@@ -12,6 +12,7 @@ class WebAppTestCase(unittest.TestCase):
     def test_no_homepage(self):
         homepage_request = self.app.get('/')
         assert homepage_request.status_code == 404
+        assert "Page not found" in str(homepage_request.data)
 
 if __name__ == '__main__':
     unittest.main()
