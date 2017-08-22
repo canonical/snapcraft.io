@@ -1,14 +1,8 @@
-<!doctype html>
+{% extends "_layout.html" %}
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>404: Page not found</title>
-  </head>
-  
-  <body>
-    <h1>404: Page not found</h1>
-    <p>Sorry, we couldn&rsquo;t find that page.</p>
-  </body>
-</html>
+{% block content %}
+  <img src="{{ url_for('static', filename='confused-hex.svg') }}" />
+  <h1>404: Page not found</h1>
+  <p>Sorry, we couldn&rsquo;t find that page.</p>
+{% endblock %}
 
