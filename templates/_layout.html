@@ -4,10 +4,33 @@
   <head>
     <meta charset="UTF-8" />
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
   </head>
   
   <body>
-    {% block content %}{% endblock %}
+    <header id="navigation" class="p-navigation--light">
+      <div class="row">
+        <div class="p-navigation__banner">
+          <div class="p-navigation__logo">
+            <a href="/">
+              <img src="https://assets.ubuntu.com/v1/d45097a4-snapcraft.io-logotype.svg" style="max-width: 150px; display: block" alt="Snapcraft.io">
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="main-content" class="p-strip is-deep u-no-padding--bottom">
+      {% block content %}{% endblock %}
+    </div>
+
+    <footer class="p-footer u-no-margin--top">
+      <div class="row">
+        <div class="col-12">
+          &copy; 2017 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
 
