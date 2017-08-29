@@ -6,7 +6,6 @@
     "clean": "rm -rf node_modules yarn-error.log static/css static/components cache.sqlite"
   },
   "author": "Canonical webteam",
-  "license": "LGPL v3",
   "devDependencies": {
     "node-sass": "^4.5.3",
     "sass-lint": "^1.10.2",
