@@ -6,7 +6,10 @@ import humanize
 
 
 app = Flask(__name__)
-cached_request = CachedSession(expire_after=60)
+cached_request = CachedSession(
+    expire_after=60,
+    old_data_on_error=True
+)
 snap_details_url = (
     "https://api.snapcraft.io/api/v1/snaps/details/{snap_name}"
     "?channel=stable"
@@ -17,8 +20,9 @@ snap_details_url = (
 def page_not_found(error):
     return render_template('404.html', description=error.description), 404
 
+
 @app.route('/<snap_name>/')
-def page_not_found(snap_name):
+def snap_details(snap_name):
     query_headers = {
         'X-Ubuntu-Series': '16',
     }
@@ -68,4 +72,3 @@ def page_not_found(snap_name):
         'snap-details.html',
         **context
     )
-
