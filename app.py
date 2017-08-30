@@ -1,3 +1,9 @@
+"""
+A Flask application for snapcraft.io.
+
+The web frontend for the snap store.
+"""
+
 import flask
 import requests
 import requests_cache
@@ -19,6 +25,11 @@ snap_details_url = (
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """
+    For 404 pages, display the 404.html template,
+    passing through the error description.
+    """
+
     return flask.render_template(
         '404.html', description=error.description
     ), 404
@@ -26,6 +37,14 @@ def page_not_found(error):
 
 @app.route('/<snap_name>/')
 def snap_details(snap_name):
+    """
+    A view to display the snap details page for specific snaps.
+
+    This queries the snapcraft API (api.snapcraft.io) and passes
+    some of the data through to the snap-details.html template,
+    with appropriate sanitation.
+    """
+
     query_headers = {
         'X-Ubuntu-Series': '16',
     }
