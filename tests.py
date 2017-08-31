@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
-import os
 import app
 import unittest
+
 
 class WebAppTestCase(unittest.TestCase):
     def setUp(self):
@@ -33,6 +33,6 @@ class WebAppTestCase(unittest.TestCase):
         assert "Snap not found" in str(response.data)
 
 
+
 if __name__ == '__main__':
     unittest.main()
-
