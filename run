@@ -134,6 +134,18 @@ while [[ -n "${1:-}" ]] && [[ "${1:0:1}" == "-" ]]; do
     shift
 done
 
+create_current_user () {
+    image="${1}"
+    etc_volume="${2}"
+    uid=$(id -u)
+    gid=$(id -g)
+
+    if ! docker volume inspect ${etc_volume} &> /dev/null; then
+        docker run --rm --volume ${etc_volume}:/etc ${image} bash -c "grep -P '${gid}:$' /etc/group &> /dev/null || groupadd -g ${gid} app-user"
+        docker run --rm --volume ${etc_volume}:/etc ${image} bash -c "grep -P 'x:${uid}:' /etc/passwd &> /dev/null || useradd -u ${uid} -g ${gid} app-user"
+    fi
+}
+
 kill_container () {
     container_name="${1}"
 
@@ -170,7 +182,7 @@ bundler_run () {
     kill_container "${container_name}"
 
     # Create etc volume with the new user
-    docker run --rm --volume ${project}-bundler-etc:/etc ${bundler_image} bash -c "getent passwd $(id -u) > /dev/null || (groupadd -g $(id -g) app-user && useradd -u $(id -u) -g $(id -g) app-user)"
+    create_current_user "${bundler_image}" "${project}-bundler-etc"
 
     # Run a command in the "bundler" image
     docker_run "${container_name}" \
@@ -187,7 +199,7 @@ node_run () {
     extra_options="${1:-}"; shift
 
     # Create etc volume with the new user
-    docker run --rm --volume ${project}-node-etc:/etc ${node_image} bash -c "getent passwd $(id -u) > /dev/null || (groupadd -g $(id -g) app-user && useradd -u $(id -u) -g $(id -g) app-user)"
+    create_current_user "${node_image}" "${project}-node-etc"
 
     # Run a command in the "node" image
     docker_run "${container_name}" \
@@ -206,7 +218,7 @@ node_install () {
     fi
 
     # Create etc volume with the new user
-    docker run --rm --volume ${project}-node-etc:/etc ${node_image} bash -c "getent passwd $(id -u) > /dev/null || (groupadd -g $(id -g) app-user && useradd -u $(id -u) -g $(id -g) app-user)"
+    create_current_user "${node_image}" "${project}-node-etc"
 
     # Run a command in the "node" image
     docker_run "${project}-yarn-install"  \
@@ -221,7 +233,7 @@ python_run () {
     extra_options="${1:-}"; shift
 
     # Create etc volume with the new user
-    docker run --rm --volume ${project}-python-etc:/etc ${python_image} bash -c "getent passwd $(id -u) > /dev/null || (groupadd -g $(id -g) app-user && useradd -u $(id -u) -g $(id -g) app-user)"
+    create_current_user "${python_image}" "${project}-python-etc"
 
     # Update dependencies if required
     if [ -f requirements.txt ]; then
