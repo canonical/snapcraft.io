@@ -3,42 +3,48 @@
 {% block title %}{{ name }} snap details{% endblock %}
 
 {% block content %}
+  <div class="p-strip">
+    <div class="row">
+      <div class="col-2">
+        {% if icon_url %}
+          <img src="{{ icon_url }}" alt="{{ name }} snap" />
+        {% else %}
+          <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="" />
+        {% endif %}
+      </div>
+      <div class="col-10">
+        <h1>{{ name }}</h1>
+        <p>{{ publisher }}</p>
+
+        {% if is_linux %}
+        <p><a href="snap://{{ name }}">Install</a></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-8">
-      <h1>{{ name }}</h1>
-
-      {% if is_linux %}
-        <p><a href="snap://{{ name }}">Install</a></p>
-      {% endif %}
-
-      {% if api_error %}
-        <div class="p-notification--negative">
-          <p class="p-notification__response">
-            <span class="p-notification__status">Error:</span> API request failed
-          </p>
-        </div>
-      {% endif %}
-
+      {% if summary %}<h2>{{ summary }}</h2>{% endif %}
+      {% if description %}<p>{{ description }}</p>{% endif %}
+      {% if support_url %}<p><a href="{{ support_url }}">Developer website</a></p>{% endif %}
+    </div>
+    <div class="col-4">
       <table>
-        {% if summary %}<tr><th>Summary</th><td>{{ summary }}</td></tr>{% endif %}
-        {% if description %}<tr><th>Description</th><td>{{ description }}</td></tr>{% endif %}
         <tr><th>Latest version</th><td>{{ version }}</td></tr>
         <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
         <tr><th>Filesize</th><td>{{ filesize }}</td></tr>
-        <tr><th>Publisher</th><td>{{ publisher }}</td></tr>
-        {% if support_url %}<tr><th>Contact</th><td><a href="{{ support_url }}">Support</a></td></tr>{% endif %}
-        {% if prices %}<tr><th>Prices</th><td>{{ prices | join(" | ") }}</td></tr>{% endif %}
       </table>
     </div>
-
-    <div class="col-4">
-      {% if icon_url %}
-        <img src="{{ icon_url }}" src="{{ name }} snap" />
-      {% endif %}
-      {% if screenshots %}
-        {% for screenshot_url in screenshot_urls %}
-          <img src="{{ screenshot_url }}" />
-        {% endfor %}
-      {% endif %}
   </div>
+  {% if api_error %}
+  <div class="row">
+    <div class="col-12">
+      <div class="p-notification--negative">
+        <p class="p-notification__response">
+          <span class="p-notification__status">Error:</span> API request failed
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 {% endblock %}

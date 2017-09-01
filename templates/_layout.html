@@ -3,10 +3,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/styles.css" />
   </head>
-  
+
   <body>
     <header id="navigation" class="p-navigation--light">
       <div class="row">
@@ -20,9 +22,7 @@
       </div>
     </header>
 
-    <div id="main-content" class="p-strip is-deep u-no-padding--bottom">
-      {% block content %}{% endblock %}
-    </div>
+    {% block content %}{% endblock %}
 
     <footer class="p-footer u-no-margin--top">
       <div class="row">
@@ -33,4 +33,3 @@
     </footer>
   </body>
 </html>
-
