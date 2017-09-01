@@ -11,10 +11,23 @@ import datetime
 import json
 import humanize
 from dateutil import parser
+from requests.packages.urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
 
 
 app = flask.Flask(__name__)
+
+# Setup session to retry requests 5 times
 uncached_session = requests.Session()
+retries = Retry(
+    total=5,
+    backoff_factor=0.1,
+    status_forcelist=[500, 502, 503, 504]
+)
+uncached_session.mount(
+    'https://api.snapcraft.io',
+    HTTPAdapter(max_retries=retries)
+)
 cached_session = requests_cache.CachedSession(expire_after=60)
 request_timeout = 2
 snap_details_url = (
