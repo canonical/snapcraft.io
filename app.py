@@ -92,7 +92,6 @@ def snap_details(snap_name):
         'icon_url': snap_data['icon_url'],
         'version': snap_data['version'],
         'revision': snap_data['revision'],
-        'download_url': snap_data['download_url'],
         'publisher': snap_data['publisher'],
         'screenshot_urls': snap_data['screenshot_urls'],
         'prices': snap_data['prices'],
