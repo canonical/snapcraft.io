@@ -28,8 +28,14 @@ uncached_session.mount(
     'https://api.snapcraft.io',
     HTTPAdapter(max_retries=retries)
 )
-cached_session = requests_cache.CachedSession(expire_after=60)
+
+# The cache expires after 5 seconds
+cached_session = requests_cache.CachedSession(expire_after=5)
+
+# Requests should timeout after 2 seconds in total
 request_timeout = 2
+
+# Request only stable snaps
 snap_details_url = (
     "https://api.snapcraft.io/api/v1/snaps/details/{snap_name}"
     "?channel=stable"
@@ -60,6 +66,7 @@ def snap_details(snap_name):
 
     query_headers = {
         'X-Ubuntu-Series': '16',
+        'X-Ubuntu-Architecture': 'amd64',
     }
 
     response = _get_from_cache(
@@ -80,27 +87,29 @@ def snap_details(snap_name):
     snap_data = json.loads(response.text)
 
     context = {
-        # Always available
+        # Data direct from API
         'name': snap_data['title'],
-        'api_error': response.old_data_from_error,
+        'icon_url': snap_data['icon_url'],
         'version': snap_data['version'],
         'revision': snap_data['revision'],
-        'filesize': humanize.naturalsize(snap_data['binary_filesize']),
         'download_url': snap_data['download_url'],
         'publisher': snap_data['publisher'],
         'screenshot_urls': snap_data['screenshot_urls'],
         'prices': snap_data['prices'],
         'support_url': snap_data.get('support_url'),
+        'summary': snap_data['summary'],
+        'description': snap_data['description'],
+
+        # Transformed API data
+        'filesize': humanize.naturalsize(snap_data['binary_filesize']),
         'last_updated': (
             humanize.naturaldate(
                 parser.parse(snap_data.get('last_updated'))
             )
         ),
 
-        # May be available
-        'summary': snap_data.get('summary'),
-        'description': snap_data.get('description'),
-        'icon_url': snap_data.get('icon_url'),
+        # Context info
+        'api_error': response.old_data_from_error,
     }
 
     return flask.render_template(
