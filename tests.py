@@ -18,7 +18,7 @@ class WebAppTestCase(unittest.TestCase):
         response = self.app.get('/canonical-livepatch')
         location = response.headers.get('Location')
 
-        assert response.status_code in (301,302)
+        assert response.status_code in (301, 302)
         assert location == "http://localhost/canonical-livepatch/"
 
     def test_canonical_livepatch_snap(self):
@@ -31,7 +31,6 @@ class WebAppTestCase(unittest.TestCase):
 
         assert response.status_code == 404
         assert "Snap not found" in str(response.data)
-
 
 
 if __name__ == '__main__':
