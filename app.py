@@ -110,6 +110,7 @@ def snap_details(snap_name):
 
         # Context info
         'api_error': response.old_data_from_error,
+        'is_linux': 'Linux' in flask.request.headers['User-Agent']
     }
 
     return flask.render_template(

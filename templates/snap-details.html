@@ -7,7 +7,9 @@
     <div class="col-8">
       <h1>{{ name }}</h1>
 
-      <p><a href="{{ download_url }}">Download</a> | <a href="snap://{{ name }}">Install</a></p>
+      {% if is_linux %}
+        <p><a href="snap://{{ name }}">Install</a></p>
+      {% endif %}
 
       {% if api_error %}
         <div class="p-notification--negative">
