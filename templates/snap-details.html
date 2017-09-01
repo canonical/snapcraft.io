@@ -1,0 +1,44 @@
+{% extends "_layout.html" %}
+
+{% block title %}{{ name }} snap details{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-8">
+      <h1>{{ name }}</h1>
+
+      {% if is_linux %}
+        <p><a href="snap://{{ name }}">Install</a></p>
+      {% endif %}
+
+      {% if api_error %}
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
+        </div>
+      {% endif %}
+
+      <table>
+        {% if summary %}<tr><th>Summary</th><td>{{ summary }}</td></tr>{% endif %}
+        {% if description %}<tr><th>Description</th><td>{{ description }}</td></tr>{% endif %}
+        <tr><th>Latest version</th><td>{{ version }}</td></tr>
+        <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
+        <tr><th>Filesize</th><td>{{ filesize }}</td></tr>
+        <tr><th>Publisher</th><td>{{ publisher }}</td></tr>
+        {% if support_url %}<tr><th>Contact</th><td><a href="{{ support_url }}">Support</a></td></tr>{% endif %}
+        {% if prices %}<tr><th>Prices</th><td>{{ prices | join(" | ") }}</td></tr>{% endif %}
+      </table>
+    </div>
+
+    <div class="col-4">
+      {% if icon_url %}
+        <img src="{{ icon_url }}" src="{{ name }} snap" />
+      {% endif %}
+      {% if screenshots %}
+        {% for screenshot_url in screenshot_urls %}
+          <img src="{{ screenshot_url }}" />
+        {% endfor %}
+      {% endif %}
+  </div>
+{% endblock %}
