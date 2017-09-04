@@ -1,0 +1,28 @@
+// based on p-navigation--light pattern from Vanilla
+@mixin navigation-x-light {
+  .p-navigation--x-light {
+    @include navigation-pattern(
+      $background-color: $color-x-light,
+      $border-color: $color-mid-light,
+      $text-color: $color-dark
+    );
+    border-bottom: 1px solid $color-mid-light;
+
+    // remove double bottom border on open nav
+    &:target .p-navigation__nav .p-navigation__link:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
+@mixin snapcraft-logo {
+  .p-navigation__snapcraft-logo {
+    float: left;
+    padding: 11px 20px 12px;
+
+    & img {
+      height: 28px;
+      display: block;
+    }
+  }
+}
