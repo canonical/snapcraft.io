@@ -46,7 +46,7 @@ Commands
 # Define docker images versions
 python_image="canonicalwebteam/python3:v1.1.0"
 bundler_image="canonicalwebteam/bundler:v0.1.2"
-node_image="canonicalwebteam/node:v0.1.0"
+node_image="canonicalwebteam/node:v0.1.1"
 
 # Global volume names
 yarn_cache_volume="${CANONICAL_WEBTEAM_YARN_CACHE_VOLUME:-canonical-webteam-node-cache}"
@@ -238,7 +238,7 @@ python_run () {
 
     # Update dependencies if required
     if [ -f requirements.txt ]; then
-        if type md5sum 2> /dev/null; then
+        if type md5sum &> /dev/null; then
             requirements_hash=$(md5sum requirements.txt | awk '{print $1;}')
         else
             requirements_hash=$(md5 requirements.txt | awk '{print $4;}')
