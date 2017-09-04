@@ -1,3 +1,4 @@
+// vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 @include vanilla-base;
 @include vf-p-grid;
@@ -6,3 +7,8 @@
 @include vf-p-navigation;
 @include vf-p-notification;
 @include vf-p-footer;
+
+// custom styling
+@import 'header';
+@include navigation-x-light;
+@include snapcraft-logo;
