@@ -1,16 +1,7 @@
-language: python
-python:
-  - "3.6"
-before_install:
-  - nvm install 7.4.0
-  - nvm use 7.4.0
-install:
-  - npm install
-  - pip install flake8
-  - pip install -r requirements.txt
+sudo: required
+
+services:
+  - docker
 
 script:
-  - npm run test
-  - flake8 app.py
-  - python3 tests.py
-
+  - ./run test

@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
-import os
 import app
 import unittest
+
 
 class WebAppTestCase(unittest.TestCase):
     def setUp(self):
@@ -18,7 +18,7 @@ class WebAppTestCase(unittest.TestCase):
         response = self.app.get('/canonical-livepatch')
         location = response.headers.get('Location')
 
-        assert response.status_code in (301,302)
+        assert response.status_code in (301, 302)
         assert location == "http://localhost/canonical-livepatch/"
 
     def test_canonical_livepatch_snap(self):
@@ -35,4 +35,3 @@ class WebAppTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
