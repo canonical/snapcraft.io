@@ -4,39 +4,27 @@ This is the new [Flask](http://flask.pocoo.org/) application that will gradually
 
 ## Local development
 
-To run the site for local development, follow these steps:
-
-### Installing dependencies
+The simplest way to run the site locally is to first [install Docker](https://docs.docker.com/engine/installation/) (on Linux you may need to [add your user to the `docker` group](https://docs.docker.com/engine/installation/linux/linux-postinstall/)), and then use the `./run` script:
 
 ``` bash
-python3 -m venv env3             # Create a python3 virtual environment
-source env3/bin/activate         # Use the python3 environment
-pip install -r requirements.txt  # Install python dependencies
-yarn install                     # Install NPM dependencies into node_modules
+./run
 ```
+
+Once the containers are setup, you can visit <http://127.0.0.1:8022> in your browser.
 
 ### Building CSS
 
-``` bash
-yarn run build  # Build SCSS files into CSS
-```
+For working on [Sass files](static/css), you may want to dynamically watch for changes to rebuild the CSS whenever something changes.
 
-### Run the site
-
-To run the local webserver at http://127.0.0.1:5000 :
+To setup the watcher, open a new terminal window and run:
 
 ``` bash
-FLASK_APP=app.py FLASK_DEBUG=true flask run
+./run watch
 ```
 
 ### Testing
 
-First make sure the site's dependencies are installed. Then:
-
 ``` bash
-pip install flake8  # Install flake8 for syntax testing
-flake8 app.py       # Check the python application syntax
-python3 tests.py    # Run the python tests
-yarn run test       # Test the Sass syntax
+./run test
 ```
 
