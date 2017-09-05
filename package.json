@@ -9,6 +9,6 @@
   "devDependencies": {
     "node-sass": "^4.5.3",
     "sass-lint": "^1.10.2",
-    "vanilla-framework": "1.4.3"
+    "vanilla-framework": "1.5.1"
   }
 }
