@@ -1,3 +1,4 @@
+// vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 @include vanilla-base;
 @include vf-p-grid;
@@ -6,3 +7,4 @@
 @include vf-p-navigation;
 @include vf-p-notification;
 @include vf-p-footer;
+@include vf-u-floats;
