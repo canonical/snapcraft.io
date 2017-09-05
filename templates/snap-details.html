@@ -3,7 +3,7 @@
 {% block title %}{{ name }} snap details{% endblock %}
 
 {% block content %}
-  <div class="p-strip">
+  <div class="p-strip is-shallow is-bordered">
     <div class="row">
       <div class="col-2">
         {% if icon_url %}
@@ -17,23 +17,27 @@
         <p>{{ publisher }}</p>
 
         {% if is_linux %}
-        <p><a href="snap://{{ name }}">Install</a></p>
+          <p>
+            <a class="p-button--positive" href="snap://{{ name }}">Install</a>
+          </p>
         {% endif %}
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-8">
-      {% if summary %}<h2>{{ summary }}</h2>{% endif %}
-      {% if description %}<p>{{ description }}</p>{% endif %}
-      {% if support_url %}<p><a href="{{ support_url }}">Developer website</a></p>{% endif %}
-    </div>
-    <div class="col-4">
-      <table>
-        <tr><th>Latest version</th><td>{{ version }}</td></tr>
-        <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
-        <tr><th>Filesize</th><td>{{ filesize }}</td></tr>
-      </table>
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-8">
+        {% if summary %}<h2>{{ summary }}</h2>{% endif %}
+        {% if description %}<p>{{ description }}</p>{% endif %}
+        {% if support_url %}<p><a href="{{ support_url }}">Developer website</a></p>{% endif %}
+      </div>
+      <div class="col-4">
+        <table>
+          <tr><th>Latest version</th><td>{{ version }}</td></tr>
+          <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
+          <tr><th>Filesize</th><td>{{ filesize }}</td></tr>
+        </table>
+      </div>
     </div>
   </div>
   {% if api_error %}
