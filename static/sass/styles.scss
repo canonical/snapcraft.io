@@ -7,8 +7,4 @@
 @include vf-p-navigation;
 @include vf-p-notification;
 @include vf-p-footer;
-
-// custom styling
-@import 'header';
-@include navigation-x-light;
-@include snapcraft-logo;
+@include vf-u-floats;
