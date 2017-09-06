@@ -29,7 +29,7 @@
       <div class="col-8">
         {% if summary %}<h4>{{ summary }}</h4>{% endif %}
         {% for paragraph in description_paragraphs %}
-          <p>{{ paragraph }}</p>
+          <p>{{ paragraph | safe }}</p>
         {% endfor %}
         {% if support_url %}<p><a href="{{ support_url }}">Developer website</a></p>{% endif %}
       </div>
