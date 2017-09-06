@@ -12,6 +12,7 @@ import json
 import humanize
 import re
 import bleach
+import urllib
 from dateutil import parser
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -92,10 +93,24 @@ def snap_details(snap_name):
     formatted_paragraphs = []
 
     # Sanitise paragraphs
+    def external(attrs, new=False):
+        url_parts = urllib.parse.urlparse(attrs[(None, "href")])
+        if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
+            if (None, "class") not in attrs:
+                attrs[(None, "class")] = "p-link--external"
+            elif "p-link--external" not in attrs[(None, "class")]:
+                attrs[(None, "class")] += " p-link--external"
+
+        return attrs
+
     for paragraph in paragraphs:
-        formatted_paragraphs.append(
-            bleach.linkify(bleach.clean(paragraph, tags=[]))
-        )
+        callbacks = bleach.linkifier.DEFAULT_CALLBACKS
+        callbacks.append(external)
+
+        paragraph = bleach.clean(paragraph, tags=[])
+        paragraph = bleach.linkify(paragraph, callbacks=callbacks)
+
+        formatted_paragraphs.append(paragraph)
 
     context = {
         # Data direct from API
