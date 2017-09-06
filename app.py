@@ -89,7 +89,8 @@ def snap_details(snap_name):
 
     context = {
         # Data direct from API
-        'name': snap_data['title'],
+        'snap_title': snap_data['title'],
+        'package_name': snap_data['package_name'],
         'icon_url': snap_data['icon_url'],
         'version': snap_data['version'],
         'revision': snap_data['revision'],
