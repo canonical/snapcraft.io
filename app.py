@@ -87,6 +87,15 @@ def snap_details(snap_name):
         flask.abort(response.status_code, message)
 
     snap_data = json.loads(response.text)
+    description = snap_data['description'].strip()
+    paragraphs = re.compile(r'[\n\r]{2,}').split(description)
+    formatted_paragraphs = []
+
+    # Sanitise paragraphs
+    for paragraph in paragraphs:
+        formatted_paragraphs.append(
+            bleach.linkify(bleach.clean(paragraph, tags=[]))
+        )
 
     context = {
         # Data direct from API
@@ -100,14 +109,7 @@ def snap_details(snap_name):
         'prices': snap_data['prices'],
         'support_url': snap_data.get('support_url'),
         'summary': snap_data['summary'],
-        'description_paragraphs': re.compile(r'[\n\r]{2,}').split(
-            bleach.linkify(
-                bleach.clean(
-                    snap_data['description'].strip(),
-                    tags=[]
-                )
-            )
-        ),
+        'description_paragraphs': formatted_paragraphs,
 
         # Transformed API data
         'filesize': humanize.naturalsize(snap_data['binary_filesize']),
