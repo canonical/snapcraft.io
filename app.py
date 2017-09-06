@@ -10,6 +10,7 @@ import requests_cache
 import datetime
 import json
 import humanize
+import re
 from dateutil import parser
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -97,7 +98,9 @@ def snap_details(snap_name):
         'prices': snap_data['prices'],
         'support_url': snap_data.get('support_url'),
         'summary': snap_data['summary'],
-        'description': snap_data['description'],
+        'description_paragraphs': re.compile(r'[\n\r]{2,}').split(
+            snap_data['description'].strip()
+        ),
 
         # Transformed API data
         'filesize': humanize.naturalsize(snap_data['binary_filesize']),
