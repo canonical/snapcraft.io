@@ -25,7 +25,9 @@
   <div class="row">
     <div class="col-8">
       {% if summary %}<h2>{{ summary }}</h2>{% endif %}
-      {% if description %}<p>{{ description }}</p>{% endif %}
+      {% for paragraph in description_paragraphs %}
+        <p>{{ paragraph }}</p>
+      {% endfor %}
       {% if support_url %}<p><a href="{{ support_url }}">Developer website</a></p>{% endif %}
     </div>
     <div class="col-4">
