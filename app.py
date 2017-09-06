@@ -11,6 +11,7 @@ import datetime
 import json
 import humanize
 import re
+import bleach
 from dateutil import parser
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -100,7 +101,12 @@ def snap_details(snap_name):
         'support_url': snap_data.get('support_url'),
         'summary': snap_data['summary'],
         'description_paragraphs': re.compile(r'[\n\r]{2,}').split(
-            snap_data['description'].strip()
+            bleach.linkify(
+                bleach.clean(
+                    snap_data['description'].strip(),
+                    strip=True
+                )
+            )
         ),
 
         # Transformed API data
