@@ -24,7 +24,7 @@
   </div>
   <div class="row">
     <div class="col-8">
-      {% if summary %}<h2>{{ summary }}</h2>{% endif %}
+      {% if summary %}<h4>{{ summary }}</h4>{% endif %}
       {% for paragraph in description_paragraphs %}
         <p>{{ paragraph }}</p>
       {% endfor %}
@@ -32,9 +32,8 @@
     </div>
     <div class="col-4">
       <table>
-        <tr><th>Latest version</th><td>{{ version }}</td></tr>
-        <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
-        <tr><th>Filesize</th><td>{{ filesize }}</td></tr>
+        <tr><th>Version</th><td>{{ version }}</td></tr>
+        <tr><th>Size</th><td>{{ filesize }}</td></tr>
       </table>
     </div>
   </div>
