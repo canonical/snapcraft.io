@@ -104,7 +104,7 @@ def snap_details(snap_name):
             bleach.linkify(
                 bleach.clean(
                     snap_data['description'].strip(),
-                    strip=True
+                    tags=[]
                 )
             )
         ),
