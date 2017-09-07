@@ -11,6 +11,8 @@ import datetime
 import json
 import humanize
 import re
+import bleach
+import urllib
 from dateutil import parser
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -86,10 +88,34 @@ def snap_details(snap_name):
         flask.abort(response.status_code, message)
 
     snap_data = json.loads(response.text)
+    description = snap_data['description'].strip()
+    paragraphs = re.compile(r'[\n\r]{2,}').split(description)
+    formatted_paragraphs = []
+
+    # Sanitise paragraphs
+    def external(attrs, new=False):
+        url_parts = urllib.parse.urlparse(attrs[(None, "href")])
+        if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
+            if (None, "class") not in attrs:
+                attrs[(None, "class")] = "p-link--external"
+            elif "p-link--external" not in attrs[(None, "class")]:
+                attrs[(None, "class")] += " p-link--external"
+
+        return attrs
+
+    for paragraph in paragraphs:
+        callbacks = bleach.linkifier.DEFAULT_CALLBACKS
+        callbacks.append(external)
+
+        paragraph = bleach.clean(paragraph, tags=[])
+        paragraph = bleach.linkify(paragraph, callbacks=callbacks)
+
+        formatted_paragraphs.append(paragraph)
 
     context = {
         # Data direct from API
-        'name': snap_data['title'],
+        'snap_title': snap_data['title'],
+        'package_name': snap_data['package_name'],
         'icon_url': snap_data['icon_url'],
         'version': snap_data['version'],
         'revision': snap_data['revision'],
@@ -98,9 +124,7 @@ def snap_details(snap_name):
         'prices': snap_data['prices'],
         'support_url': snap_data.get('support_url'),
         'summary': snap_data['summary'],
-        'description_paragraphs': re.compile(r'[\n\r]{2,}').split(
-            snap_data['description'].strip()
-        ),
+        'description_paragraphs': formatted_paragraphs,
 
         # Transformed API data
         'filesize': humanize.naturalsize(snap_data['binary_filesize']),

@@ -1,8 +1,10 @@
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 @include vanilla-base;
+@include vf-p-links;
 @include vf-p-grid;
 @include vf-p-grid-modifications;
+@include vf-p-buttons;
 @include vf-p-strip;
 @include vf-p-navigation;
 @include vf-p-notification;
