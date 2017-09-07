@@ -1,18 +1,10 @@
 @mixin p-social {
-  .p-social__heading {
-    color: $color-mid-dark;
-    font-size: .875rem;
-    text-transform: uppercase;
+  .p-social-list {
+    @extend .p-inline-list;
+    margin-top: 1rem;
   }
 
-  .p-social__heading + * {
-    margin-top: .5rem;
-  }
-
-  .p-social__icon--twitter,
-  .p-social__icon--google,
-  .p-social__icon--facebook,
-  .p-social__icon--youtube {
+  %p-social-list-icon {
     background-image: url('#{$assets-path}6bfc3d6a-build.snapcraft.social.optimize.svg');
     background-repeat: no-repeat;
     background-size: 160px 80px; // 2x4 icons 40x40px each (in 2 rows for regular and hover state)
@@ -21,24 +13,29 @@
     overflow: hidden;
     text-indent: -99999px;
     width: 40px;
+
+    &:hover {
+      background-position-y: -40px;
+    }
   }
 
-  .p-social__icon--google {
+  .p-social-list__icon--twitter {
+    @extend %p-social-list-icon;
+    background-position: 0 0;
+  }
+
+  .p-social-list__icon--google {
+    @extend %p-social-list-icon;
     background-position: -40px 0;
   }
 
-  .p-social__icon--facebook {
+  .p-social-list__icon--facebook {
+    @extend %p-social-list-icon;
     background-position: -80px 0;
   }
 
-  .p-social__icon--youtube {
+  .p-social-list__icon--youtube {
+    @extend %p-social-list-icon;
     background-position: -120px 0;
-  }
-
-  .p-social__icon--twitter:hover,
-  .p-social__icon--google:hover,
-  .p-social__icon--facebook:hover,
-  .p-social__icon--youtube:hover {
-    background-position-y: -40px;
   }
 }
