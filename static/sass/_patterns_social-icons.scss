@@ -1,10 +1,6 @@
-@mixin p-social {
-  .p-social-list {
-    @extend .p-inline-list;
-    margin-top: 1rem;
-  }
+@mixin p-social-icons {
 
-  %p-social-list-icon {
+  %p-social-icon {
     background-image: url('#{$assets-path}6bfc3d6a-build.snapcraft.social.optimize.svg');
     background-repeat: no-repeat;
     background-size: 160px 80px; // 2x4 icons 40x40px each (in 2 rows for regular and hover state)
@@ -19,23 +15,23 @@
     }
   }
 
-  .p-social-list__icon--twitter {
-    @extend %p-social-list-icon;
+  .p-social-icon--twitter {
+    @extend %p-social-icon;
     background-position: 0 0;
   }
 
-  .p-social-list__icon--google {
-    @extend %p-social-list-icon;
+  .p-social-icon--google {
+    @extend %p-social-icon;
     background-position: -40px 0;
   }
 
-  .p-social-list__icon--facebook {
-    @extend %p-social-list-icon;
+  .p-social-icon--facebook {
+    @extend %p-social-icon;
     background-position: -80px 0;
   }
 
-  .p-social-list__icon--youtube {
-    @extend %p-social-list-icon;
+  .p-social-icon--youtube {
+    @extend %p-social-icon;
     background-position: -120px 0;
   }
 }

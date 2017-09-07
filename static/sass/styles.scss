@@ -15,5 +15,8 @@
 @include vf-u-off-screen;
 @include vf-u-margin-collapse;
 
-@import 'patterns_social';
-@include p-social;
+@import 'patterns_inline-list--compact';
+@include p-inline-list--compact;
+
+@import 'patterns_social-icons';
+@include p-social-icons;
