@@ -5,22 +5,24 @@
 {% block content %}
   <div class="p-strip is-shallow is-bordered">
     <div class="row">
-      <div class="col-2">
-        {% if icon_url %}
-          <img src="{{ icon_url }}" alt="{{ snap_title }} snap" />
-        {% else %}
-          <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="" />
-        {% endif %}
-      </div>
-      <div class="col-10">
-        <h1>{{ snap_title }}</h1>
-        <p>{{ publisher }}</p>
+      <div class="col-12">
+        <div class="p-media-object u-no-margin--bottom">
+          {% if icon_url %}
+            <img class="p-media-object__image--large" src="{{ icon_url }}" alt="{{ snap_title }} snap" />
+          {% else %}
+            <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="" />
+          {% endif %}
+          <div class="p-media-object__details">
+            <h1>{{ snap_title }}</h1>
+            <p class="p-media-object__content--large">{{ publisher }}</p>
 
-        {% if is_linux %}
-          <p>
-            <a class="p-button--positive" href="snap://{{ package_name }}">Install</a>
-          </p>
-        {% endif %}
+            {% if is_linux %}
+            <p class="p-media-object__content--large">
+              <a class="p-button--positive" href="snap://{{ package_name }}">Install</a>
+            </p>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
   </div>
