@@ -13,7 +13,7 @@ import humanize
 import re
 import bleach
 import urllib
-from dateutil import parser
+from dateutil import parser, relativedelta
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 
@@ -43,6 +43,15 @@ snap_details_url = (
     "https://api.snapcraft.io/api/v1/snaps/details/{snap_name}"
     "?channel=stable"
 )
+details_query_headers = {
+    'X-Ubuntu-Series': '16',
+    'X-Ubuntu-Architecture': 'amd64',
+}
+
+snap_metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+metrics_query_headers = {
+    'Content-Type': 'application/json'
+}
 
 
 @app.errorhandler(404)
@@ -66,29 +75,50 @@ def snap_details(snap_name):
     some of the data through to the snap-details.html template,
     with appropriate sanitation.
     """
+    today = datetime.date.today()
+    month_ago = today - relativedelta.relativedelta(months=1)
 
-    query_headers = {
-        'X-Ubuntu-Series': '16',
-        'X-Ubuntu-Architecture': 'amd64',
-    }
-
-    response = _get_from_cache(
+    details_response = _get_from_cache(
         snap_details_url.format(snap_name=snap_name),
-        headers=query_headers
+        headers=details_query_headers
     )
+    details = details_response.json()
 
-    if response.status_code >= 400:
+    metrics_query_json = [
+        {
+            "metric_name": "installed_base_by_country_percent",
+            "snap_id": details['snap_id'],
+            "start": month_ago.strftime('%Y-%m-%d'),
+            "end": today.strftime('%Y-%m-%d')
+        }
+    ]
+    metrics_response = _get_from_cache(
+        snap_metrics_url.format(snap_name=snap_name),
+        headers=metrics_query_headers,
+        json=metrics_query_json
+    )
+    geodata = metrics_response.json()[0]['series']
+
+    user_percentage_by_country = {}
+
+    for country_percentages in geodata:
+        country_code = country_percentages['name']
+        percentages_with_nulls = country_percentages['values']
+        percentages = [p for p in percentages_with_nulls if p is not None]
+        average_percentage = sum(percentages) / len(percentages)
+        user_percentage_by_country[country_code] = average_percentage
+
+    if details_response.status_code >= 400:
         message = (
             'Failed to get snap details for {snap_name}'.format(**locals())
         )
 
-        if response.status_code == 404:
+        if details_response.status_code == 404:
             message = 'Snap not found: {snap_name}'.format(**locals())
 
-        flask.abort(response.status_code, message)
+        flask.abort(details_response.status_code, message)
 
-    snap_data = json.loads(response.text)
-    description = snap_data['description'].strip()
+    description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
     formatted_paragraphs = []
 
@@ -113,29 +143,33 @@ def snap_details(snap_name):
         formatted_paragraphs.append(paragraph)
 
     context = {
-        # Data direct from API
-        'snap_title': snap_data['title'],
-        'package_name': snap_data['package_name'],
-        'icon_url': snap_data['icon_url'],
-        'version': snap_data['version'],
-        'revision': snap_data['revision'],
-        'publisher': snap_data['publisher'],
-        'screenshot_urls': snap_data['screenshot_urls'],
-        'prices': snap_data['prices'],
-        'support_url': snap_data.get('support_url'),
-        'summary': snap_data['summary'],
+        # Data direct from details API
+        'snap_title': details['title'],
+        'package_name': details['package_name'],
+        'icon_url': details['icon_url'],
+        'version': details['version'],
+        'revision': details['revision'],
+        'publisher': details['publisher'],
+        'screenshot_urls': details['screenshot_urls'],
+        'prices': details['prices'],
+        'support_url': details.get('support_url'),
+        'summary': details['summary'],
         'description_paragraphs': formatted_paragraphs,
 
         # Transformed API data
-        'filesize': humanize.naturalsize(snap_data['binary_filesize']),
+        'filesize': humanize.naturalsize(details['binary_filesize']),
         'last_updated': (
             humanize.naturaldate(
-                parser.parse(snap_data.get('last_updated'))
+                parser.parse(details.get('last_updated'))
             )
         ),
 
+        # Data from metrics API
+        'user_percentage_by_country': user_percentage_by_country,
+
         # Context info
-        'api_error': response.old_data_from_error,
+        'details_api_error': details_response.old_data_from_error,
+        'metrics_api_error': metrics_response.old_data_from_error,
         'is_linux': 'Linux' in flask.request.headers['User-Agent']
     }
 
@@ -145,7 +179,7 @@ def snap_details(snap_name):
     )
 
 
-def _get_from_cache(url, headers):
+def _get_from_cache(url, headers, json=None):
     """
     Retrieve the response from the requests cache.
     If the cache has expired then it will attempt to update the cache.
@@ -154,11 +188,14 @@ def _get_from_cache(url, headers):
 
     request_error = False
 
+    method = "POST" if json else "GET"
+
     request = cached_session.prepare_request(
         requests.Request(
-            method='GET',
+            method=method,
             url=url,
-            headers=headers
+            headers=headers,
+            json=json
         )
     )
 
