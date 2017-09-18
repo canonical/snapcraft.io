@@ -8,7 +8,6 @@ import flask
 import requests
 import requests_cache
 import datetime
-import json
 import humanize
 import re
 import bleach
@@ -84,6 +83,16 @@ def snap_details(snap_name):
     )
     details = details_response.json()
 
+    if details_response.status_code >= 400:
+        message = (
+            'Failed to get snap details for {snap_name}'.format(**locals())
+        )
+
+        if details_response.status_code == 404:
+            message = 'Snap not found: {snap_name}'.format(**locals())
+
+        flask.abort(details_response.status_code, message)
+
     metrics_query_json = [
         {
             "metric_name": "installed_base_by_country_percent",
@@ -107,16 +116,6 @@ def snap_details(snap_name):
         percentages = [p for p in percentages_with_nulls if p is not None]
         average_percentage = sum(percentages) / len(percentages)
         user_percentage_by_country[country_code] = average_percentage
-
-    if details_response.status_code >= 400:
-        message = (
-            'Failed to get snap details for {snap_name}'.format(**locals())
-        )
-
-        if details_response.status_code == 404:
-            message = 'Snap not found: {snap_name}'.format(**locals())
-
-        flask.abort(details_response.status_code, message)
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
