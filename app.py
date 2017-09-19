@@ -74,7 +74,7 @@ def snap_details(snap_name):
     some of the data through to the snap-details.html template,
     with appropriate sanitation.
     """
-    today = datetime.date.today()
+    today = datetime.datetime.utcnow().date()
     month_ago = today - relativedelta.relativedelta(months=1)
 
     details_response = _get_from_cache(
