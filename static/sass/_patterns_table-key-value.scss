@@ -14,5 +14,9 @@
     tr {
       border-bottom-style: dotted;
     }
+
+    tr:last-child {
+      border-bottom: 0;
+    }
   }
 }
