@@ -3,24 +3,39 @@
 {% block title %}{{ snap_title }} — Linux software in the Snap Store{% endblock %}
 
 {% block content %}
+  <!-- Illustration of country data -->
+<!--
+  <table>
+    <tbody>
+      {% for country, percent in user_percentage_by_country.items() %}
+        <tr><th>{{ country }}</th><td>{{ percent }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+-->
+
   <div class="p-strip is-shallow is-bordered">
     <div class="row">
-      <div class="col-2">
-        {% if icon_url %}
-          <img src="{{ icon_url }}" alt="{{ snap_title }} snap" />
-        {% else %}
-          <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="" />
-        {% endif %}
-      </div>
-      <div class="col-10">
-        <h1>{{ snap_title }}</h1>
-        <p>{{ publisher }}</p>
+      <div class="col-12">
+        <div class="p-media-object u-no-margin--bottom">
+          {% if icon_url %}
+            <img class="p-media-object__image--large" src="{{ icon_url }}" alt="{{ snap_title }} snap" />
+          {% else %}
+            <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="" />
+          {% endif %}
+          <div class="p-media-object__details">
+            <h1>{{ snap_title }}</h1>
+            <p class="p-media-object__content--large">{{ publisher }}</p>
 
-        {% if is_linux %}
-          <p>
-            <a class="p-button--positive" href="snap://{{ package_name }}">Install</a>
-          </p>
-        {% endif %}
+            <p class="p-media-object__content--large">
+              {% if is_linux %}
+                <a class="p-button--positive" href="snap://{{ package_name }}">Install</a>
+              {% else %}
+                You can install this software on a snap-powered system like <a class="p-link--external" href="https://www.ubuntu.com/download">Ubuntu</a>.
+              {% endif %}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -34,8 +49,8 @@
         {% if support_url %}<p><a href="{{ support_url }}">Developer website</a></p>{% endif %}
       </div>
       <div class="col-4">
-        <table>
-          <tr><th>Version</th><td>{{ version }}</td></tr>
+        <table class="p-table-key-value">
+          <tr><th width="100">Version</th><td>{{ version }}</td></tr>
           <tr><th>Size</th><td>{{ filesize }}</td></tr>
         </table>
       </div>

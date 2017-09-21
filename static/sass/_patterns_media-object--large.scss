@@ -1,0 +1,12 @@
+@mixin p-media-object--large {
+  .p-media-object__image--large {
+    @extend .p-media-object__image;
+    flex-shrink: 0;
+    height: 6rem;
+    width: 6rem;
+  }
+
+  .p-media-object__content--large {
+    margin-top: 1rem;
+  }
+}
