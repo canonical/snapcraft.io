@@ -8,10 +8,10 @@
   "author": "Canonical webteam",
   "devDependencies": {
     "autoprefixer": "^7.1.3",
-    "postcss-cli": "^4.1.0",
     "node-sass": "^4.5.3",
+    "postcss-cli": "^4.1.0",
     "sass-lint": "^1.10.2",
-    "vanilla-framework": "1.5.1",
+    "vanilla-framework": "1.5.2",
     "watch-cli": "^0.2.2"
   }
 }
