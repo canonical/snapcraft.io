@@ -27,11 +27,13 @@
             <h1>{{ snap_title }}</h1>
             <p class="p-media-object__content--large">{{ publisher }}</p>
 
-            {% if is_linux %}
             <p class="p-media-object__content--large">
-              <a class="p-button--positive" href="snap://{{ package_name }}">Install</a>
+              {% if is_linux %}
+                <a class="p-button--positive" href="snap://{{ package_name }}">Install</a>
+              {% else %}
+                You can install this software on a snap-powered system like <a class="p-link--external" href="https://www.ubuntu.com/download">Ubuntu</a>.
+              {% endif %}
             </p>
-            {% endif %}
           </div>
         </div>
       </div>
