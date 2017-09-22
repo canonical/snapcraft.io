@@ -104,6 +104,15 @@ pip_container="${project}-db"
 db_volume="${project}-db"
 network_name="${project}-net"
 
+# Grab HTTP_PROXY settings from the host
+http_proxy=""
+if [ -n "${HTTP_PROXY:-}" ]; then
+    http_proxy="--env HTTP_PROXY=${HTTP_PROXY} --env http_proxy=${HTTP_PROXY}"
+fi
+if [ -n "${HTTPS_PROXY:-}" ]; then
+    http_proxy="${http_proxy} --env HTTPS_PROXY=${HTTPS_PROXY} --env https_proxy=${HTTPS_PROXY}"
+fi
+
 # Import environment settings
 if [ -f .env ]; then
     export $(cat .env | grep -v ^\# | xargs)
@@ -142,8 +151,14 @@ create_current_user () {
     gid=$(id -g)
 
     if ! docker volume inspect ${etc_volume} &> /dev/null; then
-        docker run --rm --volume ${etc_volume}:/etc ${image} bash -c "grep -P '${gid}:$' /etc/group &> /dev/null || groupadd -g ${gid} app-user"
-        docker run --rm --volume ${etc_volume}:/etc ${image} bash -c "grep -P 'x:${uid}:' /etc/passwd &> /dev/null || useradd -u ${uid} -g ${gid} app-user"
+        etc_run="docker run --rm --volume ${etc_volume}:/etc ${image}"
+        if ! ${etc_run} grep -P '${gid}:$' /etc/group &> /dev/null; then
+            ${etc_run} groupadd -g ${gid} app-user
+	fi
+
+	if ! ${etc_run} grep -P 'x:${uid}:' /etc/passwd &> /dev/null; then
+            ${etc_run} useradd -u ${uid} -g ${gid} app-user
+	fi
     fi
 }
 
@@ -169,6 +184,7 @@ docker_run () {
         --name ${container_name}  `# Name the container` \
         --rm                      `# Remove the container once it's finished`  \
         ${env_file}               `# Pass environment variables into the container, if file exists`  \
+        ${http_proxy}             `# Include HTTP proxy if needed`  \
         --volume `pwd`:`pwd`      `# Mirror current directory inside container`  \
         --workdir `pwd`           `# Set current directory to the image's work directory`  \
         ${tty}                    `# Attach a pseudo-terminal, if relevant`  \
@@ -268,6 +284,7 @@ python_run () {
                 --name ${db_container}       `# Name the container`  \
                 --rm                         `# Remove the container once it's finished`  \
                 --volume "${db_volume}":/var/lib/postgresql/data  `# Store dependencies in a docker volume`  \
+                 ${http_proxy}               `# Include HTTP proxy if needed`  \
                 --network "${network_name}"  `# Use an isolated network`  \
                 --network-alias db           `# Call this container "db" on the network so it can be found`  \
                 --detach                     `# Run in the background` \
@@ -446,6 +463,7 @@ case $run_command in
                 ${tty} \
                 --volume `pwd`:`pwd` \
                 --workdir `pwd` \
+                ${http_proxy}             `# Include HTTP proxy if needed`  \
                 --name "${project}-flake8-test" \
                 ${python_image} flake8 --exclude '*env*,node_modules' || test_error=true
         fi
@@ -479,7 +497,7 @@ case $run_command in
             if [ -n "${containers_using_volume}" ]; then docker rm --force ${containers_using_volume}; fi
         done
         echo "- Removing project volumes"
-        if [ -n "${project_volumes}" ]; then docker volume rm --force ${project_volumes}; fi
+        if [ -n "${project_volumes}" ]; then docker volume rm ${project_volumes}; fi
 
         echo "- Removing remaining project containers"
         project_containers="$(docker ps --all --quiet --filter name=${project})"
@@ -497,14 +515,14 @@ case $run_command in
         echo "Removing cache volume ${yarn_cache_volume}"
         containers_using_volume=$(docker ps --quiet --all --filter "volume=${yarn_cache_volume}")
         if [ -n "${containers_using_volume}" ]; then docker rm --force ${containers_using_volume}; fi
-        docker volume rm --force ${yarn_cache_volume}
+        docker volume rm ${yarn_cache_volume}
 
         if [ -f manage.py ]; then
             # Clean pip cache volume
             echo "Removing cache volume ${pip_cache_volume}"
             containers_using_volume=$(docker ps --quiet --all --filter "volume=${pip_cache_volume}")
             if [ -n "${containers_using_volume}" ]; then docker rm --force ${containers_using_volume}; fi
-            docker volume rm --force ${pip_cache_volume}
+            docker volume rm ${pip_cache_volume}
         fi
     ;;
     "python")
