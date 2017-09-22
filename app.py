@@ -65,6 +65,11 @@ def page_not_found(error):
     ), 404
 
 
+@app.route('/')
+def homepage():
+    return flask.render_template('index.html')
+
+
 @app.route('/<snap_name>/')
 def snap_details(snap_name):
     """
