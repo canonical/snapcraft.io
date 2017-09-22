@@ -9,10 +9,10 @@ class WebAppTestCase(unittest.TestCase):
         self.app = app.app.test_client()
         self.app.testing = True
 
-    def test_no_homepage(self):
+    def test_homepage(self):
         response = self.app.get('/')
-        assert response.status_code == 404
-        assert "Page not found" in str(response.data)
+        assert response.status_code == 200
+        assert "Ubuntu and Canonical are registered" in str(response.data)
 
     def test_redirect_to_add_slash(self):
         response = self.app.get('/canonical-livepatch')
