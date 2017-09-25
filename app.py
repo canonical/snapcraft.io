@@ -53,6 +53,8 @@ metrics_query_headers = {
 }
 
 
+# Error handlers
+# ===
 @app.errorhandler(404)
 def page_not_found(error):
     """
@@ -65,6 +67,21 @@ def page_not_found(error):
     ), 404
 
 
+# Redirects
+# ===
+@app.route('/docs/', defaults={'path': ''})
+@app.route('/docs/<path:path>')
+def docs_redirect(path):
+    return flask.redirect('https://docs.snapcraft.io/' + path)
+
+
+@app.route('/community/')
+def community_redirect():
+    return flask.redirect('/')
+
+
+# Normal views
+# ===
 @app.route('/')
 def homepage():
     return flask.render_template('index.html')
