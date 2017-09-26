@@ -100,7 +100,7 @@ else
     echo $project > .docker-project
 fi
 
-# Volume names 
+# Volume names
 cache_volume="${CANONICAL_WEBTEAM_CACHE_VOLUME:-canonical-webteam-cache}"
 etc_volume="${project}-etc"
 usr_local_volume="${project}-usr-local"
@@ -156,7 +156,7 @@ kill_container () {
 
 docker_run () {
     # Get options
-    extra_options="${1}"; shift
+    docker_run_options="${1}"; shift
 
     # Generate container name from command
     container_name="${project}-${@}"
@@ -178,12 +178,12 @@ docker_run () {
         ${env_file}                  `# Pass environment variables into the container, if file exists`  \
         ${http_proxy}                `# Include HTTP proxy if needed`  \
         ${tty}                       `# Attach a pseudo-terminal, if relevant`  \
-        ${extra_options}             `# Extra options`  \
+        ${docker_run_options}        `# Extra options`  \
         ${dev_image} $@              `# Run command in the image`
 }
 
 run_as_user () {
-    extra_options="${1}"; shift
+    run_as_user_options="${1}"; shift
 
     # Create local user and group in the dev image
     uid=$(id -u)
@@ -191,20 +191,20 @@ run_as_user () {
 
     if ! docker volume inspect ${etc_volume} &> /dev/null; then
         etc_run="docker run --rm --volume ${etc_volume}:/etc ${dev_image}"
-        if ! ${etc_run} grep -P '${gid}:$' /etc/group &> /dev/null; then
+        if ! ${etc_run} grep -P "${gid}:$" /etc/group &> /dev/null; then
             ${etc_run} groupadd -g ${gid} app-user
         fi
 
-        if ! ${etc_run} grep -P 'x:${uid}:' /etc/passwd &> /dev/null; then
+        if ! ${etc_run} grep -P "x:${uid}:" /etc/passwd &> /dev/null; then
             ${etc_run} useradd -u ${uid} -g ${gid} app-user
         fi
     fi
 
-    docker_run "--user $(id -u):$(id -g) ${extra_options}" $@
+    docker_run "--user $(id -u):$(id -g) ${run_as_user_options}" $@
 }
 
 python_run () {
-    extra_options="${1}"; shift
+    python_run_options="${1}"; shift
 
     # Update dependencies if required
     if [ -f requirements.txt ]; then
@@ -226,10 +226,10 @@ python_run () {
         if ! docker network inspect ${network_name} &> /dev/null; then
             docker network create ${network_name}
         fi
-        extra_options="${extra_options} --network ${network_name}"
+        python_run_options="${python_run_options} --network ${network_name}"
 
         # Start the database
-        if [[ "${extra_options}" != *"--detach"* ]]; then trap "kill_container ${project}-db" EXIT; fi
+        if [[ "${python_run_options}" != *"--detach"* ]]; then trap "kill_container ${project}-db" EXIT; fi
         if ! docker inspect -f {{.State.Running}} ${db_container} &>/dev/null; then
             docker run \
                 --name ${db_container}       `# Name the container`  \
@@ -258,7 +258,7 @@ python_run () {
     fi
 
     # Run the command in the python docker image
-    run_as_user "--env ${debug} ${extra_options}" $@
+    run_as_user "--env ${debug} ${python_run_options}" $@
 }
 
 # Find current run command
