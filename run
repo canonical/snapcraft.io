@@ -42,7 +42,7 @@ Commands
 ##
 
 # Define docker images versions
-dev_image="canonicalwebteam/dev:332ff57f863d61a872965569014964cf67bcd0dc"
+dev_image="canonicalwebteam/dev:v1.0.0"
 if [ -n "${DOCKER_REGISTRY:-}" ]; then
     dev_image="${DOCKER_REGISTRY}/${dev_image}"
 fi
@@ -189,13 +189,13 @@ run_as_user () {
     uid=$(id -u)
     gid=$(id -g)
 
-    if ! docker volume inspect ${etc_volume} &> /dev/null; then
+    if ! docker volume inspect -f "Volume exists: {{.Name}}" ${etc_volume} 2> /dev/null; then
         etc_run="docker run --rm --volume ${etc_volume}:/etc ${dev_image}"
-        if ! ${etc_run} grep -P "${gid}:$" /etc/group &> /dev/null; then
+        if ! ${etc_run} grep -P "${gid}:$" /etc/group; then
             ${etc_run} groupadd -g ${gid} app-user
         fi
 
-        if ! ${etc_run} grep -P "x:${uid}:" /etc/passwd &> /dev/null; then
+        if ! ${etc_run} grep -P "x:${uid}:" /etc/passwd; then
             ${etc_run} useradd -u ${uid} -g ${gid} app-user
         fi
     fi
