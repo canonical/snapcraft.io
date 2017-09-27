@@ -1,20 +1,8 @@
 !(function(window, document, d3) {
   var data = [];
 
-  // TODO: get data from template
-  var snapData = {
-    GB: 0.08566666666666665,
-    IN: 0.08318181818181819,
-    DE: 0.18,
-    BR: 0.0775,
-    CA: 0.08566666666666665,
-    FR: 0.17533333333333337,
-    IT: 0.09125000000000001,
-    NZ: 0.1410526315789474,
-    US: 0.4686206896551723,
-    RS: 0.08636363636363636,
-    CH: 0.08464285714285713
-  }
+  // TODO: get data via params rather then global variable
+  var snapData = SNAP_DETAILS_MAP_DATA || {};
 
   // TODO: move colors to CSS
   var colors = [
@@ -22,7 +10,8 @@
     '#9fc5e8',
     '#6fa8dc',
     '#3d85c6',
-    '#0b5394'
+    '#0b5394',
+    '#0b5394' // TODO: workaround for when value equals 1
   ];
 
   var width = 990;

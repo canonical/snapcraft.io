@@ -3,16 +3,7 @@
 {% block title %}{{ snap_title }} snap details{% endblock %}
 
 {% block content %}
-  <!-- Illustration of country data -->
-<!--
-  <table>
-    <tbody>
-      {% for country, percent in user_percentage_by_country.items() %}
-        <tr><th>{{ country }}</th><td>{{ percent }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
--->
+
 
   <div class="p-strip is-shallow is-bordered">
     <div class="row">
@@ -68,7 +59,7 @@
             <div id="tip-message" class="tooltip__message">Tip</div>
           </div>
 
-          <div id="canvas-svg"></div>
+          <div id="canvas-svg" class="u-no-margin"></div>
         </div>
 
         </div>
@@ -79,6 +70,11 @@
   {# TODO: CDN or host them ourselves (?) #}
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v3.min.js"></script>
+  <!-- Illustration of country data -->
+  {# TODO: pass data to JS function rather then rely on global variable #}
+  <script>
+    var SNAP_DETAILS_MAP_DATA = {{ user_percentage_by_country|tojson }}
+  </script>
   <script src="/static/js/snap-details-map.js"></script>
 
   {% if api_error %}
