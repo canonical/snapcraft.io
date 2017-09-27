@@ -18,6 +18,6 @@ ADD . .
 RUN pip3 install -r requirements.txt
 
 # Setup commands to run server
-ENTRYPOINT ["gunicorn", "app:app", "-b"]
+ENTRYPOINT ["gunicorn", "app:app", "--access-logfile", "-", "--error-logfile", "-", "--bind"]
 CMD ["0.0.0.0:80"]
 
