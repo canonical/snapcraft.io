@@ -1,0 +1,81 @@
+@mixin snap-details-map {
+
+  .land {
+    fill: #222;
+  }
+
+  .boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1px;
+  }
+
+  .map {
+    position: relative;
+    border: 1px solid #cdcdcd;
+    border-radius: 2px;
+  }
+
+  .map svg {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  #tip {
+    position: absolute;
+    pointer-events: none;
+    top: -1000px;
+    left: -1000px;
+  }
+
+  .tooltip__message {
+    background: #fff;
+    border-radius: 2px;
+    color: #111;
+    padding: 1.25rem;
+
+    box-shadow: 0 1px 5px 1px hsla(0,0%,7%,.2);
+
+    background-color: #111;
+    border: 0;
+    color: #fff;
+    font-size: .875rem;
+    left: 0;
+    line-height: 1.5;
+    max-width: 330px;
+    min-width: 155px;
+    padding: .5rem .75rem;
+    position: absolute;
+    text-align: left;
+    text-decoration: initial;
+    top: 100%;
+    -webkit-transform: translateX(0) translateY(13px);
+    transform: translateX(0) translateY(13px);
+    white-space: pre;
+    z-index: 1;
+
+    bottom: inherit;
+    left: 50%;
+    top: 100%;
+    -webkit-transform: translateX(-50%) translateY(8px);
+    transform: translateX(-50%) translateY(8px);
+  }
+
+  .tooltip__message:before {
+    border-bottom: 8px solid #111;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    bottom: 100%;
+    content: "";
+    height: 0;
+    left: .75rem;
+    pointer-events: none;
+    position: absolute;
+    width: 0;
+
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+
+}

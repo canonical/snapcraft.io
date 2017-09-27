@@ -55,7 +55,32 @@
         </table>
       </div>
     </div>
+    <div class="row" style="margin-top: 2rem">
+      <div class="col-12">
+        <h4>Where people are using {{ snap_title }}</h4>
+        {# TODO: vanilla-compatible class names #}
+        <div class="map">
+
+          {# TODO: vanilla-compatible class names #}
+          {# TODO: reusable vanilla tooltip pattern (or contextual menu) #}
+          {# TODO: remove html ids(?) #}
+          <div id="tip">
+            <div id="tip-message" class="tooltip__message">Tip</div>
+          </div>
+
+          <div id="canvas-svg"></div>
+        </div>
+
+        </div>
+      </div>
+    </div>
   </div>
+  {# TODO: move scripts to layout (?) #}
+  {# TODO: CDN or host them ourselves (?) #}
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/topojson.v3.min.js"></script>
+  <script src="/static/js/snap-details-map.js"></script>
+
   {% if api_error %}
   <div class="row">
     <div class="col-12">
