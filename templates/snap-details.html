@@ -72,10 +72,10 @@
   <script src="https://d3js.org/topojson.v3.min.js"></script>
   <!-- Illustration of country data -->
   {# TODO: pass data to JS function rather then rely on global variable #}
-  <script>
-    var SNAP_DETAILS_MAP_DATA = {{ user_percentage_by_country|tojson }}
-  </script>
   <script src="/static/js/snap-details-map.js"></script>
+  <script>
+    renderMap('#canvas-svg', {{ user_percentage_by_country|tojson }});
+  </script>
 
   {% if api_error %}
   <div class="row">
