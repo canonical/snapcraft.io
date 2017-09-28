@@ -1,81 +1,69 @@
 @mixin snap-details-map {
 
-  .land {
-    fill: #222;
+  .country {
+    fill: $color-light;
   }
 
   .boundary {
     fill: none;
-    stroke: #fff;
+    stroke: $color-x-light;
     stroke-width: 1px;
   }
 
   .map {
-    position: relative;
-    border: 1px solid #cdcdcd;
+    border: 1px solid $color-mid-light;
     border-radius: 2px;
+    position: relative;
   }
 
   .map svg {
-    max-width: 100%;
     margin: 0;
+    max-width: 100%;
   }
 
-  #tip {
+  .tooltip {
+    display: none;
+    pointer-events: none; // little hack to make sure tooltip doesn't dissapear when it's hovered
     position: absolute;
-    pointer-events: none;
-    top: -1000px;
-    left: -1000px;
   }
 
+  // TODO: duplicated from Vanilla
   .tooltip__message {
-    background: #fff;
-    border-radius: 2px;
-    color: #111;
-    padding: 1.25rem;
-
-    box-shadow: 0 1px 5px 1px hsla(0,0%,7%,.2);
-
-    background-color: #111;
+    background-color: $color-dark;
     border: 0;
-    color: #fff;
+    border-radius: 2px;
+    bottom: inherit;
+    box-shadow: 0 1px 5px 1px transparentize($color-dark, .8);
+    color: $color-x-light;
     font-size: .875rem;
-    left: 0;
+    left: 50%;
     line-height: 1.5;
     max-width: 330px;
     min-width: 155px;
-    padding: .5rem .75rem;
+    padding: $sp-x-small $sp-small;
     position: absolute;
     text-align: left;
     text-decoration: initial;
     top: 100%;
-    -webkit-transform: translateX(0) translateY(13px);
-    transform: translateX(0) translateY(13px);
+    transform: translateX(-50%) translateY(8px);
     white-space: pre;
     z-index: 1;
-
-    bottom: inherit;
-    left: 50%;
-    top: 100%;
-    -webkit-transform: translateX(-50%) translateY(8px);
-    transform: translateX(-50%) translateY(8px);
   }
 
-  .tooltip__message:before {
-    border-bottom: 8px solid #111;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
+  .tooltip__message::before {
+    border: {
+      bottom: 8px solid $color-dark;
+      left: 8px solid transparent;
+      right: 8px solid transparent;
+    }
     bottom: 100%;
-    content: "";
+    content: '';
     height: 0;
-    left: .75rem;
+    left: 50%;
     pointer-events: none;
     position: absolute;
-    width: 0;
-
-    left: 50%;
-    -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
+    width: 0;
   }
 
 }

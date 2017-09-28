@@ -1,11 +1,9 @@
-/* global d3, topojson, SNAP_DETAILS_MAP_DATA */
+/* global d3, topojson */
 
 !(function(window, document, d3) {
   function renderMap(el, data) {
 
-
-    // TODO: get data via params rather then global variable
-    var snapData = data; // TODO SNAP_DETAILS_MAP_DATA || {};
+    var snapData = data;
 
     // TODO: move colors to CSS
     var colors = [
@@ -78,8 +76,6 @@
             var color = colors[colorId];
             return color;
           }
-
-          return "#f4f4f4";
         })
         .on("mouseenter", function(d) {
           var pos = path.centroid(d);
@@ -92,12 +88,12 @@
             // TODO: create 'tip' in JS, avoid getting it from HTML by id
             document.getElementById('tip').style.top = (pos[1]) + 'px';
             document.getElementById('tip').style.left = (pos[0]) + 'px';
+            document.getElementById('tip').style.display = 'block';
             document.getElementById("tip-message").innerHTML = cData.name;
           }
         })
         .on("mouseout", function() {
-          document.getElementById('tip').style.top = -1000 + 'px';
-          document.getElementById('tip').style.left = -1000 + 'px';
+          document.getElementById('tip').style.display = 'none';
         });
 
       g.append("path")
