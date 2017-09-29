@@ -13,6 +13,8 @@ import re
 import bleach
 import urllib
 import pycountry
+import os
+import socket
 from dateutil import parser, relativedelta
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -66,6 +68,15 @@ def page_not_found(error):
     return flask.render_template(
         '404.html', description=error.description
     ), 404
+
+
+# Global tasks for all requests
+# ===
+@app.after_request
+def apply_caching(response):
+    response.headers["X-Commit-ID"] = os.getenv('COMMIT_ID')
+    response.headers["X-Hostname"] = socket.gethostname()
+    return response
 
 
 # Redirects
