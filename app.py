@@ -204,6 +204,7 @@ def snap_details(snap_name):
         'icon_url': details['icon_url'],
         'version': details['version'],
         'revision': details['revision'],
+        'license': details['license'],
         'publisher': details['publisher'],
         'screenshot_urls': details['screenshot_urls'],
         'prices': details['prices'],
