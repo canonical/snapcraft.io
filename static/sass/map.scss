@@ -1,12 +1,39 @@
 @mixin snap-details-map {
+  $color-country-default: $color-light;
+  $color-country-scale-0: #cfe2f3;
+  $color-country-scale-1: #9fc5e8;
+  $color-country-scale-2: #6fa8dc;
+  $color-country-scale-3: #3d85c6;
+  $color-country-scale-4: #0b5394;
+  $color-country-boundary: $color-x-light;
 
   .country {
-    fill: $color-light;
+    fill: $color-country-default;
+
+    &--scale-0 {
+      fill: $color-country-scale-0;
+    }
+
+    &--scale-1 {
+      fill: $color-country-scale-1;
+    }
+
+    &--scale-2 {
+      fill: $color-country-scale-2;
+    }
+
+    &--scale-3 {
+      fill: $color-country-scale-3;
+    }
+
+    &--scale-4 {
+      fill: $color-country-scale-4;
+    }
   }
 
   .boundary {
     fill: none;
-    stroke: $color-x-light;
+    stroke: $color-country-boundary;
     stroke-width: 1px;
   }
 

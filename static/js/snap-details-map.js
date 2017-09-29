@@ -1,20 +1,7 @@
 /* global d3, topojson */
 
 !(function(window, document, d3) {
-  function renderMap(el, data) {
-
-    var snapData = data;
-
-    // TODO: move colors to CSS
-    var colors = [
-      '#cfe2f3',
-      '#9fc5e8',
-      '#6fa8dc',
-      '#3d85c6',
-      '#0b5394',
-      '#0b5394' // TODO: workaround for when value equals 1
-    ];
-
+  function renderMap(el, snapData) {
     var width = 988; // 990 - 1px borders
     var height = width / 2;
 
@@ -56,22 +43,26 @@
       var country = g.selectAll(".country").data(countries);
 
       country.enter().insert("path")
-        .attr("class", "country")
+        .attr("class", function(countryData) {
+          var className = "country";
+
+          var countrySnapData = snapData[countryData.id];
+
+          if (countrySnapData) {
+            var colorId = ~~(countrySnapData.percentage_of_users * 5);
+            if (colorId > 4) { colorId = 4; } // so that 100% doesn't go out of scale
+
+            className = className + '--scale-' + colorId;
+          }
+
+          return className;
+        })
         .attr("d", path)
         .attr("id", function(d) {
           return d.id;
         })
         .attr("title", function(d) {
           return d.properties.name;
-        })
-        .style("fill", function(countryData) {
-          var countrySnapData = snapData[countryData.id];
-
-          if (countrySnapData) {
-            var colorId = ~~(countrySnapData.percentage_of_users * 5);
-            var color = colors[colorId];
-            return color;
-          }
         })
         .on("mouseenter", function(countryData) {
           var pos = path.centroid(countryData);
