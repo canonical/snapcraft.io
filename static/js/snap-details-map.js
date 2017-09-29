@@ -1,6 +1,6 @@
 /* global d3, topojson */
 
-!(function(window, document, d3) {
+!(function(window, document, d3, topojson) {
   function renderMap(el, snapData) {
     var width = 988; // 990 - 1px borders
     var height = width / 2;
@@ -24,6 +24,12 @@
       .datum(graticule)
       .attr("class", "graticule")
       .attr("d", path);
+
+    var tooltip = d3.select(el).append("div")
+      .attr("class", "map-tooltip u-no-margin");
+
+    var tooltipMsg = tooltip.append("div")
+      .attr("class", "p-tooltip__message");
 
     // TODO: host data files ourselves?
     d3.queue()
@@ -69,15 +75,15 @@
           var countrySnapData = snapData[countryData.id];
 
           if (countrySnapData) {
-            // TODO: create 'tip' in JS, avoid getting it from HTML by id
-            document.getElementById('tip').style.top = (pos[1]) + 'px';
-            document.getElementById('tip').style.left = (pos[0]) + 'px';
-            document.getElementById('tip').style.display = 'block';
-            document.getElementById("tip-message").innerHTML = countrySnapData.name;
+            tooltip
+              .style('top', pos[1] + 'px')
+              .style('left', pos[0] + 'px')
+              .style('display', 'block');
+            tooltipMsg.text(countrySnapData.name);
           }
         })
         .on("mouseout", function() {
-          document.getElementById('tip').style.display = 'none';
+          tooltip.style('display', 'none');
         });
 
       g.append("path")
@@ -96,4 +102,4 @@
 
   window.renderMap = renderMap;
 
-})(window, document, d3);
+})(window, document, d3, topojson);

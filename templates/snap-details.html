@@ -47,20 +47,7 @@
     <div class="row" style="margin-top: 2rem">
       <div class="col-12">
         <h4>Where people are using {{ snap_title }}</h4>
-        {# TODO: vanilla-compatible class names #}
-        <div class="map">
-
-          {# TODO: vanilla-compatible class names #}
-          {# TODO: reusable vanilla tooltip pattern (or contextual menu) #}
-          {# TODO: remove html ids(?) #}
-          <div id="tip" class="map-tooltip">
-            <div id="tip-message" class="p-tooltip__message">Tip</div>
-          </div>
-
-          <div id="canvas-svg" class="u-no-margin"></div>
-        </div>
-
-        </div>
+        <div id="js-snap-map" class="map"></div>
       </div>
     </div>
   </div>
@@ -72,7 +59,7 @@
   {# TODO: pass data to JS function rather then rely on global variable #}
   <script src="/static/js/snap-details-map.js"></script>
   <script>
-    renderMap('#canvas-svg', {{ user_percentage_by_country|tojson }});
+    renderMap('#js-snap-map', {{ user_percentage_by_country|tojson }});
   </script>
 
   {% if api_error %}
