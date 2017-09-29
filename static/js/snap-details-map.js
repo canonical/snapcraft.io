@@ -39,13 +39,11 @@
       .attr("d", path);
 
     // TODO: host data files ourselves?
-    // TODO: avoid getting tsv data file (mapping ids, names, etc)
     d3.queue()
       .defer(d3.json, "https://d3js.org/world-110m.v1.json")
-      .defer(d3.tsv, "https://d3js.org/world-110m.v1.tsv")
       .await(ready);
 
-    function ready(error, world, worldData) {
+    function ready(error, world) {
 
       var countries = topojson.feature(world, world.objects.countries).features;
 
@@ -66,30 +64,25 @@
         .attr("title", function(d) {
           return d.properties.name;
         })
-        .style("fill", function(d) {
-          var id = d.id;
-          var cData = worldData.filter(data => data.iso_n3 === id)[0];
-          var cSnapData = snapData[cData.iso_a2];
+        .style("fill", function(countryData) {
+          var countrySnapData = snapData[countryData.id];
 
-          if (cSnapData) {
-            var colorId = ~~(cSnapData * 5);
+          if (countrySnapData) {
+            var colorId = ~~(countrySnapData.percentage_of_users * 5);
             var color = colors[colorId];
             return color;
           }
         })
-        .on("mouseenter", function(d) {
-          var pos = path.centroid(d);
+        .on("mouseenter", function(countryData) {
+          var pos = path.centroid(countryData);
+          var countrySnapData = snapData[countryData.id];
 
-          var id = d.id;
-          var cData = worldData.filter(data => data.iso_n3 === id)[0];
-          var cSnapData = snapData[cData.iso_a2];
-
-          if (cSnapData) {
+          if (countrySnapData) {
             // TODO: create 'tip' in JS, avoid getting it from HTML by id
             document.getElementById('tip').style.top = (pos[1]) + 'px';
             document.getElementById('tip').style.left = (pos[0]) + 'px';
             document.getElementById('tip').style.display = 'block';
-            document.getElementById("tip-message").innerHTML = cData.name;
+            document.getElementById("tip-message").innerHTML = countrySnapData.name;
           }
         })
         .on("mouseout", function() {
