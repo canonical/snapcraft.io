@@ -31,9 +31,8 @@
     var tooltipMsg = tooltip.append("div")
       .attr("class", "p-tooltip__message");
 
-    // TODO: host data files ourselves?
     d3.queue()
-      .defer(d3.json, "https://d3js.org/world-110m.v1.json")
+      .defer(d3.json, "/static/js/world-110m.v1.json")
       .await(ready);
 
     function ready(error, world) {
