@@ -12,6 +12,7 @@ import humanize
 import re
 import bleach
 import urllib
+import pycountry
 from dateutil import parser, relativedelta
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -137,7 +138,24 @@ def snap_details(snap_name):
         percentages_with_nulls = country_percentages['values']
         percentages = [p for p in percentages_with_nulls if p is not None]
         average_percentage = sum(percentages) / len(percentages)
-        user_percentage_by_country[country_code] = average_percentage
+
+        try:
+            country_info = pycountry.countries.lookup(country_code)
+        except LookupError:
+            country_info = None
+
+        if country_info:
+            user_percentage_by_country[country_info.numeric] = {
+                'name': country_info.name,
+                'code': country_info.alpha_2,
+                'percentage_of_users': average_percentage
+            }
+        else:
+            user_percentage_by_country[country_code] = {
+                'name': None,
+                'code': None,
+                'percentage_of_users': average_percentage
+            }
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
