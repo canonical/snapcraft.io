@@ -51,16 +51,7 @@
       </div>
     </div>
   </div>
-  {# TODO: move scripts to layout (?) #}
-  <script src="/static/js/modules/d3.min.js"></script>
-  <script src="/static/js/modules/topojson-client.min.js"></script>
 
-  <!-- Illustration of country data -->
-  {# TODO: pass data to JS function rather then rely on global variable #}
-  <script src="/static/js/snap-details-map.js"></script>
-  <script>
-    renderMap('#js-snap-map', {{ user_percentage_by_country|tojson }});
-  </script>
 
   {% if api_error %}
   <div class="row">
@@ -73,4 +64,15 @@
     </div>
   </div>
   {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/modules/d3.min.js"></script>
+  <script src="/static/js/modules/topojson-client.min.js"></script>
+
+  <!-- Illustration of country data -->
+  <script src="/static/js/snap-details-map.js"></script>
+  <script>
+    renderMap('#js-snap-map', {{ user_percentage_by_country|tojson }});
+  </script>
 {% endblock %}
