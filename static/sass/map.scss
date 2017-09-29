@@ -13,12 +13,8 @@
   .map {
     border: 1px solid $color-mid-light;
     border-radius: 2px;
+    overflow: auto;
     position: relative;
-  }
-
-  .map svg {
-    margin: 0;
-    max-width: 100%;
   }
 
   .map-tooltip {

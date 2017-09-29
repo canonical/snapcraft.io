@@ -15,7 +15,7 @@
       '#0b5394' // TODO: workaround for when value equals 1
     ];
 
-    var width = 990;
+    var width = 988; // 990 - 1px borders
     var height = width / 2;
 
     var projection = d3.geoEquirectangular()
