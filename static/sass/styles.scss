@@ -1,6 +1,7 @@
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 @include vanilla-base;
+@include vf-p-card; // required by vf-p-tooltips
 @include vf-p-links;
 @include vf-p-lists;
 @include vf-p-grid;
@@ -12,6 +13,7 @@
 @include vf-p-navigation;
 @include vf-p-notification;
 @include vf-p-footer;
+@include vf-p-tooltips;
 @include vf-u-floats;
 @include vf-u-off-screen;
 @include vf-u-margin-collapse;

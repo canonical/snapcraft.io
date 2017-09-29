@@ -21,49 +21,15 @@
     max-width: 100%;
   }
 
-  .tooltip {
+  .map-tooltip {
+    @extend .p-tooltip--btm-center; // sass-lint:disable-line placeholder-in-extend
     display: none;
     pointer-events: none; // little hack to make sure tooltip doesn't dissapear when it's hovered
     position: absolute;
-  }
 
-  // TODO: duplicated from Vanilla
-  .tooltip__message {
-    background-color: $color-dark;
-    border: 0;
-    border-radius: 2px;
-    bottom: inherit;
-    box-shadow: 0 1px 5px 1px transparentize($color-dark, .8);
-    color: $color-x-light;
-    font-size: .875rem;
-    left: 50%;
-    line-height: 1.5;
-    max-width: 330px;
-    min-width: 155px;
-    padding: $sp-x-small $sp-small;
-    position: absolute;
-    text-align: left;
-    text-decoration: initial;
-    top: 100%;
-    transform: translateX(-50%) translateY(8px);
-    white-space: pre;
-    z-index: 1;
-  }
-
-  .tooltip__message::before {
-    border: {
-      bottom: 8px solid $color-dark;
-      left: 8px solid transparent;
-      right: 8px solid transparent;
+    // override display of tooltip message so it's not only shown on hover of parent element
+    .p-tooltip__message {
+      display: block;
     }
-    bottom: 100%;
-    content: '';
-    height: 0;
-    left: 50%;
-    pointer-events: none;
-    position: absolute;
-    transform: translateX(-50%);
-    width: 0;
   }
-
 }
