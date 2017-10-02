@@ -4,7 +4,7 @@
     "build": "yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output static/css && postcss --use autoprefixer --replace static/css/styles.css && postcss static/css/styles.css --use cssnano > static/css/styles.min.css",
     "build-js": "cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/topojson-client/dist/topojson-client.min.js static/js/modules",
-    "watch": "watch -p 'static/sass/*.scss' -c 'yarn run build'",
+    "watch": "watch -p 'static/sass/*.scss' -c 'yarn run build-css'",
     "clean": "rm -rf node_modules yarn-error.log static/css *.log *.sqlite _site/ build/ .jekyll-metadata"
   },
   "author": "Canonical webteam",
