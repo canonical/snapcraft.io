@@ -77,7 +77,7 @@ def docs_redirect(path):
 
 
 @app.route('/community/')
-def community_redirect():
+def create_redirect():
     return flask.redirect('/')
 
 
