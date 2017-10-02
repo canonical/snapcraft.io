@@ -77,12 +77,12 @@ def docs_redirect(path):
 
 
 @app.route('/community/')
-def create_redirect():
+def community_redirect():
     return flask.redirect('/')
 
 
 @app.route('/create/')
-def community_redirect():
+def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
