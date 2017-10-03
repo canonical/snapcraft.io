@@ -52,6 +52,36 @@
     // override display of tooltip message so it's not only shown on hover of parent element
     .p-tooltip__message {
       display: block;
+      min-width: auto;
+    }
+  }
+
+  .swatch {
+    border: 1px solid $color-x-light;
+    display: inline-block;
+    height: $sp-medium;
+    margin-right: $sp-x-small;
+    vertical-align: middle;
+    width: $sp-medium;
+
+    &--scale-0 {
+      background-color: $color-country-scale-0;
+    }
+
+    &--scale-1 {
+      background-color: $color-country-scale-1;
+    }
+
+    &--scale-2 {
+      background-color: $color-country-scale-2;
+    }
+
+    &--scale-3 {
+      background-color: $color-country-scale-3;
+    }
+
+    &--scale-4 {
+      background-color: $color-country-scale-4;
     }
   }
 }

@@ -76,13 +76,21 @@
         .on("mouseenter", function(countryData) {
           var pos = path.centroid(countryData);
           var countrySnapData = snapData[countryData.id];
+          var className = 'swatch';
 
           if (countrySnapData) {
+            var colorId = ~~(countrySnapData.percentage_of_users * 5);
+            if (colorId > 4) { colorId = 4; } // so that 100% doesn't go out of scale
+
+            className = className + '--scale-' + colorId;
+
             tooltip
               .style('top', pos[1] + 'px')
               .style('left', pos[0] + 'px')
               .style('display', 'block');
-            tooltipMsg.text(countrySnapData.name);
+            tooltipMsg.html(
+              '<span class="swatch '+ className + '"></span>' + countrySnapData.name
+            );
           }
         })
         .on("mouseout", function() {
