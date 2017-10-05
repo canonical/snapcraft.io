@@ -81,6 +81,11 @@ def community_redirect():
     return flask.redirect('/')
 
 
+@app.route('/create/')
+def create_redirect():
+    return flask.redirect('https://docs.snapcraft.io/build-snaps')
+
+
 # Normal views
 # ===
 @app.route('/')
