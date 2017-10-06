@@ -10,6 +10,7 @@ RUN pip3 install gunicorn
 
 # Set git commit ID
 ARG COMMIT_ID
+ENV COMMIT_ID=${COMMIT_ID}
 RUN test -n "${COMMIT_ID}"
 
 # Import code, install code dependencies
