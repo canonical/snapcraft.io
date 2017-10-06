@@ -13,6 +13,8 @@ import re
 import bleach
 import urllib
 import pycountry
+import os
+import socket
 from dateutil import parser, relativedelta
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -68,6 +70,15 @@ def page_not_found(error):
     ), 404
 
 
+# Global tasks for all requests
+# ===
+@app.after_request
+def apply_caching(response):
+    response.headers["X-Commit-ID"] = os.getenv('COMMIT_ID')
+    response.headers["X-Hostname"] = socket.gethostname()
+    return response
+
+
 # Redirects
 # ===
 @app.route('/docs/', defaults={'path': ''})
@@ -79,6 +90,11 @@ def docs_redirect(path):
 @app.route('/community/')
 def community_redirect():
     return flask.redirect('/')
+
+
+@app.route('/create/')
+def create_redirect():
+    return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
 # Normal views
