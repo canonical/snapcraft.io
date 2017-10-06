@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>snapcraft - Snaps are universal Linux packages</title>
+
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-K92JCQ');</script>
+        <!-- End Google Tag Manager -->
+
+        <script>
+        /* HTML5 element support */
+        for(var e,l='article aside footer header nav section time'.split(' ');e=l.pop();document.createElement(e));
+        </script>
+
+        <meta name="description" content="Introducing snaps and commands to install and remove them on Ubuntu 16.04 LTS.">
+
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://assets.ubuntu.com/v1/3361409d-apple-touch-icon-144x144-precomposed.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://assets.ubuntu.com/v1/5fe4d3c8-apple-touch-icon-114x114-precomposed.png" />
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://assets.ubuntu.com/v1/09460d9a-apple-touch-icon-72x72-precomposed.png" />
+        <link rel="apple-touch-icon-precomposed" href="https://assets.ubuntu.com/v1/cc66da65-apple-touch-icon-precomposed.png" />
+
+        <link rel="stylesheet" href="/static/css/index.css">
+    </head>
+
+    <body class="">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K92JCQ"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+
+        <header class="banner global" role="banner">
+            <nav role="navigation" class="nav-primary" id="nav-primary">
+                <span class="accessibility-aid">
+                    <a href="#main-content">Jump to main content</a>
+                </span>
+                <div class="logo">
+                    <a href="/">
+                        <img src="https://assets.ubuntu.com/v1/d45097a4-snapcraft.io-logotype.svg" alt="Snapcraft.io">
+                    </a>
+                </div>
+                <div id="nav">
+                    <div class="nav-toggle">
+                        <a href="#nav" class="nav-toggle__link open"></a>
+                        <a href="#" class="nav-toggle__link close"></a>
+                    </div>
+
+                    <ul>
+                        <li><a href="https://build.snapcraft.io">Build</a></li>
+                        <li ><a href="/docs">Docs</a></li>
+                        <li><a class="external" href="https://tutorials.ubuntu.com">Tutorials</a></li>
+                        <li><a class="external" href="https://forum.snapcraft.io/">Forum</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <div class="page-content">
+        <section class="row hero-row no-border">
+        <div class="wrapper">
+            <div class="eight-col">
+                <h1 id="snapcraft_home_banner" class="accessibility-aid">Snapcraft</h1>
+                <p class="intro">Package any app for every Linux desktop,
+                server, cloud or device, and deliver updates directly.</p>
+                <p>
+                  <a href="https://tutorials.ubuntu.com/tutorial/create-your-first-snap"><button class="p-button--primary" style="margin-right: 0.75rem; margin-bottom: 0.75rem;">Learn to craft your first snap</button></a> or <a href="https://build.snapcraft.io" class="external">Auto-build and publish from your GitHub repos</a>
+                </p>
+            </div>
+            <div class="twelve-col">
+                <ul class="inline-logos equal-height">
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-ubuntu"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/c086ad34-logo-ubuntu_st_no-black_orange-hex.svg" alt="Ubuntu" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-arch-linux"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/e0b23092-archlinux.svg" alt="Arch Linux" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-debian"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/2eafb62e-openlogo.svg" alt="Debian" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-gentoo"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/b6fa25ef-Gentoo-trans02.png" alt="Gentoo" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-fedora"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/1a53bedd-fedora.svg" alt="Fedora" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-opensuse"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/06469a26-official-logo-color.svg" alt="openSUSE" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-oe-yocto"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/d243274d-openembedded-logo.svg" alt="OpenEmbedded" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-oe-yocto"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/d9a1a359-yocto-project-transp.png" alt="Yocto Project" />
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-openwrt"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/d4981274-Openwrt_Logo.svg" alt="OpenWrt" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-solus"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/5cb36534-Solus_With_Text.png" alt="Solus" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-linux-mint"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/2c267fde-linux-mint.svg" alt="Linux Mint" /></a>
+                    </li>
+                    <li class="inline-logos__item box">
+                        <a href="/docs/core/install-manjaro"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/1669f9dd-manjaro.png" alt="Manjaro" /></a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </section>
+    <section id="snapcraft_home_install" class="row hero-row no-border row-grey">
+        <div class="wrapper">
+            <div class="twelve-col">
+                <div class="equal-height--vertical-divider">
+                  <div class="equal-height--vertical-divider__item four-col">
+                      <h3>Quick to install</h3>
+                      <p>Snaps are quick to install, easy to create, safe to run, and they
+                      update automatically and transactionally so your app is always fresh and
+                      never broken.</p>
+                      <p><a href="/docs/core/install">Install snapd&nbsp;&rsaquo;</a></p>
+                  </div>
+                  <div class="equal-height--vertical-divider__item four-col">
+                      <h3>Work anywhere</h3>
+                      <p>Snaps aim to work on any distribution or device, from IoT devices to
+                      servers, desktops to mobile devices.</p>
+                      <p><a href="https://github.com/snapcore/snapd" class="external">Build snapd from source</a></p>
+                  </div>
+                  <div class="equal-height--vertical-divider__item four-col last-col">
+                      <h3>GitHub and beyond</h3>
+                      <p>The public collection of snaps includes the best of GitHub and beyond,
+                      so you have the whole world of Linux at your fingertips.</p>
+                      <p><a href="https://build.snapcraft.io" class="external">Build a snap from GitHub</a></p>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="snapcraft_home_featured-snaps" class="row">
+        <div class="wrapper">
+            <div class="seven-col">
+                <h2>Featured snaps</h2>
+            </div>
+
+            <ul class="grid-list twelve-col no-bullets no-margin-bottom equal-height">
+                <li class="equal-height__align-vertically grid-list__item four-col">
+                    <div class="one-col ">
+                        <a href="/atom"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/2ca6d139-atom.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/atom">Atom</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col">
+                    <div class="one-col ">
+                        <a href="/brackets"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/13929d8e-brackets.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/brackets">Brackets</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col last-col">
+                    <div class="one-col ">
+                        <img class="grid-list__img" src="https://assets.ubuntu.com/v1/3f07652c-brave.png" alt="icon">
+                    </div>
+                    <div class="three-col last-col">
+                        <h3>Brave</h3>
+                    </div>
+                </li>
+
+                <li class="equal-height__align-vertically grid-list__item four-col">
+                    <div class="one-col ">
+                        <img class="grid-list__img" src="https://assets.ubuntu.com/v1/2863cbf1-code.png" alt="icon">
+                    </div>
+                    <div class="three-col last-col">
+                        <h3>Visual Studio Code</h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col">
+                    <div class="one-col ">
+                        <a href="/discord"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/4eca1f4e-discord.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/discord">Discord</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col last-col">
+                    <div class="one-col ">
+                        <img class="grid-list__img" src="https://assets.ubuntu.com/v1/58652d89-gogland.png" alt="icon">
+                    </div>
+                    <div class="three-col last-col">
+                        <h3>Gogland</h3>
+                    </div>
+                </li>
+
+                <li class="equal-height__align-vertically grid-list__item four-col">
+                    <div class="one-col ">
+                        <a href="/go"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/8f0cd431-golang.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/go">Golang</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col">
+                    <div class="one-col ">
+                        <a href="/heroku"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/86bae242-heroku.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/heroku">Heroku</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col last-col">
+                    <div class="one-col ">
+                        <a href="/hiri"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/f4b790e9-hiri.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/hiri">Hiri</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col last-row">
+                    <div class="one-col ">
+                        <img class="grid-list__img" src="https://assets.ubuntu.com/v1/8a19c654-pycharm.png" alt="icon">
+                    </div>
+                    <div class="three-col last-col">
+                        <h3>PyCharm</h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col last-row">
+                    <div class="one-col ">
+                        <a href="/teleconsole"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/a01512ec-teleconsole.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/teleconsole">Teleconsole</a></h3>
+                    </div>
+                </li>
+                <li class="equal-height__align-vertically grid-list__item four-col last-col last-row">
+                    <div class="one-col ">
+                        <a href="/wavebox"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/edab8e40-wavebox.png" alt="icon"></a>
+                    </div>
+                    <div class="three-col last-col">
+                        <h3><a href="/wavebox">Wavebox</a></h3>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="snapcraft_home_how-snaps-work" class="row">
+        <div class="wrapper">
+            <div class="eight-col">
+                <h2>How do snaps work?</h2>
+                <p>A snap is a fancy zip file containing an application together
+                with its dependencies, and a description of how it should safely
+                run on your system, especially the different ways it should
+                talk to other software.</p>
+                <p>Snaps are designed to be secure, sandboxed,
+                containerised applications isolated from the underlying system
+                and from other applications. Snaps allow the safe installation
+                of apps from any vendor on mission critical devices and desktops.</p>
+
+                <p>Try this: (you may need to <a href="/docs/core/install">install snapd</a>)</p>
+
+                <pre class="command-line code-block">
+<code>$ sudo snap install hello-world</code></pre>
+
+                <p>Now you have installed a snap. You can take a look inside the
+                snap, since it is a new directory on your system:</p>
+
+                <pre class="command-line code-block">
+<code>$ cd /snap/hello-world/current/
+
+$ tree
+.
+├── <span class="directory-highlight">bin</span>                 ← this directory structure is just for convenience
+│   ├── <span class="bin-highlight">echo</span>              there is no hardcoded structure requirement other
+│   ├── <span class="bin-highlight">env</span>               than meta/snap.yaml
+│   ├── <span class="bin-highlight">evil</span>
+│   ├── <span class="bin-highlight">sh</span>
+│   ├── <span class="bin-highlight">showdev</span>
+│   └── <span class="bin-highlight">usehw</span>
+└── <span class="directory-highlight">meta</span>                ← your snap must have this directory
+    ├── <span class="image-highlight">icon.png</span>
+    └── snap.yaml       ← this is the required metadata</code></pre>
+
+                <p>So to create a snap, just put all the files you need
+                into a directory, use whatever subdirectory structure you want. That
+                directory will be compressed into a <dfn>squashfs</dfn> — a zipped directory —
+                which will be mounted at
+                <code class="command-inline">/snap/&lt;name&gt;/current</code> when
+                the snap is installed. Your snap apps will know where they are mounted
+                because that is provided as the
+                <code class="command-inline">$SNAP</code> environment variable
+                when they are run.</p>
+
+                <p>The only requirement of a snap structure is that it
+                contains a file called <code class="command-inline">meta/snap.yaml</code>, which describes security requirements
+                and how the snap should integrate with other parts of the system.
+                Let’s take a look at that <code class="command-inline">snap.yaml</code>
+                for the <code class="command-inline">hello-world</code> snap:</p>
+
+                <pre class="command-line code-block">
+<code>$ cat meta/snap.yaml
+<span class="key-highlight">name:</span> hello-world
+<span class="key-highlight">version:</span> 6.1
+<span class="key-highlight">architectures:</span> [ all ]
+<span class="key-highlight">summary:</span> <span class="string-highlight">"The 'hello-world' of snaps"</span>
+<span class="key-highlight">description:</span> <span class="string-highlight">|
+    This is a simple snap example that includes a few interesting binaries
+    to demonstrate snaps and their confinement.
+    * hello-world.env  - dump the env of commands run inside app sandbox
+    * hello-world.evil - show how snappy sandboxes binaries
+    * hello-world.sh   - enter interactive shell that runs in app sandbox
+    * hello-world      - simply output text</span>
+<span class="key-highlight">apps:</span>
+  <span class="key-l2-highlight">env:</span>
+    <span class="key-l3-highlight">command:</span> bin/env
+  <span class="key-l2-highlight">evil:</span>
+    <span class="key-l3-highlight">command:</span> bin/evil
+  <span class="key-l2-highlight">sh:</span>
+    <span class="key-l3-highlight">command:</span> bin/sh
+  <span class="key-l2-highlight">hello-world:</span>
+    <span class="key-l3-highlight">command:</span> bin/echo</code></pre>
+
+                <p>The initial metadata describes the snap. The <code class="command-inline">version</code> is purely for humans; the snap system
+                won’t ever treat it as special or try to compare versions
+                between snaps.</p>
+
+                <p>Next is a list of “apps” provided by this snap. Each app
+                is explicitly named (“<code class="command-inline">env</code>”, “<code class="command-inline">evil</code>”, ‘<code class="command-inline">sh</code>”, and “<code class="command-inline">hello-world</code>”) and each
+                gets a distinctive command, which is path relative to <code class="command-inline">$SNAP</code>. The name
+                of the app doesn’t have to match the command.</p>
+                <p>The special app here is “<code class="command-inline">hello-world</code>”, because it has the same name
+                as the snap itself. This makes it the default app in the snap, so you can run
+                it just by typing “<code class="command-inline">hello-world</code>” after the snap is installed. The others
+                need to be namespaced, so “<code class="command-inline">hello-world.evil</code>” will execute the <code class="command-inline">bin/evil</code>
+                command in the snap.</p>
+                <p>A snap can declare daemons to be started as well. This one just
+                describes some apps.</p>
+            </div>
+
+            <div class="four-col last-col">
+                <ul class="inline-logos">
+                    <li class="inline-logos__item">
+                        <img class="inline-logos__image" src="https://assets.ubuntu.com/v1/c24cb4b9-logo-intel.svg" alt="intel" />
+                    </li>
+                    <li class="inline-logos__item">
+                        <img class="inline-logos__image" src="https://assets.ubuntu.com/v1/b5352dc1-logo-arm.svg" alt="arm" />
+                    </li>
+                    <li class="inline-logos__item">
+                        <img class="inline-logos__image" src="https://assets.ubuntu.com/v1/47e40767-power8.png" alt="power8" />
+                    </li>
+                </ul>
+            </div>
+
+            <div id="snapcraft_home_how-snaps-work_read-only" class="eight-col">
+                <h3>Snaps are read-only and have segregated data stores</h3>
+                <p>Snaps are read-only for security. The aim is to prevent a hostile
+                party from sneakily changing the software on your machine, so you
+                cannot modify a snap that is installed on your system. This also
+                means you can always check the signature on the snap, even long
+                after you installed it, to make sure it is still exactly the
+                software you intended. If you want to modify a snap, you can
+                usually build your own version of it, especially if it is open
+                source.</p>
+                <p>So where can a snap write data? Each snap gets its own set of
+                writable directories which have specific properties. There are
+                two directories which the snap can write to independent of the
+                user. One of these is versioned: each time the snap is upgraded
+                the data is saved and the new snap revision can upgrade its copy.
+                The other common data directory is not versioned, and is used
+                for big blobs of data that you don’t want to duplicate across
+                revisions of the snap:</p>
+
+                <pre class="command-line code-block">
+<code>/var/snap/&lt;name&gt;/current/  ← $SNAP_DATA is the versioned snap data directory
+/var/snap/&lt;name&gt;/common/   ← $SNAP_COMMON will not be versioned on upgrades</code></pre>
+
+                <p>Typically, configuration is stored in one of these, along with
+                system-wide data for the snap.</p>
+
+                <p>There are an equivalent two writable directories for each
+                snap in the user’s home directory, which can be used to store snap data
+                specific to that user:</p>
+
+                <pre class="command-line code-block">
+<code>~/snap/&lt;name&gt;/current/      ← $SNAP_USER_DATA that can be rolled back
+~/snap/&lt;name&gt;/common/       ← $SNAP_USER_COMMON unversioned user-specific data</code></pre>
+
+                <p>This way applications can be immutable for security reasons,
+               while still offering a full and rich user experience. To learn
+               more about the makeup of a snap please see the
+               <a href="/docs/snaps/structure">snap
+               architecture article.</a></p>
+            </div>
+
+            <div id="snapcraft_home_how-snaps-work_integration" class="eight-col">
+                <h3>Snap integration with interfaces, plugs and slots</h3>
+                <p> Snaps are safely confined in their separate sandboxes by
+                sophisticated kernel security mechanisms. That means that snaps
+                can’t peek at your data — other than the data you give
+                them — if they are compromised or malicious. But what if you need your snap
+                to talk to another snap? For example, what if your snap needs to
+                talk to a database?</p>
+                <p>It can use “interfaces” — standard and well-defined ways to
+                provide and consume services from one another. Snaps can offer
+                “slots” to provide services, and declare “plugs” that connect
+                to other snap slots to consume those services. Imagine two snaps
+                A and B that need to talk to each other:</p>
+
+                <p class="diagram">
+                    <img src="https://assets.ubuntu.com/v1/74bd0daf-interfaces-+plugs-and-slots.svg" />
+                </p>
+
+                <p class="complementing-note">These two snaps can be connected because they have a plug
+                and a slot with a matching interface.</p>
+
+                <p>The interfaces are declared in the <code class="command-inline">snap.yaml</code> metadata:</p>
+                <p class="diagram">
+                    <img src="https://assets.ubuntu.com/v1/1c1706c0-Update-Snapcraft%28dot%29io+-+YAML+metadata.svg" />
+                </p>
+
+                <p>There are <a class="external" href="/docs/reference/interfaces">
+                many interfaces defined</a> that can be used by
+                snap developers to describe the ways their snaps should be
+                connected. A snap can be connected to the host system OS
+                using plugs, too, which is how it can access shared user
+                documents or other services like OpenGL.</p>
+
+                <p>Snaps can share files with other snaps from the same vendor,
+                or with community-maintained shared snaps which act as libraries
+                of common data or code, for
+                example using the content-sharing interface. This reduces duplication while still ensuring rigorous
+                security and update control.</p>
+
+                <p>When you install a snap, the system will automatically connect
+                up the standard, safe plugs and slots. For example, your new game
+                will automatically get access to the OpenGL libraries on your
+                system because that’s considered normal behaviour for a game.
+                But there may be other plugs and slots you can connect up by
+                choice, and  snaps will document those individually.</p>
+            </div>
+            <div id="snapcraft_home_how-snaps-work_architecture" class="eight-col">
+                <h3>The architecture of a snappy system</h3>
+                <p>So a snappy system has a collection of snaps, each of which
+                is read-only, each of which has its own set of independent
+                writable directories, and each of which can talk to other snaps
+                and the host OS through a set of plugs and slots with matching
+                interfaces.</p>
+
+                <p>
+                    <img class="diagram--wide" src="https://assets.ubuntu.com/v1/143dff64-Update-Snapcraft%28dot%29io-architecture_v2.svg" />
+                </p>
+
+                <p>The snap system will present all the snap apps under <code class="command-inline">/snap/bin/</code>,
+                so with that on your <code class="command-inline">$PATH</code> you can easily run snap commands. It
+                will also integrate all the snap daemons (services) with your
+                init system so that they are automatically started and stopped
+                as needed.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="snapcraft_home_using-snaps" class="row">
+        <div class="wrapper">
+            <div class="eight-col">
+                <h2>Using snaps — the snappy “hello world” tour</h2>
+                <p>To install a snap, you’ll start by looking for available snaps.
+                Anybody can publish a snap, but if you search the default Ubuntu
+                store you will only see snaps that have been reviewed and judged
+                to be of good quality, and which can be installed securely. We
+                call these the ‘promoted’ snaps, and you can search them for a
+                matching name:</p>
+
+
+
+<pre class="command-line code-block"><code>$ snap find hello
+Name         Version  Developer  Notes  Summary
+hello        2.10     canonical  -      GNU Hello, the "hello world" snap
+hello-huge   1.0      noise      -      A really big snap
+hello-world  6.1      canonical  -      Hello world example</code></pre>
+
+                <p>In the future, you will be able to refine <code class="command-inline">snap find</code> queries with more parameters.</p>
+
+                <p>These examples use the Ubuntu store; your snap implementation
+                might be different. Other stores are available, and it’s easy
+                to create your own. There is an open-source
+                <a class="external" href="https://github.com/noise/snapstore">simple snap store</a>
+                implementation to get you started making your own store.</p>
+
+                <p>We’ll start by installing GNU Hello, from the Free Software Foundation:</p>
+
+                <pre class="command-line code-block"><code>$ sudo snap install hello</code></pre>
+
+                <p>Just like any other app, we can then launch the snap  from the
+                command line, or from the desktop if it has a launcher:</p>
+
+
+<pre class="command-line code-block"><code>$ hello
+Hello, world!</code></pre>
+
+                <p>See the snaps installed on your system with “<code class="command-inline">snap list</code>”, which
+                will also tell you the software version, the unique revision, the
+                developer of the installed snap, and any extra information such
+                as whether the snap is in <a href="/docs/reference/confinement">developer mode</a> or not:</p>
+
+
+<pre class="command-line code-block"><code>$ snap list
+Name     Version   Rev     Developer     Notes
+hello    2.10      26      canonical     -
+core     16.04-55  109     canonical     -
+snapweb  0.17      21      canonical     -</code></pre>
+            </div>
+            <div id="snapcraft_home_using-snaps_fresh" class="eight-col">
+                <h3>Always fresh – update fast and reliably</h3>
+                <p>Snaps are updated automatically in the background every day.
+                You can manually get the latest version of all your snaps with
+                “<code class="command-inline">snap refresh</code>”, which will bring you completely up to date for all
+                snaps, unless you specify particular snaps to refresh.</p>
+
+
+<pre class="command-line code-block"><code>$ sudo snap refresh hello
+hello already up to date
+$ sudo snap refresh
+core 64.75 MB [=====================================>___]   12s
+core updated</code></pre>
+            </div>
+
+            <div id="snapcraft_home_using-snaps_revert" class="eight-col">
+                <h3>Revert if something goes wrong</h3>
+                <p>It is simple to roll
+                back to a previous version of an application for any reason.</p>
+
+
+<pre class="command-line code-block"><code>$ snap list
+ Name              Version               Rev  Developer  Notes
+ hello-world       6.1                   26   canonical  -
+
+ $ sudo snap revert hello-world
+ Name             Version                Rev  Developer  Notes
+ hello-world      6.0                    25   canonical  -</code></pre>
+            </div>
+
+            <div id="snapcraft_home_using-snaps_channels" class="eight-col">
+                <h3>Stable, candidate, beta and edge channels</h3>
+                <p>Developers can release stable, candidate, beta and edge versions
+                of a snap, at the same time, to engage with a community who are
+                willing to test upcoming changes. You decide how close to the
+                leading edge you want to be.</p>
+
+                <p>By default, snaps are installed from the “<code class="command-inline">stable</code>” channel. By convention,
+                developers use the “<code class="command-inline">candidate</code>” channel to provide a heads-up of
+                a new stable revision, putting it in “<code class="command-inline">candidate</code>” a few days before
+                “<code class="command-inline">stable</code>” so that people can test it out. The “<code class="command-inline">beta</code>” channel is for
+                unfinished but interesting milestones, and the “<code class="command-inline">edge</code>” channel is
+                conventionally used for regular or daily development builds that
+                have passed some lightweight smoke-testing.</p>
+
+
+<pre class="command-line code-block"><code>$ sudo snap refresh hello --channel=beta
+hello (beta) 1.2 installed</code></pre>
+
+                <p>Now, you can run the beta version of the snap:</p>
+
+
+<pre class="command-line code-block"><code>$ hello
+Hello, snap padawan!</code></pre>
+
+                <p>You can also install a snap from the “<code class="command-inline">beta</code>” channel directly:</p>
+
+
+<pre class="command-line code-block"><code>$ sudo snap install hello --beta
+Hello (beta) 1.2 installed</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="snapcraft_home_get-crafting" class="row">
+        <div class="wrapper">
+            <div class="eight-col">
+                <h2>Get crafting!</h2>
+                <p>Snaps have a very simple internal structure — you can easily
+                craft them by hand.</p>
+                <p>But if your code is on GitHub, the easiest way to build a snap is with <a class="external" href="https://build.snapcraft.io/">our auto-build service</a>. Every commit is auto-built, and every successful build is released to the “<code class="command-inline">edge</code>” channel.</p>
+                <p>Otherwise, you can use <dfn>Snapcraft</dfn>, which
+                allows building from source and from existing packages. Snapcraft
+                also handles releasing your snaps to the world.</p>
+                <p>Read <a href="/docs/build-snaps/your-first-snap">how to create a snap</a>,
+                join the snap-crafting community on <a href="https://forum.snapcraft.io/" class="external">our forum</a>
+                or ask questions real-time <a href="https://rocket.ubuntu.com/channel/snapcraft" class="external">on Rocket Chat</a>.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="row row-grey equal-height">
+    <div class="wrapper equal-height--vertical-divider">
+        <div class="six-col equal-height--vertical-divider__item">
+            <h2>Learn more</h2>
+            <p>Want to know more about snaps, <code class="command-inline">snapd</code>, Snapcraft and Ubuntu Core?</p>
+            <ul class="no-bullets">
+                <li><a href="https://forum.snapcraft.io/" class="external">Forum</a></li>
+                <li><a href="https://rocket.ubuntu.com/channel/snapcraft" class="external">Real-time chat</a></li>
+                <li><a href="http://stackoverflow.com/questions/ask?tags=snapcraft" class="external">Snapcraft on Stack Overflow</a></li>
+            </ul>
+        </div>
+        <div class="six-col last-col equal-height--vertical-divider__item">
+            <h2>Contribute</h2>
+            <p>Interested in helping build Snapcraft and expand its reach?</p>
+            <ul class="no-bullets">
+                <li><a href="https://github.com/canonical-websites/snapcraft.io" class="external">Fork this website on GitHub</a></li>
+                <li><a href="https://github.com/snapcore/snapcraft" class="external">Fork snapcraft on GitHub</a></li>
+                <li><a href="https://github.com/snapcore/snapd" class="external">Fork snapd on GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+</div>
+
+<div class="wrapper">
+    <footer class="footer">
+      <div class="footer__social right">
+        <h3 class="footer__heading">Follow us</h3>
+        <ul class="social-list inline-list clearfix">
+          <li class="social-list__item">
+            <a href="https://twitter.com/snapcraftio" class="social-list__item--twitter">Share on Twitter</a>
+          </li>
+          <li class="social-list__item">
+            <a href="https://plus.google.com/+SnapcraftIo" class="social-list__item--google-plus">Share on Google plus</a>
+          </li>
+          <li class="social-list__item">
+            <a href="https://www.facebook.com/snapcraftio" class="social-list__item--facebook">Share on Facebook</a>
+          </li>
+          <li class="social-list__item">
+            <a href="https://www.youtube.com/snapcraftio" class="social-list__item--youtube">Share on YouTube</a>
+          </li>
+        </ul>
+      </div>
+
+      <p class="footer__text">&copy; 2017 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
+
+<ul class="footer__links">
+    <li class="footer__list-item"><a href="http://www.ubuntu.com/legal">Legal information</a><span class="footer__dot"> &#183;</span></li>
+    <li class="footer__list-item"><a href="https://github.com/ubuntudesign/snapcraft.io/issues/new">Report a bug on this site</a><span class="footer__dot"> &#183;</span></li>
+    <li class="footer__list-item"><a href="http://status.snapcraft.io/">Service status</a></li>
+</ul>
+
+<p class="note six-col">Yocto Project and all related marks and logos are trademarks of The Linux Foundation. This website is not, in any way, endorsed by the Yocto Project or The Linux Foundation. Some artwork by the <a href="http://www.gnome.org">GNOME Project</a>, licensed <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>.</p>
+
+<span class="accessibility-aid"><a href="#">Go to the top of the page</a></span>
+
+    </footer>
+</div>
+
+    </body>
+</html>

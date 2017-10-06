@@ -3,3 +3,4 @@ Flask==0.12.2
 python-dateutil==2.6.1
 humanize==0.5.1
 requests-cache==0.4.13
+pycountry==17.9.23
