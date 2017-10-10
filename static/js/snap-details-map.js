@@ -10,30 +10,27 @@
 
     function render(mapEl, snapData, world) {
       var width = mapEl.property('clientWidth');
-      var height = width / 2;
+      var height = width * 0.73;
+      // some offset to hide empty top of the map
+      var offset = width * 0.16;
 
-      var projection = d3.geoEquirectangular()
-        .scale((width + 1) / 2 / Math.PI)
-        .translate([(width / 2), (height / 2)])
-        .clipExtent([[0,0], [width, height-80]])
+      var projection = d3.geoNaturalEarth1()
+        .scale(width * 0.2)
+        .translate([(width / 2), ((height - offset) / 2) ])
         .precision(.1);
+
+      // rotate not to split Asia
+      projection.rotate([-10, 0]);
 
       var path = d3.geoPath()
         .projection(projection);
-
-      var graticule = d3.geoGraticule();
 
       // clean up HTML before rendering map
       mapEl.html('');
 
       var svg = mapEl.append("svg")
         .attr("width", width)
-        .attr("height", height);
-
-      svg.append("path")
-        .datum(graticule)
-        .attr("class", "graticule")
-        .attr("d", path);
+        .attr("height", height - offset);
 
       var tooltip = mapEl.append("div")
         .attr("class", "map-tooltip u-no-margin");
@@ -42,11 +39,6 @@
         .attr("class", "p-tooltip__message");
 
       var countries = topojson.feature(world, world.objects.countries).features;
-
-      svg.append("path")
-        .datum(graticule)
-        .attr("class", "choropleth")
-        .attr("d", path);
 
       var g = svg.append("g");
       var country = g.selectAll(".country").data(countries);
@@ -103,8 +95,6 @@
         }))
         .attr("class", "boundary")
         .attr("d", path);
-
-      svg.attr("height", height - 80);
     }
 
     function ready(error, world) {
