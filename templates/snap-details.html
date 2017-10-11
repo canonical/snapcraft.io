@@ -74,6 +74,6 @@
   <!-- Illustration of country data -->
   <script src="/static/js/snap-details-map.js"></script>
   <script>
-    renderMap('#js-snap-map', {{ user_percentage_by_country|tojson }});
+    renderMap('#js-snap-map', {{ countries|tojson }});
   </script>
 {% endblock %}

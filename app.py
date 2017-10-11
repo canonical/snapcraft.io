@@ -147,38 +147,30 @@ def snap_details(snap_name):
     )
     geodata = metrics_response.json()[0]['series']
 
-    user_percentage_by_country = {}
-
-    for country_info in pycountry.countries:
-        user_percentage_by_country[country_info.numeric] = {
-            'name': country_info.name,
-            'code': country_info.alpha_2,
-            'percentage_of_users': None
-        }
-
+    # Normalise geodata from API
+    users_by_country = {}
     for country_percentages in geodata:
         country_code = country_percentages['name']
-        percentages_with_nulls = country_percentages['values']
-        percentages = [p for p in percentages_with_nulls if p is not None]
-        average_percentage = sum(percentages) / len(percentages)
+        percentages = []
+        for daily_percent in country_percentages['values']:
+            if daily_percent is not None:
+                percentages.append(daily_percent)
 
-        try:
-            country_info = pycountry.countries.lookup(country_code)
-        except LookupError:
-            country_info = None
-
-        if country_info:
-            user_percentage_by_country[country_info.numeric] = {
-                'name': country_info.name,
-                'code': country_info.alpha_2,
-                'percentage_of_users': average_percentage
-            }
+        if len(percentages) > 0:
+            users_by_country[country_code] = (
+                sum(percentages) / len(percentages)
+            )
         else:
-            user_percentage_by_country[country_code] = {
-                'name': None,
-                'code': None,
-                'percentage_of_users': average_percentage
-            }
+            users_by_country[country_code] = None
+
+    # Build up country info for every country
+    country_data = {}
+    for country in pycountry.countries:
+        country_data[country.numeric] = {
+            'name': country.name,
+            'code': country.alpha_2,
+            'percentage_of_users': users_by_country.get(country.alpha_2)
+        }
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
@@ -227,7 +219,7 @@ def snap_details(snap_name):
         ),
 
         # Data from metrics API
-        'user_percentage_by_country': user_percentage_by_country,
+        'countries': country_data,
 
         # Context info
         'details_api_error': details_response.old_data_from_error,
