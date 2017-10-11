@@ -12,7 +12,7 @@
       var width = mapEl.property('clientWidth');
       var height = width * 0.73;
       // some offset to hide empty top of the map
-      var offset = width * 0.16;
+      var offset = width * 0.12;
 
       var projection = d3.geoNaturalEarth1()
         .scale(width * 0.2)

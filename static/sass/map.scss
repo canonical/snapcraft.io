@@ -1,10 +1,10 @@
 @mixin snap-details-map {
-  $color-country-default: $color-light;
-  $color-country-scale-0: #cfe2f3;
-  $color-country-scale-1: #9fc5e8;
-  $color-country-scale-2: #6fa8dc;
-  $color-country-scale-3: #3d85c6;
-  $color-country-scale-4: #0b5394;
+  $color-country-scale-4: #48929b;
+  $color-country-scale-3: lighten($color-country-scale-4, 10);
+  $color-country-scale-2: lighten($color-country-scale-4, 20);
+  $color-country-scale-1: lighten($color-country-scale-4, 30);
+  $color-country-scale-0: lighten($color-country-scale-4, 40);
+  $color-country-default: lighten($color-country-scale-4, 50); // TODO: $color-country-scale-0;
   $color-country-boundary: $color-x-light;
 
   .country {
@@ -38,8 +38,7 @@
   }
 
   .map {
-    border: 1px solid $color-mid-light;
-    border-radius: 2px;
+    border-top: 1px solid $color-mid-light;
     position: relative;
   }
 
