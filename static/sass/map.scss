@@ -1,10 +1,10 @@
 @mixin snap-details-map {
   $color-country-scale-4: #48929b;
-  $color-country-scale-3: lighten($color-country-scale-4, 10);
-  $color-country-scale-2: lighten($color-country-scale-4, 20);
-  $color-country-scale-1: lighten($color-country-scale-4, 30);
-  $color-country-scale-0: lighten($color-country-scale-4, 40);
-  $color-country-default: lighten($color-country-scale-4, 50); // TODO: $color-country-scale-0;
+  $color-country-scale-3: lighten($color-country-scale-4, 12);
+  $color-country-scale-2: lighten($color-country-scale-4, 24);
+  $color-country-scale-1: lighten($color-country-scale-4, 36);
+  $color-country-scale-0: lighten($color-country-scale-4, 48);
+  $color-country-default: $color-country-scale-0;
   $color-country-boundary: $color-x-light;
 
   .country {

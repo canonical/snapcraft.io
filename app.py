@@ -149,6 +149,13 @@ def snap_details(snap_name):
 
     user_percentage_by_country = {}
 
+    for country_info in pycountry.countries:
+        user_percentage_by_country[country_info.numeric] = {
+            'name': country_info.name,
+            'code': country_info.alpha_2,
+            'percentage_of_users': None
+        }
+
     for country_percentages in geodata:
         country_code = country_percentages['name']
         percentages_with_nulls = country_percentages['values']
