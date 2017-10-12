@@ -65,8 +65,8 @@
         .attr("title", function(d) {
           return d.properties.name;
         })
-        .on("mouseenter", function(countryData) {
-          var pos = path.centroid(countryData);
+        .on("mousemove", function(countryData) {
+          var pos = d3.mouse(mapEl.node());
           var countrySnapData = snapData[countryData.id];
           var className = 'swatch';
 
