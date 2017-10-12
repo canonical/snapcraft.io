@@ -10,13 +10,13 @@
 
     function render(mapEl, snapData, world) {
       var width = mapEl.property('clientWidth');
-      var height = width * 0.73;
-      // some offset to hide empty top of the map
-      var offset = width * 0.12;
+      var height = width * 0.5;
+      // some offset position center of the map properly
+      var offset = width * 0.1;
 
       var projection = d3.geoNaturalEarth1()
         .scale(width * 0.2)
-        .translate([(width / 2), ((height - offset) / 2) ])
+        .translate([(width / 2), ((height + offset) / 2) ])
         .precision(.1);
 
       // rotate not to split Asia
@@ -30,7 +30,7 @@
 
       var svg = mapEl.append("svg")
         .attr("width", width)
-        .attr("height", height - offset);
+        .attr("height", height);
 
       var tooltip = mapEl.append("div")
         .attr("class", "map-tooltip u-no-margin");
