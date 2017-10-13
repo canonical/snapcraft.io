@@ -50,8 +50,8 @@
           var countrySnapData = snapData[countryData.id];
 
           if (countrySnapData) {
-            var colorId = ~~(countrySnapData.percentage_of_users * 5);
-            if (colorId > 4) { colorId = 4; } // so that 100% doesn't go out of scale
+            var colorId = ~~(countrySnapData.percentage_of_users * 10);
+            if (colorId > 9) { colorId = 9; } // so that 100% doesn't go out of scale
 
             className = className + '--scale-' + colorId;
           }

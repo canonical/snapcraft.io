@@ -1,9 +1,15 @@
 @mixin snap-details-map {
-  $color-country-scale-4: #48929b;
-  $color-country-scale-3: lighten($color-country-scale-4, 12);
-  $color-country-scale-2: lighten($color-country-scale-4, 24);
-  $color-country-scale-1: lighten($color-country-scale-4, 36);
-  $color-country-scale-0: lighten($color-country-scale-4, 48);
+  // generated from d3 GeBu chromatic scale
+  $color-country-scale-0: rgb(229, 245, 223);
+  $color-country-scale-1: rgb(211, 238, 206);
+  $color-country-scale-2: rgb(189, 229, 191);
+  $color-country-scale-3: rgb(158, 217, 187);
+  $color-country-scale-4: rgb(123, 203, 196);
+  $color-country-scale-5: rgb(88, 183, 205);
+  $color-country-scale-6: rgb(57, 156, 198);
+  $color-country-scale-7: rgb(29, 126, 183);
+  $color-country-scale-8: rgb(11, 96, 161);
+  $color-country-scale-9: rgb(8, 64, 129);
   $color-country-default: $color-country-scale-0;
   $color-country-boundary: $color-x-light;
 
@@ -28,6 +34,26 @@
 
     &--scale-4 {
       fill: $color-country-scale-4;
+    }
+
+    &--scale-5 {
+      fill: $color-country-scale-5;
+    }
+
+    &--scale-6 {
+      fill: $color-country-scale-6;
+    }
+
+    &--scale-7 {
+      fill: $color-country-scale-7;
+    }
+
+    &--scale-8 {
+      fill: $color-country-scale-8;
+    }
+
+    &--scale-9 {
+      fill: $color-country-scale-9;
     }
   }
 
@@ -81,6 +107,26 @@
 
     &--scale-4 {
       background-color: $color-country-scale-4;
+    }
+
+    &--scale-5 {
+      background-color: $color-country-scale-5;
+    }
+
+    &--scale-6 {
+      background-color: $color-country-scale-6;
+    }
+
+    &--scale-7 {
+      background-color: $color-country-scale-7;
+    }
+
+    &--scale-8 {
+      background-color: $color-country-scale-8;
+    }
+
+    &--scale-9 {
+      background-color: $color-country-scale-9;
     }
   }
 }
