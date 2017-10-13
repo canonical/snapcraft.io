@@ -8,6 +8,13 @@
       .defer(d3.json, "/static/js/world-110m.v1.json")
       .await(ready);
 
+    function getColourScaleModifier(value) {
+      var colorId = ~~(value * 10);
+      if (colorId > 9) { colorId = 9; } // so that 100% doesn't go out of scale
+
+      return '--scale-' + colorId;
+    }
+
     function render(mapEl, snapData, world) {
       var width = mapEl.property('clientWidth');
       var height = width * 0.5;
@@ -50,10 +57,7 @@
           var countrySnapData = snapData[countryData.id];
 
           if (countrySnapData) {
-            var colorId = ~~(countrySnapData.percentage_of_users * 10);
-            if (colorId > 9) { colorId = 9; } // so that 100% doesn't go out of scale
-
-            className = className + '--scale-' + colorId;
+            className = className + getColourScaleModifier(countrySnapData.percentage_of_users);
           }
 
           return className;
@@ -71,10 +75,7 @@
           var className = 'swatch';
 
           if (countrySnapData) {
-            var colorId = ~~(countrySnapData.percentage_of_users * 5);
-            if (colorId > 4) { colorId = 4; } // so that 100% doesn't go out of scale
-
-            className = className + '--scale-' + colorId;
+            className = className + getColourScaleModifier(countrySnapData.percentage_of_users);
 
             tooltip
               .style('top', pos[1] + 'px')
