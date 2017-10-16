@@ -3,20 +3,6 @@
 {% block title %}{{ snap_title }} snap details{% endblock %}
 
 {% block content %}
-  <!-- Illustration of country data -->
-<!--
-  <table>
-    <thead>
-      <tr><th>Numeric code</th><th>Country name</th><th>Country code</th><th>Percentage of users</th></tr>
-    </thead>
-    <tbody>
-      {% for country_numeric, info in user_percentage_by_country.items() %}
-        <tr><td>{{ country_numeric }}</td><td>{{ info.name }}</td><td>{{ info.code }}</td><td>{{ info.percentage_of_users }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
--->
-
   <div class="p-strip is-shallow is-bordered">
     <div class="row">
       <div class="col-12">
@@ -59,7 +45,15 @@
         </table>
       </div>
     </div>
+    <div class="row" style="margin-top: 2rem">
+      <div class="col-12">
+        <h4>Where people are using {{ snap_title }}</h4>
+        <div id="js-snap-map" class="map"></div>
+      </div>
+    </div>
   </div>
+
+
   {% if api_error %}
   <div class="row">
     <div class="col-12">
@@ -71,4 +65,16 @@
     </div>
   </div>
   {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/js/modules/d3.min.js"></script>
+  <script src="/static/js/modules/d3-geo.min.js"></script>
+  <script src="/static/js/modules/topojson-client.min.js"></script>
+
+  <!-- Illustration of country data -->
+  <script src="/static/js/snap-details-map.js"></script>
+  <script>
+    renderMap('#js-snap-map', {{ countries|tojson }});
+  </script>
 {% endblock %}
