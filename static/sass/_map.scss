@@ -1,0 +1,132 @@
+@mixin snap-details-map {
+  // generated from d3 GeBu chromatic scale
+  $color-country-scale-0: rgb(229, 245, 223);
+  $color-country-scale-1: rgb(211, 238, 206);
+  $color-country-scale-2: rgb(189, 229, 191);
+  $color-country-scale-3: rgb(158, 217, 187);
+  $color-country-scale-4: rgb(123, 203, 196);
+  $color-country-scale-5: rgb(88, 183, 205);
+  $color-country-scale-6: rgb(57, 156, 198);
+  $color-country-scale-7: rgb(29, 126, 183);
+  $color-country-scale-8: rgb(11, 96, 161);
+  $color-country-scale-9: rgb(8, 64, 129);
+  $color-country-default: $color-country-scale-0;
+  $color-country-boundary: $color-x-light;
+
+  .country {
+    fill: $color-country-default;
+
+    &--scale-0 {
+      fill: $color-country-scale-0;
+    }
+
+    &--scale-1 {
+      fill: $color-country-scale-1;
+    }
+
+    &--scale-2 {
+      fill: $color-country-scale-2;
+    }
+
+    &--scale-3 {
+      fill: $color-country-scale-3;
+    }
+
+    &--scale-4 {
+      fill: $color-country-scale-4;
+    }
+
+    &--scale-5 {
+      fill: $color-country-scale-5;
+    }
+
+    &--scale-6 {
+      fill: $color-country-scale-6;
+    }
+
+    &--scale-7 {
+      fill: $color-country-scale-7;
+    }
+
+    &--scale-8 {
+      fill: $color-country-scale-8;
+    }
+
+    &--scale-9 {
+      fill: $color-country-scale-9;
+    }
+  }
+
+  .boundary {
+    fill: none;
+    stroke: $color-country-boundary;
+    stroke-width: 1px;
+  }
+
+  .map {
+    border-top: 1px solid $color-mid-light;
+    position: relative;
+  }
+
+  .map-tooltip {
+    @extend .p-tooltip--top-center; // sass-lint:disable-line placeholder-in-extend
+    display: none;
+    pointer-events: none; // little hack to make sure tooltip doesn't dissapear when it's hovered
+    position: absolute;
+
+    // override display of tooltip message so it's not only shown on hover of parent element
+    .p-tooltip__message {
+      display: block;
+      min-width: auto;
+    }
+  }
+
+  .swatch {
+    border: 1px solid $color-x-light;
+    display: inline-block;
+    height: $sp-medium;
+    margin-right: $sp-x-small;
+    vertical-align: middle;
+    width: $sp-medium;
+
+    &--scale-0 {
+      background-color: $color-country-scale-0;
+    }
+
+    &--scale-1 {
+      background-color: $color-country-scale-1;
+    }
+
+    &--scale-2 {
+      background-color: $color-country-scale-2;
+    }
+
+    &--scale-3 {
+      background-color: $color-country-scale-3;
+    }
+
+    &--scale-4 {
+      background-color: $color-country-scale-4;
+    }
+
+    &--scale-5 {
+      background-color: $color-country-scale-5;
+    }
+
+    &--scale-6 {
+      background-color: $color-country-scale-6;
+    }
+
+    &--scale-7 {
+      background-color: $color-country-scale-7;
+    }
+
+    &--scale-8 {
+      background-color: $color-country-scale-8;
+    }
+
+    &--scale-9 {
+      background-color: $color-country-scale-9;
+    }
+  }
+}

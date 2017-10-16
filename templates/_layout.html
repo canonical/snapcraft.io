@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="/static/minified/styles.css" />
   </head>
 
   <body>
@@ -27,8 +27,9 @@
     <div class="p-strip--light u-no-padding">
       <footer class="p-footer u-no-margin--top">
         <div class="row">
-          <div class="col-12">
-            Directory &copy; 2017 Canonical Ltd.
+          <div class="col-6">
+            <p>Directory &copy; 2017 Canonical Ltd.</p>
+
             <nav class="u-no-margin">
               <ul class="p-footer__links">
                   <li class="p-footer__item"><a class="p-footer__link" href="http://www.ubuntu.com/legal">Legal information</a></li>
@@ -39,8 +40,12 @@
               </span>
             </nav>
           </div>
+          <div class="col-6">
+            <p class="u-align--right">Powered by <a href="https://www.ubuntu.com/kubernetes">the Canonical Distribution of Kubernetes</a></p>
+          </div>
         </div>
       </footer>
     </div>
+    {% block scripts %}{% endblock %}
   </body>
 </html>
