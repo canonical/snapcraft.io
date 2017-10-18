@@ -25,6 +25,7 @@ $color-accent: $color-brand;
 @include vf-u-align;
 @include vf-p-forms;
 @include vf-p-headings;
+@include vf-p-matrix;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
