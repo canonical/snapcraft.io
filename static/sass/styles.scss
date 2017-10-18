@@ -21,6 +21,10 @@ $color-accent: $color-brand;
 @include vf-p-forms;
 @include vf-p-headings;
 @include vf-p-tabs;
+@include vf-p-forms;
+@include vf-p-headings;
+@include vf-p-matrix;
+
 
 // vanilla utilities
 @include vf-u-floats;
