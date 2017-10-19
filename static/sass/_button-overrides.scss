@@ -1,0 +1,19 @@
+@mixin button-overrides {
+  .is-inline--right {
+    margin-right: $sp-medium;
+  }
+
+  // new button style for dark strip
+  // TODO: propose as new pattern (or amendment?) to vanilla
+  .p-strip--accent {
+    .p-button--base {
+      border-color: $color-x-light;
+      color: $color-x-light;
+      margin-top: 0;
+
+      &:hover {
+        background-color: transparentize($color-x-light, .8);
+      }
+    }
+  }
+}

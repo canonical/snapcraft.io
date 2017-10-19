@@ -86,14 +86,18 @@
       </div>
     </header>
 
-    <div class="p-strip--light">
+    <div class="p-strip--accent is-deep">
       <h1 class="u-off-screen">Snapcraft</h1>
       <div class="row">
         <div class="col-8">
-          <p class="p-heading--three">Package any app for every Linux desktop,
-          server, cloud or device, and deliver updates directly.</p>
+          <p class="p-heading--three">Package, distribute, and auto update any app for Linux and IoT</p>
+          <p>Snaps are simple to create and install. They auto-update and are safe to run and because they bundle their dependencies, they work on all major Linux systems without modification.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
           <p>
-            <a href="https://tutorials.ubuntu.com/tutorial/create-your-first-snap" class="p-button--positive">Learn to craft your first snap</a> or <a href="https://build.snapcraft.io" class="external">Auto-build and publish from your GitHub repos</a>
+            <a href="https://tutorials.ubuntu.com/tutorial/create-your-first-snap" class="p-button--positive is-inline--right">Learn to craft your first snap</a> or <a href="https://build.snapcraft.io" class="p-button--neutral">Auto-build and publish from your GitHub repos</a>
           </p>
         </div>
       </div>
@@ -101,30 +105,20 @@
 
     <div class="p-strip is-bordered">
       <div class="row">
-        <div class="col-12">
+        <div class="col-6">
           <h2>Why use Snapcraft?</h2>
+          <p>Snapcraft is the command line tool for writing and publishing your software as a snap.</p>
+          <p>Snapcraft is available on <a href="https://docs.snapcraft.io/core/install">most popular linux systems</a>.</p>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-4">
-          Simple to package leveraging your existing tools
-        </div>
-        <div class="col-4">
-          Automatic updates for everyone
-        </div>
-        <div class="col-4">
-          Reach tens of millions of Linux systems
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-4">
-          Roll back versions effortlessly
-        </div>
-        <div class="col-4">
-          Easily integrates into build and CI infrastructure
-        </div>
-        <div class="col-4">
-          Free for open and closed source projects
+        <div class="col-6">
+          <ul class="p-list">
+            <li class="p-list__item is-ticked">Simple to package leveraging your existing tools</li>
+            <li class="p-list__item is-ticked">Automatic updates for everyone</li>
+            <li class="p-list__item is-ticked">Reach tens of millions of Linux systems</li>
+            <li class="p-list__item is-ticked">Roll back versions effortlessly</li>
+            <li class="p-list__item is-ticked">Easily integrates into build and CI infrastructure</li>
+            <li class="p-list__item is-ticked">Free for open and closed source projects</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -160,19 +154,15 @@
       </div>
     </div>
 
-    <div class="p-strip is-bordered">
-      <div class="row">
-        <div class="col-12">
-          <h2>Auto-build from GitHub</h2>
-        </div>
-      </div>
+    <div class="p-strip is-bordered u-no-padding--bottom">
       <div class="row">
         <div class="col-6">
+          <h2>Auto-build from GitHub</h2>
           <p>Automate your build process and publish software straight from your GitHub repos with build.snapcraft.io</p>
           <p><a href="https://build.snapcraft.io">Auto-build your repos</a></p>
         </div>
         <div class="col-6">
-          <img src="http://via.placeholder.com/500x300" />
+          <img class="u-float-right" src="https://assets.ubuntu.com/v1/006db1f4-build-snapcraft-heroku.png" />
         </div>
       </div>
     </div>
@@ -185,21 +175,21 @@
       </div>
       <div class="row">
         <div class="col-4">
-          <blockquote>
+          <blockquote class="p-testimonial">
             <p>The auto-updating feature is huge and one that we haven’t seen elsewhere. Due to the nature of our platform, we release updates more than daily which admittedly can be annoying for our users to constantly update.</p>
-            <cite>Jeff Hickey, CLI engineer <a href="https://www.heroku.com/" class="p-link--external">Heroku</a></cite>
+            <cite class="p-testimonial--citation">Jeff Hickey, CLI engineer <a href="https://www.heroku.com/" class="p-link--external">Heroku</a></cite>
           </blockquote>
         </div>
         <div class="col-4">
-          <blockquote>
+          <blockquote class="p-testimonial">
             <p>The format isolation allows for less opportunity to break the system or otherwise force abandonment – you can use newer libraries than the system offers without altering the base.</p>
-            <cite>Daniel Fore, Founder of Elementary</cite>
+            <cite class="p-testimonial--citation">Daniel Fore, Founder of <a href="https://elementary.io" class="p-link--external">Elementary</a></cite>
           </blockquote>
         </div>
         <div class="col-4">
-          <blockquote>
+          <blockquote class="p-testimonial">
             <p>With snaps we have a tool where updates can happen seamlessly and the client isn’t even aware of the changes but they can be assured the system is always running smoothly.</p>
-            <cite>Mohamed Saad Ibn Seddik, Chief Scientist at Sea Machines</cite>
+            <cite class="p-testimonial--citation">Mohamed Saad Ibn Seddik,<br/> Chief Scientist at <a href="http://www.sea-machines.com/" class="p-link--external">Sea Machines</a></cite>
           </blockquote>
         </div>
       </div>
@@ -227,8 +217,16 @@
 
     <div class="p-strip is-bordered">
       <div class="row">
+        <div class="col-6">
+          <h2>The Snap store</h2>
+        </div>
+        <div class="col-6">
+          <p>The Snap store is enabled by default on tens of millions <a href="https://docs.snapcraft.io/core/install">Linux systems</a>. It allows developers to release free or paid apps for multiple architectures, on multiple release channels from daily builds to stable releases.</p>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-12">
-          <h2>Featured snaps</h2>
+          <h3>Featured snaps</h3>
         </div>
       </div>
       <div class="row">
@@ -317,30 +315,19 @@
 
     <div class="p-strip">
       <div class="row">
-        <div class="col-12">
-          <h2>The Snap store</h2>
-          <p>The Snap store is enabled by default on tens of millions <a href="https://docs.snapcraft.io/core/install">Linux systems</a>. It allows developers to release free or paid apps for multiple architectures, on multiple release channels from daily builds to stable releases.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="p-strip--light">
-      <div class="row">
-        <div class="col-12">
+        <div class="col-6">
           <h2>Not sure yet?</h2>
         </div>
-      </div>
-      <div class="row">
         <div class="col-6">
-          <p><a href="https://docs.snapcraft.io/build-snaps/">Learn more</a> about snaps and Snapcraft</p>
-        </div>
-        <div class="col-6">
-          <p><a href="https://forum.snapcraft.io/t/welcome-to-the-snapcraft-forum/8">Ask on the forum</a> if you have any questions</p>
+          <ul class="p-list">
+            <li><a href="https://docs.snapcraft.io/build-snaps/">Learn more</a> about snaps and Snapcraft</li>
+            <li><a href="https://forum.snapcraft.io/t/welcome-to-the-snapcraft-forum/8">Ask on the forum</a> if you have any questions</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <footer class="p-footer p-strip">
+    <footer class="p-footer p-strip--light">
       <div class="row">
         <div class="col-9">
           <p>&copy; 2017 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
@@ -361,7 +348,7 @@
                 <a class="p-footer__link" href="https://status.snapcraft.io/?_ga=2.3749552.1877661670.1507549588-967098402.1485872971">Service status</a>
               </li>
             </ul>
-            <span class="u-off-screen">
+            <span class="u-off-screen u-no-margin">
               <a href="#">Go to the top of the page</a>
             </span>
           </nav>
