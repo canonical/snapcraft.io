@@ -45,12 +45,14 @@
         </table>
       </div>
     </div>
+    {# bartaz: hiding map until we get correct data from API
     <div class="row" style="margin-top: 2rem">
       <div class="col-12">
         <h4>Where people are using {{ snap_title }}</h4>
         <div id="js-snap-map" class="map"></div>
       </div>
     </div>
+    #}
   </div>
 
 
@@ -68,6 +70,7 @@
 {% endblock %}
 
 {% block scripts %}
+  {# bartaz: hiding map until we get correct data from API
   <script src="/static/js/modules/d3.min.js"></script>
   <script src="/static/js/modules/d3-geo.min.js"></script>
   <script src="/static/js/modules/topojson-client.min.js"></script>
@@ -77,4 +80,5 @@
   <script>
     renderMap('#js-snap-map', {{ countries|tojson }});
   </script>
+  #}
 {% endblock %}
