@@ -9,7 +9,7 @@ $color-brand: #003634; // TODO: this is a temprary brand colour
 $color-accent: $color-brand; // temporary for strip background
 $color-accent-background: $color-accent;
 
-@include vanilla-base;
+@include vf-base;
 @include vf-p-card; // required by vf-p-tooltips
 @include vf-p-links;
 @include vf-p-lists;
