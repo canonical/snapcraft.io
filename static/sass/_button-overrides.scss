@@ -3,6 +3,11 @@
     margin-right: $sp-medium;
   }
 
+  .p-icon--github {
+    @extend %icon;
+    background-image: url('#{$assets-path}61d83c7e-icon-github.svg');
+  }
+
   // new button style for dark strip
   // TODO: propose as new pattern (or amendment?) to vanilla
   .p-strip--accent {
