@@ -27,9 +27,9 @@ $color-accent-background: $color-accent;
 @include vf-p-forms;
 @include vf-p-headings;
 @include vf-p-tabs;
-@include vf-p-forms;
-@include vf-p-headings;
 @include vf-p-matrix;
+@include vf-p-icons;
+@include vf-p-heading-icon;
 
 
 // vanilla utilities
@@ -37,6 +37,7 @@ $color-accent-background: $color-accent;
 @include vf-u-off-screen;
 @include vf-u-margin-collapse;
 @include vf-u-padding-collapse;
+@include vf-u-vertically-center;
 @include vf-u-align;
 @include vf-u-clearfix;
 @include vf-u-animations;
@@ -79,3 +80,6 @@ $color-accent-background: $color-accent;
 
 @import 'button-overrides';
 @include button-overrides;
+
+@import 'heading-overrides';
+@include heading-overrides;
