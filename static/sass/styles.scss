@@ -83,3 +83,6 @@ $color-accent-background: $color-accent;
 
 @import 'heading-overrides';
 @include heading-overrides;
+
+@import 'patterns_logo-links';
+@include p-logo-link;

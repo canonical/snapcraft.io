@@ -1,0 +1,30 @@
+@mixin p-logo-link {
+
+  .p-logo-link {
+    border: 1px solid transparent;
+    border-radius: 2px;
+    display: block;
+    margin-top: 0;
+
+    &:hover {
+      border-color: $color-mid-light;
+    }
+  }
+
+  .p-logo-links {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .p-logo-link {
+      // by default (on mobile) use col-3 width (4 items in a row)
+      width: 23.54369%; // col-3
+
+      // on larger screens use col-2 width (6 items in a row)
+      @media screen and (min-width: $breakpoint-medium) {
+        width: 15.04854%; // col-2
+      }
+    }
+  }
+}
