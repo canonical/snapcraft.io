@@ -8,6 +8,11 @@
 
     &:hover {
       border-color: $color-mid-light;
+      text-decoration: none;
+    }
+
+    &:visited {
+      color: inherit;
     }
   }
 
@@ -19,12 +24,20 @@
 
     .p-logo-link {
       // by default (on mobile) use col-3 width (4 items in a row)
-      width: 23.54369%; // col-3
+      width: 21.875%; // mobile-col-1
 
       // on larger screens use col-2 width (6 items in a row)
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-small) {
         width: 15.04854%; // col-2
       }
     }
+
+    // don't limit max-height of logo in card header
+    .p-card__header img {
+      display: block;
+      max-height: none;
+      width: 100%;
+    }
   }
+
 }
