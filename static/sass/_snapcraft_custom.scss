@@ -1,0 +1,12 @@
+@mixin snapcraft-custom {
+  .snapcraft-hero {
+    background-image: url('#{$assets-path}19da7e00-snapcraft-hero-background.png');
+    background-position: 50% 0;
+    background-repeat: no-repeat;
+    background-size: 1440px 1440px;
+  }
+
+  .u-width-auto {
+    width: auto;
+  }
+}
