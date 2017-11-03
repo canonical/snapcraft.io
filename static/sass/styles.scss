@@ -5,10 +5,6 @@ $color-accent: $color-brand;
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 
-$color-brand: #003634; // TODO: this is a temprary brand colour
-$color-accent: $color-brand; // temporary for strip background
-$color-accent-background: $color-accent;
-
 @include vf-base;
 
 @include vf-p-card; // required by vf-p-tooltips
@@ -81,8 +77,11 @@ $color-accent-background: $color-accent;
 @import 'button-overrides';
 @include button-overrides;
 
-@import 'heading-overrides';
-@include heading-overrides;
-
 @import 'patterns_logo-links';
 @include p-logo-link;
+
+@import 'snapcraft_custom-typography';
+@include snapcraft-custom-typography;
+
+@import 'snapcraft_custom';
+@include snapcraft-custom;
