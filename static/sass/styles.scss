@@ -30,6 +30,7 @@ $color-accent: $color-brand;
 @include vf-p-matrix;
 @include vf-p-icons;
 @include vf-p-heading-icon;
+@include vf-u-image-position;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
