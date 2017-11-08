@@ -15,10 +15,11 @@ import urllib
 import pycountry
 import os
 import socket
-from math import floor
 from dateutil import parser, relativedelta
+from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+from urllib.parse import urlparse, parse_qs
 
 
 app = flask.Flask(__name__)
@@ -57,7 +58,7 @@ metrics_query_headers = {
 }
 
 snap_search_url = (
-    "https://search.apps.ubuntu.com/api/v1/snaps/search",
+    "https://search.apps.ubuntu.com/api/v1/snaps/search"
     "?q={snap_name}&page={page}&size={size}"
 )
 search_query_headers = {
@@ -108,6 +109,58 @@ def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
+def convert_limit_offset_to_size_page(link):
+    url_parsed = urlparse(link)
+    host_url = (
+        "{base_url}"
+        "?q={q}&limit={limit}&offset={offset}"
+    )
+
+    url_queries = parse_qs(url_parsed.query)
+    q = url_queries['q'][0]
+    size = int(url_queries['size'][0])
+    page = int(url_queries['page'][0])
+
+    return host_url.format(
+        base_url=flask.request.base_url,
+        q=q,
+        limit=size,
+        offset=size*(page-1)
+    )
+
+
+def get_pages_details(links):
+
+    links_result = {}
+
+    if('first' in links):
+        links_result['first'] = convert_limit_offset_to_size_page(
+            links['first']['href']
+        )
+
+    if('last' in links):
+        links_result['last'] = convert_limit_offset_to_size_page(
+            links['last']['href']
+        )
+
+    if('next' in links):
+        links_result['next'] = convert_limit_offset_to_size_page(
+            links['next']['href']
+        )
+
+    if('prev' in links):
+        links_result['prev'] = convert_limit_offset_to_size_page(
+            links['prev']['href']
+        )
+
+    if('self' in links):
+        links_result['self'] = convert_limit_offset_to_size_page(
+            links['self']['href']
+        )
+
+    return links_result
+
+
 # Normal views
 # ===
 @app.route('/')
@@ -132,9 +185,20 @@ def search_snap():
         headers=search_query_headers
     )
 
+    searched_results = searched_response.json()
+    if(searched_results['_embedded']):
+        snaps = searched_results['_embedded']['clickindex:package']
+    else:
+        snaps = []
+
+    context = {
+        "snaps": snaps,
+        "links": get_pages_details(searched_results['_links'])
+    }
+
     return flask.render_template(
         'snap-search.html',
-        **searched_response.json()
+        **context
     )
 
 
