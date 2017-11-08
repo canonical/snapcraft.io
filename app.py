@@ -15,6 +15,7 @@ import urllib
 import pycountry
 import os
 import socket
+from math import floor
 from dateutil import parser, relativedelta
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -53,6 +54,16 @@ details_query_headers = {
 snap_metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
 metrics_query_headers = {
     'Content-Type': 'application/json'
+}
+
+snap_search_url = (
+    "https://search.apps.ubuntu.com/api/v1/snaps/search",
+    "?q={snap_name}&page={page}&size={size}"
+)
+search_query_headers = {
+    'X-Ubuntu-Frameworks': '*',
+    'X-Ubuntu-Architecture': 'amd64',
+    'Accept': 'application/hal+json'
 }
 
 
@@ -102,6 +113,29 @@ def create_redirect():
 @app.route('/')
 def homepage():
     return flask.render_template('index.html')
+
+
+@app.route('/search')
+def search_snap():
+    snap_searched = flask.request.args.get('q', default='', type=str)
+    size = flask.request.args.get('limit', default=10, type=int)
+    offset = flask.request.args.get('offset', default=0, type=int)
+
+    page = floor(offset / size) + 1
+
+    searched_response = _get_from_cache(
+        snap_search_url.format(
+            snap_name=snap_searched,
+            size=size,
+            page=page
+        ),
+        headers=search_query_headers
+    )
+
+    return flask.render_template(
+        'snap-search.html',
+        **searched_response.json()
+    )
 
 
 @app.route('/<snap_name>/')
