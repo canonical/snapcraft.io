@@ -197,7 +197,7 @@ def search_snap():
     }
 
     return flask.render_template(
-        'snap-search.html',
+        'search.html',
         **context
     )
 
