@@ -81,15 +81,14 @@
       </div>
     </header>
 
-    <div class="p-strip--accent is-deep snapcraft-hero">
+    <div id="main-content" class="p-strip--accent p-strip--image is-dark is-deep" style="background-image: url('https://assets.ubuntu.com/v1/0a575390-hero-background--edgeless.png'); background-size: 1440px 1440px; background-position: 50% 0;">
       <h1 class="u-off-screen">Snapcraft</h1>
       <div class="row">
         <div class="col-12">
           <p class="p-heading--two">Package, distribute, and update any app for Linux and IoT</p>
           <p class="p-heading--five">Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run and because they bundle their dependencies, they work on all major Linux systems without modification.</p>
-          <a href="https://tutorials.ubuntu.com/tutorial/create-your-first-snap" class="u-width-auto p-button--positive is-inline--right">Build your first snap</a>
-          <span class="is-inline--right">or</span>
-          <a href="https://build.snapcraft.io" class="u-width-auto p-button--neutral">Get started with GitHub</a>
+          <a href="https://tutorials.ubuntu.com/tutorial/create-your-first-snap" class="p-button--positive">Build your first snap</a>
+          <a href="https://build.snapcraft.io" class="p-button--neutral">Get started using GitHub</a>
         </div>
       </div>
     </div>
@@ -101,7 +100,7 @@
         </div>
         <div class="col-6">
           <p class="p-heading--five">Snaps are available for any Linux OS running snapd, the service that runs and manage snaps.</p>
-          <p><a href="https://docs.snapcraft.io/core/install">Enable snaps on your OS</a></p>
+          <p class="p-heading--five"><a href="https://docs.snapcraft.io/core/install">Enable snaps on your OS</a></p>
         </div>
       </div>
       <div class="row">
@@ -155,12 +154,12 @@
         </div>
         <div class="col-6">
           <ul class="p-list u-no-margin">
-            <li class="p-list__item is-ticked">Simple to package leveraging your existing tools</li>
-            <li class="p-list__item is-ticked">Automatic updates for everyone</li>
-            <li class="p-list__item is-ticked">Reach tens of millions of Linux systems</li>
-            <li class="p-list__item is-ticked">Roll back versions effortlessly</li>
-            <li class="p-list__item is-ticked">Integrate easily with build and CI infrastructure</li>
-            <li class="p-list__item is-ticked">Free for open and closed source projects</li>
+            <li class="p-list__item is-ticked p-heading--five">Simple to package leveraging your existing tools</li>
+            <li class="p-list__item is-ticked p-heading--five">Automatic updates for everyone</li>
+            <li class="p-list__item is-ticked p-heading--five">Reach tens of millions of Linux systems</li>
+            <li class="p-list__item is-ticked p-heading--five">Roll back versions effortlessly</li>
+            <li class="p-list__item is-ticked p-heading--five">Integrate easily with build and CI infrastructure</li>
+            <li class="p-list__item is-ticked p-heading--five">Free for open and closed source projects</li>
           </ul>
         </div>
       </div>
@@ -215,19 +214,6 @@
       </div>
     </div>
 
-    <div class="p-strip is-deep is-bordered u-image-position">
-      <div class="row u-vertically-center">
-        <div class="col-6">
-          <h2>Auto-build from GitHub</h2>
-          <p class="p-heading--five">Automate your build process and publish software straight from your GitHub repos.</p>
-        <p><a class="p-button--neutral" href="https://build.snapcraft.io/auth/authenticate"><i class="p-icon--github"></i> Get started with GitHub</a></p>
-        </div>
-        <div class="col-6">
-          <img class="u-image-position--bottom" src="https://assets.ubuntu.com/v1/006db1f4-build-snapcraft-heroku.png" alt="" style="max-height: 95%;" />
-        </div>
-      </div>
-    </div>
-
     <div class="p-strip is-deep is-bordered">
       <div class="row">
         <div class="col-12">
@@ -237,21 +223,34 @@
       <div class="row">
         <div class="col-4">
           <blockquote class="p-testimonial">
-            <p>The auto-updating feature is huge and one that we haven’t seen elsewhere. Due to the nature of our platform, we release updates more than daily which admittedly can be annoying for our users to constantly update.</p>
-            <cite class="p-testimonial--citation">Jeff Hickey, CLI engineer, <a href="https://www.heroku.com/" class="p-link--external">Heroku</a></cite>
+            <p class="p-heading--five">The auto-updating feature is huge and one that we haven’t seen elsewhere. Due to the nature of our platform, we release updates more than daily which admittedly can be annoying for our users to constantly update.</p>
+            <cite class="p-testimonial--citation p-heading--five">Jeff Hickey, CLI engineer, <a href="https://www.heroku.com/" class="p-link--external">Heroku</a></cite>
           </blockquote>
         </div>
         <div class="col-4">
           <blockquote class="p-testimonial">
-            <p>The format isolation allows for less opportunity to break the system or otherwise force abandonment – you can use newer libraries than the system offers without altering the base.</p>
-            <cite class="p-testimonial--citation">Daniel Fore, Founder, <a href="https://elementary.io" class="p-link--external">Elementary</a></cite>
+            <p class="p-heading--five">The format isolation allows for less opportunity to break the system or otherwise force abandonment – you can use newer libraries than the system offers without altering the base.</p>
+            <cite class="p-testimonial--citation p-heading--five">Daniel Fore, Founder, <a href="https://elementary.io" class="p-link--external">Elementary</a></cite>
           </blockquote>
         </div>
         <div class="col-4">
           <blockquote class="p-testimonial">
-            <p>With snaps we have a tool where updates can happen seamlessly and the client isn’t even aware of the changes but they can be assured the system is always running smoothly.</p>
-            <cite class="p-testimonial--citation">Mohamed Saad Ibn Seddik,<br/> Chief Scientist, <a href="http://www.sea-machines.com/" class="p-link--external">Sea Machines</a></cite>
+            <p class="p-heading--five">With snaps we have a tool where updates can happen seamlessly and the client isn’t even aware of the changes but they can be assured the system is always running smoothly.</p>
+            <cite class="p-testimonial--citation p-heading--five">Mohamed Saad Ibn Seddik,<br/> Chief Scientist, <a href="http://www.sea-machines.com/" class="p-link--external">Sea Machines</a></cite>
           </blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-strip is-deep is-bordered u-image-position">
+      <div class="row u-vertically-center">
+        <div class="col-6">
+          <h2>Auto-build from GitHub</h2>
+          <p class="p-heading--five">Automate your build process and publish software straight from your GitHub repos.</p>
+        <p><a class="p-button--neutral" href="https://build.snapcraft.io/auth/authenticate"><i class="p-icon--github"></i> Connect a GitHub repo</a></p>
+        </div>
+        <div class="col-6">
+          <img class="u-image-position--bottom" src="https://assets.ubuntu.com/v1/006db1f4-build-snapcraft-heroku.png" alt="" style="max-height: 95%;" />
         </div>
       </div>
     </div>
@@ -367,8 +366,8 @@
         </div>
         <div class="col-6">
           <ul class="p-list u-no-margin">
-            <li class="p-list__item"><a href="https://docs.snapcraft.io/build-snaps/">Learn more</a> about snaps and Snapcraft</li>
-            <li class="p-list__item"><a href="https://forum.snapcraft.io/categories">Ask on the forum</a> if you have any questions</li>
+            <li class="p-list__item p-heading--five"><a href="https://docs.snapcraft.io/build-snaps/">Learn more</a> about snaps and Snapcraft</li>
+            <li class="p-list__item p-heading--five"><a href="https://forum.snapcraft.io/categories">Ask on the forum</a> if you have any questions</li>
           </ul>
         </div>
       </div>
@@ -380,7 +379,9 @@
           <p>&copy; 2017 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
           <p>Powered by <a href="https://www.ubuntu.com/kubernetes">the Canonical Distribution of Kubernetes</a></p>
           <p>
-            <a class="p-link--external" href="https://github.com/snapcore/snapcraft">Fork Snapcraft on GitHub</a><br/>
+            <a class="p-link--external" href="https://github.com/snapcore/snapcraft">Fork Snapcraft on GitHub</a>
+            {# TODO: u-no-margin is needed until https://github.com/vanilla-framework/vanilla-framework/issues/1426 is fixed #}
+            <br class="u-no-margin" />
             <a class="p-link--external" href="https://github.com/snapcore/snapd">Fork snapd on GitHub</a>
           </p>
           <nav class="p-footer__nav">
