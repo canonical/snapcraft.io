@@ -44,10 +44,12 @@
     </li>
   {% endfor %}
 
-  <nav>
-    {% if links.first %}<a href="{{ links.first }}">First</a>{% endif %}
-    {% if links.prev %}<a href="{{ links.prev }}">Previous</a>{% endif %}
-    {% if links.next %}<a href="{{ links.next }}">Next</a>{% endif %}
-    {% if links.last %}<a href="{{ links.last }}">Last</a>{% endif %}
-  </nav>
+  {% if links %}
+    <nav>
+        {% if links.first %}<a href="{{ links.first }}">First</a>{% endif %}
+        {% if links.prev %}<a href="{{ links.prev }}">Previous</a>{% endif %}
+        {% if links.next %}<a href="{{ links.next }}">Next</a>{% endif %}
+        {% if links.last %}<a href="{{ links.last }}">Last</a>{% endif %}
+    </nav>
+  {% endif %}
 {% endblock %}
