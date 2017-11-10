@@ -188,7 +188,7 @@ def get_pages_details(links):
 # ===
 @app.route('/')
 def homepage():
-    return flask.render_template('index.html')
+    return flask.render_template('index.html', now=datetime.datetime.utcnow())
 
 
 @app.route('/discover/')
