@@ -192,6 +192,7 @@ def search_snap():
         snaps = []
 
     context = {
+        "query": snap_searched,
         "snaps": snaps,
         "links": get_pages_details(searched_results['_links'])
     }
