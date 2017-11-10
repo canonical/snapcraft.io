@@ -3,17 +3,43 @@
 {% block title %}{{ snap_title }} — Linux software in the Snap Store{% endblock %}
 
 {% block content %}
+  <form action="/search">
+    <fieldset>
+      <label for="search-input" class="u-off-screen">Search</label>
+      <input type="search" name="q" value="{{ query }}"/>
+      <button type="submit" alt="search" class="p-button--neutral u-align--left">Search</button>
+    </fieldset>
+  </form>
+
   <ul>
   {% for snap in snaps %}
     <li>
       <h3>{{ snap.title }}</h1>
       <table>
-        {% for key, value in snap.items() %}
-          <tr>
-            <th>{{ key }}</th>
-            <td>{{ value }}</td>
-          </tr>
-        {% endfor %}
+        <tr>
+          <th>Summary</th>
+          <td>{{ snap.summary }}</td>
+        </tr>
+        <tr>
+          <th>Description</th>
+          <td>{{ snap.description }}</td>
+        </tr>
+        <tr>
+          <th>Publisher</th>
+          <td>{{ snap.publisher }}</td>
+        </tr>
+        <tr>
+          <th>Package name</th>
+          <td>{{ snap.package_name }}</td>
+        </tr>
+        {% if snap.icon_url %}
+        <tr>
+          <th>Icon</th>
+          <td>
+              <img src="{{ snap.icon_url }}" alt="" />
+          </td>
+        </tr>
+        {% endif %}
       </table>
     </li>
   {% endfor %}
