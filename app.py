@@ -16,8 +16,10 @@ import pycountry
 import os
 import socket
 from dateutil import parser, relativedelta
+from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+from urllib.parse import urlparse, parse_qs
 
 
 app = flask.Flask(__name__)
@@ -53,6 +55,16 @@ details_query_headers = {
 snap_metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
 metrics_query_headers = {
     'Content-Type': 'application/json'
+}
+
+snap_search_url = (
+    "https://search.apps.ubuntu.com/api/v1/snaps/search"
+    "?q={snap_name}&page={page}&size={size}"
+)
+search_query_headers = {
+    'X-Ubuntu-Frameworks': '*',
+    'X-Ubuntu-Architecture': 'amd64',
+    'Accept': 'application/hal+json'
 }
 
 
@@ -97,11 +109,98 @@ def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
+def convert_limit_offset_to_size_page(link):
+    url_parsed = urlparse(link)
+    host_url = (
+        "{base_url}"
+        "?q={q}&limit={limit}&offset={offset}"
+    )
+
+    url_queries = parse_qs(url_parsed.query)
+    q = url_queries['q'][0]
+    size = int(url_queries['size'][0])
+    page = int(url_queries['page'][0])
+
+    return host_url.format(
+        base_url=flask.request.base_url,
+        q=q,
+        limit=size,
+        offset=size*(page-1)
+    )
+
+
+def get_pages_details(links):
+
+    links_result = {}
+
+    if('first' in links):
+        links_result['first'] = convert_limit_offset_to_size_page(
+            links['first']['href']
+        )
+
+    if('last' in links):
+        links_result['last'] = convert_limit_offset_to_size_page(
+            links['last']['href']
+        )
+
+    if('next' in links):
+        links_result['next'] = convert_limit_offset_to_size_page(
+            links['next']['href']
+        )
+
+    if('prev' in links):
+        links_result['prev'] = convert_limit_offset_to_size_page(
+            links['prev']['href']
+        )
+
+    if('self' in links):
+        links_result['self'] = convert_limit_offset_to_size_page(
+            links['self']['href']
+        )
+
+    return links_result
+
+
 # Normal views
 # ===
 @app.route('/')
 def homepage():
     return flask.render_template('index.html')
+
+
+@app.route('/search')
+def search_snap():
+    snap_searched = flask.request.args.get('q', default='', type=str)
+    size = flask.request.args.get('limit', default=10, type=int)
+    offset = flask.request.args.get('offset', default=0, type=int)
+
+    page = floor(offset / size) + 1
+
+    searched_response = _get_from_cache(
+        snap_search_url.format(
+            snap_name=snap_searched,
+            size=size,
+            page=page
+        ),
+        headers=search_query_headers
+    )
+
+    searched_results = searched_response.json()
+    if(searched_results['_embedded']):
+        snaps = searched_results['_embedded']['clickindex:package']
+    else:
+        snaps = []
+
+    context = {
+        "query": snap_searched,
+        "snaps": snaps,
+        "links": get_pages_details(searched_results['_links'])
+    }
+
+    return flask.render_template(
+        'search.html',
+        **context
+    )
 
 
 @app.route('/<snap_name>/')
