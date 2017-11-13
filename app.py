@@ -171,6 +171,11 @@ def homepage():
 @app.route('/search')
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
+    if(not snap_searched):
+        return flask.render_template(
+            'search.html'
+        )
+
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)
 
