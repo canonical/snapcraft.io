@@ -1,55 +1,68 @@
 {% extends "_layout.html" %}
 
-{% block title %}{{ snap_title }} — Linux software in the Snap Store{% endblock %}
+{% block title %}Snap search results for "{{ query }}" — Linux software in the Snap Store{% endblock %}
 
 {% block content %}
-  <form action="/search">
-    <fieldset>
-      <label for="search-input" class="u-off-screen">Search</label>
-      <input type="search" name="q" value="{{ query }}"/>
-      <button type="submit" alt="search" class="p-button--neutral u-align--left">Search</button>
-    </fieldset>
-  </form>
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-12">
+        <form action="/search">
+          <fieldset>
+            <label for="search-input" class="u-off-screen">Search</label>
+            <input type="search" name="q" value="{{ query }}"/>
+            <button type="submit" alt="search" class="p-button--neutral u-align--left">Search</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </section>
 
-  <ul>
-  {% for snap in snaps %}
-    <li>
-      <h3>{{ snap.title }}</h1>
-      <table>
-        <tr>
-          <th>Summary</th>
-          <td>{{ snap.summary }}</td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td>{{ snap.description }}</td>
-        </tr>
-        <tr>
-          <th>Publisher</th>
-          <td>{{ snap.publisher }}</td>
-        </tr>
-        <tr>
-          <th>Package name</th>
-          <td>{{ snap.package_name }}</td>
-        </tr>
-        {% if snap.icon_url %}
-        <tr>
-          <th>Icon</th>
-          <td>
-              <img src="{{ snap.icon_url }}" alt="" />
-          </td>
-        </tr>
-        {% endif %}
-      </table>
-    </li>
-  {% endfor %}
+  <section class="p-strip">
+    <div class="row">
+      <div class="col-8">
+        <ul class="p-list">
+          {% for snap in snaps %}
+            <li class="p-list__item">
+              <div class="p-media-object">
+                {% if snap.icon_url %}
+                  <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
+                {% else %}
+                  <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" class="p-media-object__image" alt="">
+                {% endif %}
+
+                <div class="p-media-object__details">
+                  <h3 class="p-media-object__title">
+                    <a href="#">{{ snap.title }}</a>
+                  </h3>
+                  <p class="p-media-object__content"><a href="/{{ snap.package_name }}">https://snapcraft.io/{{ snap.package_name }}</a></p>
+                  <p class="p-media-object__content">{{ snap.summary }}</p>
+                  <p class="p-media-object__content">{{ snap.description }}</p>
+                  <ul class="p-media-object__meta-list">
+                    <li class="p-media-object__meta-list-item">
+                      <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
 
   {% if links %}
-    <nav>
-        {% if links.first %}<a href="{{ links.first }}">First</a>{% endif %}
-        {% if links.prev %}<a href="{{ links.prev }}">Previous</a>{% endif %}
-        {% if links.next %}<a href="{{ links.next }}">Next</a>{% endif %}
-        {% if links.last %}<a href="{{ links.last }}">Last</a>{% endif %}
+  <section class="p-strip">
+    <nav class="row">
+      <div class="col-6 u-align--left">
+        {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
+        {% if links.prev %}<a href="{{ links.prev }}">&#8249;&nbsp;Previous</a>{% endif %}
+      </div>
+      <div class="col-6 u-align--right">
+        {% if links.next %}<a href="{{ links.next }}">Next&nbsp;&#8250;</a>{% endif %}
+        {% if links.last %}&nbsp;<a href="{{ links.last }}">Last&nbsp;&#187;</a>{% endif %}
+      </div>
     </nav>
+  </section>
   {% endif %}
 {% endblock %}
