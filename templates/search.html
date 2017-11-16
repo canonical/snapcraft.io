@@ -1,6 +1,13 @@
 {% extends "_layout.html" %}
 
-{% block title %}Snap search results for "{{ query }}" — Linux software in the Snap Store{% endblock %}
+{% block title %}
+  {% if query %}
+    Snap search results for "{{ query }}"
+  {% else %}
+    Search Snap Store
+  {% endif %}
+  — Linux software in the Snap Store
+{% endblock %}
 
 {% block content %}
   <section id="main-content" class="p-strip is-shallow">
