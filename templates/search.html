@@ -1,23 +1,46 @@
 {% extends "_layout.html" %}
 
-{% block title %}Snap search results for "{{ query }}" — Linux software in the Snap Store{% endblock %}
+{% block title %}
+  {% if query %}
+    Snap search results for "{{ query }}"
+  {% else %}
+    Search Snap Store
+  {% endif %}
+  — Linux software in the Snap Store
+{% endblock %}
 
 {% block content %}
-  <section class="p-strip is-shallow">
+  <section id="main-content" class="p-strip is-shallow">
     <div class="row">
       <div class="col-12">
-        <form action="/search">
-          <fieldset>
+        {% if query %}
+          {% if snaps %}
+            <h1>We’ve found some snaps for "{{ query }}"</h1>
+          {% else %}
+            <h1>Sorry, we couldn’t find "{{ query }}"</h1>
+          {% endif %}
+        {% else %}
+          <h1>Search Snap Store</h1>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="p-strip--light is-shallow">
+    <div class="row">
+      <div class="col-12">
+        <form action="/search" class="p-form p-form--inline p-form--search">
+          <div class="p-form__group">
             <label for="search-input" class="u-off-screen">Search</label>
-            <input type="search" name="q" value="{{ query }}"/>
+            <input id="search-input" type="search" name="q" value="{{ query }}" class="p-form__control"/>
+          </div>
             <button type="submit" alt="search" class="p-button--neutral u-align--left">Search</button>
-          </fieldset>
         </form>
       </div>
     </div>
   </section>
 
-  <section class="p-strip">
+  <section class="p-strip is-shallow">
     <div class="row">
       <div class="col-8">
         <ul class="p-list">
@@ -32,11 +55,11 @@
 
                 <div class="p-media-object__details">
                   <h3 class="p-media-object__title">
-                    <a href="#">{{ snap.title }}</a>
+                    <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
                   </h3>
                   <p class="p-media-object__content"><a href="/{{ snap.package_name }}">https://snapcraft.io/{{ snap.package_name }}</a></p>
                   <p class="p-media-object__content">{{ snap.summary }}</p>
-                  <p class="p-media-object__content">{{ snap.description }}</p>
+                  <p class="p-media-object__content">{{ snap.description | truncate(200) }}</p>
                   <ul class="p-media-object__meta-list">
                     <li class="p-media-object__meta-list-item">
                       <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
@@ -52,13 +75,13 @@
   </section>
 
   {% if links %}
-  <section class="p-strip">
+  <section class="p-strip is-shallow">
     <nav class="row">
-      <div class="col-6 u-align--left">
+      <div class="col-6 prefix-1 u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
         {% if links.prev %}<a href="{{ links.prev }}">&#8249;&nbsp;Previous</a>{% endif %}
       </div>
-      <div class="col-6 u-align--right">
+      <div class="col-6 suffix-1 u-align--right">
         {% if links.next %}<a href="{{ links.next }}">Next&nbsp;&#8250;</a>{% endif %}
         {% if links.last %}&nbsp;<a href="{{ links.last }}">Last&nbsp;&#187;</a>{% endif %}
       </div>

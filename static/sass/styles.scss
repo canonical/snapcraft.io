@@ -19,6 +19,7 @@
 @include vf-u-margin-collapse;
 @include vf-u-padding-collapse;
 @include vf-u-align;
+@include vf-p-forms;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
@@ -34,3 +35,6 @@
 
 @import 'map';
 @include snap-details-map;
+
+@import 'search-form';
+@include search-form;
