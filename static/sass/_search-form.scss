@@ -1,0 +1,9 @@
+@mixin search-form {
+  .p-form--search {
+    width: 100%;
+
+    .p-form__group {
+      flex-grow: 1;
+    }
+  }
+}
