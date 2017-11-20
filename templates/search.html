@@ -57,14 +57,13 @@
                   <h3 class="p-media-object__title">
                     <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
                   </h3>
-                  <p class="p-media-object__content"><a href="/{{ snap.package_name }}">https://snapcraft.io/{{ snap.package_name }}</a></p>
-                  <p class="p-media-object__content">{{ snap.summary }}</p>
-                  <p class="p-media-object__content">{{ snap.description | truncate(200) }}</p>
-                  <ul class="p-media-object__meta-list">
+                  <ul class="p-media-object__meta-list u-no-margin">
                     <li class="p-media-object__meta-list-item">
                       <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
                     </li>
                   </ul>
+                  <p class="p-media-object__content">{{ snap.summary }}</p>
+                  <p class="p-media-object__content">{{ snap.description | truncate(200) }}</p>
                 </div>
               </div>
             </li>
