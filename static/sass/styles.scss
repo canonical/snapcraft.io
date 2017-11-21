@@ -38,3 +38,6 @@
 
 @import 'search-form';
 @include search-form;
+
+@import 'patterns_sticky_footer';
+@include p-sticky-footer;
