@@ -1,0 +1,15 @@
+@mixin p-sticky-footer {
+  .p-sticky-footer {
+    margin-top: auto;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  .has-sticky-footer {
+    display: flex;
+    flex-direction: column;
+  }
+}
