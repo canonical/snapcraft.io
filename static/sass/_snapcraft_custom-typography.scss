@@ -1,0 +1,51 @@
+@mixin snapcraft-custom-typography {
+  // Sizing fixes for headings on home page
+  h2,
+  .p-heading--two {
+    line-height: 1.3333;
+  }
+
+  h5,
+  .p-heading--five {
+    line-height: 1.4;
+  }
+
+  // max-width based on font size for better readability
+  %heading-copy--short {
+    max-width: 20em;
+  }
+
+  %heading-copy--long {
+    max-width: 25em;
+  }
+
+  %paragraph-copy {
+    max-width: 35em;
+  }
+
+  h1,
+  h2,
+  .p-heading--two {
+    @extend %heading-copy--short;
+  }
+
+  h3,
+  h4,
+  .p-heading--three,
+  .p-heading--four {
+    @extend %heading-copy--long;
+  }
+
+  h5,
+  p,
+  .p-heading--five,
+  .p-heading--six {
+    @extend %paragraph-copy;
+  }
+
+  // update to p-list is-ticked style
+  // using em instead of rem to position the tick to make it look good with bigger fonts
+  .is-ticked {
+    background-position: 0 .3em;
+  }
+}
