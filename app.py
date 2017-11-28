@@ -69,6 +69,28 @@ search_query_headers = {
 }
 
 
+def get_searched_snaps(search_results):
+    return (
+        search_results['_embedded']['clickindex:package']
+        if search_results['_embedded']
+        else []
+    )
+
+
+def get_featured_snaps():
+    url = (
+        "https://api.snapcraft.io/api/v1/snaps/search"
+        "?confinement=strict,classic&q=&section=featured"
+    )
+
+    featured_response = _get_from_cache(
+        url,
+        headers=search_query_headers
+    )
+
+    return get_searched_snaps(featured_response.json())
+
+
 # Error handlers
 # ===
 @app.errorhandler(404)
@@ -171,7 +193,10 @@ def homepage():
 
 @app.route('/discover/')
 def discover():
-    return flask.render_template('discover.html')
+    return flask.render_template(
+        'discover.html',
+        featured_snaps=get_featured_snaps()
+    )
 
 
 @app.route('/search')
@@ -195,14 +220,10 @@ def search_snap():
     )
 
     searched_results = searched_response.json()
-    if(searched_results['_embedded']):
-        snaps = searched_results['_embedded']['clickindex:package']
-    else:
-        snaps = []
 
     context = {
         "query": snap_searched,
-        "snaps": snaps,
+        "snaps": get_searched_snaps(searched_response.json()),
         "links": get_pages_details(searched_results['_links'])
     }
 
