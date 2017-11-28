@@ -41,32 +41,28 @@
   <section class="p-strip is-shallow">
     <div class="row">
       <div class="col-8">
-        <ul class="p-list">
-          {% for snap in snaps %}
-            <li class="p-list__item">
-              <div class="p-media-object">
-                {% if snap.icon_url %}
-                  <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
-                {% else %}
-                  <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" class="p-media-object__image" alt="">
-                {% endif %}
+        {% for snap in snaps %}
+          <div class="p-media-object">
+              {% if snap.icon_url %}
+                <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
+              {% else %}
+                <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" class="p-media-object__image" alt="">
+              {% endif %}
 
-                <div class="p-media-object__details">
-                  <h3 class="p-media-object__title">
-                    <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
-                  </h3>
-                  <ul class="p-media-object__meta-list u-no-margin">
-                    <li class="p-media-object__meta-list-item">
-                      <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
-                    </li>
-                  </ul>
-                  <p class="p-media-object__content">{{ snap.summary }}</p>
-                  <p class="p-media-object__content">{{ snap.description | truncate(200) }}</p>
-                </div>
+              <div class="p-media-object__details">
+                <h3 class="p-media-object__title">
+                  <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
+                </h3>
+                <ul class="p-media-object__meta-list u-no-margin">
+                  <li class="p-media-object__meta-list-item">
+                    <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
+                  </li>
+                </ul>
+                <p class="p-media-object__content">{{ snap.summary }}</p>
+                <p class="p-media-object__content">{{ snap.description | truncate(200) }}</p>
               </div>
-            </li>
-          {% endfor %}
-        </ul>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </section>
