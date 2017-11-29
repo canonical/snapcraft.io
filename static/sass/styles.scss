@@ -1,3 +1,7 @@
+// colour definitions
+$color-brand: #00302f; // TODO: this is a temprary brand colour
+$color-accent: $color-brand;
+
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 @include vanilla-base;
@@ -20,6 +24,7 @@
 @include vf-u-padding-collapse;
 @include vf-u-align;
 @include vf-p-forms;
+@include vf-p-headings;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
@@ -41,3 +46,9 @@
 
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
+
+@import 'snapcraft_custom-typography';
+@include snapcraft-custom-typography;
+
+@import 'snapcraft_banner';
+@include snapcraft-banner;

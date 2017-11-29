@@ -168,13 +168,16 @@ def homepage():
     return flask.render_template('index.html')
 
 
+@app.route('/discover')
+def discover():
+    return flask.render_template('discover.html')
+
+
 @app.route('/search')
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
-        return flask.render_template(
-            'search.html'
-        )
+        return flask.redirect('/discover')
 
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)

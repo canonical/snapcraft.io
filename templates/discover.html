@@ -1,0 +1,27 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  Discover snaps for any Linux device — Linux software in the Snap Store
+{% endblock %}
+
+{% block content %}
+  <section id="main-content" class="p-strip--accent p-strip--image is-dark is-deep snapcraft-banner-background">
+    <div class="row">
+      <div class="col-10">
+        <h2>Discover snaps for any Linux device</h2>
+        <p class="p-heading--five">The snap directory is home to easily installable, safe to run and auto-updating software packages that work on all major Linux systems across cloud, desktop and IoT devices.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-10">
+        <form action="/search" class="p-form p-form--inline p-form--search">
+          <div class="p-form__group">
+            <label for="search-input" class="u-off-screen">Search</label>
+            <input id="search-input" type="search" name="q" value="{{ query }}" class="p-form__control"/>
+          </div>
+            <button type="submit" alt="search" class="p-button--positive u-align--left">Search</button>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

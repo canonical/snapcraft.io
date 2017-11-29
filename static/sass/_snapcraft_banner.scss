@@ -1,0 +1,7 @@
+@mixin snapcraft-banner {
+  .snapcraft-banner-background {
+    background-image: url('#{$assets-path}0a575390-hero-background--edgeless.png');
+    background-position: 50% 0;
+    background-size: 1440px 1440px;
+  }
+}
