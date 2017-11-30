@@ -60,6 +60,7 @@ metrics_query_headers = {
 snap_search_url = (
     "https://search.apps.ubuntu.com/api/v1/snaps/search"
     "?q={snap_name}&page={page}&size={size}"
+    "&confinement=strict,classic"
 )
 search_query_headers = {
     'X-Ubuntu-Frameworks': '*',
