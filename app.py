@@ -168,7 +168,7 @@ def homepage():
     return flask.render_template('index.html')
 
 
-@app.route('/discover')
+@app.route('/discover/')
 def discover():
     return flask.render_template('discover.html')
 
