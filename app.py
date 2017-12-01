@@ -192,6 +192,11 @@ def homepage():
     return flask.render_template('index.html', now=datetime.datetime.utcnow())
 
 
+@app.route('/index2')
+def new_homepage():
+    return flask.render_template('index2.html', now=datetime.datetime.utcnow())
+
+
 @app.route('/discover/')
 def discover():
     return flask.render_template(
