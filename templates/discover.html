@@ -25,7 +25,36 @@
     </div>
   </section>
 
-  <!--
-    {{ featured_snaps }}
-  -->
+  <section class="p-strip is-deep is-bordered">
+    <div class="row">
+      <div class="col-12">
+        <h2>Featured snaps</h2>
+      </div>
+    </div>
+    <div class="row">
+      {% for snap in featured_snaps %}
+        <div class="col-3">
+          <div class="p-heading-icon">
+            <div class="p-heading-icon__header">
+              <a class="p-heading-icon__img" href="/{{ snap.package_name }}">
+                {% if snap.icon_url %}
+                  <img src="{{ snap.icon_url }}" alt="">
+                {% else %}
+                  <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="">
+                {% endif %}
+              </a>
+              <h5 class="u-no-margin"><a href="/{{ snap.package_name }}">{{ snap.title }}</a></h5>
+            </div>
+          </div>
+        </div>
+
+        {# end the row after every 4th snap #}
+        {% if (loop.index % 4 == 0) and not loop.last %}
+          </div>
+          <div class="row">
+        {% endif %}
+
+      {% endfor %}
+    </div>
+  </section>
 {% endblock %}
