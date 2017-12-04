@@ -1,0 +1,71 @@
+@mixin vf-p-testimonial {
+  .p-testimonial {
+    border: 0;
+    margin: $sp-x-large 0 $sp-medium;
+    padding-left: $sp-x-large;
+    padding-right: $sp-medium;
+    position: relative;
+
+    @media (min-width: 768px) {
+      & {
+        margin: $sp-large 0;
+      }
+    }
+
+    & > p:first-of-type::before,
+    & > p:last-of-type::after {
+      color: lighten($color-brand, 10%);
+      font-size: 2rem;
+      line-height: 0;
+      max-width: $sp-medium;
+    }
+
+    & > p {
+      font-style: normal;
+      margin: 0;
+    }
+
+    & > p:first-of-type::before {
+      content: '\201C\2002';
+      margin-left: -$sp-medium;
+      margin-right: -$sp-small;
+      position: relative;
+      top: $sp-small;
+    }
+
+    & > p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    & > p:last-of-type::after {
+      content: '\2002\201E';
+      margin-left: -$sp-small;
+      position: relative;
+      top: -$sp-small;
+    }
+
+    &--citation {
+      display: inline-block;
+      font-style: italic;
+      line-height: 1.5;
+      margin-top: $sp-small;
+      text-align: right;
+      width: 100%;
+    }
+
+    &--logo {
+      display: inline;
+      height: $sp-medium;
+      vertical-align: middle;
+    }
+
+    &--logo > img {
+      display: inline;
+      height: 25px;
+      margin-right: .625rem;
+      vertical-align: middle;
+    }
+
+  }
+
+}
