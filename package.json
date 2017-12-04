@@ -17,7 +17,7 @@
     "postcss-cli": "^4.1.0",
     "sass-lint": "^1.10.2",
     "topojson-client": "^3.0.0",
-    "vanilla-framework": "^1.6.2",
+    "vanilla-framework": "^1.6.3",
     "watch-cli": "^0.2.2"
   }
 }
