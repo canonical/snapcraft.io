@@ -20,6 +20,7 @@ from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from urllib.parse import urlparse, parse_qs
+from random import randint
 
 
 app = flask.Flask(__name__)
@@ -274,6 +275,7 @@ def snap_details(snap_name):
         headers=metrics_query_headers,
         json=metrics_query_json
     )
+
     geodata = metrics_response.json()[0]['series']
 
     # Normalise geodata from API
@@ -409,3 +411,79 @@ def _get_from_cache(url, headers, json=None):
     response.old_data_from_error = request_error
 
     return response
+
+
+# Publisher views
+# ===
+@app.route('/snaps/<snap_name>/measure')
+def publisher_snap(snap_name):
+    """
+    A view to display the snap measure page for specific snaps.
+
+    This queries the snapcraft API (api.snapcraft.io) and passes
+    some of the data through to the publisher/measure.html template,
+    with appropriate sanitation.
+    """
+    metric_period = flask.request.args.get('period', default='30d', type=str)
+    metric_period_int = int(metric_period[:-1])
+
+    details_response = _get_from_cache(
+        snap_details_url.format(snap_name=snap_name),
+        headers=details_query_headers
+    )
+    details = details_response.json()
+
+    if details_response.status_code >= 400:
+        message = (
+            'Failed to get snap details for {snap_name}'.format(**locals())
+        )
+
+        if details_response.status_code == 404:
+            message = 'Snap not found: {snap_name}'.format(**locals())
+
+        flask.abort(details_response.status_code, message)
+
+    # Dummy data
+    installs_metrics = {}
+    installs_metrics['buckets'] = []
+    installs_metrics['metric_name'] = 'installs'
+    installs_metrics['series'] = []
+    installs_metrics['snap_id'] = details['snap_id']
+    installs_metrics['status'] = 'OK'
+
+    start_date = datetime.date.today() + datetime.timedelta(
+        days=-metric_period_int)
+
+    for index in range(0, metric_period_int):
+        new_date = start_date + datetime.timedelta(days=index)
+        new_date = new_date.strftime('%Y-%m-%d')
+        installs_metrics['buckets'].append(new_date)
+
+    installs_values = []
+    for index in range(0, metric_period_int):
+        installs_values.append(randint(0, 100))
+
+    installs_metrics['series'].append({
+        'name': 'installs',
+        'values': installs_values
+    })
+    # end of dummy data
+
+    context = {
+        # Data direct from details API
+        'snap_title': details['title'],
+        'package_name': details['package_name'],
+        'metric_period': metric_period_int,
+
+        # Metrics data
+        'installs_total': sum(installs_values),
+        'installs_metrics': installs_metrics,
+
+        # Context info
+        'is_linux': 'Linux' in flask.request.headers['User-Agent']
+    }
+
+    return flask.render_template(
+        'publisher/measure.html',
+        **context
+    )

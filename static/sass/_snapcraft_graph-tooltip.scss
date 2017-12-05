@@ -1,0 +1,42 @@
+@mixin snapcraft-graph-tooltip {
+  .snapcraft-graph-tooltip {
+    &__title {
+      border-bottom: 1px solid $color-mid-dark;
+      display: block;
+      padding-bottom: .25rem;
+      text-align: center;
+    }
+
+    &__series {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      margin-top: .25rem;
+
+      &-name {
+        display: inline-block;
+        text-align: right;
+        text-transform: capitalize;
+        width: calc(50% - .5rem);
+      }
+
+      &-color {
+        border-radius: 1rem;
+        display: inline-block;
+        height: 1rem;
+        margin: {
+          left: .25rem;
+          right: .25rem;
+          top: 0;
+        }
+        width: 1rem;
+      }
+
+      &-value {
+        display: inline-block;
+        margin-top: 0;
+        width: calc(50% - .5rem);
+      }
+    }
+  }
+}
