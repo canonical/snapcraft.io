@@ -1,0 +1,81 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+  Publisher
+{% endblock %}
+
+{% block content %}
+  <section id="main-content">
+    <div class="row">
+      <h1>{{ snap_title }}</h1>
+    </div>
+    <div class="row">
+      <div class="grid">
+        <div class="col-3">
+          <select class="p-form__control" disabled="disabled">
+            <option value="30d">30 days</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <select class="p-form__control" disabled="disabled">
+            <option value="all">All tracks and branches</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="u-clearfix">
+        <h3 class="u-float--left">Installs</h3>
+        <strong class="p-heading--three u-float--right u-no-margin--top">786</strong>
+      </div>
+      <p>GRAPH</p>
+    </div>
+    <div class="row">
+      <div class="u-clearfix">
+        <h3 class="u-float--left">Daily active devices</h3>
+        <strong class="p-heading--three u-float--right u-no-margin--top">5011</strong>
+      </div>
+      <div class="grid u-clearfix">
+        <div class="col-3">
+          <select class="p-form__control">
+            <option value="version">By version</option>
+          </select>
+        </div>
+      </div>
+      <p>GRAPH</p>
+    </div>
+    <div class="row">
+      <div class="grid">
+        <div class="col-6">
+          <div class="u-clearfix">
+            <h3 class="u-float--left">Territories</h3>
+            <strong class="p-heading--three u-float--right u-no-margin--top">74</strong>
+          </div>
+          <p>GRAPH</p>
+        </div>
+        <div class="col-6 last-col">
+          <div class="u-clearfix">
+            <h3 class="u-float--left">Retention</h3>
+            <strong class="p-heading--three u-float--right u-no-margin--top">29%</strong>
+          </div>
+          <div class="grid">
+            <div class="col-3 u-no-margin--left">
+              <select>
+                <option>by version</option>
+              </select>
+            </div>
+          </div>
+          <p>GRAPH</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    
+  </script>
+
+  <!--
+    {{ featured_snaps }}
+  -->
+{% endblock %}
