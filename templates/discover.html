@@ -35,16 +35,14 @@
       {% for snap in featured_snaps %}
         <div class="col-3">
           <div class="p-heading-icon">
-            <div class="p-heading-icon__header">
-              <a class="p-heading-icon__img" href="/{{ snap.package_name }}">
-                {% if snap.icon_url %}
-                  <img src="{{ snap.icon_url }}" alt="">
-                {% else %}
-                  <img src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="">
-                {% endif %}
-              </a>
-              <h5 class="u-no-margin"><a href="/{{ snap.package_name }}">{{ snap.title }}</a></h5>
-            </div>
+            <a class="p-heading-icon__header" href="/{{ snap.package_name }}">
+              {% if snap.icon_url %}
+                <img class="p-heading-icon__img" src="{{ snap.icon_url }}" alt="">
+              {% else %}
+                <img class="p-heading-icon__img" src="https://assets.ubuntu.com/v1/610689b1-default-package-icon.svg" alt="">
+              {% endif %}
+              <h5 class="u-no-margin">{{ snap.title }}</h5>
+            </a>
           </div>
         </div>
 
