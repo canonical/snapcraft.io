@@ -19,6 +19,7 @@ from dateutil import parser, relativedelta
 from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+from requests.exceptions import RequestException
 from urllib.parse import urlparse, parse_qs
 
 
@@ -404,7 +405,7 @@ def _get_from_cache(url, headers, json=None):
                 )
                 if response.status_code >= 500:
                     new_response.raise_for_status()
-            except:
+            except RequestException:
                 request_error = True
             else:
                 response = new_response
