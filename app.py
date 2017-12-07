@@ -249,7 +249,7 @@ def snap_details(snap_name):
     with appropriate sanitation.
     """
     today = datetime.datetime.utcnow().date()
-    month_ago = today - relativedelta.relativedelta(months=1)
+    week_ago = today - relativedelta.relativedelta(weeks=1)
 
     details_response = _get_from_cache(
         snap_details_url.format(snap_name=snap_name),
@@ -271,7 +271,7 @@ def snap_details(snap_name):
         {
             "metric_name": "installed_base_by_country_percent",
             "snap_id": details['snap_id'],
-            "start": month_ago.strftime('%Y-%m-%d'),
+            "start": week_ago.strftime('%Y-%m-%d'),
             "end": today.strftime('%Y-%m-%d')
         }
     ]
