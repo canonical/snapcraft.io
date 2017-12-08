@@ -1,5 +1,4 @@
 @mixin snapcraft-metrics {
-  $color-installs: #94519e;
 
   svg {
     -webkit-tap-highlight-color: transparent;
@@ -37,7 +36,6 @@
         &-y {
           .tick {
             line {
-              stroke: $color-installs;
               transform: scaleX(1.143) translateX(-4px);
             }
 
