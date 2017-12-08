@@ -1,692 +1,381 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>snapcraft - Snaps are universal Linux packages</title>
+    <title>Snapcraft - Snaps are universal Linux packages</title>
 
-        <!-- Google Optimize page-hiding -->
-        <style>.async-hide { opacity: 0 !important} </style>
-        <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
-        h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
-        (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
-        })(window,document.documentElement,'async-hide','dataLayer',4000,
-        {'GTM-MJJ7C2K':true});</script>
-        <!-- End Google Optimize page-hiding -->
+    <!-- Google Optimize page-hiding -->
+    <style>.async-hide { opacity: 0 !important} </style>
+    <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
+    h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
+    (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+    })(window,document.documentElement,'async-hide','dataLayer',4000,
+    {'GTM-MJJ7C2K':true});</script>
+    <!-- End Google Optimize page-hiding -->
 
-        <!-- Google Analytics and Google Optimize -->
-        <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-1018242-59', 'auto', {'allowLinker': true});
-        ga('require', 'GTM-MJJ7C2K');
-        ga('require', 'linker');
-        ga('linker:autoLink', ['snapcraft.io', 'build.snapcraft.io',
-        'dashboard.snapcraft.io', 'conjure-up.io', 'login.ubuntu.com', 'www.ubuntu.com',
-        'ubuntu.com', 'insights.ubuntu.com', 'developer.ubuntu.com', 'cn.ubuntu.com',
-        'design.ubuntu.com', 'maas.io', 'canonical.com', 'landscape.canonical.com',
-        'pages.ubuntu.com', 'tutorials.ubuntu.com', 'docs.ubuntu.com']);
-        </script>
-        <!-- End Google Analytics and Google Optimize -->
+    <!-- Google Analytics and Google Optimize -->
+    <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-1018242-59', 'auto', {'allowLinker': true});
+    ga('require', 'GTM-MJJ7C2K');
+    ga('require', 'linker');
+    ga('linker:autoLink', ['snapcraft.io', 'build.snapcraft.io',
+    'dashboard.snapcraft.io', 'conjure-up.io', 'login.ubuntu.com', 'www.ubuntu.com',
+    'ubuntu.com', 'insights.ubuntu.com', 'developer.ubuntu.com', 'cn.ubuntu.com',
+    'design.ubuntu.com', 'maas.io', 'canonical.com', 'landscape.canonical.com',
+    'pages.ubuntu.com', 'tutorials.ubuntu.com', 'docs.ubuntu.com']);
+    </script>
+    <!-- End Google Analytics and Google Optimize -->
 
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
-        <!-- End Google Tag Manager -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
+    <!-- End Google Tag Manager -->
 
-        <script>
-        /* HTML5 element support */
-        for(var e,l='article aside footer header nav section time'.split(' ');e=l.pop();document.createElement(e));
-        </script>
+    <script>
+    /* HTML5 element support */
+    for(var e,l='article aside footer header nav section time'.split(' ');e=l.pop();document.createElement(e));
+    </script>
 
-        <meta name="description" content="Introducing snaps and commands to install and remove them on Ubuntu 16.04 LTS.">
+    <meta name="description" content="Introducing snaps and commands to install and remove them on Ubuntu 16.04 LTS.">
 
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://assets.ubuntu.com/v1/3361409d-apple-touch-icon-144x144-precomposed.png" />
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://assets.ubuntu.com/v1/5fe4d3c8-apple-touch-icon-114x114-precomposed.png" />
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://assets.ubuntu.com/v1/09460d9a-apple-touch-icon-72x72-precomposed.png" />
-        <link rel="apple-touch-icon-precomposed" href="https://assets.ubuntu.com/v1/cc66da65-apple-touch-icon-precomposed.png" />
+    <link rel="stylesheet" href="/static/minified/styles.css">
+  </head>
 
-        <link rel="stylesheet" href="/static/minified/index.css">
-    </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KCGXHQS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
-    <body class="">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KCGXHQS"
-        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-        <!-- End Google Tag Manager (noscript) -->
-
-        <header class="banner global" role="banner">
-            <nav role="navigation" class="nav-primary" id="nav-primary">
-                <span class="accessibility-aid">
-                    <a href="#main-content">Jump to main content</a>
-                </span>
-                <div class="logo">
-                    <a href="/">
-                        <img src="https://assets.ubuntu.com/v1/d45097a4-snapcraft.io-logotype.svg" alt="Snapcraft.io">
-                    </a>
-                </div>
-                <div id="nav">
-                    <div class="nav-toggle">
-                        <a href="#nav" class="nav-toggle__link open"></a>
-                        <a href="#" class="nav-toggle__link close"></a>
-                    </div>
-
-                    <ul>
-                        <li><a href="https://build.snapcraft.io">Build</a></li>
-                        <li ><a href="/docs">Docs</a></li>
-                        <li><a class="external" href="https://tutorials.ubuntu.com">Tutorials</a></li>
-                        <li><a class="external" href="https://forum.snapcraft.io/">Forum</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-
-        <div class="page-content">
-        <section class="row hero-row no-border">
-        <div class="wrapper">
-            <div class="eight-col">
-                <h1 id="snapcraft_home_banner" class="accessibility-aid">Snapcraft</h1>
-                <p class="intro">Package any app for every Linux desktop,
-                server, cloud or device, and deliver updates directly.</p>
-                <p>
-                  <a href="https://docs.snapcraft.io/build-snaps/"><button class="p-button--primary" style="margin-right: 0.75rem; margin-bottom: 0.75rem;">Learn to craft your first snap</button></a> or <a href="https://build.snapcraft.io" class="external">Auto-build and publish from your GitHub repos</a>
-                </p>
-            </div>
-            <div class="twelve-col">
-                <ul class="inline-logos equal-height">
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-ubuntu"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/c086ad34-logo-ubuntu_st_no-black_orange-hex.svg" alt="Ubuntu" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-arch-linux"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/e0b23092-archlinux.svg" alt="Arch Linux" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-debian"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/2eafb62e-openlogo.svg" alt="Debian" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-gentoo"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/b6fa25ef-Gentoo-trans02.png" alt="Gentoo" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-fedora"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/1a53bedd-fedora.svg" alt="Fedora" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-opensuse"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/06469a26-official-logo-color.svg" alt="openSUSE" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-oe-yocto"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/d243274d-openembedded-logo.svg" alt="OpenEmbedded" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-oe-yocto"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/d9a1a359-yocto-project-transp.png" alt="Yocto Project" />
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-openwrt"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/d4981274-Openwrt_Logo.svg" alt="OpenWrt" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-solus"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/5cb36534-Solus_With_Text.png" alt="Solus" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-linux-mint"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/2c267fde-linux-mint.svg" alt="Linux Mint" /></a>
-                    </li>
-                    <li class="inline-logos__item box">
-                        <a href="/docs/core/install-manjaro"><img class="inline-logos__image" src="https://assets.ubuntu.com/v1/1669f9dd-manjaro.png" alt="Manjaro" /></a>
-                    </li>
-                </ul>
-
-            </div>
+    <header id="navigation" class="p-navigation">
+      <div class="row">
+        <div class="p-navigation__banner">
+          <div class="p-navigation__logo">
+            <a href="/">
+              <img class="u-float-left" src="https://assets.ubuntu.com/v1/d45097a4-snapcraft.io-logotype.svg" width="148" alt="Snapcraft.io" />
+            </a>
+          </div>
+          <a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
+          <a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
         </div>
-    </section>
-    <section id="snapcraft_home_install" class="row hero-row no-border row-grey">
-        <div class="wrapper">
-            <div class="twelve-col">
-                <div class="equal-height--vertical-divider">
-                  <div class="equal-height--vertical-divider__item four-col">
-                      <h3>Quick to install</h3>
-                      <p>Snaps are quick to install, easy to create, safe to run, and they
-                      update automatically and transactionally so your app is always fresh and
-                      never broken.</p>
-                      <p><a href="/docs/core/install">Install snapd&nbsp;&rsaquo;</a></p>
-                  </div>
-                  <div class="equal-height--vertical-divider__item four-col">
-                      <h3>Work anywhere</h3>
-                      <p>Snaps aim to work on any distribution or device, from IoT devices to
-                      servers, desktops to mobile devices.</p>
-                      <p><a href="https://github.com/snapcore/snapd" class="external">Build snapd from source</a></p>
-                  </div>
-                  <div class="equal-height--vertical-divider__item four-col last-col">
-                      <h3>GitHub and beyond</h3>
-                      <p>The public collection of snaps includes the best of GitHub and beyond,
-                      so you have the whole world of Linux at your fingertips.</p>
-                      <p><a href="https://build.snapcraft.io" class="external">Build a snap from GitHub</a></p>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="snapcraft_home_featured-snaps" class="row">
-        <div class="wrapper">
-            <div class="seven-col">
-                <h2>Featured snaps</h2>
-            </div>
-
-            <ul class="grid-list twelve-col no-bullets no-margin-bottom equal-height">
-                <li class="equal-height__align-vertically grid-list__item four-col">
-                    <div class="one-col ">
-                        <a href="/atom"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/2ca6d139-atom.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/atom">Atom</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col">
-                    <div class="one-col ">
-                        <a href="/brackets"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/13929d8e-brackets.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/brackets">Brackets</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col last-col">
-                    <div class="one-col ">
-                        <a href="/chromium"><img class="grid-list__img" src="https://dashboard.snapcraft.io/site_media/appmedia/2017/08/chromium-browser.svg.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/chromium">Chromium</a></h3>
-                    </div>
-                </li>
-
-                <li class="equal-height__align-vertically grid-list__item four-col">
-                    <div class="one-col ">
-                        <a href="/nextcloud"><img class="grid-list__img" src="https://dashboard.snapcraft.io/site_media/appmedia/2016/06/icon.svg_1.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/nextcloud">Nextcloud</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col">
-                    <div class="one-col ">
-                        <a href="/discord"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/4eca1f4e-discord.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/discord">Discord</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col last-col">
-                    <div class="one-col ">
-                        <a href="/intellij-idea-ultimate"><img class="grid-list__img" src="https://dashboard.snapcraft.io/site_media/appmedia/2017/10/logo_zjwX5FR.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/intellij-idea-ultimate">IntelliJ IDEA</a></h3>
-                    </div>
-                </li>
-
-                <li class="equal-height__align-vertically grid-list__item four-col">
-                    <div class="one-col ">
-                        <a href="/go"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/8f0cd431-golang.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/go">Golang</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col">
-                    <div class="one-col ">
-                        <a href="/heroku"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/86bae242-heroku.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/heroku">Heroku</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col last-col">
-                    <div class="one-col ">
-                        <a href="/hiri"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/f4b790e9-hiri.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/hiri">Hiri</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col last-row">
-                    <div class="one-col ">
-                        <a href="/pycharm-community"><img class="grid-list__img" src="https://dashboard.snapcraft.io/site_media/appmedia/2017/05/pycharm_logo_256_WJuIBUR.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/pycharm-community">PyCharm</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col last-row">
-                    <div class="one-col ">
-                        <a href="/teleconsole"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/a01512ec-teleconsole.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/teleconsole">Teleconsole</a></h3>
-                    </div>
-                </li>
-                <li class="equal-height__align-vertically grid-list__item four-col last-col last-row">
-                    <div class="one-col ">
-                        <a href="/wavebox"><img class="grid-list__img" src="https://assets.ubuntu.com/v1/edab8e40-wavebox.png" alt="icon"></a>
-                    </div>
-                    <div class="three-col last-col">
-                        <h3><a href="/wavebox">Wavebox</a></h3>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </section>
-
-    <section id="snapcraft_home_how-snaps-work" class="row">
-        <div class="wrapper">
-            <div class="eight-col">
-                <h2>How do snaps work?</h2>
-                <p>A snap is a fancy zip file containing an application together
-                with its dependencies, and a description of how it should safely
-                run on your system, especially the different ways it should
-                talk to other software.</p>
-                <p>Snaps are designed to be secure, sandboxed,
-                containerised applications isolated from the underlying system
-                and from other applications. Snaps allow the safe installation
-                of apps from any vendor on mission critical devices and desktops.</p>
-
-                <p>Try this: (you may need to <a href="/docs/core/install">install snapd</a>)</p>
-
-                <pre class="command-line code-block">
-<code>$ sudo snap install hello-world</code></pre>
-
-                <p>Now you have installed a snap. You can take a look inside the
-                snap, since it is a new directory on your system:</p>
-
-                <pre class="command-line code-block">
-<code>$ cd /snap/hello-world/current/
-
-$ tree
-.
-├── <span class="directory-highlight">bin</span>                 ← this directory structure is just for convenience
-│   ├── <span class="bin-highlight">echo</span>              there is no hardcoded structure requirement other
-│   ├── <span class="bin-highlight">env</span>               than meta/snap.yaml
-│   ├── <span class="bin-highlight">evil</span>
-│   ├── <span class="bin-highlight">sh</span>
-│   ├── <span class="bin-highlight">showdev</span>
-│   └── <span class="bin-highlight">usehw</span>
-└── <span class="directory-highlight">meta</span>                ← your snap must have this directory
-    ├── <span class="image-highlight">icon.png</span>
-    └── snap.yaml       ← this is the required metadata</code></pre>
-
-                <p>So to create a snap, just put all the files you need
-                into a directory, use whatever subdirectory structure you want. That
-                directory will be compressed into a <dfn>squashfs</dfn> — a zipped directory —
-                which will be mounted at
-                <code class="command-inline">/snap/&lt;name&gt;/current</code> when
-                the snap is installed. Your snap apps will know where they are mounted
-                because that is provided as the
-                <code class="command-inline">$SNAP</code> environment variable
-                when they are run.</p>
-
-                <p>The only requirement of a snap structure is that it
-                contains a file called <code class="command-inline">meta/snap.yaml</code>, which describes security requirements
-                and how the snap should integrate with other parts of the system.
-                Let’s take a look at that <code class="command-inline">snap.yaml</code>
-                for the <code class="command-inline">hello-world</code> snap:</p>
-
-                <pre class="command-line code-block">
-<code>$ cat meta/snap.yaml
-<span class="key-highlight">name:</span> hello-world
-<span class="key-highlight">version:</span> 6.1
-<span class="key-highlight">architectures:</span> [ all ]
-<span class="key-highlight">summary:</span> <span class="string-highlight">"The 'hello-world' of snaps"</span>
-<span class="key-highlight">description:</span> <span class="string-highlight">|
-    This is a simple snap example that includes a few interesting binaries
-    to demonstrate snaps and their confinement.
-    * hello-world.env  - dump the env of commands run inside app sandbox
-    * hello-world.evil - show how snappy sandboxes binaries
-    * hello-world.sh   - enter interactive shell that runs in app sandbox
-    * hello-world      - simply output text</span>
-<span class="key-highlight">apps:</span>
-  <span class="key-l2-highlight">env:</span>
-    <span class="key-l3-highlight">command:</span> bin/env
-  <span class="key-l2-highlight">evil:</span>
-    <span class="key-l3-highlight">command:</span> bin/evil
-  <span class="key-l2-highlight">sh:</span>
-    <span class="key-l3-highlight">command:</span> bin/sh
-  <span class="key-l2-highlight">hello-world:</span>
-    <span class="key-l3-highlight">command:</span> bin/echo</code></pre>
-
-                <p>The initial metadata describes the snap. The <code class="command-inline">version</code> is purely for humans; the snap system
-                won’t ever treat it as special or try to compare versions
-                between snaps.</p>
-
-                <p>Next is a list of “apps” provided by this snap. Each app
-                is explicitly named (“<code class="command-inline">env</code>”, “<code class="command-inline">evil</code>”, ‘<code class="command-inline">sh</code>”, and “<code class="command-inline">hello-world</code>”) and each
-                gets a distinctive command, which is path relative to <code class="command-inline">$SNAP</code>. The name
-                of the app doesn’t have to match the command.</p>
-                <p>The special app here is “<code class="command-inline">hello-world</code>”, because it has the same name
-                as the snap itself. This makes it the default app in the snap, so you can run
-                it just by typing “<code class="command-inline">hello-world</code>” after the snap is installed. The others
-                need to be namespaced, so “<code class="command-inline">hello-world.evil</code>” will execute the <code class="command-inline">bin/evil</code>
-                command in the snap.</p>
-                <p>A snap can declare daemons to be started as well. This one just
-                describes some apps.</p>
-            </div>
-
-            <div class="four-col last-col">
-                <ul class="inline-logos">
-                    <li class="inline-logos__item">
-                        <img class="inline-logos__image" src="https://assets.ubuntu.com/v1/c24cb4b9-logo-intel.svg" alt="intel" />
-                    </li>
-                    <li class="inline-logos__item">
-                        <img class="inline-logos__image" src="https://assets.ubuntu.com/v1/b5352dc1-logo-arm.svg" alt="arm" />
-                    </li>
-                    <li class="inline-logos__item">
-                        <img class="inline-logos__image" src="https://assets.ubuntu.com/v1/47e40767-power8.png" alt="power8" />
-                    </li>
-                </ul>
-            </div>
-
-            <div id="snapcraft_home_how-snaps-work_read-only" class="eight-col">
-                <h3>Snaps are read-only and have segregated data stores</h3>
-                <p>Snaps are read-only for security. The aim is to prevent a hostile
-                party from sneakily changing the software on your machine, so you
-                cannot modify a snap that is installed on your system. This also
-                means you can always check the signature on the snap, even long
-                after you installed it, to make sure it is still exactly the
-                software you intended. If you want to modify a snap, you can
-                usually build your own version of it, especially if it is open
-                source.</p>
-                <p>So where can a snap write data? Each snap gets its own set of
-                writable directories which have specific properties. There are
-                two directories which the snap can write to independent of the
-                user. One of these is versioned: each time the snap is upgraded
-                the data is saved and the new snap revision can upgrade its copy.
-                The other common data directory is not versioned, and is used
-                for big blobs of data that you don’t want to duplicate across
-                revisions of the snap:</p>
-
-                <pre class="command-line code-block">
-<code>/var/snap/&lt;name&gt;/current/  ← $SNAP_DATA is the versioned snap data directory
-/var/snap/&lt;name&gt;/common/   ← $SNAP_COMMON will not be versioned on upgrades</code></pre>
-
-                <p>Typically, configuration is stored in one of these, along with
-                system-wide data for the snap.</p>
-
-                <p>There are an equivalent two writable directories for each
-                snap in the user’s home directory, which can be used to store snap data
-                specific to that user:</p>
-
-                <pre class="command-line code-block">
-<code>~/snap/&lt;name&gt;/current/      ← $SNAP_USER_DATA that can be rolled back
-~/snap/&lt;name&gt;/common/       ← $SNAP_USER_COMMON unversioned user-specific data</code></pre>
-
-                <p>This way applications can be immutable for security reasons,
-               while still offering a full and rich user experience. To learn
-               more about the makeup of a snap please see the
-               <a href="/docs/snaps/structure">snap
-               architecture article.</a></p>
-            </div>
-
-            <div id="snapcraft_home_how-snaps-work_integration" class="eight-col">
-                <h3>Snap integration with interfaces, plugs and slots</h3>
-                <p> Snaps are safely confined in their separate sandboxes by
-                sophisticated kernel security mechanisms. That means that snaps
-                can’t peek at your data — other than the data you give
-                them — if they are compromised or malicious. But what if you need your snap
-                to talk to another snap? For example, what if your snap needs to
-                talk to a database?</p>
-                <p>It can use “interfaces” — standard and well-defined ways to
-                provide and consume services from one another. Snaps can offer
-                “slots” to provide services, and declare “plugs” that connect
-                to other snap slots to consume those services. Imagine two snaps
-                A and B that need to talk to each other:</p>
-
-                <p class="diagram">
-                    <img src="https://assets.ubuntu.com/v1/74bd0daf-interfaces-+plugs-and-slots.svg" />
-                </p>
-
-                <p class="complementing-note">These two snaps can be connected because they have a plug
-                and a slot with a matching interface.</p>
-
-                <p>The interfaces are declared in the <code class="command-inline">snap.yaml</code> metadata:</p>
-                <p class="diagram">
-                    <img src="https://assets.ubuntu.com/v1/1c1706c0-Update-Snapcraft%28dot%29io+-+YAML+metadata.svg" />
-                </p>
-
-                <p>There are <a class="external" href="/docs/reference/interfaces">
-                many interfaces defined</a> that can be used by
-                snap developers to describe the ways their snaps should be
-                connected. A snap can be connected to the host system OS
-                using plugs, too, which is how it can access shared user
-                documents or other services like OpenGL.</p>
-
-                <p>Snaps can share files with other snaps from the same vendor,
-                or with community-maintained shared snaps which act as libraries
-                of common data or code, for
-                example using the content-sharing interface. This reduces duplication while still ensuring rigorous
-                security and update control.</p>
-
-                <p>When you install a snap, the system will automatically connect
-                up the standard, safe plugs and slots. For example, your new game
-                will automatically get access to the OpenGL libraries on your
-                system because that’s considered normal behaviour for a game.
-                But there may be other plugs and slots you can connect up by
-                choice, and  snaps will document those individually.</p>
-            </div>
-            <div id="snapcraft_home_how-snaps-work_architecture" class="eight-col">
-                <h3>The architecture of a snappy system</h3>
-                <p>So a snappy system has a collection of snaps, each of which
-                is read-only, each of which has its own set of independent
-                writable directories, and each of which can talk to other snaps
-                and the host OS through a set of plugs and slots with matching
-                interfaces.</p>
-
-                <p>
-                    <img class="diagram--wide" src="https://assets.ubuntu.com/v1/143dff64-Update-Snapcraft%28dot%29io-architecture_v2.svg" />
-                </p>
-
-                <p>The snap system will present all the snap apps under <code class="command-inline">/snap/bin/</code>,
-                so with that on your <code class="command-inline">$PATH</code> you can easily run snap commands. It
-                will also integrate all the snap daemons (services) with your
-                init system so that they are automatically started and stopped
-                as needed.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="snapcraft_home_using-snaps" class="row">
-        <div class="wrapper">
-            <div class="eight-col">
-                <h2>Using snaps — the snappy “hello world” tour</h2>
-                <p>To install a snap, you’ll start by looking for available snaps.
-                Anybody can publish a snap, but if you search the default Ubuntu
-                store you will only see snaps that have been reviewed and judged
-                to be of good quality, and which can be installed securely. We
-                call these the ‘promoted’ snaps, and you can search them for a
-                matching name:</p>
-
-
-
-<pre class="command-line code-block"><code>$ snap find hello
-Name         Version  Developer  Notes  Summary
-hello        2.10     canonical  -      GNU Hello, the "hello world" snap
-hello-huge   1.0      noise      -      A really big snap
-hello-world  6.1      canonical  -      Hello world example</code></pre>
-
-                <p>In the future, you will be able to refine <code class="command-inline">snap find</code> queries with more parameters.</p>
-
-                <p>These examples use the Ubuntu store; your snap implementation
-                might be different. Other stores are available, and it’s easy
-                to create your own. There is an open-source
-                <a class="external" href="https://github.com/noise/snapstore">simple snap store</a>
-                implementation to get you started making your own store.</p>
-
-                <p>We’ll start by installing GNU Hello, from the Free Software Foundation:</p>
-
-                <pre class="command-line code-block"><code>$ sudo snap install hello</code></pre>
-
-                <p>Just like any other app, we can then launch the snap  from the
-                command line, or from the desktop if it has a launcher:</p>
-
-
-<pre class="command-line code-block"><code>$ hello
-Hello, world!</code></pre>
-
-                <p>See the snaps installed on your system with “<code class="command-inline">snap list</code>”, which
-                will also tell you the software version, the unique revision, the
-                developer of the installed snap, and any extra information such
-                as whether the snap is in <a href="/docs/reference/confinement">developer mode</a> or not:</p>
-
-
-<pre class="command-line code-block"><code>$ snap list
-Name     Version   Rev     Developer     Notes
-hello    2.10      26      canonical     -
-core     16.04-55  109     canonical     -
-snapweb  0.17      21      canonical     -</code></pre>
-            </div>
-            <div id="snapcraft_home_using-snaps_fresh" class="eight-col">
-                <h3>Always fresh – update fast and reliably</h3>
-                <p>Snaps are updated automatically in the background every day.
-                You can manually get the latest version of all your snaps with
-                “<code class="command-inline">snap refresh</code>”, which will bring you completely up to date for all
-                snaps, unless you specify particular snaps to refresh.</p>
-
-
-<pre class="command-line code-block"><code>$ sudo snap refresh hello
-hello already up to date
-$ sudo snap refresh
-core 64.75 MB [=====================================>___]   12s
-core updated</code></pre>
-            </div>
-
-            <div id="snapcraft_home_using-snaps_revert" class="eight-col">
-                <h3>Revert if something goes wrong</h3>
-                <p>It is simple to roll
-                back to a previous version of an application for any reason.</p>
-
-
-<pre class="command-line code-block"><code>$ snap list
- Name              Version               Rev  Developer  Notes
- hello-world       6.1                   26   canonical  -
-
- $ sudo snap revert hello-world
- Name             Version                Rev  Developer  Notes
- hello-world      6.0                    25   canonical  -</code></pre>
-            </div>
-
-            <div id="snapcraft_home_using-snaps_channels" class="eight-col">
-                <h3>Stable, candidate, beta and edge channels</h3>
-                <p>Developers can release stable, candidate, beta and edge versions
-                of a snap, at the same time, to engage with a community who are
-                willing to test upcoming changes. You decide how close to the
-                leading edge you want to be.</p>
-
-                <p>By default, snaps are installed from the “<code class="command-inline">stable</code>” channel. By convention,
-                developers use the “<code class="command-inline">candidate</code>” channel to provide a heads-up of
-                a new stable revision, putting it in “<code class="command-inline">candidate</code>” a few days before
-                “<code class="command-inline">stable</code>” so that people can test it out. The “<code class="command-inline">beta</code>” channel is for
-                unfinished but interesting milestones, and the “<code class="command-inline">edge</code>” channel is
-                conventionally used for regular or daily development builds that
-                have passed some lightweight smoke-testing.</p>
-
-
-<pre class="command-line code-block"><code>$ sudo snap refresh hello --channel=beta
-hello (beta) 1.2 installed</code></pre>
-
-                <p>Now, you can run the beta version of the snap:</p>
-
-
-<pre class="command-line code-block"><code>$ hello
-Hello, snap padawan!</code></pre>
-
-                <p>You can also install a snap from the “<code class="command-inline">beta</code>” channel directly:</p>
-
-
-<pre class="command-line code-block"><code>$ sudo snap install hello --beta
-Hello (beta) 1.2 installed</code></pre>
-            </div>
-        </div>
-    </section>
-
-    <section id="snapcraft_home_get-crafting" class="row">
-        <div class="wrapper">
-            <div class="eight-col">
-                <h2>Get crafting!</h2>
-                <p>Snaps have a very simple internal structure — you can easily
-                craft them by hand.</p>
-                <p>But if your code is on GitHub, the easiest way to build a snap is with <a class="external" href="https://build.snapcraft.io/">our auto-build service</a>. Every commit is auto-built, and every successful build is released to the “<code class="command-inline">edge</code>” channel.</p>
-                <p>Otherwise, you can use <dfn>Snapcraft</dfn>, which
-                allows building from source and from existing packages. Snapcraft
-                also handles releasing your snaps to the world.</p>
-                <p>Read <a href="/docs/build-snaps/your-first-snap">how to create a snap</a>,
-                join the snap-crafting community on <a href="https://forum.snapcraft.io/" class="external">our forum</a>
-                or ask questions real-time <a href="https://rocket.ubuntu.com/channel/snapcraft" class="external">on Rocket Chat</a>.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="row row-grey equal-height">
-    <div class="wrapper equal-height--vertical-divider">
-        <div class="six-col equal-height--vertical-divider__item">
-            <h2>Learn more</h2>
-            <p>Want to know more about snaps, <code class="command-inline">snapd</code>, Snapcraft and Ubuntu Core?</p>
-            <ul class="no-bullets">
-                <li><a href="https://forum.snapcraft.io/" class="external">Forum</a></li>
-                <li><a href="https://rocket.ubuntu.com/channel/snapcraft" class="external">Real-time chat</a></li>
-                <li><a href="http://stackoverflow.com/questions/ask?tags=snapcraft" class="external">Snapcraft on Stack Overflow</a></li>
-            </ul>
-        </div>
-        <div class="six-col last-col equal-height--vertical-divider__item">
-            <h2>Contribute</h2>
-            <p>Interested in helping build Snapcraft and expand its reach?</p>
-            <ul class="no-bullets">
-                <li><a href="https://github.com/canonical-websites/snapcraft.io" class="external">Fork this website on GitHub</a></li>
-                <li><a href="https://github.com/snapcore/snapcraft" class="external">Fork snapcraft on GitHub</a></li>
-                <li><a href="https://github.com/snapcore/snapd" class="external">Fork snapd on GitHub</a></li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-
-</div>
-
-<div class="wrapper">
-    <footer class="footer">
-      <div class="footer__social right">
-        <h3 class="footer__heading">Follow us</h3>
-        <ul class="social-list inline-list clearfix">
-          <li class="social-list__item">
-            <a href="https://twitter.com/snapcraftio" class="social-list__item--twitter">Share on Twitter</a>
-          </li>
-          <li class="social-list__item">
-            <a href="https://plus.google.com/+SnapcraftIo" class="social-list__item--google-plus">Share on Google plus</a>
-          </li>
-          <li class="social-list__item">
-            <a href="https://www.facebook.com/snapcraftio" class="social-list__item--facebook">Share on Facebook</a>
-          </li>
-          <li class="social-list__item">
-            <a href="https://www.youtube.com/snapcraftio" class="social-list__item--youtube">Share on YouTube</a>
-          </li>
-        </ul>
+        <nav class="p-navigation__nav" role="menubar">
+          <span class="u-off-screen">
+            <a href="#main-content">Jump to main content</a>
+          </span>
+          <ul class="p-navigation__links" role="menu">
+            <li class="p-navigation__link" role="menuitem"><a href="https://build.snapcraft.io">Build</a></li>
+            <li class="p-navigation__link" role="menuitem"><a href="/docs">Docs</a></li>
+            <li class="p-navigation__link" role="menuitem"><a class="p-link--external" href="https://tutorials.ubuntu.com">Tutorials</a></li>
+            <li class="p-navigation__link" role="menuitem"><a class="p-link--external" href="https://forum.snapcraft.io/categories">Forum</a></li>
+          </ul>
+        </nav>
       </div>
+    </header>
 
-      <p class="footer__text">&copy; 2017 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
+    <div id="main-content" class="p-strip--accent p-strip--image is-dark is-deep snapcraft-banner-background">
+      <h1 class="u-off-screen">Snapcraft</h1>
+      <div class="row">
+        <div class="col-12">
+          <p class="p-heading--two">Package, distribute, and update any app for Linux and IoT</p>
+          <p class="p-heading--five">Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.</p>
+          <a href="https://tutorials.ubuntu.com/tutorial/create-your-first-snap" class="p-button--positive">Build your first snap</a>
+          <a href="https://build.snapcraft.io" class="p-button--neutral">Get started using GitHub</a>
+        </div>
+      </div>
+    </div>
 
-<ul class="footer__links">
-    <li class="footer__list-item"><a href="http://www.ubuntu.com/legal">Legal information</a><span class="footer__dot"> &#183;</span></li>
-    <li class="footer__list-item"><a href="https://github.com/canonical-websites/snapcraft.io/issues/new">Report a bug on this site</a><span class="footer__dot"> &#183;</span></li>
-    <li class="footer__list-item"><a href="http://status.snapcraft.io/">Service status</a></li>
-</ul>
+    <div class="p-strip is-deep is-bordered">
+      <div class="row">
+        <div class="col-6">
+          <h2>Installable across Linux distributions</h2>
+        </div>
+        <div class="col-6">
+          <p class="p-heading--five">Snaps are available for any Linux OS running snapd, the service that runs and manage snaps.</p>
+          <p class="p-heading--five"><a href="https://docs.snapcraft.io/core/install">Enable snaps on your OS</a></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 p-logo-links">
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-ubuntu">
+            <img src="https://assets.ubuntu.com/v1/d6c13911-ubuntu.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-debian">
+            <img src="https://assets.ubuntu.com/v1/f7f680fb-debian.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-linux-mint">
+            <img src="https://assets.ubuntu.com/v1/2ce868d9-mint.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-gentoo">
+            <img src="https://assets.ubuntu.com/v1/439fa9d5-gentuu.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-arch-linux">
+            <img src="https://assets.ubuntu.com/v1/44789cf1-arch.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-fedora">
+            <img src="https://assets.ubuntu.com/v1/f24733d2-fedora.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-openwrt">
+            <img src="https://assets.ubuntu.com/v1/0dd4809d-openwrit.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-oe-yocto">
+            <img src="https://assets.ubuntu.com/v1/f131a86c-yocto.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-oe-yocto">
+            <img src="https://assets.ubuntu.com/v1/38659979-openembed.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-opensuse">
+            <img src="https://assets.ubuntu.com/v1/c4c720c6-suse.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-manjaro">
+            <img src="https://assets.ubuntu.com/v1/02d49758-manjaro.png" alt="" />
+          </a>
+          <a class="p-logo-link" href="https://docs.snapcraft.io/core/install-solus">
+            <img src="https://assets.ubuntu.com/v1/4ea80b29-solus.png" alt="" />
+          </a>
+        </div>
+      </div>
+    </div>
 
-<p class="footer__text">Powered by <a href="https://www.ubuntu.com/kubernetes">the Canonical Distribution of Kubernetes</a></p>
+    <div class="p-strip is-deep is-bordered">
+      <div class="row">
+        <div class="col-6">
+          <h2>What is Snapcraft?</h2>
+          <p class="p-heading--five">Snapcraft is the command line tool for writing and publishing your software as a snap.</p>
+          <p class="p-heading--five">Snapcraft is available on <a href="https://docs.snapcraft.io/core/install">most popular Linux systems</a>.</p>
+        </div>
+        <div class="col-6">
+          <ul class="p-list u-no-margin">
+            <li class="p-list__item is-ticked p-heading--five">Simple to package leveraging your existing tools</li>
+            <li class="p-list__item is-ticked p-heading--five">Automatic updates for everyone</li>
+            <li class="p-list__item is-ticked p-heading--five">Reach tens of millions of Linux systems</li>
+            <li class="p-list__item is-ticked p-heading--five">Roll back versions effortlessly</li>
+            <li class="p-list__item is-ticked p-heading--five">Integrate easily with build and CI infrastructure</li>
+            <li class="p-list__item is-ticked p-heading--five">Free for open and closed source projects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-<p class="note six-col">Yocto Project and all related marks and logos are trademarks of The Linux Foundation. This website is not, in any way, endorsed by the Yocto Project or The Linux Foundation. Some artwork by the <a href="http://www.gnome.org">GNOME Project</a>, licensed <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>.</p>
+    <div class="p-strip is-deep is-bordered">
+      <div class="row">
+        <div class="col-12">
+          <h2>Snapcraft integrates with your language</h2>
+          <p class="p-heading--five">See how Snapcraft works with your language to make packaging and installing your software easy.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 p-logo-links">
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/python">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/27e2a770-logo-python.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Python</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/node">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/81c3c76e-logo-node.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Node.js</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/go">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/53990c77-logo-go.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Go</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/moos">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/b24fda67-logo-moos.png" alt=""/>
+            </header>
+            <p class="u-no-margin">MOOS</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/ros">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/b7079097-logo-ros.png" alt=""/>
+            </header>
+            <p class="u-no-margin">ROS</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/pre-built">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/4890ee03-icon-prepackaged-apps.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Pre-built apps</p>
+          </a>
+        </div>
+      </div>
+    </div>
 
-<span class="accessibility-aid"><a href="#">Go to the top of the page</a></span>
+    <div class="p-strip is-deep is-bordered">
+      <div class="row">
+        <div class="col-12">
+          <h2>What people are saying about Snapcraft</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <blockquote class="p-testimonial">
+            <p class="p-heading--five">The auto-updating feature is huge and one that we haven’t seen elsewhere. Due to the nature of our platform, we release updates more than daily which admittedly can be annoying for our users to constantly update.</p>
+            <cite class="p-testimonial--citation p-heading--five">Jeff Hickey, CLI engineer, <a href="https://www.heroku.com/" class="p-link--external">Heroku</a></cite>
+          </blockquote>
+        </div>
+        <div class="col-4">
+          <blockquote class="p-testimonial">
+            <p class="p-heading--five">The format isolation allows for less opportunity to break the system or otherwise force abandonment – you can use newer libraries than the system offers without altering the base.</p>
+            <cite class="p-testimonial--citation p-heading--five">Daniel Fore, Founder, <a href="https://elementary.io" class="p-link--external">Elementary</a></cite>
+          </blockquote>
+        </div>
+        <div class="col-4">
+          <blockquote class="p-testimonial">
+            <p class="p-heading--five">With snaps we have a tool where updates can happen seamlessly and the client isn’t even aware of the changes but they can be assured the system is always running smoothly.</p>
+            <cite class="p-testimonial--citation p-heading--five">Mohamed Saad Ibn Seddik,<br/> Chief Scientist,<br/> <a href="http://www.sea-machines.com/" class="p-link--external">Sea Machines</a></cite>
+          </blockquote>
+        </div>
+      </div>
+    </div>
 
+    <div class="p-strip is-deep is-bordered u-image-position">
+      <div class="row u-vertically-center">
+        <div class="col-6">
+          <h2>Auto-build from GitHub</h2>
+          <p class="p-heading--five">Automate your build process and publish software straight from your GitHub repos.</p>
+        <p><a class="p-button--neutral" href="https://build.snapcraft.io/auth/authenticate"><i class="p-icon--github"></i> Connect a GitHub repo</a></p>
+        </div>
+        <div class="col-6">
+          <img class="u-image-position--bottom" src="https://assets.ubuntu.com/v1/006db1f4-build-snapcraft-heroku.png" alt="" style="max-height: 95%;" />
+        </div>
+      </div>
+    </div>
+
+    <div class="p-strip is-deep is-bordered">
+      <div class="row">
+        <div class="col-4">
+          <h2>Quick to install</h2>
+          <p class="p-heading--five">Snaps are quick to install from GNOME Software or the command line.</p>
+          <p class="p-heading--five"><a href="https://docs.snapcraft.io/core/install">Installing snaps</a></p>
+        </div>
+        <div class="col-4">
+          <h2>Easy to update</h2>
+          <p class="p-heading--five">Snaps update automatically and transactionally so your app is always fresh.</p>
+          <p class="p-heading--five"><a href="https://docs.snapcraft.io/core/updates">Transactional updates</a></p>
+        </div>
+        <div class="col-4">
+          <h2>Safe to run</h2>
+          <p class="p-heading--five">Snaps stay secure as they are confined from the OS, other apps, and hardware functions.</p>
+          <p class="p-heading--five"><a href="https://docs.snapcraft.io/reference/confinement">Keeping your system safe</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-strip is-deep is-bordered">
+      <div class="row">
+        <div class="col-6">
+          <h2>The Snap Store</h2>
+        </div>
+        <div class="col-6">
+          <p class="p-heading--five">The Snap Store is enabled by default on tens of millions of Linux systems. It allows developers to release free or paid apps for multiple architectures, on multiple release channels from daily builds to stable releases.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h3>Featured snaps</h3>
+        </div>
+      </div>
+      <div class="row">
+        {% for snap in featured_snaps %}
+          <div class="col-3">
+            <div class="p-heading-icon">
+              <a class="p-heading-icon__header" href="/{{ snap.package_name }}">
+                {% if snap.icon_url %}
+                  <img class="p-heading-icon__img" src="{{ snap.icon_url }}" alt="">
+                {% else %}
+                  <img class="p-heading-icon__img" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="">
+                {% endif %}
+                <h5 class="u-no-margin">{{ snap.title }}</h5>
+              </a>
+            </div>
+          </div>
+
+          {# end the row after every 4th snap #}
+          {% if (loop.index % 4 == 0) and not loop.last %}
+            </div>
+            <div class="row">
+          {% endif %}
+
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="p-strip is-deep">
+      <div class="row">
+        <div class="col-6">
+          <h2>Not sure yet?</h2>
+        </div>
+        <div class="col-6">
+          <ul class="p-list u-no-margin">
+            <li class="p-list__item p-heading--five"><a href="https://docs.snapcraft.io/build-snaps/">Learn more</a> about snaps and Snapcraft</li>
+            <li class="p-list__item p-heading--five"><a href="https://forum.snapcraft.io/categories">Ask on the forum</a> if you have any questions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer class="p-footer p-strip--light">
+      <div class="row">
+        <div class="col-8">
+          <p>&copy; {{ now.year }} Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
+          <p>Powered by <a href="https://www.ubuntu.com/kubernetes">the Canonical Distribution of Kubernetes</a></p>
+          <p>
+            <a class="p-link--external" href="https://github.com/snapcore/snapcraft">Fork Snapcraft on GitHub</a>
+            {# TODO: u-no-margin is needed until https://github.com/vanilla-framework/vanilla-framework/issues/1426 is fixed #}
+            <br class="u-no-margin" />
+            <a class="p-link--external" href="https://github.com/snapcore/snapd">Fork snapd on GitHub</a>
+          </p>
+          <nav class="p-footer__nav">
+            <ul class="p-footer__links">
+              <li class="p-footer__item">
+                <a class="p-footer__link" href="https://www.ubuntu.com/legal">Legal information</a>
+              </li>
+              <li class="p-footer__item">
+                <a class="p-footer__link" href="https://github.com/canonical-websites/snapcraft.io-static-pages/issues/new">Report a bug on this site</a>
+              </li>
+              <li class="p-footer__item">
+                <a class="p-footer__link" href="https://status.snapcraft.io/">Service status</a>
+              </li>
+            </ul>
+            <p>Yocto Project and all related marks and logos are trademarks of The Linux Foundation. This website is not, in any way, endorsed by the Yocto Project or The Linux Foundation.</p>
+            <span class="u-off-screen u-no-margin">
+              <a href="#">Go to the top of the page</a>
+            </span>
+          </nav>
+        </div>
+        <div class="col-4">
+           <h3 class="p-muted-heading">Follow us</h3>
+           <ul class="p-inline-list--compact">
+             <li class="p-inline-list__item">
+               <a href="https://twitter.com/snapcraftio" class="p-social-icon--twitter">Share on Twitter</a>
+             </li>
+             <li class="p-inline-list__item">
+               <a href="https://plus.google.com/+SnapcraftIo" class="p-social-icon--google">Share on Google plus</a>
+             </li>
+             <li class="p-inline-list__item">
+               <a href="https://www.facebook.com/snapcraftio" class="p-social-icon--facebook">Share on Facebook</a>
+             </li>
+             <li class="p-inline-list__item">
+               <a href="https://www.youtube.com/snapcraftio" class="p-social-icon--youtube">Share on YouTube</a>
+             </li>
+           </ul>
+         </div>
+      </div>
     </footer>
-</div>
 
-    </body>
+  </body>
 </html>
-<!-- This comment was updated at 13:56 on October 12th -->
