@@ -189,13 +189,8 @@ def get_pages_details(links):
 # ===
 @app.route('/')
 def homepage():
-    return flask.render_template('index.html', now=datetime.datetime.utcnow())
-
-
-@app.route('/index2')
-def new_homepage():
     return flask.render_template(
-        'index2.html',
+        'index2.html',  # old home page is in index.html in case we need it
         featured_snaps=get_featured_snaps(),
         now=datetime.datetime.utcnow()
     )
