@@ -103,7 +103,7 @@
     /**
      * Generate the tooltip.
      * @param {Object} data The point data.
-     * @returns {HTMLElement}
+     * @returns {String} A string of HTML.
      */
     function snapcraftGraphTooltip(data) {
       var contents = ['<div class="p-tooltip p-tooltip--top-center">'];
