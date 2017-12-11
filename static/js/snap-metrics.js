@@ -34,11 +34,6 @@
     var X_TICK_FREQUENCY = 7;
     var Y_TICK_FREQUENCY = 5;
 
-    var TICK_START = 4;
-    var DEFAULT_TICK_LENGTH = 8;
-    var KEY_TICK_LENGTH = 16;
-    var TEXT_OFFSET = 28;
-
     var COLORS = {
       installs: '#94519E'
     };
@@ -128,6 +123,30 @@
     }
 
     /**
+     * 
+     * @param {Object} data The  point data.
+     * @param {Number} width 
+     * @param {Number} height 
+     * @param {HTMLElement} element The tooltip event target element.
+     * @returns {Object} Left and top offset of the tooltip.  
+     */
+    function positionTooltip(data, width, height, element) {
+      var tooltipHalfWidth = installsMetricsEl
+        .querySelector('.p-tooltip__message')
+        .clientWidth / 2;
+      var elementHalfWidth = parseFloat(element.getAttribute('width')) / 2;
+      var elementSixthHeight = parseFloat(element.getAttribute('height')) / 6;
+      return {
+        left: Math.floor(
+          parseInt(element.getAttribute('x')
+        ) + tooltipHalfWidth + elementHalfWidth) - 4,
+        top: Math.floor(
+          (mousePosition.y - installsMetricsOffset.top) + window.scrollY - elementSixthHeight
+        )
+      };
+    }
+
+    /**
      * Format the value displayed for each tick: 
      * - Jan 1
      * @param {number} x Timestamp
@@ -174,8 +193,14 @@
     // Prepend 'installs'.
     installs.unshift(metrics.installs.series[0].name);
 
+    var mousePosition = {x: 0, y: 0};
+
     // Installs Metrics
     var installsMetricsEl = document.getElementById('installs_metrics');
+    var installsMetricsOffset = {
+      left: installsMetricsEl.offsetLeft,
+      top: installsMetricsEl.offsetTop
+    };
     var installsMetrics = bb.generate({
       bindto: '#installs_metrics',
       legend: {
@@ -188,7 +213,8 @@
         right: 112
       },
       tooltip: {
-        contents: snapcraftGraphTooltip
+        contents: snapcraftGraphTooltip,
+        position: positionTooltip
       },
       transition: {
         duration: 0
@@ -225,7 +251,7 @@
           installs
         ]
       }
-    });
+    });   
 
     showGraphs();
 
@@ -244,7 +270,15 @@
       }
     }, 500);
 
+    var mouseMove = function(e) {
+      mousePosition = {
+        x: e.x,
+        y: e.y
+      };
+    };
+
     window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', mouseMove);
   }
 
   window.renderMetrics = renderMetrics;
