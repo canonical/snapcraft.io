@@ -109,14 +109,13 @@
       var contents = ['<div class="p-tooltip p-tooltip--top-center">'];
       contents.push('<span class="p-tooltip__message" role="tooltip">');
       contents.push('<span class="snapcraft-graph-tooltip__title">' + moment(data[0].x).format('YYYY-MM-DD') + '</span>');
-      for (var i = 0, ii = data.length; i < ii; i += 1) {
-        var point = data[i];
+      data.forEach(function (point) {
         contents.push('<span class="snapcraft-graph-tooltip__series">');
         contents.push('<span class="snapcraft-graph-tooltip__series-name">' + point.name + '</span>');
         contents.push('<span class="snapcraft-graph-tooltip__series-color" style="background: ' + COLORS[point.name] + ';"></span>');
         contents.push('<span class="snapcraft-graph-tooltip__series-value"> ' + point.value + '</span>');
         contents.push('</span>');
-      }
+      });
       contents.push('</span>');
       contents.push('</div>');
       return contents.join('');
