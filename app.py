@@ -92,6 +92,17 @@ def get_featured_snaps():
     return get_searched_snaps(featured_response.json())
 
 
+# Context processors
+# ===
+@app.context_processor
+def inject_datetime():
+    """
+    Adds current date to all the templates, so we can display
+    current year in the footer copyright disclaimer.
+    """
+    return dict(now=datetime.datetime.utcnow())
+
+
 # Error handlers
 # ===
 @app.errorhandler(404)
@@ -191,8 +202,7 @@ def get_pages_details(links):
 def homepage():
     return flask.render_template(
         'index.html',
-        featured_snaps=get_featured_snaps(),
-        now=datetime.datetime.utcnow()
+        featured_snaps=get_featured_snaps()
     )
 
 
