@@ -135,10 +135,19 @@
         .clientWidth / 2;
       var elementHalfWidth = parseFloat(element.getAttribute('width')) / 2;
       var elementSixthHeight = parseFloat(element.getAttribute('height')) / 6;
+      var leftModifier = -4;
+      var parent = element.parentNode;
+
+      if (parent.firstChild === element) {
+        leftModifier -= 3;
+      } else if (parent.lastChild === element) {
+        leftModifier += 4;
+      }
+
       return {
         left: Math.floor(
           parseInt(element.getAttribute('x')
-        ) + tooltipHalfWidth + elementHalfWidth) - 4,
+        ) + tooltipHalfWidth + elementHalfWidth) + leftModifier,
         top: Math.floor(
           (mousePosition.y - installsMetricsOffset.top) + window.scrollY - elementSixthHeight
         )

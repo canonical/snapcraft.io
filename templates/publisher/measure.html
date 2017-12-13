@@ -1,7 +1,7 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Publisher
+  Publisher metrics for {{ snap_title }}
 {% endblock %}
 
 {% block content %}
@@ -22,7 +22,7 @@
       </nav>
     </section>
     <section class="p-strip is-shallow">
-      <div class="row">
+      {#<div class="row">
         <div class="grid">
           <div class="col-3">
             <select class="p-form__control" disabled="disabled">
@@ -35,7 +35,7 @@
             </select>
           </div>
         </div>
-      </div>
+      </div>#}
       <div class="row">
         <div class="u-clearfix">
           <h3 class="u-float--left">Installs</h3>
