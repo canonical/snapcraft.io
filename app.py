@@ -192,8 +192,7 @@ def get_pages_details(links):
 def homepage():
     return flask.render_template(
         'index.html',
-        featured_snaps=get_featured_snaps(),
-        now=datetime.datetime.utcnow()
+        featured_snaps=get_featured_snaps()
     )
 
 
