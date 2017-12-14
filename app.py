@@ -92,17 +92,6 @@ def get_featured_snaps():
     return get_searched_snaps(featured_response.json())
 
 
-# Context processors
-# ===
-@app.context_processor
-def inject_datetime():
-    """
-    Adds current date to all the templates, so we can display
-    current year in the footer copyright disclaimer.
-    """
-    return dict(now=datetime.datetime.utcnow())
-
-
 # Error handlers
 # ===
 @app.errorhandler(404)
