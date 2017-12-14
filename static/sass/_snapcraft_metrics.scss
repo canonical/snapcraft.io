@@ -1,5 +1,15 @@
 @mixin snapcraft-metrics {
 
+  // Remove this when we have a coloured header background
+  // It hackily hides the top drop shadow.
+  .metrics__nav-wrap {
+    overflow: hidden;
+
+    .p-tabs {
+      top: -.375rem;
+    }
+  }
+  
   svg {
     -webkit-tap-highlight-color: transparent;
     font: 12px "Ubuntu";
