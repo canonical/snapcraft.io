@@ -6,6 +6,7 @@ $color-accent: $color-brand;
 @import 'vanilla-framework/scss/vanilla';
 
 @include vf-base;
+
 @include vf-p-card; // required by vf-p-tooltips
 @include vf-p-links;
 @include vf-p-lists;
@@ -19,18 +20,24 @@ $color-accent: $color-brand;
 @include vf-p-notification;
 @include vf-p-footer;
 @include vf-p-tooltips;
+@include vf-p-forms;
+@include vf-p-headings;
+@include vf-p-tabs;
+@include vf-p-matrix;
+@include vf-p-icons;
+@include vf-p-heading-icon;
+@include vf-u-image-position;
+
+
+// vanilla utilities
 @include vf-u-floats;
 @include vf-u-off-screen;
 @include vf-u-margin-collapse;
 @include vf-u-padding-collapse;
 @include vf-u-vertically-center;
 @include vf-u-align;
-@include vf-p-forms;
-@include vf-p-headings;
-@include vf-p-matrix;
-@include vf-p-icons;
-@include vf-p-heading-icon;
-@include vf-u-image-position;
+@include vf-u-clearfix;
+@include vf-u-animations;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
@@ -58,6 +65,12 @@ $color-accent: $color-brand;
 
 @import 'snapcraft_banner';
 @include snapcraft-banner;
+
+@import 'snapcraft_graph-tooltip';
+@include snapcraft-graph-tooltip;
+
+@import 'snapcraft_metrics';
+@include snapcraft-metrics;
 
 @import 'patterns_testimonial';
 @include vf-p-testimonial;
