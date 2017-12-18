@@ -455,6 +455,13 @@ def publisher_snap(snap_name):
     installs_metrics['snap_id'] = details['snap_id']
     installs_metrics['status'] = 'OK'
 
+    active_devices = {}
+    active_devices['buckets'] = []
+    active_devices['metric_name'] = 'active_devices'
+    active_devices['series'] = []
+    active_devices['snap_id'] = details['snap_id']
+    active_devices['status'] = 'OK'
+
     start_date = datetime.date.today() + datetime.timedelta(
         days=-metric_period_int)
 
@@ -462,15 +469,30 @@ def publisher_snap(snap_name):
         new_date = start_date + datetime.timedelta(days=index)
         new_date = new_date.strftime('%Y-%m-%d')
         installs_metrics['buckets'].append(new_date)
+        active_devices['buckets'].append(new_date)
 
     installs_values = []
+
     for index in range(0, metric_period_int):
         installs_values.append(randint(0, 100))
+
+    active_devices_values = []
+    
+    for index in range(0, metric_period_int * 3):
+        active_devices_values.append(0 + (10 * index))
 
     installs_metrics['series'].append({
         'name': 'installs',
         'values': installs_values
     })
+
+    for index in range(0, 3):
+        start_index = 30 * index
+        end_index = start_index + 30
+        active_devices['series'].append({
+            'name': '1.' + str(index),
+            'values': active_devices_values[start_index:end_index]
+        })
     # end of dummy data
 
     context = {
@@ -482,6 +504,8 @@ def publisher_snap(snap_name):
         # Metrics data
         'installs_total': sum(installs_values),
         'installs_metrics': installs_metrics,
+        'active_devices_total': sum(active_devices_values),
+        'active_devices': active_devices,
 
         # Context info
         'is_linux': 'Linux' in flask.request.headers['User-Agent']
