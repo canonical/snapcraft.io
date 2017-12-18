@@ -1,12 +1,21 @@
-export default function (
-  snapcraftGraphTooltip, 
-  positionTooltip, 
-  formatXAxisTickLabels, 
-  formatYAxisTickLabels,
-  COLORS,
-  days,
-  installs) {
-  bb.generate({
+import {formatAxis, formatXAxisTickLabels, formatYAxisTickLabels} from '../axis';
+import debounce from '../../libs/debounce';
+import {snapcraftGraphTooltip, positionTooltip} from '../tooltips';
+import {COLORS} from '../config';
+
+function showGraph(el) {
+  formatAxis(el);
+  el.style.opacity = 1;
+}
+
+export default function installsMetrics(days, installs) {
+  const el = document.getElementById('installs_metrics');
+  const installsMetricsOffset = {
+    left: el.offsetLeft,
+    top: el.offsetTop
+  };
+
+  const installsMetrics = bb.generate({
     bindto: '#installs_metrics',
     legend: {
       hide: true
@@ -18,8 +27,8 @@ export default function (
       right: 112
     },
     tooltip: {
-      contents: snapcraftGraphTooltip,
-      position: positionTooltip
+      contents: snapcraftGraphTooltip.bind(this, [COLORS.installs]),
+      position: positionTooltip.bind(this, installsMetricsOffset, el)
     },
     transition: {
       duration: 0
@@ -57,4 +66,24 @@ export default function (
       ]
     }
   });
+
+  showGraph(el);
+
+  // Extra events
+  let elWidth = el.clientWidth;
+
+  const resize = debounce(function () {
+    if (el.clientWidth !== elWidth) {
+      el.style.opacity = 0;
+      debounce(function () {
+        installsMetrics.resize();
+        showGraph(el);
+        elWidth = el.clientWidth;
+      }, 100)();
+    }
+  }, 500);
+
+  window.addEventListener('resize', resize);
+
+  return installsMetrics;
 }

@@ -52,18 +52,41 @@ function cullYAxis(ticks) {
  * @param {HTMLElement} el Graph wrapping element.
  */
 function formatAxis(el) {
-  console.log(el);
-  var xAxis = el.querySelector('.bb-axis-x');
+  const xAxis = el.querySelector('.bb-axis-x');
 
-  console.log(xAxis);
-  
-  var ticks = xAxis.querySelectorAll('.tick');
+  let ticks = xAxis.querySelectorAll('.tick');
   cullXAxis(ticks);
 
-  var yAxis = el.querySelector('.bb-axis-y');
+  const yAxis = el.querySelector('.bb-axis-y');
 
   ticks = yAxis.querySelectorAll('.tick');
   cullYAxis(ticks);
 }
 
-export {cullXAxis, cullYAxis, formatAxis};
+/**
+ * Format the value displayed for each tick:
+ * - Jan 1
+ * @param {number} x Timestamp
+ */
+function formatXAxisTickLabels(x) {
+  return moment(x).format('MMM D');
+}
+
+/**
+ * Format the value displayed for each tick:
+ * - 10
+ * - 1.0k
+ * - 1.0m
+ * @param {number} y Value of the tick
+ */
+function formatYAxisTickLabels(y) {
+  let str = y;
+  if (y >= 1000000) {
+    str = (y / 1000000).toFixed(1) + 'm';
+  } else if (y >= 1000) {
+    str = (y / 1000).toFixed(1) + 'k';
+  }
+  return str;
+}
+
+export {cullXAxis, cullYAxis, formatAxis, formatXAxisTickLabels, formatYAxisTickLabels};
