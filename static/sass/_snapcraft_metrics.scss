@@ -8,90 +8,90 @@
     }
   }
 
-  svg {
-    -webkit-tap-highlight-color: transparent;
-    font: 12px "Ubuntu";
-
-    path,
-    line {
-      fill: none;
-      stroke: $color-x-dark;
-    }
-
-    text {
-      fill: none;
-      user-select: none;
-    }
-
-    .bb {
-      &-xgrid-focus {
-        display: none;
-      }
-
-      &-axis {
-        .domain {
-          fill: none;
-          stroke: none;
-        }
-
-        .tick {
-          line {
-            stroke-linecap: square;
-            stroke-width: 1;
-          }
-        }
-
-        &-y {
-          .tick {
-            line {
-              transform: scaleX(1.143) translateX(-4px);
-            }
-
-            &.active {
-              line {
-                transform: scaleX(2.286) translateX(-2.25px);
-              }
-
-              text {
-                fill: $color-x-dark;
-                transform: translate(-20px, 1px);
-              }
-            }
-          }
-        }
-
-        &-x {
-          .tick {
-            line {
-              transform: scaleY(1.143) translateY(4px);
-            }
-
-            &.active {
-              line {
-                transform: scaleY(2.286) translateY(2.5px);
-              }
-
-              text {
-                fill: $color-x-dark;
-                transform: translateY(20px);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .bb-tooltip-container .p-tooltip {
-    left: 50%;
-
-    .p-tooltip__message {
-      display: block;
-    }
-  }
-
   .snapcraft-metrics__graph {
     opacity: 0;
     transition: opacity .333s;
+
+    svg {
+      -webkit-tap-highlight-color: transparent;
+      font: 12px "Ubuntu";
+
+      path,
+      line {
+        fill: none;
+        stroke: $color-x-dark;
+      }
+
+      text {
+        fill: none;
+        user-select: none;
+      }
+
+      .bb {
+        &-xgrid-focus {
+          display: none;
+        }
+
+        &-axis {
+          .domain {
+            fill: none;
+            stroke: none;
+          }
+
+          .tick {
+            line {
+              stroke-linecap: square;
+              stroke-width: 1;
+            }
+          }
+
+          &-y {
+            .tick {
+              line {
+                transform: scaleX(1.143) translateX(-4px);
+              }
+
+              &.active {
+                line {
+                  transform: scaleX(2.286) translateX(-2.25px);
+                }
+
+                text {
+                  fill: $color-x-dark;
+                  transform: translate(-20px, 1px);
+                }
+              }
+            }
+          }
+
+          &-x {
+            .tick {
+              line {
+                transform: scaleY(1.143) translateY(4px);
+              }
+
+              &.active {
+                line {
+                  transform: scaleY(2.286) translateY(2.5px);
+                }
+
+                text {
+                  fill: $color-x-dark;
+                  transform: translateY(20px);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .bb-tooltip-container .p-tooltip {
+      left: 50%;
+
+      .p-tooltip__message {
+        display: block;
+      }
+    }
   }
 }
