@@ -90,19 +90,6 @@
     }
   }
 
-  #active_devices {
-    .bb-areas path {
-      stroke: none;
-    }
-    .bb-areas text {
-      fill: $color-x-dark;
-      stroke: none;
-    }
-    .bb-lines path.bb-line {
-      stroke: none !important;
-    }
-  }
-
   .snapcraft-metrics__graph {
     opacity: 0;
     transition: opacity .333s;
