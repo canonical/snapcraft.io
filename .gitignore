@@ -45,6 +45,7 @@ package-lock.json
 *.snap
 _site/
 *.*.map
+static/js/dist
 
 # [env] Local environment settings
 .docker-project

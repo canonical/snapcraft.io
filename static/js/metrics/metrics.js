@@ -1,5 +1,4 @@
 import installsMetrics from './graphs/installs';
-import activeDevicesMetrics from './graphs/activeDevices';
 
 /**
  * Render all metrics
@@ -9,8 +8,6 @@ function renderMetrics(metrics) {
   if (!d3 || ! bb) {
     return false;
   }
-
-  console.log(metrics);
 
   let days = metrics.installs.buckets;
   // Convert to moment object.
@@ -27,20 +24,6 @@ function renderMetrics(metrics) {
   installs.unshift(metrics.installs.series[0].name);
 
   installsMetrics(days, installs);
-
-  // Active devices
-  const activeDevicesSeries = metrics['active_devices'].series;
-  let activeDevices = [];
-  activeDevicesSeries.forEach(series => {
-    let fullSeries = series.values;
-    fullSeries.unshift(series.name);
-    activeDevices.push(fullSeries);
-  });
-
-  console.log(days);
-  console.log(activeDevices);
-
-  activeDevicesMetrics(days, activeDevices);
 }
 
 export default {
