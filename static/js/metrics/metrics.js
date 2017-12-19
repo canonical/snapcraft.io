@@ -5,7 +5,7 @@ import installsMetrics from './graphs/installs';
  * @param {Object} metrics An object of metrics from the API.
  */
 function renderMetrics(metrics) {
-  if (!d3 || ! bb) {
+  if (!d3 || !bb) {
     return false;
   }
 
