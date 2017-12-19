@@ -2,6 +2,8 @@
 $color-brand: #00302f; // TODO: this is a temprary brand colour
 $color-accent: $color-brand;
 
+$color-snapcraft-light: #c0dfd0;
+
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 
@@ -83,3 +85,6 @@ $color-accent: $color-brand;
 
 @import 'snapcraft_custom-typography';
 @include snapcraft-custom-typography;
+
+@import 'snapcraft_channel';
+@include snapcraft-channel;
