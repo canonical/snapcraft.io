@@ -45,10 +45,11 @@
         </div>
       </div>
     </section>
-    {# <div class="row">
+    {#
+    <div class="row">
       <div class="u-clearfix">
         <h3 class="u-float--left">Daily active devices</h3>
-        <strong class="p-heading--three u-float--right u-no-margin--top">5011</strong>
+        <strong class="p-heading--three u-float--right u-no-margin--top">{{ active_devices_total }}</strong>
       </div>
       <div class="grid u-clearfix">
         <div class="col-3">
@@ -57,7 +58,7 @@
           </select>
         </div>
       </div>
-      <p>GRAPH</p>
+      <div id="active_devices" class="snapcraft-metrics__graph"></div>
     </div>
     <div class="row">
       <div class="grid">
@@ -93,9 +94,9 @@
 <script src="/static/js/modules/billboard.min.js"></script>
 
 <!-- Illustration of country data -->
-<script src="/static/js/snap-metrics.js"></script>
+<script src="/static/js/dist/snap-metrics.js"></script>
 <script>
-  renderMetrics({
+  snapcraft.metrics.renderMetrics({
     'installs': {{ installs_metrics|tojson }}
   });
 </script>

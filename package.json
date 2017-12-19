@@ -3,7 +3,9 @@
     "test": "sass-lint static/**/*.scss --verbose --no-exit",
     "build": "yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output static/css && postcss --use autoprefixer --replace 'static/css/**/*.css' && postcss --use cssnano --dir static/minified 'static/css/**/*.css'",
-    "build-js": "cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/d3-geo/build/d3-geo.min.js static/js/modules && cp node_modules/topojson-client/dist/topojson-client.min.js static/js/modules && cp node_modules/billboard.js/dist/billboard.min.js static/js/modules && cp node_modules/moment/min/moment.min.js static/js/modules",
+    "build-js": "yarn run copy-3rd-party-js && yarn run build-metrics",
+    "copy-3rd-party-js": "cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/d3-geo/build/d3-geo.min.js static/js/modules && cp node_modules/topojson-client/dist/topojson-client.min.js static/js/modules && cp node_modules/billboard.js/dist/billboard.min.js static/js/modules && cp node_modules/moment/min/moment.min.js static/js/modules",
+    "build-metrics": "node_modules/.bin/rollup static/js/metrics/metrics.js --o static/js/dist/snap-metrics.js -f iife -n snapcraft.metrics",
     "watch": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle"
   },
@@ -17,6 +19,7 @@
     "moment": "^2.19.3",
     "node-sass": "^4.5.3",
     "postcss-cli": "^4.1.0",
+    "rollup": "^0.52.1",
     "sass-lint": "^1.10.2",
     "topojson-client": "^3.0.0",
     "vanilla-framework": "^1.6.3",

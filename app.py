@@ -464,6 +464,7 @@ def publisher_snap(snap_name):
         installs_metrics['buckets'].append(new_date)
 
     installs_values = []
+
     for index in range(0, metric_period_int):
         installs_values.append(randint(0, 100))
 
