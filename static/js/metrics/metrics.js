@@ -1,3 +1,5 @@
+/* globals d3 bb moment */
+
 import installsMetrics from './graphs/installs';
 import activeDevicesMetrics from './graphs/activeDevices';
 
@@ -6,11 +8,9 @@ import activeDevicesMetrics from './graphs/activeDevices';
  * @param {Object} metrics An object of metrics from the API.
  */
 function renderMetrics(metrics) {
-  if (!d3 || ! bb) {
+  if (!d3 && !bb) {
     return false;
   }
-
-  console.log(metrics);
 
   let days = metrics.installs.buckets;
   // Convert to moment object.
@@ -36,9 +36,6 @@ function renderMetrics(metrics) {
     fullSeries.unshift(series.name);
     activeDevices.push(fullSeries);
   });
-
-  console.log(days);
-  console.log(activeDevices);
 
   activeDevicesMetrics(days, activeDevices);
 }

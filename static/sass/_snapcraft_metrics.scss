@@ -90,15 +90,17 @@
     }
   }
 
-  #active_devices {
+  .snapcraft-metrics__active-devices {
     .bb-areas path {
       stroke: none;
     }
+
     .bb-areas text {
       fill: $color-x-dark;
       stroke: none;
     }
-    .bb-lines path.bb-line {
+
+    .bb-lines .bb-line {
       stroke: none !important;
     }
   }

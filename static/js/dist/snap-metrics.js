@@ -2,8 +2,15 @@ this.snapcraft = this.snapcraft || {};
 this.snapcraft.metrics = (function () {
 'use strict';
 
-var X_TICK_FREQUENCY = 7;
-var Y_TICK_FREQUENCY = 5;
+const COLORS = {
+  installs: '#94519E',
+  activeDevices: ['#FFE8C8','#FCBB83','#E74A37']
+};
+
+const TICKS = {
+  X_FREQUENCY: 7,
+  Y_FREQUENCY: 5
+};
 
 /**
  * Cull Y Axis. The built in culling does not provide enough control.
@@ -13,17 +20,17 @@ var Y_TICK_FREQUENCY = 5;
  * @param {NodeList} ticks X axis tick elements.
  */
 function cullXAxis(ticks) {
-  var tick, totalTicks, text, monthCache;
+  let tick, totalTicks, text, monthCache;
 
   for (tick = 0, totalTicks = ticks.length; tick < totalTicks; tick += 1) {
     text = ticks[tick].querySelector('text');
 
-    if (tick % X_TICK_FREQUENCY !== 0) {
+    if (tick % TICKS.X_FREQUENCY !== 0) {
       text.style.display = 'none';
     } else {
       ticks[tick].classList.add('active');
       text.children[0].setAttribute('fill', '#000');
-      var month = text.children[0].innerHTML.split(' ');
+      const month = text.children[0].innerHTML.split(' ');
       if (month[0] === monthCache) {
         text.children[0].innerHTML = month[1];
       }
@@ -38,12 +45,12 @@ function cullXAxis(ticks) {
  * @param {NodeList} ticks Y axis tick elements.
  */
 function cullYAxis(ticks) {
-  var tick, totalTicks, text;
+  let tick, totalTicks, text;
 
   for (tick = 0, totalTicks = ticks.length; tick < totalTicks; tick += 1) {
     text = ticks[tick].querySelector('text');
 
-    if (tick % Y_TICK_FREQUENCY !== 0) {
+    if (tick % TICKS.Y_FREQUENCY !== 0) {
       text.style.display = 'none';
     } else {
       ticks[tick].classList.add('active');
@@ -116,7 +123,7 @@ function debounce(func, wait, immediate) {
 
 class Mouse {
   constructor() {
-    this.position = {x: 0, y: 0};
+    this.position = { x: 0, y: 0 };
 
     window.addEventListener('mousemove', this.updatePosition.bind(this));
   }
@@ -133,6 +140,7 @@ const mouse = new Mouse();
 
 /**
  * Generate the tooltip.
+ * @param {Array} colors The colours used for the graph.
  * @param {Object} data The point data.
  * @returns {String} A string of HTML.
  */
@@ -154,14 +162,15 @@ function snapcraftGraphTooltip(colors, data) {
 }
 
 /**
- * 
+ *
+ * @param {HTMLElement} graphHolder The window offset of the graphs holder.
  * @param {Object} data The  point data.
  * @param {Number} width 
  * @param {Number} height 
  * @param {HTMLElement} element The tooltip event target element.
  * @returns {Object} Left and top offset of the tooltip.  
  */
-function positionTooltip(installsMetricsOffset, graphHolder, data, width, height, element) {
+function positionTooltip(graphHolder, data, width, height, element) {
   const tooltipHalfWidth = graphHolder
     .querySelector('.p-tooltip__message')
     .clientWidth / 2;
@@ -169,6 +178,7 @@ function positionTooltip(installsMetricsOffset, graphHolder, data, width, height
   const elementSixthHeight = parseFloat(element.getAttribute('height')) / 6;
   let leftModifier = -4;
   const parent = element.parentNode;
+  const graphHolderOffsetTop = graphHolder.offsetTop;
 
   if (parent.firstChild === element) {
     leftModifier -= 3;
@@ -181,27 +191,18 @@ function positionTooltip(installsMetricsOffset, graphHolder, data, width, height
       parseInt(element.getAttribute('x')
     ) + tooltipHalfWidth + elementHalfWidth) + leftModifier,
     top: Math.floor(
-      (mouse.position.y - installsMetricsOffset.top) + window.scrollY - elementSixthHeight
+      (mouse.position.y - graphHolderOffsetTop) + window.scrollY - elementSixthHeight
     )
   };
 }
-
-const COLORS = {
-  installs: '#94519E',
-  activeDevices: ['#FFE8C8','#FCBB83','#E74A37']
-};
 
 function showGraph(el) {
   formatAxis(el);
   el.style.opacity = 1;
 }
 
-function installsMetrics$1(days, installs) {
+function installsMetrics(days, installs) {
   const el = document.getElementById('installs_metrics');
-  const installsMetricsOffset = {
-    left: el.offsetLeft,
-    top: el.offsetTop
-  };
 
   const installsMetrics = bb.generate({
     bindto: '#installs_metrics',
@@ -216,7 +217,7 @@ function installsMetrics$1(days, installs) {
     },
     tooltip: {
       contents: snapcraftGraphTooltip.bind(this, [COLORS.installs]),
-      position: positionTooltip.bind(this, installsMetricsOffset, el)
+      position: positionTooltip.bind(this, el)
     },
     transition: {
       duration: 0
@@ -281,12 +282,70 @@ function showGraph$1(el) {
   el.style.opacity = 1;
 }
 
+function findStart(data) {
+  for (let i = 0, ii = data.length; i < ii; i += 1) {
+    if (data[i] !== 0) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+function findEnd(data) {
+  for (let i = data.length; i > 0; i -= 1) {
+    if (data[i] !== 0) {
+      return i;
+    }
+  }
+  return data.length - 1;
+}
+
+function getHighest(data) {
+  let highestIndex = 0;
+  let highestValue = 0;
+  for (let i = 0, ii = data.length ; i < ii; i += 1) {
+    if (data[i] > highestValue) {
+      highestValue = data[i];
+      highestIndex = i;
+    }
+  }
+
+  return {
+    index: highestIndex,
+    value: highestValue
+  };
+}
+
+const labelPosition = function(graphEl, labelText, data) {
+  const start = findStart(data);
+  const end = findEnd(data);
+  const highestIndex = getHighest(data).index;
+
+  const labelClass = labelText.replace('.', '-');
+  const area = graphEl.querySelector(`.bb-areas-${labelClass}`);
+  const bbox = area.getBBox();
+  const sliceWidth = Math.round(bbox.width / data.length);
+
+  const leftPadding = sliceWidth * start;
+  const width = sliceWidth * (end - start);
+
+  let highestIndexPull = ((highestIndex - start) * sliceWidth) / 4;
+  if (highestIndex < end - start) {
+    highestIndexPull *= -1;
+  }
+
+  const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  label.setAttribute('stroke', '#000');
+  label.setAttribute('x', leftPadding + bbox.x + (width / 2) + highestIndexPull);
+  label.setAttribute('y', bbox.y + (bbox.height / 2));
+  const labelSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+  labelSpan.innerHTML = labelText;
+  label.appendChild(labelSpan);
+  area.appendChild(label);
+};
+
 function activeDevices(days, activeDevices) {
   const el = document.getElementById('active_devices');
-  const elOffset = {
-    left: el.offsetLeft,
-    top: el.offsetTop
-  };
 
   let types = {};
   let colors = {};
@@ -296,71 +355,8 @@ function activeDevices(days, activeDevices) {
     const name = version[0];
     types[name] = 'area-spline';
     colors[name] = _colors.shift();
-    return name
+    return name;
   });
-
-  function findStart(data) {
-    for (let i = 0, ii = data.length; i < ii; i += 1) {
-      if (data[i] !== 0) {
-        return i;
-      }
-    }
-    return 0;
-  }
-
-  function findEnd(data) {
-    for (let i = data.length; i > 0; i -= 1) {
-      if (data[i] !== 0) {
-        return i;
-      }
-    }
-    return data.length - 1;
-  }
-
-  function getHighest(data) {
-    let highestIndex = 0;
-    let highestValue = 0;
-    for (let i = 0, ii = data.length ; i < ii; i += 1) {
-      if (data[i] > highestValue) {
-        highestValue = data[i];
-        highestIndex = i;
-      }
-    }
-
-    return {
-      index: highestIndex,
-      value: highestValue
-    };
-  }
-
-  const labelPosition = function(labelText, data) {
-    data.shift();
-    const start = findStart(data);
-    const end = findEnd(data);
-    const highestIndex = getHighest(data).index;
-
-    const labelClass = labelText.replace('.', '-');
-    const area = document.querySelector(`.bb-areas-${labelClass}`);
-    const bbox = area.getBBox();
-    const sliceWidth = Math.round(bbox.width / data.length);
-
-    const leftPadding = sliceWidth * start;
-    const width = sliceWidth * (end - start);
-
-    let highestIndexPull = ((highestIndex - start) * sliceWidth) / 4;
-    if (highestIndex < end - start) {
-      highestIndexPull *= -1;
-    }
-
-    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('stroke', '#000');
-    label.setAttribute('x', leftPadding + bbox.x + (width / 2) + highestIndexPull);
-    label.setAttribute('y', bbox.y + (bbox.height / 2));
-    const labelSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-    labelSpan.innerHTML = labelText;
-    label.appendChild(labelSpan);
-    area.appendChild(label);
-  };
 
   const activeDevicesMetrics = bb.generate({
     bindto: '#active_devices',
@@ -375,13 +371,14 @@ function activeDevices(days, activeDevices) {
     },
     tooltip: {
       contents: snapcraftGraphTooltip.bind(this, COLORS.activeDevices),
-      position: positionTooltip.bind(this, elOffset, el)
+      position: positionTooltip.bind(this, el)
     },
     transition: {
       duration: 0
     },
     point: {
-      focus: false
+      focus: false,
+      show: false
     },
     axis: {
       x: {
@@ -400,9 +397,6 @@ function activeDevices(days, activeDevices) {
     resize: {
       auto: false
     },
-    point: {
-      show: false
-    },
     data: {
       colors: colors,
       types: types,
@@ -415,9 +409,10 @@ function activeDevices(days, activeDevices) {
   });
 
   showGraph$1(el);
-  labelPosition('1.0', activeDevices[0].slice(0));
-  labelPosition('1.1', activeDevices[1].slice(0));
-  labelPosition('1.2', activeDevices[2].slice(0));
+  activeDevices.forEach(points => {
+    const version = points.shift();
+    labelPosition(el, version, points);
+  });
 
   // Extra events
   let elWidth = el.clientWidth;
@@ -426,7 +421,7 @@ function activeDevices(days, activeDevices) {
     if (el.clientWidth !== elWidth) {
       el.style.opacity = 0;
       debounce(function () {
-        installsMetrics.resize();
+        activeDevicesMetrics.resize();
         showGraph$1(el);
         elWidth = el.clientWidth;
       }, 100)();
@@ -443,11 +438,9 @@ function activeDevices(days, activeDevices) {
  * @param {Object} metrics An object of metrics from the API.
  */
 function renderMetrics(metrics) {
-  if (!d3 || ! bb) {
+  if (!d3) {
     return false;
   }
-
-  console.log(metrics);
 
   let days = metrics.installs.buckets;
   // Convert to moment object.
@@ -463,7 +456,7 @@ function renderMetrics(metrics) {
   // Prepend 'installs'.
   installs.unshift(metrics.installs.series[0].name);
 
-  installsMetrics$1(days, installs);
+  installsMetrics(days, installs);
 
   // Active devices
   const activeDevicesSeries = metrics['active_devices'].series;
@@ -473,9 +466,6 @@ function renderMetrics(metrics) {
     fullSeries.unshift(series.name);
     activeDevices$$1.push(fullSeries);
   });
-
-  console.log(days);
-  console.log(activeDevices$$1);
 
   activeDevices(days, activeDevices$$1);
 }

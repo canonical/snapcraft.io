@@ -488,16 +488,26 @@ def publisher_snap(snap_name):
     for date_index in range(0, metric_period_int):
         rand = randint(0, 20)
 
-        version_1_0_value = version_1_0_values[-1] + rand if len(version_1_0_values) > 0 else 0
+        if len(version_1_0_values) > 0:
+            version_1_0_value = version_1_0_values[-1] + rand
+        else:
+            version_1_0_value = 0
 
         if date_index > 10:
-            version_1_1_value = version_1_1_values[-1] + rand if len(version_1_1_values) > 0 else 0
+            if len(version_1_1_values) > 0:
+                version_1_1_value = version_1_1_values[-1] + rand
+            else:
+                version_1_1_value = 0
             version_1_0_value = version_1_0_values[-1] - (rand - 5)
         else:
             version_1_1_value = 0
 
         if date_index > 20:
-            version_1_2_value = version_1_2_values[-1] + rand if len(version_1_2_values) > 0 else 0
+            if len(version_1_2_values) > 0:
+                version_1_2_value = version_1_2_values[-1] + rand
+            else:
+                version_1_2_value = 0
+
             version_1_1_value = version_1_1_values[-1] - (rand - 5)
         else:
             version_1_2_value = 0
