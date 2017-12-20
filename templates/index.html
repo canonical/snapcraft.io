@@ -168,17 +168,35 @@
     <div class="p-strip is-deep is-bordered">
       <div class="row">
         <div class="col-12">
-          <h2>Snapcraft integrates with your language</h2>
-          <p class="p-heading--five">See how Snapcraft works with your language to make packaging and installing your software easy.</p>
+          <h2>Snapcraft integrates with your tools</h2>
+          <p class="p-heading--five">See how Snapcraft works with your language or framework to make packaging and installing your software easy.</p>
         </div>
       </div>
       <div class="row">
         <div class="col-12 p-logo-links">
-          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/python">
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/pre-built">
             <header class="p-card__header">
-              <img src="https://assets.ubuntu.com/v1/27e2a770-logo-python.png" alt=""/>
+              <img src="https://assets.ubuntu.com/v1/4890ee03-icon-prepackaged-apps.png" alt=""/>
             </header>
-            <p class="u-no-margin">Python</p>
+            <p class="u-no-margin">Pre-built apps</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/c">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/ae5902bf-logo-cpp.png" alt=""/>
+            </header>
+            <p class="u-no-margin">C/C++</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/go">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/53990c77-logo-go.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Go</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/java">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/4fb34568-logo-java.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Java</p>
           </a>
           <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/node">
             <header class="p-card__header">
@@ -186,11 +204,29 @@
             </header>
             <p class="u-no-margin">Node.js</p>
           </a>
-          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/go">
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/electron">
             <header class="p-card__header">
-              <img src="https://assets.ubuntu.com/v1/53990c77-logo-go.png" alt=""/>
+              <img src="https://assets.ubuntu.com/v1/6ee78042-logo-electron.png" alt=""/>
             </header>
-            <p class="u-no-margin">Go</p>
+            <p class="u-no-margin">Electron</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/python">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/27e2a770-logo-python.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Python</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/ruby">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/1ce42763-logo-ruby.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Ruby</p>
+          </a>
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/rust">
+            <header class="p-card__header">
+              <img src="https://assets.ubuntu.com/v1/387bfca8-logo-rust.png" alt=""/>
+            </header>
+            <p class="u-no-margin">Rust</p>
           </a>
           <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/moos">
             <header class="p-card__header">
@@ -204,11 +240,11 @@
             </header>
             <p class="u-no-margin">ROS</p>
           </a>
-          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/pre-built">
+          <a class="p-logo-link p-card" href="https://docs.snapcraft.io/build-snaps/ros2">
             <header class="p-card__header">
-              <img src="https://assets.ubuntu.com/v1/4890ee03-icon-prepackaged-apps.png" alt=""/>
+              <img src="https://assets.ubuntu.com/v1/788b4b66-logo-ros2.png" alt=""/>
             </header>
-            <p class="u-no-margin">Pre-built apps</p>
+            <p class="u-no-margin">ROS 2</p>
           </a>
         </div>
       </div>
@@ -337,18 +373,25 @@
           <p>&copy; 2017 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
           <p>Powered by <a href="https://www.ubuntu.com/kubernetes">the Canonical Distribution of Kubernetes</a></p>
           <p>
-            <a class="p-link--external" href="https://github.com/snapcore/snapcraft">Fork Snapcraft on GitHub</a>
-            {# TODO: u-no-margin is needed until https://github.com/vanilla-framework/vanilla-framework/issues/1426 is fixed #}
-            <br class="u-no-margin" />
-            <a class="p-link--external" href="https://github.com/snapcore/snapd">Fork snapd on GitHub</a>
+            You can contribute to, or report problems with,
+            <a
+              class="p-link--external"
+              href="https://bugs.launchpad.net/snappy"
+            >snapd</a>,
+            <a
+              class="p-link--external"
+              href="https://github.com/snapcore/snapcraft/issues"
+            >Snapcraft</a>,
+            or
+            <a
+              class="p-link--external"
+              href="https://github.com/canonical-websites/snapcraft.io/issues"
+            >this site</a>.
           </p>
           <nav class="p-footer__nav">
             <ul class="p-footer__links">
               <li class="p-footer__item">
                 <a class="p-footer__link" href="https://www.ubuntu.com/legal">Legal information</a>
-              </li>
-              <li class="p-footer__item">
-                <a class="p-footer__link" href="https://github.com/canonical-websites/snapcraft.io/issues/new">Report a bug on this site</a>
               </li>
               <li class="p-footer__item">
                 <a class="p-footer__link" href="https://status.snapcraft.io/">Service status</a>
