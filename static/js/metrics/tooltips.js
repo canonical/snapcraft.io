@@ -1,7 +1,10 @@
+/* globals moment */
+
 import mouse from '../libs/mouse';
 
 /**
  * Generate the tooltip.
+ * @param {Array} colors The colours used for the graph.
  * @param {Object} data The point data.
  * @returns {String} A string of HTML.
  */
@@ -23,14 +26,15 @@ function snapcraftGraphTooltip(colors, data) {
 }
 
 /**
- * 
+ *
+ * @param {HTMLElement} graphHolder The window offset of the graphs holder.
  * @param {Object} data The  point data.
  * @param {Number} width 
  * @param {Number} height 
  * @param {HTMLElement} element The tooltip event target element.
  * @returns {Object} Left and top offset of the tooltip.  
  */
-function positionTooltip(installsMetricsOffset, graphHolder, data, width, height, element) {
+function positionTooltip(graphHolder, data, width, height, element) {
   const tooltipHalfWidth = graphHolder
     .querySelector('.p-tooltip__message')
     .clientWidth / 2;
@@ -38,6 +42,7 @@ function positionTooltip(installsMetricsOffset, graphHolder, data, width, height
   const elementSixthHeight = parseFloat(element.getAttribute('height')) / 6;
   let leftModifier = -4;
   const parent = element.parentNode;
+  const graphHolderOffsetTop = graphHolder.offsetTop;
 
   if (parent.firstChild === element) {
     leftModifier -= 3;
@@ -50,9 +55,9 @@ function positionTooltip(installsMetricsOffset, graphHolder, data, width, height
       parseInt(element.getAttribute('x')
     ) + tooltipHalfWidth + elementHalfWidth) + leftModifier,
     top: Math.floor(
-      (mouse.position.y - installsMetricsOffset.top) + window.scrollY - elementSixthHeight
+      (mouse.position.y - graphHolderOffsetTop) + window.scrollY - elementSixthHeight
     )
   };
 }
 
-export {snapcraftGraphTooltip, positionTooltip};
+export { snapcraftGraphTooltip, positionTooltip };

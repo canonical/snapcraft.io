@@ -1,6 +1,6 @@
 class Mouse {
   constructor() {
-    this.position = {x: 0, y: 0};
+    this.position = { x: 0, y: 0 };
 
     window.addEventListener('mousemove', this.updatePosition.bind(this));
   }
@@ -11,7 +11,7 @@ class Mouse {
       y: e.y
     };
   }
-};
+}
 
 const mouse = new Mouse();
 

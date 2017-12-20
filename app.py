@@ -472,6 +472,62 @@ def publisher_snap(snap_name):
         'name': 'installs',
         'values': installs_values
     })
+
+    version_1_0_values = []
+    version_1_1_values = []
+    version_1_2_values = []
+
+    for date_index in range(0, metric_period_int):
+        rand = randint(0, 20)
+
+        if len(version_1_0_values) > 0:
+            version_1_0_value = version_1_0_values[-1] + rand
+        else:
+            version_1_0_value = 0
+
+        if date_index > 10:
+            if len(version_1_1_values) > 0:
+                version_1_1_value = version_1_1_values[-1] + rand
+            else:
+                version_1_1_value = 0
+            version_1_0_value = version_1_0_values[-1] - (rand - 5)
+        else:
+            version_1_1_value = 0
+
+        if date_index > 20:
+            if len(version_1_2_values) > 0:
+                version_1_2_value = version_1_2_values[-1] + rand
+            else:
+                version_1_2_value = 0
+
+            version_1_1_value = version_1_1_values[-1] - (rand - 5)
+        else:
+            version_1_2_value = 0
+
+        version_1_0_value = 0 if version_1_0_value < 0 else version_1_0_value
+        version_1_1_value = 0 if version_1_1_value < 0 else version_1_1_value
+        version_1_2_value = 0 if version_1_2_value < 0 else version_1_2_value
+        version_1_0_values.append(version_1_0_value)
+        version_1_1_values.append(version_1_1_value)
+        version_1_2_values.append(version_1_2_value)
+
+    active_devices['series'] = [
+        {
+            'name': '1.0',
+            'values': version_1_0_values
+        },
+        {
+            'name': '1.1',
+            'values': version_1_1_values
+        },
+        {
+            'name': '1.2',
+            'values': version_1_2_values
+        }
+    ]
+    active_devices_total = 0
+    for version in active_devices['series']:
+        active_devices_total += version['values'][-1]
     # end of dummy data
 
     context = {

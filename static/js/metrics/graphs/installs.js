@@ -1,7 +1,9 @@
-import {formatAxis, formatXAxisTickLabels, formatYAxisTickLabels} from '../axis';
+/* globals bb */
+
+import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
 import debounce from '../../libs/debounce';
-import {snapcraftGraphTooltip, positionTooltip} from '../tooltips';
-import {COLORS} from '../config';
+import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
+import { COLORS } from '../config';
 
 function showGraph(el) {
   formatAxis(el);
@@ -10,10 +12,6 @@ function showGraph(el) {
 
 export default function installsMetrics(days, installs) {
   const el = document.getElementById('installs_metrics');
-  const installsMetricsOffset = {
-    left: el.offsetLeft,
-    top: el.offsetTop
-  };
 
   const installsMetrics = bb.generate({
     bindto: '#installs_metrics',
@@ -28,7 +26,7 @@ export default function installsMetrics(days, installs) {
     },
     tooltip: {
       contents: snapcraftGraphTooltip.bind(this, [COLORS.installs]),
-      position: positionTooltip.bind(this, installsMetricsOffset, el)
+      position: positionTooltip.bind(this, el)
     },
     transition: {
       duration: 0
