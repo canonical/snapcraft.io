@@ -25,6 +25,7 @@ from random import randint
 
 
 app = flask.Flask(__name__)
+app.secret_key = os.environ['SECRET_KEY']
 
 # Setup session to retry requests 5 times
 uncached_session = requests.Session()
