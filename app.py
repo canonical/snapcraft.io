@@ -473,6 +473,13 @@ def publisher_snap(snap_name):
         'values': installs_values
     })
 
+    active_devices = {}
+    active_devices['buckets'] = []
+    active_devices['metric_name'] = 'active_devices'
+    active_devices['series'] = []
+    active_devices['snap_id'] = details['snap_id']
+    active_devices['status'] = 'OK'
+
     version_1_0_values = []
     version_1_1_values = []
     version_1_2_values = []
@@ -539,6 +546,8 @@ def publisher_snap(snap_name):
         # Metrics data
         'installs_total': sum(installs_values),
         'installs_metrics': installs_metrics,
+        'active_devices_total': active_devices_total,
+        'active_devices': active_devices,
 
         # Context info
         'is_linux': 'Linux' in flask.request.headers['User-Agent']

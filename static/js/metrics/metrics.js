@@ -1,6 +1,7 @@
 /* globals d3 bb moment */
 
 import installsMetrics from './graphs/installs';
+import activeDevicesMetrics from './graphs/activeDevices';
 
 /**
  * Render all metrics

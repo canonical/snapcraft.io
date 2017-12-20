@@ -47,7 +47,6 @@
         </div>
       </div>
     </section>
-    {#
     <div class="row">
       <div class="u-clearfix">
         <h3 class="u-float--left">Daily active devices</h3>
@@ -64,6 +63,7 @@
       #}
       <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
     </div>
+    {#
     <div class="row">
       <div class="grid">
         <div class="col-6">
@@ -101,7 +101,8 @@
 <script src="/static/js/dist/snap-metrics.js"></script>
 <script>
   snapcraft.metrics.renderMetrics({
-    'installs': {{ installs_metrics|tojson }}
+    'installs': {{ installs_metrics|tojson }},
+    'active_devices': {{ active_devices|tojson }}
   });
 </script>
 {% endblock %}
