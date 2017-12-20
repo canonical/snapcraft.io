@@ -71,18 +71,16 @@
         <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
       </div>
     </section>
-    {#
     <div class="row">
       <div class="grid">
         <div class="col-6">
           <div class="u-clearfix">
             <h3 class="u-float--left">Territories</h3>
-            <div class="p-heading--three u-float--right u-no-margin--top">
-              <strong>74</strong>
-            </div>
+            <strong class="p-heading--three u-float--right u-no-margin--top">{{ territories_total }}</strong>
           </div>
-          <p>GRAPH</p>
+          <div id="territories" class="snapcraft-territories">
         </div>
+        {#
         <div class="col-6 last-col">
           <div class="u-clearfix">
             <h3 class="u-float--left">Retention</h3>
@@ -99,22 +97,26 @@
           </div>
           <p>GRAPH</p>
         </div>
+        #}
       </div>
-    </div> #}
+    </div>
   </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="/static/js/modules/moment.min.js"></script>
 <script src="/static/js/modules/d3.min.js"></script>
+<script src="/static/js/modules/d3-geo.min.js"></script>
+<script src="/static/js/modules/topojson-client.min.js"></script>
 <script src="/static/js/modules/billboard.min.js"></script>
 
 <!-- Illustration of country data -->
-<script src="/static/js/dist/snap-metrics.js"></script>
+<script src="/static/js/dist/publisher.js"></script>
 <script>
-  snapcraft.metrics.renderMetrics({
+  snapcraft.publisher.metrics({
     'installs': {{ installs_metrics|tojson }},
-    'active_devices': {{ active_devices|tojson }}
+    'active_devices': {{ active_devices|tojson }},
+    'territories': {{ territories|tojson }}
   });
 </script>
 {% endblock %}
