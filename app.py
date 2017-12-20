@@ -448,6 +448,23 @@ def publisher_snap(snap_name):
         flask.abort(details_response.status_code, message)
 
     # Dummy data
+
+    today = datetime.datetime.utcnow().date()
+    month_ago = today - relativedelta.relativedelta(months=1)
+    metrics_query_json = [
+        {
+            "metric_name": "installed_base_by_country_percent",
+            "snap_id": details['snap_id'],
+            "start": month_ago.strftime('%Y-%m-%d'),
+            "end": today.strftime('%Y-%m-%d')
+        }
+    ]
+    metrics_response = _get_from_cache(
+        snap_metrics_url.format(snap_name=snap_name),
+        headers=metrics_query_headers,
+        json=metrics_query_json
+    )
+
     installs_metrics = {}
     installs_metrics['buckets'] = []
     installs_metrics['metric_name'] = 'installs'
@@ -535,6 +552,37 @@ def publisher_snap(snap_name):
     active_devices_total = 0
     for version in active_devices['series']:
         active_devices_total += version['values'][-1]
+
+    geodata = metrics_response.json()[0]['series']
+
+    # Normalise geodata from API
+    users_by_country = {}
+    for country_percentages in geodata:
+        country_code = country_percentages['name']
+        percentages = []
+        for daily_percent in country_percentages['values']:
+            if daily_percent is not None:
+                percentages.append(daily_percent)
+
+        if len(percentages) > 0:
+            users_by_country[country_code] = (
+                sum(percentages) / len(percentages)
+            )
+        else:
+            users_by_country[country_code] = None
+
+    # Build up country info for every country
+    country_data = {}
+    territories_total = 0
+    for country in pycountry.countries:
+        number_of_users = randint(0, 20)  # TODO: this is dummy data
+        territories_total += number_of_users
+        country_data[country.numeric] = {
+            'name': country.name,
+            'code': country.alpha_2,
+            'percentage_of_users': users_by_country.get(country.alpha_2),
+            'number_of_users': number_of_users
+        }
     # end of dummy data
 
     context = {
@@ -548,6 +596,8 @@ def publisher_snap(snap_name):
         'installs_metrics': installs_metrics,
         'active_devices_total': active_devices_total,
         'active_devices': active_devices,
+        'territories_total': territories_total,
+        'territories': country_data,
 
         # Context info
         'is_linux': 'Linux' in flask.request.headers['User-Agent']
