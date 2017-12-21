@@ -80,6 +80,15 @@ search_query_headers = {
     'Accept': 'application/hal+json'
 }
 
+promoted_query_url = (
+    "https://api.snapcraft.io/api/v1/snaps/search"
+    "?promoted=true"
+    "&confinement=strict,classic"
+)
+promoted_query_headers = {
+    'X-Ubuntu-Series': '16'
+}
+
 
 def redirect_to_login():
     return flask.redirect(''.join([
@@ -108,6 +117,15 @@ def get_featured_snaps():
     )
 
     return get_searched_snaps(featured_response.json())
+
+
+def get_promoted_snaps():
+    promoted_response = _get_from_cache(
+        promoted_query_url,
+        headers=promoted_query_headers
+    )
+
+    return get_searched_snaps(promoted_response.json())
 
 
 # Error handlers
@@ -294,6 +312,14 @@ def discover():
     return flask.render_template(
         'discover.html',
         featured_snaps=get_featured_snaps()
+    )
+
+
+@app.route('/snaps/')
+def snaps():
+    return flask.render_template(
+        'promoted.html',
+        snaps=get_promoted_snaps()
     )
 
 
