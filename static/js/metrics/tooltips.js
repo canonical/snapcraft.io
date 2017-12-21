@@ -12,14 +12,23 @@ function snapcraftGraphTooltip(colors, data) {
   let contents = ['<div class="p-tooltip p-tooltip--top-center">'];
   contents.push('<span class="p-tooltip__message" role="tooltip">');
   contents.push('<span class="snapcraft-graph-tooltip__title">' + moment(data[0].x).format('YYYY-MM-DD') + '</span>');
-  data.forEach(function (point, i) {
+  let series = [];
+  data.forEach((point, i) => {
     let color = colors[i];
-    contents.push('<span class="snapcraft-graph-tooltip__series">');
-    contents.push('<span class="snapcraft-graph-tooltip__series-name">' + point.name + '</span>');
-    contents.push('<span class="snapcraft-graph-tooltip__series-color" style="background: ' + color + ';"></span>');
-    contents.push('<span class="snapcraft-graph-tooltip__series-value"> ' + point.value + '</span>');
-    contents.push('</span>');
+    if (point.value === 0) {
+      return;
+    }
+    series.push('<span class="snapcraft-graph-tooltip__series">');
+    series.push('<span class="snapcraft-graph-tooltip__series-name">' + point.name + '</span>');
+    series.push('<span class="snapcraft-graph-tooltip__series-color" style="background: ' + color + ';"></span>');
+    series.push('<span class="snapcraft-graph-tooltip__series-value"> ' + point.value + '</span>');
+    series.push('</span>');
   });
+  if (series.length > 0) {
+    contents = contents.concat(series);
+  } else {
+    contents.push('<span class="snapcraft-graph-tooltip__series">No data</span>');
+  }
   contents.push('</span>');
   contents.push('</div>');
   return contents.join('');

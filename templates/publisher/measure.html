@@ -47,22 +47,24 @@
         </div>
       </div>
     </section>
-    <div class="row">
-      <div class="u-clearfix">
-        <h3 class="u-float--left">Daily active devices</h3>
-        <strong class="p-heading--three u-float--right u-no-margin--top">{{ active_devices_total }}</strong>
-      </div>
-      {#
-        <div class="grid u-clearfix">
-          <div class="col-3">
-            <select class="p-form__control">
-              <option value="version">By version</option>
-            </select>
-          </div>
+    <section class="p-strip is-shallow">
+      <div class="row">
+        <div class="u-clearfix">
+          <h3 class="u-float--left">Daily active devices</h3>
+          <strong class="p-heading--three u-float--right u-no-margin--top">{{ active_devices_total }}</strong>
         </div>
-      #}
-      <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
-    </div>
+        {#
+          <div class="grid u-clearfix">
+            <div class="col-3">
+              <select class="p-form__control">
+                <option value="version">By version</option>
+              </select>
+            </div>
+          </div>
+        #}
+        <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
+      </div>
+    </section>
     {#
     <div class="row">
       <div class="grid">
