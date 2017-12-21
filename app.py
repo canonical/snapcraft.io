@@ -4,6 +4,7 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
+import authentication
 import flask
 import requests
 import requests_cache
@@ -16,6 +17,8 @@ import pycountry
 import os
 import socket
 from dateutil import parser, relativedelta
+from flask_openid import OpenID
+from macaroon import MacaroonRequest, MacaroonResponse
 from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -37,6 +40,12 @@ retries = Retry(
 uncached_session.mount(
     'https://api.snapcraft.io',
     HTTPAdapter(max_retries=retries)
+)
+
+oid = OpenID(
+    app,
+    safe_roots=[],
+    extension_responses=[MacaroonResponse]
 )
 
 # The cache expires after 5 seconds
@@ -70,6 +79,13 @@ search_query_headers = {
     'X-Ubuntu-Architecture': 'amd64',
     'Accept': 'application/hal+json'
 }
+
+
+def redirect_to_login():
+    return flask.redirect(''.join([
+        'login?next=',
+        flask.request.url_rule.rule,
+    ]))
 
 
 def get_searched_snaps(search_results):
@@ -128,6 +144,82 @@ def docs_redirect(path):
 @app.route('/community/')
 def community_redirect():
     return flask.redirect('/')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+@oid.loginhandler
+def login():
+    if authentication.is_authenticated(flask.session):
+        return flask.redirect(oid.get_next_url())
+
+    root = authentication.request_macaroon()
+    openid_macaroon = MacaroonRequest(
+        caveat_id=authentication.get_caveat_id(root)
+    )
+    flask.session['macaroon_root'] = root
+
+    return oid.try_login(
+        'https://login.ubuntu.com',
+        ask_for=['email', 'nickname'],
+        ask_for_optional=['fullname'],
+        extensions=[openid_macaroon]
+    )
+
+
+@oid.after_login
+def after_login(resp):
+    flask.session['openid'] = resp.identity_url
+    flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
+    return flask.redirect('/account')
+
+
+@app.route('/logout')
+def logout():
+    if authentication.is_authenticated(flask.session):
+        authentication.empty_session(flask.session)
+    return flask.redirect('/')
+
+
+@app.route('/account')
+def get_account():
+    if not authentication.is_authenticated(flask.session):
+        return redirect_to_login()
+
+    authorization = authentication.get_authorization_header(
+        flask.session['macaroon_root'],
+        flask.session['macaroon_discharge']
+    )
+
+    headers = {
+        'X-Ubuntu-Series': '16',
+        'X-Ubuntu-Architecture': 'amd64',
+        'Authorization': authorization
+    }
+
+    url = 'https://dashboard.snapcraft.io/dev/api/account'
+    response = requests.request(url=url, method='GET', headers=headers)
+
+    verified_response = authentication.verify_response(
+        response,
+        flask.session,
+        url,
+        '/account',
+        '/login'
+    )
+
+    if verified_response is not None:
+        if verified_response['redirect'] is None:
+            return response.raise_for_status
+        else:
+            return flask.redirect(
+                verified_response.redirect
+            )
+
+    print('HTTP/1.1 {} {}'.format(response.status_code, response.reason))
+
+    return "<h1>Developer Account</h1><p>{}</p>".format(
+        str(response.json())
+    )
 
 
 @app.route('/create/')
