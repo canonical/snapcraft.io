@@ -8,4 +8,11 @@ const TICKS = {
   Y_FREQUENCY: 5
 };
 
-export { COLORS, TICKS };
+const PADDING = {
+  top: 0,
+  left: 72,
+  bottom: 0,
+  right: 0
+};
+
+export { COLORS, TICKS, PADDING };

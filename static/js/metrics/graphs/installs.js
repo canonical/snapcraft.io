@@ -3,7 +3,7 @@
 import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
 import debounce from '../../libs/debounce';
 import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
-import { COLORS } from '../config';
+import { COLORS, PADDING } from '../config';
 
 function showGraph(el) {
   formatAxis(el);
@@ -18,12 +18,7 @@ export default function installsMetrics(days, installs) {
     legend: {
       hide: true
     },
-    padding: {
-      top: 0,
-      left: 72,
-      bottom: 0,
-      right: 112
-    },
+    padding: PADDING,
     tooltip: {
       contents: snapcraftGraphTooltip.bind(this, [COLORS.installs]),
       position: positionTooltip.bind(this, el)
