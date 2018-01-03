@@ -44,7 +44,7 @@ function getHighest(data) {
   };
 }
 
-const labelPosition = function(graphEl, labelText, data) {
+const labelPosition = function(graphEl, labelText, data, isFirst, isLast) {
   const start = findStart(data);
   const end = findEnd(data);
   const highestIndex = getHighest(data).index;
@@ -54,22 +54,41 @@ const labelPosition = function(graphEl, labelText, data) {
   const bbox = area.getBBox();
   const sliceWidth = Math.round(bbox.width / data.length);
 
-  const leftPadding = sliceWidth * start;
   const width = sliceWidth * (end - start);
-
-  let highestIndexPull = ((highestIndex - start) * sliceWidth) / 4;
-  if (highestIndex < end - start) {
-    highestIndexPull *= -1;
+  let leftPadding = (width / 12);
+  
+  if (isLast && highestIndex > end - 3) {
+    leftPadding = -(width / 12);
   }
 
-  const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  label.setAttribute('stroke', '#000');
-  label.setAttribute('x', leftPadding + bbox.x + (width / 2) + highestIndexPull);
-  label.setAttribute('y', bbox.y + (bbox.height / 2));
-  const labelSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-  labelSpan.innerHTML = labelText;
-  label.appendChild(labelSpan);
-  area.appendChild(label);
+  const highestLeft = parseInt(
+    graphEl.querySelector(`.bb-event-rect-${highestIndex}`).getAttribute('x'),
+    10
+  );
+
+  let label = document.querySelector(`[data-version="${labelText}"]`);
+  if (!label) {
+    label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('data-version', labelText);
+    label.setAttribute('stroke', '#000');
+    label.setAttribute('x', highestLeft + leftPadding);
+    label.setAttribute('y', bbox.y + (bbox.height / 2));
+    const labelSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+    labelSpan.innerHTML = labelText;
+    label.appendChild(labelSpan);
+    area.appendChild(label);
+  } else {
+    label.setAttribute('x', highestLeft + leftPadding);
+    label.setAttribute('y', bbox.y + (bbox.height / 2));
+  }
+};
+
+const positionLabels = function(el, activeDevices) {
+  activeDevices.forEach((points, index) => {
+    let _points = points.slice(0);
+    const version = _points.shift();
+    labelPosition(el, version, _points, index === 0, index === activeDevices.length - 1);
+  });
 };
 
 export default function activeDevices(days, activeDevices) {
@@ -132,10 +151,7 @@ export default function activeDevices(days, activeDevices) {
   });
 
   showGraph(el);
-  activeDevices.forEach(points => {
-    const version = points.shift();
-    labelPosition(el, version, points);
-  });
+  positionLabels(el, activeDevices);
 
   // Extra events
   let elWidth = el.clientWidth;
@@ -146,6 +162,7 @@ export default function activeDevices(days, activeDevices) {
       debounce(function () {
         activeDevicesMetrics.resize();
         showGraph(el);
+        positionLabels(el, activeDevices);
         elWidth = el.clientWidth;
       }, 100)();
     }
