@@ -4,6 +4,7 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
+import authentication
 import flask
 import requests
 import requests_cache
@@ -16,6 +17,8 @@ import pycountry
 import os
 import socket
 from dateutil import parser, relativedelta
+from flask_openid import OpenID
+from macaroon import MacaroonRequest, MacaroonResponse
 from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
@@ -25,6 +28,7 @@ from random import randint
 
 
 app = flask.Flask(__name__)
+app.secret_key = os.environ['SECRET_KEY']
 
 # Setup session to retry requests 5 times
 uncached_session = requests.Session()
@@ -36,6 +40,12 @@ retries = Retry(
 uncached_session.mount(
     'https://api.snapcraft.io',
     HTTPAdapter(max_retries=retries)
+)
+
+oid = OpenID(
+    app,
+    safe_roots=[],
+    extension_responses=[MacaroonResponse]
 )
 
 # The cache expires after 5 seconds
@@ -70,6 +80,22 @@ search_query_headers = {
     'Accept': 'application/hal+json'
 }
 
+promoted_query_url = (
+    "https://api.snapcraft.io/api/v1/snaps/search"
+    "?promoted=true"
+    "&confinement=strict,classic"
+)
+promoted_query_headers = {
+    'X-Ubuntu-Series': '16'
+}
+
+
+def redirect_to_login():
+    return flask.redirect(''.join([
+        'login?next=',
+        flask.request.url_rule.rule,
+    ]))
+
 
 def get_searched_snaps(search_results):
     return (
@@ -91,6 +117,15 @@ def get_featured_snaps():
     )
 
     return get_searched_snaps(featured_response.json())
+
+
+def get_promoted_snaps():
+    promoted_response = _get_from_cache(
+        promoted_query_url,
+        headers=promoted_query_headers
+    )
+
+    return get_searched_snaps(promoted_response.json())
 
 
 # Error handlers
@@ -127,6 +162,82 @@ def docs_redirect(path):
 @app.route('/community/')
 def community_redirect():
     return flask.redirect('/')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+@oid.loginhandler
+def login():
+    if authentication.is_authenticated(flask.session):
+        return flask.redirect(oid.get_next_url())
+
+    root = authentication.request_macaroon()
+    openid_macaroon = MacaroonRequest(
+        caveat_id=authentication.get_caveat_id(root)
+    )
+    flask.session['macaroon_root'] = root
+
+    return oid.try_login(
+        'https://login.ubuntu.com',
+        ask_for=['email', 'nickname'],
+        ask_for_optional=['fullname'],
+        extensions=[openid_macaroon]
+    )
+
+
+@oid.after_login
+def after_login(resp):
+    flask.session['openid'] = resp.identity_url
+    flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
+    return flask.redirect('/account')
+
+
+@app.route('/logout')
+def logout():
+    if authentication.is_authenticated(flask.session):
+        authentication.empty_session(flask.session)
+    return flask.redirect('/')
+
+
+@app.route('/account')
+def get_account():
+    if not authentication.is_authenticated(flask.session):
+        return redirect_to_login()
+
+    authorization = authentication.get_authorization_header(
+        flask.session['macaroon_root'],
+        flask.session['macaroon_discharge']
+    )
+
+    headers = {
+        'X-Ubuntu-Series': '16',
+        'X-Ubuntu-Architecture': 'amd64',
+        'Authorization': authorization
+    }
+
+    url = 'https://dashboard.snapcraft.io/dev/api/account'
+    response = requests.request(url=url, method='GET', headers=headers)
+
+    verified_response = authentication.verify_response(
+        response,
+        flask.session,
+        url,
+        '/account',
+        '/login'
+    )
+
+    if verified_response is not None:
+        if verified_response['redirect'] is None:
+            return response.raise_for_status
+        else:
+            return flask.redirect(
+                verified_response.redirect
+            )
+
+    print('HTTP/1.1 {} {}'.format(response.status_code, response.reason))
+
+    return "<h1>Developer Account</h1><p>{}</p>".format(
+        str(response.json())
+    )
 
 
 @app.route('/create/')
@@ -204,6 +315,14 @@ def discover():
     )
 
 
+@app.route('/snaps/')
+def snaps():
+    return flask.render_template(
+        'promoted.html',
+        snaps=get_promoted_snaps()
+    )
+
+
 @app.route('/search')
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
@@ -247,6 +366,7 @@ def snap_details(snap_name):
     some of the data through to the snap-details.html template,
     with appropriate sanitation.
     """
+
     today = datetime.datetime.utcnow().date()
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
@@ -329,7 +449,7 @@ def snap_details(snap_name):
         paragraph = bleach.clean(paragraph, tags=[])
         paragraph = bleach.linkify(paragraph, callbacks=callbacks)
 
-        formatted_paragraphs.append(paragraph)
+        formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
 
     context = {
         # Data direct from details API
