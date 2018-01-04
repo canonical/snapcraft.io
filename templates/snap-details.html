@@ -2,6 +2,16 @@
 
 {% block title %}{{ snap_title }} — Linux software in the Snap Store{% endblock %}
 
+{% block meta %}
+  <meta property="og:title" content="{{ snap_title }} — Linux software in the Snap Store"/>
+  <meta property="og:url" content="https://snapcraft.io/{{ package_name }}/"/>
+  <meta property="og:site_name" content="Snapcraft"/>
+  <meta property="og:type" content="product"/>
+
+  {% if summary %}<meta property="og:description" content="{{ summary }}"/>{% endif %}
+  {% if icon_url %}<meta property="og:image" content="{{ icon_url }}"/>{% endif %}
+{% endblock %}
+
 {% block content %}
   <div class="p-strip is-shallow is-bordered">
     <div class="row">
