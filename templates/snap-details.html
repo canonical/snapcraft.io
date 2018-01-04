@@ -85,6 +85,6 @@
   <!-- Illustration of country data -->
   <script src="/static/js/dist/public.js"></script>
   <script>
-    snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+    snapcraft.public.map('#js-snap-map', {{ countries|tojson }}, true);
   </script>
 {% endblock %}

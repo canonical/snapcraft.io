@@ -74,16 +74,11 @@
 
       // override display of tooltip message so it's not only shown on hover of parent element
       .p-tooltip__message {
-        display: block;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
         min-width: auto;
-
-        .active-users {
-          display: block;
-          margin: {
-            top: 0;
-            left: $sp-medium + $sp-x-small;
-          }
-        }
       }
     }
 
@@ -94,6 +89,7 @@
       margin-right: $sp-x-small;
       vertical-align: middle;
       width: $sp-medium;
+      border-radius: 50%;
 
       &--scale-0 {
         background-color: $color-country-scale-0;
