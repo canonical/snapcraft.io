@@ -1,7 +1,9 @@
 /* global d3, topojson */
 
-export default function renderMap(el, snapData, isPublisher) {
+export default function renderMap(el, snapData) {
   const mapEl = d3.select(el);
+
+  console.log(snapData);
 
   d3.queue()
     .defer(d3.json, "/static/js/world-110m.v1.json")
@@ -84,9 +86,8 @@ export default function renderMap(el, snapData, isPublisher) {
             .style('display', 'block');
 
           let content = ['<span class="u-no-margin--top">', countrySnapData.name];
-          if (isPublisher) {
-            const numberOfUsers = countrySnapData['number_of_users'] || 0;
-            content.push(`<br />${numberOfUsers} daily active users`);
+          if (countrySnapData['number_of_users'] !== undefined) {
+            content.push(`<br />${countrySnapData['number_of_users']} daily active users`);
           }
           content.push('</span>');
           tooltipMsg.html(
