@@ -70,37 +70,39 @@
         #}
         <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
       </div>
-    </section>
-    <div class="row">
-      <div class="grid">
-        <div class="col-6">
-          <div class="u-clearfix">
-            <h3 class="u-float--left">Territories</h3>
-            <strong class="p-heading--three u-float--right u-no-margin--top">{{ territories_total }}</strong>
-          </div>
-          <hr />
-          <div id="territories" class="snapcraft-territories">
-        </div>
-        {#
-        <div class="col-6 last-col">
-          <div class="u-clearfix">
-            <h3 class="u-float--left">Retention</h3>
-            <div class="p-heading--three u-float--right u-no-margin--top">
-              <strong>29%</strong>
+      <div class="row">
+        <div class="grid">
+          <div class="col-6">
+            <div class="u-clearfix">
+              <h3 class="u-float--left">Territories</h3>
+              <div class="p-heading--three u-float--right u-no-margin--top">
+                <strong>{{ territories_total }}</strong>
+              </div>
             </div>
+            <hr />
+            <div id="territories" class="snapcraft-territories">
           </div>
-          <div class="grid">
-            <div class="col-3 u-no-margin--left">
-              <select>
-                <option>by version</option>
-              </select>
+          {#
+          <div class="col-6 last-col">
+            <div class="u-clearfix">
+              <h3 class="u-float--left">Retention</h3>
+              <div class="p-heading--three u-float--right u-no-margin--top">
+                <strong>29%</strong>
+              </div>
             </div>
+            <div class="grid">
+              <div class="col-3 u-no-margin--left">
+                <select>
+                  <option>by version</option>
+                </select>
+              </div>
+            </div>
+            <p>GRAPH</p>
           </div>
-          <p>GRAPH</p>
+          #}
         </div>
-        #}
       </div>
-    </div>
+    </section>
   </div>
 {% endblock %}
 
