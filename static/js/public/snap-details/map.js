@@ -3,8 +3,6 @@
 export default function renderMap(el, snapData) {
   const mapEl = d3.select(el);
 
-  console.log(snapData);
-
   d3.queue()
     .defer(d3.json, "/static/js/world-110m.v1.json")
     .await(ready);
