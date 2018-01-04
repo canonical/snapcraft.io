@@ -1,6 +1,6 @@
 /* global d3, topojson */
 
-export default function renderMap(el, snapData) {
+export default function renderMap(el, snapData, isPublic) {
   const mapEl = d3.select(el);
 
   d3.queue()
@@ -83,10 +83,12 @@ export default function renderMap(el, snapData) {
             .style('left', pos[0] + 'px')
             .style('display', 'block');
 
-          let content = [countrySnapData.name];
-          if (countrySnapData['number_of_users']) {
-            content.push(`<span class="active-users">${countrySnapData['number_of_users']} daily active users</span>`);
+          let content = ['<span class="u-no-margin--top">', countrySnapData.name];
+          if (!isPublic) {
+            const numberOfUsers = countrySnapData['number_of_users'] || 0;
+            content.push(`<br />${numberOfUsers} daily active users`);
           }
+          content.push('</span>');
           tooltipMsg.html(
             `<span class="${className.join(' ')}"></span>${content.join(' ')}`
           );

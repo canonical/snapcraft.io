@@ -576,7 +576,8 @@ def publisher_snap(snap_name):
     territories_total = 0
     for country in pycountry.countries:
         number_of_users = randint(0, 20)  # TODO: this is dummy data
-        territories_total += number_of_users
+        if number_of_users > 0:
+                territories_total += 1
         country_data[country.numeric] = {
             'name': country.name,
             'code': country.alpha_2,
