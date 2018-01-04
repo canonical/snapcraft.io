@@ -1,5 +1,6 @@
-var X_TICK_FREQUENCY = 7;
-var Y_TICK_FREQUENCY = 5;
+/* globals moment */
+
+import { TICKS } from './config';
 
 /**
  * Cull Y Axis. The built in culling does not provide enough control.
@@ -9,17 +10,17 @@ var Y_TICK_FREQUENCY = 5;
  * @param {NodeList} ticks X axis tick elements.
  */
 function cullXAxis(ticks) {
-  var tick, totalTicks, text, monthCache;
+  let tick, totalTicks, text, monthCache;
 
   for (tick = 0, totalTicks = ticks.length; tick < totalTicks; tick += 1) {
     text = ticks[tick].querySelector('text');
 
-    if (tick % X_TICK_FREQUENCY !== 0) {
+    if (tick % TICKS.X_FREQUENCY !== 0) {
       text.style.display = 'none';
     } else {
       ticks[tick].classList.add('active');
       text.children[0].setAttribute('fill', '#000');
-      var month = text.children[0].innerHTML.split(' ');
+      const month = text.children[0].innerHTML.split(' ');
       if (month[0] === monthCache) {
         text.children[0].innerHTML = month[1];
       }
@@ -34,12 +35,12 @@ function cullXAxis(ticks) {
  * @param {NodeList} ticks Y axis tick elements.
  */
 function cullYAxis(ticks) {
-  var tick, totalTicks, text;
+  let tick, totalTicks, text;
 
   for (tick = 0, totalTicks = ticks.length; tick < totalTicks; tick += 1) {
     text = ticks[tick].querySelector('text');
 
-    if (tick % Y_TICK_FREQUENCY !== 0) {
+    if (tick % TICKS.Y_FREQUENCY !== 0) {
       text.style.display = 'none';
     } else {
       ticks[tick].classList.add('active');
@@ -89,4 +90,4 @@ function formatYAxisTickLabels(y) {
   return str;
 }
 
-export {cullXAxis, cullYAxis, formatAxis, formatXAxisTickLabels, formatYAxisTickLabels};
+export { cullXAxis, cullYAxis, formatAxis, formatXAxisTickLabels, formatYAxisTickLabels };

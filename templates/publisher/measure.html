@@ -22,57 +22,73 @@
       </nav>
     </section>
     <section class="p-strip is-shallow">
-      {# <div class="row">
-        <div class="grid">
-          <div class="col-3">
-            <select class="p-form__control" disabled="disabled">
-              <option value="30d"{% if metric_range == '30d' %} selected="selected"{% endif %}>30 days</option>
-            </select>
-          </div>
-          <div class="col-3">
-            <select class="p-form__control" disabled="disabled">
-              <option value="all">All tracks and branches</option>
-            </select>
+      {#
+        <div class="row">
+          <div class="grid">
+            <div class="col-3">
+              <select class="p-form__control" disabled="disabled">
+                <option value="30d"{% if metric_range == '30d' %} selected="selected"{% endif %}>30 days</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <select class="p-form__control" disabled="disabled">
+                <option value="all">All tracks and branches</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div> #}
+      #}
       <div class="row">
         <div class="u-clearfix">
           <h3 class="u-float--left">Installs</h3>
-          <strong class="p-heading--three u-float--right u-no-margin--top">{{ installs_total }}</strong>
+          <div class="p-heading--three u-float--right u-no-margin--top">
+            <strong>{{ installs_total }}</strong>
+          </div>
         </div>
+        <hr />
         <div id="installs_metrics" class="snapcraft-metrics__graph">
         </div>
       </div>
     </section>
-    {#
-    <div class="row">
-      <div class="u-clearfix">
-        <h3 class="u-float--left">Daily active devices</h3>
-        <strong class="p-heading--three u-float--right u-no-margin--top">{{ active_devices_total }}</strong>
-      </div>
-      <div class="grid u-clearfix">
-        <div class="col-3">
-          <select class="p-form__control">
-            <option value="version">By version</option>
-          </select>
+    <section class="p-strip is-shallow">
+      <div class="row">
+        <div class="u-clearfix">
+          <h3 class="u-float--left">Daily active devices</h3>
+          <div class="p-heading--three u-float--right u-no-margin--top">
+            <strong>{{ active_devices_total }}</strong>
+          </div>
         </div>
+        <hr />
+        {#
+          <div class="grid u-clearfix">
+            <div class="col-3">
+              <select class="p-form__control">
+                <option value="version">By version</option>
+              </select>
+            </div>
+          </div>
+        #}
+        <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
       </div>
-      <div id="active_devices" class="snapcraft-metrics__graph"></div>
-    </div>
+    </section>
+    {#
     <div class="row">
       <div class="grid">
         <div class="col-6">
           <div class="u-clearfix">
             <h3 class="u-float--left">Territories</h3>
-            <strong class="p-heading--three u-float--right u-no-margin--top">74</strong>
+            <div class="p-heading--three u-float--right u-no-margin--top">
+              <strong>74</strong>
+            </div>
           </div>
           <p>GRAPH</p>
         </div>
         <div class="col-6 last-col">
           <div class="u-clearfix">
             <h3 class="u-float--left">Retention</h3>
-            <strong class="p-heading--three u-float--right u-no-margin--top">29%</strong>
+            <div class="p-heading--three u-float--right u-no-margin--top">
+              <strong>29%</strong>
+            </div>
           </div>
           <div class="grid">
             <div class="col-3 u-no-margin--left">
@@ -97,7 +113,8 @@
 <script src="/static/js/dist/snap-metrics.js"></script>
 <script>
   snapcraft.metrics.renderMetrics({
-    'installs': {{ installs_metrics|tojson }}
+    'installs': {{ installs_metrics|tojson }},
+    'active_devices': {{ active_devices|tojson }}
   });
 </script>
 {% endblock %}

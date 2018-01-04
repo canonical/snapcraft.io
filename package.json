@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "sass-lint static/**/*.scss --verbose --no-exit",
+    "test": "sass-lint static/**/*.scss --verbose --no-exit; eslint static/js",
     "build": "yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output static/css && postcss --use autoprefixer --replace 'static/css/**/*.css' && postcss --use cssnano --dir static/minified 'static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-metrics",

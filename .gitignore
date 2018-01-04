@@ -59,4 +59,4 @@ env[23]/
 
 # Project specific ignores
 static/js/modules/*.js
-static/js/dist
+static/js/dist/*.js
