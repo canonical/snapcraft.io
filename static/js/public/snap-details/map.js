@@ -1,6 +1,6 @@
 /* global d3, topojson */
 
-export default function renderMap(el, snapData, isPublic) {
+export default function renderMap(el, snapData, isPublisher) {
   const mapEl = d3.select(el);
 
   d3.queue()
@@ -84,7 +84,7 @@ export default function renderMap(el, snapData, isPublic) {
             .style('display', 'block');
 
           let content = ['<span class="u-no-margin--top">', countrySnapData.name];
-          if (!isPublic) {
+          if (isPublisher) {
             const numberOfUsers = countrySnapData['number_of_users'] || 0;
             content.push(`<br />${numberOfUsers} daily active users`);
           }
