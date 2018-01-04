@@ -178,7 +178,7 @@ def login():
 
     return oid.try_login(
         'https://login.ubuntu.com',
-        ask_for=['email', 'nickname'],
+        ask_for=['email', 'nickname', 'image'],
         ask_for_optional=['fullname'],
         extensions=[openid_macaroon]
     )
@@ -186,7 +186,14 @@ def login():
 
 @oid.after_login
 def after_login(resp):
-    flask.session['openid'] = resp.identity_url
+    flask.session['openid'] = {
+        'identity_url': resp.identity_url,
+        'nickname': resp.nickname,
+        'fullname': resp.fullname,
+        'image': resp.image,
+        'email': resp.email
+    }
+
     flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
     return flask.redirect('/account')
 
@@ -235,8 +242,11 @@ def get_account():
 
     print('HTTP/1.1 {} {}'.format(response.status_code, response.reason))
 
-    return "<h1>Developer Account</h1><p>{}</p>".format(
-        str(response.json())
+    user_snaps = response.json()
+    return flask.render_template(
+        'account.html',
+        user_snaps=user_snaps['snaps']['16'],
+        user=flask.session['openid']
     )
 
 
