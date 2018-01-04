@@ -1,7 +1,7 @@
 /* globals bb */
 
 import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
-import debounce from '../../libs/debounce';
+import debounce from '../../../libs/debounce';
 import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
 import { COLORS, PADDING } from '../config';
 

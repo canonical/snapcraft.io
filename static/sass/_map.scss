@@ -13,120 +13,122 @@
   $color-country-default: $color-country-scale-0;
   $color-country-boundary: $color-x-light;
 
-  .country {
-    fill: $color-country-default;
-
-    &--scale-0 {
-      fill: $color-country-scale-0;
-    }
-
-    &--scale-1 {
-      fill: $color-country-scale-1;
-    }
-
-    &--scale-2 {
-      fill: $color-country-scale-2;
-    }
-
-    &--scale-3 {
-      fill: $color-country-scale-3;
-    }
-
-    &--scale-4 {
-      fill: $color-country-scale-4;
-    }
-
-    &--scale-5 {
-      fill: $color-country-scale-5;
-    }
-
-    &--scale-6 {
-      fill: $color-country-scale-6;
-    }
-
-    &--scale-7 {
-      fill: $color-country-scale-7;
-    }
-
-    &--scale-8 {
-      fill: $color-country-scale-8;
-    }
-
-    &--scale-9 {
-      fill: $color-country-scale-9;
-    }
-  }
-
-  .boundary {
-    fill: none;
-    stroke: $color-country-boundary;
-    stroke-width: 1px;
-  }
-
-  .map {
-    border-top: 1px solid $color-mid-light;
+  .snapcraft-territories {
     position: relative;
-  }
 
-  .map-tooltip {
-    @extend .p-tooltip--top-center; // sass-lint:disable-line placeholder-in-extend
-    display: none;
-    pointer-events: none; // little hack to make sure tooltip doesn't dissapear when it's hovered
-    position: absolute;
+    &__country {
+      fill: $color-country-default;
 
-    // override display of tooltip message so it's not only shown on hover of parent element
-    .p-tooltip__message {
-      display: block;
-      min-width: auto;
-    }
-  }
+      &--scale-0 {
+        fill: $color-country-scale-0;
+      }
 
-  .swatch {
-    border: 1px solid $color-x-light;
-    display: inline-block;
-    height: $sp-medium;
-    margin-right: $sp-x-small;
-    vertical-align: middle;
-    width: $sp-medium;
+      &--scale-1 {
+        fill: $color-country-scale-1;
+      }
 
-    &--scale-0 {
-      background-color: $color-country-scale-0;
-    }
+      &--scale-2 {
+        fill: $color-country-scale-2;
+      }
 
-    &--scale-1 {
-      background-color: $color-country-scale-1;
-    }
+      &--scale-3 {
+        fill: $color-country-scale-3;
+      }
 
-    &--scale-2 {
-      background-color: $color-country-scale-2;
-    }
+      &--scale-4 {
+        fill: $color-country-scale-4;
+      }
 
-    &--scale-3 {
-      background-color: $color-country-scale-3;
-    }
+      &--scale-5 {
+        fill: $color-country-scale-5;
+      }
 
-    &--scale-4 {
-      background-color: $color-country-scale-4;
-    }
+      &--scale-6 {
+        fill: $color-country-scale-6;
+      }
 
-    &--scale-5 {
-      background-color: $color-country-scale-5;
+      &--scale-7 {
+        fill: $color-country-scale-7;
+      }
+
+      &--scale-8 {
+        fill: $color-country-scale-8;
+      }
+
+      &--scale-9 {
+        fill: $color-country-scale-9;
+      }
     }
 
-    &--scale-6 {
-      background-color: $color-country-scale-6;
+    &__boundary {
+      fill: none;
+      stroke: $color-country-boundary;
+      stroke-width: 1px;
     }
 
-    &--scale-7 {
-      background-color: $color-country-scale-7;
+    &__tooltip {
+      @extend .p-tooltip--top-center; // sass-lint:disable-line placeholder-in-extend
+      display: none;
+      pointer-events: none; // little hack to make sure tooltip doesn't dissapear when it's hovered
+      position: absolute;
+
+      // override display of tooltip message so it's not only shown on hover of parent element
+      .p-tooltip__message {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        min-width: auto;
+      }
     }
 
-    &--scale-8 {
-      background-color: $color-country-scale-8;
-    }
+    &__swatch {
+      display: inline-block;
+      height: $sp-medium;
+      margin-right: $sp-x-small;
+      vertical-align: middle;
+      width: $sp-medium;
+      border-radius: 50%;
 
-    &--scale-9 {
-      background-color: $color-country-scale-9;
+      &--scale-0 {
+        background-color: $color-country-scale-0;
+      }
+
+      &--scale-1 {
+        background-color: $color-country-scale-1;
+      }
+
+      &--scale-2 {
+        background-color: $color-country-scale-2;
+      }
+
+      &--scale-3 {
+        background-color: $color-country-scale-3;
+      }
+
+      &--scale-4 {
+        background-color: $color-country-scale-4;
+      }
+
+      &--scale-5 {
+        background-color: $color-country-scale-5;
+      }
+
+      &--scale-6 {
+        background-color: $color-country-scale-6;
+      }
+
+      &--scale-7 {
+        background-color: $color-country-scale-7;
+      }
+
+      &--scale-8 {
+        background-color: $color-country-scale-8;
+      }
+
+      &--scale-9 {
+        background-color: $color-country-scale-9;
+      }
     }
   }
 }

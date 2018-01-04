@@ -2,6 +2,7 @@
 
 import installsMetrics from './graphs/installs';
 import activeDevicesMetrics from './graphs/activeDevices';
+import territoriesMetrics from './graphs/territories';
 
 /**
  * Render all metrics
@@ -38,8 +39,9 @@ function renderMetrics(metrics) {
   });
 
   activeDevicesMetrics(days, activeDevices);
+
+  // Territories
+  territoriesMetrics('#territories', metrics.territories);
 }
 
-export default {
-  renderMetrics: renderMetrics
-};
+export default renderMetrics;

@@ -1,6 +1,6 @@
 /* globals moment */
 
-import mouse from '../libs/mouse';
+import mouse from '../../libs/mouse';
 
 /**
  * Generate the tooltip.
@@ -62,7 +62,7 @@ function positionTooltip(graphHolder, data, width, height, element) {
   return {
     left: Math.floor(
       parseInt(element.getAttribute('x')
-    ) + tooltipHalfWidth + elementHalfWidth) + leftModifier,
+      ) + tooltipHalfWidth + elementHalfWidth) + leftModifier,
     top: Math.floor(
       (mouse.position.y - graphHolderOffsetTop) + window.scrollY - elementSixthHeight
     )
