@@ -55,7 +55,7 @@ def request_macaroon():
     response = requests.request(
         url='https://dashboard.snapcraft.io/dev/api/acl/',
         method='POST',
-        json={'permissions': ['package_access']},
+        json={'permissions': ['package_access', 'package_upload']},
         headers={
             'Accept': 'application/json, application/hal+json',
             'Content-Type': 'application/json',
