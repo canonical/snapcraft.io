@@ -89,6 +89,29 @@ promoted_query_headers = {
     'X-Ubuntu-Series': '16'
 }
 
+metadata_query_url = (
+    "https://dashboard.snapcraft.io/dev/api"
+    "/snaps/{snap_id}/metadata"
+)
+
+
+def get_metadata_snap(snap_id):
+    authorization = authentication.get_authorization_header(
+        flask.session['macaroon_root'],
+        flask.session['macaroon_discharge']
+    )
+
+    headers = {
+        'Authorization': authorization
+    }
+
+    metadata_response = _get_from_cache(
+        metadata_query_url.format(snap_id=snap_id),
+        headers=headers
+    )
+
+    return metadata_response.json()
+
 
 def redirect_to_login():
     return flask.redirect(''.join([
@@ -737,4 +760,34 @@ def publisher_snap(snap_name):
     return flask.render_template(
         'publisher/measure.html',
         **context
+    )
+
+
+@app.route('/account/snaps/<snap_name>/market/', methods=['GET'])
+def market_snap(snap_name):
+    if not authentication.is_authenticated(flask.session):
+        return redirect_to_login()
+
+    details_response = _get_from_cache(
+        snap_details_url.format(snap_name=snap_name),
+        headers=details_query_headers
+    )
+
+    if details_response.status_code >= 400:
+        message = (
+            'Failed to get snap details for {snap_name}'.format(**locals())
+        )
+
+        if details_response.status_code == 404:
+            message = 'Snap not found: {snap_name}'.format(**locals())
+
+        flask.abort(details_response.status_code, message)
+
+    details = details_response.json()
+    metadata = get_metadata_snap(details['snap_id'])
+
+    return flask.render_template(
+        'publisher/market.html',
+        snap_id=details['snap_id'],
+        metadata=metadata
     )
