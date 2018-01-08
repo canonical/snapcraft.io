@@ -18,6 +18,7 @@ import os
 import socket
 from dateutil import parser, relativedelta
 from flask_openid import OpenID
+from flask_wtf.csrf import CSRFProtect
 from macaroon import MacaroonRequest, MacaroonResponse
 from math import floor
 from requests.packages.urllib3.util.retry import Retry
@@ -29,6 +30,7 @@ from random import randint
 
 app = flask.Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
+app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
 
 # Setup session to retry requests 5 times
 uncached_session = requests.Session()
@@ -47,6 +49,8 @@ oid = OpenID(
     safe_roots=[],
     extension_responses=[MacaroonResponse]
 )
+
+csrf = CSRFProtect(app)
 
 # The cache expires after 5 seconds
 cached_session = requests_cache.CachedSession(expire_after=5)
