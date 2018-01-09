@@ -111,10 +111,11 @@ def get_authorization_header():
     }
 
 
-def get_snap_metadata(snap_id):
+def snap_metadata(snap_id, json=None):
     metadata_response = _get_from_cache(
         metadata_query_url.format(snap_id=snap_id),
-        headers=get_authorization_header()
+        headers=get_authorization_header(),
+        json=json
     )
 
     return metadata_response.json()
@@ -799,16 +800,17 @@ def publisher_snap(snap_name):
 
 
 @app.route('/account/snaps/<snap_name>/market/', methods=['GET'])
-def market_snap(snap_name):
+def get_market_snap(snap_name):
     if not authentication.is_authenticated(flask.session):
         return redirect_to_login()
 
     snap_id = get_snap_id(snap_name)
-    metadata = get_snap_metadata(snap_id)
+    metadata = snap_metadata(snap_id)
 
     return flask.render_template(
         'publisher/market.html',
         snap_id=snap_id,
+        snap_name=snap_name,
         metadata=metadata
     )
 
@@ -823,5 +825,37 @@ def snap_release(snap_name):
 
     return flask.render_template(
         'publisher/release.html',
+        snap_name=snap_name,
         status=status_json,
+    )
+
+
+@app.route('/account/snaps/<snap_name>/market/', methods=['POST'])
+def post_market_snap(snap_name):
+    if not authentication.is_authenticated(flask.session):
+        return redirect_to_login()
+
+    whitelist = [
+        'title',
+        'summary',
+        'description',
+        'contact_url',
+        'keywords',
+        'license',
+        'price',
+        'blacklist_countries',
+        'whitelist_countries'
+    ]
+
+    body_json = {
+        key: flask.request.form[key]
+        for key in whitelist if key in flask.request.form
+    }
+
+    snap_metadata(flask.request.form['snap_id'], body_json)
+
+    return flask.redirect(
+        "/account/snaps/{snap_name}/market/".format(
+            snap_name=snap_name
+        )
     )
