@@ -8,7 +8,7 @@
   <div id="main-content" class="u-no-margin--top">
     <section class="p-strip is-shallow">
       <div class="row">
-        <p><a href="/snaps">My snaps&nbsp;&rsaquo;</a></p>
+        <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
         <h1 class="u-no-margin--top">{{ snap_title }}</h1>
       </div>
     </section>
@@ -40,7 +40,7 @@
       #}
       <div class="row">
         <div class="u-clearfix">
-          <h3 class="u-float--left">Installs</h3>
+          <h3 class="u-float--left">New devices</h3>
           <div class="p-heading--three u-float--right u-no-margin--top">
             <strong>{{ installs_total }}</strong>
           </div>
@@ -53,7 +53,7 @@
         <div class="u-clearfix">
           <h3 class="u-float--left">Daily active devices</h3>
           <div class="p-heading--three u-float--right u-no-margin--top">
-            <strong>{{ active_devices_total }}</strong>
+            <strong>{{ latest_active_devices }}</strong>
           </div>
         </div>
         <hr />
@@ -111,13 +111,12 @@
 <script src="/static/js/modules/topojson-client.min.js"></script>
 <script src="/static/js/modules/billboard.min.js"></script>
 
-<!-- Illustration of country data -->
 <script src="/static/js/dist/publisher.js"></script>
 <script>
-  snapcraft.publisher.metrics({
-    'installs': {{ installs_metrics|tojson }},
-    'active_devices': {{ active_devices|tojson }},
-    'territories': {{ territories|tojson }}
+  snapcraft.publisher.metrics({{ days|safe }}, {
+    installs: {{ installs|safe }},
+    activeDevices: {{ active_devices|safe }},
+    territories: {{ territories|safe }}
   });
 </script>
 {% endblock %}

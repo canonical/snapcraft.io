@@ -41,7 +41,7 @@ def get_caveat_id(root):
     """
     caveat, = [
         c for c in Macaroon.deserialize(root).third_party_caveats()
-        if c.location == 'login.ubuntu.com'
+        if c.location == 'login.staging.ubuntu.com'
     ]
 
     return caveat.caveat_id
@@ -53,9 +53,16 @@ def request_macaroon():
     Returns the macaroon.
     """
     response = requests.request(
-        url='https://dashboard.snapcraft.io/dev/api/acl/',
+        url='https://dashboard.staging.snapcraft.io/dev/api/acl/',
         method='POST',
-        json={'permissions': ['package_access']},
+        json={'permissions': [
+            'edit_account',
+            'package_access',
+            'package_manage',
+            'package_upload',
+            'package_upload_request',
+            'package_purchase',
+            'modify_account_key']},
         headers={
             'Accept': 'application/json, application/hal+json',
             'Content-Type': 'application/json',
@@ -73,7 +80,7 @@ def verify_macaroon(root, discharge, url):
     """
     authorization = get_authorization_header(root, discharge)
     response = requests.request(
-        url='https://dashboard.snapcraft.io/dev/api/acl/verify/',
+        url='https://dashboard.staging.snapcraft.io/dev/api/acl/verify/',
         method='POST',
         json={
             'auth_data': {
@@ -98,7 +105,7 @@ def get_refreshed_discharge(discharge):
     Returns the new discharge macaroon.
     """
     url = (
-        'https://login.ubuntu.com'
+        'https://login.staging.ubuntu.com'
         '/api/v2/tokens/refresh'
     )
     response = requests.request(

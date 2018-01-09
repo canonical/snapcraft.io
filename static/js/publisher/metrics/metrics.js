@@ -8,12 +8,11 @@ import territoriesMetrics from './graphs/territories';
  * Render all metrics
  * @param {Object} metrics An object of metrics from the API.
  */
-function renderMetrics(metrics) {
+function renderMetrics(days, metrics) {
   if (!d3 || !bb) {
     return false;
   }
 
-  let days = metrics.installs.buckets;
   // Convert to moment object.
   days = days.map(function (day) {
     return moment(day);
@@ -23,17 +22,19 @@ function renderMetrics(metrics) {
 
 
   // Installs Metrics
-  let installs = metrics.installs.series[0].values;
+  let installs = metrics.installs.values;
   // Prepend 'installs'.
-  installs.unshift(metrics.installs.series[0].name);
+  installs.unshift('installs');
 
   installsMetrics(days, installs);
 
   // Active devices
-  const activeDevicesSeries = metrics['active_devices'].series;
+  const activeDevicesSeries = metrics.activeDevices;
   let activeDevices = [];
   activeDevicesSeries.forEach(series => {
-    let fullSeries = series.values;
+    let fullSeries = series.values.map(value => {
+      return value === null ? 0 : value;
+    });
     fullSeries.unshift(series.name);
     activeDevices.push(fullSeries);
   });

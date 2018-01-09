@@ -3,7 +3,8 @@
 import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
 import debounce from '../../../libs/debounce';
 import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
-import { COLORS, PADDING } from '../config';
+import { PADDING } from '../config';
+import colorScale from '../colorScale';
 
 function showGraph(el) {
   formatAxis(el);
@@ -49,34 +50,42 @@ const labelPosition = function(graphEl, labelText, data, isFirst, isLast) {
   const end = findEnd(data);
   const highestIndex = getHighest(data).index;
 
-  const labelClass = labelText.replace('.', '-');
+  const labelClass = labelText.replace(/\W+/g, '-');
   const area = graphEl.querySelector(`.bb-areas-${labelClass}`);
   const bbox = area.getBBox();
+
+  if (bbox.height < 20) {
+    return;
+  }
+
   const sliceWidth = Math.round(bbox.width / data.length);
 
   const width = sliceWidth * (end - start);
-  let leftPadding = (width / 12);
-  
+  let leftPadding = width / 12;
   if (isLast && highestIndex > end - 3) {
-    leftPadding = -(width / 12);
+    //leftPadding = -(width / 12);
   }
 
+  const highestEl = graphEl.querySelector(`.bb-event-rect-${highestIndex}`).getBBox();
+
   const highestLeft = parseInt(
-    graphEl.querySelector(`.bb-event-rect-${highestIndex}`).getAttribute('x'),
+    highestEl.x + (highestEl.width / 2),
     10
   );
 
   let label = document.querySelector(`[data-version="${labelText}"]`);
   if (!label) {
     label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'snapcraft-metrics__active-devices-label');
     label.setAttribute('data-version', labelText);
     label.setAttribute('stroke', '#000');
     label.setAttribute('x', highestLeft + leftPadding);
     label.setAttribute('y', bbox.y + (bbox.height / 2));
     const labelSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
     labelSpan.innerHTML = labelText;
+    labelSpan.setAttribute('text-anchor', 'middle');
     label.appendChild(labelSpan);
-    area.appendChild(label);
+    graphEl.children[0].appendChild(label);
   } else {
     label.setAttribute('x', highestLeft + leftPadding);
     label.setAttribute('y', bbox.y + (bbox.height / 2));
@@ -96,12 +105,13 @@ export default function activeDevices(days, activeDevices) {
 
   let types = {};
   let colors = {};
-  let _colors = COLORS.activeDevices.slice(0);
-
+  let _colors = colorScale(activeDevices.length);
+  let _colorIndex = 0;
   const group = activeDevices.map(version => {
     const name = version[0];
     types[name] = 'area-spline';
-    colors[name] = _colors.shift();
+    colors[name] = `rgb(${_colors[_colorIndex].join(',')})`;
+    _colorIndex++;
     return name;
   });
 
@@ -112,7 +122,7 @@ export default function activeDevices(days, activeDevices) {
     },
     padding: PADDING,
     tooltip: {
-      contents: snapcraftGraphTooltip.bind(this, COLORS.activeDevices),
+      contents: snapcraftGraphTooltip.bind(this, colors),
       position: positionTooltip.bind(this, el)
     },
     transition: {

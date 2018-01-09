@@ -24,7 +24,7 @@ from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
 from urllib.parse import urlparse, parse_qs
-from random import randint
+from operator import itemgetter
 
 
 app = flask.Flask(__name__)
@@ -38,7 +38,7 @@ retries = Retry(
     status_forcelist=[500, 502, 503, 504]
 )
 uncached_session.mount(
-    'https://api.snapcraft.io',
+    'https://api.stagin.snapcraft.io',
     HTTPAdapter(max_retries=retries)
 )
 
@@ -56,7 +56,7 @@ request_timeout = 2
 
 # Request only stable snaps
 snap_details_url = (
-    "https://api.snapcraft.io/api/v1/snaps/details/{snap_name}"
+    "https://api.staging.snapcraft.io/api/v1/snaps/details/{snap_name}"
     "?channel=stable"
 )
 details_query_headers = {
@@ -64,8 +64,13 @@ details_query_headers = {
     'X-Ubuntu-Architecture': 'amd64',
 }
 
-snap_metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+snap_metrics_url = "https://api.staging.snapcraft.io/api/v1/snaps/metrics"
 metrics_query_headers = {
+    'Content-Type': 'application/json'
+}
+
+snap_publisher_metrics_url = "https://dashboard.staging.snapcraft.io/dev/api/snaps/metrics"
+publisher_metrics_query_headers = {
     'Content-Type': 'application/json'
 }
 
@@ -81,7 +86,7 @@ search_query_headers = {
 }
 
 promoted_query_url = (
-    "https://api.snapcraft.io/api/v1/snaps/search"
+    "https://api.staging.snapcraft.io/api/v1/snaps/search"
     "?promoted=true"
     "&confinement=strict,classic"
 )
@@ -107,7 +112,7 @@ def get_searched_snaps(search_results):
 
 def get_featured_snaps():
     url = (
-        "https://api.snapcraft.io/api/v1/snaps/search"
+        "https://api.staging.snapcraft.io/api/v1/snaps/search"
         "?confinement=strict,classic&q=&section=featured"
     )
 
@@ -177,7 +182,7 @@ def login():
     flask.session['macaroon_root'] = root
 
     return oid.try_login(
-        'https://login.ubuntu.com',
+        'https://login.staging.ubuntu.com',
         ask_for=['email', 'nickname', 'image'],
         ask_for_optional=['fullname'],
         extensions=[openid_macaroon]
@@ -221,7 +226,7 @@ def get_account():
         'Authorization': authorization
     }
 
-    url = 'https://dashboard.snapcraft.io/dev/api/account'
+    url = 'https://dashboard.staging.snapcraft.io/dev/api/account'
     response = requests.request(url=url, method='GET', headers=headers)
 
     verified_response = authentication.verify_response(
@@ -549,7 +554,7 @@ def _get_from_cache(url, headers, json=None):
 
 # Publisher views
 # ===
-@app.route('/snaps/<snap_name>/measure')
+@app.route('/account/snaps/<snap_name>/measure/')
 def publisher_snap(snap_name):
     """
     A view to display the snap measure page for specific snaps.
@@ -558,6 +563,9 @@ def publisher_snap(snap_name):
     some of the data through to the publisher/measure.html template,
     with appropriate sanitation.
     """
+    if not authentication.is_authenticated(flask.session):
+        return redirect_to_login()
+
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_period_int = int(metric_period[:-1])
 
@@ -581,140 +589,102 @@ def publisher_snap(snap_name):
 
     today = datetime.datetime.utcnow().date()
     month_ago = today - relativedelta.relativedelta(months=1)
-    metrics_query_json = [
-        {
-            "metric_name": "installed_base_by_country_percent",
-            "snap_id": details['snap_id'],
-            "start": month_ago.strftime('%Y-%m-%d'),
-            "end": today.strftime('%Y-%m-%d')
-        }
-    ]
+    metrics_query_json = {
+        "filters": [
+            {
+                "metric_name": "daily_device_change",
+                "snap_id": details['snap_id'],
+                "start": month_ago.strftime('%Y-%m-%d'),
+                "end": today.strftime('%Y-%m-%d')
+            },
+            {
+                "metric_name": "installed_base_by_version",
+                "snap_id": details['snap_id'],
+                "start": month_ago.strftime('%Y-%m-%d'),
+                "end": today.strftime('%Y-%m-%d')
+            },
+            {
+                "metric_name": "installed_base_by_country",
+                "snap_id": details['snap_id'],
+                "start": month_ago.strftime('%Y-%m-%d'),
+                "end": today.strftime('%Y-%m-%d')
+            }
+        ]
+    }
+
+    authed_metrics_headers = publisher_metrics_query_headers.copy()
+    authed_metrics_headers['Authorization'] = authentication.get_authorization_header(
+        flask.session['macaroon_root'],
+        flask.session['macaroon_discharge']
+    )
+
     metrics_response = _get_from_cache(
-        snap_metrics_url.format(snap_name=snap_name),
-        headers=metrics_query_headers,
+        snap_publisher_metrics_url,
+        headers=authed_metrics_headers,
         json=metrics_query_json
     )
 
-    installs_metrics = {}
-    installs_metrics['buckets'] = []
-    installs_metrics['metric_name'] = 'installs'
-    installs_metrics['series'] = []
-    installs_metrics['snap_id'] = details['snap_id']
-    installs_metrics['status'] = 'OK'
+    metrics_response_json = metrics_response.json()
 
-    start_date = datetime.date.today() + datetime.timedelta(
-        days=-metric_period_int)
+    days = metrics_response_json['metrics'][0]['buckets']
 
-    for index in range(0, metric_period_int):
-        new_date = start_date + datetime.timedelta(days=index)
-        new_date = new_date.strftime('%Y-%m-%d')
-        installs_metrics['buckets'].append(new_date)
+    installs_metrics = []
+    for index in metrics_response_json['metrics'][0]['series']:
+        series_list = metrics_response_json['metrics'][0]['series']
+        for series in series_list:
+            if series['name'] == 'new':
+                installs_metrics = series
+                break
+    installs_total = 0
 
-    installs_values = []
-
-    for index in range(0, metric_period_int):
-        installs_values.append(randint(0, 100))
-
-    installs_metrics['series'].append({
-        'name': 'installs',
-        'values': installs_values
-    })
-
-    active_devices = {}
-    active_devices['buckets'] = []
-    active_devices['metric_name'] = 'active_devices'
-    active_devices['series'] = []
-    active_devices['snap_id'] = details['snap_id']
-    active_devices['status'] = 'OK'
-
-    version_1_0_values = []
-    version_1_1_values = []
-    version_1_2_values = []
-
-    for date_index in range(0, metric_period_int):
-        rand = randint(0, 20)
-
-        if len(version_1_0_values) > 0:
-            version_1_0_value = version_1_0_values[-1] + rand
+    for index, value in enumerate(installs_metrics['values']):
+        if value == None:
+            installs_metrics['values'][index] = 0
         else:
-            version_1_0_value = 0
+            installs_total += value
 
-        if date_index > 10:
-            if len(version_1_1_values) > 0:
-                version_1_1_value = version_1_1_values[-1] + rand
-            else:
-                version_1_1_value = 0
-            version_1_0_value = version_1_0_values[-1] - (rand - 5)
-        else:
-            version_1_1_value = 0
+    active_devices = metrics_response_json['metrics'][1]['series']
+    active_devices = sorted(active_devices, key=itemgetter('name'))
+    latest_active_devices = 0
 
-        if date_index > 20:
-            if len(version_1_2_values) > 0:
-                version_1_2_value = version_1_2_values[-1] + rand
-            else:
-                version_1_2_value = 0
+    for series_index, series in enumerate(active_devices):
+        for index, value in enumerate(series['values']):
+            if value == None:
+                active_devices[series_index]['values'][index] = 0
+        values = series['values']
+        if len(values) == len(days):
+            latest_active_devices += values[len(values)-1]
 
-            version_1_1_value = version_1_1_values[-1] - (rand - 5)
-        else:
-            version_1_2_value = 0
-
-        version_1_0_value = 0 if version_1_0_value < 0 else version_1_0_value
-        version_1_1_value = 0 if version_1_1_value < 0 else version_1_1_value
-        version_1_2_value = 0 if version_1_2_value < 0 else version_1_2_value
-        version_1_0_values.append(version_1_0_value)
-        version_1_1_values.append(version_1_1_value)
-        version_1_2_values.append(version_1_2_value)
-
-    active_devices['series'] = [
-        {
-            'name': '1.0',
-            'values': version_1_0_values
-        },
-        {
-            'name': '1.1',
-            'values': version_1_1_values
-        },
-        {
-            'name': '1.2',
-            'values': version_1_2_values
-        }
-    ]
-    active_devices_total = 0
-    for version in active_devices['series']:
-        active_devices_total += version['values'][-1]
-
-    geodata = metrics_response.json()[0]['series']
-
+    geodata = metrics_response_json['metrics'][2]['series']
+    geodata = []
     # Normalise geodata from API
     users_by_country = {}
-    for country_percentages in geodata:
-        country_code = country_percentages['name']
-        percentages = []
-        for daily_percent in country_percentages['values']:
-            if daily_percent is not None:
-                percentages.append(daily_percent)
+    for country_counts in geodata:
+        country_code = country_counts['name']
+        count = []
+        for daily_count in country_counts['values']:
+            if daily_count is not None:
+                count.append(daily_count)
 
-        if len(percentages) > 0:
+        if len(count) > 0:
             users_by_country[country_code] = (
-                sum(percentages) / len(percentages)
+                sum(count)
             )
-        else:
-            users_by_country[country_code] = None
 
     # Build up country info for every country
     country_data = {}
     territories_total = 0
     for country in pycountry.countries:
-        number_of_users = randint(0, 20)  # TODO: this is dummy data
-        if number_of_users > 0:
-                territories_total += 1
+        number_of_users = users_by_country.get(country.alpha_2)
+        if number_of_users == None:
+            number_of_users = 0
+        if number_of_users is not None and number_of_users > 0:
+            territories_total += 1
         country_data[country.numeric] = {
             'name': country.name,
             'code': country.alpha_2,
-            'percentage_of_users': users_by_country.get(country.alpha_2),
             'number_of_users': number_of_users
         }
-    # end of dummy data
 
     context = {
         # Data direct from details API
@@ -723,9 +693,10 @@ def publisher_snap(snap_name):
         'metric_period': metric_period_int,
 
         # Metrics data
-        'installs_total': sum(installs_values),
-        'installs_metrics': installs_metrics,
-        'active_devices_total': active_devices_total,
+        'days': days,
+        'installs_total': "{:,}".format(installs_total),
+        'installs': installs_metrics,
+        'latest_active_devices': "{:,}".format(latest_active_devices),
         'active_devices': active_devices,
         'territories_total': territories_total,
         'territories': country_data,
