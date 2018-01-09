@@ -588,25 +588,25 @@ def publisher_snap(snap_name):
     # Dummy data
 
     today = datetime.datetime.utcnow().date()
-    month_ago = today - relativedelta.relativedelta(months=1)
+    start = today - relativedelta.relativedelta(days=metric_period_int)
     metrics_query_json = {
         "filters": [
             {
                 "metric_name": "daily_device_change",
                 "snap_id": details['snap_id'],
-                "start": month_ago.strftime('%Y-%m-%d'),
+                "start": start.strftime('%Y-%m-%d'),
                 "end": today.strftime('%Y-%m-%d')
             },
             {
                 "metric_name": "installed_base_by_version",
                 "snap_id": details['snap_id'],
-                "start": month_ago.strftime('%Y-%m-%d'),
+                "start": start.strftime('%Y-%m-%d'),
                 "end": today.strftime('%Y-%m-%d')
             },
             {
                 "metric_name": "installed_base_by_country",
                 "snap_id": details['snap_id'],
-                "start": month_ago.strftime('%Y-%m-%d'),
+                "start": start.strftime('%Y-%m-%d'),
                 "end": today.strftime('%Y-%m-%d')
             }
         ]
@@ -690,7 +690,7 @@ def publisher_snap(snap_name):
         # Data direct from details API
         'snap_title': details['title'],
         'package_name': details['package_name'],
-        'metric_period': metric_period_int,
+        'metric_period': metric_period,
 
         # Metrics data
         'days': days,

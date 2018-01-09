@@ -22,22 +22,21 @@
       </nav>
     </section>
     <section class="p-strip is-shallow">
-      {#
-        <div class="row">
-          <div class="grid">
-            <div class="col-3">
-              <select class="p-form__control" disabled="disabled">
-                <option value="30d"{% if metric_range == '30d' %} selected="selected"{% endif %}>30 days</option>
-              </select>
-            </div>
-            <div class="col-3">
-              <select class="p-form__control" disabled="disabled">
-                <option value="all">All tracks and branches</option>
-              </select>
-            </div>
+      <div class="row">
+        <div class="grid">
+          <div class="col-3">
+            <select class="p-form__control metrics-period">
+              <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>30 days</option>
+              <option value="60d"{% if metric_period == '60d' %} selected="selected"{% endif %}>60 days</option>
+            </select>
           </div>
+          {#<div class="col-3">
+            <select class="p-form__control" disabled="disabled">
+              <option value="all">All tracks and branches</option>
+            </select>
+          </div>#}
         </div>
-      #}
+      </div>
       <div class="row">
         <div class="u-clearfix">
           <h3 class="u-float--left">New devices</h3>
@@ -113,6 +112,7 @@
 
 <script src="/static/js/dist/publisher.js"></script>
 <script>
+  snapcraft.publisher.period('.metrics-period');
   snapcraft.publisher.metrics({{ days|safe }}, {
     installs: {{ installs|safe }},
     activeDevices: {{ active_devices|safe }},
