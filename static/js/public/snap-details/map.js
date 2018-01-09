@@ -80,7 +80,7 @@ export default function renderMap(el, snapData) {
 
           let content = ['<span class="u-no-margin--top">', countrySnapData.name];
           if (countrySnapData['number_of_users'] !== undefined) {
-            content.push(`<br />${countrySnapData['number_of_users']} daily active users`);
+            content.push(`<br />${countrySnapData['number_of_users']} daily active devices`);
           }
           content.push('</span>');
           tooltipMsg.html(
