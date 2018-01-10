@@ -229,6 +229,7 @@ def community_redirect():
 
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
+@csrf.exempt
 def login():
     if authentication.is_authenticated(flask.session):
         return flask.redirect(oid.get_next_url())
