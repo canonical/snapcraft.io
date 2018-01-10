@@ -567,6 +567,7 @@ def publisher_snap(snap_name):
         return redirect_to_login()
 
     metric_period = flask.request.args.get('period', default='30d', type=str)
+    metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
 
     details_response = _get_from_cache(
@@ -588,26 +589,35 @@ def publisher_snap(snap_name):
     # Dummy data
 
     today = datetime.datetime.utcnow().date()
-    start = today - relativedelta.relativedelta(days=metric_period_int)
+    end = today - relativedelta.relativedelta(days=1)
+    device_change = 'daily_device_change'
+    start = None
+    if metric_bucket == 'd':
+        start = end - relativedelta.relativedelta(days=metric_period_int)
+    elif metric_bucket == 'm':
+        start = end - relativedelta.relativedelta(months=metric_period_int)
+        device_change = 'weekly_device_changes'
+    elif metric_bucket == 'y':
+        start = end - relativedelta.relativedelta(years=metric_period_int)
     metrics_query_json = {
         "filters": [
             {
-                "metric_name": "daily_device_change",
+                "metric_name": device_change,
                 "snap_id": details['snap_id'],
                 "start": start.strftime('%Y-%m-%d'),
-                "end": today.strftime('%Y-%m-%d')
+                "end": end.strftime('%Y-%m-%d')
             },
             {
                 "metric_name": "installed_base_by_version",
                 "snap_id": details['snap_id'],
                 "start": start.strftime('%Y-%m-%d'),
-                "end": today.strftime('%Y-%m-%d')
+                "end": end.strftime('%Y-%m-%d')
             },
             {
                 "metric_name": "installed_base_by_country",
                 "snap_id": details['snap_id'],
                 "start": start.strftime('%Y-%m-%d'),
-                "end": today.strftime('%Y-%m-%d')
+                "end": end.strftime('%Y-%m-%d')
             }
         ]
     }
@@ -626,14 +636,12 @@ def publisher_snap(snap_name):
 
     metrics_response_json = metrics_response.json()
 
-    days = metrics_response_json['metrics'][0]['buckets']
-
-    installs_metrics = []
+    installs_metrics = {'values': [], 'buckets': metrics_response_json['metrics'][0]['buckets']}
     for index in metrics_response_json['metrics'][0]['series']:
         series_list = metrics_response_json['metrics'][0]['series']
         for series in series_list:
             if series['name'] == 'new':
-                installs_metrics = series
+                installs_metrics['values'] = series['values']
                 break
     installs_total = 0
 
@@ -643,17 +651,19 @@ def publisher_snap(snap_name):
         else:
             installs_total += value
 
-    active_devices = metrics_response_json['metrics'][1]['series']
-    active_devices = sorted(active_devices, key=itemgetter('name'))
+    active_devices = metrics_response_json['metrics'][1]
+    active_devices['series'] = sorted(active_devices['series'], key=itemgetter('name'))
     latest_active_devices = 0
 
-    for series_index, series in enumerate(active_devices):
+    for series_index, series in enumerate(active_devices['series']):
         for index, value in enumerate(series['values']):
             if value == None:
-                active_devices[series_index]['values'][index] = 0
+                active_devices['series'][series_index]['values'][index] = 0
         values = series['values']
-        if len(values) == len(days):
+        if len(values) == len(active_devices['buckets']):
             latest_active_devices += values[len(values)-1]
+
+    active_devices = {'series': active_devices['series'], 'buckets': active_devices['buckets']}
 
     geodata = metrics_response_json['metrics'][2]['series']
     geodata = []
@@ -693,7 +703,6 @@ def publisher_snap(snap_name):
         'metric_period': metric_period,
 
         # Metrics data
-        'days': days,
         'installs_total': "{:,}".format(installs_total),
         'installs': installs_metrics,
         'latest_active_devices': "{:,}".format(latest_active_devices),

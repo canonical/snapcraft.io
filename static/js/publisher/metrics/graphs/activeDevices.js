@@ -100,6 +100,23 @@ const positionLabels = function(el, activeDevices) {
   });
 };
 
+function getDailyTotals(data) {
+  let days = [];
+
+  data.forEach(points => {
+    points.shift();
+
+    points.forEach((point, i) => {
+      if (!days[i]) {
+        days[i] = 0;
+      }
+      days[i] += point;
+    });
+  });
+
+  return days;
+}
+
 export default function activeDevices(days, activeDevices) {
   const el = document.getElementById('active_devices');
 

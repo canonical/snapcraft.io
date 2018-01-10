@@ -4,7 +4,9 @@
       border-bottom: 1px solid $color-mid-dark;
       display: block;
       padding-bottom: .25rem;
+      margin-bottom: .5rem;
       text-align: center;
+      font: 12px "Ubuntu";
     }
 
     &__series {
@@ -14,6 +16,10 @@
       margin-top: .25rem;
       width: 176px;
       font: 12px "Ubuntu";
+
+      &:last-child {
+        margin-bottom: .25rem;
+      }
 
       &-name {
         display: inline-block;
