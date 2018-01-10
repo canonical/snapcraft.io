@@ -479,27 +479,67 @@ def snap_details(snap_name):
 
     # Normalise geodata from API
     users_by_country = {}
+    max_users = 0.0
     for country_percentages in geodata:
         country_code = country_percentages['name']
+        users_by_country[country_code] = {}
         percentages = []
         for daily_percent in country_percentages['values']:
             if daily_percent is not None:
                 percentages.append(daily_percent)
 
         if len(percentages) > 0:
-            users_by_country[country_code] = (
+            users_by_country[country_code]['percentage_of_users'] = (
                 sum(percentages) / len(percentages)
             )
         else:
-            users_by_country[country_code] = None
+            users_by_country[country_code]['percentage_of_users'] = 0
+
+        if max_users < users_by_country[country_code]['percentage_of_users']:
+            max_users = users_by_country[country_code]['percentage_of_users']
+
+    def calculate_color(thisCountry, maxCountry, maxColor, minColor):
+        countryFactor = float(thisCountry)/maxCountry
+        colorRange = maxColor - minColor
+        return int(colorRange*countryFactor+minColor)
+
+    for country_code in users_by_country:
+        users_by_country[country_code]['color_rgb'] = [
+            calculate_color(
+                users_by_country[country_code]['percentage_of_users'],
+                max_users,
+                8,
+                229
+            ),
+            calculate_color(
+                users_by_country[country_code]['percentage_of_users'],
+                max_users,
+                64,
+                245
+            ),
+            calculate_color(
+                users_by_country[country_code]['percentage_of_users'],
+                max_users,
+                129,
+                223
+            )
+        ]
 
     # Build up country info for every country
     country_data = {}
     for country in pycountry.countries:
+        country_info = users_by_country.get(country.alpha_2)
+        percentage_of_users = 0
+        color_rgb = [229, 245, 223]
+        if country_info is not None:
+            percentage_of_users = country_info['percentage_of_users'] or 0
+            color_rgb = country_info['color_rgb'] or [229, 245, 223]
+
         country_data[country.numeric] = {
             'name': country.name,
             'code': country.alpha_2,
-            'percentage_of_users': users_by_country.get(country.alpha_2)
+            'percentage_of_users': percentage_of_users,
+            'color_rgb': color_rgb
         }
 
     description = details['description'].strip()
