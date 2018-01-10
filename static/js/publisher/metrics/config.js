@@ -1,5 +1,5 @@
 const COLORS = {
-  installs: '#94519E'
+  active_devices: '#94519E'
 };
 
 const TICKS = {
