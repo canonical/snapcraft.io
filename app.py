@@ -116,10 +116,13 @@ def get_authorization_header():
 
 
 def snap_metadata(snap_id, json=None):
+    method = "PUT" if json is not None else None
+
     metadata_response = _get_from_cache(
         metadata_query_url.format(snap_id=snap_id),
         headers=get_authorization_header(),
-        json=json
+        json=json,
+        method=method
     )
 
     return metadata_response.json()
@@ -604,7 +607,7 @@ def snap_details(snap_name):
     )
 
 
-def _get_from_cache(url, headers, json=None):
+def _get_from_cache(url, headers, json=None, method=None):
     """
     Retrieve the response from the requests cache.
     If the cache has expired then it will attempt to update the cache.
@@ -613,7 +616,8 @@ def _get_from_cache(url, headers, json=None):
 
     request_error = False
 
-    method = "POST" if json else "GET"
+    if method is None:
+        method = "POST" if json else "GET"
 
     request = cached_session.prepare_request(
         requests.Request(
