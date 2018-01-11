@@ -7,13 +7,6 @@ export default function renderMap(el, snapData) {
     .defer(d3.json, "/static/js/world-110m.v1.json")
     .await(ready);
 
-  function getColourScaleModifier(value) {
-    let colorId = ~~(value * 10);
-    if (colorId > 9) { colorId = 9; } // so that 100% doesn't go out of scale
-
-    return '--scale-' + colorId;
-  }
-
   function render(mapEl, snapData, world) {
     const width = mapEl.property('clientWidth');
     const height = width * 0.5;
@@ -54,12 +47,19 @@ export default function renderMap(el, snapData) {
         const countrySnapData = snapData[countryData.id];
 
         if (countrySnapData) {
-          return `snapcraft-territories__country snapcraft-territories__country${getColourScaleModifier(
-            countrySnapData.percentage_of_users
-          )}`;
+          return `snapcraft-territories__country snapcraft-territories__country-default`;
         }
 
         return 'snapcraft-territories__country';
+      })
+      .attr("style", countryData => {
+        const countrySnapData = snapData[countryData.id];
+
+        if (countrySnapData){
+          if (countrySnapData.color_rgb) {
+            return 'fill: rgb(' + countrySnapData.color_rgb[0]+ ',' + countrySnapData.color_rgb[1]+ ',' + countrySnapData.color_rgb[2]+ ')';
+          }
+        }
       })
       .attr("d", path)
       .attr("id", function(d) {
@@ -71,13 +71,8 @@ export default function renderMap(el, snapData) {
       .on("mousemove", countryData => {
         const pos = d3.mouse(mapEl.node());
         const countrySnapData = snapData[countryData.id];
-        let className = ['snapcraft-territories__swatch'];
 
         if (countrySnapData) {
-          className.push(`snapcraft-territories__swatch${getColourScaleModifier(
-            countrySnapData.percentage_of_users
-          )}`);
-
           tooltip
             .style('top', pos[1] + 'px')
             .style('left', pos[0] + 'px')
@@ -89,7 +84,10 @@ export default function renderMap(el, snapData) {
           }
           content.push('</span>');
           tooltipMsg.html(
-            `<span class="${className.join(' ')}"></span>${content.join(' ')}`
+            `<span
+               class="snapcraft-territories__swatch"
+               style="background-color: rgb(${countrySnapData.color_rgb[0]}, ${countrySnapData.color_rgb[1]}, ${countrySnapData.color_rgb[2]})"></span>
+             ${content.join(' ')}`
           );
         }
       })
