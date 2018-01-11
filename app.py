@@ -659,7 +659,7 @@ def _get_from_cache(url, headers, json=None, method=None):
 # Publisher views
 # ===
 @app.route('/snaps/<snap_name>/measure')
-def publisher_snap(snap_name):
+def publisher_snap_measure(snap_name):
     """
     A view to display the snap measure page for specific snaps.
 
@@ -861,7 +861,7 @@ def get_market_snap(snap_name):
         'publisher/market.html',
         snap_id=snap_id,
         snap_name=snap_name,
-        metadata=metadata
+        **metadata
     )
 
 
