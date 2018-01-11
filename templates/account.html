@@ -8,25 +8,20 @@
 
   <section class="p-strip is-shallow">
       <div class="row">
-          <div class="col-12">
-              <h1>My account</h1>
-          </div>
-      </div>
-      <div class="row">
-          <div class="col-3">
+          <div class="col-2">
               {% if user.image %}
                   <img class="p-media-object__image--large" src="{{ user.image }}" alt="{{ user.nickname }} account" />
               {% else %}
                   <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
               {% endif %}
-              <h2 class="u-no-margin">{{ user.nickname }}</h2>
           </div>
-
           <div class="col-9">
+              <h1 class="u-no-margin">{{ user.nickname }}</h1>
               <table class="p-table-key-value">
-                  <tr><th width="100">Fullname</th><td>{{ user.fullname }}</td></tr>
-                  <tr><th>Nickname</th><td>{{ user.nickname }}</td></tr>
+                  <tr><th width="100">Full name</th><td>{{ user.fullname }}</td></tr>
+                  <tr><th>Username</th><td>{{ user.nickname }}</td></tr>
                   <tr><th>Email</th><td>{{ user.email }}</td></tr>
+                  <tr><th>Namespace</th><td>{{ namespace }}</td></tr>
               </table>
           </div>
       </div>

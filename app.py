@@ -309,6 +309,7 @@ def get_account():
     user_snaps = response.json()
     return flask.render_template(
         'account.html',
+        namespace=user_snaps['namespace'],
         user_snaps=user_snaps['snaps']['16'],
         user=flask.session['openid']
     )
