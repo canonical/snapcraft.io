@@ -913,8 +913,16 @@ def post_market_snap(snap_name):
         for key in whitelist if key in flask.request.form
     }
 
-    snap_metadata(flask.request.form['snap_id'], body_json)
+    metadata = snap_metadata(flask.request.form['snap_id'], body_json)
 
+    if 'error_list' in metadata:
+        return flask.render_template(
+            'publisher/market.html',
+            snap_id=flask.request.form['snap_id'],
+            snap_name=snap_name,
+            metadata=flask.request.form,
+            error_list=metadata['error_list']
+        )
     return flask.redirect(
         "/account/snaps/{snap_name}/market/".format(
             snap_name=snap_name
