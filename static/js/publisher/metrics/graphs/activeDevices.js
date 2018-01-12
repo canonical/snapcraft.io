@@ -11,37 +11,51 @@ function showGraph(el) {
   el.style.opacity = 1;
 }
 
-function findStart(data) {
-  for (let i = 0, ii = data.length; i < ii; i += 1) {
-    if (data[i] !== 0) {
-      return i;
-    }
-  }
-  return 0;
-}
+const findCenter = function(points) {
+  const maxValue = Math.max.apply(Math, points);
 
-function findEnd(data) {
-  for (let i = data.length; i > 0; i -= 1) {
-    if (data[i] !== 0) {
-      return i;
+  let sections = [];
+  let cache = [];
+  points.forEach((point, index) => {
+    if (point / maxValue < 0.5 && cache.length !== 0) {
+      sections.push(cache.slice(0));
+      cache = [];
     }
-  }
-  return data.length - 1;
-}
+    if (point / maxValue >= 0.5) {
+      cache.push(index);
+    }
+
+    if (index === points.length - 1 && cache.length > 0) {
+      sections.push(cache);
+    }
+  });
+
+  let longestSection = { length: 0 };
+  sections.forEach(section => {
+    if (section.length > longestSection.length) {
+      longestSection = section.slice(0);
+    }
+  });
+
+  return longestSection;
+};
 
 const labelPosition = function(graphEl, labelText, points) {
-  const start = findStart(points);
-  const end = findEnd(points);
+  const range = findCenter(points);
 
   const labelClass = labelText.replace(/\W+/g, '-');
   const area = graphEl.querySelector(`.bb-areas-${labelClass}`);
   const bbox = area.getBBox();
 
-  const pointsWidth = (bbox.width / points.length) * (end - start);
+  const pointWidth = bbox.width / points.length;
+  const left = (pointWidth * range[0]);
+  const width = pointWidth * (range[range.length - 1] - range[0]);
 
-  if (bbox.height < 20) {
+  if (bbox.height < 20 || width < 50) {
     return;
   }
+
+  let labelBBox;
 
   let label = document.querySelector(`[data-version="${labelText}"]`);
   if (!label) {
@@ -54,8 +68,9 @@ const labelPosition = function(graphEl, labelText, points) {
     labelSpan.setAttribute('text-anchor', 'middle');
     label.appendChild(labelSpan);
     area.appendChild(label);
+    labelBBox = label.getBBox();
   }
-  label.setAttribute('x', pointsWidth / 2);
+  label.setAttribute('x', bbox.x + left + (width / 2) + (labelBBox.width / 2));
   label.setAttribute('y', bbox.y + (bbox.height / 2));
 };
 
@@ -119,6 +134,11 @@ export default function activeDevices(days, activeDevices) {
     },
     resize: {
       auto: false
+    },
+    spline: {
+      interpolation: {
+        type: 'basis'
+      }
     },
     data: {
       colors: colors,

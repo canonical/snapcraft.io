@@ -4,6 +4,8 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
+# TODO: it's just for the demo
+
 import authentication
 import flask
 import requests
@@ -820,7 +822,20 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    metrics_response_json = get_publisher_metrics(metrics_query_json)
+    authed_metrics_headers = publisher_metrics_query_headers.copy()
+    auth_header = get_authorization_header()['Authorization']
+    authed_metrics_headers['Authorization'] = auth_header
+
+    metrics_response = _get_from_cache(
+        snap_pub_metrics_url,
+        headers=authed_metrics_headers,
+        json=metrics_query_json
+    )
+
+    print(metrics_response.json())
+
+    metrics_response_json = metrics_response.json()
+
     installs_metrics = {
         'values': [],
         'buckets': metrics_response_json['metrics'][0]['buckets']
@@ -871,6 +886,7 @@ def publisher_snap_measure(snap_name):
     for data in country_data.values():
         if data['number_of_users'] > 0:
             territories_total += 1
+
 
     context = {
         # Data direct from details API
