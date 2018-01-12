@@ -4,6 +4,8 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
+# TODO: it's just for the demo
+
 import authentication
 import flask
 import requests
