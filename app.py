@@ -838,7 +838,7 @@ def publisher_snap_measure(snap_name):
 
     context = {
         # Data direct from details API
-        'snap_title': details['title'],
+        'snap_name': details['title'],
         'package_name': details['package_name'],
         'metric_period': metric_period,
 
