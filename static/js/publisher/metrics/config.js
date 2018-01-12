@@ -14,4 +14,9 @@ const PADDING = {
   right: 0
 };
 
-export { COLORS, TICKS, PADDING };
+const COLOR_SCALE = {
+  start: [ 255, 232, 200 ],
+  end: [ 226, 74, 51 ]
+};
+
+export { COLORS, TICKS, PADDING, COLOR_SCALE };

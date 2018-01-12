@@ -59,17 +59,14 @@ const labelPosition = function(graphEl, labelText, points) {
   label.setAttribute('y', bbox.y + (bbox.height / 2));
 };
 
-const positionLabels = function(el, activeDevices, activeDevicesMetrics) {
-  activeDevices.forEach((points, index) => {
+const positionLabels = function(el, activeDevices) {
+  activeDevices.forEach((points) => {
     let _points = points.slice(0);
     const version = _points.shift();
     labelPosition(
       el,
       version,
-      _points,
-      activeDevicesMetrics.data(),
-      index === 0,
-      index === activeDevices.length - 1
+      _points
     );
   });
 };
@@ -135,7 +132,7 @@ export default function activeDevices(days, activeDevices) {
   });
 
   showGraph(el);
-  positionLabels(el, activeDevices, activeDevicesMetrics);
+  positionLabels(el, activeDevices);
 
   // Extra events
   let elWidth = el.clientWidth;
@@ -146,7 +143,7 @@ export default function activeDevices(days, activeDevices) {
       debounce(function () {
         activeDevicesMetrics.resize();
         showGraph(el);
-        positionLabels(el, activeDevices, activeDevicesMetrics);
+        positionLabels(el, activeDevices);
         elWidth = el.clientWidth;
       }, 100)();
     }

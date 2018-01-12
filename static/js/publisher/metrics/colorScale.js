@@ -1,6 +1,8 @@
+import { COLOR_SCALE } from "./config";
+
 export default function(steps) {
-  const start = [ 255, 232, 200 ];
-  const end = [ 226, 74, 51 ];
+  const start = COLOR_SCALE.start;
+  const end = COLOR_SCALE.end;
 
   const redSteps = (start[0] - end[0]) / steps;
   const greenSteps = (start[1] - end[1]) / steps;
