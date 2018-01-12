@@ -13,32 +13,43 @@ function renderMetrics(metrics) {
     return false;
   }
 
-  let days = metrics.installs.buckets;
-  // Convert to moment object.
-  days = days.map(function (day) {
-    return moment(day);
-  });
-  // Prepend 'x'.
-  days.unshift('x');
-
-
   // Installs Metrics
-  let installs = metrics.installs.series[0].values;
+  let installs = metrics.installs;
   // Prepend 'installs'.
-  installs.unshift(metrics.installs.series[0].name);
+  installs.values.unshift('active_devices');
 
-  installsMetrics(days, installs);
+  installs.buckets = installs.buckets.map(bucket => {
+    return moment(bucket);
+  });
+  installs.buckets.unshift('x');
+
+  installsMetrics(
+    installs.buckets,
+    installs.values
+  );
 
   // Active devices
-  const activeDevicesSeries = metrics['active_devices'].series;
-  let activeDevices = [];
-  activeDevicesSeries.forEach(series => {
-    let fullSeries = series.values;
+  let activeDevices = {
+    series: [],
+    buckets: metrics.activeDevices.buckets
+  };
+  metrics.activeDevices.series.forEach(series => {
+    let fullSeries = series.values.map(value => {
+      return value === null ? 0 : value;
+    });
     fullSeries.unshift(series.name);
-    activeDevices.push(fullSeries);
+    activeDevices.series.push(fullSeries);
   });
 
-  activeDevicesMetrics(days, activeDevices);
+  activeDevices.buckets = activeDevices.buckets.map(bucket => {
+    return moment(bucket);
+  });
+  activeDevices.buckets.unshift('x');
+
+  activeDevicesMetrics(
+    activeDevices.buckets,
+    activeDevices.series
+  );
 
   // Territories
   territoriesMetrics('#territories', metrics.territories);

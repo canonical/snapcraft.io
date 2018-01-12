@@ -12,10 +12,15 @@ import { TICKS } from './config';
 function cullXAxis(ticks) {
   let tick, totalTicks, text, monthCache;
 
+  let frequency = TICKS.X_FREQUENCY;
+  if (ticks.length > 95) {
+    frequency *= 2;
+  }
+
   for (tick = 0, totalTicks = ticks.length; tick < totalTicks; tick += 1) {
     text = ticks[tick].querySelector('text');
 
-    if (tick % TICKS.X_FREQUENCY !== 0) {
+    if (tick % frequency !== 0) {
       text.style.display = 'none';
     } else {
       ticks[tick].classList.add('active');
