@@ -1,6 +1,5 @@
 const COLORS = {
-  installs: '#94519E',
-  activeDevices: ['#FFE8C8','#FCBB83','#E74A37']
+  active_devices: '#94519E'
 };
 
 const TICKS = {
@@ -15,4 +14,9 @@ const PADDING = {
   right: 0
 };
 
-export { COLORS, TICKS, PADDING };
+const COLOR_SCALE = {
+  start: [ 255, 232, 200 ],
+  end: [ 226, 74, 51 ]
+};
+
+export { COLORS, TICKS, PADDING, COLOR_SCALE };

@@ -20,7 +20,7 @@ export default function installsMetrics(days, installs) {
     },
     padding: PADDING,
     tooltip: {
-      contents: snapcraftGraphTooltip.bind(this, [COLORS.installs]),
+      contents: snapcraftGraphTooltip.bind(this, COLORS),
       position: positionTooltip.bind(this, el)
     },
     transition: {

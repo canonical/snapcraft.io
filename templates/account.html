@@ -39,7 +39,7 @@
                   </tr>
                   {% for snap in user_snaps %}
                       <tr>
-                          <td>{{snap}}</td>
+                          <td><a href="/account/snaps/{{snap}}/measure/">{{snap}}</a></td>
                           <td>{{ user_snaps[snap].status }}</td>
                           <td>{% if user_snaps[snap].price %} user_snaps[snap].price {% else %} 0 {% endif %}</td>
                       </tr>

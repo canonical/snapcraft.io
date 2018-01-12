@@ -42,6 +42,7 @@
             line {
               stroke-linecap: square;
               stroke-width: 1;
+              stroke: $color-mid-light;
             }
           }
 
@@ -100,7 +101,7 @@
       stroke: none;
     }
 
-    .bb-areas text {
+    .snapcraft-metrics__active-devices-label {
       fill: $color-x-dark;
       stroke: none;
     }
