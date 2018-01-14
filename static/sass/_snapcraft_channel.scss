@@ -1,0 +1,33 @@
+@mixin snapcraft-channel {
+
+  %p-snap-channel {
+    position: relative;
+
+    &::after {
+      background: $color-snapcraft-light;
+      border-radius: 2px;
+      font-size: 1rem;
+      left: 100%;
+      margin-left: $sp-x-small;
+      padding: $sp-xx-small $sp-x-small;
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  .p-snap-channel--beta {
+    @extend %p-snap-channel;
+
+    &::after {
+      content: 'Beta';
+    }
+  }
+
+  .p-snap-channel--candidate {
+    @extend %p-snap-channel;
+
+    &::after {
+      content: 'Preview';
+    }
+  }
+}

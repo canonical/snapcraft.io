@@ -61,7 +61,7 @@ request_timeout = 2
 # Request only stable snaps
 snap_details_url = (
     "https://api.snapcraft.io/api/v1/snaps/details/{snap_name}"
-    "?channel=stable"
+    "?channel="
 )
 details_query_headers = {
     'X-Ubuntu-Series': '16',
@@ -586,6 +586,7 @@ def snap_details(snap_name):
         'icon_url': details['icon_url'],
         'version': details['version'],
         'revision': details['revision'],
+        'channel': details['channel'],
         'license': details['license'],
         'publisher': details['publisher'],
         'screenshot_urls': details['screenshot_urls'],

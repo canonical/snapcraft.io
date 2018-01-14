@@ -23,7 +23,7 @@
             <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
           {% endif %}
           <div class="p-media-object__details">
-            <h1>{{ snap_title }}</h1>
+            <h1><span class="{% if channel == 'beta' %}p-snap-channel--beta{% endif %} {% if channel == 'candidate' %}p-snap-channel--candidate{% endif %}">{{ snap_title }}</span></h1>
             <p class="p-media-object__content--large">{{ publisher }}</p>
 
             <p class="p-media-object__content--large">
