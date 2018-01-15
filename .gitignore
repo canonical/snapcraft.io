@@ -1,5 +1,5 @@
 # [generated] Bracketed sections updated by Yeoman generator
-# generator-canonical-webteam@2.2.0
+# generator-canonical-webteam@2.5.0
 
 # [os] OS & editor files
 Desktop.ini
@@ -50,6 +50,7 @@ _site/
 .docker-project
 .*.hash
 .envrc
+.env.local
 env/
 env[23]/
 
@@ -58,3 +59,4 @@ env[23]/
 
 # Project specific ignores
 static/js/modules/*.js
+static/js/dist/*.js

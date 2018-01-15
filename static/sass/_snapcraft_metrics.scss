@@ -42,6 +42,7 @@
             line {
               stroke-linecap: square;
               stroke-width: 1;
+              stroke: $color-mid-light;
             }
           }
 
@@ -88,10 +89,25 @@
 
     .bb-tooltip-container .p-tooltip {
       left: 50%;
+    }
 
-      .p-tooltip__message {
-        display: block;
-      }
+    .p-tooltip__message {
+      display: block;
+    }
+  }
+
+  .snapcraft-metrics__active-devices {
+    .bb-areas path {
+      stroke: none;
+    }
+
+    .snapcraft-metrics__active-devices-label {
+      fill: $color-x-dark;
+      stroke: none;
+    }
+
+    .bb-lines .bb-line {
+      stroke: none !important;
     }
   }
 }

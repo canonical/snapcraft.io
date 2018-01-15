@@ -2,6 +2,16 @@
 
 {% block title %}{{ snap_title }} — Linux software in the Snap Store{% endblock %}
 
+{% block meta %}
+  <meta property="og:title" content="{{ snap_title }} — Linux software in the Snap Store"/>
+  <meta property="og:url" content="https://snapcraft.io/{{ package_name }}/"/>
+  <meta property="og:site_name" content="Snapcraft"/>
+  <meta property="og:type" content="product"/>
+
+  {% if summary %}<meta property="og:description" content="{{ summary }}"/>{% endif %}
+  {% if icon_url %}<meta property="og:image" content="{{ icon_url }}"/>{% endif %}
+{% endblock %}
+
 {% block content %}
   <div class="p-strip is-shallow is-bordered">
     <div class="row">
@@ -48,7 +58,7 @@
     <div class="row" style="margin-top: 2rem">
       <div class="col-12">
         <h4>Where people are using {{ snap_title }}</h4>
-        <div id="js-snap-map" class="map"></div>
+        <div id="js-snap-map" class="snapcraft-territories"></div>
       </div>
     </div>
   </div>
@@ -73,8 +83,8 @@
   <script src="/static/js/modules/topojson-client.min.js"></script>
 
   <!-- Illustration of country data -->
-  <script src="/static/js/snap-details-map.js"></script>
+  <script src="/static/js/dist/public.js"></script>
   <script>
-    renderMap('#js-snap-map', {{ countries|tojson }});
+    snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
   </script>
 {% endblock %}

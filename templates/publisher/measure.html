@@ -1,102 +1,127 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Publisher metrics for {{ snap_title }}
+  Publisher metrics for {{ snap_name }}
 {% endblock %}
 
 {% block content %}
   <div id="main-content" class="u-no-margin--top">
     <section class="p-strip is-shallow">
       <div class="row">
-        <p><a href="/snaps">My snaps&nbsp;&rsaquo;</a></p>
-        <h1 class="u-no-margin--top">{{ snap_title }}</h1>
+        <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
+        <h1 class="u-no-margin--top">{{ snap_name }}</h1>
       </div>
     </section>
     <section class="metrics__nav-wrap p-strip is-shallow u-no-padding--top u-no-padding--bottom">
       <nav class="p-tabs">
         <ul class="p-tabs__list" role="tablist">
           <li class="p-tabs__item" role="presentation">
-            <a href="/snaps/{{ package_name }}/measure" class="p-tabs__link" tabindex="0" role="tab" aria-controls="section1" aria-selected="true">Measure</a>
+            <a href="/account/snaps/{{ snap_name }}/market/" class="p-tabs__link" tabindex="0" role="tab">Market</a>
+          </li>
+          <li class="p-tabs__item" role="presentation">
+            <a href="/account/snaps/{{ snap_name }}/measure/" class="p-tabs__link" tabindex="0" role="tab" aria-selected="true">Measure</a>
           </li>
         </ul>
       </nav>
     </section>
     <section class="p-strip is-shallow">
-      {# <div class="row">
+      <div class="row">
         <div class="grid">
           <div class="col-3">
-            <select class="p-form__control" disabled="disabled">
-              <option value="30d"{% if metric_range == '30d' %} selected="selected"{% endif %}>30 days</option>
+            <select class="p-form__control metrics-period">
+              <option value="7d"{% if metric_period == '7d' %} selected="selected"{% endif %}>Past 7 days</option>
+              <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>Past 30 days</option>
+              <option value="3m"{% if metric_period == '3m' %} selected="selected"{% endif %}>Past 3 months</option>
+              <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
             </select>
           </div>
-          <div class="col-3">
+          {#<div class="col-3">
             <select class="p-form__control" disabled="disabled">
               <option value="all">All tracks and branches</option>
             </select>
-          </div>
+          </div>#}
         </div>
-      </div> #}
+      </div>
       <div class="row">
         <div class="u-clearfix">
-          <h3 class="u-float--left">Installs</h3>
-          <strong class="p-heading--three u-float--right u-no-margin--top">{{ installs_total }}</strong>
+          <h3 class="u-float--left">New devices</h3>
+          <div class="p-heading--three u-float--right u-no-margin--top">
+            <strong>{{ installs_total }}</strong>
+          </div>
         </div>
+        <hr />
         <div id="installs_metrics" class="snapcraft-metrics__graph">
         </div>
       </div>
-    </section>
-    {# <div class="row">
-      <div class="u-clearfix">
-        <h3 class="u-float--left">Daily active devices</h3>
-        <strong class="p-heading--three u-float--right u-no-margin--top">5011</strong>
-      </div>
-      <div class="grid u-clearfix">
-        <div class="col-3">
-          <select class="p-form__control">
-            <option value="version">By version</option>
-          </select>
-        </div>
-      </div>
-      <p>GRAPH</p>
-    </div>
-    <div class="row">
-      <div class="grid">
-        <div class="col-6">
-          <div class="u-clearfix">
-            <h3 class="u-float--left">Territories</h3>
-            <strong class="p-heading--three u-float--right u-no-margin--top">74</strong>
+      <div class="row">
+        <div class="u-clearfix">
+          <h3 class="u-float--left">Daily active devices</h3>
+          <div class="p-heading--three u-float--right u-no-margin--top">
+            <strong>{{ latest_active_devices }}</strong>
           </div>
-          <p>GRAPH</p>
         </div>
-        <div class="col-6 last-col">
-          <div class="u-clearfix">
-            <h3 class="u-float--left">Retention</h3>
-            <strong class="p-heading--three u-float--right u-no-margin--top">29%</strong>
-          </div>
-          <div class="grid">
-            <div class="col-3 u-no-margin--left">
-              <select>
-                <option>by version</option>
+        <hr />
+        {#
+          <div class="grid u-clearfix">
+            <div class="col-3">
+              <select class="p-form__control">
+                <option value="version">By version</option>
               </select>
             </div>
           </div>
-          <p>GRAPH</p>
+        #}
+        <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
+      </div>
+      <div class="row">
+        <div class="grid">
+          <div class="col-6">
+            <div class="u-clearfix">
+              <h3 class="u-float--left">Territories</h3>
+              <div class="p-heading--three u-float--right u-no-margin--top">
+                <strong>{{ territories_total }}</strong>
+              </div>
+            </div>
+            <hr />
+            <div id="territories" class="snapcraft-territories">
+          </div>
+          {#
+          <div class="col-6 last-col">
+            <div class="u-clearfix">
+              <h3 class="u-float--left">Retention</h3>
+              <div class="p-heading--three u-float--right u-no-margin--top">
+                <strong>29%</strong>
+              </div>
+            </div>
+            <div class="grid">
+              <div class="col-3 u-no-margin--left">
+                <select>
+                  <option>by version</option>
+                </select>
+              </div>
+            </div>
+            <p>GRAPH</p>
+          </div>
+          #}
         </div>
       </div>
-    </div> #}
+    </section>
   </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="/static/js/modules/moment.min.js"></script>
 <script src="/static/js/modules/d3.min.js"></script>
+<script src="/static/js/modules/d3-geo.min.js"></script>
+<script src="/static/js/modules/topojson-client.min.js"></script>
 <script src="/static/js/modules/billboard.min.js"></script>
 
-<!-- Illustration of country data -->
-<script src="/static/js/snap-metrics.js"></script>
+<script src="/static/js/dist/publisher.js"></script>
 <script>
-  renderMetrics({
-    'installs': {{ installs_metrics|tojson }}
+  snapcraft.publisher.period('.metrics-period');
+  snapcraft.publisher.metrics({
+    installs: {{ installs|safe }},
+    activeDevices: {{ active_devices|safe }},
+    territories: {{ territories|safe }}
   });
 </script>
 {% endblock %}
