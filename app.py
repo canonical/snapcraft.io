@@ -32,6 +32,23 @@ app = flask.Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
 
+SNAPCRAFT_IO_API = os.getenv(
+    'SNAPCRAFT_IO_API',
+    'https://api.snapcraft.io/api/v1/',
+)
+DASHBOARD_API = os.getenv(
+    'DASHBOARD_API',
+    'https://dashboard.snapcraft.io/dev/api/',
+)
+SEARCH_API = os.getenv(
+    'SEARCH_API',
+    'https://search.apps.ubuntu.com/api/v1/',
+)
+LOGIN_URL = os.getenv(
+    'LOGIN_URL',
+    'https://login.ubuntu.com',
+)
+
 # Setup session to retry requests 5 times
 uncached_session = requests.Session()
 retries = Retry(
@@ -59,54 +76,74 @@ cached_session = requests_cache.CachedSession(expire_after=5)
 request_timeout = 2
 
 # Request only stable snaps
-snap_details_url = (
-    "https://api.snapcraft.io/api/v1/snaps/details/{snap_name}"
-    "?channel=stable"
-)
-details_query_headers = {
+SNAP_DETAILS_URL = ''.join([
+    SNAPCRAFT_IO_API,
+    'snaps/details/{snap_name}',
+    '?channel=stable',
+])
+DETAILS_QUERY_HEADERS = {
     'X-Ubuntu-Series': '16',
     'X-Ubuntu-Architecture': 'amd64',
 }
 
-snap_metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-metrics_query_headers = {
+SNAP_METRICS_URL = ''.join([
+    SNAPCRAFT_IO_API,
+    'snaps/metrics',
+])
+METRICS_QUERY_HEADERS = {
     'Content-Type': 'application/json'
 }
 
-snap_pub_metrics_url = "https://dashboard.snapcraft.io/dev/api/snaps/metrics"
-publisher_metrics_query_headers = {
+FEATURE_SNAPS_URL = ''.join([
+    SNAPCRAFT_IO_API,
+    'snaps/search',
+    '?confinement=strict,classic&q=&section=featured',
+])
+
+SNAP_PUB_METRICS_URL = ''.join([
+    DASHBOARD_API,
+    'snaps/metrics',
+])
+PUBLISHER_METRICS_QUERY_HEADERS = {
     'Content-Type': 'application/json'
 }
 
-snap_search_url = (
-    "https://search.apps.ubuntu.com/api/v1/snaps/search"
-    "?q={snap_name}&page={page}&size={size}"
-    "&confinement=strict,classic"
-)
-search_query_headers = {
+ACCOUNT_URL = ''.join([
+    DASHBOARD_API,
+    'account',
+])
+
+SNAP_SEARCH_URL = ''.join([
+    SEARCH_API,
+    'snaps/search',
+    '?q={snap_name}&page={page}&size={size}',
+    '&confinement=strict,classic',
+])
+SEARCH_QUERY_HEADERS = {
     'X-Ubuntu-Frameworks': '*',
     'X-Ubuntu-Architecture': 'amd64',
     'Accept': 'application/hal+json'
 }
 
-promoted_query_url = (
-    "https://api.snapcraft.io/api/v1/snaps/search"
-    "?promoted=true"
-    "&confinement=strict,classic"
-)
-promoted_query_headers = {
+PROMOTED_QUERY_URL = ''.join([
+    SNAPCRAFT_IO_API,
+    'snaps/search',
+    '?promoted=true',
+    '&confinement=strict,classic',
+])
+PROMOTED_QUERY_HEADERS = {
     'X-Ubuntu-Series': '16'
 }
 
-metadata_query_url = (
-    "https://dashboard.snapcraft.io/dev/api"
-    "/snaps/{snap_id}/metadata"
-)
+METADATA_QUERY_URL = ''.join([
+    DASHBOARD_API,
+    'snaps/{snap_id}/metadata',
+])
 
-status_query_url = (
-    "https://dashboard.snapcraft.io/dev/api"
-    "/snaps/{snap_id}/status"
-)
+STATUS_QUERY_URL = ''.join([
+    DASHBOARD_API,
+    'snaps/{snap_id}/status',
+])
 
 
 def get_authorization_header():
@@ -124,7 +161,7 @@ def snap_metadata(snap_id, json=None):
     method = "PUT" if json is not None else None
 
     metadata_response = _get_from_cache(
-        metadata_query_url.format(snap_id=snap_id),
+        METADATA_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header(),
         json=json,
         method=method
@@ -135,7 +172,7 @@ def snap_metadata(snap_id, json=None):
 
 def get_snap_status(snap_id):
     status_response = _get_from_cache(
-        status_query_url.format(snap_id=snap_id),
+        STATUS_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header()
     )
 
@@ -158,14 +195,9 @@ def get_searched_snaps(search_results):
 
 
 def get_featured_snaps():
-    url = (
-        "https://api.snapcraft.io/api/v1/snaps/search"
-        "?confinement=strict,classic&q=&section=featured"
-    )
-
     featured_response = _get_from_cache(
-        url,
-        headers=search_query_headers
+        FEATURE_SNAPS_URL,
+        headers=SEARCH_QUERY_HEADERS
     )
 
     return get_searched_snaps(featured_response.json())
@@ -173,8 +205,8 @@ def get_featured_snaps():
 
 def get_promoted_snaps():
     promoted_response = _get_from_cache(
-        promoted_query_url,
-        headers=promoted_query_headers
+        PROMOTED_QUERY_URL,
+        headers=PROMOTED_QUERY_HEADERS
     )
 
     return get_searched_snaps(promoted_response.json())
@@ -182,8 +214,8 @@ def get_promoted_snaps():
 
 def get_snap_id(snap_name):
     details_response = _get_from_cache(
-        snap_details_url.format(snap_name=snap_name),
-        headers=details_query_headers
+        SNAP_DETAILS_URL.format(snap_name=snap_name),
+        headers=DETAILS_QUERY_HEADERS
     )
 
     if details_response.status_code >= 400:
@@ -279,7 +311,7 @@ def login():
     flask.session['macaroon_root'] = root
 
     return oid.try_login(
-        'https://login.ubuntu.com',
+        LOGIN_URL,
         ask_for=['email', 'nickname', 'image'],
         ask_for_optional=['fullname'],
         extensions=[openid_macaroon]
@@ -323,13 +355,12 @@ def get_account():
         'Authorization': authorization
     }
 
-    url = 'https://dashboard.snapcraft.io/dev/api/account'
-    response = requests.request(url=url, method='GET', headers=headers)
+    response = requests.request(url=ACCOUNT_URL, method='GET', headers=headers)
 
     verified_response = authentication.verify_response(
         response,
         flask.session,
-        url,
+        ACCOUNT_URL,
         '/account',
         '/login'
     )
@@ -448,12 +479,12 @@ def search_snap():
     page = floor(offset / size) + 1
 
     searched_response = _get_from_cache(
-        snap_search_url.format(
+        SNAP_SEARCH_URL.format(
             snap_name=snap_searched,
             size=size,
             page=page
         ),
-        headers=search_query_headers
+        headers=SEARCH_QUERY_HEADERS
     )
 
     searched_results = searched_response.json()
@@ -484,8 +515,8 @@ def snap_details(snap_name):
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
     details_response = _get_from_cache(
-        snap_details_url.format(snap_name=snap_name),
-        headers=details_query_headers
+        SNAP_DETAILS_URL.format(snap_name=snap_name),
+        headers=DETAILS_QUERY_HEADERS
     )
     details = details_response.json()
 
@@ -508,8 +539,8 @@ def snap_details(snap_name):
         }
     ]
     metrics_response = _get_from_cache(
-        snap_metrics_url.format(snap_name=snap_name),
-        headers=metrics_query_headers,
+        SNAP_METRICS_URL.format(snap_name=snap_name),
+        headers=METRICS_QUERY_HEADERS,
         json=metrics_query_json
     )
 
@@ -685,8 +716,8 @@ def publisher_snap_measure(snap_name):
     metric_period_int = int(metric_period[:-1])
 
     details_response = _get_from_cache(
-        snap_details_url.format(snap_name=snap_name),
-        headers=details_query_headers
+        SNAP_DETAILS_URL.format(snap_name=snap_name),
+        headers=DETAILS_QUERY_HEADERS
     )
     details = details_response.json()
 
@@ -733,12 +764,12 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    authed_metrics_headers = publisher_metrics_query_headers.copy()
+    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
     auth_header = get_authorization_header()['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
     metrics_response = _get_from_cache(
-        snap_pub_metrics_url,
+        SNAP_PUB_METRICS_URL,
         headers=authed_metrics_headers,
         json=metrics_query_json
     )
