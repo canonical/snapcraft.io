@@ -19,6 +19,7 @@ import socket
 from dateutil import parser, relativedelta
 from flask_openid import OpenID
 from flask_wtf.csrf import CSRFProtect
+from functools import wraps
 from macaroon import MacaroonRequest, MacaroonResponse
 from math import floor
 from requests.packages.urllib3.util.retry import Retry
@@ -194,6 +195,16 @@ def get_snap_status(snap_id):
     return status_response.json()
 
 
+def login_required(func):
+    @wraps(func)
+    def is_user_logged_in(*args, **kwargs):
+        if not authentication.is_authenticated(flask.session):
+            return redirect_to_login()
+
+        return func(*args, **kwargs)
+    return is_user_logged_in
+
+
 def redirect_to_login():
     return flask.redirect(''.join([
         'login?next=',
@@ -355,10 +366,8 @@ def logout():
 
 
 @app.route('/account')
+@login_required
 def get_account():
-    if not authentication.is_authenticated(flask.session):
-        return redirect_to_login()
-
     authorization = authentication.get_authorization_header(
         flask.session['macaroon_root'],
         flask.session['macaroon_discharge']
@@ -715,6 +724,7 @@ def _get_from_cache(url, headers, json=None, method=None):
 # Publisher views
 # ===
 @app.route('/account/snaps/<snap_name>/measure/')
+@login_required
 def publisher_snap_measure(snap_name):
     """
     A view to display the snap measure page for specific snaps.
@@ -723,9 +733,6 @@ def publisher_snap_measure(snap_name):
     some of the data through to the publisher/measure.html template,
     with appropriate sanitation.
     """
-    if not authentication.is_authenticated(flask.session):
-        return redirect_to_login()
-
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
@@ -907,10 +914,8 @@ def publisher_snap_measure(snap_name):
 
 
 @app.route('/account/snaps/<snap_name>/market/', methods=['GET'])
+@login_required
 def get_market_snap(snap_name):
-    if not authentication.is_authenticated(flask.session):
-        return redirect_to_login()
-
     snap_id = get_snap_id(snap_name)
     metadata = snap_metadata(snap_id)
     screenshots = snap_screenshots(snap_id)
@@ -925,10 +930,8 @@ def get_market_snap(snap_name):
 
 
 @app.route('/account/snaps/<snap_name>/release/')
+@login_required
 def snap_release(snap_name):
-    if not authentication.is_authenticated(flask.session):
-        return redirect_to_login()
-
     snap_id = get_snap_id(snap_name)
     status_json = get_snap_status(snap_id)
 
@@ -940,10 +943,8 @@ def snap_release(snap_name):
 
 
 @app.route('/account/snaps/<snap_name>/market/', methods=['POST'])
+@login_required
 def post_market_snap(snap_name):
-    if not authentication.is_authenticated(flask.session):
-        return redirect_to_login()
-
     whitelist = [
         'title',
         'summary',
