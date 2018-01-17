@@ -9,7 +9,7 @@
     <section class="p-strip is-shallow">
       <div class="row">
         <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
-        <h1 class="u-no-margin--top">{{ snap_title }}</h1>
+        <h1 class="u-no-margin--top">{{ title }}</h1>
       </div>
     </section>
     <section class="metrics__nav-wrap p-strip is-shallow u-no-padding--top u-no-padding--bottom">
@@ -40,11 +40,15 @@
         </div>
         <div class="row">
           <div class="col-2">
-            {% if icon_url %}
-              <img id="snap_icon_image" class="p-media-object__image--large" src="{{ icon_url }}" alt="{{ title }} snap" />
-            {% else %}
-              <img id="snap_icon_image" class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
-            {% endif %}
+
+            <img id="snap_icon_image" class="p-media-object__image--large p-editable-icon"
+              {% if icon_url %}
+                src="{{ icon_url }}" alt="{{ title }} snap"
+              {% else %}
+                src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
+              {% endif %}
+            />
+
           </div>
           <div class="col-8">
             <label for="snap-title">Title:</label>

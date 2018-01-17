@@ -1,0 +1,45 @@
+@import 'vanilla-framework/scss/vanilla/settings';
+
+@mixin u-margin-sizing {
+  .u-margin-medium {
+    margin: $sp-medium !important;
+
+    &--top {
+      margin-top: $sp-medium !important;
+    }
+
+    &--right {
+      margin-right: $sp-medium !important;
+    }
+
+    &--bottom {
+      margin-bottom: $sp-medium !important;
+    }
+
+    &--left {
+      margin-left: $sp-medium !important;
+    }
+  }
+
+  .u-margin-small {
+    margin: $sp-small !important;
+
+    &--top {
+      margin-top: $sp-small !important;
+    }
+
+    &--right {
+      margin-right: $sp-small !important;
+    }
+
+    &--bottom {
+      margin-bottom: $sp-small !important;
+    }
+
+    &--left {
+      margin-left: $sp-small !important;
+    }
+  }
+
+  // ... etc for other spacing values (xx-small, x-small, large, x-large...)
+}
