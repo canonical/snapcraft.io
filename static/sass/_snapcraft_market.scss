@@ -1,7 +1,28 @@
 @mixin snapcraft-market {
 
   .p-editable-icon {
+    $white-overlay-color: rgba(255, 255, 255, .5);
+
     cursor: pointer;
+    position: relative;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+
+    &::after {
+      background: transparent;
+      border-radius: 50%;
+      bottom: 0;
+      box-shadow: 0 0 0 20px $white-overlay-color;
+      content: "";
+      left: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
   }
 
 }
