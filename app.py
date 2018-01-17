@@ -145,6 +145,11 @@ STATUS_QUERY_URL = ''.join([
     'snaps/{snap_id}/status',
 ])
 
+screenshots_query_url = (
+    "https://dashboard.snapcraft.io/dev/api"
+    "/snaps/{snap_id}/binary-metadata"
+)
+
 
 def get_authorization_header():
     authorization = authentication.get_authorization_header(
@@ -155,6 +160,16 @@ def get_authorization_header():
     return {
         'Authorization': authorization
     }
+
+
+def snap_screenshots(snap_id, json=None):
+    screenshot_response = _get_from_cache(
+        screenshots_query_url.format(snap_id=snap_id),
+        headers=get_authorization_header(),
+        json=json
+    )
+
+    return screenshot_response.json()
 
 
 def snap_metadata(snap_id, json=None):
@@ -898,12 +913,14 @@ def get_market_snap(snap_name):
 
     snap_id = get_snap_id(snap_name)
     metadata = snap_metadata(snap_id)
+    screenshots = snap_screenshots(snap_id)
 
     return flask.render_template(
         'publisher/market.html',
         snap_id=snap_id,
         snap_name=snap_name,
-        **metadata
+        **metadata,
+        screenshots=screenshots
     )
 
 
