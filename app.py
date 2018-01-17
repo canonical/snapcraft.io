@@ -163,6 +163,25 @@ def get_authorization_header():
     }
 
 
+def get_snap_details(snap_name):
+    details_response = _get_from_cache(
+        SNAP_DETAILS_URL.format(snap_name=snap_name),
+        headers=DETAILS_QUERY_HEADERS
+    )
+
+    if details_response.status_code >= 400:
+        message = (
+            'Failed to get snap details for {snap_name}'.format(**locals())
+        )
+
+        if details_response.status_code == 404:
+            message = 'Snap not found: {snap_name}'.format(**locals())
+
+        flask.abort(details_response.status_code, message)
+
+    return details_response.json()
+
+
 def snap_screenshots(snap_id, json=None):
     screenshot_response = _get_from_cache(
         screenshots_query_url.format(snap_id=snap_id),
@@ -195,6 +214,19 @@ def get_snap_status(snap_id):
     return status_response.json()
 
 
+def get_searched_snaps(snap_searched, size, page):
+    searched_response = _get_from_cache(
+        SNAP_SEARCH_URL.format(
+            snap_name=snap_searched,
+            size=size,
+            page=page
+        ),
+        headers=SEARCH_QUERY_HEADERS
+    )
+
+    return searched_response.json()
+
+
 def login_required(func):
     @wraps(func)
     def is_user_logged_in(*args, **kwargs):
@@ -212,7 +244,7 @@ def redirect_to_login():
     ]))
 
 
-def get_searched_snaps(search_results):
+def normalize_searched_snaps(search_results):
     return (
         search_results['_embedded']['clickindex:package']
         if search_results['_embedded']
@@ -226,7 +258,7 @@ def get_featured_snaps():
         headers=SEARCH_QUERY_HEADERS
     )
 
-    return get_searched_snaps(featured_response.json())
+    return normalize_searched_snaps(featured_response.json())
 
 
 def get_promoted_snaps():
@@ -235,26 +267,12 @@ def get_promoted_snaps():
         headers=PROMOTED_QUERY_HEADERS
     )
 
-    return get_searched_snaps(promoted_response.json())
+    return normalize_searched_snaps(promoted_response.json())
 
 
 def get_snap_id(snap_name):
-    details_response = _get_from_cache(
-        SNAP_DETAILS_URL.format(snap_name=snap_name),
-        headers=DETAILS_QUERY_HEADERS
-    )
-
-    if details_response.status_code >= 400:
-        message = (
-            'Failed to get snap details for {snap_name}'.format(**locals())
-        )
-
-        if details_response.status_code == 404:
-            message = 'Snap not found: {snap_name}'.format(**locals())
-
-        flask.abort(details_response.status_code, message)
-
-    return details_response.json()['snap_id']
+    snap_details = get_snap_details(snap_name)
+    return snap_details['snap_id']
 
 
 def calculate_color(thisCountry, maxCountry, maxColor, minColor):
@@ -502,20 +520,11 @@ def search_snap():
 
     page = floor(offset / size) + 1
 
-    searched_response = _get_from_cache(
-        SNAP_SEARCH_URL.format(
-            snap_name=snap_searched,
-            size=size,
-            page=page
-        ),
-        headers=SEARCH_QUERY_HEADERS
-    )
-
-    searched_results = searched_response.json()
+    searched_results = get_searched_snaps(snap_searched, size, page)
 
     context = {
         "query": snap_searched,
-        "snaps": get_searched_snaps(searched_response.json()),
+        "snaps": normalize_searched_snaps(searched_results),
         "links": get_pages_details(searched_results['_links'])
     }
 
@@ -538,21 +547,7 @@ def snap_details(snap_name):
     today = datetime.datetime.utcnow().date()
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
-    details_response = _get_from_cache(
-        SNAP_DETAILS_URL.format(snap_name=snap_name),
-        headers=DETAILS_QUERY_HEADERS
-    )
-    details = details_response.json()
-
-    if details_response.status_code >= 400:
-        message = (
-            'Failed to get snap details for {snap_name}'.format(**locals())
-        )
-
-        if details_response.status_code == 404:
-            message = 'Snap not found: {snap_name}'.format(**locals())
-
-        flask.abort(details_response.status_code, message)
+    details = get_snap_details(snap_name)
 
     metrics_query_json = [
         {
@@ -661,8 +656,6 @@ def snap_details(snap_name):
         'countries': country_data,
 
         # Context info
-        'details_api_error': details_response.old_data_from_error,
-        'metrics_api_error': metrics_response.old_data_from_error,
         'is_linux': 'Linux' in flask.request.headers['User-Agent']
     }
 
@@ -737,21 +730,7 @@ def publisher_snap_measure(snap_name):
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
 
-    details_response = _get_from_cache(
-        SNAP_DETAILS_URL.format(snap_name=snap_name),
-        headers=DETAILS_QUERY_HEADERS
-    )
-    details = details_response.json()
-
-    if details_response.status_code >= 400:
-        message = (
-            'Failed to get snap details for {snap_name}'.format(**locals())
-        )
-
-        if details_response.status_code == 404:
-            message = 'Snap not found: {snap_name}'.format(**locals())
-
-        flask.abort(details_response.status_code, message)
+    details = get_snap_details(snap_name)
 
     today = datetime.datetime.utcnow().date()
     end = today - relativedelta.relativedelta(days=1)
