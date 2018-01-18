@@ -26,7 +26,7 @@
     </section>
 
     <div class="p-strip is-shallow">
-      <form method="POST">
+      <form method="POST" enctype='multipart/form-data'>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="snap_id" value="{{ snap_id }}" />
         <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
