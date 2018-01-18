@@ -493,10 +493,10 @@ def homepage():
     )
 
 
-@app.route('/discover/')
-def discover():
+@app.route('/store/')
+def store():
     return flask.render_template(
-        'discover.html',
+        'store.html',
         featured_snaps=get_featured_snaps()
     )
 
@@ -513,7 +513,7 @@ def snaps():
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
-        return flask.redirect('/discover')
+        return flask.redirect('/store')
 
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)
