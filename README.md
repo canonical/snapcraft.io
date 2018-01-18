@@ -12,6 +12,17 @@ The simplest way to run the site locally is to first [install Docker](https://do
 
 Once the containers are setup, you can visit <http://127.0.0.1:8004> in your browser.
 
+### Use staging APIs
+
+To use staging APIs locally you can edit the file `.env.` and add the following lines:
+
+```bash
+SNAPCRAFT_IO_API=https://api.staging.snapcraft.io/api/v1/
+DASHBOARD_API=https://dashboard.staging.snapcraft.io/dev/api/
+SEARCH_API=https://search.apps.staging.ubuntu.com/api/v1/
+LOGIN_URL=https://login.staging.ubuntu.com
+```
+
 ### Building CSS
 
 For working on [Sass files](static/css), you may want to dynamically watch for changes to rebuild the CSS whenever something changes.
