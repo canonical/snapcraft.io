@@ -60,8 +60,8 @@ $color-accent: $color-brand;
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
 
-@import '_snapcraft_navigation';
-@include snapcraft-navigation;
+@import 'snapcraft_p-navigation';
+@include snapcraft-p-navigation;
 
 @import 'snapcraft_custom-typography';
 @include snapcraft-custom-typography;

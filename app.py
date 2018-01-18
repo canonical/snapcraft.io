@@ -501,6 +501,7 @@ def store():
         page_slug='store'
     )
 
+
 @app.route('/discover/')
 def discover():
     return flask.redirect('/store/')
