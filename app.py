@@ -252,6 +252,16 @@ def normalize_searched_snaps(search_results):
     )
 
 
+def get_public_metrics(snap_name, json):
+    metrics_response = _get_from_cache(
+        SNAP_METRICS_URL.format(snap_name=snap_name),
+        headers=METRICS_QUERY_HEADERS,
+        json=json
+    )
+
+    return metrics_response.json()
+
+
 def get_featured_snaps():
     featured_response = _get_from_cache(
         FEATURE_SNAPS_URL,
@@ -279,6 +289,20 @@ def calculate_color(thisCountry, maxCountry, maxColor, minColor):
     countryFactor = float(thisCountry)/maxCountry
     colorRange = maxColor - minColor
     return int(colorRange*countryFactor+minColor)
+
+
+def get_publisher_metrics(json):
+    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
+    auth_header = get_authorization_header()['Authorization']
+    authed_metrics_headers['Authorization'] = auth_header
+
+    metrics_response = _get_from_cache(
+        SNAP_PUB_METRICS_URL,
+        headers=authed_metrics_headers,
+        json=json
+    )
+
+    return metrics_response.json()
 
 
 def calculate_colors(countries, max_users):
@@ -557,15 +581,14 @@ def snap_details(snap_name):
             "end": today.strftime('%Y-%m-%d')
         }
     ]
-    metrics_response = _get_from_cache(
-        SNAP_METRICS_URL.format(snap_name=snap_name),
-        headers=METRICS_QUERY_HEADERS,
-        json=metrics_query_json
+
+    metrics_response = get_public_metrics(
+        snap_name,
+        metrics_query_json
     )
 
-
     users_by_country = normalize_metrics(
-        metrics_response.json()[0]['series']
+        metrics_response[0]['series']
     )
     country_data = build_country_info(users_by_country)
 
@@ -785,18 +808,7 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
-    auth_header = get_authorization_header()['Authorization']
-    authed_metrics_headers['Authorization'] = auth_header
-
-    metrics_response = _get_from_cache(
-        SNAP_PUB_METRICS_URL,
-        headers=authed_metrics_headers,
-        json=metrics_query_json
-    )
-
-    metrics_response_json = metrics_response.json()
-
+    metrics_response_json = get_publisher_metrics(metrics_query_json)
     installs_metrics = {
         'values': [],
         'buckets': metrics_response_json['metrics'][0]['buckets']
