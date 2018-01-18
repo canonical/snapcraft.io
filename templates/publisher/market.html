@@ -50,16 +50,14 @@
           </div>
         </div>
 
-        <!--
         <div class="row">
           <div class="col-2">
             <label>Publisher: </label>
           </div>
           <div class="col-8">
-            {{ publisher }}
+            {{ details.publisher }}
           </div>
         </div>
-      -->
 
         <div class="row">
           <div class="col-12">
@@ -90,13 +88,13 @@
           </div>
         </div>
 
-        <!--
+
         <div class="row">
           <div class="col-2">
             <label>Version: </label>
           </div>
           <div class="col-8">
-            <input type="text" value="{{ version }}" />
+            {{ details.version }}
           </div>
         </div>
         <div class="row">
@@ -104,18 +102,15 @@
             <label>Size: </label>
           </div>
           <div class="col-8">
-            {{ filesize }}
+            {{ details.filesize }}
           </div>
         </div>
-      -->
-
         <div class="row">
           <div class="col-2">
             <label>License: </label>
           </div>
           <div class="col-8">
             {{ license }}
-            <!-- <input type="text" value="{{ license }}" /> -->
           </div>
         </div>
 

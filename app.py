@@ -901,13 +901,23 @@ def get_market_snap(snap_name):
     snap_id = get_snap_id(snap_name)
     metadata = snap_metadata(snap_id)
     screenshots = snap_screenshots(snap_id)
+    details = get_snap_details(snap_name)
+
+    # Transformed API data
+    details['filesize'] = humanize.naturalsize(details['binary_filesize'])
+    details['last_updated'] = (
+        humanize.naturaldate(
+            parser.parse(details.get('last_updated'))
+        )
+    )
 
     return flask.render_template(
         'publisher/market.html',
         snap_id=snap_id,
         snap_name=snap_name,
         **metadata,
-        screenshots=screenshots
+        screenshots=screenshots,
+        details=details
     )
 
 
