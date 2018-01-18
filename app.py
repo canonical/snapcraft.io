@@ -649,7 +649,10 @@ def snap_details(snap_name):
         'countries': country_data,
 
         # Context info
-        'is_linux': 'Linux' in flask.request.headers['User-Agent']
+        'is_linux': (
+            'Linux' in flask.request.headers['User-Agent'] and
+            'Android' not in flask.request.headers['User-Agent']
+        )
     }
 
     return flask.render_template(
