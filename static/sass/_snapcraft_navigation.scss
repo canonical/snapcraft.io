@@ -1,0 +1,10 @@
+@mixin snapcraft-navigation {
+  .snapcraft-navigation {
+    .p-navigation__link {
+      a:hover,
+      .is-selected {
+        background: darken($color-x-light, 10%);
+      }
+    }
+  }
+}

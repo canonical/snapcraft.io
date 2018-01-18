@@ -497,7 +497,8 @@ def homepage():
 def store():
     return flask.render_template(
         'store.html',
-        featured_snaps=get_featured_snaps()
+        featured_snaps=get_featured_snaps(),
+        page_slug='store'
     )
 
 
