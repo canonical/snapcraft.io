@@ -252,6 +252,16 @@ def normalize_searched_snaps(search_results):
     )
 
 
+def get_public_metrics(snap_name, json):
+    metrics_response = _get_from_cache(
+        SNAP_METRICS_URL.format(snap_name=snap_name),
+        headers=METRICS_QUERY_HEADERS,
+        json=json
+    )
+
+    return metrics_response.json()
+
+
 def get_featured_snaps():
     featured_response = _get_from_cache(
         FEATURE_SNAPS_URL,
@@ -279,6 +289,20 @@ def calculate_color(thisCountry, maxCountry, maxColor, minColor):
     countryFactor = float(thisCountry)/maxCountry
     colorRange = maxColor - minColor
     return int(colorRange*countryFactor+minColor)
+
+
+def get_publisher_metrics(json):
+    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
+    auth_header = get_authorization_header()['Authorization']
+    authed_metrics_headers['Authorization'] = auth_header
+
+    metrics_response = _get_from_cache(
+        SNAP_PUB_METRICS_URL,
+        headers=authed_metrics_headers,
+        json=json
+    )
+
+    return metrics_response.json()
 
 
 def calculate_colors(countries, max_users):
@@ -563,53 +587,16 @@ def snap_details(snap_name):
             "end": today.strftime('%Y-%m-%d')
         }
     ]
-    metrics_response = _get_from_cache(
-        SNAP_METRICS_URL.format(snap_name=snap_name),
-        headers=METRICS_QUERY_HEADERS,
-        json=metrics_query_json
+
+    metrics_response = get_public_metrics(
+        snap_name,
+        metrics_query_json
     )
 
-    geodata = metrics_response.json()[0]['series']
-
-    # Normalise geodata from API
-    users_by_country = {}
-    max_users = 0.0
-    for country_percentages in geodata:
-        country_code = country_percentages['name']
-        users_by_country[country_code] = {}
-        percentages = []
-        for daily_percent in country_percentages['values']:
-            if daily_percent is not None:
-                percentages.append(daily_percent)
-
-        if len(percentages) > 0:
-            users_by_country[country_code]['percentage_of_users'] = (
-                sum(percentages) / len(percentages)
-            )
-        else:
-            users_by_country[country_code]['percentage_of_users'] = 0
-
-        if max_users < users_by_country[country_code]['percentage_of_users']:
-            max_users = users_by_country[country_code]['percentage_of_users']
-
-    calculate_colors(users_by_country, max_users)
-
-    # Build up country info for every country
-    country_data = {}
-    for country in pycountry.countries:
-        country_info = users_by_country.get(country.alpha_2)
-        percentage_of_users = 0
-        color_rgb = [229, 245, 223]
-        if country_info is not None:
-            percentage_of_users = country_info['percentage_of_users'] or 0
-            color_rgb = country_info['color_rgb'] or [229, 245, 223]
-
-        country_data[country.numeric] = {
-            'name': country.name,
-            'code': country.alpha_2,
-            'percentage_of_users': percentage_of_users,
-            'color_rgb': color_rgb
-        }
+    users_by_country = normalize_metrics(
+        metrics_response[0]['series']
+    )
+    country_data = build_country_info(users_by_country)
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
@@ -720,6 +707,62 @@ def _get_from_cache(url, headers, json=None, method=None):
     return response
 
 
+def normalize_metrics(geodata):
+    users_by_country = {}
+    max_users = 0.0
+    for country_counts in geodata:
+        country_code = country_counts['name']
+        users_by_country[country_code] = {}
+        counts = []
+        for daily_count in country_counts['values']:
+            if daily_count is not None:
+                counts.append(daily_count)
+
+        if len(counts) > 0:
+            users_by_country[country_code]['number_of_users'] = (
+                sum(counts)
+            )
+            users_by_country[country_code]['percentage_of_users'] = (
+                sum(counts) / len(counts)
+            )
+        else:
+            users_by_country[country_code]['number_of_users'] = 0
+            users_by_country[country_code]['percentage_of_users'] = 0
+
+        if max_users < users_by_country[country_code]['percentage_of_users']:
+            max_users = users_by_country[country_code]['percentage_of_users']
+
+    calculate_colors(users_by_country, max_users)
+
+    return users_by_country
+
+
+def build_country_info(users_by_country, display_number_users=False):
+    country_data = {}
+    for country in pycountry.countries:
+        country_info = users_by_country.get(country.alpha_2)
+        number_of_users = 0
+        percentage_of_users = 0
+        color_rgb = [229, 245, 223]
+        if country_info is not None:
+            if display_number_users:
+                number_of_users = country_info['number_of_users'] or 0
+            percentage_of_users = country_info['percentage_of_users'] or 0
+            color_rgb = country_info['color_rgb'] or [229, 245, 223]
+
+        country_data[country.numeric] = {
+            'name': country.name,
+            'code': country.alpha_2,
+            'percentage_of_users': percentage_of_users,
+            'color_rgb': color_rgb
+        }
+
+        if display_number_users:
+            country_data[country.numeric]['number_of_users'] = number_of_users
+
+    return country_data
+
+
 # Publisher views
 # ===
 @app.route('/account/snaps/<snap_name>/measure/')
@@ -771,18 +814,7 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
-    auth_header = get_authorization_header()['Authorization']
-    authed_metrics_headers['Authorization'] = auth_header
-
-    metrics_response = _get_from_cache(
-        SNAP_PUB_METRICS_URL,
-        headers=authed_metrics_headers,
-        json=metrics_query_json
-    )
-
-    metrics_response_json = metrics_response.json()
-
+    metrics_response_json = get_publisher_metrics(metrics_query_json)
     installs_metrics = {
         'values': [],
         'buckets': metrics_response_json['metrics'][0]['buckets']
@@ -821,57 +853,17 @@ def publisher_snap_measure(snap_name):
         'buckets': active_devices['buckets']
     }
 
-    geodata = metrics_response_json['metrics'][2]['series']
+    users_by_country = normalize_metrics(
+        metrics_response_json['metrics'][2]['series']
+    )
 
-    # Normalise geodata from API
-    users_by_country = {}
-    max_users = 0.0
-    for country_counts in geodata:
-        country_code = country_counts['name']
-        users_by_country[country_code] = {}
-        counts = []
-        for daily_count in country_counts['values']:
-            if daily_count is not None:
-                counts.append(daily_count)
-
-        if len(counts) > 0:
-            users_by_country[country_code]['number_of_users'] = (
-                sum(counts)
-            )
-            users_by_country[country_code]['percentage_of_users'] = (
-                sum(counts) / len(counts)
-            )
-        else:
-            users_by_country[country_code]['number_of_users'] = 0
-            users_by_country[country_code]['percentage_of_users'] = 0
-
-        if max_users < users_by_country[country_code]['percentage_of_users']:
-            max_users = users_by_country[country_code]['percentage_of_users']
-
-    calculate_colors(users_by_country, max_users)
-
-    # Build up country info for every country
-    country_data = {}
+    country_data = build_country_info(
+        users_by_country,
+        True
+    )
     territories_total = 0
-    for country in pycountry.countries:
-        country_info = users_by_country.get(country.alpha_2)
-        number_of_users = 0
-        percentage_of_users = 0
-        color_rgb = [229, 245, 223]
-        if country_info is not None:
-            number_of_users = country_info['number_of_users'] or 0
-            percentage_of_users = country_info['percentage_of_users'] or 0
-            color_rgb = country_info['color_rgb'] or [229, 245, 223]
-
-        country_data[country.numeric] = {
-            'name': country.name,
-            'code': country.alpha_2,
-            'number_of_users': number_of_users,
-            'percentage_of_users': percentage_of_users,
-            'color_rgb': color_rgb
-        }
-
-        if number_of_users > 0:
+    for data in country_data.values():
+        if data['number_of_users'] > 0:
             territories_total += 1
 
     context = {
