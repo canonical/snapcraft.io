@@ -65,7 +65,8 @@ uncached_session.mount(
 )
 
 oid = OpenID(
-    app,
+    app=app,
+    stateless=True,
     safe_roots=[],
     extension_responses=[MacaroonResponse]
 )
