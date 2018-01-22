@@ -1,6 +1,6 @@
 bleach==2.0.0
 Flask==0.12.2
-Flask-OpenID==1.2.5
+Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.2
 humanize==0.5.1
 pycountry==17.9.23
