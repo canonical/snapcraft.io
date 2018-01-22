@@ -4,8 +4,6 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-# TODO: it's just for the demo
-
 import authentication
 import flask
 import requests
@@ -110,7 +108,7 @@ SNAP_PUB_METRICS_URL = ''.join([
     DASHBOARD_API,
     'snaps/metrics',
 ])
-PUBLISHER_METRICS_QUERY_HEADERS = {
+PUB_METRICS_QUERY_HEADERS = {
     'Content-Type': 'application/json'
 }
 
@@ -297,7 +295,7 @@ def calculate_color(thisCountry, maxCountry, maxColor, minColor):
 
 
 def get_publisher_metrics(json):
-    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
+    authed_metrics_headers = PUB_METRICS_QUERY_HEADERS.copy()
     auth_header = get_authorization_header()['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
@@ -822,19 +820,7 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    authed_metrics_headers = publisher_metrics_query_headers.copy()
-    auth_header = get_authorization_header()['Authorization']
-    authed_metrics_headers['Authorization'] = auth_header
-
-    metrics_response = _get_from_cache(
-        snap_pub_metrics_url,
-        headers=authed_metrics_headers,
-        json=metrics_query_json
-    )
-
-    print(metrics_response.json())
-
-    metrics_response_json = metrics_response.json()
+    metrics_response_json = get_publisher_metrics(json=metrics_query_json)
 
     installs_metrics = {
         'values': [],
@@ -886,7 +872,6 @@ def publisher_snap_measure(snap_name):
     for data in country_data.values():
         if data['number_of_users'] > 0:
             territories_total += 1
-
 
     context = {
         # Data direct from details API

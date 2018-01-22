@@ -24,23 +24,22 @@
 
       // override display of tooltip message so it's not only shown on hover of parent element
       .p-tooltip__message {
+        align-items: center;
         display: flex;
         flex-direction: row;
         justify-content: center;
-        align-items: center;
         min-width: auto;
       }
     }
 
     &__swatch {
+      background-color: $color-country-default;
+      border-radius: 50%;
       display: inline-block;
       height: $sp-medium;
       margin-right: $sp-x-small;
       vertical-align: middle;
       width: $sp-medium;
-      border-radius: 50%;
-
-      background-color: $color-country-default;
     }
   }
 }
