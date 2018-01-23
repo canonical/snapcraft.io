@@ -3,19 +3,19 @@
     &__title {
       border-bottom: 1px solid $color-mid-dark;
       display: block;
-      padding-bottom: .25rem;
-      margin-bottom: .5rem;
-      text-align: center;
       font: 12px "Ubuntu";
+      margin-bottom: .5rem;
+      padding-bottom: .25rem;
+      text-align: center;
     }
 
     &__series {
       align-items: center;
       display: flex;
+      font: 12px "Ubuntu";
       justify-content: center;
       margin-top: .25rem;
       width: 176px;
-      font: 12px "Ubuntu";
 
       &:last-child {
         margin-bottom: .25rem;
@@ -23,11 +23,11 @@
 
       &-name {
         display: inline-block;
+        overflow: hidden;
         text-align: right;
+        text-overflow: ellipsis;
         text-transform: capitalize;
         width: calc(50% - .5rem);
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
 
       &-color {

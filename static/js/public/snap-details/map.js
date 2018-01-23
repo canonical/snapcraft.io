@@ -79,9 +79,10 @@ export default function renderMap(el, snapData) {
             .style('display', 'block');
 
           let content = ['<span class="u-no-margin--top">', countrySnapData.name];
-          if (countrySnapData['number_of_users'] !== undefined) {
-            content.push(`<br />${countrySnapData['number_of_users']} daily active devices`);
-          }
+          // Commented out but still relevant once we've updated how this will work
+          // if (countrySnapData['number_of_users'] !== undefined) {
+          //   content.push(`<br />${countrySnapData['number_of_users']} active devices`);
+          // }
           content.push('</span>');
           tooltipMsg.html(
             `<span

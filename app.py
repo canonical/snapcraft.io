@@ -108,7 +108,7 @@ SNAP_PUB_METRICS_URL = ''.join([
     DASHBOARD_API,
     'snaps/metrics',
 ])
-PUBLISHER_METRICS_QUERY_HEADERS = {
+PUB_METRICS_QUERY_HEADERS = {
     'Content-Type': 'application/json'
 }
 
@@ -295,7 +295,7 @@ def calculate_color(thisCountry, maxCountry, maxColor, minColor):
 
 
 def get_publisher_metrics(json):
-    authed_metrics_headers = PUBLISHER_METRICS_QUERY_HEADERS.copy()
+    authed_metrics_headers = PUB_METRICS_QUERY_HEADERS.copy()
     auth_header = get_authorization_header()['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
@@ -820,7 +820,8 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    metrics_response_json = get_publisher_metrics(metrics_query_json)
+    metrics_response_json = get_publisher_metrics(json=metrics_query_json)
+
     installs_metrics = {
         'values': [],
         'buckets': metrics_response_json['metrics'][0]['buckets']

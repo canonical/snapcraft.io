@@ -40,9 +40,9 @@
 
           .tick {
             line {
+              stroke: $color-mid-light;
               stroke-linecap: square;
               stroke-width: 1;
-              stroke: $color-mid-light;
             }
           }
 
