@@ -132,6 +132,26 @@
           </div>
 
           <div class="row">
+            <div class="col-12">
+              <label>Screenshots:</label>
+            </div>
+          </div>
+
+          <div class="row">
+              {% for screenshot in details.screenshot_urls %}
+              <div class="col-2">
+                <img src={{ screenshot }} alt="" />
+              </div>
+              {% endfor %}
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <hr />
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-2">
               <label>License: </label>
             </div>
@@ -155,19 +175,19 @@
             </div>
           </div>
         </form>
-        {% endif %}
-      </div>
+      {% endif %}
+    </div>
 
-      {% if api_error %}
-      <div class="row">
-        <div class="col-12">
-          <div class="p-notification--negative">
-            <p class="p-notification__response">
-              <span class="p-notification__status">Error:</span> API request failed
-            </p>
-          </div>
+    {% if api_error %}
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
         </div>
       </div>
+    </div>
     {% endif %}
 
   </div>
