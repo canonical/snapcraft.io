@@ -40,8 +40,8 @@
         </div>
         <div class="row">
           <div class="col-2">
-
-            <div class="p-media-object__image--large p-editable-icon">
+            {# p-editable-icon removed until we can properly edit the icon #}
+            <div class="p-media-object__image--large {# p-editable-icon #}">
               <img id="snap_icon_image"
                 {% if icon_url %}
                   src="{{ icon_url }}" alt="{{ title }} snap"
@@ -155,7 +155,9 @@
 
 {% block scripts %}
 <script src="/static/js/dist/publisher.js"></script>
+{# TODO: disabled until we can properly post the icon
 <script>
   snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
 </script>
+#}
 {% endblock %}
