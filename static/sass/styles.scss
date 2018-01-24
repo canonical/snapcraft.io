@@ -75,6 +75,9 @@ $color-accent: $color-brand;
 @import 'snapcraft_metrics';
 @include snapcraft-metrics;
 
+@import 'snapcraft_market';
+@include snapcraft-market;
+
 @import 'patterns_testimonial';
 @include vf-p-testimonial;
 

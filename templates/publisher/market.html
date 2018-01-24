@@ -9,7 +9,7 @@
     <section class="p-strip is-shallow">
       <div class="row">
         <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
-        <h1 class="u-no-margin--top">{{ snap_title }}</h1>
+        <h1 class="u-no-margin--top">{{ title }}</h1>
       </div>
     </section>
     <section class="metrics__nav-wrap p-strip is-shallow u-no-padding--top u-no-padding--bottom">
@@ -26,9 +26,11 @@
     </section>
 
     <div class="p-strip is-shallow">
-      <form method="POST">
+      <form method="POST" enctype='multipart/form-data'>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="snap_id" value="{{ snap_id }}" />
+        <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
+
         <div class="row">
           <div class="col-12 u-align--right">
               <a href="/account/snaps/{{ snap_name }}/market" class="p-button--neutral">Revert</a>
@@ -38,11 +40,16 @@
         </div>
         <div class="row">
           <div class="col-2">
-            {% if icon_url %}
-              <img class="p-media-object__image--large" src="{{ icon_url }}" alt="{{ title }} snap" />
-            {% else %}
-              <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
-            {% endif %}
+            {# p-editable-icon removed until we can properly edit the icon #}
+            <div class="p-media-object__image--large {# p-editable-icon #}">
+              <img id="snap_icon_image"
+                {% if icon_url %}
+                  src="{{ icon_url }}" alt="{{ title }} snap"
+                {% else %}
+                  src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
+                {% endif %}
+              />
+            </div>
           </div>
           <div class="col-8">
             <label for="snap-title">Title:</label>
@@ -147,5 +154,10 @@
 {% endblock %}
 
 {% block scripts %}
-
+<script src="/static/js/dist/publisher.js"></script>
+{# TODO: disabled until we can properly post the icon
+<script>
+  snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
+</script>
+#}
 {% endblock %}
