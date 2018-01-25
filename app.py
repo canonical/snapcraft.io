@@ -957,7 +957,6 @@ def publisher_snap_measure(snap_name):
 def get_market_snap(snap_name):
     snap_id = get_snap_id(snap_name)
     metadata = snap_metadata(snap_id)
-    screenshots = snap_screenshots(snap_id)
     details = _transform_api_data(
         get_snap_details(snap_name)
     )
@@ -967,7 +966,6 @@ def get_market_snap(snap_name):
         snap_id=snap_id,
         snap_name=snap_name,
         **metadata,
-        screenshots=screenshots,
         details=details
     )
 
