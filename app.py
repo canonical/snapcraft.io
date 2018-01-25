@@ -804,12 +804,12 @@ def build_country_info(users_by_country, display_number_users=False):
         country_info = users_by_country.get(country.alpha_2)
         number_of_users = 0
         percentage_of_users = 0
-        color_rgb = [229, 245, 223]
+        color_rgb = [247, 247, 247]
         if country_info is not None:
             if display_number_users:
                 number_of_users = country_info['number_of_users'] or 0
             percentage_of_users = country_info['percentage_of_users'] or 0
-            color_rgb = country_info['color_rgb'] or [229, 245, 223]
+            color_rgb = country_info['color_rgb'] or [247, 247, 247]
 
         country_data[country.numeric] = {
             'name': country.name,
@@ -840,11 +840,16 @@ def publisher_snap_measure(snap_name):
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
 
+    installed_base_metric = flask.request.args.get(
+        'active-devices',
+        default='version',
+        type=str
+    )
+
     details = get_snap_details(snap_name)
 
     today = datetime.datetime.utcnow().date()
     end = today - relativedelta.relativedelta(days=1)
-    device_change = 'weekly_device_change'
     start = None
     if metric_bucket == 'd':
         start = end - relativedelta.relativedelta(days=metric_period_int)
@@ -852,24 +857,23 @@ def publisher_snap_measure(snap_name):
         start = end - relativedelta.relativedelta(months=metric_period_int)
     elif metric_bucket == 'y':
         start = end - relativedelta.relativedelta(years=metric_period_int)
+
+    if installed_base_metric == 'version':
+        installed_base = "weekly_installed_base_by_version"
+    elif installed_base_metric == 'os':
+        installed_base = "weekly_installed_base_by_operating_system"
     metrics_query_json = {
         "filters": [
             {
-                "metric_name": device_change,
+                "metric_name": installed_base,
                 "snap_id": details['snap_id'],
                 "start": start.strftime('%Y-%m-%d'),
                 "end": end.strftime('%Y-%m-%d')
             },
             {
-                "metric_name": "installed_base_by_version",
+                "metric_name": "weekly_installed_base_by_country",
                 "snap_id": details['snap_id'],
-                "start": start.strftime('%Y-%m-%d'),
-                "end": end.strftime('%Y-%m-%d')
-            },
-            {
-                "metric_name": "installed_base_by_country",
-                "snap_id": details['snap_id'],
-                "start": start.strftime('%Y-%m-%d'),
+                "start": end.strftime('%Y-%m-%d'),
                 "end": end.strftime('%Y-%m-%d')
             }
         ]
@@ -877,25 +881,7 @@ def publisher_snap_measure(snap_name):
 
     metrics_response_json = get_publisher_metrics(json=metrics_query_json)
 
-    installs_metrics = {
-        'values': [],
-        'buckets': metrics_response_json['metrics'][0]['buckets']
-    }
-    for index in metrics_response_json['metrics'][0]['series']:
-        series_list = metrics_response_json['metrics'][0]['series']
-        for series in series_list:
-            if series['name'] == 'new':
-                installs_metrics['values'] = series['values']
-                break
-    installs_total = 0
-
-    for index, value in enumerate(installs_metrics['values']):
-        if value is None:
-            installs_metrics['values'][index] = 0
-        else:
-            installs_total += value
-
-    active_devices = metrics_response_json['metrics'][1]
+    active_devices = metrics_response_json['metrics'][0]
     active_devices['series'] = sorted(
         active_devices['series'],
         key=itemgetter('name')
@@ -916,7 +902,7 @@ def publisher_snap_measure(snap_name):
     }
 
     users_by_country = normalize_metrics(
-        metrics_response_json['metrics'][2]['series']
+        metrics_response_json['metrics'][1]['series']
     )
 
     country_data = build_country_info(
@@ -933,10 +919,9 @@ def publisher_snap_measure(snap_name):
         'snap_name': details['title'],
         'package_name': details['package_name'],
         'metric_period': metric_period,
+        'active_device_metric': installed_base_metric,
 
         # Metrics data
-        'installs_total': "{:,}".format(installs_total),
-        'installs': installs_metrics,
         'latest_active_devices': "{:,}".format(latest_active_devices),
         'active_devices': active_devices,
         'territories_total': territories_total,

@@ -27,14 +27,6 @@
     <section class="p-strip is-shallow">
       <div class="row">
         <div class="grid">
-          <div class="col-3">
-            <select class="p-form__control metrics-period">
-              <option value="7d"{% if metric_period == '7d' %} selected="selected"{% endif %}>Past 7 days</option>
-              <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>Past 30 days</option>
-              <option value="3m"{% if metric_period == '3m' %} selected="selected"{% endif %}>Past 3 months</option>
-              <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
-            </select>
-          </div>
           {#<div class="col-3">
             <select class="p-form__control" disabled="disabled">
               <option value="all">All tracks and branches</option>
@@ -44,32 +36,28 @@
       </div>
       <div class="row">
         <div class="u-clearfix">
-          <h3 class="u-float--left">New devices</h3>
-          <div class="p-heading--three u-float--right u-no-margin--top">
-            <strong>{{ installs_total }}</strong>
-          </div>
-        </div>
-        <hr />
-        <div id="installs_metrics" class="snapcraft-metrics__graph">
-        </div>
-      </div>
-      <div class="row">
-        <div class="u-clearfix">
-          <h3 class="u-float--left">Daily active devices</h3>
+          <h3 class="u-float--left">Weekly active devices</h3>
           <div class="p-heading--three u-float--right u-no-margin--top">
             <strong>{{ latest_active_devices }}</strong>
           </div>
         </div>
         <hr />
-        {#
-          <div class="grid u-clearfix">
-            <div class="col-3">
-              <select class="p-form__control">
-                <option value="version">By version</option>
-              </select>
-            </div>
+        <div class="grid u-clearfix">
+          <div class="col-3">
+            <select class="p-form__control metrics-period">
+              <option value="7d"{% if metric_period == '7d' %} selected="selected"{% endif %}>Past 7 days</option>
+              <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>Past 30 days</option>
+              <option value="3m"{% if metric_period == '3m' %} selected="selected"{% endif %}>Past 3 months</option>
+              <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
+            </select>
           </div>
-        #}
+          <div class="col-3">
+            <select class="p-form__control active-devices">
+              <option value="version"{% if active_device_metric == 'version' %} selected="selected"{% endif %}>By version</option>
+              <option value="os"{% if active_device_metric == 'os' %} selected="selected"{% endif %}>By OS</option>
+            </select>
+          </div>
+        </div>
         <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
       </div>
       <div class="row">
@@ -81,7 +69,6 @@
                 <strong>{{ territories_total }}</strong>
               </div>
             </div>
-            <hr />
             <div id="territories" class="snapcraft-territories">
           </div>
           {#
@@ -117,9 +104,9 @@
 
 <script src="/static/js/dist/publisher.js"></script>
 <script>
-  snapcraft.publisher.period('.metrics-period');
+  snapcraft.publisher.selector('.metrics-period', 'period');
+  snapcraft.publisher.selector('.active-devices', 'active-devices');
   snapcraft.publisher.metrics({
-    installs: {{ installs|safe }},
     activeDevices: {{ active_devices|safe }},
     territories: {{ territories|safe }}
   });
