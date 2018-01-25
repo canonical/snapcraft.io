@@ -37,7 +37,7 @@
                       <th>Status</th>
                       <th>Price</th>
                   </tr>
-                  {% for snap in user_snaps %}
+                  {% for snap in user_snaps|sort %}
                       <tr>
                           <td><a href="/account/snaps/{{snap}}/market/">{{snap}}</a></td>
                           <td>{{ user_snaps[snap].status }}</td>
