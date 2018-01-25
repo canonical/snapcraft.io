@@ -951,21 +951,27 @@ def post_market_snap(snap_name):
         'whitelist_countries'
     ]
 
-    body_json = {
-        key: flask.request.form[key]
-        for key in whitelist if key in flask.request.form
-    }
+    if 'submit_revert' in flask.request.form:
+        flask.flash("All changes reverted.", 'information')
+    else:
+        body_json = {
+            key: flask.request.form[key]
+            for key in whitelist if key in flask.request.form
+        }
 
-    metadata = snap_metadata(flask.request.form['snap_id'], body_json)
+        metadata = snap_metadata(flask.request.form['snap_id'], body_json)
 
-    if 'error_list' in metadata:
-        return flask.render_template(
-            'publisher/market.html',
-            snap_id=flask.request.form['snap_id'],
-            snap_name=snap_name,
-            metadata=flask.request.form,
-            error_list=metadata['error_list']
-        )
+        if 'error_list' in metadata:
+            return flask.render_template(
+                'publisher/market.html',
+                snap_id=flask.request.form['snap_id'],
+                snap_name=snap_name,
+                metadata=flask.request.form,
+                error_list=metadata['error_list']
+            )
+
+        flask.flash("Changes applied successfully.", 'positive')
+
     return flask.redirect(
         "/account/snaps/{snap_name}/market/".format(
             snap_name=snap_name

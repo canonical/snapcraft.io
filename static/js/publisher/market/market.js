@@ -12,8 +12,27 @@ function initSnapIconEdit(iconElId, iconInputId) {
   });
 }
 
+function initFormNotification(formElId, notificationElId) {
+  var form = document.getElementById(formElId);
+
+  form.addEventListener("change", function() {
+    var notification = document.getElementById(notificationElId);
+    if (notification) {
+      notification.parentNode.removeChild(notification);
+    }
+  });
+  var notification = document.getElementById(notificationElId);
+
+  if (notification) {
+    setTimeout(function(){
+      notification.parentNode.removeChild(notification);
+    }, 20000);
+  }
+}
+
 const market = {
-  initSnapIconEdit
+  initSnapIconEdit,
+  initFormNotification
 };
 
 export default market;
