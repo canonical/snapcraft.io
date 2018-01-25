@@ -5,6 +5,7 @@ The web frontend for the snap store.
 """
 
 import authentication
+import hashlib
 import flask
 import requests
 import requests_cache
@@ -28,6 +29,7 @@ from requests.exceptions import RequestException
 from urllib.parse import urlparse, parse_qs
 from operator import itemgetter
 from werkzeug.contrib.fixers import ProxyFix
+from json import dumps
 
 
 app = flask.Flask(__name__)
@@ -166,6 +168,17 @@ def get_authorization_header():
     }
 
 
+def _transform_api_data(details):
+    details['filesize'] = humanize.naturalsize(details['binary_filesize'])
+    details['last_updated'] = (
+        humanize.naturaldate(
+            parser.parse(details.get('last_updated'))
+        )
+    )
+
+    return details
+
+
 def get_snap_details(snap_name):
     details_response = _get_from_cache(
         SNAP_DETAILS_URL.format(snap_name=snap_name),
@@ -185,11 +198,44 @@ def get_snap_details(snap_name):
     return details_response.json()
 
 
-def snap_screenshots(snap_id, json=None):
+def build_image_info(image, image_type):
+    """
+    Build info json structure for image upload
+    Return json oject with useful informations for the api
+    """
+    hasher = hashlib.sha256(image.read())
+    hash_final = hasher.hexdigest()
+    image.seek(0)
+
+    return {
+        "key": image.filename,
+        "type": image_type,
+        "filename": image.filename,
+        "hash": hash_final
+    }
+
+
+def snap_screenshots(snap_id, data=None, files=None):
+    method = None
+    files_array = None
+    headers = get_authorization_header()
+    headers['Accept'] = 'application/json'
+
+    if data is not None:
+        method = 'PUT'
+        files_array = []
+        if files is not None:
+            for f in files:
+                files_array.append(
+                    (f.filename, (f.filename, f.stream, f.mimetype))
+                )
+
     screenshot_response = _get_from_cache(
         screenshots_query_url.format(snap_id=snap_id),
-        headers=get_authorization_header(),
-        json=json
+        headers=headers,
+        data=data,
+        method=method,
+        files=files_array
     )
 
     return screenshot_response.json()
@@ -664,7 +710,14 @@ def snap_details(snap_name):
     )
 
 
-def _get_from_cache(url, headers, json=None, method=None):
+def _get_from_cache(
+        url,
+        headers,
+        json=None,
+        data=None,
+        method=None,
+        files=None
+):
     """
     Retrieve the response from the requests cache.
     If the cache has expired then it will attempt to update the cache.
@@ -681,7 +734,9 @@ def _get_from_cache(url, headers, json=None, method=None):
             method=method,
             url=url,
             headers=headers,
-            json=json
+            json=json,
+            files=files,
+            data=data
         )
     )
 
@@ -903,14 +958,8 @@ def get_market_snap(snap_name):
     snap_id = get_snap_id(snap_name)
     metadata = snap_metadata(snap_id)
     screenshots = snap_screenshots(snap_id)
-    details = get_snap_details(snap_name)
-
-    # Transformed API data
-    details['filesize'] = humanize.naturalsize(details['binary_filesize'])
-    details['last_updated'] = (
-        humanize.naturaldate(
-            parser.parse(details.get('last_updated'))
-        )
+    details = _transform_api_data(
+        get_snap_details(snap_name)
     )
 
     return flask.render_template(
@@ -939,38 +988,77 @@ def snap_release(snap_name):
 @app.route('/account/snaps/<snap_name>/market/', methods=['POST'])
 @login_required
 def post_market_snap(snap_name):
-    whitelist = [
-        'title',
-        'summary',
-        'description',
-        'contact_url',
-        'keywords',
-        'license',
-        'price',
-        'blacklist_countries',
-        'whitelist_countries'
-    ]
-
     if 'submit_revert' in flask.request.form:
         flask.flash("All changes reverted.", 'information')
     else:
+        error_list = []
+        info = []
+        images_files = []
+        images_json = None
+
+        icon = flask.request.files.get('icon')
+        if icon is not None:
+            info.append(build_image_info(icon, 'icon'))
+            images_files.append(icon)
+
+        screenshots = flask.request.files.getlist('screenshots')
+        for screenshot in screenshots:
+            info.append(build_image_info(screenshot, 'screenshot'))
+            images_files.append(screenshot)
+
+        if not images_files:
+            # API requires a multipart request, but we have no files to push
+            # https://github.com/requests/requests/issues/1081
+            images_files = {'info': ('', dumps(info))}
+        else:
+            images_json = {'info': dumps(info)}
+
+        screenshots_response = snap_screenshots(
+            flask.request.form['snap_id'],
+            images_json,
+            images_files
+        )
+
+        if 'error_list' in screenshots_response:
+            error_list = error_list + screenshots_response['error_list']
+
+        whitelist = [
+            'title',
+            'summary',
+            'description',
+            'contact_url',
+            'keywords',
+            'license',
+            'price',
+            'blacklist_countries',
+            'whitelist_countries'
+        ]
+
         body_json = {
             key: flask.request.form[key]
             for key in whitelist if key in flask.request.form
         }
 
         metadata = snap_metadata(flask.request.form['snap_id'], body_json)
-
         if 'error_list' in metadata:
+            error_list = error_list + metadata['error_list']
+
+        if error_list:
+            details = _transform_api_data(
+                get_snap_details(snap_name)
+            )
+
             return flask.render_template(
                 'publisher/market.html',
                 snap_id=flask.request.form['snap_id'],
                 snap_name=snap_name,
-                metadata=flask.request.form,
-                error_list=metadata['error_list']
+                **metadata,
+                details=details,
+                screenshots=screenshots_response,
+                error_list=error_list
             )
 
-        flask.flash("Changes applied successfully.", 'positive')
+    flask.flash("Changes applied successfully.", 'positive')
 
     return flask.redirect(
         "/account/snaps/{snap_name}/market/".format(
