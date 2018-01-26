@@ -584,7 +584,7 @@ def snap_details(snap_name):
 
     metrics_query_json = [
         {
-            "metric_name": "installed_base_by_country_percent",
+            "metric_name": "weekly_installed_base_by_country_percent",
             "snap_id": details['snap_id'],
             "start": week_ago.strftime('%Y-%m-%d'),
             "end": today.strftime('%Y-%m-%d')
@@ -749,12 +749,12 @@ def build_country_info(users_by_country, display_number_users=False):
         country_info = users_by_country.get(country.alpha_2)
         number_of_users = 0
         percentage_of_users = 0
-        color_rgb = [229, 245, 223]
+        color_rgb = [247, 247, 247]
         if country_info is not None:
             if display_number_users:
                 number_of_users = country_info['number_of_users'] or 0
             percentage_of_users = country_info['percentage_of_users'] or 0
-            color_rgb = country_info['color_rgb'] or [229, 245, 223]
+            color_rgb = country_info['color_rgb'] or color_rgb
 
         country_data[country.numeric] = {
             'name': country.name,
