@@ -14,7 +14,7 @@ Once the containers are setup, you can visit <http://127.0.0.1:8004> in your bro
 
 ### Use staging APIs
 
-To use staging APIs locally you can edit the file `.env.` and add the following lines:
+To use staging APIs locally you can add the following lines to an`.env.local` file:
 
 ```bash
 SNAPCRAFT_IO_API=https://api.staging.snapcraft.io/api/v1/
