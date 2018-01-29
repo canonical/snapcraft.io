@@ -12,7 +12,6 @@ import datetime
 import humanize
 import re
 import bleach
-import urllib
 import pycountry
 import os
 import socket
@@ -25,7 +24,7 @@ from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, unquote, urlparse, urlunparse
 from operator import itemgetter
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -161,12 +160,17 @@ def clear_trailing():
     """
     Remove trailing slashes from all routes
     We like our URLs without slashes
-    (From: https://stackoverflow.com/a/40365514/613540)
     """
 
-    path = flask.request.path
+    parsed_url = urlparse(unquote(flask.request.url))
+    path = parsed_url.path
+
     if path != '/' and path.endswith('/'):
-        return flask.redirect(path[:-1])
+        new_uri = urlunparse(
+            parsed_url._replace(path=path[:-1])
+        )
+
+        return flask.redirect(new_uri)
 
 
 def get_authorization_header():
@@ -618,7 +622,7 @@ def snap_details(snap_name):
 
     # Sanitise paragraphs
     def external(attrs, new=False):
-        url_parts = urllib.parse.urlparse(attrs[(None, "href")])
+        url_parts = urlparse(attrs[(None, "href")])
         if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
             if (None, "class") not in attrs:
                 attrs[(None, "class")] = "p-link--external"
