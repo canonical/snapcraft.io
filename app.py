@@ -6,25 +6,21 @@ The web frontend for the snap store.
 
 import authentication
 import hashlib
-import flask
-import requests
-import requests_cache
 import datetime
+import flask
 import humanize
 import re
 import bleach
 import pycountry
 import os
 import socket
+import modules.cache as cache
 from dateutil import parser, relativedelta
 from flask_openid import OpenID
 from flask_wtf.csrf import CSRFProtect
 from functools import wraps
 from macaroon import MacaroonRequest, MacaroonResponse
 from math import floor
-from requests.packages.urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
-from requests.exceptions import RequestException
 from urllib.parse import parse_qs, unquote, urlparse, urlunparse
 from operator import itemgetter
 from werkzeug.contrib.fixers import ProxyFix
@@ -54,18 +50,6 @@ LOGIN_URL = os.getenv(
     'https://login.ubuntu.com',
 )
 
-# Setup session to retry requests 5 times
-uncached_session = requests.Session()
-retries = Retry(
-    total=5,
-    backoff_factor=0.1,
-    status_forcelist=[500, 502, 503, 504]
-)
-uncached_session.mount(
-    'https://api.snapcraft.io',
-    HTTPAdapter(max_retries=retries)
-)
-
 oid = OpenID(
     app=app,
     stateless=True,
@@ -75,11 +59,6 @@ oid = OpenID(
 
 csrf = CSRFProtect(app)
 
-# The cache expires after 5 seconds
-cached_session = requests_cache.CachedSession(expire_after=5)
-
-# Requests should timeout after 2 seconds in total
-request_timeout = 2
 
 # Request only stable snaps
 SNAP_DETAILS_URL = ''.join([
@@ -198,7 +177,7 @@ def _transform_api_data(details):
 
 
 def get_snap_details(snap_name):
-    details_response = _get_from_cache(
+    details_response = cache.get(
         SNAP_DETAILS_URL.format(snap_name=snap_name),
         headers=DETAILS_QUERY_HEADERS
     )
@@ -248,7 +227,7 @@ def snap_screenshots(snap_id, data=None, files=None):
                     (f.filename, (f.filename, f.stream, f.mimetype))
                 )
 
-    screenshot_response = _get_from_cache(
+    screenshot_response = cache.get(
         screenshots_query_url.format(snap_id=snap_id),
         headers=headers,
         data=data,
@@ -262,7 +241,7 @@ def snap_screenshots(snap_id, data=None, files=None):
 def snap_metadata(snap_id, json=None):
     method = "PUT" if json is not None else None
 
-    metadata_response = _get_from_cache(
+    metadata_response = cache.get(
         METADATA_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header(),
         json=json,
@@ -273,7 +252,7 @@ def snap_metadata(snap_id, json=None):
 
 
 def get_snap_status(snap_id):
-    status_response = _get_from_cache(
+    status_response = cache.get(
         STATUS_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header()
     )
@@ -282,7 +261,7 @@ def get_snap_status(snap_id):
 
 
 def get_searched_snaps(snap_searched, size, page):
-    searched_response = _get_from_cache(
+    searched_response = cache.get(
         SNAP_SEARCH_URL.format(
             snap_name=snap_searched,
             size=size,
@@ -317,7 +296,7 @@ def normalize_searched_snaps(search_results):
 
 
 def get_public_metrics(snap_name, json):
-    metrics_response = _get_from_cache(
+    metrics_response = cache.get(
         SNAP_METRICS_URL.format(snap_name=snap_name),
         headers=METRICS_QUERY_HEADERS,
         json=json
@@ -327,7 +306,7 @@ def get_public_metrics(snap_name, json):
 
 
 def get_featured_snaps():
-    featured_response = _get_from_cache(
+    featured_response = cache.get(
         FEATURE_SNAPS_URL,
         headers=SEARCH_QUERY_HEADERS
     )
@@ -336,7 +315,7 @@ def get_featured_snaps():
 
 
 def get_promoted_snaps():
-    promoted_response = _get_from_cache(
+    promoted_response = cache.get(
         PROMOTED_QUERY_URL,
         headers=PROMOTED_QUERY_HEADERS
     )
@@ -360,7 +339,7 @@ def get_publisher_metrics(json):
     auth_header = get_authorization_header()['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
-    metrics_response = _get_from_cache(
+    metrics_response = cache.get(
         SNAP_PUB_METRICS_URL,
         headers=authed_metrics_headers,
         json=json
@@ -485,7 +464,11 @@ def get_account():
         'Authorization': authorization
     }
 
-    response = requests.request(url=ACCOUNT_URL, method='GET', headers=headers)
+    response = cache.get(
+        url=ACCOUNT_URL,
+        method='GET',
+        headers=headers
+    )
 
     verified_response = authentication.verify_response(
         response,
@@ -723,64 +706,6 @@ def snap_details(snap_name):
         'snap-details.html',
         **context
     )
-
-
-def _get_from_cache(
-        url,
-        headers,
-        json=None,
-        data=None,
-        method=None,
-        files=None
-):
-    """
-    Retrieve the response from the requests cache.
-    If the cache has expired then it will attempt to update the cache.
-    If it gets an error, it will use the cached response, if it exists.
-    """
-
-    request_error = False
-
-    if method is None:
-        method = "POST" if json else "GET"
-
-    request = cached_session.prepare_request(
-        requests.Request(
-            method=method,
-            url=url,
-            headers=headers,
-            json=json,
-            files=files,
-            data=data
-        )
-    )
-
-    cache_key = cached_session.cache.create_key(request)
-    response, timestamp = cached_session.cache.get_response_and_time(
-        cache_key
-    )
-
-    if response:
-        age = datetime.datetime.utcnow() - timestamp
-
-        if age > cached_session._cache_expire_after:
-            try:
-                new_response = uncached_session.send(
-                    request,
-                    timeout=request_timeout
-                )
-                if response.status_code >= 500:
-                    new_response.raise_for_status()
-            except RequestException:
-                request_error = True
-            else:
-                response = new_response
-    else:
-        response = cached_session.send(request)
-
-    response.old_data_from_error = request_error
-
-    return response
 
 
 def normalize_metrics(geodata):
