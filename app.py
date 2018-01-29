@@ -241,10 +241,7 @@ def login_required(func):
 
 
 def redirect_to_login():
-    return flask.redirect(''.join([
-        'login?next=',
-        flask.request.url_rule.rule,
-    ]))
+    return flask.redirect('login/?next=' + flask.request.url_rule.rule)
 
 
 def normalize_searched_snaps(search_results):
