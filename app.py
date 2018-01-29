@@ -365,7 +365,7 @@ def community_redirect():
     return flask.redirect('/')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 @oid.loginhandler
 @csrf.exempt
 def login():
@@ -400,14 +400,14 @@ def after_login(resp):
     return flask.redirect('/account')
 
 
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
     if authentication.is_authenticated(flask.session):
         authentication.empty_session(flask.session)
     return flask.redirect('/')
 
 
-@app.route('/account')
+@app.route('/account/')
 @login_required
 def get_account():
     authorization = authentication.get_authorization_header(
@@ -427,8 +427,8 @@ def get_account():
         response,
         flask.session,
         ACCOUNT_URL,
-        '/account',
-        '/login'
+        '/account/',
+        '/login/'
     )
 
     if verified_response is not None:
@@ -539,7 +539,7 @@ def snaps():
     )
 
 
-@app.route('/search')
+@app.route('/search/')
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
