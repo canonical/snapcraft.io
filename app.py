@@ -439,7 +439,7 @@ def get_account():
             return response.raise_for_status
         else:
             return flask.redirect(
-                verified_response.redirect
+                verified_response['redirect']
             )
 
     print('HTTP/1.1 {} {}'.format(response.status_code, response.reason))
