@@ -961,12 +961,19 @@ def get_market_snap(snap_name):
         get_snap_details(snap_name)
     )
 
+    context = {
+        "snap_id": snap_id,
+        "snap_name": snap_name,
+        "title": metadata['title'],
+        "summary": metadata['summary'],
+        "description": metadata['description'],
+        "license": metadata['license'],
+        "details": details
+    }
+
     return flask.render_template(
         'publisher/market.html',
-        snap_id=snap_id,
-        snap_name=snap_name,
-        **metadata,
-        details=details
+        **context
     )
 
 
@@ -1046,14 +1053,21 @@ def post_market_snap(snap_name):
                 get_snap_details(snap_name)
             )
 
+            context = {
+                "snap_id": flask.request.form['snap_id'],
+                "snap_name": snap_name,
+                "title": metadata['title'],
+                "summary": metadata['summary'],
+                "description": metadata['description'],
+                "license": metadata['license'],
+                "details": details,
+                "screenshots": screenshots_response,
+                "error_list": error_list
+            }
+
             return flask.render_template(
                 'publisher/market.html',
-                snap_id=flask.request.form['snap_id'],
-                snap_name=snap_name,
-                **metadata,
-                details=details,
-                screenshots=screenshots_response,
-                error_list=error_list
+                **context
             )
 
     flask.flash("Changes applied successfully.", 'positive')
