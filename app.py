@@ -34,6 +34,7 @@ app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
+app.url_map.strict_slashes = False
 
 SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',
@@ -155,6 +156,19 @@ screenshots_query_url = (
 )
 
 
+@app.before_request
+def clear_trailing():
+    """
+    Remove trailing slashes from all routes
+    We like our URLs without slashes
+    (From: https://stackoverflow.com/a/40365514/613540)
+    """
+
+    path = flask.request.path
+    if path != '/' and path.endswith('/'):
+        return flask.redirect(path[:-1])
+
+
 def get_authorization_header():
     authorization = authentication.get_authorization_header(
         flask.session['macaroon_root'],
@@ -241,7 +255,7 @@ def login_required(func):
 
 
 def redirect_to_login():
-    return flask.redirect('login/?next=' + flask.request.url_rule.rule)
+    return flask.redirect('login?next=' + flask.request.url_rule.rule)
 
 
 def normalize_searched_snaps(search_results):
@@ -354,18 +368,18 @@ def apply_caching(response):
 
 # Redirects
 # ===
-@app.route('/docs/', defaults={'path': ''})
+@app.route('/docs', defaults={'path': ''})
 @app.route('/docs/<path:path>')
 def docs_redirect(path):
     return flask.redirect('https://docs.snapcraft.io/' + path)
 
 
-@app.route('/community/')
+@app.route('/community')
 def community_redirect():
     return flask.redirect('/')
 
 
-@app.route('/login/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 @csrf.exempt
 def login():
@@ -400,14 +414,14 @@ def after_login(resp):
     return flask.redirect('/account')
 
 
-@app.route('/logout/')
+@app.route('/logout')
 def logout():
     if authentication.is_authenticated(flask.session):
         authentication.empty_session(flask.session)
     return flask.redirect('/')
 
 
-@app.route('/account/')
+@app.route('/account')
 @login_required
 def get_account():
     authorization = authentication.get_authorization_header(
@@ -427,8 +441,8 @@ def get_account():
         response,
         flask.session,
         ACCOUNT_URL,
-        '/account/',
-        '/login/'
+        '/account',
+        '/login'
     )
 
     if verified_response is not None:
@@ -450,7 +464,7 @@ def get_account():
     )
 
 
-@app.route('/create/')
+@app.route('/create')
 def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
@@ -517,7 +531,7 @@ def homepage():
     )
 
 
-@app.route('/store/')
+@app.route('/store')
 def store():
     return flask.render_template(
         'store.html',
@@ -526,12 +540,12 @@ def store():
     )
 
 
-@app.route('/discover/')
+@app.route('/discover')
 def discover():
-    return flask.redirect('/store/')
+    return flask.redirect('/store')
 
 
-@app.route('/snaps/')
+@app.route('/snaps')
 def snaps():
     return flask.render_template(
         'promoted.html',
@@ -539,11 +553,11 @@ def snaps():
     )
 
 
-@app.route('/search/')
+@app.route('/search')
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
-        return flask.redirect('/store/')
+        return flask.redirect('/store')
 
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)
@@ -564,7 +578,7 @@ def search_snap():
     )
 
 
-@app.route('/<snap_name>/')
+@app.route('/<snap_name>')
 def snap_details(snap_name):
     """
     A view to display the snap details page for specific snaps.
@@ -768,7 +782,7 @@ def build_country_info(users_by_country, display_number_users=False):
 
 # Publisher views
 # ===
-@app.route('/account/snaps/<snap_name>/measure/')
+@app.route('/account/snaps/<snap_name>/measure')
 @login_required
 def publisher_snap_measure(snap_name):
     """
@@ -894,7 +908,7 @@ def publisher_snap_measure(snap_name):
     )
 
 
-@app.route('/account/snaps/<snap_name>/market/', methods=['GET'])
+@app.route('/account/snaps/<snap_name>/market', methods=['GET'])
 @login_required
 def get_market_snap(snap_name):
     snap_id = get_snap_id(snap_name)
@@ -920,7 +934,7 @@ def get_market_snap(snap_name):
     )
 
 
-@app.route('/account/snaps/<snap_name>/release/')
+@app.route('/account/snaps/<snap_name>/release')
 @login_required
 def snap_release(snap_name):
     snap_id = get_snap_id(snap_name)
@@ -933,7 +947,7 @@ def snap_release(snap_name):
     )
 
 
-@app.route('/account/snaps/<snap_name>/market/', methods=['POST'])
+@app.route('/account/snaps/<snap_name>/market', methods=['POST'])
 @login_required
 def post_market_snap(snap_name):
     whitelist = [
@@ -970,7 +984,7 @@ def post_market_snap(snap_name):
         flask.flash("Changes applied successfully.", 'positive')
 
     return flask.redirect(
-        "/account/snaps/{snap_name}/market/".format(
+        "/account/snaps/{snap_name}/market".format(
             snap_name=snap_name
         )
     )
