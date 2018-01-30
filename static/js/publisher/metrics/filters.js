@@ -1,10 +1,10 @@
-function period(selector) {
+function selector(selector, name) {
   const dropDown = document.querySelector(selector);
 
   function onChange() {
     let params = new URLSearchParams(window.location.search);
 
-    params.set('period', this.value);
+    params.set(name, this.value);
 
     window.location.search = params.toString();
   }
@@ -12,4 +12,4 @@ function period(selector) {
   dropDown.addEventListener('change', onChange);
 }
 
-export { period };
+export { selector };

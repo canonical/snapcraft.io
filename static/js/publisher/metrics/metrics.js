@@ -1,6 +1,5 @@
 /* globals d3 bb moment */
 
-import installsMetrics from './graphs/installs';
 import activeDevicesMetrics from './graphs/activeDevices';
 import territoriesMetrics from './graphs/territories';
 
@@ -12,21 +11,6 @@ function renderMetrics(metrics) {
   if (!d3 || !bb) {
     return false;
   }
-
-  // Installs Metrics
-  let installs = metrics.installs;
-  // Prepend 'installs'.
-  installs.values.unshift('active_devices');
-
-  installs.buckets = installs.buckets.map(bucket => {
-    return moment(bucket);
-  });
-  installs.buckets.unshift('x');
-
-  installsMetrics(
-    installs.buckets,
-    installs.values
-  );
 
   // Active devices
   let activeDevices = {
