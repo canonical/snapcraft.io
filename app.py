@@ -13,7 +13,6 @@ import datetime
 import humanize
 import re
 import bleach
-import urllib
 import pycountry
 import os
 import socket
@@ -26,7 +25,7 @@ from math import floor
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, unquote, urlparse, urlunparse
 from operator import itemgetter
 from werkzeug.contrib.fixers import ProxyFix
 from json import dumps
@@ -36,6 +35,7 @@ app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
+app.url_map.strict_slashes = False
 
 SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',
@@ -155,6 +155,24 @@ screenshots_query_url = (
     "https://dashboard.snapcraft.io/dev/api"
     "/snaps/{snap_id}/binary-metadata"
 )
+
+
+@app.before_request
+def clear_trailing():
+    """
+    Remove trailing slashes from all routes
+    We like our URLs without slashes
+    """
+
+    parsed_url = urlparse(unquote(flask.request.url))
+    path = parsed_url.path
+
+    if path != '/' and path.endswith('/'):
+        new_uri = urlunparse(
+            parsed_url._replace(path=path[:-1])
+        )
+
+        return flask.redirect(new_uri)
 
 
 def get_authorization_header():
@@ -287,10 +305,7 @@ def login_required(func):
 
 
 def redirect_to_login():
-    return flask.redirect(''.join([
-        'login?next=',
-        flask.request.url_rule.rule,
-    ]))
+    return flask.redirect('login?next=' + flask.request.url_rule.rule)
 
 
 def normalize_searched_snaps(search_results):
@@ -403,13 +418,13 @@ def apply_caching(response):
 
 # Redirects
 # ===
-@app.route('/docs/', defaults={'path': ''})
+@app.route('/docs', defaults={'path': ''})
 @app.route('/docs/<path:path>')
 def docs_redirect(path):
     return flask.redirect('https://docs.snapcraft.io/' + path)
 
 
-@app.route('/community/')
+@app.route('/community')
 def community_redirect():
     return flask.redirect('/')
 
@@ -485,7 +500,7 @@ def get_account():
             return response.raise_for_status
         else:
             return flask.redirect(
-                verified_response.redirect
+                verified_response['redirect']
             )
 
     print('HTTP/1.1 {} {}'.format(response.status_code, response.reason))
@@ -499,7 +514,7 @@ def get_account():
     )
 
 
-@app.route('/create/')
+@app.route('/create')
 def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
@@ -566,7 +581,7 @@ def homepage():
     )
 
 
-@app.route('/store/')
+@app.route('/store')
 def store():
     return flask.render_template(
         'store.html',
@@ -575,12 +590,12 @@ def store():
     )
 
 
-@app.route('/discover/')
+@app.route('/discover')
 def discover():
-    return flask.redirect('/store/')
+    return flask.redirect('/store')
 
 
-@app.route('/snaps/')
+@app.route('/snaps')
 def snaps():
     return flask.render_template(
         'promoted.html',
@@ -592,7 +607,7 @@ def snaps():
 def search_snap():
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
-        return flask.redirect('/store/')
+        return flask.redirect('/store')
 
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)
@@ -613,7 +628,7 @@ def search_snap():
     )
 
 
-@app.route('/<snap_name>/')
+@app.route('/<snap_name>')
 def snap_details(snap_name):
     """
     A view to display the snap details page for specific snaps.
@@ -653,7 +668,7 @@ def snap_details(snap_name):
 
     # Sanitise paragraphs
     def external(attrs, new=False):
-        url_parts = urllib.parse.urlparse(attrs[(None, "href")])
+        url_parts = urlparse(attrs[(None, "href")])
         if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
             if (None, "class") not in attrs:
                 attrs[(None, "class")] = "p-link--external"
@@ -826,7 +841,7 @@ def build_country_info(users_by_country, display_number_users=False):
 
 # Publisher views
 # ===
-@app.route('/account/snaps/<snap_name>/measure/')
+@app.route('/account/snaps/<snap_name>/measure')
 @login_required
 def publisher_snap_measure(snap_name):
     """
@@ -952,7 +967,7 @@ def publisher_snap_measure(snap_name):
     )
 
 
-@app.route('/account/snaps/<snap_name>/market/', methods=['GET'])
+@app.route('/account/snaps/<snap_name>/market', methods=['GET'])
 @login_required
 def get_market_snap(snap_name):
     snap_id = get_snap_id(snap_name)
@@ -977,7 +992,7 @@ def get_market_snap(snap_name):
     )
 
 
-@app.route('/account/snaps/<snap_name>/release/')
+@app.route('/account/snaps/<snap_name>/release')
 @login_required
 def snap_release(snap_name):
     snap_id = get_snap_id(snap_name)
@@ -990,7 +1005,7 @@ def snap_release(snap_name):
     )
 
 
-@app.route('/account/snaps/<snap_name>/market/', methods=['POST'])
+@app.route('/account/snaps/<snap_name>/market', methods=['POST'])
 @login_required
 def post_market_snap(snap_name):
     if 'submit_revert' in flask.request.form:
@@ -1073,7 +1088,7 @@ def post_market_snap(snap_name):
     flask.flash("Changes applied successfully.", 'positive')
 
     return flask.redirect(
-        "/account/snaps/{snap_name}/market/".format(
+        "/account/snaps/{snap_name}/market".format(
             snap_name=snap_name
         )
     )
