@@ -4,27 +4,27 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-import authentication
-import hashlib
+import bleach
 import datetime
 import flask
+import hashlib
 import humanize
-import re
-import bleach
-import pycountry
-import os
-import socket
 import modules.cache as cache
+import modules.authentication as authentication
+import os
+import pycountry
+import re
+import socket
 from dateutil import parser, relativedelta
 from flask_openid import OpenID
 from flask_wtf.csrf import CSRFProtect
 from functools import wraps
-from macaroon import MacaroonRequest, MacaroonResponse
-from math import floor
-from urllib.parse import parse_qs, unquote, urlparse, urlunparse
-from operator import itemgetter
-from werkzeug.contrib.fixers import ProxyFix
 from json import dumps
+from math import floor
+from modules.macaroon import MacaroonRequest, MacaroonResponse
+from operator import itemgetter
+from urllib.parse import parse_qs, unquote, urlparse, urlunparse
+from werkzeug.contrib.fixers import ProxyFix
 
 
 app = flask.Flask(__name__)
