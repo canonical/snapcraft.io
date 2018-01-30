@@ -1070,7 +1070,7 @@ def post_market_snap(snap_name):
                 **context
             )
 
-    flask.flash("Changes applied successfully.", 'positive')
+        flask.flash("Changes applied successfully.", 'positive')
 
     return flask.redirect(
         "/account/snaps/{snap_name}/market".format(
