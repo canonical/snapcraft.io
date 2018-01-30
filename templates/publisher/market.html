@@ -40,7 +40,7 @@
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
+          {% if messages or error_list %}
             <div class="row">
               <div class="col-12">
                 {% for category, message in messages %}
@@ -48,7 +48,15 @@
                     <p class="p-notification__response">
                         {{ message }}
                     </p>
-                    </div>
+                  </div>
+                {% endfor %}
+
+                {% for error in error_list %}
+                  <div class="p-notification--negative" style="display: block">
+                    <p class="p-notification__response">
+                        {{ error.message }}
+                    </p>
+                  </div>
                 {% endfor %}
               </div>
             </div>
