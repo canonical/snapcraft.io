@@ -44,7 +44,7 @@
             <div class="row">
               <div class="col-12">
                 {% for category, message in messages %}
-                  <div id="market-form-status" class="p-notification--{{ category }}" style="display: block">
+                  <div id="market-form-status" class="p-notification--{{ category }}">
                     <p class="p-notification__response">
                         {{ message }}
                     </p>
@@ -52,7 +52,7 @@
                 {% endfor %}
 
                 {% for error in error_list %}
-                  <div class="p-notification--negative" style="display: block">
+                  <div class="p-notification--negative">
                     <p class="p-notification__response">
                         {{ error.message }}
                     </p>
