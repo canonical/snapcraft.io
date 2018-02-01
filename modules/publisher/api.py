@@ -37,6 +37,11 @@ SCREENSHOTS_QUERY_URL = ''.join([
     'snaps/{snap_id}/binary-metadata'
 ])
 
+SNAP_INFO_URL = ''.join([
+    DASHBOARD_API,
+    'snaps/info/{snap_name}',
+])
+
 
 def get_authorization_header():
     authorization = authentication.get_authorization_header(
@@ -114,6 +119,21 @@ def get_publisher_metrics(json):
     return metrics_response.json()
 
 
+def get_snap_info(snap_name):
+    response = cache.get(
+        SNAP_INFO_URL.format(snap_name=snap_name),
+        headers=get_authorization_header()
+    )
+
+    return response.json()
+
+
+def get_snap_id(snap_name):
+    snap_info = get_snap_info(snap_name)
+
+    return snap_info['snap_id']
+
+
 def snap_metadata(snap_id, json=None):
     method = "PUT" if json is not None else None
 
@@ -160,3 +180,8 @@ def snap_screenshots(snap_id, data=None, files=None):
     )
 
     return screenshot_response.json()
+
+
+def is_snap_uploaded(snap_name):
+    user_snaps = get_account()
+    return user_snaps['snaps']['16'][snap_name]['uploaded']
