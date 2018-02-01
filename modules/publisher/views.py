@@ -2,65 +2,19 @@ import datetime
 import flask
 import hashlib
 import humanize
-import modules.authentication as authentication
-import modules.cache as cache
 import modules.public.api as public_api
 import modules.public.views as public_views
 import modules.publisher.api as api
-import os
 from dateutil import parser, relativedelta
 from json import dumps
 from operator import itemgetter
 
-DASHBOARD_API = os.getenv(
-    'DASHBOARD_API',
-    'https://dashboard.snapcraft.io/dev/api/',
-)
-
-
-ACCOUNT_URL = ''.join([
-    DASHBOARD_API,
-    'account',
-])
-
 
 def get_account():
-    authorization = authentication.get_authorization_header(
-        flask.session['macaroon_root'],
-        flask.session['macaroon_discharge']
-    )
+    user_snaps = api.get_account()
+    if 'redirect' in user_snaps:
+        return user_snaps['redirect']
 
-    headers = {
-        'X-Ubuntu-Series': '16',
-        'X-Ubuntu-Architecture': 'amd64',
-        'Authorization': authorization
-    }
-
-    response = cache.get(
-        url=ACCOUNT_URL,
-        method='GET',
-        headers=headers
-    )
-
-    verified_response = authentication.verify_response(
-        response,
-        flask.session,
-        ACCOUNT_URL,
-        '/account',
-        '/login'
-    )
-
-    if verified_response is not None:
-        if verified_response['redirect'] is None:
-            return response.raise_for_status
-        else:
-            return flask.redirect(
-                verified_response['redirect']
-            )
-
-    print('HTTP/1.1 {} {}'.format(response.status_code, response.reason))
-
-    user_snaps = response.json()
     return flask.render_template(
         'account.html',
         namespace=user_snaps['namespace'],
