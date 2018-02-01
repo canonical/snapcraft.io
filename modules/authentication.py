@@ -1,7 +1,7 @@
 import os
+from pymacaroons import Macaroon
 import requests
 from urllib.parse import urlparse
-from pymacaroons import Macaroon
 
 DASHBOARD_API = os.getenv(
     'DASHBOARD_API',

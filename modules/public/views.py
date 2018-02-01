@@ -1,13 +1,13 @@
-import modules.public.api as api
-import flask
-import re
 import bleach
-import humanize
 import datetime
+import flask
+import humanize
+import modules.public.api as api
 import pycountry
+import re
+from dateutil import parser, relativedelta
 from math import floor
 from urllib.parse import parse_qs, urlparse
-from dateutil import parser, relativedelta
 
 
 def calculate_colors(countries, max_users):

@@ -32,8 +32,8 @@ STATUS_QUERY_URL = ''.join([
     'snaps/{snap_id}/status',
 ])
 
-screenshots_query_url = (
-    "https://dashboard.snapcraft.io/dev/api"
+SCREENSHOTS_QUERY_URL = (
+    DASHBOARD_API,
     "/snaps/{snap_id}/binary-metadata"
 )
 
@@ -101,7 +101,7 @@ def snap_screenshots(snap_id, data=None, files=None):
                 )
 
     screenshot_response = cache.get(
-        screenshots_query_url.format(snap_id=snap_id),
+        SCREENSHOTS_QUERY_URL.format(snap_id=snap_id),
         headers=headers,
         data=data,
         method=method,

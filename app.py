@@ -24,12 +24,7 @@ app.secret_key = os.environ['SECRET_KEY']
 app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
 app.url_map.strict_slashes = False
 
-LOGIN_URL = os.getenv(
-    'LOGIN_URL',
-    'https://login.ubuntu.com',
-)
-
-oid = OpenID(
+open_id = OpenID(
     app=app,
     stateless=True,
     safe_roots=[],
@@ -38,26 +33,17 @@ oid = OpenID(
 
 csrf = CSRFProtect(app)
 
-
-@app.before_request
-def clear_trailing():
-    """
-    Remove trailing slashes from all routes
-    We like our URLs without slashes
-    """
-
-    parsed_url = urlparse(unquote(flask.request.url))
-    path = parsed_url.path
-
-    if path != '/' and path.endswith('/'):
-        new_uri = urlunparse(
-            parsed_url._replace(path=path[:-1])
-        )
-
-        return flask.redirect(new_uri)
+LOGIN_URL = os.getenv(
+    'LOGIN_URL',
+    'https://login.ubuntu.com',
+)
 
 
 def login_required(func):
+    """
+    Decorator that checks if a user is logged in, and redirects
+    to login page if not.
+    """
     @wraps(func)
     def is_user_logged_in(*args, **kwargs):
         if not authentication.is_authenticated(flask.session):
@@ -87,6 +73,24 @@ def page_not_found(error):
 
 # Global tasks for all requests
 # ===
+@app.before_request
+def clear_trailing():
+    """
+    Remove trailing slashes from all routes
+    We like our URLs without slashes
+    """
+
+    parsed_url = urlparse(unquote(flask.request.url))
+    path = parsed_url.path
+
+    if path != '/' and path.endswith('/'):
+        new_uri = urlunparse(
+            parsed_url._replace(path=path[:-1])
+        )
+
+        return flask.redirect(new_uri)
+
+
 @app.after_request
 def apply_caching(response):
     response.headers["X-Commit-ID"] = os.getenv('COMMIT_ID')
@@ -107,12 +111,19 @@ def community_redirect():
     return flask.redirect('/')
 
 
+@app.route('/create')
+def create_redirect():
+    return flask.redirect('https://docs.snapcraft.io/build-snaps')
+
+
+# Login handler
+# ===
 @app.route('/login', methods=['GET', 'POST'])
-@oid.loginhandler
+@open_id.loginhandler
 @csrf.exempt
 def login():
     if authentication.is_authenticated(flask.session):
-        return flask.redirect(oid.get_next_url())
+        return flask.redirect(open_id.get_next_url())
 
     root = authentication.request_macaroon()
     openid_macaroon = MacaroonRequest(
@@ -120,7 +131,7 @@ def login():
     )
     flask.session['macaroon_root'] = root
 
-    return oid.try_login(
+    return open_id.try_login(
         LOGIN_URL,
         ask_for=['email', 'nickname', 'image'],
         ask_for_optional=['fullname'],
@@ -128,7 +139,7 @@ def login():
     )
 
 
-@oid.after_login
+@open_id.after_login
 def after_login(resp):
     flask.session['openid'] = {
         'identity_url': resp.identity_url,
@@ -147,11 +158,6 @@ def logout():
     if authentication.is_authenticated(flask.session):
         authentication.empty_session(flask.session)
     return flask.redirect('/')
-
-
-@app.route('/create')
-def create_redirect():
-    return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
 # Normal views
