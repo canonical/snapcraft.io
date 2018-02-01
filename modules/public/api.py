@@ -124,3 +124,8 @@ def get_public_metrics(snap_name, json):
     )
 
     return metrics_response.json()
+
+
+def get_snap_id(snap_name):
+    snap_details = get_snap_details(snap_name)
+    return snap_details['snap_id']
