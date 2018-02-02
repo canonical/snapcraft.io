@@ -32,10 +32,10 @@ STATUS_QUERY_URL = ''.join([
     'snaps/{snap_id}/status',
 ])
 
-SCREENSHOTS_QUERY_URL = (
+SCREENSHOTS_QUERY_URL = ''.join([
     DASHBOARD_API,
-    "/snaps/{snap_id}/binary-metadata"
-)
+    'snaps/{snap_id}/binary-metadata'
+])
 
 
 def get_authorization_header():
