@@ -89,3 +89,6 @@ $color-accent: $color-brand;
 
 @import 'snapcraft_custom-typography';
 @include snapcraft-custom-typography;
+
+@import 'snapcraft_market_screenshots';
+@include snapcraft-market-screenshots;

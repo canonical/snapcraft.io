@@ -12,6 +12,57 @@ function initSnapIconEdit(iconElId, iconInputId) {
   });
 }
 
+function initSnapScreenshotsEdit(addElId, screenshotsToolbarElId, screenshotsWrapperElId, data) {
+  const state = {};
+  state.screenshots = data.map((url) => { return { url }; });
+
+  const addScreenshotsEl = document.getElementById(addElId);
+  const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
+  const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
+
+  const screenshotTpl = (screenshot) => `
+    <div class="col-2">
+      <img src="${screenshot.url}" alt="" />
+    </div>
+  `;
+
+  const renderScreenshots = (screenshots) => {
+    screenshotsWrapper.innerHTML = screenshots.map(screenshotTpl).join("");
+  };
+
+  const render = () => {
+    renderScreenshots(state.screenshots);
+  };
+
+  render();
+
+  const onScreenshotsChange = function() {
+    const fileList = this.files;
+
+    for (var i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      state.screenshots.push({ file, url: URL.createObjectURL(file) });
+
+      render();
+    }
+  };
+
+  addScreenshotsEl.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    const input = document.createElement('input');
+    input.type = "file";
+    input.multiple = "multiple";
+    input.accept = "image/*";
+    input.name="screenshots";
+    input.hidden = "hidden";
+
+    screenshotsToolbarEl.parentNode.appendChild(input);
+    input.addEventListener("change", onScreenshotsChange);
+    input.click();
+  });
+}
+
 function initFormNotification(formElId, notificationElId) {
   var form = document.getElementById(formElId);
 
@@ -32,7 +83,8 @@ function initFormNotification(formElId, notificationElId) {
 
 const market = {
   initSnapIconEdit,
-  initFormNotification
+  initFormNotification,
+  initSnapScreenshotsEdit
 };
 
 export default market;

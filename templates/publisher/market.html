@@ -133,16 +133,14 @@
 
           <div class="row">
             <div class="col-12">
-              <label>Screenshots:</label>
+              <div class="p-screenshots-toolbar" id="screenshots-toolbar">
+                <label>Screenshots:</label>
+                <button class="p-button-neutral" id="snap-add-screenshot"><i class="p-icon--plus"></i></button>
+              </div>
             </div>
           </div>
 
-          <div class="row">
-              {% for screenshot in details.screenshot_urls %}
-              <div class="col-2">
-                <img src={{ screenshot }} alt="" />
-              </div>
-              {% endfor %}
+          <div class="row" id="snap-screenshots">
           </div>
 
           <div class="row">
@@ -198,5 +196,11 @@
 <script>
   snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
   snapcraft.publisher.market.initFormNotification("market-form", "market-form-status");
+  snapcraft.publisher.market.initSnapScreenshotsEdit(
+    "snap-add-screenshot",
+    "screenshots-toolbar",
+    "snap-screenshots",
+    {{ details.screenshot_urls|tojson }}
+  );
 </script>
 {% endblock %}

@@ -1,0 +1,7 @@
+@mixin snapcraft-market-screenshots {
+  .p-screenshots-toolbar {
+    align-items: baseline;
+    display: flex;
+    justify-content: space-between;
+  }
+}
