@@ -32,8 +32,8 @@ STATUS_QUERY_URL = ''.join([
     'snaps/{snap_id}/status',
 ])
 
-screenshots_query_url = (
-    "https://dashboard.snapcraft.io/dev/api"
+SCREENSHOTS_QUERY_URL = (
+    DASHBOARD_API,
     "/snaps/{snap_id}/binary-metadata"
 )
 
@@ -47,6 +47,57 @@ def get_authorization_header():
     return {
         'Authorization': authorization
     }
+
+
+def verify_response(response, url, endpoint, login_endpoint):
+    verified_response = authentication.verify_response(
+        response,
+        flask.session,
+        url,
+        endpoint,
+        login_endpoint
+    )
+
+    if verified_response is not None:
+        if verified_response['redirect'] is None:
+            return response.raise_for_status
+        else:
+            return flask.redirect(
+                verified_response['redirect']
+            )
+
+
+def get_account():
+    authorization = authentication.get_authorization_header(
+        flask.session['macaroon_root'],
+        flask.session['macaroon_discharge']
+    )
+
+    headers = {
+        'X-Ubuntu-Series': '16',
+        'X-Ubuntu-Architecture': 'amd64',
+        'Authorization': authorization
+    }
+
+    response = cache.get(
+        url=ACCOUNT_URL,
+        method='GET',
+        headers=headers
+    )
+
+    verified_response = verify_response(
+        response,
+        ACCOUNT_URL,
+        '/account',
+        '/login'
+    )
+
+    if verified_response is not None:
+        return {
+            'redirect': verified_response
+        }
+
+    return response.json()
 
 
 def get_publisher_metrics(json):
@@ -101,7 +152,7 @@ def snap_screenshots(snap_id, data=None, files=None):
                 )
 
     screenshot_response = cache.get(
-        screenshots_query_url.format(snap_id=snap_id),
+        SCREENSHOTS_QUERY_URL.format(snap_id=snap_id),
         headers=headers,
         data=data,
         method=method,

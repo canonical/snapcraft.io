@@ -1,6 +1,6 @@
 import flask
-import os
 import modules.cache as cache
+import os
 
 SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',

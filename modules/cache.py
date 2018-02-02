@@ -1,9 +1,9 @@
 import datetime
 import requests
 import requests_cache
-from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from requests.exceptions import RequestException
+from requests.packages.urllib3.util.retry import Retry
 
 # Setup session to retry requests 5 times
 uncached_session = requests.Session()
