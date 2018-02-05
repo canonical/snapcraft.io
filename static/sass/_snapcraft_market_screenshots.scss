@@ -4,4 +4,11 @@
     display: flex;
     justify-content: space-between;
   }
+
+  .p-empty-add-screenshots {
+    background: $color-light;
+    display: block;
+    padding: $sp-x-large;
+    text-align: center;
+  }
 }

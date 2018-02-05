@@ -135,7 +135,7 @@
             <div class="col-12">
               <div class="p-screenshots-toolbar" id="screenshots-toolbar">
                 <label>Screenshots:</label>
-                <button class="p-button-neutral" id="snap-add-screenshot"><i class="p-icon--plus"></i></button>
+                <button class="p-button-neutral js-add-screenshots" id="snap-add-screenshot"><i class="p-icon--plus"></i></button>
               </div>
             </div>
           </div>
@@ -197,7 +197,6 @@
   snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
   snapcraft.publisher.market.initFormNotification("market-form", "market-form-status");
   snapcraft.publisher.market.initSnapScreenshotsEdit(
-    "snap-add-screenshot",
     "screenshots-toolbar",
     "snap-screenshots",
     {{ details.screenshot_urls|tojson }}

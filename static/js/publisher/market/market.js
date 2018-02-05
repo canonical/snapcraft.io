@@ -12,11 +12,10 @@ function initSnapIconEdit(iconElId, iconInputId) {
   });
 }
 
-function initSnapScreenshotsEdit(addElId, screenshotsToolbarElId, screenshotsWrapperElId, data) {
+function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, data) {
   const state = {};
   state.screenshots = data.map((url) => { return { url }; });
 
-  const addScreenshotsEl = document.getElementById(addElId);
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
   const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
 
@@ -26,8 +25,18 @@ function initSnapScreenshotsEdit(addElId, screenshotsToolbarElId, screenshotsWra
     </div>
   `;
 
+  const emptyTpl = () => `
+    <div class="col-12">
+      <a class="p-empty-add-screenshots js-add-screenshots">Add images</a>
+    </div>
+  `;
+
   const renderScreenshots = (screenshots) => {
-    screenshotsWrapper.innerHTML = screenshots.map(screenshotTpl).join("");
+    if (screenshots.length) {
+      screenshotsWrapper.innerHTML = screenshots.map(screenshotTpl).join("");
+    } else {
+      screenshotsWrapper.innerHTML = emptyTpl();
+    }
   };
 
   const render = () => {
@@ -47,19 +56,21 @@ function initSnapScreenshotsEdit(addElId, screenshotsToolbarElId, screenshotsWra
     }
   };
 
-  addScreenshotsEl.addEventListener("click", function(event) {
-    event.preventDefault();
+  document.addEventListener("click", function(event){
+    if (event.target.classList.contains('js-add-screenshots')) {
+      event.preventDefault();
 
-    const input = document.createElement('input');
-    input.type = "file";
-    input.multiple = "multiple";
-    input.accept = "image/*";
-    input.name="screenshots";
-    input.hidden = "hidden";
+      const input = document.createElement('input');
+      input.type = "file";
+      input.multiple = "multiple";
+      input.accept = "image/*";
+      input.name="screenshots";
+      input.hidden = "hidden";
 
-    screenshotsToolbarEl.parentNode.appendChild(input);
-    input.addEventListener("change", onScreenshotsChange);
-    input.click();
+      screenshotsToolbarEl.parentNode.appendChild(input);
+      input.addEventListener("change", onScreenshotsChange);
+      input.click();
+    }
   });
 }
 
