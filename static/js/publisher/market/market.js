@@ -13,12 +13,33 @@ function initSnapIconEdit(iconElId, iconInputId) {
 }
 
 function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, data) {
-  const state = {};
-  state.screenshots = data.map((url) => { return { url }; });
-
+  // DOM elements
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
   const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
 
+  // simple state handling (and serializing as JSON in hidden input)
+  const state = {};
+  const stateInput = document.createElement('input');
+  stateInput.type = "hidden";
+  stateInput.name = "state";
+
+  screenshotsToolbarEl.parentNode.appendChild(stateInput);
+
+  const setState = function(nextState) {
+    for (let key in nextState) {
+      if (nextState.hasOwnProperty(key)) {
+        state[key] = nextState[key];
+      }
+    }
+
+    stateInput.value = JSON.stringify(state);
+  };
+
+  setState({
+    screenshots: data.map((url) => { return { url }; })
+  });
+
+  // templates
   const screenshotTpl = (screenshot) => `
     <div class="col-2">
       <img src="${screenshot.url}" alt="" />
@@ -50,7 +71,9 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
     for (var i = 0; i < fileList.length; i++) {
       const file = fileList[i];
-      state.screenshots.push({ file, url: URL.createObjectURL(file) });
+      setState({
+        screenshots: state.screenshots.concat([{ file, url: URL.createObjectURL(file), name: file.name }])
+      });
 
       render();
     }
