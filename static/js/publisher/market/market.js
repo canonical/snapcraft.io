@@ -12,7 +12,7 @@ function initSnapIconEdit(iconElId, iconInputId) {
   });
 }
 
-function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, data) {
+function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, initialState) {
   // DOM elements
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
   const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
@@ -35,9 +35,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     stateInput.value = JSON.stringify(state);
   };
 
-  setState({
-    screenshots: data.map((url) => { return { url }; })
-  });
+  setState(initialState);
 
   // templates
   const screenshotTpl = (screenshot) => `
@@ -61,7 +59,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   };
 
   const render = () => {
-    renderScreenshots(state.screenshots);
+    renderScreenshots(state.images.filter(i => i.type === "screenshot"));
   };
 
   render();
@@ -69,10 +67,10 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   const onScreenshotsChange = function() {
     const fileList = this.files;
 
-    for (var i = 0; i < fileList.length; i++) {
+    for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
       setState({
-        screenshots: state.screenshots.concat([{ file, url: URL.createObjectURL(file), name: file.name }])
+        images: state.images.concat([{ file, url: URL.createObjectURL(file), name: file.name, type: "screenshot" }])
       });
 
       render();
@@ -80,7 +78,9 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   };
 
   document.addEventListener("click", function(event){
-    if (event.target.classList.contains('js-add-screenshots')) {
+    if (event.target.classList.contains('js-add-screenshots')
+        || event.target.parentNode.classList.contains('js-add-screenshots')
+      ) {
       event.preventDefault();
 
       const input = document.createElement('input');

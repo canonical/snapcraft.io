@@ -199,7 +199,15 @@
   snapcraft.publisher.market.initSnapScreenshotsEdit(
     "screenshots-toolbar",
     "snap-screenshots",
-    {{ details.screenshot_urls|tojson }}
+    {
+      images: [
+        { url: {{ details.icon_url|tojson }}, type: "icon" },
+
+        {% for screenshot_url in details.screenshot_urls %}
+          { url: {{ screenshot_url|tojson }}, type: "screenshot" },
+        {% endfor %}
+      ]
+    }
   );
 </script>
 {% endblock %}
