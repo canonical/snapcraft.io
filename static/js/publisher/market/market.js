@@ -59,7 +59,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   };
 
   const render = () => {
-    renderScreenshots(state.images.filter(i => i.type === "screenshot"));
+    renderScreenshots(state.images.filter(image => image.type === "screenshot"));
   };
 
   render();
@@ -72,9 +72,9 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
       setState({
         images: state.images.concat([{ file, url: URL.createObjectURL(file), name: file.name, type: "screenshot" }])
       });
-
-      render();
     }
+
+    render();
   };
 
   document.addEventListener("click", function(event){
