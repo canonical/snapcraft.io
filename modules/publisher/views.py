@@ -135,7 +135,8 @@ def publisher_snap_measure(snap_name):
         'territories': country_data,
 
         # Context info
-        'is_linux': 'Linux' in flask.request.headers['User-Agent']
+        'is_linux': 'Linux' in flask.request.headers['User-Agent'],
+        'uploaded': uploaded
     }
 
     return flask.render_template(
