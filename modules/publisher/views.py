@@ -4,7 +4,7 @@ import hashlib
 import modules.public.views as public_views
 import modules.publisher.api as api
 from dateutil import relativedelta
-from json import dumps
+from json import dumps, loads
 from operator import itemgetter
 
 
@@ -220,6 +220,16 @@ def post_market_snap(snap_name):
         info = []
         images_files = []
         images_json = None
+
+        # Add existing screenshots
+        screenshots_uploaded = api.snap_screenshots(
+            flask.request.form['snap_id']
+        )
+        state_screenshots = loads(flask.request.form['state'])['images']
+        for screenshot in state_screenshots:
+            for screenshot_uploaded in screenshots_uploaded:
+                if screenshot['url'] == screenshot_uploaded['url']:
+                    info.append(screenshot_uploaded)
 
         icon = flask.request.files.get('icon')
         if icon is not None:
