@@ -192,6 +192,7 @@
 {% endblock %}
 
 {% block scripts %}
+{% if uploaded %}
 <script src="/static/js/dist/publisher.js"></script>
 <script>
   snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
@@ -210,4 +211,5 @@
     }
   );
 </script>
+{% endif %}
 {% endblock %}
