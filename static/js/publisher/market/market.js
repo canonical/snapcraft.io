@@ -12,6 +12,96 @@ function initSnapIconEdit(iconElId, iconInputId) {
   });
 }
 
+function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, initialState) {
+  // DOM elements
+  const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
+  const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
+
+  // simple state handling (and serializing as JSON in hidden input)
+  const state = {};
+  const stateInput = document.createElement('input');
+  stateInput.type = "hidden";
+  stateInput.name = "state";
+
+  screenshotsToolbarEl.parentNode.appendChild(stateInput);
+
+  const setState = function(nextState) {
+    for (let key in nextState) {
+      if (nextState.hasOwnProperty(key)) {
+        state[key] = nextState[key];
+      }
+    }
+
+    stateInput.value = JSON.stringify(state);
+  };
+
+  setState(initialState);
+
+  // templates
+  const screenshotTpl = (screenshot) => `
+    <div class="col-2">
+      <img src="${screenshot.url}" alt="" />
+    </div>
+  `;
+
+  const emptyTpl = () => `
+    <div class="col-12">
+      <a class="p-empty-add-screenshots js-add-screenshots">Add images</a>
+    </div>
+  `;
+
+  const renderScreenshots = (screenshots) => {
+    if (screenshots.length) {
+      screenshotsWrapper.innerHTML = screenshots.map(screenshotTpl).join("");
+    } else {
+      screenshotsWrapper.innerHTML = emptyTpl();
+    }
+  };
+
+  const render = () => {
+    renderScreenshots(state.images.filter(image => image.type === "screenshot"));
+  };
+
+  render();
+
+  const onScreenshotsChange = function() {
+    const fileList = this.files;
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      setState({
+        images: state.images.concat([{
+          file, url: URL.createObjectURL(file),
+          name: file.name,
+          type: "screenshot",
+          status: "new"
+        }])
+      });
+    }
+
+    render();
+  };
+
+  document.addEventListener("click", function(event){
+    if (event.target.classList.contains('js-add-screenshots')
+        || event.target.parentNode.classList.contains('js-add-screenshots')
+      ) {
+      event.preventDefault();
+
+      const input = document.createElement('input');
+      input.type = "file";
+      input.multiple = "multiple";
+      input.accept = "image/*";
+      input.name="screenshots";
+      input.hidden = "hidden";
+
+      screenshotsToolbarEl.parentNode.appendChild(input);
+      input.addEventListener("change", onScreenshotsChange);
+      input.click();
+    }
+  });
+}
+
 function initFormNotification(formElId, notificationElId) {
   var form = document.getElementById(formElId);
 
@@ -32,7 +122,8 @@ function initFormNotification(formElId, notificationElId) {
 
 const market = {
   initSnapIconEdit,
-  initFormNotification
+  initFormNotification,
+  initSnapScreenshotsEdit
 };
 
 export default market;

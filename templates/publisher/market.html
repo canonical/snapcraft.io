@@ -132,6 +132,24 @@
           </div>
 
           <div class="row">
+            <div class="col-12">
+              <div class="p-screenshots-toolbar" id="screenshots-toolbar">
+                <label>Screenshots:</label>
+                <button class="p-button-neutral js-add-screenshots" id="snap-add-screenshot"><i class="p-icon--plus"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" id="snap-screenshots">
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <hr />
+            </div>
+          </div>
+
+          <div class="row">
             <div class="col-2">
               <label>License: </label>
             </div>
@@ -155,28 +173,43 @@
             </div>
           </div>
         </form>
-        {% endif %}
-      </div>
+      {% endif %}
+    </div>
 
-      {% if api_error %}
-      <div class="row">
-        <div class="col-12">
-          <div class="p-notification--negative">
-            <p class="p-notification__response">
-              <span class="p-notification__status">Error:</span> API request failed
-            </p>
-          </div>
+    {% if api_error %}
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
         </div>
       </div>
+    </div>
     {% endif %}
 
   </div>
 {% endblock %}
 
 {% block scripts %}
+{% if uploaded %}
 <script src="/static/js/dist/publisher.js"></script>
 <script>
   snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
   snapcraft.publisher.market.initFormNotification("market-form", "market-form-status");
+  snapcraft.publisher.market.initSnapScreenshotsEdit(
+    "screenshots-toolbar",
+    "snap-screenshots",
+    {
+      images: [
+        { url: {{ icon_url|tojson }}, type: "icon" },
+
+        {% for screenshot_url in screenshot_urls %}
+          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+        {% endfor %}
+      ]
+    }
+  );
 </script>
+{% endif %}
 {% endblock %}
