@@ -207,7 +207,9 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    if not api.is_snap_uploaded(snap_name):
+    uploaded = api.is_snap_uploaded(snap_name)
+
+    if not uploaded:
         return flask.redirect(
             "/account/snaps/{snap_name}/market".format(
                 snap_name=snap_name
@@ -294,7 +296,8 @@ def post_market_snap(snap_name):
                 "icon_url": snap_details['icon_url'],
                 "publisher_name": snap_details['publisher_name'],
                 "screenshot_urls": snap_details['screenshot_urls'],
-                "error_list": error_list
+                "error_list": error_list,
+                "uploaded": uploaded
             }
 
             return flask.render_template(
