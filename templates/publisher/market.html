@@ -204,7 +204,7 @@
         { url: {{ icon_url|tojson }}, type: "icon" },
 
         {% for screenshot_url in screenshot_urls %}
-          { url: {{ screenshot_url|tojson }}, type: "screenshot" },
+          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
         {% endfor %}
       ]
     }

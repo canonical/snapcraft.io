@@ -70,7 +70,12 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
       setState({
-        images: state.images.concat([{ file, url: URL.createObjectURL(file), name: file.name, type: "screenshot" }])
+        images: state.images.concat([{
+          file, url: URL.createObjectURL(file),
+          name: file.name,
+          type: "screenshot",
+          status: "new"
+        }])
       });
     }
 
