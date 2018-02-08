@@ -1,11 +1,9 @@
 import datetime
 import flask
 import hashlib
-import humanize
-import modules.public.api as public_api
 import modules.public.views as public_views
 import modules.publisher.api as api
-from dateutil import parser, relativedelta
+from dateutil import relativedelta
 from json import dumps
 from operator import itemgetter
 
@@ -31,6 +29,20 @@ def publisher_snap_measure(snap_name):
     some of the data through to the publisher/measure.html template,
     with appropriate sanitation.
     """
+    uploaded = api.is_snap_uploaded(snap_name)
+
+    if not uploaded:
+        context = {
+            'snap_title': snap_name,
+            'snap_name': snap_name,
+            'uploaded': uploaded
+        }
+
+        return flask.render_template(
+            'publisher/measure.html',
+            **context
+        )
+
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
@@ -41,7 +53,7 @@ def publisher_snap_measure(snap_name):
         type=str
     )
 
-    details = public_api.get_snap_details(snap_name)
+    details = api.get_snap_info(snap_name)
 
     today = datetime.datetime.utcnow().date()
     end = today - relativedelta.relativedelta(days=1)
@@ -111,8 +123,8 @@ def publisher_snap_measure(snap_name):
 
     context = {
         # Data direct from details API
-        'snap_name': details['title'],
-        'package_name': details['package_name'],
+        'snap_name': snap_name,
+        'snap_title': details['title'],
         'metric_period': metric_period,
         'active_device_metric': installed_base_metric,
 
@@ -132,33 +144,32 @@ def publisher_snap_measure(snap_name):
     )
 
 
-def _transform_api_data(details):
-    details['filesize'] = humanize.naturalsize(details['binary_filesize'])
-    details['last_updated'] = (
-        humanize.naturaldate(
-            parser.parse(details.get('last_updated'))
-        )
-    )
-
-    return details
-
-
 def get_market_snap(snap_name):
-    snap_id = public_api.get_snap_id(snap_name)
-    metadata = api.snap_metadata(snap_id)
-    details = _transform_api_data(
-        public_api.get_snap_details(snap_name)
-    )
+    uploaded = api.is_snap_uploaded(snap_name)
 
-    context = {
-        "snap_id": snap_id,
-        "snap_name": snap_name,
-        "title": metadata['title'],
-        "summary": metadata['summary'],
-        "description": metadata['description'],
-        "license": metadata['license'],
-        "details": details
-    }
+    if not uploaded:
+        context = {
+            "snap_name": snap_name,
+            "title": snap_name,
+
+            # Check if snap is uploaded or not
+            "uploaded": uploaded
+        }
+    else:
+        snap_details = api.get_snap_info(snap_name)
+        context = {
+            "snap_id": snap_details['snap_id'],
+            "snap_name": snap_details['snap_name'],
+            "title": snap_details['title'],
+            "summary": snap_details['summary'],
+            "description": snap_details['description'],
+            "license": snap_details['license'],
+            "icon_url": snap_details['icon_url'],
+            "publisher_name": snap_details['publisher_name'],
+
+            # Check if snap is uploaded or not
+            "uploaded": uploaded
+        }
 
     return flask.render_template(
         'publisher/market.html',
@@ -167,7 +178,7 @@ def get_market_snap(snap_name):
 
 
 def snap_release(snap_name):
-    snap_id = public_api.get_snap_id(snap_name)
+    snap_id = api.get_snap_id(snap_name)
     status_json = api.get_snap_status(snap_id)
 
     return flask.render_template(
@@ -195,6 +206,13 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
+    if not api.is_snap_uploaded(snap_name):
+        return flask.redirect(
+            "/account/snaps/{snap_name}/market".format(
+                snap_name=snap_name
+            )
+        )
+
     if 'submit_revert' in flask.request.form:
         flask.flash("All changes reverted.", 'information')
     else:
@@ -254,19 +272,16 @@ def post_market_snap(snap_name):
             error_list = error_list + metadata['error_list']
 
         if error_list:
-            details = _transform_api_data(
-                public_api.get_snap_details(snap_name)
-            )
-
+            snap_details = api.get_snap_info(snap_name)
             context = {
-                "snap_id": flask.request.form['snap_id'],
-                "snap_name": snap_name,
-                "title": details['title'],
-                "summary": details['summary'],
-                "description": details['description'],
-                "license": details['license'],
-                "details": details,
-                "screenshots": screenshots_response,
+                "snap_id": snap_details['snap_id'],
+                "snap_name": snap_details['snap_name'],
+                "title": snap_details['title'],
+                "summary": snap_details['summary'],
+                "description": snap_details['description'],
+                "license": snap_details['license'],
+                "icon_url": snap_details['icon_url'],
+                "publisher_name": snap_details['publisher_name'],
                 "error_list": error_list
             }
 
