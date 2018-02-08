@@ -166,7 +166,7 @@ def get_market_snap(snap_name):
             "license": snap_details['license'],
             "icon_url": snap_details['icon_url'],
             "publisher_name": snap_details['publisher_name'],
-
+            "screenshot_urls": snap_details['screenshot_urls'],
             # Check if snap is uploaded or not
             "uploaded": uploaded
         }
@@ -282,6 +282,7 @@ def post_market_snap(snap_name):
                 "license": snap_details['license'],
                 "icon_url": snap_details['icon_url'],
                 "publisher_name": snap_details['publisher_name'],
+                "screenshot_urls": snap_details['screenshot_urls'],
                 "error_list": error_list
             }
 
