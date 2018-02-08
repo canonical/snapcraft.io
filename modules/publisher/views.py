@@ -4,7 +4,7 @@ import hashlib
 import modules.public.views as public_views
 import modules.publisher.api as api
 from dateutil import relativedelta
-from json import dumps
+from json import dumps, loads
 from operator import itemgetter
 
 
@@ -135,7 +135,8 @@ def publisher_snap_measure(snap_name):
         'territories': country_data,
 
         # Context info
-        'is_linux': 'Linux' in flask.request.headers['User-Agent']
+        'is_linux': 'Linux' in flask.request.headers['User-Agent'],
+        'uploaded': uploaded
     }
 
     return flask.render_template(
@@ -206,7 +207,9 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    if not api.is_snap_uploaded(snap_name):
+    uploaded = api.is_snap_uploaded(snap_name)
+
+    if not uploaded:
         return flask.redirect(
             "/account/snaps/{snap_name}/market".format(
                 snap_name=snap_name
@@ -220,6 +223,16 @@ def post_market_snap(snap_name):
         info = []
         images_files = []
         images_json = None
+
+        # Add existing screenshots
+        screenshots_uploaded = api.snap_screenshots(
+            flask.request.form['snap_id']
+        )
+        state_screenshots = loads(flask.request.form['state'])['images']
+        for screenshot in state_screenshots:
+            for screenshot_uploaded in screenshots_uploaded:
+                if screenshot['url'] == screenshot_uploaded['url']:
+                    info.append(screenshot_uploaded)
 
         icon = flask.request.files.get('icon')
         if icon is not None:
@@ -283,7 +296,8 @@ def post_market_snap(snap_name):
                 "icon_url": snap_details['icon_url'],
                 "publisher_name": snap_details['publisher_name'],
                 "screenshot_urls": snap_details['screenshot_urls'],
-                "error_list": error_list
+                "error_list": error_list,
+                "uploaded": uploaded
             }
 
             return flask.render_template(
