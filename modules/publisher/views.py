@@ -9,14 +9,18 @@ from operator import itemgetter
 
 
 def get_account():
-    user_snaps = api.get_account()
-    if 'redirect' in user_snaps:
-        return user_snaps['redirect']
+    account = api.get_account()
+    if 'redirect' in account:
+        return account['redirect']
+
+    user_snaps = []
+    if '16' in account['snaps']:
+        user_snaps = account['snaps']['16']
 
     return flask.render_template(
         'account.html',
-        namespace=user_snaps['namespace'],
-        user_snaps=user_snaps['snaps']['16'],
+        namespace=account['namespace'],
+        user_snaps=user_snaps,
         user=flask.session['openid']
     )
 
