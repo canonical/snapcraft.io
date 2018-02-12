@@ -1,7 +1,7 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Market details for {{ snap_title }}
+  Market details for {{ title }}
 {% endblock %}
 
 {% block content %}
@@ -90,6 +90,15 @@
             <div class="col-8">
               <label for="snap-title">Title:</label>
               <input id="snap-title" type="text" name="title" value="{{ title }}" {% if not uploaded %}readonly{% endif %}/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2">
+              <label>Snap name: </label>
+            </div>
+            <div class="col-8">
+                {{ snap_name }}
             </div>
           </div>
 
