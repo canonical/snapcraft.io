@@ -1,0 +1,53 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+Developer Program Agreement — Linux software in the Snap Store
+{% endblock %}
+
+{% block content %}
+<section class="p-layout__main">
+  <div class="row">
+    <h1>Developer Programme Agreement</h1>
+  </div>
+
+  <div class="row">
+    <div class="p-card">
+      <h2>Canonical Terms of Service</h2>
+      <p class="p-card__content">
+        <a class="p-link--external" href="https://www.ubuntu.com/legal/terms-and-policies/developer-terms-and-conditions" target="_blank">Developer Terms and Conditions</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="p-strip is-shallow u-no-padding--top" >
+    <div class="row u-no-margin--top">
+      <form method="POST" action="/account/agreement">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <div class="row">
+          <div class="col-8">
+            <div class="p-form-validation">
+              <input name="i_agree" id="id_i_agree" class="p-form-validation__input" type="checkbox">
+              <label for="id_i_agree"">I agree to these terms</label>
+            </div>
+          </div>
+          <div class="col-4 u-align--right">
+            <a class="p-button--neutral" href="/">Cancel</a>
+            <button class="p-button--positive" disabled="disabled" type="submit">Continue</button>
+          </div>
+        </div>
+        <script>
+         var checkbox = document.querySelector('#id_i_agree');
+         var button = document.querySelector('button[type="submit"]');
+         checkbox.addEventListener('change', function(event) {
+           if (this.checked) {
+             button.removeAttribute('disabled');
+           } else {
+             button.setAttribute('disabled', 'disabled');
+           }
+         });
+        </script>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -22,6 +22,11 @@ ACCOUNT_URL = ''.join([
     'account',
 ])
 
+AGREEMENT_URL = ''.join([
+    DASHBOARD_API,
+    'agreement/'
+])
+
 METADATA_QUERY_URL = ''.join([
     DASHBOARD_API,
     'snaps/{snap_id}/metadata',
@@ -104,6 +109,32 @@ def get_account():
         }
 
     return response.json()
+
+
+def get_agreement():
+    headers = get_authorization_header()
+
+    agreement_response = cache.get(
+        AGREEMENT_URL,
+        headers
+    )
+
+    return agreement_response.json()
+
+
+def post_agreement(agreed):
+    headers = get_authorization_header()
+
+    json = {
+        'latest_tos_accepted': agreed
+    }
+    agreement_response = cache.get(
+        AGREEMENT_URL,
+        headers,
+        json
+    )
+
+    return agreement_response.json()
 
 
 def get_publisher_metrics(json):
