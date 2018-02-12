@@ -137,6 +137,24 @@ def post_agreement(agreed):
     return agreement_response.json()
 
 
+def post_username(username):
+    headers = get_authorization_header()
+    json = {
+        'short_namespace': username
+    }
+    username_response = cache.get(
+        url=ACCOUNT_URL,
+        headers=headers,
+        json=json,
+        method='PATCH'
+    )
+
+    if username_response.status_code == 204:
+        return {}
+    else:
+        return username_response.json()
+
+
 def get_publisher_metrics(json):
     authed_metrics_headers = PUB_METRICS_QUERY_HEADERS.copy()
     auth_header = get_authorization_header()['Authorization']

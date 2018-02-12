@@ -247,6 +247,18 @@ def post_agreement():
     return publisher_views.post_agreement()
 
 
+@app.route('/account/username')
+@login_required
+def get_account_name():
+    return publisher_views.get_account_name()
+
+
+@app.route('/account/username', methods=['POST'])
+@login_required
+def post_account_name():
+    return publisher_views.post_account_name()
+
+
 @app.route('/account/snaps/<snap_name>/measure')
 @login_required
 def publisher_snap_measure(snap_name):
