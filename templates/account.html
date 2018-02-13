@@ -37,19 +37,25 @@
                       <th>Status</th>
                       <th>Price</th>
                   </tr>
-                  {% for snap in user_snaps|sort %}
-                      <tr>
-                          <td>
-                              {% if user_snaps[snap].uploaded %}
-                                  <a href="/account/snaps/{{snap}}/market">{{snap}}</a>
-                              {% else %}
-                                  {{snap}}
-                              {% endif %}
-                          </td>
-                          <td>{{ user_snaps[snap].status }}</td>
-                          <td>{% if user_snaps[snap].price %} user_snaps[snap].price {% else %} 0 {% endif %}</td>
-                      </tr>
-                  {% endfor %}
+                  {% if not user_snaps %}
+                  <tr>
+                      <td>You have uploaded no snap yet!</td>
+                  </tr>
+                  {% else %}
+                    {% for snap in user_snaps|sort %}
+                        <tr>
+                            <td>
+                                {% if user_snaps[snap].uploaded %}
+                                    <a href="/account/snaps/{{snap}}/market">{{snap}}</a>
+                                {% else %}
+                                    {{snap}}
+                                {% endif %}
+                            </td>
+                            <td>{{ user_snaps[snap].status }}</td>
+                            <td>{% if user_snaps[snap].price %} user_snaps[snap].price {% else %} 0 {% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                  {% endif %}
               </table>
           </div>
       </div>
