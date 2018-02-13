@@ -66,8 +66,6 @@ def publisher_snap_measure(snap_name):
         start = end - relativedelta.relativedelta(days=metric_period_int)
     elif metric_bucket == 'm':
         start = end - relativedelta.relativedelta(months=metric_period_int)
-    elif metric_bucket == 'y':
-        start = end - relativedelta.relativedelta(years=metric_period_int)
 
     if installed_base_metric == 'version':
         installed_base = "weekly_installed_base_by_version"

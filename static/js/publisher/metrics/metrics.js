@@ -15,9 +15,9 @@ function renderMetrics(metrics) {
   // Active devices
   let activeDevices = {
     series: [],
-    buckets: metrics.activeDevices.buckets
+    buckets: metrics.activeDevices.metrics.buckets
   };
-  metrics.activeDevices.series.forEach(series => {
+  metrics.activeDevices.metrics.series.forEach(series => {
     let fullSeries = series.values.map(value => {
       return value === null ? 0 : value;
     });
@@ -32,7 +32,8 @@ function renderMetrics(metrics) {
 
   activeDevicesMetrics(
     activeDevices.buckets,
-    activeDevices.series
+    activeDevices.series,
+    metrics.activeDevices.type
   );
 
   // Territories
