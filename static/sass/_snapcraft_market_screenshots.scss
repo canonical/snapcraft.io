@@ -11,4 +11,11 @@
     padding: $sp-x-large;
     text-align: center;
   }
+
+  .p-screenshot {
+    &.selected {
+      outline: 1px solid $color-focus;
+      outline-offset: 2px;
+    }
+  }
 }
