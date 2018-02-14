@@ -37,10 +37,39 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
   setState(initialState);
 
+  // actions on state
+  const addScreenshots = (files) => {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      setState({
+        images: state.images.concat([{
+          file, url: URL.createObjectURL(file),
+          name: file.name,
+          type: "screenshot",
+          status: "new"
+        }])
+      });
+    }
+  };
+
+  const selectScreenshot = (url) => {
+    state.images.forEach(image => image.selected = false);
+
+    const screenshot = state.images.filter(image => image.url === url)[0];
+
+    if (url && screenshot) {
+      screenshot.selected = true;
+    }
+  };
+
   // templates
   const screenshotTpl = (screenshot) => `
     <div class="col-2">
-      <img src="${screenshot.url}" alt="" />
+      <img
+        class="p-screenshot ${screenshot.selected ? 'selected' : ''}"
+        src="${screenshot.url}"
+        alt=""
+      />
     </div>
   `;
 
@@ -65,24 +94,16 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   render();
 
   const onScreenshotsChange = function() {
-    const fileList = this.files;
-
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList[i];
-      setState({
-        images: state.images.concat([{
-          file, url: URL.createObjectURL(file),
-          name: file.name,
-          type: "screenshot",
-          status: "new"
-        }])
-      });
-    }
-
+    addScreenshots(this.files);
     render();
   };
 
+  // delegated click handlers
   document.addEventListener("click", function(event){
+    // unselect any screenshots when clicked outside of them
+    selectScreenshot();
+
+    // clicking on [+] add screenshots button
     if (event.target.classList.contains('js-add-screenshots')
         || event.target.parentNode.classList.contains('js-add-screenshots')
       ) {
@@ -99,6 +120,14 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
       input.addEventListener("change", onScreenshotsChange);
       input.click();
     }
+
+    // clicking on screenshot to select it
+    if (event.target.classList.contains('p-screenshot')) {
+      event.preventDefault();
+      selectScreenshot(event.target.src);
+    }
+
+    render();
   });
 }
 
