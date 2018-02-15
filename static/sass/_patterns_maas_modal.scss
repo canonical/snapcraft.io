@@ -1,0 +1,255 @@
+// https://github.com/canonical-websites/maas.io/blob/master/static/sass/_settings_colors.scss
+$color-modal-overlay:  rgba($color-x-dark, .85);
+$color-modal-controls: rgba($color-x-dark, .2);
+
+// https://github.com/canonical-websites/maas.io/blob/master/static/sass/_patterns_modal.scss
+@mixin maas-p-modal {
+  .venobox {
+    width: auto;
+
+    &--expand {
+      margin: 0 auto 20px;
+      overflow: visible;
+      position: relative;
+
+      > img {
+        margin: 0 auto;
+      }
+
+      &::after {
+        background: {
+          color: $color-dark;
+          image: url('#{$assets-path}495995ef-fullscreen-white.svg');
+          position: center;
+          repeat: no-repeat;
+          size: 50%;
+        }
+        bottom: 15px;
+        box-shadow: 0 5px 10px 0 $color-modal-controls;
+        content: '';
+        display: block;
+        height: 20px;
+        position: absolute;
+        right: 15px;
+        width: 20px;
+      }
+    }
+  }
+
+  // venobox.css
+  .vbox-overlay *,
+  .vbox-overlay *::before,
+  .vbox-overlay *::after {
+    box-sizing: border-box;
+  }
+
+  // overlay: change here background color and opacity ----- */
+  .vbox-overlay {
+    background: $color-modal-overlay;
+    bottom: 0;
+    height: auto;
+    left: 0;
+    margin-top: 0;
+    opacity: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+  }
+
+  // preloader - choose between CIRCLE, IOS, DOTS, QUADS
+
+  // circle preloader
+  .vbox-preloader {
+    background-image: url('preload-circle.png');
+    height: 32px;
+    left: 50%;
+    margin-left: -16px;
+    margin-top: -16px;
+    overflow: hidden;
+    position: fixed;
+    text-indent: -100px;
+    top: 50%;
+    width: 32px;
+  }
+
+  @keyframes playload {
+    from { background-position:    0; }
+    to { background-position: -576px; }
+  }
+
+  // navigation
+  .vbox-close {
+    background: url('#{$assets-path}345e40a0-close_16_white.svg') no-repeat;
+    background-position: center;
+    background-size: 1rem;
+    color: $color-x-light;
+    cursor: pointer;
+    display: block;
+    height: 2rem;
+    margin-top: 0;
+    overflow: hidden;
+    position: fixed;
+    right: 1rem;
+    text-indent: -100px;
+    top: 1rem;
+    width: 2rem;
+
+    @media screen and (max-width: $breakpoint-medium) {
+      background-position: top 20px right 20px;
+    }
+  }
+
+  .vbox-next,
+  .vbox-prev {
+    background-color: $color-x-light;
+    box-sizing: content-box;
+    cursor: pointer;
+    height: 3rem;
+    margin-top: -1.5rem;
+    overflow: hidden;
+    padding: 0;
+    position: fixed;
+    text-indent: -100px;
+    top: 50%;
+    width: 3rem;
+    border-radius: 3rem;
+    background: {
+      position: center;
+      repeat: no-repeat;
+      size: .25rem;
+    }
+  }
+
+  .vbox-next:disabled:hover,
+  .vbox-prev:disabled:hover {
+    background-color: $color-x-light;
+  }
+
+  .vbox-prev {
+    background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
+    left: 1rem;
+  }
+
+  .vbox-next {
+    background-image: url('#{$assets-path}9716bbab-chevron.svg');
+    right: 1rem;
+  }
+
+  .vbox-title {
+    background: $color-dark;
+    bottom: 0;
+    color: $color-x-light;
+    display: none;
+    float: left;
+    font-size: 1rem;
+    height: auto;
+    left: 0;
+    line-height: 28px;
+    overflow: hidden;
+    padding: 40px;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+
+    @media screen and (max-width: 1024px) {
+      bottom: 25px;
+    }
+  }
+
+  .vbox-num {
+    background: $color-dark;
+    color: $color-x-light;
+    cursor: pointer;
+    display: none;
+    font-size: 12px;
+    height: 40px;
+    left: 0;
+    line-height: 28px;
+    overflow: hidden;
+    padding: 6px 10px;
+    position: fixed;
+    top: -1px;
+  }
+
+  // inline window
+  .vbox-inline {
+    background: $color-x-light;
+    height: 315px;
+    margin: 0 auto;
+    overflow: auto;
+    padding: 10px;
+    text-align: left;
+    width: 420px;
+  }
+
+  // Video & iFrames window
+  .venoframe {
+    border: 0;
+    height: 100%;
+    min-height: 600px;
+    width: 100%;
+  }
+
+  @media (max-width: 992px) {
+    .venoframe {
+      height: 480px;
+      min-height: inherit;
+      width: 640px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .venoframe {
+      height: 315px;
+      min-height: inherit;
+      width: 420px;
+    }
+  }
+
+  @media (max-width: 460px) {
+    .vbox-inline {
+      width: 100%;
+    }
+
+    .venoframe {
+      height: 260px;
+      min-height: inherit;
+      width: 100%;
+    }
+  }
+
+  // PLease do NOT edit this! (or do it at your own risk)
+  .vbox-open {
+    overflow: hidden;
+  }
+
+  .vbox-container {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 15px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vbox-content {
+    float: left;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .vbox-container img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+}
