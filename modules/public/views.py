@@ -84,7 +84,7 @@ def build_country_info(users_by_country, display_number_users=False):
             color_rgb = country_info['color_rgb'] or [247, 247, 247]
 
         country_data[country.numeric] = {
-            'name': country.name,
+            'name': country.common_name,
             'code': country.alpha_2,
             'percentage_of_users': percentage_of_users,
             'color_rgb': color_rgb
