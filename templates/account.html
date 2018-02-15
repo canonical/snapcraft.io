@@ -35,7 +35,6 @@
                   <tr>
                       <th>Name</th>
                       <th>Status</th>
-                      <th>Price</th>
                   </tr>
                   {% if not user_snaps %}
                   <tr>
@@ -44,15 +43,22 @@
                   {% else %}
                     {% for snap in user_snaps|sort %}
                         <tr>
-                            <td>
+                            <td class="u-vertically-center">
+                                {% if user_snaps[snap].icon_url %}
+                                    <img src="{{ user_snaps[snap].icon_url }}" width="32" height="32" />&nbsp;
+                                {% else %}
+                                    <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" width="32" height="32" />&nbsp;
+                                {% endif %}
                                 {% if user_snaps[snap].uploaded %}
-                                    <a href="/account/snaps/{{snap}}/market">{{snap}}</a>
+                                    <a href="/account/snaps/{{snap}}/market" class="u-no-margin--top">{{snap}}</a>
                                 {% else %}
                                     {{snap}}
                                 {% endif %}
+                                {% if user_snaps[snap].private %}
+                                    &nbsp;<small class="u-no-margin--top">Private</small>
+                                {% endif %}
                             </td>
                             <td>{{ user_snaps[snap].status }}</td>
-                            <td>{% if user_snaps[snap].price %} user_snaps[snap].price {% else %} 0 {% endif %}</td>
                         </tr>
                     {% endfor %}
                   {% endif %}
