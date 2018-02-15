@@ -9,7 +9,11 @@
   <meta property="og:type" content="product"/>
 
   {% if summary %}<meta property="og:description" content="{{ summary }}"/>{% endif %}
-  {% if icon_url %}<meta property="og:image" content="{{ icon_url }}"/>{% endif %}
+  {% if icon_url %}
+    <meta property="og:image" content="{{ icon_url }}"/>
+  {% else %}
+    <meta property="og:image" content="https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png" />
+  {% endif %}
 {% endblock %}
 
 {% block content %}
