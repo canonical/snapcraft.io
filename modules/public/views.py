@@ -83,8 +83,14 @@ def build_country_info(users_by_country, display_number_users=False):
             percentage_of_users = country_info['percentage_of_users'] or 0
             color_rgb = country_info['color_rgb'] or [247, 247, 247]
 
+        # Use common_name if available to be less political offending (#310)
+        try:
+            country_name = country.common_name
+        except AttributeError:
+            country_name = country.name
+
         country_data[country.numeric] = {
-            'name': country.name,
+            'name': country_name,
             'code': country.alpha_2,
             'percentage_of_users': percentage_of_users,
             'color_rgb': color_rgb
