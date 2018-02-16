@@ -26,17 +26,6 @@
       </nav>
     </section>
     <section class="p-strip is-shallow">
-      {% if not uploaded %}
-        <div class="row">
-          <div class="col-12">
-              <div class="p-notification--negative">
-                <p class="p-notification__response">
-                    You need to upload your snap before accessing measures.
-                </p>
-              </div>
-          </div>
-        </div>
-      {% else %}
         <div class="row">
           <div class="grid">
             {#<div class="col-3">
@@ -102,7 +91,6 @@
             #}
           {#</div>
         </div>#}
-      {% endif %}
     </section>
   </div>
 {% endblock %}

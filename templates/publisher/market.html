@@ -27,17 +27,6 @@
     </section>
 
     <div class="p-strip is-shallow">
-      {% if not uploaded %}
-          <div class="row">
-            <div class="col-12">
-                <div class="p-notification--negative">
-                  <p class="p-notification__response">
-                      You need to upload your snap before updating snap metadata.
-                  </p>
-                </div>
-            </div>
-          </div>
-      {% else %}
         <form id="market-form" method="POST" enctype='multipart/form-data'>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <input type="hidden" name="snap_id" value="{{ snap_id }}" />
@@ -45,8 +34,8 @@
 
           <div class="row">
             <div class="col-12 u-align--right">
-                <input type="submit" class="p-button--neutral" name="submit_revert" value="Revert" {% if not uploaded %}disabled{% endif %}/>
-                <input type="submit" class="p-button--positive" name="submit_apply" value="Apply" {% if not uploaded %}disabled{% endif %}/>
+                <input type="submit" class="p-button--neutral" name="submit_revert" value="Revert"/>
+                <input type="submit" class="p-button--positive" name="submit_apply" value="Apply"/>
                 <hr />
             </div>
           </div>
@@ -89,7 +78,7 @@
             </div>
             <div class="col-8">
               <label for="snap-title">Title:</label>
-              <input id="snap-title" type="text" name="title" value="{{ title }}" {% if not uploaded %}readonly{% endif %}/>
+              <input id="snap-title" type="text" name="title" value="{{ title }}"/>
             </div>
           </div>
 
@@ -122,7 +111,7 @@
               <label>Summary: </label>
             </div>
             <div class="col-8">
-              <input type="text" name="summary" value="{{ summary }}" {% if not uploaded %}readonly{% endif %}/>
+              <input type="text" name="summary" value="{{ summary }}"/>
             </div>
           </div>
           <div class="row">
@@ -130,7 +119,7 @@
               <label>Description: </label>
             </div>
             <div class="col-8">
-              <textarea name="description" {% if not uploaded %}readonly{% endif %}>{{ description }}</textarea>
+              <textarea name="description">{{ description }}</textarea>
             </div>
           </div>
 
@@ -178,11 +167,10 @@
               <label>Developer website: </label>
             </div>
             <div class="col-8">
-              <input type="text" name="contact" value="{{ contact }}" {% if not uploaded %}readonly{% endif %}/>
+              <input type="text" name="contact" value="{{ contact }}"/>
             </div>
           </div>
         </form>
-      {% endif %}
     </div>
 
     {% if api_error %}
@@ -201,7 +189,6 @@
 {% endblock %}
 
 {% block scripts %}
-{% if uploaded %}
 <script src="/static/js/dist/publisher.js"></script>
 <script>
   snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
@@ -220,5 +207,4 @@
     }
   );
 </script>
-{% endif %}
 {% endblock %}

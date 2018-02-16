@@ -125,6 +125,10 @@ def get_snap_info(snap_name):
         headers=get_authorization_header()
     )
 
+    if response.status_code == 404:
+        message = 'Snap not found: {snap_name}'.format(**locals())
+        flask.abort(404, message)
+
     return response.json()
 
 
@@ -180,8 +184,3 @@ def snap_screenshots(snap_id, data=None, files=None):
     )
 
     return screenshot_response.json()
-
-
-def is_snap_uploaded(snap_name):
-    user_snaps = get_account()
-    return user_snaps['snaps']['16'][snap_name]['uploaded']

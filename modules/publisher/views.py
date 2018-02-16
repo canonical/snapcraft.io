@@ -33,20 +33,7 @@ def publisher_snap_measure(snap_name):
     some of the data through to the publisher/measure.html template,
     with appropriate sanitation.
     """
-    uploaded = api.is_snap_uploaded(snap_name)
-
-    if not uploaded:
-        context = {
-            'snap_title': snap_name,
-            'snap_name': snap_name,
-            'uploaded': uploaded
-        }
-
-        return flask.render_template(
-            'publisher/measure.html',
-            **context
-        )
-
+    details = api.get_snap_info(snap_name)
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
@@ -56,8 +43,6 @@ def publisher_snap_measure(snap_name):
         default='version',
         type=str
     )
-
-    details = api.get_snap_info(snap_name)
 
     today = datetime.datetime.utcnow().date()
     end = today - relativedelta.relativedelta(days=1)
@@ -137,8 +122,7 @@ def publisher_snap_measure(snap_name):
         'territories': country_data,
 
         # Context info
-        'is_linux': 'Linux' in flask.request.headers['User-Agent'],
-        'uploaded': uploaded
+        'is_linux': 'Linux' in flask.request.headers['User-Agent']
     }
 
     return flask.render_template(
@@ -148,31 +132,19 @@ def publisher_snap_measure(snap_name):
 
 
 def get_market_snap(snap_name):
-    uploaded = api.is_snap_uploaded(snap_name)
+    snap_details = api.get_snap_info(snap_name)
 
-    if not uploaded:
-        context = {
-            "snap_name": snap_name,
-            "title": snap_name,
-
-            # Check if snap is uploaded or not
-            "uploaded": uploaded
-        }
-    else:
-        snap_details = api.get_snap_info(snap_name)
-        context = {
-            "snap_id": snap_details['snap_id'],
-            "snap_name": snap_details['snap_name'],
-            "title": snap_details['title'],
-            "summary": snap_details['summary'],
-            "description": snap_details['description'],
-            "license": snap_details['license'],
-            "icon_url": snap_details['icon_url'],
-            "publisher_name": snap_details['publisher_name'],
-            "screenshot_urls": snap_details['screenshot_urls'],
-            # Check if snap is uploaded or not
-            "uploaded": uploaded
-        }
+    context = {
+        "snap_id": snap_details['snap_id'],
+        "snap_name": snap_details['snap_name'],
+        "title": snap_details['title'],
+        "summary": snap_details['summary'],
+        "description": snap_details['description'],
+        "license": snap_details['license'],
+        "icon_url": snap_details['icon_url'],
+        "publisher_name": snap_details['publisher_name'],
+        "screenshot_urls": snap_details['screenshot_urls']
+    }
 
     return flask.render_template(
         'publisher/market.html',
@@ -209,14 +181,7 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    uploaded = api.is_snap_uploaded(snap_name)
-
-    if not uploaded:
-        return flask.redirect(
-            "/account/snaps/{snap_name}/market".format(
-                snap_name=snap_name
-            )
-        )
+    snap_id = api.get_snap_id(snap_name)
 
     if 'submit_revert' in flask.request.form:
         flask.flash("All changes reverted.", 'information')
@@ -228,7 +193,7 @@ def post_market_snap(snap_name):
 
         # Add existing screenshots
         screenshots_uploaded = api.snap_screenshots(
-            flask.request.form['snap_id']
+            snap_id
         )
         state_screenshots = loads(flask.request.form['state'])['images']
         for screenshot in state_screenshots:
@@ -254,7 +219,7 @@ def post_market_snap(snap_name):
             images_json = {'info': dumps(info)}
 
         screenshots_response = api.snap_screenshots(
-            flask.request.form['snap_id'],
+            snap_id,
             images_json,
             images_files
         )
@@ -298,8 +263,7 @@ def post_market_snap(snap_name):
                 "icon_url": snap_details['icon_url'],
                 "publisher_name": snap_details['publisher_name'],
                 "screenshot_urls": snap_details['screenshot_urls'],
-                "error_list": error_list,
-                "uploaded": uploaded
+                "error_list": error_list
             }
 
             return flask.render_template(
