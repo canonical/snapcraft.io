@@ -20,11 +20,13 @@ function generateSeriesMarkup(point, color) {
 
 /**
  * Generate the tooltip.
- * @param {Array} colors The colours used for the graph.
+ * @param {Object} options
+ * @param {Array} options.colors The colours used for the graph.
+ * @param {Boolean} options.showLabels If true, always show labels.
  * @param {Object} data The point data.
  * @returns {String} A string of HTML.
  */
-function snapcraftGraphTooltip(colors, data) {
+function snapcraftGraphTooltip(options, data) {
   let contents = ['<div class="p-tooltip p-tooltip--top-center">'];
   contents.push('<span class="p-tooltip__message" role="tooltip">');
   contents.push('<span class="snapcraft-graph-tooltip__title">' + moment(data[0].x).format('YYYY-MM-DD') + '</span>');
@@ -37,11 +39,14 @@ function snapcraftGraphTooltip(colors, data) {
     value: 0,
     name: 'other'
   };
-  if (data.length === 1) {
+  if (data.length === 1 && !options.showLabels) {
     series.push(`<span class="snapcraft-graph-tooltip__series">${commaNumber(data[0].value)}</span>`);
   } else {
+    data.sort((a, b) => {
+      return b.value - a.value;
+    });
     data.forEach((point) => {
-      let color = colors[point.name];
+      let color = options.colors[point.name];
       if (point.value === 0) {
         return;
       }

@@ -60,7 +60,6 @@
                 <option value="7d"{% if metric_period == '7d' %} selected="selected"{% endif %}>Past 7 days</option>
                 <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>Past 30 days</option>
                 <option value="3m"{% if metric_period == '3m' %} selected="selected"{% endif %}>Past 3 months</option>
-                <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
               </select>
             </div>
             <div class="col-3">
@@ -120,7 +119,10 @@
   snapcraft.publisher.selector('.metrics-period', 'period');
   snapcraft.publisher.selector('.active-devices', 'active-devices');
   snapcraft.publisher.metrics({
-    activeDevices: {{ active_devices|safe }},
+    activeDevices: {
+      metrics: {{ active_devices|safe }},
+      type: '{{ active_device_metric }}'
+    },
     territories: {{ territories|safe }}
   });
 </script>

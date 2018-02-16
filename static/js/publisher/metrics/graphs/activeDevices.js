@@ -45,6 +45,9 @@ const labelPosition = function(graphEl, labelText, points) {
 
   const labelClass = labelText.replace(/\W+/g, '-');
   const area = graphEl.querySelector(`.bb-areas-${labelClass}`);
+  if (!area) {
+    return;
+  }
   const bbox = area.getBBox();
 
   const pointWidth = bbox.width / points.length;
@@ -70,8 +73,10 @@ const labelPosition = function(graphEl, labelText, points) {
     area.appendChild(label);
     labelBBox = label.getBBox();
   }
-  label.setAttribute('x', bbox.x + left + (width / 2) + (labelBBox.width / 2));
-  label.setAttribute('y', bbox.y + (bbox.height / 2));
+  if (labelBBox) {
+    label.setAttribute('x', bbox.x + left + (width / 2) + (labelBBox.width / 2));
+    label.setAttribute('y', bbox.y + (bbox.height / 2));
+  }
 };
 
 const positionLabels = function(el, activeDevices) {
@@ -86,14 +91,64 @@ const positionLabels = function(el, activeDevices) {
   });
 };
 
-export default function activeDevices(days, activeDevices) {
+export default function activeDevices(days, activeDevices, type) {
   const el = document.getElementById('active_devices');
+
+  activeDevices.sort((a, b) => {
+    const a1 = a.slice(1); // Remove the first item as it's the label
+    const b1 = b.slice(1); // Same again.
+
+    const reducer = (accumulator, currentValue) => {
+      return accumulator + currentValue;
+    };
+
+    const a1Total = a1.reduce(reducer);
+    const b1Total = b1.reduce(reducer);
+
+    return b1Total - a1Total;
+  });
+
+  let groupedActiveDevices = {};
+  let deviceData;
+
+  if (type === 'os') {
+    activeDevices.forEach(activeDevice => {
+      let series = activeDevice.slice(0);
+      let label = series[0];
+      if(label.indexOf('ubuntu') == -1 && label.indexOf('/') > -1) {
+        label = label.split('/')[0];
+        series[0] = label;
+      }
+      if (!groupedActiveDevices[label]) {
+        groupedActiveDevices[label] = [series.slice(1)];
+      } else {
+        groupedActiveDevices[label].push(series.slice(1));
+      }
+    });
+
+    let mergedActiveDevices = [];
+    Object.keys(groupedActiveDevices).forEach(key => {
+      let base = groupedActiveDevices[key][0];
+      for (let seriesIndex = groupedActiveDevices[key].length - 1; seriesIndex > 0; seriesIndex -= 1) {
+        const series = groupedActiveDevices[key][seriesIndex];
+        for (let valueIndex = 0, jj = series.length; valueIndex < jj; valueIndex += 1) {
+          base[valueIndex] += series[valueIndex];
+        }
+      }
+      groupedActiveDevices[key] = groupedActiveDevices[key][0];
+      mergedActiveDevices.push([key].concat(groupedActiveDevices[key]));
+    });
+
+    deviceData = mergedActiveDevices;
+  } else {
+    deviceData = activeDevices;
+  }
 
   let types = {};
   let colors = {};
-  let _colors = colorScale(activeDevices.length);
+  let _colors = colorScale(deviceData.length);
   let _colorIndex = 0;
-  const group = activeDevices.map(version => {
+  const group = deviceData.map(version => {
     const name = version[0];
     types[name] = 'area-spline';
     colors[name] = `rgb(${_colors[_colorIndex].join(',')})`;
@@ -108,7 +163,10 @@ export default function activeDevices(days, activeDevices) {
     },
     padding: PADDING,
     tooltip: {
-      contents: snapcraftGraphTooltip.bind(this, colors),
+      contents: snapcraftGraphTooltip.bind(this, {
+        colors: colors,
+        showLabels: true
+      }),
       position: positionTooltip.bind(this, el)
     },
     transition: {
@@ -147,12 +205,23 @@ export default function activeDevices(days, activeDevices) {
         group
       ],
       x: 'x',
-      columns: [days].concat(activeDevices)
+      columns: [days].concat(deviceData)
+    },
+    onrendered: () => {
+      // Because we're modifying the axis with CSS the mask crops the labels
+      // We don't need the masks, so here we remove them each render.
+      Array.from(
+        el.querySelectorAll('clipPath')
+      ).forEach(mask => {
+        if (mask.id.indexOf('axis') !== -1) {
+          mask.remove();
+        }
+      });
     }
   });
 
   showGraph(el);
-  positionLabels(el, activeDevices);
+  positionLabels(el, deviceData);
 
   // Extra events
   let elWidth = el.clientWidth;
@@ -163,7 +232,7 @@ export default function activeDevices(days, activeDevices) {
       debounce(function () {
         activeDevicesMetrics.resize();
         showGraph(el);
-        positionLabels(el, activeDevices);
+        positionLabels(el, deviceData);
         elWidth = el.clientWidth;
       }, 100)();
     }
