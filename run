@@ -443,7 +443,7 @@ case $run_command in
         # Generic python tests
         if [ -f tests.py ]; then
             echo "- Running python tests from tests.py"
-            python_run "" python3 tests.py || test_error=true
+            python_run "" python3  -m unittest -vvv tests.py || test_error=true
         fi
 
         # Run flake8 (python syntax) checks
