@@ -1,0 +1,14 @@
+@mixin snapcraft-snap-list {
+  .p-snap-list {
+
+    &__image {
+      width: 32px;
+      height: 32px;
+    }
+
+    &__image,
+    &__name {
+      margin-right: $sp-medium;
+    }
+  }
+}

@@ -1,69 +1,83 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-    Account page — Linux software in the Snap Store
+Account page — Linux software in the Snap Store
 {% endblock %}
 
 {% block content %}
-
   <section class="p-strip is-shallow">
-      <div class="row">
-          <div class="col-2">
-              {% if user.image %}
-                  <img class="p-media-object__image--large" src="{{ user.image }}" alt="{{ user.nickname }} account" />
-              {% else %}
-                  <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
-              {% endif %}
-          </div>
-          <div class="col-9">
-              <h1 class="u-no-margin">{{ user.nickname }}</h1>
-              <table class="p-table-key-value">
-                  <tr><th width="100">Full name</th><td>{{ user.fullname }}</td></tr>
-                  <tr><th>Username</th><td>{{ user.nickname }}</td></tr>
-                  <tr><th>Email</th><td>{{ user.email }}</td></tr>
-                  <tr><th>Namespace</th><td>{{ namespace }}</td></tr>
-              </table>
-          </div>
+    <div class="row">
+      <div class="col-2">
+        {% if user.image %}
+          <img class="p-media-object__image--large" src="{{ user.image }}" alt="{{ user.nickname }} account" />
+        {% else %}
+          <img class="p-media-object__image--large" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
+        {% endif %}
       </div>
+      <div class="col-9">
+        <h1 class="u-no-margin">{{ user.nickname }}</h1>
+        <table class="p-table-key-value">
+          <tr><th width="100">Full name</th><td>{{ user.fullname }}</td></tr>
+          <tr>
+            <th>Username</th>
+            <td>
+              {{ user.nickname }} <a href="{{ LOGIN_URL }}" class="p-link--external">Edit</a>
+            </td>
+          </tr>
+          <tr><th>Email</th><td>{{ user.email }}</td></tr>
+          <tr><th>Namespace</th><td>{{ namespace }}</td></tr>
+        </table>
+      </div>
+    </div>
   </section>
 
   <section class="p-strip is-shallow">
-      <div class="row">
-          <div class="col-12">
-              <h3>My snaps</h3>
-              <table>
-                  <tr>
-                      <th>Name</th>
-                      <th>Status</th>
-                  </tr>
-                  {% if not user_snaps %}
-                  <tr>
-                      <td>You have uploaded no snap yet!</td>
-                  </tr>
-                  {% else %}
-                    {% for snap in user_snaps|sort %}
-                        <tr>
-                            <td class="u-vertically-center">
-                                {% if user_snaps[snap].icon_url %}
-                                    <img src="{{ user_snaps[snap].icon_url }}" width="32" height="32" />&nbsp;
-                                {% else %}
-                                    <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" width="32" height="32" />&nbsp;
-                                {% endif %}
-                                {% if user_snaps[snap].uploaded %}
-                                    <a href="/account/snaps/{{snap}}/market" class="u-no-margin--top">{{snap}}</a>
-                                {% else %}
-                                    {{snap}}
-                                {% endif %}
-                                {% if user_snaps[snap].private %}
-                                    &nbsp;<small class="u-no-margin--top">Private</small>
-                                {% endif %}
-                            </td>
-                            <td>{{ user_snaps[snap].status }}</td>
-                        </tr>
-                    {% endfor %}
+    <div class="row">
+      <div class="col-12">
+        <h3>My snaps</h3>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+          </tr>
+          {% if not user_snaps %}
+            <tr>
+              <td>You have not uploaded or registered a snap yet!</td>
+            </tr>
+          {% else %}
+            {% for snap in user_snaps|sort %}
+              <tr>
+                <td class="u-vertically-center p-snap-list">
+                  {% if user_snaps[snap].uploaded %}
+                    <a href="/account/snaps/{{snap}}/market" class="u-no-margin--top u-vertically-center">
                   {% endif %}
-              </table>
-          </div>
+                  {% if user_snaps[snap].icon_url %}
+                    <img src="{{ user_snaps[snap].icon_url }}" class="p-snap-list__image" />
+                  {% else %}
+                    <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-snap-list__image" />
+                  {% endif %}
+                  <span class="p-snap-list__name u-no-margin--top">
+                    {{snap}}
+                  </span>
+                  {% if user_snaps[snap].uploaded %}
+                    </a>
+                  {% endif %}
+                  {% if user_snaps[snap].private %}
+                    <small class="u-no-margin--top">Private</small>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if not user_snaps[snap].uploaded %}
+                    Name registered. No snap uploaded.
+                  {% else %}
+                    {{ user_snaps[snap].status }}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </table>
       </div>
+    </div>
   </section>
 {% endblock %}
