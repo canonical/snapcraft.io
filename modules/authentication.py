@@ -149,7 +149,8 @@ def verify_response(
         session,
         url_requested,
         url_calling,
-        url_login
+        url_login,
+        url_account
 ):
     """
     Verify if the response from the server has errors.
@@ -188,6 +189,7 @@ def verify_response(
         if response.status_code == 401 and not verified['allowed']:
             return {
                 'status_code': 401,
+                'redirect': url_account,
                 'reason': 'Not authorized'
             }
 
@@ -195,5 +197,6 @@ def verify_response(
         if verified['account'] is not None and response.status_code == 404:
             return {
                 'status_code': 404,
+                'redirect': url_account,
                 'reason': 'Not found'
             }
