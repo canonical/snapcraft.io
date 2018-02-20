@@ -11,86 +11,6 @@ function showGraph(el) {
   el.style.opacity = 1;
 }
 
-const findCenter = function(points) {
-  const maxValue = Math.max.apply(Math, points);
-
-  let sections = [];
-  let cache = [];
-  points.forEach((point, index) => {
-    if (point / maxValue < 0.5 && cache.length !== 0) {
-      sections.push(cache.slice(0));
-      cache = [];
-    }
-    if (point / maxValue >= 0.5) {
-      cache.push(index);
-    }
-
-    if (index === points.length - 1 && cache.length > 0) {
-      sections.push(cache);
-    }
-  });
-
-  let longestSection = { length: 0 };
-  sections.forEach(section => {
-    if (section.length > longestSection.length) {
-      longestSection = section.slice(0);
-    }
-  });
-
-  return longestSection;
-};
-
-const labelPosition = function(graphEl, labelText, points) {
-  const range = findCenter(points);
-
-  const labelClass = labelText.replace(/\W+/g, '-');
-  const area = graphEl.querySelector(`.bb-areas-${labelClass}`);
-  if (!area) {
-    return;
-  }
-  const bbox = area.getBBox();
-
-  const pointWidth = bbox.width / points.length;
-  const left = (pointWidth * range[0]);
-  const width = pointWidth * (range[range.length - 1] - range[0]);
-
-  if (bbox.height < 20 || width < 50) {
-    return;
-  }
-
-  let labelBBox;
-
-  let label = document.querySelector(`[data-version="${labelText}"]`);
-  if (!label) {
-    label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('class', 'snapcraft-metrics__active-devices-label');
-    label.setAttribute('data-version', labelText);
-    label.setAttribute('stroke', '#000');
-    const labelSpan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-    labelSpan.innerHTML = labelText;
-    labelSpan.setAttribute('text-anchor', 'middle');
-    label.appendChild(labelSpan);
-    area.appendChild(label);
-    labelBBox = label.getBBox();
-  }
-  if (labelBBox) {
-    label.setAttribute('x', bbox.x + left + (width / 2) + (labelBBox.width / 2));
-    label.setAttribute('y', bbox.y + (bbox.height / 2));
-  }
-};
-
-const positionLabels = function(el, activeDevices) {
-  activeDevices.forEach((points) => {
-    let _points = points.slice(0);
-    const version = _points.shift();
-    labelPosition(
-      el,
-      version,
-      _points
-    );
-  });
-};
-
 export default function activeDevices(days, activeDevices, type) {
   const el = document.getElementById('active_devices');
 
@@ -187,6 +107,9 @@ export default function activeDevices(days, activeDevices, type) {
       y: {
         tick: {
           format: formatYAxisTickLabels
+        },
+        padding: {
+          top: 30, bottom: 30
         }
       }
     },
@@ -221,7 +144,6 @@ export default function activeDevices(days, activeDevices, type) {
   });
 
   showGraph(el);
-  positionLabels(el, deviceData);
 
   // Extra events
   let elWidth = el.clientWidth;
@@ -232,7 +154,6 @@ export default function activeDevices(days, activeDevices, type) {
       debounce(function () {
         activeDevicesMetrics.resize();
         showGraph(el);
-        positionLabels(el, deviceData);
         elWidth = el.clientWidth;
       }, 100)();
     }
