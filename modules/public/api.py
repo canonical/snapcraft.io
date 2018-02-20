@@ -6,10 +6,6 @@ SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',
     'https://api.snapcraft.io/api/v1/',
 )
-SEARCH_API = os.getenv(
-    'SEARCH_API',
-    'https://search.apps.ubuntu.com/api/v1/',
-)
 
 SNAP_DETAILS_URL = ''.join([
     SNAPCRAFT_IO_API,
@@ -30,7 +26,7 @@ METRICS_QUERY_HEADERS = {
 }
 
 SNAP_SEARCH_URL = ''.join([
-    SEARCH_API,
+    SNAPCRAFT_IO_API,
     'snaps/search',
     '?q={snap_name}&page={page}&size={size}',
     '&confinement=strict,classic',
