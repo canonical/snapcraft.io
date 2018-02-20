@@ -92,3 +92,6 @@ $color-accent: $color-brand;
 
 @import 'snapcraft_market_screenshots';
 @include snapcraft-market-screenshots;
+
+@import 'snapcraft_snap-list';
+@include snapcraft-snap-list;

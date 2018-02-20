@@ -39,6 +39,12 @@ LOGIN_URL = os.getenv(
 )
 
 
+# Make LOGIN_URL available in all templates
+@app.context_processor
+def inject_login():
+    return dict(LOGIN_URL=LOGIN_URL)
+
+
 def login_required(func):
     """
     Decorator that checks if a user is logged in, and redirects
