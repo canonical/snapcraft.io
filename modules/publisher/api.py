@@ -60,7 +60,8 @@ def verify_response(response, url, endpoint, login_endpoint):
         flask.session,
         url,
         endpoint,
-        login_endpoint
+        login_endpoint,
+        '/account'
     )
 
     if verified_response is not None:

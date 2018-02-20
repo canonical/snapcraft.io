@@ -7,7 +7,7 @@ import pycountry
 import re
 from dateutil import parser, relativedelta
 from math import floor
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, quote_plus
 
 
 def calculate_colors(countries, max_users):
@@ -193,7 +193,11 @@ def search_snap():
 
     page = floor(offset / size) + 1
 
-    searched_results = api.get_searched_snaps(snap_searched, size, page)
+    searched_results = api.get_searched_snaps(
+        quote_plus(snap_searched),
+        size,
+        page
+    )
 
     context = {
         "query": snap_searched,

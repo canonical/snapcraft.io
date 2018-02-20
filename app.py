@@ -150,7 +150,7 @@ def after_login(resp):
     }
 
     flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
-    return flask.redirect('/account')
+    return flask.redirect(open_id.get_next_url())
 
 
 @app.route('/logout')
