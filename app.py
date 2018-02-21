@@ -173,6 +173,11 @@ def homepage():
     return public_views.homepage()
 
 
+@app.route('/status')
+def status():
+    return 'alive'
+
+
 @app.route('/store')
 def store():
     return public_views.store()
