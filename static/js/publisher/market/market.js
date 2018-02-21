@@ -1,3 +1,5 @@
+import lightbox from './lightbox';
+
 function initSnapIconEdit(iconElId, iconInputId) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
@@ -100,8 +102,27 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
   // delegated click handlers
   document.addEventListener("click", function(event){
-    // unselect any screenshots when clicked outside of them
-    selectScreenshot();
+    if (event.target.classList.contains('js-fullscreen-screenshot')
+        || (event.target.parentNode && event.target.parentNode.classList.contains('js-fullscreen-screenshot'))
+      ) {
+      event.preventDefault();
+      let screenshot = state.images.filter(image => image.selected)[0];
+
+      // if none is selected pick first screenshot from list
+      if (!screenshot) {
+        screenshot = state.images.filter(image => image.type === 'screenshot')[0];
+      }
+
+      if (screenshot) {
+        lightbox.openLightbox(
+          screenshot.url,
+          state.images.filter(image => image.type === 'screenshot').map(image => image.url)
+        );
+      }
+    } else {
+      // unselect any screenshots when clicked outside of them
+      selectScreenshot();
+    }
 
     // clicking on [+] add screenshots button
     if (event.target.classList.contains('js-add-screenshots')
@@ -125,9 +146,27 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     if (event.target.classList.contains('p-screenshot')) {
       event.preventDefault();
       selectScreenshot(event.target.src);
+      setTimeout(() => {
+        render();
+      }, 50);
+      return;
     }
 
     render();
+  });
+
+  document.addEventListener('dblclick', event => {
+    if (event.target.classList.contains('p-screenshot')) {
+      event.preventDefault();
+      let screenshot = state.images.filter(image => image.selected)[0];
+
+      if (screenshot) {
+        lightbox.openLightbox(
+          screenshot.url,
+          state.images.filter(image => image.type === 'screenshot').map(image => image.url)
+        );
+      }
+    }
   });
 }
 

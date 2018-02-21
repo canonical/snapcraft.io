@@ -3,6 +3,15 @@
     align-items: baseline;
     display: flex;
     justify-content: space-between;
+
+    .p-screenshots-toolbar__buttons {
+      margin: 0;
+    }
+
+    .p-icon--fullscreen {
+      @extend %icon;
+      background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
+    }
   }
 
   .p-empty-add-screenshots {

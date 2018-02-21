@@ -95,3 +95,6 @@ $color-accent: $color-brand;
 
 @import 'snapcraft_snap-list';
 @include snapcraft-snap-list;
+
+@import 'patterns_maas_modal';
+@include maas-p-modal;
