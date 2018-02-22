@@ -201,22 +201,26 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.ravenjs.com/3.22.3/raven.min.js" crossorigin="anonymous"></script>
 <script src="/static/js/dist/publisher.js"></script>
 <script>
-  snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
-  snapcraft.publisher.market.initFormNotification("market-form", "market-form-status");
-  snapcraft.publisher.market.initSnapScreenshotsEdit(
-    "screenshots-toolbar",
-    "snap-screenshots",
-    {
-      images: [
-        { url: {{ icon_url|tojson }}, type: "icon" },
+  Raven.config('{{ SENTRY_PUBLIC_DSN }}').install();
+  Raven.context(function () {
+    snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
+    snapcraft.publisher.market.initFormNotification("market-form", "market-form-status");
+    snapcraft.publisher.market.initSnapScreenshotsEdit(
+      "screenshots-toolbar",
+      "snap-screenshots",
+      {
+        images: [
+          { url: {{ icon_url|tojson }}, type: "icon" },
 
-        {% for screenshot_url in screenshot_urls %}
-          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
-        {% endfor %}
-      ]
-    }
-  );
+          {% for screenshot_url in screenshot_urls %}
+            { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+          {% endfor %}
+        ]
+      }
+    );
+  });
 </script>
 {% endblock %}
