@@ -279,7 +279,8 @@ def snap_details(snap_name):
         'publisher': details['publisher'],
         'screenshot_urls': details['screenshot_urls'],
         'prices': details['prices'],
-        'support_url': details.get('support_url'),
+        'contact': details.get('contact'),
+        'website': details.get('website'),
         'summary': details['summary'],
         'description_paragraphs': formatted_paragraphs,
 
