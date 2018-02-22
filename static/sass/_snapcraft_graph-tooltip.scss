@@ -15,10 +15,14 @@
       font: 12px "Ubuntu";
       justify-content: center;
       margin-top: .25rem;
-      width: 176px;
+      width: 215px;
 
       &:last-child {
         margin-bottom: .25rem;
+      }
+
+      &.is-hovered {
+        font-weight: bold;
       }
 
       &-name {

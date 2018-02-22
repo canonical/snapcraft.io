@@ -86,7 +86,7 @@ export default function activeDevices(days, activeDevices, type) {
       contents: snapcraftGraphTooltip.bind(this, {
         colors: colors,
         showLabels: true
-      }),
+      }, el),
       position: positionTooltip.bind(this, el)
     },
     transition: {
@@ -144,6 +144,12 @@ export default function activeDevices(days, activeDevices, type) {
   });
 
   showGraph(el);
+
+  deviceData.forEach(device => {
+    const labelClass = device[0].replace(/\W+/g, '-');
+    const area = el.querySelector(`.bb-area-${labelClass}`);
+    area.dataset.label = device[0];
+  });
 
   // Extra events
   let elWidth = el.clientWidth;
