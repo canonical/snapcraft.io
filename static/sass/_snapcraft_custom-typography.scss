@@ -41,6 +41,7 @@
   .p-heading--five,
   .p-heading--six {
     @extend %paragraph-copy;
+    max-width: 100%;
   }
 
   // update to p-list is-ticked style

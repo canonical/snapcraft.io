@@ -211,6 +211,18 @@ def get_account():
     return publisher_views.get_account()
 
 
+@app.route('/account/agreement')
+@login_required
+def get_agreement():
+    return publisher_views.get_agreement()
+
+
+@app.route('/account/agreement', methods=['POST'])
+@login_required
+def post_agreement():
+    return publisher_views.post_agreement()
+
+
 @app.route('/account/snaps/<snap_name>/measure')
 @login_required
 def publisher_snap_measure(snap_name):

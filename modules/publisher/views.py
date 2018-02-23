@@ -13,6 +13,15 @@ def get_account():
     if 'redirect' in account:
         return account['redirect']
 
+    error_list = []
+    if 'error_list' in account:
+        for error in account['error_list']:
+            if error['code'] == 'user-not-ready':
+                if 'has not signed agreement' in error['message']:
+                    return flask.redirect('/account/agreement')
+            else:
+                error_list.append(error)
+
     user_snaps = []
     if '16' in account['snaps']:
         user_snaps = account['snaps']['16']
@@ -21,8 +30,23 @@ def get_account():
         'account.html',
         namespace=account['namespace'],
         user_snaps=user_snaps,
-        user=flask.session['openid']
+        user=flask.session['openid'],
+        error_list=error_list
     )
+
+
+def get_agreement():
+    return flask.render_template('developer_programme_agreement.html')
+
+
+def post_agreement():
+    agreed = flask.request.form.get('i_agree')
+
+    if agreed == 'on':
+        api.post_agreement(True)
+        return flask.redirect('/account')
+    else:
+        return flask.render_template('developer_programme_agreement.html')
 
 
 def publisher_snap_measure(snap_name):
