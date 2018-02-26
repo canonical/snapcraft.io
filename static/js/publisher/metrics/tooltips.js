@@ -6,10 +6,11 @@ function commaNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function generateSeriesMarkup(point, color) {
+function generateSeriesMarkup(point, color, highlight) {
   let series = [];
   color = color || 'transparent';
-  series.push(`<span class="snapcraft-graph-tooltip__series" title="${point.name}">`);
+  let extraClass = highlight === point.name ? ' is-hovered' : '';
+  series.push(`<span class="snapcraft-graph-tooltip__series${extraClass}" title="${point.name}">`);
   series.push(`<span class="snapcraft-graph-tooltip__series-name">${point.name}</span>`);
   series.push(`<span class="snapcraft-graph-tooltip__series-color" style="background:${color};"></span>`);
   series.push(`<span class="snapcraft-graph-tooltip__series-value">${commaNumber(point.value)}</span>`);
@@ -26,7 +27,16 @@ function generateSeriesMarkup(point, color) {
  * @param {Object} data The point data.
  * @returns {String} A string of HTML.
  */
-function snapcraftGraphTooltip(options, data) {
+function snapcraftGraphTooltip(options, graphHolder, data) {
+  const targets = graphHolder.querySelectorAll('.bb-target');
+  for (let i = 0; i < targets.length; i += 1) {
+    targets[i].style.pointerEvents = 'all';
+  }
+  const graphAtPoints = document.elementFromPoint(mouse.position.x, mouse.position.y);
+  for (let i = 0; i < targets.length; i += 1) {
+    targets[i].style.pointerEvents = 'none';
+  }
+  const highlight = graphAtPoints.dataset.label;
   let contents = ['<div class="p-tooltip p-tooltip--top-center">'];
   contents.push('<span class="p-tooltip__message" role="tooltip">');
   contents.push('<span class="snapcraft-graph-tooltip__title">' + moment(data[0].x).format('YYYY-MM-DD') + '</span>');
@@ -55,7 +65,7 @@ function snapcraftGraphTooltip(options, data) {
         other.value += point.value;
         return;
       }
-      series.push(generateSeriesMarkup(point, color));
+      series.push(generateSeriesMarkup(point, color, highlight));
     });
   }
   if (other.count > 0) {
@@ -75,11 +85,11 @@ function snapcraftGraphTooltip(options, data) {
 /**
  *
  * @param {HTMLElement} graphHolder The window offset of the graphs holder.
- * @param {Object} data The  point data.
- * @param {Number} width 
- * @param {Number} height 
+ * @param {Object} data The point data.
+ * @param {Number} width
+ * @param {Number} height
  * @param {HTMLElement} element The tooltip event target element.
- * @returns {Object} Left and top offset of the tooltip.  
+ * @returns {Object} Left and top offset of the tooltip.
  */
 function positionTooltip(graphHolder, data, width, height, element) {
   const tooltipHalfWidth = graphHolder
@@ -87,20 +97,26 @@ function positionTooltip(graphHolder, data, width, height, element) {
     .clientWidth / 2;
   const elementHalfWidth = parseFloat(element.getAttribute('width')) / 2;
   const elementSixthHeight = parseFloat(element.getAttribute('height')) / 6;
-  let leftModifier = -26;
+  let leftModifier = -46; // This is directly related to the width of the tooltip
   const parent = element.parentNode;
   const graphHolderOffsetTop = graphHolder.offsetTop;
 
+  let left = Math.floor(
+    parseInt(
+      element.getAttribute('x')
+    ) + tooltipHalfWidth
+  ) + leftModifier;
+
   if (parent.firstChild === element) {
-    leftModifier -= 3;
+    left += 5;
   } else if (parent.lastChild === element) {
-    leftModifier += 4;
+    left += parseInt(element.getAttribute('width')) - 5;
+  } else {
+    left += elementHalfWidth;
   }
 
   return {
-    left: Math.floor(
-      parseInt(element.getAttribute('x')
-      ) + tooltipHalfWidth + elementHalfWidth) + leftModifier,
+    left: left,
     top: Math.floor(
       (mouse.position.y - graphHolderOffsetTop) + window.scrollY - elementSixthHeight
     )
