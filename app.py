@@ -4,21 +4,32 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
+import functools
+import os
+import socket
+from urllib.parse import (
+    unquote,
+    urlparse,
+    urlunparse,
+)
+
 import flask
+from flask_openid import OpenID
+from flask_wtf.csrf import CSRFProtect
+from raven.contrib.flask import Sentry
+from werkzeug.contrib.fixers import ProxyFix
+
 import modules.authentication as authentication
 import modules.public.views as public_views
 import modules.publisher.views as publisher_views
-import os
-import socket
-from flask_openid import OpenID
-from flask_wtf.csrf import CSRFProtect
-from functools import wraps
-from modules.macaroon import MacaroonRequest, MacaroonResponse
-from urllib.parse import unquote, urlparse, urlunparse
-from werkzeug.contrib.fixers import ProxyFix
+from modules.macaroon import (
+    MacaroonRequest,
+    MacaroonResponse,
+)
 
 
 app = flask.Flask(__name__)
+sentry = Sentry(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
@@ -50,7 +61,7 @@ def login_required(func):
     Decorator that checks if a user is logged in, and redirects
     to login page if not.
     """
-    @wraps(func)
+    @functools.wraps(func)
     def is_user_logged_in(*args, **kwargs):
         if not authentication.is_authenticated(flask.session):
             return redirect_to_login()
