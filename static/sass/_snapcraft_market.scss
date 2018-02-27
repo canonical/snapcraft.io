@@ -42,4 +42,8 @@
     }
   }
 
+  // workaround for label placement in grid
+  .p-label--grid-baseline {
+    margin-top: .55rem;
+  }
 }
