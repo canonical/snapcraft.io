@@ -1,7 +1,21 @@
 sudo: required
+language: node_js
+node_js:
+  - 6
+
+cache:
+  directories:
+    - ~/.npm
+    - node_modules
+install:
+  - npm install
 
 services:
   - docker
 
+before_script:
+  - ./run serve --detach
+
 script:
-  - ./run test
+  - echo $CYPRESS_EMAIL_ACCOUNT
+  - $(npm bin)/cypress run
