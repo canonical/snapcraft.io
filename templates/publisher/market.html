@@ -108,7 +108,7 @@
 
           <div class="row">
             <div class="col-2">
-              <label>Summary: </label>
+              <label class="p-label--grid-baseline">Summary: </label>
             </div>
             <div class="col-8">
               <input type="text" name="summary" value="{{ summary }}"/>
@@ -116,10 +116,10 @@
           </div>
           <div class="row">
             <div class="col-2">
-              <label>Description: </label>
+              <label class="p-label--grid-baseline">Description: </label>
             </div>
             <div class="col-8">
-              <textarea name="description">{{ description }}</textarea>
+              <textarea class="u-no-margin" name="description">{{ description }}</textarea>
             </div>
           </div>
 
@@ -167,7 +167,16 @@
 
           <div class="row">
             <div class="col-2">
-              <label>Developer website: </label>
+              <label class="p-label--grid-baseline">Developer website: </label>
+            </div>
+            <div class="col-8">
+            <input type="text" name="website" value="{{ website }}"/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2">
+              <label class="p-label--grid-baseline">Contact {{ publisher_name }}: </label>
             </div>
             <div class="col-8">
               <input type="text" name="contact" value="{{ contact }}"/>
