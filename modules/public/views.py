@@ -297,8 +297,8 @@ def snap_details(snap_name):
 
         # Context info
         'is_linux': (
-            'Linux' in flask.request.headers['User-Agent'] and
-            'Android' not in flask.request.headers['User-Agent']
+            'Linux' in flask.request.headers.get('User-Agent', '') and
+            'Android' not in flask.request.headers.get('User-Agent', '')
         )
     }
 
