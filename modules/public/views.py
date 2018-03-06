@@ -105,7 +105,7 @@ def build_country_info(users_by_country, display_number_users=False):
 def normalize_searched_snaps(search_results):
     return (
         search_results['_embedded']['clickindex:package']
-        if search_results['_embedded']
+        if '_embedded' in search_results
         else []
     )
 
@@ -202,7 +202,14 @@ def search_snap():
     context = {
         "query": snap_searched,
         "snaps": normalize_searched_snaps(searched_results),
-        "links": get_pages_details(searched_results['_links'])
+        "links": get_pages_details(
+            (
+                searched_results['_links']
+                if '_links' in searched_results
+                else []
+            )
+        )
+
     }
 
     return flask.render_template(
