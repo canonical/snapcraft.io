@@ -29,11 +29,15 @@ from modules.macaroon import (
 
 
 app = flask.Flask(__name__)
-sentry = Sentry(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
 app.url_map.strict_slashes = False
+app.sentry_public_dsn = os.getenv(
+    'SENTRY_PUBLIC_DSN',
+    ''
+)
+sentry = Sentry(app)
 
 open_id = OpenID(
     app=app,
@@ -52,8 +56,11 @@ LOGIN_URL = os.getenv(
 
 # Make LOGIN_URL available in all templates
 @app.context_processor
-def inject_login():
-    return dict(LOGIN_URL=LOGIN_URL)
+def inject_template_variables():
+    return {
+        'LOGIN_URL': LOGIN_URL,
+        'SENTRY_PUBLIC_DSN': app.sentry_public_dsn
+    }
 
 
 def login_required(func):

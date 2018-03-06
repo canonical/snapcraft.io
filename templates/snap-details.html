@@ -88,8 +88,12 @@
   <script src="/static/js/modules/topojson-client.min.js"></script>
 
   <!-- Illustration of country data -->
+  <script src="https://cdn.ravenjs.com/3.22.3/raven.min.js" crossorigin="anonymous"></script>
   <script src="/static/js/dist/public.js"></script>
   <script>
-    snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+    Raven.config('{{ SENTRY_PUBLIC_DSN }}').install();
+    Raven.context(function () {
+      snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+    });
   </script>
 {% endblock %}
