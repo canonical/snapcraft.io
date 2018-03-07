@@ -105,12 +105,8 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
       return '';
     }
     return `<p>
-      ${newCount
-          ? newCount + ' image' + (newCount > 1 ? 's' : '') + ' to upload. '
-          : ''}
-      ${deleteCount
-          ? deleteCount + ' image' + (deleteCount > 1 ? 's' : '') + ' to delete.'
-          : ''}
+      ${newCount ? newCount + ' image' + (newCount > 1 ? 's' : '') + ' to upload. ' : ''}
+      ${deleteCount ? deleteCount + ' image' + (deleteCount > 1 ? 's' : '') + ' to delete.' : ''}
     </p>`;
   };
 
@@ -155,7 +151,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     // Delete screenshot
     if (event.target.classList.contains('js-delete-screenshot')
         || event.target.parentNode.classList.contains('js-delete-screenshot')
-       ) {
+    ) {
       event.preventDefault();
       let screenshot = state.images.filter(image => image.selected)[0];
       if (screenshot) {
@@ -165,7 +161,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
       render();
     } else if (event.target.classList.contains('js-fullscreen-screenshot')
         || (event.target.parentNode && event.target.parentNode.classList.contains('js-fullscreen-screenshot'))
-      ) {
+    ) {
       event.preventDefault();
       let screenshot = state.images.filter(image => image.selected)[0];
 
@@ -188,7 +184,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     // clicking on [+] add screenshots button
     if (event.target.classList.contains('js-add-screenshots')
         || event.target.parentNode.classList.contains('js-add-screenshots')
-      ) {
+    ) {
       event.preventDefault();
 
       const input = document.createElement('input');
