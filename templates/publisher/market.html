@@ -132,10 +132,11 @@
           <div class="row">
             <div class="col-12">
               <div class="p-screenshots-toolbar" id="screenshots-toolbar">
-                <label>Screenshots:</label>
+                <label>Screenshots (up to 5):</label>
                 <div class="p-screenshots-toolbar__buttons">
-                  <button class="p-button-neutral js-fullscreen-screenshot"><i class="p-icon--fullscreen"></i></button>
-                  <button class="p-button-neutral js-add-screenshots u-no-margin--top"><i class="p-icon--plus"></i></button>
+                  <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
+                  <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
+                  <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
                 </div>
               </div>
             </div>
@@ -143,6 +144,7 @@
 
           <div class="row" id="snap-screenshots">
           </div>
+          <div class="row" id="screenshots-status"></div>
 
           <div class="row">
             <div class="col-12">
@@ -211,10 +213,12 @@
     snapcraft.publisher.market.initSnapScreenshotsEdit(
       "screenshots-toolbar",
       "snap-screenshots",
+      "screenshots-status",
       {
         images: [
-          { url: {{ icon_url|tojson }}, type: "icon" },
-
+          {% if icon_url %}
+            { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
+          {% endif %}
           {% for screenshot_url in screenshot_urls %}
             { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
           {% endfor %}
