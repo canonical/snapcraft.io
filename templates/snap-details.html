@@ -93,7 +93,9 @@
   <script>
     Raven.config('{{ SENTRY_PUBLIC_DSN }}').install();
     Raven.context(function () {
-      snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+      if (snapcraft) {
+        snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+      }
     });
   </script>
 {% endblock %}
