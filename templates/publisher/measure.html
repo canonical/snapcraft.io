@@ -105,7 +105,9 @@
 <script src="https://cdn.ravenjs.com/3.22.3/raven.min.js" crossorigin="anonymous"></script>
 <script src="/static/js/dist/publisher.js"></script>
 <script>
-  Raven.config('{{ SENTRY_PUBLIC_DSN }}').install();
+  Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
+    whitelistUrls: ['snapcraft.io']
+  }).install();
   Raven.context(function () {
     snapcraft.publisher.selector('.metrics-period', 'period');
     snapcraft.publisher.selector('.active-devices', 'active-devices');

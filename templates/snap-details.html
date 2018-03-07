@@ -91,7 +91,9 @@
   <script src="https://cdn.ravenjs.com/3.22.3/raven.min.js" crossorigin="anonymous"></script>
   <script src="/static/js/dist/public.js"></script>
   <script>
-    Raven.config('{{ SENTRY_PUBLIC_DSN }}').install();
+    Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
+      whitelistUrls: ['snapcraft.io']
+    }).install();
     Raven.context(function () {
       snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
     });
