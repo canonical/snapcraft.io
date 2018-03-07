@@ -32,10 +32,6 @@ app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.url_map.strict_slashes = False
-app.sentry_public_dsn = os.getenv(
-    'SENTRY_PUBLIC_DSN',
-    ''
-)
 sentry = Sentry(app)
 
 open_id = OpenID(
@@ -47,6 +43,7 @@ open_id = OpenID(
 
 csrf = CSRFProtect(app)
 
+SENTRY_PUBLIC_DSN = os.getenv('SENTRY_PUBLIC_DSN', '').strip()
 LOGIN_URL = os.getenv(
     'LOGIN_URL',
     'https://login.ubuntu.com',
@@ -56,10 +53,9 @@ LOGIN_URL = os.getenv(
 # Make LOGIN_URL available in all templates
 @app.context_processor
 def inject_template_variables():
-    url = 'https://9e7812280c8f4ca797803145651b6e6e@sentry.io/291822'
     return {
         'LOGIN_URL': LOGIN_URL,
-        'SENTRY_PUBLIC_DSN': url
+        'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN
     }
 
 
