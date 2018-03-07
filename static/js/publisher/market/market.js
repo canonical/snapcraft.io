@@ -175,7 +175,8 @@ function initFormNotification(formElId, notificationElId) {
 
   form.addEventListener("change", function() {
     var notification = document.getElementById(notificationElId);
-    if (notification) {
+
+    if (notification && notification.parentNode) {
       notification.parentNode.removeChild(notification);
     }
   });
@@ -183,7 +184,9 @@ function initFormNotification(formElId, notificationElId) {
 
   if (notification) {
     setTimeout(function(){
-      notification.parentNode.removeChild(notification);
+      if (notification && notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
     }, 20000);
   }
 }
