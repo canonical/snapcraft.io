@@ -31,7 +31,6 @@ from modules.macaroon import (
 app = flask.Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
-app.wtf_csrf_secret_key = os.environ['WTF_CSRF_SECRET_KEY']
 app.url_map.strict_slashes = False
 app.sentry_public_dsn = os.getenv(
     'SENTRY_PUBLIC_DSN',
