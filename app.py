@@ -57,9 +57,10 @@ LOGIN_URL = os.getenv(
 # Make LOGIN_URL available in all templates
 @app.context_processor
 def inject_template_variables():
+    url = 'https://9e7812280c8f4ca797803145651b6e6e@sentry.io/291822'
     return {
         'LOGIN_URL': LOGIN_URL,
-        'SENTRY_PUBLIC_DSN': app.sentry_public_dsn
+        'SENTRY_PUBLIC_DSN': url
     }
 
 
