@@ -68,17 +68,17 @@
           &-x {
             .tick {
               line {
-                transform: scaleY(1.143) translateY(4px);
+                transform: scaleY(1.143) translateY(12px);
               }
 
               &.active {
                 line {
-                  transform: scaleY(2.286) translateY(2.5px);
+                  transform: scaleY(2.286) translateY(6px);
                 }
 
                 text {
                   fill: $color-x-dark;
-                  transform: translateY(20px);
+                  transform: translateY(28px);
                 }
               }
             }
