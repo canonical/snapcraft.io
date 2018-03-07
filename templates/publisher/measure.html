@@ -109,15 +109,17 @@
     whitelistUrls: ['snapcraft.io']
   }).install();
   Raven.context(function () {
-    snapcraft.publisher.selector('.metrics-period', 'period');
-    snapcraft.publisher.selector('.active-devices', 'active-devices');
-    snapcraft.publisher.metrics({
-      activeDevices: {
-        metrics: {{ active_devices|safe }},
-        type: '{{ active_device_metric }}'
-      },
-      territories: {{ territories|safe }}
-    });
+    if (snapcraft) {
+      snapcraft.publisher.selector('.metrics-period', 'period');
+      snapcraft.publisher.selector('.active-devices', 'active-devices');
+      snapcraft.publisher.metrics({
+        activeDevices: {
+          metrics: {{ active_devices|safe }},
+          type: '{{ active_device_metric }}'
+        },
+        territories: {{ territories|safe }}
+      });
+    }
   });
 </script>
 {% endblock %}
