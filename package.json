@@ -16,6 +16,8 @@
   "author": "Canonical webteam",
   "dependencies": {
     "autoprefixer": "^6.3.1",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "billboard.js": "^1.1.1",
     "cssnano": "^3.10.0",
     "d3": "^4.10.2",
@@ -25,6 +27,7 @@
     "node-sass": "^4.5.3",
     "postcss-cli": "^4.1.0",
     "rollup": "^0.52.1",
+    "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-node-resolve": "^3.0.0",
     "sass-lint": "^1.10.2",
     "topojson-client": "^3.0.0",
