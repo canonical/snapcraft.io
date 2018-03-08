@@ -14,11 +14,10 @@ function initSnapIconEdit(iconElId, iconInputId) {
   });
 }
 
-function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, screenshotsStatusElId, initialState) {
+function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, initialState) {
   // DOM elements
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
   const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
-  const screenshotsStatus = document.getElementById(screenshotsStatusElId);
 
   // simple state handling (and serializing as JSON in hidden input)
   const state = {};
@@ -82,6 +81,10 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   };
 
   // templates
+  const rowTpl = (content) => `
+    <div class="row">${content}</div>
+  `;
+
   const screenshotTpl = (screenshot) => `
     <div class="col-2">
       <div class="p-screenshot__holder ${screenshot.status === 'delete' ? 'is-deleted' : ''}">
@@ -112,7 +115,13 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
   const renderScreenshots = (screenshots) => {
     if (screenshots.length) {
-      screenshotsWrapper.innerHTML = screenshots.map(screenshotTpl).join("");
+      let html = rowTpl(screenshots.map(screenshotTpl).join(''));
+
+      const newScreenshots = screenshots.filter(image => image.status === 'new').length;
+      const deleteScreenshots = screenshots.filter(image => image.status === 'delete').length;
+      html += rowTpl(changesTpl(newScreenshots, deleteScreenshots));
+
+      screenshotsWrapper.innerHTML = html;
     } else {
       screenshotsWrapper.innerHTML = emptyTpl();
     }
@@ -133,10 +142,6 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     } else {
       document.querySelector('.js-delete-screenshot').removeAttribute('disabled');
     }
-
-    const newScreenshots = screenshots.filter(image => image.status === 'new').length;
-    const deleteScreenshots = screenshots.filter(image => image.status === 'delete').length;
-    screenshotsStatus.innerHTML = changesTpl(newScreenshots, deleteScreenshots);
   };
 
   render();
