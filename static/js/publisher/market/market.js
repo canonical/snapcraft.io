@@ -122,7 +122,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     const screenshots = state.images.filter(image => image.type === 'screenshot');
     renderScreenshots(screenshots);
 
-    if (screenshots.length === 5) {
+    if (screenshots.filter(image => image.status !== 'delete').length === 5) {
       document.querySelector('.js-add-screenshots').setAttribute('disabled', 'disabled');
     } else {
       document.querySelector('.js-add-screenshots').removeAttribute('disabled');
@@ -189,7 +189,6 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
       const input = document.createElement('input');
       input.type = "file";
-      input.multiple = "multiple";
       input.accept = "image/*";
       input.name="screenshots";
       input.hidden = "hidden";
