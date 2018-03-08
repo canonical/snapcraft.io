@@ -3,8 +3,7 @@
 import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
 import debounce from '../../../libs/debounce';
 import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
-import { PADDING } from '../config';
-import colorScale from '../colorScale';
+import { PADDING, COLOR_SCALE } from '../config';
 
 function showGraph(el) {
   formatAxis(el);
@@ -66,12 +65,24 @@ export default function activeDevices(days, activeDevices, type) {
 
   let types = {};
   let colors = {};
-  let _colors = colorScale(deviceData.length);
+  let colorScale = COLOR_SCALE.reduce((accumulator, color) => {
+    return [].concat(accumulator, color);
+  });
+
+  let _colors = [];
+
+  const diff = Math.ceil(deviceData.length / colorScale.length);
+  let i = 0;
+  while (i < diff) {
+    _colors = _colors.concat(colorScale);
+    i++;
+  }
+
   let _colorIndex = 0;
   const group = deviceData.map(version => {
     const name = version[0];
     types[name] = 'area-spline';
-    colors[name] = `rgb(${_colors[_colorIndex].join(',')})`;
+    colors[name] = `${_colors[_colorIndex]}`;
     _colorIndex++;
     return name;
   });
