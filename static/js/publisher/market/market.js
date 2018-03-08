@@ -115,7 +115,13 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
   const renderScreenshots = (screenshots) => {
     if (screenshots.length) {
-      let html = rowTpl(screenshots.map(screenshotTpl).join(''));
+      // show first 6 images in one row
+      let html = rowTpl(screenshots.slice(0, 6).map(screenshotTpl).join(''));
+
+      // if there is more screenshots (some marker for deletion?) show second row
+      if (screenshots.length > 6) {
+        html += rowTpl(screenshots.slice(6, 12).map(screenshotTpl).join(''));
+      }
 
       const newScreenshots = screenshots.filter(image => image.status === 'new').length;
       const deleteScreenshots = screenshots.filter(image => image.status === 'delete').length;
