@@ -104,6 +104,11 @@ export default function renderMap(el, snapData) {
   }
 
   function ready(error, world) {
+    if (error) {
+      // let sentry catch it, so we get notified why it fails
+      throw error;
+    }
+
     render(mapEl, snapData, world);
 
     let resizeTimeout;
