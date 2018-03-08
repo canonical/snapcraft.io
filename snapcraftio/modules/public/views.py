@@ -2,7 +2,7 @@ import bleach
 import datetime
 import flask
 import humanize
-import modules.public.api as api
+import snapcraftio.modules.public.api as api
 import pycountry
 import re
 from dateutil import parser, relativedelta

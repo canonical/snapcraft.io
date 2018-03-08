@@ -1,5 +1,5 @@
 import flask
-import modules.cache as cache
+import snapcraftio.modules.cache as cache
 import os
 
 SNAPCRAFT_IO_API = os.getenv(

@@ -20,10 +20,10 @@ from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 import prometheus_flask_exporter
 
-import modules.authentication as authentication
-import modules.public.views as public_views
-import modules.publisher.views as publisher_views
-from modules.macaroon import (
+import snapcraftio.modules.authentication as authentication
+import snapcraftio.modules.public.views as public_views
+import snapcraftio.modules.publisher.views as publisher_views
+from snapcraftio.modules.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
 )

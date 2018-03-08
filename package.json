@@ -1,17 +1,17 @@
 {
   "scripts": {
     "test": "yarn run test-js && yarn run test-scss",
-    "test-js": "eslint static/js",
-    "test-scss": "sass-lint static/**/*.scss --verbose --no-exit",
+    "test-js": "eslint snapcraftio/static/js",
+    "test-scss": "sass-lint snapcraftio/static/**/*.scss --verbose --no-exit",
     "build": "yarn run build-js && yarn run build-css",
-    "build-css": "node-sass --include-path node_modules static/sass --output static/css && postcss --use autoprefixer --replace 'static/css/**/*.css' && postcss --use cssnano --dir static/minified 'static/css/**/*.css'",
+    "build-css": "node-sass --include-path node_modules snapcraftio/static/sass --output snapcraftio/static/css && postcss --use autoprefixer --replace 'snapcraftio/static/css/**/*.css' && postcss --use cssnano --dir snapcraftio/static/minified 'snapcraftio/static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-transpile",
-    "copy-3rd-party-js": "cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/d3-geo/build/d3-geo.min.js static/js/modules && cp node_modules/topojson-client/dist/topojson-client.min.js static/js/modules && cp node_modules/billboard.js/dist/billboard.min.js static/js/modules && cp node_modules/moment/min/moment.min.js static/js/modules",
+    "copy-3rd-party-js": "cp node_modules/d3/build/d3.min.js snapcraftio/static/js/modules && cp node_modules/d3-geo/build/d3-geo.min.js snapcraftio/static/js/modules && cp node_modules/topojson-client/dist/topojson-client.min.js snapcraftio/static/js/modules && cp node_modules/billboard.js/dist/billboard.min.js snapcraftio/static/js/modules && cp node_modules/moment/min/moment.min.js snapcraftio/static/js/modules",
     "build-js-transpile": "rollup -c",
-    "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
-    "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
-    "watch-js": "watch -p 'static/js/**/*.js' -c 'yarn run build-js'",
-    "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle"
+    "watch": "watch -p 'snapcraftio/static/sass/**/*.scss' -p 'snapcraftio/static/js/**/*.js' -c 'yarn run build'",
+    "watch-scss": "watch -p 'snapcraftio/static/sass/**/*.scss' -c 'yarn run build-css'",
+    "watch-js": "watch -p 'snapcraftio/static/js/**/*.js' -c 'yarn run build-js'",
+    "clean": "rm -rf node_modules yarn-error.log css snapcraftio/static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle"
   },
   "author": "Canonical webteam",
   "dependencies": {

@@ -1,6 +1,6 @@
 import flask
-import modules.authentication as authentication
-import modules.cache as cache
+import snapcraftio.modules.authentication as authentication
+import snapcraftio.modules.cache as cache
 import os
 
 

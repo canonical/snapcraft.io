@@ -17,6 +17,7 @@ Thumbs.db
 *.bak
 *.pyc
 *-cache/
+__pycache__/
 
 # [data] Local data
 *.sqlite*
@@ -60,3 +61,7 @@ env[23]/
 # Project specific ignores
 static/js/modules/*.js
 static/js/dist/*.js
+
+bin/
+include/
+lib/

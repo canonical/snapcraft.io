@@ -1,8 +1,8 @@
 import datetime
 import flask
 import hashlib
-import modules.public.views as public_views
-import modules.publisher.api as api
+import snapcraftio.modules.public.views as public_views
+import snapcraftio.modules.publisher.api as api
 from dateutil import relativedelta
 from json import dumps, loads
 from operator import itemgetter
