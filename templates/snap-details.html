@@ -32,7 +32,7 @@
 
             <p class="p-media-object__content--large">
               {% if is_linux %}
-                <a class="p-button--positive" href="snap://{{ package_name }}" onclick="ga('gtm1.send', {hitType: 'event', eventCategory: 'Snap details', eventAction: 'Clicked Install button', eventLabel: 'Install {{ package_name }}'})">Install</a>
+                <a class="p-button--positive" href="snap://{{ package_name }}" onclick="if(typeof ga !== 'undefined'){ga('gtm1.send', {hitType: 'event', eventCategory: 'Snap details', eventAction: 'Clicked Install button', eventLabel: 'Install {{ package_name }}'})}">Install</a>
               {% else %}
                 You can install this software on a snap-powered system like <a class="p-link--external" href="https://www.ubuntu.com/download">Ubuntu</a>.
               {% endif %}
