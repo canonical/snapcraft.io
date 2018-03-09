@@ -193,22 +193,38 @@ def search_snap():
 
     page = floor(offset / size) + 1
 
-    searched_results = api.get_searched_snaps(
-        quote_plus(snap_searched),
-        size,
-        page
-    )
+    errors = []
+    normalize_results = []
+    links = []
+    try:
+        searched_results = api.get_searched_snaps(
+            quote_plus(snap_searched),
+            size,
+            page
+        )
 
-    context = {
-        "query": snap_searched,
-        "snaps": normalize_searched_snaps(searched_results),
-        "links": get_pages_details(
+        normalize_results = normalize_searched_snaps(searched_results)
+        links = get_pages_details(
             (
                 searched_results['_links']
                 if '_links' in searched_results
                 else []
             )
         )
+    except api.InvalidResponseContent as invalid_response_content:
+        message = str(invalid_response_content)
+        flask.abort(500, message)
+    except api.ApiErrorResponse as api_error_exception:
+        if api_error_exception.errors:
+            errors = api_error_exception.errors
+        else:
+            flask.abort(api_error_exception.status, ["Unknown error"])
+
+    context = {
+        "query": snap_searched,
+        "snaps": normalize_results,
+        "links": links,
+        "errors": errors
 
     }
 

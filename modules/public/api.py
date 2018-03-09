@@ -61,6 +61,30 @@ class ApiErrorResponse(Exception):
     pass
 
 
+def process_response(response):
+    try:
+        body = response.json()
+    except ValueError as decode_error:
+        error_message = ''.join([
+            "JSON decoding failed: ",
+            str(decode_error),
+        ])
+        raise InvalidResponseContent(error_message)
+
+    if response.status_code != 200:
+        if 'error_list' in body:
+            api_error_exception = ApiErrorResponse("Error list")
+            api_error_exception.status = response.status_code
+            api_error_exception.errors = body['error_list']
+            raise api_error_exception
+        else:
+            api_error_exception = ApiErrorResponse("Unknown error")
+            api_error_exception.status = response.status_code
+            raise api_error_exception
+
+    return body
+
+
 def normalize_searched_snaps(search_results):
     return (
         search_results['_embedded']['clickindex:package']
@@ -97,7 +121,7 @@ def get_searched_snaps(snap_searched, size, page):
         headers=SEARCH_QUERY_HEADERS
     )
 
-    return searched_response.json()
+    return process_response(searched_response)
 
 
 def get_snap_details(snap_name):
@@ -106,27 +130,7 @@ def get_snap_details(snap_name):
         headers=DETAILS_QUERY_HEADERS
     )
 
-    try:
-        details = details_response.json()
-    except ValueError as decode_error:
-        error_message = ''.join([
-            "JSON decoding failed: ",
-            str(decode_error),
-        ])
-        raise InvalidResponseContent(error_message)
-
-    if details_response.status_code != 200:
-        if 'error_list' in details:
-            api_error_exception = ApiErrorResponse("Error list")
-            api_error_exception.status = details_response.status_code
-            api_error_exception.errors = details['error_list']
-            raise api_error_exception
-        else:
-            api_error_exception = ApiErrorResponse("Unknown error")
-            api_error_exception.status = details_response.status_code
-            raise api_error_exception
-
-    return details
+    return process_response(details_response)
 
 
 def get_public_metrics(snap_name, json):
