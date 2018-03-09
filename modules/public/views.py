@@ -230,7 +230,16 @@ def snap_details(snap_name):
     today = datetime.datetime.utcnow().date()
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
-    details = api.get_snap_details(snap_name)
+    try:
+        details = api.get_snap_details(snap_name)
+    except api.InvalidResponseContent as invalid_response_content:
+        message = str(invalid_response_content)
+        flask.abort(500, message)
+    except api.ApiErrorResponse as api_error_exception:
+        if api_error_exception.errors:
+            flask.abort(api_error_exception.status, api_error_exception.errors)
+        else:
+            flask.abort(api_error_exception.status, ["Unknown error"])
 
     metrics_query_json = [
         {

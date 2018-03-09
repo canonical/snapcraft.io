@@ -81,7 +81,7 @@ class WebAppTestCase(unittest.TestCase):
         response = self._get_response('/non-existent-snap')
 
         assert response.status_code == 404
-        assert "Snap not found" in str(response.data)
+        assert "No snap named" in str(response.data)
 
     # Helper methods
     # ==

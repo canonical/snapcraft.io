@@ -10,7 +10,11 @@
     </div>
     <div class="col-6">
       <h1>404: Page not found</h1>
-      <p>{{ description }}</p>
+      {% for error in error_list %}
+        <p class="p-notification__response">
+          {{ error.message }}
+        </p>
+      {% endfor %}
     </div>
   </div>
 </div>

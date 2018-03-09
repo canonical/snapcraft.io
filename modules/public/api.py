@@ -1,4 +1,3 @@
-import flask
 import modules.cache as cache
 import os
 
@@ -54,6 +53,14 @@ PROMOTED_QUERY_HEADERS = {
 }
 
 
+class InvalidResponseContent(Exception):
+    pass
+
+
+class ApiErrorResponse(Exception):
+    pass
+
+
 def normalize_searched_snaps(search_results):
     return (
         search_results['_embedded']['clickindex:package']
@@ -99,17 +106,27 @@ def get_snap_details(snap_name):
         headers=DETAILS_QUERY_HEADERS
     )
 
-    if details_response.status_code >= 400:
-        message = (
-            'Failed to get snap details for {snap_name}'.format(**locals())
-        )
+    try:
+        details = details_response.json()
+    except ValueError as decode_error:
+        error_message = ''.join([
+            "JSON decoding failed: ",
+            str(decode_error),
+        ])
+        raise InvalidResponseContent(error_message)
 
-        if details_response.status_code == 404:
-            message = 'Snap not found: {snap_name}'.format(**locals())
+    if details_response.status_code != 200:
+        if 'error_list' in details:
+            api_error_exception = ApiErrorResponse("Error list")
+            api_error_exception.status = details_response.status_code
+            api_error_exception.errors = details['error_list']
+            raise api_error_exception
+        else:
+            api_error_exception = ApiErrorResponse("Unknown error")
+            api_error_exception.status = details_response.status_code
+            raise api_error_exception
 
-        flask.abort(details_response.status_code, message)
-
-    return details_response.json()
+    return details
 
 
 def get_public_metrics(snap_name, json):
