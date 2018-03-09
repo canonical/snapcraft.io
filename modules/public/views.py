@@ -162,21 +162,43 @@ def convert_limit_offset_to_size_page(link):
 
 
 def homepage():
-    featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+    featured_snaps = []
+    errors = []
+    try:
+        featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+    except api.InvalidResponseContent as invalid_response_content:
+        errors = ["Error from server"]
+    except api.ApiErrorResponse as api_error_exception:
+        if api_error_exception.errors:
+            errors = api_error_exception.errors
+        else:
+            errors = ["Unknown error"]
 
     return flask.render_template(
         'index.html',
-        featured_snaps=featured_snaps
+        featured_snaps=featured_snaps,
+        errors=errors
     )
 
 
 def store():
-    featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+    featured_snaps = []
+    errors = []
+    try:
+        featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+    except api.InvalidResponseContent as invalid_response_content:
+        errors = ["Error from server"]
+    except api.ApiErrorResponse as api_error_exception:
+        if api_error_exception.errors:
+            errors = api_error_exception.errors
+        else:
+            errors = ["Unknown error"]
 
     return flask.render_template(
         'store.html',
         featured_snaps=featured_snaps,
-        page_slug='store'
+        page_slug='store',
+        errors=errors
     )
 
 

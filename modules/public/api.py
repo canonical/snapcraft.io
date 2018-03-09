@@ -91,7 +91,7 @@ def get_featured_snaps():
         headers=SEARCH_QUERY_HEADERS
     )
 
-    return featured_response.json()
+    return process_response(featured_response)
 
 
 def get_promoted_snaps():
