@@ -125,4 +125,4 @@ def get_public_metrics(snap_name, json):
         json=json
     )
 
-    return metrics_response.json()
+    return process_response(metrics_response)

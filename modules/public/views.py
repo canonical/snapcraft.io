@@ -282,6 +282,7 @@ def snap_details(snap_name):
     with appropriate sanitation.
     """
 
+    errors = []
     today = datetime.datetime.utcnow().date()
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
@@ -296,25 +297,6 @@ def snap_details(snap_name):
         else:
             flask.abort(api_error_exception.status, ["Unknown error"])
 
-    metrics_query_json = [
-        {
-            "metric_name": "installed_base_by_country_percent",
-            "snap_id": details['snap_id'],
-            "start": week_ago.strftime('%Y-%m-%d'),
-            "end": today.strftime('%Y-%m-%d')
-        }
-    ]
-
-    metrics_response = api.get_public_metrics(
-        snap_name,
-        metrics_query_json
-    )
-
-    users_by_country = normalize_metrics(
-        metrics_response[0]['series']
-    )
-    country_data = build_country_info(users_by_country)
-
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
     formatted_paragraphs = []
@@ -327,7 +309,6 @@ def snap_details(snap_name):
                 attrs[(None, "class")] = "p-link--external"
             elif "p-link--external" not in attrs[(None, "class")]:
                 attrs[(None, "class")] += " p-link--external"
-
         return attrs
 
     for paragraph in paragraphs:
@@ -338,6 +319,35 @@ def snap_details(snap_name):
         paragraph = bleach.linkify(paragraph, callbacks=callbacks)
 
         formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
+
+    country_data = []
+    try:
+        metrics_query_json = [
+            {
+                "metric_name": "installed_base_by_country_percent",
+                "snap_id": details['snap_id'],
+                "start": week_ago.strftime('%Y-%m-%d'),
+                "end": today.strftime('%Y-%m-%d')
+            }
+        ]
+
+        metrics_response = api.get_public_metrics(
+            snap_name,
+            metrics_query_json
+        )
+
+        users_by_country = normalize_metrics(
+            metrics_response[0]['series']
+        )
+        country_data = build_country_info(users_by_country)
+    except api.InvalidResponseContent as invalid_response_content:
+        message = str(invalid_response_content)
+        errors = [{'code': 'json-error', 'message': message}]
+    except api.ApiErrorResponse as api_error_exception:
+        if api_error_exception.errors:
+            errors = api_error_exception.errors
+        else:
+            errors = [{'code': 'unknown-error', 'message': 'Unknown Error'}]
 
     context = {
         # Data direct from details API
@@ -370,7 +380,9 @@ def snap_details(snap_name):
         'is_linux': (
             'Linux' in flask.request.headers.get('User-Agent', '') and
             'Android' not in flask.request.headers.get('User-Agent', '')
-        )
+        ),
+
+        'errors': errors
     }
 
     return flask.render_template(
