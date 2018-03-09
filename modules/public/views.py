@@ -162,24 +162,29 @@ def convert_limit_offset_to_size_page(link):
 
 
 def homepage():
+    featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+
     return flask.render_template(
         'index.html',
-        featured_snaps=api.get_featured_snaps()
+        featured_snaps=featured_snaps
     )
 
 
 def store():
+    featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+
     return flask.render_template(
         'store.html',
-        featured_snaps=api.get_featured_snaps(),
+        featured_snaps=featured_snaps,
         page_slug='store'
     )
 
 
 def snaps():
+    promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
     return flask.render_template(
         'promoted.html',
-        snaps=api.get_promoted_snaps()
+        snaps=promoted_snaps
     )
 
 

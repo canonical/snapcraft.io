@@ -85,21 +85,13 @@ def process_response(response):
     return body
 
 
-def normalize_searched_snaps(search_results):
-    return (
-        search_results['_embedded']['clickindex:package']
-        if search_results['_embedded']
-        else []
-    )
-
-
 def get_featured_snaps():
     featured_response = cache.get(
         FEATURE_SNAPS_URL,
         headers=SEARCH_QUERY_HEADERS
     )
 
-    return normalize_searched_snaps(featured_response.json())
+    return featured_response.json()
 
 
 def get_promoted_snaps():
@@ -108,7 +100,7 @@ def get_promoted_snaps():
         headers=PROMOTED_QUERY_HEADERS
     )
 
-    return normalize_searched_snaps(promoted_response.json())
+    return promoted_response.json()
 
 
 def get_searched_snaps(snap_searched, size, page):
