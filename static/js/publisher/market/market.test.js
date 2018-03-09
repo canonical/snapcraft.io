@@ -1,4 +1,4 @@
-import market from './market';
+import * as market from './market';
 
 describe('initSnapIconEdit', () => {
   let input;
