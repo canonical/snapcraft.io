@@ -1,4 +1,5 @@
 import requests
+from modules.exceptions import ApiErrorResponse
 
 
 def get(
@@ -20,12 +21,21 @@ def get(
     if method is None:
         method = "POST" if json else "GET"
 
-    return requests.request(
-        method=method,
-        url=url,
-        headers=headers,
-        json=json,
-        files=files,
-        data=data,
-        timeout=2
-    )
+    try:
+        return requests.request(
+            method=method,
+            url=url,
+            headers=headers,
+            json=json,
+            files=files,
+            data=data,
+            timeout=2
+        )
+    except requests.exceptions.Timeout as exception_response:
+        api_error_exception = ApiErrorResponse("Timeout")
+        api_error_exception.errors = [{
+            'code': 'timeout-server',
+            'message': 'API timeout'
+        }]
+        api_error_exception.status = 500
+        raise api_error_exception

@@ -1,5 +1,9 @@
 import modules.cache as cache
 import os
+from modules.exceptions import (
+    InvalidResponseContent,
+    ApiErrorResponse
+)
 
 SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',
@@ -53,25 +57,14 @@ PROMOTED_QUERY_HEADERS = {
 }
 
 
-class InvalidResponseContent(Exception):
-    pass
-
-
-class ApiErrorResponse(Exception):
-    pass
-
-
 def process_response(response):
     try:
         body = response.json()
     except ValueError as decode_error:
-        error_message = ''.join([
-            "JSON decoding failed: ",
-            str(decode_error),
-        ])
+        error_message = 'JSON decoding failed: {}'.format(decode_error)
         raise InvalidResponseContent(error_message)
 
-    if response.status_code != 200:
+    if not response.ok:
         if 'error_list' in body:
             api_error_exception = ApiErrorResponse("Error list")
             api_error_exception.status = response.status_code
