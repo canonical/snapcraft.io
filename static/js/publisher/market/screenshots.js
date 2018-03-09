@@ -1,5 +1,62 @@
 import lightbox from './lightbox';
 
+// STATE HELPER FUNCTIONS
+function updateState(state, values) {
+  if (values) {
+    for (let key in values) {
+      if (values.hasOwnProperty(key)) {
+        state[key] = values[key];
+      }
+    }
+  }
+}
+
+function serializeState(state) {
+  let cleanedState = Object.assign({}, state);
+  if (cleanedState.images && cleanedState.images.length) {
+    cleanedState.images = cleanedState.images.filter(image => image.status !== 'delete');
+  }
+  return cleanedState;
+}
+
+// TEMPLATES
+const templates = {
+  row: (content) => `
+    <div class="row">${content}</div>
+  `,
+
+  screenshot: (screenshot) => `
+    <div class="col-2">
+      <div class="p-screenshot__holder ${screenshot.status === 'delete' ? 'is-deleted' : ''}">
+        <img
+          class="p-screenshot ${screenshot.selected ? 'selected' : ''}"
+          src="${screenshot.url}"
+          alt=""
+        />
+      </div>
+    </div>
+  `,
+
+  empty: () => `
+    <div class="col-12">
+      <a class="p-empty-add-screenshots js-add-screenshots">Add images</a>
+    </div>
+  `,
+
+  changes: (newCount, deleteCount) => {
+    if (!newCount && !deleteCount) {
+      return '';
+    }
+    return `
+      <p>
+        ${newCount ? newCount + ' image' + (newCount > 1 ? 's' : '') + ' to upload. ' : ''}
+        ${deleteCount ? deleteCount + ' image' + (deleteCount > 1 ? 's' : '') + ' to delete.' : ''}
+      </p>
+    `;
+  }
+};
+
+// INIT SCREENSHOTS
 function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, initialState) {
   // DOM elements
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
@@ -14,17 +71,11 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   screenshotsToolbarEl.parentNode.appendChild(stateInput);
 
   const setState = function(nextState) {
-    if (nextState) {
-      for (let key in nextState) {
-        if (nextState.hasOwnProperty(key)) {
-          state[key] = nextState[key];
-        }
-      }
-    }
+    updateState(state, nextState);
 
     let newState = Object.assign({}, state);
     newState.images = newState.images.filter(image => image.status !== 'delete');
-    stateInput.value = JSON.stringify(newState);
+    stateInput.value = JSON.stringify(serializeState(state));
   };
 
   setState(initialState);
@@ -66,56 +117,23 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     }
   };
 
-  // templates
-  const rowTpl = (content) => `
-    <div class="row">${content}</div>
-  `;
-
-  const screenshotTpl = (screenshot) => `
-    <div class="col-2">
-      <div class="p-screenshot__holder ${screenshot.status === 'delete' ? 'is-deleted' : ''}">
-        <img
-          class="p-screenshot ${screenshot.selected ? 'selected' : ''}"
-          src="${screenshot.url}"
-          alt=""
-        />
-      </div>
-    </div>
-  `;
-
-  const emptyTpl = () => `
-    <div class="col-12">
-      <a class="p-empty-add-screenshots js-add-screenshots">Add images</a>
-    </div>
-  `;
-
-  const changesTpl = (newCount, deleteCount) => {
-    if (!newCount && !deleteCount) {
-      return '';
-    }
-    return `<p>
-      ${newCount ? newCount + ' image' + (newCount > 1 ? 's' : '') + ' to upload. ' : ''}
-      ${deleteCount ? deleteCount + ' image' + (deleteCount > 1 ? 's' : '') + ' to delete.' : ''}
-    </p>`;
-  };
-
   const renderScreenshots = (screenshots) => {
     if (screenshots.length) {
       // show first 6 images in one row
-      let html = rowTpl(screenshots.slice(0, 6).map(screenshotTpl).join(''));
+      let html = templates.row(screenshots.slice(0, 6).map(templates.screenshot).join(''));
 
       // if there is more screenshots (some marker for deletion?) show second row
       if (screenshots.length > 6) {
-        html += rowTpl(screenshots.slice(6, 12).map(screenshotTpl).join(''));
+        html += templates.row(screenshots.slice(6, 12).map(templates.screenshot).join(''));
       }
 
       const newScreenshots = screenshots.filter(image => image.status === 'new').length;
       const deleteScreenshots = screenshots.filter(image => image.status === 'delete').length;
-      html += rowTpl(changesTpl(newScreenshots, deleteScreenshots));
+      html += templates.row(templates.changes(newScreenshots, deleteScreenshots));
 
       screenshotsWrapper.innerHTML = html;
     } else {
-      screenshotsWrapper.innerHTML = emptyTpl();
+      screenshotsWrapper.innerHTML = templates.empty();
     }
   };
 
@@ -223,7 +241,9 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   });
 }
 
-
 export {
-  initSnapScreenshotsEdit
+  initSnapScreenshotsEdit,
+  // for testing
+  templates,
+  serializeState
 };
