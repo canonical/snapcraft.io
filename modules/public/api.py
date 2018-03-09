@@ -100,7 +100,7 @@ def get_promoted_snaps():
         headers=PROMOTED_QUERY_HEADERS
     )
 
-    return promoted_response.json()
+    return process_response(promoted_response)
 
 
 def get_searched_snaps(snap_searched, size, page):

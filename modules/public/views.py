@@ -203,10 +203,22 @@ def store():
 
 
 def snaps():
-    promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
+    promoted_snaps = []
+    errors = []
+    try:
+        promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
+    except api.InvalidResponseContent as invalid_response_content:
+        errors = ["Error from server"]
+    except api.ApiErrorResponse as api_error_exception:
+        if api_error_exception.errors:
+            errors = api_error_exception.errors
+        else:
+            errors = ["Unknown error"]
+
     return flask.render_template(
         'promoted.html',
-        snaps=promoted_snaps
+        snaps=promoted_snaps,
+        errors=errors
     )
 
 
