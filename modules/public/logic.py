@@ -1,4 +1,7 @@
+import bleach
+from math import floor
 import pycountry
+import re
 from urllib.parse import parse_qs, urlparse
 
 
@@ -156,3 +159,36 @@ def convert_limit_offset_to_size_page(url, link):
         limit=size,
         offset=size*(page-1)
     )
+
+
+def format_paragraphs(unformatted_description):
+    description = unformatted_description.strip()
+    paragraphs = re.compile(r'[\n\r]{2,}').split(description)
+    formatted_paragraphs = []
+
+    # Sanitise paragraphs
+    def external(attrs, new=False):
+        url_parts = urlparse(attrs[(None, "href")])
+        if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
+            if (None, "class") not in attrs:
+                attrs[(None, "class")] = "p-link--external"
+            elif "p-link--external" not in attrs[(None, "class")]:
+                attrs[(None, "class")] += " p-link--external"
+        return attrs
+
+    for paragraph in paragraphs:
+        callbacks = bleach.linkifier.DEFAULT_CALLBACKS
+        callbacks.append(external)
+
+        paragraph = bleach.clean(paragraph, tags=[])
+        paragraph = bleach.linkify(paragraph, callbacks=callbacks)
+
+        formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
+
+    return formatted_paragraphs
+
+
+def convert_args_search(limit, offset):
+    page = floor(offset / limit) + 1
+
+    return (limit, page)

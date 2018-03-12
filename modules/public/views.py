@@ -1,10 +1,8 @@
-import bleach
 import datetime
 import flask
 import humanize
 import modules.public.api as api
 import modules.public.logic as logic
-import re
 from dateutil import parser, relativedelta
 from modules.exceptions import (
     ApiError,
@@ -14,8 +12,7 @@ from modules.exceptions import (
     ApiResponseErrorList,
     ApiConnectionError
 )
-from math import floor
-from urllib.parse import urlparse, quote_plus
+from urllib.parse import quote_plus
 
 
 def _handle_errors(api_error: ApiError):
@@ -97,13 +94,13 @@ def snaps():
 def search_snap():
     status_code = 200
     snap_searched = flask.request.args.get('q', default='', type=str)
-    if(not snap_searched):
+    if not snap_searched:
         return flask.redirect('/store')
 
-    size = flask.request.args.get('limit', default=10, type=int)
-    offset = flask.request.args.get('offset', default=0, type=int)
-
-    page = floor(offset / size) + 1
+    size, page = logic.convert_args_search(
+        flask.request.args.get('limit', default=10, type=int),
+        flask.request.args.get('offset', default=0, type=int)
+    )
 
     error_info = {}
     normalize_results = []
@@ -151,9 +148,6 @@ def snap_details(snap_name):
     """
 
     error_info = {}
-    today = datetime.datetime.utcnow().date()
-    week_ago = today - relativedelta.relativedelta(weeks=1)
-
     try:
         details = api.get_snap_details(snap_name)
     except ApiTimeoutError as api_timeout_error:
@@ -171,32 +165,14 @@ def snap_details(snap_name):
     except ApiError as api_error:
         flask.abort(502, str(api_error))
 
-    description = details['description'].strip()
-    paragraphs = re.compile(r'[\n\r]{2,}').split(description)
-    formatted_paragraphs = []
-
-    # Sanitise paragraphs
-    def external(attrs, new=False):
-        url_parts = urlparse(attrs[(None, "href")])
-        if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
-            if (None, "class") not in attrs:
-                attrs[(None, "class")] = "p-link--external"
-            elif "p-link--external" not in attrs[(None, "class")]:
-                attrs[(None, "class")] += " p-link--external"
-        return attrs
-
-    for paragraph in paragraphs:
-        callbacks = bleach.linkifier.DEFAULT_CALLBACKS
-        callbacks.append(external)
-
-        paragraph = bleach.clean(paragraph, tags=[])
-        paragraph = bleach.linkify(paragraph, callbacks=callbacks)
-
-        formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
+    formatted_paragraphs = logic.format_paragraphs(details['description'])
 
     status_code = 200
     country_data = []
     try:
+        today = datetime.datetime.utcnow().date()
+        week_ago = today - relativedelta.relativedelta(weeks=1)
+
         metrics_query_json = [
             {
                 "metric_name": "installed_base_by_country_percent",
