@@ -167,12 +167,22 @@ def homepage():
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except api.InvalidResponseContent as invalid_response_content:
-        errors = ["Error from server"]
+        errors = [
+            {
+                'code': 'invalid-response',
+                'message': 'Invalid response from API'
+            }
+        ]
     except api.ApiErrorResponse as api_error_exception:
         if api_error_exception.errors:
             errors = api_error_exception.errors
         else:
-            errors = ["Unknown error"]
+            errors = [
+                {
+                    'code': 'unknown-error',
+                    'message': 'Unknown Error from request'
+                }
+            ]
 
     return flask.render_template(
         'index.html',
@@ -187,12 +197,22 @@ def store():
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except api.InvalidResponseContent as invalid_response_content:
-        errors = ["Error from server"]
+        errors = [
+            {
+                'code': 'invalid-response',
+                'message': 'Invalid response from API'
+            }
+        ]
     except api.ApiErrorResponse as api_error_exception:
         if api_error_exception.errors:
             errors = api_error_exception.errors
         else:
-            errors = ["Unknown error"]
+            errors = [
+                {
+                    'code': 'unknown-error',
+                    'message': 'Unknown Error from request'
+                }
+            ]
 
     return flask.render_template(
         'store.html',
@@ -208,12 +228,22 @@ def snaps():
     try:
         promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
     except api.InvalidResponseContent as invalid_response_content:
-        errors = ["Error from server"]
+        errors = [
+            {
+                'code': 'invalid-response',
+                'message': 'Invalid response from API'
+            }
+        ]
     except api.ApiErrorResponse as api_error_exception:
         if api_error_exception.errors:
             errors = api_error_exception.errors
         else:
-            errors = ["Unknown error"]
+            errors = [
+                {
+                    'code': 'unknown-error',
+                    'message': 'Unknown Error from request'
+                }
+            ]
 
     return flask.render_template(
         'promoted.html',
@@ -251,13 +281,24 @@ def search_snap():
             )
         )
     except api.InvalidResponseContent as invalid_response_content:
-        message = str(invalid_response_content)
-        flask.abort(500, message)
+        errors = [
+            {
+                'code': 'invalid-response',
+                'message': 'Invalid response from API'
+            }
+        ]
+        flask.abort(500, errors.message)
     except api.ApiErrorResponse as api_error_exception:
         if api_error_exception.errors:
             errors = api_error_exception.errors
         else:
-            flask.abort(api_error_exception.status, ["Unknown error"])
+            errors = [
+                {
+                    'code': 'unknown-error',
+                    'message': 'Unknown Error from request'
+                }
+            ]
+            flask.abort(api_error_exception.status, errors.message)
 
     context = {
         "query": snap_searched,
@@ -295,7 +336,13 @@ def snap_details(snap_name):
         if api_error_exception.errors:
             flask.abort(api_error_exception.status, api_error_exception.errors)
         else:
-            flask.abort(api_error_exception.status, ["Unknown error"])
+            errors = [
+                {
+                    'code': 'unknown-error',
+                    'message': 'Unknown Error from request'
+                }
+            ]
+            flask.abort(api_error_exception.status, errors)
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
@@ -347,7 +394,12 @@ def snap_details(snap_name):
         if api_error_exception.errors:
             errors = api_error_exception.errors
         else:
-            errors = [{'code': 'unknown-error', 'message': 'Unknown Error'}]
+            errors = [
+                {
+                    'code': 'unknown-error',
+                    'message': 'Unknown Error from request'
+                }
+            ]
 
     context = {
         # Data direct from details API
