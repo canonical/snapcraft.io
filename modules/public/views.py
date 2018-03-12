@@ -117,6 +117,7 @@ def search_snap():
 
         normalize_results = logic.normalize_searched_snaps(searched_results)
         links = logic.get_pages_details(
+            flask.request.base_url,
             (
                 searched_results['_links']
                 if '_links' in searched_results

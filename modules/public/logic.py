@@ -1,4 +1,3 @@
-import flask
 import pycountry
 from urllib.parse import parse_qs, urlparse
 
@@ -103,38 +102,43 @@ def normalize_searched_snaps(search_results):
     )
 
 
-def get_pages_details(links):
+def get_pages_details(url, links):
     links_result = {}
 
     if('first' in links):
         links_result['first'] = convert_limit_offset_to_size_page(
+            url,
             links['first']['href']
         )
 
     if('last' in links):
         links_result['last'] = convert_limit_offset_to_size_page(
+            url,
             links['last']['href']
         )
 
     if('next' in links):
         links_result['next'] = convert_limit_offset_to_size_page(
+            url,
             links['next']['href']
         )
 
     if('prev' in links):
         links_result['prev'] = convert_limit_offset_to_size_page(
+            url,
             links['prev']['href']
         )
 
     if('self' in links):
         links_result['self'] = convert_limit_offset_to_size_page(
+            url,
             links['self']['href']
         )
 
     return links_result
 
 
-def convert_limit_offset_to_size_page(link):
+def convert_limit_offset_to_size_page(url, link):
     url_parsed = urlparse(link)
     host_url = (
         "{base_url}"
@@ -147,7 +151,7 @@ def convert_limit_offset_to_size_page(link):
     page = int(url_queries['page'][0])
 
     return host_url.format(
-        base_url=flask.request.base_url,
+        base_url=url,
         q=q,
         limit=size,
         offset=size*(page-1)
