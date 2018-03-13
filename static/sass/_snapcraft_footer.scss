@@ -1,0 +1,17 @@
+@mixin snapcraft-footer {
+  .p-icon--top {
+    @extend %icon;
+    background-image: url('#{$assets-path}9ec2c354-icon-arrow-up.svg');
+    background-size: 12px 12px;
+    margin-left: $sp-x-small;
+  }
+
+  .p-footer {
+    padding-bottom: $sp-xx-large;
+
+    p {
+      max-width: 100%;
+    }
+  }
+
+}
