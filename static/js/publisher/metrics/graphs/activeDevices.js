@@ -1,4 +1,4 @@
-/* globals bb */
+/* globals bb, moment */
 
 import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
 import debounce from '../../../libs/debounce';
@@ -12,6 +12,22 @@ function showGraph(el) {
 
 export default function activeDevices(days, activeDevices, type) {
   const el = document.getElementById('active_devices');
+
+  // If there's no data, we still want to show the axis
+  let minYAxisValue;
+  if (days.length === 1) { // Only includes the 'x'
+    let offset = 0;
+    const start = moment.utc().startOf('day').subtract(30, 'days');
+    let dummyActiveDevices = [''];
+
+    while(offset < 30) {
+      days.push(start.clone().add(offset, 'days'));
+      dummyActiveDevices.push(0);
+      offset++;
+    }
+    activeDevices.push(dummyActiveDevices);
+    minYAxisValue = 1;
+  }
 
   activeDevices.sort((a, b) => {
     const a1 = a.slice(1); // Remove the first item as it's the label
@@ -121,7 +137,8 @@ export default function activeDevices(days, activeDevices, type) {
         },
         padding: {
           top: 30, bottom: 30
-        }
+        },
+        min: minYAxisValue
       }
     },
     resize: {
@@ -159,7 +176,9 @@ export default function activeDevices(days, activeDevices, type) {
   deviceData.forEach(device => {
     const labelClass = device[0].replace(/\W+/g, '-');
     const area = el.querySelector(`.bb-area-${labelClass}`);
-    area.dataset.label = device[0];
+    if (area) {
+      area.dataset.label = device[0];
+    }
   });
 
   // Extra events
