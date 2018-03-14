@@ -26,12 +26,20 @@ def get_account():
     if '16' in account['snaps']:
         user_snaps = account['snaps']['16']
 
+    flask_user = flask.session['openid']
+
+    context = {
+        'image': flask_user['image'],
+        'username': account['username'],
+        'displayname': account['displayname'],
+        'email': account['email'],
+        'snaps': user_snaps,
+        'error_list': error_list
+    }
+
     return flask.render_template(
         'account.html',
-        namespace=account['namespace'],
-        user_snaps=user_snaps,
-        user=flask.session['openid'],
-        error_list=error_list
+        **context
     )
 
 
