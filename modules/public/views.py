@@ -164,95 +164,77 @@ def convert_limit_offset_to_size_page(link):
 def homepage():
     featured_snaps = []
     errors = []
+    status_code = 200
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except api.InvalidResponseContent as invalid_response_content:
-        errors = [
-            {
-                'code': 'invalid-response',
-                'message': 'Invalid response from API'
-            }
-        ]
+        errors.append(str(invalid_response_content))
+        status_code = 500
     except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
+        if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
+            status_code = errors.status_code
         else:
-            errors = [
-                {
-                    'code': 'unknown-error',
-                    'message': 'Unknown Error from request'
-                }
-            ]
+            errors.append(str(api_error_exception))
 
     return flask.render_template(
         'index.html',
         featured_snaps=featured_snaps,
         errors=errors
-    )
+    ), status_code
 
 
 def store():
     featured_snaps = []
     errors = []
+    status_code = 200
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except api.InvalidResponseContent as invalid_response_content:
-        errors = [
-            {
-                'code': 'invalid-response',
-                'message': 'Invalid response from API'
-            }
-        ]
+        errors.append(str(invalid_response_content))
+        status_code = 500
     except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
+        if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
-            errors = [
-                {
-                    'code': 'unknown-error',
-                    'message': 'Unknown Error from request'
-                }
-            ]
+            errors.append(str(api_error_exception))
+
+        status_code = api_error_exception.status_code
 
     return flask.render_template(
         'store.html',
         featured_snaps=featured_snaps,
         page_slug='store',
         errors=errors
-    )
+    ), status_code
 
 
 def snaps():
     promoted_snaps = []
     errors = []
+    status_code = 200
     try:
         promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
     except api.InvalidResponseContent as invalid_response_content:
-        errors = [
-            {
-                'code': 'invalid-response',
-                'message': 'Invalid response from API'
-            }
-        ]
+        errors.append(str(invalid_response_content))
+        status_code = 500
     except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
+        if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
-            errors = [
-                {
-                    'code': 'unknown-error',
-                    'message': 'Unknown Error from request'
-                }
-            ]
+            errors.append(str(api_error_exception))
+
+        status_code = api_error_exception.status_code
 
     return flask.render_template(
         'promoted.html',
         snaps=promoted_snaps,
         errors=errors
-    )
+    ), status_code
 
 
 def search_snap():
+    status_code = 200
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
         return flask.redirect('/store')
@@ -281,24 +263,15 @@ def search_snap():
             )
         )
     except api.InvalidResponseContent as invalid_response_content:
-        errors = [
-            {
-                'code': 'invalid-response',
-                'message': 'Invalid response from API'
-            }
-        ]
-        flask.abort(500, errors.message)
+        errors.append(str(invalid_response_content))
+        status_code = 500
     except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
+        if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
-            errors = [
-                {
-                    'code': 'unknown-error',
-                    'message': 'Unknown Error from request'
-                }
-            ]
-            flask.abort(api_error_exception.status, errors.message)
+            errors.append(str(api_error_exception))
+
+        status_code = api_error_exception.status_code
 
     context = {
         "query": snap_searched,
@@ -311,7 +284,7 @@ def search_snap():
     return flask.render_template(
         'search.html',
         **context
-    )
+    ), status_code
 
 
 def snap_details(snap_name):
@@ -333,16 +306,13 @@ def snap_details(snap_name):
         message = str(invalid_response_content)
         flask.abort(500, message)
     except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
+        if hasattr(api_error_exception, 'errors'):
             flask.abort(api_error_exception.status, api_error_exception.errors)
         else:
-            errors = [
-                {
-                    'code': 'unknown-error',
-                    'message': 'Unknown Error from request'
-                }
-            ]
-            flask.abort(api_error_exception.status, errors)
+            flask.abort(
+                api_error_exception.status,
+                str(api_error_exception),
+            )
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
@@ -367,6 +337,7 @@ def snap_details(snap_name):
 
         formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
 
+    status_code = 200
     country_data = []
     try:
         metrics_query_json = [
@@ -388,18 +359,15 @@ def snap_details(snap_name):
         )
         country_data = build_country_info(users_by_country)
     except api.InvalidResponseContent as invalid_response_content:
-        message = str(invalid_response_content)
-        errors = [{'code': 'json-error', 'message': message}]
+        errors.append(str(invalid_response_content))
+        status_code = 500
     except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
+        if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
-            errors = [
-                {
-                    'code': 'unknown-error',
-                    'message': 'Unknown Error from request'
-                }
-            ]
+            errors.append(str(api_error_exception))
+
+        status_code = api_error_exception.status_code
 
     context = {
         # Data direct from details API
@@ -440,4 +408,4 @@ def snap_details(snap_name):
     return flask.render_template(
         'snap-details.html',
         **context
-    )
+    ), status_code

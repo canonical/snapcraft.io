@@ -32,10 +32,8 @@ def get(
             timeout=2
         )
     except requests.exceptions.Timeout as exception_response:
-        api_error_exception = ApiErrorResponse("Timeout")
-        api_error_exception.errors = [{
-            'code': 'timeout-server',
-            'message': 'API timeout'
-        }]
-        api_error_exception.status = 500
+        api_error_exception = ApiErrorResponse(
+            'The request to {} took longer than 2 seconds'.format(url)
+        )
+        api_error_exception.status_code = 504
         raise api_error_exception

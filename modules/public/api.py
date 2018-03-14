@@ -67,12 +67,16 @@ def process_response(response):
     if not response.ok:
         if 'error_list' in body:
             api_error_exception = ApiErrorResponse("Error list")
-            api_error_exception.status = response.status_code
-            api_error_exception.errors = body['error_list']
+            api_error_exception.status_code = response.status_code
+            errors = []
+            for error in body['error_list']:
+                errors.append(error['message'])
+            api_error_exception.errors = errors
+
             raise api_error_exception
         else:
             api_error_exception = ApiErrorResponse("Unknown error")
-            api_error_exception.status = response.status_code
+            api_error_exception.status_code = response.status_code
             raise api_error_exception
 
     return body

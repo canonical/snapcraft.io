@@ -97,7 +97,7 @@ def page_not_found(error):
     """
 
     return flask.render_template(
-        '404.html', error_list=error.description
+        '404.html', errors=error.description
     ), 404
 
 
