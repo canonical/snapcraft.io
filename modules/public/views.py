@@ -167,10 +167,7 @@ def homepage():
     status_code = 200
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
-    except api.InvalidResponseContent as invalid_response_content:
-        errors.append(str(invalid_response_content))
-        status_code = 500
-    except api.ApiErrorResponse as api_error_exception:
+    except api.ApiResponseError as api_error_exception:
         if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
             status_code = errors.status_code
@@ -190,10 +187,7 @@ def store():
     status_code = 200
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
-    except api.InvalidResponseContent as invalid_response_content:
-        errors.append(str(invalid_response_content))
-        status_code = 500
-    except api.ApiErrorResponse as api_error_exception:
+    except api.ApiResponseError as api_error_exception:
         if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
@@ -215,10 +209,7 @@ def snaps():
     status_code = 200
     try:
         promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
-    except api.InvalidResponseContent as invalid_response_content:
-        errors.append(str(invalid_response_content))
-        status_code = 500
-    except api.ApiErrorResponse as api_error_exception:
+    except api.ApiResponseError as api_error_exception:
         if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
@@ -262,10 +253,7 @@ def search_snap():
                 else []
             )
         )
-    except api.InvalidResponseContent as invalid_response_content:
-        errors.append(str(invalid_response_content))
-        status_code = 500
-    except api.ApiErrorResponse as api_error_exception:
+    except api.ApiResponseError as api_error_exception:
         if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:
@@ -302,15 +290,15 @@ def snap_details(snap_name):
 
     try:
         details = api.get_snap_details(snap_name)
-    except api.InvalidResponseContent as invalid_response_content:
-        message = str(invalid_response_content)
-        flask.abort(500, message)
-    except api.ApiErrorResponse as api_error_exception:
+    except api.ApiResponseError as api_error_exception:
         if hasattr(api_error_exception, 'errors'):
-            flask.abort(api_error_exception.status, api_error_exception.errors)
+            flask.abort(
+                api_error_exception.status_code,
+                api_error_exception.errors
+            )
         else:
             flask.abort(
-                api_error_exception.status,
+                api_error_exception.status_code,
                 str(api_error_exception),
             )
 
@@ -358,10 +346,7 @@ def snap_details(snap_name):
             metrics_response[0]['series']
         )
         country_data = build_country_info(users_by_country)
-    except api.InvalidResponseContent as invalid_response_content:
-        errors.append(str(invalid_response_content))
-        status_code = 500
-    except api.ApiErrorResponse as api_error_exception:
+    except api.ApiResponseError as api_error_exception:
         if hasattr(api_error_exception, 'errors'):
             errors = api_error_exception.errors
         else:

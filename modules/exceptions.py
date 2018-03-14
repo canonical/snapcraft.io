@@ -1,6 +1,2 @@
-class InvalidResponseContent(Exception):
-    pass
-
-
-class ApiErrorResponse(Exception):
+class ApiResponseError(Exception):
     pass

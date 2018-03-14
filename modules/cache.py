@@ -1,5 +1,5 @@
 import requests
-from modules.exceptions import ApiErrorResponse
+from modules.exceptions import ApiResponseError
 
 
 def get(
@@ -32,7 +32,7 @@ def get(
             timeout=2
         )
     except requests.exceptions.Timeout as exception_response:
-        api_error_exception = ApiErrorResponse(
+        api_error_exception = ApiResponseError(
             'The request to {} took longer than 2 seconds'.format(url)
         )
         api_error_exception.status_code = 504

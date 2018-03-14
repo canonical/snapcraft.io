@@ -1,9 +1,6 @@
 import modules.cache as cache
 import os
-from modules.exceptions import (
-    InvalidResponseContent,
-    ApiErrorResponse
-)
+from modules.exceptions import ApiResponseError
 
 SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',
@@ -61,12 +58,15 @@ def process_response(response):
     try:
         body = response.json()
     except ValueError as decode_error:
-        error_message = 'JSON decoding failed: {}'.format(decode_error)
-        raise InvalidResponseContent(error_message)
+        api_error_exception = ApiResponseError(
+            'JSON decoding failed: {}'.format(decode_error)
+        )
+        api_error_exception.status_code = 500
+        raise api_error_exception
 
     if not response.ok:
         if 'error_list' in body:
-            api_error_exception = ApiErrorResponse("Error list")
+            api_error_exception = ApiResponseError("Error list")
             api_error_exception.status_code = response.status_code
             errors = []
             for error in body['error_list']:
@@ -75,7 +75,7 @@ def process_response(response):
 
             raise api_error_exception
         else:
-            api_error_exception = ApiErrorResponse("Unknown error")
+            api_error_exception = ApiResponseError("Unknown error")
             api_error_exception.status_code = response.status_code
             raise api_error_exception
 
