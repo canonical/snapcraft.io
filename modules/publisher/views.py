@@ -99,6 +99,12 @@ def publisher_snap_measure(snap_name):
 
     metrics_response_json = api.get_publisher_metrics(json=metrics_query_json)
 
+    nodata = True
+
+    for metric in metrics_response_json['metrics']:
+        if metric['status'] == 'OK':
+            nodata = False
+
     active_devices = metrics_response_json['metrics'][0]
     active_devices['series'] = sorted(
         active_devices['series'],
@@ -140,6 +146,7 @@ def publisher_snap_measure(snap_name):
         'active_device_metric': installed_base_metric,
 
         # Metrics data
+        'nodata': nodata,
         'latest_active_devices': "{:,}".format(latest_active_devices),
         'active_devices': active_devices,
         'territories_total': territories_total,

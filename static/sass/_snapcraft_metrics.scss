@@ -110,4 +110,17 @@
       stroke: none !important;
     }
   }
+
+  .is-empty {
+    h3,
+    hr,
+    .p-heading--three {
+      color: $color-mid-light;
+    }
+
+    svg {
+      pointer-events: none;
+      opacity: .4;
+    }
+  }
 }
