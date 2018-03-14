@@ -36,8 +36,54 @@ function initFormNotification(formElId, notificationElId) {
 }
 
 
+// TODO: test
+function diffFormData(initialState, formData) {
+  const diff = {};
+
+  for (let key in initialState) {
+    if (key === 'images') {
+      let images = JSON.parse(formData.get('state'))['images'];
+
+      if (JSON.stringify(initialState[key]) !== JSON.stringify(images)) {
+        diff[key] = images;
+      }
+    } else {
+      if (initialState[key] !== formData.get(key)) {
+        diff[key] = formData.get(key);
+      }
+    }
+  }
+
+  return diff;
+}
+
+function initForm(config, initialState) {
+  // TODO: edit icon in images state
+  initSnapIconEdit(config.snapIconImage, config.snapIconInput);
+  initFormNotification(config.form, config.formNotification);
+  // TODO: move state out of screenshots (to share with icon and rest of the form?)
+  initSnapScreenshotsEdit(
+    config.screenshotsToolbar,
+    config.screenshotsWrapper,
+    {
+      images: JSON.parse(JSON.stringify(initialState.images))
+    }
+  );
+
+  // TODO: move to submit button, leave revert button as it is
+  document.querySelector('form').addEventListener('submit', function() {
+    const data = new FormData(this);
+
+    // TODO: only save changed data
+    // console.log('changed', diffFormData(initialState, data));
+    diffFormData(initialState, data);
+    // event.preventDefault();
+  });
+}
+
 export {
   initSnapIconEdit,
   initFormNotification,
-  initSnapScreenshotsEdit
+  initSnapScreenshotsEdit,
+  initForm
 };

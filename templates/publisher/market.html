@@ -209,22 +209,28 @@
     whitelistUrls: ['snapcraft.io']
   }).install();
   Raven.context(function () {
-    snapcraft.publisher.market.initSnapIconEdit("snap_icon_image", "snap_icon");
-    snapcraft.publisher.market.initFormNotification("market-form", "market-form-status");
-    snapcraft.publisher.market.initSnapScreenshotsEdit(
-      "screenshots-toolbar",
-      "snap-screenshots",
-      {
-        images: [
-          {% if icon_url %}
-            { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
-          {% endif %}
-          {% for screenshot_url in screenshot_urls %}
-            { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
-          {% endfor %}
-        ]
-      }
-    );
+    snapcraft.publisher.market.initForm({
+      snapIconImage: "snap_icon_image",
+      snapIconInput: "snap_icon",
+      form: "market-form",
+      formNotification: "market-form-status",
+      screenshotsToolbar: "screenshots-toolbar",
+      screenshotsWrapper: "snap-screenshots"
+    }, {
+      title: {{ title|tojson }},
+      summary: {{ summary|tojson }},
+      description: {{ description|tojson }},
+      website: {{ website|tojson }},
+      contact: {{ contact|tojson }},
+      images: [
+        {% if icon_url %}
+          { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
+        {% endif %}
+        {% for screenshot_url in screenshot_urls %}
+          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+        {% endfor %}
+      ]
+    })
   });
 </script>
 {% endblock %}
