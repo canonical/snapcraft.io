@@ -54,7 +54,8 @@ function diffFormData(initialState, formData) {
     }
   }
 
-  return diff;
+  // only return diff when there are any changes
+  return Object.keys(diff).length > 0 ? diff : null;
 }
 
 function initForm(config, initialState) {
@@ -70,14 +71,17 @@ function initForm(config, initialState) {
     }
   );
 
-  // TODO: move to submit button, leave revert button as it is
-  document.querySelector('form').addEventListener('submit', function() {
-    const data = new FormData(this);
+  document.querySelector('.js-market-submit').addEventListener('click', function(event){
+    const marketForm = document.getElementById(config.form);
+    // const data = new FormData(marketForm);
+    // const diff = diffFormData(initialState, data);
+
+    event.preventDefault();
 
     // TODO: only save changed data
-    // console.log('changed', diffFormData(initialState, data));
-    diffFormData(initialState, data);
-    // event.preventDefault();
+    // if (diff) {
+    marketForm.submit();
+    //}
   });
 }
 
