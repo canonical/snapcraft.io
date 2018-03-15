@@ -137,7 +137,9 @@ def _log_in(client):
     discharge = pymacaroons.Macaroon('3rd', 'a_ident', 'a_caveat_key')
 
     with client.session_transaction() as s:
-        s['openid'] = 'fake'
+        s['openid'] = {
+            'image': None
+            }
         s['macaroon_root'] = root.serialize()
         s['macaroon_discharge'] = discharge.serialize()
 
@@ -182,7 +184,9 @@ class PublisherPagesTestCase(unittest.TestCase):
     def test_account_logged_in(self):
         # Users logged-in can access they account page.
         payload = {
-            'namespace': 'testing',
+            'username': 'testing',
+            'displayname': 'testing',
+            'email': 'testing@testing.com',
             'snaps': {
                 '16': {
                     'foo': {
@@ -216,7 +220,9 @@ class PublisherPagesTestCase(unittest.TestCase):
         # Why verifying creds (`authentication.verify_response`) on a 500
         # from `account-info` that stil depend on a valid payload ?!?
         payload = {
-            'namespace': 'testing',
+            'username': 'testing',
+            'displayname': 'testing',
+            'email': 'testing@testing.com',
             'snaps': {
                 '16': {},
             }
