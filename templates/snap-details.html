@@ -64,12 +64,14 @@
         </table>
       </div>
     </div>
-    <div class="row" style="margin-top: 2rem">
-      <div class="col-12">
-        <h4>Where people are using {{ snap_title }}</h4>
-        <div id="js-snap-map" class="snapcraft-territories"></div>
+    {% if countries %}
+      <div class="row" style="margin-top: 2rem">
+        <div class="col-12">
+          <h4>Where people are using {{ snap_title }}</h4>
+          <div id="js-snap-map" class="snapcraft-territories"></div>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 
 

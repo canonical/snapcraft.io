@@ -1,5 +1,10 @@
 import modules.cache as cache
 import os
+from modules.exceptions import (
+    ApiResponseDecodeError,
+    ApiResponseError,
+    ApiResponseErrorList
+)
 
 SNAPCRAFT_IO_API = os.getenv(
     'SNAPCRAFT_IO_API',
@@ -53,20 +58,30 @@ PROMOTED_QUERY_HEADERS = {
 }
 
 
-class InvalidResponseContent(Exception):
-    pass
+def process_response(response):
+    try:
+        body = response.json()
+    except ValueError as decode_error:
+        api_error_exception = ApiResponseDecodeError(
+            'JSON decoding failed: {}'.format(decode_error),
+        )
+        raise api_error_exception
 
+    if not response.ok:
+        if 'error_list' in body:
+            api_error_exception = ApiResponseErrorList(
+                'The api returned a list of errors',
+                response.status_code,
+                body['error_list']
+            )
+            raise api_error_exception
+        else:
+            raise ApiResponseError(
+                'Unknown error from api',
+                response.status_code
+            )
 
-class ApiErrorResponse(Exception):
-    pass
-
-
-def normalize_searched_snaps(search_results):
-    return (
-        search_results['_embedded']['clickindex:package']
-        if search_results['_embedded']
-        else []
-    )
+    return body
 
 
 def get_featured_snaps():
@@ -75,7 +90,7 @@ def get_featured_snaps():
         headers=SEARCH_QUERY_HEADERS
     )
 
-    return normalize_searched_snaps(featured_response.json())
+    return process_response(featured_response)
 
 
 def get_promoted_snaps():
@@ -84,7 +99,7 @@ def get_promoted_snaps():
         headers=PROMOTED_QUERY_HEADERS
     )
 
-    return normalize_searched_snaps(promoted_response.json())
+    return process_response(promoted_response)
 
 
 def get_searched_snaps(snap_searched, size, page):
@@ -97,7 +112,7 @@ def get_searched_snaps(snap_searched, size, page):
         headers=SEARCH_QUERY_HEADERS
     )
 
-    return searched_response.json()
+    return process_response(searched_response)
 
 
 def get_snap_details(snap_name):
@@ -106,27 +121,7 @@ def get_snap_details(snap_name):
         headers=DETAILS_QUERY_HEADERS
     )
 
-    try:
-        details = details_response.json()
-    except ValueError as decode_error:
-        error_message = ''.join([
-            "JSON decoding failed: ",
-            str(decode_error),
-        ])
-        raise InvalidResponseContent(error_message)
-
-    if details_response.status_code != 200:
-        if 'error_list' in details:
-            api_error_exception = ApiErrorResponse("Error list")
-            api_error_exception.status = details_response.status_code
-            api_error_exception.errors = details['error_list']
-            raise api_error_exception
-        else:
-            api_error_exception = ApiErrorResponse("Unknown error")
-            api_error_exception.status = details_response.status_code
-            raise api_error_exception
-
-    return details
+    return process_response(details_response)
 
 
 def get_public_metrics(snap_name, json):
@@ -136,4 +131,4 @@ def get_public_metrics(snap_name, json):
         json=json
     )
 
-    return metrics_response.json()
+    return process_response(metrics_response)

@@ -6,6 +6,14 @@ import modules.public.api as api
 import pycountry
 import re
 from dateutil import parser, relativedelta
+from modules.exceptions import (
+    ApiError,
+    ApiTimeoutError,
+    ApiResponseDecodeError,
+    ApiResponseError,
+    ApiResponseErrorList,
+    ApiConnectionError
+)
 from math import floor
 from urllib.parse import parse_qs, urlparse, quote_plus
 
@@ -161,29 +169,78 @@ def convert_limit_offset_to_size_page(link):
     )
 
 
+def _handle_errors(api_error: ApiError):
+    status_code = 502
+    error = {
+        'message': str(api_error)
+    }
+
+    if type(api_error) is ApiTimeoutError:
+        status_code = 504
+    elif type(api_error) is ApiResponseDecodeError:
+        status_code = 502
+    elif type(api_error) is ApiResponseErrorList:
+        error['errors'] = api_error.errors
+        status_code = 502
+    elif type(api_error) is ApiResponseError:
+        status_code = 502
+    elif type(api_error) is ApiConnectionError:
+        status_code = 502
+
+    return status_code, error
+
+
 def homepage():
+    featured_snaps = []
+    error_info = {}
+    status_code = 200
+    try:
+        featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+    except ApiError as api_error:
+        status_code, error_info = _handle_errors(api_error)
+
     return flask.render_template(
         'index.html',
-        featured_snaps=api.get_featured_snaps()
-    )
+        featured_snaps=featured_snaps,
+        error_info=error_info
+    ), status_code
 
 
 def store():
+    featured_snaps = []
+    error_info = {}
+    status_code = 200
+    try:
+        featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
+    except ApiError as api_error:
+        status_code, error_info = _handle_errors(api_error)
+
     return flask.render_template(
         'store.html',
-        featured_snaps=api.get_featured_snaps(),
-        page_slug='store'
-    )
+        featured_snaps=featured_snaps,
+        page_slug='store',
+        error_info=error_info
+    ), status_code
 
 
 def snaps():
+    promoted_snaps = []
+    error_info = {}
+    status_code = 200
+    try:
+        promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
+    except ApiError as api_error:
+        status_code, error_info = _handle_errors(api_error)
+
     return flask.render_template(
         'promoted.html',
-        snaps=api.get_promoted_snaps()
-    )
+        snaps=promoted_snaps,
+        error_info=error_info
+    ), status_code
 
 
 def search_snap():
+    status_code = 200
     snap_searched = flask.request.args.get('q', default='', type=str)
     if(not snap_searched):
         return flask.redirect('/store')
@@ -193,22 +250,32 @@ def search_snap():
 
     page = floor(offset / size) + 1
 
-    searched_results = api.get_searched_snaps(
-        quote_plus(snap_searched),
-        size,
-        page
-    )
+    error_info = {}
+    normalize_results = []
+    links = []
+    try:
+        searched_results = api.get_searched_snaps(
+            quote_plus(snap_searched),
+            size,
+            page
+        )
 
-    context = {
-        "query": snap_searched,
-        "snaps": normalize_searched_snaps(searched_results),
-        "links": get_pages_details(
+        normalize_results = normalize_searched_snaps(searched_results)
+        links = get_pages_details(
             (
                 searched_results['_links']
                 if '_links' in searched_results
                 else []
             )
         )
+    except ApiError as api_error:
+        status_code, error_info = _handle_errors(api_error)
+
+    context = {
+        "query": snap_searched,
+        "snaps": normalize_results,
+        "links": links,
+        "error_info": error_info
 
     }
 
@@ -227,38 +294,26 @@ def snap_details(snap_name):
     with appropriate sanitation.
     """
 
+    error_info = {}
     today = datetime.datetime.utcnow().date()
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
     try:
         details = api.get_snap_details(snap_name)
-    except api.InvalidResponseContent as invalid_response_content:
-        message = str(invalid_response_content)
-        flask.abort(500, message)
-    except api.ApiErrorResponse as api_error_exception:
-        if api_error_exception.errors:
-            flask.abort(api_error_exception.status, api_error_exception.errors)
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            flask.abort(api_error_exception.status, ["Unknown error"])
-
-    metrics_query_json = [
-        {
-            "metric_name": "installed_base_by_country_percent",
-            "snap_id": details['snap_id'],
-            "start": week_ago.strftime('%Y-%m-%d'),
-            "end": today.strftime('%Y-%m-%d')
-        }
-    ]
-
-    metrics_response = api.get_public_metrics(
-        snap_name,
-        metrics_query_json
-    )
-
-    users_by_country = normalize_metrics(
-        metrics_response[0]['series']
-    )
-    country_data = build_country_info(users_by_country)
+            error_messages = ', '.join(api_response_error_list.errors.key())
+            flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        flask.abort(502, str(api_error))
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
@@ -272,7 +327,6 @@ def snap_details(snap_name):
                 attrs[(None, "class")] = "p-link--external"
             elif "p-link--external" not in attrs[(None, "class")]:
                 attrs[(None, "class")] += " p-link--external"
-
         return attrs
 
     for paragraph in paragraphs:
@@ -283,6 +337,30 @@ def snap_details(snap_name):
         paragraph = bleach.linkify(paragraph, callbacks=callbacks)
 
         formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
+
+    status_code = 200
+    country_data = []
+    try:
+        metrics_query_json = [
+            {
+                "metric_name": "installed_base_by_country_percent",
+                "snap_id": details['snap_id'],
+                "start": week_ago.strftime('%Y-%m-%d'),
+                "end": today.strftime('%Y-%m-%d')
+            }
+        ]
+
+        metrics_response = api.get_public_metrics(
+            snap_name,
+            metrics_query_json
+        )
+
+        users_by_country = normalize_metrics(
+            metrics_response[0]['series']
+        )
+        country_data = build_country_info(users_by_country)
+    except ApiError as api_error:
+        status_code, error_info = _handle_errors(api_error)
 
     context = {
         # Data direct from details API
@@ -315,10 +393,12 @@ def snap_details(snap_name):
         'is_linux': (
             'Linux' in flask.request.headers.get('User-Agent', '') and
             'Android' not in flask.request.headers.get('User-Agent', '')
-        )
+        ),
+
+        'error_info': error_info
     }
 
     return flask.render_template(
         'snap-details.html',
         **context
-    )
+    ), status_code

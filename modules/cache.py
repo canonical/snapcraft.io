@@ -1,4 +1,8 @@
 import requests
+from modules.exceptions import (
+    ApiTimeoutError,
+    ApiConnectionError
+)
 
 
 def get(
@@ -20,12 +24,23 @@ def get(
     if method is None:
         method = "POST" if json else "GET"
 
-    return requests.request(
-        method=method,
-        url=url,
-        headers=headers,
-        json=json,
-        files=files,
-        data=data,
-        timeout=2
-    )
+    try:
+        return requests.request(
+            method=method,
+            url=url,
+            headers=headers,
+            json=json,
+            files=files,
+            data=data,
+            timeout=2
+        )
+    except requests.exceptions.Timeout:
+        api_error_exception = ApiTimeoutError(
+            'The request to {} took longer than 2 seconds'.format(url),
+        )
+        raise api_error_exception
+    except requests.exceptions.ConnectionError:
+        api_error_exception = ApiConnectionError(
+            'Failed to establish connection to {}.'.format(url)
+        )
+        raise api_error_exception
