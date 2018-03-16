@@ -4,6 +4,7 @@ import humanize
 import modules.public.api as api
 import modules.public.logic as logic
 from dateutil import parser, relativedelta
+from math import floor
 from modules.exceptions import (
     ApiError,
     ApiTimeoutError,
@@ -97,10 +98,13 @@ def search_snap():
     if not snap_searched:
         return flask.redirect('/store')
 
-    size, page = logic.convert_args_search(
-        flask.request.args.get('limit', default=10, type=int),
-        flask.request.args.get('offset', default=0, type=int)
-    )
+    size = flask.request.args.get('limit', default=10, type=int)
+    offset = flask.request.args.get('offset', default=0, type=int)
+    try:
+        page = floor(offset / size) + 1
+    except ZeroDivisionError:
+        size = 10
+        page = floor(offset / size) + 1
 
     error_info = {}
     snaps_results = []
@@ -165,7 +169,9 @@ def snap_details(snap_name):
     except ApiError as api_error:
         flask.abort(502, str(api_error))
 
-    formatted_paragraphs = logic.format_paragraphs(details['description'])
+    formatted_paragraphs = logic.split_description_into_paragraphs(
+        details['description']
+    )
 
     status_code = 200
     country_data = []
@@ -187,7 +193,7 @@ def snap_details(snap_name):
             metrics_query_json
         )
 
-        users_by_country = logic.transform_metrics(
+        users_by_country = logic.calculate_metrics_countries(
             metrics_response[0]['series']
         )
         country_data = logic.build_country_info(users_by_country)

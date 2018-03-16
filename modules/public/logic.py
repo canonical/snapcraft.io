@@ -1,18 +1,17 @@
 import bleach
-from math import floor
 import pycountry
 import re
 from urllib.parse import parse_qs, urlparse
 
 
 def calculate_colors(countries, max_users):
-    """Calculate the displayed colors for a list of country depending on the
-    maximum of users
+    """Calculate the displayed colors for a list of countries depending on the
+    maximum number of users
 
     :param countries: List of countries
-    :param max_users: Maximum of users
+    :param max_users: Maximum of number users
 
-    :returns: The list of countries with a caculated color for each
+    :returns: The list of countries with a calculated color for each
     """
     for country_code in countries:
         countries[country_code]['color_rgb'] = [
@@ -36,6 +35,8 @@ def calculate_colors(countries, max_users):
             )
         ]
 
+    return countries
+
 
 def calculate_color(thisCountry, maxCountry, maxColor, minColor):
     """Calculate displayed color for a given country
@@ -52,8 +53,23 @@ def calculate_color(thisCountry, maxCountry, maxColor, minColor):
     return int(colorRange*countryFactor+minColor)
 
 
-def transform_metrics(geodata):
-    """Transform metrics to get more displayable metrics
+def calculate_metrics_countries(geodata):
+    """Calculate metrics per countries:
+    - Number of users
+    - Percentage of users
+    - Colors to display
+
+    Output:
+    ```
+    {
+      'FR': {
+        'number_of_users': 1.125,
+        'percentage_of_users': 0.1875,
+        'color_rgb': [8, 64, 129]
+      },
+      ...
+    }
+    ```
 
     :param geodata: The list of countries
 
@@ -83,18 +99,32 @@ def transform_metrics(geodata):
         if max_users < users_by_country[country_code]['percentage_of_users']:
             max_users = users_by_country[country_code]['percentage_of_users']
 
-    calculate_colors(users_by_country, max_users)
+    metrics_countries = calculate_colors(users_by_country, max_users)
 
-    return users_by_country
+    return metrics_countries
 
 
 def build_country_info(users_by_country, display_number_users=False):
-    """Build info list for every country
+    """Build information for every country from a subset of information of
+    country.
 
-    :param users_by_country: number of users per country
+    Input:
+    ```
+    {
+      'FR': {
+        'number_of_users': 1.125,
+        'percentage_of_users': 0.1875,
+        'color_rgb': [8, 64, 129]
+      },
+      ...
+    }
+    ```
+
+    :param users_by_country: A dictionnary of information for a subset of
+    countries
     :param display_number_users: Add the number of users if True
 
-    :returns: A dictionnary with the country information
+    :returns: A dictionnary with the country information for every country
     """
     country_data = {}
     for country in pycountry.countries:
@@ -153,31 +183,31 @@ def get_pages_details(url, links):
     links_result = {}
 
     if('first' in links):
-        links_result['first'] = convert_limit_offset_to_size_page(
+        links_result['first'] = convert_navigation_url(
             url,
             links['first']['href']
         )
 
     if('last' in links):
-        links_result['last'] = convert_limit_offset_to_size_page(
+        links_result['last'] = convert_navigation_url(
             url,
             links['last']['href']
         )
 
     if('next' in links):
-        links_result['next'] = convert_limit_offset_to_size_page(
+        links_result['next'] = convert_navigation_url(
             url,
             links['next']['href']
         )
 
     if('prev' in links):
-        links_result['prev'] = convert_limit_offset_to_size_page(
+        links_result['prev'] = convert_navigation_url(
             url,
             links['prev']['href']
         )
 
     if('self' in links):
-        links_result['self'] = convert_limit_offset_to_size_page(
+        links_result['self'] = convert_navigation_url(
             url,
             links['self']['href']
         )
@@ -185,8 +215,12 @@ def get_pages_details(url, links):
     return links_result
 
 
-def convert_limit_offset_to_size_page(url, link):
-    """Convert navigation link from offst/limit to size/page
+def convert_navigation_url(url, link):
+    """Convert navigation link from offest/limit to size/page
+
+    Example:
+    - input: http://example.com?q=test&size=10&page=3
+    - output: http://example2.com?q=test&limit=10&offset=30
 
     :param url: The new url
     :param link: The navigation url returned by the API
@@ -212,8 +246,9 @@ def convert_limit_offset_to_size_page(url, link):
     )
 
 
-def format_paragraphs(unformatted_description):
-    """Format paragraphs to displayable paragraph
+def split_description_into_paragraphs(unformatted_description):
+    """Split a long description into a set of paragraphs. We assume each
+    paragraph is separated by 2 or more line-breaks in the description.
 
     :param unformatted_description: The paragraph to format
 
@@ -243,16 +278,3 @@ def format_paragraphs(unformatted_description):
         formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
 
     return formatted_paragraphs
-
-
-def convert_args_search(limit, offset):
-    """Convert from limit/offset to size/page
-
-    :param limit: The limit
-    :param offset: The offset
-
-    :returns: The size and the page
-    """
-    page = floor(offset / limit) + 1
-
-    return (limit, page)
