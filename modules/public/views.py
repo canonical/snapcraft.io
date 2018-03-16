@@ -189,50 +189,50 @@ def _handle_errors(api_error: ApiError):
 
 def homepage():
     featured_snaps = []
-    errors = []
+    error_info = {}
     status_code = 200
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except ApiError as api_error:
-        status_code, errors = _handle_errors(api_error)
+        status_code, error_info = _handle_errors(api_error)
 
     return flask.render_template(
         'index.html',
         featured_snaps=featured_snaps,
-        errors=errors
+        error_info=error_info
     ), status_code
 
 
 def store():
     featured_snaps = []
-    errors = []
+    error_info = {}
     status_code = 200
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except ApiError as api_error:
-        status_code, errors = _handle_errors(api_error)
+        status_code, error_info = _handle_errors(api_error)
 
     return flask.render_template(
         'store.html',
         featured_snaps=featured_snaps,
         page_slug='store',
-        errors=errors
+        error_info=error_info
     ), status_code
 
 
 def snaps():
     promoted_snaps = []
-    errors = []
+    error_info = {}
     status_code = 200
     try:
         promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
     except ApiError as api_error:
-        status_code, errors = _handle_errors(api_error)
+        status_code, error_info = _handle_errors(api_error)
 
     return flask.render_template(
         'promoted.html',
         snaps=promoted_snaps,
-        errors=errors
+        error_info=error_info
     ), status_code
 
 
@@ -247,7 +247,7 @@ def search_snap():
 
     page = floor(offset / size) + 1
 
-    errors = []
+    error_info = {}
     normalize_results = []
     links = []
     try:
@@ -266,13 +266,13 @@ def search_snap():
             )
         )
     except ApiError as api_error:
-        status_code, errors = _handle_errors(api_error)
+        status_code, error_info = _handle_errors(api_error)
 
     context = {
         "query": snap_searched,
         "snaps": normalize_results,
         "links": links,
-        "errors": errors
+        "error_info": error_info
 
     }
 
@@ -291,7 +291,7 @@ def snap_details(snap_name):
     with appropriate sanitation.
     """
 
-    errors = []
+    error_info = {}
     today = datetime.datetime.utcnow().date()
     week_ago = today - relativedelta.relativedelta(weeks=1)
 
@@ -357,7 +357,7 @@ def snap_details(snap_name):
         )
         country_data = build_country_info(users_by_country)
     except ApiError as api_error:
-        status_code, errors = _handle_errors(api_error)
+        status_code, error_info = _handle_errors(api_error)
 
     context = {
         # Data direct from details API
@@ -392,7 +392,7 @@ def snap_details(snap_name):
             'Android' not in flask.request.headers.get('User-Agent', '')
         ),
 
-        'errors': errors
+        'error_info': error_info
     }
 
     return flask.render_template(
