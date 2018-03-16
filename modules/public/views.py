@@ -41,7 +41,7 @@ def homepage():
     error_info = {}
     status_code = 200
     try:
-        featured_snaps = logic.normalize_searched_snaps(
+        featured_snaps = logic.get_searched_snaps(
             api.get_featured_snaps()
         )
     except ApiError as api_error:
@@ -59,7 +59,7 @@ def store():
     error_info = {}
     status_code = 200
     try:
-        featured_snaps = logic.normalize_searched_snaps(
+        featured_snaps = logic.get_searched_snaps(
             api.get_featured_snaps()
         )
     except ApiError as api_error:
@@ -78,7 +78,7 @@ def snaps():
     error_info = {}
     status_code = 200
     try:
-        promoted_snaps = logic.normalize_searched_snaps(
+        promoted_snaps = logic.get_searched_snaps(
             api.get_promoted_snaps()
         )
     except ApiError as api_error:
@@ -103,7 +103,7 @@ def search_snap():
     )
 
     error_info = {}
-    normalize_results = []
+    snaps_results = []
     links = []
     try:
         searched_results = api.get_searched_snaps(
@@ -112,7 +112,7 @@ def search_snap():
             page
         )
 
-        normalize_results = logic.normalize_searched_snaps(searched_results)
+        snaps_results = logic.get_searched_snaps(searched_results)
         links = logic.get_pages_details(
             flask.request.base_url,
             (
@@ -126,7 +126,7 @@ def search_snap():
 
     context = {
         "query": snap_searched,
-        "snaps": normalize_results,
+        "snaps": snaps_results,
         "links": links,
         "error_info": error_info
 
@@ -187,7 +187,7 @@ def snap_details(snap_name):
             metrics_query_json
         )
 
-        users_by_country = logic.normalize_metrics(
+        users_by_country = logic.transform_metrics(
             metrics_response[0]['series']
         )
         country_data = logic.build_country_info(users_by_country)

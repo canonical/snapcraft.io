@@ -6,6 +6,14 @@ from urllib.parse import parse_qs, urlparse
 
 
 def calculate_colors(countries, max_users):
+    """Calculate the displayed colors for a list of country depending on the
+    maximum of users
+
+    :param countries: List of countries
+    :param max_users: Maximum of users
+
+    :returns: The list of countries with a caculated color for each
+    """
     for country_code in countries:
         countries[country_code]['color_rgb'] = [
             calculate_color(
@@ -30,12 +38,27 @@ def calculate_colors(countries, max_users):
 
 
 def calculate_color(thisCountry, maxCountry, maxColor, minColor):
+    """Calculate displayed color for a given country
+
+    :param thisCountry: The country
+    :param maxCountry: The number of users of the country with the most users
+    :param maxColor: The maximum color to reach
+    :param minColor: The minimum color to reach
+
+    :returns: The calculated color for the country
+    """
     countryFactor = float(thisCountry)/maxCountry
     colorRange = maxColor - minColor
     return int(colorRange*countryFactor+minColor)
 
 
-def normalize_metrics(geodata):
+def transform_metrics(geodata):
+    """Transform metrics to get more displayable metrics
+
+    :param geodata: The list of countries
+
+    :returns: The transformed metrics
+    """
     users_by_country = {}
     max_users = 0.0
     for country_counts in geodata:
@@ -66,6 +89,13 @@ def normalize_metrics(geodata):
 
 
 def build_country_info(users_by_country, display_number_users=False):
+    """Build info list for every country
+
+    :param users_by_country: number of users per country
+    :param display_number_users: Add the number of users if True
+
+    :returns: A dictionnary with the country information
+    """
     country_data = {}
     for country in pycountry.countries:
         country_info = users_by_country.get(country.alpha_2)
@@ -97,7 +127,13 @@ def build_country_info(users_by_country, display_number_users=False):
     return country_data
 
 
-def normalize_searched_snaps(search_results):
+def get_searched_snaps(search_results):
+    """Get search snaps from API response
+
+    :param search_results: the body responsed by the API
+
+    :returns: The list of the searched snaps
+    """
     return (
         search_results['_embedded']['clickindex:package']
         if '_embedded' in search_results
@@ -106,6 +142,14 @@ def normalize_searched_snaps(search_results):
 
 
 def get_pages_details(url, links):
+    """Transform returned navigation links from search API from limit/offset
+    to size/page
+
+    :param url: The url to build
+    :param links: The links returned by the API
+
+    :returns: A dictionnary with all the navigation links
+    """
     links_result = {}
 
     if('first' in links):
@@ -142,6 +186,13 @@ def get_pages_details(url, links):
 
 
 def convert_limit_offset_to_size_page(url, link):
+    """Convert navigation link from offst/limit to size/page
+
+    :param url: The new url
+    :param link: The navigation url returned by the API
+
+    :returns: The new navigation link
+    """
     url_parsed = urlparse(link)
     host_url = (
         "{base_url}"
@@ -162,6 +213,12 @@ def convert_limit_offset_to_size_page(url, link):
 
 
 def format_paragraphs(unformatted_description):
+    """Format paragraphs to displayable paragraph
+
+    :param unformatted_description: The paragraph to format
+
+    :returns: The formatted paragraphs
+    """
     description = unformatted_description.strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
     formatted_paragraphs = []
@@ -189,6 +246,13 @@ def format_paragraphs(unformatted_description):
 
 
 def convert_args_search(limit, offset):
+    """Convert from limit/offset to size/page
+
+    :param limit: The limit
+    :param offset: The offset
+
+    :returns: The size and the page
+    """
     page = floor(offset / limit) + 1
 
     return (limit, page)
