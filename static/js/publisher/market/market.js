@@ -1,12 +1,24 @@
 import { initSnapScreenshotsEdit } from './screenshots';
 
-function initSnapIconEdit(iconElId, iconInputId) {
+function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
 
   snapIconInput.addEventListener("change", function(){
-    const fileList = this.files;
-    snapIconEl.src = URL.createObjectURL(fileList[0]);
+    const iconFile = this.files[0];
+    snapIconEl.src = URL.createObjectURL(iconFile);
+
+    // remove existing icon from state object
+    const images = state.images.filter(image => image.type !== 'icon');
+    // replace it with a new one
+    images.unshift({
+      url: URL.createObjectURL(iconFile),
+      file: iconFile,
+      name: iconFile.name,
+      status: 'new'
+    });
+
+    updateState(state, { images });
   });
 
   snapIconEl.addEventListener("click", function() {
@@ -44,8 +56,14 @@ function diffFormData(initialState, state) {
   for (let key of allowedKeys) {
     // images is an array of objects so compare stringified version
     if (key === 'images') {
-      // remove images to delete from the diff
-      const images = state[key].filter(image => image.status !== 'delete');
+      const images = state[key]
+        // remove images to delete from the diff
+        .filter(image => image.status !== 'delete')
+        // ignore selected status when comparing
+        .map(image => {
+          delete image.selected;
+          return image;
+        });
 
       if (JSON.stringify(initialState[key]) !== JSON.stringify(images)) {
         diff[key] = images;
@@ -61,6 +79,7 @@ function diffFormData(initialState, state) {
   return Object.keys(diff).length > 0 ? diff : null;
 }
 
+// TODO: test
 function updateState(state, values) {
   if (values) {
     // if values can be iterated on (like FormData)
@@ -97,8 +116,7 @@ function initForm(config, initialState) {
 
   marketForm.appendChild(diffInput);
 
-  // TODO: edit icon in images state
-  initSnapIconEdit(config.snapIconImage, config.snapIconInput);
+  initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
   initFormNotification(config.form, config.formNotification);
   initSnapScreenshotsEdit(
     config.screenshotsToolbar,
