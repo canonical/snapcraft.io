@@ -6,6 +6,14 @@ class ApiError(Exception):
     pass
 
 
+class ApiConnectionError(ApiError):
+    """
+    Communication with the API failed
+    """
+
+    pass
+
+
 class ApiTimeoutError(ApiError):
     """
     Communication with the API timed out

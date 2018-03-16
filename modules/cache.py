@@ -1,5 +1,8 @@
 import requests
-from modules.exceptions import ApiTimeoutError
+from modules.exceptions import (
+    ApiTimeoutError,
+    ApiConnectionError
+)
 
 
 def get(
@@ -31,8 +34,13 @@ def get(
             data=data,
             timeout=2
         )
-    except requests.exceptions.Timeout as exception_response:
+    except requests.exceptions.Timeout:
         api_error_exception = ApiTimeoutError(
             'The request to {} took longer than 2 seconds'.format(url),
+        )
+        raise api_error_exception
+    except requests.exceptions.ConnectionError:
+        api_error_exception = ApiConnectionError(
+            'Failed to establish connection to {}.'.format(url)
         )
         raise api_error_exception

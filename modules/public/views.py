@@ -11,7 +11,8 @@ from modules.exceptions import (
     ApiTimeoutError,
     ApiResponseDecodeError,
     ApiResponseError,
-    ApiResponseErrorList
+    ApiResponseErrorList,
+    ApiConnectionError
 )
 from math import floor
 from urllib.parse import parse_qs, urlparse, quote_plus
@@ -182,6 +183,8 @@ def _handle_errors(api_error: ApiError):
         error['errors'] = api_error.errors
         status_code = 502
     elif type(api_error) is ApiResponseError:
+        status_code = 502
+    elif type(api_error) is ApiConnectionError:
         status_code = 502
 
     return status_code, error
