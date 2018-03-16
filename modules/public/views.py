@@ -168,6 +168,25 @@ def convert_limit_offset_to_size_page(link):
     )
 
 
+def _handle_errors(api_error: ApiError):
+    status_code = 502
+    error = {
+        'message': str(api_error)
+    }
+
+    if type(api_error) is ApiTimeoutError:
+        status_code = 504
+    elif type(api_error) is ApiResponseDecodeError:
+        status_code = 502
+    elif type(api_error) is ApiResponseErrorList:
+        error['errors'] = api_error.errors
+        status_code = 502
+    elif type(api_error) is ApiResponseError:
+        status_code = 502
+
+    return status_code, error
+
+
 def homepage():
     featured_snaps = []
     errors = []
@@ -175,28 +194,13 @@ def homepage():
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except ApiError as api_error:
-        status_code, errors = handle_errors(api_error)
+        status_code, errors = _handle_errors(api_error)
 
     return flask.render_template(
         'index.html',
         featured_snaps=featured_snaps,
         errors=errors
     ), status_code
-
-
-def handle_errors(api_error: ApiError):
-    status_code = 500
-
-    if type(api_error) is ApiTimeoutError:
-        status_code = 504
-    elif type(api_error) is ApiResponseDecodeError:
-        status_code = 500
-    elif type(api_error) is ApiResponseErrorList:
-        status_code = api_error.status_code
-    elif type(api_error) is ApiResponseError:
-        status_code = api_error.status_code
-
-    return status_code, [str(api_error)]
 
 
 def store():
@@ -206,7 +210,7 @@ def store():
     try:
         featured_snaps = normalize_searched_snaps(api.get_featured_snaps())
     except ApiError as api_error:
-        status_code, errors = handle_errors(api_error)
+        status_code, errors = _handle_errors(api_error)
 
     return flask.render_template(
         'store.html',
@@ -223,7 +227,7 @@ def snaps():
     try:
         promoted_snaps = normalize_searched_snaps(api.get_promoted_snaps())
     except ApiError as api_error:
-        status_code, errors = handle_errors(api_error)
+        status_code, errors = _handle_errors(api_error)
 
     return flask.render_template(
         'promoted.html',
@@ -262,7 +266,7 @@ def search_snap():
             )
         )
     except ApiError as api_error:
-        status_code, errors = handle_errors(api_error)
+        status_code, errors = _handle_errors(api_error)
 
     context = {
         "query": snap_searched,
@@ -275,7 +279,7 @@ def search_snap():
     return flask.render_template(
         'search.html',
         **context
-    ), status_code
+    )
 
 
 def snap_details(snap_name):
@@ -294,37 +298,19 @@ def snap_details(snap_name):
     try:
         details = api.get_snap_details(snap_name)
     except ApiTimeoutError as api_timeout_error:
-        flask.abort(
-            504,
-            str(api_timeout_error)
-        )
+        flask.abort(504, str(api_timeout_error))
     except ApiResponseDecodeError as api_response_decode_error:
-        flask.abort(
-            500,
-            str(api_response_decode_error)
-        )
+        flask.abort(502, str(api_response_decode_error))
     except ApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
-            flask.abort(
-                404,
-                'No snap named {}'.format(snap_name)
-            )
+            flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            error_messages = ', '.join(api_response_error_list.errors)
-            flask.abort(
-                500,
-                error_messages
-            )
+            error_messages = ', '.join(api_response_error_list.errors.key())
+            flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
-        flask.abort(
-            500,
-            str(api_response_error)
-        )
+        flask.abort(502, str(api_response_error))
     except ApiError as api_error:
-        flask.abort(
-            500,
-            str(api_error)
-        )
+        flask.abort(502, str(api_error))
 
     description = details['description'].strip()
     paragraphs = re.compile(r'[\n\r]{2,}').split(description)
@@ -371,7 +357,7 @@ def snap_details(snap_name):
         )
         country_data = build_country_info(users_by_country)
     except ApiError as api_error:
-        status_code, errors = handle_errors(api_error)
+        status_code, errors = _handle_errors(api_error)
 
     context = {
         # Data direct from details API

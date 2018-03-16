@@ -214,8 +214,7 @@ def discover():
 
 @app.route('/snaps')
 def snaps():
-    return public_views.snaps()
-    # return flask.redirect('/store')
+    return flask.redirect('/store')
 
 
 @app.route('/search')

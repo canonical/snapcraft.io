@@ -69,14 +69,10 @@ def process_response(response):
 
     if not response.ok:
         if 'error_list' in body:
-            errors = []
-            for error in body['error_list']:
-                errors.append(error['message'])
-
             api_error_exception = ApiResponseErrorList(
                 'The api returned a list of errors',
                 response.status_code,
-                errors
+                body['error_list']
             )
             raise api_error_exception
         else:
