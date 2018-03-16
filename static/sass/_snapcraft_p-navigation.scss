@@ -3,20 +3,22 @@
   $navigation-hover-color: darken($color-navigation-background, 8%); // from #252525 to #111
 
   .p-navigation {
-    .p-navigation__link {
-      a:hover,
-      .is-selected {
-        background: $navigation-hover-color;
-      }
-    }
-
-    .p-navigation__links {
+    @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__link {
-        border-left: 1px solid $navigation-border-color;
+        a:hover,
+        .is-selected {
+          background: $navigation-hover-color;
+        }
       }
 
-      &:last-of-type {
-        border-right: 1px solid $navigation-border-color;
+      .p-navigation__links {
+        .p-navigation__link {
+          border-left: 1px solid $navigation-border-color;
+        }
+
+        &:last-of-type {
+          border-right: 1px solid $navigation-border-color;
+        }
       }
     }
   }
