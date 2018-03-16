@@ -50,7 +50,11 @@
           <p>{{ paragraph | safe }}</p>
         {% endfor %}
         {% if website %}<p><a href="{{ website }}">Developer website</a></p>{% endif %}
-        {% if contact %}<p class="u-no-margin--top"><a href="{{ contact }}">Contact {{ publisher }}</a></p>{% endif %}
+        {% if contact %}
+          <p{% if website %} class="u-no-margin--top"{% endif %}>
+            <a href="{{ contact }}">Contact {{ publisher }}</a>
+          </p>
+        {% endif %}
       </div>
       <div class="col-4">
         <table class="p-table-key-value">
