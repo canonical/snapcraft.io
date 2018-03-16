@@ -48,4 +48,11 @@
   .is-ticked {
     background-position: 0 .3em;
   }
+
+  // This can be removed when
+  // https://github.com/vanilla-framework/vanilla-framework/issues/1627
+  // is resolved.
+  br {
+    margin-top: 0;
+  }
 }
