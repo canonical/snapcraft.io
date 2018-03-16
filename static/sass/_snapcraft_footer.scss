@@ -12,6 +12,11 @@
     p {
       max-width: 100%;
     }
+
+    a,
+    br {
+      margin-top: 0; // get rid of Vanilla `* + *` margin
+    }
   }
 
 }
