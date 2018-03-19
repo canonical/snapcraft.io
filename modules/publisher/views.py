@@ -1,7 +1,7 @@
 import datetime
 import flask
 import hashlib
-import modules.public.views as public_views
+import modules.public.logic as public_logic
 import modules.publisher.api as api
 from dateutil import relativedelta
 from json import dumps, loads
@@ -156,11 +156,11 @@ def publisher_snap_measure(snap_name):
         'buckets': active_devices['buckets']
     }
 
-    users_by_country = public_views.normalize_metrics(
+    users_by_country = public_logic.calculate_metrics_countries(
         metrics_response_json['metrics'][1]['series']
     )
 
-    country_data = public_views.build_country_info(
+    country_data = public_logic.build_country_info(
         users_by_country,
         True
     )
