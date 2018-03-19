@@ -1,0 +1,49 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+Choose username — Linux software in the Snap Store
+{% endblock %}
+
+{% block content %}
+<section class="p-layout__main u-no-margin--top">
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <h3>Choose a snap store username</h3>
+      {% if error_list %}
+        {% for error in error_list %}
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            {{ error.message|safe }}
+          </p>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="row">
+    <form class="p-form p-form--stacked" method="POST" action="/account/username">
+      <div class="row">
+        <div class="col-7">
+          <label class="p-form__label" for="username">Username:</label>
+          <div class="p-form__control">
+            <input name="username" id="username" type="text" value="{{ username }}" required pattern="^[a-z0-9]+[a-z0-9-]*[a-z0-9]+$">
+            <p class="p-form-help-text">
+              <b>This name will appear as the owner of any snaps you create and cannot be changed.</b><br class="u-no-margin--top" />
+              Enter a value consisting of lower-case letters, numbers or hyphens.<br class="u-no-margin--top" />
+              Hyphens cannot occur at the start or end of the chosen value.
+            </p>
+          </div>
+        </div>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      </div>
+      <hr />
+      <div class="row u-no-margin--top">
+        <div class="u-float--right u-no-margin--top u-clear">
+          <a class="p-button--neutral" href="/">Cancel</a>
+          <button class="p-button--possitive u-no-margin--top" type="submit">Continue</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

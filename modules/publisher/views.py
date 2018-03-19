@@ -19,6 +19,8 @@ def get_account():
             if error['code'] == 'user-not-ready':
                 if 'has not signed agreement' in error['message']:
                     return flask.redirect('/account/agreement')
+                elif 'missing namespace' in error['message']:
+                    return flask.redirect('/account/username')
             else:
                 error_list.append(error)
 
@@ -55,6 +57,27 @@ def post_agreement():
         return flask.redirect('/account')
     else:
         return flask.render_template('developer_programme_agreement.html')
+
+
+def get_account_name():
+    return flask.render_template('username.html')
+
+
+def post_account_name():
+    username = flask.request.form.get('username')
+
+    if username:
+        response = api.post_username(username)
+        if 'error_list' in response:
+            return flask.render_template(
+                'username.html',
+                username=username,
+                error_list=response['error_list']
+            )
+        else:
+            return flask.redirect('/account')
+    else:
+        return flask.render_template('username.html')
 
 
 def publisher_snap_measure(snap_name):

@@ -71,7 +71,13 @@ def request_macaroon():
     response = requests.request(
         url=url,
         method='POST',
-        json={'permissions': ['package_access', 'package_upload']},
+        json={
+            'permissions': [
+                'package_access',
+                'package_upload',
+                'edit_account'
+            ]
+        },
         headers={
             'Accept': 'application/json, application/hal+json',
             'Content-Type': 'application/json',
