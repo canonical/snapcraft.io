@@ -9,7 +9,7 @@ from operator import itemgetter
 
 
 def get_account():
-    account = api.get_account()
+    account = api.get_account(flask.session)
     if 'redirect' in account:
         return account['redirect']
 
@@ -53,7 +53,7 @@ def post_agreement():
     agreed = flask.request.form.get('i_agree')
 
     if agreed == 'on':
-        api.post_agreement(True)
+        api.post_agreement(flask.session, True)
         return flask.redirect('/account')
     else:
         return flask.render_template('developer_programme_agreement.html')
@@ -67,7 +67,7 @@ def post_account_name():
     username = flask.request.form.get('username')
 
     if username:
-        response = api.post_username(username)
+        response = api.post_username(flask.session, username)
         if 'error_list' in response:
             return flask.render_template(
                 'username.html',
@@ -88,7 +88,7 @@ def publisher_snap_measure(snap_name):
     some of the data through to the publisher/measure.html template,
     with appropriate sanitation.
     """
-    details = api.get_snap_info(snap_name)
+    details = api.get_snap_info(snap_name, flask.session)
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
@@ -128,7 +128,10 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    metrics_response_json = api.get_publisher_metrics(json=metrics_query_json)
+    metrics_response_json = api.get_publisher_metrics(
+        flask.session,
+        json=metrics_query_json
+    )
 
     nodata = True
 
@@ -194,7 +197,7 @@ def publisher_snap_measure(snap_name):
 
 
 def get_market_snap(snap_name):
-    snap_details = api.get_snap_info(snap_name)
+    snap_details = api.get_snap_info(snap_name, flask.session)
 
     context = {
         "snap_id": snap_details['snap_id'],
@@ -217,8 +220,8 @@ def get_market_snap(snap_name):
 
 
 def snap_release(snap_name):
-    snap_id = api.get_snap_id(snap_name)
-    status_json = api.get_snap_status(snap_id)
+    snap_id = api.get_snap_id(snap_name, flask.session)
+    status_json = api.get_snap_status(snap_id, flask.session)
 
     return flask.render_template(
         'publisher/release.html',
@@ -245,7 +248,7 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    snap_id = api.get_snap_id(snap_name)
+    snap_id = api.get_snap_id(snap_name, flask.session)
 
     if 'submit_revert' in flask.request.form:
         flask.flash("All changes reverted.", 'information')
@@ -257,7 +260,8 @@ def post_market_snap(snap_name):
 
         # Add existing screenshots
         current_screenshots = api.snap_screenshots(
-            snap_id
+            snap_id,
+            flask.session
         )
         state_screenshots = loads(flask.request.form['state'])['images']
         for state_screenshot in state_screenshots:
@@ -287,6 +291,7 @@ def post_market_snap(snap_name):
         images_json = {'info': dumps(info)}
         screenshots_response = api.snap_screenshots(
             snap_id,
+            flask.session,
             images_json,
             images_files
         )
@@ -314,13 +319,14 @@ def post_market_snap(snap_name):
 
         metadata = api.snap_metadata(
             flask.request.form['snap_id'],
+            flask.session,
             body_json
         )
         if 'error_list' in metadata:
             error_list = error_list + metadata['error_list']
 
         if error_list:
-            snap_details = api.get_snap_info(snap_name)
+            snap_details = api.get_snap_info(snap_name, flask.session)
             context = {
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
