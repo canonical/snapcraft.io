@@ -27,9 +27,49 @@ def refresh_redirect(path):
     return flask.redirect(path)
 
 
-def get_account():
+def get_account_details():
     try:
         account = api.get_account(flask.session)
+        if 'redirect' in account:
+            return account['redirect']
+
+        error_list = []
+        if 'error_list' in account:
+            for error in account['error_list']:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        return flask.redirect('/account/agreement')
+                    elif 'missing namespace' in error['message']:
+                        return flask.redirect('/account/username')
+                else:
+                    error_list.append(error)
+
+            context = {'error_list': error_list}
+        else:
+            flask_user = flask.session['openid']
+
+            context = {
+                'image': flask_user['image'],
+                'username': flask_user['nickname'],
+                'displayname': flask_user['fullname'],
+                'email': flask_user['email'],
+            }
+
+        return flask.render_template(
+            'publisher/account-details.html',
+            **context
+        )
+    except MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
+
+
+def get_account_snaps():
+    try:
+        account = api.get_account(flask.session)
+        if 'redirect' in account:
+            return account['redirect']
 
         error_list = []
         if 'error_list' in account:
@@ -46,23 +86,27 @@ def get_account():
                 'error_list': error_list
             }
         else:
-            user_snaps = []
+            user_snaps = {}
+            registered_snaps = {}
+
             if '16' in account['snaps']:
-                user_snaps = account['snaps']['16']
+                snaps = account['snaps']['16']
+                for snap in snaps.keys():
+                    if not snaps[snap]['latest_revisions']:
+                        registered_snaps[snap] = snaps[snap]
+                    else:
+                        user_snaps[snap] = snaps[snap]
 
             flask_user = flask.session['openid']
 
             context = {
-                'image': flask_user['image'],
-                'username': flask_user['nickname'],
-                'displayname': flask_user['fullname'],
-                'email': account['email'],
                 'snaps': user_snaps,
-                'error_list': error_list
+                'current_user': flask_user['nickname'],
+                'registered_snaps': registered_snaps,
             }
 
         return flask.render_template(
-            'account.html',
+            'publisher/account-snaps.html',
             **context
         )
     except MacaroonRefreshRequired:

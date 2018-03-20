@@ -70,7 +70,8 @@ class BaseTestCases:
                 s['openid'] = {
                     'image': None,
                     'nickname': 'Toto',
-                    'fullname': 'El Toto'
+                    'fullname': 'El Toto',
+                    'email': 'testing@testing.com'
                 }
                 s['macaroon_root'] = root.serialize()
                 s['macaroon_discharge'] = discharge.serialize()

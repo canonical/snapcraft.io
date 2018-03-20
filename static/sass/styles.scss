@@ -9,6 +9,7 @@ $color-navigation-background: #252525;
 @include vf-base;
 
 @include vf-p-card; // required by vf-p-tooltips
+@include vf-p-divider;
 @include vf-p-links;
 @include vf-p-lists;
 @include vf-p-grid;
@@ -103,6 +104,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_snap-list';
 @include snapcraft-snap-list;
+
+@import 'snapcraft_account-snaps';
+@include snapcraft-account-snaps;
 
 @import 'patterns_maas_modal';
 @include maas-p-modal;
