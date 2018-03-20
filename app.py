@@ -236,6 +236,18 @@ def get_account():
     return publisher_views.get_account()
 
 
+@app.route('/account/details')
+@login_required
+def get_account_details():
+    return publisher_views.get_account_details()
+
+
+@app.route('/account/snaps')
+@login_required
+def get_account_snaps():
+    return publisher_views.get_account_snaps()
+
+
 @app.route('/account/agreement')
 @login_required
 def get_agreement():

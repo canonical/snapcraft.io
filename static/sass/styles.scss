@@ -101,6 +101,9 @@ $color-navigation-background: #252525;
 @import 'snapcraft_snap-list';
 @include snapcraft-snap-list;
 
+@import 'snapcraft_account-snaps';
+@include snapcraft-account-snaps;
+
 @import 'patterns_maas_modal';
 @include maas-p-modal;
 

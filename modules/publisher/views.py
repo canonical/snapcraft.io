@@ -45,6 +45,77 @@ def get_account():
     )
 
 
+def get_account_details():
+    account = api.get_account(flask.session)
+    if 'redirect' in account:
+        return account['redirect']
+
+    error_list = []
+    if 'error_list' in account:
+        for error in account['error_list']:
+            if error['code'] == 'user-not-ready':
+                if 'has not signed agreement' in error['message']:
+                    return flask.redirect('/account/agreement')
+                elif 'missing namespace' in error['message']:
+                    return flask.redirect('/account/username')
+            else:
+                error_list.append(error)
+
+    flask_user = flask.session['openid']
+
+    context = {
+        'image': flask_user['image'],
+        'username': account['username'],
+        'displayname': account['displayname'],
+        'email': account['email'],
+        'error_list': error_list
+    }
+
+    return flask.render_template(
+        'publisher/account-details.html',
+        **context
+    )
+
+
+def get_account_snaps():
+    account = api.get_account(flask.session)
+    if 'redirect' in account:
+        return account['redirect']
+
+    error_list = []
+    if 'error_list' in account:
+        for error in account['error_list']:
+            if error['code'] == 'user-not-ready':
+                if 'has not signed agreement' in error['message']:
+                    return flask.redirect('/account/agreement')
+                elif 'missing namespace' in error['message']:
+                    return flask.redirect('/account/username')
+            else:
+                error_list.append(error)
+
+    user_snaps = {}
+    if '16' in account['snaps']:
+        user_snaps = account['snaps']['16']
+
+    registered_snaps = {}
+
+    for snap in user_snaps.keys():
+        if user_snaps[snap]['uploaded'] is False:
+            registered_snaps[snap] = user_snaps[snap]
+
+    context = {
+        'snaps': user_snaps,
+        'current_user': account['username'],
+        'registered_snaps': registered_snaps,
+        'error_list': error_list
+    }
+
+    return flask.render_template(
+        'publisher/account-snaps.html',
+        **context
+    )
+
+
 def get_agreement():
     return flask.render_template('developer_programme_agreement.html')
 

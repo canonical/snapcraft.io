@@ -1,0 +1,81 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+Account details — Linux software in the Snap Store
+{% endblock %}
+
+{% block content %}
+<section class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="u-float--left">Publisher account details</h3>
+      <a href="{{ LOGIN_URL }}" class="p-link--external u-float--right">Edit details</a>
+    </div>
+  </div>
+  <div class="row u-no-margin--top">
+    <hr />
+  </div>
+  {% if errors %}
+    <div class="row u-no-margin--top">
+      <div class="p-notification--negative">
+        <p class="p-notification__response">
+          {% for error in errors %}
+            {{ error.message }}<br />
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row {% if not errors %}u-no-margin--top{% endif %}">
+    <div class="col-2">
+      Full name:
+    </div>
+    <div class="col-6">
+      <b>{{ displayname }}</b>
+    </div>
+    <div class="col-12">
+      <br />
+      <p class="p-form-help-text">
+        Who your users will see as the publisher of your snap.
+      </p>
+    </div>
+  </div>
+  <div class="row u-no-margin--top">
+    <hr />
+  </div>
+  <div class="row u-no-margin--top">
+    <div class="col-2">
+      Username:
+    </div>
+    <div class="col-6">
+      <b>{{ username }}</b>
+    </div>
+    <div class="col-12">
+      <br />
+      <p class="p-form-help-text">
+        This is a shorthand version of your name, used when space on screen is limited.
+      </p>
+    </div>
+  </div>
+  <div class="row u-no-margin--top">
+    <hr />
+  </div>
+  <div class="row u-no-margin--top">
+    <div class="col-2">
+      Email:
+    </div>
+    <div class="col-6">
+      <b>{{ email }}</b>
+    </div>
+    <div class="col-12">
+      <br />
+      <p class="p-form-help-text">
+        This is your account email address, it will not be shared unless you choose to use it as the publisher contact for your snap.
+      </p>
+    </div>
+  </div>
+  <div class="row u-no-margin--top">
+    <hr />
+  </div>
+</section>
+{% endblock %}

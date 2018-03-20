@@ -1,0 +1,129 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+My snaps — Linux software in the Snap Store
+{% endblock %}
+
+{% block content %}
+<div class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="u-float--left">My snaps</h3>
+      <a href="https://docs.snapcraft.io/build-snaps/" class="p-link--external u-float--right">How to create a snap</a>
+    </div>
+  </div>
+  {% if not snaps %}
+    </div> {# close previous strip #}
+    <div class="p-strip--light is-shallow">
+      <div class="row">
+        <h5>You haven't published any snaps yet.</h5>
+        <p>Get started by <a class="p-link--external" href="https://docs.snapcraft.io/build-snaps/your-first-snap">
+          publishing your first snap</a>.
+        </p>
+      </div>
+    </div>
+  {% else %}
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Privacy</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for snap in snaps|sort %}
+            {% if snaps[snap].uploaded %}
+              <tr>
+                <td>
+                  <a href="/account/snaps/{{snap}}/market" class="u-no-margin--top u-vertically-center">
+                    {% if snaps[snap].icon_url %}
+                      <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
+                    {% else %}
+                      <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-snap-list__image" />
+                    {% endif %}
+                    <span class="p-snap-list__name u-no-margin--top">
+                      {{snap}}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  {% if snaps[snap].private %}
+                    Private
+                  {% else %}
+                    Public
+                  {% endif %}
+                </td>
+                <td>
+                  {% if snaps[snap].publisher.username == current_user %}
+                    You
+                  {% else %}
+                    {{ snaps[snap].publisher['display-name'] }}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if snaps|length == 1 %}
+      {% for snap in snaps %}
+        <div class="p-strip--light is-shallow">
+          <div class="row">
+            <div class="col-3">
+              <h4>Congratulations!</h4>
+            </div>
+            <div class="col-6">
+              <p>
+                You've just released a snap!<br />
+                {% if not snaps[snap].private %}
+                  This snap is public &mdash; anyone can find and install it, <a href="/account/snaps/{{ snap }}/market">make it private now<a/>.
+                {% else %}
+                Currently your app is set to private: <a href="/account/snaps/{{ snap }}/market">Make it public now</a>.
+                {% endif %}
+              </p>
+              <p>Things to do next:</p>
+            </div>
+          </div>
+          <div class="row u-no-margin--top">
+            <hr />
+          </div>
+          <div class="row u-no-margin--top">
+            <div class="col-3">
+              <h4>Market</h4>
+            </div>
+            <div class="col-5">
+              <p>
+                Want to improve the listings in stores?
+                You can add an icon and screenshots.
+              </p>
+              <p>
+                <a href="/account/snaps/{{ snap }}/market" class="p-button--neutral">Go to market listing</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+</div>
+{% if registered_snaps %}
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-12">
+        <h4 class="u-float--left">My registered snap names</h4>
+      </div>
+    </div>
+    <div class="row">
+      <p>
+        Names you own but have not pushed a snap to will appear in this list:
+      </p>
+      <p>
+        {% for registered_snap in registered_snaps|sort %}{% if loop.index > 1 %}, {% endif %}{{ registered_snap }}{% endfor %}
+      </p>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
