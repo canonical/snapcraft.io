@@ -1,15 +1,5 @@
 import lightbox from './lightbox';
-
-// STATE HELPER FUNCTIONS
-function updateState(state, values) {
-  if (values) {
-    for (let key in values) {
-      if (values.hasOwnProperty(key)) {
-        state[key] = values[key];
-      }
-    }
-  }
-}
+import { updateState } from './state';
 
 // TEMPLATES
 const templates = {
@@ -57,8 +47,6 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   const setState = function(nextState) {
     updateState(state, nextState);
   };
-
-  setState();
 
   // actions on state
   const addScreenshots = (files) => {

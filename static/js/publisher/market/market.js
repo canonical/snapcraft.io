@@ -1,4 +1,5 @@
 import { initSnapScreenshotsEdit } from './screenshots';
+import { updateState, diffState } from './state';
 
 function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
@@ -47,58 +48,7 @@ function initFormNotification(formElId, notificationElId) {
   }
 }
 
-const allowedKeys = ['title', 'summary', 'description', 'images', 'website', 'contact'];
 
-// TODO: test
-function diffFormData(initialState, state) {
-  const diff = {};
-
-  for (let key of allowedKeys) {
-    // images is an array of objects so compare stringified version
-    if (key === 'images') {
-      const images = state[key]
-        // remove images to delete from the diff
-        .filter(image => image.status !== 'delete')
-        // ignore selected status when comparing
-        .map(image => {
-          delete image.selected;
-          return image;
-        });
-
-      if (JSON.stringify(initialState[key]) !== JSON.stringify(images)) {
-        diff[key] = images;
-      }
-    } else {
-      if (initialState[key] !== state[key]) {
-        diff[key] = state[key];
-      }
-    }
-  }
-
-  // only return diff when there are any changes
-  return Object.keys(diff).length > 0 ? diff : null;
-}
-
-// TODO: test
-function updateState(state, values) {
-  if (values) {
-    // if values can be iterated on (like FormData)
-    if (values.forEach) {
-      values.forEach((value, key) => {
-        if (allowedKeys.includes(key)) {
-          state[key] = value;
-        }
-      });
-    // else if it's just a plain object
-    } else {
-      for (let key in values) {
-        if (allowedKeys.includes(key)) {
-          state[key] = values[key];
-        }
-      }
-    }
-  }
-}
 
 function initForm(config, initialState) {
   const marketForm = document.getElementById(config.form);
@@ -130,7 +80,7 @@ function initForm(config, initialState) {
   });
 
   document.querySelector('.js-market-submit').addEventListener('click', function(event) {
-    const diff = diffFormData(initialState, state);
+    const diff = diffState(initialState, state);
     event.preventDefault();
 
     // if anything was changed, update state inputs and submit
