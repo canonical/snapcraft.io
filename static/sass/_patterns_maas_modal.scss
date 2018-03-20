@@ -104,7 +104,13 @@ $color-modal-controls: rgba($color-x-dark, .2);
 
   .vbox-next,
   .vbox-prev {
-    background-color: $color-x-light;
+    background: {
+      color: $color-x-light;
+      position: center;
+      repeat: no-repeat;
+      size: .25rem;
+    }
+    border-radius: 3rem;
     box-sizing: content-box;
     cursor: pointer;
     height: 3rem;
@@ -115,12 +121,6 @@ $color-modal-controls: rgba($color-x-dark, .2);
     text-indent: -100px;
     top: 50%;
     width: 3rem;
-    border-radius: 3rem;
-    background: {
-      position: center;
-      repeat: no-repeat;
-      size: .25rem;
-    }
   }
 
   .vbox-next:disabled:hover,
@@ -227,25 +227,25 @@ $color-modal-controls: rgba($color-x-dark, .2);
   }
 
   .vbox-container {
+    height: 100%;
     margin: 0 auto;
     max-width: 1200px;
     padding: 0 15px;
     position: relative;
     width: 100%;
-    height: 100%;
   }
 
   .vbox-content {
+    align-items: center;
+    display: flex;
     float: left;
+    height: 100%;
+    justify-content: center;
     overflow: hidden;
+    padding: 40px 0;
     position: relative;
     text-align: center;
     width: 100%;
-    height: 100%;
-    padding: 40px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .vbox-container img {

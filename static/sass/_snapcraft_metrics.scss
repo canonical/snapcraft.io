@@ -13,7 +13,7 @@
     transition: opacity .333s;
 
     svg {
-      -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: transparent; // sass-lint:disable-line no-vendor-prefixes
       font: 12px "Ubuntu";
 
       path,
@@ -119,8 +119,8 @@
     }
 
     svg {
-      pointer-events: none;
       opacity: .4;
+      pointer-events: none;
     }
   }
 }

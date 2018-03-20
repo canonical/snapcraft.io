@@ -1,6 +1,6 @@
 @mixin p-media-object--large {
   .p-media-object__image--large {
-    @extend .p-media-object__image;
+    @extend .p-media-object__image; // sass-lint:disable-line placeholder-in-extend
     flex-shrink: 0;
     height: 6rem;
     width: 6rem;
