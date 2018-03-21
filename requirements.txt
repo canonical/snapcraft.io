@@ -3,6 +3,7 @@ Flask==0.12.2
 Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.2
 humanize==0.5.1
+prometheus-flask-exporter==0.2.0
 pycountry==17.9.23
 pymacaroons==0.12.0
 python-dateutil==2.6.1
@@ -10,4 +11,4 @@ raven[flask]==6.5.0
 requests==2.18.4
 requests-cache==0.4.13
 responses==0.8.1
-prometheus-flask-exporter==0.2.0
+talisker==0.9.6

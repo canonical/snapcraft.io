@@ -14,6 +14,7 @@ from urllib.parse import (
 )
 
 import flask
+import talisker.flask
 from flask_openid import OpenID
 from flask_wtf.csrf import CSRFProtect
 from raven.contrib.flask import Sentry
@@ -30,6 +31,7 @@ from modules.macaroon import (
 
 
 app = flask.Flask(__name__)
+talisker.flask.register(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.url_map.strict_slashes = False
@@ -123,7 +125,6 @@ def clear_trailing():
 
 @app.after_request
 def apply_caching(response):
-    response.headers["X-Commit-ID"] = os.getenv('COMMIT_ID')
     response.headers["X-Hostname"] = socket.gethostname()
     return response
 
