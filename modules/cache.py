@@ -32,11 +32,11 @@ def get(
             json=json,
             files=files,
             data=data,
-            timeout=2
+            timeout=3
         )
     except requests.exceptions.Timeout:
         api_error_exception = ApiTimeoutError(
-            'The request to {} took longer than 2 seconds'.format(url),
+            'The request to {} took longer than 3 seconds'.format(url),
         )
         raise api_error_exception
     except requests.exceptions.ConnectionError:
