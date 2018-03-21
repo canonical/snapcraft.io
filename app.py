@@ -37,14 +37,12 @@ app.secret_key = os.environ['SECRET_KEY']
 app.url_map.strict_slashes = False
 sentry = Sentry(app)
 
-if not app.debug:
-    metrics = prometheus_flask_exporter.PrometheusMetrics(
-        app,
-        group_by_endpoint=True,
-        buckets=[0.25, 0.5, 0.75, 1, 2],
-        path=None
-    )
-    metrics.start_http_server(port=9990, endpoint='/')
+metrics = prometheus_flask_exporter.PrometheusMetrics(
+    app,
+    group_by_endpoint=True,
+    buckets=[0.25, 0.5, 0.75, 1, 2],
+    path=None
+)
 
 open_id = OpenID(
     app=app,
