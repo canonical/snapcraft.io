@@ -200,6 +200,11 @@ def snap_details(snap_name):
     except ApiError as api_error:
         status_code, error_info = _handle_errors(api_error)
 
+    # filter out banner and banner-icon images from screenshots
+    screenshots = [
+        url for url in details['screenshot_urls'] if "banner" not in url
+    ]
+
     context = {
         # Data direct from details API
         'snap_title': details['title'],
@@ -209,7 +214,7 @@ def snap_details(snap_name):
         'revision': details['revision'],
         'license': details['license'],
         'publisher': details['publisher'],
-        'screenshot_urls': details['screenshot_urls'],
+        'screenshots': screenshots,
         'prices': details['prices'],
         'contact': details.get('contact'),
         'website': details.get('website'),

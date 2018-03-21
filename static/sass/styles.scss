@@ -104,6 +104,9 @@ $color-navigation-background: #252525;
 @import 'patterns_maas_modal';
 @include maas-p-modal;
 
+@import 'snapcraft_details_screenshots';
+@include snapcraft-details-screenshots;
+
 @import 'snapcraft_footer';
 @include snapcraft-footer;
 

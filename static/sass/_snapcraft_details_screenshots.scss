@@ -1,0 +1,24 @@
+@mixin snapcraft-details-screenshots {
+  .p-screenshots {
+    .p-screenshots__wrapper {
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+      -webkit-overflow-scrolling: touch; // sass-lint:disable-line no-misspelled-properties
+
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .p-screenshot {
+      flex: 0 0 auto;
+      height: 240px;
+      margin-right: 30px;
+      margin-top: 0;
+    }
+
+    .p-screenshot img {
+      max-height: 100%;
+    }
+  }
+}
