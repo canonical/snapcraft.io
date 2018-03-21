@@ -1,5 +1,11 @@
 @mixin snapcraft-details-screenshots {
+  // below this breakpoint we don't show buttons to move screenshots
+  // but leave scroll to allow swiping them on mobile
+  $screenshots-buttons-breakpoint: $breakpoint-medium;
+
   .p-screenshots {
+    position: relative;
+
     .p-screenshots__wrapper {
       // sass-lint:disable-block no-vendor-prefixes
       -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -13,17 +19,89 @@
 
     .p-screenshot {
       flex: 0 0 auto;
-      height: 240px;
-      margin-right: 30px;
+      height: 120px;
+      margin-right: 1rem;
       margin-top: 0;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        height: 240px;
+        margin-right: 2rem;
+      }
     }
 
     .p-screenshot img {
       max-height: 100%;
+      max-width: none; // make sure images are not squeezed on small screens
+    }
+
+    // p-screenshots__next p-screenshots__prev
+    // based on vbox-next vbox-prev from _patterns_maas_modal.scss
+    &__next,
+    &__prev {
+      background: {
+        color: $color-x-light;
+        position: center;
+        repeat: no-repeat;
+        size: .25rem;
+      }
+      border-radius: 3rem;
+      box-sizing: content-box;
+      cursor: pointer;
+      display: none;
+      height: 3rem;
+      margin-left: 0;
+      margin-top: -1.5rem;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      text-indent: -999px;
+      top: 50%;
+      width: 3rem;
+
+      @media screen and (min-width: $screenshots-buttons-breakpoint) {
+        display: block;
+      }
+    }
+
+    &__next:disabled,
+    &__prev:disabled {
+      cursor: default;
+      opacity: 0;
+    }
+
+    &__prev {
+      background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
+      left: -1rem;
+
+      @media screen and (min-width: $breakpoint-large) {
+        left: -1.5rem;
+      }
+    }
+
+    &__next {
+      background-image: url('#{$assets-path}9716bbab-chevron.svg');
+      right: -1rem;
+
+      @media screen and (min-width: $breakpoint-large) {
+        right: -1.5rem;
+      }
+
     }
   }
 
-  .js-ready {
+  // styles applied when __container is added via JS
+  .p-screenshots__container {
+    overflow: hidden;
+
+    @media screen and (min-width: $screenshots-buttons-breakpoint) {
+      .p-screenshots__wrapper {
+        left: 0;
+        overflow: visible;
+        position: relative;
+        transition: left 150ms linear;
+      }
+    }
+
     .p-screenshot {
       cursor: pointer;
       position: relative;
@@ -41,6 +119,7 @@
         content: '';
         display: block;
         height: 24px;
+        pointer-events: none;
         position: absolute;
         right: 10px;
         top: 10px;
