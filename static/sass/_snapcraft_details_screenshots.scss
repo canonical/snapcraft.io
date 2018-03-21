@@ -1,6 +1,7 @@
 @mixin snapcraft-details-screenshots {
   .p-screenshots {
     .p-screenshots__wrapper {
+      // sass-lint:disable-block no-vendor-prefixes
       -ms-overflow-style: -ms-autohiding-scrollbar;
       -webkit-overflow-scrolling: touch; // sass-lint:disable-line no-misspelled-properties
 
@@ -19,6 +20,32 @@
 
     .p-screenshot img {
       max-height: 100%;
+    }
+  }
+
+  .js-ready {
+    .p-screenshot {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .p-screenshot:hover {
+      &::after {
+        background-color: $color-x-light;
+        background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-size: 12px 12px;
+        border: 1px solid $color-light;
+        border-radius: 2px;
+        content: '';
+        display: block;
+        height: 24px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 24px;
+      }
     }
   }
 }

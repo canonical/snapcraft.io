@@ -59,7 +59,7 @@
   {% if screenshots %}
     <div class="p-strip is-shallow">
       <div class="row">
-        <div class="p-screenshots">
+        <div class="p-screenshots" id="js-snap-screenshots">
           <div class="p-screenshots__wrapper">
             {% for screenshot in screenshots %}
               <div class="p-screenshot">
@@ -132,6 +132,9 @@
       whitelistUrls: ['snapcraft.io']
     }).install();
     Raven.context(function () {
+      snapcraft.public.screenshots('#js-snap-screenshots');
+      snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+
       var ctrlDown = false;
 
       function keyDown(e) {
@@ -173,8 +176,6 @@
           });
         }
       });
-
-      snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
     });
   </script>
 {% endblock %}
