@@ -1,0 +1,11 @@
+@mixin p-media-object {
+  @include vf-p-media-object;
+
+  .p-media-object {
+    @extend .p-media-object; // sass-lint:disable-line placeholder-in-extend
+
+    &__details {
+      flex-grow: 1;
+    }
+  }
+}

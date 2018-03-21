@@ -1,0 +1,9 @@
+@mixin snapcraft-snap-details {
+  @media screen and (max-width: $breakpoint-small) {
+    .snapcraft-snap-details {
+      &__snippet {
+        margin-left: -4.5rem !important;
+      }
+    }
+  }
+}

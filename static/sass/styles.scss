@@ -15,7 +15,6 @@ $color-navigation-background: #252525;
 @include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
-@include vf-p-media-object;
 @include vf-p-muted-heading;
 @include vf-p-navigation;
 @include vf-p-notification;
@@ -29,6 +28,7 @@ $color-navigation-background: #252525;
 @include vf-p-icons;
 @include vf-p-heading-icon;
 @include vf-u-image-position;
+@include vf-p-code-snippet;
 
 
 // vanilla utilities
@@ -46,6 +46,9 @@ $color-navigation-background: #252525;
 
 @import 'patterns_social-icons';
 @include p-social-icons;
+
+@import 'patterns_media-object';
+@include p-media-object;
 
 @import 'patterns_media-object--large';
 @include p-media-object--large;
@@ -103,6 +106,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_footer';
 @include snapcraft-footer;
+
+@import 'snapcraft_snap-details';
+@include snapcraft-snap-details;
 
 @import 'snapcraft_404';
 @include snapcraft-404;
