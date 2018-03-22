@@ -48,10 +48,10 @@ SNAP_INFO_URL = ''.join([
 ])
 
 
-def get_authorization_header():
+def get_authorization_header(session):
     authorization = authentication.get_authorization_header(
-        flask.session['macaroon_root'],
-        flask.session['macaroon_discharge']
+        session['macaroon_root'],
+        session['macaroon_discharge']
     )
 
     return {
@@ -59,10 +59,10 @@ def get_authorization_header():
     }
 
 
-def verify_response(response, url, endpoint, login_endpoint):
+def verify_response(response, session, url, endpoint, login_endpoint):
     verified_response = authentication.verify_response(
         response,
-        flask.session,
+        session,
         url,
         endpoint,
         login_endpoint,
@@ -78,10 +78,10 @@ def verify_response(response, url, endpoint, login_endpoint):
             )
 
 
-def get_account():
+def get_account(session):
     authorization = authentication.get_authorization_header(
-        flask.session['macaroon_root'],
-        flask.session['macaroon_discharge']
+        session['macaroon_root'],
+        session['macaroon_discharge']
     )
 
     headers = {
@@ -98,9 +98,10 @@ def get_account():
 
     verified_response = verify_response(
         response,
+        session,
         ACCOUNT_URL,
         '/account',
-        '/login'
+        '/login',
     )
 
     if verified_response is not None:
@@ -111,8 +112,8 @@ def get_account():
     return response.json()
 
 
-def get_agreement():
-    headers = get_authorization_header()
+def get_agreement(session):
+    headers = get_authorization_header(session)
 
     agreement_response = cache.get(
         AGREEMENT_URL,
@@ -122,8 +123,8 @@ def get_agreement():
     return agreement_response.json()
 
 
-def post_agreement(agreed):
-    headers = get_authorization_header()
+def post_agreement(session, agreed):
+    headers = get_authorization_header(session)
 
     json = {
         'latest_tos_accepted': agreed
@@ -137,8 +138,8 @@ def post_agreement(agreed):
     return agreement_response.json()
 
 
-def post_username(username):
-    headers = get_authorization_header()
+def post_username(session, username):
+    headers = get_authorization_header(session)
     json = {
         'short_namespace': username
     }
@@ -155,9 +156,9 @@ def post_username(username):
         return username_response.json()
 
 
-def get_publisher_metrics(json):
+def get_publisher_metrics(session, json):
     authed_metrics_headers = PUB_METRICS_QUERY_HEADERS.copy()
-    auth_header = get_authorization_header()['Authorization']
+    auth_header = get_authorization_header(session)['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
     metrics_response = cache.get(
@@ -169,10 +170,10 @@ def get_publisher_metrics(json):
     return metrics_response.json()
 
 
-def get_snap_info(snap_name):
+def get_snap_info(snap_name, session):
     response = cache.get(
         SNAP_INFO_URL.format(snap_name=snap_name),
-        headers=get_authorization_header()
+        headers=get_authorization_header(session)
     )
 
     if response.status_code == 404:
@@ -182,18 +183,18 @@ def get_snap_info(snap_name):
     return response.json()
 
 
-def get_snap_id(snap_name):
-    snap_info = get_snap_info(snap_name)
+def get_snap_id(snap_name, session):
+    snap_info = get_snap_info(snap_name, session)
 
     return snap_info['snap_id']
 
 
-def snap_metadata(snap_id, json=None):
+def snap_metadata(snap_id, session, json=None):
     method = "PUT" if json is not None else None
 
     metadata_response = cache.get(
         METADATA_QUERY_URL.format(snap_id=snap_id),
-        headers=get_authorization_header(),
+        headers=get_authorization_header(session),
         json=json,
         method=method
     )
@@ -201,19 +202,19 @@ def snap_metadata(snap_id, json=None):
     return metadata_response.json()
 
 
-def get_snap_status(snap_id):
+def get_snap_status(snap_id, session):
     status_response = cache.get(
         STATUS_QUERY_URL.format(snap_id=snap_id),
-        headers=get_authorization_header()
+        headers=get_authorization_header(session)
     )
 
     return status_response.json()
 
 
-def snap_screenshots(snap_id, data=None, files=None):
+def snap_screenshots(snap_id, session, data=None, files=None):
     method = None
     files_array = None
-    headers = get_authorization_header()
+    headers = get_authorization_header(session)
     headers['Accept'] = 'application/json'
 
     if data:
