@@ -23,7 +23,6 @@ $color-navigation-background: #252525;
 @include vf-p-forms;
 @include vf-p-form-help-text;
 @include vf-p-headings;
-@include vf-p-tabs;
 @include vf-p-matrix;
 @include vf-p-icons;
 @include vf-p-heading-icon;
@@ -67,6 +66,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-navigation';
 @include snapcraft-p-navigation;
+
+@import 'snapcraft_p-tabs';
+@include snapcraft-p-tabs;
 
 @import 'snapcraft_custom-typography';
 @include snapcraft-custom-typography;

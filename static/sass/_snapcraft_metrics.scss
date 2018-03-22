@@ -1,13 +1,4 @@
 @mixin snapcraft-metrics {
-
-  // Remove this when we have a coloured header background
-  // It hackily hides the top drop shadow.
-  .metrics__nav-wrap {
-    .p-tabs {
-      box-shadow: 0 2px 2.5px 1px transparentize($color-dark, .85);
-    }
-  }
-
   .snapcraft-metrics__graph {
     opacity: 0;
     transition: opacity .333s;

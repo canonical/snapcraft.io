@@ -1,0 +1,13 @@
+@mixin snapcraft-p-tabs {
+  @include vf-p-tabs;
+
+  .p-tabs {
+    @extend .p-tabs; // sass-lint:disable-line placeholder-in-extend
+    box-shadow: none;
+
+    &__list {
+      padding-right: 0;
+      width: auto;
+    }
+  }
+}
