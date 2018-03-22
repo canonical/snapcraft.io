@@ -1,6 +1,7 @@
 import datetime
 import flask
 import hashlib
+import modules.authentication as authentication
 import modules.public.logic as public_logic
 import modules.publisher.api as api
 from dateutil import relativedelta
@@ -12,44 +13,50 @@ from modules.exceptions import (
     ApiResponseDecodeError,
     ApiResponseError,
     ApiResponseErrorList,
+    MacaroonRefreshRequired
 )
 
 
 def get_account():
-    account = api.get_account(flask.session)
-    if 'redirect' in account:
-        return account['redirect']
+    try:
+        account = api.get_account(flask.session)
 
-    error_list = []
-    if 'error_list' in account:
-        for error in account['error_list']:
-            if error['code'] == 'user-not-ready':
-                if 'has not signed agreement' in error['message']:
-                    return flask.redirect('/account/agreement')
-                elif 'missing namespace' in error['message']:
-                    return flask.redirect('/account/username')
-            else:
-                error_list.append(error)
+        error_list = []
+        if 'error_list' in account:
+            for error in account['error_list']:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        return flask.redirect('/account/agreement')
+                    elif 'missing namespace' in error['message']:
+                        return flask.redirect('/account/username')
+                    else:
+                        error_list.append(error)
 
-    user_snaps = []
-    if '16' in account['snaps']:
-        user_snaps = account['snaps']['16']
+        user_snaps = []
+        if '16' in account['snaps']:
+            user_snaps = account['snaps']['16']
 
-    flask_user = flask.session['openid']
+        flask_user = flask.session['openid']
 
-    context = {
-        'image': flask_user['image'],
-        'username': account['username'],
-        'displayname': account['displayname'],
-        'email': account['email'],
-        'snaps': user_snaps,
-        'error_list': error_list
-    }
+        context = {
+            'image': flask_user['image'],
+            'username': account['username'],
+            'displayname': account['displayname'],
+            'email': account['email'],
+            'snaps': user_snaps,
+            'error_list': error_list
+        }
 
-    return flask.render_template(
-        'account.html',
-        **context
-    )
+        return flask.render_template(
+            'account.html',
+            **context
+        )
+    except MacaroonRefreshRequired:
+        authentication.get_refreshed_discharge(
+            flask.session['macaroon_discharge']
+        )
+
+        return flask.redirect(flask.request.path)
 
 
 def get_agreement():

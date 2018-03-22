@@ -49,3 +49,8 @@ class ApiResponseErrorList(ApiResponseError):
     def __init__(self, message, status_code, errors):
         self.errors = errors
         return super().__init__(message, status_code)
+
+
+class MacaroonRefreshRequired(ApiError):
+    def __init__(self):
+        return super().__init__('The Macaroon needs to be refreshed')
