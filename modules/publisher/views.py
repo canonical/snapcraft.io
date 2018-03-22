@@ -6,6 +6,13 @@ import modules.publisher.api as api
 from dateutil import relativedelta
 from json import dumps, loads
 from operator import itemgetter
+from modules.exceptions import (
+    ApiError,
+    ApiTimeoutError,
+    ApiResponseDecodeError,
+    ApiResponseError,
+    ApiResponseErrorList,
+)
 
 
 def get_account():
@@ -88,7 +95,23 @@ def publisher_snap_measure(snap_name):
     some of the data through to the publisher/measure.html template,
     with appropriate sanitation.
     """
-    details = api.get_snap_info(snap_name, flask.session)
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            flask.abort(404, 'No snap named {}'.format(snap_name))
+        else:
+            error_messages = ', '.join(api_response_error_list.errors.key())
+            flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        flask.abort(502, str(api_error))
+
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
     metric_period_int = int(metric_period[:-1])
@@ -197,7 +220,22 @@ def publisher_snap_measure(snap_name):
 
 
 def get_market_snap(snap_name):
-    snap_details = api.get_snap_info(snap_name, flask.session)
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            flask.abort(404, 'No snap named {}'.format(snap_name))
+        else:
+            error_messages = ', '.join(api_response_error_list.errors.key())
+            flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        flask.abort(502, str(api_error))
 
     context = {
         "snap_id": snap_details['snap_id'],
@@ -220,7 +258,23 @@ def get_market_snap(snap_name):
 
 
 def snap_release(snap_name):
-    snap_id = api.get_snap_id(snap_name, flask.session)
+    try:
+        snap_id = api.get_snap_id(snap_name, flask.session)
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            flask.abort(404, 'No snap named {}'.format(snap_name))
+        else:
+            error_messages = ', '.join(api_response_error_list.errors.key())
+            flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        flask.abort(502, str(api_error))
+
     status_json = api.get_snap_status(snap_id, flask.session)
 
     return flask.render_template(
@@ -326,7 +380,25 @@ def post_market_snap(snap_name):
             error_list = error_list + metadata['error_list']
 
         if error_list:
-            snap_details = api.get_snap_info(snap_name, flask.session)
+            try:
+                snap_details = api.get_snap_info(snap_name, flask.session)
+            except ApiTimeoutError as api_timeout_error:
+                flask.abort(504, str(api_timeout_error))
+            except ApiResponseDecodeError as api_response_decode_error:
+                flask.abort(502, str(api_response_decode_error))
+            except ApiResponseErrorList as api_response_error_list:
+                if api_response_error_list.status_code == 404:
+                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                else:
+                    error_messages = ', '.join(
+                        api_response_error_list.errors.key()
+                    )
+                    flask.abort(502, error_messages)
+            except ApiResponseError as api_response_error:
+                flask.abort(502, str(api_response_error))
+            except ApiError as api_error:
+                flask.abort(502, str(api_error))
+
             context = {
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
