@@ -1,23 +1,5 @@
 import lightbox from './lightbox';
-
-// STATE HELPER FUNCTIONS
-function updateState(state, values) {
-  if (values) {
-    for (let key in values) {
-      if (values.hasOwnProperty(key)) {
-        state[key] = values[key];
-      }
-    }
-  }
-}
-
-function serializeState(state) {
-  let cleanedState = Object.assign({}, state);
-  if (cleanedState.images && cleanedState.images.length) {
-    cleanedState.images = cleanedState.images.filter(image => image.status !== 'delete');
-  }
-  return cleanedState;
-}
+import { updateState } from './state';
 
 // TEMPLATES
 const templates = {
@@ -57,28 +39,14 @@ const templates = {
 };
 
 // INIT SCREENSHOTS
-function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, initialState) {
+function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, state) {
   // DOM elements
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
   const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
 
-  // simple state handling (and serializing as JSON in hidden input)
-  const state = {};
-  const stateInput = document.createElement('input');
-  stateInput.type = "hidden";
-  stateInput.name = "state";
-
-  screenshotsToolbarEl.parentNode.appendChild(stateInput);
-
   const setState = function(nextState) {
     updateState(state, nextState);
-
-    let newState = Object.assign({}, state);
-    newState.images = newState.images.filter(image => image.status !== 'delete');
-    stateInput.value = JSON.stringify(serializeState(state));
   };
-
-  setState(initialState);
 
   // actions on state
   const addScreenshots = (files) => {
@@ -244,6 +212,5 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 export {
   initSnapScreenshotsEdit,
   // for testing
-  templates,
-  serializeState
+  templates
 };
