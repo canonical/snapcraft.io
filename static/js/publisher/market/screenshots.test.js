@@ -1,6 +1,5 @@
 import {
-  templates,
-  serializeState
+  templates
 } from './screenshots';
 
 describe('templates', () => {
@@ -90,22 +89,5 @@ describe('templates', () => {
       expect(result).toContain('3 images to upload');
       expect(result).toContain('2 images to delete');
     });
-  });
-});
-
-describe('serializeState', () => {
-  it('should remove images marked from deletion', () => {
-    const state = {
-      images: [
-        { url: 'image1' },
-        { url: 'image2', status: 'delete' },
-        { url: 'image3' }
-      ]
-    };
-
-    const result = serializeState(state);
-
-    expect(result.images.length).toBe(2);
-    expect(result.images.filter(image => image.status === 'delete').length).toBe(0);
   });
 });
