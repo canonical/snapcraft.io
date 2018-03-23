@@ -1,3 +1,4 @@
 import map from './snap-details/map';
+import screenshots from './snap-details/screenshots';
 
-export { map };
+export { map, screenshots };
