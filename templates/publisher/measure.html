@@ -6,30 +6,38 @@ Publisher metrics for {{ snap_name }}
 
 {% block content %}
   <div id="main-content" class="u-no-margin--top">
-    <section class="p-strip is-shallow">
-      <div class="row">
-        <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
-        <h1 class="u-no-margin--top">{{ snap_title }}</h1>
-      </div>
-    </section>
-
-    <section class="metrics__nav-wrap p-strip is-shallow u-no-padding--top u-no-padding--bottom">
+    <section class="p-strip is-shallow u-no-padding--bottom">
       <nav class="p-tabs">
-        <ul class="p-tabs__list" role="tablist">
-          <li class="p-tabs__item" role="presentation">
-            <a href="/account/snaps/{{ snap_name }}/market" class="p-tabs__link" tabindex="0" role="tab">Market</a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a href="/account/snaps/{{ snap_name }}/measure" class="p-tabs__link" tabindex="0" role="tab" aria-selected="true">Measure</a>
-          </li>
-        </ul>
+        {# This row and it's contents needs to be removed before going live #}
+        <div class="row">
+          <a href="/account" class="u-float--left p-muted-heading">&lsaquo; Snap list</a>
+        </div>
+        <div class="row u-no-margin--top">
+          <div class="col-6">
+            <h1 class="u-float--left p-heading--three">{{ snap_title }}</h1>
+          </div>
+          <div class="col-6">
+            <ul class="p-tabs__list u-float--right" role="tablist">
+              <li class="p-tabs__item" role="presentation">
+                <a href="/account/snaps/{{ snap_name }}/market" class="p-tabs__link" tabindex="0" role="tab">Market</a>
+              </li>
+              <li class="p-tabs__item" role="presentation">
+                <a href="/account/snaps/{{ snap_name }}/measure" class="p-tabs__link" tabindex="0" role="tab" aria-selected="true">Measure</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row u-no-margin--top">
+          <hr class="u-no-margin" />
+        </div>
       </nav>
     </section>
+
     {% if nodata %}
       <section class="p-strip--light is-shallow">
         <div class="row">
           <div class="col-6">
-            <h4>Measure your snap's performance</h4>
+            <h2 class="p-heading--four">Measure your snap's performance</h2>
           </div>
           <div class="col-6">
             <p>You'll be able to see active devices and territories when people start using your snap.</p>
@@ -40,8 +48,8 @@ Publisher metrics for {{ snap_name }}
     <section class="p-strip is-shallow{% if nodata %} is-empty{% endif %}">
       <div class="row">
         <div class="u-clearfix">
-          <h3 class="u-float--left">Weekly active devices</h3>
-          <div class="p-heading--three u-float--right u-no-margin--top">
+          <h4 class="u-float--left">Weekly active devices</h4>
+          <div class="p-heading--four u-float--right u-no-margin--top">
             <strong>{{ latest_active_devices }}</strong>
           </div>
         </div>
@@ -67,8 +75,8 @@ Publisher metrics for {{ snap_name }}
       </div>
       <div class="row">
         <div class="u-clearfix">
-          <h3 class="u-float--left">Territories</h3>
-          <div class="p-heading--three u-float--right u-no-margin--top">
+          <h1 class="u-float--left p-heading--four">Territories</h1>
+          <div class="p-heading--four u-float--right u-no-margin--top">
             <strong>{{ territories_total }}</strong>
           </div>
         </div>
