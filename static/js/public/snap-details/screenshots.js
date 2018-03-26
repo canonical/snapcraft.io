@@ -3,6 +3,10 @@ import lightbox from './../../publisher/market/lightbox';
 export default function initScreenshots(screenshotsId) {
   const screenshotsEl = document.querySelector(screenshotsId);
 
+  if (!screenshotsEl) {
+    return;
+  }
+
   const images = Array.from(screenshotsEl.querySelectorAll('img')).map(image => image.src);
 
   screenshotsEl.addEventListener('click', (event) => {
@@ -35,14 +39,14 @@ export default function initScreenshots(screenshotsId) {
 
 
   // get table of offsets for all screenshots
-  let offsets = Array.from(screenshotsEl.querySelectorAll('.p-screenshot'))
+  let offsets = [].slice.call(screenshotsEl.querySelectorAll('.p-screenshot'))
     .map(screenshot => screenshot.offsetLeft);
 
   let current = 0;
 
   function setCurrent(n) {
     // update offsets in case images finished loading after init
-    offsets = Array.from(screenshotsEl.querySelectorAll('.p-screenshot'))
+    offsets = [].slice.call(screenshotsEl.querySelectorAll('.p-screenshot'))
       .map(screenshot => screenshot.offsetLeft);
 
     current = n;
