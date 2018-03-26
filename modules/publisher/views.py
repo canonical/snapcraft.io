@@ -409,6 +409,8 @@ def post_market_snap(snap_name):
                 "icon_url": snap_details['icon_url'],
                 "publisher_name": snap_details['publisher_name'],
                 "screenshot_urls": snap_details['screenshot_urls'],
+                "contact": snap_details['contact'],
+                "website": snap_details['website'],
                 "error_list": error_list
             }
 
