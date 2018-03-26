@@ -2,6 +2,11 @@ import flask
 import modules.authentication as authentication
 import modules.cache as cache
 import os
+from modules.exceptions import (
+    ApiResponseDecodeError,
+    ApiResponseError,
+    ApiResponseErrorList,
+)
 
 
 DASHBOARD_API = os.getenv(
@@ -46,6 +51,32 @@ SNAP_INFO_URL = ''.join([
     DASHBOARD_API,
     'snaps/info/{snap_name}',
 ])
+
+
+def process_response(response):
+    try:
+        body = response.json()
+    except ValueError as decode_error:
+        api_error_exception = ApiResponseDecodeError(
+            'JSON decoding failed: {}'.format(decode_error),
+        )
+        raise api_error_exception
+
+    if not response.ok:
+        if 'error_list' in body:
+            api_error_exception = ApiResponseErrorList(
+                'The api returned a list of errors',
+                response.status_code,
+                body['error_list']
+            )
+            raise api_error_exception
+        else:
+            raise ApiResponseError(
+                'Unknown error from api',
+                response.status_code
+            )
+
+    return body
 
 
 def get_authorization_header(session):
@@ -176,11 +207,7 @@ def get_snap_info(snap_name, session):
         headers=get_authorization_header(session)
     )
 
-    if response.status_code == 404:
-        message = 'Snap not found: {snap_name}'.format(**locals())
-        flask.abort(404, message)
-
-    return response.json()
+    return process_response(response)
 
 
 def get_snap_id(snap_name, session):
