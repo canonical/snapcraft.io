@@ -138,44 +138,53 @@
       var ctrlDown = false;
 
       function keyDown(e) {
-        var key = e.key.toLowerCase();
-        if (key === 'control' || key === 'meta') {
-          ctrlDown = true;
-        }
-        if ((key === 'c' || key === 'x') && ctrlDown) {
-          if (typeof ga !== 'undefined') {
-            ga('gtm1.send', {
-              hitType: 'event',
-              eventCategory: 'Snap details',
-              eventAction: 'Copy CLI install instructions',
-              eventLabel: 'Copy {{ package_name }} input'
-            });
+        if (e && e.key) {
+          var key = e.key.toLowerCase();
+          if (key === 'control' || key === 'meta') {
+            ctrlDown = true;
+          }
+          if ((key === 'c' || key === 'x') && ctrlDown) {
+            if (typeof ga !== 'undefined') {
+              ga('gtm1.send', {
+                hitType: 'event',
+                eventCategory: 'Snap details',
+                eventAction: 'Copy CLI install instructions',
+                eventLabel: 'Copy {{ package_name }} input'
+              });
+            }
           }
         }
       }
 
       function keyUp(e) {
-        var key = e.key.toLowerCase();
-        if (key === 'control' || key === 'meta') {
-          ctrlDown = false;
+        if (e && e.key) {
+          var key = e.key.toLowerCase();
+          if (key === 'control' || key === 'meta') {
+            ctrlDown = false;
+          }
         }
       }
 
-      document.querySelector('#snap-install').addEventListener('keyup', keyUp);
-      document.querySelector('#snap-install').addEventListener('keydown', keyDown);
+      var snapInstall = document.querySelector('#snap-install');
+      if (snapInstall) {
+        snapInstall.addEventListener('keyup', keyUp);
+        snapInstall.addEventListener('keydown', keyDown);
+      }
 
-      var copy = new ClipboardJS('#copy');
-
-      copy.on('success', function () {
-        if (typeof ga !== 'undefined') {
-          ga('gtm1.send', {
-            hitType: 'event',
-            eventCategory: 'Snap details',
-            eventAction: 'Copy CLI install instructions',
-            eventLabel: 'Copy {{ package_name }} button'
-          });
-        }
-      });
+      if (ClipboardJS) {
+        var copy = new ClipboardJS('#copy');
+        
+        copy.on('success', function () {
+          if (typeof ga !== 'undefined') {
+            ga('gtm1.send', {
+              hitType: 'event',
+              eventCategory: 'Snap details',
+              eventAction: 'Copy CLI install instructions',
+              eventLabel: 'Copy {{ package_name }} button'
+            });
+          }
+        });
+      }
     });
   </script>
 {% endblock %}
