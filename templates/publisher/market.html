@@ -85,8 +85,10 @@
               </div>
             </div>
             <div class="col-8">
-              <label for="snap-title">Title:</label>
-              <input id="snap-title" type="text" name="title" value="{{ title }}"/>
+              <div class="p-form-validation u-no-margin">
+                <label for="snap-title">Title:</label>
+                <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}"/>
+              </div>
             </div>
           </div>
 
@@ -119,7 +121,9 @@
               <label class="p-label--grid-baseline">Summary: </label>
             </div>
             <div class="col-8">
-              <input type="text" name="summary" value="{{ summary }}"/>
+              <div class="p-form-validation u-no-margin">
+                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}"/>
+              </div>
             </div>
           </div>
           <div class="row">
@@ -127,7 +131,9 @@
               <label class="p-label--grid-baseline">Description: </label>
             </div>
             <div class="col-8">
-              <textarea class="u-no-margin" name="description">{{ description }}</textarea>
+              <div class="p-form-validation u-no-margin">
+                <textarea class="p-form-validation__input u-no-margin" name="description">{{ description }}</textarea>
+              </div>
             </div>
           </div>
 
@@ -179,7 +185,9 @@
               <label class="p-label--grid-baseline">Developer website: </label>
             </div>
             <div class="col-8">
-            <input type="text" name="website" value="{{ website }}"/>
+              <div class="p-form-validation u-no-margin">
+                <input class="p-form-validation__input" type="text" name="website" value="{{ website }}"/>
+              </div>
             </div>
           </div>
 
@@ -188,7 +196,9 @@
               <label class="p-label--grid-baseline">Contact {{ publisher_name }}: </label>
             </div>
             <div class="col-8">
-              <input type="text" name="contact" value="{{ contact }}"/>
+              <div class="p-form-validation u-no-margin">
+                <input class="p-form-validation__input" type="text" name="contact" value="{{ contact }}"/>
+              </div>
             </div>
           </div>
         </form>
@@ -238,7 +248,13 @@
           { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
         {% endfor %}
       ]
-    })
+    },
+    {% if error_list %}
+      {{ error_list|tojson}}
+    {% else %}
+      null
+    {% endif %}
+    );
   });
 </script>
 {% endblock %}

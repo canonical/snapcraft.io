@@ -50,7 +50,21 @@ function initFormNotification(formElId, notificationElId) {
 
 
 
-function initForm(config, initialState) {
+function initForm(config, initialState, errors) {
+  // if there are errors mark fields as invalid
+  if (errors && errors.length) {
+    errors.forEach((error) => {
+      if (error.code === 'invalid-field') {
+        const name = error.extra.name;
+        if (name) {
+          const input = document.querySelector(`[name=${name}]`);
+          input.closest('.p-form-validation').classList.add('is-error');
+        }
+      }
+    });
+  }
+
+  // setup form functionality
   const marketForm = document.getElementById(config.form);
   let state = JSON.parse(JSON.stringify(initialState));
 
@@ -75,8 +89,14 @@ function initForm(config, initialState) {
   );
 
   // when anything is changed update the state
-  marketForm.addEventListener('change', function() {
+  marketForm.addEventListener('change', function(event) {
     updateState(state, new FormData(marketForm));
+
+    // clear validation of field on change
+    const field = event.target.closest('.p-form-validation');
+    if (field) {
+      field.classList.remove('is-error');
+    }
   });
 
   document.querySelector('.js-market-submit').addEventListener('click', function(event) {
