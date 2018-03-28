@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 
-import json
 import unittest
 
 import pymacaroons
@@ -230,33 +229,18 @@ class PublisherPagesTestCase(unittest.TestCase):
         responses.add(
             responses.GET, 'https://dashboard.snapcraft.io/dev/api/account',
             json=payload, status=500)
-        responses.add(
-            responses.POST,
-            'https://dashboard.snapcraft.io/dev/api/acl/verify/',
-            json={'account': 'test', 'allowed': True}, status=200)
 
         authorization = _log_in(self.client)
         response = self.client.get('/account')
         self.assertEqual(200, response.status_code)
 
-        self.assertEqual(2, len(responses.calls))
-        [account_call, verify_call] = responses.calls
+        self.assertEqual(1, len(responses.calls))
+        [account_call] = responses.calls
         self.assertEqual(
             'https://dashboard.snapcraft.io/dev/api/account',
             account_call.request.url)
         self.assertEqual(
             authorization, account_call.request.headers.get('Authorization'))
-        self.assertEqual(
-            'https://dashboard.snapcraft.io/dev/api/acl/verify/',
-            verify_call.request.url)
-        self.assertEqual({
-            'auth_data': {
-                'authorization': authorization,
-                'http_uri': (
-                    'https://dashboard.snapcraft.io/dev/api/acl/verify/'),
-                'http_method': 'GET'
-            },
-        }, json.loads(verify_call.request.body.decode('utf-8')))
 
 
 if __name__ == '__main__':

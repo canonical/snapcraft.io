@@ -1,4 +1,3 @@
-import flask
 import modules.authentication as authentication
 import modules.cache as cache
 import os
@@ -6,6 +5,7 @@ from modules.exceptions import (
     ApiResponseDecodeError,
     ApiResponseError,
     ApiResponseErrorList,
+    MacaroonRefreshRequired
 )
 
 
@@ -90,25 +90,6 @@ def get_authorization_header(session):
     }
 
 
-def verify_response(response, session, url, endpoint, login_endpoint):
-    verified_response = authentication.verify_response(
-        response,
-        session,
-        url,
-        endpoint,
-        login_endpoint,
-        '/account'
-    )
-
-    if verified_response is not None:
-        if verified_response['redirect'] is None:
-            return response.raise_for_status
-        else:
-            return flask.redirect(
-                verified_response['redirect']
-            )
-
-
 def get_account(session):
     authorization = authentication.get_authorization_header(
         session['macaroon_root'],
@@ -127,18 +108,8 @@ def get_account(session):
         headers=headers
     )
 
-    verified_response = verify_response(
-        response,
-        session,
-        ACCOUNT_URL,
-        '/account',
-        '/login',
-    )
-
-    if verified_response is not None:
-        return {
-            'redirect': verified_response
-        }
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired()
 
     return response.json()
 
