@@ -201,6 +201,52 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-12">
+              <hr />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-8">
+              <input
+                type="checkbox"
+                name="public_metrics_enabled"
+                id="public-metrics-enabled"
+                {% if public_metrics_enabled %}
+                  checked="checked"
+                {% endif %}
+                />
+              <label class="u-no-margin--top" for="public-metrics-enabled">Display public metric charts</label>
+              <p class="p-form-help-text">Does not disclose any usage numbers for your application</p>
+              <input
+                type="hidden"
+                name="public_metrics_blacklist"
+                {% if public_metrics_blacklist|length > 0 %}
+                  value="{{ join(public_metrics_blacklist, ',')}}"
+                {% endif %}
+                />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <input
+                type="checkbox"
+                name="public_metrics_territories"
+                id="public-metrics-territories"
+                {% if not contains(public_metrics_blacklist, 'installed_base_by_country_percent') %}
+                  checked="checked"
+                {% endif %}
+                {% if not public_metrics_enabled %}
+                  disabled="disabled"
+                {% endif %}
+                />
+              <label class="u-no-margin--top" for="public-metrics-territories">Territories</label>
+              <p class="p-form-help-text">Shows usage percentage by country on a map</p>
+            </div>
+          </div>
         </form>
     </div>
 
@@ -247,7 +293,9 @@
         {% for screenshot_url in screenshot_urls %}
           { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
         {% endfor %}
-      ]
+      ],
+      'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
+      'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }}
     },
     {% if error_list %}
       {{ error_list|tojson}}
