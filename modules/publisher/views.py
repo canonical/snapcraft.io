@@ -75,7 +75,7 @@ def post_agreement():
         api.post_agreement(flask.session, True)
         return flask.redirect('/account')
     else:
-        return flask.render_template('developer_programme_agreement.html')
+        return flask.redirect('/account/agreement')
 
 
 def get_account_name():
