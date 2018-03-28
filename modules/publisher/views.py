@@ -260,7 +260,9 @@ def get_market_snap(snap_name):
         "publisher_name": snap_details['publisher_name'],
         "screenshot_urls": snap_details['screenshot_urls'],
         "contact": snap_details['contact'],
-        "website": snap_details['website']
+        "website": snap_details['website'],
+        "public_metrics_enabled": snap_details['public_metrics_enabled'],
+        "public_metrics_blacklist": snap_details['public_metrics_blacklist'],
     }
 
     return flask.render_template(
@@ -375,13 +377,26 @@ def post_market_snap(snap_name):
             'license',
             'price',
             'blacklist_countries',
-            'whitelist_countries'
+            'whitelist_countries',
+            'public_metrics_enabled',
+            'public_metrics_blacklist'
         ]
 
         body_json = {
             key: flask.request.form[key]
             for key in whitelist if key in flask.request.form
         }
+
+        metrics_enabled = flask.request.form.get('public_metrics_enabled')
+        body_json['public_metrics_enabled'] = metrics_enabled == 'on'
+        metrics_blacklist = flask.request.form.get('public_metrics_blacklist')
+
+        if len(metrics_blacklist) > 0:
+            metrics_blacklist = metrics_blacklist.split(',')
+        else:
+            metrics_blacklist = []
+
+        body_json['public_metrics_blacklist'] = metrics_blacklist
 
         metadata = api.snap_metadata(
             flask.request.form['snap_id'],
@@ -411,6 +426,9 @@ def post_market_snap(snap_name):
             except ApiError as api_error:
                 flask.abort(502, str(api_error))
 
+            details_metrics_enabled = snap_details['public_metrics_enabled']
+            details_blacklist = snap_details['public_metrics_blacklist']
+
             context = {
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
@@ -423,6 +441,8 @@ def post_market_snap(snap_name):
                 "screenshot_urls": snap_details['screenshot_urls'],
                 "contact": snap_details['contact'],
                 "website": snap_details['website'],
+                "public_metrics_enabled": details_metrics_enabled,
+                "public_metrics_blacklist": details_blacklist,
                 "error_list": error_list
             }
 

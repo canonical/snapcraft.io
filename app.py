@@ -69,6 +69,21 @@ def inject_template_variables():
     }
 
 
+# Template helpers
+@app.context_processor
+def utility_processor():
+    def contains(arr, str):
+        return str in arr
+
+    def join(arr, str):
+        return str.join(arr)
+
+    return {
+        'contains': contains,
+        'join': join
+    }
+
+
 def login_required(func):
     """
     Decorator that checks if a user is logged in, and redirects

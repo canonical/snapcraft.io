@@ -1,5 +1,6 @@
 import { initSnapScreenshotsEdit } from './screenshots';
 import { updateState, diffState } from './state';
+import { publicMetrics } from './publicMetrics';
 
 function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
@@ -90,7 +91,11 @@ function initForm(config, initialState, errors) {
 
   // when anything is changed update the state
   marketForm.addEventListener('change', function(event) {
-    updateState(state, new FormData(marketForm));
+    let formData = new FormData(marketForm);
+
+    // Some extra modifications need to happen for the checkboxes
+    publicMetrics(marketForm, formData);
+    updateState(state, formData);
 
     // clear validation of field on change
     const field = event.target.closest('.p-form-validation');

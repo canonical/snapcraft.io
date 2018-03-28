@@ -1,4 +1,13 @@
-const allowedKeys = ['title', 'summary', 'description', 'images', 'website', 'contact'];
+const allowedKeys = [
+  'title',
+  'summary',
+  'description',
+  'images',
+  'website',
+  'contact',
+  'public_metrics_enabled',
+  'public_metrics_blacklist'
+];
 
 function updateState(state, values) {
   if (values) {
