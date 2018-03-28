@@ -39,14 +39,14 @@ export default function initScreenshots(screenshotsId) {
 
 
   // get table of offsets for all screenshots
-  let offsets = [].slice.call(screenshotsEl.querySelectorAll('.p-screenshot'))
+  let offsets = Array.from(screenshotsEl.querySelectorAll('.p-screenshot'))
     .map(screenshot => screenshot.offsetLeft);
 
   let current = 0;
 
   function setCurrent(n) {
     // update offsets in case images finished loading after init
-    offsets = [].slice.call(screenshotsEl.querySelectorAll('.p-screenshot'))
+    offsets = Array.from(screenshotsEl.querySelectorAll('.p-screenshot'))
       .map(screenshot => screenshot.offsetLeft);
 
     current = n;
