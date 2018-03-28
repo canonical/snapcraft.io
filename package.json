@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "test": "yarn run test-js && yarn run test-scss",
+    "test": "yarn run test-python && yarn run test-js && yarn run test-scss",
     "test-js": "eslint static/js && jest",
+    "test-python": "python3 -m unittest discover .",
     "test-scss": "sass-lint static/**/*.scss --verbose --no-exit",
     "build": "yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output static/css && postcss --use autoprefixer --replace 'static/css/**/*.css' && postcss --use cssnano --dir static/minified 'static/css/**/*.css'",

@@ -29,32 +29,37 @@ def get_account():
                         return flask.redirect('/account/agreement')
                     elif 'missing namespace' in error['message']:
                         return flask.redirect('/account/username')
-                    else:
-                        error_list.append(error)
+                else:
+                    error_list.append(error)
 
-        user_snaps = []
-        if '16' in account['snaps']:
-            user_snaps = account['snaps']['16']
+            context = {
+                'error_list': error_list
+            }
+        else:
+            user_snaps = []
+            if '16' in account['snaps']:
+                user_snaps = account['snaps']['16']
 
-        flask_user = flask.session['openid']
+            flask_user = flask.session['openid']
 
-        context = {
-            'image': flask_user['image'],
-            'username': account['username'],
-            'displayname': account['displayname'],
-            'email': account['email'],
-            'snaps': user_snaps,
-            'error_list': error_list
-        }
+            context = {
+                'image': flask_user['image'],
+                'username': account['username'],
+                'displayname': account['displayname'],
+                'email': account['email'],
+                'snaps': user_snaps,
+                'error_list': error_list
+            }
 
         return flask.render_template(
             'account.html',
             **context
         )
     except MacaroonRefreshRequired:
-        authentication.get_refreshed_discharge(
+        macaroon_discharge = authentication.get_refreshed_discharge(
             flask.session['macaroon_discharge']
         )
+        flask.session['macaroon_discharge'] = macaroon_discharge
 
         return flask.redirect(flask.request.path)
 

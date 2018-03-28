@@ -152,68 +152,6 @@ class PublisherPagesTestCase(unittest.TestCase):
         app.testing = True
         self.client = app.app.test_client()
 
-    def test_account_not_logged_in(self):
-        # `account` page redirects unauthenticated access to `login`
-        # with the appropriate `next` path.
-        response = self.client.get('/account')
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            'http://localhost/login?next=/account',
-            response.location)
-
-    def test_snap_market_not_logged_in(self):
-        # `snap-market` page redirects unauthenticated access to `login`
-        # with the appropriate `next` path.
-        response = self.client.get('/account/snaps/lxd/market')
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            'http://localhost/login?next=/account/snaps/lxd/market',
-            response.location)
-
-    def test_snap_measure_not_logged_in(self):
-        # `snap-measure` page redirects unauthenticated access to `login`
-        # with the appropriate `next` path.
-        response = self.client.get('/account/snaps/lxd/measure')
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            'http://localhost/login?next=/account/snaps/lxd/measure',
-            response.location)
-
-    @responses.activate
-    def test_account_logged_in(self):
-        # Users logged-in can access they account page.
-        payload = {
-            'username': 'testing',
-            'displayname': 'testing',
-            'email': 'testing@testing.com',
-            'snaps': {
-                '16': {
-                    'foo': {
-                        'icon_url': None,
-                        'snap_id': 'snap-id',
-                        'private': False,
-                        'uploaded': False,
-                    }
-                }
-            }
-        }
-        responses.add(
-            responses.GET, 'https://dashboard.snapcraft.io/dev/api/account',
-            json=payload, status=200)
-
-        authorization = _log_in(self.client)
-        response = self.client.get('/account')
-        self.assertEqual(200, response.status_code)
-        # Add pyQuery basic context checks
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(
-            'https://dashboard.snapcraft.io/dev/api/account',
-            called.request.url)
-        self.assertEqual(
-            authorization, called.request.headers.get('Authorization'))
-
     @responses.activate
     def test_account_api_failure(self):
         # Why verifying creds (`authentication.verify_response`) on a 500
