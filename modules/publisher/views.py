@@ -96,7 +96,7 @@ def post_account_name():
         else:
             return flask.redirect('/account')
     else:
-        return flask.render_template('username.html')
+        return flask.redirect('/account/username')
 
 
 def publisher_snap_measure(snap_name):

@@ -17,6 +17,7 @@ class PublisherPage(TestCase):
     render_templates = False
 
     def create_app(self):
+        app.config['WTF_CSRF_METHODS'] = []
         app.testing = True
 
         return app
@@ -108,6 +109,8 @@ class PublisherPage(TestCase):
             'http://localhost/login?next=/account/agreement',
             response.location)
 
+    # /account endpoint
+    # ===
     @responses.activate
     def test_account_logged_in(self):
         # Users logged-in can access they account page.
@@ -276,6 +279,104 @@ class PublisherPage(TestCase):
         self.assertEqual(
             'http://localhost/account',
             response.location)
+
+    # /account/username endpoint
+    # ===
+    @responses.activate
+    def test_username_logged_in(self):
+        self._log_in(self.client)
+        response = self.client.get("/account/username")
+
+        assert response.status_code == 200
+        self.assert_template_used('username.html')
+
+    @responses.activate
+    def test_post_username_logged_in(self):
+        responses.add(
+            responses.PATCH, 'https://dashboard.snapcraft.io/dev/api/account',
+            json={}, status=204)
+
+        authorization = self._log_in(self.client)
+        response = self.client.post(
+            '/account/username',
+            data={
+                'username': 'toto'
+            },
+        )
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(
+            'https://dashboard.snapcraft.io/dev/api/account',
+            called.request.url)
+        self.assertEqual(
+            authorization, called.request.headers.get('Authorization'))
+        self.assertEqual(
+            called.response.json(),
+            {},
+        )
+        self.assertEqual(
+            b'{"short_namespace": "toto"}',
+            called.request.body
+            )
+
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(
+            'http://localhost/account',
+            response.location)
+
+    @responses.activate
+    def test_post_no_username_logged_in(self):
+        self._log_in(self.client)
+        response = self.client.post(
+            '/account/username',
+        )
+
+        self.assertEqual(0, len(responses.calls))
+
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(
+            'http://localhost/account/username',
+            response.location)
+
+    @responses.activate
+    def test_post_bad_username_logged_in(self):
+        payload = {
+            'error_list': [
+                {
+                    'code': 'custom-error',
+                    'message': 'great message'
+                }
+            ]
+        }
+        responses.add(
+            responses.PATCH, 'https://dashboard.snapcraft.io/dev/api/account',
+            json=payload, status=400)
+
+        authorization = self._log_in(self.client)
+        response = self.client.post(
+            '/account/username',
+            data={
+                'username': 'toto'
+            },
+        )
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(
+            'https://dashboard.snapcraft.io/dev/api/account',
+            called.request.url)
+        self.assertEqual(
+            authorization, called.request.headers.get('Authorization'))
+        self.assertEqual(
+            b'{"short_namespace": "toto"}',
+            called.request.body
+        )
+
+        assert response.status_code == 200
+        self.assert_template_used('username.html')
+        self.assert_context('username', 'toto')
+        self.assert_context('error_list', payload['error_list'])
 
 
 if __name__ == '__main__':
