@@ -95,7 +95,7 @@
       </div>
     </div>
     {% if countries %}
-      <div class="row" style="margin-top: 2rem">
+      <div class="row js-snap-map-holder" style="margin-top: 2rem;">
         <div class="col-12">
           <h4>Where people are using {{ snap_title }}</h4>
           <div id="js-snap-map" class="snapcraft-territories"></div>
@@ -133,7 +133,14 @@
     }).install();
     Raven.context(function () {
       snapcraft.public.screenshots('#js-snap-screenshots');
-      snapcraft.public.map('#js-snap-map', {{ countries|tojson }});
+      {% if countries %}
+        try {
+          snapcraft.public.map('#js-snap-map', {{ countries | tojson }});
+        } catch(e) {
+          Raven.captureException(e);
+          document.querySelector('.js-snap-map-holder').style.display = 'none';
+        }
+      {% endif %}
 
       var ctrlDown = false;
 
