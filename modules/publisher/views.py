@@ -429,21 +429,36 @@ def post_market_snap(snap_name):
             details_metrics_enabled = snap_details['public_metrics_enabled']
             details_blacklist = snap_details['public_metrics_blacklist']
 
+            field_errors = {}
+            other_errors = []
+
+            for error in error_list:
+                if error['code'] == 'invalid-field':
+                    field_errors[error['extra']['name']] = error['message']
+                else:
+                    other_errors.append(error)
+
             context = {
+                # read-only values from details API
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
-                "title": snap_details['title'],
-                "summary": snap_details['summary'],
-                "description": snap_details['description'],
                 "license": snap_details['license'],
                 "icon_url": snap_details['icon_url'],
                 "publisher_name": snap_details['publisher_name'],
                 "screenshot_urls": snap_details['screenshot_urls'],
-                "contact": snap_details['contact'],
-                "website": snap_details['website'],
                 "public_metrics_enabled": details_metrics_enabled,
                 "public_metrics_blacklist": details_blacklist,
-                "error_list": error_list
+                "display_title": snap_details['title'],
+                # values posted by user
+                "title": flask.request.form['title'],
+                "summary": flask.request.form['summary'],
+                "description": flask.request.form['description'],
+                "contact": flask.request.form['contact'],
+                "website": flask.request.form['website'],
+                # errors
+                "error_list": error_list,
+                "field_errors": field_errors,
+                "other_erros": other_errors
             }
 
             return flask.render_template(
