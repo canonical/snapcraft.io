@@ -54,9 +54,12 @@ function initFormNotification(formElId, notificationElId) {
 function initForm(config, initialState, errors) {
   // if there are errors focus first error
   if (errors && errors.length) {
-    const errorInput = document.querySelector('.is-error input');
+    // find input with error or error notification and scroll it into view
+    const errorInput = document.querySelector('.is-error input')
+      || document.querySelector('.p-notification--negative');
+
     if (errorInput) {
-      errorInput.focus();
+      errorInput.scrollIntoView();
     }
   }
 
