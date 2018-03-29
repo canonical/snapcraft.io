@@ -1,7 +1,18 @@
+import os
 import requests
 from modules.exceptions import (
     ApiTimeoutError,
     ApiConnectionError
+)
+
+ENVIRONMENT = os.getenv(
+    'ENVIRONMENT',
+    'devel'
+)
+
+COMMIT_ID = os.getenv(
+    'COMMIT_ID',
+    'commit_id'
 )
 
 
@@ -23,6 +34,12 @@ def get(
 
     if method is None:
         method = "POST" if json else "GET"
+
+    storefront_header = 'storefront ({commit_hash};{environment})'.format(
+        commit_hash=COMMIT_ID,
+        environment=ENVIRONMENT
+    )
+    headers.update({'User-Agent': storefront_header})
 
     try:
         return requests.request(
