@@ -99,7 +99,9 @@ Publisher metrics for {{ snap_name }}
   <script src="/static/js/dist/publisher.js"></script>
   <script>
     Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
-      whitelistUrls: ['snapcraft.io']
+      whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
+      release: '{{ COMMIT_ID }}',
+      environment: '{{ ENVIRONMENT }}'
     }).install();
     Raven.context(function () {
       snapcraft.publisher.selector('.metrics-period', 'period');

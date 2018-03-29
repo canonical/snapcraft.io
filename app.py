@@ -29,7 +29,6 @@ from modules.macaroon import (
     MacaroonResponse,
 )
 
-
 app = flask.Flask(__name__)
 talisker.flask.register(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -59,13 +58,29 @@ LOGIN_URL = os.getenv(
     'https://login.ubuntu.com',
 )
 
+ENVIRONMENT = os.getenv(
+    'ENVIRONMENT',
+    'devel'
+)
+COMMIT_ID = os.getenv(
+    'COMMIT_ID',
+    'commit_id'
+)
+
+app.config['SENTRY_CONFIG'] = {
+    'release': COMMIT_ID,
+    'environment': ENVIRONMENT
+}
+
 
 # Make LOGIN_URL available in all templates
 @app.context_processor
 def inject_template_variables():
     return {
         'LOGIN_URL': LOGIN_URL,
-        'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN
+        'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN,
+        'COMMIT_ID': COMMIT_ID,
+        'ENVIRONMENT': ENVIRONMENT
     }
 
 

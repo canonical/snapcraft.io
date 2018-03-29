@@ -129,7 +129,9 @@
   <script src="/static/js/dist/public.js"></script>
   <script>
     Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
-      whitelistUrls: ['snapcraft.io']
+      whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
+      release: '{{ COMMIT_ID }}',
+      environment: '{{ ENVIRONMENT }}'
     }).install();
     Raven.context(function () {
       snapcraft.public.screenshots('#js-snap-screenshots');
