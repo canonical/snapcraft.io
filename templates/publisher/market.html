@@ -42,7 +42,7 @@
 
           <div class="row">
             <div class="col-12 u-align--right">
-                <input type="submit" class="p-button--neutral js-market-revert" name="submit_revert" value="Revert"/>
+                <a class="p-button--neutral js-market-revert" name="submit_revert" href="/account/snaps/{{ snap_name }}/market">Revert</a>
                 <input type="submit" class="p-button--positive js-market-submit" name="submit_apply" value="Apply"/>
                 <hr />
             </div>
@@ -104,7 +104,7 @@
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
                 <label for="snap-title">Title:</label>
-                <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}"/>
+                <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}" required maxlength="64"/>
                 {% if field_errors and field_errors['title'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['title'] }}
@@ -144,7 +144,7 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
-                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}"/>
+                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
                 {% if field_errors and field_errors['summary'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['summary'] }}
@@ -229,7 +229,7 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-                <input class="p-form-validation__input" type="text" name="website" value="{{ website }}"/>
+                <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
                 {% if field_errors and field_errors['website'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['website'] }}
@@ -245,7 +245,7 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-                <input class="p-form-validation__input" type="text" name="contact" value="{{ contact }}"/>
+                <input class="p-form-validation__input" type="url" name="contact" value="{{ contact }}" maxlength="256"/>
                 {% if field_errors and field_errors['contact'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['contact'] }}

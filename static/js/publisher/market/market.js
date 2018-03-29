@@ -111,9 +111,8 @@ function initForm(config, initialState, errors) {
     }
   });
 
-  document.querySelector('.js-market-submit').addEventListener('click', function(event) {
+  marketForm.addEventListener('submit', function(event) {
     const diff = diffState(initialState, state);
-    event.preventDefault();
 
     // if anything was changed, update state inputs and submit
     if (diff) {
@@ -123,8 +122,8 @@ function initForm(config, initialState, errors) {
       cleanState.images = cleanState.images.filter(image => image.status !== 'delete');
       stateInput.value = JSON.stringify(cleanState);
       diffInput.value = JSON.stringify(diff);
-
-      marketForm.submit();
+    } else {
+      event.preventDefault();
     }
   });
 
