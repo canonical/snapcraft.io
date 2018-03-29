@@ -59,7 +59,11 @@ function initForm(config, initialState, errors) {
       || document.querySelector('.p-notification--negative');
 
     if (errorInput) {
-      errorInput.scrollIntoView();
+      errorInput.focus();
+
+      if (errorInput.scrollIntoView) {
+        errorInput.scrollIntoView();
+      }
     }
   }
 
