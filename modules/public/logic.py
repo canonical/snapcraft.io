@@ -126,6 +126,9 @@ def build_country_info(users_by_country, display_number_users=False):
 
     :returns: A dictionnary with the country information for every country
     """
+    if not users_by_country:
+        return {}
+
     country_data = {}
     for country in pycountry.countries:
         country_info = users_by_country.get(country.alpha_2)
