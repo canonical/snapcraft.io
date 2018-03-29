@@ -1,7 +1,7 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Market details for {{ title }}
+  Market details for {% if display_title %}{{ display_title }}{% else %}{{ title }}{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -15,7 +15,7 @@
         <div class="row u-no-margin--top">
         <div class="row">
           <div class="col-6">
-            <h1 class="u-float--left p-heading--three">{{ title }}</h1>
+            <h1 class="u-float--left p-heading--three">{% if display_title %}{{ display_title }}{% else %}{{ title }}{% endif %}</h1>
           </div>
           <div class="col-6">
             <ul class="p-tabs__list u-float--right" role="tablist">
@@ -49,7 +49,7 @@
           </div>
 
           {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages or error_list %}
+            {% if messages %}
               <div class="row">
                 <div class="col-12">
                   {% for category, message in messages %}
@@ -59,8 +59,15 @@
                       </p>
                     </div>
                   {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          {% endwith %}
 
-                  {% for error in error_list %}
+          {% if other_errors %}
+              <div class="row">
+                <div class="col-12">
+                  {% for error in other_errors %}
                     <div class="p-notification--negative">
                       <p class="p-notification__response">
                           {{ error.message }}
@@ -69,15 +76,25 @@
                   {% endfor %}
                 </div>
               </div>
-            {% endif %}
-          {% endwith %}
+          {% endif %}
 
-          <div class="row">
+          {% if field_errors and field_errors['icon'] %}
+            <div class="row">
+              <div class="col-12">
+                <div class="p-notification--negative">
+                  <p class="p-notification__response">
+                      <strong>Icon:</strong> {{ field_errors['icon'] }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <div class="row" data-validation-name="icon">
             <div class="col-2">
               <div class="p-media-object__image--large p-editable-icon">
                 <img id="snap_icon_image"
                   {% if icon_url %}
-                    src="{{ icon_url }}" alt="{{ title }} snap"
+                    src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ title }}{% endif %} snap"
                   {% else %}
                     src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
                   {% endif %}
@@ -85,9 +102,14 @@
               </div>
             </div>
             <div class="col-8">
-              <div class="p-form-validation u-no-margin">
+              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
                 <label for="snap-title">Title:</label>
                 <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}"/>
+                {% if field_errors and field_errors['title'] %}
+                  <p class="p-form-validation__message">
+                    <strong>Error:</strong> {{ field_errors['title'] }}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -121,8 +143,13 @@
               <label class="p-label--grid-baseline">Summary: </label>
             </div>
             <div class="col-8">
-              <div class="p-form-validation u-no-margin">
+              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
                 <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}"/>
+                {% if field_errors and field_errors['summary'] %}
+                  <p class="p-form-validation__message">
+                    <strong>Error:</strong> {{ field_errors['summary'] }}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -131,8 +158,13 @@
               <label class="p-label--grid-baseline">Description: </label>
             </div>
             <div class="col-8">
-              <div class="p-form-validation u-no-margin">
+              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
                 <textarea class="p-form-validation__input u-no-margin" name="description">{{ description }}</textarea>
+                {% if field_errors and field_errors['description'] %}
+                  <p class="p-form-validation__message">
+                    <strong>Error:</strong> {{ field_errors['description'] }}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -143,7 +175,18 @@
             </div>
           </div>
 
-          <div class="row">
+          {% if field_errors and field_errors['screenshots'] %}
+            <div class="row">
+              <div class="col-12">
+                <div class="p-notification--negative">
+                  <p class="p-notification__response">
+                      <strong>Screenshots:</strong> {{ field_errors['screenshots'] }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <div class="row" data-validation-name="screenshots">
             <div class="col-12">
               <div class="p-screenshots-toolbar" id="screenshots-toolbar">
                 <label>Screenshots (up to 5):</label>
@@ -185,8 +228,13 @@
               <label class="p-label--grid-baseline">Developer website: </label>
             </div>
             <div class="col-8">
-              <div class="p-form-validation u-no-margin">
+              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
                 <input class="p-form-validation__input" type="text" name="website" value="{{ website }}"/>
+                {% if field_errors and field_errors['website'] %}
+                  <p class="p-form-validation__message">
+                    <strong>Error:</strong> {{ field_errors['website'] }}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -196,8 +244,13 @@
               <label class="p-label--grid-baseline">Contact {{ publisher_name }}: </label>
             </div>
             <div class="col-8">
-              <div class="p-form-validation u-no-margin">
+              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
                 <input class="p-form-validation__input" type="text" name="contact" value="{{ contact }}"/>
+                {% if field_errors and field_errors['contact'] %}
+                  <p class="p-form-validation__message">
+                    <strong>Error:</strong> {{ field_errors['contact'] }}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -249,19 +302,6 @@
           </div>
         </form>
     </div>
-
-    {% if api_error %}
-    <div class="row">
-      <div class="col-12">
-        <div class="p-notification--negative">
-          <p class="p-notification__response">
-            <span class="p-notification__status">Error:</span> API request failed
-          </p>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-
   </div>
 {% endblock %}
 

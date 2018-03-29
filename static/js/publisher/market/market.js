@@ -52,17 +52,19 @@ function initFormNotification(formElId, notificationElId) {
 
 
 function initForm(config, initialState, errors) {
-  // if there are errors mark fields as invalid
+  // if there are errors focus first error
   if (errors && errors.length) {
-    errors.forEach((error) => {
-      if (error.code === 'invalid-field') {
-        const name = error.extra.name;
-        if (name) {
-          const input = document.querySelector(`[name=${name}]`);
-          input.closest('.p-form-validation').classList.add('is-error');
-        }
+    // find input with error or error notification and scroll it into view
+    const errorInput = document.querySelector('.is-error input')
+      || document.querySelector('.p-notification--negative');
+
+    if (errorInput) {
+      errorInput.focus();
+
+      if (errorInput.scrollIntoView) {
+        errorInput.scrollIntoView();
       }
-    });
+    }
   }
 
   // setup form functionality
@@ -101,6 +103,11 @@ function initForm(config, initialState, errors) {
     const field = event.target.closest('.p-form-validation');
     if (field) {
       field.classList.remove('is-error');
+
+      const message = field.querySelector('.p-form-validation__message');
+      if (message) {
+        message.remove();
+      }
     }
   });
 
