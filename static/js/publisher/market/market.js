@@ -105,27 +105,24 @@ function initForm(config, initialState, errors) {
   initSnapScreenshotsEdit(
     config.screenshotsToolbar,
     config.screenshotsWrapper,
-    state
+    state,
+    (nextState) => {
+      updateState(state, nextState);
+      updateFormState();
+    }
   );
 
   function checkForm() {
-    let enabled = false;
-
     const diff = diffState(initialState, state);
 
-    if (diff) {
-      enabled = true;
-    }
-
-    if (enabled) {
+    if (diff && isFormValid()) {
       enableSubmit();
     } else {
       disableSubmit();
     }
   }
 
-  // when anything is changed update the state
-  marketForm.addEventListener('change', function() {
+  function updateFormState() {
     // Some extra modifications need to happen for the checkboxes
     publicMetrics(marketForm);
 
@@ -140,6 +137,11 @@ function initForm(config, initialState, errors) {
     });
 
     checkForm();
+  }
+
+  // when anything is changed update the state
+  marketForm.addEventListener('change', function() {
+    updateFormState();
   });
 
   marketForm.addEventListener('submit', function(event) {
@@ -161,42 +163,14 @@ function initForm(config, initialState, errors) {
   // client side validation
 
   const validation = {};
-  const validateInputs = Array.from(marketForm.querySelectorAll('input'));
+  const validateInputs = Array.from(marketForm.querySelectorAll('input,textarea'));
 
-  validateInputs.forEach(input => {
-    const inputValidation = {};
+  function isFormValid() {
+    // form is valid if every validated input is valid
+    return Object.keys(validation).every(name => validation[name].isValid);
+  }
 
-    if (input.maxLength > 0) {
-      // save max length, but remove it from input so more chars can be entered
-      inputValidation.maxLength = input.maxLength;
-      input.removeAttribute('maxlength');
-
-      // prepare counter element to show how many chars need to be removed
-      const counter = document.createElement('span');
-      counter.className = 'p-form-validation__counter';
-      inputValidation.counterEl = counter;
-      input.parentNode.appendChild(counter);
-    }
-
-    if (input.required) {
-      inputValidation.required = true;
-    }
-
-    if (input.type === 'url') {
-      inputValidation.url = true;
-    }
-
-    // allow mailto: addresses for contact field
-    if (input.name === 'contact') {
-      inputValidation.mailto = true;
-    }
-
-    validation[input.name] = inputValidation;
-  });
-
-  // validate inputs on change
-  marketForm.addEventListener('input', function (event) {
-    const input = event.target;
+  function validateInput(input) {
     const field = input.closest('.p-form-validation');
 
     if (field) {
@@ -245,8 +219,10 @@ function initForm(config, initialState, errors) {
 
       if (isValid) {
         field.classList.remove('is-error');
+        inputValidation.isValid = true;
       } else {
         field.classList.add('is-error');
+        inputValidation.isValid = false;
       }
 
       if (showCounter) {
@@ -255,13 +231,48 @@ function initForm(config, initialState, errors) {
         field.classList.remove('has-counter');
       }
     }
+  }
 
+  // prepare validation of inputs based on their HTML attributes
+  validateInputs.forEach(input => {
+    const inputValidation = { isValid: true };
+
+    if (input.maxLength > 0) {
+      // save max length, but remove it from input so more chars can be entered
+      inputValidation.maxLength = input.maxLength;
+      input.removeAttribute('maxlength');
+
+      // prepare counter element to show how many chars need to be removed
+      const counter = document.createElement('span');
+      counter.className = 'p-form-validation__counter';
+      inputValidation.counterEl = counter;
+      input.parentNode.appendChild(counter);
+    }
+
+    if (input.required) {
+      inputValidation.required = true;
+    }
+
+    if (input.type === 'url') {
+      inputValidation.url = true;
+    }
+
+    // allow mailto: addresses for contact field
+    if (input.name === 'contact') {
+      inputValidation.mailto = true;
+    }
+
+    validation[input.name] = inputValidation;
+  });
+
+  // validate inputs on change
+  marketForm.addEventListener('input', function (event) {
+    validateInput(event.target);
+    updateFormState();
   });
 }
 
 export {
   initSnapIconEdit,
-  initFormNotification,
-  initSnapScreenshotsEdit,
   initForm
 };

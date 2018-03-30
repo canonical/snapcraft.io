@@ -233,7 +233,9 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-                <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
+                <div class="p-form-validation__field">
+                  <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
+                </div>
                 {% if field_errors and field_errors['website'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['website'] }}
@@ -249,7 +251,9 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-                <input class="p-form-validation__input" type="url" name="contact" value="{{ contact }}" maxlength="256"/>
+                <div class="p-form-validation__field">
+                  <input class="p-form-validation__input" type="url" name="contact" value="{{ contact }}" maxlength="256"/>
+                </div>
                 {% if field_errors and field_errors['contact'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['contact'] }}

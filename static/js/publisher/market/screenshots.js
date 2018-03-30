@@ -1,5 +1,4 @@
 import lightbox from './lightbox';
-import { updateState } from './state';
 
 // TEMPLATES
 const templates = {
@@ -39,14 +38,10 @@ const templates = {
 };
 
 // INIT SCREENSHOTS
-function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, state) {
+function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId, state, setState) {
   // DOM elements
   const screenshotsToolbarEl = document.getElementById(screenshotsToolbarElId);
   const screenshotsWrapper = document.getElementById(screenshotsWrapperElId);
-
-  const setState = function(nextState) {
-    updateState(state, nextState);
-  };
 
   // actions on state
   const addScreenshots = (files) => {
