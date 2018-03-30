@@ -97,11 +97,18 @@ function initForm(config, initialState, errors) {
 
   // when anything is changed update the state
   marketForm.addEventListener('change', function() {
+    // Some extra modifications need to happen for the checkboxes
+    publicMetrics(marketForm);
+
     let formData = new FormData(marketForm);
 
-    // Some extra modifications need to happen for the checkboxes
-    publicMetrics(marketForm, formData);
+    // update state based on data of all inputs
     updateState(state, formData);
+    // checkboxes are tricky,
+    // make sure to update state based on their 'checked' status
+    updateState(state, {
+      'public_metrics_enabled': marketForm['public_metrics_enabled'].checked
+    });
   });
 
   marketForm.addEventListener('submit', function(event) {
