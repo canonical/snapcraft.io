@@ -2,6 +2,10 @@ import { initSnapScreenshotsEdit } from './screenshots';
 import { updateState, diffState } from './state';
 import { publicMetrics } from './publicMetrics';
 
+// https://gist.github.com/dperini/729294
+const URL_REGEXP = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+const MAILTO_REGEXP = /^mailto:/;
+
 function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
@@ -140,6 +144,15 @@ function initForm(config, initialState, errors) {
       inputValidation.required = true;
     }
 
+    if (input.type === 'url') {
+      inputValidation.url = true;
+    }
+
+    // allow mailto: addresses for contact field
+    if (input.name === 'contact') {
+      inputValidation.mailto = true;
+    }
+
     validation[input.name] = inputValidation;
   });
 
@@ -176,6 +189,19 @@ function initForm(config, initialState, errors) {
         } else {
           inputValidation.counterEl.innerHTML = '';
           showCounter = false;
+        }
+      }
+
+      // only validate contents when there is any value
+      if (input.value.length > 0) {
+        if (inputValidation.mailto) {
+          if (!URL_REGEXP.test(input.value) && !MAILTO_REGEXP.test(input.value)) {
+            isValid = false;
+          }
+        } else if (inputValidation.url) {
+          if (!URL_REGEXP.test(input.value)) {
+            isValid = false;
+          }
         }
       }
 
