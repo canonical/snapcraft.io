@@ -98,17 +98,6 @@ function initForm(config, initialState, errors) {
     // Some extra modifications need to happen for the checkboxes
     publicMetrics(marketForm, formData);
     updateState(state, formData);
-
-    // clear validation of field on change
-    const field = event.target.closest('.p-form-validation');
-    if (field) {
-      field.classList.remove('is-error');
-
-      const message = field.querySelector('.p-form-validation__message');
-      if (message) {
-        message.remove();
-      }
-    }
   });
 
   marketForm.addEventListener('submit', function(event) {
@@ -127,6 +116,50 @@ function initForm(config, initialState, errors) {
     }
   });
 
+  // client side validation
+
+  const validation = {};
+  const maxLengthInputs = Array.from(marketForm.querySelectorAll('.p-form-validation__field [maxlength]'));
+
+  maxLengthInputs.forEach(input => {
+    validation[input.name] = {
+      maxLength: input.maxLength
+    };
+    input.removeAttribute('maxlength');
+
+    const counter = document.createElement('span');
+    counter.className = 'p-form-validation__counter';
+    validation[input.name].counterEl = counter;
+    input.parentNode.appendChild(counter);
+  });
+
+  // validate inputs on change
+  marketForm.addEventListener('input', function (event) {
+    const input = event.target;
+    const field = input.closest('.p-form-validation');
+
+    if (field) {
+      const message = field.querySelector('.p-form-validation__message');
+      if (message) {
+        message.remove();
+      }
+
+      if (validation[input.name] && validation[input.name].maxLength) {
+        const count = validation[input.name].maxLength - input.value.length;
+
+        if (count < 0) {
+          validation[input.name].counterEl.innerHTML = count;
+          field.classList.add('is-error');
+          field.classList.add('has-counter');
+        } else {
+          validation[input.name].counterEl.innerHTML = '';
+          field.classList.remove('is-error');
+          field.classList.remove('has-counter');
+        }
+      }
+    }
+
+  });
 }
 
 export {

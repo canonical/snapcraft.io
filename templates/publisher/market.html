@@ -104,7 +104,9 @@
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
                 <label for="snap-title">Title:</label>
-                <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}" required maxlength="64"/>
+                <div class="p-form-validation__field">
+                  <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}" required maxlength="64"/>
+                </div>
                 {% if field_errors and field_errors['title'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['title'] }}
@@ -144,7 +146,9 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
-                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
+                <div class="p-form-validation__field">
+                  <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
+                </div>
                 {% if field_errors and field_errors['summary'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['summary'] }}
