@@ -73,6 +73,19 @@ function initForm(config, initialState, errors) {
 
   // setup form functionality
   const marketForm = document.getElementById(config.form);
+  const submitButton = marketForm.querySelector('.js-market-submit');
+
+  function disableSubmit() {
+    submitButton.disabled = 'disabled';
+  }
+
+  function enableSubmit() {
+    submitButton.disabled = false;
+  }
+
+  // disable submit by default, it will be enabled on valid change
+  disableSubmit();
+
   let state = JSON.parse(JSON.stringify(initialState));
 
   const stateInput = document.createElement('input');
@@ -95,6 +108,22 @@ function initForm(config, initialState, errors) {
     state
   );
 
+  function checkForm() {
+    let enabled = false;
+
+    const diff = diffState(initialState, state);
+
+    if (diff) {
+      enabled = true;
+    }
+
+    if (enabled) {
+      enableSubmit();
+    } else {
+      disableSubmit();
+    }
+  }
+
   // when anything is changed update the state
   marketForm.addEventListener('change', function() {
     // Some extra modifications need to happen for the checkboxes
@@ -109,6 +138,8 @@ function initForm(config, initialState, errors) {
     updateState(state, {
       'public_metrics_enabled': marketForm['public_metrics_enabled'].checked
     });
+
+    checkForm();
   });
 
   marketForm.addEventListener('submit', function(event) {
