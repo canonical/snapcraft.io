@@ -92,7 +92,7 @@ function initForm(config, initialState, errors) {
   );
 
   // when anything is changed update the state
-  marketForm.addEventListener('change', function(event) {
+  marketForm.addEventListener('change', function() {
     let formData = new FormData(marketForm);
 
     // Some extra modifications need to happen for the checkboxes
@@ -119,18 +119,28 @@ function initForm(config, initialState, errors) {
   // client side validation
 
   const validation = {};
-  const maxLengthInputs = Array.from(marketForm.querySelectorAll('.p-form-validation__field [maxlength]'));
+  const validateInputs = Array.from(marketForm.querySelectorAll('input'));
 
-  maxLengthInputs.forEach(input => {
-    validation[input.name] = {
-      maxLength: input.maxLength
-    };
-    input.removeAttribute('maxlength');
+  validateInputs.forEach(input => {
+    const inputValidation = {};
 
-    const counter = document.createElement('span');
-    counter.className = 'p-form-validation__counter';
-    validation[input.name].counterEl = counter;
-    input.parentNode.appendChild(counter);
+    if (input.maxLength > 0) {
+      // save max length, but remove it from input so more chars can be entered
+      inputValidation.maxLength = input.maxLength;
+      input.removeAttribute('maxlength');
+
+      // prepare counter element to show how many chars need to be removed
+      const counter = document.createElement('span');
+      counter.className = 'p-form-validation__counter';
+      inputValidation.counterEl = counter;
+      input.parentNode.appendChild(counter);
+    }
+
+    if (input.required) {
+      inputValidation.required = true;
+    }
+
+    validation[input.name] = inputValidation;
   });
 
   // validate inputs on change
@@ -144,18 +154,41 @@ function initForm(config, initialState, errors) {
         message.remove();
       }
 
-      if (validation[input.name] && validation[input.name].maxLength) {
+      let isValid = true;
+      let showCounter = false;
+
+      const inputValidation = validation[input.name];
+
+      if (inputValidation.required) {
+        const length = input.value.length;
+        if (!length) {
+          isValid = false;
+        }
+      }
+
+      if (inputValidation.maxLength) {
         const count = validation[input.name].maxLength - input.value.length;
 
         if (count < 0) {
-          validation[input.name].counterEl.innerHTML = count;
-          field.classList.add('is-error');
-          field.classList.add('has-counter');
+          inputValidation.counterEl.innerHTML = count;
+          isValid = false;
+          showCounter = true;
         } else {
-          validation[input.name].counterEl.innerHTML = '';
-          field.classList.remove('is-error');
-          field.classList.remove('has-counter');
+          inputValidation.counterEl.innerHTML = '';
+          showCounter = false;
         }
+      }
+
+      if (isValid) {
+        field.classList.remove('is-error');
+      } else {
+        field.classList.add('is-error');
+      }
+
+      if (showCounter) {
+        field.classList.add('has-counter');
+      } else {
+        field.classList.remove('has-counter');
       }
     }
 
