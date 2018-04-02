@@ -15,6 +15,11 @@ SNAP_DETAILS_URL = ''.join([
     SNAPCRAFT_IO_API,
     'snaps/details/{snap_name}',
     '?channel=stable',
+    '&fields=snap_id,package_name,title,summary,description,license,contact,'
+    'website,publisher,prices,media,'
+    # Released (stable) revision fields will eventually be replaced by
+    # `channel_maps_list` contextual information.
+    'revision,version,binary_filesize,last_updated'
 ])
 DETAILS_QUERY_HEADERS = {
     'X-Ubuntu-Series': '16',
@@ -34,6 +39,7 @@ SNAP_SEARCH_URL = ''.join([
     'snaps/search',
     '?q={snap_name}&page={page}&size={size}',
     '&confinement=strict,classic',
+    '&fields=package_name,title,summary,icon_url'
 ])
 SEARCH_QUERY_HEADERS = {
     'X-Ubuntu-Frameworks': '*',
@@ -44,7 +50,8 @@ SEARCH_QUERY_HEADERS = {
 FEATURE_SNAPS_URL = ''.join([
     SNAPCRAFT_IO_API,
     'snaps/search',
-    '?confinement=strict,classic&q=&section=featured',
+    '?confinement=strict,classic&section=featured',
+    '&fields=package_name,title,icon_url'
 ])
 
 PROMOTED_QUERY_URL = ''.join([
@@ -52,6 +59,7 @@ PROMOTED_QUERY_URL = ''.join([
     'snaps/search',
     '?promoted=true',
     '&confinement=strict,classic',
+    '&fields=package_name,title,icon_url'
 ])
 PROMOTED_QUERY_HEADERS = {
     'X-Ubuntu-Series': '16'
