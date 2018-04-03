@@ -22,6 +22,7 @@ from werkzeug.contrib.fixers import ProxyFix
 import prometheus_flask_exporter
 
 import modules.authentication as authentication
+import modules.helpers as helpers
 import modules.public.views as public_views
 import modules.publisher.views as publisher_views
 from modules.macaroon import (
@@ -34,6 +35,7 @@ talisker.flask.register(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.url_map.strict_slashes = False
+app.url_map.converters['regex'] = helpers.RegexConverter
 sentry = Sentry(app)
 
 metrics = prometheus_flask_exporter.PrometheusMetrics(
@@ -175,6 +177,11 @@ def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
+@app.route('/favicon.ico')
+def favicon():
+    return flask.redirect('https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png')
+
+
 # Login handler
 # ===
 @app.route('/login', methods=['GET', 'POST'])
@@ -251,7 +258,7 @@ def search_snap():
     return public_views.search_snap()
 
 
-@app.route('/<snap_name>')
+@app.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
 def snap_details(snap_name):
     return public_views.snap_details(snap_name)
 
