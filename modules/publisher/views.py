@@ -117,7 +117,8 @@ def publisher_snap_measure(snap_name):
         if api_response_error_list.status_code == 404:
             flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            error_messages = ', '.join(api_response_error_list.errors.key())
+            codes = [error['code'] for error in api_response_error_list.errors]
+            error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
         flask.abort(502, str(api_response_error))
@@ -242,7 +243,8 @@ def get_market_snap(snap_name):
         if api_response_error_list.status_code == 404:
             flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            error_messages = ', '.join(api_response_error_list.errors.key())
+            codes = [error['code'] for error in api_response_error_list.errors]
+            error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
         flask.abort(502, str(api_response_error))
@@ -282,7 +284,8 @@ def snap_release(snap_name):
         if api_response_error_list.status_code == 404:
             flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            error_messages = ', '.join(api_response_error_list.errors.key())
+            codes = [error['code'] for error in api_response_error_list.errors]
+            error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
         flask.abort(502, str(api_response_error))
@@ -417,9 +420,9 @@ def post_market_snap(snap_name):
                 if api_response_error_list.status_code == 404:
                     flask.abort(404, 'No snap named {}'.format(snap_name))
                 else:
-                    error_messages = ', '.join(
-                        api_response_error_list.errors.key()
-                    )
+                    errors = api_response_error_list.errors
+                    codes = [error['code'] for error in errors]
+                    error_messages = ', '.join(codes)
                     flask.abort(502, error_messages)
             except ApiResponseError as api_response_error:
                 flask.abort(502, str(api_response_error))
