@@ -122,6 +122,9 @@ def get_agreement(session):
         headers
     )
 
+    if authentication.is_macaroon_expired(agreement_response.headers):
+        raise MacaroonRefreshRequired()
+
     return agreement_response.json()
 
 
@@ -137,6 +140,9 @@ def post_agreement(session, agreed):
         json
     )
 
+    if authentication.is_macaroon_expired(agreement_response.headers):
+        raise MacaroonRefreshRequired()
+
     return agreement_response.json()
 
 
@@ -151,6 +157,9 @@ def post_username(session, username):
         json=json,
         method='PATCH'
     )
+
+    if authentication.is_macaroon_expired(username_response.headers):
+        raise MacaroonRefreshRequired()
 
     if username_response.status_code == 204:
         return {}
@@ -169,6 +178,9 @@ def get_publisher_metrics(session, json):
         json=json
     )
 
+    if authentication.is_macaroon_expired(metrics_response.headers):
+        raise MacaroonRefreshRequired()
+
     return metrics_response.json()
 
 
@@ -177,6 +189,9 @@ def get_snap_info(snap_name, session):
         SNAP_INFO_URL.format(snap_name=snap_name),
         headers=get_authorization_header(session)
     )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired()
 
     return process_response(response)
 
@@ -197,6 +212,9 @@ def snap_metadata(snap_id, session, json=None):
         method=method
     )
 
+    if authentication.is_macaroon_expired(metadata_response.headers):
+        raise MacaroonRefreshRequired()
+
     return metadata_response.json()
 
 
@@ -205,6 +223,9 @@ def get_snap_status(snap_id, session):
         STATUS_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header(session)
     )
+
+    if authentication.is_macaroon_expired(status_response.headers):
+        raise MacaroonRefreshRequired()
 
     return status_response.json()
 
@@ -237,5 +258,8 @@ def snap_screenshots(snap_id, session, data=None, files=None):
         method=method,
         files=files_array
     )
+
+    if authentication.is_macaroon_expired(screenshot_response.headers):
+        raise MacaroonRefreshRequired()
 
     return screenshot_response.json()

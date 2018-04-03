@@ -17,6 +17,15 @@ from modules.exceptions import (
 )
 
 
+def refresh_redirect(path):
+    macaroon_discharge = authentication.get_refreshed_discharge(
+        flask.session['macaroon_discharge']
+    )
+    flask.session['macaroon_discharge'] = macaroon_discharge
+
+    return flask.redirect(path)
+
+
 def get_account():
     try:
         account = api.get_account(flask.session)
@@ -56,12 +65,9 @@ def get_account():
             **context
         )
     except MacaroonRefreshRequired:
-        macaroon_discharge = authentication.get_refreshed_discharge(
-            flask.session['macaroon_discharge']
+        return refresh_redirect(
+            flask.request.path
         )
-        flask.session['macaroon_discharge'] = macaroon_discharge
-
-        return flask.redirect(flask.request.path)
 
 
 def get_agreement():
@@ -72,7 +78,12 @@ def post_agreement():
     agreed = flask.request.form.get('i_agree')
 
     if agreed == 'on':
-        api.post_agreement(flask.session, True)
+        try:
+            api.post_agreement(flask.session, True)
+        except MacaroonRefreshRequired:
+            return refresh_redirect(
+                '/account/agreement'
+            )
         return flask.redirect('/account')
     else:
         return flask.redirect('/account/agreement')
@@ -86,7 +97,13 @@ def post_account_name():
     username = flask.request.form.get('username')
 
     if username:
-        response = api.post_username(flask.session, username)
+        try:
+            response = api.post_username(flask.session, username)
+        except MacaroonRefreshRequired:
+            return refresh_redirect(
+                '/account/username'
+            )
+
         if 'error_list' in response:
             return flask.render_template(
                 'username.html',
@@ -124,6 +141,10 @@ def publisher_snap_measure(snap_name):
         flask.abort(502, str(api_response_error))
     except ApiError as api_error:
         flask.abort(502, str(api_error))
+    except MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
 
     metric_period = flask.request.args.get('period', default='30d', type=str)
     metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
@@ -164,10 +185,15 @@ def publisher_snap_measure(snap_name):
         ]
     }
 
-    metrics_response_json = api.get_publisher_metrics(
-        flask.session,
-        json=metrics_query_json
-    )
+    try:
+        metrics_response_json = api.get_publisher_metrics(
+            flask.session,
+            json=metrics_query_json
+        )
+    except MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
 
     nodata = True
 
@@ -250,6 +276,10 @@ def get_market_snap(snap_name):
         flask.abort(502, str(api_response_error))
     except ApiError as api_error:
         flask.abort(502, str(api_error))
+    except MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
 
     context = {
         "snap_id": snap_details['snap_id'],
@@ -291,8 +321,17 @@ def snap_release(snap_name):
         flask.abort(502, str(api_response_error))
     except ApiError as api_error:
         flask.abort(502, str(api_error))
+    except MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
 
-    status_json = api.get_snap_status(snap_id, flask.session)
+    try:
+        status_json = api.get_snap_status(snap_id, flask.session)
+    except MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
 
     return flask.render_template(
         'publisher/release.html',
@@ -334,10 +373,15 @@ def post_market_snap(snap_name):
 
         if 'images' in changes:
             # Add existing screenshots
-            current_screenshots = api.snap_screenshots(
-                snap_id,
-                flask.session
-            )
+            try:
+                current_screenshots = api.snap_screenshots(
+                    snap_id,
+                    flask.session
+                )
+            except MacaroonRefreshRequired:
+                return refresh_redirect(
+                    flask.request.path
+                )
 
             changed_screenshots = changes['images']
 
@@ -368,12 +412,17 @@ def post_market_snap(snap_name):
                         images_files.append(new_screenshot)
 
             images_json = {'info': dumps(info)}
-            screenshots_response = api.snap_screenshots(
-                snap_id,
-                flask.session,
-                images_json,
-                images_files
-            )
+            try:
+                screenshots_response = api.snap_screenshots(
+                    snap_id,
+                    flask.session,
+                    images_json,
+                    images_files
+                )
+            except MacaroonRefreshRequired:
+                return refresh_redirect(
+                    flask.request.path
+                )
 
             if 'error_list' in screenshots_response:
                 error_list = error_list + screenshots_response['error_list']
@@ -416,11 +465,16 @@ def post_market_snap(snap_name):
                     body_json['description'].replace('\r\n', '\n')
                 )
 
-            metadata = api.snap_metadata(
-                snap_id,
-                flask.session,
-                body_json
-            )
+            try:
+                metadata = api.snap_metadata(
+                    flask.request.form['snap_id'],
+                    flask.session,
+                    body_json
+                )
+            except MacaroonRefreshRequired:
+                return refresh_redirect(
+                    flask.request.path
+                )
             if 'error_list' in metadata:
                 error_list = error_list + metadata['error_list']
 
@@ -443,6 +497,10 @@ def post_market_snap(snap_name):
                 flask.abort(502, str(api_response_error))
             except ApiError as api_error:
                 flask.abort(502, str(api_error))
+            except MacaroonRefreshRequired:
+                return refresh_redirect(
+                    flask.request.path
+                )
 
             details_metrics_enabled = snap_details['public_metrics_enabled']
             details_blacklist = snap_details['public_metrics_blacklist']
