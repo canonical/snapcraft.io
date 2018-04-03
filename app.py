@@ -12,6 +12,7 @@ from urllib.parse import (
     urlparse,
     urlunparse,
 )
+from hashlib import md5
 
 import flask
 import talisker.flask
@@ -75,18 +76,6 @@ app.config['SENTRY_CONFIG'] = {
 }
 
 
-# Make LOGIN_URL available in all templates
-@app.context_processor
-def inject_template_variables():
-    return {
-        'LOGIN_URL': LOGIN_URL,
-        'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN,
-        'COMMIT_ID': COMMIT_ID,
-        'ENVIRONMENT': ENVIRONMENT
-    }
-
-
-# Template helpers
 @app.context_processor
 def utility_processor():
     def contains(arr, str):
@@ -95,9 +84,39 @@ def utility_processor():
     def join(arr, str):
         return str.join(arr)
 
+    def static_url(filename):
+        """
+        Given the path for a static file
+        Output a url path with a hex has query string for versioning
+        """
+
+        filepath = os.path.join('static', filename)
+        url = '/' + filepath
+
+        if not os.path.isfile(filepath):
+            print('Could not find static file: ' + filepath)
+            return url
+
+        # Use MD5 as we care about speed a lot
+        # and not security in this case
+        file_hash = md5()
+        with open(filepath, "rb") as file_contents:
+            for chunk in iter(lambda: file_contents.read(4096), b""):
+                file_hash.update(chunk)
+
+        return url + '?v=' + file_hash.hexdigest()[:7]
+
     return {
+        # Variables
+        'LOGIN_URL': LOGIN_URL,
+        'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN,
+        'COMMIT_ID': COMMIT_ID,
+        'ENVIRONMENT': ENVIRONMENT,
+
+        # Functions
         'contains': contains,
-        'join': join
+        'join': join,
+        'static_url': static_url,
     }
 
 
