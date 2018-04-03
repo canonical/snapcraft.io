@@ -177,6 +177,11 @@ def create_redirect():
     return flask.redirect('https://docs.snapcraft.io/build-snaps')
 
 
+@app.route('/favicon.ico')
+def favicon():
+    return flask.redirect('https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png')
+
+
 # Login handler
 # ===
 @app.route('/login', methods=['GET', 'POST'])
