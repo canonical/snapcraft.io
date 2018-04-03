@@ -5,11 +5,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% block description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
+
+    <title>{% block title %}Snapcraft - Snaps are universal Linux packages{% endblock %}</title>
+
     {% block meta %}
       <meta property="og:title" content="{{ self.title() }}"/>
       <meta property="og:site_name" content="Snapcraft"/>
       <meta property="og:type" content="website"/>
-      <meta property="og:description" content="Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification."/>
+      <meta property="og:description" content="{{ self.description() }}"/>
       <meta property="og:image" content="https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png" />
       <meta property="twitter:site" content="@snapcraftio" />
     {% endblock %}
