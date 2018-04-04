@@ -319,7 +319,11 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    changes = loads(flask.request.form['changes'])
+    changes = None
+    changed_fields = flask.request.form['changes']
+
+    if changed_fields:
+        changes = loads(changed_fields)
 
     if changes:
         snap_id = flask.request.form['snap_id']
