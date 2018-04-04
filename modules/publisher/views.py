@@ -322,7 +322,7 @@ def post_market_snap(snap_name):
     changes = loads(flask.request.form['changes'])
 
     if changes:
-        snap_id = api.get_snap_id(snap_name, flask.session)
+        snap_id = flask.request.form['snap_id']
         error_list = []
         info = []
         images_files = []
@@ -407,7 +407,7 @@ def post_market_snap(snap_name):
                 body_json['public_metrics_blacklist'] = metrics_blacklist
 
             metadata = api.snap_metadata(
-                flask.request.form['snap_id'],
+                snap_id,
                 flask.session,
                 body_json
             )
