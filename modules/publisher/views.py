@@ -319,56 +319,64 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    snap_id = api.get_snap_id(snap_name, flask.session)
+    changes = None
+    changed_fields = flask.request.form['changes']
 
-    if 'submit_revert' in flask.request.form:
-        flask.flash("All changes reverted.", 'information')
-    else:
+    if changed_fields:
+        changes = loads(changed_fields)
+
+    if changes:
+        snap_id = flask.request.form['snap_id']
         error_list = []
         info = []
         images_files = []
         images_json = None
 
-        # Add existing screenshots
-        current_screenshots = api.snap_screenshots(
-            snap_id,
-            flask.session
-        )
-        state_screenshots = loads(flask.request.form['state'])['images']
-        for state_screenshot in state_screenshots:
-            for current_screenshot in current_screenshots:
-                if state_screenshot['url'] == current_screenshot['url']:
-                    info.append(current_screenshot)
+        if 'images' in changes:
+            # Add existing screenshots
+            current_screenshots = api.snap_screenshots(
+                snap_id,
+                flask.session
+            )
 
-        # Add new icon
-        icon = flask.request.files.get('icon')
-        if icon is not None:
-            info.append(build_image_info(icon, 'icon'))
-            images_files.append(icon)
+            changed_screenshots = changes['images']
 
-        # Add new screenshots
-        new_screenshots = flask.request.files.getlist('screenshots')
-        for new_screenshot in new_screenshots:
-            for state_screenshot in state_screenshots:
-                is_same = (
-                    state_screenshot['status'] == 'new'
-                    and state_screenshot['name'] == new_screenshot.filename
-                )
+            for changed_screenshot in changed_screenshots:
+                for current_screenshot in current_screenshots:
+                    if changed_screenshot['url'] == current_screenshot['url']:
+                        info.append(current_screenshot)
 
-                if is_same:
-                    info.append(build_image_info(new_screenshot, 'screenshot'))
-                    images_files.append(new_screenshot)
+            # Add new icon
+            icon = flask.request.files.get('icon')
+            if icon is not None:
+                info.append(build_image_info(icon, 'icon'))
+                images_files.append(icon)
 
-        images_json = {'info': dumps(info)}
-        screenshots_response = api.snap_screenshots(
-            snap_id,
-            flask.session,
-            images_json,
-            images_files
-        )
+            # Add new screenshots
+            new_screenshots = flask.request.files.getlist('screenshots')
+            for new_screenshot in new_screenshots:
+                for changed_screenshot in changed_screenshots:
+                    is_same = (
+                        changed_screenshot['status'] == 'new' and
+                        changed_screenshot['name'] == new_screenshot.filename
+                    )
 
-        if 'error_list' in screenshots_response:
-            error_list = error_list + screenshots_response['error_list']
+                    if is_same:
+                        info.append(
+                            build_image_info(new_screenshot, 'screenshot')
+                        )
+                        images_files.append(new_screenshot)
+
+            images_json = {'info': dumps(info)}
+            screenshots_response = api.snap_screenshots(
+                snap_id,
+                flask.session,
+                images_json,
+                images_files
+            )
+
+            if 'error_list' in screenshots_response:
+                error_list = error_list + screenshots_response['error_list']
 
         whitelist = [
             'title',
@@ -386,28 +394,29 @@ def post_market_snap(snap_name):
         ]
 
         body_json = {
-            key: flask.request.form[key]
-            for key in whitelist if key in flask.request.form
+            key: changes[key]
+            for key in whitelist if key in changes
         }
 
-        metrics_enabled = flask.request.form.get('public_metrics_enabled')
-        body_json['public_metrics_enabled'] = metrics_enabled == 'on'
-        metrics_blacklist = flask.request.form.get('public_metrics_blacklist')
+        if body_json:
+            if 'public_metrics_blacklist' in body_json:
+                # if metrics blacklist was changed, split it into array
+                metrics_blacklist = body_json['public_metrics_blacklist']
 
-        if len(metrics_blacklist) > 0:
-            metrics_blacklist = metrics_blacklist.split(',')
-        else:
-            metrics_blacklist = []
+                if len(metrics_blacklist) > 0:
+                    metrics_blacklist = metrics_blacklist.split(',')
+                else:
+                    metrics_blacklist = []
 
-        body_json['public_metrics_blacklist'] = metrics_blacklist
+                body_json['public_metrics_blacklist'] = metrics_blacklist
 
-        metadata = api.snap_metadata(
-            flask.request.form['snap_id'],
-            flask.session,
-            body_json
-        )
-        if 'error_list' in metadata:
-            error_list = error_list + metadata['error_list']
+            metadata = api.snap_metadata(
+                snap_id,
+                flask.session,
+                body_json
+            )
+            if 'error_list' in metadata:
+                error_list = error_list + metadata['error_list']
 
         if error_list:
             try:
@@ -454,11 +463,26 @@ def post_market_snap(snap_name):
                 "public_metrics_blacklist": details_blacklist,
                 "display_title": snap_details['title'],
                 # values posted by user
-                "title": flask.request.form['title'],
-                "summary": flask.request.form['summary'],
-                "description": flask.request.form['description'],
-                "contact": flask.request.form['contact'],
-                "website": flask.request.form['website'],
+                "title": (
+                    changes['title'] if 'title' in changes
+                    else snap_details['title']
+                ),
+                "summary": (
+                    changes['summary'] if 'summary' in changes
+                    else snap_details['summary']
+                ),
+                "description": (
+                    changes['description'] if 'description' in changes
+                    else snap_details['description']
+                ),
+                "contact": (
+                    changes['contact'] if 'contact' in changes
+                    else snap_details['contact']
+                ),
+                "website": (
+                    changes['website'] if 'website' in changes
+                    else snap_details['website']
+                ),
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
@@ -471,6 +495,8 @@ def post_market_snap(snap_name):
             )
 
         flask.flash("Changes applied successfully.", 'positive')
+    else:
+        flask.flash("No changes to save.", 'information')
 
     return flask.redirect(
         "/account/snaps/{snap_name}/market".format(
