@@ -202,14 +202,16 @@ def snap_details(snap_name):
 
     # filter out banner and banner-icon images from screenshots
     screenshots = [
-        url for url in details['screenshot_urls'] if "banner" not in url
+        m['url'] for m in details['media']
+        if m['type'] == "screenshot" and "banner" not in m['url']
     ]
+    icons = [m['url'] for m in details['media'] if m['type'] == "icon"]
 
     context = {
         # Data direct from details API
         'snap_title': details['title'],
         'package_name': details['package_name'],
-        'icon_url': details['icon_url'],
+        'icon_url': icons[0] if icons else None,
         'version': details['version'],
         'revision': details['revision'],
         'license': details['license'],
