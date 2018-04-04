@@ -39,7 +39,7 @@ SNAP_SEARCH_URL = ''.join([
     'snaps/search',
     '?q={snap_name}&page={page}&size={size}',
     '&confinement=strict,classic',
-    '&fields=package_name,title,summary,icon_url'
+    '&fields=package_name,title,summary,icon_url,publisher'
 ])
 SEARCH_QUERY_HEADERS = {
     'X-Ubuntu-Frameworks': '*',
