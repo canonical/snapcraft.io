@@ -2,6 +2,10 @@ import { initSnapScreenshotsEdit } from './screenshots';
 import { updateState, diffState } from './state';
 import { publicMetrics } from './publicMetrics';
 
+// https://gist.github.com/dperini/729294
+const URL_REGEXP = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+const MAILTO_REGEXP = /^mailto:/;
+
 function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
@@ -69,6 +73,19 @@ function initForm(config, initialState, errors) {
 
   // setup form functionality
   const marketForm = document.getElementById(config.form);
+  const submitButton = marketForm.querySelector('.js-market-submit');
+
+  function disableSubmit() {
+    submitButton.disabled = 'disabled';
+  }
+
+  function enableSubmit() {
+    submitButton.disabled = false;
+  }
+
+  // disable submit by default, it will be enabled on valid change
+  disableSubmit();
+
   let state = JSON.parse(JSON.stringify(initialState));
 
   const stateInput = document.createElement('input');
@@ -88,32 +105,47 @@ function initForm(config, initialState, errors) {
   initSnapScreenshotsEdit(
     config.screenshotsToolbar,
     config.screenshotsWrapper,
-    state
+    state,
+    (nextState) => {
+      updateState(state, nextState);
+      updateFormState();
+    }
   );
 
-  // when anything is changed update the state
-  marketForm.addEventListener('change', function(event) {
+  function checkForm() {
+    const diff = diffState(initialState, state);
+
+    if (diff && isFormValid()) {
+      enableSubmit();
+    } else {
+      disableSubmit();
+    }
+  }
+
+  function updateFormState() {
+    // Some extra modifications need to happen for the checkboxes
+    publicMetrics(marketForm);
+
     let formData = new FormData(marketForm);
 
-    // Some extra modifications need to happen for the checkboxes
-    publicMetrics(marketForm, formData);
+    // update state based on data of all inputs
     updateState(state, formData);
+    // checkboxes are tricky,
+    // make sure to update state based on their 'checked' status
+    updateState(state, {
+      'public_metrics_enabled': marketForm['public_metrics_enabled'].checked
+    });
 
-    // clear validation of field on change
-    const field = event.target.closest('.p-form-validation');
-    if (field) {
-      field.classList.remove('is-error');
+    checkForm();
+  }
 
-      const message = field.querySelector('.p-form-validation__message');
-      if (message) {
-        message.remove();
-      }
-    }
+  // when anything is changed update the state
+  marketForm.addEventListener('change', function() {
+    updateFormState();
   });
 
-  document.querySelector('.js-market-submit').addEventListener('click', function(event) {
+  marketForm.addEventListener('submit', function(event) {
     const diff = diffState(initialState, state);
-    event.preventDefault();
 
     // if anything was changed, update state inputs and submit
     if (diff) {
@@ -123,16 +155,124 @@ function initForm(config, initialState, errors) {
       cleanState.images = cleanState.images.filter(image => image.status !== 'delete');
       stateInput.value = JSON.stringify(cleanState);
       diffInput.value = JSON.stringify(diff);
-
-      marketForm.submit();
+    } else {
+      event.preventDefault();
     }
   });
 
+  // client side validation
+
+  const validation = {};
+  const validateInputs = Array.from(marketForm.querySelectorAll('input,textarea'));
+
+  function isFormValid() {
+    // form is valid if every validated input is valid
+    return Object.keys(validation).every(name => validation[name].isValid);
+  }
+
+  function validateInput(input) {
+    const field = input.closest('.p-form-validation');
+
+    if (field) {
+      const message = field.querySelector('.p-form-validation__message');
+      if (message) {
+        message.remove();
+      }
+
+      let isValid = true;
+      let showCounter = false;
+
+      const inputValidation = validation[input.name];
+
+      if (inputValidation.required) {
+        const length = input.value.length;
+        if (!length) {
+          isValid = false;
+        }
+      }
+
+      if (inputValidation.maxLength) {
+        const count = validation[input.name].maxLength - input.value.length;
+
+        if (count < 0) {
+          inputValidation.counterEl.innerHTML = count;
+          isValid = false;
+          showCounter = true;
+        } else {
+          inputValidation.counterEl.innerHTML = '';
+          showCounter = false;
+        }
+      }
+
+      // only validate contents when there is any value
+      if (input.value.length > 0) {
+        if (inputValidation.mailto) {
+          if (!URL_REGEXP.test(input.value) && !MAILTO_REGEXP.test(input.value)) {
+            isValid = false;
+          }
+        } else if (inputValidation.url) {
+          if (!URL_REGEXP.test(input.value)) {
+            isValid = false;
+          }
+        }
+      }
+
+      if (isValid) {
+        field.classList.remove('is-error');
+        inputValidation.isValid = true;
+      } else {
+        field.classList.add('is-error');
+        inputValidation.isValid = false;
+      }
+
+      if (showCounter) {
+        field.classList.add('has-counter');
+      } else {
+        field.classList.remove('has-counter');
+      }
+    }
+  }
+
+  // prepare validation of inputs based on their HTML attributes
+  validateInputs.forEach(input => {
+    const inputValidation = { isValid: true };
+
+    if (input.maxLength > 0) {
+      // save max length, but remove it from input so more chars can be entered
+      inputValidation.maxLength = input.maxLength;
+      input.removeAttribute('maxlength');
+
+      // prepare counter element to show how many chars need to be removed
+      const counter = document.createElement('span');
+      counter.className = 'p-form-validation__counter';
+      inputValidation.counterEl = counter;
+      input.parentNode.appendChild(counter);
+    }
+
+    if (input.required) {
+      inputValidation.required = true;
+    }
+
+    if (input.type === 'url') {
+      inputValidation.url = true;
+    }
+
+    // allow mailto: addresses for contact field
+    if (input.name === 'contact') {
+      inputValidation.mailto = true;
+    }
+
+    validation[input.name] = inputValidation;
+  });
+
+  // validate inputs on change
+  marketForm.addEventListener('input', function (event) {
+    validateInput(event.target);
+    updateFormState();
+  });
 }
 
 export {
   initSnapIconEdit,
-  initFormNotification,
-  initSnapScreenshotsEdit,
   initForm
 };

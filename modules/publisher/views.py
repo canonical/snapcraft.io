@@ -436,7 +436,8 @@ def post_market_snap(snap_name):
             other_errors = []
 
             for error in error_list:
-                if error['code'] == 'invalid-field':
+                if (error['code'] == 'invalid-field' or
+                        error['code'] == 'required'):
                     field_errors[error['extra']['name']] = error['message']
                 else:
                     other_errors.append(error)
@@ -461,7 +462,7 @@ def post_market_snap(snap_name):
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
-                "other_erros": other_errors
+                "other_errors": other_errors
             }
 
             return flask.render_template(

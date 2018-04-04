@@ -2,14 +2,8 @@ const NAMES = {
   'public_metrics_territories': 'installed_base_by_country_percent'
 };
 
-function publicMetrics(form, formData) {
+function publicMetrics(form) {
   const publicMetricsEnabled = form['public_metrics_enabled'].checked;
-
-  if (publicMetricsEnabled) {
-    formData.set('public_metrics_enabled', publicMetricsEnabled);
-  } else {
-    formData.set('public_metrics_enabled', false);
-  }
 
   let blackList = [];
 
