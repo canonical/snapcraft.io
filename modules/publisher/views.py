@@ -319,12 +319,10 @@ def build_image_info(image, image_type):
 
 
 def post_market_snap(snap_name):
-    snap_id = api.get_snap_id(snap_name, flask.session)
+    changes = loads(flask.request.form['changes'])
 
-    if 'submit_revert' in flask.request.form:
-        flask.flash("All changes reverted.", 'information')
-    else:
-        changes = loads(flask.request.form['changes'])
+    if changes:
+        snap_id = api.get_snap_id(snap_name, flask.session)
         error_list = []
         info = []
         images_files = []
@@ -493,6 +491,8 @@ def post_market_snap(snap_name):
             )
 
         flask.flash("Changes applied successfully.", 'positive')
+    else:
+        flask.flash("No changes to save.", 'information')
 
     return flask.redirect(
         "/account/snaps/{snap_name}/market".format(
