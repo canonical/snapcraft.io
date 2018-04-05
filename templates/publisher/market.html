@@ -163,7 +163,7 @@
             </div>
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
-                <textarea class="p-form-validation__input u-no-margin" name="description">{{ description }}</textarea>
+                <textarea class="p-form-validation__input u-no-margin" name="description" required>{{ description }}</textarea>
                 {% if field_errors and field_errors['description'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['description'] }}
