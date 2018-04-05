@@ -234,7 +234,7 @@
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
                 <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
+                  <input class="p-form-validation__input" type="url" name="website" value="{{ website if website is not none else '' }}" maxlength="256"/>
                 </div>
                 {% if field_errors and field_errors['website'] %}
                   <p class="p-form-validation__message">
@@ -334,7 +334,7 @@
       title: {{ title|tojson }},
       summary: {{ summary|tojson }},
       description: {{ description|tojson }},
-      website: {{ website|tojson }},
+      website: {{ (website if website is not none else '')|tojson }},
       contact: {{ contact|tojson }},
       images: [
         {% if icon_url %}
