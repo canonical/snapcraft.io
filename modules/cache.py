@@ -1,18 +1,33 @@
+# Core packages
 import os
+from urllib.parse import urlparse
+
+# Third-party packages
 import requests
+import prometheus_client
+
+# Local packages
 from modules.exceptions import (
     ApiTimeoutError,
     ApiConnectionError
 )
 
-ENVIRONMENT = os.getenv(
-    'ENVIRONMENT',
-    'devel'
-)
 
-COMMIT_ID = os.getenv(
-    'COMMIT_ID',
-    'commit_id'
+timeout_counter = prometheus_client.Counter(
+    'feed_timeouts',
+    'A counter of timed out requests',
+    ['domain'],
+)
+connection_failed_counter = prometheus_client.Counter(
+    'feed_connection_failures',
+    'A counter of requests which failed to connect',
+    ['domain'],
+)
+latency_histogram = prometheus_client.Histogram(
+    'feed_latency_seconds',
+    'Feed requests retrieved',
+    ['domain', 'code'],
+    buckets=[0.25, 0.5, 0.75, 1, 2, 3],
 )
 
 
@@ -36,13 +51,14 @@ def get(
         method = "POST" if json else "GET"
 
     storefront_header = 'storefront ({commit_hash};{environment})'.format(
-        commit_hash=COMMIT_ID,
-        environment=ENVIRONMENT
+        commit_hash=os.getenv('COMMIT_ID', 'commit_id'),
+        environment=os.getenv('ENVIRONMENT', 'devel')
     )
     headers.update({'User-Agent': storefront_header})
+    domain = urlparse(url).netloc
 
     try:
-        return requests.request(
+        response = requests.request(
             method=method,
             url=url,
             headers=headers,
@@ -52,12 +68,20 @@ def get(
             timeout=3
         )
     except requests.exceptions.Timeout:
-        api_error_exception = ApiTimeoutError(
+        timeout_counter.labels(domain=domain).inc()
+
+        raise ApiTimeoutError(
             'The request to {} took longer than 3 seconds'.format(url),
         )
-        raise api_error_exception
     except requests.exceptions.ConnectionError:
-        api_error_exception = ApiConnectionError(
+        connection_failed_counter.labels(domain=domain).inc()
+
+        raise ApiConnectionError(
             'Failed to establish connection to {}.'.format(url)
         )
-        raise api_error_exception
+
+    latency_histogram.labels(domain=domain, code=response.status_code).observe(
+        response.elapsed.total_seconds()
+    )
+
+    return response
