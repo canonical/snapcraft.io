@@ -15,7 +15,9 @@ function updateState(state, values) {
     if (values.forEach) {
       values.forEach((value, key) => {
         if (allowedKeys.includes(key)) {
-          state[key] = value;
+          // FormData values encode new lines as \r\n which are invalid for our API
+          // so we need to replace them back to \n
+          state[key] = value.replace(/\r\n/g, '\n');
         }
       });
     // else if it's just a plain object

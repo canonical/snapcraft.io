@@ -410,6 +410,12 @@ def post_market_snap(snap_name):
 
                 body_json['public_metrics_blacklist'] = metrics_blacklist
 
+            if 'description' in body_json:
+                # remove invalid characters from description
+                body_json['description'] = (
+                    body_json['description'].replace('\r\n', '\n')
+                )
+
             metadata = api.snap_metadata(
                 snap_id,
                 flask.session,
