@@ -1,30 +1,13 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Market details for {{ title }}
+  Market details for {{ snap_title }}
 {% endblock %}
 
 {% block content %}
   <div id="main-content" class="u-no-margin--top">
-    <section class="p-strip is-shallow">
-      <div class="row">
-        <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
-        <h1 class="u-no-margin--top">{{ title }}</h1>
-      </div>
-    </section>
-
-    <section class="metrics__nav-wrap p-strip is-shallow u-no-padding--top u-no-padding--bottom">
-      <nav class="p-tabs">
-        <ul class="p-tabs__list" role="tablist">
-          <li class="p-tabs__item" role="presentation">
-            <a href="/account/snaps/{{ snap_name }}/market" class="p-tabs__link" tabindex="0" role="tab" aria-selected="true">Market</a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a href="/account/snaps/{{ snap_name }}/measure" class="p-tabs__link" tabindex="0" role="tab">Measure</a>
-          </li>
-        </ul>
-      </nav>
-    </section>
+    {% set selected_tab='market' %}
+    {% include "publisher/_header.html" %}
 
     <div class="p-strip is-shallow">
         <form id="market-form" method="POST" enctype='multipart/form-data'>
@@ -69,7 +52,7 @@
               <div class="p-media-object__image--large p-editable-icon">
                 <img id="snap_icon_image"
                   {% if icon_url %}
-                    src="{{ icon_url }}" alt="{{ title }} snap"
+                    src="{{ icon_url }}" alt="{{ snap_title }} snap"
                   {% else %}
                     src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
                   {% endif %}
@@ -78,7 +61,7 @@
             </div>
             <div class="col-8">
               <label for="snap-title">Title:</label>
-              <input id="snap-title" type="text" name="title" value="{{ title }}"/>
+              <input id="snap-title" type="text" name="title" value="{{ snap_title }}"/>
             </div>
           </div>
 

@@ -6,25 +6,9 @@ Publisher metrics for {{ snap_name }}
 
 {% block content %}
   <div id="main-content" class="u-no-margin--top">
-    <section class="p-strip is-shallow">
-      <div class="row">
-        <p><a href="/account">My snaps&nbsp;&rsaquo;</a></p>
-        <h1 class="u-no-margin--top">{{ snap_title }}</h1>
-      </div>
-    </section>
+    {% set selected_tab='measure' %}
+    {% include "publisher/_header.html" %}
 
-    <section class="metrics__nav-wrap p-strip is-shallow u-no-padding--top u-no-padding--bottom">
-      <nav class="p-tabs">
-        <ul class="p-tabs__list" role="tablist">
-          <li class="p-tabs__item" role="presentation">
-            <a href="/account/snaps/{{ snap_name }}/market" class="p-tabs__link" tabindex="0" role="tab">Market</a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a href="/account/snaps/{{ snap_name }}/measure" class="p-tabs__link" tabindex="0" role="tab" aria-selected="true">Measure</a>
-          </li>
-        </ul>
-      </nav>
-    </section>
     {% if nodata %}
       <section class="p-strip--light is-shallow">
         <div class="row">
