@@ -76,6 +76,36 @@ app.config['SENTRY_CONFIG'] = {
 }
 
 
+def public_cache_headers(decorated):
+    """
+    Add standard caching headers to a public route:
+
+    - Cache pages for 30 seconds
+      (allows Squid to take significant load of the app)
+    - Serve stale pages while revalidating the cache for 5 minutes
+      (allows Squid to response instantly while doing cache refreshes)
+    - Show stale pages if the app is erroring for 1 day
+      (gives us a 1 day buffer to fix errors before they are publicly visible)
+    """
+
+    cache_control_headers = [
+        'max-age=30',
+        'stale-while-revalidate=300',
+        'stale-if-error=86400',
+    ]
+
+    @functools.wraps(decorated)
+    def decorated_function(*args, **kwargs):
+        response = flask.make_response(
+            decorated(*args, **kwargs)
+        )
+        response.headers['Cache-Control'] = ', '.join(cache_control_headers)
+
+        return response
+
+    return decorated_function
+
+
 @app.context_processor
 def utility_processor():
     def contains(arr, str):
@@ -248,6 +278,7 @@ def logout():
 # Normal views
 # ===
 @app.route('/')
+@public_cache_headers
 def homepage():
     return public_views.homepage()
 
@@ -258,6 +289,7 @@ def status():
 
 
 @app.route('/store')
+@public_cache_headers
 def store():
     return public_views.store()
 
@@ -273,11 +305,13 @@ def snaps():
 
 
 @app.route('/search')
+@public_cache_headers
 def search_snap():
     return public_views.search_snap()
 
 
 @app.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
+@public_cache_headers
 def snap_details(snap_name):
     return public_views.snap_details(snap_name)
 
