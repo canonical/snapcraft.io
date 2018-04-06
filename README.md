@@ -55,3 +55,16 @@ To setup the watcher, open a new terminal window and run:
 ./run test
 ```
 
+### Status checks and prometheus metrics
+
+[Talisker](https://talisker.readthedocs.io/en/latest/) provides a bunch of useful status checks and metrics about the running application. Some of this information is sensitive and so to access it you need to run the site with your IP address mentioned in the `TALISKER_NETWORKS` variable:
+
+``` bash
+./run --env TALISKER_NETWORKS=172.16.0.0/12
+```
+
+Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Talisker. Useful ones include:
+
+- http://127.0.0.1:8004/_status/check - A basic check that the site is running
+- http://127.0.0.1:8004/_status/metrics - The prometheus metrics for the application
+
