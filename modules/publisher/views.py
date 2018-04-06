@@ -246,7 +246,7 @@ def publisher_snap_measure(snap_name):
     context = {
         # Data direct from details API
         'snap_name': snap_name,
-        'snap_title': details['title'],
+        'snap_display_name': details['title'],
         'metric_period': metric_period,
         'active_device_metric': installed_base_metric,
 
@@ -273,7 +273,7 @@ def get_market_snap(snap_name):
     context = {
         "snap_id": snap_details['snap_id'],
         "snap_name": snap_details['snap_name'],
-        "snap_title": snap_details['title'],
+        "snap_display_name": snap_details['title'],
         "summary": snap_details['summary'],
         "description": snap_details['description'],
         "license": snap_details['license'],
@@ -401,7 +401,7 @@ def post_market_snap(snap_name):
             context = {
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
-                "snap_title": snap_details['title'],
+                "snap_display_name": snap_details['title'],
                 "summary": snap_details['summary'],
                 "description": snap_details['description'],
                 "license": snap_details['license'],

@@ -1,7 +1,7 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Market details for {{ snap_title }}
+  Market details for {{ snap_display_name }}
 {% endblock %}
 
 {% block content %}
@@ -52,7 +52,7 @@
               <div class="p-media-object__image--large p-editable-icon">
                 <img id="snap_icon_image"
                   {% if icon_url %}
-                    src="{{ icon_url }}" alt="{{ snap_title }} snap"
+                    src="{{ icon_url }}" alt="{{ snap_display_name }} snap"
                   {% else %}
                     src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
                   {% endif %}
@@ -61,7 +61,7 @@
             </div>
             <div class="col-8">
               <label for="snap-title">Title:</label>
-              <input id="snap-title" type="text" name="title" value="{{ snap_title }}"/>
+              <input id="snap-title" type="text" name="title" value="{{ snap_display_name }}"/>
             </div>
           </div>
 
