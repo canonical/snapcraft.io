@@ -284,7 +284,7 @@ def get_market_snap(snap_name):
     context = {
         "snap_id": snap_details['snap_id'],
         "snap_name": snap_details['snap_name'],
-        "title": snap_details['title'],
+        "snap_title": snap_details['title'],
         "summary": snap_details['summary'],
         "description": snap_details['description'],
         "license": snap_details['license'],
@@ -532,7 +532,7 @@ def post_market_snap(snap_name):
                 "public_metrics_blacklist": details_blacklist,
                 "display_title": snap_details['title'],
                 # values posted by user
-                "title": (
+                "snap_title": (
                     changes['title'] if 'title' in changes
                     else snap_details['title']
                 ),

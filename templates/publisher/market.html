@@ -1,38 +1,13 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Market details for {% if display_title %}{{ display_title }}{% else %}{{ title }}{% endif %}
+  Market details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
 {% endblock %}
 
 {% block content %}
   <div id="main-content" class="u-no-margin--top">
-    <section class="p-strip is-shallow u-no-padding--bottom">
-      <nav class="p-tabs">
-        {# This row and it's contents needs to be removed before going live #}
-        <div class="row">
-          <a href="/account" class="u-float--left p-muted-heading">&lsaquo; Snap list</a>
-        </div>
-        <div class="row u-no-margin--top">
-        <div class="row">
-          <div class="col-6">
-            <h1 class="u-float--left p-heading--three">{% if display_title %}{{ display_title }}{% else %}{{ title }}{% endif %}</h1>
-          </div>
-          <div class="col-6">
-            <ul class="p-tabs__list u-float--right" role="tablist">
-              <li class="p-tabs__item" role="presentation">
-                <a href="/account/snaps/{{ snap_name }}/market" class="p-tabs__link" tabindex="0" role="tab" aria-selected="true">Market</a>
-              </li>
-              <li class="p-tabs__item" role="presentation">
-                <a href="/account/snaps/{{ snap_name }}/measure" class="p-tabs__link" tabindex="0" role="tab">Measure</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row u-no-margin--top">
-          <hr class="u-no-margin" />
-        </div>
-      </nav>
-    </section>
+    {% set selected_tab='market' %}
+    {% include "publisher/_header.html" %}
 
     <div class="p-strip is-shallow">
         <form id="market-form" method="POST" enctype='multipart/form-data'>
@@ -94,7 +69,7 @@
               <div class="p-media-object__image--large p-editable-icon">
                 <img id="snap_icon_image"
                   {% if icon_url %}
-                    src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ title }}{% endif %} snap"
+                    src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
                   {% else %}
                     src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
                   {% endif %}
@@ -105,7 +80,7 @@
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
                 <label for="snap-title">Title:</label>
                 <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ title }}" required maxlength="64"/>
+                  <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
                 </div>
                 {% if field_errors and field_errors['title'] %}
                   <p class="p-form-validation__message">
@@ -331,7 +306,7 @@
       screenshotsToolbar: "screenshots-toolbar",
       screenshotsWrapper: "snap-screenshots"
     }, {
-      title: {{ title|tojson }},
+      title: {{ snap_title|tojson }},
       summary: {{ summary|tojson }},
       description: {{ description|tojson }},
       website: {{ website|tojson }},
