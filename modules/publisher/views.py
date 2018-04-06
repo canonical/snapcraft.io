@@ -262,7 +262,7 @@ def get_market_snap(snap_name):
         "publisher_name": snap_details['publisher_name'],
         "screenshot_urls": snap_details['screenshot_urls'],
         "contact": snap_details['contact'],
-        "website": snap_details['website'],
+        "website": snap_details['website'] or '',
         "public_metrics_enabled": snap_details['public_metrics_enabled'],
         "public_metrics_blacklist": snap_details['public_metrics_blacklist'],
     }
@@ -457,6 +457,11 @@ def post_market_snap(snap_name):
                 else:
                     other_errors.append(error)
 
+            website = (
+                changes['website'] if 'website' in changes
+                else snap_details['website']
+            )
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details['snap_id'],
@@ -485,10 +490,7 @@ def post_market_snap(snap_name):
                     changes['contact'] if 'contact' in changes
                     else snap_details['contact']
                 ),
-                "website": (
-                    changes['website'] if 'website' in changes
-                    else snap_details['website']
-                ),
+                "website": website or '',
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
