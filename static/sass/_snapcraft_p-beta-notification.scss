@@ -1,0 +1,17 @@
+@mixin snapcraft-p-beta-notification {
+  .p-beta-notification {
+    padding: {
+      top: $sp-small;
+      bottom: $sp-small;
+    }
+
+
+    .p-muted-heading {
+      margin-right: $sp-medium;
+    }
+
+    p {
+      max-width: 100%;
+    }
+  }
+}
