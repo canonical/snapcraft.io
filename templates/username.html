@@ -5,12 +5,14 @@ Choose username — Linux software in the Snap Store
 {% endblock %}
 
 {% block content %}
-<section class="p-layout__main u-no-margin--top">
-  <div class="p-strip is-shallow">
-    <div class="row">
-      <h3>Choose a snap store username</h3>
-      {% if error_list %}
-        {% for error in error_list %}
+
+{% include "publisher/_beta-notification.html" %}
+
+<section class="p-strip">
+  <div class="row">
+    <h1 class="p-heading--three">Choose a snap store username</h1>
+    {% if error_list %}
+      {% for error in error_list %}
         <div class="p-notification--negative">
           <p class="p-notification__response">
             {{ error.message|safe }}

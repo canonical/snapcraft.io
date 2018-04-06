@@ -121,3 +121,6 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-form-help-text';
 @include snapcraft-p-form-help-text;
+
+@import 'snapcraft_p-beta-notification';
+@include snapcraft-p-beta-notification;
