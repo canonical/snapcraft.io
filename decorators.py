@@ -32,7 +32,7 @@ def public_cache_headers(decorated):
       (gives us a 1 day buffer to fix errors before they are publicly visible)
     """
 
-    cache_control_headers = [
+    cache_headers = [
         'max-age=30',
         'stale-while-revalidate=300',
         'stale-if-error=86400',
@@ -43,7 +43,10 @@ def public_cache_headers(decorated):
         response = flask.make_response(
             decorated(*args, **kwargs)
         )
-        response.headers['Cache-Control'] = ', '.join(cache_control_headers)
+
+        if response.status_code == 200:
+            # Only add caching headers to successful responses
+            response.headers['Cache-Control'] = ', '.join(cache_headers)
 
         return response
 
