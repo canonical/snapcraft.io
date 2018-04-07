@@ -12,6 +12,7 @@ def login_required(func):
     to login page if not.
     """
     @functools.wraps(func)
+    @private_cache_headers
     def is_user_logged_in(*args, **kwargs):
         if not authentication.is_authenticated(flask.session):
             return flask.redirect('login?next=' + flask.request.path)
@@ -20,7 +21,28 @@ def login_required(func):
     return is_user_logged_in
 
 
-def public_cache_headers(decorated):
+def _cache_headers_decorator(route_function, cache_headers):
+    """
+    Return a decorator function to add a set of Cache-Control headers
+    to the response
+    """
+
+    @functools.wraps(route_function)
+    def decorated_function(*args, **kwargs):
+        response = flask.make_response(
+            route_function(*args, **kwargs)
+        )
+
+        if response.status_code == 200:
+            # Only add caching headers to successful responses
+            response.headers['Cache-Control'] = ', '.join(cache_headers)
+
+        return response
+
+    return decorated_function
+
+
+def public_cache_headers(route_function):
     """
     Add standard caching headers to a public route:
 
@@ -38,16 +60,19 @@ def public_cache_headers(decorated):
         'stale-if-error=86400',
     ]
 
-    @functools.wraps(decorated)
-    def decorated_function(*args, **kwargs):
-        response = flask.make_response(
-            decorated(*args, **kwargs)
-        )
+    return _cache_headers_decorator(route_function, cache_headers)
 
-        if response.status_code == 200:
-            # Only add caching headers to successful responses
-            response.headers['Cache-Control'] = ', '.join(cache_headers)
 
-        return response
+def private_cache_headers(route_function):
+    """
+    Add standard caching headers to a private route:
 
-    return decorated_function
+    - Most importantly, add "private"
+      (to prevent responses going where they shouldn't)
+    """
+
+    cache_headers = [
+        'private',  # Important
+    ]
+
+    return _cache_headers_decorator(route_function, cache_headers)
