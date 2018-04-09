@@ -281,6 +281,14 @@ def get_market_snap(snap_name):
             flask.request.path
         )
 
+    # Filter icon & screenshot urls from the media set.
+    icon_urls = [
+        m['url'] for m in snap_details['media']
+        if m['type'] == 'icon']
+    screenshot_urls = [
+        m['url'] for m in snap_details['media']
+        if m['type'] == 'screenshot']
+
     context = {
         "snap_id": snap_details['snap_id'],
         "snap_name": snap_details['snap_name'],
@@ -288,9 +296,9 @@ def get_market_snap(snap_name):
         "summary": snap_details['summary'],
         "description": snap_details['description'],
         "license": snap_details['license'],
-        "icon_url": snap_details['icon_url'],
-        "publisher_name": snap_details['publisher_name'],
-        "screenshot_urls": snap_details['screenshot_urls'],
+        "icon_url": icon_urls[0] if icon_urls else None,
+        "publisher_name": snap_details['publisher']['display-name'],
+        "screenshot_urls": screenshot_urls,
         "contact": snap_details['contact'],
         "website": snap_details['website'] or '',
         "public_metrics_enabled": snap_details['public_metrics_enabled'],
@@ -520,14 +528,22 @@ def post_market_snap(snap_name):
                 else snap_details['website']
             )
 
+            # Filter icon & screenshot urls from the media set.
+            icon_urls = [
+                m['url'] for m in snap_details['media']
+                if m['type'] == 'icon']
+            screenshot_urls = [
+                m['url'] for m in snap_details['media']
+                if m['type'] == 'screenshot']
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
                 "license": snap_details['license'],
-                "icon_url": snap_details['icon_url'],
-                "publisher_name": snap_details['publisher_name'],
-                "screenshot_urls": snap_details['screenshot_urls'],
+                "icon_url": icon_urls[0] if icon_urls else None,
+                "publisher_name": snap_details['publisher']['display-name'],
+                "screenshot_urls": screenshot_urls,
                 "public_metrics_enabled": details_metrics_enabled,
                 "public_metrics_blacklist": details_blacklist,
                 "display_title": snap_details['title'],
