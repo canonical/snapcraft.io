@@ -29,6 +29,7 @@ $color-navigation-background: #252525;
 @include vf-u-image-position;
 @include vf-p-code-snippet;
 @include vf-p-form-validation;
+@include vf-p-contextual-menu;
 
 // vanilla utilities
 @include vf-u-floats;
