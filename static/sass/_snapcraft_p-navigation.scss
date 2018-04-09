@@ -3,9 +3,11 @@
   $navigation-hover-color: darken($color-navigation-background, 8%); // from #252525 to #111
 
   .p-navigation {
+    // custom styles for dark header with hover
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__link {
-        a:hover,
+        & > a:hover,
+        .p-contextual-menu__toggle:hover,
         .is-selected {
           background: $navigation-hover-color;
         }
@@ -18,6 +20,80 @@
 
         &:last-of-type {
           border-right: 1px solid $navigation-border-color;
+        }
+      }
+    }
+
+
+    // custom styles for contextual menu dropdown in navigation
+    .p-contextual-menu {
+      display: block;
+    }
+
+    .p-contextual-menu__toggle {
+      cursor: pointer;
+      display: block;
+
+      // copied from Vanilla _patterns_navigation
+      // (to copy styles of regular navigation item)
+      font-size: .875rem;
+      padding: .84375rem $sp-x-small; // 0.84375rem = (48px [height] - 21px [line-height]) / 2
+
+      @media (min-width: $breakpoint-navigation-threshold + 1) {
+        padding-left: ($sp-large - $sp-xx-small);
+        padding-right: ($sp-large - $sp-xx-small);
+      }
+
+      .p-icon--chevron {
+        height: 12px;
+        margin: {
+          // adjust position of the icon inside menu item padding
+          left: .5rem;
+          right: -.5rem;
+        }
+        transition: transform 100ms;
+        width: 12px;
+      }
+
+      &[aria-expanded="true"] {
+        .p-icon--chevron {
+          transform: rotate(180deg);
+         }
+      }
+    }
+
+    // mobile styles for contextual menu dropdown
+    // (to make dropdown items visible in Vanilla mobile navigation dropdown)
+    @media screen and (max-width: $breakpoint-medium) {
+      .p-contextual-menu__toggle {
+        display: none;
+      }
+
+      .p-contextual-menu {
+        &__toggle {
+          display: none;
+        }
+
+        &__dropdown {
+          background: none;
+          box-shadow: none;
+          display: block;
+          max-width: 100%;
+          position: static;
+
+          &::before,
+          &::after {
+            display: none;
+          }
+        }
+
+        &__group {
+          padding: 0;
+        }
+
+        &__link {
+          font-size: .875rem;
+          padding: .84375rem $sp-x-small; // 0.84375rem = (48px [height] - 21px [line-height]) / 2
         }
       }
     }
