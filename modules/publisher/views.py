@@ -53,8 +53,8 @@ def get_account():
 
             context = {
                 'image': flask_user['image'],
-                'username': account['username'],
-                'displayname': account['displayname'],
+                'username': flask_user['nickname'],
+                'displayname': flask_user['fullname'],
                 'email': account['email'],
                 'snaps': user_snaps,
                 'error_list': error_list
