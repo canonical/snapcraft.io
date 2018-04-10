@@ -137,7 +137,9 @@ def _log_in(client):
 
     with client.session_transaction() as s:
         s['openid'] = {
-            'image': None
+            'image': None,
+            'nickname': 'Toto',
+            'fullname': 'El Toto'
             }
         s['macaroon_root'] = root.serialize()
         s['macaroon_discharge'] = discharge.serialize()

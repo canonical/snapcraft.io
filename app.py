@@ -27,6 +27,7 @@ import modules.authentication as authentication
 import modules.helpers as helpers
 import modules.public.views as public_views
 import modules.publisher.views as publisher_views
+import modules.publisher.api as publisher_api
 import template_functions
 import decorators
 from modules.macaroon import (
@@ -189,15 +190,26 @@ def login():
 
 @open_id.after_login
 def after_login(resp):
-    flask.session['openid'] = {
-        'identity_url': resp.identity_url,
-        'nickname': resp.nickname,
-        'fullname': resp.fullname,
-        'image': resp.image,
-        'email': resp.email
-    }
-
     flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
+
+    try:
+        account = publisher_api.get_account(flask.session)
+        flask.session['openid'] = {
+            'identity_url': resp.identity_url,
+            'nickname': account['username'],
+            'fullname': account['displayname'],
+            'image': resp.image,
+            'email': account['email']
+        }
+    except Exception:
+        flask.session['openid'] = {
+            'identity_url': resp.identity_url,
+            'nickname': resp.nickname,
+            'fullname': resp.fullname,
+            'image': resp.image,
+            'email': resp.email
+        }
+
     return flask.redirect(open_id.get_next_url())
 
 

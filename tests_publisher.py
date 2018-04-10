@@ -56,7 +56,9 @@ class PublisherPage(TestCase):
 
         with client.session_transaction() as s:
             s['openid'] = {
-                'image': None
+                'image': None,
+                'nickname': 'Toto',
+                'fullname': 'El Toto'
             }
             s['macaroon_root'] = root.serialize()
             s['macaroon_discharge'] = discharge.serialize()
@@ -124,8 +126,8 @@ class PublisherPage(TestCase):
         }
 
         payload = {
-            'username': 'testing',
-            'displayname': 'testing',
+            'username': 'Toto',
+            'displayname': 'El Toto',
             'email': 'testing@testing.com',
             'snaps': {
                 '16': snaps
@@ -150,8 +152,8 @@ class PublisherPage(TestCase):
 
         assert response.status_code == 200
         self.assert_template_used('account.html')
-        self.assert_context('username', 'testing')
-        self.assert_context('displayname', 'testing')
+        self.assert_context('username', 'Toto')
+        self.assert_context('displayname', 'El Toto')
         self.assert_context('email', 'testing@testing.com')
         self.assert_context('snaps', snaps)
         self.assert_context('image', None)
