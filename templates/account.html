@@ -47,7 +47,7 @@ Account page — Linux software in the Snap Store
             {% for snap in snaps|sort %}
               <tr>
                 <td class="u-vertically-center p-snap-list">
-                  {% if snaps[snap].uploaded %}
+                  {% if snaps[snap].latest_revisions %}
                     <a href="/account/snaps/{{snap}}/market" class="u-no-margin--top u-vertically-center">
                   {% endif %}
                   {% if snaps[snap].icon_url %}
@@ -58,7 +58,7 @@ Account page — Linux software in the Snap Store
                   <span class="p-snap-list__name u-no-margin--top">
                     {{snap}}
                   </span>
-                  {% if snaps[snap].uploaded %}
+                  {% if snaps[snap].latest_revisions %}
                     </a>
                   {% endif %}
                   {% if snaps[snap].private %}
@@ -66,7 +66,7 @@ Account page — Linux software in the Snap Store
                   {% endif %}
                 </td>
                 <td>
-                  {% if not snaps[snap].uploaded %}
+                  {% if not snaps[snap].latest_revisions %}
                     Name registered. No snap uploaded.
                   {% else %}
                     {{ snaps[snap].status }}
