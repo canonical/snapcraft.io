@@ -4,7 +4,7 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-import functools
+# Core packages
 import os
 import socket
 from urllib.parse import (
@@ -12,20 +12,23 @@ from urllib.parse import (
     urlparse,
     urlunparse,
 )
-from hashlib import md5
 
+# Third-party packages
 import flask
 import talisker.flask
+import prometheus_flask_exporter
 from flask_openid import OpenID
 from flask_wtf.csrf import CSRFProtect
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
-import prometheus_flask_exporter
 
+# Local modules
 import modules.authentication as authentication
 import modules.helpers as helpers
 import modules.public.views as public_views
 import modules.publisher.views as publisher_views
+import template_functions
+import decorators
 from modules.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
@@ -78,33 +81,11 @@ app.config['SENTRY_CONFIG'] = {
 
 @app.context_processor
 def utility_processor():
-    def contains(arr, str):
-        return str in arr
-
-    def join(arr, str):
-        return str.join(arr)
-
-    def static_url(filename):
-        """
-        Given the path for a static file
-        Output a url path with a hex has query string for versioning
-        """
-
-        filepath = os.path.join('static', filename)
-        url = '/' + filepath
-
-        if not os.path.isfile(filepath):
-            print('Could not find static file: ' + filepath)
-            return url
-
-        # Use MD5 as we care about speed a lot
-        # and not security in this case
-        file_hash = md5()
-        with open(filepath, "rb") as file_contents:
-            for chunk in iter(lambda: file_contents.read(4096), b""):
-                file_hash.update(chunk)
-
-        return url + '?v=' + file_hash.hexdigest()[:7]
+    """
+    This defines the set of properties and functions that will be added
+    to the default context for processing templates. All these items
+    can be used in all templates
+    """
 
     return {
         # Variables
@@ -114,28 +95,10 @@ def utility_processor():
         'ENVIRONMENT': ENVIRONMENT,
 
         # Functions
-        'contains': contains,
-        'join': join,
-        'static_url': static_url,
+        'contains': template_functions.contains,
+        'join': template_functions.join,
+        'static_url': template_functions.static_url,
     }
-
-
-def login_required(func):
-    """
-    Decorator that checks if a user is logged in, and redirects
-    to login page if not.
-    """
-    @functools.wraps(func)
-    def is_user_logged_in(*args, **kwargs):
-        if not authentication.is_authenticated(flask.session):
-            return redirect_to_login()
-
-        return func(*args, **kwargs)
-    return is_user_logged_in
-
-
-def redirect_to_login():
-    return flask.redirect('login?next=' + flask.request.path)
 
 
 # Error handlers
@@ -248,6 +211,7 @@ def logout():
 # Normal views
 # ===
 @app.route('/')
+@decorators.public_cache_headers
 def homepage():
     return public_views.homepage()
 
@@ -258,6 +222,7 @@ def status():
 
 
 @app.route('/store')
+@decorators.public_cache_headers
 def store():
     return public_views.store()
 
@@ -273,11 +238,13 @@ def snaps():
 
 
 @app.route('/search')
+@decorators.public_cache_headers
 def search_snap():
     return public_views.search_snap()
 
 
 @app.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
+@decorators.public_cache_headers
 def snap_details(snap_name):
     return public_views.snap_details(snap_name)
 
@@ -285,54 +252,54 @@ def snap_details(snap_name):
 # Publisher views
 # ===
 @app.route('/account')
-@login_required
+@decorators.login_required
 def get_account():
     return publisher_views.get_account()
 
 
 @app.route('/account/agreement')
-@login_required
+@decorators.login_required
 def get_agreement():
     return publisher_views.get_agreement()
 
 
 @app.route('/account/agreement', methods=['POST'])
-@login_required
+@decorators.login_required
 def post_agreement():
     return publisher_views.post_agreement()
 
 
 @app.route('/account/username')
-@login_required
+@decorators.login_required
 def get_account_name():
     return publisher_views.get_account_name()
 
 
 @app.route('/account/username', methods=['POST'])
-@login_required
+@decorators.login_required
 def post_account_name():
     return publisher_views.post_account_name()
 
 
 @app.route('/account/snaps/<snap_name>/measure')
-@login_required
+@decorators.login_required
 def publisher_snap_measure(snap_name):
     return publisher_views.publisher_snap_measure(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/market', methods=['GET'])
-@login_required
+@decorators.login_required
 def get_market_snap(snap_name):
     return publisher_views.get_market_snap(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/release')
-@login_required
+@decorators.login_required
 def snap_release(snap_name):
     return publisher_views.snap_release(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/market', methods=['POST'])
-@login_required
+@decorators.login_required
 def post_market_snap(snap_name):
     return publisher_views.post_market_snap(snap_name)
