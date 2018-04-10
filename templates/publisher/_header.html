@@ -1,0 +1,47 @@
+<section class="p-strip is-shallow u-no-padding--bottom">
+  <nav class="p-tabs">
+    {# This row and it's contents needs to be removed before going live #}
+    <div class="row">
+      <a href="/account" class="u-float--left p-muted-heading">&lsaquo; Snap list</a>
+    </div>
+    <div class="row u-no-margin--top">
+      <div class="row">
+        <div class="col-6">
+          <h1 class="u-float--left p-heading--three">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
+        </div>
+        <div class="col-6">
+          <ul class="p-tabs__list u-float--right" role="tablist">
+            <li class="p-tabs__item" role="presentation">
+              <a
+                href="/account/snaps/{{ snap_name }}/market"
+                class="p-tabs__link"
+                tabindex="0"
+                role="tab"
+                {% if selected_tab == 'market' %}
+                  aria-selected="true"
+                {% endif %}
+              >
+                Market
+              </a>
+            </li>
+            <li class="p-tabs__item" role="presentation">
+              <a
+                href="/account/snaps/{{ snap_name }}/measure"
+                class="p-tabs__link"
+                tabindex="0"
+                role="tab"
+                {% if selected_tab == 'measure' %}
+                  aria-selected="true"
+                {% endif %}
+              >
+                Measure
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row u-no-margin--top">
+        <hr class="u-no-margin" />
+      </div>
+  </nav>
+</section>
