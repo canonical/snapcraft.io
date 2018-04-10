@@ -289,7 +289,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.ravenjs.com/3.22.3/raven.min.js" crossorigin="anonymous"></script>
+<script src="{{ static_url('js/modules/raven.min.js') }}"></script>
 <script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
   Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
