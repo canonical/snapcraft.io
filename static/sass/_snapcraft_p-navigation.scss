@@ -14,16 +14,28 @@
       }
 
       .p-navigation__links {
+        border-right: 1px solid $navigation-border-color;
+
         .p-navigation__link {
           border-left: 1px solid $navigation-border-color;
         }
+      }
+    }
+
+    // right aligned sign-in navigation
+    .p-navigation__links--right {
+      @extend .p-navigation__links; // sass-lint:disable-line placeholder-in-extend
+    }
+
+    @media (min-width: $breakpoint-navigation-threshold + 1) {
+      .p-navigation__links--right {
+        margin-left: auto; // align to right in flexbox parent
 
         &:last-of-type {
           border-right: 1px solid $navigation-border-color;
         }
       }
     }
-
 
     // custom styles for contextual menu dropdown in navigation
     .p-contextual-menu {
