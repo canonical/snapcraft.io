@@ -121,7 +121,7 @@ class PublisherPage(TestCase):
                 'icon_url': None,
                 'snap_id': 'snap-id',
                 'private': False,
-                'uploaded': False,
+                'latest_revisions': [],
             }
         }
 
