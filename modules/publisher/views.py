@@ -10,6 +10,7 @@ from operator import itemgetter
 from modules.exceptions import (
     ApiError,
     ApiTimeoutError,
+    ApiConnectionError,
     ApiResponseDecodeError,
     ApiResponseError,
     ApiResponseErrorList,
@@ -263,6 +264,8 @@ def get_market_snap(snap_name):
         snap_details = api.get_snap_info(snap_name, flask.session)
     except ApiTimeoutError as api_timeout_error:
         flask.abort(504, str(api_timeout_error))
+    except ApiConnectionError as api_connection_error:
+        flask.abort(502, str(api_connection_error))
     except ApiResponseDecodeError as api_response_decode_error:
         flask.abort(502, str(api_response_decode_error))
     except ApiResponseErrorList as api_response_error_list:
@@ -274,8 +277,6 @@ def get_market_snap(snap_name):
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
         flask.abort(502, str(api_response_error))
-    except ApiError as api_error:
-        flask.abort(502, str(api_error))
     except MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
