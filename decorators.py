@@ -34,8 +34,9 @@ def _cache_headers_decorator(route_function, cache_headers):
         )
 
         if response.status_code == 200:
-            # Only add caching headers to successful responses
-            response.headers['Cache-Control'] = ', '.join(cache_headers)
+            if not authentication.is_authenticated(flask.session):
+                # Only add caching headers to successful responses
+                response.headers['Cache-Control'] = ', '.join(cache_headers)
 
         return response
 
