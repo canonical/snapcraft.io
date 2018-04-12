@@ -88,7 +88,7 @@ def utility_processor():
     can be used in all templates
     """
 
-    if 'openid' in flask.session:
+    if authentication.is_authenticated(flask.session):
         user_name = flask.session['openid']['fullname']
     else:
         user_name = None
