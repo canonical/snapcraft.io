@@ -254,8 +254,9 @@
                   checked="checked"
                 {% endif %}
                 />
-              <label class="u-no-margin--top" for="public-metrics-enabled">Display public metric charts</label>
-              <p class="p-form-help-text">Does not disclose any usage numbers for your application</p>
+              <label class="u-no-margin--top p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
+                <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
+              </label>
               <input
                 type="hidden"
                 name="public_metrics_blacklist"
@@ -267,7 +268,7 @@
           </div>
 
           <div class="row">
-            <div class="col-4">
+            <div class="col-6">
               <input
                 type="checkbox"
                 name="public_metrics_territories"
@@ -280,7 +281,7 @@
                 {% endif %}
                 />
               <label class="u-no-margin--top" for="public-metrics-territories">Territories</label>
-              <p class="p-form-help-text">Shows usage percentage by country on a map</p>
+              <p class="p-form-help-text">Displays where your snap is being used by country</p>
             </div>
           </div>
         </form>
