@@ -36,22 +36,6 @@ class BaseTestCases:
         def _get_location(self):
             return 'http://localhost{}'.format(self.endpoint_url)
 
-    class EndpointLoggedOut(BaseAppTesting):
-        def setUp(self, snap_name, endpoint_url):
-            super().setUp(snap_name, None, endpoint_url)
-
-        def test_access_not_logged_in(self):
-            response = self.client.get(self.endpoint_url)
-            self.assertEqual(302, response.status_code)
-            self.assertEqual(
-                'http://localhost/login?next={}'.format(self.endpoint_url),
-                response.location)
-
-    class EndpointLoggedIn(BaseAppTesting):
-        def setUp(self, snap_name, api_url, endpoint_url):
-            super().setUp(snap_name, api_url, endpoint_url)
-            self.authorization = self._log_in(self.client)
-
         def _log_in(self, client):
             """Emulates test client login in the store.
 
@@ -77,6 +61,33 @@ class BaseTestCases:
 
             return get_authorization_header(
                 root.serialize(), discharge.serialize())
+
+    class EndpointGetLoggedOut(BaseAppTesting):
+        def setUp(self, snap_name, endpoint_url):
+            super().setUp(snap_name, None, endpoint_url)
+
+        def test_access_not_logged_in(self):
+            response = self.client.get(self.endpoint_url)
+            self.assertEqual(302, response.status_code)
+            self.assertEqual(
+                'http://localhost/login?next={}'.format(self.endpoint_url),
+                response.location)
+
+    class EndpointPostLoggedOut(BaseAppTesting):
+        def setUp(self, snap_name, endpoint_url):
+            super().setUp(snap_name, None, endpoint_url)
+
+        def test_access_not_logged_in(self):
+            response = self.client.post(self.endpoint_url, data={})
+            self.assertEqual(302, response.status_code)
+            self.assertEqual(
+                'http://localhost/login?next={}'.format(self.endpoint_url),
+                response.location)
+
+    class EndpointGetLoggedIn(BaseAppTesting):
+        def setUp(self, snap_name, api_url, endpoint_url):
+            super().setUp(snap_name, api_url, endpoint_url)
+            self.authorization = self._log_in(self.client)
 
         @responses.activate
         def test_timeout(self):
