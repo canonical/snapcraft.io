@@ -1,2 +1,2 @@
 import './polyfills';
-import './contextual-menu-toggle';
+import './dropdown-menu-toggle';

@@ -32,5 +32,5 @@
     }
   }
 
-  toggle('.p-contextual-menu__toggle');
+  toggle('.p-dropdown__toggle');
 })();

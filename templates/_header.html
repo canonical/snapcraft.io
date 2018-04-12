@@ -27,25 +27,18 @@
       </ul>
       <ul class="p-navigation__links--right" role="menu">
         {% if user_name %}
-          <li class="p-navigation__link" role="menuitem">
-            <span class="p-contextual-menu">
-              <span class="p-contextual-menu__toggle" aria-controls="user-menu" aria-expanded="false" aria-haspopup="true">
-                {{ user_name }}
-                <i class="p-icon--chevron"></i>
-              </span>
-              <span class="p-contextual-menu__dropdown" id="user-menu" aria-hidden="true" aria-label="submenu">
-                <span class="p-contextual-menu__group">
-                  <a class="p-contextual-menu__link" href="/account">
-                    Account details
-                  </a>
-                </span>
-                <span class="p-contextual-menu__group">
-                  <a class="p-contextual-menu__link" href="/logout">
-                    Sign out
-                  </a>
-                </span>
-              </span>
-            </span>
+          <li role="menuitem" class="p-navigation__link p-dropdown">
+              <a class="p-dropdown__toggle" aria-controls="account-menu" aria-expanded="false">
+                {{ user_name }} <i class="p-icon--chevron"></i>
+              </a>
+              <ul class="p-dropdown__menu u-hide" id="account-menu" aria-hidden="true">
+                  <li class="p-navigation__link" role="menuitem">
+                      <a href="/account">Account details</a>
+                  </li>
+                  <li class="p-navigation__link" role="menuitem">
+                      <a href="/logout">Sign out</a>
+                  </li>
+              </ul>
           </li>
         {% else %}
           <li class="p-navigation__link" role="menuitem"><a href="/login">Sign in</a></li>
