@@ -37,80 +37,67 @@
       }
     }
 
-    // custom styles for contextual menu dropdown in navigation
-    .p-contextual-menu {
-      display: block;
-    }
-
-    .p-contextual-menu__toggle {
-      cursor: pointer;
-      display: block;
-
-      // copied from Vanilla _patterns_navigation
-      // (to copy styles of regular navigation item)
-      font-size: .875rem;
-      padding: .84375rem $sp-x-small; // 0.84375rem = (48px [height] - 21px [line-height]) / 2
-
+    // custom navigation dropdown
+    // inspired heavily by MAAS dropdown:
+    // https://github.com/maas/maas/blob/master/src/maasserver/static/scss/_patterns_navigation.scss
+    .p-dropdown {
       @media (min-width: $breakpoint-navigation-threshold + 1) {
-        padding-left: ($sp-large - $sp-xx-small);
-        padding-right: ($sp-large - $sp-xx-small);
+        height: 3rem; // to align with header height
+
+        .p-dropdown__menu {
+          display: none;
+
+          &[aria-hidden="false"] {
+            display: block;
+          }
+        }
       }
 
       .p-icon--chevron {
-        height: 12px;
-        margin: {
-          // adjust position of the icon inside menu item padding
-          left: .5rem;
-          right: -.5rem;
-        }
-        transition: transform 100ms;
-        width: 12px;
+        height: $sp-small;
+        margin-top: -($sp-small / 2); // half of the height
+        position: absolute;
+        right: $sp-small;
+        top: 50%;
+        width: $sp-small;
       }
 
       &[aria-expanded="true"] {
         .p-icon--chevron {
           transform: rotate(180deg);
-         }
+        }
       }
     }
 
-    .p-contextual-menu__link {
-      color: $color-dark;
+    // making it specific enough to override Vanilla selectors :(
+    .p-navigation__links .p-navigation__link.p-dropdown {
+      @media (max-width: $breakpoint-navigation-threshold) {
+        border: 0;
+      }
     }
 
-    // mobile styles for contextual menu dropdown
-    // (to make dropdown items visible in Vanilla mobile navigation dropdown)
-    @media screen and (max-width: $breakpoint-medium) {
-      .p-contextual-menu__toggle {
-        display: none;
+    // making it specific enough to override Vanilla selectors :(
+    .p-navigation__links .p-navigation__link .p-dropdown__toggle {
+      display: none;
+      padding-right: $sp-x-large;
+      position: relative;
+
+      @media (min-width: $breakpoint-navigation-threshold + 1) {
+        display: block;
       }
+    }
 
-      .p-contextual-menu {
-        &__toggle {
-          display: none;
-        }
+    // making it specific enough to override Vanilla selectors :(
+    .p-navigation__links .p-dropdown__menu {
+      background-color: $color-navigation-background;
 
-        &__dropdown {
-          background: none;
-          box-shadow: none;
-          display: block;
-          max-width: 100%;
-          position: static;
+      margin: 0;
+      padding: 0;
 
-          &::before,
-          &::after {
-            display: none;
-          }
-        }
-
-        &__group {
-          padding: 0;
-        }
-
-        &__link {
-          font-size: .875rem;
-          padding: .84375rem $sp-x-small; // 0.84375rem = (48px [height] - 21px [line-height]) / 2
-        }
+      .p-navigation__link {
+        border-left: 0;
+        float: none;
+        width: 100%;
       }
     }
   }
