@@ -1,0 +1,9 @@
+@mixin snapcraft-p-form-help-text {
+  [type="checkbox"][disabled="disabled"] ~ .p-form-help-text,
+  [type="checkbox"][disabled] ~ .p-form-help-text,
+  [type="radio"][disabled="disabled"] ~ .p-form-help-text,
+  [type="radio"][disabled] ~ .p-form-help-text {
+    cursor: not-allowed;
+    opacity: .5;
+  }
+}
