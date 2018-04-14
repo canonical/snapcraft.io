@@ -9,284 +9,285 @@
     {% set selected_tab='market' %}
     {% include "publisher/_header.html" %}
 
-    <div class="p-strip is-shallow">
-        <form id="market-form" method="POST" enctype='multipart/form-data'>
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-          <input type="hidden" name="snap_id" value="{{ snap_id }}" />
-          <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
+    <section class="p-strip u-no-padding--top">
 
-          <div class="row">
-            <div class="col-12 u-align--right">
-                <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/market">Revert</a>
-                <input type="submit" class="p-button--positive js-market-submit" name="submit_apply" value="Apply"/>
-                <hr />
-            </div>
+      <form id="market-form" method="POST" enctype='multipart/form-data' class="u-no-margin--top">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="snap_id" value="{{ snap_id }}" />
+        <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
+
+        <div class="row">
+          <div class="col-12 u-align--right">
+              <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/market">Revert</a>
+              <input type="submit" class="p-button--positive js-market-submit" name="submit_apply" value="Apply"/>
+              <hr />
           </div>
+        </div>
 
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              <div class="row">
-                <div class="col-12">
-                  {% for category, message in messages %}
-                    <div id="market-form-status" class="p-notification--{{ category }}">
-                      <p class="p-notification__response">
-                          {{ message }}
-                      </p>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endif %}
-          {% endwith %}
-
-          {% if other_errors %}
-              <div class="row">
-                <div class="col-12">
-                  {% for error in other_errors %}
-                    <div class="p-notification--negative">
-                      <p class="p-notification__response">
-                          {{ error.message }}
-                      </p>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-          {% endif %}
-
-          {% if field_errors and field_errors['icon'] %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
             <div class="row">
               <div class="col-12">
-                <div class="p-notification--negative">
-                  <p class="p-notification__response">
-                      <strong>Icon:</strong> {{ field_errors['icon'] }}
-                  </p>
-                </div>
+                {% for category, message in messages %}
+                  <div id="market-form-status" class="p-notification--{{ category }}">
+                    <p class="p-notification__response">
+                        {{ message }}
+                    </p>
+                  </div>
+                {% endfor %}
               </div>
             </div>
           {% endif %}
-          <div class="row" data-validation-name="icon">
-            <div class="col-2">
-              <div class="p-media-object__image--large p-editable-icon">
-                <img id="snap_icon_image"
-                  {% if icon_url %}
-                    src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                  {% else %}
-                    src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
-                  {% endif %}
-                />
-              </div>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
-                <label for="snap-title">Title:</label>
-                <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
-                </div>
-                {% if field_errors and field_errors['title'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['title'] }}
-                  </p>
-                {% endif %}
-              </div>
-            </div>
-          </div>
+        {% endwith %}
 
-          <div class="row">
-            <div class="col-2">
-              <label>Snap name: </label>
-            </div>
-            <div class="col-8">
-                {{ snap_name }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-2">
-              <label>Publisher: </label>
-            </div>
-            <div class="col-8">
-                {{ publisher_name }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-2">
-              <label class="p-label--grid-baseline">Summary: </label>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
-                <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
-                </div>
-                {% if field_errors and field_errors['summary'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['summary'] }}
-                  </p>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-2">
-              <label class="p-label--grid-baseline">Description: </label>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
-                <textarea class="p-form-validation__input u-no-margin" name="description" required>{{ description }}</textarea>
-                {% if field_errors and field_errors['description'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['description'] }}
-                  </p>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
-          </div>
-
-          {% if field_errors and field_errors['screenshots'] %}
+        {% if other_errors %}
             <div class="row">
               <div class="col-12">
-                <div class="p-notification--negative">
-                  <p class="p-notification__response">
-                      <strong>Screenshots:</strong> {{ field_errors['screenshots'] }}
-                  </p>
-                </div>
+                {% for error in other_errors %}
+                  <div class="p-notification--negative">
+                    <p class="p-notification__response">
+                        {{ error.message }}
+                    </p>
+                  </div>
+                {% endfor %}
               </div>
             </div>
-          {% endif %}
-          <div class="row" data-validation-name="screenshots">
-            <div class="col-12">
-              <div class="p-screenshots-toolbar" id="screenshots-toolbar">
-                <label>Screenshots (up to 5):</label>
-                <div class="p-screenshots-toolbar__buttons">
-                  <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
-                  <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
-                  <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
-                </div>
-              </div>
-            </div>
-          </div>
+        {% endif %}
 
-          <div class="row" id="snap-screenshots">
-          </div>
-
+        {% if field_errors and field_errors['icon'] %}
           <div class="row">
             <div class="col-12">
-              <hr />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-2">
-              <label>License: </label>
-            </div>
-            <div class="col-8">
-              {{ license }}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-2">
-              <label class="p-label--grid-baseline">Developer website: </label>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-                <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
-                </div>
-                {% if field_errors and field_errors['website'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['website'] }}
-                  </p>
-                {% endif %}
+              <div class="p-notification--negative">
+                <p class="p-notification__response">
+                    <strong>Icon:</strong> {{ field_errors['icon'] }}
+                </p>
               </div>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-2">
-              <label class="p-label--grid-baseline">Contact {{ publisher_name }}: </label>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-                <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="url" name="contact" value="{{ contact }}" maxlength="256"/>
-                </div>
-                {% if field_errors and field_errors['contact'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['contact'] }}
-                  </p>
+        {% endif %}
+        <div class="row" data-validation-name="icon">
+          <div class="col-2">
+            <div class="p-media-object__image--large p-editable-icon">
+              <img id="snap_icon_image"
+                {% if icon_url %}
+                  src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
+                {% else %}
+                  src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
                 {% endif %}
+              />
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
+              <label for="snap-title">Title:</label>
+              <div class="p-form-validation__field">
+                <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
+              </div>
+              {% if field_errors and field_errors['title'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['title'] }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>Snap name: </label>
+          </div>
+          <div class="col-8">
+              {{ snap_name }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>Publisher: </label>
+          </div>
+          <div class="col-8">
+              {{ publisher_name }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label class="p-label--grid-baseline">Summary: </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
+              <div class="p-form-validation__field">
+                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
+              </div>
+              {% if field_errors and field_errors['summary'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['summary'] }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label class="p-label--grid-baseline">Description: </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
+              <textarea class="p-form-validation__input u-no-margin" name="description" required>{{ description }}</textarea>
+              {% if field_errors and field_errors['description'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['description'] }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+
+        {% if field_errors and field_errors['screenshots'] %}
+          <div class="row">
+            <div class="col-12">
+              <div class="p-notification--negative">
+                <p class="p-notification__response">
+                    <strong>Screenshots:</strong> {{ field_errors['screenshots'] }}
+                </p>
               </div>
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-12">
-              <hr />
+        {% endif %}
+        <div class="row" data-validation-name="screenshots">
+          <div class="col-12">
+            <div class="p-screenshots-toolbar" id="screenshots-toolbar">
+              <label>Screenshots (up to 5):</label>
+              <div class="p-screenshots-toolbar__buttons">
+                <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
+                <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
+                <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-8">
-              <input
-                type="checkbox"
-                name="public_metrics_enabled"
-                id="public-metrics-enabled"
-                {% if public_metrics_enabled %}
-                  checked="checked"
-                {% endif %}
-                />
-              <label class="u-no-margin--top p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
-                <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
-              </label>
-              <input
-                type="hidden"
-                name="public_metrics_blacklist"
-                {% if public_metrics_blacklist|length > 0 %}
-                  value="{{ join(public_metrics_blacklist, ',')}}"
-                {% endif %}
-                />
+        <div class="row" id="snap-screenshots">
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>License: </label>
+          </div>
+          <div class="col-8">
+            {{ license }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label class="p-label--grid-baseline">Developer website: </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
+              <div class="p-form-validation__field">
+                <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
+              </div>
+              {% if field_errors and field_errors['website'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['website'] }}
+                </p>
+              {% endif %}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-6">
-              <input
-                type="checkbox"
-                name="public_metrics_territories"
-                id="public-metrics-territories"
-                {% if not contains(public_metrics_blacklist, 'installed_base_by_country_percent') %}
-                  checked="checked"
-                {% endif %}
-                {% if not public_metrics_enabled %}
-                  disabled="disabled"
-                {% endif %}
-                />
-              <label class="u-no-margin--top" for="public-metrics-territories">Territories</label>
-              <p class="p-form-help-text">Displays where your snap is being used by country</p>
+        <div class="row">
+          <div class="col-2">
+            <label class="p-label--grid-baseline">Contact {{ publisher_name }}: </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
+              <div class="p-form-validation__field">
+                <input class="p-form-validation__input" type="url" name="contact" value="{{ contact }}" maxlength="256"/>
+              </div>
+              {% if field_errors and field_errors['contact'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['contact'] }}
+                </p>
+              {% endif %}
             </div>
           </div>
-        </form>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8">
+            <input
+              type="checkbox"
+              name="public_metrics_enabled"
+              id="public-metrics-enabled"
+              {% if public_metrics_enabled %}
+                checked="checked"
+              {% endif %}
+              />
+            <label class="u-no-margin--top p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
+              <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
+            </label>
+            <input
+              type="hidden"
+              name="public_metrics_blacklist"
+              {% if public_metrics_blacklist|length > 0 %}
+                value="{{ join(public_metrics_blacklist, ',')}}"
+              {% endif %}
+              />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <input
+              type="checkbox"
+              name="public_metrics_territories"
+              id="public-metrics-territories"
+              {% if not contains(public_metrics_blacklist, 'installed_base_by_country_percent') %}
+                checked="checked"
+              {% endif %}
+              {% if not public_metrics_enabled %}
+                disabled="disabled"
+              {% endif %}
+              />
+            <label class="u-no-margin--top" for="public-metrics-territories">Territories</label>
+            <p class="p-form-help-text">Displays where your snap is being used by country</p>
+          </div>
+        </div>
+      </form>
     </div>
-  </div>
+  </section>
 {% endblock %}
 
 {% block scripts %}

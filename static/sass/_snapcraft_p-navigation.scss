@@ -25,6 +25,11 @@
     // right aligned sign-in navigation
     .p-navigation__links--right {
       @extend .p-navigation__links; // sass-lint:disable-line placeholder-in-extend
+      z-index: 1;
+
+      .p-dropdown__toggle {
+        min-width: 138px;
+      }
     }
 
     @media (min-width: $breakpoint-navigation-threshold + 1) {
@@ -50,6 +55,10 @@
           &[aria-hidden="false"] {
             display: block;
           }
+        }
+
+        &:hover {
+          background: $navigation-hover-color !important;
         }
       }
 
