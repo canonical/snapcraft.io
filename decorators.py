@@ -56,7 +56,7 @@ def public_cache_headers(route_function):
 
     cache_headers = [
         'public',
-        'max-age=30',
+        'max-age=61',
         'stale-while-revalidate=300',
         'stale-if-error=86400',
     ]
