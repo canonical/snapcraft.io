@@ -6,6 +6,10 @@
     // custom styles for dark header with hover
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__link {
+        // &:hover {
+        //   background: transparent;
+        // }
+
         & > a:hover,
         .p-contextual-menu__toggle:hover,
         .is-selected {
@@ -18,6 +22,11 @@
 
         .p-navigation__link {
           border-left: 1px solid $navigation-border-color;
+        }
+
+        // fix for hover styles
+        .p-navigation__link:hover {
+          background: transparent;
         }
       }
     }
