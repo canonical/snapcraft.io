@@ -79,11 +79,19 @@
     // making it specific enough to override Vanilla selectors :(
     .p-navigation__links .p-navigation__link .p-dropdown__toggle {
       display: none;
+      max-width: 200px;
+      overflow: hidden;
       padding-right: $sp-x-large;
       position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       @media (min-width: $breakpoint-navigation-threshold + 1) {
         display: block;
+      }
+
+      @media (min-width: $breakpoint-large) {
+        max-width: 300px;
       }
     }
 
