@@ -8,7 +8,6 @@ from dateutil import relativedelta
 from json import dumps, loads
 from operator import itemgetter
 from modules.exceptions import (
-    ApiError,
     ApiTimeoutError,
     ApiConnectionError,
     ApiResponseDecodeError,
@@ -140,8 +139,6 @@ def publisher_snap_measure(snap_name):
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
         flask.abort(502, str(api_response_error))
-    except ApiError as api_error:
-        flask.abort(502, str(api_error))
     except MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
@@ -328,8 +325,6 @@ def snap_release(snap_name):
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
         flask.abort(502, str(api_response_error))
-    except ApiError as api_error:
-        flask.abort(502, str(api_error))
     except MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
@@ -504,8 +499,6 @@ def post_market_snap(snap_name):
                     flask.abort(502, error_messages)
             except ApiResponseError as api_response_error:
                 flask.abort(502, str(api_response_error))
-            except ApiError as api_error:
-                flask.abort(502, str(api_error))
             except MacaroonRefreshRequired:
                 return refresh_redirect(
                     flask.request.path
