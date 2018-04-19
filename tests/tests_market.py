@@ -4,7 +4,7 @@ import responses
 from tests.endpoint_testing import BaseTestCases
 
 
-class MarketPageNotAuth(BaseTestCases.EndpointLoggedOut):
+class MarketPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/market'.format(snap_name)
@@ -12,7 +12,7 @@ class MarketPageNotAuth(BaseTestCases.EndpointLoggedOut):
         super().setUp(snap_name, endpoint_url)
 
 
-class MarketPage(BaseTestCases.EndpointLoggedIn):
+class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
 
