@@ -172,6 +172,8 @@ def publisher_snap_measure(snap_name):
         details = api.get_snap_info(snap_name, flask.session)
     except ApiTimeoutError as api_timeout_error:
         flask.abort(504, str(api_timeout_error))
+    except ApiConnectionError as api_connection_error:
+        flask.abort(502, str(api_connection_error))
     except ApiResponseDecodeError as api_response_decode_error:
         flask.abort(502, str(api_response_decode_error))
     except ApiResponseErrorList as api_response_error_list:
