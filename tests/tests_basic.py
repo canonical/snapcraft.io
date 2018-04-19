@@ -2,13 +2,10 @@
 
 import unittest
 
-import pymacaroons
 import responses
 import urllib
 
 import app
-from modules.authentication import get_authorization_header
-
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True
@@ -43,27 +40,6 @@ class WebAppTestCase(unittest.TestCase):
 
         assert response.status_code == 404
         assert "Page not found" in str(response.data)
-
-    # Account pages
-    # ===
-
-    def test_account(self):
-        """
-        Naive check that the basic redirects to the authentication system
-        are working for the /account page
-        """
-
-        local_redirect = self._get_response('/account')
-        redirect_url = "http://localhost/login?next=/account"
-        assert local_redirect.status_code == 302
-        assert local_redirect.headers.get('Location') == redirect_url
-
-        ext_redirect = self._get_response('/login?next=/account')
-        ext2_redirect = self._get_response('/login?next=/account')
-        assert ext_redirect.status_code == 302
-        assert ext2_redirect.status_code == 302
-        assert 'login.ubuntu.com' in ext_redirect.headers.get('Location')
-        assert 'login.ubuntu.com' in ext2_redirect.headers.get('Location')
 
     # Snap details pages
     # ==
@@ -119,68 +95,6 @@ class WebAppTestCase(unittest.TestCase):
         assert "Ubuntu and Canonical are registered" in str(response.data)
 
         return response
-
-
-def _log_in(client):
-    """Emulates test client login in the store.
-
-    Fill current session with `openid`, `macaroon_root` and
-    `macaroon_discharge`.
-
-    Return the expected `Authorization` header for further verification in API
-    requests.
-    """
-    # Basic root/discharge macaroons pair.
-    root = pymacaroons.Macaroon('test', 'testing', 'a_key')
-    root.add_third_party_caveat('3rd', 'a_caveat-key', 'a_ident')
-    discharge = pymacaroons.Macaroon('3rd', 'a_ident', 'a_caveat_key')
-
-    with client.session_transaction() as s:
-        s['openid'] = {
-            'image': None,
-            'nickname': 'Toto',
-            'fullname': 'El Toto'
-            }
-        s['macaroon_root'] = root.serialize()
-        s['macaroon_discharge'] = discharge.serialize()
-
-    return get_authorization_header(root.serialize(), discharge.serialize())
-
-
-class PublisherPagesTestCase(unittest.TestCase):
-    """Integration tests for the publisher pages."""
-
-    def setUp(self):
-        app.testing = True
-        self.client = app.app.test_client()
-
-    @responses.activate
-    def test_account_api_failure(self):
-        # Why verifying creds (`authentication.verify_response`) on a 500
-        # from `account-info` that stil depend on a valid payload ?!?
-        payload = {
-            'username': 'testing',
-            'displayname': 'testing',
-            'email': 'testing@testing.com',
-            'snaps': {
-                '16': {},
-            }
-        }
-        responses.add(
-            responses.GET, 'https://dashboard.snapcraft.io/dev/api/account',
-            json=payload, status=500)
-
-        authorization = _log_in(self.client)
-        response = self.client.get('/account')
-        self.assertEqual(200, response.status_code)
-
-        self.assertEqual(1, len(responses.calls))
-        [account_call] = responses.calls
-        self.assertEqual(
-            'https://dashboard.snapcraft.io/dev/api/account',
-            account_call.request.url)
-        self.assertEqual(
-            authorization, account_call.request.headers.get('Authorization'))
 
 
 if __name__ == '__main__':
