@@ -74,6 +74,7 @@ function initForm(config, initialState, errors) {
   // setup form functionality
   const marketForm = document.getElementById(config.form);
   const submitButton = marketForm.querySelector('.js-market-submit');
+  const revertButton = marketForm.querySelector('.js-market-revert');
 
   function disableSubmit() {
     submitButton.disabled = 'disabled';
@@ -111,6 +112,29 @@ function initForm(config, initialState, errors) {
       updateFormState();
     }
   );
+
+  let ignoreChangesOnUnload = false;
+
+  window.addEventListener("beforeunload", function (event) {
+    const diff = diffState(initialState, state);
+
+    if (!ignoreChangesOnUnload && diff) {
+      // crossbrowser beforeunload:
+      // https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
+
+      // confirmation message (ignored by most browsers),
+      // but may be showed by some older ones
+      var confirmationMessage = "Changes that you made will not be saved if you leave the page.";
+
+      event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+      return confirmationMessage;              // Gecko, WebKit, Chrome <34
+    }
+  });
+
+  revertButton.addEventListener('click', () => {
+    // make sure we don't warn user about leaving the page when reverting
+    ignoreChangesOnUnload = true;
+  });
 
   function checkForm() {
     const diff = diffState(initialState, state);
@@ -155,6 +179,9 @@ function initForm(config, initialState, errors) {
       cleanState.images = cleanState.images.filter(image => image.status !== 'delete');
       stateInput.value = JSON.stringify(cleanState);
       diffInput.value = JSON.stringify(diff);
+
+      // make sure we don't warn user about leaving the page when submitting
+      ignoreChangesOnUnload = true;
     } else {
       event.preventDefault();
     }
