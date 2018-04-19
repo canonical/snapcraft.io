@@ -99,6 +99,7 @@ def get_account_snaps():
             flask_user = flask.session['openid']
 
             context = {
+                'page_slug': 'my-snaps',
                 'snaps': user_snaps,
                 'current_user': flask_user['nickname'],
                 'registered_snaps': registered_snaps,
@@ -279,6 +280,7 @@ def publisher_snap_measure(snap_name):
             territories_total += 1
 
     context = {
+        'page_slug': 'my-snaps',
         # Data direct from details API
         'snap_name': snap_name,
         'snap_title': details['title'],
@@ -334,6 +336,7 @@ def get_market_snap(snap_name):
         if m['type'] == 'screenshot']
 
     context = {
+        "page_slug": 'my-snaps',
         "snap_id": snap_details['snap_id'],
         "snap_name": snap_details['snap_name'],
         "snap_title": snap_details['title'],
@@ -385,6 +388,7 @@ def snap_release(snap_name):
 
     return flask.render_template(
         'publisher/release.html',
+        page_slug='my-snaps',
         snap_name=snap_name,
         status=status_json,
     )
@@ -577,6 +581,7 @@ def post_market_snap(snap_name):
                 if m['type'] == 'screenshot']
 
             context = {
+                "page_slug": 'my-snaps',
                 # read-only values from details API
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],
