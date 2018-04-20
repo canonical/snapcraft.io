@@ -2,42 +2,46 @@
 
 <nav class="p-tabs">
   <div class="row">
-    <div class="row">
-      <div class="col-6">
-        <h1 class="u-float--left p-heading--three">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
-      </div>
-      <div class="col-6">
-        <ul class="p-tabs__list u-float--right" role="tablist">
-          <li class="p-tabs__item" role="presentation">
-            <a
-              href="/account/snaps/{{ snap_name }}/market"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'market' %}
-            aria-selected="true"
-            {% endif %}
-            >
-            Market
-            </a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a
-              href="/account/snaps/{{ snap_name }}/measure"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'measure' %}
-            aria-selected="true"
-            {% endif %}
-            >
-            Measure
-            </a>
-          </li>
-        </ul>
-      </div>
+    <div class="col-12">
+      <a href="/account/snaps">&lsaquo; My snaps</a>
     </div>
-    <div class="row u-no-margin--top">
-      <hr class="u-no-margin" />
+  </div>
+  <div class="row u-no-margin--top">
+    <div class="col-6">
+      <h1 class="u-float--left p-heading--three">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
     </div>
+    <div class="col-6">
+      <ul class="p-tabs__list u-float--right" role="tablist">
+        <li class="p-tabs__item" role="presentation">
+          <a
+            href="/account/snaps/{{ snap_name }}/market"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'market' %}
+          aria-selected="true"
+          {% endif %}
+          >
+          Market
+          </a>
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a
+            href="/account/snaps/{{ snap_name }}/measure"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'measure' %}
+          aria-selected="true"
+          {% endif %}
+          >
+          Measure
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row u-no-margin--top">
+    <hr class="u-no-margin" />
+  </div>
 </nav>
