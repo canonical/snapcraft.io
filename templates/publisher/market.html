@@ -194,13 +194,22 @@
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['website'] %}is-error{% endif %}">
                 <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="url" name="website" value="{{ website }}" maxlength="256"/>
+                  <input
+                    class="p-form-validation__input"
+                    type="url"
+                    name="website"
+                    value="{{ website }}"
+                    maxlength="256"
+                    placeholder="https://snapcraft.io" />
                 </div>
                 {% if field_errors and field_errors['website'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['website'] }}
                   </p>
                 {% endif %}
+                <p class="p-form-help-text">
+                  Please include a valid http:// or https:// link
+                </p>
               </div>
             </div>
           </div>
@@ -212,13 +221,22 @@
             <div class="col-8">
               <div class="p-form-validation u-no-margin {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
                 <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="url" name="contact" value="{{ contact }}" maxlength="256"/>
+                  <input
+                    class="p-form-validation__input"
+                    type="url"
+                    name="contact"
+                    value="{{ contact }}"
+                    maxlength="256"
+                    placeholder="mailto:example@example.com" />
                 </div>
                 {% if field_errors and field_errors['contact'] %}
                   <p class="p-form-validation__message">
                     <strong>Error:</strong> {{ field_errors['contact'] }}
                   </p>
                 {% endif %}
+                <p class="p-form-help-text">
+                  Use include a valid http://, https:// or mailto: link
+                </p>
               </div>
             </div>
           </div>
