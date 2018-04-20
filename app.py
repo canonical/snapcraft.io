@@ -292,13 +292,13 @@ def get_account():
 
 
 @app.route('/account/details')
-@decorators.login_required
+@login_required
 def get_account_details():
     return publisher_views.get_account_details()
 
 
 @app.route('/account/snaps')
-@decorators.login_required
+@login_required
 def get_account_snaps():
     return publisher_views.get_account_snaps()
 
