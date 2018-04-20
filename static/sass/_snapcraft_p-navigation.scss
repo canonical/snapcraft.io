@@ -6,10 +6,6 @@
     // custom styles for dark header with hover
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__link {
-        // &:hover {
-        //   background: transparent;
-        // }
-
         & > a:hover,
         .p-contextual-menu__toggle:hover,
         .is-selected {
@@ -17,7 +13,8 @@
         }
       }
 
-      .p-navigation__links {
+      .p-navigation__links,
+      .p-navigation__links:last-of-type { // fighting vanilla specificity
         border-right: 1px solid $navigation-border-color;
 
         .p-navigation__link {
@@ -39,10 +36,6 @@
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__links--right {
         margin-left: auto; // align to right in flexbox parent
-
-        &:last-of-type {
-          border-right: 1px solid $navigation-border-color;
-        }
       }
     }
 
