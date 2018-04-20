@@ -88,12 +88,18 @@ def utility_processor():
     can be used in all templates
     """
 
+    if authentication.is_authenticated(flask.session):
+        user_name = flask.session['openid']['fullname']
+    else:
+        user_name = None
+
     return {
         # Variables
         'LOGIN_URL': LOGIN_URL,
         'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN,
         'COMMIT_ID': COMMIT_ID,
         'ENVIRONMENT': ENVIRONMENT,
+        'user_name': user_name,
 
         # Functions
         'contains': template_functions.contains,

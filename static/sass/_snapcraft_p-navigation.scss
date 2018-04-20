@@ -3,22 +3,111 @@
   $navigation-hover-color: darken($color-navigation-background, 8%); // from #252525 to #111
 
   .p-navigation {
+    // custom styles for dark header with hover
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__link {
-        a:hover,
+        & > a:hover,
+        .p-contextual-menu__toggle:hover,
         .is-selected {
           background: $navigation-hover-color;
         }
       }
 
-      .p-navigation__links {
+      .p-navigation__links,
+      .p-navigation__links:last-of-type { // fighting vanilla specificity
+        border-right: 1px solid $navigation-border-color;
+
         .p-navigation__link {
           border-left: 1px solid $navigation-border-color;
         }
 
-        &:last-of-type {
-          border-right: 1px solid $navigation-border-color;
+        // fix for hover styles
+        .p-navigation__link:hover {
+          background: transparent;
         }
+      }
+    }
+
+    // right aligned sign-in navigation
+    .p-navigation__links--right {
+      @extend .p-navigation__links; // sass-lint:disable-line placeholder-in-extend
+    }
+
+    @media (min-width: $breakpoint-navigation-threshold + 1) {
+      .p-navigation__links--right {
+        margin-left: auto; // align to right in flexbox parent
+      }
+    }
+
+    // custom navigation dropdown
+    // inspired heavily by MAAS dropdown:
+    // https://github.com/maas/maas/blob/master/src/maasserver/static/scss/_patterns_navigation.scss
+    .p-dropdown {
+      @media (min-width: $breakpoint-navigation-threshold + 1) {
+        height: 3rem; // to align with header height
+
+        .p-dropdown__menu {
+          display: none;
+
+          &[aria-hidden="false"] {
+            display: block;
+          }
+        }
+      }
+
+      .p-icon--chevron {
+        height: $sp-small;
+        margin-top: -($sp-small / 2); // half of the height
+        position: absolute;
+        right: $sp-small;
+        top: 50%;
+        width: $sp-small;
+      }
+
+      &[aria-expanded="true"] {
+        .p-icon--chevron {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    // making it specific enough to override Vanilla selectors :(
+    .p-navigation__links .p-navigation__link.p-dropdown {
+      @media (max-width: $breakpoint-navigation-threshold) {
+        border: 0;
+      }
+    }
+
+    // making it specific enough to override Vanilla selectors :(
+    .p-navigation__links .p-navigation__link .p-dropdown__toggle {
+      display: none;
+      max-width: 200px;
+      overflow: hidden;
+      padding-right: $sp-x-large;
+      position: relative;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      @media (min-width: $breakpoint-navigation-threshold + 1) {
+        display: block;
+      }
+
+      @media (min-width: $breakpoint-large) {
+        max-width: 300px;
+      }
+    }
+
+    // making it specific enough to override Vanilla selectors :(
+    .p-navigation__links .p-dropdown__menu {
+      background-color: $color-navigation-background;
+
+      margin: 0;
+      padding: 0;
+
+      .p-navigation__link {
+        border-left: 0;
+        float: none;
+        width: 100%;
       }
     }
   }
