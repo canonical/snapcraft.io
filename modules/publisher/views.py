@@ -181,7 +181,15 @@ def publisher_snap_measure(snap_name):
         if api_response_error_list.status_code == 404:
             flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            codes = [error['code'] for error in api_response_error_list.errors]
+            codes = []
+            for error in api_response_error_list.errors:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        return flask.redirect('/account/agreement')
+                    elif 'missing namespace' in error['message']:
+                        return flask.redirect('/account/username')
+                else:
+                    codes = error['code']
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
@@ -317,7 +325,15 @@ def get_market_snap(snap_name):
         if api_response_error_list.status_code == 404:
             flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            codes = [error['code'] for error in api_response_error_list.errors]
+            codes = []
+            for error in api_response_error_list.errors:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        return flask.redirect('/account/agreement')
+                    elif 'missing namespace' in error['message']:
+                        return flask.redirect('/account/username')
+                else:
+                    codes = error['code']
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
@@ -369,7 +385,15 @@ def snap_release(snap_name):
         if api_response_error_list.status_code == 404:
             flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            codes = [error['code'] for error in api_response_error_list.errors]
+            codes = []
+            for error in api_response_error_list.errors:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        return flask.redirect('/account/agreement')
+                    elif 'missing namespace' in error['message']:
+                        return flask.redirect('/account/username')
+                else:
+                    codes = error['code']
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
