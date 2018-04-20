@@ -29,7 +29,7 @@ import modules.public.views as public_views
 import modules.publisher.views as publisher_views
 import modules.publisher.api as publisher_api
 import template_functions
-import decorators
+from decorators import login_required
 from modules.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
@@ -143,8 +143,28 @@ def clear_trailing():
 
 
 @app.after_request
-def apply_caching(response):
+def add_headers(response):
+    """
+    Generic rules for headers to add to all requests
+
+    - X-Hostname: Mention the name of the host/pod running the application
+    - Cache-Control: Add cache-control headers for public and private pages
+    """
+
     response.headers["X-Hostname"] = socket.gethostname()
+
+    if response.status_code == 200:
+        if flask.session:
+            response.headers['Cache-Control'] = 'private'
+        else:
+            # Only add caching headers to successful responses
+            response.headers['Cache-Control'] = ', '.join({
+                'public',
+                'max-age=61',
+                'stale-while-revalidate=300',
+                'stale-if-error=86400',
+            })
+
     return response
 
 
@@ -229,7 +249,6 @@ def logout():
 # Normal views
 # ===
 @app.route('/')
-@decorators.public_cache_headers
 def homepage():
     return public_views.homepage()
 
@@ -240,7 +259,6 @@ def status():
 
 
 @app.route('/store')
-@decorators.public_cache_headers
 def store():
     return public_views.store()
 
@@ -256,13 +274,11 @@ def snaps():
 
 
 @app.route('/search')
-@decorators.public_cache_headers
 def search_snap():
     return public_views.search_snap()
 
 
 @app.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
-@decorators.public_cache_headers
 def snap_details(snap_name):
     return public_views.snap_details(snap_name)
 
@@ -270,7 +286,7 @@ def snap_details(snap_name):
 # Publisher views
 # ===
 @app.route('/account')
-@decorators.login_required
+@login_required
 def get_account():
     return flask.redirect('/account/snaps')
 
@@ -288,48 +304,48 @@ def get_account_snaps():
 
 
 @app.route('/account/agreement')
-@decorators.login_required
+@login_required
 def get_agreement():
     return publisher_views.get_agreement()
 
 
 @app.route('/account/agreement', methods=['POST'])
-@decorators.login_required
+@login_required
 def post_agreement():
     return publisher_views.post_agreement()
 
 
 @app.route('/account/username')
-@decorators.login_required
+@login_required
 def get_account_name():
     return publisher_views.get_account_name()
 
 
 @app.route('/account/username', methods=['POST'])
-@decorators.login_required
+@login_required
 def post_account_name():
     return publisher_views.post_account_name()
 
 
 @app.route('/account/snaps/<snap_name>/measure')
-@decorators.login_required
+@login_required
 def publisher_snap_measure(snap_name):
     return publisher_views.publisher_snap_measure(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/market', methods=['GET'])
-@decorators.login_required
+@login_required
 def get_market_snap(snap_name):
     return publisher_views.get_market_snap(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/release')
-@decorators.login_required
+@login_required
 def snap_release(snap_name):
     return publisher_views.snap_release(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/market', methods=['POST'])
-@decorators.login_required
+@login_required
 def post_market_snap(snap_name):
     return publisher_views.post_market_snap(snap_name)
