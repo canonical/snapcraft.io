@@ -5,15 +5,15 @@ import responses
 from tests.endpoint_testing import BaseTestCases
 
 
-class MeasurePageNotAuth(BaseTestCases.EndpointGetLoggedOut):
+class MetricsPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = '/account/snaps/{}/measure'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
 
         super().setUp(snap_name, endpoint_url)
 
 
-class GetMeasureGetInfoPage(BaseTestCases.EndpointGetLoggedIn):
+class GetMetricsGetInfoPage(BaseTestCases.EndpointGetLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
 
@@ -21,12 +21,12 @@ class GetMeasureGetInfoPage(BaseTestCases.EndpointGetLoggedIn):
         api_url = api_url.format(
             snap_name
         )
-        endpoint_url = '/account/snaps/{}/measure'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
 
         super().setUp(snap_name, api_url, endpoint_url)
 
 
-class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
+class GetMetricsPostMetrics(BaseTestCases.BaseAppTesting):
     def setUp(self):
         snap_name = "test-snap"
 
@@ -46,7 +46,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             json=payload, status=200)
 
         api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/metrics'
-        endpoint_url = '/account/snaps/{}/measure'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
 
         super().setUp(snap_name, api_url, endpoint_url)
         self.authorization = self._log_in(self.client)
@@ -54,7 +54,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
     def _get_redirect(self):
         return (
             'http://localhost'
-            '/account/snaps/{}/measure'
+            '/account/snaps/{}/metrics'
         ).format(self.snap_name)
 
     @responses.activate
@@ -135,7 +135,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '30d')
@@ -197,7 +197,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '30d')
@@ -259,7 +259,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '7d')
@@ -324,7 +324,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '3m')
@@ -386,7 +386,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '7d')
@@ -448,7 +448,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '30d')
@@ -513,7 +513,7 @@ class GetMeasurePostMeasure(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/measure.html')
+        self.assert_template_used('publisher/metrics.html')
         self.assert_context('snap_name', self.snap_name)
         self.assert_context('snap_title', 'Test Snap')
         self.assert_context('metric_period', '3m')

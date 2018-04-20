@@ -171,12 +171,12 @@ def post_account_name():
         return flask.redirect('/account/username')
 
 
-def publisher_snap_measure(snap_name):
+def publisher_snap_metrics(snap_name):
     """
-    A view to display the snap measure page for specific snaps.
+    A view to display the snap metrics page for specific snaps.
 
     This queries the snapcraft API (api.snapcraft.io) and passes
-    some of the data through to the publisher/measure.html template,
+    some of the data through to the publisher/metrics.html template,
     with appropriate sanitation.
     """
     try:
@@ -317,12 +317,12 @@ def publisher_snap_measure(snap_name):
     }
 
     return flask.render_template(
-        'publisher/measure.html',
+        'publisher/metrics.html',
         **context
     )
 
 
-def get_market_snap(snap_name):
+def get_listing_snap(snap_name):
     try:
         snap_details = api.get_snap_info(snap_name, flask.session)
     except ApiTimeoutError as api_timeout_error:
@@ -379,7 +379,7 @@ def get_market_snap(snap_name):
     }
 
     return flask.render_template(
-        'publisher/market.html',
+        'publisher/listing.html',
         **context
     )
 
@@ -445,7 +445,7 @@ def build_image_info(image, image_type):
     }
 
 
-def post_market_snap(snap_name):
+def post_listing_snap(snap_name):
     changes = None
     changed_fields = flask.request.form.get('changes')
 
@@ -651,7 +651,7 @@ def post_market_snap(snap_name):
             }
 
             return flask.render_template(
-                'publisher/market.html',
+                'publisher/listing.html',
                 **context
             )
 
@@ -660,7 +660,7 @@ def post_market_snap(snap_name):
         flask.flash("No changes to save.", 'information')
 
     return flask.redirect(
-        "/account/snaps/{snap_name}/market".format(
+        "/account/snaps/{snap_name}/listing".format(
             snap_name=snap_name
         )
     )

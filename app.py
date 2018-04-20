@@ -327,16 +327,16 @@ def post_account_name():
     return publisher_views.post_account_name()
 
 
-@app.route('/account/snaps/<snap_name>/measure')
+@app.route('/account/snaps/<snap_name>/metrics')
 @login_required
-def publisher_snap_measure(snap_name):
-    return publisher_views.publisher_snap_measure(snap_name)
+def publisher_snap_metrics(snap_name):
+    return publisher_views.publisher_snap_metrics(snap_name)
 
 
-@app.route('/account/snaps/<snap_name>/market', methods=['GET'])
+@app.route('/account/snaps/<snap_name>/listing', methods=['GET'])
 @login_required
-def get_market_snap(snap_name):
-    return publisher_views.get_market_snap(snap_name)
+def get_listing_snap(snap_name):
+    return publisher_views.get_listing_snap(snap_name)
 
 
 @app.route('/account/snaps/<snap_name>/release')
@@ -345,7 +345,23 @@ def snap_release(snap_name):
     return publisher_views.snap_release(snap_name)
 
 
-@app.route('/account/snaps/<snap_name>/market', methods=['POST'])
+@app.route('/account/snaps/<snap_name>/listing', methods=['POST'])
 @login_required
-def post_market_snap(snap_name):
-    return publisher_views.post_market_snap(snap_name)
+def post_listing_snap(snap_name):
+    return publisher_views.post_listing_snap(snap_name)
+
+
+@app.route('/account/snaps/<snap_name>/market')
+@login_required
+def get_market_snap(snap_name):
+    return flask.redirect(
+        "/account/snaps/{snap_name}/listing".format(
+            snap_name=snap_name))
+
+
+@app.route('/account/snaps/<snap_name>/measure')
+@login_required
+def get_measure_snap(snap_name):
+    return flask.redirect(
+        "/account/snaps/{snap_name}/metrics".format(
+            snap_name=snap_name))
