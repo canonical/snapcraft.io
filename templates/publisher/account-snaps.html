@@ -71,14 +71,30 @@ My snaps — Linux software in the Snap Store
             <h3 class="p-heading--four">Congratulations!</h3>
           </div>
           <div class="col-6">
-            <p>
-              You've just released a snap to the "{{ snaps[snap].latest_revisions[0].channels[0] }}" channel!<br />
-              Want to improve the listing in stores? You can add an icon and screenshots.<br />
-              <a href="/account/snaps/{{ snap }}/listing" class="p-button--neutral">Go to listing listing</a>
-            </p>
+            {% if snaps[snap].latest_revisions[0].channels[0] %}
+              <p>
+                You've just released {{ snap }} to the "{{ snaps[snap].latest_revisions[0].channels[0] }}" channel!
+              </p>
+            {% else %}
+              <p>
+                You've just uploaded {{ snap }}!
+              </p>
+            {% endif %}
+            <ul>
+              <li>
+                Want to improve the listing in stores?
+                <a href="/account/snaps/{{ snap }}/market">Edit Store listing</a>
+              </li>
+              {% if not snap[snap].latest_revisions[0].channels[0] %}
+                <li>
+                  Is your snap ready to release?
+                  <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>
+                </li>
+              {% endif %}
+            </ul>
           </div>
           <div class="col-3" style="margin-top: -25px">
-            <img src="https://assets.ubuntu.com/v1/320a508d-rocket-icon-with-stars.png" />
+            <img alt="Rocket among stars" src="https://assets.ubuntu.com/v1/320a508d-rocket-icon-with-stars.png" />
           </div>
         </div>
       </section>
