@@ -4,7 +4,7 @@ import responses
 from tests.endpoint_testing import BaseTestCases
 
 
-class ListingPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
+class ListingPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
@@ -12,7 +12,8 @@ class ListingPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
         super().setUp(snap_name, endpoint_url)
 
 
-class GetListingPage(BaseTestCases.EndpointGetLoggedIn):
+class GetListingPageErrorsHandling(
+        BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         snap_name = "test-snap"
 
@@ -22,7 +23,20 @@ class GetListingPage(BaseTestCases.EndpointGetLoggedIn):
         )
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
-        super().setUp(snap_name, api_url, endpoint_url)
+        super().setUp(snap_name, endpoint_url, api_url)
+
+
+class GetListingPage(BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        snap_name = "test-snap"
+
+        api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
+        api_url = api_url.format(
+            snap_name
+        )
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
+
+        super().setUp(snap_name, endpoint_url, api_url)
 
     @responses.activate
     def test_page_not_found(self):

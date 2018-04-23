@@ -7,19 +7,28 @@ from tests.endpoint_testing import BaseTestCases
 responses.mock.assert_all_requests_are_fired = True
 
 
-class AccountDetailsNotAuth(BaseTestCases.EndpointGetLoggedOut):
+class AccountDetailsNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/details'
 
         super().setUp(None, endpoint_url)
 
 
-class AccountDetailsPage(BaseTestCases.EndpointGetLoggedIn):
+class AccountDetailsPageErrorsHandling(
+       BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         api_url = 'https://dashboard.snapcraft.io/dev/api/account'
         endpoint_url = '/account/details'
 
-        super().setUp(None, api_url, endpoint_url)
+        super().setUp(None, endpoint_url, api_url)
+
+
+class AccountDetailsPage(BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        api_url = 'https://dashboard.snapcraft.io/dev/api/account'
+        endpoint_url = '/account/details'
+
+        super().setUp(None, endpoint_url, api_url)
 
     @responses.activate
     def test_account(self):

@@ -5,12 +5,12 @@ import json
 from tests.endpoint_testing import BaseTestCases
 
 
-class PostListingPageNotAuth(BaseTestCases.EndpointPostLoggedOut):
+class PostListingPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
-        super().setUp(snap_name, endpoint_url)
+        super().setUp(snap_name, endpoint_url, 'POST')
 
 
 class PostMetadataListingPage(BaseTestCases.BaseAppTesting):

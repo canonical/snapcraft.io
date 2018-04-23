@@ -154,7 +154,7 @@ def post_username(session, username):
     if username_response.status_code == 204:
         return {}
     else:
-        return username_response.json()
+        return process_response(username_response)
 
 
 def get_publisher_metrics(session, json):
