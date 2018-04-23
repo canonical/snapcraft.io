@@ -9,17 +9,17 @@
     {% set selected_tab='listing' %}
     {% include "publisher/_header.html" %}
 
-    <div class="p-strip is-shallow">
+    <div class="p-strip is-shallow u-no-padding--top">
         <form id="market-form" method="POST" enctype='multipart/form-data'>
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <input type="hidden" name="snap_id" value="{{ snap_id }}" />
           <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
 
-          <div class="row">
+          <div class="row snapcraft-p-sticky">
             <div class="col-12 u-align--right">
                 <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
                 <input type="submit" class="p-button--positive js-market-submit" name="submit_apply" value="Apply"/>
-                <hr />
+                <hr class="u-no-margin--bottom" />
             </div>
           </div>
 

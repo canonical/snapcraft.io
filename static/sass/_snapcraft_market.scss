@@ -69,4 +69,16 @@
   .has-counter .p-form-validation__input {
     background-image: none;
   }
+
+  // Stick the Revert, Apply buttons to the top
+  .snapcraft-p-sticky {
+    background: $color-x-light;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    @media screen and (max-width: $breakpoint-x-small) {
+      padding-top: $sp-medium;
+    }
+  }
 }
