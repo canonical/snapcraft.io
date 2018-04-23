@@ -15,11 +15,31 @@
           <input type="hidden" name="snap_id" value="{{ snap_id }}" />
           <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
 
-          <div class="row snapcraft-p-sticky">
-            <div class="col-12 u-align--right">
-                <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
-                <input type="submit" class="p-button--positive js-market-submit" name="submit_apply" value="Apply"/>
-                <hr class="u-no-margin--bottom" />
+          <div class="snapcraft-p-sticky u-no-margin--top">
+            <div class="row">
+              <div class="col-7">
+                <p class="snapcraft-p-market-message">
+                  {% if is_on_stable %}
+                    {% if private %}
+                      This listing is not public because the snap is set to private.
+                      <a href="https://dashboard.snapcraft.io/snaps/{{ snap_name }}">Settings</a>
+                    {% else %}
+                      Changes you make here will appear immediately on the <a href="/{{ snap_name }}">public listing</a>.
+                    {% endif %}
+                  {% else %}
+                    This listing will appear in the Snap Store when there is a <a href="https://docs.snapcraft.io/build-snaps/release">stable release</a>.
+                  {% endif %}
+                </p>
+              </div>
+              <div class="col-5">
+                <div class="u-align--right">
+                  <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
+                  <input type="submit" class="u-no-margin--top p-button--positive js-market-submit" name="submit_apply" value="Save"/>
+                </div>
+              </div>
+            </div>
+            <div class="row u-no-margin--top">
+              <hr class="u-no-margin" />
             </div>
           </div>
 

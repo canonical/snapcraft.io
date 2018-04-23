@@ -73,12 +73,23 @@
   // Stick the Revert, Apply buttons to the top
   .snapcraft-p-sticky {
     background: $color-x-light;
+    margin-bottom: $sp-small;
     position: sticky;
     top: 0;
     z-index: 1;
 
+    & .row {
+      padding-top: $sp-small;
+    }
+
+    & .snapcraft-p-market-message {
+      margin-top: $sp-x-small;
+    }
+
     @media screen and (max-width: $breakpoint-x-small) {
-      padding-top: $sp-medium;
+      .js-market-submit {
+        margin-top: $sp-x-small !important;
+      }
     }
   }
 }
