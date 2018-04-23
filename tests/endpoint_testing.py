@@ -129,29 +129,6 @@ class BaseTestCases:
             assert response.status_code == 502
 
         @responses.activate
-        def test_page_not_found(self):
-            payload = {
-                'error_list': []
-            }
-            responses.add(
-                responses.GET, self.api_url,
-                json=payload, status=404)
-
-            response = self.client.get(self.endpoint_url)
-
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
-            self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
-
-            assert response.status_code == 404
-            self.assert_template_used('404.html')
-
-        @responses.activate
         def test_broken_json(self):
             # To test this I return no json from the server, this makes the
             # call to the function response.json() raise a ValueError exception
@@ -242,3 +219,63 @@ class BaseTestCases:
 
             assert response.status_code == 302
             assert response.location == self._get_location()
+
+        @responses.activate
+        def test_account_not_signed_agreement_logged_in(self):
+            payload = {
+                'error_list': [
+                    {
+                        'code': 'user-not-ready',
+                        'message': 'has not signed agreement'
+                    }
+                ]
+            }
+            responses.add(
+                responses.GET, self.api_url,
+                json=payload, status=403)
+
+            response = self.client.get(self.endpoint_url)
+
+            self.assertEqual(1, len(responses.calls))
+            called = responses.calls[0]
+            self.assertEqual(
+                self.api_url,
+                called.request.url)
+            self.assertEqual(
+                self.authorization,
+                called.request.headers.get('Authorization'))
+
+            self.assertEqual(302, response.status_code)
+            self.assertEqual(
+                'http://localhost/account/agreement',
+                response.location)
+
+        @responses.activate
+        def test_account_no_username_logged_in(self):
+            payload = {
+                'error_list': [
+                    {
+                        'code': 'user-not-ready',
+                        'message': 'missing namespace'
+                    }
+                ]
+            }
+            responses.add(
+                responses.GET, self.api_url,
+                json=payload, status=403)
+
+            response = self.client.get(self.endpoint_url)
+
+            self.assertEqual(1, len(responses.calls))
+            called = responses.calls[0]
+            self.assertEqual(
+                self.api_url,
+                called.request.url)
+            self.assertEqual(
+                self.authorization,
+                called.request.headers.get('Authorization'))
+
+            self.assertEqual(302, response.status_code)
+            self.assertEqual(
+                'http://localhost/account/username',
+                response.location)

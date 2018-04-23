@@ -25,6 +25,29 @@ class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
         super().setUp(snap_name, api_url, endpoint_url)
 
     @responses.activate
+    def test_page_not_found(self):
+        payload = {
+            'error_list': []
+        }
+        responses.add(
+            responses.GET, self.api_url,
+            json=payload, status=404)
+
+        response = self.client.get(self.endpoint_url)
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(
+            self.api_url,
+            called.request.url)
+        self.assertEqual(
+            self.authorization,
+            called.request.headers.get('Authorization'))
+
+        assert response.status_code == 404
+        self.assert_template_used('404.html')
+
+    @responses.activate
     def test_account_logged_in(self):
         snap_name = "test-snap"
 
