@@ -1,0 +1,50 @@
+@mixin snapcraft-details-heading {
+  .p-snap-heading {
+    display: flex;
+
+    &__icon {
+      align-self: flex-start;
+      flex-shrink: 0;
+      margin-right: $sp-medium;
+      max-height: 3.75rem;
+      max-width: 3.75rem;
+      vertical-align: middle;
+      width: auto;
+    }
+
+    &__title {
+      flex-grow: 1;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    &__name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__publisher {
+      margin-top: $sp-x-small;
+    }
+
+    @media screen and (min-width: $breakpoint-medium) {
+      flex-direction: column;
+
+      &__title {
+        margin-top: $sp-x-small;
+      }
+    }
+  }
+
+  .p-snap-install {
+    font-size: .875rem; // same as .p-form-help-text
+
+    .p-code-snippet {
+      margin-top: $sp-x-small;
+    }
+
+    @media screen and (min-width: $breakpoint-medium) {
+      margin-top: $sp-xxx-large;
+    }
+  }
+}
