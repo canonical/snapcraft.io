@@ -28,91 +28,101 @@ def refresh_redirect(path):
 
 def get_account_details():
     try:
-        account = api.get_account(flask.session)
-        if 'redirect' in account:
-            return account['redirect']
+        # We don't use the data from this endpoint.
+        # It is mostly used to make sure the user has signed
+        # the terms and conditions.
+        api.get_account(flask.session)
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiConnectionError as api_connection_error:
+        flask.abort(502, str(api_connection_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        codes = []
+        for error in api_response_error_list.errors:
+            if error['code'] == 'user-not-ready':
+                if 'has not signed agreement' in error['message']:
+                    return flask.redirect('/account/agreement')
+                elif 'missing namespace' in error['message']:
+                    return flask.redirect('/account/username')
+            else:
+                codes = error['code']
 
-        error_list = []
-        if 'error_list' in account:
-            for error in account['error_list']:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
-                        return flask.redirect('/account/agreement')
-                    elif 'missing namespace' in error['message']:
-                        return flask.redirect('/account/username')
-                else:
-                    error_list.append(error)
-
-            context = {'error_list': error_list}
-        else:
-            flask_user = flask.session['openid']
-
-            context = {
-                'image': flask_user['image'],
-                'username': flask_user['nickname'],
-                'displayname': flask_user['fullname'],
-                'email': flask_user['email'],
-            }
-
-        return flask.render_template(
-            'publisher/account-details.html',
-            **context
-        )
+        error_messages = ', '.join(codes)
+        flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
     except MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
         )
+
+    flask_user = flask.session['openid']
+    context = {
+        'image': flask_user['image'],
+        'username': flask_user['nickname'],
+        'displayname': flask_user['fullname'],
+        'email': flask_user['email'],
+    }
+
+    return flask.render_template(
+        'publisher/account-details.html',
+        **context
+    )
 
 
 def get_account_snaps():
     try:
         account = api.get_account(flask.session)
-        if 'redirect' in account:
-            return account['redirect']
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiConnectionError as api_connection_error:
+        flask.abort(502, str(api_connection_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        codes = []
+        for error in api_response_error_list.errors:
+            if error['code'] == 'user-not-ready':
+                if 'has not signed agreement' in error['message']:
+                    return flask.redirect('/account/agreement')
+                elif 'missing namespace' in error['message']:
+                    return flask.redirect('/account/username')
+            else:
+                codes = error['code']
 
-        error_list = []
-        if 'error_list' in account:
-            for error in account['error_list']:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
-                        return flask.redirect('/account/agreement')
-                    elif 'missing namespace' in error['message']:
-                        return flask.redirect('/account/username')
-                else:
-                    error_list.append(error)
-
-            context = {
-                'error_list': error_list
-            }
-        else:
-            user_snaps = {}
-            registered_snaps = {}
-
-            if '16' in account['snaps']:
-                snaps = account['snaps']['16']
-                for snap in snaps.keys():
-                    if not snaps[snap]['latest_revisions']:
-                        registered_snaps[snap] = snaps[snap]
-                    else:
-                        user_snaps[snap] = snaps[snap]
-
-            flask_user = flask.session['openid']
-
-            context = {
-                'page_slug': 'my-snaps',
-                'snaps': user_snaps,
-                'current_user': flask_user['nickname'],
-                'registered_snaps': registered_snaps,
-            }
-
-        return flask.render_template(
-            'publisher/account-snaps.html',
-            **context
-        )
+        error_messages = ', '.join(codes)
+        flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
     except MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
         )
+
+    user_snaps = {}
+    registered_snaps = {}
+    if '16' in account['snaps']:
+        snaps = account['snaps']['16']
+        for snap in snaps.keys():
+            if not snaps[snap]['latest_revisions']:
+                registered_snaps[snap] = snaps[snap]
+            else:
+                user_snaps[snap] = snaps[snap]
+
+    flask_user = flask.session['openid']
+    context = {
+        'page_slug': 'my-snaps',
+        'snaps': user_snaps,
+        'current_user': flask_user['nickname'],
+        'registered_snaps': registered_snaps,
+    }
+
+    return flask.render_template(
+        'publisher/account-snaps.html',
+        **context
+    )
 
 
 def get_agreement():

@@ -64,12 +64,11 @@ def process_response(response):
 
     if not response.ok:
         if 'error_list' in body:
-            api_error_exception = ApiResponseErrorList(
+            raise ApiResponseErrorList(
                 'The api returned a list of errors',
                 response.status_code,
                 body['error_list']
             )
-            raise api_error_exception
         else:
             raise ApiResponseError(
                 'Unknown error from api',
@@ -91,16 +90,7 @@ def get_authorization_header(session):
 
 
 def get_account(session):
-    authorization = authentication.get_authorization_header(
-        session['macaroon_root'],
-        session['macaroon_discharge']
-    )
-
-    headers = {
-        'X-Ubuntu-Series': '16',
-        'X-Ubuntu-Architecture': 'amd64',
-        'Authorization': authorization
-    }
+    headers = get_authorization_header(session)
 
     response = cache.get(
         url=ACCOUNT_URL,
@@ -111,7 +101,7 @@ def get_account(session):
     if authentication.is_macaroon_expired(response.headers):
         raise MacaroonRefreshRequired()
 
-    return response.json()
+    return process_response(response)
 
 
 def get_agreement(session):
