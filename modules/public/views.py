@@ -170,8 +170,10 @@ def snap_details(snap_name):
         flask.abort(502, str(api_error))
 
     formatted_paragraphs = logic.split_description_into_paragraphs(
-        details['description']
-    )
+        details['description'])
+
+    channel_maps_list = logic.convert_channel_maps(
+        details.get('channel_maps_list'))
 
     status_code = 200
     country_data = []
@@ -222,6 +224,7 @@ def snap_details(snap_name):
         'website': details.get('website'),
         'summary': details['summary'],
         'description_paragraphs': formatted_paragraphs,
+        'channel_map': channel_maps_list,
 
         # Transformed API data
         'filesize': humanize.naturalsize(details['binary_filesize']),
