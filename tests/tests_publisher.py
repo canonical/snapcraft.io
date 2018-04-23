@@ -66,11 +66,11 @@ class PublisherPage(TestCase):
         return get_authorization_header(
             root.serialize(), discharge.serialize())
 
-    def test_snap_measure_not_logged_in(self):
-        response = self.client.get('/account/snaps/lxd/measure')
+    def test_snap_metrics_not_logged_in(self):
+        response = self.client.get('/account/snaps/lxd/metrics')
         self.assertEqual(302, response.status_code)
         self.assertEqual(
-            'http://localhost/login?next=/account/snaps/lxd/measure',
+            'http://localhost/login?next=/account/snaps/lxd/metrics',
             response.location)
 
     def test_username_not_logged_in(self):

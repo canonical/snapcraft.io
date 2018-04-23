@@ -1,12 +1,12 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-  Market details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+  Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
 {% endblock %}
 
 {% block content %}
   <div id="main-content" class="u-no-margin--top">
-    {% set selected_tab='market' %}
+    {% set selected_tab='listing' %}
     {% include "publisher/_header.html" %}
 
     <div class="p-strip is-shallow">
@@ -17,7 +17,7 @@
 
           <div class="row">
             <div class="col-12 u-align--right">
-                <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/market">Revert</a>
+                <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
                 <input type="submit" class="p-button--positive js-market-submit" name="submit_apply" value="Apply"/>
                 <hr />
             </div>

@@ -14,28 +14,28 @@
       <ul class="p-tabs__list u-float--right" role="tablist">
         <li class="p-tabs__item" role="presentation">
           <a
-            href="/account/snaps/{{ snap_name }}/market"
+            href="/account/snaps/{{ snap_name }}/listing"
             class="p-tabs__link"
             tabindex="0"
             role="tab"
-            {% if selected_tab == 'market' %}
+            {% if selected_tab == 'listing' %}
           aria-selected="true"
           {% endif %}
           >
-          Market
+          Listing
           </a>
         </li>
         <li class="p-tabs__item" role="presentation">
           <a
-            href="/account/snaps/{{ snap_name }}/measure"
+            href="/account/snaps/{{ snap_name }}/metrics"
             class="p-tabs__link"
             tabindex="0"
             role="tab"
-            {% if selected_tab == 'measure' %}
+            {% if selected_tab == 'metrics' %}
           aria-selected="true"
           {% endif %}
           >
-          Measure
+          Metrics
           </a>
         </li>
       </ul>

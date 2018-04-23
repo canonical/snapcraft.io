@@ -5,11 +5,11 @@ import io
 from tests.endpoint_testing import BaseTestCases
 
 
-class PostBinaryMetadataMarketPage(BaseTestCases.BaseAppTesting):
+class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         self.snap_id = 'complexId'
         snap_name = "test-snap"
-        endpoint_url = '/account/snaps/{}/market'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
         super().setUp(snap_name, None, endpoint_url)
         self.authorization = self._log_in(self.client)
@@ -17,7 +17,7 @@ class PostBinaryMetadataMarketPage(BaseTestCases.BaseAppTesting):
     def _get_redirect(self):
         return (
             'http://localhost'
-            '/account/snaps/{}/market'
+            '/account/snaps/{}/listing'
         ).format(self.snap_name)
 
     @responses.activate

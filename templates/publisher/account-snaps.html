@@ -74,7 +74,7 @@ My snaps — Linux software in the Snap Store
             <p>
               You've just released a snap to the "{{ snaps[snap].latest_revisions[0].channels[0] }}" channel!<br />
               Want to improve the listing in stores? You can add an icon and screenshots.<br />
-              <a href="/account/snaps/{{ snap }}/market" class="p-button--neutral">Go to market listing</a>
+              <a href="/account/snaps/{{ snap }}/listing" class="p-button--neutral">Go to listing listing</a>
             </p>
           </div>
           <div class="col-3" style="margin-top: -25px">
@@ -99,7 +99,7 @@ My snaps — Linux software in the Snap Store
           {% for snap in snaps|sort %}
             <tr>
               <td>
-                <a href="/account/snaps/{{snap}}/market" class="u-no-margin--top u-vertically-center">
+                <a href="/account/snaps/{{snap}}/listing" class="u-no-margin--top u-vertically-center">
                   {% if snaps[snap].icon_url %}
                     <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
                   {% else %}

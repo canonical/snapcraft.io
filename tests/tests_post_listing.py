@@ -5,19 +5,19 @@ import json
 from tests.endpoint_testing import BaseTestCases
 
 
-class PostMarketPageNotAuth(BaseTestCases.EndpointPostLoggedOut):
+class PostListingPageNotAuth(BaseTestCases.EndpointPostLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = '/account/snaps/{}/market'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
         super().setUp(snap_name, endpoint_url)
 
 
-class PostMetadataMarketPage(BaseTestCases.BaseAppTesting):
+class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         self.snap_id = 'complexId'
         snap_name = "test-snap"
-        endpoint_url = '/account/snaps/{}/market'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
         super().setUp(snap_name, None, endpoint_url)
         self.authorization = self._log_in(self.client)
@@ -25,7 +25,7 @@ class PostMetadataMarketPage(BaseTestCases.BaseAppTesting):
     def _get_redirect(self):
         return (
             'http://localhost'
-            '/account/snaps/{}/market'
+            '/account/snaps/{}/listing'
         ).format(self.snap_name)
 
     @responses.activate
@@ -364,7 +364,7 @@ class PostMetadataMarketPage(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/market.html')
+        self.assert_template_used('publisher/listing.html')
 
         self.assert_context('snap_id', self.snap_id)
         self.assert_context('snap_name', self.snap_name)
@@ -464,7 +464,7 @@ class PostMetadataMarketPage(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/market.html')
+        self.assert_template_used('publisher/listing.html')
 
         # Not updatable fields
         self.assert_context('snap_id', self.snap_id)
@@ -557,7 +557,7 @@ class PostMetadataMarketPage(BaseTestCases.BaseAppTesting):
             self.authorization, called.request.headers.get('Authorization'))
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used('publisher/market.html')
+        self.assert_template_used('publisher/listing.html')
 
         self.assert_context('field_errors', {
             'description': 'error message'

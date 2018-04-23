@@ -4,15 +4,15 @@ import responses
 from tests.endpoint_testing import BaseTestCases
 
 
-class MarketPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
+class ListingPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = '/account/snaps/{}/market'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
         super().setUp(snap_name, endpoint_url)
 
 
-class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
+class GetListingPage(BaseTestCases.EndpointGetLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
 
@@ -20,7 +20,7 @@ class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
         api_url = api_url.format(
             snap_name
         )
-        endpoint_url = '/account/snaps/{}/market'.format(snap_name)
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
         super().setUp(snap_name, api_url, endpoint_url)
 
@@ -83,7 +83,7 @@ class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
             self.authorization, called.request.headers.get('Authorization'))
 
         assert response.status_code == 200
-        self.assert_template_used('publisher/market.html')
+        self.assert_template_used('publisher/listing.html')
 
         self.assert_context('snap_id', 'id')
         self.assert_context('snap_name', snap_name)
@@ -138,7 +138,7 @@ class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
             self.authorization, called.request.headers.get('Authorization'))
 
         assert response.status_code == 200
-        self.assert_template_used('publisher/market.html')
+        self.assert_template_used('publisher/listing.html')
 
         self.assert_context('icon_url', 'this is a url')
 
@@ -181,7 +181,7 @@ class GetMarketPage(BaseTestCases.EndpointGetLoggedIn):
             self.authorization, called.request.headers.get('Authorization'))
 
         assert response.status_code == 200
-        self.assert_template_used('publisher/market.html')
+        self.assert_template_used('publisher/listing.html')
 
         self.assert_context('screenshot_urls', ['this is a url'])
 
