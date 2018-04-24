@@ -15,15 +15,16 @@ SNAP_DETAILS_URL = ''.join([
     SNAPCRAFT_IO_API,
     'snaps/details/{snap_name}',
     '?channel=stable',
-    '&fields=snap_id,package_name,title,summary,description,license,contact,'
-    'website,publisher,prices,media,'
+    '&fields=snap_id,package_name,title,summary,description,license,contact,',
+    'website,publisher,prices,media,',
     # Released (stable) revision fields will eventually be replaced by
     # `channel_maps_list` contextual information.
-    'revision,version,binary_filesize,last_updated'
+    'revision,version,binary_filesize,last_updated,',
+    'channel_maps_list'
 ])
 DETAILS_QUERY_HEADERS = {
     'X-Ubuntu-Series': '16',
-    'X-Ubuntu-Architecture': 'amd64',
+    'X-Ubuntu-Architecture': 'any',
 }
 
 SNAP_METRICS_URL = ''.join([

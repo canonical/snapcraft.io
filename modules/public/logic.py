@@ -281,3 +281,45 @@ def split_description_into_paragraphs(unformatted_description):
         formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
 
     return formatted_paragraphs
+
+
+def convert_channel_maps(channel_maps_list):
+    """
+    Converts channel maps list to format easier to manipulate
+
+    Example:
+    - Input:
+    [
+      {
+        'architecture': 'arch'
+        'map': [{'info': 'release', ...}, ...],
+        'track': 'track 1'
+      },
+      ...
+    ]
+    - Output:
+    {
+      'arch': {
+        'track 1': [{'info': 'release', ...}, ...],
+        ...
+      },
+      ...
+    }
+
+    :param channel_maps_list: The channel maps list returned by the API
+
+    :returns: The channel maps reshaped
+    """
+    channel_maps = {}
+    for channel_map in channel_maps_list:
+        arch = channel_map.get('architecture')
+        track = channel_map.get('track')
+        if arch not in channel_maps:
+            channel_maps[arch] = {}
+        channel_maps[arch][track] = []
+
+        for channel in channel_map['map']:
+            if channel.get('info'):
+                channel_maps[arch][track].append(channel)
+
+    return channel_maps
