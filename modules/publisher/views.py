@@ -131,14 +131,26 @@ def get_agreement():
 
 def post_agreement():
     agreed = flask.request.form.get('i_agree')
-
     if agreed == 'on':
         try:
             api.post_agreement(flask.session, True)
+        except ApiTimeoutError as api_timeout_error:
+            flask.abort(504, str(api_timeout_error))
+        except ApiConnectionError as api_connection_error:
+            flask.abort(502, str(api_connection_error))
+        except ApiResponseDecodeError as api_response_decode_error:
+            flask.abort(502, str(api_response_decode_error))
+        except ApiResponseErrorList as api_response_error_list:
+            codes = [error['code'] for error in api_response_error_list.errors]
+            error_messages = ', '.join(codes)
+            flask.abort(502, error_messages)
+        except ApiResponseError as api_response_error:
+            flask.abort(502, str(api_response_error))
         except MacaroonRefreshRequired:
             return refresh_redirect(
-                '/account/agreement'
+                flask.request.path
             )
+
         return flask.redirect('/account')
     else:
         return flask.redirect('/account/agreement')

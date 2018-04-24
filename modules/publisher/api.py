@@ -133,7 +133,7 @@ def post_agreement(session, agreed):
     if authentication.is_macaroon_expired(agreement_response.headers):
         raise MacaroonRefreshRequired()
 
-    return agreement_response.json()
+    return process_response(agreement_response)
 
 
 def post_username(session, username):
