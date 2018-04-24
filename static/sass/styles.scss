@@ -131,3 +131,6 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-beta-notification';
 @include snapcraft-p-beta-notification;
+
+@import 'snapcraft_distro-chart';
+@include snapcraft-distro-chart;

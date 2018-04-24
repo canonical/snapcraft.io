@@ -53,6 +53,19 @@ def calculate_color(thisCountry, maxCountry, maxColor, minColor):
     return int(colorRange*countryFactor+minColor)
 
 
+def find_metric(full_response, name):
+    """Find a named metric in a metric response
+
+    :param full_response: The JSON response from the metrics API
+    :name: Name of the metric to find
+
+    :returns: A dictionnary with the metric information
+    """
+    for metric in full_response:
+        if metric['metric_name'] == name:
+            return metric
+
+
 def calculate_metrics_countries(geodata):
     """Calculate metrics per countries:
     - Number of users
@@ -158,6 +171,38 @@ def build_country_info(users_by_country, display_number_users=False):
             country_data[country.numeric]['number_of_users'] = number_of_users
 
     return country_data
+
+
+def build_os_info(series):
+    """Build information for OS distro graph
+
+        Input:
+        ```
+        [
+            {
+                'values': [0.4],
+                'name': 'fedora/25'
+            }
+            ...
+        ]
+
+        :param series: A series list from the metrics endpoint
+
+        :returns: A list with the sorted distros
+        """
+    oses = []
+
+    for distro in series:
+        if distro['values'][0]:
+            name = distro['name'].replace('/-', '')
+            oses.append({
+                'name': name.replace('/', ' - '),
+                'value': distro['values'][-1]
+            })
+
+    oses.sort(key=lambda x: x['value'], reverse=True)
+
+    return oses
 
 
 def get_searched_snaps(search_results):

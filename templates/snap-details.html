@@ -97,14 +97,34 @@
         </table>
       </div>
     </div>
-    {% if countries %}
-      <div class="row js-snap-map-holder" style="margin-top: 2rem;">
-        <div class="col-12">
+    <div class="row" style="margin-top: 2rem;">
+      {% if countries %}
+        <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder">
           <h4>Where people are using {{ snap_title }}</h4>
           <div id="js-snap-map" class="snapcraft-territories"></div>
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
+      {% if normalized_os %}
+        <div class="col-4">
+          <h4>Users by distribution (log)</h4>
+          <div class="snapcraft-distro-chart">
+            <div class="snapcraft-distro-chart__names">
+              {% for distro in normalized_os %}
+                <div class="snapcraft-distro-chart__name">{{ distro.name }}</div>
+              {% endfor %}
+            </div>
+            <div class="snapcraft-distro-chart__bars">
+              {% for distro in normalized_os %}
+                <div
+                  class="snapcraft-distro-chart__bar"
+                  style="width: {{ distro.value * 100 }}%"
+                ></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
   </div>
 
 
