@@ -222,8 +222,6 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(2, len(responses.calls))
-
             called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 'https://login.ubuntu.com/api/v2/tokens/refresh',
@@ -239,10 +237,54 @@ class BaseTestCases:
                 'error_list': []
             }
             responses.add(
-                responses.GET, self.api_url,
-                json=payload, status=400)
+                responses.Response(
+                    method=self.method_api,
+                    url=self.api_url,
+                    json=payload,
+                    status=400,
+                )
+            )
 
-            response = self.client.get(self.endpoint_url)
+            if self.method_endpoint == 'GET':
+                response = self.client.get(self.endpoint_url)
+            else:
+                response = self.client.post(self.endpoint_url, data=self.data)
+
+            called = responses.calls[len(responses.calls)-1]
+            self.assertEqual(
+                self.api_url,
+                called.request.url)
+            self.assertEqual(
+                self.authorization,
+                called.request.headers.get('Authorization'))
+
+            assert response.status_code == 502
+
+        @responses.activate
+        def test_custom_error(self):
+            payload = {
+                'error_list': [
+                    {
+                        'code': 'error-code1'
+                    },
+                    {
+                        'code': 'error-code2'
+                    }
+                ]
+            }
+            responses.add(
+                responses.Response(
+                    method=self.method_api,
+                    url=self.api_url,
+                    json=payload,
+                    status=400,
+                )
+            )
+
+            if self.method_endpoint == 'GET':
+                response = self.client.get(self.endpoint_url)
+            else:
+                response = self.client.post(self.endpoint_url, data=self.data)
 
             called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
