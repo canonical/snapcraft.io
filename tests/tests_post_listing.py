@@ -16,24 +16,32 @@ class PostListingPageNotAuth(BaseTestCases.EndpointLoggedOut):
             method_endpoint='POST')
 
 
-class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
+class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         self.snap_id = 'complexId'
+
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
+        api_url = (
+            'https://dashboard.snapcraft.io/dev/api/'
+            'snaps/{}/metadata').format(
+                self.snap_id)
+
+        changes = {
+            "contact": "contact-adress"
+        }
+        data = {
+            'changes': json.dumps(changes),
+            'snap_id': self.snap_id
+        }
 
         super().setUp(
             snap_name=snap_name,
-            api_url=None,
-            endpoint_url=endpoint_url)
-
-        self.authorization = self._log_in(self.client)
-
-    def _get_redirect(self):
-        return (
-            'http://localhost'
-            '/account/snaps/{}/listing'
-        ).format(self.snap_name)
+            api_url=api_url,
+            endpoint_url=endpoint_url,
+            method_api='PUT',
+            method_endpoint='POST',
+            data=data)
 
     @responses.activate
     def test_post_no_data(self):
@@ -58,61 +66,9 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         assert response.location == self._get_location()
 
     @responses.activate
-    def test_expired_macaroon(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
-        responses.add(
-            responses.PUT, api_url,
-            json={}, status=500,
-            headers={'WWW-Authenticate': 'Macaroon needs_refresh=1'})
-        responses.add(
-            responses.POST,
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            json={'discharge_macaroon': 'macaroon'}, status=200)
-
-        changes = {
-            "contact": "contact-adress"
-        }
-
-        response = self.client.post(
-            self.endpoint_url,
-            data={
-                'changes': json.dumps(changes),
-                'snap_id': self.snap_id
-            },
-        )
-
-        self.assertEqual(2, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(
-            api_url,
-            called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-        self.assertEqual(
-            b'{"contact": "contact-adress"}',
-            called.request.body
-            )
-        called = responses.calls[1]
-        self.assertEqual(
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            called.request.url)
-
-        assert response.status_code == 302
-        assert response.location == self._get_redirect()
-
-    @responses.activate
     def test_update_valid_field(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -130,27 +86,21 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
         self.assertEqual(
             b'{"contact": "contact-adress"}',
-            called.request.body
-            )
+            called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_update_description_with_carriage_return(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -168,27 +118,21 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
         self.assertEqual(
             b'{"description": "This is a description\\n"}',
-            called.request.body
-            )
+            called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_update_no_metric_blacklist(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -206,27 +150,21 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
         self.assertEqual(
             b'{"public_metrics_blacklist": []}',
-            called.request.body
-            )
+            called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_update_one_metric_blacklist(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -244,27 +182,21 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
         self.assertEqual(
             b'{"public_metrics_blacklist": ["metric"]}',
-            called.request.body
-            )
+            called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_update_multiple_metrics_blacklist(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -282,25 +214,19 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
         self.assertEqual(
             b'{"public_metrics_blacklist": ["metric1", "metric2"]}',
-            called.request.body
-            )
+            called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_return_error_udpate_one_field(self):
-        metadata_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         metadata_payload = {
             'error_list': [
                 {
@@ -311,7 +237,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         }
 
         responses.add(
-            responses.PUT, metadata_url,
+            responses.PUT, self.api_url,
             json=metadata_payload, status=500)
 
         info_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
@@ -357,7 +283,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            metadata_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
@@ -394,11 +320,6 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
 
     @responses.activate
     def test_return_error_udpate_all_field(self):
-        metadata_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         metadata_payload = {
             'error_list': [
                 {
@@ -409,7 +330,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         }
 
         responses.add(
-            responses.PUT, metadata_url,
+            responses.PUT, self.api_url,
             json=metadata_payload, status=500)
 
         info_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
@@ -464,7 +385,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            metadata_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
@@ -498,11 +419,6 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
 
     @responses.activate
     def test_return_error_invalid_field(self):
-        metadata_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
-                self.snap_id)
-
         metadata_payload = {
             'error_list': [
                 {
@@ -514,7 +430,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         }
 
         responses.add(
-            responses.PUT, metadata_url,
+            responses.PUT, self.api_url,
             json=metadata_payload, status=500)
 
         info_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
@@ -560,7 +476,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            metadata_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             self.authorization, called.request.headers.get('Authorization'))
