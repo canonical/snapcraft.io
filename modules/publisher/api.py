@@ -171,7 +171,7 @@ def get_publisher_metrics(session, json):
     if authentication.is_macaroon_expired(metrics_response.headers):
         raise MacaroonRefreshRequired()
 
-    return metrics_response.json()
+    return process_response(metrics_response)
 
 
 def get_snap_info(snap_name, session):
