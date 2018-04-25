@@ -5,7 +5,7 @@ import responses
 from tests.endpoint_testing import BaseTestCases
 
 
-class MetricsPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
+class MetricsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
@@ -13,7 +13,8 @@ class MetricsPageNotAuth(BaseTestCases.EndpointGetLoggedOut):
         super().setUp(snap_name, endpoint_url)
 
 
-class GetMetricsGetInfoPage(BaseTestCases.EndpointGetLoggedIn):
+class GetMetricsGetInfoPageErrorsHandling(
+        BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         snap_name = "test-snap"
 
@@ -23,7 +24,20 @@ class GetMetricsGetInfoPage(BaseTestCases.EndpointGetLoggedIn):
         )
         endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
 
-        super().setUp(snap_name, api_url, endpoint_url)
+        super().setUp(None, endpoint_url, api_url)
+
+
+class GetMetricsGetInfoPage(BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        snap_name = "test-snap"
+
+        api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
+        api_url = api_url.format(
+            snap_name
+        )
+        endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
+
+        super().setUp(snap_name, endpoint_url, api_url)
 
 
 class GetMetricsPostMetrics(BaseTestCases.BaseAppTesting):

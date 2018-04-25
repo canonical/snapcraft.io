@@ -164,21 +164,32 @@ def post_account_name():
     username = flask.request.form.get('username')
 
     if username:
+        errors = []
         try:
-            response = api.post_username(flask.session, username)
+            api.post_username(flask.session, username)
+        except ApiTimeoutError as api_timeout_error:
+            flask.abort(504, str(api_timeout_error))
+        except ApiConnectionError as api_connection_error:
+            flask.abort(502, str(api_connection_error))
+        except ApiResponseDecodeError as api_response_decode_error:
+            flask.abort(502, str(api_response_decode_error))
+        except ApiResponseErrorList as api_response_error_list:
+            errors = errors + api_response_error_list.errors
+        except ApiResponseError as api_response_error:
+            flask.abort(502, str(api_response_error))
         except MacaroonRefreshRequired:
             return refresh_redirect(
-                '/account/username'
+                flask.request.path
             )
 
-        if 'error_list' in response:
+        if errors:
             return flask.render_template(
                 'username.html',
                 username=username,
-                error_list=response['error_list']
+                error_list=errors
             )
-        else:
-            return flask.redirect('/account')
+
+        return flask.redirect('/account')
     else:
         return flask.redirect('/account/username')
 
