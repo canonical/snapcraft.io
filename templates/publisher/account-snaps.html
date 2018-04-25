@@ -85,7 +85,7 @@ My snaps — Linux software in the Snap Store
                 Want to improve the listing in stores?
                 <a href="/account/snaps/{{ snap }}/market">Edit Store listing</a>
               </li>
-              {% if not snap[snap].latest_revisions[0].channels[0] %}
+              {% if not snaps[snap].latest_revisions[0].channels[0] %}
                 <li>
                   Is your snap ready to release?
                   <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>

@@ -382,7 +382,8 @@ def get_listing_snap(snap_name):
             is_on_stable = (
                 is_on_stable or
                 'channel' in series_map and
-                series_map['channel'] == 'stable')
+                series_map['channel'] == 'stable' and
+                series_map['info'])
 
     # Filter icon & screenshot urls from the media set.
     icon_urls = [
@@ -645,7 +646,8 @@ def post_listing_snap(snap_name):
                     is_on_stable = (
                         is_on_stable or
                         'channel' in series_map and
-                        series_map['channel'] == 'stable')
+                        series_map['channel'] == 'stable' and
+                        series_map['info'])
 
             # Filter icon & screenshot urls from the media set.
             icon_urls = [
