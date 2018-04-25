@@ -11,24 +11,24 @@ class AccountDetailsNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/details'
 
-        super().setUp(None, endpoint_url)
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url)
 
 
-class AccountDetailsPageErrorsHandling(
+class AccountDetailsPage(
        BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         api_url = 'https://dashboard.snapcraft.io/dev/api/account'
         endpoint_url = '/account/details'
 
-        super().setUp(None, endpoint_url, api_url)
-
-
-class AccountDetailsPage(BaseTestCases.EndpointLoggedIn):
-    def setUp(self):
-        api_url = 'https://dashboard.snapcraft.io/dev/api/account'
-        endpoint_url = '/account/details'
-
-        super().setUp(None, endpoint_url, api_url)
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url,
+            method_endpoint='GET',
+            api_url=api_url,
+            method_api='GET'
+        )
 
     @responses.activate
     def test_account(self):

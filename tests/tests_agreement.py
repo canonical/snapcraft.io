@@ -6,13 +6,18 @@ from tests.endpoint_testing import BaseTestCases
 class GetAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/agreement'
-        super().setUp(None, endpoint_url)
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url)
 
 
 class GetAgreementPage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = '/account/agreement'
-        super().setUp(None, None, endpoint_url)
+        super().setUp(
+            snap_name=None,
+            api_url=None,
+            endpoint_url=endpoint_url)
 
     @responses.activate
     def test_agreement_logged_in(self):
@@ -26,7 +31,10 @@ class GetAgreementPage(BaseTestCases.BaseAppTesting):
 class PostAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/agreement'
-        super().setUp(None, endpoint_url, 'POST')
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST')
 
 
 class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
@@ -37,7 +45,14 @@ class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
         }
         endpoint_url = '/account/agreement'
 
-        super().setUp(None, endpoint_url, api_url, 'POST', data)
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url,
+            api_url=api_url,
+            method_endpoint='POST',
+            method_api='POST',
+            data=data
+        )
 
     @responses.activate
     def test_post_agreement_on(self):
