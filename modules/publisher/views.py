@@ -47,7 +47,7 @@ def get_account_details():
                 elif 'missing namespace' in error['message']:
                     return flask.redirect('/account/username')
             else:
-                codes = error['code']
+                codes.append(error['code'])
 
         error_messages = ', '.join(codes)
         flask.abort(502, error_messages)
@@ -90,7 +90,7 @@ def get_account_snaps():
                 elif 'missing namespace' in error['message']:
                     return flask.redirect('/account/username')
             else:
-                codes = error['code']
+                codes.append(error['code'])
 
         error_messages = ', '.join(codes)
         flask.abort(502, error_messages)
@@ -222,7 +222,7 @@ def publisher_snap_metrics(snap_name):
                     elif 'missing namespace' in error['message']:
                         return flask.redirect('/account/username')
                 else:
-                    codes = error['code']
+                    codes.append(error['code'])
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
@@ -276,6 +276,29 @@ def publisher_snap_metrics(snap_name):
             flask.session,
             json=metrics_query_json
         )
+    except ApiTimeoutError as api_timeout_error:
+        flask.abort(504, str(api_timeout_error))
+    except ApiConnectionError as api_connection_error:
+        flask.abort(502, str(api_connection_error))
+    except ApiResponseDecodeError as api_response_decode_error:
+        flask.abort(502, str(api_response_decode_error))
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            flask.abort(404, 'No snap named {}'.format(snap_name))
+        else:
+            codes = []
+            for error in api_response_error_list.errors:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        return flask.redirect('/account/agreement')
+                    elif 'missing namespace' in error['message']:
+                        return flask.redirect('/account/username')
+                else:
+                    codes.append(error['code'])
+            error_messages = ', '.join(codes)
+            flask.abort(502, error_messages)
+    except ApiResponseError as api_response_error:
+        flask.abort(502, str(api_response_error))
     except MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
@@ -366,7 +389,7 @@ def get_listing_snap(snap_name):
                     elif 'missing namespace' in error['message']:
                         return flask.redirect('/account/username')
                 else:
-                    codes = error['code']
+                    codes.append(error['code'])
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:
@@ -437,7 +460,7 @@ def snap_release(snap_name):
                     elif 'missing namespace' in error['message']:
                         return flask.redirect('/account/username')
                 else:
-                    codes = error['code']
+                    codes.append(error['code'])
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
     except ApiResponseError as api_response_error:

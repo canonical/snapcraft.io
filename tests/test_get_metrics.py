@@ -35,7 +35,9 @@ class GetMetricsGetInfoPage(
         )
 
 
-class GetMetricsPostMetrics(BaseTestCases.BaseAppTesting):
+class GetMetricsPostMetrics(
+        BaseTestCases.EndpointLoggedInErrorHandling):
+
     def setUp(self):
         snap_name = "test-snap"
 
@@ -57,50 +59,19 @@ class GetMetricsPostMetrics(BaseTestCases.BaseAppTesting):
         api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/metrics'
         endpoint_url = '/account/snaps/{}/metrics'.format(snap_name)
 
-        super().setUp(snap_name, api_url, endpoint_url)
-        self.authorization = self._log_in(self.client)
+        super().setUp(
+            snap_name=snap_name,
+            endpoint_url=endpoint_url,
+            api_url=api_url,
+            method_endpoint='GET',
+            method_api='POST'
+        )
 
     def _get_redirect(self):
         return (
             'http://localhost'
             '/account/snaps/{}/metrics'
         ).format(self.snap_name)
-
-    @responses.activate
-    def test_expired_macaroon(self):
-        responses.add(
-            responses.POST, self.api_url,
-            json={}, status=500,
-            headers={'WWW-Authenticate': 'Macaroon needs_refresh=1'})
-        responses.add(
-            responses.POST,
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            json={'discharge_macaroon': 'macaroon'}, status=200)
-
-        response = self.client.get(
-            self.endpoint_url,
-        )
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(
-            self.info_url,
-            called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-        called = responses.calls[1]
-        self.assertEqual(
-            self.api_url,
-            called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-        called = responses.calls[2]
-        self.assertEqual(
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            called.request.url)
-
-        assert response.status_code == 302
-        assert response.location == self._get_redirect()
 
     @responses.activate
     def test_no_data(self):
