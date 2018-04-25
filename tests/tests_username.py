@@ -5,13 +5,18 @@ from tests.endpoint_testing import BaseTestCases
 class GetUsernamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/username'
-        super().setUp(None, endpoint_url)
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url)
 
 
 class GetUsernamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = '/account/username'
-        super().setUp(None, None, endpoint_url)
+        super().setUp(
+            snap_name=None,
+            api_url=None,
+            endpoint_url=endpoint_url)
 
     @responses.activate
     def test_agreement_logged_in(self):
@@ -25,7 +30,10 @@ class GetUsernamePage(BaseTestCases.BaseAppTesting):
 class PostUsernamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/username'
-        super().setUp(None, endpoint_url, 'POST')
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST')
 
 
 class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
@@ -36,7 +44,13 @@ class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
         }
         endpoint_url = '/account/username'
 
-        super().setUp(None, endpoint_url, api_url, 'PATCH', data)
+        super().setUp(
+            snap_name=None,
+            api_url=api_url,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST',
+            method_api='PATCH',
+            data=data)
 
     @responses.activate
     def test_post_username(self):

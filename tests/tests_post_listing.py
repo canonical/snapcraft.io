@@ -10,7 +10,10 @@ class PostListingPageNotAuth(BaseTestCases.EndpointLoggedOut):
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
-        super().setUp(snap_name, endpoint_url, 'POST')
+        super().setUp(
+            snap_name=snap_name,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST')
 
 
 class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
@@ -19,7 +22,11 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
 
-        super().setUp(snap_name, None, endpoint_url)
+        super().setUp(
+            snap_name=snap_name,
+            api_url=None,
+            endpoint_url=endpoint_url)
+
         self.authorization = self._log_in(self.client)
 
     def _get_redirect(self):

@@ -64,12 +64,14 @@ class BaseTestCases:
                 root.serialize(), discharge.serialize())
 
     class EndpointLoggedOut(BaseAppTesting):
-        def setUp(self, snap_name, endpoint_url, method='GET'):
-            self.method = method
+        def setUp(self, snap_name,
+                  endpoint_url, method_endpoint='GET'):
+
+            self.method_endpoint = method_endpoint
             super().setUp(snap_name, None, endpoint_url)
 
         def test_access_not_logged_in(self):
-            if self.method == 'GET':
+            if self.method_endpoint == 'GET':
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data={})
@@ -80,11 +82,17 @@ class BaseTestCases:
                 response.location)
 
     class EndpointLoggedIn(BaseAppTesting):
-        def setUp(self, snap_name, endpoint_url, api_url,
-                  method='GET', data=None):
-            super().setUp(snap_name, api_url, endpoint_url)
+        def setUp(self, snap_name,
+                  endpoint_url, api_url,
+                  method_endpoint='GET', method_api='GET', data=None):
 
-            self.method = method
+            super().setUp(
+                snap_name=snap_name,
+                api_url=api_url,
+                endpoint_url=endpoint_url)
+
+            self.method_endpoint = method_endpoint
+            self.method_api = method_api
             self.data = data
             self.authorization = self._log_in(self.client)
 
@@ -92,20 +100,19 @@ class BaseTestCases:
         def test_timeout(self):
             responses.add(
                 responses.Response(
-                    method=self.method,
+                    method=self.method_api,
                     url=self.api_url,
                     body=requests.exceptions.Timeout(),
                     status=504
                 )
             )
 
-            if self.method == 'GET':
+            if self.method_endpoint == 'GET':
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
@@ -119,20 +126,19 @@ class BaseTestCases:
         def test_connection_error(self):
             responses.add(
                 responses.Response(
-                    method=self.method,
+                    method=self.method_api,
                     url=self.api_url,
                     body=requests.exceptions.ConnectionError(),
                     status=500
                 )
             )
 
-            if self.method == 'GET':
+            if self.method_endpoint == 'GET':
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
@@ -148,19 +154,18 @@ class BaseTestCases:
             # call to the function response.json() raise a ValueError exception
             responses.add(
                 responses.Response(
-                    method=self.method,
+                    method=self.method_api,
                     url=self.api_url,
                     status=500
                 )
             )
 
-            if self.method == 'GET':
+            if self.method_endpoint == 'GET':
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
@@ -174,20 +179,19 @@ class BaseTestCases:
         def test_unknown_error(self):
             responses.add(
                 responses.Response(
-                    method=self.method,
+                    method=self.method_api,
                     url=self.api_url,
                     json={},
                     status=500
                 )
             )
 
-            if self.method == 'GET':
+            if self.method_endpoint == 'GET':
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
@@ -201,7 +205,7 @@ class BaseTestCases:
         def test_expired_macaroon(self):
             responses.add(
                 responses.Response(
-                    method=self.method,
+                    method=self.method_api,
                     url=self.api_url,
                     json={},
                     status=500,
@@ -213,21 +217,14 @@ class BaseTestCases:
                 'https://login.ubuntu.com/api/v2/tokens/refresh',
                 json={'discharge_macaroon': 'macaroon'}, status=200)
 
-            if self.method == 'GET':
+            if self.method_endpoint == 'GET':
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
             self.assertEqual(2, len(responses.calls))
 
-            called = responses.calls[0]
-            self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
-            called = responses.calls[1]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 'https://login.ubuntu.com/api/v2/tokens/refresh',
                 called.request.url)
@@ -235,15 +232,7 @@ class BaseTestCases:
             assert response.status_code == 302
             assert response.location == self._get_location()
 
-    class EndpointLoggedInErrorHandling(BaseAppTesting):
-        def setUp(self, snap_name, endpoint_url, api_url,
-                  method='GET', data=None):
-            super().setUp(snap_name, api_url, endpoint_url)
-
-            self.method = method
-            self.data = data
-            self.authorization = self._log_in(self.client)
-
+    class EndpointLoggedInErrorHandling(EndpointLoggedIn):
         @responses.activate
         def test_error_4xx(self):
             payload = {
@@ -255,8 +244,7 @@ class BaseTestCases:
 
             response = self.client.get(self.endpoint_url)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
@@ -277,13 +265,20 @@ class BaseTestCases:
                 ]
             }
             responses.add(
-                responses.GET, self.api_url,
-                json=payload, status=403)
+                responses.Response(
+                    method=self.method_api,
+                    url=self.api_url,
+                    json=payload,
+                    status=403
+                )
+            )
 
-            response = self.client.get(self.endpoint_url)
+            if self.method_endpoint == 'GET':
+                response = self.client.get(self.endpoint_url)
+            else:
+                response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
@@ -307,13 +302,20 @@ class BaseTestCases:
                 ]
             }
             responses.add(
-                responses.GET, self.api_url,
-                json=payload, status=403)
+                responses.Response(
+                    method=self.method_api,
+                    url=self.api_url,
+                    json=payload,
+                    status=403
+                )
+            )
 
-            response = self.client.get(self.endpoint_url)
+            if self.method_endpoint == 'GET':
+                response = self.client.get(self.endpoint_url)
+            else:
+                response = self.client.post(self.endpoint_url, data=self.data)
 
-            self.assertEqual(1, len(responses.calls))
-            called = responses.calls[0]
+            called = responses.calls[len(responses.calls)-1]
             self.assertEqual(
                 self.api_url,
                 called.request.url)
