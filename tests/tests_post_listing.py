@@ -323,6 +323,8 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
             'publisher': {
                 'display-name': 'The publisher'
             },
+            'private': True,
+            'channel_maps_list': [{'map': [{'info': 'info'}]}],
             'contact': 'contact adress',
             'website': 'website_url',
             'public_metrics_enabled': True,
@@ -381,6 +383,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assert_context('website', 'website_url')
         self.assert_context('public_metrics_enabled', True)
         self.assert_context('public_metrics_blacklist', True)
+        self.assert_context('is_on_stable', False)
 
     @responses.activate
     def test_return_error_udpate_all_field(self):
@@ -418,6 +421,8 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
             'publisher': {
                 'display-name': 'The publisher'
             },
+            'private': True,
+            'channel_maps_list': [{'map': [{'info': 'info'}]}],
             'contact': 'contact adress',
             'website': 'website_url',
             'public_metrics_enabled': True,
@@ -476,6 +481,7 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assert_context('publisher_name', 'The publisher')
         self.assert_context('screenshot_urls', [])
         self.assert_context('snap_title', 'Snap title')
+        self.assert_context('is_on_stable', False)
 
         # All updatable fields
         self.assert_context('summary', 'New summary')
@@ -520,6 +526,8 @@ class PostMetadataListingPage(BaseTestCases.BaseAppTesting):
             'publisher': {
                 'display-name': 'The publisher'
             },
+            'private': True,
+            'channel_maps_list': [{'map': [{'info': 'info'}]}],
             'contact': 'contact adress',
             'website': 'website_url',
             'public_metrics_enabled': True,

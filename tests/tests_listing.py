@@ -76,6 +76,8 @@ class GetListingPage(BaseTestCases.EndpointLoggedIn):
             'publisher': {
                 'display-name': 'The publisher'
             },
+            'private': True,
+            'channel_maps_list': [{'map': [{'info': 'info'}]}],
             'contact': 'contact adress',
             'website': 'website_url',
             'public_metrics_enabled': True,
@@ -112,6 +114,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context('website', 'website_url')
         self.assert_context('public_metrics_enabled', True)
         self.assert_context('public_metrics_blacklist', True)
+        self.assert_context('is_on_stable', False)
 
     @responses.activate
     def test_icon(self):
@@ -131,6 +134,8 @@ class GetListingPage(BaseTestCases.EndpointLoggedIn):
             'publisher': {
                 'display-name': 'The publisher'
             },
+            'private': True,
+            'channel_maps_list': [{'map': [{'info': 'info'}]}],
             'contact': 'contact adress',
             'website': 'website_url',
             'public_metrics_enabled': True,
@@ -174,6 +179,8 @@ class GetListingPage(BaseTestCases.EndpointLoggedIn):
             'publisher': {
                 'display-name': 'The publisher'
             },
+            'private': True,
+            'channel_maps_list': [{'map': [{'info': 'info'}]}],
             'contact': 'contact adress',
             'website': 'website_url',
             'public_metrics_enabled': True,

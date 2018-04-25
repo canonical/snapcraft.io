@@ -376,6 +376,14 @@ def get_listing_snap(snap_name):
             flask.request.path
         )
 
+    is_on_stable = False
+    for series in snap_details['channel_maps_list']:
+        for series_map in series['map']:
+            is_on_stable = (
+                is_on_stable or
+                'channel' in series_map and
+                series_map['channel'] == 'stable')
+
     # Filter icon & screenshot urls from the media set.
     icon_urls = [
         m['url'] for m in snap_details['media']
@@ -396,9 +404,11 @@ def get_listing_snap(snap_name):
         "publisher_name": snap_details['publisher']['display-name'],
         "screenshot_urls": screenshot_urls,
         "contact": snap_details['contact'],
+        "private": snap_details['private'],
         "website": snap_details['website'] or '',
         "public_metrics_enabled": snap_details['public_metrics_enabled'],
         "public_metrics_blacklist": snap_details['public_metrics_blacklist'],
+        "is_on_stable": is_on_stable,
     }
 
     return flask.render_template(
@@ -629,6 +639,14 @@ def post_listing_snap(snap_name):
                 else snap_details['website']
             )
 
+            is_on_stable = False
+            for series in snap_details['channel_maps_list']:
+                for series_map in series['map']:
+                    is_on_stable = (
+                        is_on_stable or
+                        'channel' in series_map and
+                        series_map['channel'] == 'stable')
+
             # Filter icon & screenshot urls from the media set.
             icon_urls = [
                 m['url'] for m in snap_details['media']
@@ -666,7 +684,9 @@ def post_listing_snap(snap_name):
                     changes['contact'] if 'contact' in changes
                     else snap_details['contact']
                 ),
+                "private": snap_details['private'],
                 "website": website or '',
+                "is_on_stable": is_on_stable,
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
