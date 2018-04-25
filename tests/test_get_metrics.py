@@ -67,12 +67,6 @@ class GetMetricsPostMetrics(
             method_api='POST'
         )
 
-    def _get_redirect(self):
-        return (
-            'http://localhost'
-            '/account/snaps/{}/metrics'
-        ).format(self.snap_name)
-
     @responses.activate
     def test_no_data(self):
         payload = {
