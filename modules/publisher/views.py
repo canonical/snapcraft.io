@@ -611,21 +611,13 @@ def post_listing_snap(snap_name):
                 )
 
             try:
-                metadata = api.snap_metadata(
+                api.snap_metadata(
                     flask.request.form['snap_id'],
                     flask.session,
                     body_json
                 )
-            except MacaroonRefreshRequired:
-                return refresh_redirect(
-                    flask.request.path
-                )
-            if 'error_list' in metadata:
-                error_list = error_list + metadata['error_list']
-
-        if error_list:
-            try:
-                snap_details = api.get_snap_info(snap_name, flask.session)
+            except ApiConnectionError as api_connection_error:
+                flask.abort(502, str(api_connection_error))
             except ApiTimeoutError as api_timeout_error:
                 flask.abort(504, str(api_timeout_error))
             except ApiResponseDecodeError as api_response_decode_error:
@@ -634,10 +626,28 @@ def post_listing_snap(snap_name):
                 if api_response_error_list.status_code == 404:
                     flask.abort(404, 'No snap named {}'.format(snap_name))
                 else:
-                    errors = api_response_error_list.errors
-                    codes = [error['code'] for error in errors]
-                    error_messages = ', '.join(codes)
-                    flask.abort(502, error_messages)
+                    error_list = error_list + api_response_error_list.errors
+            except ApiResponseError as api_response_error:
+                flask.abort(502, str(api_response_error))
+            except MacaroonRefreshRequired:
+                return refresh_redirect(
+                    flask.request.path
+                )
+
+        if error_list:
+            try:
+                snap_details = api.get_snap_info(snap_name, flask.session)
+            except ApiConnectionError as api_connection_error:
+                flask.abort(502, str(api_connection_error))
+            except ApiTimeoutError as api_timeout_error:
+                flask.abort(504, str(api_timeout_error))
+            except ApiResponseDecodeError as api_response_decode_error:
+                flask.abort(502, str(api_response_decode_error))
+            except ApiResponseErrorList as api_response_error_list:
+                if api_response_error_list.status_code == 404:
+                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                else:
+                    error_list = error_list + api_response_error_list.errors
             except ApiResponseError as api_response_error:
                 flask.abort(502, str(api_response_error))
             except MacaroonRefreshRequired:

@@ -205,7 +205,7 @@ def snap_metadata(snap_id, session, json=None):
     if authentication.is_macaroon_expired(metadata_response.headers):
         raise MacaroonRefreshRequired()
 
-    return metadata_response.json()
+    return process_response(metadata_response)
 
 
 def get_snap_status(snap_id, session):
