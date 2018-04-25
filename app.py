@@ -21,6 +21,7 @@ from flask_openid import OpenID
 from flask_wtf.csrf import CSRFProtect
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.debug import DebuggedApplication
 
 # Local modules
 import modules.authentication as authentication
@@ -38,6 +39,8 @@ from modules.macaroon import (
 app = flask.Flask(__name__)
 talisker.flask.register(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
+if app.debug:
+    app.wsgi_app = DebuggedApplication(app.wsgi_app)
 app.secret_key = os.environ['SECRET_KEY']
 app.url_map.strict_slashes = False
 app.url_map.converters['regex'] = helpers.RegexConverter
