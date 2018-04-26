@@ -523,6 +523,29 @@ def post_listing_snap(snap_name):
                     snap_id,
                     flask.session
                 )
+            except ApiTimeoutError as api_timeout_error:
+                flask.abort(504, str(api_timeout_error))
+            except ApiConnectionError as api_connection_error:
+                flask.abort(502, str(api_connection_error))
+            except ApiResponseDecodeError as api_response_decode_error:
+                flask.abort(502, str(api_response_decode_error))
+            except ApiResponseErrorList as api_response_error_list:
+                if api_response_error_list.status_code == 404:
+                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                else:
+                    codes = []
+                    for error in api_response_error_list.errors:
+                        if error['code'] == 'user-not-ready':
+                            if 'has not signed agreement' in error['message']:
+                                return flask.redirect('/account/agreement')
+                            elif 'missing namespace' in error['message']:
+                                return flask.redirect('/account/username')
+                        else:
+                            codes.append(error['code'])
+                    error_messages = ', '.join(codes)
+                    flask.abort(502, error_messages)
+            except ApiResponseError as api_response_error:
+                flask.abort(502, str(api_response_error))
             except MacaroonRefreshRequired:
                 return refresh_redirect(
                     flask.request.path
@@ -558,19 +581,33 @@ def post_listing_snap(snap_name):
 
             images_json = {'info': dumps(info)}
             try:
-                screenshots_response = api.snap_screenshots(
+                api.snap_screenshots(
                     snap_id,
                     flask.session,
                     images_json,
                     images_files
                 )
+            except ApiTimeoutError as api_timeout_error:
+                flask.abort(504, str(api_timeout_error))
+            except ApiConnectionError as api_connection_error:
+                flask.abort(502, str(api_connection_error))
+            except ApiResponseDecodeError as api_response_decode_error:
+                flask.abort(502, str(api_response_decode_error))
+            except ApiResponseErrorList as api_response_error_list:
+                if api_response_error_list.status_code == 404:
+                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                else:
+                    error_list = error_list + api_response_error_list.errors
+            except ApiResponseError as api_response_error:
+                flask.abort(502, str(api_response_error))
             except MacaroonRefreshRequired:
                 return refresh_redirect(
                     flask.request.path
                 )
-
-            if 'error_list' in screenshots_response:
-                error_list = error_list + screenshots_response['error_list']
+            except MacaroonRefreshRequired:
+                return refresh_redirect(
+                    flask.request.path
+                )
 
         whitelist = [
             'title',

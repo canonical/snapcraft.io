@@ -5,70 +5,114 @@ import io
 from tests.endpoint_testing import BaseTestCases
 
 
-class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
+class PostBinaryMetadataListingPageLoggedOut(
+        BaseTestCases.EndpointLoggedOut):
+    def setUp(self):
+        snap_name = "test-snap"
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
+
+        super().setUp(
+            snap_name=snap_name,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST')
+
+
+class PostMetadataListingPage(
+        BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         self.snap_id = 'complexId'
         snap_name = "test-snap"
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
-
-        super().setUp(snap_name, None, endpoint_url)
-        self.authorization = self._log_in(self.client)
-
-    def _get_redirect(self):
-        return (
-            'http://localhost'
-            '/account/snaps/{}/listing'
-        ).format(self.snap_name)
-
-    @responses.activate
-    def test_get_binary_metadata_macaroon_refresh(self):
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
             'snaps/{}/binary-metadata').format(
                 self.snap_id)
-
-        responses.add(
-            responses.GET, api_url,
-            json=[], status=500,
-            headers={'WWW-Authenticate': 'Macaroon needs_refresh=1'})
-        responses.add(
-            responses.POST,
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            json={'discharge_macaroon': 'macaroon'}, status=200)
 
         changes = {
             "images":  None
         }
-
         data = dict(
             snap_id=self.snap_id,
             changes=json.dumps(changes),
         )
-        response = self.client.post(
-            self.endpoint_url,
-            content_type='multipart/form-data',
+
+        super().setUp(
+            snap_name=snap_name,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST',
+            api_url=api_url,
+            method_api='GET',
             data=data)
 
-        self.assertEqual(2, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(
-            api_url,
-            called.request.url)
-        self.assertEqual(
-            "GET",
-            called.request.method)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-        called = responses.calls[1]
-        self.assertEqual(
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            called.request.url)
 
-        assert response.status_code == 302
-        assert response.location == self._get_redirect()
+class PostBinaryMetadataErrorListingPage(
+        BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        responses.reset()
 
-    @responses.activate
-    def test_post_binary_metadata_macaroon_refresh(self):
+        self.snap_id = 'complexId'
+        snap_name = "test-snap"
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
+        binary_url = (
+            'https://dashboard.snapcraft.io/dev/api/'
+            'snaps/{}/binary-metadata').format(
+                self.snap_id)
+
+        responses.add(
+            responses.GET, binary_url,
+            json=[], status=200)
+        payload = {
+            'error_list': [
+                {
+                    'code': 'this-is-a-code',
+                    'message': 'Great error message'
+                }
+            ]
+        }
+        responses.add(
+            responses.PUT, binary_url,
+            json=payload, status=400)
+
+        api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
+        api_url = api_url.format(
+            snap_name
+        )
+
+        changes = {
+            "images": [
+                {
+                    'file': {},
+                    'url': 'blob:this_is_a_blob',
+                    'name': 'blue.png',
+                    'type': 'icon',
+                    'status': 'new'
+                }
+            ]
+        }
+
+        data = dict(
+            icon=[(io.BytesIO(b'my file contents'), "blue.png")],
+            snap_id=self.snap_id,
+            changes=json.dumps(changes),
+        )
+
+        super().setUp(
+            snap_name=snap_name,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST',
+            api_url=api_url,
+            method_api='GET',
+            data=data)
+
+
+class PostBinaryMetadataListingPage(
+        BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        responses.reset()
+
+        self.snap_id = 'complexId'
+        snap_name = "test-snap"
+        endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
             'snaps/{}/binary-metadata').format(
@@ -77,100 +121,28 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         responses.add(
             responses.GET, api_url,
             json=[], status=200)
-        responses.add(
-            responses.PUT, api_url,
-            json={}, status=500,
-            headers={'WWW-Authenticate': 'Macaroon needs_refresh=1'})
-        responses.add(
-            responses.POST,
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            json={'discharge_macaroon': 'macaroon'}, status=200)
 
         changes = {
-            "images": [
-                {
-                    'file': {},
-                    'url': 'blob:this_is_a_blob',
-                    'name': 'blue.png',
-                    'type': 'screenshot',
-                    'status': 'new'
-                }
-            ]
+            "images":  []
         }
-
         data = dict(
-            screenshots=[(io.BytesIO(b'my file contents'), "blue.png")],
             snap_id=self.snap_id,
             changes=json.dumps(changes),
         )
 
-        response = self.client.post(
-            self.endpoint_url,
-            content_type='multipart/form-data',
+        super().setUp(
+            snap_name=snap_name,
+            endpoint_url=endpoint_url,
+            method_endpoint='POST',
+            api_url=api_url,
+            method_api='PUT',
             data=data)
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(
-            api_url,
-            called.request.url)
-        self.assertEqual(
-            "GET",
-            called.request.method)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-
-        called = responses.calls[1]
-        self.assertEqual(
-            api_url,
-            called.request.url)
-        self.assertEqual(
-            "PUT",
-            called.request.method)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-
-        self.assertIn(
-            b'"key": "blue.png"',
-            called.request.body
-        )
-        self.assertIn(
-            b'"type": "screenshot"',
-            called.request.body
-        )
-        self.assertIn(
-            b'"filename": "blue.png"',
-            called.request.body
-        )
-        hash_screenshot = (
-            '"hash": '
-            '"114d70ba7d04c76d8c217c970f99682025c89b1a6ffe91eb9045653b4b954eb9'
-        )
-        self.assertIn(
-            bytes(hash_screenshot, encoding='utf-8'),
-            called.request.body
-        )
-        called = responses.calls[2]
-        self.assertEqual(
-            'https://login.ubuntu.com/api/v2/tokens/refresh',
-            called.request.url)
-
-        assert response.status_code == 302
-        assert response.location == self._get_redirect()
 
     @responses.activate
     def test_upload_new_screenshot(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/binary-metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.GET, api_url,
-            json=[], status=200)
-        responses.add(
-            responses.PUT, api_url,
-            json={}, status=200)
+            responses.PUT, self.api_url,
+            json={'totot': 'toto'}, status=200)
 
         changes = {
             "images": [
@@ -198,7 +170,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             "GET",
@@ -208,7 +180,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
 
         called = responses.calls[1]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             "PUT",
@@ -238,20 +210,12 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_upload_new_icon(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/binary-metadata').format(
-                self.snap_id)
-
         responses.add(
-            responses.GET, api_url,
-            json=[], status=200)
-        responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -280,7 +244,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             "GET",
@@ -290,7 +254,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
 
         called = responses.calls[1]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             "PUT",
@@ -320,14 +284,11 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
     @responses.activate
     def test_upload_new_screenshot_with_existing_ones(self):
-        api_url = (
-            'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/binary-metadata').format(
-                self.snap_id)
+        responses.reset()
 
         current_screenshots = [
             {
@@ -338,10 +299,10 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
             }
         ]
         responses.add(
-            responses.GET, api_url,
+            responses.GET, self.api_url,
             json=current_screenshots, status=200)
         responses.add(
-            responses.PUT, api_url,
+            responses.PUT, self.api_url,
             json={}, status=200)
 
         changes = {
@@ -376,7 +337,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             "GET",
@@ -386,7 +347,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
 
         called = responses.calls[1]
         self.assertEqual(
-            api_url,
+            self.api_url,
             called.request.url)
         self.assertEqual(
             "PUT",
@@ -433,7 +394,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.BaseAppTesting):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_redirect()
+        assert response.location == self._get_location()
 
 
 if __name__ == '__main__':
