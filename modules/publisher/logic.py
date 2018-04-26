@@ -1,4 +1,5 @@
 import hashlib
+import datetime
 from json import dumps
 
 
@@ -19,6 +20,22 @@ def get_snaps_account_info(account_info):
                 registered_snaps[snap] = snaps[snap]
             else:
                 user_snaps[snap] = snaps[snap]
+
+    now = datetime.datetime.utcnow()
+
+    if len(user_snaps) == 1:
+        for snap in user_snaps:
+            snap_info = user_snaps[snap]
+            revisions = snap_info['latest_revisions']
+
+            revision_since = datetime.datetime.strptime(
+                revisions[-1]['since'],
+                '%Y-%m-%dT%H:%M:%SZ')
+
+            if (abs((revision_since - now).days) < 30 and
+                (not revisions[0]['channels'] or
+                    revisions[0]['channels'][0] == 'edge')):
+                snap_info['is_new'] = True
 
     return user_snaps, registered_snaps
 

@@ -21,7 +21,11 @@ class PublisherLogicTest(unittest.TestCase):
             'snaps': {
                 '16': {
                     'snap1': {
-                        'latest_revisions': 'revision'
+                        'latest_revisions': [
+                            {
+                                'since': '2018-01-01T00:00:00Z'
+                            }
+                        ]
                     }
                 }
             }
@@ -31,7 +35,11 @@ class PublisherLogicTest(unittest.TestCase):
 
         expected_user_snaps = {
             'snap1': {
-                'latest_revisions': 'revision'
+                'latest_revisions': [
+                    {
+                        'since': '2018-01-01T00:00:00Z'
+                    }
+                ]
             }
         }
 
@@ -65,7 +73,11 @@ class PublisherLogicTest(unittest.TestCase):
             'snaps': {
                 '16': {
                     'snap1': {
-                        'latest_revisions': 'revision'
+                        'latest_revisions': [
+                            {
+                                'since': '2018-01-01T00:00:00Z'
+                            }
+                        ]
                     },
                     'snap2': {
                         'latest_revisions': None
@@ -78,7 +90,11 @@ class PublisherLogicTest(unittest.TestCase):
 
         expected_user_snaps = {
             'snap1': {
-                'latest_revisions': 'revision'
+                'latest_revisions': [
+                    {
+                        'since': '2018-01-01T00:00:00Z'
+                    }
+                ]
             }
         }
         expected_registered_snaps = {

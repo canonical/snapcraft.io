@@ -99,7 +99,12 @@ class AccountSnapsPage(
                 '16': {
                     'test': {
                         'snap-name': 'test',
-                        'latest_revisions': [{'test': 'test'}]
+                        'latest_revisions': [
+                            {
+                                'test': 'test',
+                                'since': '2018-01-01T00:00:00Z'
+                            }
+                        ]
                     }
                 }
             }
@@ -133,7 +138,12 @@ class AccountSnapsPage(
                 '16': {
                     'test': {
                         'snap-name': 'test',
-                        'latest_revisions': [{'test': 'test'}]
+                        'latest_revisions': [
+                            {
+                                'test': 'test',
+                                'since': '2018-01-01T00:00:00Z'
+                            }
+                        ]
                     },
                     'test2': {
                         'snap-name': 'test2',
@@ -167,9 +177,14 @@ class AccountSnapsPage(
 
         uploaded_snaps = {
             'test': {
-                 'snap-name': 'test',
-                 'latest_revisions': [{'test': 'test'}]
-             }
+                'snap-name': 'test',
+                'latest_revisions': [
+                    {
+                        'test': 'test',
+                        'since': '2018-01-01T00:00:00Z'
+                    }
+                ]
+            }
         }
 
         assert response.status_code == 200
