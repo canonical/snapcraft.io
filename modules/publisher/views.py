@@ -441,50 +441,6 @@ def get_listing_snap(snap_name):
     )
 
 
-def snap_release(snap_name):
-    try:
-        snap_id = api.get_snap_id(snap_name, flask.session)
-    except ApiTimeoutError as api_timeout_error:
-        flask.abort(504, str(api_timeout_error))
-    except ApiResponseDecodeError as api_response_decode_error:
-        flask.abort(502, str(api_response_decode_error))
-    except ApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            flask.abort(404, 'No snap named {}'.format(snap_name))
-        else:
-            codes = []
-            for error in api_response_error_list.errors:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
-                        return flask.redirect('/account/agreement')
-                    elif 'missing namespace' in error['message']:
-                        return flask.redirect('/account/username')
-                else:
-                    codes.append(error['code'])
-            error_messages = ', '.join(codes)
-            flask.abort(502, error_messages)
-    except ApiResponseError as api_response_error:
-        flask.abort(502, str(api_response_error))
-    except MacaroonRefreshRequired:
-        return refresh_redirect(
-            flask.request.path
-        )
-
-    try:
-        status_json = api.get_snap_status(snap_id, flask.session)
-    except MacaroonRefreshRequired:
-        return refresh_redirect(
-            flask.request.path
-        )
-
-    return flask.render_template(
-        'publisher/release.html',
-        page_slug='my-snaps',
-        snap_name=snap_name,
-        status=status_json,
-    )
-
-
 def build_image_info(image, image_type):
     """
     Build info json structure for image upload
