@@ -217,7 +217,7 @@ def get_snap_status(snap_id, session):
     if authentication.is_macaroon_expired(status_response.headers):
         raise MacaroonRefreshRequired()
 
-    return status_response.json()
+    return process_response(status_response)
 
 
 def snap_screenshots(snap_id, session, data=None, files=None):
