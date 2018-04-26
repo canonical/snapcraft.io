@@ -2,14 +2,16 @@
   <div class="row">
     <div class="col-3">
       <form>
-        <label for="js-channel-map-track-select">Architecture</label>
-        <select id="js-channel-map-architecture-select">
-          <option value="amd64">amd64</option>
-        </select>
-        <label for="js-channel-map-track-select">Track</label>
-        <select id="js-channel-map-track-select">
-          <option value="latest">Latest</option>
-        </select>
+        <div class="js-channel-map-arch-field">
+          <label for="js-channel-map-track-select">Architecture</label>
+          <select id="js-channel-map-architecture-select">
+          </select>
+        </div>
+        <div class="js-channel-map-track-field">
+          <label for="js-channel-map-track-select">Track</label>
+          <select id="js-channel-map-track-select">
+          </select>
+        </div>
       </form>
     </div>
 
@@ -26,7 +28,7 @@
 
       <div id="js-channel-map-stable" class="p-channel-map__row">
         <div class="col-2">
-          Stable
+          <span class="js-channel-name">stable</span>
         </div>
         <div class="col-5">
           <div class="p-code-snippet">
@@ -49,7 +51,7 @@
 
       <div id="js-channel-map-candidate" class="p-channel-map__row">
         <div class="col-2">
-          Candidate
+          <span class="js-channel-name">candidate</span>
         </div>
         <div class="col-5">
           <div class="p-code-snippet">
@@ -72,7 +74,7 @@
 
       <div id="js-channel-map-beta" class="p-channel-map__row">
         <div class="col-2">
-          Beta
+          <span class="js-channel-name">beta</span>
         </div>
         <div class="col-5">
           <div class="p-code-snippet">
@@ -95,7 +97,7 @@
 
       <div id="js-channel-map-edge" class="p-channel-map__row">
         <div class="col-2">
-          Edge
+          <span class="js-channel-name">edge</span>
         </div>
         <div class="col-5">
           <div class="p-code-snippet">
