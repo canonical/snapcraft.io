@@ -36,6 +36,7 @@
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__links--right {
         margin-left: auto; // align to right in flexbox parent
+        margin-right: 20px; // align with the grid
       }
     }
 

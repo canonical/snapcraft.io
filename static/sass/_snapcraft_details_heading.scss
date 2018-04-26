@@ -39,12 +39,70 @@
   .p-snap-install {
     font-size: .875rem; // same as .p-form-help-text
 
+    &__versions {
+      margin-top: 77px; // align with install instructions
+      text-align: right;
+    }
+
     .p-code-snippet {
+      font-size: 1rem;
       margin-top: $sp-x-small;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
       margin-top: $sp-xxx-large;
+    }
+  }
+
+
+  .p-channel-map {
+    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 57px; // just under the header (mobile)
+    z-index: 1;
+
+    @media screen and (min-width: $breakpoint-medium) {
+      top: 48px; // just under the header (desktop)
+    }
+
+    // align hide button with stable install instructions
+    &__hide {
+      text-align: right;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        float: right;
+        margin-left: $sp-x-small;
+        margin-top: 49px; // align with install instructions
+      }
+    }
+
+    &__row {
+      @extend %clearfix;
+      border-bottom: 1px solid $color-mid-light;
+      margin: 0;
+      padding-bottom: 2rem;
+      padding-top: 1rem;
+
+      &--heading {
+        padding-bottom: .5rem;
+        padding-top: 0;
+
+        @media screen and (max-width: $breakpoint-medium) {
+          display: none;
+        }
+      }
+    }
+
+
+    &__footer {
+      @extend %clearfix;
+      margin: 0;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        padding-top: 1rem;
+      }
     }
   }
 }
