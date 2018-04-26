@@ -37,11 +37,6 @@ METADATA_QUERY_URL = ''.join([
     'snaps/{snap_id}/metadata',
 ])
 
-STATUS_QUERY_URL = ''.join([
-    DASHBOARD_API,
-    'snaps/{snap_id}/status',
-])
-
 SCREENSHOTS_QUERY_URL = ''.join([
     DASHBOARD_API,
     'snaps/{snap_id}/binary-metadata'
@@ -206,18 +201,6 @@ def snap_metadata(snap_id, session, json=None):
         raise MacaroonRefreshRequired()
 
     return process_response(metadata_response)
-
-
-def get_snap_status(snap_id, session):
-    status_response = cache.get(
-        STATUS_QUERY_URL.format(snap_id=snap_id),
-        headers=get_authorization_header(session)
-    )
-
-    if authentication.is_macaroon_expired(status_response.headers):
-        raise MacaroonRefreshRequired()
-
-    return status_response.json()
 
 
 def snap_screenshots(snap_id, session, data=None, files=None):

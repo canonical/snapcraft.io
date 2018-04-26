@@ -342,12 +342,6 @@ def get_listing_snap(snap_name):
     return publisher_views.get_listing_snap(snap_name)
 
 
-@app.route('/account/snaps/<snap_name>/release')
-@login_required
-def snap_release(snap_name):
-    return publisher_views.snap_release(snap_name)
-
-
 @app.route('/account/snaps/<snap_name>/listing', methods=['POST'])
 @login_required
 def post_listing_snap(snap_name):
