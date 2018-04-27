@@ -19,7 +19,7 @@
 {% block content %}
   <div class="p-strip--light is-shallow">
     <div class="row">
-      <div class="col-5">
+      <div class="col-4">
         <div class="p-snap-heading">
           {% if icon_url %}
             <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" />
@@ -43,8 +43,7 @@
               readonly="readonly"
             />
             <button
-              class="p-code-snippet__action"
-              id="copy"
+              class="p-code-snippet__action js-clipboard-copy"
               data-clipboard-target="#snap-install">
               Copy to clipboard
             </button>
@@ -54,10 +53,13 @@
           </p>
         </div>
       </div>
-      <div class="col-2">
+      <div class="col-3 p-snap-install__versions">
+        <button class="p-button--neutral js-open-channel-map">Show all versions</button>
       </div>
     </div>
   </div>
+
+  {% include "snap-details/_channel_map.html" %}
 
   {% if screenshots %}
     <div class="p-strip is-shallow">
@@ -162,6 +164,15 @@
         }
       {% endif %}
 
+      {% if channel_map %}
+        try {
+          snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }});
+        } catch(e) {
+          Raven.captureException(e);
+          document.querySelector('.js-open-channel-map').style.display = 'none';
+        }
+      {% endif %}
+
       var ctrlDown = false;
 
       function keyDown(e) {
@@ -198,8 +209,8 @@
         snapInstall.addEventListener('keydown', keyDown);
       }
 
-      if (ClipboardJS) {
-        var copy = new ClipboardJS('#copy');
+      if (typeof ClipboardJS !== 'undefined') {
+        var copy = new ClipboardJS('.js-clipboard-copy');
 
         copy.on('success', function () {
           if (typeof ga !== 'undefined') {

@@ -1,0 +1,135 @@
+<div id='js-channel-map' class="p-strip--light p-channel-map is-closed">
+  <div class="row">
+    <div class="col-3">
+      <form>
+        <div class="js-channel-map-arch-field">
+          <label for="js-channel-map-track-select">Architecture</label>
+          <select id="js-channel-map-architecture-select">
+          </select>
+        </div>
+        <div class="js-channel-map-track-field">
+          <label for="js-channel-map-track-select">Track</label>
+          <select id="js-channel-map-track-select">
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-7">
+
+      <div class="p-channel-map__row p-channel-map__row--heading">
+        <div class="col-2">
+          Channel
+        </div>
+        <div class="col-5">
+          Install instructions
+        </div>
+      </div>
+
+      <div id="js-channel-map-stable" class="p-channel-map__row">
+        <div class="col-2">
+          <span class="js-channel-name">stable</span>
+        </div>
+        <div class="col-5">
+          <div class="p-code-snippet">
+            <input
+              class="p-code-snippet__input"
+              id="snap-install-stable"
+              value="sudo snap install {{ package_name }}"
+              readonly="readonly"
+            />
+            <button
+              class="p-code-snippet__action js-clipboard-copy"
+              data-clipboard-target="#snap-install-stable">
+              Copy to clipboard
+            </button>
+          </div>
+          <p class="p-form-help-text">
+          </p>
+        </div>
+      </div>
+
+      <div id="js-channel-map-candidate" class="p-channel-map__row">
+        <div class="col-2">
+          <span class="js-channel-name">candidate</span>
+        </div>
+        <div class="col-5">
+          <div class="p-code-snippet">
+            <input
+              class="p-code-snippet__input"
+              id="snap-install-candidate"
+              value="sudo snap install {{ package_name }} --candidate"
+              readonly="readonly"
+            />
+            <button
+              class="p-code-snippet__action js-clipboard-copy"
+              data-clipboard-target="#snap-install-candidate">
+              Copy to clipboard
+            </button>
+          </div>
+          <p class="p-form-help-text">
+          </p>
+        </div>
+      </div>
+
+      <div id="js-channel-map-beta" class="p-channel-map__row">
+        <div class="col-2">
+          <span class="js-channel-name">beta</span>
+        </div>
+        <div class="col-5">
+          <div class="p-code-snippet">
+            <input
+              class="p-code-snippet__input"
+              id="snap-install-beta"
+              value="sudo snap install {{ package_name }} --beta"
+              readonly="readonly"
+            />
+            <button
+              class="p-code-snippet__action js-clipboard-copy"
+              data-clipboard-target="#snap-install-beta">
+              Copy to clipboard
+            </button>
+          </div>
+          <p class="p-form-help-text">
+          </p>
+        </div>
+      </div>
+
+      <div id="js-channel-map-edge" class="p-channel-map__row">
+        <div class="col-2">
+          <span class="js-channel-name">edge</span>
+        </div>
+        <div class="col-5">
+          <div class="p-code-snippet">
+            <input
+              class="p-code-snippet__input"
+              id="snap-install-edge"
+              value="sudo snap install {{ package_name }} --edge"
+              readonly="readonly"
+            />
+            <button
+              class="p-code-snippet__action js-clipboard-copy"
+              data-clipboard-target="#snap-install-edge">
+              Copy to clipboard
+            </button>
+          </div>
+          <p class="p-form-help-text">
+          </p>
+        </div>
+      </div>
+
+      <div class="p-channel-map__footer">
+        <div class="col-2"></div>
+        <div class="col-5">
+      <p class="p-form-help-text">
+        To run snaps on your system you'll need to <a href="https://docs.snapcraft.io/core/install">install snapd</a>.
+      </p>
+    </div>
+  </div>
+  </div>
+  <div class="p-channel-map__hide">
+    <button class="p-button--neutral js-hide-channel-map">Hide versions</button>
+  </div>
+  </div>
+</div>
+<div class="p-channel-map-overlay" style="display: none"></div>

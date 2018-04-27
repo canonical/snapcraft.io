@@ -1,4 +1,10 @@
 @mixin snapcraft-details-heading {
+  $color-drawer-overlay: rgba(0, 0, 0, .2);
+
+  .p-code-snippet__input {
+    padding-right: 40px;
+  }
+
   .p-snap-heading {
     display: flex;
 
@@ -37,14 +43,109 @@
   }
 
   .p-snap-install {
-    font-size: .875rem; // same as .p-form-help-text
+
+    &__versions {
+      margin-top: 73px; // align with install instructions
+      text-align: right;
+    }
 
     .p-code-snippet {
+      font-size: 1rem;
       margin-top: $sp-x-small;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
-      margin-top: $sp-xxx-large;
+      margin-top: 41px; // align with channel map
+    }
+  }
+
+
+  .p-channel-map {
+    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(57px); // just under the header (mobile)
+    transition: transform 500ms;
+    z-index: 10;
+
+    @media screen and (min-width: $breakpoint-medium) {
+      transform: translateY(48px); // just under the header (desktop)
+    }
+
+    &.is-closed {
+      transform: translateY(-1111px); // should be high enough to hide it on mobile
+    }
+
+    // align hide button with stable install instructions
+    &__hide {
+      text-align: right;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        float: right;
+        margin-left: $sp-x-small;
+        margin-top: 49px; // align with install instructions
+      }
+    }
+
+
+    &__row {
+      @extend %clearfix;
+      border-bottom: 1px solid $color-mid-light;
+      margin: 0;
+      padding-bottom: 2rem;
+      padding-top: 1rem;
+
+      // hide install instructions when no release in channel
+      &--closed {
+        .p-code-snippet {
+          display: none;
+        }
+
+        .p-form-help-text {
+          margin-top: .125rem; // align with channel name
+        }
+      }
+
+      &--heading {
+        padding-bottom: .5rem;
+        padding-top: 0;
+
+        @media screen and (max-width: $breakpoint-medium) {
+          display: none;
+        }
+      }
+    }
+
+
+    &__footer {
+      @extend %clearfix;
+      margin: 0;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        padding-top: 1rem;
+      }
+    }
+  }
+
+  .p-channel-map-overlay {
+    background: $color-drawer-overlay;
+    bottom: 0;
+    height: auto;
+    left: 0;
+    margin-top: 0;
+    opacity: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    transition: opacity 500ms;
+    width: 100%;
+    z-index: 4;
+
+    .is-closed + & {
+      opacity: 0;
     }
   }
 }
