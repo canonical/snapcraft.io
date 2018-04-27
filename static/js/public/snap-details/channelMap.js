@@ -8,7 +8,7 @@ function setTrack(arch, track, packageName, channelMap) {
     const channelName = track === LATEST ? risk : `${track}/${risk}`;
 
     channelEl.querySelector('.js-channel-name').innerHTML = channelName;
-    const channelData = channelMap[channelName];
+    let channelData = channelMap[channelName];
 
     // update install instructions
     let command = `sudo snap install ${packageName}`;
@@ -24,6 +24,7 @@ function setTrack(arch, track, packageName, channelMap) {
     channelEl.querySelector('input').value = command;
 
     const versionEl = channelEl.querySelector('.p-form-help-text');
+    channelEl.classList.remove('p-channel-map__row--closed');
 
     // show version
     if (channelData) {
@@ -41,10 +42,12 @@ function setTrack(arch, track, packageName, channelMap) {
         versionEl.innerHTML = `No release in ${risk} channel, using ${fallbackRisk} release.`;
       } else {
         versionEl.innerHTML = `No release in ${risk} channel.`;
+        channelEl.classList.add('p-channel-map__row--closed');
       }
     }
   });
 }
+
 
 function getArchTrackChannels(arch, track, channelMapData) {
   const channels = channelMapData[arch][track];

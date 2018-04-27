@@ -81,12 +81,24 @@
       }
     }
 
+
     &__row {
       @extend %clearfix;
       border-bottom: 1px solid $color-mid-light;
       margin: 0;
       padding-bottom: 2rem;
       padding-top: 1rem;
+
+      // hide install instructions when no release in channel
+      &--closed {
+        .p-code-snippet {
+          display: none;
+        }
+
+        .p-form-help-text {
+          margin-top: .125rem; // align with channel name
+        }
+      }
 
       &--heading {
         padding-bottom: .5rem;
