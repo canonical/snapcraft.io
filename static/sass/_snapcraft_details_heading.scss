@@ -1,4 +1,8 @@
 @mixin snapcraft-details-heading {
+  .p-code-snippet__input {
+    padding-right: 40px;
+  }
+
   .p-snap-heading {
     display: flex;
 
@@ -37,10 +41,9 @@
   }
 
   .p-snap-install {
-    font-size: .875rem; // same as .p-form-help-text
 
     &__versions {
-      margin-top: 77px; // align with install instructions
+      margin-top: 80px; // align with install instructions
       text-align: right;
     }
 
