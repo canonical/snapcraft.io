@@ -65,7 +65,7 @@
     right: 0;
     top: 57px; // just under the header (mobile)
     transition: top 500ms;
-    z-index: 1;
+    z-index: 10;
 
     @media screen and (min-width: $breakpoint-medium) {
       top: 48px; // just under the header (desktop)
@@ -123,6 +123,26 @@
       @media screen and (min-width: $breakpoint-medium) {
         padding-top: 1rem;
       }
+    }
+  }
+
+  .p-channel-map-overlay {
+    background: $color-modal-overlay; // from _patterns_maas_modal.scss
+    bottom: 0;
+    height: auto;
+    left: 0;
+    margin-top: 0;
+    opacity: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    transition: opacity 500ms;
+    width: 100%;
+    z-index: 4;
+
+    .is-closed + & {
+      opacity: 0;
     }
   }
 }

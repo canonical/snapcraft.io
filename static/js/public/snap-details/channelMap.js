@@ -103,14 +103,22 @@ function setArchitecture(arch, packageName, channelMapData) {
 
 export default function initChannelMap(el, packageName, channelMapData) {
   const channelMapEl = document.querySelector(el);
+  const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
+  let closeTimeout;
 
   // init open/hide buttons
   document.querySelector('.js-open-channel-map').addEventListener('click', () => {
-    channelMapEl.classList.remove('is-closed');
+    // clear hiding animation if it's still running
+    clearTimeout(closeTimeout);
+    // make sure overlay is displayed before CSS transitions are triggered
+    channelOverlayEl.style.display = 'block';
+    setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
   });
 
   document.querySelector('.js-hide-channel-map').addEventListener('click', () => {
     channelMapEl.classList.add('is-closed');
+    // hide overlay after CSS transition is finished
+    closeTimeout = setTimeout(() => channelOverlayEl.style.display = 'none', 500);
   });
 
   // get architectures from data
