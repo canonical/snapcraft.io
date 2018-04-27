@@ -179,14 +179,22 @@ def snap_details(snap_name):
     country_data = []
     try:
         today = datetime.datetime.utcnow().date()
-        week_ago = today - relativedelta.relativedelta(weeks=1)
+        yesterday = today - relativedelta.relativedelta(days=1)
+        country_metric_name = 'installed_base_by_country_percent'
+        os_metric_name = 'weekly_installed_base_by_operating_system_normalized'
 
         metrics_query_json = [
             {
-                "metric_name": "installed_base_by_country_percent",
+                "metric_name": country_metric_name,
                 "snap_id": details['snap_id'],
-                "start": week_ago.strftime('%Y-%m-%d'),
-                "end": today.strftime('%Y-%m-%d')
+                "start": yesterday.strftime('%Y-%m-%d'),
+                "end": yesterday.strftime('%Y-%m-%d')
+            },
+            {
+                "metric_name": os_metric_name,
+                "snap_id": details['snap_id'],
+                "start": yesterday.strftime('%Y-%m-%d'),
+                "end": yesterday.strftime('%Y-%m-%d')
             }
         ]
 
@@ -195,12 +203,17 @@ def snap_details(snap_name):
             metrics_query_json
         )
 
-        users_by_country = logic.calculate_metrics_countries(
-            metrics_response[0]['series']
-        )
-        country_data = logic.build_country_info(users_by_country)
     except ApiError as api_error:
         status_code, error_info = _handle_errors(api_error)
+
+    oses = logic.find_metric(metrics_response, os_metric_name)
+    normalized_os = logic.build_os_info(oses['series'])
+
+    territories = logic.find_metric(metrics_response, country_metric_name)
+    users_by_country = logic.calculate_metrics_countries(
+        territories['series']
+    )
+    country_data = logic.build_country_info(users_by_country)
 
     # filter out banner and banner-icon images from screenshots
     screenshots = [
@@ -236,6 +249,7 @@ def snap_details(snap_name):
 
         # Data from metrics API
         'countries': country_data,
+        'normalized_os': normalized_os,
 
         # Context info
         'is_linux': (

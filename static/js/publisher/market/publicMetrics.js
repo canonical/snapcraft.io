@@ -1,5 +1,6 @@
 const NAMES = {
-  'public_metrics_territories': 'installed_base_by_country_percent'
+  'public_metrics_territories': 'installed_base_by_country_percent',
+  'public_metrics_distros': 'weekly_installed_base_by_operating_system_normalized'
 };
 
 function publicMetrics(form) {
