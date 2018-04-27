@@ -3,6 +3,7 @@
   $navigation-hover-color: darken($color-navigation-background, 8%); // from #252525 to #111
 
   .p-navigation {
+    z-index: 100; // appear over channel map
     // custom styles for dark header with hover
     @media (min-width: $breakpoint-navigation-threshold + 1) {
       .p-navigation__link {

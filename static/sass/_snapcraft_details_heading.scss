@@ -64,10 +64,15 @@
     position: absolute;
     right: 0;
     top: 57px; // just under the header (mobile)
+    transition: top 500ms;
     z-index: 1;
 
     @media screen and (min-width: $breakpoint-medium) {
       top: 48px; // just under the header (desktop)
+    }
+
+    &.is-closed {
+      top: -1111px; // should be high enough to hide it on mobile
     }
 
     // align hide button with stable install instructions

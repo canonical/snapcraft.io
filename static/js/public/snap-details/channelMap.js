@@ -106,11 +106,11 @@ export default function initChannelMap(el, packageName, channelMapData) {
 
   // init open/hide buttons
   document.querySelector('.js-open-channel-map').addEventListener('click', () => {
-    channelMapEl.style.display = 'block';
+    channelMapEl.classList.remove('is-closed');
   });
 
   document.querySelector('.js-hide-channel-map').addEventListener('click', () => {
-    channelMapEl.style.display = 'none';
+    channelMapEl.classList.add('is-closed');
   });
 
   // get architectures from data
