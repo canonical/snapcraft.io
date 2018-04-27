@@ -63,7 +63,20 @@ function setArchitecture(arch, packageName, channelMapData) {
   }
 
   const tracks = Object.keys(channelMapData[arch]);
-  const track = channelMapData[arch][LATEST] ? LATEST : tracks[0];
+
+  // sort tracks alphabetically with 'latest' always first
+  tracks.sort((a, b) => {
+    if (a === LATEST) {
+      return -1;
+    }
+    if (b === LATEST) {
+      return 1;
+    }
+    return a <= b ? -1 : 1;
+  });
+
+  // by default take first track (which should be 'latest')
+  const track = tracks[0];
 
   if (!track) {
     return;
