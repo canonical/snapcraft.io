@@ -1,4 +1,6 @@
 @mixin snapcraft-details-heading {
+  $color-drawer-overlay: rgba(0, 0, 0, .2);
+
   .p-code-snippet__input {
     padding-right: 40px;
   }
@@ -63,16 +65,17 @@
     left: 0;
     position: absolute;
     right: 0;
-    top: 57px; // just under the header (mobile)
-    transition: top 500ms;
+    top: 0;
+    transform: translateY(57px); // just under the header (mobile)
+    transition: transform 500ms;
     z-index: 10;
 
     @media screen and (min-width: $breakpoint-medium) {
-      top: 48px; // just under the header (desktop)
+      transform: translateY(48px); // just under the header (desktop)
     }
 
     &.is-closed {
-      top: -1111px; // should be high enough to hide it on mobile
+      transform: translateY(-1111px); // should be high enough to hide it on mobile
     }
 
     // align hide button with stable install instructions
@@ -127,7 +130,7 @@
   }
 
   .p-channel-map-overlay {
-    background: $color-modal-overlay; // from _patterns_maas_modal.scss
+    background: $color-drawer-overlay;
     bottom: 0;
     height: auto;
     left: 0;
