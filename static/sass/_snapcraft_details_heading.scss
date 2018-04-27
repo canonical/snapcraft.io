@@ -43,7 +43,7 @@
   .p-snap-install {
 
     &__versions {
-      margin-top: 80px; // align with install instructions
+      margin-top: 73px; // align with install instructions
       text-align: right;
     }
 
@@ -53,7 +53,7 @@
     }
 
     @media screen and (min-width: $breakpoint-medium) {
-      margin-top: $sp-xxx-large;
+      margin-top: 41px; // align with channel map
     }
   }
 
