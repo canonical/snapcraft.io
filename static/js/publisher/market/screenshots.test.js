@@ -42,7 +42,7 @@ describe('templates', () => {
       const result = templates.screenshot(screenshot);
       wrapper.innerHTML = result;
 
-      expect(wrapper.querySelector('img').classList.contains('selected')).toBe(true);
+      expect(wrapper.querySelector('.p-screenshot').classList.contains('is-selected')).toBe(true);
     });
 
     it('should mark deleted screenshots', () => {
@@ -50,7 +50,7 @@ describe('templates', () => {
       const result = templates.screenshot(screenshot);
       wrapper.innerHTML = result;
 
-      expect(wrapper.querySelector('.p-screenshot__holder').classList.contains('is-deleted')).toBe(true);
+      expect(wrapper.querySelector('.p-screenshot').classList.contains('is-deleted')).toBe(true);
     });
   });
 

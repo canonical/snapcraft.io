@@ -8,13 +8,16 @@ const templates = {
 
   screenshot: (screenshot) => `
     <div class="col-2">
-      <div class="p-screenshot__holder ${screenshot.status === 'delete' ? 'is-deleted' : ''}">
+      <label
+        ${screenshot.status === 'delete' ? '' : 'tabindex="0"'}
+        class="p-screenshot ${screenshot.status === 'delete' ? 'is-deleted' : ''} ${screenshot.selected ? 'is-selected' : ''}">
+        <input class="p-screenshot__checkbox" tabindex="-1" type="checkbox" ${screenshot.selected ? 'checked="checked"' : ''} >
         <img
-          class="p-screenshot ${screenshot.selected ? 'selected' : ''}"
+          class="p-screenshot__image"
           src="${screenshot.url}"
           alt=""
         />
-      </div>
+      </label>
     </div>
   `,
 
@@ -183,9 +186,10 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     }
 
     // clicking on screenshot to select it
-    if (event.target.classList.contains('p-screenshot')) {
+    if (event.target.closest('.p-screenshot')) {
       event.preventDefault();
-      selectScreenshot(event.target.src);
+      const img = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image');
+      selectScreenshot(img.src);
       setTimeout(() => {
         render();
       }, 50);
@@ -195,8 +199,23 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     render();
   });
 
+  screenshotsWrapper.addEventListener('keydown', (event) => {
+    if ((event.key === " " || event.key == "Spacebar") &&
+        event.target.closest('.p-screenshot')) {
+      event.preventDefault();
+      const img = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image');
+      selectScreenshot(img.src);
+      setTimeout(() => {
+        render();
+        // after rendering find image with same src and focus it back
+        screenshotsWrapper.querySelector(`[src="${img.src}"]`).closest('.p-screenshot').focus();
+      }, 50);
+      return;
+    }
+  });
+
   document.addEventListener('dblclick', event => {
-    if (event.target.classList.contains('p-screenshot')) {
+    if (event.target.classList.contains('p-screenshot__image')) {
       event.preventDefault();
       let screenshot = state.images.filter(image => image.selected)[0];
 
