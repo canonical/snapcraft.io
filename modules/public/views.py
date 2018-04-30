@@ -180,7 +180,7 @@ def snap_details(snap_name):
     try:
         today = datetime.datetime.utcnow().date()
         yesterday = today - relativedelta.relativedelta(days=1)
-        country_metric_name = 'installed_base_by_country_percent'
+        country_metric_name = 'weekly_installed_base_by_country_percent'
         os_metric_name = 'weekly_installed_base_by_operating_system_normalized'
 
         metrics_query_json = [
