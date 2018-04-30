@@ -3,12 +3,21 @@
     <div class="col-3">
       <form>
         <div class="js-channel-map-arch-field">
-          <label for="js-channel-map-track-select">Architecture</label>
+          <label for="js-channel-map-track-select">
+            Architecture
+          </label>
           <select id="js-channel-map-architecture-select">
           </select>
         </div>
         <div class="js-channel-map-track-field">
-          <label for="js-channel-map-track-select">Track</label>
+          <label for="js-channel-map-track-select">
+            Track
+            <span class="p-tooltip is-icon" aria-describedby="tooltip-track">
+              <i class="p-icon--information"></i>
+              <span class="p-tooltip__message" role="tooltip" id="tooltip-track">This application has alternate series or 'tracks'
+where you can install and get updates from.</span>
+            </span>
+          </label>
           <select id="js-channel-map-track-select">
           </select>
         </div>
@@ -20,6 +29,12 @@
       <div class="p-channel-map__row p-channel-map__row--heading">
         <div class="col-2">
           Channel
+          <span class="p-tooltip p-tooltip--btm-center" aria-describedby="tooltip-channel">
+            <i class="p-icon--information"></i>
+            <span class="p-tooltip__message" role="tooltip" id="tooltip-channel">Install this application from ‘channels’ of varying stability.
+For example, Edge is used for development and testing, whereas
+Stable is used for well tested and production ready versions.</span>
+          </span>
         </div>
         <div class="col-5">
           Install instructions

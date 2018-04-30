@@ -148,4 +148,20 @@
       opacity: 0;
     }
   }
+
+  // because of Vanilla `* + *` top margin
+  .p-tooltip__message {
+    margin: 0;
+  }
+
+  // positioning fixes for track tooltip
+  .p-tooltip.is-icon {
+    .p-tooltip__message {
+      left: -3rem; // position in bottom-left under the label and icon
+
+      &::before {
+        left: 3rem; // reposition arrow correctly under the icon
+      }
+    }
+  }
 }
