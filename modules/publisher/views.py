@@ -8,6 +8,7 @@ from dateutil import relativedelta
 from json import dumps, loads
 from operator import itemgetter
 from modules.exceptions import (
+    ApiError,
     ApiTimeoutError,
     ApiConnectionError,
     ApiResponseDecodeError,
@@ -26,37 +27,46 @@ def refresh_redirect(path):
     return flask.redirect(path)
 
 
+def _handle_errors(api_error: ApiError):
+    if type(api_error) is ApiTimeoutError:
+        return flask.abort(504, str(api_error))
+    elif type(api_error) is MacaroonRefreshRequired:
+        return refresh_redirect(
+            flask.request.path
+        )
+    else:
+        return flask.abort(502, str(api_error))
+
+
+def _handle_error_list(errors):
+    codes = []
+    # TODO This has to be moved in the API module.
+    # Should be done once all the errors catchings
+    # are handled by this function.
+    # https://github.com/canonical-websites/snapcraft.io/issues/609
+    for error in errors:
+        if error['code'] == 'user-not-ready':
+            if 'has not signed agreement' in error['message']:
+                return flask.redirect('/account/agreement')
+            elif 'missing namespace' in error['message']:
+                return flask.redirect('/account/username')
+        else:
+            codes.append(error['code'])
+
+    error_messages = ', '.join(codes)
+    return flask.abort(502, error_messages)
+
+
 def get_account_details():
     try:
         # We don't use the data from this endpoint.
         # It is mostly used to make sure the user has signed
         # the terms and conditions.
         api.get_account(flask.session)
-    except ApiTimeoutError as api_timeout_error:
-        flask.abort(504, str(api_timeout_error))
-    except ApiConnectionError as api_connection_error:
-        flask.abort(502, str(api_connection_error))
-    except ApiResponseDecodeError as api_response_decode_error:
-        flask.abort(502, str(api_response_decode_error))
     except ApiResponseErrorList as api_response_error_list:
-        codes = []
-        for error in api_response_error_list.errors:
-            if error['code'] == 'user-not-ready':
-                if 'has not signed agreement' in error['message']:
-                    return flask.redirect('/account/agreement')
-                elif 'missing namespace' in error['message']:
-                    return flask.redirect('/account/username')
-            else:
-                codes.append(error['code'])
-
-        error_messages = ', '.join(codes)
-        flask.abort(502, error_messages)
-    except ApiResponseError as api_response_error:
-        flask.abort(502, str(api_response_error))
-    except MacaroonRefreshRequired:
-        return refresh_redirect(
-            flask.request.path
-        )
+        return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
 
     flask_user = flask.session['openid']
     context = {
