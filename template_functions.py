@@ -41,3 +41,11 @@ def static_url(filename):
             file_hash.update(chunk)
 
     return url + '?v=' + file_hash.hexdigest()[:7]
+
+
+def format_number(number: int):
+    """
+    Template function that transforms a int into a string
+    with a comma between every thousands
+    """
+    return '{:,}'.format(number)
