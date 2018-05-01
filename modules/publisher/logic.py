@@ -84,13 +84,23 @@ def build_metrics_json(
     :returns A dictionnary with the filters for the metrics API, by default
     returns also the 'weekly_installed_base_by_country'.
     """
-    today = datetime.datetime.utcnow().date()
-    end = today - relativedelta.relativedelta(days=1)
+
+    # We want to give time to the store to preoccess all the metrics,
+    # since the metrics are processed during the night
+    # https://github.com/canonical-websites/snapcraft.io/pull/616
+    twelve_hours = relativedelta.relativedelta(hours=12)
+    last_metrics_processed = datetime.datetime.utcnow() - twelve_hours
+
+    one_day = relativedelta.relativedelta(days=1)
+    previous_processed_metrics = last_metrics_processed.date() - one_day
+
     start = None
     if metric_bucket == 'd':
-        start = end - relativedelta.relativedelta(days=metric_period)
+        start = previous_processed_metrics - relativedelta.relativedelta(
+            days=metric_period)
     elif metric_bucket == 'm':
-        start = end - relativedelta.relativedelta(months=metric_period)
+        start = previous_processed_metrics - relativedelta.relativedelta(
+            months=metric_period)
 
     if installed_base_metric == 'version':
         installed_base = "weekly_installed_base_by_version"
@@ -103,13 +113,13 @@ def build_metrics_json(
                 "metric_name": installed_base,
                 "snap_id": snap_id,
                 "start": start.strftime('%Y-%m-%d'),
-                "end": end.strftime('%Y-%m-%d')
+                "end": previous_processed_metrics.strftime('%Y-%m-%d')
             },
             {
                 "metric_name": "weekly_installed_base_by_country",
                 "snap_id": snap_id,
-                "start": end.strftime('%Y-%m-%d'),
-                "end": end.strftime('%Y-%m-%d')
+                "start": previous_processed_metrics.strftime('%Y-%m-%d'),
+                "end": previous_processed_metrics.strftime('%Y-%m-%d')
             }
         ]
     }

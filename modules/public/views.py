@@ -178,8 +178,15 @@ def snap_details(snap_name):
     status_code = 200
     country_data = []
     try:
-        today = datetime.datetime.utcnow().date()
-        yesterday = today - relativedelta.relativedelta(days=1)
+        # We want to give time to the store to preoccess all the metrics,
+        # since the metrics are processed during the night
+        # https://github.com/canonical-websites/snapcraft.io/pull/616
+        twelve_hours = relativedelta.relativedelta(hours=12)
+        last_metrics_processed = datetime.datetime.utcnow() - twelve_hours
+
+        one_day = relativedelta.relativedelta(days=1)
+        previous_processed_metrics = last_metrics_processed.date() - one_day
+
         country_metric_name = 'weekly_installed_base_by_country_percent'
         os_metric_name = 'weekly_installed_base_by_operating_system_normalized'
 
@@ -187,14 +194,14 @@ def snap_details(snap_name):
             {
                 "metric_name": country_metric_name,
                 "snap_id": details['snap_id'],
-                "start": yesterday.strftime('%Y-%m-%d'),
-                "end": yesterday.strftime('%Y-%m-%d')
+                "start": previous_processed_metrics.strftime('%Y-%m-%d'),
+                "end": previous_processed_metrics.strftime('%Y-%m-%d')
             },
             {
                 "metric_name": os_metric_name,
                 "snap_id": details['snap_id'],
-                "start": yesterday.strftime('%Y-%m-%d'),
-                "end": yesterday.strftime('%Y-%m-%d')
+                "start": previous_processed_metrics.strftime('%Y-%m-%d'),
+                "end": previous_processed_metrics.strftime('%Y-%m-%d')
             }
         ]
 
