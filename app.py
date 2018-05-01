@@ -108,6 +108,7 @@ def utility_processor():
         'contains': template_functions.contains,
         'join': template_functions.join,
         'static_url': template_functions.static_url,
+        'format_number': template_functions.format_number,
     }
 
 

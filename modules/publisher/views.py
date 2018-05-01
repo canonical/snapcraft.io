@@ -1,11 +1,9 @@
-import datetime
 import flask
 import hashlib
 import modules.authentication as authentication
 import modules.public.logic as public_logic
 import modules.publisher.api as api
 import modules.publisher.logic as logic
-from dateutil import relativedelta
 from json import dumps, loads
 from operator import itemgetter
 from modules.exceptions import (
@@ -186,156 +184,74 @@ def publisher_snap_metrics(snap_name):
     """
     try:
         details = api.get_snap_info(snap_name, flask.session)
-    except ApiTimeoutError as api_timeout_error:
-        flask.abort(504, str(api_timeout_error))
-    except ApiConnectionError as api_connection_error:
-        flask.abort(502, str(api_connection_error))
-    except ApiResponseDecodeError as api_response_decode_error:
-        flask.abort(502, str(api_response_decode_error))
     except ApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
-            flask.abort(404, 'No snap named {}'.format(snap_name))
+            return flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            codes = []
-            for error in api_response_error_list.errors:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
-                        return flask.redirect('/account/agreement')
-                    elif 'missing namespace' in error['message']:
-                        return flask.redirect('/account/username')
-                else:
-                    codes.append(error['code'])
-            error_messages = ', '.join(codes)
-            flask.abort(502, error_messages)
-    except ApiResponseError as api_response_error:
-        flask.abort(502, str(api_response_error))
-    except MacaroonRefreshRequired:
-        return refresh_redirect(
-            flask.request.path
-        )
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
 
-    metric_period = flask.request.args.get('period', default='30d', type=str)
-    metric_bucket = ''.join([i for i in metric_period if not i.isdigit()])
-    metric_period_int = int(metric_period[:-1])
+    metric_requested = logic.extract_metrics_period(
+        flask.request.args.get('period', default='30d', type=str))
 
-    installed_base_metric = flask.request.args.get(
-        'active-devices',
-        default='version',
-        type=str
-    )
+    installed_base_metric = logic.verify_base_metrics(
+        flask.request.args.get(
+            'active-devices',
+            default='version',
+            type=str))
 
-    today = datetime.datetime.utcnow().date()
-    end = today - relativedelta.relativedelta(days=1)
-    start = None
-    if metric_bucket == 'd':
-        start = end - relativedelta.relativedelta(days=metric_period_int)
-    elif metric_bucket == 'm':
-        start = end - relativedelta.relativedelta(months=metric_period_int)
-
-    if installed_base_metric == 'version':
-        installed_base = "weekly_installed_base_by_version"
-    elif installed_base_metric == 'os':
-        installed_base = "weekly_installed_base_by_operating_system"
-    metrics_query_json = {
-        "filters": [
-            {
-                "metric_name": installed_base,
-                "snap_id": details['snap_id'],
-                "start": start.strftime('%Y-%m-%d'),
-                "end": end.strftime('%Y-%m-%d')
-            },
-            {
-                "metric_name": "weekly_installed_base_by_country",
-                "snap_id": details['snap_id'],
-                "start": end.strftime('%Y-%m-%d'),
-                "end": end.strftime('%Y-%m-%d')
-            }
-        ]
-    }
+    metrics_query_json = logic.build_metrics_json(
+        snap_id=details['snap_id'],
+        metric_period=metric_requested['int'],
+        metric_bucket=metric_requested['bucket'],
+        installed_base_metric=installed_base_metric)
 
     try:
         metrics_response_json = api.get_publisher_metrics(
             flask.session,
-            json=metrics_query_json
-        )
-    except ApiTimeoutError as api_timeout_error:
-        flask.abort(504, str(api_timeout_error))
-    except ApiConnectionError as api_connection_error:
-        flask.abort(502, str(api_connection_error))
-    except ApiResponseDecodeError as api_response_decode_error:
-        flask.abort(502, str(api_response_decode_error))
+            json=metrics_query_json)
     except ApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
-            flask.abort(404, 'No snap named {}'.format(snap_name))
+            return flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            codes = []
-            for error in api_response_error_list.errors:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
-                        return flask.redirect('/account/agreement')
-                    elif 'missing namespace' in error['message']:
-                        return flask.redirect('/account/username')
-                else:
-                    codes.append(error['code'])
-            error_messages = ', '.join(codes)
-            flask.abort(502, error_messages)
-    except ApiResponseError as api_response_error:
-        flask.abort(502, str(api_response_error))
-    except MacaroonRefreshRequired:
-        return refresh_redirect(
-            flask.request.path
-        )
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
 
-    nodata = True
-
-    for metric in metrics_response_json['metrics']:
-        if metric['status'] == 'OK':
-            nodata = False
-
-    active_devices = metrics_response_json['metrics'][0]
-    active_devices['series'] = sorted(
-        active_devices['series'],
-        key=itemgetter('name')
-    )
-    latest_active_devices = 0
-
-    for series_index, series in enumerate(active_devices['series']):
-        for index, value in enumerate(series['values']):
-            if value is None:
-                active_devices['series'][series_index]['values'][index] = 0
-        values = series['values']
-        if len(values) == len(active_devices['buckets']):
-            latest_active_devices += values[len(values)-1]
+    nodata = logic.has_data(metrics_response_json['metrics'])
 
     active_devices = {
-        'series': active_devices['series'],
-        'buckets': active_devices['buckets']
+        'series': metrics_response_json['metrics'][0]['series'],
+        'buckets': metrics_response_json['metrics'][0]['buckets']
     }
+    active_devices['series'] = sorted(
+        active_devices['series'],
+        key=itemgetter('name'))
+
+    latest_active_devices = logic.get_number_latest_active_devices(
+        active_devices)
 
     users_by_country = public_logic.calculate_metrics_countries(
-        metrics_response_json['metrics'][1]['series']
-    )
+        metrics_response_json['metrics'][1]['series'])
 
     country_data = public_logic.build_country_info(
         users_by_country,
-        True
-    )
-    territories_total = 0
-    for data in country_data.values():
-        if data['number_of_users'] > 0:
-            territories_total += 1
+        True)
+
+    territories_total = logic.get_number_territories(country_data)
 
     context = {
         'page_slug': 'my-snaps',
         # Data direct from details API
         'snap_name': snap_name,
         'snap_title': details['title'],
-        'metric_period': metric_period,
+        'metric_period': metric_requested['period'],
         'active_device_metric': installed_base_metric,
 
         # Metrics data
         'nodata': nodata,
-        'latest_active_devices': "{:,}".format(latest_active_devices),
+        'latest_active_devices': latest_active_devices,
         'active_devices': active_devices,
         'territories_total': territories_total,
         'territories': country_data,
@@ -346,8 +262,7 @@ def publisher_snap_metrics(snap_name):
 
     return flask.render_template(
         'publisher/metrics.html',
-        **context
-    )
+        **context)
 
 
 def get_listing_snap(snap_name):
