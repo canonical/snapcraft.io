@@ -35,16 +35,20 @@
       outline-offset: 2px;
     }
 
+    &:focus,
+    &:hover,
+    &.is-selected {
+      .p-screenshot__checkbox {
+        opacity: 1;
+      }
+    }
+
     &__checkbox {
       left: $sp-x-small;
-      opacity: 0; // only display when selected
+      opacity: 0; // only display when selected or focused
       pointer-events: none;
       position: absolute;
       top: $sp-x-small;
-
-      &[checked] {
-        opacity: 1;
-      }
     }
 
     &__image {
