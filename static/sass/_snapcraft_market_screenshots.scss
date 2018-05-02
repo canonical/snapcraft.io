@@ -37,9 +37,14 @@
 
     &__checkbox {
       left: $sp-x-small;
+      opacity: 0; // only display when selected
       pointer-events: none;
       position: absolute;
       top: $sp-x-small;
+
+      &[checked] {
+        opacity: 1;
+      }
     }
 
     &__image {

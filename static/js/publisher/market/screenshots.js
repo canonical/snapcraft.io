@@ -211,9 +211,10 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   });
 
   document.addEventListener('dblclick', event => {
-    if (event.target.classList.contains('p-screenshot__image')) {
+    if (event.target.closest('.p-screenshot')) {
       event.preventDefault();
-      let screenshot = state.images.filter(image => image.selected)[0];
+      const url = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image').src;
+      const screenshot = state.images.filter(image => image.url === url)[0];
 
       if (screenshot) {
         lightbox.openLightbox(
