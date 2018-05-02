@@ -21,19 +21,30 @@
     text-align: center;
   }
 
-  .p-screenshot__holder {
-    .p-screenshot {
-      &.selected {
-        outline: 1px solid $color-focus;
-        outline-offset: 2px;
-      }
+  .p-screenshot {
+    position: relative;
+
+    &.is-selected {
+      outline: 1px solid $color-mid-light;
+      outline-offset: 2px;
     }
 
-    .p-screenshot[src^='blob'] {
-      & + .p-screenshot__delete,
-      & + .p-screenshot__revert {
-        display: none;
-      }
+
+    &:focus {
+      outline: 1px solid $color-focus;
+      outline-offset: 2px;
+    }
+
+    &__checkbox {
+      left: $sp-x-small;
+      pointer-events: none;
+      position: absolute;
+      top: $sp-x-small;
+    }
+
+    &__image {
+      display: block;
+      margin: 0;
     }
 
     &:hover {
@@ -43,15 +54,13 @@
     }
 
     &.is-deleted {
-      .p-screenshot__delete {
+      cursor: default;
+
+      .p-screenshot__checkbox {
         display: none;
       }
 
-      .p-screenshot__revert {
-        display: block;
-      }
-
-      .p-screenshot {
+      .p-screenshot__image {
         filter: grayscale(100%);
         opacity: .6;
       }

@@ -63,23 +63,25 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
   const deleteScreenshot = (screenshot) => {
     if (screenshot.status === 'new') {
-      const index = state.images.findIndex(image => image.selected);
+      // if image is not uploaded yet, just get rid of it
+      const index = state.images.findIndex(image => image.url === screenshot.url);
       state.images.splice(index, 1);
     } else {
+      // otherwise mark image to be deleted on save
       screenshot._previousStatus = screenshot.status;
       screenshot.status = 'delete';
+      screenshot.selected = false;
     }
 
     setState();
   };
 
   const selectScreenshot = (url) => {
-    state.images.forEach(image => image.selected = false);
-
     const screenshot = state.images.filter(image => image.url === url)[0];
 
+    // toggle selected status of given screenshot
     if (url && screenshot && screenshot.status !== 'delete') {
-      screenshot.selected = true;
+      screenshot.selected = !screenshot.selected;
     }
   };
 
@@ -127,6 +129,17 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     render();
   };
 
+  const selectScreenshotHandler = function(event) {
+    event.preventDefault();
+    const img = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image');
+    selectScreenshot(img.src);
+    setTimeout(() => {
+      render();
+      // after rendering find image with same src and focus it back
+      screenshotsWrapper.querySelector(`[src="${img.src}"]`).closest('.p-screenshot').focus();
+    }, 50);
+  };
+
   // delegated click handlers
   document.addEventListener("click", function(event){
     // Delete screenshot
@@ -136,11 +149,10 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
       }
 
       event.preventDefault();
-      let screenshot = state.images.filter(image => image.selected)[0];
-      if (screenshot) {
-        deleteScreenshot(screenshot);
-        selectScreenshot();
-      }
+      const selected = state.images.filter(image => image.selected);
+      // delete all selected screenshots
+      selected.forEach(deleteScreenshot);
+
       render();
     } else if (event.target.closest('.js-fullscreen-screenshot')) {
       if (event.target.closest('.js-fullscreen-screenshot').disabled) {
@@ -161,9 +173,6 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
           state.images.filter(image => image.type === 'screenshot').map(image => image.url)
         );
       }
-    } else {
-      // unselect any screenshots when clicked outside of them
-      selectScreenshot();
     }
 
     // clicking on [+] add screenshots button
@@ -187,12 +196,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
     // clicking on screenshot to select it
     if (event.target.closest('.p-screenshot')) {
-      event.preventDefault();
-      const img = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image');
-      selectScreenshot(img.src);
-      setTimeout(() => {
-        render();
-      }, 50);
+      selectScreenshotHandler(event);
       return;
     }
 
@@ -202,15 +206,7 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
   screenshotsWrapper.addEventListener('keydown', (event) => {
     if ((event.key === " " || event.key == "Spacebar") &&
         event.target.closest('.p-screenshot')) {
-      event.preventDefault();
-      const img = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image');
-      selectScreenshot(img.src);
-      setTimeout(() => {
-        render();
-        // after rendering find image with same src and focus it back
-        screenshotsWrapper.querySelector(`[src="${img.src}"]`).closest('.p-screenshot').focus();
-      }, 50);
-      return;
+      selectScreenshotHandler(event);
     }
   });
 
