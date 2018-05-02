@@ -1,10 +1,10 @@
 import flask
 import modules.authentication as authentication
-import modules.public.logic as public_logic
+import modules.metrics.helper as metrics_helper
+import modules.metrics.metrics as metrics
 import modules.publisher.api as api
 import modules.publisher.logic as logic
 from json import loads
-from operator import itemgetter
 from modules.exceptions import (
     AgreementNotSigned,
     ApiError,
@@ -171,14 +171,15 @@ def publisher_snap_metrics(snap_name):
             default='version',
             type=str))
 
-    metrics_query_json = logic.build_metrics_json(
+    installed_base = logic.get_installed_based_metric(installed_base_metric)
+    metrics_query_json = metrics_helper.build_metrics_json(
         snap_id=details['snap_id'],
+        installed_base=installed_base,
         metric_period=metric_requested['int'],
-        metric_bucket=metric_requested['bucket'],
-        installed_base_metric=installed_base_metric)
+        metric_bucket=metric_requested['bucket'])
 
     try:
-        metrics_response_json = api.get_publisher_metrics(
+        metrics_response = api.get_publisher_metrics(
             flask.session,
             json=metrics_query_json)
     except ApiResponseErrorList as api_response_error_list:
@@ -189,27 +190,32 @@ def publisher_snap_metrics(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    nodata = logic.has_data(metrics_response_json['metrics'])
+    active_metrics = metrics_helper.find_metric(
+        metrics_response['metrics'], installed_base)
+    active_devices = metrics.ActiveDevices(
+        name=active_metrics['metric_name'],
+        series=active_metrics['series'],
+        buckets=active_metrics['buckets'],
+        status=active_metrics['status'])
 
-    active_devices = {
-        'series': metrics_response_json['metrics'][0]['series'],
-        'buckets': metrics_response_json['metrics'][0]['buckets']
-    }
-    active_devices['series'] = sorted(
-        active_devices['series'],
-        key=itemgetter('name'))
+    latest_active = 0
+    if active_devices:
+        latest_active = active_devices.get_number_latest_active_devices()
 
-    latest_active_devices = logic.get_number_latest_active_devices(
-        active_devices)
+    country_metric = metrics_helper.find_metric(
+        metrics_response['metrics'], "weekly_installed_base_by_country")
+    country_devices = metrics.CountryDevices(
+        name=country_metric['metric_name'],
+        series=country_metric['series'],
+        buckets=country_metric['buckets'],
+        status=country_metric['status'],
+        private=True)
 
-    users_by_country = public_logic.calculate_metrics_countries(
-        metrics_response_json['metrics'][1]['series'])
+    territories_total = 0
+    if country_devices:
+        territories_total = country_devices.get_number_territories()
 
-    country_data = public_logic.build_country_info(
-        users_by_country,
-        True)
-
-    territories_total = logic.get_number_territories(country_data)
+    nodata = not any([country_devices, active_devices])
 
     context = {
         'page_slug': 'my-snaps',
@@ -221,10 +227,10 @@ def publisher_snap_metrics(snap_name):
 
         # Metrics data
         'nodata': nodata,
-        'latest_active_devices': latest_active_devices,
-        'active_devices': active_devices,
+        'latest_active_devices': latest_active,
+        'active_devices': dict(active_devices),
         'territories_total': territories_total,
-        'territories': country_data,
+        'territories': country_devices.country_data,
 
         # Context info
         'is_linux': 'Linux' in flask.request.headers['User-Agent']
