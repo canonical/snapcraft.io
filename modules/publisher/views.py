@@ -114,22 +114,12 @@ def post_agreement():
     if agreed == 'on':
         try:
             api.post_agreement(flask.session, True)
-        except ApiTimeoutError as api_timeout_error:
-            flask.abort(504, str(api_timeout_error))
-        except ApiConnectionError as api_connection_error:
-            flask.abort(502, str(api_connection_error))
-        except ApiResponseDecodeError as api_response_decode_error:
-            flask.abort(502, str(api_response_decode_error))
         except ApiResponseErrorList as api_response_error_list:
             codes = [error['code'] for error in api_response_error_list.errors]
             error_messages = ', '.join(codes)
             flask.abort(502, error_messages)
-        except ApiResponseError as api_response_error:
-            flask.abort(502, str(api_response_error))
-        except MacaroonRefreshRequired:
-            return refresh_redirect(
-                flask.request.path
-            )
+        except ApiError as api_error:
+            return _handle_errors(api_error)
 
         return flask.redirect('/account')
     else:
@@ -147,20 +137,10 @@ def post_account_name():
         errors = []
         try:
             api.post_username(flask.session, username)
-        except ApiTimeoutError as api_timeout_error:
-            flask.abort(504, str(api_timeout_error))
-        except ApiConnectionError as api_connection_error:
-            flask.abort(502, str(api_connection_error))
-        except ApiResponseDecodeError as api_response_decode_error:
-            flask.abort(502, str(api_response_decode_error))
         except ApiResponseErrorList as api_response_error_list:
             errors = errors + api_response_error_list.errors
-        except ApiResponseError as api_response_error:
-            flask.abort(502, str(api_response_error))
-        except MacaroonRefreshRequired:
-            return refresh_redirect(
-                flask.request.path
-            )
+        except ApiError as api_error:
+            return _handle_errors(api_error)
 
         if errors:
             return flask.render_template(
