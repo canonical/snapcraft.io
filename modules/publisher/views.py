@@ -1,17 +1,13 @@
 import flask
-import hashlib
 import modules.authentication as authentication
 import modules.public.logic as public_logic
 import modules.publisher.api as api
 import modules.publisher.logic as logic
-from json import dumps, loads
+from json import loads
 from operator import itemgetter
 from modules.exceptions import (
     ApiError,
     ApiTimeoutError,
-    ApiConnectionError,
-    ApiResponseDecodeError,
-    ApiResponseError,
     ApiResponseErrorList,
     MacaroonRefreshRequired
 )
@@ -291,23 +287,6 @@ def get_listing_snap(snap_name):
     )
 
 
-def build_image_info(image, image_type):
-    """
-    Build info json structure for image upload
-    Return json oject with useful informations for the api
-    """
-    hasher = hashlib.sha256(image.read())
-    hash_final = hasher.hexdigest()
-    image.seek(0)
-
-    return {
-        "key": image.filename,
-        "type": image_type,
-        "filename": image.filename,
-        "hash": hash_final
-    }
-
-
 def post_listing_snap(snap_name):
     changes = None
     changed_fields = flask.request.form.get('changes')
@@ -318,9 +297,6 @@ def post_listing_snap(snap_name):
     if changes:
         snap_id = flask.request.form.get('snap_id')
         error_list = []
-        info = []
-        images_files = []
-        images_json = None
 
         if 'images' in changes:
             # Add existing screenshots
@@ -329,63 +305,20 @@ def post_listing_snap(snap_name):
                     snap_id,
                     flask.session
                 )
-            except ApiTimeoutError as api_timeout_error:
-                flask.abort(504, str(api_timeout_error))
-            except ApiConnectionError as api_connection_error:
-                flask.abort(502, str(api_connection_error))
-            except ApiResponseDecodeError as api_response_decode_error:
-                flask.abort(502, str(api_response_decode_error))
             except ApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
-                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                    return flask.abort(
+                        404, 'No snap named {}'.format(snap_name))
                 else:
-                    codes = []
-                    for error in api_response_error_list.errors:
-                        if error['code'] == 'user-not-ready':
-                            if 'has not signed agreement' in error['message']:
-                                return flask.redirect('/account/agreement')
-                            elif 'missing namespace' in error['message']:
-                                return flask.redirect('/account/username')
-                        else:
-                            codes.append(error['code'])
-                    error_messages = ', '.join(codes)
-                    flask.abort(502, error_messages)
-            except ApiResponseError as api_response_error:
-                flask.abort(502, str(api_response_error))
-            except MacaroonRefreshRequired:
-                return refresh_redirect(
-                    flask.request.path
-                )
+                    return _handle_error_list(api_response_error_list.errors)
+            except ApiError as api_error:
+                return _handle_errors(api_error)
 
-            changed_screenshots = changes['images']
+            images_json, images_files = logic.build_changed_images(
+                changes['images'], current_screenshots,
+                flask.request.files.get('icon'),
+                flask.request.files.getlist('screenshots'))
 
-            for changed_screenshot in changed_screenshots:
-                for current_screenshot in current_screenshots:
-                    if changed_screenshot['url'] == current_screenshot['url']:
-                        info.append(current_screenshot)
-
-            # Add new icon
-            icon = flask.request.files.get('icon')
-            if icon is not None:
-                info.append(build_image_info(icon, 'icon'))
-                images_files.append(icon)
-
-            # Add new screenshots
-            new_screenshots = flask.request.files.getlist('screenshots')
-            for new_screenshot in new_screenshots:
-                for changed_screenshot in changed_screenshots:
-                    is_same = (
-                        changed_screenshot['status'] == 'new' and
-                        changed_screenshot['name'] == new_screenshot.filename
-                    )
-
-                    if is_same:
-                        info.append(
-                            build_image_info(new_screenshot, 'screenshot')
-                        )
-                        images_files.append(new_screenshot)
-
-            images_json = {'info': dumps(info)}
             try:
                 api.snap_screenshots(
                     snap_id,
@@ -393,137 +326,57 @@ def post_listing_snap(snap_name):
                     images_json,
                     images_files
                 )
-            except ApiTimeoutError as api_timeout_error:
-                flask.abort(504, str(api_timeout_error))
-            except ApiConnectionError as api_connection_error:
-                flask.abort(502, str(api_connection_error))
-            except ApiResponseDecodeError as api_response_decode_error:
-                flask.abort(502, str(api_response_decode_error))
             except ApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
-                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                    return flask.abort(
+                        404, 'No snap named {}'.format(snap_name))
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiResponseError as api_response_error:
-                flask.abort(502, str(api_response_error))
-            except MacaroonRefreshRequired:
-                return refresh_redirect(
-                    flask.request.path
-                )
-            except MacaroonRefreshRequired:
-                return refresh_redirect(
-                    flask.request.path
-                )
+            except ApiError as api_error:
+                return _handle_errors(api_error)
 
-        whitelist = [
-            'title',
-            'summary',
-            'description',
-            'contact',
-            'website',
-            'keywords',
-            'license',
-            'price',
-            'blacklist_countries',
-            'whitelist_countries',
-            'public_metrics_enabled',
-            'public_metrics_blacklist'
-        ]
-
-        body_json = {
-            key: changes[key]
-            for key in whitelist if key in changes
-        }
-
+        body_json = logic.filter_changes_data(changes)
         if body_json:
             if 'public_metrics_blacklist' in body_json:
-                # if metrics blacklist was changed, split it into array
-                metrics_blacklist = body_json['public_metrics_blacklist']
-
-                if len(metrics_blacklist) > 0:
-                    metrics_blacklist = metrics_blacklist.split(',')
-                else:
-                    metrics_blacklist = []
-
-                body_json['public_metrics_blacklist'] = metrics_blacklist
+                converted_metrics = logic.convert_metrics_blacklist(
+                    body_json['public_metrics_blacklist'])
+                body_json['public_metrics_blacklist'] = converted_metrics
 
             if 'description' in body_json:
-                # remove invalid characters from description
-                body_json['description'] = (
-                    body_json['description'].replace('\r\n', '\n')
-                )
+                body_json['description'] = logic.remove_invalid_characters(
+                    body_json['description'])
 
             try:
                 api.snap_metadata(
-                    flask.request.form['snap_id'],
-                    flask.session,
-                    body_json
-                )
-            except ApiConnectionError as api_connection_error:
-                flask.abort(502, str(api_connection_error))
-            except ApiTimeoutError as api_timeout_error:
-                flask.abort(504, str(api_timeout_error))
-            except ApiResponseDecodeError as api_response_decode_error:
-                flask.abort(502, str(api_response_decode_error))
+                    snap_id, flask.session, body_json)
             except ApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
-                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                    return flask.abort(
+                        404, 'No snap named {}'.format(snap_name))
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiResponseError as api_response_error:
-                flask.abort(502, str(api_response_error))
-            except MacaroonRefreshRequired:
-                return refresh_redirect(
-                    flask.request.path
-                )
+            except ApiError as api_error:
+                return _handle_errors(api_error)
 
         if error_list:
             try:
                 snap_details = api.get_snap_info(snap_name, flask.session)
-            except ApiConnectionError as api_connection_error:
-                flask.abort(502, str(api_connection_error))
-            except ApiTimeoutError as api_timeout_error:
-                flask.abort(504, str(api_timeout_error))
-            except ApiResponseDecodeError as api_response_decode_error:
-                flask.abort(502, str(api_response_decode_error))
             except ApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
-                    flask.abort(404, 'No snap named {}'.format(snap_name))
+                    return flask.abort(
+                        404, 'No snap named {}'.format(snap_name))
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiResponseError as api_response_error:
-                flask.abort(502, str(api_response_error))
-            except MacaroonRefreshRequired:
-                return refresh_redirect(
-                    flask.request.path
-                )
+            except ApiError as api_error:
+                return _handle_errors(api_error)
 
             details_metrics_enabled = snap_details['public_metrics_enabled']
             details_blacklist = snap_details['public_metrics_blacklist']
 
-            field_errors = {}
-            other_errors = []
+            field_errors, other_errors = logic.invalid_filed_errors(error_list)
 
-            for error in error_list:
-                if (error['code'] == 'invalid-field' or
-                        error['code'] == 'required'):
-                    field_errors[error['extra']['name']] = error['message']
-                else:
-                    other_errors.append(error)
-
-            website = (
-                changes['website'] if 'website' in changes
-                else snap_details['website']
-            )
-
-            is_on_stable = False
-            for series in snap_details['channel_maps_list']:
-                for series_map in series['map']:
-                    is_on_stable = (
-                        is_on_stable or
-                        'channel' in series_map and
-                        series_map['channel'] == 'stable' and
-                        series_map['info'])
+            is_on_stable = logic.is_snap_on_stable(
+                snap_details['channel_maps_list'])
 
             # Filter icon & screenshot urls from the media set.
             icon_urls = [
@@ -563,7 +416,10 @@ def post_listing_snap(snap_name):
                     else snap_details['contact']
                 ),
                 "private": snap_details['private'],
-                "website": website or '',
+                "website": (
+                    changes['website'] if 'website' in changes
+                    else snap_details['website']
+                ),
                 "is_on_stable": is_on_stable,
                 # errors
                 "error_list": error_list,
