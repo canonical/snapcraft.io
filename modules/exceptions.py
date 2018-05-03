@@ -22,6 +22,22 @@ class ApiTimeoutError(ApiError):
     pass
 
 
+class MissingUsername(ApiError):
+    """
+    The user hasn't registed a username
+    """
+
+    pass
+
+
+class AgreementNotSigned(ApiError):
+    """
+    The user needs to sign the agreement
+    """
+
+    pass
+
+
 class ApiResponseDecodeError(ApiError):
     """
     We failed to properly decode the response from the API

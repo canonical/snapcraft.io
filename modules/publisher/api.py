@@ -2,10 +2,12 @@ import modules.authentication as authentication
 import modules.cache as cache
 import os
 from modules.exceptions import (
+    AgreementNotSigned,
     ApiResponseDecodeError,
     ApiResponseError,
     ApiResponseErrorList,
-    MacaroonRefreshRequired
+    MacaroonRefreshRequired,
+    MissingUsername
 )
 
 
@@ -59,6 +61,13 @@ def process_response(response):
 
     if not response.ok:
         if 'error_list' in body:
+            for error in body['error_list']:
+                if error['code'] == 'user-not-ready':
+                    if 'has not signed agreement' in error['message']:
+                        raise AgreementNotSigned
+                    elif 'missing namespace' in error['message']:
+                        raise MissingUsername
+
             raise ApiResponseErrorList(
                 'The api returned a list of errors',
                 response.status_code,
