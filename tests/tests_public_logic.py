@@ -97,7 +97,7 @@ class PublicLogicTest(unittest.TestCase):
         result = logic.build_os_info(oses)
         expected_result = [
             {
-                'name': 'test2 - test',
+                'name': 'test2 test',
                 'value': '0.9'
             },
             {
