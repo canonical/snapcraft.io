@@ -39,7 +39,7 @@
             <input
               class="p-code-snippet__input"
               id="snap-install"
-              value="sudo snap install {{ package_name }}"
+              value="sudo snap install {{ package_name }} {% if default_channel != 'stable' %}--channel {{default_channel}}{% endif %}"
               readonly="readonly"
             />
             <button
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-
+  
   {% include "snap-details/_channel_map.html" %}
 
   {% if screenshots %}

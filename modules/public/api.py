@@ -14,7 +14,7 @@ SNAPCRAFT_IO_API = os.getenv(
 SNAP_DETAILS_URL = ''.join([
     SNAPCRAFT_IO_API,
     'snaps/details/{snap_name}',
-    '?channel=stable',
+    '?channel={snap_channel}',
     '&fields=snap_id,package_name,title,summary,description,license,contact,',
     'website,publisher,prices,media,',
     # Released (stable) revision fields will eventually be replaced by
@@ -124,9 +124,11 @@ def get_searched_snaps(snap_searched, size, page):
     return process_response(searched_response)
 
 
-def get_snap_details(snap_name):
+def get_snap_details(snap_name, snap_channel):
     details_response = cache.get(
-        SNAP_DETAILS_URL.format(snap_name=snap_name),
+        SNAP_DETAILS_URL.format(
+            snap_name=snap_name,
+            snap_channel=snap_channel),
         headers=DETAILS_QUERY_HEADERS
     )
 
