@@ -1,5 +1,7 @@
 import datetime
+import hashlib
 from dateutil import relativedelta
+from json import dumps
 
 
 def get_snaps_account_info(account_info):
@@ -192,3 +194,138 @@ def is_snap_on_stable(channel_maps_list):
                 series_map['info']
 
     return is_on_stable
+
+
+def build_image_info(image, image_type):
+    """
+    Build info json structure for image upload
+    Return json oject with useful informations for the api
+    """
+    hasher = hashlib.sha256(image.read())
+    hash_final = hasher.hexdigest()
+    image.seek(0)
+
+    return {
+        "key": image.filename,
+        "type": image_type,
+        "filename": image.filename,
+        "hash": hash_final
+    }
+
+
+def convert_metrics_blacklist(metrics_blacklist):
+    """Convert the blacklisted metrics to an array
+
+    Input:
+      "metric1,metric2"
+    Output:
+      ["metric1", "metric2"]
+
+    :param metrics_blacklist: The metrics blacklisted
+
+    :return: Array of metrics"""
+    converted_metrics_blacklist = []
+    if len(metrics_blacklist) > 0:
+        converted_metrics_blacklist = metrics_blacklist.split(',')
+
+    return converted_metrics_blacklist
+
+
+def remove_invalid_characters(description):
+    """Remove invalid charcters from description
+
+    :param description: The description
+
+    :return: The description wihtou the invalid characters"""
+    return description.replace('\r\n', '\n')
+
+
+def build_changed_images(
+        changed_screenshots,
+        current_screenshots,
+        icon,
+        new_screenshots):
+    """Filter and build images to upload.
+
+    :param changed_screenshots: Dictionary of all the changed screenshots
+    :param current_screenshots: Ductionary of the current screenshots
+    :param icon: The uploaded icon
+    :param new_screenshots: The uploaded screenshots
+
+    :return: The json to send to the store and the list images to upload"""
+
+    info = []
+    images_files = []
+    images_json = None
+    for changed_screenshot in changed_screenshots:
+        for current_screenshot in current_screenshots:
+            if changed_screenshot['url'] == current_screenshot['url']:
+                info.append(current_screenshot)
+
+    # Add new icon
+    if icon is not None:
+        info.append(build_image_info(icon, 'icon'))
+        images_files.append(icon)
+
+    # Add new screenshots
+    for new_screenshot in new_screenshots:
+        for changed_screenshot in changed_screenshots:
+            is_same = (
+                changed_screenshot['status'] == 'new' and
+                changed_screenshot['name'] == new_screenshot.filename
+            )
+
+            if is_same:
+                info.append(
+                    build_image_info(
+                        new_screenshot, 'screenshot'))
+                images_files.append(new_screenshot)
+
+    images_json = {'info': dumps(info)}
+
+    return images_json, images_files
+
+
+def filter_changes_data(changes):
+    """Filter the changes posted to keep the valid fields
+
+    :param changes: Dictionary of all the changes
+
+    ":return: Dictionary with the changes filtered"""
+    whitelist = [
+        'title',
+        'summary',
+        'description',
+        'contact',
+        'website',
+        'keywords',
+        'license',
+        'price',
+        'blacklist_countries',
+        'whitelist_countries',
+        'public_metrics_enabled',
+        'public_metrics_blacklist'
+    ]
+
+    return {
+        key: changes[key]
+        for key in whitelist if key in changes
+    }
+
+
+def invalid_filed_errors(errors):
+    """Split errors in invalid fields and other errors
+
+    :param erros: List of errors
+
+    :return: List of fields errors and list of other errors"""
+    field_errors = {}
+    other_errors = []
+
+    for error in errors:
+        if (error['code'] == 'invalid-field' or error['code'] == 'required'):
+            field_errors[error['extra']['name']] = error['message']
+        else:
+            other_errors.append(error)
+
+    return field_errors, other_errors
