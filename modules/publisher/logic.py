@@ -33,7 +33,7 @@ def verify_base_metrics(active_devices):
 
     :return The base metric if it's available, 'version' if not
     """
-    if active_devices not in ('version', 'os'):
+    if active_devices not in ('version', 'os', 'channel'):
         return 'version'
 
     return active_devices
@@ -108,6 +108,8 @@ def build_metrics_json(
         installed_base = "weekly_installed_base_by_version"
     elif installed_base_metric == 'os':
         installed_base = "weekly_installed_base_by_operating_system"
+    elif installed_base_metric == 'channel':
+        installed_base = 'weekly_installed_base_by_channel'
 
     return {
         "filters": [

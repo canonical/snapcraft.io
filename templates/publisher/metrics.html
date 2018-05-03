@@ -45,6 +45,7 @@ Publisher metrics for {{ snap_title }}
                     {% if nodata %}disabled="disabled"{% endif %}>
               <option value="version"{% if active_device_metric == 'version' %} selected="selected"{% endif %}>By version</option>
               <option value="os"{% if active_device_metric == 'os' %} selected="selected"{% endif %}>By OS</option>
+              <option value="channel"{% if active_device_metric == 'channel' %} selected="selected"{% endif %}>By channel</option>
             </select>
           </div>
         </div>
