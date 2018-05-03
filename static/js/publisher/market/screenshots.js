@@ -8,13 +8,16 @@ const templates = {
 
   screenshot: (screenshot) => `
     <div class="col-2">
-      <div class="p-screenshot__holder ${screenshot.status === 'delete' ? 'is-deleted' : ''}">
+      <label
+        ${screenshot.status === 'delete' ? '' : 'tabindex="0"'}
+        class="p-screenshot ${screenshot.status === 'delete' ? 'is-deleted' : ''} ${screenshot.selected ? 'is-selected' : ''}">
+        <input class="p-screenshot__checkbox" tabindex="-1" type="checkbox" ${screenshot.selected ? 'checked="checked"' : ''} >
         <img
-          class="p-screenshot ${screenshot.selected ? 'selected' : ''}"
+          class="p-screenshot__image"
           src="${screenshot.url}"
           alt=""
         />
-      </div>
+      </label>
     </div>
   `,
 
@@ -60,23 +63,25 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
 
   const deleteScreenshot = (screenshot) => {
     if (screenshot.status === 'new') {
-      const index = state.images.findIndex(image => image.selected);
+      // if image is not uploaded yet, just get rid of it
+      const index = state.images.findIndex(image => image.url === screenshot.url);
       state.images.splice(index, 1);
     } else {
+      // otherwise mark image to be deleted on save
       screenshot._previousStatus = screenshot.status;
       screenshot.status = 'delete';
+      screenshot.selected = false;
     }
 
     setState();
   };
 
   const selectScreenshot = (url) => {
-    state.images.forEach(image => image.selected = false);
-
     const screenshot = state.images.filter(image => image.url === url)[0];
 
+    // toggle selected status of given screenshot
     if (url && screenshot && screenshot.status !== 'delete') {
-      screenshot.selected = true;
+      screenshot.selected = !screenshot.selected;
     }
   };
 
@@ -124,6 +129,17 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     render();
   };
 
+  const selectScreenshotHandler = function(event) {
+    event.preventDefault();
+    const img = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image');
+    selectScreenshot(img.src);
+    setTimeout(() => {
+      render();
+      // after rendering find image with same src and focus it back
+      screenshotsWrapper.querySelector(`[src="${img.src}"]`).closest('.p-screenshot').focus();
+    }, 50);
+  };
+
   // delegated click handlers
   document.addEventListener("click", function(event){
     // Delete screenshot
@@ -133,11 +149,10 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
       }
 
       event.preventDefault();
-      let screenshot = state.images.filter(image => image.selected)[0];
-      if (screenshot) {
-        deleteScreenshot(screenshot);
-        selectScreenshot();
-      }
+      const selected = state.images.filter(image => image.selected);
+      // delete all selected screenshots
+      selected.forEach(deleteScreenshot);
+
       render();
     } else if (event.target.closest('.js-fullscreen-screenshot')) {
       if (event.target.closest('.js-fullscreen-screenshot').disabled) {
@@ -158,9 +173,6 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
           state.images.filter(image => image.type === 'screenshot').map(image => image.url)
         );
       }
-    } else {
-      // unselect any screenshots when clicked outside of them
-      selectScreenshot();
     }
 
     // clicking on [+] add screenshots button
@@ -183,22 +195,26 @@ function initSnapScreenshotsEdit(screenshotsToolbarElId, screenshotsWrapperElId,
     }
 
     // clicking on screenshot to select it
-    if (event.target.classList.contains('p-screenshot')) {
-      event.preventDefault();
-      selectScreenshot(event.target.src);
-      setTimeout(() => {
-        render();
-      }, 50);
+    if (event.target.closest('.p-screenshot')) {
+      selectScreenshotHandler(event);
       return;
     }
 
     render();
   });
 
+  screenshotsWrapper.addEventListener('keydown', (event) => {
+    if ((event.key === " " || event.key == "Spacebar") &&
+        event.target.closest('.p-screenshot')) {
+      selectScreenshotHandler(event);
+    }
+  });
+
   document.addEventListener('dblclick', event => {
-    if (event.target.classList.contains('p-screenshot')) {
+    if (event.target.closest('.p-screenshot')) {
       event.preventDefault();
-      let screenshot = state.images.filter(image => image.selected)[0];
+      const url = event.target.closest('.p-screenshot').querySelector('.p-screenshot__image').src;
+      const screenshot = state.images.filter(image => image.url === url)[0];
 
       if (screenshot) {
         lightbox.openLightbox(
