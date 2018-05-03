@@ -6,10 +6,12 @@ import modules.publisher.logic as logic
 from json import loads
 from operator import itemgetter
 from modules.exceptions import (
+    AgreementNotSigned,
     ApiError,
-    ApiTimeoutError,
     ApiResponseErrorList,
-    MacaroonRefreshRequired
+    ApiTimeoutError,
+    MacaroonRefreshRequired,
+    MissingUsername
 )
 
 
@@ -25,6 +27,10 @@ def refresh_redirect(path):
 def _handle_errors(api_error: ApiError):
     if type(api_error) is ApiTimeoutError:
         return flask.abort(504, str(api_error))
+    elif type(api_error) is MissingUsername:
+        return flask.redirect('/account/username')
+    elif type(api_error) is AgreementNotSigned:
+        return flask.redirect('/account/agreement')
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
@@ -34,19 +40,7 @@ def _handle_errors(api_error: ApiError):
 
 
 def _handle_error_list(errors):
-    codes = []
-    # TODO This has to be moved in the API module.
-    # Should be done once all the errors catchings
-    # are handled by this function.
-    # https://github.com/canonical-websites/snapcraft.io/issues/609
-    for error in errors:
-        if error['code'] == 'user-not-ready':
-            if 'has not signed agreement' in error['message']:
-                return flask.redirect('/account/agreement')
-            elif 'missing namespace' in error['message']:
-                return flask.redirect('/account/username')
-        else:
-            codes.append(error['code'])
+    codes = [error['code'] for error in errors]
 
     error_messages = ', '.join(codes)
     return flask.abort(502, error_messages)
