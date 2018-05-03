@@ -89,3 +89,50 @@ class PublisherLogicTest(unittest.TestCase):
 
         self.assertEqual(user_snaps, expected_user_snaps)
         self.assertEqual(registered_snaps, expected_registered_snaps)
+
+    # is_snap_on_stable
+    # ===
+    def test_snap_not_stable(self):
+        channel_maps_list = [
+            {
+                'map': [
+                    {
+                        'channel': 'not stable',
+                        'info': None
+                    }
+                ]
+            }
+        ]
+
+        result = logic.is_snap_on_stable(channel_maps_list)
+        self.assertFalse(result)
+
+    def test_snap_stable_not_info(self):
+        channel_maps_list = [
+            {
+                'map': [
+                    {
+                        'channel': 'stable',
+                        'info': None
+                    }
+                ]
+            }
+        ]
+
+        result = logic.is_snap_on_stable(channel_maps_list)
+        self.assertFalse(result)
+
+    def test_snap_stable(self):
+        channel_maps_list = [
+            {
+                'map': [
+                    {
+                        'channel': 'stable',
+                        'info': 'info'
+                    }
+                ]
+            }
+        ]
+
+        result = logic.is_snap_on_stable(channel_maps_list)
+        self.assertTrue(result)

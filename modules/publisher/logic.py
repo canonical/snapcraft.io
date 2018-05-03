@@ -174,3 +174,21 @@ def get_number_territories(country_data):
             territories_total += 1
 
     return territories_total
+
+
+def is_snap_on_stable(channel_maps_list):
+    """Checks if the snap in on a stable channel
+
+    :param channel_maps_list: The channel maps list of a snap
+
+    :return: True is stable, False if not
+    """
+    is_on_stable = False
+    for series in channel_maps_list:
+        for series_map in series['map']:
+            is_on_stable = is_on_stable or \
+                'channel' in series_map and \
+                series_map['channel'] == 'stable' and \
+                series_map['info']
+
+    return is_on_stable

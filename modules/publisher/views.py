@@ -248,42 +248,15 @@ def publisher_snap_metrics(snap_name):
 def get_listing_snap(snap_name):
     try:
         snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiTimeoutError as api_timeout_error:
-        flask.abort(504, str(api_timeout_error))
-    except ApiConnectionError as api_connection_error:
-        flask.abort(502, str(api_connection_error))
-    except ApiResponseDecodeError as api_response_decode_error:
-        flask.abort(502, str(api_response_decode_error))
     except ApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
-            flask.abort(404, 'No snap named {}'.format(snap_name))
+            return flask.abort(404, 'No snap named {}'.format(snap_name))
         else:
-            codes = []
-            for error in api_response_error_list.errors:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
-                        return flask.redirect('/account/agreement')
-                    elif 'missing namespace' in error['message']:
-                        return flask.redirect('/account/username')
-                else:
-                    codes.append(error['code'])
-            error_messages = ', '.join(codes)
-            flask.abort(502, error_messages)
-    except ApiResponseError as api_response_error:
-        flask.abort(502, str(api_response_error))
-    except MacaroonRefreshRequired:
-        return refresh_redirect(
-            flask.request.path
-        )
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
 
-    is_on_stable = False
-    for series in snap_details['channel_maps_list']:
-        for series_map in series['map']:
-            is_on_stable = (
-                is_on_stable or
-                'channel' in series_map and
-                series_map['channel'] == 'stable' and
-                series_map['info'])
+    is_on_stable = logic.is_snap_on_stable(snap_details['channel_maps_list'])
 
     # Filter icon & screenshot urls from the media set.
     icon_urls = [
