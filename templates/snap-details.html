@@ -112,7 +112,7 @@
           <div class="snapcraft-distro-chart">
             <div class="snapcraft-distro-chart__names">
               {% for distro in normalized_os %}
-                <div class="snapcraft-distro-chart__name">{{ distro.name }}</div>
+              <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
               {% endfor %}
             </div>
             <div class="snapcraft-distro-chart__bars">

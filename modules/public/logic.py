@@ -196,7 +196,7 @@ def build_os_info(series):
         if distro['values'][0]:
             name = distro['name'].replace('/-', '')
             oses.append({
-                'name': name.replace('/', ' - '),
+                'name': name.replace('/', ' '),
                 'value': distro['values'][-1]
             })
 
