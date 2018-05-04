@@ -1,9 +1,10 @@
-import datetime
 import flask
 import humanize
+import modules.metrics.helper as metrics_helper
+import modules.metrics.metrics as metrics
 import modules.public.api as api
 import modules.public.logic as logic
-from dateutil import parser, relativedelta
+from dateutil import parser
 from math import floor
 from modules.exceptions import (
     ApiError,
@@ -175,52 +176,45 @@ def snap_details(snap_name):
     channel_maps_list = logic.convert_channel_maps(
         details.get('channel_maps_list'))
 
+    end = metrics_helper.get_last_metrics_processed_date()
+    country_metric_name = 'weekly_installed_base_by_country_percent'
+    os_metric_name = 'weekly_installed_base_by_operating_system_normalized'
+
+    metrics_query_json = [
+        metrics_helper.get_filter(
+            metric_name=country_metric_name,
+            snap_id=details['snap_id'],
+            start=end,
+            end=end),
+        metrics_helper.get_filter(
+            metric_name=os_metric_name,
+            snap_id=details['snap_id'],
+            start=end,
+            end=end)]
+
     status_code = 200
-    country_data = []
     try:
-        # We want to give time to the store to preoccess all the metrics,
-        # since the metrics are processed during the night
-        # https://github.com/canonical-websites/snapcraft.io/pull/616
-        twelve_hours = relativedelta.relativedelta(hours=12)
-        last_metrics_processed = datetime.datetime.utcnow() - twelve_hours
-
-        one_day = relativedelta.relativedelta(days=1)
-        previous_processed_metrics = last_metrics_processed.date() - one_day
-
-        country_metric_name = 'weekly_installed_base_by_country_percent'
-        os_metric_name = 'weekly_installed_base_by_operating_system_normalized'
-
-        metrics_query_json = [
-            {
-                "metric_name": country_metric_name,
-                "snap_id": details['snap_id'],
-                "start": previous_processed_metrics.strftime('%Y-%m-%d'),
-                "end": previous_processed_metrics.strftime('%Y-%m-%d')
-            },
-            {
-                "metric_name": os_metric_name,
-                "snap_id": details['snap_id'],
-                "start": previous_processed_metrics.strftime('%Y-%m-%d'),
-                "end": previous_processed_metrics.strftime('%Y-%m-%d')
-            }
-        ]
-
         metrics_response = api.get_public_metrics(
             snap_name,
-            metrics_query_json
-        )
-
+            metrics_query_json)
     except ApiError as api_error:
         status_code, error_info = _handle_errors(api_error)
 
-    oses = logic.find_metric(metrics_response, os_metric_name)
-    normalized_os = logic.build_os_info(oses['series'])
+    oses = metrics_helper.find_metric(metrics_response, os_metric_name)
+    os_metrics = metrics.OsMetric(
+        name=oses['metric_name'],
+        series=oses['series'],
+        buckets=oses['buckets'],
+        status=oses['status'])
 
-    territories = logic.find_metric(metrics_response, country_metric_name)
-    users_by_country = logic.calculate_metrics_countries(
-        territories['series']
-    )
-    country_data = logic.build_country_info(users_by_country)
+    territories = metrics_helper.find_metric(
+        metrics_response, country_metric_name)
+    country_devices = metrics.CountryDevices(
+        name=territories['metric_name'],
+        series=territories['series'],
+        buckets=territories['buckets'],
+        status=territories['status'],
+        private=False)
 
     # filter out banner and banner-icon images from screenshots
     screenshots = [
@@ -255,8 +249,8 @@ def snap_details(snap_name):
         ),
 
         # Data from metrics API
-        'countries': country_data,
-        'normalized_os': normalized_os,
+        'countries': country_devices.country_data,
+        'normalized_os': os_metrics.os,
 
         # Context info
         'is_linux': (
