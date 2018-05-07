@@ -129,6 +129,8 @@ function initForm(config, initialState, errors) {
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
       return confirmationMessage;              // Gecko, WebKit, Chrome <34
     }
+
+    ignoreChangesOnUnload = false;
   });
 
   revertButton.addEventListener('click', () => {
