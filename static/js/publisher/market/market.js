@@ -6,6 +6,14 @@ import { publicMetrics } from './publicMetrics';
 const URL_REGEXP = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 const MAILTO_REGEXP = /^mailto:/;
 
+// check if browser is on chromium engine, based on:
+// https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
+const IS_CHROMIUM = (
+  window.chrome !== null &&
+  typeof window.chrome !== "undefined" &&
+  window.navigator.userAgent.indexOf("Edge") === -1 // Edge pretends to have window.chrome
+);
+
 function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
@@ -128,6 +136,13 @@ function initForm(config, initialState, errors) {
 
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
       return confirmationMessage;              // Gecko, WebKit, Chrome <34
+    }
+
+    // make sure to show unload warning dialog during submit in progress
+    // but because of Chrome bug don't show it in Chrome:
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=152649
+    if (!IS_CHROMIUM) {
+      ignoreChangesOnUnload = false;
     }
   });
 
