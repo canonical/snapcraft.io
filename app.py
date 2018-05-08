@@ -363,3 +363,15 @@ def get_measure_snap(snap_name):
     return flask.redirect(
         "/account/snaps/{snap_name}/metrics".format(
             snap_name=snap_name))
+
+
+@app.route('/account/register-name')
+@login_required
+def get_register_name():
+    return publisher_views.get_register_name()
+
+
+@app.route('/account/register-name', methods=['POST'])
+@login_required
+def post_register_name():
+    return publisher_views.post_register_name()
