@@ -153,8 +153,11 @@ def snap_details(snap_name):
     """
 
     error_info = {}
+    default_channel = logic.get_default_channel(snap_name)
+
     try:
-        details = api.get_snap_details(snap_name)
+        details = api.get_snap_details(
+                snap_name, default_channel)
     except ApiTimeoutError as api_timeout_error:
         flask.abort(504, str(api_timeout_error))
     except ApiResponseDecodeError as api_response_decode_error:
@@ -239,6 +242,7 @@ def snap_details(snap_name):
         'summary': details['summary'],
         'description_paragraphs': formatted_paragraphs,
         'channel_map': channel_maps_list,
+        'default_channel': default_channel,
 
         # Transformed API data
         'filesize': humanize.naturalsize(details['binary_filesize']),

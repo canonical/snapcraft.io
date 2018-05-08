@@ -166,3 +166,18 @@ def convert_channel_maps(channel_maps_list):
                 channel_maps[arch][track].append(channel)
 
     return channel_maps
+
+
+def get_default_channel(snap_name):
+    """
+    Get's the default channel of 'stable' unless the snap_name is node.
+
+    This is a temporary* hack to get around nodejs not using 'latest'
+    as their default.
+
+    * depending on snapd and store work (not in the 18.10 cycle)
+    """
+    if snap_name == 'node':
+        return '10/stable'
+
+    return 'stable'
