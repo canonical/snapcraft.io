@@ -30,7 +30,6 @@ import modules.public.views as public_views
 import modules.publisher.views as publisher_views
 import modules.publisher.api as publisher_api
 import template_functions
-from decorators import login_required
 from modules.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
@@ -81,6 +80,10 @@ app.config['SENTRY_CONFIG'] = {
     'release': COMMIT_ID,
     'environment': ENVIRONMENT
 }
+
+
+app.register_blueprint(public_views.store_pages)
+app.register_blueprint(publisher_views.publisher_pages, url_prefix='/account')
 
 
 @app.context_processor
@@ -250,128 +253,6 @@ def logout():
     return flask.redirect('/')
 
 
-# Normal views
-# ===
-@app.route('/')
-def homepage():
-    return public_views.homepage()
-
-
 @app.route('/status')
 def status():
     return 'alive'
-
-
-@app.route('/store')
-def store():
-    return public_views.store()
-
-
-@app.route('/discover')
-def discover():
-    return flask.redirect('/store')
-
-
-@app.route('/snaps')
-def snaps():
-    return flask.redirect('/store')
-
-
-@app.route('/search')
-def search_snap():
-    return public_views.search_snap()
-
-
-@app.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
-def snap_details(snap_name):
-    return public_views.snap_details(snap_name)
-
-
-# Publisher views
-# ===
-@app.route('/account')
-@login_required
-def get_account():
-    return flask.redirect('/account/snaps')
-
-
-@app.route('/account/details')
-@login_required
-def get_account_details():
-    return publisher_views.get_account_details()
-
-
-@app.route('/account/snaps')
-@login_required
-def get_account_snaps():
-    return publisher_views.get_account_snaps()
-
-
-@app.route('/account/agreement')
-@login_required
-def get_agreement():
-    return publisher_views.get_agreement()
-
-
-@app.route('/account/agreement', methods=['POST'])
-@login_required
-def post_agreement():
-    return publisher_views.post_agreement()
-
-
-@app.route('/account/username')
-@login_required
-def get_account_name():
-    return publisher_views.get_account_name()
-
-
-@app.route('/account/username', methods=['POST'])
-@login_required
-def post_account_name():
-    return publisher_views.post_account_name()
-
-
-@app.route('/account/snaps/<snap_name>/metrics')
-@login_required
-def publisher_snap_metrics(snap_name):
-    return publisher_views.publisher_snap_metrics(snap_name)
-
-
-@app.route('/account/snaps/<snap_name>/listing', methods=['GET'])
-@login_required
-def get_listing_snap(snap_name):
-    return publisher_views.get_listing_snap(snap_name)
-
-
-@app.route('/account/snaps/<snap_name>/listing', methods=['POST'])
-@login_required
-def post_listing_snap(snap_name):
-    return publisher_views.post_listing_snap(snap_name)
-
-
-@app.route('/account/snaps/<snap_name>/market')
-@login_required
-def get_market_snap(snap_name):
-    return flask.redirect(
-        "/account/snaps/{snap_name}/listing".format(
-            snap_name=snap_name))
-
-
-@app.route('/account/snaps/<snap_name>/measure')
-@login_required
-def get_measure_snap(snap_name):
-    return flask.redirect(
-        "/account/snaps/{snap_name}/metrics".format(
-            snap_name=snap_name))
-
-
-@app.route('/account/register-name')
-@login_required
-def get_register_name():
-    return publisher_views.get_register_name()
-
-
-@app.route('/account/register-name', methods=['POST'])
-@login_required
-def post_register_name():
-    return publisher_views.post_register_name()

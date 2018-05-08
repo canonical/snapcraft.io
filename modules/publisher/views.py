@@ -4,6 +4,7 @@ import modules.metrics.helper as metrics_helper
 import modules.metrics.metrics as metrics
 import modules.publisher.api as api
 import modules.publisher.logic as logic
+from decorators import login_required
 from json import loads
 from modules.exceptions import (
     AgreementNotSigned,
@@ -13,6 +14,10 @@ from modules.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername
 )
+
+
+publisher_pages = flask.Blueprint(
+    'publisher_pages', __name__, template_folder='/templates')
 
 
 def refresh_redirect(path):
@@ -46,6 +51,8 @@ def _handle_error_list(errors):
     return flask.abort(502, error_messages)
 
 
+@publisher_pages.route('/details')
+@login_required
 def get_account_details():
     try:
         # We don't use the data from this endpoint.
@@ -71,6 +78,14 @@ def get_account_details():
     )
 
 
+@publisher_pages.route('/')
+@login_required
+def get_account():
+    return flask.redirect('/account/snaps')
+
+
+@publisher_pages.route('/snaps')
+@login_required
 def get_account_snaps():
     try:
         account = api.get_account(flask.session)
@@ -95,10 +110,14 @@ def get_account_snaps():
     )
 
 
+@publisher_pages.route('/agreement')
+@login_required
 def get_agreement():
     return flask.render_template('developer_programme_agreement.html')
 
 
+@publisher_pages.route('/agreement', methods=['POST'])
+@login_required
 def post_agreement():
     agreed = flask.request.form.get('i_agree')
     if agreed == 'on':
@@ -116,10 +135,14 @@ def post_agreement():
         return flask.redirect('/account/agreement')
 
 
+@publisher_pages.route('/username')
+@login_required
 def get_account_name():
     return flask.render_template('username.html')
 
 
+@publisher_pages.route('/username', methods=['POST'])
+@login_required
 def post_account_name():
     username = flask.request.form.get('username')
 
@@ -144,6 +167,16 @@ def post_account_name():
         return flask.redirect('/account/username')
 
 
+@publisher_pages.route('/snaps/<snap_name>/measure')
+@login_required
+def get_measure_snap(snap_name):
+    return flask.redirect(
+        "/account/snaps/{snap_name}/metrics".format(
+            snap_name=snap_name))
+
+
+@publisher_pages.route('/snaps/<snap_name>/metrics')
+@login_required
 def publisher_snap_metrics(snap_name):
     """
     A view to display the snap metrics page for specific snaps.
@@ -241,6 +274,16 @@ def publisher_snap_metrics(snap_name):
         **context)
 
 
+@publisher_pages.route('/snaps/<snap_name>/market')
+@login_required
+def get_market_snap(snap_name):
+    return flask.redirect(
+        "/account/snaps/{snap_name}/listing".format(
+            snap_name=snap_name))
+
+
+@publisher_pages.route('/snaps/<snap_name>/listing', methods=['GET'])
+@login_required
 def get_listing_snap(snap_name):
     try:
         snap_details = api.get_snap_info(snap_name, flask.session)
@@ -287,11 +330,15 @@ def get_listing_snap(snap_name):
     )
 
 
+@publisher_pages.route('/register-name')
+@login_required
 def get_register_name():
     return flask.render_template(
         'publisher/register-name.html')
 
 
+@publisher_pages.route('/register-name', methods=['POST'])
+@login_required
 def post_register_name():
     snap_name = flask.request.form.get('snap-name')
 
@@ -323,6 +370,8 @@ def post_register_name():
     return flask.redirect('/account/register-name')
 
 
+@publisher_pages.route('/snaps/<snap_name>/listing', methods=['POST'])
+@login_required
 def post_listing_snap(snap_name):
     changes = None
     changed_fields = flask.request.form.get('changes')
