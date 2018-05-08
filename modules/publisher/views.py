@@ -287,6 +287,42 @@ def get_listing_snap(snap_name):
     )
 
 
+def get_register_name():
+    return flask.render_template(
+        'publisher/register-name.html')
+
+
+def post_register_name():
+    snap_name = flask.request.form.get('snap-name')
+
+    if not snap_name:
+        return flask.redirect('/account/register-name')
+
+    store = flask.request.form.get('store')
+    is_private = flask.request.form.get('is_private') == 'on'
+    registrant_comment = flask.request.form.get('registrant_comment')
+
+    try:
+        api.post_register_name(
+            session=flask.session,
+            snap_name=snap_name,
+            is_private=is_private,
+            store=store,
+            registrant_comment=registrant_comment)
+    except ApiResponseErrorList as api_response_error_list:
+        context = {
+            'errors': api_response_error_list.errors,
+        }
+
+        return flask.render_template(
+            'publisher/register-name.html',
+            **context)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    return flask.redirect('/account/register-name')
+
+
 def post_listing_snap(snap_name):
     changes = None
     changed_fields = flask.request.form.get('changes')

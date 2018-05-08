@@ -49,6 +49,11 @@ SNAP_INFO_URL = ''.join([
     'snaps/info/{snap_name}',
 ])
 
+REGISTER_NAME_URL = ''.join([
+    DASHBOARD_API,
+    'register-name/'
+])
+
 
 def process_response(response):
     try:
@@ -176,6 +181,35 @@ def get_publisher_metrics(session, json):
         raise MacaroonRefreshRequired()
 
     return process_response(metrics_response)
+
+
+def post_register_name(
+        session, snap_name,
+        registrant_comment=None, is_private=False, store=None):
+
+    json = {
+        'snap_name': snap_name,
+    }
+
+    if registrant_comment:
+        json['registrant_comment'] = registrant_comment
+
+    if is_private:
+        json['is_private'] = is_private
+
+    if store:
+        json['store'] = store
+
+    response = cache.get(
+        REGISTER_NAME_URL,
+        headers=get_authorization_header(session),
+        json=json,
+        method='POST')
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired()
+
+    return process_response(response)
 
 
 def get_snap_info(snap_name, session):
