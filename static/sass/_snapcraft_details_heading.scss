@@ -8,6 +8,7 @@
   .p-snap-heading {
     display: flex;
 
+
     &__icon {
       align-self: flex-start;
       flex-shrink: 0;
@@ -63,6 +64,8 @@
   .p-channel-map {
     box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
     left: 0;
+    padding-bottom: $sp-medium;
+    padding-top: $sp-medium;
     position: absolute;
     right: 0;
     top: 0;
@@ -78,38 +81,20 @@
       transform: translateY(-1111px); // should be high enough to hide it on mobile
     }
 
-    // align hide button with stable install instructions
-    &__hide {
-      text-align: right;
-
-      @media screen and (min-width: $breakpoint-medium) {
-        float: right;
-        margin-left: $sp-x-small;
-        margin-top: 49px; // align with install instructions
-      }
-    }
-
-
     &__row {
       @extend %clearfix;
-      border-bottom: 1px solid $color-mid-light;
       margin: 0;
-      padding-bottom: 2rem;
-      padding-top: 1rem;
+      padding-bottom: $sp-x-large;
 
       // hide install instructions when no release in channel
       &--closed {
         .p-code-snippet {
           display: none;
         }
-
-        .p-form-help-text {
-          margin-top: .125rem; // align with channel name
-        }
       }
 
       &--heading {
-        padding-bottom: .5rem;
+        padding-bottom: $sp-small;
         padding-top: 0;
 
         @media screen and (max-width: $breakpoint-medium) {
@@ -118,14 +103,39 @@
       }
     }
 
+    // align track select with candidate input
+    &__track-field {
+      margin-top: $sp-large;
+    }
 
-    &__footer {
-      @extend %clearfix;
-      margin: 0;
+    &__channel-name {
+      display: inline-block;
+      font-weight: 400;
+      padding-top: $sp-x-small;
+    }
 
-      @media screen and (min-width: $breakpoint-medium) {
-        padding-top: 1rem;
+    .p-tabs {
+      background: transparent; // remove default white background
+      border-bottom: 1px solid $color-mid-light;
+      position: relative; // for close button;
+
+      &::before {
+        display: none; // hide mobile arror thingy
       }
+
+      .p-tabs__list {
+        padding: 0; // remove left padding
+      }
+    }
+
+    &__hide {
+      background-color: transparent;
+      background-size: $sp-medium $sp-medium;
+      border: 0;
+      padding: $sp-small;
+      position: absolute;
+      right: $sp-small;
+      top: $sp-small;
     }
   }
 

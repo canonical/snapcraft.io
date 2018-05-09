@@ -1,5 +1,18 @@
 <div id='js-channel-map' class="p-strip--light p-channel-map is-closed">
   <div class="row">
+    <div class="col-12">
+      <nav class="p-tabs">
+        <ul class="p-tabs__list" role="tablist">
+          <li class="p-tabs__item" role="presentation">
+            <span class="p-tabs__link" role="tab" aria-selected="true">All versions</span>
+          </li>
+        </ul>
+        <button class="p-channel-map__hide p-icon--close js-hide-channel-map" aria-label="Hide all versions">Hide</button>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-3">
       <form>
         <div class="js-channel-map-arch-field">
@@ -9,7 +22,7 @@
           <select id="js-channel-map-architecture-select">
           </select>
         </div>
-        <div class="js-channel-map-track-field">
+        <div class="p-channel-map__track-field js-channel-map-track-field">
           <label for="js-channel-map-track-select">
             Track
             <span class="p-tooltip is-icon" aria-describedby="tooltip-track">
@@ -24,11 +37,11 @@ where you can install and get updates from.</span>
       </form>
     </div>
 
-    <div class="col-7">
+    <div class="col-9">
 
       <div class="p-channel-map__row p-channel-map__row--heading">
-        <div class="col-2">
-          Channel
+        <div class="col-8">
+          Command line install
           <span class="p-tooltip p-tooltip--btm-center" aria-describedby="tooltip-channel">
             <i class="p-icon--information"></i>
             <span class="p-tooltip__message" role="tooltip" id="tooltip-channel">Install this application from ‘channels’ of varying stability.
@@ -36,16 +49,13 @@ For example, Edge is used for development and testing, whereas
 Stable is used for well tested and production ready versions.</span>
           </span>
         </div>
-        <div class="col-5">
-          Install instructions
-        </div>
       </div>
 
       <div id="js-channel-map-stable" class="p-channel-map__row">
         <div class="col-2">
-          <span class="js-channel-name">stable</span>
+          <span class="p-channel-map__channel-name js-channel-name">stable</span>
         </div>
-        <div class="col-5">
+        <div class="col-6">
           <div class="p-code-snippet">
             <input
               class="p-code-snippet__input"
@@ -66,9 +76,9 @@ Stable is used for well tested and production ready versions.</span>
 
       <div id="js-channel-map-candidate" class="p-channel-map__row">
         <div class="col-2">
-          <span class="js-channel-name">candidate</span>
+          <span class="p-channel-map__channel-name js-channel-name">candidate</span>
         </div>
-        <div class="col-5">
+        <div class="col-6">
           <div class="p-code-snippet">
             <input
               class="p-code-snippet__input"
@@ -89,9 +99,9 @@ Stable is used for well tested and production ready versions.</span>
 
       <div id="js-channel-map-beta" class="p-channel-map__row">
         <div class="col-2">
-          <span class="js-channel-name">beta</span>
+          <span class="p-channel-map__channel-name js-channel-name">beta</span>
         </div>
-        <div class="col-5">
+        <div class="col-6">
           <div class="p-code-snippet">
             <input
               class="p-code-snippet__input"
@@ -112,9 +122,9 @@ Stable is used for well tested and production ready versions.</span>
 
       <div id="js-channel-map-edge" class="p-channel-map__row">
         <div class="col-2">
-          <span class="js-channel-name">edge</span>
+          <span class="p-channel-map__channel-name js-channel-name">edge</span>
         </div>
-        <div class="col-5">
+        <div class="col-6">
           <div class="p-code-snippet">
             <input
               class="p-code-snippet__input"
@@ -133,18 +143,7 @@ Stable is used for well tested and production ready versions.</span>
         </div>
       </div>
 
-      <div class="p-channel-map__footer">
-        <div class="col-2"></div>
-        <div class="col-5">
-      <p class="p-form-help-text">
-        To run snaps on your system you'll need to <a href="https://docs.snapcraft.io/core/install">install snapd</a>.
-      </p>
     </div>
-  </div>
-  </div>
-  <div class="p-channel-map__hide">
-    <button class="p-button--neutral js-hide-channel-map">Hide versions</button>
-  </div>
   </div>
 </div>
 <div class="p-channel-map-overlay" style="display: none"></div>
