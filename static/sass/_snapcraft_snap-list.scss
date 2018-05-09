@@ -11,4 +11,23 @@
       margin-right: $sp-medium;
     }
   }
+
+  .p-snapcraft-first-snap {
+    position: relative;
+
+    &__notification {
+      margin-top: 1rem;
+    }
+
+    &__rocket {
+      margin: {
+        top: -1rem;
+        bottom: -1rem;
+      }
+
+      img {
+        height: 130px;
+      }
+    }
+  }
 }

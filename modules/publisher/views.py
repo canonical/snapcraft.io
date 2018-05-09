@@ -82,6 +82,7 @@ def get_account_snaps():
     user_snaps, registered_snaps = logic.get_snaps_account_info(account)
 
     flask_user = flask.session['openid']
+
     context = {
         'page_slug': 'my-snaps',
         'snaps': user_snaps,

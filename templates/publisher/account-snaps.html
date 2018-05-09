@@ -65,39 +65,35 @@ My snaps — Linux software in the Snap Store
   {% else %}
     {% if snaps|length == 1 %}
       {% for snap in snaps %}
-      <section class="p-strip--light is-shallow">
-        <div class="row">
-          <div class="col-3">
-            <h3 class="p-heading--four">Congratulations!</h3>
-          </div>
-          <div class="col-6">
-            {% if snaps[snap].latest_revisions[0].channels[0] %}
-              <p>
-                You've just released {{ snap }} to the "{{ snaps[snap].latest_revisions[0].channels[0] }}" channel!
-              </p>
-            {% else %}
-              <p>
-                You've just uploaded {{ snap }}!
-              </p>
-            {% endif %}
-            <ul>
-              <li>
-                Want to improve the listing in stores?
-                <a href="/account/snaps/{{ snap }}/market">Edit Store listing</a>
-              </li>
-              {% if not snaps[snap].latest_revisions[0].channels[0] %}
-                <li>
-                  Is your snap ready to release?
-                  <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>
-                </li>
-              {% endif %}
-            </ul>
-          </div>
-          <div class="col-3" style="margin-top: -25px">
-            <img alt="Rocket among stars" src="https://assets.ubuntu.com/v1/320a508d-rocket-icon-with-stars.png" />
-          </div>
-        </div>
-      </section>
+        {% if snaps[snap].is_new %}
+          <section class="p-strip--light is-shallow p-snapcraft-first-snap__notification">
+            <div class="row">
+              <div class="col-9">
+                {% if snaps[snap].latest_revisions[0].channels[0] %}
+                  <p>
+                    You've released {{ snap }} to the "{{ snaps[snap].latest_revisions[0].channels[0] }}" channel!
+                  </p>
+                {% else %}
+                  <p>
+                    You've uploaded {{ snap }}!
+                  </p>
+                {% endif %}
+                <p>
+                  Want to improve the listing in stores?
+                  <a href="/account/snaps/{{ snap }}/listing">Edit Store listing</a>
+                  {% if not snaps[snap].latest_revisions[0].channels[0] %}
+                    <br />
+                    Is your snap ready to release?
+                    <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>
+                  {% endif %}
+                </p>
+              </div>
+              <div class="col-3 p-snapcraft-first-snap__rocket">
+                <img alt="Rocket among stars" src="https://assets.ubuntu.com/v1/abd70be7-Rocket+V2.png" />
+              </div>
+            </div>
+          </section>
+        {% endif %}
       {% endfor %}
     {% endif %}
     <div class="row">
