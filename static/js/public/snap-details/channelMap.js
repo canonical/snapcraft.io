@@ -107,19 +107,43 @@ export default function initChannelMap(el, packageName, channelMapData) {
   let closeTimeout;
 
   // init open/hide buttons
-  document.querySelector('.js-open-channel-map').addEventListener('click', () => {
+  const openChannelMap = () => {
     // clear hiding animation if it's still running
     clearTimeout(closeTimeout);
     // make sure overlay is displayed before CSS transitions are triggered
     channelOverlayEl.style.display = 'block';
     setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
-  });
 
-  document.querySelector('.js-hide-channel-map').addEventListener('click', () => {
+    window.addEventListener('keyup', hideOnEscape);
+    document.addEventListener('click', hideOnClick);
+  };
+
+  const hideChannelMap = () => {
     channelMapEl.classList.add('is-closed');
     // hide overlay after CSS transition is finished
     closeTimeout = setTimeout(() => channelOverlayEl.style.display = 'none', 500);
-  });
+
+    window.removeEventListener('keyup', hideOnEscape);
+    document.removeEventListener('click', hideOnClick);
+  };
+
+  const hideOnEscape = (event) => {
+    if (event.key === "Escape" && !channelMapEl.classList.contains('is-closed')) {
+      hideChannelMap();
+    }
+  };
+
+  const hideOnClick = (event) => {
+    // when channel map is not closed and clicking outside of it, close it
+    if (!channelMapEl.classList.contains('is-closed') &&
+        !event.target.closest(el)) {
+      hideChannelMap();
+    }
+  };
+
+  // show/hide when clicking on buttons
+  document.querySelector('.js-open-channel-map').addEventListener('click', openChannelMap);
+  document.querySelector('.js-hide-channel-map').addEventListener('click', hideChannelMap);
 
   // get architectures from data
   const architectures = Object.keys(channelMapData);
