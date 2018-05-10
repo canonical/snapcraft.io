@@ -251,6 +251,7 @@ def snap_details(snap_name):
                 parser.parse(details.get('last_updated'))
             )
         ),
+        'last_updated_raw': details.get('last_updated'),
 
         # Data from metrics API
         'countries': country_devices.country_data,

@@ -1,6 +1,25 @@
 {% extends "_layout.html" %}
 
-{% block title %}Find snaps — Linux software in the Snap Store{% endblock %}
+{% block meta_title %}Find snaps — Linux software in the Snap Store{% endblock %}
+
+{% block meta_description %}Find and install the best Linux software for all major Linux distributions.{% endblock %}
+
+{% block meta_schema %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@id": "https://snapcraft.io/#website",
+      "@type": "WebSite",
+      "name": "Snapcraft",
+      "url": "https://snapcraft.io{{ self.meta_path() }}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://snapcraft.io/search?q={q}",
+        "query-input": "required name=q"
+      }
+    }
+  </script>
+{% endblock %}
 
 {% block content %}
   <section id="main-content" class="p-strip--image is-deep snapcraft-banner-background">

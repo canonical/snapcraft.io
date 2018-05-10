@@ -1,19 +1,44 @@
 {% extends "_layout.html" %}
 
-{% block title %}{{ snap_title }} — Linux software in the Snap Store{% endblock %}
+{% block meta_title %}{{ snap_title }} - Linux software in the Snap Store{% endblock %}
 
-{% block meta %}
-  <meta property="og:title" content="{{ snap_title }} — Linux software in the Snap Store"/>
-  <meta property="og:url" content="https://snapcraft.io/{{ package_name }}"/>
-  <meta property="og:site_name" content="Snapcraft"/>
-  <meta property="og:type" content="product"/>
+{% block meta_description %}Get the latest version of {{ snap_title }} for Linux - {{ summary }}{% endblock %}
 
-  {% if summary %}<meta property="og:description" content="{{ summary }}"/>{% endif %}
-  {% if icon_url %}
-    <meta property="og:image" content="{{ icon_url }}"/>
-  {% else %}
-    <meta property="og:image" content="https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png" />
-  {% endif %}
+{% if icon_url %}
+  {% block meta_image %}
+    {{ icon_url }}
+  {% endblock %}
+{% endif %}
+
+{% block meta_schema %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "{{ snap_title }}",
+      "description": "{{ summary }}",
+      "datePublished": "{{ last_updated_raw }}",
+      {% if screenhots and screenshots|length > 0 %}
+      "screenshot": "{{ screenshots[0] }}",
+      {% endif %}
+      "image": "{{ icon_url }}",
+      "operatingSystem": "linux",
+      "offers": {
+        "price": {% if prices and prices['USD'] %}{{ prices['USD'] }}{% else %}0.00{% endif %},
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "{{ publisher }}"
+        {% if website %}, {# the , is within the if to avoid parsing errors #}
+        "url": "{{ website }}"
+        {% endif %}
+      },
+      "softwareVersion": "{{ version }}",
+      "fileSize": "{{ filesize }}",
+      "license": "{{ license }}"
+    }
+  </script>
 {% endblock %}
 
 {% block content %}

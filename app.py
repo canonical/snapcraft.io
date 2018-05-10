@@ -102,6 +102,7 @@ def utility_processor():
         'SENTRY_PUBLIC_DSN': SENTRY_PUBLIC_DSN,
         'COMMIT_ID': COMMIT_ID,
         'ENVIRONMENT': ENVIRONMENT,
+        'path': flask.request.path,
         'user_name': user_name,
 
         # Functions
