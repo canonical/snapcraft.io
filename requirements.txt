@@ -1,5 +1,5 @@
 bleach==2.0.0
-Flask==0.12.2
+Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.2
 humanize==0.5.1
@@ -11,5 +11,5 @@ raven[flask]==6.5.0
 requests==2.18.4
 requests-cache==0.4.13
 responses==0.9.0
-talisker==0.9.6
+talisker==0.9.8
 Flask-Testing==0.6.2
