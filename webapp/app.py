@@ -23,20 +23,21 @@ from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
-# Local modules
-import modules.authentication as authentication
-import modules.helpers as helpers
-import modules.public.views as public_views
-import modules.publisher.views as publisher_views
-import modules.publisher.api as publisher_api
-import template_functions
-from decorators import login_required
-from modules.macaroon import (
+# Local webapp
+import webapp.authentication as authentication
+import webapp.helpers as helpers
+import webapp.public.views as public_views
+import webapp.publisher.views as publisher_views
+import webapp.publisher.api as publisher_api
+import webapp.template_functions as template_functions
+from webapp.decorators import login_required
+from webapp.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
 )
 
-app = flask.Flask(__name__)
+app = flask.Flask(
+    __name__, template_folder='../templates', static_folder='../static')
 talisker.flask.register(app)
 app.wsgi_app = ProxyFix(app.wsgi_app)
 if app.debug:

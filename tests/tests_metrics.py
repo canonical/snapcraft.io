@@ -1,5 +1,5 @@
 import unittest
-import modules.metrics.metrics as metrics
+import webapp.metrics.metrics as metrics
 
 
 class OsMetricTest(unittest.TestCase):

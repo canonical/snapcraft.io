@@ -1,6 +1,6 @@
-import modules.cache as cache
+import webapp.cache as cache
 import os
-from modules.exceptions import (
+from webapp.exceptions import (
     ApiResponseDecodeError,
     ApiResponseError,
     ApiResponseErrorList

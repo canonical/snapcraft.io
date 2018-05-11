@@ -5,7 +5,7 @@ import unittest
 import responses
 import urllib
 
-import app
+import webapp.app as app
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True

@@ -3,7 +3,7 @@ import functools
 
 # Third party packages
 import flask
-import modules.authentication as authentication
+import webapp.authentication as authentication
 
 
 def login_required(func):

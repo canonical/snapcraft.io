@@ -1,5 +1,5 @@
 import unittest
-import modules.publisher.logic as logic
+import webapp.publisher.logic as logic
 
 
 class PublisherLogicTest(unittest.TestCase):

@@ -7,7 +7,7 @@ import requests
 import prometheus_client
 
 # Local packages
-from modules.exceptions import (
+from webapp.exceptions import (
     ApiTimeoutError,
     ApiConnectionError
 )

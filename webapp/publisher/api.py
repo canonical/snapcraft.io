@@ -1,7 +1,7 @@
-import modules.authentication as authentication
-import modules.cache as cache
+import webapp.authentication as authentication
+import webapp.cache as cache
 import os
-from modules.exceptions import (
+from webapp.exceptions import (
     AgreementNotSigned,
     ApiResponseDecodeError,
     ApiResponseError,

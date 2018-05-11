@@ -3,9 +3,9 @@ import requests
 import pymacaroons
 import responses
 
-from app import app
+from webapp.app import app
 from flask_testing import TestCase
-from modules.authentication import get_authorization_header
+from webapp.authentication import get_authorization_header
 
 
 # Make sure tests fail on stray responses.
