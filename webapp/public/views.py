@@ -1,12 +1,12 @@
 import flask
 import humanize
-import modules.metrics.helper as metrics_helper
-import modules.metrics.metrics as metrics
-import modules.public.api as api
-import modules.public.logic as logic
+import webapp.metrics.helper as metrics_helper
+import webapp.metrics.metrics as metrics
+import webapp.public.api as api
+import webapp.public.logic as logic
 from dateutil import parser
 from math import floor
-from modules.exceptions import (
+from webapp.exceptions import (
     ApiError,
     ApiTimeoutError,
     ApiResponseDecodeError,

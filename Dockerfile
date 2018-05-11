@@ -19,6 +19,6 @@ RUN echo "${COMMIT_ID}" > version-info.txt
 ENV COMMIT_ID "${COMMIT_ID}"
 
 # Setup commands to run server
-ENTRYPOINT ["talisker.gunicorn", "app:app", "--access-logfile", "-", "--error-logfile", "-", "--bind"]
+ENTRYPOINT ["talisker.gunicorn", "webapp.app:app", "--access-logfile", "-", "--error-logfile", "-", "--bind"]
 CMD ["0.0.0.0:80"]
 

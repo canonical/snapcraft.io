@@ -1,11 +1,11 @@
 import flask
-import modules.authentication as authentication
-import modules.metrics.helper as metrics_helper
-import modules.metrics.metrics as metrics
-import modules.publisher.api as api
-import modules.publisher.logic as logic
+import webapp.authentication as authentication
+import webapp.metrics.helper as metrics_helper
+import webapp.metrics.metrics as metrics
+import webapp.publisher.api as api
+import webapp.publisher.logic as logic
 from json import loads
-from modules.exceptions import (
+from webapp.exceptions import (
     AgreementNotSigned,
     ApiError,
     ApiResponseErrorList,

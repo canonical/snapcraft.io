@@ -2,7 +2,7 @@ import unittest
 
 import responses
 
-from app import app
+from webapp.app import app
 from flask_testing import TestCase
 
 

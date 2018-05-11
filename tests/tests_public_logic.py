@@ -1,5 +1,5 @@
 import unittest
-import modules.public.logic as logic
+import webapp.public.logic as logic
 
 
 class PublicLogicTest(unittest.TestCase):
