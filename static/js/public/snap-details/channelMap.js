@@ -123,7 +123,31 @@ function initTabs(el) {
   });
 }
 
+function initOpenSnapButtons() {
+  document.addEventListener('click', (event) => {
+    const openButton = event.target.closest('.js-open-snap-button');
+
+    if (openButton) {
+      const name = openButton.dataset.snap;
+      let iframe = document.querySelector('.js-snap-open-frame');
+
+      if (iframe) {
+        iframe.parentNode.removeChild(iframe);
+      }
+
+      iframe = document.createElement('iframe');
+      iframe.className = 'js-snap-open-frame';
+      iframe.style.position = 'absolute';
+      iframe.style.top = '-9999px';
+      iframe.style.left = '-9999px';
+      iframe.src = `snap://${name}`;
+      document.body.appendChild(iframe);
+    }
+  });
+}
+
 export default function initChannelMap(el, packageName, channelMapData) {
+  initOpenSnapButtons();
 
   const channelMapEl = document.querySelector(el);
   const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
