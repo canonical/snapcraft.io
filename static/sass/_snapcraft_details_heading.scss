@@ -60,11 +60,18 @@
     }
   }
 
+  .p-view-store-button,
+  .p-cli-install {
+    margin-top: $sp-x-small;
+  }
+
+  .p-form-help-text.is-condensed {
+    margin-top: $sp-xx-small;
+  }
 
   .p-channel-map {
     box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
     left: 0;
-    padding-bottom: $sp-medium;
     padding-top: $sp-medium;
     position: absolute;
     right: 0;
@@ -136,6 +143,14 @@
       position: absolute;
       right: $sp-small;
       top: $sp-small;
+    }
+  }
+
+  .p-channel-map__tab {
+    display: none;
+
+    &.is-open {
+      display: block;
     }
   }
 

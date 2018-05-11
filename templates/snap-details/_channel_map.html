@@ -4,15 +4,44 @@
       <nav class="p-tabs">
         <ul class="p-tabs__list" role="tablist">
           <li class="p-tabs__item" role="presentation">
-            <span class="p-tabs__link" role="tab" aria-selected="true">All versions</span>
+            <a href="#install" class="p-tabs__link" role="tab" aria-controls="channel-map-tab-install">{{ snap_title }} {{ version }}</a>
+          </li>
+          <li class="p-tabs__item" role="presentation">
+            <a href="#versions" class="p-tabs__link" role="tab" aria-controls="channel-map-tab-versions" aria-selected="true">All versions</a>
           </li>
         </ul>
         <button class="p-channel-map__hide p-icon--close js-hide-channel-map" aria-label="Hide all versions">Hide</button>
       </nav>
     </div>
   </div>
-
-  <div class="row">
+  <div class="row p-channel-map__tab" id="channel-map-tab-install">
+    <div class="col-6">
+      <p>Ubuntu 16.04 or later?</p>
+      <p class="p-form-help-text is-condensed">(Or a snap enabled store)</p>
+      <button class="p-view-store-button">View in store</button>
+    </div>
+    <div class="col-5">
+      <p>Got snapd installed?</p>
+      <p class="p-form-help-text  is-condensed">(Or just prefer the command line)</p>
+      <div class="p-code-snippet p-cli-install">
+        <input
+          class="p-code-snippet__input"
+          id="snap-install"
+          value="sudo snap install {{ package_name }} {% if default_channel != 'stable' %}--channel {{default_channel}}{% endif %}"
+          readonly="readonly"
+        />
+        <button
+          class="p-code-snippet__action js-clipboard-copy"
+          data-clipboard-target="#snap-install">
+          Copy to clipboard
+        </button>
+      </div>
+      <p class="p-form-help-text">
+        Don't have snapd? <a href="https://docs.snapcraft.io/core/install">Get set up for snaps</a>.
+      </p>
+    </div>
+  </div>
+  <div class="row p-channel-map__tab is-open" id="channel-map-tab-versions">
     <div class="col-3">
       <form>
         <div class="js-channel-map-arch-field">
