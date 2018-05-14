@@ -152,7 +152,7 @@ export default function initChannelMap(el, packageName, channelMapData) {
   const channelMapEl = document.querySelector(el);
   const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
 
-  const defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls=channel-map-tab-versions]');
+  const defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls=channel-map-tab-install]');
   initTabs(channelMapEl);
 
   let closeTimeout;
