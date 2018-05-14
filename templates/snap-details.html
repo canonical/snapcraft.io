@@ -86,8 +86,8 @@
   
   {% include "snap-details/_channel_map.html" %}
 
-  {% if screenshots %}
-    <div class="p-strip is-shallow">
+  <div class="p-strip is-shallow">
+    {% if screenshots %}
       <div class="row">
         <div class="p-screenshots" id="js-snap-screenshots">
           <div class="p-screenshots__wrapper">
@@ -99,11 +99,15 @@
           </div>
         </div>
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
 
-  <div class="p-strip is-shallow">
     <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
+    </div>
+
+    <div class="row u-no-margin--top">
       <div class="col-8">
         {% if summary %}<h4>{{ summary }}</h4>{% endif %}
         {% for paragraph in description_paragraphs %}
@@ -124,7 +128,14 @@
         </table>
       </div>
     </div>
-    <div class="row" style="margin-top: 2rem;">
+
+    <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
+    </div>
+
+    <div class="row u-no-margin--top">
       {% if countries %}
         <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder">
           <h4>Where people are using {{ snap_title }}</h4>
