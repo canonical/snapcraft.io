@@ -101,15 +101,70 @@ function setArchitecture(arch, packageName, channelMapData) {
   setTrack(arch, track, packageName, channelMap);
 }
 
+function selectTab(tabEl, tabsWrapperEl) {
+  const selected = tabEl.getAttribute('aria-selected');
+  if (!selected) {
+    tabsWrapperEl.querySelector('.p-channel-map__tab.is-open').classList.remove('is-open');
+    tabsWrapperEl.querySelector('.p-tabs__link[aria-selected]').removeAttribute('aria-selected');
+
+    document.getElementById(tabEl.getAttribute('aria-controls')).classList.add('is-open');
+    tabEl.setAttribute('aria-selected', "true");
+  }
+}
+
+function initTabs(el) {
+  el.addEventListener('click', (event) => {
+    const target = event.target.closest('.p-tabs__link');
+
+    if (target) {
+      event.preventDefault();
+      selectTab(target, el);
+    }
+  });
+}
+
+function initOpenSnapButtons() {
+  document.addEventListener('click', (event) => {
+    const openButton = event.target.closest('.js-open-snap-button');
+
+    if (openButton) {
+      const name = openButton.dataset.snap;
+      let iframe = document.querySelector('.js-snap-open-frame');
+
+      if (iframe) {
+        iframe.parentNode.removeChild(iframe);
+      }
+
+      iframe = document.createElement('iframe');
+      iframe.className = 'js-snap-open-frame';
+      iframe.style.position = 'absolute';
+      iframe.style.top = '-9999px';
+      iframe.style.left = '-9999px';
+      iframe.src = `snap://${name}`;
+      document.body.appendChild(iframe);
+    }
+  });
+}
+
 export default function initChannelMap(el, packageName, channelMapData) {
+  initOpenSnapButtons();
+
   const channelMapEl = document.querySelector(el);
   const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
+
+  const defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls=channel-map-tab-install]');
+  initTabs(channelMapEl);
+
   let closeTimeout;
 
   // init open/hide buttons
   const openChannelMap = () => {
     // clear hiding animation if it's still running
     clearTimeout(closeTimeout);
+
+    // select default tab before opening
+    selectTab(defaultTab, channelMapEl);
+
     // make sure overlay is displayed before CSS transitions are triggered
     channelOverlayEl.style.display = 'block';
     setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
