@@ -197,6 +197,12 @@ function initForm(config, initialState, errors) {
 
       // make sure we don't warn user about leaving the page when submitting
       ignoreChangesOnUnload = true;
+
+      // disable button and show spinner when loading is long
+      disableSubmit();
+      setTimeout(() => {
+        submitButton.classList.add('has-spinner');
+      }, 2000);
     } else {
       event.preventDefault();
     }
