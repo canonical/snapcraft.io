@@ -16,7 +16,7 @@
       <ul class="p-navigation__links" role="menu">
         <li class="p-navigation__link" role="menuitem">
           <a
-            {% if page_slug and page_slug == 'store' %} class="is-selected"{% endif %}
+            {% if path and path.startswith('/store') %} class="is-selected"{% endif %}
             href="/store">Store
           </a>
         </li>
@@ -30,7 +30,7 @@
         {% if user_name %}
           <li role="menuitem" class="p-navigation__link p-dropdown">
               <a
-                {% if page_slug and 'account' in page_slug %}
+                {% if path and path.startswith('/account') %}
                   class="p-dropdown__toggle is-selected"
                 {% else %}
                   class="p-dropdown__toggle"
