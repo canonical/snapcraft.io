@@ -84,7 +84,6 @@ def get_account_snaps():
     flask_user = flask.session['openid']
 
     context = {
-        'page_slug': 'my-snaps',
         'snaps': user_snaps,
         'current_user': flask_user['nickname'],
         'registered_snaps': registered_snaps,
@@ -219,7 +218,6 @@ def publisher_snap_metrics(snap_name):
     nodata = not any([country_devices, active_devices])
 
     context = {
-        'page_slug': 'my-snaps',
         # Data direct from details API
         'snap_name': snap_name,
         'snap_title': details['title'],
@@ -264,7 +262,6 @@ def get_listing_snap(snap_name):
         if m['type'] == 'screenshot']
 
     context = {
-        "page_slug": 'my-snaps',
         "snap_id": snap_details['snap_id'],
         "snap_name": snap_details['snap_name'],
         "snap_title": snap_details['title'],
@@ -424,7 +421,6 @@ def post_listing_snap(snap_name):
                 if m['type'] == 'screenshot']
 
             context = {
-                "page_slug": 'my-snaps',
                 # read-only values from details API
                 "snap_id": snap_details['snap_id'],
                 "snap_name": snap_details['snap_name'],

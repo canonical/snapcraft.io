@@ -70,7 +70,6 @@ def store():
     return flask.render_template(
         'store.html',
         featured_snaps=featured_snaps,
-        page_slug='store',
         error_info=error_info
     ), status_code
 

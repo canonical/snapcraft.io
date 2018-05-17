@@ -47,9 +47,13 @@
     .p-dropdown {
       @media (min-width: $breakpoint-navigation-threshold + 1) {
         height: 3rem; // to align with header height
+        position: relative;
 
         .p-dropdown__menu {
           display: none;
+          position: absolute;
+          right: 0;
+          white-space: nowrap;
 
           &[aria-hidden="false"] {
             display: block;
