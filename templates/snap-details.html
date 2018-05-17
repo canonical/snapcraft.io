@@ -58,8 +58,8 @@
         </div>
       </div>
       <div class="col-5 p-snap-install__versions">
-        <button class="p-button--positive js-open-channel-map" name="channel-map-tab-install">Install</button>
-        <button class="p-button--neutral js-open-channel-map" name="channel-map-tab-versions">All versions</button>
+        <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
+        <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button>
       </div>
     </div>
   </div>
@@ -98,13 +98,13 @@
           <p{% if website %} class="u-no-margin--top"{% endif %}>
             <a href="{{ contact }}">Contact {{ publisher }}</a>
           </p>
-        {% endif %}       
+        {% endif %}
       </div>
       <div class="col-4">
         <table class="p-table-key-value">
           <tr><th>License</th><td>{{ license }}</td></tr>
           <tr><th>Size</th><td>{{ filesize }}</td></tr>
-          <tr><th width="100">Version</th><td>{{ version }}</td></tr>          
+          <tr><th width="100">Version</th><td>{{ version }}</td></tr>
         </table>
       </div>
     </div>

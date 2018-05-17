@@ -152,28 +152,33 @@ export default function initChannelMap(el, packageName, channelMapData) {
   const channelMapEl = document.querySelector(el);
   const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
 
-  var defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls=channel-map-tab-install]');
   initTabs(channelMapEl);
 
   let closeTimeout;
 
   // init open/hide buttons
-  const openChannelMap = (openedTab) => {
-    // clear hiding animation if it's still running
-    clearTimeout(closeTimeout);
-    
-    if (openedTab)
-      defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls='+openedTab+']');
+  const openChannelMap = (event) => {
+    const openButton = event.target.closest('.js-open-channel-map');
 
-    // select default tab before opening
-    selectTab(defaultTab, channelMapEl);
+    if (openButton) {
+      // open tab based on button click (or install tab by default)
+      const openTabName = openButton.getAttribute('aria-controls') || 'channel-map-tab-install';
 
-    // make sure overlay is displayed before CSS transitions are triggered
-    channelOverlayEl.style.display = 'block';
-    setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
+      // clear hiding animation if it's still running
+      clearTimeout(closeTimeout);
 
-    window.addEventListener('keyup', hideOnEscape);
-    document.addEventListener('click', hideOnClick);
+      const openTab = channelMapEl.querySelector(`.p-tabs__link[aria-controls=${openTabName}]`);
+
+      // select default tab before opening
+      selectTab(openTab, channelMapEl);
+
+      // make sure overlay is displayed before CSS transitions are triggered
+      channelOverlayEl.style.display = 'block';
+      setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
+
+      window.addEventListener('keyup', hideOnEscape);
+      document.addEventListener('click', hideOnClick);
+    }
   };
 
   const hideChannelMap = () => {
@@ -200,13 +205,7 @@ export default function initChannelMap(el, packageName, channelMapData) {
   };
 
   // show/hide when clicking on buttons
-  Array.from(document.querySelectorAll('.js-open-channel-map')).forEach(
-    button => {
-      button.addEventListener('click', ()=> {
-        openChannelMap(button.getAttribute('name'));
-      });
-    }
-  );
+  document.addEventListener('click', openChannelMap);
   document.querySelector('.js-hide-channel-map').addEventListener('click', hideChannelMap);
 
   // get architectures from data
