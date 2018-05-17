@@ -73,7 +73,7 @@
     }
 
     &__row {
-      @extend %clearfix;
+      @extend %vf-clearfix;
       margin: 0;
       padding-bottom: $sp-x-large;
 
