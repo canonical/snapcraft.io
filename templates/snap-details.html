@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="col-5 p-snap-install__versions">
-        <button class="p-button--positive js-open-channel-map" name="channel-map-tab-install">Install…</button>
+        <button class="p-button--positive js-open-channel-map" name="channel-map-tab-install">Install</button>
         <button class="p-button--neutral js-open-channel-map" name="channel-map-tab-versions">All versions</button>
       </div>
     </div>
@@ -98,27 +98,7 @@
           <p{% if website %} class="u-no-margin--top"{% endif %}>
             <a href="{{ contact }}">Contact {{ publisher }}</a>
           </p>
-        {% endif %}
-
-        <div class="p-snap-install">
-          <p>Install stable version</p>
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install"
-              value="sudo snap install {{ package_name }} {% if default_channel != 'stable' %}--channel {{default_channel}}{% endif %}"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-            To run snaps on your system you'll need to <a href="https://docs.snapcraft.io/core/install">install snapd</a>.
-          </p>
-        </div>        
+        {% endif %}       
       </div>
       <div class="col-4">
         <table class="p-table-key-value">
