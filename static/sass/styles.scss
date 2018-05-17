@@ -8,6 +8,7 @@ $color-navigation-background: #252525;
 
 @include vf-base;
 
+@include vf-u-hide; // required by vf-p-icons
 @include vf-p-card; // required by vf-p-tooltips
 @include vf-p-divider;
 @include vf-p-links;
