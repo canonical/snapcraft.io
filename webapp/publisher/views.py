@@ -289,8 +289,27 @@ def get_listing_snap(snap_name):
 
 
 def get_register_name():
+    snap_name = flask.request.args.get('snap_name', default='', type=str)
+    is_private_str = flask.request.args.get(
+        'is_private', default='False', type=str)
+    is_private = is_private_str == 'True'
+
+    conflict_str = flask.request.args.get(
+        'conflict', default='False', type=str)
+    conflict = conflict_str == 'True'
+
+    is_private_str = flask.request.args.get(
+        'is_private', default='False', type=str)
+    is_private = is_private_str == 'True'
+
+    context = {
+        'snap_name': snap_name,
+        'is_private': is_private,
+        'conflict': conflict,
+    }
     return flask.render_template(
-        'publisher/register-name.html')
+        'publisher/register-name.html',
+        **context)
 
 
 def post_register_name():
@@ -299,8 +318,8 @@ def post_register_name():
     if not snap_name:
         return flask.redirect('/account/register-name')
 
+    is_private = flask.request.form.get('is_private') == 'private'
     store = flask.request.form.get('store')
-    is_private = flask.request.form.get('is_private') == 'on'
     registrant_comment = flask.request.form.get('registrant_comment')
 
     try:
@@ -311,7 +330,22 @@ def post_register_name():
             store=store,
             registrant_comment=registrant_comment)
     except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 409:
+            for error in api_response_error_list.errors:
+                if error['code'] == 'already_claimed':
+                    # TODO add flash message for next page with notification
+                    return flask.redirect('/account')
+                elif error['code'] == 'already_registered':
+                    return flask.redirect(
+                        flask.url_for(
+                            'get_register_name',
+                            snap_name=snap_name,
+                            is_private=is_private,
+                            conflict=True))
+
         context = {
+            'snap_name': snap_name,
+            'is_private': is_private,
             'errors': api_response_error_list.errors,
         }
 
@@ -321,7 +355,7 @@ def post_register_name():
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    return flask.redirect('/account/register-name')
+    return flask.redirect('/account')
 
 
 def post_listing_snap(snap_name):
