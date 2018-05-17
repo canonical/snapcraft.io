@@ -152,15 +152,18 @@ export default function initChannelMap(el, packageName, channelMapData) {
   const channelMapEl = document.querySelector(el);
   const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
 
-  const defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls=channel-map-tab-install]');
+  var defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls=channel-map-tab-install]');
   initTabs(channelMapEl);
 
   let closeTimeout;
 
   // init open/hide buttons
-  const openChannelMap = () => {
+  const openChannelMap = (openedTab) => {
     // clear hiding animation if it's still running
     clearTimeout(closeTimeout);
+    
+    if (openedTab)
+      defaultTab = channelMapEl.querySelector('.p-tabs__link[aria-controls='+openedTab+']');
 
     // select default tab before opening
     selectTab(defaultTab, channelMapEl);
@@ -197,7 +200,13 @@ export default function initChannelMap(el, packageName, channelMapData) {
   };
 
   // show/hide when clicking on buttons
-  document.querySelector('.js-open-channel-map').addEventListener('click', openChannelMap);
+  Array.from(document.querySelectorAll('.js-open-channel-map')).forEach(
+    button => {
+      button.addEventListener('click', ()=> {
+        openChannelMap(button.getAttribute('name'));
+      });
+    }
+  );
   document.querySelector('.js-hide-channel-map').addEventListener('click', hideChannelMap);
 
   // get architectures from data

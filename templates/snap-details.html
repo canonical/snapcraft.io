@@ -44,7 +44,7 @@
 {% block content %}
   <div class="p-strip--light is-shallow">
     <div class="row">
-      <div class="col-5">
+      <div class="col-7">
         <div class="p-snap-heading">
           {% if icon_url %}
             <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" />
@@ -57,29 +57,9 @@
           </div>
         </div>
       </div>
-      <div class="col-5">
-        <div class="p-snap-install">
-          <p>Install stable version</p>
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install"
-              value="sudo snap install {{ package_name }} {% if default_channel != 'stable' %}--channel {{default_channel}}{% endif %}"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-            To run snaps on your system you'll need to <a href="https://docs.snapcraft.io/core/install">install snapd</a>.
-          </p>
-        </div>
-      </div>
-      <div class="col-2 p-snap-install__versions">
-        <button class="p-button--neutral js-open-channel-map">Install…</button>
+      <div class="col-5 p-snap-install__versions">
+        <button class="p-button--positive js-open-channel-map" name="channel-map-tab-install">Install…</button>
+        <button class="p-button--neutral js-open-channel-map" name="channel-map-tab-versions">All versions</button>
       </div>
     </div>
   </div>
@@ -119,12 +99,32 @@
             <a href="{{ contact }}">Contact {{ publisher }}</a>
           </p>
         {% endif %}
+
+        <div class="p-snap-install">
+          <p>Install stable version</p>
+          <div class="p-code-snippet">
+            <input
+              class="p-code-snippet__input"
+              id="snap-install"
+              value="sudo snap install {{ package_name }} {% if default_channel != 'stable' %}--channel {{default_channel}}{% endif %}"
+              readonly="readonly"
+            />
+            <button
+              class="p-code-snippet__action js-clipboard-copy"
+              data-clipboard-target="#snap-install">
+              Copy to clipboard
+            </button>
+          </div>
+          <p class="p-form-help-text">
+            To run snaps on your system you'll need to <a href="https://docs.snapcraft.io/core/install">install snapd</a>.
+          </p>
+        </div>        
       </div>
       <div class="col-4">
         <table class="p-table-key-value">
-          <tr><th width="100">Version</th><td>{{ version }}</td></tr>
-          <tr><th>Size</th><td>{{ filesize }}</td></tr>
           <tr><th>License</th><td>{{ license }}</td></tr>
+          <tr><th>Size</th><td>{{ filesize }}</td></tr>
+          <tr><th width="100">Version</th><td>{{ version }}</td></tr>          
         </table>
       </div>
     </div>
