@@ -43,21 +43,9 @@
     }
   }
 
-  .p-snap-install {
-
-    &__versions {
-      margin-top: 68px; // align with install instructions
-      text-align: right;
-    }
-
-    .p-code-snippet {
-      font-size: 1rem;
-      margin-top: $sp-x-small;
-    }
-
-    @media screen and (min-width: $breakpoint-medium) {
-      margin-top: 41px; // align with channel map
-    }
+  .p-snap-install-buttons {
+    margin-top: 68px; // align with snap name (60px icon + 8px margin)
+    text-align: right;
   }
 
   .p-view-store-button,
