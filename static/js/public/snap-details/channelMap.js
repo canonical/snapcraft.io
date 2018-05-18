@@ -1,3 +1,5 @@
+/* global ga */
+
 const LATEST = 'latest';
 
 function setTrack(arch, track, packageName, channelMap) {
@@ -142,6 +144,15 @@ function initOpenSnapButtons() {
       iframe.style.left = '-9999px';
       iframe.src = `snap://${name}`;
       document.body.appendChild(iframe);
+
+      if (typeof ga !== 'undefined') {
+        ga('gtm1.send', {
+          hitType: 'event',
+          eventCategory: 'Snap details',
+          eventAction: 'Click view in desktop store button',
+          eventLabel: `Click view in desktop store for ${name} snap`
+        });
+      }
     }
   });
 }
@@ -178,6 +189,15 @@ export default function initChannelMap(el, packageName, channelMapData) {
 
       window.addEventListener('keyup', hideOnEscape);
       document.addEventListener('click', hideOnClick);
+
+      if (typeof ga !== 'undefined') {
+        ga('gtm1.send', {
+          hitType: 'event',
+          eventCategory: 'Snap details',
+          eventAction: 'Open install dialog',
+          eventLabel: `Open ${openTabName} dialog tab for ${packageName} snap`
+        });
+      }
     }
   };
 
