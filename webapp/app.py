@@ -373,6 +373,12 @@ def get_register_name():
     return publisher_views.get_register_name()
 
 
+@app.route('/account/reserve-name')
+@login_required
+def get_reserve_name():
+    return publisher_views.get_reserve_name()
+
+
 @app.route('/account/register-name', methods=['POST'])
 @login_required
 def post_register_name():

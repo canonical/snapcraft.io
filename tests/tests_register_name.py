@@ -27,6 +27,28 @@ class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
         self.assert_template_used('publisher/register-name.html')
 
 
+class GetReserveNamePage(BaseTestCases.BaseAppTesting):
+    def setUp(self):
+        endpoint_url = (
+            '/account/register-name'
+            '?snap_name=test-snap&is_private=False&conflict=True')
+        super().setUp(
+            snap_name=None,
+            api_url=None,
+            endpoint_url=endpoint_url)
+
+    @responses.activate
+    def test_reserve_name_logged_in(self):
+        self._log_in(self.client)
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+        self.assert_template_used('publisher/register-name.html')
+        self.assert_context('snap_name', 'test-snap')
+        self.assert_context('is_private', False)
+        self.assert_context('conflict', True)
+
+
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         endpoint_url = '/account/register-name'
@@ -88,7 +110,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        self.assertEqual(response.location, 'http://localhost/account')
 
     @responses.activate
     def test_post_store(self):
@@ -117,7 +139,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        self.assertEqual(response.location, 'http://localhost/account')
 
     @responses.activate
     def test_post_private(self):
@@ -125,7 +147,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             responses.POST, self.api_url,
             json={}, status=200)
 
-        self.data['is_private'] = 'on'
+        self.data['is_private'] = 'private'
         response = self.client.post(
             self.endpoint_url,
             data=self.data,
@@ -146,7 +168,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        self.assertEqual(response.location, 'http://localhost/account')
 
     @responses.activate
     def test_post_registrant_comment(self):
@@ -175,7 +197,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        self.assertEqual(response.location, 'http://localhost/account')
 
     @responses.activate
     def test_error_from_api(self):
@@ -197,3 +219,53 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
 
         self.assert_template_used('publisher/register-name.html')
         self.assert_context('errors', payload['error_list'])
+
+    @responses.activate
+    def test_name_already_registered(self):
+        payload = {
+            'error_list': [
+                {
+                    'code': 'already_registered'
+                },
+            ]
+        }
+        responses.add(
+            responses.POST, self.api_url,
+            json=payload, status=409)
+
+        response = self.client.post(
+            self.endpoint_url,
+            data=self.data,
+        )
+
+        assert response.status_code == 302
+        self.assertIn(
+            'snap_name=test-snap',
+            response.location)
+        self.assertIn(
+            'is_private=False',
+            response.location)
+        self.assertIn(
+            'http://localhost/account/register-name',
+            response.location)
+
+    @responses.activate
+    def test_claim_dispute(self):
+        payload = {
+            'error_list': [
+                {
+                    'code': 'already_claimed'
+                },
+            ]
+        }
+        responses.add(
+            responses.POST, self.api_url,
+            json=payload, status=409)
+
+        response = self.client.post(
+            self.endpoint_url,
+            data=self.data,
+        )
+
+        assert response.status_code == 302
+        self.assertEqual(response.location, 'http://localhost/account')
