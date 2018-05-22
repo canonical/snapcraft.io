@@ -79,13 +79,13 @@
           </div>
         </div>
       </div>
-    {% endif %}
 
-    <div class="row">
-      <div class="col-12">
-        <hr />
+      <div class="row">
+        <div class="col-12">
+          <hr />
+        </div>
       </div>
-    </div>
+    {% endif %}
 
     <div class="row u-no-margin--top">
       <div class="col-8">
@@ -109,40 +109,42 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
-    </div>
-
-    <div class="row u-no-margin--top">
-      {% if countries %}
-        <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder">
-          <h4>Where people are using {{ snap_title }}</h4>
-          <div id="js-snap-map" class="snapcraft-territories"></div>
+    {% if countries or normalized_os %}
+      <div class="row">
+        <div class="col-12">
+          <hr />
         </div>
-      {% endif %}
-      {% if normalized_os %}
-        <div class="col-4">
-          <h4>Users by distribution (log)</h4>
-          <div class="snapcraft-distro-chart">
-            <div class="snapcraft-distro-chart__names">
-              {% for distro in normalized_os %}
-              <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
-              {% endfor %}
-            </div>
-            <div class="snapcraft-distro-chart__bars">
-              {% for distro in normalized_os %}
-                <div
-                  class="snapcraft-distro-chart__bar"
-                  style="width: {{ distro.value * 100 }}%"
-                ></div>
-              {% endfor %}
+      </div>
+
+      <div class="row u-no-margin--top">
+        {% if countries %}
+          <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder">
+            <h4>Where people are using {{ snap_title }}</h4>
+            <div id="js-snap-map" class="snapcraft-territories"></div>
+          </div>
+        {% endif %}
+        {% if normalized_os %}
+          <div class="col-4">
+            <h4>Users by distribution (log)</h4>
+            <div class="snapcraft-distro-chart">
+              <div class="snapcraft-distro-chart__names">
+                {% for distro in normalized_os %}
+                <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+                {% endfor %}
+              </div>
+              <div class="snapcraft-distro-chart__bars">
+                {% for distro in normalized_os %}
+                  <div
+                    class="snapcraft-distro-chart__bar"
+                    style="width: {{ distro.value * 100 }}%"
+                  ></div>
+                {% endfor %}
+              </div>
             </div>
           </div>
-        </div>
-      {% endif %}
-    </div>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 
 
