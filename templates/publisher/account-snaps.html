@@ -151,7 +151,9 @@ My published snaps — Linux software in the Snap Store
   {% if registered_snaps %}
     <div class="row">
       <div class="col-12">
-        <hr />
+        {% if snaps|length > 1 %}
+          <hr />
+        {% endif %}
         <h4>My registered snap names</h4>
       </div>
     </div>
