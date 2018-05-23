@@ -8,26 +8,36 @@ Register new Snap name
 <div class="p-strip">
 
   <div class="row">
-    {% if conflict %}
-      <h1 class="p-heading--three">Request reserved name</h1>
-    {% else %}
-      <h1 class="p-heading--three">Register a snap name</h1>
-    {% endif %}
+      <div class="col-8 push-2">
+        <h1 class="p-heading--three">Register a snap name</h1>
+      </div>
   </div>
 
-  <div class="row">
-    {% if conflict %}
-      <h2 class="p-heading--five">You can request a transfer of ownership of this name or <a href="/account/register-name">try a different name</a></h2>
-    {% else %}
-      <h2 class="p-heading--five">Before you can push your snap to the store, its name must be registered</h2>
-    {% endif %}
-  </div>
+  {% if conflict %}
+      <div class="row">
+        <div class="col-8 push-2">
+            <div class="p-notification--caution">
+              <p class="p-notification__response">
+                <b>{{ snap_name }}</b> is already registered.<br />Please provide a reason why you would like ownership of this name, or <a href="/account/register-name">request another name</a>
+              </p>
+            </div>
+        </div>
+      </div>
+  {% endif %}
+
+  {% if not conflict %}
+    <div class="row">
+      <div class="col-8 push-2">
+        <p>Before you can push your snap to the store, its name must be registered</p>
+      </div>
+    </div>
+  {% endif %}
 
   {% if errors %}
       <div class="row">
-        <div class="col-12">
+        <div class="col-8 push-2">
           {% for error in errors %}
-            <div class="p-notification--negative">
+            <div class="p-notification--caution">
               <p class="p-notification__response">
                   {{ error.message }}
               </p>
@@ -37,62 +47,63 @@ Register new Snap name
       </div>
   {% endif %}
 
-  <form method="POST" action="/account/register-name">
+  <form method="POST" action="/account/register-name" class="u-no-margin--top">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
-    <div class="row">
-      <div class="col-8">
-        <div class="p-form-validation">
-          <label for="snap-name">Snap name</label>
-          <div class="p-form-validation__field">
-            <input class="p-form-validation__input" type="text" name="snap-name" id="snap-name" required maxlength="64" value="{{ snap_name }}" />
-          </div>
-        </div>
-      </div>
-    </div>
 
     {% if conflict %}
       <div class="row">
-        <div class="col-8">
+        <div class="col-8 push-2">
           <div class="p-form-validation">
             <label for="snap-name">Supporting comment</label>
-            <p class="p-form-help-text">Please provide a reason why you would like ownership of the snap</p>
             <div class="p-form-validation__field">
-              <textarea class="p-form-validation__input u-no-margin" name="registrant_comment" rows="10" required></textarea>
+              <textarea class="p-form-validation__input u-no-margin" name="registrant_comment" rows="10" required>{{ registrant_comment }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" name="snap-name" value="{{ snap_name }}"/>
+      <input type="hidden" name="is_private" value="{% if is_private %} private {% else %} public {% endif %}"/>
+    {% else %}
+      <div class="row">
+        <div class="col-8 push-2">
+          <div class="p-form-validation">
+            <label for="snap-name">Snap name</label>
+            <div class="p-form-validation__field">
+              <input class="p-form-validation__input" type="text" name="snap-name" id="snap-name" required maxlength="64" value="{{ snap_name }}" />
+            </div>
+          </div>
+          <div class="p-form-validation">
+            <label for="public">Snap privacy</label>
+            <p class="p-form-help-text">This can be changed at any time after the initial upload</p>
+            <div class="p-form-validation__field">
+              <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" {% if not is_private %} checked {% endif %}>
+              <label for="public">Public</label>
+              <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" {% if is_private %} checked {% endif %}>
+              <label for="private">Private</label>
             </div>
           </div>
         </div>
       </div>
     {% endif %}
 
-    <div class="row">
-      <div class="col-8">
-        <div class="p-form-validation">
-          <label for="public">Snap privacy</label>
-          <p class="p-form-help-text">This can be changed at any time after the initial upload</p>
-          <div class="p-form-validation__field">
-            <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" {% if not is_private %} checked {% endif %}>
-            <label for="public">Public</label>
-            <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" {% if is_private %} checked {% endif %}>
-            <label for="private">Private</label>
-          </div>
-        </div>
+    <div class="row u-no-margin--top">
+      <div class="col-8 push-2">
+        <hr/>
       </div>
     </div>
 
-    <div class="row">
-      <hr/>
-    </div>
+    <div class="row u-no-margin--top">
+      <div class="col-8 push-2">
+        <div class="u-align--right">
 
-    <div class="row">
-      <div class="u-align--right">
-
-        <a class="p-button--neutral" href="/account/snaps">Cancel</a>
-        {% if conflict %}
-          <input type="submit" class="p-button--positive u-no-margin--top" value="Request reserved name"/>
-        {% else %}
-          <input type="submit" class="p-button--positive u-no-margin--top" value="Register"/>
-        {% endif %}
+          <a class="p-button--neutral" href="/account/snaps">Cancel</a>
+          {% if conflict %}
+            <input type="submit" class="p-button--positive u-no-margin--top" value="Request name"/>
+          {% else %}
+            <input type="submit" class="p-button--positive u-no-margin--top" value="Register"/>
+          {% endif %}
+        </div>
       </div>
     </div>
   </form>
