@@ -24,12 +24,12 @@ from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
 # Local webapp
-import webapp.authentication as authentication
 import webapp.helpers as helpers
 import webapp.public.views as public_views
 import webapp.publisher.views as publisher_views
-import webapp.publisher.api as publisher_api
 import webapp.template_functions as template_functions
+from canonicalwebteam.snapstoreapi import authentication
+from canonicalwebteam.snapstoreapi import publisher_api
 from webapp.decorators import login_required
 from webapp.macaroon import (
     MacaroonRequest,

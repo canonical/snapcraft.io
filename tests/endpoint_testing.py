@@ -5,7 +5,9 @@ import responses
 
 from webapp.app import app
 from flask_testing import TestCase
-from webapp.authentication import get_authorization_header
+
+from canonicalwebteam.snapstoreapi.authentication import (
+    get_authorization_header)
 
 
 # Make sure tests fail on stray responses.

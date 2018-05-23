@@ -1,11 +1,11 @@
 import flask
-import webapp.authentication as authentication
+from canonicalwebteam.snapstoreapi import authentication
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-import webapp.publisher.api as api
+import canonicalwebteam.snapstoreapi.publisher_api as api
 import webapp.publisher.logic as logic
 from json import loads
-from webapp.exceptions import (
+from canonicalwebteam.snapstoreapi.exceptions import (
     AgreementNotSigned,
     ApiError,
     ApiResponseErrorList,
