@@ -468,24 +468,24 @@ def post_listing_snap(snap_name):
                 # values posted by user
                 "snap_title": (
                     changes['title'] if 'title' in changes
-                    else snap_details['title']
+                    else snap_details['title'] or ''
                 ),
                 "summary": (
                     changes['summary'] if 'summary' in changes
-                    else snap_details['summary']
+                    else snap_details['summary'] or ''
                 ),
                 "description": (
                     changes['description'] if 'description' in changes
-                    else snap_details['description']
+                    else snap_details['description'] or ''
                 ),
                 "contact": (
                     changes['contact'] if 'contact' in changes
-                    else snap_details['contact']
+                    else snap_details['contact'] or ''
                 ),
                 "private": snap_details['private'],
                 "website": (
                     changes['website'] if 'website' in changes
-                    else snap_details['website']
+                    else snap_details['website'] or ''
                 ),
                 "is_on_stable": is_on_stable,
                 # errors
