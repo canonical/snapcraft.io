@@ -1,17 +1,61 @@
 {% extends webapp_config['LAYOUT'] %}
 
 {% block content %}
-<div id="main-content" class="p-strip--image is-deep snapcraft-banner-background">
+<div id="main-content" class="p-strip--image snapcraft-banner-background">
   <h1 class="u-off-screen">Snapcraft</h1>
   <div class="row">
     <div class="col-12">
-      <p class="p-heading--two">Package, distribute, and update any app for Linux and IoT</p>
-      <p class="p-heading--five">Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.</p>
+      <p class="p-heading--two">Deliver and update all apps for Linux and IoT</p>
+      <p class="p-heading--five">Snaps auto-update and are safe to run</p>
       <a href="https://docs.snapcraft.io/build-snaps/languages" class="p-button--positive">Build your first snap</a>
       <a href="https://build.snapcraft.io" class="p-button--neutral">Get started using GitHub</a>
     </div>
   </div>
 </div>
+
+<section class="p-strip is-bordered is-shallow">
+  <div class="row">
+    <div class="col-12 p-logo-list no-border">
+      <span class="p-logo-list__item u-align--center">
+        <img src="https://assets.ubuntu.com/v1/2133a97d-heroku-logo+copy.svg" alt="Heroku" />
+      </span>
+      <span class="p-logo-list__item u-align--center">
+        <img src="https://assets.ubuntu.com/v1/7371f63d-Amazon.com-Logo+Copy.svg" alt="Amazons" />
+      </span>
+      <span class="p-logo-list__item u-align--center">
+        <img src="https://assets.ubuntu.com/v1/e44026ff-Spotify_Logo_RGB_Green+Copy.svg" alt="Spotify" />
+      </span>
+      <span class="p-logo-list__item u-align--center">
+        <img src="https://assets.ubuntu.com/v1/79161103-Google_2015_logo+Copy.svg" alt="Google" />
+      </span>
+      <span class="p-logo-list__item u-align--center">
+        <img src="https://assets.ubuntu.com/v1/b179abab-microsoft-logo+copy.svg" alt="Microsoft" />
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="p-strip is-deep is-bordered">
+  <div class="row">
+    <div class="col-12">
+      <h3>Snaps are containerised software packages that are simple to create and install on all major Linux systems without modification.</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <h3>Quick to install</h3>
+      <p>Snaps are self-contained, separate from the system. No complex dependencies, and no interfering with each other. Whichever system you’re running, a snap will work the same way.</p>
+    </div>
+    <div class="col-4">
+      <h3>Safe to run</h3>
+      <p>Not only are snaps kept separate, their data is kept separate too. Snaps communicate with each other only in ways that you approve.</p>
+    </div>
+    <div class="col-4">
+      <h3>Easy to update</h3>
+      <p>Updates are automatic, and download only what’s changed. You can test alphas/betas if you want, switching back to stable at any time. And any update can be reversed.</p>
+    </div>
+  </div>
+</section>
 
 <div class="p-strip is-deep is-bordered">
   <div class="row">

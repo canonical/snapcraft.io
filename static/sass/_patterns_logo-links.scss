@@ -38,6 +38,12 @@
       max-height: none;
       width: 100%;
     }
+
+    &.no-border {
+      .p-logo-link:hover {
+        border-color: transparent;
+      }
+    }
   }
 
 }

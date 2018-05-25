@@ -150,3 +150,6 @@ $color-navigation-background: #252525;
 
 @import 'patterns_blog-post';
 @include snapcraft-p-blog-post;
+
+@import 'patterns_logo-list';
+@include p-logo-list;
