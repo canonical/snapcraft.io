@@ -126,6 +126,8 @@ function initTabs(el) {
 }
 
 function initOpenSnapButtons() {
+  let attempt = 1;
+
   document.addEventListener('click', (event) => {
     const openButton = event.target.closest('.js-open-snap-button');
 
@@ -146,13 +148,26 @@ function initOpenSnapButtons() {
       document.body.appendChild(iframe);
 
       if (typeof ga !== 'undefined') {
+        // The first attempt should be counted towards the 'intent'
+        let label = 'Snap install intent';
+        let value = `${name}`;
+
+        // Subsequent attempts should still be tracked, but not as 'intent'
+        if (attempt > 1) {
+          label = 'Snap install click';
+          value += ` - click ${attempt}`;
+        }
+
         ga('gtm1.send', {
           hitType: 'event',
           eventCategory: 'Snap details',
           eventAction: 'Click view in desktop store button',
-          eventLabel: `Click view in desktop store for ${name} snap`
+          eventLabel: label,
+          eventValue: value
         });
       }
+
+      attempt += 1;
     }
   });
 }
