@@ -56,6 +56,12 @@
                 <ul class="p-media-object__meta-list u-no-margin">
                   <li class="p-media-object__meta-list-item">
                     <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
+                    {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
+                      <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ snap.package_name }}-tooltip">
+                        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
+                        <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ snap.package_name }}-tooltip">Verified account</span>
+                      </span>
+                    {% endif %}
                   </li>
                 </ul>
                 <p class="p-media-object__content">{{ snap.summary }}</p>
