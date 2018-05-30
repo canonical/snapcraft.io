@@ -105,6 +105,7 @@ def utility_processor():
         'ENVIRONMENT': ENVIRONMENT,
         'path': flask.request.path,
         'user_name': user_name,
+        'VERIFIED_PUBLISHER': 'verified',
 
         # Functions
         'contains': template_functions.contains,
