@@ -220,6 +220,7 @@ def filter_changes_data(changes):
         'keywords',
         'license',
         'price',
+        'private',
         'blacklist_countries',
         'whitelist_countries',
         'public_metrics_enabled',
@@ -232,7 +233,7 @@ def filter_changes_data(changes):
     }
 
 
-def invalid_filed_errors(errors):
+def invalid_field_errors(errors):
     """Split errors in invalid fields and other errors
 
     :param erros: List of errors
