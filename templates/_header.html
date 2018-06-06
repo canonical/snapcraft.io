@@ -16,7 +16,7 @@
       <ul class="p-navigation__links" role="menu">
         <li class="p-navigation__link" role="menuitem">
           <a
-            {% if path and path.startswith('/store') %} class="is-selected"{% endif %}
+            {% if (path and (path.startswith('/store') or path.startswith('/search'))) or snap_title %} class="is-selected"{% endif %}
             href="/store">Store
           </a>
         </li>
