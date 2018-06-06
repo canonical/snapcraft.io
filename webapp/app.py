@@ -30,6 +30,7 @@ import webapp.publisher.views as publisher_views
 import webapp.template_functions as template_functions
 from canonicalwebteam.snapstoreapi import authentication
 from canonicalwebteam.snapstoreapi import publisher_api
+from webapp.blog.blog import blog_page
 from webapp.decorators import login_required
 from webapp.macaroon import (
     MacaroonRequest,
@@ -384,3 +385,6 @@ def get_reserve_name():
 @login_required
 def post_register_name():
     return publisher_views.post_register_name()
+
+
+app.register_blueprint(blog_page, url_prefix='/blog')
