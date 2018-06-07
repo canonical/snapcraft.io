@@ -3,8 +3,10 @@ import { updateState, diffState } from './state';
 import { publicMetrics } from './publicMetrics';
 
 // https://gist.github.com/dperini/729294
-const URL_REGEXP = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
-const MAILTO_REGEXP = /^mailto:/;
+// Luke 07-06-2018 made the protocol optional
+const URL_REGEXP = /^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+// Luke 07-06-2018 rather then looking for a mailto, look for 1 @ and at least 1 .
+const MAILTO_REGEXP = /[^@]+@[^@]+\.[^@]+/;
 
 // check if browser is on chromium engine, based on:
 // https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
@@ -319,6 +321,33 @@ function initForm(config, initialState, errors) {
   marketForm.addEventListener('input', function (event) {
     validateInput(event.target);
     updateFormState();
+  });
+
+  // Prefix contact and website fields on blur if the user doesn't provide the protocol
+  function prefixInput(input) {
+    if (['website', 'contact'].includes(input.name)) {
+      if (
+        validation[input.name].isValid &&
+        input.value.length > 0 &&
+        !input.value.includes('http') &&
+        !input.value.includes('mailto')
+      ){
+        if (input.name === 'website') {
+          input.value = `https://${input.value}`;
+        } else if (input.name === 'contact' && MAILTO_REGEXP.test(input.value)) {
+          input.value = `mailto:${input.value}`;
+        }
+        validateInput(input);
+        updateFormState();
+      }
+    }
+  }
+
+  const prefixableFields = [marketForm['website'], marketForm['contact']];
+  prefixableFields.forEach(input => {
+    input.addEventListener('blur', function (event) {
+      prefixInput(event.target);
+    });
   });
 }
 
