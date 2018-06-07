@@ -69,19 +69,39 @@ function setArchitecture(arch, packageName, channelMapData) {
 
   const tracks = Object.keys(channelMapData[arch]);
 
-  // sort tracks alphabetically with 'latest' always first
-  tracks.sort((a, b) => {
-    if (a === LATEST) {
-      return -1;
+  // split tracks into strings and numbers
+  let numberTracks = [];
+  let stringTracks = [];
+  tracks.forEach(track => {
+    // numbers are defined by any string starting any of the following patterns:
+    //   just a number – 1,2,3,4,
+    //   numbers on the left in a pattern – 2018.3 , 1.1, 1.1.23 ...
+    //   or numbers on the left with strings at the end – 1.1-hotfix
+    if (isNaN(parseInt(track.substr(0, 1)))) {
+      stringTracks.push(track);
+    } else {
+      numberTracks.push(track);
     }
-    if (b === LATEST) {
-      return 1;
-    }
-    return a <= b ? -1 : 1;
   });
 
-  // by default take first track (which should be 'latest')
-  const track = tracks[0];
+  // Ignore case
+  stringTracks.sort(function (a, b) {
+    return a.toLowerCase().localeCompare(b.toLowerCase());
+  });
+
+  const latestIndex = stringTracks.indexOf(LATEST);
+  stringTracks.splice(latestIndex, 1);
+  stringTracks = [LATEST].concat(stringTracks);
+
+  // Sort numbers (that are actually strings)
+  numberTracks.sort((a, b) => {
+    return b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' });
+  });
+
+  // Join the arrays together again
+  const sortedTracks = stringTracks.concat(numberTracks);
+
+  const track = sortedTracks[0];
 
   if (!track) {
     return;
@@ -89,11 +109,11 @@ function setArchitecture(arch, packageName, channelMapData) {
 
   // update tracks select
   const trackSelect = document.getElementById("js-channel-map-track-select");
-  trackSelect.innerHTML = tracks.map(track => `<option value="${track}">${track}</option>`).join('');
+  trackSelect.innerHTML = sortedTracks.map(track => `<option value="${track}">${track}</option>`).join('');
   trackSelect.value = track;
 
   // hide tracks if there is only one
-  if (tracks.length === 1) {
+  if (sortedTracks.length === 1) {
     trackSelect.closest('.js-channel-map-track-field').style.display = 'none';
   } else {
     trackSelect.closest('.js-channel-map-track-field').style.display = '';
