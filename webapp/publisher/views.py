@@ -404,6 +404,7 @@ def post_listing_snap(snap_name):
                 return _handle_errors(api_error)
 
         body_json = logic.filter_changes_data(changes)
+
         if body_json:
             if 'public_metrics_blacklist' in body_json:
                 converted_metrics = logic.convert_metrics_blacklist(
@@ -441,7 +442,7 @@ def post_listing_snap(snap_name):
             details_metrics_enabled = snap_details['public_metrics_enabled']
             details_blacklist = snap_details['public_metrics_blacklist']
 
-            field_errors, other_errors = logic.invalid_filed_errors(error_list)
+            field_errors, other_errors = logic.invalid_field_errors(error_list)
 
             is_on_stable = logic.is_snap_on_stable(
                 snap_details['channel_maps_list'])

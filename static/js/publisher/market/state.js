@@ -5,6 +5,7 @@ const allowedKeys = [
   'images',
   'website',
   'contact',
+  'private',
   'public_metrics_enabled',
   'public_metrics_blacklist'
 ];

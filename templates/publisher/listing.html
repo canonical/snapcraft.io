@@ -124,7 +124,7 @@
             <div class="col-2">
               <label>Snap name: </label>
             </div>
-            <div class="col-8">
+            <div class="col-4">
                 {{ snap_name }}
             </div>
           </div>
@@ -135,6 +135,40 @@
             </div>
             <div class="col-8">
                 {{ publisher_name }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-2">
+              <label>
+                Privacy
+              </label>
+            </div>
+            <div class="col-8">
+              <div class="row">
+                <input
+                  type="radio"
+                  name="private"
+                  id="is-public"
+                  {% if not private %}
+                    checked="checked"
+                  {% endif %}
+                  value="public" />
+                <label class="u-no-margin--top" for="is-public">Public</label>
+              </div>
+              <div class="row" style="margin-top: 1rem;">
+                <input
+                  type="radio"
+                  name="private"
+                  id="is-private"
+                  {% if private %}
+                    checked="checked"
+                  {% endif %}
+                  value="private" />
+                <label class="u-no-margin--top" for="is-private">Private
+                  <span class="p-form-help-text">Snap is hidden in stores and only accessible by the publisher and collaborators</span>
+                </label>
+              </div>
             </div>
           </div>
 

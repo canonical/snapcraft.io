@@ -169,10 +169,12 @@ function initForm(config, initialState, errors) {
 
     // update state based on data of all inputs
     updateState(state, formData);
+
     // checkboxes are tricky,
     // make sure to update state based on their 'checked' status
     updateState(state, {
-      'public_metrics_enabled': marketForm['public_metrics_enabled'].checked
+      'public_metrics_enabled': marketForm['public_metrics_enabled'].checked,
+      'private': marketForm['private'].value === 'private'
     });
 
     checkForm();
