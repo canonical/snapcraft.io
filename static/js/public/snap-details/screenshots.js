@@ -1,4 +1,5 @@
 import lightbox from './../../publisher/market/lightbox';
+import { isMobile } from '../../libs/mobile';
 
 export default function initScreenshots(screenshotsId) {
   const screenshotsEl = document.querySelector(screenshotsId);
@@ -13,7 +14,12 @@ export default function initScreenshots(screenshotsId) {
     const url = event.target.src;
 
     if (url) {
-      lightbox.openLightbox(url, images);
+      if (isMobile()) {
+        window.open(url, '_blank');
+        window.focus();
+      } else {
+        lightbox.openLightbox(url, images);
+      }
     }
   });
 
