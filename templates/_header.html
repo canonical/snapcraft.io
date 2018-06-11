@@ -16,8 +16,11 @@
       <ul class="p-navigation__links" role="menu">
         <li class="p-navigation__link" role="menuitem">
           <a
-            {% if (path and (path.startswith('/store') or path.startswith('/search'))) or snap_title %} class="is-selected"{% endif %}
-            href="/store">Store
+            {% if page_slug == 'store' %}
+              class="is-selected"
+            {% endif %}
+            href="/store">
+            Store
           </a>
         </li>
         <li class="p-navigation__link" role="menuitem">
@@ -30,7 +33,7 @@
         {% if user_name %}
           <li role="menuitem" class="p-navigation__link p-dropdown">
               <a
-                {% if path and path.startswith('/account') %}
+                {% if page_slug == 'account' %}
                   class="p-dropdown__toggle is-selected"
                 {% else %}
                   class="p-dropdown__toggle"

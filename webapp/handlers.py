@@ -1,6 +1,6 @@
 import flask
 import socket
-import webapp.template_functions as template_functions
+import webapp.template_utils as template_utils
 from urllib.parse import (
     unquote,
     urlparse,
@@ -23,6 +23,8 @@ def set_handlers(app):
         else:
             user_name = None
 
+        page_slug = template_utils.generate_slug(flask.request.path)
+
         return {
             # Variables
             'LOGIN_URL': app.config['LOGIN_URL'],
@@ -30,14 +32,15 @@ def set_handlers(app):
             'COMMIT_ID': app.config['COMMIT_ID'],
             'ENVIRONMENT': app.config['ENVIRONMENT'],
             'path': flask.request.path,
+            'page_slug': page_slug,
             'user_name': user_name,
             'VERIFIED_PUBLISHER': 'verified',
 
             # Functions
-            'contains': template_functions.contains,
-            'join': template_functions.join,
-            'static_url': template_functions.static_url,
-            'format_number': template_functions.format_number,
+            'contains': template_utils.contains,
+            'join': template_utils.join,
+            'static_url': template_utils.static_url,
+            'format_number': template_utils.format_number,
         }
 
     # Error handlers
