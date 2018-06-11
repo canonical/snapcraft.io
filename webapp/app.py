@@ -175,11 +175,6 @@ def add_headers(response):
     return response
 
 
-@app.route('/status')
-def status():
-    return 'alive'
-
-
 # Redirects
 # ===
 @app.route('/docs', defaults={'path': ''})
