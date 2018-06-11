@@ -110,7 +110,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, 'http://localhost/account')
+        self.assertEqual(response.location, 'http://localhost/account/')
 
     @responses.activate
     def test_post_store(self):
@@ -139,7 +139,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, 'http://localhost/account')
+        self.assertEqual(response.location, 'http://localhost/account/')
 
     @responses.activate
     def test_post_private(self):
@@ -168,7 +168,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, 'http://localhost/account')
+        self.assertEqual(response.location, 'http://localhost/account/')
 
     @responses.activate
     def test_post_registrant_comment(self):
@@ -197,7 +197,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, 'http://localhost/account')
+        self.assertEqual(response.location, 'http://localhost/account/')
 
     @responses.activate
     def test_error_from_api(self):
@@ -268,4 +268,4 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         )
 
         assert response.status_code == 302
-        self.assertEqual(response.location, 'http://localhost/account')
+        self.assertEqual(response.location, 'http://localhost/account/')

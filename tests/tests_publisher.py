@@ -134,7 +134,7 @@ class PublisherPage(TestCase):
 
         self.assertEqual(302, response.status_code)
         self.assertEqual(
-            'http://localhost/account',
+            'http://localhost/account/',
             response.location)
 
     @responses.activate
