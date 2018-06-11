@@ -31,6 +31,7 @@ from canonicalwebteam.snapstoreapi import publisher_api
 from webapp.blog.views import blog
 from webapp.public.views import store
 from webapp.publisher.views import account
+from webapp.snapcraft.views import snapcraft
 from webapp.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
@@ -175,29 +176,6 @@ def add_headers(response):
     return response
 
 
-# Redirects
-# ===
-@app.route('/docs', defaults={'path': ''})
-@app.route('/docs/<path:path>')
-def docs_redirect(path):
-    return flask.redirect('https://docs.snapcraft.io/' + path)
-
-
-@app.route('/community')
-def community_redirect():
-    return flask.redirect('/')
-
-
-@app.route('/create')
-def create_redirect():
-    return flask.redirect('https://docs.snapcraft.io/build-snaps')
-
-
-@app.route('/favicon.ico')
-def favicon():
-    return flask.redirect('https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png')
-
-
 # Login handler
 # ===
 @app.route('/login', methods=['GET', 'POST'])
@@ -253,6 +231,7 @@ def logout():
     return flask.redirect('/')
 
 
+app.register_blueprint(snapcraft)
 app.register_blueprint(store)
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(blog, url_prefix='/blog')

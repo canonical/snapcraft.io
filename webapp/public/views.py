@@ -42,25 +42,6 @@ def _handle_errors(api_error: ApiError):
     return status_code, error
 
 
-@store.route('/')
-def homepage():
-    featured_snaps = []
-    error_info = {}
-    status_code = 200
-    try:
-        featured_snaps = logic.get_searched_snaps(
-            api.get_featured_snaps()
-        )
-    except ApiError as api_error:
-        status_code, error_info = _handle_errors(api_error)
-
-    return flask.render_template(
-        'index.html',
-        featured_snaps=featured_snaps,
-        error_info=error_info
-    ), status_code
-
-
 @store.route('/snaps')
 def snaps_view():
     return flask.redirect(
