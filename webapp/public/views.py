@@ -16,8 +16,8 @@ from canonicalwebteam.snapstoreapi.exceptions import (
 )
 from urllib.parse import quote_plus
 
-store_page = flask.Blueprint(
-    'store_page', __name__,
+store = flask.Blueprint(
+    'store', __name__,
     template_folder='/templates', static_folder='/static')
 
 
@@ -42,7 +42,7 @@ def _handle_errors(api_error: ApiError):
     return status_code, error
 
 
-@store_page.route('/')
+@store.route('/')
 def homepage():
     featured_snaps = []
     error_info = {}
@@ -61,18 +61,18 @@ def homepage():
     ), status_code
 
 
-@store_page.route('/snaps')
+@store.route('/snaps')
 def snaps_view():
     return flask.redirect('/store')
 
 
-@store_page.route('/discover')
+@store.route('/discover')
 def discover():
     return flask.redirect('/store')
 
 
-@store_page.route('/store')
-def store():
+@store.route('/store')
+def store_view():
     featured_snaps = []
     error_info = {}
     status_code = 200
@@ -108,7 +108,7 @@ def snaps():
     ), status_code
 
 
-@store_page.route('/search')
+@store.route('/search')
 def search_snap():
     status_code = 200
     snap_searched = flask.request.args.get('q', default='', type=str)
@@ -159,7 +159,7 @@ def search_snap():
     )
 
 
-@store_page.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
+@store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
 def snap_details(snap_name):
     """
     A view to display the snap details page for specific snaps.

@@ -29,7 +29,7 @@ import webapp.template_functions as template_functions
 from canonicalwebteam.snapstoreapi import authentication
 from canonicalwebteam.snapstoreapi import publisher_api
 from webapp.blog.blog import blog
-from webapp.public.views import store_page
+from webapp.public.views import store
 from webapp.publisher.views import account
 from webapp.macaroon import (
     MacaroonRequest,
@@ -258,6 +258,6 @@ def logout():
     return flask.redirect('/')
 
 
-app.register_blueprint(store_page)
+app.register_blueprint(store)
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(blog, url_prefix='/blog')
