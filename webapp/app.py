@@ -28,7 +28,7 @@ import webapp.helpers as helpers
 import webapp.template_functions as template_functions
 from canonicalwebteam.snapstoreapi import authentication
 from canonicalwebteam.snapstoreapi import publisher_api
-from webapp.blog.blog import blog_page
+from webapp.blog.blog import blog
 from webapp.public.views import store_page
 from webapp.publisher.views import account
 from webapp.macaroon import (
@@ -260,4 +260,4 @@ def logout():
 
 app.register_blueprint(store_page)
 app.register_blueprint(account, url_prefix='/account')
-app.register_blueprint(blog_page, url_prefix='/blog')
+app.register_blueprint(blog, url_prefix='/blog')

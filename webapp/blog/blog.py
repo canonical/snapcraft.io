@@ -4,12 +4,12 @@ from canonicalwebteam.snapstoreapi.exceptions import ApiError
 
 from webapp.blog import api
 
-blog_page = flask.Blueprint(
-    'blog_page', __name__,
+blog = flask.Blueprint(
+    'blog', __name__,
     template_folder='/templates', static_folder='/static')
 
 
-@blog_page.route('/')
+@blog.route('/')
 def homepage():
     try:
         articles = api.get_articles()
@@ -23,7 +23,7 @@ def homepage():
     return flask.render_template('blog/index.html', **context)
 
 
-@blog_page.route('/<slug>')
+@blog.route('/<slug>')
 def post(slug):
     try:
         posts = api.get_posts(slug)
