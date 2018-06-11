@@ -28,7 +28,7 @@ import webapp.helpers as helpers
 import webapp.template_functions as template_functions
 from canonicalwebteam.snapstoreapi import authentication
 from canonicalwebteam.snapstoreapi import publisher_api
-from webapp.blog.blog import blog
+from webapp.blog.views import blog
 from webapp.public.views import store
 from webapp.publisher.views import account
 from webapp.macaroon import (
