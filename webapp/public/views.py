@@ -63,12 +63,14 @@ def homepage():
 
 @store.route('/snaps')
 def snaps_view():
-    return flask.redirect('/store')
+    return flask.redirect(
+        flask.url_for('.store_view'))
 
 
 @store.route('/discover')
 def discover():
-    return flask.redirect('/store')
+    return flask.redirect(
+        flask.url_for('.store_view'))
 
 
 @store.route('/store')
@@ -95,7 +97,8 @@ def search_snap():
     status_code = 200
     snap_searched = flask.request.args.get('q', default='', type=str)
     if not snap_searched:
-        return flask.redirect('/store')
+        return flask.redirect(
+            flask.url_for('.store_view'))
 
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)
