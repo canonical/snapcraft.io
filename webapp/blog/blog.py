@@ -21,3 +21,22 @@ def homepage():
     }
 
     return flask.render_template('blog/index.html', **context)
+
+
+@blog_page.route('/<slug>')
+def post(slug):
+    try:
+        posts = api.get_posts(slug)
+    except ApiError as api_error:
+        return flask.abort(502, str(api_error))
+
+    if not posts:
+        flask.abort(404)
+
+    context = {
+        'post': posts[0]
+    }
+
+    return flask.render_template(
+        'blog/post.html',
+        **context)
