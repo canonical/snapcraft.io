@@ -90,24 +90,6 @@ def store_view():
     ), status_code
 
 
-def snaps():
-    promoted_snaps = []
-    error_info = {}
-    status_code = 200
-    try:
-        promoted_snaps = logic.get_searched_snaps(
-            api.get_promoted_snaps()
-        )
-    except ApiError as api_error:
-        status_code, error_info = _handle_errors(api_error)
-
-    return flask.render_template(
-        'promoted.html',
-        snaps=promoted_snaps,
-        error_info=error_info
-    ), status_code
-
-
 @store.route('/search')
 def search_snap():
     status_code = 200
