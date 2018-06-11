@@ -3,6 +3,7 @@ from canonicalwebteam.snapstoreapi import authentication
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import canonicalwebteam.snapstoreapi.publisher_api as api
+from webapp.decorators import login_required
 import webapp.publisher.logic as logic
 from json import loads
 from canonicalwebteam.snapstoreapi.exceptions import (
@@ -13,6 +14,11 @@ from canonicalwebteam.snapstoreapi.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername
 )
+
+
+account_page = flask.Blueprint(
+    'account_page', __name__,
+    template_folder='/templates', static_folder='/static')
 
 
 def refresh_redirect(path):
@@ -28,9 +34,11 @@ def _handle_errors(api_error: ApiError):
     if type(api_error) is ApiTimeoutError:
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
-        return flask.redirect('/account/username')
+        return flask.redirect(
+            flask.url_for('account_page.get_account_name'))
     elif type(api_error) is AgreementNotSigned:
-        return flask.redirect('/account/agreement')
+        return flask.redirect(
+            flask.url_for('account_page.get_agreement'))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
@@ -46,6 +54,15 @@ def _handle_error_list(errors):
     return flask.abort(502, error_messages)
 
 
+@account_page.route('/')
+@login_required
+def get_account():
+    return flask.redirect(
+        flask.url_for('account_page.get_account_snaps'))
+
+
+@account_page.route('/details')
+@login_required
 def get_account_details():
     try:
         # We don't use the data from this endpoint.
@@ -71,6 +88,8 @@ def get_account_details():
     )
 
 
+@account_page.route('/snaps')
+@login_required
 def get_account_snaps():
     try:
         account = api.get_account(flask.session)
@@ -95,10 +114,14 @@ def get_account_snaps():
     )
 
 
+@account_page.route('/agreement')
+@login_required
 def get_agreement():
     return flask.render_template('developer_programme_agreement.html')
 
 
+@account_page.route('/agreement', methods=['POST'])
+@login_required
 def post_agreement():
     agreed = flask.request.form.get('i_agree')
     if agreed == 'on':
@@ -111,15 +134,21 @@ def post_agreement():
         except ApiError as api_error:
             return _handle_errors(api_error)
 
-        return flask.redirect('/account')
+        return flask.redirect(
+            flask.url_for('account_page.get_account'))
     else:
-        return flask.redirect('/account/agreement')
+        return flask.redirect(
+            flask.url_for('account_page.get_agreement'))
 
 
+@account_page.route('/username')
+@login_required
 def get_account_name():
     return flask.render_template('username.html')
 
 
+@account_page.route('/username', methods=['POST'])
+@login_required
 def post_account_name():
     username = flask.request.form.get('username')
 
@@ -139,11 +168,23 @@ def post_account_name():
                 error_list=errors
             )
 
-        return flask.redirect('/account')
+        return flask.redirect(
+            flask.url_for('account_page.get_account'))
     else:
-        return flask.redirect('/account/username')
+        return flask.redirect(
+            flask.url_for('account_page.get_account_name'))
 
 
+@account_page.route('/snaps/<snap_name>/measure')
+@login_required
+def get_measure_snap(snap_name):
+    return flask.redirect(
+        flask.url_for(
+            'account_page.publisher_snap_metrics', snap_name))
+
+
+@account_page.route('/snaps/<snap_name>/metrics')
+@login_required
 def publisher_snap_metrics(snap_name):
     """
     A view to display the snap metrics page for specific snaps.
@@ -240,6 +281,14 @@ def publisher_snap_metrics(snap_name):
         **context)
 
 
+@account_page.route('/snaps/<snap_name>/market')
+def get_market_snap(snap_name):
+    return flask.redirect(
+        flask.url_for('account_page.get_listing_snap', snap_name=snap_name))
+
+
+@account_page.route('/snaps/<snap_name>/listing', methods=['GET'])
+@login_required
 def get_listing_snap(snap_name):
     try:
         snap_details = api.get_snap_info(snap_name, flask.session)
@@ -285,6 +334,8 @@ def get_listing_snap(snap_name):
     )
 
 
+@account_page.route('/register-name')
+@login_required
 def get_register_name():
     snap_name = flask.request.args.get('snap_name', default='', type=str)
     is_private_str = flask.request.args.get(
@@ -309,11 +360,14 @@ def get_register_name():
         **context)
 
 
+@account_page.route('/register-name', methods=['POST'])
+@login_required
 def post_register_name():
     snap_name = flask.request.form.get('snap-name')
 
     if not snap_name:
-        return flask.redirect('/account/register-name')
+        return flask.redirect(
+            flask.url_for('account_page.get_register_name'))
 
     is_private = flask.request.form.get('is_private') == 'private'
     store = flask.request.form.get('store')
@@ -331,11 +385,12 @@ def post_register_name():
             for error in api_response_error_list.errors:
                 if error['code'] == 'already_claimed':
                     # TODO add flash message for next page with notification
-                    return flask.redirect('/account')
+                    return flask.redirect(
+                        flask.url_for('account_page.get_account'))
                 elif error['code'] == 'already_registered':
                     return flask.redirect(
                         flask.url_for(
-                            'get_register_name',
+                            'account_page.get_register_name',
                             snap_name=snap_name,
                             is_private=is_private,
                             conflict=True))
@@ -352,9 +407,12 @@ def post_register_name():
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    return flask.redirect('/account')
+    return flask.redirect(
+        flask.url_for('account_page.get_account'))
 
 
+@account_page.route('/snaps/<snap_name>/listing', methods=['POST'])
+@login_required
 def post_listing_snap(snap_name):
     changes = None
     changed_fields = flask.request.form.get('changes')
@@ -505,7 +563,4 @@ def post_listing_snap(snap_name):
         flask.flash("No changes to save.", 'information')
 
     return flask.redirect(
-        "/account/snaps/{snap_name}/listing".format(
-            snap_name=snap_name
-        )
-    )
+        flask.url_for('account_page.get_listing_snap', snap_name=snap_name))
