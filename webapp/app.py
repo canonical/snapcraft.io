@@ -25,11 +25,11 @@ from werkzeug.debug import DebuggedApplication
 
 # Local webapp
 import webapp.helpers as helpers
-import webapp.public.views as public_views
 import webapp.publisher.views as publisher_views
 import webapp.template_functions as template_functions
 from canonicalwebteam.snapstoreapi import authentication
 from canonicalwebteam.snapstoreapi import publisher_api
+from webapp.public.views import store_page
 from webapp.blog.blog import blog_page
 from webapp.decorators import login_required
 from webapp.macaroon import (
@@ -176,6 +176,11 @@ def add_headers(response):
     return response
 
 
+@app.route('/status')
+def status():
+    return 'alive'
+
+
 # Redirects
 # ===
 @app.route('/docs', defaults={'path': ''})
@@ -252,43 +257,6 @@ def logout():
     if authentication.is_authenticated(flask.session):
         authentication.empty_session(flask.session)
     return flask.redirect('/')
-
-
-# Normal views
-# ===
-@app.route('/')
-def homepage():
-    return public_views.homepage()
-
-
-@app.route('/status')
-def status():
-    return 'alive'
-
-
-@app.route('/store')
-def store():
-    return public_views.store()
-
-
-@app.route('/discover')
-def discover():
-    return flask.redirect('/store')
-
-
-@app.route('/snaps')
-def snaps():
-    return flask.redirect('/store')
-
-
-@app.route('/search')
-def search_snap():
-    return public_views.search_snap()
-
-
-@app.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
-def snap_details(snap_name):
-    return public_views.snap_details(snap_name)
 
 
 # Publisher views
@@ -387,4 +355,5 @@ def post_register_name():
     return publisher_views.post_register_name()
 
 
+app.register_blueprint(store_page)
 app.register_blueprint(blog_page, url_prefix='/blog')
