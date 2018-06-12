@@ -17,7 +17,7 @@ from urllib.parse import (
 import flask
 import talisker.flask
 import prometheus_flask_exporter
-from flask_openid import OpenID
+from canonicalwebteam.snapstoreapi import authentication
 from flask_wtf.csrf import CSRFProtect
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
@@ -26,16 +26,11 @@ from werkzeug.debug import DebuggedApplication
 # Local webapp
 import webapp.helpers as helpers
 import webapp.template_functions as template_functions
-from canonicalwebteam.snapstoreapi import authentication
-from canonicalwebteam.snapstoreapi import publisher_api
 from webapp.blog.views import blog
 from webapp.public.views import store
 from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft
-from webapp.macaroon import (
-    MacaroonRequest,
-    MacaroonResponse,
-)
+from webapp.login.views import login
 
 app = flask.Flask(
     __name__, template_folder='../templates', static_folder='../static')
@@ -53,13 +48,6 @@ metrics = prometheus_flask_exporter.PrometheusMetrics(
     group_by_endpoint=True,
     buckets=[0.25, 0.5, 0.75, 1, 2],
     path=None
-)
-
-open_id = OpenID(
-    app=app,
-    stateless=True,
-    safe_roots=[],
-    extension_responses=[MacaroonResponse]
 )
 
 csrf = CSRFProtect(app)
@@ -176,62 +164,9 @@ def add_headers(response):
     return response
 
 
-# Login handler
-# ===
-@app.route('/login', methods=['GET', 'POST'])
-@open_id.loginhandler
-@csrf.exempt
-def login():
-    if authentication.is_authenticated(flask.session):
-        return flask.redirect(open_id.get_next_url())
-
-    root = authentication.request_macaroon()
-    openid_macaroon = MacaroonRequest(
-        caveat_id=authentication.get_caveat_id(root)
-    )
-    flask.session['macaroon_root'] = root
-
-    return open_id.try_login(
-        LOGIN_URL,
-        ask_for=['email', 'nickname', 'image'],
-        ask_for_optional=['fullname'],
-        extensions=[openid_macaroon]
-    )
-
-
-@open_id.after_login
-def after_login(resp):
-    flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
-
-    try:
-        account = publisher_api.get_account(flask.session)
-        flask.session['openid'] = {
-            'identity_url': resp.identity_url,
-            'nickname': account['username'],
-            'fullname': account['displayname'],
-            'image': resp.image,
-            'email': account['email']
-        }
-    except Exception:
-        flask.session['openid'] = {
-            'identity_url': resp.identity_url,
-            'nickname': resp.nickname,
-            'fullname': resp.fullname,
-            'image': resp.image,
-            'email': resp.email
-        }
-
-    return flask.redirect(open_id.get_next_url())
-
-
-@app.route('/logout')
-def logout():
-    if authentication.is_authenticated(flask.session):
-        authentication.empty_session(flask.session)
-    return flask.redirect('/')
-
-
 app.register_blueprint(snapcraft)
+app.register_blueprint(login)
+csrf.exempt('webapp.login.views.login_handler')
 app.register_blueprint(store)
 app.register_blueprint(account, url_prefix='/account')
 app.register_blueprint(blog, url_prefix='/blog')
