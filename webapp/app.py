@@ -4,9 +4,6 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-# Core packages
-import os
-
 # Third-party packages
 import flask
 import talisker.flask
@@ -26,22 +23,6 @@ from webapp.snapcraft.views import snapcraft
 from webapp.login.views import login
 
 
-SENTRY_PUBLIC_DSN = os.getenv('SENTRY_PUBLIC_DSN', '').strip()
-LOGIN_URL = os.getenv(
-    'LOGIN_URL',
-    'https://login.ubuntu.com',
-)
-
-ENVIRONMENT = os.getenv(
-    'ENVIRONMENT',
-    'devel'
-)
-COMMIT_ID = os.getenv(
-    'COMMIT_ID',
-    'commit_id'
-)
-
-
 csrf = CSRFProtect()
 sentry = Sentry()
 
@@ -50,20 +31,18 @@ def create_app(testing=False):
     app = flask.Flask(
         __name__, template_folder='../templates', static_folder='../static')
 
+    app.config.from_pyfile('config.py')
+
     app.wsgi_app = ProxyFix(app.wsgi_app)
     if app.debug:
         app.wsgi_app = DebuggedApplication(app.wsgi_app)
 
-    app.secret_key = os.environ['SECRET_KEY']
     app.url_map.strict_slashes = False
     app.url_map.converters['regex'] = helpers.RegexConverter
 
     if not testing:
         talisker.flask.register(app)
-        app.config['SENTRY_CONFIG'] = {
-            'release': COMMIT_ID,
-            'environment': ENVIRONMENT
-        }
+        print(app.config['SENTRY_CONFIG'])
 
         prometheus_flask_exporter.PrometheusMetrics(
             app,
@@ -74,29 +53,27 @@ def create_app(testing=False):
 
         init_extensions(app)
 
-    set_handlers(app, LOGIN_URL, SENTRY_PUBLIC_DSN, COMMIT_ID, ENVIRONMENT)
+    set_handlers(app)
+
+    if app.config['WEBAPP'] == 'snapcraft.io':
+        init_snapcraft(app)
+    else:
+        init_brandstore(app)
 
     return app
 
 
-def create_brandstore(testing=False):
-    app = create_app(testing)
+def init_brandstore(app):
     app.register_blueprint(store)
 
-    return app
 
-
-def create_snapcraft(testing=False):
-    app = create_app(testing)
-
+def init_snapcraft(app):
     app.register_blueprint(snapcraft)
     app.register_blueprint(login)
     csrf.exempt('webapp.login.views.login_handler')
     app.register_blueprint(store)
     app.register_blueprint(account, url_prefix='/account')
     app.register_blueprint(blog, url_prefix='/blog')
-
-    return app
 
 
 def init_extensions(app):

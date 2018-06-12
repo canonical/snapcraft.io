@@ -9,7 +9,7 @@ from urllib.parse import (
 from canonicalwebteam.snapstoreapi import authentication
 
 
-def set_handlers(app, login_url, sentry_public_dsn, commit_id, env):
+def set_handlers(app):
     @app.context_processor
     def utility_processor():
         """
@@ -25,10 +25,10 @@ def set_handlers(app, login_url, sentry_public_dsn, commit_id, env):
 
         return {
             # Variables
-            'LOGIN_URL': login_url,
-            'SENTRY_PUBLIC_DSN': sentry_public_dsn,
-            'COMMIT_ID': commit_id,
-            'ENVIRONMENT': env,
+            'LOGIN_URL': app.config['LOGIN_URL'],
+            'SENTRY_PUBLIC_DSN': app.config['SENTRY_PUBLIC_DSN'],
+            'COMMIT_ID': app.config['COMMIT_ID'],
+            'ENVIRONMENT': app.config['ENVIRONMENT'],
             'path': flask.request.path,
             'user_name': user_name,
             'VERIFIED_PUBLISHER': 'verified',

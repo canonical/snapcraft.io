@@ -1,7 +1,7 @@
 import responses
 import requests
 
-from webapp.app import create_snapcraft
+from webapp.app import create_app
 from flask_testing import TestCase
 
 
@@ -14,7 +14,7 @@ class BlogPage(TestCase):
     render_templates = False
 
     def create_app(self):
-        app = create_snapcraft(testing=True)
+        app = create_app(testing=True)
         app.testing = True
 
         return app
