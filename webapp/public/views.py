@@ -54,6 +54,7 @@ def discover():
         flask.url_for('.store_view'))
 
 
+@store.route('/')
 @store.route('/store')
 def store_view():
     featured_snaps = []
