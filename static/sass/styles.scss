@@ -27,7 +27,6 @@ $color-navigation-background: #252525;
 @include vf-p-matrix;
 @include vf-p-icons;
 @include vf-p-heading-icon;
-@include vf-u-image-position;
 @include vf-p-code-snippet;
 @include vf-p-form-validation;
 @include vf-p-contextual-menu;
@@ -41,6 +40,8 @@ $color-navigation-background: #252525;
 @include vf-u-align;
 @include vf-u-clearfix;
 @include vf-u-animations;
+@include vf-u-image-position;
+@include vf-u-equal-height;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
@@ -140,3 +141,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-verified';
 @include snapcraft-p-verified;
+
+@import 'utilities_crop';
+@include u-insights-crop;
+
+@import 'patterns_card';
+@include insights-p-card;
