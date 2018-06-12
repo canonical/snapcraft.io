@@ -2,7 +2,7 @@ import unittest
 
 import responses
 
-from webapp.app import app
+from webapp.app import create_snapcraft
 from flask_testing import TestCase
 
 
@@ -15,10 +15,10 @@ class PublicPage(TestCase):
     render_templates = False
 
     def create_app(self):
-        my_app = app
-        my_app.testing = True
+        app = create_snapcraft(testing=True)
+        app.testing = True
 
-        return my_app
+        return app
 
     @responses.activate
     def test_index(self):

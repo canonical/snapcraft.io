@@ -3,7 +3,7 @@ import unittest
 import pymacaroons
 import responses
 
-from webapp.app import app
+from webapp.app import create_snapcraft
 from flask_testing import TestCase
 from canonicalwebteam.snapstoreapi.authentication import (
     get_authorization_header)
@@ -18,6 +18,7 @@ class PublisherPage(TestCase):
     render_templates = False
 
     def create_app(self):
+        app = create_snapcraft(testing=True)
         app.config['WTF_CSRF_METHODS'] = []
         app.testing = True
 

@@ -9,7 +9,7 @@
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-transpile",
     "copy-3rd-party-js": "cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/d3-geo/build/d3-geo.min.js static/js/modules && cp node_modules/topojson-client/dist/topojson-client.min.js static/js/modules && cp node_modules/billboard.js/dist/billboard.min.js static/js/modules && cp node_modules/moment/min/moment.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
     "build-js-transpile": "rollup -c",
-    "serve": "talisker.gunicorn webapp.app:app --reload --log-level debug --timeout 9999 --access-logfile - --error-logfile - --bind 0.0.0.0:${PORT}",
+    "serve": "talisker.gunicorn webapp.app:${FACTORY}\\(\\) --reload --log-level debug --timeout 9999 --access-logfile - --error-logfile - --bind 0.0.0.0:${PORT}",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "watch -p 'static/js/**/*.js' -c 'yarn run build-js'",

@@ -46,11 +46,9 @@ csrf = CSRFProtect()
 sentry = Sentry()
 
 
-def create_app():
+def create_app(testing=False):
     app = flask.Flask(
         __name__, template_folder='../templates', static_folder='../static')
-
-    talisker.flask.register(app)
 
     app.wsgi_app = ProxyFix(app.wsgi_app)
     if app.debug:
@@ -60,33 +58,36 @@ def create_app():
     app.url_map.strict_slashes = False
     app.url_map.converters['regex'] = helpers.RegexConverter
 
-    app.config['SENTRY_CONFIG'] = {
-        'release': COMMIT_ID,
-        'environment': ENVIRONMENT
-    }
+    if not testing:
+        talisker.flask.register(app)
+        app.config['SENTRY_CONFIG'] = {
+            'release': COMMIT_ID,
+            'environment': ENVIRONMENT
+        }
 
-    prometheus_flask_exporter.PrometheusMetrics(
-        app,
-        group_by_endpoint=True,
-        buckets=[0.25, 0.5, 0.75, 1, 2],
-        path=None
-    )
+        prometheus_flask_exporter.PrometheusMetrics(
+            app,
+            group_by_endpoint=True,
+            buckets=[0.25, 0.5, 0.75, 1, 2],
+            path=None
+        )
 
-    init_extensions(app)
+        init_extensions(app)
+
     set_handlers(app, LOGIN_URL, SENTRY_PUBLIC_DSN, COMMIT_ID, ENVIRONMENT)
 
     return app
 
 
-def create_snapstore():
-    app = create_app()
+def create_brandstore(testing=False):
+    app = create_app(testing)
     app.register_blueprint(store)
 
     return app
 
 
-def create_snapcraft():
-    app = create_app()
+def create_snapcraft(testing=False):
+    app = create_app(testing)
 
     app.register_blueprint(snapcraft)
     app.register_blueprint(login)
