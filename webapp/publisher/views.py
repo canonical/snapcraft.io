@@ -35,10 +35,10 @@ def _handle_errors(api_error: ApiError):
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
         return flask.redirect(
-            flask.url_for('account.get_account_name'))
+            flask.url_for('.get_account_name'))
     elif type(api_error) is AgreementNotSigned:
         return flask.redirect(
-            flask.url_for('account.get_agreement'))
+            flask.url_for('.get_agreement'))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(
             flask.request.path
@@ -58,7 +58,7 @@ def _handle_error_list(errors):
 @login_required
 def get_account():
     return flask.redirect(
-        flask.url_for('account.get_account_snaps'))
+        flask.url_for('.get_account_snaps'))
 
 
 @account.route('/details')
@@ -135,10 +135,10 @@ def post_agreement():
             return _handle_errors(api_error)
 
         return flask.redirect(
-            flask.url_for('account.get_account'))
+            flask.url_for('.get_account'))
     else:
         return flask.redirect(
-            flask.url_for('account.get_agreement'))
+            flask.url_for('.get_agreement'))
 
 
 @account.route('/username')
@@ -169,10 +169,10 @@ def post_account_name():
             )
 
         return flask.redirect(
-            flask.url_for('account.get_account'))
+            flask.url_for('.get_account'))
     else:
         return flask.redirect(
-            flask.url_for('account.get_account_name'))
+            flask.url_for('.get_account_name'))
 
 
 @account.route('/snaps/<snap_name>/measure')
@@ -284,7 +284,7 @@ def publisher_snap_metrics(snap_name):
 @account.route('/snaps/<snap_name>/market')
 def get_market_snap(snap_name):
     return flask.redirect(
-        flask.url_for('account.get_listing_snap', snap_name=snap_name))
+        flask.url_for('.get_listing_snap', snap_name=snap_name))
 
 
 @account.route('/snaps/<snap_name>/listing', methods=['GET'])
@@ -367,7 +367,7 @@ def post_register_name():
 
     if not snap_name:
         return flask.redirect(
-            flask.url_for('account.get_register_name'))
+            flask.url_for('.get_register_name'))
 
     is_private = flask.request.form.get('is_private') == 'private'
     store = flask.request.form.get('store')
@@ -386,7 +386,7 @@ def post_register_name():
                 if error['code'] == 'already_claimed':
                     # TODO add flash message for next page with notification
                     return flask.redirect(
-                        flask.url_for('account.get_account'))
+                        flask.url_for('.get_account'))
                 elif error['code'] == 'already_registered':
                     return flask.redirect(
                         flask.url_for(
@@ -408,7 +408,7 @@ def post_register_name():
         return _handle_errors(api_error)
 
     return flask.redirect(
-        flask.url_for('account.get_account'))
+        flask.url_for('.get_account'))
 
 
 @account.route('/snaps/<snap_name>/listing', methods=['POST'])
@@ -563,4 +563,4 @@ def post_listing_snap(snap_name):
         flask.flash("No changes to save.", 'information')
 
     return flask.redirect(
-        flask.url_for('account.get_listing_snap', snap_name=snap_name))
+        flask.url_for('.get_listing_snap', snap_name=snap_name))

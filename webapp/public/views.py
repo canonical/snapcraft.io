@@ -16,8 +16,8 @@ from canonicalwebteam.snapstoreapi.exceptions import (
 )
 from urllib.parse import quote_plus
 
-store_page = flask.Blueprint(
-    'store_page', __name__,
+store = flask.Blueprint(
+    'store', __name__,
     template_folder='/templates', static_folder='/static')
 
 
@@ -42,7 +42,7 @@ def _handle_errors(api_error: ApiError):
     return status_code, error
 
 
-@store_page.route('/')
+@store.route('/')
 def homepage():
     featured_snaps = []
     error_info = {}
@@ -61,18 +61,20 @@ def homepage():
     ), status_code
 
 
-@store_page.route('/snaps')
+@store.route('/snaps')
 def snaps_view():
-    return flask.redirect('/store')
+    return flask.redirect(
+        flask.url_for('.store_view'))
 
 
-@store_page.route('/discover')
+@store.route('/discover')
 def discover():
-    return flask.redirect('/store')
+    return flask.redirect(
+        flask.url_for('.store_view'))
 
 
-@store_page.route('/store')
-def store():
+@store.route('/store')
+def store_view():
     featured_snaps = []
     error_info = {}
     status_code = 200
@@ -90,30 +92,13 @@ def store():
     ), status_code
 
 
-def snaps():
-    promoted_snaps = []
-    error_info = {}
-    status_code = 200
-    try:
-        promoted_snaps = logic.get_searched_snaps(
-            api.get_promoted_snaps()
-        )
-    except ApiError as api_error:
-        status_code, error_info = _handle_errors(api_error)
-
-    return flask.render_template(
-        'promoted.html',
-        snaps=promoted_snaps,
-        error_info=error_info
-    ), status_code
-
-
-@store_page.route('/search')
+@store.route('/search')
 def search_snap():
     status_code = 200
     snap_searched = flask.request.args.get('q', default='', type=str)
     if not snap_searched:
-        return flask.redirect('/store')
+        return flask.redirect(
+            flask.url_for('.store_view'))
 
     size = flask.request.args.get('limit', default=10, type=int)
     offset = flask.request.args.get('offset', default=0, type=int)
@@ -159,7 +144,7 @@ def search_snap():
     )
 
 
-@store_page.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
+@store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
 def snap_details(snap_name):
     """
     A view to display the snap details page for specific snaps.
