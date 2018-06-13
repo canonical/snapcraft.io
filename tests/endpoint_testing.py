@@ -3,7 +3,7 @@ import requests
 import pymacaroons
 import responses
 
-from webapp.app import app
+from webapp.app import create_app
 from flask_testing import TestCase
 
 from canonicalwebteam.snapstoreapi.authentication import (
@@ -30,8 +30,8 @@ class BaseTestCases:
             self.endpoint_url = endpoint_url
 
         def create_app(self):
+            app = create_app(testing=True)
             app.config['WTF_CSRF_METHODS'] = []
-            app.testing = True
 
             return app
 
