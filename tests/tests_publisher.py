@@ -20,7 +20,6 @@ class PublisherPage(TestCase):
     def create_app(self):
         app = create_app(testing=True)
         app.config['WTF_CSRF_METHODS'] = []
-        app.testing = True
 
         return app
 

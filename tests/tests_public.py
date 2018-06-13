@@ -16,7 +16,6 @@ class PublicPage(TestCase):
 
     def create_app(self):
         app = create_app(testing=True)
-        app.testing = True
 
         return app
 

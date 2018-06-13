@@ -31,7 +31,8 @@ def create_app(testing=False):
     app = flask.Flask(
         __name__, template_folder='../templates', static_folder='../static')
 
-    app.config.from_pyfile('config.py')
+    app.config.from_object('webapp.config')
+    app.testing = testing
 
     app.wsgi_app = ProxyFix(app.wsgi_app)
     if app.debug:
