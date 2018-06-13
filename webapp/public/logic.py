@@ -1,5 +1,6 @@
 import bleach
 import re
+from collections import OrderedDict
 from urllib.parse import parse_qs, urlparse
 
 
@@ -166,6 +167,43 @@ def convert_channel_maps(channel_maps_list):
                 channel_maps[arch][track].append(channel)
 
     return channel_maps
+
+
+def convert_sidebar_channel_map(channel_maps_list):
+    channel_maps = {}
+    total_tracks = 0
+    dedupe_channels = []
+    channel_cache = []
+
+    for channel_map in channel_maps_list:
+        track = channel_map['track']
+        channels = channel_map['map']
+
+        if not track in channel_maps:
+            channel_maps[track] = []
+
+        for channel in channels:
+            if channel['info']:
+                channel_name = channel['channel'].replace(track + '/', '')
+                channel_version = channel['version']
+                if not channel_name in channel_cache:
+                    dedupe_channels.append({
+                       'name': channel_name,
+                       'safe_track_name': track.replace('.', '-'),
+                       'version': channel_version
+                    })
+                    channel_cache.append(channel_name)
+
+        channel_maps[track] = dedupe_channels
+
+    ordered_channel_maps = OrderedDict(sorted(channel_maps.items(), reverse=True))
+
+    ordered_channel_maps.move_to_end('latest', last=False)
+
+    for track in ordered_channel_maps:
+        total_tracks = total_tracks + len(ordered_channel_maps[track])
+
+    return ordered_channel_maps, total_tracks
 
 
 def get_default_channel(snap_name):

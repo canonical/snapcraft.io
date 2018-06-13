@@ -192,96 +192,63 @@ function initOpenSnapButtons() {
   });
 }
 
-export default function initChannelMap(el, packageName, channelMapData) {
+
+let closeTimeout;
+let channelMapSelector;
+let channelMapEl;
+let channelOverlayEl;
+
+// init open/hide buttons
+const openChannelMap = (event) => {
+  if (event.target.classList.contains('js-open-channel-map')) {
+    // clear hiding animation if it's still running
+    clearTimeout(closeTimeout);
+
+    // make sure overlay is displayed before CSS transitions are triggered
+    channelOverlayEl.style.display = 'block';
+    setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
+
+    window.addEventListener('keyup', hideOnEscape);
+
+    if (typeof ga !== 'undefined') {
+      ga('gtm1.send', {
+        hitType: 'event',
+        eventCategory: 'Snap details',
+        eventAction: 'Open install dialog',
+        eventLabel: `Open install dialog for ${packageName} snap`
+      });
+    }
+  }
+};
+
+const hideChannelMap = (e) => {
+  channelMapEl.classList.add('is-closed');
+  // hide overlay after CSS transition is finished
+  closeTimeout = setTimeout(() => channelOverlayEl.style.display = 'none', 500);
+
+  window.removeEventListener('keyup', hideOnEscape);
+};
+
+const hideOnEscape = (event) => {
+  if (event.key === "Escape" && !channelMapEl.classList.contains('is-closed')) {
+    hideChannelMap();
+  }
+};
+
+export function initChannelMap(el, packageName) {
   initOpenSnapButtons();
 
-  const channelMapEl = document.querySelector(el);
-  const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
-
-  initTabs(channelMapEl);
-
-  let closeTimeout;
-
-  // init open/hide buttons
-  const openChannelMap = (event) => {
-    const openButton = event.target.closest('.js-open-channel-map');
-
-    if (openButton) {
-      // open tab based on button click (or install tab by default)
-      const openTabName = openButton.getAttribute('aria-controls') || 'channel-map-tab-install';
-
-      // clear hiding animation if it's still running
-      clearTimeout(closeTimeout);
-
-      const openTab = channelMapEl.querySelector(`.p-tabs__link[aria-controls=${openTabName}]`);
-
-      // select default tab before opening
-      selectTab(openTab, channelMapEl);
-
-      // make sure overlay is displayed before CSS transitions are triggered
-      channelOverlayEl.style.display = 'block';
-      setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
-
-      window.addEventListener('keyup', hideOnEscape);
-      document.addEventListener('click', hideOnClick);
-
-      if (typeof ga !== 'undefined') {
-        ga('gtm1.send', {
-          hitType: 'event',
-          eventCategory: 'Snap details',
-          eventAction: 'Open install dialog',
-          eventLabel: `Open ${openTabName} dialog tab for ${packageName} snap`
-        });
-      }
-    }
-  };
-
-  const hideChannelMap = () => {
-    channelMapEl.classList.add('is-closed');
-    // hide overlay after CSS transition is finished
-    closeTimeout = setTimeout(() => channelOverlayEl.style.display = 'none', 500);
-
-    window.removeEventListener('keyup', hideOnEscape);
-    document.removeEventListener('click', hideOnClick);
-  };
-
-  const hideOnEscape = (event) => {
-    if (event.key === "Escape" && !channelMapEl.classList.contains('is-closed')) {
-      hideChannelMap();
-    }
-  };
-
-  const hideOnClick = (event) => {
-    // when channel map is not closed and clicking outside of it, close it
-    if (!channelMapEl.classList.contains('is-closed') &&
-        !event.target.closest(el)) {
-      hideChannelMap();
-    }
-  };
+  channelMapSelector = el;
+  channelMapEl = document.querySelector(channelMapSelector);
+  channelOverlayEl = document.querySelector('.p-channel-map-overlay');
 
   // show/hide when clicking on buttons
   document.addEventListener('click', openChannelMap);
   document.querySelector('.js-hide-channel-map').addEventListener('click', hideChannelMap);
+  document.querySelector('.p-channel-map-overlay').addEventListener('click', hideChannelMap);
+}
 
-  // get architectures from data
-  const architectures = Object.keys(channelMapData);
-
-  // initialize arch and track selects
-  const archSelect = document.getElementById("js-channel-map-architecture-select");
-  const trackSelect = document.getElementById("js-channel-map-track-select");
-
-  archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
-
-  archSelect.addEventListener('change', ()=> {
-    setArchitecture(archSelect.value, packageName, channelMapData);
-  });
-
-  trackSelect.addEventListener('change', ()=> {
-    const channels = getArchTrackChannels(archSelect.value, trackSelect.value, channelMapData);
-    setTrack(archSelect.value, trackSelect.value, packageName, channels);
-  });
-
-  const arch = channelMapData['amd64'] ? 'amd64' : architectures[0];
-  archSelect.value = arch;
-  setArchitecture(arch, packageName, channelMapData);
+export function showChannelMap(e, track, channel) {
+  openChannelMap(e);
+  console.log(track, channel);
 }

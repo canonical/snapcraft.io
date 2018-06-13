@@ -57,15 +57,15 @@
     box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
     left: 0;
     padding-top: $sp-medium;
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0;
-    transform: translateY(57px); // just under the header (mobile)
+    //transform: translateY(57px); // just under the header (mobile)
     transition: transform 500ms;
     z-index: 10;
 
     @media screen and (min-width: $breakpoint-medium) {
-      transform: translateY(48px); // just under the header (desktop)
+      //transform: translateY(48px); // just under the header (desktop)
     }
 
     &.is-closed {

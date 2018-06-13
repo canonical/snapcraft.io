@@ -159,7 +159,7 @@ def snap_details(snap_name):
     formatted_paragraphs = logic.split_description_into_paragraphs(
         details['description'])
 
-    channel_maps_list = logic.convert_channel_maps(
+    channel_maps_list, total_tracks = logic.convert_sidebar_channel_map(
         details.get('channel_maps_list'))
 
     end = metrics_helper.get_last_metrics_processed_date()
@@ -225,6 +225,7 @@ def snap_details(snap_name):
         'summary': details['summary'],
         'description_paragraphs': formatted_paragraphs,
         'channel_map': channel_maps_list,
+        'total_tracks': total_tracks,
         'default_channel': default_channel,
 
         # Transformed API data
