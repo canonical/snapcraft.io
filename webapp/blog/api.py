@@ -41,3 +41,14 @@ def get_media(media_id):
         return None
 
     return response.json()
+
+
+def get_feed():
+    """"""
+    response = cache.get(
+        'https://admin.insights.ubuntu.com/?tag=Snap&feed=rss', {})
+
+    if not response.ok:
+        return None
+
+    return response.text

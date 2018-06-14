@@ -176,3 +176,33 @@ class BlogPage(TestCase):
 
         assert response.status_code == 404
         self.assert_template_used('404.html')
+
+    @responses.activate
+    def test_get_feed(self):
+        url = (
+            'https://admin.insights.ubuntu.com/?tag=Snap&feed=rss'
+        )
+
+        responses.add(
+            responses.GET, url,
+            body='xml', status=200)
+
+        response = self.client.get('/blog/feed')
+
+        assert response.status_code == 200
+        self.assertEqual(response.data, b'xml')
+
+    @responses.activate
+    def test_timeout_get_feed(self):
+        url = (
+            'https://admin.insights.ubuntu.com/?tag=Snap&feed=rss'
+        )
+
+        responses.add(
+            responses.GET, url,
+            body=requests.exceptions.Timeout(),
+            status=504)
+
+        response = self.client.get('/blog/feed')
+
+        assert response.status_code == 502

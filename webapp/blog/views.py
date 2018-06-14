@@ -37,6 +37,18 @@ def homepage():
     return flask.render_template('blog/index.html', **context)
 
 
+@blog.route('/feed')
+def feed():
+    try:
+        feed = api.get_feed()
+    except ApiError:
+        return flask.abort(502)
+
+    right_urls = logic.change_url(
+        feed, flask.request.base_url.replace('/feed', ''))
+    return flask.Response(right_urls, mimetype='text/xml')
+
+
 @blog.route('/<slug>')
 def post(slug):
     try:

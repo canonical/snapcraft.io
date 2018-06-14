@@ -41,3 +41,17 @@ def transform_article(article, featured_image=None):
             article['excerpt']['raw'] = article['excerpt']['raw'] + ' […]'
 
     return article
+
+
+def change_url(feed, host):
+    """Change insights urls to snapcraft.io/blog
+
+    :param feed: String with urls
+
+    :returns: A string with converted urls
+    """
+    url_regex = re.compile(
+        'https:\/\/admin.insights.ubuntu.com(\/\d{4}\/\d{2}\/\d{2})?')
+    updated_feed = re.sub(url_regex, host, feed)
+
+    return updated_feed
