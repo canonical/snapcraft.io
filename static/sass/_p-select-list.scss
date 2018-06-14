@@ -1,0 +1,47 @@
+@mixin snapcraft-p-select-list {
+  .p-select-list {
+    overflow-y: hidden;
+    max-height: 19.25rem;
+
+    &.is-open {
+      max-height: 100%;
+    }
+
+    .p-code-snippet__input {
+      display: none;
+    }
+
+    .p-select-list__item {
+
+      &-install {
+        opacity: 0;
+        padding: $sp-small;
+      }
+
+      small {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        width: 6.375rem;
+        margin: 0;
+      }
+
+      th {
+        vertical-align: top;
+      }
+
+      &:hover {
+        background: $color-light;
+
+        .p-select-list__item-install {
+          opacity: 1;
+        }
+      }
+    }
+
+    & + .show-more {
+      margin-top: 1rem;
+    }
+  }
+}

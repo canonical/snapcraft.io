@@ -66,8 +66,10 @@
         </div>
       </div>
       <div class="col-5 p-snap-install-buttons">
-        <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
-        <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button>
+        <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">
+          <i class="p-icon" style="background-image: url('/static/images/import-icon-white.svg');"></i>&nbsp;
+          Install</button>
+        {# <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button> #}
       </div>
     </div>
   </div>
@@ -109,11 +111,40 @@
         {% endif %}
       </div>
       <div class="col-4">
-        <table class="p-table-key-value">
-          <tr><th>License</th><td>{{ license }}</td></tr>
-          <tr><th>Size</th><td>{{ filesize }}</td></tr>
-          <tr><th width="100">Version</th><td>{{ version }}</td></tr>
-        </table>
+          <!--<table class="p-table-key-value">-->
+            <!--<tr><th width="10px">License</th><td colspan="2">{{ license }}</td></tr>-->
+            <!--<tr><th>Size</th><td colspan="2">{{ filesize }}</td></tr>-->
+          <!--</table>-->
+          <h4>All versions</h4>
+          <div class="p-select-list">
+            <table class="p-table-key-value">
+              {% for track in channel_map %}
+                {% set outer_loop = loop %}
+                {% for channel in channel_map[track] %}
+                  <tr class="p-select-list__item">
+                    {% if loop.index == 1 %}
+                      <th>{{ track }}</th>
+                    {% else %}
+                      <th></th>
+                    {% endif %}
+                    <td>{{ channel.name }}<br />
+                      <small title="{{ channel.version }}">{{ channel.version }}</small>
+                    </td>
+                    <td>
+                      <button
+                        class="p-select-list__item-install js-open-channel-map p-button--neutral"
+                        data-track="{{ track }}" data-channel="{{ channel.name }}" data-version="{{ channel.version }}">
+                        <i class="p-icon" style="background-image: url('/static/images/import-icon.svg');">Install</i>
+                      </button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% endfor %}
+            </table>
+        </div>
+        {% if total_tracks > 5 %}
+          <button class="show-more">Show more</button>
+        {% endif %}
       </div>
     </div>
 
@@ -194,6 +225,7 @@
         try {
           snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }});
         } catch(e) {
+          console.error(e);
           Raven.captureException(e);
           document.querySelector('.js-open-channel-map').style.display = 'none';
         }
@@ -238,6 +270,8 @@
       if (typeof ClipboardJS !== 'undefined') {
         var copy = new ClipboardJS('.js-clipboard-copy');
 
+
+
         copy.on('success', function () {
           if (typeof ga !== 'undefined') {
             ga('gtm1.send', {
@@ -249,6 +283,64 @@
           }
         });
       }
+
+      var selectList = document.querySelector('.p-select-list');
+      var showMore = document.querySelector('.show-more');
+
+      selectList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('js-open-channel-map')) {
+          var button = e.target;
+          var track = button.dataset.track;
+          var channel = button.dataset.channel;
+          var version = button.dataset.version;
+
+          var channelMapGUIButton = document.querySelector('.js-open-snap-button');
+          var channelMapCLI = document.querySelector('.p-code-snippet__input');
+
+          // snap://etcd?channel=3.2/edge`
+          channelMapGUIButton.setAttribute('data-snap', '{{ package_name }}?channel=' + track + '/' + channel);
+          if (track == 'latest') {
+            channelMapCLI.setAttribute('value', 'sudo snap install {{ package_name }} --' + channel);
+          } else {
+            channelMapCLI.setAttribute('value', 'sudo snap install {{ package_name }} --channel=' + track + '/' + channel);
+          }
+
+          document.querySelector('#js-channel-map .channel').innerHTML = track+' '+channel;
+          document.querySelector('#js-channel-map .version').innerHTML = version;
+
+          snapcraft.public.showChannelMap(e, track, channel);
+        }
+      });
+
+      if (showMore) {
+        showMore.addEventListener('click', function (e) {
+          if (selectList.classList.contains('is-open')) {
+            selectList.classList.remove('is-open');
+            showMore.innerText = 'Show more';
+          } else {
+            selectList.classList.add('is-open');
+            showMore.innerText = 'Show less';
+          }
+        });
+      }
+
+      var headerHeight = document.querySelector('#navigation').clientHeight;
+      var jsChannelMap = document.querySelector('#js-channel-map');
+
+      function setChannelMapPosition(diff) {
+        if (diff < 0) {
+          diff = 0;
+        }
+        jsChannelMap.setAttribute('style', 'top: ' + diff + 'px');
+      }
+
+      var diff = headerHeight - window.scrollY;
+      setChannelMapPosition(diff);
+
+      window.addEventListener('scroll', function (e) {
+        diff = headerHeight - window.scrollY;
+        setChannelMapPosition(diff);
+      });
     });
   </script>
 {% endblock %}

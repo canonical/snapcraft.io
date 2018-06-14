@@ -1,18 +1,7 @@
 <div id='js-channel-map' class="p-strip--light p-channel-map is-closed">
+  <button class="p-channel-map__hide p-icon--close js-hide-channel-map" aria-label="Hide all versions">Hide</button>
   <div class="row">
-    <div class="col-12">
-      <nav class="p-tabs">
-        <ul class="p-tabs__list" role="tablist">
-          <li class="p-tabs__item" role="presentation">
-            <a href="#install" class="p-tabs__link" role="tab" aria-controls="channel-map-tab-install" aria-selected="true">{{ snap_title }} {{ version }}</a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a href="#versions" class="p-tabs__link" role="tab" aria-controls="channel-map-tab-versions">All versions</a>
-          </li>
-        </ul>
-        <button class="p-channel-map__hide p-icon--close js-hide-channel-map" aria-label="Hide all versions">Hide</button>
-      </nav>
-    </div>
+    <h2 class="p-heading--four">Install {{ snap_title }} <small><span class="channel">latest stable</span> (<span class="version">{{ version }}</span>)</small></h2>
   </div>
   <div class="row p-channel-map__tab is-open" id="channel-map-tab-install">
     <div class="col-5">
@@ -26,7 +15,7 @@
         <input
           class="p-code-snippet__input"
           id="snap-install"
-          value="sudo snap install {{ package_name }} {% if default_channel != 'stable' %}--channel {{default_channel}}{% endif %}"
+          value="sudo snap install {{ package_name }}{% if default_channel != 'stable' %} --channel {{default_channel}}{% endif %}"
           readonly="readonly"
         />
         <button
@@ -38,139 +27,6 @@
       <p class="p-form-help-text">
         Don't have snapd? <a href="https://docs.snapcraft.io/core/install">Get set up for snaps</a>.
       </p>
-    </div>
-  </div>
-  <div class="row p-channel-map__tab" id="channel-map-tab-versions">
-    <div class="col-3">
-      <form>
-        <div class="js-channel-map-arch-field">
-          <label for="js-channel-map-track-select">
-            Architecture
-          </label>
-          <select id="js-channel-map-architecture-select">
-          </select>
-        </div>
-        <div class="p-channel-map__track-field js-channel-map-track-field">
-          <label for="js-channel-map-track-select">
-            Track
-            <span class="p-tooltip is-icon" aria-describedby="tooltip-track">
-              <i class="p-icon--information"></i>
-              <span class="p-tooltip__message" role="tooltip" id="tooltip-track">This application has alternate series or 'tracks'
-where you can install and get updates from.</span>
-            </span>
-          </label>
-          <select id="js-channel-map-track-select">
-          </select>
-        </div>
-      </form>
-    </div>
-
-    <div class="col-9">
-
-      <div class="p-channel-map__row p-channel-map__row--heading">
-        <div class="col-8">
-          Command line install
-          <span class="p-tooltip p-tooltip--btm-center" aria-describedby="tooltip-channel">
-            <i class="p-icon--information"></i>
-            <span class="p-tooltip__message" role="tooltip" id="tooltip-channel">Install this application from ‘channels’ of varying stability.
-For example, Edge is used for development and testing, whereas
-Stable is used for well tested and production ready versions.</span>
-          </span>
-        </div>
-      </div>
-
-      <div id="js-channel-map-stable" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">stable</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-stable"
-              value="sudo snap install {{ package_name }}"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-stable">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
-      </div>
-
-      <div id="js-channel-map-candidate" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">candidate</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-candidate"
-              value="sudo snap install {{ package_name }} --candidate"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-candidate">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
-      </div>
-
-      <div id="js-channel-map-beta" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">beta</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-beta"
-              value="sudo snap install {{ package_name }} --beta"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-beta">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
-      </div>
-
-      <div id="js-channel-map-edge" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">edge</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-edge"
-              value="sudo snap install {{ package_name }} --edge"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-edge">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>

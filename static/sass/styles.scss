@@ -140,3 +140,6 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-verified';
 @include snapcraft-p-verified;
+
+@import 'p-select-list';
+@include snapcraft-p-select-list;

@@ -1,5 +1,5 @@
 import map from './snap-details/map';
 import screenshots from './snap-details/screenshots';
-import channelMap from './snap-details/channelMap';
+import {initChannelMap as channelMap, showChannelMap } from './snap-details/channelMap';
 
-export { map, screenshots, channelMap };
+export { map, screenshots, channelMap, showChannelMap };
