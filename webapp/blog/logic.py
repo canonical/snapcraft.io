@@ -16,7 +16,7 @@ def strip_excerpt(raw_html):
     return html.unescape(cleantext).replace('\n', '')
 
 
-def transform_article(article, featured_image=None):
+def transform_article(article, featured_image=None, author=None):
     """Transform article to include featured image, human readable
     date and a stipped version of the excerpt
 
@@ -27,7 +27,9 @@ def transform_article(article, featured_image=None):
     """
     article['image'] = featured_image
 
-    if article['date_gmt']:
+    article['author'] = author
+
+    if 'date_gmt' in article:
         article_gmt = article['date_gmt']
         article_date = datetime.strptime(article_gmt, '%Y-%m-%dT%H:%M:%S')
         article['date'] = article_date.strftime('%-d %B %Y')
@@ -37,8 +39,19 @@ def transform_article(article, featured_image=None):
             article['excerpt']['rendered'])[:340]
 
         # If the excerpt doesn't end before 340 characters, add ellipsis
-        if article['excerpt']['raw'][-4:] != ' […]':
-            article['excerpt']['raw'] = article['excerpt']['raw'] + ' […]'
+        raw_article = article['excerpt']['raw']
+        # split at the last 3 characters
+        raw_article_start = raw_article[:-3]
+        raw_article_end = raw_article[-3:]
+        # for the last 3 characters replace any part of […]
+        raw_article_end = raw_article_end.replace('[', '')
+        raw_article_end = raw_article_end.replace('…', '')
+        raw_article_end = raw_article_end.replace(']', '')
+        # join it back up
+        article['excerpt']['raw'] = ''.join([
+            raw_article_start,
+            raw_article_end,
+            ' […]'])
 
     return article
 

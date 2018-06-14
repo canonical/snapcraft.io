@@ -26,7 +26,15 @@ def homepage():
         except ApiError:
             featured_image = None
 
-        article = logic.transform_article(article, featured_image)
+        try:
+            author = api.get_user(article['author'])
+        except ApiError:
+            author = None
+
+        article = logic.transform_article(
+            article,
+            featured_image=featured_image,
+            author=author)
 
     context = {
         'current_page': page_param,
@@ -50,19 +58,43 @@ def feed():
 
 
 @blog.route('/<slug>')
-def post(slug):
+def article(slug):
     try:
-        posts = api.get_posts(slug)
+        articles = api.get_article(slug)
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
-    if not posts:
-        flask.abort(404)
+    if not articles:
+        flask.abort(404, 'Article not found')
+
+    article = articles[0]
+
+    try:
+        author = api.get_user(article['author'])
+    except ApiError:
+        author = None
+
+    transformed_article = logic.transform_article(article, author=author)
+
+    tags = article['tags']
+
+    try:
+        related_articles, total_pages = api.get_articles(
+            tags=tags,
+            per_page=3,
+            exclude=article['id'])
+    except ApiError:
+        related_articles = None
+
+    if related_articles:
+        for related_article in related_articles:
+            related_article = logic.transform_article(related_article)
 
     context = {
-        'post': posts[0]
+        'article': transformed_article,
+        'related_articles': related_articles
     }
 
     return flask.render_template(
-        'blog/post.html',
+        'blog/article.html',
         **context)

@@ -1,0 +1,7 @@
+@mixin snapcraft-p-blog-post {
+  .p-blog-post {
+    * {
+      max-width: 100%;
+    }
+  }
+}
