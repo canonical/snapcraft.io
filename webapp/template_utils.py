@@ -3,6 +3,24 @@ import hashlib
 import os
 
 
+# generator functions for templates
+def generate_slug(path):
+    """
+    Generate a slug for each page
+    """
+    if path.startswith('/account'):
+        return 'account'
+
+    if path == '/':
+        return 'home'
+
+    if path == '/blog':
+        return 'blog'
+
+    return 'store'
+
+
+# template filters
 def contains(arr, contents):
     """
     Template helper for detecting if an array contains an item
