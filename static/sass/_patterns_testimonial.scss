@@ -1,8 +1,8 @@
 @mixin vf-p-testimonial {
   .p-testimonial {
     border: 0 none;
-    padding: 0;
     margin: 0;
+    padding: 0;
 
     &__title {
       margin-top: $sp-medium;

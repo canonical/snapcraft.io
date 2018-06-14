@@ -1,8 +1,8 @@
 @mixin snapcraft-p-beta-notification {
   .p-beta-notification {
     padding: {
-      top: $sp-small;
       bottom: $sp-small;
+      top: $sp-small;
     }
 
 

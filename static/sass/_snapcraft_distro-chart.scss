@@ -39,10 +39,10 @@
 
     &__bar {
       background: $bar-color;
+      clear: left;
+      float: left;
       height: 1px;
       margin: .53125rem 0 .46875rem;
-      float: left;
-      clear: left;
     }
   }
 }
