@@ -1,0 +1,25 @@
+---
+
+defaults: &defaults
+  docker:
+    - image: canonicalwebteam/dev
+  working_directory: ~/project
+
+version: 2
+jobs:
+  python-lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pip3 install flake8
+      - run:
+          name: Lint webapp with Flake8
+          command: flake8 webapp
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - python-lint
