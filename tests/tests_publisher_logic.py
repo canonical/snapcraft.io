@@ -1,5 +1,5 @@
 import unittest
-import webapp.publisher.logic as logic
+from webapp.publisher.snaps import logic
 
 
 class PublisherLogicTest(unittest.TestCase):

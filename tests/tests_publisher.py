@@ -89,7 +89,7 @@ class PublisherPage(TestCase):
         response = self.client.get('/account')
         self.assertEqual(302, response.status_code)
         self.assertEqual(
-            'http://localhost/account/snaps',
+            'http://localhost/account/snaps/',
             response.location)
 
     # /account/username endpoint

@@ -19,6 +19,7 @@ from webapp.handlers import set_handlers
 from webapp.blog.views import blog
 from webapp.public.views import store
 from webapp.publisher.views import account
+from webapp.publisher.snaps.views import publisher_snaps
 from webapp.snapcraft.views import snapcraft
 from webapp.login.views import login
 
@@ -74,6 +75,7 @@ def init_snapcraft(app):
     csrf.exempt('webapp.login.views.login_handler')
     app.register_blueprint(store)
     app.register_blueprint(account, url_prefix='/account')
+    app.register_blueprint(publisher_snaps, url_prefix='/account/snaps')
     app.register_blueprint(blog, url_prefix='/blog')
 
 
