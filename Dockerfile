@@ -18,6 +18,11 @@ RUN test -n "${COMMIT_ID}"
 RUN echo "${COMMIT_ID}" > version-info.txt
 ENV COMMIT_ID "${COMMIT_ID}"
 
+# Set which webapp configuration to load
+ARG WEBAPP
+RUN test -n "${WEBAPP}"
+ENV WEBAPP "${WEBAPP}"
+
 # Setup commands to run server
 ENTRYPOINT ["talisker.gunicorn", "webapp.app:create_app()", "--access-logfile", "-", "--error-logfile", "-", "--bind"]
 CMD ["0.0.0.0:80"]
