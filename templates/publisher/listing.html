@@ -1,4 +1,4 @@
-{% extends "_layout.html" %}
+{% extends webapp_config['LAYOUT'] %}
 
 {% block meta_title %}
   Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}

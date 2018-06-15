@@ -44,7 +44,6 @@ def create_app(testing=False):
 
     if not testing:
         talisker.flask.register(app)
-        print(app.config['SENTRY_CONFIG'])
 
         prometheus_flask_exporter.PrometheusMetrics(
             app,
@@ -55,9 +54,10 @@ def create_app(testing=False):
 
         init_extensions(app)
 
+    app.config.from_object('webapp.configs.' + app.config['WEBAPP'])
     set_handlers(app)
 
-    if app.config['WEBAPP'] == 'snapcraft.io':
+    if app.config['WEBAPP'] == 'snapcraft':
         init_snapcraft(app)
     else:
         init_brandstore(app)

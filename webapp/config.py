@@ -23,4 +23,4 @@ SENTRY_CONFIG = {
     'environment': ENVIRONMENT
 }
 
-WEBAPP = os.getenv('WEBAPP', 'snapcraft.io')
+WEBAPP = os.getenv('WEBAPP', 'snapcraft')
