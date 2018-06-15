@@ -1,0 +1,81 @@
+{% extends "_layout.html" %}
+
+{% block meta_title %}{{ article.title.rendered|safe }} | Snapcraft{% endblock %}
+{% block meta_description %}{{ article.excerpt.raw }}{% endblock %}
+{% block meta_type %}article{% endblock %}
+{% if article.image and article.image.source_url %}
+  {% block meta_image %}{{ article.image.source_url }}{% endblock %}
+{% endif %}
+
+{% block meta_schema %}
+<script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@id": "https://snapcraft.io/#article",
+      "@type": "Article",
+      "name": "{{ article.title.renderered|safe }}",
+      "author": {
+         "@type": "Person",
+         "name": "{{ article.author.name }}"
+      },
+      "datePublished": "{{ article.date_gmt }}",
+      {% if article.image and article.image.source_url %}
+        "image": "{{ article.image.source_url }}",
+      {% endif %}
+      "url": "https://snapcraft.io{{ self.meta_path() }}",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Snapcraft",
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block extra_meta %}
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="{{ article.date_gmt }}" />
+  <meta property="article:author" content="{{ article.author.name }}" />
+{% endblock %}
+
+{% block content %}
+<section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
+  <div class="row">
+    <div class="col-10">
+      <h2>{{ article.title.rendered|safe }}</h2>
+      <p>by {{ article.author.name }} on {{ article.date }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="p-strip is-bordered">
+  <div class="row">
+    <div class="col-10 p-blog-post">
+      {{ article.content.rendered|safe }}
+    </div>
+  </div>
+</section>
+
+{% if related_articles %}
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-12">
+        <h3>
+          Related posts
+        </h3>
+      </div>
+    </div>
+    <div class="row p-divider">
+      {% for related_article in related_articles %}
+        <div class="col-4 p-divider__block">
+          <h4>
+            <a href="/blog/{{ related_article.slug }}">
+              {{ related_article.title.rendered|safe }}
+            </a>
+          </h4>
+          <p>{{ related_article.excerpt.raw }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+{% endblock %}

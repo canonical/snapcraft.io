@@ -30,7 +30,8 @@ class BlogPage(TestCase):
         payload = [
             {
                 'featured_media': 123,
-                'date_gmt': '2018-06-11T11:11:11'
+                'date_gmt': '2018-06-11T11:11:11',
+                'author': 321
             }
         ]
 
@@ -58,7 +59,8 @@ class BlogPage(TestCase):
             'date': '11 June 2018',
             'date_gmt': '2018-06-11T11:11:11',
             'featured_media': 123,
-            'image': {}
+            'image': {},
+            'author': None
         }])
 
     @responses.activate
@@ -90,7 +92,8 @@ class BlogPage(TestCase):
         payload = [
             {
                 'featured_media': 123,
-                'date_gmt': '2018-06-11T11:11:11'
+                'date_gmt': '2018-06-11T11:11:11',
+                'author': 321
             }
         ]
 
@@ -119,7 +122,51 @@ class BlogPage(TestCase):
             'date': '11 June 2018',
             'date_gmt': '2018-06-11T11:11:11',
             'featured_media': 123,
-            'image': None
+            'image': None,
+            'author': None
+        }])
+
+    @responses.activate
+    def test_user_timeout(self):
+        posts_url = ''.join([
+            self.api_url,
+            '/posts?tag=2065'])
+
+        payload = [
+            {
+                'featured_media': 123,
+                'date_gmt': '2018-06-11T11:11:11',
+                'author': 321
+            }
+        ]
+
+        posts_headers = {
+            'X-WP-TotalPages': '1'
+        }
+
+        responses.add(
+            responses.GET, posts_url,
+            json=payload, status=200, headers=posts_headers)
+
+        url = ''.join([
+            self.api_url,
+            '/users/321'])
+
+        responses.add(
+            responses.GET, url,
+            body=requests.exceptions.Timeout(),
+            status=504)
+
+        response = self.client.get("/blog")
+
+        assert response.status_code == 200
+        self.assert_template_used('blog/index.html')
+        self.assert_context('articles', [{
+            'date': '11 June 2018',
+            'date_gmt': '2018-06-11T11:11:11',
+            'featured_media': 123,
+            'image': None,
+            'author': None
         }])
 
     @responses.activate
@@ -131,7 +178,9 @@ class BlogPage(TestCase):
 
         payload = [
             {
-                'post': 'this is a post'
+                'author': 321,
+                'tags': [10],
+                'id': 20
             }
         ]
 
@@ -142,8 +191,13 @@ class BlogPage(TestCase):
         response = self.client.get("/blog/test-page")
 
         assert response.status_code == 200
-        self.assert_template_used('blog/post.html')
-        self.assert_context('post', payload[0])
+        self.assert_template_used('blog/article.html')
+        self.assert_context('article', {
+            'author': None,
+            'image': None,
+            'id': 20,
+            'tags': [10]
+        })
 
     @responses.activate
     def test_timeout_article(self):
@@ -176,6 +230,48 @@ class BlogPage(TestCase):
 
         assert response.status_code == 404
         self.assert_template_used('404.html')
+
+    @responses.activate
+    def test_related_posts_timeout(self):
+        posts_url = ''.join([
+            self.api_url,
+            '/posts?slug=test-page&tags=2065'])
+
+        payload = [
+            {
+                'author': 321,
+                'tags': [2065],
+                'id': 20
+            }
+        ]
+
+        posts_headers = {
+            'X-WP-TotalPages': '1'
+        }
+
+        responses.add(
+            responses.GET, posts_url,
+            json=payload, status=200, headers=posts_headers)
+
+        url = ''.join([
+            self.api_url,
+            '/posts?tags=2065&per_page=3&page=1&exclude=10'])
+
+        responses.add(
+            responses.GET, url,
+            body=requests.exceptions.Timeout(),
+            status=504)
+
+        response = self.client.get("/blog/test-page")
+
+        assert response.status_code == 200
+        self.assert_template_used('blog/article.html')
+        self.assert_context('article', {
+            'author': None,
+            'image': None,
+            'id': 20,
+            'tags': [2065]
+        })
 
     @responses.activate
     def test_get_feed(self):

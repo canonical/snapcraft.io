@@ -12,7 +12,7 @@
     {% block meta %}
       <meta property="og:title" content="{{ self.meta_title() }}"/>
       <meta property="og:site_name" content="Snapcraft"/>
-      <meta property="og:type" content="website"/>
+      <meta property="og:type" content="{% block meta_type %}website{% endblock %}"/>
       <meta property="og:description" content="{{ self.meta_description() }}"/>
       <meta property="og:image" content="{% block meta_image %}https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png{% endblock %}" />
       <meta property="og:url" content="https://snapcraft.io{% block meta_path %}{{ path }}{% endblock %}" />
@@ -21,6 +21,8 @@
       <meta property="twitter:creator" content="@snapcraftio" />
       <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
     {% endblock %}
+
+    {% block extra_meta %}{% endblock %}
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
