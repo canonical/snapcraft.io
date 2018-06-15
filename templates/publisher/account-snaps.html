@@ -7,11 +7,26 @@ My published snaps — Linux software in the Snap Store
 {% block content %}
 {% include "publisher/_beta-notification.html" %}
 <section class="p-strip is-shallow">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="row">
+          <div class="col-12">
+            <div class="p-notification--positive">
+              <p class="p-notification__response">
+                <span class="p-notification__status">Success:</span> {{ message|safe }}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
   <div class="row">
     <div class="col-12">
       <h1 class="p-heading--three u-float--left">My published snaps</h1>
       {% if snaps %}
-        <a href="https://docs.snapcraft.io/build-snaps/" class="p-link--external u-float--right">How to create a snap</a>
+        <a href="/account/register-name" class="p-button--neutral u-no-margin--top u-float--right">Register name</a>
       {% endif %}
     </div>
   </div>

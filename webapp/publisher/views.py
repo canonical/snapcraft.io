@@ -157,6 +157,10 @@ def get_register_name():
         'conflict', default='False', type=str)
     conflict = conflict_str == 'True'
 
+    already_owned_str = flask.request.args.get(
+        'already_owned', default='False', type=str)
+    already_owned = already_owned_str == 'True'
+
     is_private_str = flask.request.args.get(
         'is_private', default='False', type=str)
     is_private = is_private_str == 'True'
@@ -165,6 +169,7 @@ def get_register_name():
         'snap_name': snap_name,
         'is_private': is_private,
         'conflict': conflict,
+        'already_owned': already_owned,
     }
     return flask.render_template(
         'publisher/register-name.html',
@@ -195,7 +200,6 @@ def post_register_name():
         if api_response_error_list.status_code == 409:
             for error in api_response_error_list.errors:
                 if error['code'] == 'already_claimed':
-                    # TODO add flash message for next page with notification
                     return flask.redirect(
                         flask.url_for('.get_account'))
                 elif error['code'] == 'already_registered':
@@ -205,6 +209,13 @@ def post_register_name():
                             snap_name=snap_name,
                             is_private=is_private,
                             conflict=True))
+                elif error['code'] == 'already_owned':
+                    return flask.redirect(
+                        flask.url_for(
+                            'account.get_register_name',
+                            snap_name=snap_name,
+                            is_private=is_private,
+                            already_owned=True))
 
         context = {
             'snap_name': snap_name,
@@ -217,6 +228,13 @@ def post_register_name():
             **context)
     except ApiError as api_error:
         return _handle_errors(api_error)
+
+    flask.flash(''.join([
+        snap_name,
+        ' registered.',
+        ' <a href="https://docs.snapcraft.io/build-snaps/upload"',
+        ' class="p-link--external"',
+        ' target="blank">How to upload a Snap</a>']))
 
     return flask.redirect(
         flask.url_for('.get_account'))
