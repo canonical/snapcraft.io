@@ -35,6 +35,7 @@ def set_handlers(app):
             'page_slug': page_slug,
             'user_name': user_name,
             'VERIFIED_PUBLISHER': 'verified',
+            'webapp_config': app.config['WEBAPP_CONFIG'],
 
             # Functions
             'contains': template_utils.contains,

@@ -1,4 +1,4 @@
-{% extends "_layout.html" %}
+{% extends webapp_config['LAYOUT'] %}
 
 {% block meta_title %}{{ article.title.rendered|safe }} | Snapcraft{% endblock %}
 {% block meta_description %}{{ article.excerpt.raw }}{% endblock %}

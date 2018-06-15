@@ -1,0 +1,96 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
+
+    <title>{% block meta_title %}{{ webapp_config['STORE_NAME'] }} - Snaps are universal Linux packages{% endblock %}</title>
+
+    {% block meta %}
+      <meta property="og:title" content="{{ self.meta_title() }}"/>
+      <meta property="og:site_name" content="Snapcraft"/>
+      <meta property="og:type" content="website"/>
+      <meta property="og:description" content="{{ self.meta_description() }}"/>
+      <meta property="og:image" content="{% block meta_image %}https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png{% endblock %}" />
+      <meta property="og:url" content="https://snapcraft.io{% block meta_path %}{{ path }}{% endblock %}" />
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:site" content="@snapcraftio" />
+      <meta property="twitter:creator" content="@snapcraftio" />
+      <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
+    {% endblock %}
+
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
+
+    <link rel="stylesheet" href="{{ static_url('minified/styles.css') }}" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
+    <!-- End Google Tag Manager -->
+  </head>
+
+  <body class="has-sticky-footer">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KCGXHQS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    {% include "_header.html" %}
+
+    {% block content %}{% endblock %}
+
+    {% include "_footer.html" %}
+
+    {% block scripts_modules %}{% endblock %}
+    <script src="{{ static_url('js/modules/raven.min.js') }}"></script>
+    <script>
+      Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
+        whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
+        release: '{{ COMMIT_ID }}',
+        environment: '{{ ENVIRONMENT }}'
+      }).install();
+    </script>
+
+    <script src="{{ static_url('js/dist/base.js') }}"></script>
+    {% block scripts %}{% endblock %}
+
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@id": "https://snapcraft.io/#organization",
+        "@type": "Organization",
+        "name": "Snapcraft",
+        "logo": "https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png",
+        "url": "https://snapcraft.io",
+        "sameAs": [
+          "https://developer.ubuntu.com/snapcraft",
+          "https://github.com/snapcore/snapcraft",
+          "https://en.wikipedia.org/wiki/Snappy_(package_manager)",
+          "https://twitter.com/snapcraftio",
+          "https://www.facebook.com/snapcraftio/",
+          "https://plus.google.com/+SnapcraftIo",
+          "https://www.youtube.com/snapcraftio"
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@id": "https://snapcraft.io/#website",
+        "@type": "WebPage",
+        "name": "Snapcraft",
+        "url": "https://snapcraft.io{{ self.meta_path() }}"
+      }
+    </script>
+
+    {% block meta_schema %}{% endblock %}
+  </body>
+</html>
