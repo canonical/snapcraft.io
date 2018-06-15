@@ -14,3 +14,4 @@ responses==0.9.0
 talisker==0.9.8
 Flask-Testing==0.6.2
 canonicalwebteam.snapstoreapi==0.3
+gunicorn[gevent]
