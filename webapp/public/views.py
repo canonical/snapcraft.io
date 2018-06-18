@@ -6,7 +6,7 @@ import webapp.api.public as api
 import webapp.public.logic as logic
 from dateutil import parser
 from math import floor
-from webapp.exceptions import (
+from webapp.api.exceptions import (
     ApiError,
     ApiTimeoutError,
     ApiResponseDecodeError,

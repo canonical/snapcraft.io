@@ -2,7 +2,7 @@ import flask
 from webapp import authentication
 import webapp.api.dashboard as api
 from webapp.decorators import login_required
-from webapp.exceptions import (
+from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
     ApiResponseErrorList,

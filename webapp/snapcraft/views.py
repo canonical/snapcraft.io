@@ -2,7 +2,7 @@ import flask
 
 import webapp.api.public as api
 from webapp.public import logic
-from webapp.exceptions import (
+from webapp.api.exceptions import (
     ApiError,
     ApiTimeoutError,
     ApiResponseDecodeError,

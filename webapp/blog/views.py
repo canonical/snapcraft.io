@@ -1,8 +1,8 @@
 import flask
 
-from webapp.api.blog as api
+import webapp.api.blog as api
+from webapp.api.exceptions import ApiError
 from webapp.blog import logic
-from webapp.exceptions import ApiError
 
 
 blog = flask.Blueprint(

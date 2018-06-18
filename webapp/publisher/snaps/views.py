@@ -6,7 +6,7 @@ import webapp.api.dashboard as api
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from json import loads
-from webapp.exceptions import (
+from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
     ApiResponseErrorList,
