@@ -1,9 +1,8 @@
 import flask
 
-from canonicalwebteam.snapstoreapi.exceptions import ApiError
-
 from webapp.blog import api
 from webapp.blog import logic
+from webapp.exceptions import ApiError
 
 
 blog = flask.Blueprint(

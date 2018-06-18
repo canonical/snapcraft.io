@@ -6,7 +6,7 @@ from urllib.parse import (
     urlparse,
     urlunparse,
 )
-from canonicalwebteam.snapstoreapi import authentication
+from webapp import authentication
 
 
 def set_handlers(app):

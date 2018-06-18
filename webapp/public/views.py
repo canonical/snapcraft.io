@@ -2,11 +2,11 @@ import flask
 import humanize
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-import canonicalwebteam.snapstoreapi.public_api as api
+import webapp.api.public as api
 import webapp.public.logic as logic
 from dateutil import parser
 from math import floor
-from canonicalwebteam.snapstoreapi.exceptions import (
+from webapp.exceptions import (
     ApiError,
     ApiTimeoutError,
     ApiResponseDecodeError,
