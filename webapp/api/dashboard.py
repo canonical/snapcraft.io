@@ -1,7 +1,7 @@
-import webapp.cache as cache
 import os
 
 from webapp import authentication
+from webapp.api import cache
 from webapp.exceptions import (
     AgreementNotSigned,
     ApiResponseDecodeError,

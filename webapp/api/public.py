@@ -1,4 +1,4 @@
-import webapp.cache as cache
+from webapp.api import cache
 import os
 from webapp.exceptions import (
     ApiResponseDecodeError,
