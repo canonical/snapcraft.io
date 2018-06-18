@@ -1,6 +1,6 @@
 import flask
 
-from webapp.blog import api
+from webapp.api.blog as api
 from webapp.blog import logic
 from webapp.exceptions import ApiError
 
