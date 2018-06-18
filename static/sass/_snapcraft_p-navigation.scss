@@ -68,15 +68,17 @@
       }
 
       .p-icon--chevron {
-        height: $sp-small;
-        margin-top: -($sp-small / 2); // half of the height
+        $chevron-size: map-get($icon-sizes, accordion);
+
+        height: $chevron-size;
+        margin-top: -($chevron-size / 2); // half of the height
         position: absolute;
-        right: $sp-small;
+        right: $chevron-size;
         top: 50%;
-        width: $sp-small;
+        width: $chevron-size;
       }
 
-      &[aria-expanded="true"] {
+      [aria-expanded="true"] {
         .p-icon--chevron {
           transform: rotate(180deg);
         }
