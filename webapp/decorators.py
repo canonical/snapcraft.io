@@ -3,7 +3,7 @@ import functools
 
 # Third party packages
 import flask
-from canonicalwebteam.snapstoreapi import authentication
+from webapp import authentication
 
 
 def login_required(func):

@@ -3,8 +3,8 @@ import os
 
 from flask_openid import OpenID
 
-from canonicalwebteam.snapstoreapi import authentication
-from canonicalwebteam.snapstoreapi import publisher_api
+from webapp import authentication
+from webapp.api import dashboard
 from webapp.login.macaroon import (
     MacaroonRequest,
     MacaroonResponse,
@@ -50,7 +50,7 @@ def after_login(resp):
     flask.session['macaroon_discharge'] = resp.extensions['macaroon'].discharge
 
     try:
-        account = publisher_api.get_account(flask.session)
+        account = dashboard.get_account(flask.session)
         flask.session['openid'] = {
             'identity_url': resp.identity_url,
             'nickname': account['username'],

@@ -1,8 +1,8 @@
 import flask
-from canonicalwebteam.snapstoreapi import authentication
-import canonicalwebteam.snapstoreapi.publisher_api as api
+from webapp import authentication
+import webapp.api.dashboard as api
 from webapp.decorators import login_required
-from canonicalwebteam.snapstoreapi.exceptions import (
+from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
     ApiResponseErrorList,

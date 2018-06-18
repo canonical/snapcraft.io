@@ -1,4 +1,4 @@
-from canonicalwebteam.snapstoreapi import cache
+from webapp.api import cache
 
 API_URL = 'https://admin.insights.ubuntu.com/wp-json/wp/v2'
 TAGS = '2065'  # 'Snaps'

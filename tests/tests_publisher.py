@@ -5,7 +5,7 @@ import responses
 
 from webapp.app import create_app
 from flask_testing import TestCase
-from canonicalwebteam.snapstoreapi.authentication import (
+from webapp.authentication import (
     get_authorization_header)
 
 

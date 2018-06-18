@@ -1,8 +1,7 @@
 import flask
 
-from canonicalwebteam.snapstoreapi.exceptions import ApiError
-
-from webapp.blog import api
+import webapp.api.blog as api
+from webapp.api.exceptions import ApiError
 from webapp.blog import logic
 
 

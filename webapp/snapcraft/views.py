@@ -1,8 +1,8 @@
 import flask
 
-import canonicalwebteam.snapstoreapi.public_api as api
+import webapp.api.public as api
 from webapp.public import logic
-from canonicalwebteam.snapstoreapi.exceptions import (
+from webapp.api.exceptions import (
     ApiError,
     ApiTimeoutError,
     ApiResponseDecodeError,
