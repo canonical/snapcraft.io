@@ -43,6 +43,9 @@ $color-navigation-background: #252525;
 @include vf-u-image-position;
 @include vf-u-equal-height;
 
+@import 'base_image-grid';
+@include base-image-grid;
+
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
 
@@ -153,3 +156,6 @@ $color-navigation-background: #252525;
 
 @import 'patterns_logo-list';
 @include p-logo-list;
+
+@import 'patterns_featured-snaps';
+@include snapcraft-p-featured-snaps;

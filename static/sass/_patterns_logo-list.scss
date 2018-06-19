@@ -1,10 +1,6 @@
 @mixin p-logo-list {
   .p-logo-list {
-    align-items: center;
-    background-color: $color-x-light;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    @extend %image-grid;
     padding: $sp-medium 0;
 
     &__item {
