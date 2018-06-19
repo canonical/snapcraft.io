@@ -20,6 +20,10 @@
       @media screen and (min-width: $breakpoint-small) {
         width: 15.04854%; // col-2
       }
+
+      img {
+        align-self: auto; // override vanilla default align-self: flex-start
+      }
     }
   }
 }
