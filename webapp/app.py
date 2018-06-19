@@ -17,10 +17,10 @@ from werkzeug.debug import DebuggedApplication
 import webapp.helpers as helpers
 from webapp.handlers import set_handlers
 from webapp.blog.views import blog
-from webapp.public.views import store
+from webapp.public.views import store_blueprint
 from webapp.publisher.views import account
 from webapp.publisher.snaps.views import publisher_snaps
-from webapp.snapcraft.views import snapcraft
+from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.login.views import login
 
 
@@ -66,14 +66,15 @@ def create_app(testing=False):
 
 
 def init_brandstore(app):
-    app.register_blueprint(store)
+    store_query = app.config.get('WEBAPP_CONFIG').get('STORE_QUERY')
+    app.register_blueprint(store_blueprint(store_query))
 
 
 def init_snapcraft(app):
-    app.register_blueprint(snapcraft)
+    app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(login)
     csrf.exempt('webapp.login.views.login_handler')
-    app.register_blueprint(store)
+    app.register_blueprint(store_blueprint())
     app.register_blueprint(account, url_prefix='/account')
     app.register_blueprint(publisher_snaps, url_prefix='/account/snaps')
 

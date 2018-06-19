@@ -22,18 +22,11 @@ SNAP_DETAILS_URL = ''.join([
     'revision,version,binary_filesize,last_updated,',
     'channel_maps_list'
 ])
-DETAILS_QUERY_HEADERS = {
-    'X-Ubuntu-Series': '16',
-    'X-Ubuntu-Architecture': 'any',
-}
 
 SNAP_METRICS_URL = ''.join([
     SNAPCRAFT_IO_API,
     'snaps/metrics',
 ])
-METRICS_QUERY_HEADERS = {
-    'Content-Type': 'application/json'
-}
 
 SNAP_SEARCH_URL = ''.join([
     SNAPCRAFT_IO_API,
@@ -42,11 +35,6 @@ SNAP_SEARCH_URL = ''.join([
     '&confinement=strict,classic',
     '&fields=package_name,title,summary,icon_url,publisher'
 ])
-SEARCH_QUERY_HEADERS = {
-    'X-Ubuntu-Frameworks': '*',
-    'X-Ubuntu-Architecture': 'amd64',
-    'Accept': 'application/hal+json'
-}
 
 FEATURE_SNAPS_URL = ''.join([
     SNAPCRAFT_IO_API,
@@ -62,84 +50,87 @@ PROMOTED_QUERY_URL = ''.join([
     '&confinement=strict,classic',
     '&fields=package_name,title,icon_url'
 ])
-PROMOTED_QUERY_HEADERS = {
-    'X-Ubuntu-Series': '16'
-}
 
 
-def process_response(response):
-    try:
-        body = response.json()
-    except ValueError as decode_error:
-        api_error_exception = ApiResponseDecodeError(
-            'JSON decoding failed: {}'.format(decode_error),
-        )
-        raise api_error_exception
+class StoreApi:
+    headers = {'X-Ubuntu-Series': '16'}
 
-    if not response.ok:
-        if 'error_list' in body:
-            api_error_exception = ApiResponseErrorList(
-                'The api returned a list of errors',
-                response.status_code,
-                body['error_list']
+    def __init__(self, store_query=None):
+        if store_query:
+            self.headers.update({'X-Ubuntu-Store': store_query})
+
+    def process_response(self, response):
+        try:
+            body = response.json()
+        except ValueError as decode_error:
+            api_error_exception = ApiResponseDecodeError(
+                'JSON decoding failed: {}'.format(decode_error),
             )
             raise api_error_exception
-        else:
-            raise ApiResponseError(
-                'Unknown error from api',
-                response.status_code
-            )
 
-    return body
+        if not response.ok:
+            if 'error_list' in body:
+                api_error_exception = ApiResponseErrorList(
+                    'The api returned a list of errors',
+                    response.status_code,
+                    body['error_list']
+                )
+                raise api_error_exception
+            else:
+                raise ApiResponseError(
+                    'Unknown error from api',
+                    response.status_code
+                )
 
+        return body
 
-def get_featured_snaps():
-    featured_response = cache.get(
-        FEATURE_SNAPS_URL,
-        headers=SEARCH_QUERY_HEADERS
-    )
+    def get_featured_snaps(self):
+        featured_response = cache.get(
+            FEATURE_SNAPS_URL,
+            headers=self.headers
+        )
 
-    return process_response(featured_response)
+        return self.process_response(featured_response)
 
+    def get_promoted_snaps(self):
+        promoted_response = cache.get(
+            PROMOTED_QUERY_URL,
+            headers=self.headers
+        )
 
-def get_promoted_snaps():
-    promoted_response = cache.get(
-        PROMOTED_QUERY_URL,
-        headers=PROMOTED_QUERY_HEADERS
-    )
+        return self.process_response(promoted_response)
 
-    return process_response(promoted_response)
+    def get_searched_snaps(self, snap_searched, size, page):
+        searched_response = cache.get(
+            SNAP_SEARCH_URL.format(
+                snap_name=snap_searched,
+                size=size,
+                page=page
+            ),
+            headers=self.headers
+        )
 
+        return self.process_response(searched_response)
 
-def get_searched_snaps(snap_searched, size, page):
-    searched_response = cache.get(
-        SNAP_SEARCH_URL.format(
-            snap_name=snap_searched,
-            size=size,
-            page=page
-        ),
-        headers=SEARCH_QUERY_HEADERS
-    )
+    def get_snap_details(self, snap_name, snap_channel):
+        details_headers = self.headers.copy()
+        details_headers.update({'X-Ubuntu-Architecture': 'any'})
+        details_response = cache.get(
+            SNAP_DETAILS_URL.format(
+                snap_name=snap_name,
+                snap_channel=snap_channel),
+            headers=self.headers
+        )
 
-    return process_response(searched_response)
+        return self.process_response(details_response)
 
+    def get_public_metrics(self, snap_name, json):
+        metrics_headers = self.headers.copy()
+        metrics_headers.update({'Content-Type': 'application/json'})
+        metrics_response = cache.get(
+            SNAP_METRICS_URL.format(snap_name=snap_name),
+            headers=metrics_headers,
+            json=json
+        )
 
-def get_snap_details(snap_name, snap_channel):
-    details_response = cache.get(
-        SNAP_DETAILS_URL.format(
-            snap_name=snap_name,
-            snap_channel=snap_channel),
-        headers=DETAILS_QUERY_HEADERS
-    )
-
-    return process_response(details_response)
-
-
-def get_public_metrics(snap_name, json):
-    metrics_response = cache.get(
-        SNAP_METRICS_URL.format(snap_name=snap_name),
-        headers=METRICS_QUERY_HEADERS,
-        json=json
-    )
-
-    return process_response(metrics_response)
+        return self.process_response(metrics_response)
