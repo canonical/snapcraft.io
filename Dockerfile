@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:xenial
 
 # System dependencies
 RUN apt-get update && apt-get install --yes python3-pip libsodium-dev
