@@ -316,21 +316,9 @@
                   checked="checked"
                 {% endif %}
                 />
-              <label class="u-no-margin--top p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
+              <label class="p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
                 <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
               </label>
-              <input
-                type="hidden"
-                name="public_metrics_blacklist"
-                {% if public_metrics_blacklist|length > 0 %}
-                  value="{{ join(public_metrics_blacklist, ',')}}"
-                {% endif %}
-                />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-6">
               <input
                 type="checkbox"
                 name="public_metrics_territories"
@@ -342,10 +330,7 @@
                   disabled="disabled"
                 {% endif %}
                 />
-              <label class="u-no-margin--top" for="public-metrics-territories">World map</label>
-              <p class="p-form-help-text">Displays where your snap is being used by country</p>
-            </div>
-            <div class="col-6">
+              <label for="public-metrics-territories">World map <span class="p-form-help-text">Displays where your snap is being used by country</span></label>
               <input
                 type="checkbox"
                 name="public_metrics_distros"
@@ -357,8 +342,14 @@
                   disabled="disabled"
                 {% endif %}
                 />
-              <label class="u-no-margin--top" for="public-metrics-distros">Linux distributions</label>
-              <p class="p-form-help-text">Displays where your snap is being used by distro</p>
+              <label for="public-metrics-distros">Linux distributions <span class="p-form-help-text">Displays where your snap is being used by distro</span></label>
+              <input
+                type="hidden"
+                name="public_metrics_blacklist"
+                {% if public_metrics_blacklist|length > 0 %}
+                  value="{{ join(public_metrics_blacklist, ',')}}"
+                {% endif %}
+              />
             </div>
           </div>
         </form>
