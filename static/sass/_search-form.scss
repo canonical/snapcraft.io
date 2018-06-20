@@ -1,10 +1,14 @@
 @mixin search-form {
   .p-form--search {
-    align-items: unset; // to fix alignment bug
     width: 100%;
 
     .p-form__group {
       flex-grow: 1;
     }
+
+    .p-form__control {
+      width: 100%;
+    }
+
   }
 }
