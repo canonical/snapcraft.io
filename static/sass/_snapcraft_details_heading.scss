@@ -26,6 +26,7 @@
     }
 
     &__name {
+      margin-bottom: 0;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -44,8 +45,15 @@
   }
 
   .p-snap-install-buttons {
-    margin-top: 68px; // align with snap name (60px icon + 8px margin)
     text-align: right;
+
+    @media screen and (min-width: $breakpoint-medium) {
+      margin-top: 8.5 * $sp-unit; // align with snap name baseline
+    }
+
+    button:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .p-view-store-button,
