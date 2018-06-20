@@ -12,8 +12,8 @@ from webapp.api.exceptions import (
 )
 
 
-def snapcraft_blueprint():
-    api = StoreApi()
+def snapcraft_blueprint(extra_headers):
+    api = StoreApi(extra_headers)
 
     snapcraft = flask.Blueprint(
         'snapcraft', __name__,
