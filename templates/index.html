@@ -292,7 +292,7 @@
     <div class="row">
       <div class="col-12 p-featured-snaps">
         {% for snap in featured_snaps %}
-          <a class="p-featured-snaps__item p-media-object">
+          <a class="p-featured-snaps__item p-media-object" href="/{{ snap.package_name }}">
             <span class="p-media-object__image">
               {% if snap.icon_url %}
                 <img class="p-heading-icon__img" src="{{ snap.icon_url }}" alt="">
