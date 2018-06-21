@@ -42,11 +42,6 @@
     }
   }
 
-  // workaround for label placement in grid
-  .p-label--grid-baseline {
-    margin-top: .55rem;
-  }
-
   .p-form-validation__field {
     position: relative;
 
@@ -80,10 +75,6 @@
 
     & .row {
       padding-top: $sp-small;
-    }
-
-    & .snapcraft-p-market-message {
-      margin-top: $sp-x-small;
     }
 
     @media screen and (max-width: $breakpoint-x-small) {
