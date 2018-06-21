@@ -74,8 +74,8 @@
 
   {% include "snap-details/_channel_map.html" %}
 
-  <div class="p-strip is-shallow">
-    {% if screenshots %}
+  {% if screenshots %}
+    <div class="p-strip is-shallow">
       <div class="row">
         <div class="p-screenshots" id="js-snap-screenshots">
           <div class="p-screenshots__wrapper">
@@ -87,15 +87,17 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
+    <div class="row">
+      <div class="col-12">
+        <hr />
       </div>
-    {% endif %}
+    </div>
+  {% endif %}
 
-    <div class="row u-no-margin--top">
+  <div class="p-strip is-shallow">
+    <div class="row">
       <div class="col-8">
         {% if summary %}<h4>{{ summary }}</h4>{% endif %}
         {% for paragraph in description_paragraphs %}
@@ -103,7 +105,7 @@
         {% endfor %}
         {% if website %}<p><a href="{{ website }}">Developer website</a></p>{% endif %}
         {% if contact %}
-          <p{% if website %} class="u-no-margin--top"{% endif %}>
+          <p>
             <a href="{{ contact }}">Contact {{ publisher }}</a>
           </p>
         {% endif %}
@@ -116,15 +118,17 @@
         </table>
       </div>
     </div>
+  </div>
 
-    {% if countries or normalized_os %}
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
+  {% if countries or normalized_os %}
+    <div class="row">
+      <div class="col-12">
+        <hr />
       </div>
+    </div>
 
-      <div class="row u-no-margin--top">
+    <div class="p-strip is-shallow">
+      <div class="row">
         {% if countries %}
           <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder">
             <h4>Where people are using {{ snap_title }}</h4>
@@ -152,8 +156,8 @@
           </div>
         {% endif %}
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
 
   {% if api_error %}
