@@ -4,34 +4,11 @@
 
   .p-navigation {
     z-index: 100; // appear over channel map
+
     // custom styles for dark header with hover
-    @media (min-width: $breakpoint-navigation-threshold + 1) {
-      .p-navigation__link {
-        & > a:hover,
-        .p-contextual-menu__toggle:hover,
-        .is-selected {
-          background: $navigation-hover-color;
-        }
-      }
-
-      .p-navigation__links,
-      .p-navigation__links:last-of-type { // fighting vanilla specificity
-        border-right: 1px solid $navigation-border-color;
-
-        .p-navigation__link {
-          border-left: 1px solid $navigation-border-color;
-        }
-
-        // fix for hover styles
-        .p-navigation__link:hover {
-          background: transparent;
-        }
-      }
-    }
-
-    @media (max-width: $breakpoint-navigation-threshold) {
-      .p-navigation__link .is-selected {
-        background: $color-light;
+    .p-navigation__link {
+      .is-selected {
+        background: $navigation-hover-color;
       }
     }
 
