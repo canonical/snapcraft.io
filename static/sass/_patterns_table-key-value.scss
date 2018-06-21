@@ -1,22 +1,16 @@
 @mixin vf-p-table-key-value {
   .p-table-key-value {
-    th,
-    td {
-      padding: $sp-x-small $sp-small;
-    }
 
     th {
       color: $color-mid-dark;
       font-weight: 300;
+      padding-right: $sph-intra; // workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1883
       text-align: right;
     }
 
-    tr {
-      border-bottom-style: dotted;
+    tbody tr:not(:first-child) {
+      border-top-style: dotted;
     }
 
-    tr:last-child {
-      border-bottom: 0;
-    }
   }
 }
