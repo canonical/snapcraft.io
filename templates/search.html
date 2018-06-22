@@ -51,7 +51,8 @@
               {% endif %}
 
               <div class="p-media-object__details">
-                <h3 class="p-media-object__title">
+                {# FIXME u-no-margin is a workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1879 #}
+                <h3 class="p-media-object__title u-no-margin">
                   <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
                 </h3>
                 <ul class="p-media-object__meta-list u-no-margin">
