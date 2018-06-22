@@ -43,6 +43,11 @@ $color-navigation-background: #252525;
 @include vf-u-image-position;
 @include vf-u-equal-height;
 
+// FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1880
+img {
+  align-self: initial;
+}
+
 @import 'base_image-grid';
 @include base-image-grid;
 
