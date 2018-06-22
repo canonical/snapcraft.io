@@ -3,6 +3,8 @@
 defaults: &defaults
   docker:
     - image: canonicalwebteam/dev
+  environment:
+    BLOG_ENABLED: True
   working_directory: ~/project
 
 version: 2
@@ -17,9 +19,22 @@ jobs:
       - run:
           name: Lint webapp with Flake8
           command: flake8 webapp
-
+  python-tests:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install requirements
+          command: pip3 install -r requirements.txt
+      - run:
+          name: Install dependencies
+          command: pip3 install coverage
+      - run:
+          name: Run tests with coverage
+          command: coverage run  --source=. -m unittest discover tests
 workflows:
   version: 2
   build:
     jobs:
       - python-lint
+      - python-tests

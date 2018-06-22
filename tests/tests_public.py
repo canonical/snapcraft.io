@@ -16,6 +16,7 @@ class PublicPage(TestCase):
 
     def create_app(self):
         app = create_app(testing=True)
+        app.secret_key = 'secret_key'
 
         return app
 
