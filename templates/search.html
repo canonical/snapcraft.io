@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block content %}
-
   <section id="main-content" class="p-strip--image is-deep snapcraft-banner-background">
     <div class="row">
       <div class="col-10">
@@ -30,9 +29,11 @@
         <form action="/search" class="p-form p-form--inline p-form--search">
           <div class="p-form__group">
             <label for="search-input" class="u-off-screen">Search</label>
-            <input id="search-input" type="search" name="q" value="{{ query }}" class="p-form__control"/>
+            <div class="p-form__control u-clearfix">
+              <input id="search-input" type="search" name="q" value="{{ query }}" />
+            </div>
           </div>
-            <button type="submit" alt="search" class="p-button--positive u-align--left">Search</button>
+          <button type="submit" alt="search" class="p-button--positive">Search</button>
         </form>
       </div>
     </div>
@@ -50,7 +51,8 @@
               {% endif %}
 
               <div class="p-media-object__details">
-                <h3 class="p-media-object__title">
+                {# FIXME u-no-margin is a workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1879 #}
+                <h3 class="p-media-object__title u-no-margin">
                   <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
                 </h3>
                 <ul class="p-media-object__meta-list u-no-margin">

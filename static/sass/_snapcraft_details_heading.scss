@@ -26,6 +26,7 @@
     }
 
     &__name {
+      margin-bottom: 0;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -44,13 +45,20 @@
   }
 
   .p-snap-install-buttons {
-    margin-top: 68px; // align with snap name (60px icon + 8px margin)
     text-align: right;
+
+    @media screen and (min-width: $breakpoint-medium) {
+      margin-top: 8.5 * $sp-unit; // align with snap name baseline
+    }
+
+    button:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .p-view-store-button,
   .p-cli-install {
-    margin-top: $sp-x-small;
+    margin-bottom: $input-margin-bottom;
   }
 
   .p-channel-map {
@@ -60,12 +68,12 @@
     position: absolute;
     right: 0;
     top: 0;
-    transform: translateY(57px); // just under the header (mobile)
+    transform: translateY(48px); // just under the header (mobile)
     transition: transform 500ms;
     z-index: 10;
 
-    @media screen and (min-width: $breakpoint-medium) {
-      transform: translateY(48px); // just under the header (desktop)
+    label {
+      margin-bottom: $spv-inter--condensed + $spv-nudge-compensation;
     }
 
     &.is-closed {
@@ -73,7 +81,7 @@
     }
 
     &__row {
-      @extend %clearfix;
+      @extend %vf-clearfix;
       margin: 0;
       padding-bottom: $sp-x-large;
 
@@ -85,7 +93,7 @@
       }
 
       &--heading {
-        padding-bottom: $sp-small;
+        padding-bottom: 0;
         padding-top: 0;
 
         @media screen and (max-width: $breakpoint-medium) {
@@ -105,18 +113,8 @@
       padding-top: $sp-x-small;
     }
 
-    .p-tabs {
-      background: transparent; // remove default white background
-      border-bottom: 1px solid $color-mid-light;
-      position: relative; // for close button;
-
-      &::before {
-        display: none; // hide mobile arror thingy
-      }
-
-      .p-tabs__list {
-        padding: 0; // remove left padding
-      }
+    .p-tabs::before {
+      display: none; // hide mobile arror thingy
     }
 
     &__hide {
@@ -156,11 +154,6 @@
     .is-closed + & {
       opacity: 0;
     }
-  }
-
-  // because of Vanilla `* + *` top margin
-  .p-tooltip__message {
-    margin: 0;
   }
 
   // positioning fixes for track tooltip

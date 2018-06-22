@@ -1,10 +1,6 @@
 @mixin p-logo-list {
   .p-logo-list {
-    align-items: center;
-    background-color: $color-x-light;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    @extend %image-grid;
     padding: $sp-medium 0;
 
     &__item {
@@ -19,6 +15,10 @@
       // on larger screens use col-2 width (6 items in a row)
       @media screen and (min-width: $breakpoint-small) {
         width: 15.04854%; // col-2
+      }
+
+      img {
+        align-self: auto; // override vanilla default align-self: flex-start
       }
     }
   }

@@ -40,8 +40,8 @@ export default function initScreenshots(screenshotsId) {
   prev.className = 'p-screenshots__prev';
   prev.innerHTML = 'previous';
 
-  screenshotsEl.appendChild(next);
   screenshotsEl.appendChild(prev);
+  screenshotsEl.appendChild(next);
 
 
   // get table of offsets for all screenshots

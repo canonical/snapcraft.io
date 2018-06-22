@@ -5,218 +5,220 @@
 {% endblock %}
 
 {% block content %}
-  <div id="main-content" class="u-no-margin--top">
+  <div id="main-content">
     {% set selected_tab='listing' %}
     {% include "publisher/_header.html" %}
 
-    <div class="p-strip is-shallow u-no-padding--top">
-        <form id="market-form" method="POST" enctype='multipart/form-data'>
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-          <input type="hidden" name="snap_id" value="{{ snap_id }}" />
-          <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
+    <form id="market-form" method="POST" enctype='multipart/form-data'>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="snap_id" value="{{ snap_id }}" />
+      <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
 
-          <div class="snapcraft-p-sticky u-no-margin--top">
-            <div class="row">
-              <div class="col-7">
-                <p class="snapcraft-p-market-message">
-                  {% if is_on_stable %}
-                    {% if private %}
-                      This listing is not public because the snap is set to private.
-                      <a href="https://dashboard.snapcraft.io/snaps/{{ snap_name }}">Settings</a>
-                    {% else %}
-                      Changes you make here will appear immediately on the <a href="/{{ snap_name }}">public listing</a>.
-                    {% endif %}
-                  {% else %}
-                    This listing will appear in the Snap Store when there is a <a href="https://docs.snapcraft.io/build-snaps/release">stable release</a>.
-                  {% endif %}
-                </p>
-              </div>
-              <div class="col-5">
-                <div class="u-align--right">
-                  <a class="p-button--neutral js-market-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
-                  <button type="submit" class="u-no-margin--top p-button--positive p-button-spinner js-market-submit" name="submit_apply" value="Save">
-                    {#
-                      to force dark icon variant we need a fake --dark class name:
-                      https://github.com/vanilla-framework/vanilla-framework/issues/1817
-                    #}
-                    <span class="p-button__spinner vanilla-workaround--dark">
-                      <i class="p-icon--spinner u-animation--spin"></i>
-                    </span>
-                    <span class="p-button__text">Save</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="row u-no-margin--top">
-              <hr class="u-no-margin" />
+      <div class="snapcraft-p-sticky">
+        <div class="row">
+          <div class="col-7">
+            <p class="snapcraft-p-market-message u-no-margin--bottom">
+              {% if is_on_stable %}
+                {% if private %}
+                  This listing is not public because the snap is set to private.
+                  <a href="https://dashboard.snapcraft.io/snaps/{{ snap_name }}">Settings</a>
+                {% else %}
+                  Changes you make here will appear immediately on the <a href="/{{ snap_name }}">public listing</a>.
+                {% endif %}
+              {% else %}
+                This listing will appear in the Snap Store when there is a <a href="https://docs.snapcraft.io/build-snaps/release">stable release</a>.
+              {% endif %}
+            </p>
+          </div>
+          <div class="col-5">
+            <div class="u-align--right">
+              <a class="p-button--neutral js-market-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
+              <button type="submit" class="p-button--positive p-button-spinner js-market-submit u-no-margin--bottom" name="submit_apply" value="Save">
+                {#
+                  to force dark icon variant we need a fake --dark class name:
+                  https://github.com/vanilla-framework/vanilla-framework/issues/1817
+                #}
+                <span class="p-button__spinner vanilla-workaround--dark">
+                  <i class="p-icon--spinner u-animation--spin"></i>
+                </span>
+                <span class="p-button__text">Save</span>
+              </button>
             </div>
           </div>
+        </div>
+        <div class="row">
+          <hr class="u-no-margin--bottom" />
+        </div>
+      </div>
 
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              <div class="row">
-                <div class="col-12">
-                  {% for category, message in messages %}
-                    <div id="market-form-status" class="p-notification--{{ category }}">
-                      <p class="p-notification__response">
-                          {{ message }}
-                      </p>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endif %}
-          {% endwith %}
-
-          {% if other_errors %}
-              <div class="row">
-                <div class="col-12">
-                  {% for error in other_errors %}
-                    <div class="p-notification--negative">
-                      <p class="p-notification__response">
-                          {{ error.message }}
-                      </p>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-          {% endif %}
-
-          {% if field_errors and field_errors['icon'] %}
+      <section class="p-strip is-shallow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
             <div class="row">
               <div class="col-12">
-                <div class="p-notification--negative">
-                  <p class="p-notification__response">
-                      <strong>Icon:</strong> {{ field_errors['icon'] }}
-                  </p>
-                </div>
+                {% for category, message in messages %}
+                  <div id="market-form-status" class="p-notification--{{ category }}">
+                    <p class="p-notification__response">
+                        {{ message }}
+                    </p>
+                  </div>
+                {% endfor %}
               </div>
             </div>
           {% endif %}
-          <div class="row" data-validation-name="icon">
-            <div class="col-2">
-              <div class="p-media-object__image--large p-editable-icon">
-                <img id="snap_icon_image"
-                  {% if icon_url %}
-                    src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                  {% else %}
-                    src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
-                  {% endif %}
-                />
+        {% endwith %}
+
+        {% if other_errors %}
+            <div class="row">
+              <div class="col-12">
+                {% for error in other_errors %}
+                  <div class="p-notification--negative">
+                    <p class="p-notification__response">
+                        {{ error.message }}
+                    </p>
+                  </div>
+                {% endfor %}
               </div>
             </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['title'] %}is-error{% endif %}">
-                <label for="snap-title">Title:</label>
-                <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
-                </div>
-                {% if field_errors and field_errors['title'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['title'] }}
-                  </p>
+        {% endif %}
+
+        {% if field_errors and field_errors['icon'] %}
+          <div class="row">
+            <div class="col-12">
+              <div class="p-notification--negative">
+                <p class="p-notification__response">
+                    <strong>Icon:</strong> {{ field_errors['icon'] }}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="row" data-validation-name="icon">
+          <div class="col-2">
+            <div class="p-media-object__image--large p-editable-icon">
+              <img id="snap_icon_image"
+                {% if icon_url %}
+                  src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
+                {% else %}
+                  src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
                 {% endif %}
+              />
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}">
+              <label for="snap-title">Title:</label>
+              <div class="p-form-validation__field">
+                <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
               </div>
+              {% if field_errors and field_errors['title'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['title'] }}
+                </p>
+              {% endif %}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-2">
-              <label>Snap name: </label>
-            </div>
-            <div class="col-4">
-                {{ snap_name }}
-            </div>
+        <div class="row">
+          <div class="col-2">
+            <label>Snap name: </label>
           </div>
-
-          <div class="row">
-            <div class="col-2">
-              <label>Publisher: </label>
-            </div>
-            <div class="col-8">
-                {{ publisher_name }}
-            </div>
+          <div class="col-4">
+              <p>{{ snap_name }}</p>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-2">
-              <label>
-                Privacy
+        <div class="row">
+          <div class="col-2">
+            <label>Publisher: </label>
+          </div>
+          <div class="col-8">
+              <p>{{ publisher_name }}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>
+              Privacy:
+            </label>
+          </div>
+          <div class="col-8">
+            <div class="row">
+              <input
+                type="radio"
+                name="private"
+                id="is-public"
+                {% if not private %}
+                  checked="checked"
+                {% endif %}
+                value="public" />
+              <label for="is-public">Public</label>
+            </div>
+            <div class="row">
+              <input
+                type="radio"
+                name="private"
+                id="is-private"
+                {% if private %}
+                  checked="checked"
+                {% endif %}
+                value="private" />
+              <label for="is-private">Private
+                <span class="p-form-help-text">Snap is hidden in stores and only accessible by the publisher and collaborators</span>
               </label>
             </div>
-            <div class="col-8">
-              <div class="row">
-                <input
-                  type="radio"
-                  name="private"
-                  id="is-public"
-                  {% if not private %}
-                    checked="checked"
-                  {% endif %}
-                  value="public" />
-                <label class="u-no-margin--top" for="is-public">Public</label>
-              </div>
-              <div class="row" style="margin-top: 1rem;">
-                <input
-                  type="radio"
-                  name="private"
-                  id="is-private"
-                  {% if private %}
-                    checked="checked"
-                  {% endif %}
-                  value="private" />
-                <label class="u-no-margin--top" for="is-private">Private
-                  <span class="p-form-help-text">Snap is hidden in stores and only accessible by the publisher and collaborators</span>
-                </label>
-              </div>
-            </div>
           </div>
+        </div>
 
+        <div class="p-strip is-shallow">
           <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
+            <hr class="u-no-margin--bottom" />
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-2">
-              <label class="p-label--grid-baseline">Summary: </label>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
-                <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
-                </div>
-                {% if field_errors and field_errors['summary'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['summary'] }}
-                  </p>
-                {% endif %}
+        <div class="row">
+          <div class="col-2">
+            <label>Summary: </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
+              <div class="p-form-validation__field">
+                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
               </div>
+              {% if field_errors and field_errors['summary'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['summary'] }}
+                </p>
+              {% endif %}
             </div>
           </div>
-          <div class="row">
-            <div class="col-2">
-              <label class="p-label--grid-baseline">Description: </label>
-            </div>
-            <div class="col-8">
-              <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
-                <textarea class="p-form-validation__input u-no-margin" name="description" rows="10" required>{{ description }}</textarea>
-                {% if field_errors and field_errors['description'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['description'] }}
-                  </p>
-                {% endif %}
-              </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <label>Description: </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
+              <textarea class="p-form-validation__input u-no-margin" name="description" rows="10" required>{{ description }}</textarea>
+              {% if field_errors and field_errors['description'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['description'] }}
+                </p>
+              {% endif %}
             </div>
           </div>
+        </div>
 
+        <div class="p-strip is-shallow">
           <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
+            <hr class="u-no-margin--bottom" />
           </div>
+        </div>
 
+        <div class="row">
           {% if field_errors and field_errors['screenshots'] %}
             <div class="row">
               <div class="col-12">
@@ -243,94 +245,84 @@
 
           <div class="row" id="snap-screenshots">
           </div>
+        </div>
 
+        <div class="p-strip is-shallow">
           <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
+            <hr class="u-no-margin--bottom" />
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-8">
-              <div class="p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-                <label>Developer website: </label>
-                <div class="p-form-validation__field">
-                  <input
-                    class="p-form-validation__input"
-                    type="url"
-                    name="website"
-                    value="{{ website }}"
-                    maxlength="256"
-                    placeholder="https://snapcraft.io" />
-                </div>
-                {% if field_errors and field_errors['website'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['website'] }}
-                  </p>
-                {% endif %}
-                <p class="p-form-help-text">
-                  Please include a valid http:// or https:// link
-                </p>
+        <div class="row">
+          <div class="col-8">
+            <div class="p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
+              <label>Developer website: </label>
+              <div class="p-form-validation__field">
+                <input
+                  class="p-form-validation__input"
+                  type="url"
+                  name="website"
+                  value="{{ website }}"
+                  maxlength="256"
+                  placeholder="https://snapcraft.io" />
               </div>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-8">
-              <div class="p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-                <label>Contact {{ publisher_name }}: </label>
-                <div class="p-form-validation__field">
-                  <input
-                    class="p-form-validation__input"
-                    type="url"
-                    name="contact"
-                    value="{{ contact }}"
-                    maxlength="256"
-                    placeholder="mailto:example@example.com" />
-                </div>
-                {% if field_errors and field_errors['contact'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['contact'] }}
-                  </p>
-                {% endif %}
-                <p class="p-form-help-text">
-                  Please include a valid http://, https:// or mailto: link
+              {% if field_errors and field_errors['website'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['website'] }}
                 </p>
+              {% endif %}
+              <p class="p-form-help-text">
+                Please include a valid http:// or https:// link
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8">
+            <div class="p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
+              <label>Contact {{ publisher_name }}: </label>
+              <div class="p-form-validation__field">
+                <input
+                  class="p-form-validation__input"
+                  type="url"
+                  name="contact"
+                  value="{{ contact }}"
+                  maxlength="256"
+                  placeholder="mailto:example@example.com" />
               </div>
+              {% if field_errors and field_errors['contact'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['contact'] }}
+                </p>
+              {% endif %}
+              <p class="p-form-help-text">
+                Please include a valid http://, https:// or mailto: link
+              </p>
             </div>
           </div>
+        </div>
 
+        <div class="p-strip is-shallow">
           <div class="row">
-            <div class="col-12">
-              <hr />
-            </div>
+            <hr class="u-no-margin--bottom" />
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col-8">
-              <input
-                type="checkbox"
-                name="public_metrics_enabled"
-                id="public-metrics-enabled"
-                {% if public_metrics_enabled %}
-                  checked="checked"
-                {% endif %}
-                />
-              <label class="u-no-margin--top p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
-                <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
-              </label>
-              <input
-                type="hidden"
-                name="public_metrics_blacklist"
-                {% if public_metrics_blacklist|length > 0 %}
-                  value="{{ join(public_metrics_blacklist, ',')}}"
-                {% endif %}
-                />
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-6">
+        <div class="row">
+          <div class="col-8">
+            <input
+              type="checkbox"
+              name="public_metrics_enabled"
+              id="public-metrics-enabled"
+              {% if public_metrics_enabled %}
+                checked="checked"
+              {% endif %}
+              />
+            <label class="p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
+              <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
+            </label>
+            <div class="p-nested-inputs">
               <input
                 type="checkbox"
                 name="public_metrics_territories"
@@ -342,10 +334,7 @@
                   disabled="disabled"
                 {% endif %}
                 />
-              <label class="u-no-margin--top" for="public-metrics-territories">World map</label>
-              <p class="p-form-help-text">Displays where your snap is being used by country</p>
-            </div>
-            <div class="col-6">
+              <label for="public-metrics-territories">World map <span class="p-form-help-text">Displays where your snap is being used by country</span></label>
               <input
                 type="checkbox"
                 name="public_metrics_distros"
@@ -357,12 +346,19 @@
                   disabled="disabled"
                 {% endif %}
                 />
-              <label class="u-no-margin--top" for="public-metrics-distros">Linux distributions</label>
-              <p class="p-form-help-text">Displays where your snap is being used by distro</p>
+              <label for="public-metrics-distros">Linux distributions <span class="p-form-help-text">Displays where your snap is being used by distro</span></label>
+              <input
+                type="hidden"
+                name="public_metrics_blacklist"
+                {% if public_metrics_blacklist|length > 0 %}
+                  value="{{ join(public_metrics_blacklist, ',')}}"
+                {% endif %}
+              />
             </div>
           </div>
-        </form>
-    </div>
+        </div>
+      </section>
+    </form>
   </div>
 {% endblock %}
 

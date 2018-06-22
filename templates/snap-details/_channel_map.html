@@ -16,12 +16,12 @@
   </div>
   <div class="row p-channel-map__tab is-open" id="channel-map-tab-install">
     <div class="col-5">
-      <p>Ubuntu 16.04 or later?</p>
+      <label>Ubuntu 16.04 or later?</label>
       <button data-snap="{{ package_name }}" class="js-open-snap-button p-view-store-button">View in Desktop store</button>
       <p class="p-form-help-text">Make sure <a href="https://docs.snapcraft.io/core/install">snap support</a> is enabled in your Desktop store.</p>
     </div>
     <div class="col-5">
-      <p>Install with snapd</p>
+      <label>Install with snapd</label>
       <div class="p-code-snippet p-cli-install">
         <input
           class="p-code-snippet__input"
@@ -69,13 +69,15 @@ where you can install and get updates from.</span>
 
       <div class="p-channel-map__row p-channel-map__row--heading">
         <div class="col-8">
-          Command line install
-          <span class="p-tooltip p-tooltip--btm-center" aria-describedby="tooltip-channel">
-            <i class="p-icon--information"></i>
-            <span class="p-tooltip__message" role="tooltip" id="tooltip-channel">Install this application from ‘channels’ of varying stability.
+          <label>
+            Command line install
+            <span class="p-tooltip p-tooltip--btm-center" aria-describedby="tooltip-channel">
+              <i class="p-icon--information"></i>
+              <span class="p-tooltip__message" role="tooltip" id="tooltip-channel">Install this application from ‘channels’ of varying stability.
 For example, Edge is used for development and testing, whereas
 Stable is used for well tested and production ready versions.</span>
-          </span>
+            </span>
+          </label>
         </div>
       </div>
 
