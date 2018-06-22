@@ -322,37 +322,39 @@
             <label class="p-tooltip p-tooltip--top-left" for="public-metrics-enabled">Display public popularity charts
               <span class="p-tooltip__message">These display relative popularity, not exact numbers.</span>
             </label>
-            <input
-              type="checkbox"
-              name="public_metrics_territories"
-              id="public-metrics-territories"
-              {% if not contains(public_metrics_blacklist, 'installed_base_by_country_percent') %}
-                checked="checked"
-              {% endif %}
-              {% if not public_metrics_enabled %}
-                disabled="disabled"
-              {% endif %}
+            <div class="p-nested-inputs">
+              <input
+                type="checkbox"
+                name="public_metrics_territories"
+                id="public-metrics-territories"
+                {% if not contains(public_metrics_blacklist, 'installed_base_by_country_percent') %}
+                  checked="checked"
+                {% endif %}
+                {% if not public_metrics_enabled %}
+                  disabled="disabled"
+                {% endif %}
+                />
+              <label for="public-metrics-territories">World map <span class="p-form-help-text">Displays where your snap is being used by country</span></label>
+              <input
+                type="checkbox"
+                name="public_metrics_distros"
+                id="public-metrics-distros"
+                {% if not contains(public_metrics_blacklist, 'weekly_installed_base_by_operating_system_normalized') %}
+                  checked="checked"
+                {% endif %}
+                {% if not public_metrics_enabled %}
+                  disabled="disabled"
+                {% endif %}
+                />
+              <label for="public-metrics-distros">Linux distributions <span class="p-form-help-text">Displays where your snap is being used by distro</span></label>
+              <input
+                type="hidden"
+                name="public_metrics_blacklist"
+                {% if public_metrics_blacklist|length > 0 %}
+                  value="{{ join(public_metrics_blacklist, ',')}}"
+                {% endif %}
               />
-            <label for="public-metrics-territories">World map <span class="p-form-help-text">Displays where your snap is being used by country</span></label>
-            <input
-              type="checkbox"
-              name="public_metrics_distros"
-              id="public-metrics-distros"
-              {% if not contains(public_metrics_blacklist, 'weekly_installed_base_by_operating_system_normalized') %}
-                checked="checked"
-              {% endif %}
-              {% if not public_metrics_enabled %}
-                disabled="disabled"
-              {% endif %}
-              />
-            <label for="public-metrics-distros">Linux distributions <span class="p-form-help-text">Displays where your snap is being used by distro</span></label>
-            <input
-              type="hidden"
-              name="public_metrics_blacklist"
-              {% if public_metrics_blacklist|length > 0 %}
-                value="{{ join(public_metrics_blacklist, ',')}}"
-              {% endif %}
-            />
+            </div>
           </div>
         </div>
       </section>

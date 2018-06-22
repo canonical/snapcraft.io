@@ -3,7 +3,6 @@
 
   .p-tabs-bordered {
     @extend .p-tabs; // sass-lint:disable-line placeholder-in-extend
-    box-shadow: none;
 
     .p-tabs__group {
       &::after {
