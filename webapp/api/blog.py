@@ -1,14 +1,14 @@
 from webapp.api import cache
 
 API_URL = 'https://admin.insights.ubuntu.com/wp-json/wp/v2'
-TAGS = '2065'  # 'Snaps'
+TAGS = [2996]  # 'snapcraft.io'
 
 
 def get_articles(tags=TAGS, per_page=12, page=1, exclude=None):
     url_parts = [
         API_URL,
         '/posts?tags=',
-        TAGS,
+        ''.join(str(tag) for tag in tags),
         '&per_page=',
         str(per_page),
         '&page=',
@@ -34,7 +34,7 @@ def get_article(slug):
         '/posts?slug=',
         slug,
         '&tags=',
-        TAGS
+        ''.join(str(tag) for tag in TAGS)
     ])
 
     response = cache.get(url, {})
