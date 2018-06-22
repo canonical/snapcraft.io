@@ -164,3 +164,6 @@ img {
 
 @import 'patterns_featured-snaps';
 @include snapcraft-p-featured-snaps;
+
+@import 'patterns_nested-inputs';
+@include snapcraft-p-nested-inputs;
