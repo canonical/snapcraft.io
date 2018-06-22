@@ -5,6 +5,11 @@
   .p-navigation {
     z-index: 100; // appear over channel map
 
+    // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1892
+    .p-navigation__banner {
+      flex-basis: auto;
+    }
+
     // custom styles for dark header with hover
     .p-navigation__link {
       .is-selected {
