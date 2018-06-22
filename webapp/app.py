@@ -66,16 +66,15 @@ def create_app(testing=False):
 
 
 def init_brandstore(app):
-    extra_headers = app.config.get('WEBAPP_EXTRA_HEADERS')
-    app.register_blueprint(store_blueprint(extra_headers))
+    store = app.config.get('WEBAPP_CONFIG').get('STORE_QUERY')
+    app.register_blueprint(store_blueprint(store))
 
 
 def init_snapcraft(app):
-    extra_headers = app.config.get('WEBAPP_EXTRA_HEADERS')
-    app.register_blueprint(snapcraft_blueprint(extra_headers))
+    app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(login)
     csrf.exempt('webapp.login.views.login_handler')
-    app.register_blueprint(store_blueprint(extra_headers))
+    app.register_blueprint(store_blueprint())
     app.register_blueprint(account, url_prefix='/account')
     app.register_blueprint(publisher_snaps, url_prefix='/account/snaps')
 

@@ -55,9 +55,9 @@ PROMOTED_QUERY_URL = ''.join([
 class StoreApi:
     headers = {'X-Ubuntu-Series': '16'}
 
-    def __init__(self, extra_headers=None):
-        if extra_headers:
-            self.headers.update(extra_headers)
+    def __init__(self, store=None):
+        if store:
+            self.headers.update({'X-Ubuntu-Store': store})
 
     def process_response(self, response):
         try:
