@@ -226,6 +226,7 @@ def store_blueprint(store=None):
             'description_paragraphs': formatted_paragraphs,
             'channel_map': channel_maps_list,
             'default_channel': default_channel,
+            'developer_validation': details['developer_validation'],
 
             # Transformed API data
             'filesize': humanize.naturalsize(details['binary_filesize']),
