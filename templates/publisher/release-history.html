@@ -1,0 +1,9 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block meta_title %}
+Release history for {{ snap_title }}
+{% endblock %}
+
+{% block content %}
+{{ revision_history }}
+{% endblock %}
