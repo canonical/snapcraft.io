@@ -5,6 +5,7 @@ defaults: &defaults
     - image: canonicalwebteam/dev
   environment:
     BLOG_ENABLED: True
+    WEBAPP: snapcraft
   working_directory: ~/project
 
 version: 2

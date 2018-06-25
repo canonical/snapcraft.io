@@ -1,6 +1,10 @@
 import os
 
 
+class ConfigurationError(Exception):
+    pass
+
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 LOGIN_URL = os.getenv(
@@ -23,5 +27,8 @@ SENTRY_CONFIG = {
     'environment': ENVIRONMENT
 }
 
-WEBAPP = os.getenv('WEBAPP', 'snapcraft')
+WEBAPP = os.getenv('WEBAPP')
+if not WEBAPP:
+    raise ConfigurationError("`WEBAPP` is not configured")
+
 WEBAPP_EXTRA_HEADERS = {}
