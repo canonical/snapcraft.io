@@ -1,7 +1,7 @@
 import os
 
 from webapp import authentication
-from webapp.api import cache
+from webapp.api import requests
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiResponseDecodeError,
@@ -107,7 +107,7 @@ def get_authorization_header(session):
 def get_account(session):
     headers = get_authorization_header(session)
 
-    response = cache.get(
+    response = requests.get(
         url=ACCOUNT_URL,
         method='GET',
         headers=headers
@@ -122,7 +122,7 @@ def get_account(session):
 def get_agreement(session):
     headers = get_authorization_header(session)
 
-    agreement_response = cache.get(
+    agreement_response = requests.get(
         AGREEMENT_URL,
         headers
     )
@@ -139,7 +139,7 @@ def post_agreement(session, agreed):
     json = {
         'latest_tos_accepted': agreed
     }
-    agreement_response = cache.get(
+    agreement_response = requests.get(
         AGREEMENT_URL,
         headers,
         json
@@ -156,7 +156,7 @@ def post_username(session, username):
     json = {
         'short_namespace': username
     }
-    username_response = cache.get(
+    username_response = requests.get(
         url=ACCOUNT_URL,
         headers=headers,
         json=json,
@@ -177,7 +177,7 @@ def get_publisher_metrics(session, json):
     auth_header = get_authorization_header(session)['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
-    metrics_response = cache.get(
+    metrics_response = requests.get(
         SNAP_PUB_METRICS_URL,
         headers=authed_metrics_headers,
         json=json
@@ -206,7 +206,7 @@ def post_register_name(
     if store:
         json['store'] = store
 
-    response = cache.get(
+    response = requests.get(
         REGISTER_NAME_URL,
         headers=get_authorization_header(session),
         json=json,
@@ -219,7 +219,7 @@ def post_register_name(
 
 
 def get_snap_info(snap_name, session):
-    response = cache.get(
+    response = requests.get(
         SNAP_INFO_URL.format(snap_name=snap_name),
         headers=get_authorization_header(session)
     )
@@ -239,7 +239,7 @@ def get_snap_id(snap_name, session):
 def snap_metadata(snap_id, session, json=None):
     method = "PUT" if json is not None else None
 
-    metadata_response = cache.get(
+    metadata_response = requests.get(
         METADATA_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header(session),
         json=json,
@@ -273,7 +273,7 @@ def snap_screenshots(snap_id, session, data=None, files=None):
             files_array = {'info': ('', data['info'])}
             data = None
 
-    screenshot_response = cache.get(
+    screenshot_response = requests.get(
         SCREENSHOTS_QUERY_URL.format(snap_id=snap_id),
         headers=headers,
         data=data,

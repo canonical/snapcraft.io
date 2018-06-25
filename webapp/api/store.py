@@ -1,5 +1,5 @@
 import os
-from webapp.api import cache
+from webapp.api import requests
 from webapp.api.exceptions import (
     ApiResponseDecodeError,
     ApiResponseError,
@@ -106,7 +106,7 @@ class StoreApi:
         return self.process_response(all_snaps_response)
 
     def get_featured_snaps(self):
-        featured_response = cache.get(
+        featured_response = requests.get(
             FEATURE_SNAPS_URL,
             headers=self.headers
         )
@@ -114,7 +114,7 @@ class StoreApi:
         return self.process_response(featured_response)
 
     def get_promoted_snaps(self):
-        promoted_response = cache.get(
+        promoted_response = requests.get(
             PROMOTED_QUERY_URL,
             headers=self.headers
         )
@@ -131,7 +131,7 @@ class StoreApi:
         if category:
             url += '&section=' + category
 
-        searched_response = cache.get(
+        searched_response = requests.get(
             url,
             headers=self.headers
         )
@@ -139,7 +139,7 @@ class StoreApi:
         return self.process_response(searched_response)
 
     def get_snap_details(self, snap_name):
-        details_response = cache.get(
+        details_response = requests.get(
             SNAP_INFO_URL.format(
                 snap_name=snap_name),
             headers=self.headers_v2
@@ -150,7 +150,7 @@ class StoreApi:
     def get_public_metrics(self, snap_name, json):
         metrics_headers = self.headers.copy()
         metrics_headers.update({'Content-Type': 'application/json'})
-        metrics_response = cache.get(
+        metrics_response = requests.get(
             SNAP_METRICS_URL.format(snap_name=snap_name),
             headers=metrics_headers,
             json=json
