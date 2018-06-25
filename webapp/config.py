@@ -24,3 +24,4 @@ SENTRY_CONFIG = {
 }
 
 WEBAPP = os.getenv('WEBAPP', 'snapcraft')
+WEBAPP_EXTRA_HEADERS = {}
