@@ -52,6 +52,16 @@ jobs:
       - run:
           name: Run tests with jest
           command: yarn run test-js
+  scss-lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install npm dependencies
+          command: yarn
+      - run:
+          name: Lint scss with sass-lint
+          command: yarn run lint-scss
 workflows:
   version: 2
   build:
@@ -60,3 +70,4 @@ workflows:
       - python-tests
       - js-lint
       - js-tests
+      - scss-lint
