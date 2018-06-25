@@ -1,5 +1,5 @@
 import os
-from webapp.api import requests
+from webapp.api import requests as api_requests
 from webapp.api.exceptions import (
     ApiResponseDecodeError,
     ApiResponseError,
@@ -73,6 +73,10 @@ class StoreApi:
             self.headers.update({'X-Ubuntu-Store': store})
             self.headers_v2.update({'Snap-Device-Store': store})
 
+        self.session = api_requests.CachedSession()
+        self.session.headers.update(self.headers)
+        self.session.headers.update(self.headers_v2)
+
     def process_response(self, response):
         try:
             body = response.json()
@@ -99,24 +103,22 @@ class StoreApi:
         return body
 
     def get_all_snaps(self, size):
-        all_snaps_response = cache.get(
-            ALL_SNAPS_URL.format(size=size),
-            headers=self.headers)
+        all_snaps_response = self.session.get(
+            ALL_SNAPS_URL.format(size=size)
+        )
 
         return self.process_response(all_snaps_response)
 
     def get_featured_snaps(self):
-        featured_response = requests.get(
+        featured_response = self.session.get(
             FEATURE_SNAPS_URL,
-            headers=self.headers
         )
 
         return self.process_response(featured_response)
 
     def get_promoted_snaps(self):
-        promoted_response = requests.get(
+        promoted_response = self.session.get(
             PROMOTED_QUERY_URL,
-            headers=self.headers
         )
 
         return self.process_response(promoted_response)
@@ -131,26 +133,22 @@ class StoreApi:
         if category:
             url += '&section=' + category
 
-        searched_response = requests.get(
-            url,
-            headers=self.headers
+        searched_response = self.session.get(
+            url
         )
 
         return self.process_response(searched_response)
 
     def get_snap_details(self, snap_name):
-        details_response = requests.get(
-            SNAP_INFO_URL.format(
-                snap_name=snap_name),
-            headers=self.headers_v2
+        details_response = self.session.get(
+            SNAP_INFO_URL.format(snap_name=snap_name)
         )
 
         return self.process_response(details_response)
 
     def get_public_metrics(self, snap_name, json):
-        metrics_headers = self.headers.copy()
-        metrics_headers.update({'Content-Type': 'application/json'})
-        metrics_response = requests.get(
+        metrics_headers = {'Content-Type': 'application/json'}
+        metrics_response = self.session.post(
             SNAP_METRICS_URL.format(snap_name=snap_name),
             headers=metrics_headers,
             json=json
@@ -159,9 +157,8 @@ class StoreApi:
         return self.process_response(metrics_response)
 
     def get_categories(self):
-        categories_response = cache.get(
+        categories_response = self.session.get(
             CATEGORIES_URL,
-            headers=self.headers
         )
 
         return self.process_response(categories_response)

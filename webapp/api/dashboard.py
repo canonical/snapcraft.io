@@ -288,7 +288,7 @@ def snap_screenshots(snap_id, session, data=None, files=None):
 
 
 def snap_revision_history(session, snap_id):
-    response = cache.get(
+    response = requests.get(
         REVISION_HISTORY_URL.format(snap_id=snap_id),
         headers=get_authorization_header(session)
     )
