@@ -3,7 +3,8 @@ import os
 from urllib.parse import urlparse
 
 # Third-party packages
-import requests
+import requests as _requests
+import requests_cache
 import prometheus_client
 
 # Local packages
@@ -31,58 +32,81 @@ latency_histogram = prometheus_client.Histogram(
 )
 
 
-def get(
-        url,
-        headers,
-        json=None,
-        data=None,
-        method=None,
-        files=None
-):
+class TimeoutHTTPAdapter(_requests.adapters.HTTPAdapter):
+    def __init__(self, timeout=None, *args, **kwargs):
+        self.timeout = timeout
+        super().__init__(*args, **kwargs)
+
+    def send(self, *args, **kwargs):
+        kwargs['timeout'] = self.timeout
+        return super().send(*args, **kwargs)
+
+
+class BaseSession():
+    """A base session interface to implement common functionality
+
+    Create an interface to manage exceptions and return API exceptions
     """
-    WARNING: The cache is disabled due to a bug on our caching system.
+    def __init__(self, *args, **kwargs):
+        timeout = 3
 
-    Retrieve the response from the requests cache.
-    If the cache has expired then it will attempt to update the cache.
-    If it gets an error, it will use the cached response, if it exists.
-    """
+        super().__init__(*args, **kwargs)
 
-    if method is None:
-        method = "POST" if json else "GET"
+        self.mount("http://", TimeoutHTTPAdapter(timeout=timeout))
+        self.mount("https://", TimeoutHTTPAdapter(timeout=timeout))
 
-    # TODO allow user to choose it's own user agent
-    storefront_header = 'storefront ({commit_hash};{environment})'.format(
-        commit_hash=os.getenv('COMMIT_ID', 'commit_id'),
-        environment=os.getenv('ENVIRONMENT', 'devel')
-    )
-    headers.update({'User-Agent': storefront_header})
-    domain = urlparse(url).netloc
-
-    try:
-        response = requests.request(
-            method=method,
-            url=url,
-            headers=headers,
-            json=json,
-            files=files,
-            data=data,
-            timeout=3
-        )
-    except requests.exceptions.Timeout:
-        timeout_counter.labels(domain=domain).inc()
-
-        raise ApiTimeoutError(
-            'The request to {} took longer than 3 seconds'.format(url),
-        )
-    except requests.exceptions.ConnectionError:
-        connection_failed_counter.labels(domain=domain).inc()
-
-        raise ApiConnectionError(
-            'Failed to establish connection to {}.'.format(url)
+        # TODO allow user to choose it's own user agent
+        storefront_header = 'storefront ({commit_hash};{environment})'.format(
+            commit_hash=os.getenv('COMMIT_ID', 'commit_id'),
+            environment=os.getenv('ENVIRONMENT', 'devel'),
         )
 
-    latency_histogram.labels(domain=domain, code=response.status_code).observe(
-        response.elapsed.total_seconds()
-    )
+        headers = {
+            'User-Agent': storefront_header,
+        }
+        self.headers.update(headers)
 
-    return response
+    def request(self, method, url, **kwargs):
+        domain = urlparse(url).netloc
+
+        try:
+            request = super().request(method=method, url=url, **kwargs)
+        except _requests.exceptions.Timeout:
+            timeout_counter.labels(domain=domain).inc()
+
+            raise ApiTimeoutError(
+                'The request to {} took too long'.format(url),
+            )
+        except _requests.exceptions.ConnectionError:
+            connection_failed_counter.labels(domain=domain).inc()
+
+            raise ApiConnectionError(
+                'Failed to establish connection to {}.'.format(url)
+            )
+
+        latency_histogram.labels(
+            domain=domain, code=request.status_code
+        ).observe(
+            request.elapsed.total_seconds()
+        )
+
+        return request
+
+
+class Session(BaseSession, _requests.Session):
+    pass
+
+
+class CachedSession(BaseSession, requests_cache.CachedSession):
+    def __init__(self, *args, **kwargs):
+        # Set cache defaults
+        options = {
+            'backend': 'sqlite',
+            'expire_after': 5,
+            # Include headers in cache key
+            'include_get_headers': True,
+        }
+
+        options.update(kwargs)
+
+        super().__init__(*args, **options)
