@@ -55,6 +55,11 @@ REGISTER_NAME_URL = ''.join([
     'register-name/'
 ])
 
+REVISION_HISTORY_URL = ''.join([
+    DASHBOARD_API,
+    'snaps/{snap_id}/history'
+])
+
 
 def process_response(response):
     try:
@@ -280,3 +285,15 @@ def snap_screenshots(snap_id, session, data=None, files=None):
         raise MacaroonRefreshRequired
 
     return process_response(screenshot_response)
+
+
+def snap_revision_history(session, snap_id):
+    response = cache.get(
+        REVISION_HISTORY_URL.format(snap_id=snap_id),
+        headers=get_authorization_header(session)
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
