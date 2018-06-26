@@ -68,3 +68,26 @@ Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Taliske
 - http://127.0.0.1:8004/_status/check - A basic check that the site is running
 - http://127.0.0.1:8004/_status/metrics - The prometheus metrics for the application
 
+# Brand stores
+
+To create a brand store, create a file with the name of the store in the folder `webapp/configs`. Then run the project with the environment variable WEBAPP setted with the name of the store.
+
+## Example
+
+Let's create the brand store storePlus. First create the file `webapp/configs/storePlus.py`
+
+```python
+# webapp/configs/brand.py
+
+WEBAPP_CONFIG = {
+    'LAYOUT': '_layout-brandstore.html', # custom layout for brandstores
+    'STORE_NAME': 'Store Plus',         # Store name displayed in the header
+    'STORE_QUERY': 'storePlus',              # Store to query to the snap store
+}
+```
+
+Then run the project with this command, make sure the WEBAPP has the same name as the brand config file:
+
+```bash
+./run --env WEBAPP=storePlus
+```
