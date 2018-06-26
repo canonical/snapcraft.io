@@ -20,7 +20,7 @@ SNAP_DETAILS_URL = ''.join([
     # Released (stable) revision fields will eventually be replaced by
     # `channel_maps_list` contextual information.
     'revision,version,binary_filesize,last_updated,',
-    'channel_maps_list'
+    'developer_validation,channel_maps_list'
 ])
 
 SNAP_METRICS_URL = ''.join([
@@ -33,7 +33,8 @@ SNAP_SEARCH_URL = ''.join([
     'snaps/search',
     '?q={snap_name}&page={page}&size={size}',
     '&confinement=strict,classic',
-    '&fields=package_name,title,summary,icon_url,publisher'
+    '&fields=package_name,title,summary,icon_url,publisher,',
+    'developer_validation'
 ])
 
 FEATURE_SNAPS_URL = ''.join([
