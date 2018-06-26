@@ -5,5 +5,27 @@ Release history for {{ snap_title }}
 {% endblock %}
 
 {% block content %}
-{{ revision_history }}
+
+<div id="main-content" class="u-no-margin--top">
+  {% set selected_tab='release' %}
+  {% include "publisher/_header.html" %}
+
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <h4>Release history</h4>
+
+      <div id="app"></div>
+
+    </div>
+  </section>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ static_url('js/dist/release.js') }}"></script>
+  <script>
+    snapcraft.release.init('#app', {{ revision_history|tojson }});
+  </script>
 {% endblock %}
