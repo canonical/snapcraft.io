@@ -13,8 +13,14 @@ export default class RevisionsList extends Component {
           <td>{ revision.version }</td>
           <td>{ revision.arch }</td>
           <td>{ revision.channels.join(", ") }</td>
-          <td>{ uploadDate.format("YYYY-MM-DD HH:mm") }</td>
-          <td className="u-align--right">{ uploadDate.fromNow() }</td>
+          <td className="u-align--right">
+            <span className="p-tooltip p-tooltip--btm-center" aria-describedby={`revision-uploaded-${revision.revision}`}>
+              { uploadDate.fromNow() }
+              <span className="p-tooltip__message u-align--center" role="tooltip" id={`revision-uploaded-${revision.revision}`}>
+                { uploadDate.format("YYYY-MM-DD HH:mm") }
+              </span>
+            </span>
+          </td>
         </tr>
       );
     });
@@ -26,10 +32,10 @@ export default class RevisionsList extends Component {
         <thead>
           <tr>
             <th width="10%" scope="col">Revision</th>
-            <th width="15%" scope="col">Version</th>
-            <th width="15%" scope="col">Architecture</th>
-            <th width="30%" scope="col">Channels</th>
-            <th width="30%" scope="col" colSpan="2">Submission date</th>
+            <th width="28%" scope="col">Version</th>
+            <th width="12%" scope="col">Architecture</th>
+            <th width="35%" scope="col">Channels</th>
+            <th width="15%" scope="col" className="u-align--right">Submission date</th>
           </tr>
         </thead>
 
