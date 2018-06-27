@@ -21,10 +21,23 @@
               tabindex="0"
               role="tab"
               {% if selected_tab == 'listing' %}
-            aria-selected="true"
-            {% endif %}
+                aria-selected="true"
+              {% endif %}
             >
             Listing
+            </a>
+          </li>
+          <li class="p-tabs__item" role="presentation">
+            <a
+              href="/account/snaps/{{ snap_name }}/release"
+              class="p-tabs__link"
+              tabindex="0"
+              role="tab"
+              {% if selected_tab == 'release' %}
+                aria-selected="true"
+              {% endif %}
+            >
+            Releases
             </a>
           </li>
           <li class="p-tabs__item" role="presentation">
@@ -34,8 +47,8 @@
               tabindex="0"
               role="tab"
               {% if selected_tab == 'metrics' %}
-            aria-selected="true"
-            {% endif %}
+                aria-selected="true"
+              {% endif %}
             >
             Metrics
             </a>
