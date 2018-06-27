@@ -78,8 +78,7 @@ export default [
         ],
         namedExports: {
           'node_modules/react/index.js': ['Children', 'Component', 'PropTypes', 'createElement'],
-          'node_modules/react-dom/index.js': ['render'],
-          'node_modules/vanilla-framework-react/build/index.js': ['Button'],
+          'node_modules/react-dom/index.js': ['render']
         }
       }),
       // needed for React
