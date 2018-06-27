@@ -33,7 +33,9 @@ export default class RevisionsList extends Component {
           </tr>
         </thead>
 
-        { this.renderRows(this.props.revisions) }
+        <tbody>
+          { this.renderRows(this.props.revisions) }
+        </tbody>
       </table>
     );
   }
