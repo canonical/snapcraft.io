@@ -1,5 +1,5 @@
 module.exports = {
-  'plugins': ["jest"],
+  'plugins': ["jest", "react"],
   'globals': {
 
   },
@@ -9,10 +9,14 @@ module.exports = {
     'jest/globals': true
   },
   'extends': [
-    'eslint:recommended'
+    'eslint:recommended',
+    "plugin:react/recommended"
   ],
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   'rules': {
     'indent': [
