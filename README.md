@@ -70,14 +70,14 @@ Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Taliske
 
 # Brand stores
 
-To create a brand store, create a file with the name of the store in the folder `webapp/configs`. Then run the project with the environment variable WEBAPP setted with the name of the store.
+To create a brand store, create a file with the name of the store in the folder `webapp/configs`. Then run the project with the environment variable WEBAPP set with the name of the store.
 
 ## Example
 
 Let's create the brand store storePlus. First create the file `webapp/configs/storePlus.py`
 
 ```python
-# webapp/configs/brand.py
+# webapp/configs/storePlus.py
 
 WEBAPP_CONFIG = {
     'LAYOUT': '_layout-brandstore.html', # custom layout for brandstores
