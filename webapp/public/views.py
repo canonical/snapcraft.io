@@ -111,9 +111,10 @@ def store_blueprint(store=None):
                 )
             )
 
-            featured_snaps = logic.get_searched_snaps(
-                api.get_featured_snaps()
-            )
+            if not snaps_results:
+                featured_snaps = logic.get_searched_snaps(
+                    api.get_featured_snaps()
+                )
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 

@@ -39,7 +39,7 @@
     </div>
   </section>
 
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-deep">
     <div class="row">
         {% if snaps %}
         <div class="col-8">
@@ -75,7 +75,7 @@
         </div>
         {% else %}
           {% if featured_snaps %}
-            <h3>Featured snaps</h3>
+            <h2>Featured snaps</h2>
             <div class="col-12 p-featured-snaps">
               {% for snap in featured_snaps %}
                 <a class="p-featured-snaps__item p-media-object" href="/{{ snap.package_name }}">
