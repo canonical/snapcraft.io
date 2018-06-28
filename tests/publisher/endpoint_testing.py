@@ -29,6 +29,9 @@ class BaseTestCases:
             self.api_url = api_url
             self.endpoint_url = endpoint_url
 
+        def tearDown(self):
+            responses.reset()
+
         def create_app(self):
             app = create_app(testing=True)
             app.secret_key = 'secret_key'
