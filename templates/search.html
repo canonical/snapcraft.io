@@ -45,12 +45,13 @@
         <div class="col-8">
         {% for snap in snaps %}
           <div class="p-media-object">
+              <a href="/{{ snap.package_name }}" class="p-media-object__image">
               {% if snap.icon_url %}
-                <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
+                <img src="{{ snap.icon_url }}"  alt="">
               {% else %}
-                <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object__image" alt="">
+                <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg"  alt="">
               {% endif %}
-
+              </a>
               <div class="p-media-object__details">
                 {# FIXME u-no-margin is a workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1879 #}
                 <h3 class="p-media-object__title u-no-margin">
