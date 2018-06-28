@@ -1,17 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './release/app';
+import RevisionsList from './release/revisionsList';
 
-const init = (id, data) => {
-  // FIXME: just a debug
-  window.console.log("render", id, data);
-
+const initReleases = (id, data) => {
   ReactDOM.render(
-    <App />
-    , document.querySelector(id));
+    <RevisionsList revisions={data} />,
+    document.querySelector(id)
+  );
 };
 
 export {
-  init
+  initReleases
 };
