@@ -10,14 +10,14 @@
 {% endblock %}
 
 {% block content %}
-  <section id="main-content" class="p-strip--image is-deep snapcraft-banner-background">
+  <section id="main-content" class="p-strip--image snapcraft-banner-background">
     <div class="row">
       <div class="col-10">
         {% if query %}
           {% if snaps %}
-            <h2>We’ve found some snaps for "{{ query }}"</h2>
+            <h2>We’ve found some snaps</h2>
           {% else %}
-            <h2>Sorry, we couldn’t find "{{ query }}"</h2>
+            <h2>Sorry, we couldn’t find any snaps</h2>
           {% endif %}
         {% else %}
           <h2>Search Snap Store</h2>
@@ -39,17 +39,19 @@
     </div>
   </section>
 
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-deep">
     <div class="row">
-      <div class="col-8">
+        {% if snaps %}
+        <div class="col-8">
         {% for snap in snaps %}
           <div class="p-media-object">
+              <a href="/{{ snap.package_name }}" class="p-media-object__image">
               {% if snap.icon_url %}
-                <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
+                <img src="{{ snap.icon_url }}"  alt="">
               {% else %}
-                <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object__image" alt="">
+                <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg"  alt="">
               {% endif %}
-
+              </a>
               <div class="p-media-object__details">
                 {# FIXME u-no-margin is a workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1879 #}
                 <h3 class="p-media-object__title u-no-margin">
@@ -70,7 +72,28 @@
               </div>
           </div>
         {% endfor %}
-      </div>
+        </div>
+        {% else %}
+          {% if featured_snaps %}
+            <h2>Featured snaps</h2>
+            <div class="col-12 p-featured-snaps">
+              {% for snap in featured_snaps %}
+                <a class="p-featured-snaps__item p-media-object" href="/{{ snap.package_name }}">
+                  <span class="p-media-object__image">
+                    {% if snap.icon_url %}
+                      <img class="p-heading-icon__img" src="{{ snap.icon_url }}" alt="">
+                    {% else %}
+                      <img class="p-heading-icon__img" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="">
+                    {% endif %}
+                  </span>
+                  <span class="p-media-object__details">
+                    <h4>{{ snap.title }}</h4>
+                  </span>
+                </a>
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endif %}
     </div>
   </section>
 
