@@ -47,9 +47,7 @@ class BaseSession():
 
     Create an interface to manage exceptions and return API exceptions
     """
-    def __init__(self, *args, **kwargs):
-        timeout = 3
-
+    def __init__(self, timeout=(0.5, 3), *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.mount("http://", TimeoutHTTPAdapter(timeout=timeout))
