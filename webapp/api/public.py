@@ -52,6 +52,11 @@ PROMOTED_QUERY_URL = ''.join([
     '&fields=package_name,title,icon_url'
 ])
 
+CATEGORIES_URL = ''.join([
+    SNAPCRAFT_IO_API,
+    'snaps/sections'
+])
+
 
 class StoreApi:
     headers = {'X-Ubuntu-Series': '16'}
@@ -101,13 +106,18 @@ class StoreApi:
 
         return self.process_response(promoted_response)
 
-    def get_searched_snaps(self, snap_searched, size, page):
+    def get_searched_snaps(self, snap_searched, category, size, page):
+        url = SNAP_SEARCH_URL.format(
+            snap_name=snap_searched,
+            size=size,
+            page=page
+        )
+
+        if category:
+            url += '&section=' + category
+
         searched_response = cache.get(
-            SNAP_SEARCH_URL.format(
-                snap_name=snap_searched,
-                size=size,
-                page=page
-            ),
+            url,
             headers=self.headers
         )
 
@@ -135,3 +145,11 @@ class StoreApi:
         )
 
         return self.process_response(metrics_response)
+
+    def get_categories(self):
+        categories_response = cache.get(
+            CATEGORIES_URL,
+            headers=self.headers
+        )
+
+        return self.process_response(categories_response)

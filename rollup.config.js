@@ -53,7 +53,8 @@ export default [
       format: 'iife',
       name: 'snapcraft.public',
       sourcemap: true
-    }
+    },
+    context: 'window' // This is set for whatwg-fetch to work
   },
   {
     input: 'static/js/publisher/release.js',

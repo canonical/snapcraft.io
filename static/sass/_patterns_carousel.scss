@@ -1,0 +1,95 @@
+@mixin snapcraft-p-carousel {
+  // below this breakpoint we don't show buttons to move carousels
+  // but leave scroll to allow swiping them on mobile
+  $carousel-buttons-breakpoint: $breakpoint-medium;
+
+  .p-carousel {
+    position: relative;
+    margin-bottom: $spv-inter--scaleable;
+
+    .p-carousel__mask {
+      overflow-x: scroll;
+      overflow-y: hidden;
+      position: relative;
+
+      @media screen and (min-width: $carousel-buttons-breakpoint) {
+        overflow-x: hidden;
+      }
+    }
+
+    .p-carousel__scroller {
+      position: relative;
+      transition: transform .333s ease;
+
+      .p-carousel__item {
+        width: 12.375rem;
+      }
+    }
+
+    // p-carousel__next p-carousel__prev
+    // based on vbox-next vbox-prev from _patterns_maas_modal.scss
+    .p-carousel__next,
+    .p-carousel__prev {
+      background: {
+        color: $color-x-light;
+        position: center;
+        repeat: no-repeat;
+        size: .25rem;
+      }
+      border-radius: 3rem;
+      box-sizing: content-box;
+      cursor: pointer;
+      display: none;
+      height: 3rem;
+      margin: {
+        bottom: 0;
+        left: 0;
+        top: -1.5rem;
+      }
+      opacity: 0;
+      overflow: hidden;
+      padding: 0;
+      pointer-events: none;
+      position: absolute;
+      text-indent: -999px;
+      top: 50%;
+      transition: opacity .165s;
+      width: 3rem;
+
+      @media screen and (min-width: $carousel-buttons-breakpoint) {
+        display: block;
+      }
+    }
+
+    &:hover .p-carousel__next,
+    &:hover .p-carousel__prev {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .p-carousel__next:disabled,
+    .p-carousel__prev:disabled {
+      cursor: default;
+      opacity: 0;
+    }
+
+    .p-carousel__prev {
+      background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
+      left: -1rem;
+
+      @media screen and (min-width: $breakpoint-large) {
+        left: -1.5rem;
+      }
+    }
+
+    .p-carousel__next {
+      background-image: url('#{$assets-path}9716bbab-chevron.svg');
+      right: -1rem;
+
+      @media screen and (min-width: $breakpoint-large) {
+        right: -1.5rem;
+      }
+
+    }
+  }
+}

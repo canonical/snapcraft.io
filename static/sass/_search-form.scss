@@ -4,11 +4,18 @@
 
     .p-form__group {
       flex-grow: 1;
+
+      &--no-grow {
+        flex-grow: 0;
+      }
+
+      @media screen and (max-width: $breakpoint-navigation-threshold) {
+        margin-bottom: $spv-inter--regular;
+      }
     }
 
     .p-form__control {
       width: 100%;
     }
-
   }
 }

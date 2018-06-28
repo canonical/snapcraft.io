@@ -57,19 +57,29 @@ def store_blueprint(store=None):
     @store.route('/')
     @store.route('/store')
     def store_view():
-        featured_snaps = []
         error_info = {}
         status_code = 200
+
         try:
-            featured_snaps = logic.get_searched_snaps(
-                api.get_featured_snaps()
-            )
+            categories_results = api.get_categories()
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
+
+        categories = logic.get_categories(categories_results)
+
+        try:
+            featured_snaps_results = api.get_featured_snaps()
+        except ApiError as api_error:
+            status_code, error_info = _handle_errors(api_error)
+
+        featured_snaps = logic.get_searched_snaps(
+            featured_snaps_results
+        )
 
         return flask.render_template(
             'store.html',
             featured_snaps=featured_snaps,
+            categories=categories,
             error_info=error_info
         ), status_code
 
@@ -77,12 +87,24 @@ def store_blueprint(store=None):
     def search_snap():
         status_code = 200
         snap_searched = flask.request.args.get('q', default='', type=str)
-        if not snap_searched:
+        snap_category = flask.request.args.get(
+            'category',
+            default='',
+            type=str)
+
+        if snap_category:
+            snap_category_display = snap_category.capitalize().replace(
+                '-', ' ')
+        else:
+            snap_category_display = None
+
+        if not snap_searched and not snap_category:
             return flask.redirect(
                 flask.url_for('.store_view'))
 
-        size = flask.request.args.get('limit', default=10, type=int)
+        size = flask.request.args.get('limit', default=25, type=int)
         offset = flask.request.args.get('offset', default=0, type=int)
+
         try:
             page = floor(offset / size) + 1
         except ZeroDivisionError:
@@ -90,47 +112,62 @@ def store_blueprint(store=None):
             page = floor(offset / size) + 1
 
         error_info = {}
-        snaps_results = []
-        links = []
         featured_snaps = []
+        categories_results = []
+        searched_results = []
+
+        try:
+            categories_results = api.get_categories()
+        except ApiError as api_error:
+            status_code, error_info = _handle_errors(api_error)
+
+        categories = logic.get_categories(categories_results)
 
         try:
             searched_results = api.get_searched_snaps(
                 quote_plus(snap_searched),
+                snap_category,
                 size,
                 page
             )
-
-            snaps_results = logic.get_searched_snaps(searched_results)
-            links = logic.get_pages_details(
-                flask.request.base_url,
-                (
-                    searched_results['_links']
-                    if '_links' in searched_results
-                    else []
-                )
-            )
-
-            if not snaps_results:
-                featured_snaps = logic.get_searched_snaps(
-                    api.get_featured_snaps()
-                )
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
+        snaps_results = logic.get_searched_snaps(searched_results)
+        links = logic.get_pages_details(
+            flask.request.base_url,
+            (
+                searched_results['_links']
+                if '_links' in searched_results
+                else []
+            )
+        )
+
+        if not snaps_results:
+            try:
+                featured_snaps_results = api.get_featured_snaps()
+            except ApiError as api_error:
+                status_code, error_info = _handle_errors(api_error)
+
+            featured_snaps = logic.get_searched_snaps(
+                featured_snaps_results
+            )
+
         context = {
             "query": snap_searched,
+            "category": snap_category,
+            "category_display": snap_category_display,
+            "categories": categories,
             "snaps": snaps_results,
             "links": links,
             "featured_snaps": featured_snaps,
             "error_info": error_info
-
         }
 
         return flask.render_template(
             'search.html',
             **context
-        )
+        ), status_code
 
     @store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
     def snap_details(snap_name):
@@ -260,6 +297,34 @@ def store_blueprint(store=None):
 
         return flask.render_template(
             'snap-details.html',
+            **context
+        ), status_code
+
+    @store.route('/store/categories/<category>')
+    def store_category(category):
+        status_code = 200
+        error_info = {}
+
+        try:
+            category_results = api.get_searched_snaps(
+                snap_searched='',
+                category=category,
+                size=24,
+                page=1
+            )
+        except ApiError as api_error:
+            status_code, error_info = _handle_errors(api_error)
+
+        snaps_results = logic.get_searched_snaps(category_results)
+
+        context = {
+            "category": category,
+            "snaps": snaps_results,
+            "error_info": error_info
+        }
+
+        return flask.render_template(
+            '_category-partial.html',
             **context
         ), status_code
 

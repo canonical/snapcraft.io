@@ -167,3 +167,9 @@ img {
 
 @import 'patterns_nested-inputs';
 @include snapcraft-p-nested-inputs;
+
+@import 'patterns_carousel';
+@include snapcraft-p-carousel;
+
+@import 'patterns_media-object--snap';
+@include snapcraft-p-media-object--snap;
