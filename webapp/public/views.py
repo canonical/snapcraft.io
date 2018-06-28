@@ -92,6 +92,8 @@ def store_blueprint(store=None):
         error_info = {}
         snaps_results = []
         links = []
+        featured_snaps = []
+
         try:
             searched_results = api.get_searched_snaps(
                 quote_plus(snap_searched),
@@ -108,6 +110,10 @@ def store_blueprint(store=None):
                     else []
                 )
             )
+
+            featured_snaps = logic.get_searched_snaps(
+                api.get_featured_snaps()
+            )
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
@@ -115,6 +121,7 @@ def store_blueprint(store=None):
             "query": snap_searched,
             "snaps": snaps_results,
             "links": links,
+            "featured_snaps": featured_snaps,
             "error_info": error_info
 
         }
