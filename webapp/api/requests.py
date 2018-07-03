@@ -110,29 +110,3 @@ class CachedSession(BaseSession, requests_cache.CachedSession):
         options.update(kwargs)
 
         super().__init__(*args, **options)
-
-
-session = Session()
-
-
-def get(
-        url,
-        headers,
-        json=None,
-        data=None,
-        method=None,
-        files=None
-):
-    if method is None:
-        method = "POST" if json else "GET"
-
-    response = session.request(
-        method=method,
-        url=url,
-        headers=headers,
-        json=json,
-        files=files,
-        data=data,
-    )
-
-    return response
