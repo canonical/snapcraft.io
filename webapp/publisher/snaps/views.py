@@ -85,7 +85,7 @@ def get_account_snaps():
 def get_measure_snap(snap_name):
     return flask.redirect(
         flask.url_for(
-            '.publisher_snap_metrics', snap_name))
+            '.publisher_snap_metrics', snap_name=snap_name))
 
 
 @publisher_snaps.route('/<snap_name>/metrics')
