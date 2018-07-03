@@ -1,5 +1,5 @@
 import os
-from webapp.api import requests as api_requests
+from webapp import api
 from webapp.api.exceptions import (
     ApiResponseDecodeError,
     ApiResponseError,
@@ -73,7 +73,7 @@ class StoreApi:
             self.headers.update({'X-Ubuntu-Store': store})
             self.headers_v2.update({'Snap-Device-Store': store})
 
-        self.session = api_requests.CachedSession()
+        self.session = api.requests.CachedSession()
         self.session.headers.update(self.headers)
         self.session.headers.update(self.headers_v2)
 

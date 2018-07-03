@@ -3,7 +3,7 @@ import os
 from urllib.parse import urlparse
 
 # Third-party packages
-import requests as _requests
+import requests
 import requests_cache
 import prometheus_client
 
@@ -32,7 +32,7 @@ latency_histogram = prometheus_client.Histogram(
 )
 
 
-class TimeoutHTTPAdapter(_requests.adapters.HTTPAdapter):
+class TimeoutHTTPAdapter(requests.adapters.HTTPAdapter):
     def __init__(self, timeout=None, *args, **kwargs):
         self.timeout = timeout
         super().__init__(*args, **kwargs)
@@ -71,13 +71,13 @@ class BaseSession():
 
         try:
             request = super().request(method=method, url=url, **kwargs)
-        except _requests.exceptions.Timeout:
+        except requests.exceptions.Timeout:
             timeout_counter.labels(domain=domain).inc()
 
             raise ApiTimeoutError(
                 'The request to {} took too long'.format(url),
             )
-        except _requests.exceptions.ConnectionError:
+        except requests.exceptions.ConnectionError:
             connection_failed_counter.labels(domain=domain).inc()
 
             raise ApiConnectionError(
@@ -93,7 +93,7 @@ class BaseSession():
         return request
 
 
-class Session(BaseSession, _requests.Session):
+class Session(BaseSession, requests.Session):
     pass
 
 

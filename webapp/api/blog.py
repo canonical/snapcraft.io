@@ -1,10 +1,10 @@
-from webapp.api import requests as api_requests
+from webapp import api
 
 API_URL = 'https://admin.insights.ubuntu.com/wp-json/wp/v2'
 TAGS = [2996]  # 'snapcraft.io'
 
 
-api_session = api_requests.Session()
+api_session = api.requests.Session()
 
 
 def get_articles(tags=TAGS, per_page=12, page=1, exclude=None):
