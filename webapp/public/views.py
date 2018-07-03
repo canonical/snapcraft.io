@@ -193,22 +193,26 @@ def store_blueprint(store=None):
                 metrics_query_json)
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
+            metrics_response = None
 
-        oses = metrics_helper.find_metric(metrics_response, os_metric_name)
-        os_metrics = metrics.OsMetric(
-            name=oses['metric_name'],
-            series=oses['series'],
-            buckets=oses['buckets'],
-            status=oses['status'])
+        os_metrics = None
+        country_devices = None
+        if metrics_response:
+            oses = metrics_helper.find_metric(metrics_response, os_metric_name)
+            os_metrics = metrics.OsMetric(
+                name=oses['metric_name'],
+                series=oses['series'],
+                buckets=oses['buckets'],
+                status=oses['status'])
 
-        territories = metrics_helper.find_metric(
-            metrics_response, country_metric_name)
-        country_devices = metrics.CountryDevices(
-            name=territories['metric_name'],
-            series=territories['series'],
-            buckets=territories['buckets'],
-            status=territories['status'],
-            private=False)
+            territories = metrics_helper.find_metric(
+                metrics_response, country_metric_name)
+            country_devices = metrics.CountryDevices(
+                name=territories['metric_name'],
+                series=territories['series'],
+                buckets=territories['buckets'],
+                status=territories['status'],
+                private=False)
 
         # filter out banner and banner-icon images from screenshots
         screenshots = [
@@ -246,8 +250,10 @@ def store_blueprint(store=None):
             'last_updated_raw': details.get('last_updated'),
 
             # Data from metrics API
-            'countries': country_devices.country_data,
-            'normalized_os': os_metrics.os,
+            'countries': (
+                country_devices.country_data if country_devices else None
+            ),
+            'normalized_os': os_metrics.os if os_metrics else None,
 
             # Context info
             'is_linux': (
