@@ -6,12 +6,16 @@ function commaNumber(number) {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function standariseOSName(os) {
+  return os.replace('/',' ');
+}
+
 function generateSeriesMarkup(point, color, highlight) {
   let series = [];
   color = color || 'transparent';
   let extraClass = highlight === point.name ? ' is-hovered' : '';
   series.push(`<span class="snapcraft-graph-tooltip__series${extraClass}" title="${point.name}">`);
-  series.push(`<span class="snapcraft-graph-tooltip__series-name">${point.name}</span>`);
+  series.push(`<span class="snapcraft-graph-tooltip__series-name">${standariseOSName(point.name)}</span>`);
   series.push(`<span class="snapcraft-graph-tooltip__series-color" style="background:${color};"></span>`);
   series.push(`<span class="snapcraft-graph-tooltip__series-value">${commaNumber(point.value)}</span>`);
   series.push('</span>');
