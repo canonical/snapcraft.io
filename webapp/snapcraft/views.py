@@ -1,7 +1,7 @@
 import flask
 
-from webapp.api.public import StoreApi
-from webapp.public import logic
+from webapp.api.store import StoreApi
+from webapp.store import logic
 from webapp.api.exceptions import (
     ApiError,
     ApiTimeoutError,
