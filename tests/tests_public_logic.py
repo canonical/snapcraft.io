@@ -1,8 +1,8 @@
 import unittest
-import webapp.public.logic as logic
+import webapp.store.logic as logic
 
 
-class PublicLogicTest(unittest.TestCase):
+class StoreLogicTest(unittest.TestCase):
 
     # convert_channel_maps
     # ===

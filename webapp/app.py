@@ -17,7 +17,7 @@ from werkzeug.debug import DebuggedApplication
 import webapp.helpers as helpers
 from webapp.handlers import set_handlers
 from webapp.blog.views import blog
-from webapp.public.views import store_blueprint
+from webapp.store.views import store_blueprint
 from webapp.publisher.views import account
 from webapp.publisher.snaps.views import publisher_snaps
 from webapp.snapcraft.views import snapcraft_blueprint

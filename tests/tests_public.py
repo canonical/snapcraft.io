@@ -10,7 +10,7 @@ from flask_testing import TestCase
 responses.mock.assert_all_requests_are_fired = True
 
 
-class PublicPage(TestCase):
+class StorePage(TestCase):
 
     render_templates = False
 
