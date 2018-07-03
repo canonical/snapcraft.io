@@ -65,8 +65,8 @@ def convert_navigation_url(url, link):
     """Convert navigation link from offest/limit to size/page
 
     Example:
-    - input: http://example.com?q=test&size=10&page=3
-    - output: http://example2.com?q=test&limit=10&offset=30
+    - input: http://example.com?q=test&category=finance&size=10&page=3
+    - output: http://example2.com?q=test&category=finance&limit=10&offset=30
 
     :param url: The new url
     :param link: The navigation url returned by the API
@@ -80,16 +80,31 @@ def convert_navigation_url(url, link):
     )
 
     url_queries = parse_qs(url_parsed.query)
-    q = url_queries['q'][0]
+
+    if 'q' in url_queries:
+        q = url_queries['q'][0]
+    else:
+        q = ''
+
+    if 'section' in url_queries:
+        category = url_queries['section'][0]
+    else:
+        category = ''
+
     size = int(url_queries['size'][0])
     page = int(url_queries['page'][0])
 
-    return host_url.format(
+    url = host_url.format(
         base_url=url,
         q=q,
         limit=size,
         offset=size*(page-1)
     )
+
+    if category != '':
+        url += '&category=' + category
+
+    return url
 
 
 def split_description_into_paragraphs(unformatted_description):
@@ -127,8 +142,7 @@ def split_description_into_paragraphs(unformatted_description):
 
 
 def convert_channel_maps(channel_maps_list):
-    """
-    Converts channel maps list to format easier to manipulate
+    """Converts channel maps list to format easier to manipulate
 
     Example:
     - Input:
@@ -169,8 +183,7 @@ def convert_channel_maps(channel_maps_list):
 
 
 def get_default_channel(snap_name):
-    """
-    Get's the default channel of 'stable' unless the snap_name is node.
+    """Get's the default channel of 'stable' unless the snap_name is node.
 
     This is a temporary* hack to get around nodejs not using 'latest'
     as their default.
@@ -181,3 +194,25 @@ def get_default_channel(snap_name):
         return '10/stable'
 
     return 'stable'
+
+
+def get_categories(categories_json):
+    """Retrieve and flatten the nested array from the legacy API response.
+
+    :param categories_json: The returned json
+    :returns: A list of categories
+    """
+    categories_list = ['featured', 'developers', 'games', 'social-networking']
+    categories = []
+
+    for cat in categories_json['_embedded']['clickindex:sections']:
+        if cat['name'] not in categories_list:
+            categories_list.append(cat['name'])
+
+    for category in categories_list:
+        categories.append({
+            'slug': category,
+            'name': category.capitalize().replace('-', ' ')
+        })
+
+    return categories
