@@ -1,6 +1,7 @@
 @mixin p-logo-list {
   .p-logo-list {
     @extend %image-grid;
+    justify-content: space-around;
     padding: $sp-medium 0;
 
     &__item {
@@ -8,6 +9,7 @@
       display: flex;
       margin-top: 0;
       min-height: 60px;
+      min-width: 150px;
 
       // by default (on mobile) use col-3 width (4 items in a row)
       width: 21.875%; // mobile-col-1
