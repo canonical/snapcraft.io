@@ -5,5 +5,6 @@ WEBAPP_CONFIG = {
         'LOGO': None,
         'COLOUR': None
     },
+    'FOOTER_TEXT': None,
     'STORE_QUERY': 'LimeNET'
 }
