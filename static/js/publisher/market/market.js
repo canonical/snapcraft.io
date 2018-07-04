@@ -170,7 +170,7 @@ function initForm(config, initialState, errors) {
       if (isFormValid()) {
         enableSubmit();
       } else {
-        disablesubmit();
+        disableSubmit();
       }
     } else {
       disableRevert();
