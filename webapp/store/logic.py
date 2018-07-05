@@ -1,4 +1,5 @@
 import bleach
+import dateutil
 import re
 from urllib.parse import parse_qs, urlparse
 
@@ -141,7 +142,7 @@ def split_description_into_paragraphs(unformatted_description):
     return formatted_paragraphs
 
 
-def convert_channel_maps(channel_maps_list):
+def convert_channel_maps(channel_map):
     """Converts channel maps list to format easier to manipulate
 
     Example:
@@ -167,33 +168,26 @@ def convert_channel_maps(channel_maps_list):
 
     :returns: The channel maps reshaped
     """
-    channel_maps = {}
-    for channel_map in channel_maps_list:
-        arch = channel_map.get('architecture')
-        track = channel_map.get('track')
-        if arch not in channel_maps:
-            channel_maps[arch] = {}
-        channel_maps[arch][track] = []
+    channel_map_restruct = {}
+    for channel in channel_map:
+        arch = channel.get('channel').get('architecture')
+        track = channel.get('channel').get('track')
+        if arch not in channel_map_restruct:
+            channel_map_restruct[arch] = {}
+        if track not in channel_map_restruct[arch]:
+            channel_map_restruct[arch][track] = []
 
-        for channel in channel_map['map']:
-            if channel.get('info'):
-                channel_maps[arch][track].append(channel)
+        info = {
+            'created-at': channel.get('created-at'),
+            'version': channel.get('version'),
+            'channel': channel.get('channel').get('name'),
+            'risk': channel.get('channel').get('risk'),
+            'confinement': channel.get('confinement'),
+            'size': channel.get('download').get('size')
+        }
+        channel_map_restruct[arch][track].append(info)
 
-    return channel_maps
-
-
-def get_default_channel(snap_name):
-    """Get's the default channel of 'stable' unless the snap_name is node.
-
-    This is a temporary* hack to get around nodejs not using 'latest'
-    as their default.
-
-    * depending on snapd and store work (not in the 18.10 cycle)
-    """
-    if snap_name == 'node':
-        return '10/stable'
-
-    return 'stable'
+    return channel_map_restruct
 
 
 def get_categories(categories_json):
@@ -216,3 +210,27 @@ def get_categories(categories_json):
         })
 
     return categories
+
+
+def get_last_udpated_version(channel_map):
+    """Get the oldest channel that was created
+
+    :param channel_map: List of a specific track
+
+    :returns: The oldest created channel
+    """
+    newest_channel = None
+    for latest in channel_map:
+        if not newest_channel:
+            newest_channel = latest
+            parsed_creation_date = dateutil.parser.parse(
+                newest_channel['created-at'])
+        else:
+            parsed_actual_creation_date = dateutil.parser.parse(
+                latest['created-at'])
+            if parsed_creation_date > parsed_actual_creation_date:
+                newest_channel = latest
+                parsed_creation_date = dateutil.parser.parse(
+                    newest_channel['created-at'])
+
+    return newest_channel

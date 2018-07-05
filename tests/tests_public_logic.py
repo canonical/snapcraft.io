@@ -15,16 +15,34 @@ class StoreLogicTest(unittest.TestCase):
     def test_one_track_channel_map(self):
         channel_maps_list = [
             {
-                'architecture': 'arch',
-                'map': [{'info': 'release'}],
-                'track': 'track'
+                'channel': {
+                    'name': 'channel',
+                    'architecture': 'arch',
+                    'track': 'track',
+                    'risk': 'risk'
+                },
+                'created-at': 'date',
+                'confinement': 'confinement',
+                'download': {
+                    'size': 'size'
+                },
+                'version': 'version'
             }
         ]
 
         result = logic.convert_channel_maps(channel_maps_list)
         expected_result = {
             'arch': {
-                'track': [{'info': 'release'}]
+                'track': [
+                    {
+                        'channel': 'channel',
+                        'created-at': 'date',
+                        'confinement': 'confinement',
+                        'size': 'size',
+                        'risk': 'risk',
+                        'version': 'version'
+                    }
+                ]
             }
         }
 
@@ -33,22 +51,57 @@ class StoreLogicTest(unittest.TestCase):
     def test_multiple_track_same_arch_channel_map(self):
         channel_maps_list = [
             {
-                'architecture': 'arch',
-                'map': [{'info': 'release'}],
-                'track': 'track'
+                'channel': {
+                    'name': 'channel',
+                    'architecture': 'arch',
+                    'track': 'track',
+                    'risk': 'risk'
+                },
+                'created-at': 'date',
+                'confinement': 'confinement',
+                'download': {
+                    'size': 'size'
+                },
+                'version': 'version'
             },
             {
-                'architecture': 'arch',
-                'map': [{'info': 'release'}],
-                'track': 'track1'
+                'channel': {
+                    'name': 'channel',
+                    'architecture': 'arch',
+                    'track': 'track1',
+                    'risk': 'risk'
+                },
+                'created-at': 'date',
+                'confinement': 'confinement',
+                'download': {
+                    'size': 'size'
+                },
+                'version': 'version'
             }
         ]
-
         result = logic.convert_channel_maps(channel_maps_list)
         expected_result = {
             'arch': {
-                'track': [{'info': 'release'}],
-                'track1': [{'info': 'release'}]
+                'track': [
+                    {
+                        'channel': 'channel',
+                        'created-at': 'date',
+                        'confinement': 'confinement',
+                        'size': 'size',
+                        'risk': 'risk',
+                        'version': 'version'
+                    }
+                ],
+                'track1': [
+                    {
+                        'channel': 'channel',
+                        'created-at': 'date',
+                        'confinement': 'confinement',
+                        'size': 'size',
+                        'risk': 'risk',
+                        'version': 'version'
+                    }
+                ]
             }
         }
 
@@ -57,24 +110,60 @@ class StoreLogicTest(unittest.TestCase):
     def test_multiple_track_different_arch_channel_map(self):
         channel_maps_list = [
             {
-                'architecture': 'arch',
-                'map': [{'info': 'release'}],
-                'track': 'track'
+                'channel': {
+                    'name': 'channel',
+                    'architecture': 'arch',
+                    'track': 'track',
+                    'risk': 'risk'
+                },
+                'created-at': 'date',
+                'confinement': 'confinement',
+                'download': {
+                    'size': 'size'
+                },
+                'version': 'version'
             },
             {
-                'architecture': 'arch1',
-                'map': [{'info': 'release'}],
-                'track': 'track'
+                'channel': {
+                    'name': 'channel',
+                    'architecture': 'arch1',
+                    'track': 'track',
+                    'risk': 'risk'
+                },
+                'created-at': 'date',
+                'confinement': 'confinement',
+                'download': {
+                    'size': 'size'
+                },
+                'version': 'version'
             }
         ]
 
         result = logic.convert_channel_maps(channel_maps_list)
         expected_result = {
             'arch': {
-                'track': [{'info': 'release'}],
+                'track': [
+                    {
+                        'channel': 'channel',
+                        'created-at': 'date',
+                        'confinement': 'confinement',
+                        'size': 'size',
+                        'risk': 'risk',
+                        'version': 'version'
+                    }
+                ]
             },
             'arch1': {
-                'track': [{'info': 'release'}],
+                'track': [
+                    {
+                        'channel': 'channel',
+                        'created-at': 'date',
+                        'confinement': 'confinement',
+                        'size': 'size',
+                        'risk': 'risk',
+                        'version': 'version'
+                    }
+                ]
             }
         }
 

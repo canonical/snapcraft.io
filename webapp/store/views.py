@@ -180,11 +180,9 @@ def store_blueprint(store=None):
         """
 
         error_info = {}
-        default_channel = logic.get_default_channel(snap_name)
 
         try:
-            details = api.get_snap_details(
-                    snap_name, default_channel)
+            details = api.get_snap_details(snap_name)
         except ApiTimeoutError as api_timeout_error:
             flask.abort(504, str(api_timeout_error))
         except ApiResponseDecodeError as api_response_decode_error:
@@ -202,10 +200,16 @@ def store_blueprint(store=None):
             flask.abort(502, str(api_error))
 
         formatted_paragraphs = logic.split_description_into_paragraphs(
-            details['description'])
+            details['snap']['description'])
 
         channel_maps_list = logic.convert_channel_maps(
-            details.get('channel_maps_list'))
+            details.get('channel-map'))
+
+        latest_channel = logic.get_last_udpated_version(
+            channel_maps_list['amd64']['latest'])
+        last_updated = latest_channel['created-at']
+        last_version = latest_channel['version']
+        binary_filesize = latest_channel['size']
 
         end = metrics_helper.get_last_metrics_processed_date()
         country_metric_name = 'weekly_installed_base_by_country_percent'
@@ -214,12 +218,12 @@ def store_blueprint(store=None):
         metrics_query_json = [
             metrics_helper.get_filter(
                 metric_name=country_metric_name,
-                snap_id=details['snap_id'],
+                snap_id=details['snap-id'],
                 start=end,
                 end=end),
             metrics_helper.get_filter(
                 metric_name=os_metric_name,
-                snap_id=details['snap_id'],
+                snap_id=details['snap-id'],
                 start=end,
                 end=end)]
 
@@ -253,38 +257,37 @@ def store_blueprint(store=None):
 
         # filter out banner and banner-icon images from screenshots
         screenshots = [
-            m['url'] for m in details['media']
+            m['url'] for m in details['snap']['media']
             if m['type'] == "screenshot" and "banner" not in m['url']
         ]
-        icons = [m['url'] for m in details['media'] if m['type'] == "icon"]
+        icons = [
+            m['url'] for m in details['snap']['media'] if m['type'] == "icon"]
 
         context = {
             # Data direct from details API
-            'snap_title': details['title'],
-            'package_name': details['package_name'],
+            'snap_title': details['snap']['title'],
+            'package_name': details['name'],
             'icon_url': icons[0] if icons else None,
-            'version': details['version'],
-            'revision': details['revision'],
-            'license': details['license'],
-            'publisher': details['publisher'],
+            'version': last_version,
+            'license': details['snap']['license'],
+            'publisher': details['snap']['publisher']['display-name'],
             'screenshots': screenshots,
-            'prices': details['prices'],
-            'contact': details.get('contact'),
-            'website': details.get('website'),
-            'summary': details['summary'],
+            'prices': details['snap']['prices'],
+            'contact': details['snap'].get('contact'),
+            'website': details['snap'].get('website'),
+            'summary': details['snap']['summary'],
             'description_paragraphs': formatted_paragraphs,
             'channel_map': channel_maps_list,
-            'default_channel': default_channel,
-            'developer_validation': details['developer_validation'],
+            'developer_validation': details['snap']['publisher']['validation'],
 
             # Transformed API data
-            'filesize': humanize.naturalsize(details['binary_filesize']),
+            'filesize': humanize.naturalsize(binary_filesize),
             'last_updated': (
                 humanize.naturaldate(
-                    parser.parse(details.get('last_updated'))
+                    parser.parse(last_updated)
                 )
             ),
-            'last_updated_raw': details.get('last_updated'),
+            'last_updated_raw': last_updated,
 
             # Data from metrics API
             'countries': (
