@@ -63,6 +63,7 @@ def store_blueprint(store=None):
         try:
             categories_results = api.get_categories()
         except ApiError as api_error:
+            categories_results = []
             status_code, error_info = _handle_errors(api_error)
 
         categories = logic.get_categories(categories_results)
@@ -70,6 +71,7 @@ def store_blueprint(store=None):
         try:
             featured_snaps_results = api.get_featured_snaps()
         except ApiError as api_error:
+            featured_snaps_results = []
             status_code, error_info = _handle_errors(api_error)
 
         featured_snaps = logic.get_searched_snaps(
@@ -77,7 +79,7 @@ def store_blueprint(store=None):
         )
 
         return flask.render_template(
-            'store.html',
+            'store/store.html',
             featured_snaps=featured_snaps,
             categories=categories,
             error_info=error_info
@@ -165,7 +167,7 @@ def store_blueprint(store=None):
         }
 
         return flask.render_template(
-            'search.html',
+            'store/search.html',
             **context
         ), status_code
 
@@ -306,7 +308,7 @@ def store_blueprint(store=None):
         }
 
         return flask.render_template(
-            'snap-details.html',
+            'store/snap-details.html',
             **context
         ), status_code
 
@@ -339,7 +341,7 @@ def store_blueprint(store=None):
         }
 
         return flask.render_template(
-            '_category-partial.html',
+            'store/_category-partial.html',
             **context
         ), status_code
 

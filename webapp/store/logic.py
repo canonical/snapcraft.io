@@ -198,15 +198,16 @@ def get_categories(categories_json):
     categories_list = ['featured', 'developers', 'games', 'social-networking']
     categories = []
 
-    for cat in categories_json['_embedded']['clickindex:sections']:
-        if cat['name'] not in categories_list:
-            categories_list.append(cat['name'])
+    if '_embedded' in categories_json:
+        for cat in categories_json['_embedded']['clickindex:sections']:
+            if cat['name'] not in categories_list:
+                categories_list.append(cat['name'])
 
-    for category in categories_list:
-        categories.append({
-            'slug': category,
-            'name': category.capitalize().replace('-', ' ')
-        })
+        for category in categories_list:
+            categories.append({
+                'slug': category,
+                'name': category.capitalize().replace('-', ' ')
+            })
 
     return categories
 
