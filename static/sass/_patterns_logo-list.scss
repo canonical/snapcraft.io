@@ -2,7 +2,7 @@
   .p-logo-list {
     @extend %image-grid;
     justify-content: space-around;
-    padding: $sp-medium 0;
+    padding: 0;
 
     &__item {
       align-items: center;
