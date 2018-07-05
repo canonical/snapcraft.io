@@ -1,0 +1,16 @@
+<footer class="p-footer p-strip--light p-sticky-footer">
+  <div class="row">
+    <div class="col-8">
+      <nav class="p-footer__nav">
+        <ul class="p-footer__links">
+          <li class="p-footer__item">
+            <a class="p-footer__link" href="#">Back to top<i class="p-icon--top"></i></a>
+          </li>
+        </ul>
+      </nav>
+      {% if webapp_config['FOOTER_TEXT'] %}
+        <p>{{ webapp_config['FOOTER_TEXT']|safe }}</p>
+      {% endif %}
+    </div>
+  </div>
+</footer>
