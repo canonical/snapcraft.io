@@ -1,5 +1,4 @@
 import bleach
-import dateutil
 import re
 from urllib.parse import parse_qs, urlparse
 
@@ -212,25 +211,22 @@ def get_categories(categories_json):
     return categories
 
 
-def get_last_udpated_version(channel_map):
+def get_last_udpated_version(channel_maps):
     """Get the oldest channel that was created
 
-    :param channel_map: List of a specific track
+    :param channel_map: Channel map list
 
-    :returns: The oldest created channel
+    :returns: The latest stable version, if no stable, the lastest risk updated
     """
     newest_channel = None
-    for latest in channel_map:
+    for channel_map in channel_maps:
         if not newest_channel:
-            newest_channel = latest
-            parsed_creation_date = dateutil.parser.parse(
-                newest_channel['created-at'])
+            newest_channel = channel_map
         else:
-            parsed_actual_creation_date = dateutil.parser.parse(
-                latest['created-at'])
-            if parsed_creation_date > parsed_actual_creation_date:
-                newest_channel = latest
-                parsed_creation_date = dateutil.parser.parse(
-                    newest_channel['created-at'])
+            if channel_map['channel']['risk'] == 'stable':
+                newest_channel = channel_map
+
+        if newest_channel['channel']['risk'] == 'stable':
+            break
 
     return newest_channel

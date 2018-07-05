@@ -206,10 +206,11 @@ def store_blueprint(store=None):
             details.get('channel-map'))
 
         latest_channel = logic.get_last_udpated_version(
-            channel_maps_list['amd64']['latest'])
+            details.get('channel-map'))
+
         last_updated = latest_channel['created-at']
         last_version = latest_channel['version']
-        binary_filesize = latest_channel['size']
+        binary_filesize = latest_channel['download']['size']
 
         end = metrics_helper.get_last_metrics_processed_date()
         country_metric_name = 'weekly_installed_base_by_country_percent'
