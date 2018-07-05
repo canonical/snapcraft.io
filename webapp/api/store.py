@@ -11,16 +11,16 @@ SNAPCRAFT_IO_API = os.getenv(
     'https://api.snapcraft.io/api/v1/',
 )
 
-SNAP_DETAILS_URL = ''.join([
-    SNAPCRAFT_IO_API,
-    'snaps/details/{snap_name}',
-    '?channel={snap_channel}',
-    '&fields=snap_id,package_name,title,summary,description,license,contact,',
-    'website,publisher,prices,media,',
-    # Released (stable) revision fields will eventually be replaced by
-    # `channel_maps_list` contextual information.
-    'revision,version,binary_filesize,last_updated,',
-    'developer_validation,channel_maps_list'
+SNAPCRAFT_IO_API_V2 = os.getenv(
+    'SNAPCRAFT_IO_API_V2',
+    'https://api.snapcraft.io/v2/'
+)
+
+SNAP_INFO_URL = ''.join([
+    SNAPCRAFT_IO_API_V2,
+    'snaps/info/{snap_name}',
+    '?fields=title,summary,description,license,contact,website,publisher,',
+    'prices,media,download,version,created-at,confinement',
 ])
 
 SNAP_METRICS_URL = ''.join([
@@ -60,10 +60,12 @@ CATEGORIES_URL = ''.join([
 
 class StoreApi:
     headers = {'X-Ubuntu-Series': '16'}
+    headers_v2 = {'Snap-Device-Series': '16'}
 
     def __init__(self, store=None):
         if store:
             self.headers.update({'X-Ubuntu-Store': store})
+            self.headers_v2.update({'X-Ubuntu-Store': store})
 
     def process_response(self, response):
         try:
@@ -123,14 +125,11 @@ class StoreApi:
 
         return self.process_response(searched_response)
 
-    def get_snap_details(self, snap_name, snap_channel):
-        details_headers = self.headers.copy()
-        details_headers.update({'X-Ubuntu-Architecture': 'any'})
+    def get_snap_details(self, snap_name):
         details_response = cache.get(
-            SNAP_DETAILS_URL.format(
-                snap_name=snap_name,
-                snap_channel=snap_channel),
-            headers=self.headers
+            SNAP_INFO_URL.format(
+                snap_name=snap_name),
+            headers=self.headers_v2
         )
 
         return self.process_response(details_response)
