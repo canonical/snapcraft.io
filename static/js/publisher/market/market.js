@@ -86,6 +86,14 @@ function initForm(config, initialState, errors) {
   const submitButton = marketForm.querySelector('.js-market-submit');
   const revertButton = marketForm.querySelector('.js-market-revert');
 
+  function disableRevert() {
+    revertButton.disabled = 'disabled';
+  }
+
+  function enableRevert() {
+    revertButton.disabled = false;
+  }
+
   function disableSubmit() {
     submitButton.disabled = 'disabled';
   }
@@ -94,7 +102,8 @@ function initForm(config, initialState, errors) {
     submitButton.disabled = false;
   }
 
-  // disable submit by default, it will be enabled on valid change
+  // commit buttons are disabled by default, as there’s nothing to revert/save
+  disableRevert();
   disableSubmit();
 
   let state = JSON.parse(JSON.stringify(initialState));
@@ -156,10 +165,15 @@ function initForm(config, initialState, errors) {
   function checkForm() {
     const diff = diffState(initialState, state);
 
-    if (diff && isFormValid()) {
-      enableSubmit();
+    if (diff) {
+      enableRevert();
+      if (isFormValid()) {
+        enableSubmit();
+      } else {
+        disableSubmit();
+      }
     } else {
-      disableSubmit();
+      disableRevert();
     }
   }
 
