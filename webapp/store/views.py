@@ -306,6 +306,11 @@ def store_blueprint(store=None):
             **context
         ), status_code
 
+    @store.route('/<regex("[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"):snap_name>')
+    def snap_details_case_sensitive(snap_name):
+        return flask.redirect(
+            flask.url_for('.snap_details', snap_name=snap_name.lower()))
+
     @store.route('/store/categories/<category>')
     def store_category(category):
         status_code = 200
