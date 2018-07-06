@@ -1,7 +1,7 @@
 import unittest
 import responses
 
-from tests.endpoint_testing import BaseTestCases
+from tests.publisher.endpoint_testing import BaseTestCases
 
 
 class ListingPageNotAuth(BaseTestCases.EndpointLoggedOut):
