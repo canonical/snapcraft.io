@@ -24,7 +24,7 @@ class GetUsernamePage(BaseTestCases.BaseAppTesting):
         response = self.client.get("/account/username")
 
         assert response.status_code == 200
-        self.assert_template_used('username.html')
+        self.assert_template_used('publisher/username.html')
 
 
 class PostUsernamePageNotAuth(BaseTestCases.EndpointLoggedOut):

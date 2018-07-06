@@ -87,7 +87,8 @@ def get_account_details():
 @account.route('/agreement')
 @login_required
 def get_agreement():
-    return flask.render_template('developer_programme_agreement.html')
+    return flask.render_template(
+        'publisher/developer_programme_agreement.html')
 
 
 @account.route('/agreement', methods=['POST'])
@@ -114,7 +115,7 @@ def post_agreement():
 @account.route('/username')
 @login_required
 def get_account_name():
-    return flask.render_template('username.html')
+    return flask.render_template('publisher/username.html')
 
 
 @account.route('/username', methods=['POST'])
@@ -133,7 +134,7 @@ def post_account_name():
 
         if errors:
             return flask.render_template(
-                'username.html',
+                'publisher/username.html',
                 username=username,
                 error_list=errors
             )
