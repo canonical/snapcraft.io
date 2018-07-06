@@ -1,5 +1,5 @@
 import responses
-from tests.endpoint_testing import BaseTestCases
+from tests.publisher.endpoint_testing import BaseTestCases
 
 
 class GetRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):

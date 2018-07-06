@@ -2,7 +2,7 @@ from datetime import datetime
 import random
 import responses
 
-from tests.endpoint_testing import BaseTestCases
+from tests.publisher.endpoint_testing import BaseTestCases
 
 
 class MetricsPageNotAuth(BaseTestCases.EndpointLoggedOut):

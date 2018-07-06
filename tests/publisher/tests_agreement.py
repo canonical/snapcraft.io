@@ -1,18 +1,19 @@
 import responses
-from tests.endpoint_testing import BaseTestCases
+
+from tests.publisher.endpoint_testing import BaseTestCases
 
 
-class GetUsernamePageNotAuth(BaseTestCases.EndpointLoggedOut):
+class GetAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = '/account/username'
+        endpoint_url = '/account/agreement'
         super().setUp(
             snap_name=None,
             endpoint_url=endpoint_url)
 
 
-class GetUsernamePage(BaseTestCases.BaseAppTesting):
+class GetAgreementPage(BaseTestCases.BaseAppTesting):
     def setUp(self):
-        endpoint_url = '/account/username'
+        endpoint_url = '/account/agreement'
         super().setUp(
             snap_name=None,
             api_url=None,
@@ -21,47 +22,51 @@ class GetUsernamePage(BaseTestCases.BaseAppTesting):
     @responses.activate
     def test_agreement_logged_in(self):
         self._log_in(self.client)
-        response = self.client.get("/account/username")
+        response = self.client.get("/account/agreement")
 
         assert response.status_code == 200
-        self.assert_template_used('publisher/username.html')
+        self.assert_template_used(
+            'publisher/developer_programme_agreement.html')
 
 
-class PostUsernamePageNotAuth(BaseTestCases.EndpointLoggedOut):
+class PostAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = '/account/username'
+        endpoint_url = '/account/agreement'
         super().setUp(
             snap_name=None,
             endpoint_url=endpoint_url,
             method_endpoint='POST')
 
 
-class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
+class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
-        api_url = 'https://dashboard.snapcraft.io/dev/api/account'
+        api_url = 'https://dashboard.snapcraft.io/dev/api/agreement/'
         data = {
-            'username': 'toto'
+            'i_agree': 'on'
         }
-        endpoint_url = '/account/username'
+        endpoint_url = '/account/agreement'
 
         super().setUp(
             snap_name=None,
-            api_url=api_url,
             endpoint_url=endpoint_url,
+            api_url=api_url,
             method_endpoint='POST',
-            method_api='PATCH',
-            data=data)
+            method_api='POST',
+            data=data
+        )
 
     @responses.activate
-    def test_post_username(self):
+    def test_post_agreement_on(self):
         responses.add(
-            responses.PATCH,
+            responses.POST,
             self.api_url,
-            json={}, status=204)
+            json={}, status=200)
 
         response = self.client.post(
             self.endpoint_url,
-            data=self.data,
+            data={
+                'i_agree': 'on'
+            },
         )
 
         self.assertEqual(1, len(responses.calls))
@@ -76,8 +81,9 @@ class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
             {},
         )
         self.assertEqual(
-            b'{"short_namespace": "toto"}',
-            called.request.body)
+            b'{"latest_tos_accepted": true}',
+            called.request.body
+            )
 
         self.assertEqual(302, response.status_code)
         self.assertEqual(
@@ -85,25 +91,15 @@ class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
             response.location)
 
     @responses.activate
-    def test_post_username_empty(self):
+    def test_post_agreement_off(self):
         response = self.client.post(
             self.endpoint_url,
-            data={'username': ''},
+            data={
+                'i_agree': 'off'
+            },
         )
 
         self.assertEqual(302, response.status_code)
         self.assertEqual(
-            'http://localhost/account/username',
-            response.location)
-
-    @responses.activate
-    def test_post_no_data(self):
-        response = self.client.post(
-            self.endpoint_url,
-            data={}
-        )
-
-        self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            'http://localhost/account/username',
+            'http://localhost/account/agreement',
             response.location)
