@@ -17,8 +17,8 @@ from webapp.api.exceptions import (
 from urllib.parse import quote_plus
 
 
-def store_blueprint(store=None):
-    api = StoreApi(store)
+def store_blueprint(store_query=None):
+    api = StoreApi(store_query)
 
     store = flask.Blueprint(
         'store', __name__,
@@ -54,9 +54,36 @@ def store_blueprint(store=None):
         return flask.redirect(
             flask.url_for('.store_view'))
 
-    @store.route('/')
-    @store.route('/store')
     def store_view():
+        error_info = {}
+        status_code = 200
+
+        try:
+            categories_results = api.get_categories()
+        except ApiError as api_error:
+            categories_results = []
+            status_code, error_info = _handle_errors(api_error)
+
+        categories = logic.get_categories(categories_results)
+
+        try:
+            featured_snaps_results = api.get_featured_snaps()
+        except ApiError as api_error:
+            featured_snaps_results = []
+            status_code, error_info = _handle_errors(api_error)
+
+        featured_snaps = logic.get_searched_snaps(
+            featured_snaps_results
+        )
+
+        return flask.render_template(
+            'store/store.html',
+            featured_snaps=featured_snaps,
+            categories=categories,
+            error_info=error_info
+        ), status_code
+
+    def brand_store_view():
         error_info = {}
         status_code = 200
 
@@ -344,5 +371,10 @@ def store_blueprint(store=None):
             'store/_category-partial.html',
             **context
         ), status_code
+
+    if store_query:
+        store.add_url_rule('/', 'homepage', brand_store_view)
+    else:
+        store.add_url_rule('/store', 'homepage', store_view)
 
     return store
