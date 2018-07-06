@@ -37,6 +37,12 @@ SNAP_SEARCH_URL = ''.join([
     'developer_validation'
 ])
 
+ALL_SNAPS_URL = ''.join([
+    SNAPCRAFT_IO_API,
+    'snaps/search',
+    '?scope=wide&size={size}'
+])
+
 FEATURE_SNAPS_URL = ''.join([
     SNAPCRAFT_IO_API,
     'snaps/search',
@@ -91,6 +97,13 @@ class StoreApi:
                 )
 
         return body
+
+    def get_all_snaps(self, size):
+        all_snaps_response = cache.get(
+            ALL_SNAPS_URL.format(size=size),
+            headers=self.headers)
+
+        return self.process_response(all_snaps_response)
 
     def get_featured_snaps(self):
         featured_response = cache.get(
