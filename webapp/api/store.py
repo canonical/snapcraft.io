@@ -71,7 +71,7 @@ class StoreApi:
     def __init__(self, store=None):
         if store:
             self.headers.update({'X-Ubuntu-Store': store})
-            self.headers_v2.update({'X-Ubuntu-Store': store})
+            self.headers_v2.update({'Snap-Device-Store': store})
 
     def process_response(self, response):
         try:
