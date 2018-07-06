@@ -101,7 +101,7 @@ class PublisherPage(TestCase):
         response = self.client.get('/account/username')
 
         assert response.status_code == 200
-        self.assert_template_used('username.html')
+        self.assert_template_used('publisher/username.html')
 
     @responses.activate
     def test_post_username_logged_in(self):
@@ -187,7 +187,7 @@ class PublisherPage(TestCase):
         )
 
         assert response.status_code == 200
-        self.assert_template_used('username.html')
+        self.assert_template_used('publisher/username.html')
         self.assert_context('username', 'toto')
         self.assert_context('error_list', payload['error_list'])
 

@@ -25,7 +25,7 @@ class GetAgreementPage(BaseTestCases.BaseAppTesting):
         response = self.client.get("/account/agreement")
 
         assert response.status_code == 200
-        self.assert_template_used('developer_programme_agreement.html')
+        self.assert_template_used('publisher/developer_programme_agreement.html')
 
 
 class PostAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
