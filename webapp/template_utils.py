@@ -14,7 +14,7 @@ def generate_slug(path):
     if path == '/':
         return 'home'
 
-    if path == '/blog':
+    if path.startswith('/blog'):
         return 'blog'
 
     return 'store'
