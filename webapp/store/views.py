@@ -47,12 +47,12 @@ def store_blueprint(store_query=None):
     @store.route('/snaps')
     def snaps_view():
         return flask.redirect(
-            flask.url_for('.store_view'))
+            flask.url_for('.homepage'))
 
     @store.route('/discover')
     def discover():
         return flask.redirect(
-            flask.url_for('.store_view'))
+            flask.url_for('.homepage'))
 
     def store_view():
         error_info = {}
@@ -129,7 +129,7 @@ def store_blueprint(store_query=None):
 
         if not snap_searched and not snap_category:
             return flask.redirect(
-                flask.url_for('.store_view'))
+                flask.url_for('.homepage'))
 
         size = flask.request.args.get('limit', default=25, type=int)
         offset = flask.request.args.get('offset', default=0, type=int)
