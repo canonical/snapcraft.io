@@ -77,9 +77,7 @@ def init_snapcraft(app):
     app.register_blueprint(store_blueprint())
     app.register_blueprint(account, url_prefix='/account')
     app.register_blueprint(publisher_snaps, url_prefix='/account/snaps')
-
-    if app.config['BLOG_ENABLED']:
-        app.register_blueprint(blog, url_prefix='/blog')
+    app.register_blueprint(blog, url_prefix='/blog')
 
 
 def init_extensions(app):

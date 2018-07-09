@@ -2,14 +2,9 @@ import unittest
 
 import pymacaroons
 import responses
-import requests_cache
 from requests.exceptions import ConnectionError
 
 from tests.publisher.endpoint_testing import BaseTestCases
-from webapp.api.dashboard import (
-    ACCOUNT_URL,
-    get_account,
-)
 from webapp.app import create_app
 from flask_testing import TestCase
 from webapp.authentication import (
