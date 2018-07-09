@@ -65,14 +65,27 @@
           </div>
         </div>
       </div>
-      <div class="col-5 p-snap-install-buttons">
-        <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
-        <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button>
-      </div>
+      {% if not webapp_config['STORE_QUERY'] %}
+        <div class="col-5 p-snap-install-buttons">
+          <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
+          <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button>
+        </div>
+      {% else %}
+        <div class="col-5 p-snap-install-buttons">
+          <div class="p-code-snippet">
+            <input class="p-code-snippet__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
+            <button class="p-code-snippet__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
+              Copy to clipboard
+            </button>
+          </div>
+        </div>
+      {% endif %}
     </div>
   </div>
 
-  {% include "store/snap-details/_channel_map.html" %}
+  {% if not webapp_config['STORE_QUERY'] %}
+    {% include "store/snap-details/_channel_map.html" %}
+  {% endif %}
 
   {% if screenshots %}
     <div class="p-strip is-shallow">
@@ -194,7 +207,7 @@
         }
       {% endif %}
 
-      {% if channel_map %}
+      {% if not webapp_config['STORE_QUERY'] and channel_map %}
         try {
           snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }});
         } catch(e) {
