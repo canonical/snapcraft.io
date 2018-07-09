@@ -25,6 +25,18 @@
   {% include 'partials/search-bar.html' %}
 
   <section class="p-strip is-shallow">
+    {% if webapp_config['STORE_INSTALL_INSTRUCTIONS'] %}
+      <div class="row">
+        <h3>Installing apps</h3>
+        <p>To configure a snap enabled system to use {{ webapp_config['STORE_QUERY'] }}:</p>
+        <pre><code>sudo echo "UBUNTU_STORE_ID={{ webapp_config['STORE_QUERY'] }}" >> /etc/environment
+sudo service snapd restart</code></pre>
+      </div>
+      <div class="row">
+        <hr />
+      </div>
+    {% endif %}
+
     <div class="row">
       <div class="col-12 p-featured-snaps">
         {% for snap in snaps %}
