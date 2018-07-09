@@ -173,6 +173,7 @@ def store_blueprint(store_query=None):
         )
 
         if not snaps_results:
+            featured_snaps_results = []
             try:
                 featured_snaps_results = api.get_featured_snaps()
             except ApiError as api_error:
