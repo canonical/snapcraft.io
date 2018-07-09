@@ -123,7 +123,7 @@ class StoreApi:
 
         return self.process_response(promoted_response)
 
-    def get_searched_snaps(self, snap_searched, category, size, page):
+    def get_searched_snaps(self, snap_searched, size, page, category=None):
         url = SNAP_SEARCH_URL.format(
             snap_name=snap_searched,
             size=size,
