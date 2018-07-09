@@ -24,6 +24,6 @@ RUN test -n "${WEBAPP}"
 ENV WEBAPP "${WEBAPP}"
 
 # Setup commands to run server
-ENTRYPOINT ["talisker.gunicorn", "webapp.app:create_app()", "--access-logfile", "-", "--error-logfile", "-", "--bind"]
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["0.0.0.0:80"]
 
