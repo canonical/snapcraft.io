@@ -101,7 +101,6 @@ def store_blueprint(store_query=None):
             error_info=error_info
         ), status_code
 
-    @store.route('/search')
     def search_snap():
         status_code = 200
         snap_searched = flask.request.args.get('q', default='', type=str)
@@ -144,9 +143,9 @@ def store_blueprint(store_query=None):
         try:
             searched_results = api.get_searched_snaps(
                 quote_plus(snap_searched),
-                snap_category,
-                size,
-                page
+                category=snap_category,
+                size=size,
+                page=page
             )
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
@@ -184,6 +183,57 @@ def store_blueprint(store_query=None):
 
         return flask.render_template(
             'store/search.html',
+            **context
+        ), status_code
+
+    def brand_search_snap():
+        status_code = 200
+        snap_searched = flask.request.args.get('q', default='', type=str)
+
+        if not snap_searched:
+            return flask.redirect(
+                flask.url_for('.homepage'))
+
+        size = flask.request.args.get('limit', default=25, type=int)
+        offset = flask.request.args.get('offset', default=0, type=int)
+
+        try:
+            page = floor(offset / size) + 1
+        except ZeroDivisionError:
+            size = 10
+            page = floor(offset / size) + 1
+
+        error_info = {}
+        searched_results = []
+
+        try:
+            searched_results = api.get_searched_snaps(
+                quote_plus(snap_searched),
+                size=size,
+                page=page
+            )
+        except ApiError as api_error:
+            status_code, error_info = _handle_errors(api_error)
+
+        snaps_results = logic.get_searched_snaps(searched_results)
+        links = logic.get_pages_details(
+            flask.request.base_url,
+            (
+                searched_results['_links']
+                if '_links' in searched_results
+                else []
+            )
+        )
+
+        context = {
+            "query": snap_searched,
+            "snaps": snaps_results,
+            "links": links,
+            "error_info": error_info
+        }
+
+        return flask.render_template(
+            'brand-store/search.html',
             **context
         ), status_code
 
@@ -363,7 +413,9 @@ def store_blueprint(store_query=None):
 
     if store_query:
         store.add_url_rule('/', 'homepage', brand_store_view)
+        store.add_url_rule('/search', 'search', brand_search_snap)
     else:
         store.add_url_rule('/store', 'homepage', store_view)
+        store.add_url_rule('/search', 'search', search_snap)
 
     return store
