@@ -1,7 +1,7 @@
 import os
 
 from webapp import authentication
-from webapp.api import cache
+from webapp import api
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiResponseDecodeError,
@@ -10,6 +10,9 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername
 )
+
+
+api_session = api.requests.Session()
 
 
 DASHBOARD_API = os.getenv(
@@ -107,10 +110,9 @@ def get_authorization_header(session):
 def get_account(session):
     headers = get_authorization_header(session)
 
-    response = cache.get(
+    response = api_session.get(
         url=ACCOUNT_URL,
-        method='GET',
-        headers=headers
+        headers=headers,
     )
 
     if authentication.is_macaroon_expired(response.headers):
@@ -122,9 +124,9 @@ def get_account(session):
 def get_agreement(session):
     headers = get_authorization_header(session)
 
-    agreement_response = cache.get(
-        AGREEMENT_URL,
-        headers
+    agreement_response = api_session.get(
+        url=AGREEMENT_URL,
+        headers=headers,
     )
 
     if authentication.is_macaroon_expired(agreement_response.headers):
@@ -139,10 +141,10 @@ def post_agreement(session, agreed):
     json = {
         'latest_tos_accepted': agreed
     }
-    agreement_response = cache.get(
-        AGREEMENT_URL,
-        headers,
-        json
+    agreement_response = api_session.post(
+        url=AGREEMENT_URL,
+        headers=headers,
+        json=json,
     )
 
     if authentication.is_macaroon_expired(agreement_response.headers):
@@ -156,11 +158,10 @@ def post_username(session, username):
     json = {
         'short_namespace': username
     }
-    username_response = cache.get(
+    username_response = api_session.patch(
         url=ACCOUNT_URL,
         headers=headers,
         json=json,
-        method='PATCH'
     )
 
     if authentication.is_macaroon_expired(username_response.headers):
@@ -177,10 +178,10 @@ def get_publisher_metrics(session, json):
     auth_header = get_authorization_header(session)['Authorization']
     authed_metrics_headers['Authorization'] = auth_header
 
-    metrics_response = cache.get(
-        SNAP_PUB_METRICS_URL,
+    metrics_response = api_session.post(
+        url=SNAP_PUB_METRICS_URL,
         headers=authed_metrics_headers,
-        json=json
+        json=json,
     )
 
     if authentication.is_macaroon_expired(metrics_response.headers):
@@ -206,11 +207,11 @@ def post_register_name(
     if store:
         json['store'] = store
 
-    response = cache.get(
-        REGISTER_NAME_URL,
+    response = api_session.post(
+        url=REGISTER_NAME_URL,
         headers=get_authorization_header(session),
         json=json,
-        method='POST')
+    )
 
     if authentication.is_macaroon_expired(response.headers):
         raise MacaroonRefreshRequired
@@ -219,9 +220,9 @@ def post_register_name(
 
 
 def get_snap_info(snap_name, session):
-    response = cache.get(
-        SNAP_INFO_URL.format(snap_name=snap_name),
-        headers=get_authorization_header(session)
+    response = api_session.get(
+        url=SNAP_INFO_URL.format(snap_name=snap_name),
+        headers=get_authorization_header(session),
     )
 
     if authentication.is_macaroon_expired(response.headers):
@@ -239,11 +240,11 @@ def get_snap_id(snap_name, session):
 def snap_metadata(snap_id, session, json=None):
     method = "PUT" if json is not None else None
 
-    metadata_response = cache.get(
-        METADATA_QUERY_URL.format(snap_id=snap_id),
+    metadata_response = api_session.request(
+        method=method,
+        url=METADATA_QUERY_URL.format(snap_id=snap_id),
         headers=get_authorization_header(session),
         json=json,
-        method=method
     )
 
     if authentication.is_macaroon_expired(metadata_response.headers):
@@ -253,7 +254,7 @@ def snap_metadata(snap_id, session, json=None):
 
 
 def snap_screenshots(snap_id, session, data=None, files=None):
-    method = None
+    method = 'GET'
     files_array = None
     headers = get_authorization_header(session)
     headers['Accept'] = 'application/json'
@@ -273,12 +274,12 @@ def snap_screenshots(snap_id, session, data=None, files=None):
             files_array = {'info': ('', data['info'])}
             data = None
 
-    screenshot_response = cache.get(
-        SCREENSHOTS_QUERY_URL.format(snap_id=snap_id),
+    screenshot_response = api_session.request(
+        method=method,
+        url=SCREENSHOTS_QUERY_URL.format(snap_id=snap_id),
         headers=headers,
         data=data,
-        method=method,
-        files=files_array
+        files=files_array,
     )
 
     if authentication.is_macaroon_expired(screenshot_response.headers):
@@ -288,9 +289,9 @@ def snap_screenshots(snap_id, session, data=None, files=None):
 
 
 def snap_revision_history(session, snap_id):
-    response = cache.get(
-        REVISION_HISTORY_URL.format(snap_id=snap_id),
-        headers=get_authorization_header(session)
+    response = api_session.get(
+        url=REVISION_HISTORY_URL.format(snap_id=snap_id),
+        headers=get_authorization_header(session),
     )
 
     if authentication.is_macaroon_expired(response.headers):

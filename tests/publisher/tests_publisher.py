@@ -2,7 +2,14 @@ import unittest
 
 import pymacaroons
 import responses
+import requests_cache
+from requests.exceptions import ConnectionError
 
+from tests.publisher.endpoint_testing import BaseTestCases
+from webapp.api.dashboard import (
+    ACCOUNT_URL,
+    get_account,
+)
 from webapp.app import create_app
 from flask_testing import TestCase
 from webapp.authentication import (
@@ -11,6 +18,38 @@ from webapp.authentication import (
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True
+
+
+class TestCache(
+       BaseTestCases.EndpointLoggedInErrorHandling
+):
+    def setUp(self):
+        api_url = 'https://dashboard.snapcraft.io/dev/api/account'
+        endpoint_url = '/account/details'
+
+        super().setUp(
+            snap_name=None,
+            endpoint_url=endpoint_url,
+            method_endpoint='GET',
+            api_url=api_url,
+            method_api='GET'
+        )
+
+    @responses.activate
+    def test_cache_disabled(self):
+        responses.add(
+            responses.GET, self.api_url,
+            json={}, status=200)
+
+        response = self.client.get(self.endpoint_url)
+        self.assertEqual(200, response.status_code)
+
+        responses.replace(
+            responses.GET, self.api_url,
+            body=ConnectionError(),
+        )
+        response = self.client.get(self.endpoint_url)
+        self.assertEqual(response.status_code, 502)
 
 
 class PublisherPage(TestCase):
