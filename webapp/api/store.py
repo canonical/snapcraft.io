@@ -87,11 +87,16 @@ class StoreApi:
             raise api_error_exception
 
         if not response.ok:
-            if 'error_list' in body:
+            if 'error_list' in body or 'error-list' in body:
+                # V1 and V2 error handling
+                error_body = (
+                    body['error_list']
+                    if 'error_list' in body else body['error-list']
+                )
                 api_error_exception = ApiResponseErrorList(
                     'The api returned a list of errors',
                     response.status_code,
-                    body['error_list']
+                    error_body
                 )
                 raise api_error_exception
             else:
