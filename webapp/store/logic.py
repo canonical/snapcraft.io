@@ -231,3 +231,20 @@ def get_last_udpated_version(channel_maps):
             break
 
     return newest_channel
+
+
+def has_stable(channel_maps_list):
+    """Use the channel map to find out if the snap has a stable release
+
+    :param channel_maps_list: Channel map list
+
+    :returns: True or False
+    """
+    if channel_maps_list:
+        for arch in channel_maps_list:
+            for track in channel_maps_list[arch]:
+                for release in channel_maps_list[arch][track]:
+                    if release['risk'] == 'stable':
+                        return True
+
+    return False

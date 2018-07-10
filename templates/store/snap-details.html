@@ -67,7 +67,9 @@
       </div>
       {% if not webapp_config['STORE_QUERY'] %}
         <div class="col-5 p-snap-install-buttons">
-          <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
+          {% if has_stable %}
+            <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
+          {% endif %}
           <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button>
         </div>
       {% else %}
