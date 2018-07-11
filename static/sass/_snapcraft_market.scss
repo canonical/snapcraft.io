@@ -59,6 +59,7 @@
     // workaround for Vanilla added spacing
     * + & {
       margin-top: .75rem;
+      margin-bottom: $sp-medium;
     }
 
     .p-form-validation__counter {
