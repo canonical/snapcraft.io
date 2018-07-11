@@ -1,5 +1,15 @@
 @mixin snapcraft-market {
 
+  // hack to make anchor link behave like a button
+  .js-market-revert.disabled {
+    cursor: not-allowed;
+    opacity: .5;
+    
+    &:hover {
+      background-color:transparent;
+    }
+  }
+  
   .p-editable-icon {
     $white-overlay-color: rgba(255, 255, 255, .5);
     $black-overlay-color: rgba(0, 0, 0, .5);
