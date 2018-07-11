@@ -1,7 +1,7 @@
 @mixin snapcraft-market {
 
   // hack to make anchor link behave like a button
-  .js-market-revert.disabled {
+  .js-market-revert.is-disabled {
 
     cursor: not-allowed;
     opacity: .5;
