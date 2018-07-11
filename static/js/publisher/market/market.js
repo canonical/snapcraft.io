@@ -85,6 +85,8 @@ function initForm(config, initialState, errors) {
   const marketForm = document.getElementById(config.form);
   const submitButton = marketForm.querySelector('.js-market-submit');
   const revertButton = marketForm.querySelector('.js-market-revert');
+  const revertURL = revertButton.getAttribute('href');
+  const disabledRevertClass = 'is-disabled';
 
   function disableSubmit() {
     submitButton.disabled = 'disabled';
@@ -94,8 +96,19 @@ function initForm(config, initialState, errors) {
     submitButton.disabled = false;
   }
 
+  function disableRevert() {
+    revertButton.setAttribute('href','javascript:void(0);');
+    revertButton.classList.add(disabledRevertClass);
+  }
+
+  function enableRevert() {
+    revertButton.setAttribute('href',revertURL);
+    revertButton.classList.remove(disabledRevertClass);
+  }
+
   // disable submit by default, it will be enabled on valid change
   disableSubmit();
+  disableRevert();
 
   let state = JSON.parse(JSON.stringify(initialState));
 
@@ -156,10 +169,15 @@ function initForm(config, initialState, errors) {
   function checkForm() {
     const diff = diffState(initialState, state);
 
-    if (diff && isFormValid()) {
-      enableSubmit();
+    if (diff) {
+      enableRevert();
+      if (isFormValid()) {
+        enableSubmit(); 
+      } else {
+        disableSubmit();
+      }
     } else {
-      disableSubmit();
+      disableRevert();
     }
   }
 
