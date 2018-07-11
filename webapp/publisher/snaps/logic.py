@@ -244,7 +244,11 @@ def invalid_field_errors(errors):
 
     for error in errors:
         if (error['code'] == 'invalid-field' or error['code'] == 'required'):
-            field_errors[error['extra']['name']] = error['message']
+            if 'name' in error['extra']:
+                name = error['extra']['name']
+            elif 'field' in error['extra']:
+                name = error['extra']['field']
+            field_errors[name] = error['message']
         else:
             other_errors.append(error)
 
