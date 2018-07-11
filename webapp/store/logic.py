@@ -248,3 +248,27 @@ def has_stable(channel_maps_list):
                         return True
 
     return False
+
+
+def get_lowest_available_risk(channel_map, default_track):
+    """Get the lowest available risk for the default track
+
+    :param channel_map: Channel map list
+
+    :returns: The lowest available risk
+    """
+    risk_order = ['stable', 'candidate', 'beta', 'edge']
+    lowest_available_risk = None
+    for arch in channel_map:
+        if channel_map[arch][default_track]:
+            releases = channel_map[arch][default_track]
+            for release in releases:
+                if not lowest_available_risk:
+                    lowest_available_risk = release['risk']
+                else:
+                    risk_index = risk_order.index(release['risk'])
+                    lowest_index = risk_order.index(lowest_available_risk)
+                    if risk_index < lowest_index:
+                        lowest_available_risk = release['risk']
+
+    return lowest_available_risk

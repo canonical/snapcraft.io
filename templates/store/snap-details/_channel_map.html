@@ -1,35 +1,32 @@
-<div id='js-channel-map' class="p-strip--light p-channel-map is-closed">
-  <div class="row">
-    <div class="col-12">
-      <nav class="p-tabs">
-        <ul class="p-tabs__list" role="tablist">
-          {% if has_stable %}
-            <li class="p-tabs__item" role="presentation">
-              <a href="#install" class="p-tabs__link" role="tab" aria-controls="channel-map-tab-install" aria-selected="true">{{ snap_title }} {{ version }}</a>
-            </li>
-          {% endif %}
-          <li class="p-tabs__item" role="presentation">
-            <a href="#versions" class="p-tabs__link" role="tab" aria-controls="channel-map-tab-versions">All versions</a>
-          </li>
-        </ul>
-        <button class="p-channel-map__hide p-icon--close js-hide-channel-map" aria-label="Hide all versions">Hide</button>
-      </nav>
-    </div>
-  </div>
-  {% if has_stable %}
-    <div class="row p-channel-map__tab is-open" id="channel-map-tab-install">
-      <div class="col-5">
+<div id="js-channel-map" class="p-channel-map is-closed">
+  <div id="channel-map-install" class="p-channel-map__tab">
+    <div class="p-strip--light is-shallow">
+      <div class="row">
+        <p class="p-heading--four">Install {{ default_track }}/{{ lowest_risk_available }} of {{ snap_title }}</p>
         <label>Ubuntu 16.04 or later?</label>
-        <button data-snap="{{ package_name }}" class="js-open-snap-button p-view-store-button">View in Desktop store</button>
+        <button
+          data-snap="{{ package_name }}
+            {% if default_track != 'latest' or lowest_risk_available != 'stable' %}
+              ?channel={{ default_track }}/{{ lowest_risk_available }}
+            {% endif %}"
+          class="p-view-store-button"
+          data-js="open-desktop">
+            View in Desktop store
+        </button>
         <p class="p-form-help-text">Make sure <a href="https://docs.snapcraft.io/core/install">snap support</a> is enabled in your Desktop store.</p>
       </div>
-      <div class="col-5">
-        <label>Install with snapd</label>
+      <div class="row">
+        <hr />
+      </div>
+      <div class="row">
+        <p><b>Install using the command line</b></p>
         <div class="p-code-snippet p-cli-install">
           <input
             class="p-code-snippet__input"
             id="snap-install"
-            value="sudo snap install {{ package_name }}"
+            value="sudo snap install {{ package_name }}
+{% if default_track != 'latest' %} --channel={{ default_track }}/{{ lowest_risk_available }}
+{% elif lowest_risk_available != 'stable' %}--{{ lowest_risk_available }}{% endif %}"
             readonly="readonly"
           />
           <button
@@ -43,141 +40,108 @@
         </p>
       </div>
     </div>
-  {% endif %}
-  <div class="row p-channel-map__tab" id="channel-map-tab-versions">
-    <div class="col-3">
-      <form>
-        <div class="js-channel-map-arch-field">
-          <label for="js-channel-map-track-select">
-            Architecture
-          </label>
-          <select id="js-channel-map-architecture-select">
-          </select>
+  </div>
+  <div id="channel-map-versions" class="p-channel-map__tab">
+    <div class="p-channel-map__slides show-left">
+      <div class="p-strip is-shallow p-channel-map__slide u-no-padding--bottom" data-js="channel-map-options">
+        <div class="row">
+          <form class="p-form--inline">
+            <div class="p-form__group">
+              <label class="p-form__label">
+                All available options to install this snap
+              </label>
+            </div>
+            <div class="js-channel-map-arch-field p-form__group">
+              <label for="js-channel-map-track-select" class="p-form__label">
+                Architecture
+              </label>
+              <div class="p-form__control">
+                <select id="js-channel-map-architecture-select">
+                </select>
+              </div>
+            </div>
+          </form>
         </div>
-        <div class="p-channel-map__track-field js-channel-map-track-field">
-          <label for="js-channel-map-track-select">
-            Track
-            <span class="p-tooltip is-icon" aria-describedby="tooltip-track">
-              <i class="p-icon--information"></i>
-              <span class="p-tooltip__message" role="tooltip" id="tooltip-track">This application has alternate series or 'tracks'
-where you can install and get updates from.</span>
-            </span>
-          </label>
-          <select id="js-channel-map-track-select">
-          </select>
+        <div class="row" data-js="channel-map-tabs">
+          <nav class="p-tabs">
+            <ul class="p-tabs__list" role="tablist">
+              <li class="p-tabs__item" role="presentation">
+                <a
+                  hre="#"
+                  class="p-tabs__link"
+                  role="tab"
+                  data-tab="overview"
+                  data-js="switch-tab"
+                  aria-selected="true">
+                    Overview
+                </a>
+              </li>
+              <li class="p-tabs__item" role="presentation">
+                <a
+                  hre="#"
+                  class="p-tabs__link"
+                  role="tab"
+                  data-tab="all"
+                  data-js="switch-tab">
+                    All releases
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
-      </form>
-    </div>
-
-    <div class="col-9">
-
-      <div class="p-channel-map__row p-channel-map__row--heading">
-        <div class="col-8">
-          <label>
-            Command line install
-            <span class="p-tooltip p-tooltip--btm-center" aria-describedby="tooltip-channel">
-              <i class="p-icon--information"></i>
-              <span class="p-tooltip__message" role="tooltip" id="tooltip-channel">Install this application from ‘channels’ of varying stability.
-For example, Edge is used for development and testing, whereas
-Stable is used for well tested and production ready versions.</span>
-            </span>
-          </label>
-        </div>
-      </div>
-
-      <div id="js-channel-map-stable" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">stable</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-stable"
-              value="sudo snap install {{ package_name }}"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-stable">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
-      </div>
-
-      <div id="js-channel-map-candidate" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">candidate</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-candidate"
-              value="sudo snap install {{ package_name }} --candidate"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-candidate">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
+        <div class="row p-channel-map__version-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Version</th>
+                <th width="25%" class="u-hide--medium u-hide--small">Published date</th>
+                <th width="12%"></th>
+              </tr>
+            </thead>
+            <tbody data-js="channel-map-table">
+            </tbody>
+          </table>
         </div>
       </div>
-
-      <div id="js-channel-map-beta" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">beta</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-beta"
-              value="sudo snap install {{ package_name }} --beta"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-beta">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
+      <div class="p-strip--light is-shallow p-channel-map__slide" data-js="channel-map-install-details">
       </div>
-
-      <div id="js-channel-map-edge" class="p-channel-map__row">
-        <div class="col-2">
-          <span class="p-channel-map__channel-name js-channel-name">edge</span>
-        </div>
-        <div class="col-6">
-          <div class="p-code-snippet">
-            <input
-              class="p-code-snippet__input"
-              id="snap-install-edge"
-              value="sudo snap install {{ package_name }} --edge"
-              readonly="readonly"
-            />
-            <button
-              class="p-code-snippet__action js-clipboard-copy"
-              data-clipboard-target="#snap-install-edge">
-              Copy to clipboard
-            </button>
-          </div>
-          <p class="p-form-help-text">
-          </p>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
-<div class="p-channel-map-overlay" style="display: none"></div>
+<script type="text/template" data-js="install-window">
+  <div class="row">
+    <a href="#" data-js="slide-all-versions">&lsaquo; Other versions</a>
+  </div>
+  <div class="row">
+    <p class="p-heading--four">Install ${channel} of {{ snap_title }}</p>
+    <label>Ubuntu 16.04 or later?</label>
+    <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop">View in Desktop store</button>
+    <p class="p-form-help-text">Make sure <a href="https://docs.snapcraft.io/core/install">snap support</a> is enabled in your Desktop store.</p>
+  </div>
+  <div class="row">
+    <hr />
+  </div>
+  <div class="row">
+    <p><b>Install using the command line</b></p>
+    <div class="p-code-snippet p-cli-install">
+      <input
+        class="p-code-snippet__input"
+        id="snap-install-alt"
+        value="sudo snap install {{ package_name }} ${paramString}"
+        readonly="readonly"
+      />
+      <button
+        class="p-code-snippet__action js-clipboard-copy"
+        data-js="copy-to-clipboard"
+        data-clipboard-target="#snap-install-alt">
+        Copy to clipboard
+      </button>
+    </div>
+    <p class="p-form-help-text">
+      Don't have snapd? <a href="https://docs.snapcraft.io/core/install">Get set up for snaps</a>.
+    </p>
+  </div>
+</script>
+</div>
+<div class="p-channel-map-overlay" data-js="close-channel-map" style="display: none"></div>

@@ -42,6 +42,7 @@ $color-navigation-background: #252525;
 @include vf-u-animations;
 @include vf-u-image-position;
 @include vf-u-equal-height;
+@include vf-u-hide;
 
 // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1880
 img {

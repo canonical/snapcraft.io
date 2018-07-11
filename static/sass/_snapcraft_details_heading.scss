@@ -1,5 +1,4 @@
 @mixin snapcraft-details-heading {
-  $color-drawer-overlay: rgba(0, 0, 0, .2);
 
   .p-code-snippet__input {
     padding-right: 40px;
@@ -47,12 +46,30 @@
   .p-snap-install-buttons {
     text-align: right;
 
+    .p-snap-install-buttons__install,
+    .p-snap-install-buttons__versions {
+      position: relative;
+      z-index: 5;
+    }
+
     @media screen and (min-width: $breakpoint-medium) {
       margin-top: 8.5 * $sp-unit; // align with snap name baseline
     }
 
     button:last-child {
       margin-bottom: 0;
+    }
+
+    .p-snap-install-buttons__install {
+      &.is-active {
+        background-color: darken($color-positive, 10%);
+      }
+    }
+
+    .p-snap-install-buttons__versions {
+      &.is-active {
+        background-color: darken($color-light, 10%);
+      }
     }
   }
 
@@ -62,22 +79,32 @@
   }
 
   .p-channel-map {
+    background: $color-x-light;
     box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
-    left: 0;
-    padding-top: $sp-medium;
+    max-width: 600px;
+    overflow: hidden;
     position: absolute;
     right: 0;
     top: 0;
-    transform: translateY(48px); // just under the header (mobile)
-    transition: transform 500ms;
     z-index: 10;
+
+    @media screen and (max-width: $breakpoint-medium) {
+      margin-top: -$spv-inter--shallow-scaleable;
+      max-width: 100%;
+      overflow: visible;
+      position: static;
+    }
+
+    @media screen and (max-width: $breakpoint-small) {
+      margin-top: 0;
+    }
 
     label {
       margin-bottom: $spv-inter--condensed + $spv-nudge-compensation;
     }
 
     &.is-closed {
-      transform: translateY(-1111px); // should be high enough to hide it on mobile
+      display: none;
     }
 
     &__row {
@@ -130,14 +157,14 @@
 
   .p-channel-map__tab {
     display: none;
+    overflow: hidden;
 
     &.is-open {
-      display: block;
+      display: flex;
     }
   }
 
   .p-channel-map-overlay {
-    background: $color-drawer-overlay;
     bottom: 0;
     height: auto;
     left: 0;
@@ -154,6 +181,10 @@
     .is-closed + & {
       opacity: 0;
     }
+
+    @media screen and (max-width: $breakpoint-medium) {
+      pointer-events: none;
+    }
   }
 
   // positioning fixes for track tooltip
@@ -164,6 +195,77 @@
       &::before {
         left: 3rem; // reposition arrow correctly under the icon
       }
+    }
+  }
+
+  .p-channel-map__slides {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    position: relative;
+    transition: transform .333s;
+
+    &.show-right {
+      transform: translateX(-100%);
+    }
+
+    &.show-left {
+      transform: translate(0);
+    }
+
+    .p-channel-map__slide {
+      flex-shrink: 0;
+      width: 100%;
+    }
+  }
+
+  .p-channel-map__version-table {
+    max-height: 16rem;
+    overflow: auto;
+
+    @media screen and (max-width: $breakpoint-medium) {
+      max-height: 100%;
+    }
+
+    &-install {
+      display: none;
+    }
+
+    tbody tr {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-light;
+
+        .p-channel-map__version-table-install {
+          display: block;
+        }
+      }
+
+      &.is-highlighted {
+        td:first-child {
+          font-weight: 400;
+        }
+      }
+
+      &.no-border {
+        border-top-color: transparent;
+      }
+    }
+
+    @media screen and (max-width: $breakpoint-medium) {
+      th:nth-child(4) {
+        width: 20%;
+      }
+
+      .p-channel-map__version-table-install {
+        display: block;
+      }
+    }
+
+    td {
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
 }
