@@ -96,12 +96,10 @@ function initForm(config, initialState, errors) {
   }
 
   function disableRevert() {
-    console.log(revertURL);
     revertButton.setAttribute('href','javascript:void(0);');
     revertButton.classList.add('disabled');
   }
 
-  console.log(revertButton);
   function enableRevert() {
     revertButton.setAttribute('href',revertURL);
     revertButton.classList.remove('disabled');
