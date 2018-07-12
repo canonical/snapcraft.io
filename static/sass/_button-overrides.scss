@@ -10,7 +10,7 @@
 
   //propose to vanilla when two buttons are next to each other
   [class^="p-button"] + [class^="p-button"]:not(span) {
-        margin-right: $sph-inter;
+    margin-right: $sph-inter;
   }
 
   // new button style for dark strip

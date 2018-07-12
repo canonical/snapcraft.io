@@ -51,7 +51,7 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
 
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = '/account/register-snap'
+        endpoint_url = '/account/register-name'
 
         super().setUp(
             snap_name=None,
@@ -61,10 +61,10 @@ class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
-        endpoint_url = '/account/register-snap'
+        endpoint_url = '/account/register-name'
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
-            'register-snap/')
+            'register-name/')
 
         data = {
             'snap-name': 'test-snap'
