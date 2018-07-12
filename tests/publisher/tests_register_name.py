@@ -4,7 +4,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 
 class GetRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = '/account/register-name'
+        endpoint_url = '/account/register-snap'
         super().setUp(
             snap_name=None,
             endpoint_url=endpoint_url)
@@ -12,7 +12,7 @@ class GetRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
-        endpoint_url = '/account/register-name'
+        endpoint_url = '/account/register-snap'
         super().setUp(
             snap_name=None,
             api_url=None,
@@ -24,13 +24,13 @@ class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_template_used('publisher/register-name.html')
+        self.assert_template_used('publisher/register-snap.html')
 
 
 class GetReserveNamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = (
-            '/account/register-name'
+            '/account/register-snap'
             '?snap_name=test-snap&is_private=False&conflict=True')
         super().setUp(
             snap_name=None,
@@ -43,7 +43,7 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_template_used('publisher/register-name.html')
+        self.assert_template_used('publisher/register-snap.html')
         self.assert_context('snap_name', 'test-snap')
         self.assert_context('is_private', False)
         self.assert_context('conflict', True)
@@ -51,7 +51,7 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
 
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = '/account/register-name'
+        endpoint_url = '/account/register-snap'
 
         super().setUp(
             snap_name=None,
@@ -61,7 +61,7 @@ class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
-        endpoint_url = '/account/register-name'
+        endpoint_url = '/account/register-snap'
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
             'register-name/')
@@ -217,7 +217,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             data=self.data,
         )
 
-        self.assert_template_used('publisher/register-name.html')
+        self.assert_template_used('publisher/register-snap.html')
         self.assert_context('errors', payload['error_list'])
 
     @responses.activate
@@ -246,7 +246,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             'is_private=False',
             response.location)
         self.assertIn(
-            'http://localhost/account/register-name',
+            'http://localhost/account/register-snap',
             response.location)
 
     @responses.activate

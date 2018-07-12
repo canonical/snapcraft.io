@@ -4,8 +4,8 @@
   $carousel-buttons-breakpoint: $breakpoint-medium;
 
   .p-carousel {
-    position: relative;
     margin-bottom: $spv-inter--scaleable;
+    position: relative;
 
     .p-carousel__mask {
       overflow-x: scroll;

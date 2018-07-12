@@ -141,6 +141,9 @@ img {
 @import 'snapcraft_p-form-help-text';
 @include snapcraft-p-form-help-text;
 
+@import 'snapcraft_p-form-validation';
+@include snapcraft-p-form-validation;
+
 @import 'snapcraft_p-beta-notification';
 @include snapcraft-p-beta-notification;
 
