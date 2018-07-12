@@ -16,7 +16,7 @@ Register new Snap name
   {% else %}
     <div class="row">
         <div class="col-8 push-2">
-          <h1 class="p-heading--three">Register a snap</h1>
+          <h1 class="p-heading--three">Register snap</h1>
         </div>
     </div>
   {% endif %}
@@ -67,7 +67,7 @@ Register new Snap name
       </div>
   {% endif %}
 
-  <form method="POST" action="/account/register-name" class="u-no-margin--top">
+  <form method="POST" action="/account/register-snap" class="u-no-margin--top">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
    <div class="row">
