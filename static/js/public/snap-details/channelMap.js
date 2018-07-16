@@ -126,8 +126,15 @@ function setArchitecture(arch, packageName, channelMapData) {
 function selectTab(tabEl, tabsWrapperEl) {
   const selected = tabEl.getAttribute('aria-selected');
   if (!selected) {
-    tabsWrapperEl.querySelector('.p-channel-map__tab.is-open').classList.remove('is-open');
-    tabsWrapperEl.querySelector('.p-tabs__link[aria-selected]').removeAttribute('aria-selected');
+    const selectedTabEle = tabsWrapperEl.querySelector('.p-channel-map__tab.is-open');
+    if (selectedTabEle) {
+      selectedTabEle.classList.remove('is-open');
+    }
+
+    const selectedTabLinkEle = tabsWrapperEl.querySelector('.p-tabs__link[aria-selected]');
+    if (selectedTabLinkEle) {
+      selectedTabLinkEle.removeAttribute('aria-selected');
+    }
 
     document.getElementById(tabEl.getAttribute('aria-controls')).classList.add('is-open');
     tabEl.setAttribute('aria-selected', "true");

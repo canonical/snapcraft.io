@@ -348,6 +348,7 @@ def store_blueprint(store_query=None):
             'summary': details['snap']['summary'],
             'description_paragraphs': formatted_paragraphs,
             'channel_map': channel_maps_list,
+            'has_stable': logic.has_stable(channel_maps_list),
             'developer_validation': details['snap']['publisher']['validation'],
 
             # Transformed API data
