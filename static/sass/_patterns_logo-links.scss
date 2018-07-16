@@ -24,8 +24,8 @@
 
     .p-logo-link {
       // by default (on mobile) use col-3 width (4 items in a row)
-      width: 21.875%; // mobile-col-1
       min-width: 150px;
+      width: 21.875%; // mobile-col-1
 
       // on larger screens use col-2 width (6 items in a row)
       @media screen and (min-width: $breakpoint-small) {

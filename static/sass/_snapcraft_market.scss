@@ -1,5 +1,16 @@
 @mixin snapcraft-market {
 
+  // hack to make anchor link behave like a button
+  .js-market-revert.is-disabled {
+
+    cursor: not-allowed;
+    opacity: .5;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
   .p-editable-icon {
     $white-overlay-color: rgba(255, 255, 255, .5);
     $black-overlay-color: rgba(0, 0, 0, .5);
@@ -40,29 +51,6 @@
       right: 0;
       top: 50%;
     }
-  }
-
-  .p-form-validation__field {
-    position: relative;
-
-    // workaround for Vanilla added spacing
-    * + & {
-      margin-top: .75rem;
-    }
-
-    .p-form-validation__counter {
-      color: $color-negative;
-      line-height: 42px;
-      margin: 0;
-      position: absolute;
-      right: 6px;
-      top: 0;
-    }
-  }
-
-  // hide validation icon when counter is visible
-  .has-counter .p-form-validation__input {
-    background-image: none;
   }
 
   // Stick the Revert, Apply buttons to the top

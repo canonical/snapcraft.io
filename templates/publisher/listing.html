@@ -31,18 +31,18 @@
             </p>
           </div>
           <div class="col-5">
-            <div class="u-align--right">
-              <a class="p-button--neutral js-market-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
-              <button type="submit" class="p-button--positive p-button-spinner js-market-submit u-no-margin--bottom" name="submit_apply" value="Save">
-                {#
-                  to force dark icon variant we need a fake --dark class name:
-                  https://github.com/vanilla-framework/vanilla-framework/issues/1817
-                #}
-                <span class="p-button__spinner vanilla-workaround--dark">
-                  <i class="p-icon--spinner u-animation--spin"></i>
-                </span>
-                <span class="p-button__text">Save</span>
+            <div class="u-align--right u-clearfix">
+              <button type="submit" class="p-button--positive p-button-spinner js-market-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
+                  {#
+                    to force dark icon variant we need a fake --dark class name:
+                    https://github.com/vanilla-framework/vanilla-framework/issues/1817
+                  #}
+                  <span class="p-button__spinner vanilla-workaround--dark">
+                    <i class="p-icon--spinner u-animation--spin"></i>
+                  </span>
+                  <span class="p-button__text">Save</span>
               </button>
+              <a class="p-button--neutral js-market-revert u-no-margin--bottom u-float-right" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
             </div>
           </div>
         </div>

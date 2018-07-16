@@ -1,0 +1,25 @@
+@mixin snapcraft-p-form-validation {
+  .p-form-validation__field {
+    position: relative;
+
+    // workaround for Vanilla added spacing
+    * + & {
+      margin-bottom: $sp-medium;
+      margin-top: .75rem;
+    }
+
+    .p-form-validation__counter {
+      color: $color-negative;
+      line-height: 42px;
+      margin: 0;
+      position: absolute;
+      right: 6px;
+      top: 0;
+    }
+  }
+
+  // hide validation icon when counter is visible
+  .has-counter .p-form-validation__input {
+    background-image: none;
+	}
+}

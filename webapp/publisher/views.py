@@ -146,7 +146,7 @@ def post_account_name():
             flask.url_for('.get_account_name'))
 
 
-@account.route('/register-name')
+@account.route('/register-snap')
 @login_required
 def get_register_name():
     snap_name = flask.request.args.get('snap_name', default='', type=str)
@@ -173,11 +173,11 @@ def get_register_name():
         'already_owned': already_owned,
     }
     return flask.render_template(
-        'publisher/register-name.html',
+        'publisher/register-snap.html',
         **context)
 
 
-@account.route('/register-name', methods=['POST'])
+@account.route('/register-snap', methods=['POST'])
 @login_required
 def post_register_name():
     snap_name = flask.request.form.get('snap-name')
@@ -225,7 +225,7 @@ def post_register_name():
         }
 
         return flask.render_template(
-            'publisher/register-name.html',
+            'publisher/register-snap.html',
             **context)
     except ApiError as api_error:
         return _handle_errors(api_error)
