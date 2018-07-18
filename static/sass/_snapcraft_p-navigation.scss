@@ -15,6 +15,10 @@
       .is-selected {
         background: $navigation-hover-color;
       }
+
+      .p-icon--user {
+        margin-right: $sp-small;
+      }
     }
 
     // right aligned sign-in navigation
