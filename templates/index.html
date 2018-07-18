@@ -297,13 +297,13 @@
       <div class="col-12 p-featured-snaps">
         {% for snap in featured_snaps %}
           <a class="p-featured-snaps__item p-media-object" href="/{{ snap.package_name }}">
-            <span class="p-media-object__image">
+            <div class="p-media-object__image">
               {% if snap.icon_url %}
                 <img class="p-heading-icon__img" src="{{ snap.icon_url }}" alt="">
               {% else %}
                 <img class="p-heading-icon__img" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="">
               {% endif %}
-            </span>
+            </div>
             <div class="p-media-object__details">
               <h4>{{ snap.title }}</h4>
             </div>
