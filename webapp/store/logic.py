@@ -212,12 +212,12 @@ def get_categories(categories_json):
     return categories
 
 
-def get_last_udpated_version(channel_maps):
+def get_last_updated_version(channel_maps):
     """Get the oldest channel that was created
 
     :param channel_map: Channel map list
 
-    :returns: The latest stable version, if no stable, the lastest risk updated
+    :returns: The latest stable version, if no stable, the latest risk updated
     """
     newest_channel = None
     for channel_map in channel_maps:

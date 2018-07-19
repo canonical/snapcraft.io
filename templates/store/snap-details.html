@@ -266,7 +266,9 @@
       }
 
       if (typeof ClipboardJS !== 'undefined') {
-        snapcraft.copySuccess = function() {
+        var copy = new ClipboardJS('.js-clipboard-copy');
+
+        copy.on('success', function() {
           if (typeof ga !== 'undefined') {
             ga('gtm1.send', {
               hitType: 'event',
@@ -275,10 +277,7 @@
               eventLabel: 'Copy {{ package_name }} button'
             });
           }
-        }
-        var copy = new ClipboardJS('.js-clipboard-copy');
-
-        copy.on('success', snapcraft.copySuccess);
+        });
       }
     });
   </script>

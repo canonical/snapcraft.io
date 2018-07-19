@@ -168,3 +168,55 @@ class StoreLogicTest(unittest.TestCase):
         }
 
         self.assertEqual(result, expected_result)
+
+
+    def test_get_lowest_available_risk(self):
+        channel_map = {
+            'arch': {
+                'track': [
+                    {
+                        'risk': 'edge'
+                    }
+                ]
+            }
+        }
+        edge_result = logic.get_lowest_available_risk(channel_map, 'track')
+        self.assertEqual(edge_result, 'edge')
+
+        channel_map['arch']['track'].append({
+            'risk': 'beta'
+        })
+        beta_result = logic.get_lowest_available_risk(channel_map, 'track')
+        self.assertEqual(beta_result, 'beta')
+
+        channel_map['arch']['track'].append({
+            'risk': 'candidate'
+        })
+        cand_result = logic.get_lowest_available_risk(channel_map, 'track')
+        self.assertEqual(cand_result, 'candidate')
+
+        channel_map['arch']['track'].append({
+            'risk': 'stable'
+        })
+        stable_result = logic.get_lowest_available_risk(channel_map, 'track')
+        self.assertEqual(stable_result, 'stable')
+
+        # assert that channel_map has been updated successfully
+        self.assertEqual(channel_map, {
+            'arch': {
+                'track': [
+                    {
+                        'risk': 'edge'
+                    },
+                    {
+                        'risk': 'beta'
+                    },
+                    {
+                        'risk': 'candidate'
+                    },
+                    {
+                        'risk': 'stable'
+                    }
+                ]
+            }
+        })

@@ -274,7 +274,7 @@ def store_blueprint(store_query=None):
         channel_maps_list = logic.convert_channel_maps(
             details.get('channel-map'))
 
-        latest_channel = logic.get_last_udpated_version(
+        latest_channel = logic.get_last_updated_version(
             details.get('channel-map'))
 
         last_updated = latest_channel['created-at']
@@ -333,6 +333,8 @@ def store_blueprint(store_query=None):
         icons = [
             m['url'] for m in details['snap']['media'] if m['type'] == "icon"]
 
+        # until default tracks are supported by the API we special case node
+        # to use 10, rather then latest
         default_track = '10' if details['name'] == 'node' else 'latest'
 
         lowest_risk_available = logic.get_lowest_available_risk(

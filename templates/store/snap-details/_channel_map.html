@@ -51,12 +51,12 @@
                 All available options to install this snap
               </label>
             </div>
-            <div class="js-channel-map-arch-field p-form__group">
-              <label for="js-channel-map-track-select" class="p-form__label">
+            <div class="channel-map-arch-field p-form__group">
+              <label for="channel-map-track-select" class="p-form__label">
                 Architecture
               </label>
               <div class="p-form__control">
-                <select id="js-channel-map-architecture-select">
+                <select id="channel-map-architecture-select" data-js="arch-select">
                 </select>
               </div>
             </div>
@@ -133,7 +133,6 @@
       />
       <button
         class="p-code-snippet__action js-clipboard-copy"
-        data-js="copy-to-clipboard"
         data-clipboard-target="#snap-install-alt">
         Copy to clipboard
       </button>

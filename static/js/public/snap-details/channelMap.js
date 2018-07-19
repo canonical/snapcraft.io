@@ -1,6 +1,7 @@
-/* global ga, ClipboardJS, snapcraft */
+/* global ga */
 
 import moment from '../../../../node_modules/moment/src/moment';
+import globalEvents from '../../libs/events';
 
 class ChannelMap {
   constructor(selectorString, packageName, channelMapData, defaultTrack) {
@@ -27,31 +28,14 @@ class ChannelMap {
     const architectures = Object.keys(this.channelMapData);
 
     // initialize architecture select
-    const archSelect = document.getElementById("js-channel-map-architecture-select");
+    const archSelect = document.querySelector('[data-js="arch-select"]');
 
     archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
 
-    archSelect.addEventListener('change', ()=> {
-      this.prepareTable(this.channelMapData[archSelect.value]);
-    });
-
     this.arch = this.channelMapData['amd64'] ? 'amd64' : architectures[0];
 
-    // To ensure the scope of the event handlers are bound to the class (not the element)
-    // and that 'removeEventListener' works
-    this.closeOnClick = function(event) {
-      this._closeOnClick(event);
-    }.bind(this);
-
-    this.closeOnEscape = function(event) {
-      this._closeOnEscape(event);
-    }.bind(this);
-
     // capture events
-    document.addEventListener('click', this.handleClick.bind(this));
-
-    // Bind escape to close channel map
-    window.addEventListener('keyup', this.closeOnEscape.bind(this));
+    this.bindEvents();
   }
 
   sortRows(rows){
@@ -90,67 +74,77 @@ class ChannelMap {
     return stringTracks.concat(numberTracks);
   }
 
-  handleClick(event) {
-    const clickEl = event.target;
+  bindEvents() {
+    globalEvents.addEvents({
+      'click': {
+        '[data-js="open-channel-map"]': (target, event) => {
+          event.preventDefault();
 
-    if (clickEl.dataset.js) {
-      if (clickEl.dataset.js === 'open-channel-map') {
-        event.preventDefault();
-        // If the button has already been clicked, close the channel map
-        if (clickEl === this.openButton) {
+          // If the button has already been clicked, close the channel map
+          if (target === this.openButton) {
+            this.closeChannelMap();
+            this.openButton = null;
+          } else {
+            this.openChannelMap(target);
+          }
+        },
+
+        '[data-js="close-channel-map"]': (target, event) => {
+          event.preventDefault();
+
           this.closeChannelMap();
           this.openButton = null;
-        } else {
-          this.openChannelMap(clickEl);
+        },
+
+        '[data-js="slide-all-versions"]': (target, event) => {
+          event.preventDefault();
+          this.slideToVersions(target);
+        },
+
+        '[data-js="switch-tab"]': (target, event) => {
+          event.preventDefault();
+          this.switchTab(target);
+        },
+
+        '[data-js="open-desktop"]': (target, event) => {
+          event.preventDefault();
+          this.openDesktop(target);
+        },
+
+        '[data-js="slide-install-instructions"]': (target, event) => {
+          event.preventDefault();
+          this.slideToInstructions(target);
         }
+      },
 
-        return;
+      'change': {
+        '[data-js="arch-select"]': (target) => {
+          this.prepareTable(this.channelMapData[target.value]);
+        }
+      },
+
+      'keyup': {
+        'window': (target, event) => {
+          this._closeOnEscape.call(this, event);
+        }
+      },
+
+      'resize': {
+        'window': this.positionChannelMap.bind(this)
       }
+    });
+  }
 
-      if (clickEl.dataset.js === 'close-channel-map') {
-        event.preventDefault();
-        this.closeChannelMap();
-        this.openButton = null;
+  positionChannelMap() {
+    const windowWidth = document.body.scrollWidth;
+    const buttonRect = this.openButton.getBoundingClientRect();
+    const channelMapPosition = [
+      windowWidth - buttonRect.right,
+      buttonRect.y + buttonRect.height + 16 + window.scrollY
+    ];
 
-        return;
-      }
-
-      if (clickEl.dataset.js === 'slide-all-versions') {
-        event.preventDefault();
-        this.slideToVersions(clickEl);
-
-        return;
-      }
-
-      if (clickEl.dataset.js === 'switch-tab') {
-        event.preventDefault();
-        this.switchTab(clickEl);
-
-        return;
-      }
-
-      if (clickEl.dataset.js === 'open-desktop') {
-        event.preventDefault();
-        this.openDesktop(clickEl);
-
-        return;
-      }
-
-      if (clickEl.dataset.js === 'copy-to-clipboard') {
-        const copy = new ClipboardJS('.js-clipboard-copy');
-        copy.on('success', snapcraft.copySuccess);
-
-        return;
-      }
-    }
-
-    let slideToInstructions = clickEl.closest('[data-js="slide-install-instructions"]');
-    if (slideToInstructions) {
-      event.preventDefault();
-      this.slideToInstructions(slideToInstructions);
-
-      return;
-    }
+    this.channelMapEl.style.right = `${channelMapPosition[0]}px`;
+    this.channelMapEl.style.top = `${channelMapPosition[1]}px`;
   }
 
   openChannelMap(openButton) {
@@ -161,15 +155,7 @@ class ChannelMap {
 
     this.openButton.classList.add('is-active');
 
-    const windowWidth = document.body.scrollWidth;
-    const buttonRect = this.openButton.getBoundingClientRect();
-    const channelMapPosition = [
-      windowWidth - buttonRect.right,
-      buttonRect.y + buttonRect.height + 16
-    ];
-
-    this.channelMapEl.style.right = `${channelMapPosition[0]}px`;
-    this.channelMapEl.style.top = `${channelMapPosition[1]}px`;
+    this.positionChannelMap();
 
     // open screen based on button click (or install screen by default)
     this.openScreenName = this.openButton.getAttribute('aria-controls') || 'channel-map-install';
