@@ -143,4 +143,12 @@
   </div>
 </script>
 </div>
+<script type="text/template" data-js="channel-map-row">
+  <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}">
+    <td>${row[0]}/${row[1]}</td>
+    <td>${row[2]}</td>
+    <td class="u-hide--medium u-hide--small">${row[3]}</td>
+    <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
+  </tr>
+</script>
 <div class="p-channel-map-overlay" data-js="close-channel-map" style="display: none"></div>

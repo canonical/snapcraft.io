@@ -7,6 +7,7 @@ class ChannelMap {
   constructor(selectorString, packageName, channelMapData, defaultTrack) {
     this.RISK_ORDER = ['stable', 'candidate', 'beta', 'edge'];
     this.INSTALL_TEMPLATE = document.querySelector('[data-js="install-window"]').innerHTML;
+    this.CHANNEL_ROW_TEMPLATE = document.querySelector('[data-js="channel-map-row"]').innerHTML;
 
     this.packageName = packageName;
     this.currentTab = 'overview';
@@ -315,13 +316,14 @@ class ChannelMap {
         rowClass.push('no-border');
       }
 
-      let _row = `
-<tr class="${rowClass.join(' ')}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}">
-  <td>${row[0]}/${row[1]}</td>
-  <td>${row[2]}</td>
-  <td class="u-hide--medium u-hide--small">${row[3]}</td>
-  <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
-</tr>`;
+      let _row = this.CHANNEL_ROW_TEMPLATE
+        .split('${rowClass}')
+        .join(rowClass.join(' '));
+
+      row.forEach((val, index) => {
+        _row = _row.split('${row[' + index + ']}').join(val);
+      });
+
       cache = row[0];
       return _row;
     });

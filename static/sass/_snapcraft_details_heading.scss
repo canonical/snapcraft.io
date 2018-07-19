@@ -89,6 +89,11 @@
     z-index: 10;
 
     @media screen and (max-width: $breakpoint-medium) {
+      border: {
+        top: 1px solid $color-mid-light;
+        bottom: 1px solid $color-mid-light;
+      }
+      box-shadow: none;
       margin-top: -$spv-inter--shallow-scaleable;
       max-width: 100%;
       overflow: visible;
