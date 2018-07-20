@@ -112,6 +112,15 @@
       display: none;
     }
 
+    .p-channel-map-arch-select {
+      min-width: 0;
+    }
+
+    .p-channel-map__form {
+      justify-content: space-between;
+      width: 100%;
+    }
+
     &__row {
       @extend %vf-clearfix;
       margin: 0;

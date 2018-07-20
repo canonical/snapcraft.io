@@ -45,18 +45,18 @@
     <div class="p-channel-map__slides show-left">
       <div class="p-strip is-shallow p-channel-map__slide u-no-padding--bottom" data-js="channel-map-options">
         <div class="row">
-          <form class="p-form--inline">
+          <form class="p-form--inline p-channel-map__form">
             <div class="p-form__group">
               <label class="p-form__label">
-                All available options to install this snap
+                Options to install this snap
               </label>
             </div>
             <div class="channel-map-arch-field p-form__group">
               <label for="channel-map-track-select" class="p-form__label">
-                Architecture
+                Show architecture
               </label>
               <div class="p-form__control">
-                <select id="channel-map-architecture-select" data-js="arch-select">
+                <select id="channel-map-architecture-select" data-js="arch-select" class="p-channel-map-arch-select">
                 </select>
               </div>
             </div>
@@ -95,7 +95,7 @@
               <tr>
                 <th>Channel</th>
                 <th>Version</th>
-                <th width="25%" class="u-hide--medium u-hide--small">Published date</th>
+                <th width="25%" class="u-hide--medium u-hide--small">Published</th>
                 <th width="12%"></th>
               </tr>
             </thead>
