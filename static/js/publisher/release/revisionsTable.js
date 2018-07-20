@@ -40,10 +40,10 @@ export default class RevisionsTable extends Component {
         archs.forEach(arch => {
           if (releasedChannels[channel][arch]) {
             if (revision.revision > releasedChannels[channel][arch]) {
-              releasedChannels[channel][arch] = revision.revision;
+              releasedChannels[channel][arch] = revision;
             }
           } else {
-            releasedChannels[channel][arch] = revision.revision;
+            releasedChannels[channel][arch] = revision;
           }
           releasedArchs[arch] = true;
         });
@@ -71,13 +71,28 @@ export default class RevisionsTable extends Component {
         if (track !== 'latest') {
           channel = `${track}/${channel}`;
         }
+
         const release = channels[channel] || {};
+
+        // make sure to display 'latest' in front of default channels
+        if (track === 'latest') {
+          channel = `${track}/${channel}`;
+        }
 
         return (
           <tr key={channel}>
             <td>{ channel }</td>
             {
-              archs.map(arch => <td key={`${channel}/${arch}`}>{ release[arch]}</td>)
+              archs.map(arch => {
+                return (
+                  <td
+                    key={`${channel}/${arch}`}
+                    title={ release[arch] ? release[arch].version : null }
+                  >
+                    { release[arch] ? release[arch].version : '-' }
+                  </td>
+                );
+              })
             }
           </tr>
         );
@@ -91,7 +106,7 @@ export default class RevisionsTable extends Component {
     const releaseData = this.getReleaseDataFromList(this.props.revisions);
 
     return (
-      <table>
+      <table className="p-release-table">
         <thead>
           <tr>
             <th width="40%" scope="col"></th>
