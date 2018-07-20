@@ -82,7 +82,13 @@ export default [
           'node_modules/vanilla-framework-react/**'
         ],
         namedExports: {
-          'node_modules/react/index.js': ['Children', 'Component', 'PropTypes', 'createElement'],
+          'node_modules/react/index.js': [
+            'Children',
+            'Component',
+            'Fragment',
+            'PropTypes',
+            'createElement'
+          ],
           'node_modules/react-dom/index.js': ['render']
         }
       }),

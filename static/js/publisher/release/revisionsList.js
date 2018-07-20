@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -9,7 +9,7 @@ export default class RevisionsList extends Component {
 
       return (
         <tr key={revision.revision}>
-          <td>#{ revision.revision }</td>
+          <td>{ revision.revision }</td>
           <td>{ revision.version }</td>
           <td>{ revision.arch }</td>
           <td>{ revision.channels.join(", ") }</td>
@@ -28,21 +28,24 @@ export default class RevisionsList extends Component {
 
   render() {
     return (
-      <table>
-        <thead>
-          <tr>
-            <th width="10%" scope="col">Revision</th>
-            <th width="28%" scope="col">Version</th>
-            <th width="12%" scope="col">Architecture</th>
-            <th width="35%" scope="col">Channels</th>
-            <th width="15%" scope="col" className="u-align--right">Submission date</th>
-          </tr>
-        </thead>
+      <Fragment>
+        <h4>Revisions available</h4>
+        <table>
+          <thead>
+            <tr>
+              <th width="10%" scope="col">Revision</th>
+              <th width="28%" scope="col">Version</th>
+              <th width="12%" scope="col">Architecture</th>
+              <th width="35%" scope="col">Channels</th>
+              <th width="15%" scope="col" className="u-align--right">Submission date</th>
+            </tr>
+          </thead>
 
-        <tbody>
-          { this.renderRows(this.props.revisions) }
-        </tbody>
-      </table>
+          <tbody>
+            { this.renderRows(this.props.revisions) }
+          </tbody>
+        </table>
+      </Fragment>
     );
   }
 }

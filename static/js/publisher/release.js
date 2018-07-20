@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 
 import RevisionsList from './release/revisionsList';
@@ -7,12 +7,10 @@ import RevisionsTable from './release/revisionsTable';
 
 const initReleases = (id, data) => {
   ReactDOM.render(
-    <div>
-      <h4>Releases available for install</h4>
+    <Fragment>
       <RevisionsTable revisions={data} />
-      <h4>Revisions available</h4>
       <RevisionsList revisions={data} />
-    </div>,
+    </Fragment>,
     document.querySelector(id)
   );
 };

@@ -1,7 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 export default class RevisionsTable extends Component {
+  constructor() {
+    super();
+
+    // default to latest track
+    this.state = {
+      currentTrack: 'latest'
+    };
+  }
 
   // getting list of tracks names from track/channel names list
   getTracksFromChannels(releasedChannels) {
@@ -62,64 +70,93 @@ export default class RevisionsTable extends Component {
   }
 
   renderRows(releaseData) {
-    const { channels, tracks, archs } = releaseData;
+    const { channels, archs } = releaseData;
 
-    let rows = [];
+    const track = this.state.currentTrack;
 
-    tracks.forEach(track => {
-      rows = rows.concat(['stable', 'candidate', 'beta', 'edge'].map((channel) => {
-        if (track !== 'latest') {
-          channel = `${track}/${channel}`;
-        }
+    return ['stable', 'candidate', 'beta', 'edge'].map((channel) => {
+      if (track !== 'latest') {
+        channel = `${track}/${channel}`;
+      }
 
-        const release = channels[channel] || {};
+      const release = channels[channel] || {};
 
-        // make sure to display 'latest' in front of default channels
-        if (track === 'latest') {
-          channel = `${track}/${channel}`;
-        }
+      // make sure to display 'latest' in front of default channels
+      if (track === 'latest') {
+        channel = `${track}/${channel}`;
+      }
 
-        return (
-          <tr key={channel}>
-            <td>{ channel }</td>
-            {
-              archs.map(arch => {
-                return (
-                  <td
-                    key={`${channel}/${arch}`}
-                    title={ release[arch] ? release[arch].version : null }
-                  >
-                    { release[arch] ? release[arch].version : '-' }
-                  </td>
-                );
-              })
-            }
-          </tr>
-        );
-      }));
+      return (
+        <tr key={channel}>
+          <td>{ channel }</td>
+          {
+            archs.map(arch => {
+              return (
+                <td
+                  key={`${channel}/${arch}`}
+                  title={ release[arch] ? release[arch].version : null }
+                >
+                  { release[arch] ? release[arch].version : '-' }
+                </td>
+              );
+            })
+          }
+        </tr>
+      );
     });
+  }
 
-    return rows;
+  renderTrackDropdown(tracks) {
+    return (
+      <form className="p-form p-form--inline u-float--right">
+        <div className="p-form__group">
+          <label htmlFor="track-dropdown" className="p-form__label">
+            Show revisions released in
+          </label>
+          <div className="p-form__control u-clearfix">
+            <select
+              id="track-dropdown"
+              onChange={this.onTrackChange.bind(this)}
+            >
+              {
+                tracks.map(track => <option key={`${track}`} value={track}>{ track }</option>)
+              }
+            </select>
+          </div>
+        </div>
+      </form>
+    );
+  }
+
+  onTrackChange(event) {
+    this.setState({ currentTrack: event.target.value });
   }
 
   render() {
     const releaseData = this.getReleaseDataFromList(this.props.revisions);
 
-    return (
-      <table className="p-release-table">
-        <thead>
-          <tr>
-            <th width="40%" scope="col"></th>
-            {
-              releaseData.archs.map(arch => <th width="10%" key={`${arch}`}>{ arch }</th>)
-            }
-          </tr>
-        </thead>
 
-        <tbody>
-          { this.renderRows(releaseData) }
-        </tbody>
-      </table>
+    return (
+      <Fragment>
+        <div className="u-clearfix">
+          <h4 className="u-float--left">Releases available for install</h4>
+          { releaseData.tracks.length > 1 && this.renderTrackDropdown(releaseData.tracks) }
+        </div>
+        <table className="p-release-table">
+          <thead>
+            <tr>
+              <th width="22%" scope="col"></th>
+              {
+                releaseData.archs.map(arch => <th width="13%" key={`${arch}`}>{ arch }</th>)
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            { this.renderRows(releaseData) }
+          </tbody>
+        </table>
+      </Fragment>
     );
   }
 }
