@@ -12,6 +12,5 @@
     "test": {
       "presets": ["env"]
     }
-  },
-  "plugins": ["external-helpers"]
+  }
 }
