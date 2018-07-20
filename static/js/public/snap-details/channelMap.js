@@ -331,45 +331,61 @@ class ChannelMap {
     el.innerHTML = tbody.join('');
   }
 
+  /**
+   * Prepare the channel map tables
+   *
+   * @param {Object} archData
+   * @param {Array.<{channel: string, confinement: string, 'created-at': string, risk: string, size: number, version: string}>} archData.track
+   */
   prepareTable(archData) {
     const tbodyEl = this.channelMapEl.querySelector('[data-js="channel-map-table"]');
 
+    // If we're on the overview tab we only want to see latest/[all risks]
+    // and [all tracks]/[highest risk], so filter out anything that isn't these
     const filtered = this.currentTab === 'overview';
 
     let numberOfTracks = 0;
     let trimmedNumberOfTracks = 0;
 
+    // Get a total number of tracks
     Object.keys(archData).forEach(arch => {
       numberOfTracks += archData[arch].length;
     });
 
     let rows = [];
 
-    let trimmed = filtered ? {} : archData;
+    // If we're not filtering, pass through all the data...
+    let trackList = filtered ? {} : archData;
 
+    // ...and don't do the expensive bit
     if (filtered) {
       Object.keys(archData).forEach(track => {
+        // Sort by risk
         archData[track].sort((a, b) => {
           return this.RISK_ORDER.indexOf(a['risk']) - this.RISK_ORDER.indexOf(b['risk']);
         });
 
+        // Only the default track has all risks
+        // Other tracks should show the highest risk
         if (track === this.defaultTrack) {
-          trimmed[track] = archData[track];
-          trimmedNumberOfTracks += trimmed[track].length;
+          trackList[track] = archData[track];
+          trimmedNumberOfTracks += trackList[track].length;
         } else {
-          trimmed[track] = [archData[track][0]];
+          trackList[track] = [archData[track][0]];
           trimmedNumberOfTracks += 1;
         }
       });
 
+      // If we're filtering, but that list ends up with the same number of tracks
+      // we don't need to show the tabs (we'll show the same data twice)
       if (numberOfTracks === trimmedNumberOfTracks) {
         this.hideTabs();
       }
     }
 
-
-    Object.keys(trimmed).forEach(track => {
-      trimmed[track].forEach(trackInfo => {
+    // Create an array of columns
+    Object.keys(trackList).forEach(track => {
+      trackList[track].forEach(trackInfo => {
         const trackName = track.split('/')[0];
         rows.push([
           trackName,

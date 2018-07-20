@@ -90,8 +90,8 @@
 
     @media screen and (max-width: $breakpoint-medium) {
       border: {
-        top: 1px solid $color-mid-light;
         bottom: 1px solid $color-mid-light;
+        top: 1px solid $color-mid-light;
       }
       box-shadow: none;
       margin-top: -$spv-inter--shallow-scaleable;
