@@ -68,9 +68,21 @@
       {% if not webapp_config['STORE_QUERY'] %}
         <div class="col-5 p-snap-install-buttons">
           {% if has_stable %}
-            <button class="p-button--positive js-open-channel-map" aria-controls="channel-map-tab-install">Install</button>
+            <button
+              class="p-button--positive p-snap-install-buttons__install"
+              data-js="open-channel-map"
+              data-controls="channel-map-install"
+              aria-controls="channel-map-install">
+                Install
+            </button>
           {% endif %}
-          <button class="p-button--neutral js-open-channel-map" aria-controls="channel-map-tab-versions">All versions</button>
+          <button
+            class="p-button--neutral p-snap-install-buttons__versions"
+            data-js="open-channel-map"
+            data-controls="channel-map-versions"
+            aria-controls="channel-map-versions">
+              Other versions&nbsp;&nbsp;<i class="p-icon--chevron"></i>
+          </button>
         </div>
       {% else %}
         <div class="col-5 p-snap-install-buttons">
@@ -128,8 +140,7 @@
       <div class="col-4">
         <table class="p-table-key-value">
           <tr><th>License</th><td>{{ license }}</td></tr>
-          <tr><th>Size</th><td>{{ filesize }}</td></tr>
-          <tr><th width="100">Version</th><td>{{ version }}</td></tr>
+          <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
         </table>
       </div>
     </div>
@@ -211,8 +222,9 @@
 
       {% if not webapp_config['STORE_QUERY'] and channel_map %}
         try {
-          snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }});
+          snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
         } catch(e) {
+          console.log(e);
           Raven.captureException(e);
           document.querySelector('.js-open-channel-map').style.display = 'none';
         }
@@ -257,7 +269,7 @@
       if (typeof ClipboardJS !== 'undefined') {
         var copy = new ClipboardJS('.js-clipboard-copy');
 
-        copy.on('success', function () {
+        copy.on('success', function() {
           if (typeof ga !== 'undefined') {
             ga('gtm1.send', {
               hitType: 'event',

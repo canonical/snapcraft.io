@@ -1,294 +1,428 @@
 /* global ga */
 
-const LATEST = 'latest';
+import moment from '../../../../node_modules/moment/src/moment';
+import SnapEvents from '../../libs/events';
 
-function setTrack(arch, track, packageName, channelMap) {
-  ['stable', 'candidate', 'beta', 'edge'].forEach((risk, i, risks) => {
-    const channelEl = document.getElementById(`js-channel-map-${risk}`);
+class ChannelMap {
+  constructor(selectorString, packageName, channelMapData, defaultTrack) {
+    this.RISK_ORDER = ['stable', 'candidate', 'beta', 'edge'];
+    this.INSTALL_TEMPLATE = document.querySelector('[data-js="install-window"]').innerHTML;
+    this.CHANNEL_ROW_TEMPLATE = document.querySelector('[data-js="channel-map-row"]').innerHTML;
 
-    // channel names in tracks other then latest are prefixed with track name
-    const channelName = track === LATEST ? risk : `${track}/${risk}`;
+    this.packageName = packageName;
+    this.currentTab = 'overview';
 
-    channelEl.querySelector('.js-channel-name').innerHTML = channelName;
-    let channelData = channelMap[channelName];
+    this.openDesktopAttempt = 1;
 
-    // update install instructions
-    let command = `sudo snap install ${packageName}`;
-
-    if (track === LATEST) {
-      if (risk !== 'stable') {
-        command += ` --${risk}`;
-      }
+    if (!defaultTrack) {
+      this.defaultTrack = 'latest';
     } else {
-      command += ` --channel=${track}/${risk}`;
+      this.defaultTrack = defaultTrack;
     }
 
-    channelEl.querySelector('input').value = command;
+    this.selectorString = selectorString;
+    this.channelMapEl = document.querySelector(this.selectorString);
+    this.channelOverlayEl = document.querySelector('.p-channel-map-overlay');
+    this.channelMapData = channelMapData;
 
-    const versionEl = channelEl.querySelector('.p-form-help-text');
-    channelEl.classList.remove('p-channel-map__row--closed');
+    // get architectures from data
+    const architectures = Object.keys(this.channelMapData);
 
-    // show version
-    if (channelData) {
-      versionEl.innerHTML = `Version: ${channelData.version}`;
-    } else {
-      let fallbackRisk;
-      for (let j = 0; j < i; j++) {
-        const channelName = track === LATEST ? risks[j] : `${track}/${risks[j]}`;
-        if (channelMap[channelName]) {
-          fallbackRisk = risks[j];
-        }
-      }
+    // initialize architecture select
+    const archSelect = document.querySelector('[data-js="arch-select"]');
 
-      if (fallbackRisk) {
-        versionEl.innerHTML = `No release in ${risk} channel, using ${fallbackRisk} release.`;
+    archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
+
+    this.arch = this.channelMapData['amd64'] ? 'amd64' : architectures[0];
+
+    this.events = new SnapEvents(this.channelMapEl.parentNode);
+
+    // capture events
+    this.bindEvents();
+  }
+
+  sortRows(rows){
+    // split tracks into strings and numbers
+    let numberTracks = [];
+    let stringTracks = [];
+    let latestTracks = [];
+    rows.forEach(row => {
+      // numbers are defined by any string starting any of the following patterns:
+      //   just a number – 1,2,3,4,
+      //   numbers on the left in a pattern – 2018.3 , 1.1, 1.1.23 ...
+      //   or numbers on the left with strings at the end – 1.1-hotfix
+      if (row[0] === this.defaultTrack) {
+        latestTracks.push(row);
+      } else if (isNaN(parseInt(row[0].substr(0, 1)))) {
+        stringTracks.push(row);
       } else {
-        versionEl.innerHTML = `No release in ${risk} channel.`;
-        channelEl.classList.add('p-channel-map__row--closed');
+        numberTracks.push(row);
       }
-    }
-  });
-}
+    });
 
+    // Ignore case
+    stringTracks.sort(function (a, b) {
+      return a[0].toLowerCase().localeCompare(b[0].toLowerCase());
+    });
 
-function getArchTrackChannels(arch, track, channelMapData) {
-  const channels = channelMapData[arch][track];
-  const archTrackChannels = {};
+    stringTracks = latestTracks.concat(stringTracks);
 
-  channels.forEach(channel => {
-    archTrackChannels[channel.channel] = channel;
-  });
+    // Sort numbers (that are actually strings)
+    numberTracks.sort((a, b) => {
+      return b[0].localeCompare(a[0], undefined, { numeric: true, sensitivity: 'base' });
+    });
 
-  return archTrackChannels;
-}
+    // Join the arrays together again
 
-function setArchitecture(arch, packageName, channelMapData) {
-  if (!arch) {
-    return;
+    return stringTracks.concat(numberTracks);
   }
 
-  const tracks = Object.keys(channelMapData[arch]);
+  bindEvents() {
+    this.events.addEvents({
+      'click': {
+        '[data-js="open-channel-map"]': (event, target) => {
+          event.preventDefault();
 
-  // split tracks into strings and numbers
-  let numberTracks = [];
-  let stringTracks = [];
-  tracks.forEach(track => {
-    // numbers are defined by any string starting any of the following patterns:
-    //   just a number – 1,2,3,4,
-    //   numbers on the left in a pattern – 2018.3 , 1.1, 1.1.23 ...
-    //   or numbers on the left with strings at the end – 1.1-hotfix
-    if (isNaN(parseInt(track.substr(0, 1)))) {
-      stringTracks.push(track);
-    } else {
-      numberTracks.push(track);
-    }
-  });
+          // If the button has already been clicked, close the channel map
+          if (target === this.openButton) {
+            this.closeChannelMap();
+            this.openButton = null;
+          } else {
+            this.openChannelMap(target);
+          }
+        },
 
-  // Ignore case
-  stringTracks.sort(function (a, b) {
-    return a.toLowerCase().localeCompare(b.toLowerCase());
-  });
+        '[data-js="close-channel-map"]': (event) => {
+          event.preventDefault();
 
-  const latestIndex = stringTracks.indexOf(LATEST);
-  stringTracks.splice(latestIndex, 1);
-  stringTracks = [LATEST].concat(stringTracks);
+          this.closeChannelMap();
+          this.openButton = null;
+        },
 
-  // Sort numbers (that are actually strings)
-  numberTracks.sort((a, b) => {
-    return b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' });
-  });
+        '[data-js="slide-all-versions"]': (event, target) => {
+          event.preventDefault();
+          this.slideToVersions(target);
+        },
 
-  // Join the arrays together again
-  const sortedTracks = stringTracks.concat(numberTracks);
+        '[data-js="switch-tab"]': (event, target) => {
+          event.preventDefault();
+          this.switchTab(target);
+        },
 
-  const track = sortedTracks[0];
+        '[data-js="open-desktop"]': (event, target) => {
+          event.preventDefault();
+          this.openDesktop(target);
+        },
 
-  if (!track) {
-    return;
-  }
-
-  // update tracks select
-  const trackSelect = document.getElementById("js-channel-map-track-select");
-  trackSelect.innerHTML = sortedTracks.map(track => `<option value="${track}">${track}</option>`).join('');
-  trackSelect.value = track;
-
-  // hide tracks if there is only one
-  if (sortedTracks.length === 1) {
-    trackSelect.closest('.js-channel-map-track-field').style.display = 'none';
-  } else {
-    trackSelect.closest('.js-channel-map-track-field').style.display = '';
-  }
-
-  const channelMap = getArchTrackChannels(arch, track, channelMapData);
-  setTrack(arch, track, packageName, channelMap);
-}
-
-function selectTab(tabEl, tabsWrapperEl) {
-  const selected = tabEl.getAttribute('aria-selected');
-  if (!selected) {
-    const selectedTabEle = tabsWrapperEl.querySelector('.p-channel-map__tab.is-open');
-    if (selectedTabEle) {
-      selectedTabEle.classList.remove('is-open');
-    }
-
-    const selectedTabLinkEle = tabsWrapperEl.querySelector('.p-tabs__link[aria-selected]');
-    if (selectedTabLinkEle) {
-      selectedTabLinkEle.removeAttribute('aria-selected');
-    }
-
-    document.getElementById(tabEl.getAttribute('aria-controls')).classList.add('is-open');
-    tabEl.setAttribute('aria-selected', "true");
-  }
-}
-
-function initTabs(el) {
-  el.addEventListener('click', (event) => {
-    const target = event.target.closest('.p-tabs__link');
-
-    if (target) {
-      event.preventDefault();
-      selectTab(target, el);
-    }
-  });
-}
-
-function initOpenSnapButtons() {
-  let attempt = 1;
-
-  document.addEventListener('click', (event) => {
-    const openButton = event.target.closest('.js-open-snap-button');
-
-    if (openButton) {
-      const name = openButton.dataset.snap;
-      let iframe = document.querySelector('.js-snap-open-frame');
-
-      if (iframe) {
-        iframe.parentNode.removeChild(iframe);
-      }
-
-      iframe = document.createElement('iframe');
-      iframe.className = 'js-snap-open-frame';
-      iframe.style.position = 'absolute';
-      iframe.style.top = '-9999px';
-      iframe.style.left = '-9999px';
-      iframe.src = `snap://${name}`;
-      document.body.appendChild(iframe);
-
-      if (typeof ga !== 'undefined') {
-        // The first attempt should be counted towards the 'intent'
-        let label = 'Snap install intent';
-        let value = `${name}`;
-
-        // Subsequent attempts should still be tracked, but not as 'intent'
-        if (attempt > 1) {
-          label = 'Snap install click';
-          value += ` - click ${attempt}`;
+        '[data-js="slide-install-instructions"]': (event, target) => {
+          event.preventDefault();
+          this.slideToInstructions(target);
         }
+      },
 
-        ga('gtm1.send', {
-          hitType: 'event',
-          eventCategory: 'Snap details',
-          eventAction: 'Click view in desktop store button',
-          eventLabel: label,
-          eventValue: value
-        });
+      'change': {
+        '[data-js="arch-select"]': (event, target) => {
+          this.prepareTable(this.channelMapData[target.value]);
+        }
+      }
+    });
+
+    this.events.addEvent('keyup', window, event => {
+      this._closeOnEscape.call(this, event);
+    });
+
+    this.events.addEvent('resize', window, () => {
+      this.positionChannelMap.bind(this);
+    });
+  }
+
+  positionChannelMap() {
+    if (!this.openButton) {
+      return;
+    }
+    const windowWidth = document.body.scrollWidth;
+    const buttonRect = this.openButton.getBoundingClientRect();
+    const channelMapPosition = [
+      windowWidth - buttonRect.right,
+      buttonRect.y + buttonRect.height + 16 + window.scrollY
+    ];
+
+    this.channelMapEl.style.right = `${channelMapPosition[0]}px`;
+    this.channelMapEl.style.top = `${channelMapPosition[1]}px`;
+  }
+
+  openChannelMap(openButton) {
+    // Hide everything first, so we can click between
+    this.closeChannelMap();
+
+    this.openButton = openButton;
+
+    this.openButton.classList.add('is-active');
+
+    this.positionChannelMap();
+
+    // open screen based on button click (or install screen by default)
+    this.openScreenName = this.openButton.getAttribute('aria-controls') || 'channel-map-install';
+
+    const openScreen = this.channelMapEl.querySelector(`#${this.openScreenName}`);
+
+    // select default screen before opening
+    this.selectScreen(openScreen);
+
+    // If we're going to the 'other' screen, prepare the tables
+    if (openButton.dataset.controls === 'channel-map-versions') {
+      this.prepareTable(this.channelMapData[this.arch]);
+    }
+
+    this.channelOverlayEl.style.display = 'block';
+    this.channelMapEl.classList.remove('is-closed');
+
+    if (typeof ga !== 'undefined') {
+      ga('gtm1.send', {
+        hitType: 'event',
+        eventCategory: 'Snap details',
+        eventAction: 'Open install dialog',
+        eventLabel: `Open ${this.openScreenName} dialog screen for ${this.packageName} snap`
+      });
+    }
+  }
+
+  closeChannelMap() {
+    this.channelMapEl.classList.add('is-closed');
+    const children = this.channelMapEl.children;
+    for (let i = 0; i < children.length; i++) {
+      const screenEl = children[i];
+      screenEl.classList.remove('is-open');
+      screenEl.removeAttribute('aria-selected');
+    }
+    this.channelOverlayEl.style.display = 'none';
+
+    if (this.openButton) {
+      this.openButton.classList.remove('is-active');
+    }
+  }
+
+  _closeOnEscape(event) {
+    if (event.key === "Escape" && !this.channelMapEl.classList.contains('is-closed')) {
+      this.closeChannelMap();
+    }
+  }
+
+  _closeOnClick(event) {
+    // when channel map is not closed and clicking outside of it, close it
+    if (!this.channelMapEl.classList.contains('is-closed') &&
+      !event.target.closest(this.selectorString)) {
+      this.closeChannelMap();
+    }
+  }
+
+  openDesktop(clickEl) {
+    const name = clickEl.dataset.snap.trim();
+    let iframe = document.querySelector('.js-snap-open-frame');
+
+    if (iframe) {
+      iframe.parentNode.removeChild(iframe);
+    }
+
+    iframe = document.createElement('iframe');
+    iframe.className = 'js-snap-open-frame';
+    iframe.style.position = 'absolute';
+    iframe.style.top = '-9999px';
+    iframe.style.left = '-9999px';
+    iframe.src = `snap://${name}`;
+    document.body.appendChild(iframe);
+
+    if (typeof ga !== 'undefined') {
+      // The first attempt should be counted towards the 'intent'
+      let label = 'Snap install intent';
+      let value = `${name}`;
+
+      // Subsequent attempts should still be tracked, but not as 'intent'
+      if (this.openDesktopAttempt > 1) {
+        label = 'Snap install click';
+        value += ` - click ${this.openDesktopAttempt}`;
       }
 
-      attempt += 1;
+      ga('gtm1.send', {
+        hitType: 'event',
+        eventCategory: 'Snap details',
+        eventAction: 'Click view in desktop store button',
+        eventLabel: label,
+        eventValue: value
+      });
     }
-  });
+
+    this.openDesktopAttempt += 1;
+  }
+
+  selectScreen(screenEl) {
+    const selected = screenEl.getAttribute('aria-selected');
+    const currentlySelected = screenEl.parentNode.querySelector('.is-open');
+
+    if (currentlySelected) {
+      currentlySelected.classList.remove('is-open');
+    }
+
+    if (!selected) {
+      screenEl.classList.add('is-open');
+      screenEl.setAttribute('aria-selected', "true");
+    }
+  }
+
+  slideToVersions(clickEl) {
+    const slides = clickEl.closest('.p-channel-map__slides');
+    slides.classList.add('show-left');
+    slides.classList.remove('show-right');
+  }
+
+  slideToInstructions(clickEl) {
+    // Add content to the right slide area
+    this.writeInstallInstructions(clickEl.dataset.channel);
+
+    const slides = clickEl.closest('.p-channel-map__slides');
+    slides.classList.add('show-right');
+    slides.classList.remove('show-left');
+  }
+
+  writeInstallInstructions(channel) {
+    let paramString = '';
+
+    // By default no params are required
+    // If you switch risk on latest you can use the shorthand --{risk} syntax
+    // For all other tracks and risks, use the full --channel={channel} syntax
+    if (channel.indexOf('latest/') === 0) {
+      if (channel !== 'latest/stable') {
+        paramString = `--${channel.split('/')[1]}`;
+      }
+    } else {
+      paramString = `--channel=${channel}`;
+    }
+
+    const template = this.INSTALL_TEMPLATE
+      .split('${channel}')
+      .join(channel)
+      .split('${paramString}')
+      .join(paramString);
+    const holder = document.querySelector('[data-js="channel-map-install-details"]');
+
+    holder.innerHTML = template;
+  }
+
+  writeTable(el, data) {
+    let cache;
+    const tbody = data.map((row, i) => {
+      const isSameTrack = (cache && row[0] === cache);
+      let rowClass = [];
+
+      if (i === 0) {
+        rowClass.push('is-highlighted');
+      }
+
+      if (isSameTrack) {
+        rowClass.push('no-border');
+      }
+
+      let _row = this.CHANNEL_ROW_TEMPLATE
+        .split('${rowClass}')
+        .join(rowClass.join(' '));
+
+      row.forEach((val, index) => {
+        _row = _row.split('${row[' + index + ']}').join(val);
+      });
+
+      cache = row[0];
+      return _row;
+    });
+
+    el.innerHTML = tbody.join('');
+  }
+
+  /**
+   * Prepare the channel map tables
+   *
+   * @param {Object} archData
+   * @param {Array.<{channel: string, confinement: string, 'created-at': string, risk: string, size: number, version: string}>} archData.track
+   */
+  prepareTable(archData) {
+    const tbodyEl = this.channelMapEl.querySelector('[data-js="channel-map-table"]');
+
+    // If we're on the overview tab we only want to see latest/[all risks]
+    // and [all tracks]/[highest risk], so filter out anything that isn't these
+    const filtered = this.currentTab === 'overview';
+
+    let numberOfTracks = 0;
+    let trimmedNumberOfTracks = 0;
+
+    // Get a total number of tracks
+    Object.keys(archData).forEach(arch => {
+      numberOfTracks += archData[arch].length;
+    });
+
+    let rows = [];
+
+    // If we're not filtering, pass through all the data...
+    let trackList = filtered ? {} : archData;
+
+    // ...and don't do the expensive bit
+    if (filtered) {
+      Object.keys(archData).forEach(track => {
+        // Sort by risk
+        archData[track].sort((a, b) => {
+          return this.RISK_ORDER.indexOf(a['risk']) - this.RISK_ORDER.indexOf(b['risk']);
+        });
+
+        // Only the default track has all risks
+        // Other tracks should show the highest risk
+        if (track === this.defaultTrack) {
+          trackList[track] = archData[track];
+          trimmedNumberOfTracks += trackList[track].length;
+        } else {
+          trackList[track] = [archData[track][0]];
+          trimmedNumberOfTracks += 1;
+        }
+      });
+
+      // If we're filtering, but that list ends up with the same number of tracks
+      // we don't need to show the tabs (we'll show the same data twice)
+      if (numberOfTracks === trimmedNumberOfTracks) {
+        this.hideTabs();
+      }
+    }
+
+    // Create an array of columns
+    Object.keys(trackList).forEach(track => {
+      trackList[track].forEach(trackInfo => {
+        const trackName = track.split('/')[0];
+        rows.push([
+          trackName,
+          trackInfo['risk'],
+          trackInfo['version'],
+          moment.utc(trackInfo['created-at']).fromNow()
+        ]);
+      });
+    });
+
+    this.writeTable(tbodyEl, this.sortRows(rows));
+  }
+
+  hideTabs() {
+    const tabs = document.querySelector('[data-js="channel-map-tabs"]');
+
+    if (tabs) {
+      tabs.style.display = 'none';
+    }
+  }
+
+  switchTab(clickEl) {
+    const selected = clickEl.closest('.p-tabs').querySelector('[aria-selected="true"]');
+    this.currentTab = clickEl.dataset.tab;
+    selected.removeAttribute('aria-selected');
+    clickEl.setAttribute('aria-selected', 'true');
+
+    this.prepareTable(this.channelMapData[this.arch]);
+  }
 }
 
-export default function initChannelMap(el, packageName, channelMapData) {
-  initOpenSnapButtons();
-
-  const channelMapEl = document.querySelector(el);
-  const channelOverlayEl = document.querySelector('.p-channel-map-overlay');
-
-  initTabs(channelMapEl);
-
-  let closeTimeout;
-
-  // init open/hide buttons
-  const openChannelMap = (event) => {
-    const openButton = event.target.closest('.js-open-channel-map');
-
-    if (openButton) {
-      // open tab based on button click (or install tab by default)
-      const openTabName = openButton.getAttribute('aria-controls') || 'channel-map-tab-install';
-
-      // clear hiding animation if it's still running
-      clearTimeout(closeTimeout);
-
-      const openTab = channelMapEl.querySelector(`.p-tabs__link[aria-controls=${openTabName}]`);
-
-      // select default tab before opening
-      selectTab(openTab, channelMapEl);
-
-      // make sure overlay is displayed before CSS transitions are triggered
-      channelOverlayEl.style.display = 'block';
-      setTimeout(() => channelMapEl.classList.remove('is-closed'), 10);
-
-      window.addEventListener('keyup', hideOnEscape);
-      document.addEventListener('click', hideOnClick);
-
-      if (typeof ga !== 'undefined') {
-        ga('gtm1.send', {
-          hitType: 'event',
-          eventCategory: 'Snap details',
-          eventAction: 'Open install dialog',
-          eventLabel: `Open ${openTabName} dialog tab for ${packageName} snap`
-        });
-      }
-    }
-  };
-
-  const hideChannelMap = () => {
-    channelMapEl.classList.add('is-closed');
-    // hide overlay after CSS transition is finished
-    closeTimeout = setTimeout(() => channelOverlayEl.style.display = 'none', 500);
-
-    window.removeEventListener('keyup', hideOnEscape);
-    document.removeEventListener('click', hideOnClick);
-  };
-
-  const hideOnEscape = (event) => {
-    if (event.key === "Escape" && !channelMapEl.classList.contains('is-closed')) {
-      hideChannelMap();
-    }
-  };
-
-  const hideOnClick = (event) => {
-    // when channel map is not closed and clicking outside of it, close it
-    if (!channelMapEl.classList.contains('is-closed') &&
-        !event.target.closest(el)) {
-      hideChannelMap();
-    }
-  };
-
-  // show/hide when clicking on buttons
-  document.addEventListener('click', openChannelMap);
-  document.querySelector('.js-hide-channel-map').addEventListener('click', hideChannelMap);
-
-  // get architectures from data
-  const architectures = Object.keys(channelMapData);
-
-  // initialize arch and track selects
-  const archSelect = document.getElementById("js-channel-map-architecture-select");
-  const trackSelect = document.getElementById("js-channel-map-track-select");
-
-  archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
-
-  archSelect.addEventListener('change', ()=> {
-    setArchitecture(archSelect.value, packageName, channelMapData);
-  });
-
-  trackSelect.addEventListener('change', ()=> {
-    const channels = getArchTrackChannels(archSelect.value, trackSelect.value, channelMapData);
-    setTrack(archSelect.value, trackSelect.value, packageName, channels);
-  });
-
-  const arch = channelMapData['amd64'] ? 'amd64' : architectures[0];
-  archSelect.value = arch;
-  setArchitecture(arch, packageName, channelMapData);
+export default function channelMap(el, packageName, channelMapData, defaultTrack) {
+  return new ChannelMap(el, packageName, channelMapData, defaultTrack);
 }

@@ -274,7 +274,7 @@ def store_blueprint(store_query=None):
         channel_maps_list = logic.convert_channel_maps(
             details.get('channel-map'))
 
-        latest_channel = logic.get_last_udpated_version(
+        latest_channel = logic.get_last_updated_version(
             details.get('channel-map'))
 
         last_updated = latest_channel['created-at']
@@ -333,6 +333,14 @@ def store_blueprint(store_query=None):
         icons = [
             m['url'] for m in details['snap']['media'] if m['type'] == "icon"]
 
+        # until default tracks are supported by the API we special case node
+        # to use 10, rather then latest
+        default_track = '10' if details['name'] == 'node' else 'latest'
+
+        lowest_risk_available = logic.get_lowest_available_risk(
+            channel_maps_list,
+            default_track)
+
         context = {
             # Data direct from details API
             'snap_title': details['snap']['title'],
@@ -350,6 +358,8 @@ def store_blueprint(store_query=None):
             'channel_map': channel_maps_list,
             'has_stable': logic.has_stable(channel_maps_list),
             'developer_validation': details['snap']['publisher']['validation'],
+            'default_track': default_track,
+            'lowest_risk_available': lowest_risk_available,
 
             # Transformed API data
             'filesize': humanize.naturalsize(binary_filesize),
