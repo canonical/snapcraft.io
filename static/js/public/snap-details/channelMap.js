@@ -1,7 +1,7 @@
 /* global ga */
 
 import moment from '../../../../node_modules/moment/src/moment';
-import globalEvents from '../../libs/events';
+import SnapEvents from '../../libs/events';
 
 class ChannelMap {
   constructor(selectorString, packageName, channelMapData, defaultTrack) {
@@ -34,6 +34,8 @@ class ChannelMap {
     archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
 
     this.arch = this.channelMapData['amd64'] ? 'amd64' : architectures[0];
+
+    this.events = new SnapEvents(this.channelMapEl.parentNode);
 
     // capture events
     this.bindEvents();
@@ -76,9 +78,9 @@ class ChannelMap {
   }
 
   bindEvents() {
-    globalEvents.addEvents({
+    this.events.addEvents({
       'click': {
-        '[data-js="open-channel-map"]': (target, event) => {
+        '[data-js="open-channel-map"]': (event, target) => {
           event.preventDefault();
 
           // If the button has already been clicked, close the channel map
@@ -90,49 +92,47 @@ class ChannelMap {
           }
         },
 
-        '[data-js="close-channel-map"]': (target, event) => {
+        '[data-js="close-channel-map"]': (event) => {
           event.preventDefault();
 
           this.closeChannelMap();
           this.openButton = null;
         },
 
-        '[data-js="slide-all-versions"]': (target, event) => {
+        '[data-js="slide-all-versions"]': (event, target) => {
           event.preventDefault();
           this.slideToVersions(target);
         },
 
-        '[data-js="switch-tab"]': (target, event) => {
+        '[data-js="switch-tab"]': (event, target) => {
           event.preventDefault();
           this.switchTab(target);
         },
 
-        '[data-js="open-desktop"]': (target, event) => {
+        '[data-js="open-desktop"]': (event, target) => {
           event.preventDefault();
           this.openDesktop(target);
         },
 
-        '[data-js="slide-install-instructions"]': (target, event) => {
+        '[data-js="slide-install-instructions"]': (event, target) => {
           event.preventDefault();
           this.slideToInstructions(target);
         }
       },
 
       'change': {
-        '[data-js="arch-select"]': (target) => {
+        '[data-js="arch-select"]': (event, target) => {
           this.prepareTable(this.channelMapData[target.value]);
         }
-      },
-
-      'keyup': {
-        'window': (target, event) => {
-          this._closeOnEscape.call(this, event);
-        }
-      },
-
-      'resize': {
-        'window': this.positionChannelMap.bind(this)
       }
+    });
+
+    this.events.addEvent('keyup', window, event => {
+      this._closeOnEscape.call(this, event);
+    });
+
+    this.events.addEvent('resize', window, () => {
+      this.positionChannelMap.bind(this);
     });
   }
 
@@ -287,8 +287,11 @@ class ChannelMap {
   writeInstallInstructions(channel) {
     let paramString = '';
 
-    if (channel.indexOf('latest') === 0) {
-      if (channel.indexOf('stable') !== 7) {
+    // By default no params are required
+    // If you switch risk on latest you can use the shorthand --{risk} syntax
+    // For all other tracks and risks, use the full --channel={channel} syntax
+    if (channel.indexOf('latest/') === 0) {
+      if (channel !== 'latest/stable') {
         paramString = `--${channel.split('/')[1]}`;
       }
     } else {

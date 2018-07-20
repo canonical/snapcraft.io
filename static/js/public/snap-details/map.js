@@ -1,6 +1,6 @@
 /* global d3, topojson */
 
-import globalEvents from '../../libs/events';
+import SnapEvents from '../../libs/events';
 
 export default function renderMap(el, snapData) {
   const mapEl = d3.select(el);
@@ -115,7 +115,9 @@ export default function renderMap(el, snapData) {
 
     let resizeTimeout;
 
-    globalEvents.addEvent('resize', 'window', () => {
+    const events = new SnapEvents();
+
+    events.addEvent('resize', window, () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function () {
         render(mapEl, snapData, world);

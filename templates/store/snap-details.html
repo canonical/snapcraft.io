@@ -224,6 +224,7 @@
         try {
           snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
         } catch(e) {
+          console.log(e);
           Raven.captureException(e);
           document.querySelector('.js-open-channel-map').style.display = 'none';
         }

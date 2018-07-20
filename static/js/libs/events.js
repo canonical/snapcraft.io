@@ -1,37 +1,38 @@
-const Events = {
-  constructor: function() {
+class Events {
+
+  constructor(defaultBindTarget) {
+    this.defaultBindTarget = defaultBindTarget || document.body;
     this.events = {};
     this.availableHandles = [];
 
     return this;
-  },
+  }
 
-  _addListener: function(type, bindWindow) {
-    const bindTarget = bindWindow ? window : document.body;
+  _addListener(type, selector) {
+    const bindTarget = typeof(selector) === 'string' ? this.defaultBindTarget : selector;
     bindTarget.addEventListener(type, this._handleEvent.bind(this, type));
-  },
+  }
 
-  _handleEvent: function(type, event) {
+  _handleEvent(type, event) {
     const eventTarget = event.target;
 
     this.events[type].forEach(ev => {
-      // A bit hacky but this allows using the same api to bind to window for key, resize and scroll events
-      const target = ev.selector === 'window' ? window : eventTarget.closest(ev.selector);
+      const target = typeof(ev.selector) === 'string' ? eventTarget.closest(ev.selector) : ev.selector;
 
       if (target) {
-        ev.func(target, event);
+        ev.func(event, target);
       }
     });
-  },
+  }
 
   /**
    * Add an event listener
    *
    * @param {String} type The event type (click, change, keyup etc.)
-   * @param {String} selector CSS Selector to trigger the event
+   * @param {String|Element} selector CSS Selector or element to trigger the event
    * @param {Function} func The function to trigger
    */
-  addEvent: function(type, selector, func) {
+  addEvent(type, selector, func) {
     if (!this.events[type]) {
       this.events[type] = [];
     }
@@ -42,23 +43,23 @@ const Events = {
     });
 
     if (!this.availableHandles.includes(type)) {
-      this._addListener(type, selector === 'window');
+      this._addListener(type, selector);
       this.availableHandles.push(type);
     }
-  },
+  }
 
-  /**
-   * Add events by type
-   *
-   * @param {Array.<{eventType: {selector: Function}}>} types
-   */
-  addEvents: function(types) {
-    Object.keys(types).forEach(type => {
-      Object.keys(types[type]).forEach(selector => {
-        this.addEvent(type, selector, types[type][selector]);
+  addEvents(eventTypes) {
+    /**
+     * Add events by type
+     *
+     * @param {{eventType: {selector: Function}}} eventTypes
+     */
+    Object.keys(eventTypes).forEach(type => {
+      Object.keys(eventTypes[type]).forEach(selector => {
+        this.addEvent(type, selector, eventTypes[type][selector]);
       });
     });
   }
-};
+}
 
-export default Events.constructor();
+export default Events;
