@@ -137,6 +137,9 @@ class ChannelMap {
   }
 
   positionChannelMap() {
+    if (!this.openButton) {
+      return;
+    }
     const windowWidth = document.body.scrollWidth;
     const buttonRect = this.openButton.getBoundingClientRect();
     const channelMapPosition = [
