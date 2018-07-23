@@ -16,10 +16,11 @@ def get_snaps_account_info(account_info):
     if '16' in account_info['snaps']:
         snaps = account_info['snaps']['16']
         for snap in snaps.keys():
-            if not snaps[snap]['latest_revisions']:
-                registered_snaps[snap] = snaps[snap]
-            else:
-                user_snaps[snap] = snaps[snap]
+            if snaps[snap]['status'] != 'Revoked':
+                if not snaps[snap]['latest_revisions']:
+                    registered_snaps[snap] = snaps[snap]
+                else:
+                    user_snaps[snap] = snaps[snap]
 
     now = datetime.datetime.utcnow()
 

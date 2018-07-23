@@ -64,6 +64,7 @@ class AccountSnapsPage(
             'snaps': {
                 '16': {
                     'test': {
+                        'status': 'Approved',
                         'snap-name': 'test',
                         'latest_revisions': []
                     }
@@ -98,6 +99,7 @@ class AccountSnapsPage(
             'snaps': {
                 '16': {
                     'test': {
+                        'status': 'Approved',
                         'snap-name': 'test',
                         'latest_revisions': [
                             {
@@ -137,6 +139,7 @@ class AccountSnapsPage(
             'snaps': {
                 '16': {
                     'test': {
+                        'status': 'Approved',
                         'snap-name': 'test',
                         'latest_revisions': [
                             {
@@ -146,6 +149,7 @@ class AccountSnapsPage(
                         ]
                     },
                     'test2': {
+                        'status': 'Approved',
                         'snap-name': 'test2',
                         'latest_revisions': []
                     }
@@ -170,6 +174,7 @@ class AccountSnapsPage(
 
         registered_snaps = {
             'test2': {
+                'status': 'Approved',
                 'snap-name': 'test2',
                 'latest_revisions': []
             }
@@ -177,6 +182,88 @@ class AccountSnapsPage(
 
         uploaded_snaps = {
             'test': {
+                'status': 'Approved',
+                'snap-name': 'test',
+                'latest_revisions': [
+                    {
+                        'test': 'test',
+                        'since': '2018-01-01T00:00:00Z'
+                    }
+                ]
+            }
+        }
+
+        assert response.status_code == 200
+        self.assert_template_used('publisher/account-snaps.html')
+        self.assert_context('current_user', 'Toto')
+        self.assert_context('snaps', uploaded_snaps)
+        self.assert_context('registered_snaps', registered_snaps)
+
+    @responses.activate
+    def test_revoked_snaps(self):
+        payload = {
+            'snaps': {
+                '16': {
+                    'test': {
+                        'status': 'Approved',
+                        'snap-name': 'test',
+                        'latest_revisions': [
+                            {
+                                'test': 'test',
+                                'since': '2018-01-01T00:00:00Z'
+                            }
+                        ]
+                    },
+                    'test2': {
+                        'status': 'Approved',
+                        'snap-name': 'test2',
+                        'latest_revisions': []
+                    },
+                    'test3': {
+                        'status': 'Revoked',
+                        'snap-name': 'test',
+                        'latest_revisions': [
+                            {
+                                'test': 'test',
+                                'since': '2018-01-01T00:00:00Z'
+                            }
+                        ]
+                    },
+                    'test4': {
+                        'status': 'Revoked',
+                        'snap-name': 'test2',
+                        'latest_revisions': []
+                    }
+                }
+            }
+        }
+        responses.add(
+            responses.GET, self.api_url,
+            json=payload, status=200)
+
+        response = self.client.get(self.endpoint_url)
+        self.assertEqual(200, response.status_code)
+        # Add pyQuery basic context checks
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(
+            self.api_url,
+            called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get('Authorization'))
+
+        registered_snaps = {
+            'test2': {
+                'status': 'Approved',
+                'snap-name': 'test2',
+                'latest_revisions': []
+            }
+        }
+
+        uploaded_snaps = {
+            'test': {
+                'status': 'Approved',
                 'snap-name': 'test',
                 'latest_revisions': [
                     {
