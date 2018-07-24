@@ -88,23 +88,8 @@
     {% else %}
       <div class="row">
         <h2>Sorry, we couldn’t find anything for your search "{{ query }}"</h2>
-        <p>Try using some different, or more general keywords.</p>
+        <h4>Try using some different, or more general keywords.</h4>
       </div>
-      {% if category %}
-        <div class="row">
-          <h3>Other {{ category_display|lower }} snaps</h3>
-        </div>
-        <div data-category="{{ category }}" class="row js-store-category">
-          {# _category-partial.html loaded via JS #}
-        </div>
-      {% else %}
-        {% for category in categories %}
-          {% if loop.index > 1 %}
-            <div class="row">
-              <hr />
-            </div>
-          {% endif %}
-
           <div class="row">
             <h3>{{ category.name }}</h3>
           </div>
