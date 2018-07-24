@@ -260,7 +260,7 @@ def get_lowest_available_risk(channel_map, default_track):
     risk_order = ['stable', 'candidate', 'beta', 'edge']
     lowest_available_risk = None
     for arch in channel_map:
-        if channel_map[arch][default_track]:
+        if arch in channel_map and default_track in channel_map[arch]:
             releases = channel_map[arch][default_track]
             for release in releases:
                 if not lowest_available_risk:
