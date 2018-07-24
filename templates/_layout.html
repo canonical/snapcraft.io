@@ -54,7 +54,7 @@
     <script src="{{ static_url('js/modules/raven.min.js') }}"></script>
     <script>
       Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
-        whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
+        whitelistUrls: ['staging.snapcraft.io/static/js', 'snapcraft.io/static/js/'],
         release: '{{ COMMIT_ID }}',
         environment: '{{ ENVIRONMENT }}'
       }).install();
