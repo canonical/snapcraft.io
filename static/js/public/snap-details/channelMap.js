@@ -87,6 +87,15 @@ class ChannelMap {
             this.openButton = null;
           } else {
             this.openChannelMap(target);
+            // As discussed with David Calle, we should just track 'install' button clicks
+            if (this.openScreenName === 'channel-map-install' && typeof ga !== 'undefined') {
+              ga('gtm1.send', {
+                hitType: 'event',
+                eventCategory: 'Snap details',
+                eventAction: 'Open install dialog',
+                eventLabel: `Open install dialog screen for ${this.packageName} snap`
+              });
+            }
           }
         },
 
@@ -174,16 +183,6 @@ class ChannelMap {
 
     this.channelOverlayEl.style.display = 'block';
     this.channelMapEl.classList.remove('is-closed');
-
-    // As discussed with David Calle, we should just track 'install' button clicks
-    if (this.openScreenName === 'channel-map-install' && typeof ga !== 'undefined') {
-      ga('gtm1.send', {
-        hitType: 'event',
-        eventCategory: 'Snap details',
-        eventAction: 'Open install dialog',
-        eventLabel: `Open install dialog screen for ${this.packageName} snap`
-      });
-    }
   }
 
   closeChannelMap() {
