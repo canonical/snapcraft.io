@@ -3,11 +3,7 @@
 {% block meta_title %}
   {% if query %}
     Snap search results for "{{ query }}"
-    {% if category_display %}
-      in {{ category_display }}
-      {% endif %}
-  {% elif category_display %}
-    {{ category_display }}
+  {% endif %}
   {% else %}
     Search Snap Store
   {% endif %}
@@ -46,14 +42,8 @@
 
   <section class="p-strip is-shallow">
     {% if snaps %}
-      <div class="row">
-        {% if not query and category_display %}
-          <a href="/store">&lsaquo; Categories</a>
-          <h2>{{ category_display }} snaps</h2>
-        {% else %}
           <h2>We’ve found some snaps</h2>
-        {% endif %}
-      </div>
+    {% endif %}
       <div class="row">
         <div class="col-8">
           {% for snap in snaps %}
@@ -89,31 +79,9 @@
       </div>
     {% else %}
       <div class="row">
-        <h2>Sorry, we couldn’t find any snaps</h2>
+        <h2>Sorry, we couldn’t find anything for your search "{{ query }}"</h2>
+        <h4>Try using some different, or more general keywords.</h4>
       </div>
-      {% if category %}
-        <div class="row">
-          <h3>Other {{ category_display|lower }} snaps</h3>
-        </div>
-        <div data-category="{{ category }}" class="row js-store-category">
-          {# _category-partial.html loaded via JS #}
-        </div>
-      {% else %}
-        {% for category in categories %}
-          {% if loop.index > 1 %}
-            <div class="row">
-              <hr />
-            </div>
-          {% endif %}
-
-          <div class="row">
-            <h3>{{ category.name }}</h3>
-          </div>
-          <div data-category="{{ category.slug }}" class="row js-store-category">
-            {# _category-partial.html loaded via JS #}
-          </div>
-        {% endfor %}
-      {% endif %}
     {% endif %}
   </section>
 
