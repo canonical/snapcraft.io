@@ -3,7 +3,7 @@
 {% block meta_title %}
   {% if query %}
     Snap search results for "{{ query }}"
-      {% endif %}
+  {% endif %}
   {% else %}
     Search Snap Store
   {% endif %}
@@ -42,14 +42,8 @@
 
   <section class="p-strip is-shallow">
     {% if snaps %}
-      <div class="row">
-        {% if not query and category_display %}
-          <a href="/store">&lsaquo; Categories</a>
-          <h2>{{ category_display }} snaps</h2>
-        {% else %}
           <h2>We’ve found some snaps</h2>
-        {% endif %}
-      </div>
+    {% endif %}
       <div class="row">
         <div class="col-8">
           {% for snap in snaps %}
