@@ -177,3 +177,6 @@ img {
 
 @import 'patterns_media-object--snap';
 @include snapcraft-p-media-object--snap;
+
+@import 'snapcraft_release';
+@include snapcraft-release;

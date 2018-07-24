@@ -11,7 +11,8 @@ export default [
         jsnext: true
       }),
       babel({
-        exclude: 'node_modules/**'
+        exclude: 'node_modules/**',
+        plugins: ['external-helpers']
       })
     ],
     output: {
@@ -28,7 +29,8 @@ export default [
         jsnext: true
       }),
       babel({
-        exclude: 'node_modules/**'
+        exclude: 'node_modules/**',
+        plugins: ['external-helpers']
       })
     ],
     output: {
@@ -45,7 +47,8 @@ export default [
         jsnext: true
       }),
       babel({
-        exclude: 'node_modules/**'
+        exclude: 'node_modules/**',
+        plugins: ['external-helpers']
       })
     ],
     output: {
@@ -63,7 +66,8 @@ export default [
         jsnext: true
       }),
       babel({
-        exclude: 'node_modules/**'
+        exclude: 'node_modules/**',
+        plugins: ['external-helpers']
       }),
       // https://github.com/rollup/rollup-plugin-commonjs/issues/200
       commonjs({
@@ -78,7 +82,13 @@ export default [
           'node_modules/vanilla-framework-react/**'
         ],
         namedExports: {
-          'node_modules/react/index.js': ['Children', 'Component', 'PropTypes', 'createElement'],
+          'node_modules/react/index.js': [
+            'Children',
+            'Component',
+            'Fragment',
+            'PropTypes',
+            'createElement'
+          ],
           'node_modules/react-dom/index.js': ['render']
         }
       }),
