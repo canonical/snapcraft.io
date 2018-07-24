@@ -12,8 +12,6 @@ class ChannelMap {
     this.packageName = packageName;
     this.currentTab = 'overview';
 
-    this.openDesktopAttempt = 1;
-
     if (!defaultTrack) {
       this.defaultTrack = 'latest';
     } else {
@@ -89,6 +87,15 @@ class ChannelMap {
             this.openButton = null;
           } else {
             this.openChannelMap(target);
+            // As discussed with David Calle, we should just track 'install' button clicks
+            if (this.openScreenName === 'channel-map-install' && typeof ga !== 'undefined') {
+              ga('gtm1.send', {
+                hitType: 'event',
+                eventCategory: 'Snap details',
+                eventAction: 'Open install dialog',
+                eventLabel: `Open install dialog screen for ${this.packageName} snap`
+              });
+            }
           }
         },
 
@@ -176,15 +183,6 @@ class ChannelMap {
 
     this.channelOverlayEl.style.display = 'block';
     this.channelMapEl.classList.remove('is-closed');
-
-    if (typeof ga !== 'undefined') {
-      ga('gtm1.send', {
-        hitType: 'event',
-        eventCategory: 'Snap details',
-        eventAction: 'Open install dialog',
-        eventLabel: `Open ${this.openScreenName} dialog screen for ${this.packageName} snap`
-      });
-    }
   }
 
   closeChannelMap() {
@@ -231,28 +229,6 @@ class ChannelMap {
     iframe.style.left = '-9999px';
     iframe.src = `snap://${name}`;
     document.body.appendChild(iframe);
-
-    if (typeof ga !== 'undefined') {
-      // The first attempt should be counted towards the 'intent'
-      let label = 'Snap install intent';
-      let value = `${name}`;
-
-      // Subsequent attempts should still be tracked, but not as 'intent'
-      if (this.openDesktopAttempt > 1) {
-        label = 'Snap install click';
-        value += ` - click ${this.openDesktopAttempt}`;
-      }
-
-      ga('gtm1.send', {
-        hitType: 'event',
-        eventCategory: 'Snap details',
-        eventAction: 'Click view in desktop store button',
-        eventLabel: label,
-        eventValue: value
-      });
-    }
-
-    this.openDesktopAttempt += 1;
   }
 
   selectScreen(screenEl) {

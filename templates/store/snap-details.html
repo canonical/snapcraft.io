@@ -230,55 +230,8 @@
         }
       {% endif %}
 
-      var ctrlDown = false;
-
-      function keyDown(e) {
-        if (e && e.key) {
-          var key = e.key.toLowerCase();
-          if (key === 'control' || key === 'meta') {
-            ctrlDown = true;
-          }
-          if ((key === 'c' || key === 'x') && ctrlDown) {
-            if (typeof ga !== 'undefined') {
-              ga('gtm1.send', {
-                hitType: 'event',
-                eventCategory: 'Snap details',
-                eventAction: 'Copy CLI install instructions',
-                eventLabel: 'Copy {{ package_name }} input'
-              });
-            }
-          }
-        }
-      }
-
-      function keyUp(e) {
-        if (e && e.key) {
-          var key = e.key.toLowerCase();
-          if (key === 'control' || key === 'meta') {
-            ctrlDown = false;
-          }
-        }
-      }
-
-      var snapInstall = document.querySelector('#snap-install');
-      if (snapInstall) {
-        snapInstall.addEventListener('keyup', keyUp);
-        snapInstall.addEventListener('keydown', keyDown);
-      }
-
       if (typeof ClipboardJS !== 'undefined') {
-        var copy = new ClipboardJS('.js-clipboard-copy');
-
-        copy.on('success', function() {
-          if (typeof ga !== 'undefined') {
-            ga('gtm1.send', {
-              hitType: 'event',
-              eventCategory: 'Snap details',
-              eventAction: 'Copy CLI install instructions',
-              eventLabel: 'Copy {{ package_name }} button'
-            });
-          }
-        });
+        new ClipboardJS('.js-clipboard-copy');
       }
     });
   </script>
