@@ -90,14 +90,6 @@
         <h2>Sorry, we couldn’t find anything for your search "{{ query }}"</h2>
         <h4>Try using some different, or more general keywords.</h4>
       </div>
-          <div class="row">
-            <h3>{{ category.name }}</h3>
-          </div>
-          <div data-category="{{ category.slug }}" class="row js-store-category">
-            {# _category-partial.html loaded via JS #}
-          </div>
-        {% endfor %}
-      {% endif %}
     {% endif %}
   </section>
 
