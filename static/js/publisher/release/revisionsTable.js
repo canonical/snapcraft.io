@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 // - when other revision is released 'over' other one, other one is still counted/listed
 // - when revision is the same button is not needed (nothing to promote)
 //    - or when it was just clicked to be released there
-// - when revision has multiple architectures promoting doesn't work (in one of the archs)
 // - if already released version would be long showing release with -> will be off screen
 export default class RevisionsTable extends Component {
   constructor() {
@@ -205,7 +204,9 @@ export default class RevisionsTable extends Component {
           nextReleaseData[channel] = {};
         }
 
-        nextReleaseData[channel][revision.arch] = revision;
+        revision.arch.split(', ').forEach(arch => {
+          nextReleaseData[channel][arch] = revision;
+        });
       });
     });
 
