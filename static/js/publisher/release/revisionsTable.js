@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 // TODO:
 // - when version is the same but revision different it's not visible
 // - when other revision is released 'over' other one, other one is still counted/listed
-// - when revision is the same button is not needed (nothing to promote)
-//    - or when it was just clicked to be released there
 // - if already released version would be long showing release with -> will be off screen
 export default class RevisionsTable extends Component {
   constructor() {
@@ -105,6 +103,13 @@ export default class RevisionsTable extends Component {
     });
   }
 
+  getRevisionToDisplay(channels, nextReleases, channel, arch) {
+    const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
+    const currentRelease = channels[channel] && channels[channel][arch];
+
+    return pendingRelease || currentRelease;
+  }
+
   renderRows(releaseData) {
     const { channels, archs } = releaseData;
 
@@ -127,13 +132,22 @@ export default class RevisionsTable extends Component {
 
       // TODO:
       // - move logic out of template
-      // - check if release is possible (should button be rendered)
-      // - check if something is released in top level (for better styling)
       return (
         <tr key={channel}>
           <td>{ channel }</td>
           {
             archs.map(arch => {
+              // TODO: @bartaz - clean up this mess
+              let canBePromoted = false;
+              let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
+              let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
+              let promotedRevision = this.getRevisionToDisplay(channels, nextChannelReleases, `${track}/${targetRisk}`, arch);
+
+
+              if (risk !== 'stable' && thisRevision && (!promotedRevision || promotedRevision.revision !== thisRevision.revision)) {
+                canBePromoted = true;
+              }
+
               let nextRelease;
 
               if (nextChannelReleases[channel] && nextChannelReleases[channel][arch]) {
@@ -147,14 +161,14 @@ export default class RevisionsTable extends Component {
                   key={`${channel}/${arch}`}
                   title={ release[arch] ? release[arch].version : null }
                 >
-                  { release[arch] ? release[arch].version : '-' }
+                  { release[arch] ? `${release[arch].version} (${release[arch].revision})` : '-' }
                   { nextRelease &&
-                    <span> &rarr; { nextRelease.version }</span>
+                    <span> &rarr; { `${nextRelease.version} (${nextRelease.revision})` }</span>
                   }
 
-                  { ((release[arch] || nextRelease) && risk !== 'stable') &&
+                  { canBePromoted &&
                     <div style={{ position: 'absolute', right: '5px', top: '5px' }}>
-                      <button onClick={releaseClick.bind(this, (nextRelease || release[arch]), track, risk)} title={`Promote ${(nextRelease || release[arch]).version} (${(nextRelease || release[arch]).revision})`}>&uarr;</button>
+                      <button onClick={releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
                     </div>
                   }
                 </td>
