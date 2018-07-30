@@ -5,9 +5,18 @@ import SnapEvents from '../../libs/events';
 
 class ChannelMap {
   constructor(selectorString, packageName, channelMapData, defaultTrack) {
+    let installTemplateEl = document.querySelector('[data-js="install-window"]');
+    if (!installTemplateEl) {
+      installTemplateEl = document.getElementById('install-window-template');
+    }
+    let channelRowTemplateEl = document.querySelector('[data-js="channel-map-row"]');
+    if (!channelRowTemplateEl) {
+      channelRowTemplateEl = document.getElementById('channel-map-row-template');
+    }
+
     this.RISK_ORDER = ['stable', 'candidate', 'beta', 'edge'];
-    this.INSTALL_TEMPLATE = document.querySelector('[data-js="install-window"]').innerHTML;
-    this.CHANNEL_ROW_TEMPLATE = document.querySelector('[data-js="channel-map-row"]').innerHTML;
+    this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
+    this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
 
     this.packageName = packageName;
     this.currentTab = 'overview';
