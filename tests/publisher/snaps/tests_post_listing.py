@@ -24,7 +24,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/metadata').format(
+            'snaps/{}/metadata?conflict_on_update=true').format(
                 self.snap_id)
 
         changes = {
