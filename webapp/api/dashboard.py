@@ -41,6 +41,7 @@ AGREEMENT_URL = ''.join([
 METADATA_QUERY_URL = ''.join([
     DASHBOARD_API,
     'snaps/{snap_id}/metadata',
+    '?conflict_on_update=true'
 ])
 
 SCREENSHOTS_QUERY_URL = ''.join([
