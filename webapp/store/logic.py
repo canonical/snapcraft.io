@@ -250,18 +250,19 @@ def has_stable(channel_maps_list):
     return False
 
 
-def get_lowest_available_risk(channel_map, default_track):
+def get_lowest_available_risk(channel_map, track):
     """Get the lowest available risk for the default track
 
     :param channel_map: Channel map list
+    :param track: The track of the channel
 
     :returns: The lowest available risk
     """
     risk_order = ['stable', 'candidate', 'beta', 'edge']
     lowest_available_risk = None
     for arch in channel_map:
-        if arch in channel_map and default_track in channel_map[arch]:
-            releases = channel_map[arch][default_track]
+        if arch in channel_map and track in channel_map[arch]:
+            releases = channel_map[arch][track]
             for release in releases:
                 if not lowest_available_risk:
                     lowest_available_risk = release['risk']
@@ -272,3 +273,22 @@ def get_lowest_available_risk(channel_map, default_track):
                         lowest_available_risk = release['risk']
 
     return lowest_available_risk
+
+
+def get_confinement(channel_map, track, risk):
+    """Get the confinement for a channel
+
+    :param channel_map: Channel map list
+    :param track: The track of the channel
+    :param risk: The risk of the channel
+
+    :returns: The confinement
+    """
+    for arch in channel_map:
+        if arch in channel_map and track in channel_map[arch]:
+            releases = channel_map[arch][track]
+            for release in releases:
+                if release['risk'] == risk:
+                    return release['confinement']
+
+    return None

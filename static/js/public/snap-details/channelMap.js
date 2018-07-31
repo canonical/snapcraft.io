@@ -273,14 +273,14 @@ class ChannelMap {
 
   slideToInstructions(clickEl) {
     // Add content to the right slide area
-    this.writeInstallInstructions(clickEl.dataset.channel);
+    this.writeInstallInstructions(clickEl.dataset.channel, clickEl.dataset.confinement);
 
     const slides = clickEl.closest('.p-channel-map__slides');
     slides.classList.add('show-right');
     slides.classList.remove('show-left');
   }
 
-  writeInstallInstructions(channel) {
+  writeInstallInstructions(channel, confinement) {
     let paramString = '';
 
     // By default no params are required
@@ -288,10 +288,14 @@ class ChannelMap {
     // For all other tracks and risks, use the full --channel={channel} syntax
     if (channel.indexOf('latest/') === 0) {
       if (channel !== 'latest/stable') {
-        paramString = `--${channel.split('/')[1]}`;
+        paramString = ` --${channel.split('/')[1]}`;
       }
     } else {
-      paramString = `--channel=${channel}`;
+      paramString = ` --channel=${channel}`;
+    }
+
+    if (confinement === 'classic') {
+      paramString += ` --classic`;
     }
 
     const template = this.INSTALL_TEMPLATE
@@ -393,7 +397,8 @@ class ChannelMap {
           trackName,
           trackInfo['risk'],
           trackInfo['version'],
-          moment.utc(trackInfo['created-at']).fromNow()
+          moment.utc(trackInfo['created-at']).fromNow(),
+          trackInfo['confinement']
         ]);
       });
     });

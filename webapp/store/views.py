@@ -341,6 +341,11 @@ def store_blueprint(store_query=None):
             channel_maps_list,
             default_track)
 
+        confinement = logic.get_confinement(
+            channel_maps_list,
+            default_track,
+            lowest_risk_available)
+
         context = {
             # Data direct from details API
             'snap_title': details['snap']['title'],
@@ -360,6 +365,7 @@ def store_blueprint(store_query=None):
             'developer_validation': details['snap']['publisher']['validation'],
             'default_track': default_track,
             'lowest_risk_available': lowest_risk_available,
+            'confinement': confinement,
 
             # Transformed API data
             'filesize': humanize.naturalsize(binary_filesize),

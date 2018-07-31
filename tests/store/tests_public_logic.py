@@ -220,3 +220,25 @@ class StoreLogicTest(unittest.TestCase):
                 ]
             }
         })
+
+
+    def test_get_confinement(self):
+        channel_map = {
+            'arch': {
+                'track': [
+                    {
+                        'risk': 'edge',
+                        'confinement': 'classic'
+                    },
+                    {
+                        'risk': 'stable',
+                        'confinement': 'strict'
+                    }
+                ]
+            }
+        }
+        classic_result = logic.get_confinement(channel_map, 'track', 'edge')
+        self.assertEqual(classic_result, 'classic')
+
+        strict_result = logic.get_confinement(channel_map, 'track', 'stable')
+        self.assertEqual(strict_result, 'strict')

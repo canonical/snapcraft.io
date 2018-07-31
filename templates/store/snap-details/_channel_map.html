@@ -26,7 +26,8 @@
             id="snap-install"
             value="sudo snap install {{ package_name }}
 {% if default_track != 'latest' %} --channel={{ default_track }}/{{ lowest_risk_available }}
-{% elif lowest_risk_available != 'stable' %}--{{ lowest_risk_available }}{% endif %}"
+{% elif lowest_risk_available != 'stable' %}--{{ lowest_risk_available }}{% endif %}
+{% if confinement == 'classic' %} --classic{% endif %}"
             readonly="readonly"
           />
           <button
@@ -128,7 +129,7 @@
       <input
         class="p-code-snippet__input"
         id="snap-install-alt"
-        value="sudo snap install {{ package_name }} ${paramString}"
+        value="sudo snap install {{ package_name }}${paramString}"
         readonly="readonly"
       />
       <button
@@ -143,7 +144,7 @@
   </div>
 </script>
 <script type="text/template" id="channel-map-row-template" data-js="channel-map-row">
-  <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}">
+  <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}" data-confinement="${row[4]}">
     <td>${row[0]}/${row[1]}</td>
     <td>${row[2]}</td>
     <td class="u-hide--medium u-hide--small">${row[3]}</td>
