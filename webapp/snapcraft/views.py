@@ -74,4 +74,12 @@ def snapcraft_blueprint():
         return flask.redirect(
             'https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png')
 
+    @snapcraft.route('/build')
+    def build():
+        status_code = 200
+
+        return flask.render_template(
+            'snapcraft/build.html'
+        ), status_code
+
     return snapcraft

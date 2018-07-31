@@ -43,12 +43,6 @@
     @extend %paragraph-copy;
   }
 
-  // update to p-list is-ticked style
-  // using em instead of rem to position the tick to make it look good with bigger fonts
-  .is-ticked {
-    background-position: 0 .3em;
-  }
-
   // This can be removed when
   // https://github.com/vanilla-framework/vanilla-framework/issues/1627
   // is resolved.

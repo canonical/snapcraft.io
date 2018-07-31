@@ -1,0 +1,15 @@
+@mixin snapcraft-p-build {
+  .p-build__github-button {
+    font-size: 1.25rem;
+    margin-top: $spv-inter--regular-scaleable;
+
+    img {
+      display: inline-block;
+      height: 1.5em;
+      margin-left: .5rem;
+      vertical-align: middle;
+    }
+  }
+}
+
+

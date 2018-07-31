@@ -180,3 +180,6 @@ img {
 
 @import 'snapcraft_release';
 @include snapcraft-release;
+
+@import 'snapcraft_p-build';
+@include snapcraft-p-build;
