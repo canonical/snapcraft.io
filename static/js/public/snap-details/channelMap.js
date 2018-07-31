@@ -5,19 +5,7 @@ import SnapEvents from '../../libs/events';
 
 class ChannelMap {
   constructor(selectorString, packageName, channelMapData, defaultTrack) {
-    let installTemplateEl = document.querySelector('[data-js="install-window"]');
-    if (!installTemplateEl) {
-      installTemplateEl = document.getElementById('install-window-template');
-    }
-    let channelRowTemplateEl = document.querySelector('[data-js="channel-map-row"]');
-    if (!channelRowTemplateEl) {
-      channelRowTemplateEl = document.getElementById('channel-map-row-template');
-    }
-
     this.RISK_ORDER = ['stable', 'candidate', 'beta', 'edge'];
-    this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
-    this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
-
     this.packageName = packageName;
     this.currentTab = 'overview';
 
@@ -32,17 +20,9 @@ class ChannelMap {
     this.channelOverlayEl = document.querySelector('.p-channel-map-overlay');
     this.channelMapData = channelMapData;
 
-    // get architectures from data
-    const architectures = Object.keys(this.channelMapData);
-
-    // initialize architecture select
-    const archSelect = document.querySelector('[data-js="arch-select"]');
-
-    archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
-
-    this.arch = this.channelMapData['amd64'] ? 'amd64' : architectures[0];
-
     this.events = new SnapEvents(this.channelMapEl.parentNode);
+
+    this.initOtherVersions();
 
     // capture events
     this.bindEvents();
@@ -82,6 +62,37 @@ class ChannelMap {
     // Join the arrays together again
 
     return stringTracks.concat(numberTracks);
+  }
+
+  initOtherVersions() {
+    let installTemplateEl = document.querySelector('[data-js="install-window"]');
+    if (!installTemplateEl) {
+      installTemplateEl = document.getElementById('install-window-template');
+    }
+    let channelRowTemplateEl = document.querySelector('[data-js="channel-map-row"]');
+    if (!channelRowTemplateEl) {
+      channelRowTemplateEl = document.getElementById('channel-map-row-template');
+    }
+
+    if (!installTemplateEl || !channelRowTemplateEl) {
+      document.querySelector('.p-snap-install-buttons__versions')
+        .style
+        .display = 'none';
+      return false;
+    }
+
+    this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
+    this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
+
+    // get architectures from data
+    const architectures = Object.keys(this.channelMapData);
+
+    // initialize architecture select
+    const archSelect = document.querySelector('[data-js="arch-select"]');
+
+    archSelect.innerHTML = architectures.map(arch => `<option value="${arch}">${arch}</option>`).join('');
+
+    this.arch = this.channelMapData['amd64'] ? 'amd64' : architectures[0];
   }
 
   bindEvents() {
