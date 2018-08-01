@@ -20,6 +20,10 @@ class ChannelMap {
     this.channelOverlayEl = document.querySelector('.p-channel-map-overlay');
     this.channelMapData = channelMapData;
 
+    if (!this.channelOverlayEl) {
+      throw new Error('The channel map HTML is not present');
+    }
+
     this.events = new SnapEvents(this.channelMapEl.parentNode);
 
     this.initOtherVersions();

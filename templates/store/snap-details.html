@@ -210,7 +210,12 @@
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function () {
-      snapcraft.public.screenshots('#js-snap-screenshots');
+      try {
+        snapcraft.public.screenshots('#js-snap-screenshots');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
       {% if countries %}
         try {
           snapcraft.public.map('#js-snap-map', {{ countries | tojson }});
@@ -222,7 +227,9 @@
 
       {% if not webapp_config['STORE_QUERY'] and channel_map %}
         try {
-          snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          document.addEventListener('DOMContentLoaded', function() {
+            snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          });
         } catch(e) {
           console.log(e);
           Raven.captureException(e);
