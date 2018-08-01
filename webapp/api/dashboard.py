@@ -46,7 +46,8 @@ METADATA_QUERY_URL = ''.join([
 
 SCREENSHOTS_QUERY_URL = ''.join([
     DASHBOARD_API,
-    'snaps/{snap_id}/binary-metadata'
+    'snaps/{snap_id}/binary-metadata',
+    '?conflict_on_update=true'
 ])
 
 SNAP_INFO_URL = ''.join([

@@ -25,7 +25,7 @@ class PostMetadataListingPage(
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/binary-metadata').format(
+            'snaps/{}/binary-metadata?conflict_on_update=true').format(
                 self.snap_id)
 
         changes = {
@@ -55,7 +55,7 @@ class PostBinaryMetadataErrorListingPage(
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
         binary_url = (
             'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/binary-metadata').format(
+            'snaps/{}/binary-metadata?conflict_on_update=true').format(
                 self.snap_id)
 
         responses.add(
@@ -115,7 +115,7 @@ class PostBinaryMetadataListingPage(
         endpoint_url = '/account/snaps/{}/listing'.format(snap_name)
         api_url = (
             'https://dashboard.snapcraft.io/dev/api/'
-            'snaps/{}/binary-metadata').format(
+            'snaps/{}/binary-metadata?conflict_on_update=true').format(
                 self.snap_id)
 
         responses.add(
