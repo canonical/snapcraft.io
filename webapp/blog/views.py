@@ -53,7 +53,10 @@ def feed():
 
     right_urls = logic.change_url(
         feed, flask.request.base_url.replace('/feed', ''))
-    return flask.Response(right_urls, mimetype='text/xml')
+
+    right_title = right_urls.replace('Ubuntu Blog', 'Snapcraft Blog')
+
+    return flask.Response(right_title, mimetype='text/xml')
 
 
 @blog.route('/<slug>')

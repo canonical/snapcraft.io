@@ -68,7 +68,7 @@ def get_user(user_id):
 def get_feed():
     """"""
     response = api_session.get(
-        'https://admin.insights.ubuntu.com/?tag=Snap&feed=rss')
+        'https://admin.insights.ubuntu.com/?tag=snapcraft.io&feed=rss')
 
     if not response.ok:
         return None
