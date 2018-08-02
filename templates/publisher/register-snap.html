@@ -1,4 +1,4 @@
-{% extends webapp_config['LAYOUT'] %}
+{% extends "publisher/_publisher_layout.html" %}
 
 {% block title %}
 Register new Snap name
@@ -99,7 +99,7 @@ Register new Snap name
 
     <div class="row u-no-margin--top">
       <div class="col-8 push-2 u-clearfix u-align--right">
-          <input type="submit" class="p-button--positive u-no-margin--top u-float-right" value="Register"/>        
+          <input type="submit" class="p-button--positive u-no-margin--top u-float-right" value="Register"/>
           <a class="p-button--neutral u-float-right" href="/account/snaps">Cancel</a>
       </div>
     </div>
