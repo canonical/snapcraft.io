@@ -18,11 +18,10 @@
       width: 100%;
     }
   }
-  
-.no-search-query {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+  .no-search-query {
     font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
