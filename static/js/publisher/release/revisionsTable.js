@@ -1,13 +1,18 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+// TODO:
+// - when version is the same but revision different it's not visible
+// - when other revision is released 'over' other one, other one is still counted/listed
+// - if already released version would be long showing release with -> will be off screen
 export default class RevisionsTable extends Component {
   constructor() {
     super();
 
     // default to latest track
     this.state = {
-      currentTrack: 'latest'
+      currentTrack: 'latest',
+      releases: {} // revisions to be released
     };
   }
 
@@ -20,7 +25,7 @@ export default class RevisionsTable extends Component {
       const split = channel.split('/');
 
       // if there is a track name in the channel name
-      // and we haven't saved it yet, s
+      // and we haven't saved it yet
       if (split.length > 1 && tracks.indexOf(split[0]) === -1) {
         tracks.push(split[0]);
       }
@@ -38,10 +43,14 @@ export default class RevisionsTable extends Component {
     revisions.forEach(revision => {
 
       revision.channels.forEach(channel => {
+        // append 'latest' track to default channels
+        if (channel.split('/').length === 1) {
+          channel = `latest/${channel}`;
+        }
+
         if (!releasedChannels[channel]) {
           releasedChannels[channel] = {};
         }
-
         // some revisions may have multiple architectures listed
         const archs = revision.arch.split(', ');
 
@@ -69,34 +78,104 @@ export default class RevisionsTable extends Component {
     };
   }
 
+  promoteRevision(revision, channel) {
+    this.setState((state) => {
+      const { releases } = state;
+
+      if (!releases[revision.revision]) {
+        releases[revision.revision] = {
+          revision: revision,
+          channels: []
+        };
+      }
+
+      let channels = releases[revision.revision].channels;
+      channels.push(channel);
+
+      // make sure channels are unique
+      channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
+
+      releases[revision.revision].channels = channels;
+
+      return {
+        releases
+      };
+    });
+  }
+
+  getRevisionToDisplay(channels, nextReleases, channel, arch) {
+    const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
+    const currentRelease = channels[channel] && channels[channel][arch];
+
+    return pendingRelease || currentRelease;
+  }
+
   renderRows(releaseData) {
     const { channels, archs } = releaseData;
 
-    const track = this.state.currentTrack;
+    const nextChannelReleases = this.getNextReleasesData(channels, this.state.releases);
 
-    return ['stable', 'candidate', 'beta', 'edge'].map((channel) => {
-      if (track !== 'latest') {
-        channel = `${track}/${channel}`;
-      }
+    const track = this.state.currentTrack;
+    const RISKS = ['stable', 'candidate', 'beta', 'edge'];
+    return RISKS.map((risk) => {
+      const channel = `${track}/${risk}`;
 
       const release = channels[channel] || {};
 
-      // make sure to display 'latest' in front of default channels
-      if (track === 'latest') {
-        channel = `${track}/${channel}`;
-      }
+      const releaseClick = (revision, track, risk) => {
+        let targetRisk;
+        targetRisk = RISKS[RISKS.indexOf(risk) - 1];
+        if (targetRisk) {
+          this.promoteRevision(revision, `${track}/${targetRisk}`);
+        }
+      };
 
+      // TODO:
+      // - move logic out of template
       return (
         <tr key={channel}>
           <td>{ channel }</td>
           {
             archs.map(arch => {
+              // TODO: @bartaz - clean up this mess
+              let canBePromoted = false;
+              let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
+              let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
+              let promotedRevision = this.getRevisionToDisplay(channels, nextChannelReleases, `${track}/${targetRisk}`, arch);
+
+
+              if (risk !== 'stable' && thisRevision && (!promotedRevision || promotedRevision.revision !== thisRevision.revision)) {
+                canBePromoted = true;
+              }
+
+              // if feature is disabled don't show the buttons
+              if (!this.props.options.releaseUiEnabled) {
+                canBePromoted = false;
+              }
+
+              let nextRelease;
+
+              if (nextChannelReleases[channel] && nextChannelReleases[channel][arch]) {
+                if (!release[arch] || release[arch].revision !== nextChannelReleases[channel][arch].revision) {
+                  nextRelease = nextChannelReleases[channel][arch];
+                }
+              }
               return (
                 <td
+                  style={ { position: 'relative' } }
                   key={`${channel}/${arch}`}
-                  title={ release[arch] ? release[arch].version : null }
+                  title={ release[arch] ? `${release[arch].version} (${release[arch].revision})` : null }
                 >
                   { release[arch] ? release[arch].version : '-' }
+                  { nextRelease &&
+                    <span> &rarr; { nextRelease.version }</span>
+                  }
+
+                  { canBePromoted &&
+                    <div style={{ position: 'absolute', right: '5px', top: '5px' }}>
+                      <button onClick={releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
+                    </div>
+                  }
                 </td>
               );
             })
@@ -132,9 +211,35 @@ export default class RevisionsTable extends Component {
     this.setState({ currentTrack: event.target.value });
   }
 
+  getNextReleasesData(currentReleaseData, releases) {
+    const nextReleaseData = JSON.parse(JSON.stringify(currentReleaseData));
+
+    // for each release
+    Object.keys(releases).forEach(releasedRevision => {
+      releases[releasedRevision].channels.forEach(channel => {
+        const revision = releases[releasedRevision].revision;
+
+        if (!nextReleaseData[channel]) {
+          nextReleaseData[channel] = {};
+        }
+
+        revision.arch.split(', ').forEach(arch => {
+          nextReleaseData[channel][arch] = revision;
+        });
+      });
+    });
+
+    return nextReleaseData;
+  }
+
+  onRevertClick() {
+    this.setState({
+      releases: {}
+    });
+  }
+
   render() {
     const releaseData = this.getReleaseDataFromList(this.props.revisions);
-
 
     return (
       <Fragment>
@@ -142,6 +247,9 @@ export default class RevisionsTable extends Component {
           <h4 className="u-float--left">Releases available for install</h4>
           { releaseData.tracks.length > 1 && this.renderTrackDropdown(releaseData.tracks) }
         </div>
+        { Object.keys(this.state.releases).length > 0 &&
+          <p>{ Object.keys(this.state.releases).length } revision{ Object.keys(this.state.releases).length > 1 ? 's' : '' } to release <button disabled title="Not implemented yet...">Apply</button> <button onClick={ this.onRevertClick.bind(this) }>Cancel</button></p>
+        }
         <table className="p-release-table">
           <thead>
             <tr>
@@ -162,5 +270,6 @@ export default class RevisionsTable extends Component {
 }
 
 RevisionsTable.propTypes = {
-  revisions: PropTypes.object.isRequired
+  revisions: PropTypes.object.isRequired,
+  options: PropTypes.object.isRequired
 };
