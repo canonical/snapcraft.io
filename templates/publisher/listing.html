@@ -1,4 +1,4 @@
-{% extends webapp_config['LAYOUT'] %}
+{% extends "publisher/_publisher_layout.html" %}
 
 {% block meta_title %}
   Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
