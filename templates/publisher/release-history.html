@@ -25,6 +25,8 @@ Revision history for {{ snap_title }}
 {% block scripts %}
   <script src="{{ static_url('js/dist/release.js') }}"></script>
   <script>
-    snapcraft.release.initReleases('#release-history', {{ revision_history|tojson }});
+    snapcraft.release.initReleases('#release-history', {{ revision_history|tojson }}, {
+      releaseUiEnabled: {{ release_ui_enabled|tojson }}
+    });
   </script>
 {% endblock %}

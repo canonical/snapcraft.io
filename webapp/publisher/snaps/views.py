@@ -414,7 +414,8 @@ def get_release_history(snap_name):
 
     context = {
         'snap_name': snap_name,
-        'revision_history': revision_history
+        'revision_history': revision_history,
+        'release_ui_enabled': flask.current_app.config['RELEASE_UI_ENABLED']
     }
 
     return flask.render_template(

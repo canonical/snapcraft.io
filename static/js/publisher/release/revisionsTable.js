@@ -148,6 +148,11 @@ export default class RevisionsTable extends Component {
                 canBePromoted = true;
               }
 
+              // if feature is disabled don't show the buttons
+              if (!this.props.options.releaseUiEnabled) {
+                canBePromoted = false;
+              }
+
               let nextRelease;
 
               if (nextChannelReleases[channel] && nextChannelReleases[channel][arch]) {
@@ -159,11 +164,11 @@ export default class RevisionsTable extends Component {
                 <td
                   style={ { position: 'relative' } }
                   key={`${channel}/${arch}`}
-                  title={ release[arch] ? release[arch].version : null }
+                  title={ release[arch] ? `${release[arch].version} (${release[arch].revision})` : null }
                 >
-                  { release[arch] ? `${release[arch].version} (${release[arch].revision})` : '-' }
+                  { release[arch] ? release[arch].version : '-' }
                   { nextRelease &&
-                    <span> &rarr; { `${nextRelease.version} (${nextRelease.revision})` }</span>
+                    <span> &rarr; { nextRelease.version }</span>
                   }
 
                   { canBePromoted &&
@@ -265,5 +270,6 @@ export default class RevisionsTable extends Component {
 }
 
 RevisionsTable.propTypes = {
-  revisions: PropTypes.object.isRequired
+  revisions: PropTypes.object.isRequired,
+  options: PropTypes.object.isRequired
 };
