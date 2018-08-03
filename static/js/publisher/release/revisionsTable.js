@@ -194,15 +194,24 @@ export default class RevisionsTable extends Component {
                 <td
                   style={ { position: 'relative' } }
                   key={`${channel}/${arch}`}
-                  title={ release[arch] ? `${release[arch].version} (${release[arch].revision})` : null }
                 >
-                  <span className={ nextRelease ? 'p-previous-revision' : '' }>
-                    { release[arch] ? release[arch].version : '-' }
-                  </span>
-                  { nextRelease &&
-                    <span> &rarr; { nextRelease.version }</span>
-                  }
+                  <span className="p-tooltip p-tooltip--btm-center">
+                    <span className="p-release-version">
+                      <span className={ nextRelease ? 'p-previous-revision' : '' }>
+                        { release[arch] ? release[arch].version : '-' }
+                      </span>
+                      { nextRelease &&
+                        <span> &rarr; { nextRelease.version }</span>
+                      }
+                    </span>
 
+                    <span className="p-tooltip__message">
+                      { release[arch] ? `${release[arch].version} (${release[arch].revision})` : 'None' }
+                      { nextRelease &&
+                        <span> &rarr; { `${nextRelease.version} (${nextRelease.revision})` }</span>
+                      }
+                    </span>
+                  </span>
                   { (canBePromoted || nextRelease) &&
                     <div style={{ position: 'absolute', right: '5px', top: '5px' }}>
                       { canBePromoted &&
@@ -257,7 +266,7 @@ export default class RevisionsTable extends Component {
               const release = releases[revId];
 
               return <span key={revId}>
-                {release.revision.version} ({release.revision.arch})
+                {release.revision.version} ({release.revision.revision}) {release.revision.arch}
                 {' '}
                 to {release.channels.join(', ')}
                 {'\n'}

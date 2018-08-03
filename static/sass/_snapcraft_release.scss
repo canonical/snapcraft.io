@@ -3,11 +3,6 @@
     th {
       text-transform: none;
     }
-
-    td {
-      overflow: hidden;
-      white-space: nowrap;
-    }
   }
 
 
@@ -22,5 +17,13 @@
 
   .p-previous-revision {
     opacity: .5;
+  }
+
+  .p-release-version {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
