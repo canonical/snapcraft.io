@@ -103,6 +103,27 @@ export default class RevisionsTable extends Component {
     });
   }
 
+  undoRelease(revision, channel) {
+    this.setState((state) => {
+      const { releases } = state;
+
+      if (releases[revision.revision]) {
+        const channels = releases[revision.revision].channels;
+        if (channels.indexOf(channel) !== -1) {
+          channels.splice(channels.indexOf(channel), 1);
+        }
+
+        if (channels.length === 0) {
+          delete releases[revision.revision];
+        }
+      }
+
+      return {
+        releases
+      };
+    });
+  }
+
   getRevisionToDisplay(channels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
     const currentRelease = channels[channel] && channels[channel][arch];
@@ -110,6 +131,11 @@ export default class RevisionsTable extends Component {
     return pendingRelease || currentRelease;
   }
 
+  // TODO:
+  // - opacity to old release name
+  // - tooltip for release (list of revisions to release)
+  // - tooltip for promote button
+  // - tooltip for undo button
   renderRows(releaseData) {
     const { channels, archs } = releaseData;
 
@@ -128,6 +154,10 @@ export default class RevisionsTable extends Component {
         if (targetRisk) {
           this.promoteRevision(revision, `${track}/${targetRisk}`);
         }
+      };
+
+      const undoClick = (revision, track, risk) => {
+        this.undoRelease(revision, `${track}/${risk}`);
       };
 
       // TODO:
@@ -160,6 +190,7 @@ export default class RevisionsTable extends Component {
                   nextRelease = nextChannelReleases[channel][arch];
                 }
               }
+
               return (
                 <td
                   style={ { position: 'relative' } }
@@ -171,9 +202,14 @@ export default class RevisionsTable extends Component {
                     <span> &rarr; { nextRelease.version }</span>
                   }
 
-                  { canBePromoted &&
+                  { (canBePromoted || nextRelease) &&
                     <div style={{ position: 'absolute', right: '5px', top: '5px' }}>
-                      <button onClick={releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
+                      { canBePromoted &&
+                        <button className="p-icon-button" onClick={releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
+                      }
+                      { nextRelease &&
+                        <button className="p-icon-button" onClick={undoClick.bind(this, thisRevision, track, risk)} title={`Undo this release`}>&#x2715;</button>
+                      }
                     </div>
                   }
                 </td>

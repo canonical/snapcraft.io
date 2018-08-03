@@ -9,4 +9,15 @@
       white-space: nowrap;
     }
   }
+
+
+  .p-icon-button {
+    padding-left: .5rem;
+    padding-right: .5rem;
+
+    &:not(:last-of-type):not(:only-of-type) {
+      margin-right: .25rem;
+    }
+  }
+
 }
