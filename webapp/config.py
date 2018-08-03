@@ -12,6 +12,11 @@ LOGIN_URL = os.getenv(
     'https://login.ubuntu.com',
 )
 
+BSI_URL = os.getenv(
+    'BSI_URL',
+    'https://build.snapcraft.io'
+)
+
 ENVIRONMENT = os.getenv(
     'ENVIRONMENT',
     'devel'
