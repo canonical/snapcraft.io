@@ -132,9 +132,9 @@ export default class RevisionsTable extends Component {
   }
 
   // TODO:
-  // - tooltip for release (list of revisions to release)
   // - tooltip for promote button
   // - tooltip for undo button
+  // - bug when releasing 2 revisions to same channel
   renderRows(releaseData) {
     const { channels, archs } = releaseData;
 
@@ -244,6 +244,34 @@ export default class RevisionsTable extends Component {
     );
   }
 
+  renderReleasesConfirm() {
+    const { releases } = this.state;
+    const releasesCount = Object.keys(releases).length;
+
+    return (releasesCount > 0 &&
+      <p>
+        <span className="p-tooltip">
+          { releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release
+          <span className="p-tooltip__message" role="tooltip" id="default-tooltip">
+            { Object.keys(releases).map(revId => {
+              const release = releases[revId];
+
+              return <span key={revId}>
+                {release.revision.version} ({release.revision.arch})
+                {' '}
+                to {release.channels.join(', ')}
+                {'\n'}
+              </span>;
+            })}
+          </span>
+        </span>
+        {' '}
+        <button disabled title="Not implemented yet...">Apply</button>
+        <button onClick={ this.onRevertClick.bind(this) }>Cancel</button>
+      </p>
+    );
+  }
+
   onTrackChange(event) {
     this.setState({ currentTrack: event.target.value });
   }
@@ -284,9 +312,7 @@ export default class RevisionsTable extends Component {
           <h4 className="u-float--left">Releases available for install</h4>
           { releaseData.tracks.length > 1 && this.renderTrackDropdown(releaseData.tracks) }
         </div>
-        { Object.keys(this.state.releases).length > 0 &&
-          <p>{ Object.keys(this.state.releases).length } revision{ Object.keys(this.state.releases).length > 1 ? 's' : '' } to release <button disabled title="Not implemented yet...">Apply</button> <button onClick={ this.onRevertClick.bind(this) }>Cancel</button></p>
-        }
+        { this.renderReleasesConfirm() }
         <table className="p-release-table">
           <thead>
             <tr>
