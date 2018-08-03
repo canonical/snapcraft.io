@@ -132,7 +132,6 @@ export default class RevisionsTable extends Component {
   }
 
   // TODO:
-  // - opacity to old release name
   // - tooltip for release (list of revisions to release)
   // - tooltip for promote button
   // - tooltip for undo button
@@ -197,7 +196,9 @@ export default class RevisionsTable extends Component {
                   key={`${channel}/${arch}`}
                   title={ release[arch] ? `${release[arch].version} (${release[arch].revision})` : null }
                 >
-                  { release[arch] ? release[arch].version : '-' }
+                  <span className={ nextRelease ? 'p-previous-revision' : '' }>
+                    { release[arch] ? release[arch].version : '-' }
+                  </span>
                   { nextRelease &&
                     <span> &rarr; { nextRelease.version }</span>
                   }
