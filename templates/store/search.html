@@ -91,31 +91,8 @@
       </div>
     {% else %}
       <div class="row">
-        <h2>Sorry, we couldn’t find any snaps</h2>
-      </div>
-      {% if category %}
-        <div class="row">
-          <h3>Other {{ category_display|lower }} snaps</h3>
-        </div>
-        <div data-category="{{ category }}" class="row js-store-category">
-          {# _category-partial.html loaded via JS #}
-        </div>
-      {% else %}
-        {% for category in categories %}
-          {% if loop.index > 1 %}
-            <div class="row">
-              <hr />
-            </div>
-          {% endif %}
-
-          <div class="row">
-            <h3>{{ category.name }}</h3>
-          </div>
-          <div data-category="{{ category.slug }}" class="row js-store-category">
-            {# _category-partial.html loaded via JS #}
-          </div>
-        {% endfor %}
-      {% endif %}
+        <h2>We couldn't find anything for your search <div class="no-search-query">{{query}}.</div></h2>
+        <h4>Try using some different, or more general keywords.</h4>
     {% endif %}
   </section>
 
