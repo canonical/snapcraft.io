@@ -72,6 +72,12 @@ def after_login(resp):
 
 @login.route('/logout')
 def logout():
+    no_redirect = flask.request.args.get('no_redirect')
+
     if authentication.is_authenticated(flask.session):
         authentication.empty_session(flask.session)
-    return flask.redirect('/')
+
+    if no_redirect == 'true':
+        return flask.redirect('/')
+    else:
+        return flask.redirect('https://build.snapcraft.io/auth/logout')
