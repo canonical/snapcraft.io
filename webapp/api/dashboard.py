@@ -12,7 +12,12 @@ from webapp.api.exceptions import (
 )
 
 
-api_session = api.requests.Session()
+# XXX cprov 2018-08-03: publisher snap-info endpoint is behaving badly for
+# snaps with large and spread channelmap (e.g. nextcloud). While the issue
+# is solved in the Store we will relax the requests `read` timeout according
+# to what the frontend (k8s ingress) permits.
+# See https://bugs.launchpad.net/snapstore/+bug/1785094 for more information.
+api_session = api.requests.Session(timeout=(.5, 6))
 
 
 DASHBOARD_API = os.getenv(
