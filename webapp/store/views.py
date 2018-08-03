@@ -405,6 +405,7 @@ def store_blueprint(store_query=None):
     def store_category(category):
         status_code = 200
         error_info = {}
+        category_results = []
 
         try:
             category_results = api.get_searched_snaps(
