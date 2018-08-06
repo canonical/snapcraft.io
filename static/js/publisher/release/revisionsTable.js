@@ -170,10 +170,21 @@ export default class RevisionsTable extends Component {
               let canBePromoted = false;
               let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
               let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
-              let promotedRevision = this.getRevisionToDisplay(channels, nextChannelReleases, `${track}/${targetRisk}`, arch);
 
+              let promotedRevision = null;
+              let currentRelease = null;
+              let hasPendingRelease = false;
 
-              if (risk !== 'stable' && thisRevision && (!promotedRevision || promotedRevision.revision !== thisRevision.revision)) {
+              if (targetRisk) {
+                promotedRevision = this.getRevisionToDisplay(channels, nextChannelReleases, `${track}/${targetRisk}`, arch);
+
+                currentRelease = channels[`${track}/${targetRisk}`] && channels[`${track}/${targetRisk}`][arch];
+                hasPendingRelease = currentRelease && promotedRevision && (currentRelease.revision !== promotedRevision.revision);
+              }
+
+              if (risk !== 'stable' && thisRevision && !hasPendingRelease &&
+                (!promotedRevision || promotedRevision.revision !== thisRevision.revision)
+              ) {
                 canBePromoted = true;
               }
 
