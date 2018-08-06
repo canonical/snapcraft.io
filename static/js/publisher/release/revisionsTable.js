@@ -213,7 +213,7 @@ export default class RevisionsTable extends Component {
                     </span>
                   </span>
                   { (canBePromoted || nextRelease) &&
-                    <div style={{ position: 'absolute', right: '5px', top: '5px' }}>
+                    <div className="p-release-buttons">
                       { canBePromoted &&
                         <button className="p-icon-button" onClick={releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
                       }
@@ -261,6 +261,8 @@ export default class RevisionsTable extends Component {
       <p>
         <span className="p-tooltip">
           { releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release
+          {' '}
+          <i className="p-icon--question" />
           <span className="p-tooltip__message" role="tooltip" id="default-tooltip">
             { Object.keys(releases).map(revId => {
               const release = releases[revId];
