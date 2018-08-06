@@ -271,9 +271,9 @@ export default class RevisionsTable extends Component {
     return (releasesCount > 0 &&
       <p>
         <span className="p-tooltip">
-          { releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release
-          {' '}
           <i className="p-icon--question" />
+          {' '}
+          { releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release
           <span className="p-tooltip__message" role="tooltip" id="default-tooltip">
             { Object.keys(releases).map(revId => {
               const release = releases[revId];
@@ -288,8 +288,8 @@ export default class RevisionsTable extends Component {
           </span>
         </span>
         {' '}
-        <button disabled title="Not implemented yet...">Apply</button>
-        <button onClick={ this.onRevertClick.bind(this) }>Cancel</button>
+        <button className="p-button--positive is-inline" disabled title="Not implemented yet...">Apply</button>
+        <button className="p-button--neutral" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
       </p>
     );
   }
