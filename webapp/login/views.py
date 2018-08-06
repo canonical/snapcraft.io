@@ -18,6 +18,12 @@ LOGIN_URL = os.getenv(
     'LOGIN_URL',
     'https://login.ubuntu.com',
 )
+
+BSI_URL = os.getenv(
+    'BSI_URL',
+    'https://build.snapcraft.io'
+)
+
 open_id = OpenID(
     stateless=True,
     safe_roots=[],
@@ -75,3 +81,8 @@ def logout():
     if authentication.is_authenticated(flask.session):
         authentication.empty_session(flask.session)
     return flask.redirect('/')
+
+
+@login.route('/login/bsi')
+def login_bsi():
+    return flask.redirect(BSI_URL + '/auth/authenticate')
