@@ -56,6 +56,14 @@ def snapcraft_blueprint():
             error_info=error_info
         ), status_code
 
+    @snapcraft.route('/iot')
+    def iot():
+        status_code = 200
+
+        return flask.render_template(
+            'store/categories/iot.html'
+        ), status_code
+
     @snapcraft.route('/docs', defaults={'path': ''})
     @snapcraft.route('/docs/<path:path>')
     def docs_redirect(path):

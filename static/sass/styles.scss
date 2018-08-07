@@ -183,3 +183,9 @@ img {
 
 @import 'snapcraft_p-build';
 @include snapcraft-p-build;
+
+@import 'patterns_case-study';
+@include snapcraft-p-case-study;
+
+@import 'patterns_snap-row';
+@include snapcraft-p-snap-row;

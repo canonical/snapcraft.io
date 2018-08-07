@@ -1,0 +1,16 @@
+@mixin snapcraft-p-snap-row {
+  .p-snap-row {
+    margin-bottom: $spv-inter--regular;
+
+    @media screen and (max-width: $breakpoint-navigation-threshold) {
+      .col-2 {
+        @include column-base;
+        width: column-width(6);
+      }
+
+      .p-media-object--snap {
+        margin-bottom: $spv-inter--regular;
+      }
+    }
+  }
+}
