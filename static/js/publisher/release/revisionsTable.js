@@ -1,10 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-// TODO:
-// - when version is the same but revision different it's not visible
-// - when other revision is released 'over' other one, other one is still counted/listed
-// - if already released version would be long showing release with -> will be off screen
+const RISKS = ['stable', 'candidate', 'beta', 'edge'];
+
 export default class RevisionsTable extends Component {
   constructor() {
     super();
@@ -131,111 +129,103 @@ export default class RevisionsTable extends Component {
     return pendingRelease || currentRelease;
   }
 
-  // TODO:
-  // - tooltip for promote button
-  // - tooltip for undo button
-  // - bug when releasing 2 revisions to same channel
+  releaseClick(revision, track, risk) {
+    let targetRisk;
+    targetRisk = RISKS[RISKS.indexOf(risk) - 1];
+    if (targetRisk) {
+      this.promoteRevision(revision, `${track}/${targetRisk}`);
+    }
+  }
+
+  undoClick(revision, track, risk) {
+    this.undoRelease(revision, `${track}/${risk}`);
+  }
+
+  renderRevisionCell(track, risk, arch, channels, nextChannelReleases) {
+
+    const channel = `${track}/${risk}`;
+    //const release = channels[channel] || {};
+
+    let canBePromoted = false;
+    let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
+    let thisPreviousRevision = channels[channel] && channels[channel][arch];
+
+    let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
+    let targetRevision = null;
+    let targetPreviousRevision = null;
+    let targetHasPendingRelease = false;
+
+    if (targetRisk) {
+      const targetChannel = `${track}/${targetRisk}`;
+
+      targetRevision = this.getRevisionToDisplay(channels, nextChannelReleases, targetChannel, arch);
+      targetPreviousRevision = channels[targetChannel] && channels[targetChannel][arch];
+      targetHasPendingRelease = targetPreviousRevision && targetRevision && (targetPreviousRevision.revision !== targetRevision.revision);
+    }
+
+    if (risk !== 'stable' && thisRevision && !targetHasPendingRelease &&
+      (!targetRevision || targetRevision.revision !== thisRevision.revision)
+    ) {
+      canBePromoted = true;
+    }
+
+    // if feature is disabled don't show the buttons
+    if (!this.props.options.releaseUiEnabled) {
+      canBePromoted = false;
+    }
+
+    const hasPendingRelease = thisPreviousRevision && thisRevision && (thisPreviousRevision.revision !== thisRevision.revision);
+
+    return (
+      <td
+        style={ { position: 'relative' } }
+        key={`${channel}/${arch}`}
+      >
+        <span className="p-tooltip p-tooltip--btm-center">
+          <span className="p-release-version">
+            <span className={ hasPendingRelease ? 'p-previous-revision' : '' }>
+              { thisPreviousRevision ? thisPreviousRevision.version : '-' }
+            </span>
+            { hasPendingRelease &&
+              <span> &rarr; { thisRevision.version }</span>
+            }
+          </span>
+
+          <span className="p-tooltip__message">
+            { thisPreviousRevision ? `${thisPreviousRevision.version} (${thisPreviousRevision.revision})` : 'None' }
+            { hasPendingRelease &&
+              <span> &rarr; { `${thisRevision.version} (${thisRevision.revision})` }</span>
+            }
+          </span>
+        </span>
+        { (canBePromoted || hasPendingRelease) &&
+          <div className="p-release-buttons">
+            { canBePromoted &&
+              <button className="p-icon-button" onClick={this.releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
+            }
+            { hasPendingRelease &&
+              <button className="p-icon-button" onClick={this.undoClick.bind(this, thisRevision, track, risk)} title={`Undo this release`}>&#x2715;</button>
+            }
+          </div>
+        }
+      </td>
+    );
+  }
+
   renderRows(releaseData) {
     const { channels, archs } = releaseData;
 
     const nextChannelReleases = this.getNextReleasesData(channels, this.state.releases);
-
     const track = this.state.currentTrack;
-    const RISKS = ['stable', 'candidate', 'beta', 'edge'];
-    return RISKS.map((risk) => {
+
+    return RISKS.map(risk => {
       const channel = `${track}/${risk}`;
 
-      const release = channels[channel] || {};
-
-      const releaseClick = (revision, track, risk) => {
-        let targetRisk;
-        targetRisk = RISKS[RISKS.indexOf(risk) - 1];
-        if (targetRisk) {
-          this.promoteRevision(revision, `${track}/${targetRisk}`);
-        }
-      };
-
-      const undoClick = (revision, track, risk) => {
-        this.undoRelease(revision, `${track}/${risk}`);
-      };
-
-      // TODO:
-      // - move logic out of template
       return (
         <tr key={channel}>
           <td>{ channel }</td>
           {
-            archs.map(arch => {
-              // TODO: @bartaz - clean up this mess
-              let canBePromoted = false;
-              let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
-              let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
-
-              let promotedRevision = null;
-              let currentRelease = null;
-              let hasPendingRelease = false;
-
-              if (targetRisk) {
-                promotedRevision = this.getRevisionToDisplay(channels, nextChannelReleases, `${track}/${targetRisk}`, arch);
-
-                currentRelease = channels[`${track}/${targetRisk}`] && channels[`${track}/${targetRisk}`][arch];
-                hasPendingRelease = currentRelease && promotedRevision && (currentRelease.revision !== promotedRevision.revision);
-              }
-
-              if (risk !== 'stable' && thisRevision && !hasPendingRelease &&
-                (!promotedRevision || promotedRevision.revision !== thisRevision.revision)
-              ) {
-                canBePromoted = true;
-              }
-
-              // if feature is disabled don't show the buttons
-              if (!this.props.options.releaseUiEnabled) {
-                canBePromoted = false;
-              }
-
-              let nextRelease;
-
-              if (nextChannelReleases[channel] && nextChannelReleases[channel][arch]) {
-                if (!release[arch] || release[arch].revision !== nextChannelReleases[channel][arch].revision) {
-                  nextRelease = nextChannelReleases[channel][arch];
-                }
-              }
-
-              return (
-                <td
-                  style={ { position: 'relative' } }
-                  key={`${channel}/${arch}`}
-                >
-                  <span className="p-tooltip p-tooltip--btm-center">
-                    <span className="p-release-version">
-                      <span className={ nextRelease ? 'p-previous-revision' : '' }>
-                        { release[arch] ? release[arch].version : '-' }
-                      </span>
-                      { nextRelease &&
-                        <span> &rarr; { nextRelease.version }</span>
-                      }
-                    </span>
-
-                    <span className="p-tooltip__message">
-                      { release[arch] ? `${release[arch].version} (${release[arch].revision})` : 'None' }
-                      { nextRelease &&
-                        <span> &rarr; { `${nextRelease.version} (${nextRelease.revision})` }</span>
-                      }
-                    </span>
-                  </span>
-                  { (canBePromoted || nextRelease) &&
-                    <div className="p-release-buttons">
-                      { canBePromoted &&
-                        <button className="p-icon-button" onClick={releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
-                      }
-                      { nextRelease &&
-                        <button className="p-icon-button" onClick={undoClick.bind(this, thisRevision, track, risk)} title={`Undo this release`}>&#x2715;</button>
-                      }
-                    </div>
-                  }
-                </td>
-              );
-            })
+            archs.map(arch => this.renderRevisionCell(track, risk, arch, channels, nextChannelReleases))
           }
         </tr>
       );
