@@ -24,9 +24,7 @@
         <ul class="p-navigation__links" role="menu">
           {% for link in webapp_config['STORE_LINKS'] %}
             <li class="p-navigation__link" role="menuitem">
-              <a class="p-link--external" href="{{ link['href'] }}">
-                {{ link['title'] }}
-              </a>
+              <a class="p-link--external" href="{{ link['href'] }}">{{ link['title'] }}</a>
             </li>
           {% endfor %}
         </ul>
