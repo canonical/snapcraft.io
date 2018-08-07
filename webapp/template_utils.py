@@ -20,6 +20,9 @@ def generate_slug(path):
     if path.startswith('/blog'):
         return 'blog'
 
+    if path.startswith('/iot'):
+        return 'iot'
+
     return 'store'
 
 
