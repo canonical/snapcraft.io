@@ -36,6 +36,7 @@ def set_handlers(app):
             'user_name': user_name,
             'VERIFIED_PUBLISHER': 'verified',
             'webapp_config': app.config['WEBAPP_CONFIG'],
+            'BSI_URL': app.config['BSI_URL'],
 
             # Functions
             'contains': template_utils.contains,
