@@ -142,14 +142,13 @@ export default class RevisionsTable extends Component {
   }
 
   renderRevisionCell(track, risk, arch, channels, nextChannelReleases) {
-
     const channel = `${track}/${risk}`;
-    //const release = channels[channel] || {};
 
     let canBePromoted = false;
     let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
     let thisPreviousRevision = channels[channel] && channels[channel][arch];
 
+    // check for revision and pending release in target channel (risk - 1)
     let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
     let targetRevision = null;
     let targetPreviousRevision = null;
@@ -160,7 +159,9 @@ export default class RevisionsTable extends Component {
 
       targetRevision = this.getRevisionToDisplay(channels, nextChannelReleases, targetChannel, arch);
       targetPreviousRevision = channels[targetChannel] && channels[targetChannel][arch];
-      targetHasPendingRelease = targetPreviousRevision && targetRevision && (targetPreviousRevision.revision !== targetRevision.revision);
+      targetHasPendingRelease = (
+        targetRevision && (!targetPreviousRevision || (targetPreviousRevision.revision !== targetRevision.revision))
+      );
     }
 
     if (risk !== 'stable' && thisRevision && !targetHasPendingRelease &&
@@ -174,7 +175,9 @@ export default class RevisionsTable extends Component {
       canBePromoted = false;
     }
 
-    const hasPendingRelease = thisPreviousRevision && thisRevision && (thisPreviousRevision.revision !== thisRevision.revision);
+    const hasPendingRelease = (
+      thisRevision && (!thisPreviousRevision || (thisPreviousRevision.revision !== thisRevision.revision))
+    );
 
     return (
       <td
