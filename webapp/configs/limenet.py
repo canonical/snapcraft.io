@@ -12,12 +12,13 @@ WEBAPP_CONFIG = {
         },
         {
             'title': 'Myriad-RF',
-            'href': 'http://www.limemicro.com/'
+            'href': 'https://myriadrf.org/'
         }
     ],
-    'CUSTOM_STYLES': '.p-navigation__link a {color: #000;}\
+    'CUSTOM_STYLES': '.p-navigation__link a,.p-navigation__link a:visited,\
+     .p-navigation__link a:focus {color: #000;}\
      .p-navigation__link a:hover {color: #049619; background: transparent;}',
     'STORE_INSTALL_INSTRUCTIONS': True,
-    'FOOTER_TEXT': 'Copyright 2017 Lime Microsystems',
+    'FOOTER_TEXT': 'Copyright 2018 Lime Microsystems',
     'STORE_QUERY': 'LimeNET'
 }
