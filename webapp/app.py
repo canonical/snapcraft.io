@@ -4,28 +4,21 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-# Third-party packages
 import flask
-import talisker.flask
-import prometheus_flask_exporter
-from flask_wtf.csrf import CSRFProtect
-from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
-# Local webapp
+import prometheus_flask_exporter
+import talisker.flask
 import webapp.helpers as helpers
-from webapp.handlers import set_handlers
 from webapp.blog.views import blog
-from webapp.store.views import store_blueprint
-from webapp.publisher.views import account
-from webapp.publisher.snaps.views import publisher_snaps
-from webapp.snapcraft.views import snapcraft_blueprint
+from webapp.extensions import cache, csrf, sentry
+from webapp.handlers import set_handlers
 from webapp.login.views import login
-
-
-csrf = CSRFProtect()
-sentry = Sentry()
+from webapp.publisher.snaps.views import publisher_snaps
+from webapp.publisher.views import account
+from webapp.snapcraft.views import snapcraft_blueprint
+from webapp.store.views import store_blueprint
 
 
 def create_app(testing=False):
@@ -55,6 +48,10 @@ def create_app(testing=False):
         init_extensions(app)
 
     app.config.from_object('webapp.configs.' + app.config['WEBAPP'])
+    cache.init_app(app)
+    with app.app_context():
+        cache.clear()
+
     set_handlers(app)
 
     if app.config['WEBAPP'] == 'snapcraft':

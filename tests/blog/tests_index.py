@@ -2,6 +2,7 @@ import responses
 import requests
 
 from webapp.app import create_app
+from webapp.extensions import cache
 from flask_testing import TestCase
 
 
@@ -20,6 +21,7 @@ class BlogPage(TestCase):
         return app
 
     def setUp(self):
+        cache.clear()
         self.api_url = 'https://admin.insights.ubuntu.com/wp-json/wp/v2'
 
     @responses.activate
