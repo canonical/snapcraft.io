@@ -5,7 +5,6 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
 {% endblock %}
 
 {% block content %}
-
 <div id="main-content" class="u-no-margin--top">
   {% set selected_tab='release' %}
   {% include "publisher/_header.html" %}
@@ -25,7 +24,7 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
 {% block scripts %}
   <script src="{{ static_url('js/dist/release.js') }}"></script>
   <script>
-    snapcraft.release.initReleases('#release-history', {{ revision_history|tojson }}, {
+    snapcraft.release.initReleases('#release-history', {{ release_history|tojson }}, {
       releaseUiEnabled: {{ release_ui_enabled|tojson }}
     });
   </script>
