@@ -56,6 +56,7 @@
     <script>
       Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
         whitelistUrls: ['staging.snapcraft.io/static/js', 'snapcraft.io/static/js/'],
+        ignoreUrls: ['staging.snapcraft.io/static/js/modules', 'snapcraft.io/static/js/modules'],
         release: '{{ COMMIT_ID }}',
         environment: '{{ ENVIRONMENT }}'
       }).install();
