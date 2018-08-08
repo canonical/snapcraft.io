@@ -249,6 +249,7 @@ def store_blueprint(store_query=None):
         """
 
         error_info = {}
+        status_code = 200
 
         try:
             details = api.get_snap_details(snap_name)
@@ -288,49 +289,58 @@ def store_blueprint(store_query=None):
         last_version = latest_channel['version']
         binary_filesize = latest_channel['download']['size']
 
-        end = metrics_helper.get_last_metrics_processed_date()
         country_metric_name = 'weekly_installed_base_by_country_percent'
         os_metric_name = 'weekly_installed_base_by_operating_system_normalized'
 
-        metrics_query_json = [
-            metrics_helper.get_filter(
-                metric_name=country_metric_name,
-                snap_id=details['snap-id'],
-                start=end,
-                end=end),
-            metrics_helper.get_filter(
-                metric_name=os_metric_name,
-                snap_id=details['snap-id'],
-                start=end,
-                end=end)]
+        webapp_config = flask.current_app.config.get('WEBAPP_CONFIG')
 
-        status_code = 200
-        try:
-            metrics_response = api.get_public_metrics(
-                snap_name,
-                metrics_query_json)
-        except ApiError as api_error:
-            status_code, error_info = _handle_errors(api_error)
-            metrics_response = None
+        if 'STORE_QUERY' not in webapp_config:
+            end = metrics_helper.get_last_metrics_processed_date()
 
-        os_metrics = None
-        country_devices = None
-        if metrics_response:
-            oses = metrics_helper.find_metric(metrics_response, os_metric_name)
-            os_metrics = metrics.OsMetric(
-                name=oses['metric_name'],
-                series=oses['series'],
-                buckets=oses['buckets'],
-                status=oses['status'])
+            metrics_query_json = [
+                metrics_helper.get_filter(
+                    metric_name=country_metric_name,
+                    snap_id=details['snap-id'],
+                    start=end,
+                    end=end),
+                metrics_helper.get_filter(
+                    metric_name=os_metric_name,
+                    snap_id=details['snap-id'],
+                    start=end,
+                    end=end)]
 
-            territories = metrics_helper.find_metric(
-                metrics_response, country_metric_name)
-            country_devices = metrics.CountryDevices(
-                name=territories['metric_name'],
-                series=territories['series'],
-                buckets=territories['buckets'],
-                status=territories['status'],
-                private=False)
+            try:
+                metrics_response = api.get_public_metrics(
+                    snap_name,
+                    metrics_query_json)
+            except ApiError as api_error:
+                status_code, error_info = _handle_errors(api_error)
+                metrics_response = None
+
+            os_metrics = None
+            country_devices = None
+            if metrics_response:
+                oses = metrics_helper.find_metric(
+                    metrics_response,
+                    os_metric_name
+                )
+                os_metrics = metrics.OsMetric(
+                    name=oses['metric_name'],
+                    series=oses['series'],
+                    buckets=oses['buckets'],
+                    status=oses['status'])
+
+                territories = metrics_helper.find_metric(
+                    metrics_response, country_metric_name)
+                country_devices = metrics.CountryDevices(
+                    name=territories['metric_name'],
+                    series=territories['series'],
+                    buckets=territories['buckets'],
+                    status=territories['status'],
+                    private=False)
+        else:
+            os_metrics = None
+            country_devices = None
 
         # filter out banner and banner-icon images from screenshots
         screenshots = [
