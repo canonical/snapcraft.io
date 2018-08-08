@@ -268,6 +268,13 @@ def store_blueprint(store_query=None):
         except ApiError as api_error:
             flask.abort(502, str(api_error))
 
+        # When removing all the channel maps of an exsting snap the API,
+        # responds that the snaps still exists with data.
+        # Return a 404 if not channel maps, to avoid having a error.
+        # For example: mir-kiosk-browser
+        if not details.get('channel-map'):
+            flask.abort(404, 'No snap named {}'.format(snap_name))
+
         formatted_paragraphs = logic.split_description_into_paragraphs(
             details['snap']['description'])
 
