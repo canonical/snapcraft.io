@@ -3,10 +3,33 @@
     th {
       text-transform: none;
     }
+  }
 
-    td {
-      overflow: hidden;
-      white-space: nowrap;
+
+  .p-icon-button {
+    padding-left: .5rem;
+    padding-right: .5rem;
+
+    &:not(:last-of-type):not(:only-of-type) {
+      margin-right: .25rem;
     }
+  }
+
+  .p-previous-revision {
+    opacity: .5;
+  }
+
+  .p-release-version {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .p-release-buttons {
+    position: absolute;
+    right: 1rem; // match table padding
+    top: .5rem;
   }
 }

@@ -1,7 +1,7 @@
 {% extends "publisher/_publisher_layout.html" %}
 
 {% block meta_title %}
-Revision history for {{ snap_title }}
+Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}
 {% endblock %}
 
 {% block content %}
