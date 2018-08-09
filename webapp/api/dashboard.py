@@ -25,6 +25,11 @@ DASHBOARD_API = os.getenv(
     'https://dashboard.snapcraft.io/dev/api/',
 )
 
+DASHBOARD_API_V2 = os.getenv(
+    'DASHBOARD_API_V2',
+    'https://dashboard.snapcraft.io/api/v2/'
+)
+
 SNAP_PUB_METRICS_URL = ''.join([
     DASHBOARD_API,
     'snaps/metrics',
@@ -68,6 +73,11 @@ REGISTER_NAME_URL = ''.join([
 REVISION_HISTORY_URL = ''.join([
     DASHBOARD_API,
     'snaps/{snap_id}/history'
+])
+
+SNAP_RELEASE_HISTORY_URL = ''.join([
+    DASHBOARD_API_V2,
+    'snaps/{snap_name}/releases?page=1&size=100'
 ])
 
 
@@ -298,6 +308,18 @@ def snap_screenshots(snap_id, session, data=None, files=None):
 def snap_revision_history(session, snap_id):
     response = api_session.get(
         url=REVISION_HISTORY_URL.format(snap_id=snap_id),
+        headers=get_authorization_header(session),
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def snap_release_history(session, snap_name):
+    response = api_session.get(
+        url=SNAP_RELEASE_HISTORY_URL.format(snap_name=snap_name),
         headers=get_authorization_header(session),
     )
 

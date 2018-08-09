@@ -5,13 +5,13 @@ import moment from 'moment';
 export default class RevisionsList extends Component {
   renderRows(revisions) {
     return revisions.map((revision) => {
-      const uploadDate = moment(revision.timestamp);
+      const uploadDate = moment(revision.uploaded_at);
 
       return (
         <tr key={revision.revision}>
           <td>{ revision.revision }</td>
           <td>{ revision.version }</td>
-          <td>{ revision.arch }</td>
+          <td>{ revision.architectures.join(", ") }</td>
           <td>{ revision.channels.join(", ") }</td>
           <td className="u-align--right">
             <span className="p-tooltip p-tooltip--btm-center" aria-describedby={`revision-uploaded-${revision.revision}`}>

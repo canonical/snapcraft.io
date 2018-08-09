@@ -18,7 +18,10 @@ class GetRevisionGetInfoPage(
     def setUp(self):
         snap_name = "test-snap"
 
-        api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
+        api_url = (
+            'https://dashboard.snapcraft.io/api/v2/snaps/{}' +
+            '/releases?page=1&size=100'
+        )
         api_url = api_url.format(
             snap_name
         )
@@ -39,22 +42,13 @@ class GetRevisionHistory(
     def setUp(self):
         snap_name = "test-snap"
 
-        self.snap_id = 'complexId'
-        info_url = 'https://dashboard.snapcraft.io/dev/api/snaps/info/{}'
-        self.info_url = info_url.format(
+        api_url = (
+            'https://dashboard.snapcraft.io/api/v2/snaps/{}' +
+            '/releases?page=1&size=100'
+        )
+        api_url = api_url.format(
             snap_name
         )
-
-        payload = {
-            'snap_id': 'id',
-            'title': 'Test Snap'
-        }
-
-        responses.add(
-            responses.GET, self.info_url,
-            json=payload, status=200)
-
-        api_url = 'https://dashboard.snapcraft.io/dev/api/snaps/id/history'
         endpoint_url = '/account/snaps/{}/release'.format(snap_name)
 
         super().setUp(
@@ -69,20 +63,14 @@ class GetRevisionHistory(
     def test_get_revision(self):
         responses.add(
             responses.GET, self.api_url,
-            json=[], status=200)
+            json={}, status=200)
 
         response = self.client.get(
             self.endpoint_url,
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
-        self.assertEqual(
-            self.info_url,
-            called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get('Authorization'))
-        called = responses.calls[1]
         self.assertEqual(
             self.api_url,
             called.request.url)
@@ -92,4 +80,4 @@ class GetRevisionHistory(
         self.assertEqual(response.status_code, 200)
         self.assert_template_used('publisher/release-history.html')
         self.assert_context('snap_name', self.snap_name)
-        self.assert_context('revision_history', [])
+        self.assert_context('release_history', {})

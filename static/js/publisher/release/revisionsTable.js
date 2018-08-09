@@ -49,10 +49,9 @@ export default class RevisionsTable extends Component {
         if (!releasedChannels[channel]) {
           releasedChannels[channel] = {};
         }
-        // some revisions may have multiple architectures listed
-        const archs = revision.arch.split(', ');
 
-        archs.forEach(arch => {
+        // some revisions may have multiple architectures listed
+        revision.architectures.forEach(arch => {
           if (releasedChannels[channel][arch]) {
             if (revision.revision > releasedChannels[channel][arch]) {
               releasedChannels[channel][arch] = revision;
@@ -272,7 +271,7 @@ export default class RevisionsTable extends Component {
               const release = releases[revId];
 
               return <span key={revId}>
-                {release.revision.version} ({release.revision.revision}) {release.revision.arch}
+                {release.revision.version} ({release.revision.revision}) {release.revision.architectures.join(', ')}
                 {' '}
                 to {release.channels.join(', ')}
                 {'\n'}
@@ -303,7 +302,7 @@ export default class RevisionsTable extends Component {
           nextReleaseData[channel] = {};
         }
 
-        revision.arch.split(', ').forEach(arch => {
+        revision.architectures.forEach(arch => {
           nextReleaseData[channel][arch] = revision;
         });
       });

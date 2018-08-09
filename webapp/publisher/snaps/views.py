@@ -397,16 +397,8 @@ def post_listing_snap(snap_name):
 @publisher_snaps.route('/<snap_name>/release')
 @login_required
 def get_release_history(snap_name):
-    snap_id = ''
     try:
-        snap_id = api.get_snap_id(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_errors(api_error)
-
-    try:
-        revision_history = api.snap_revision_history(flask.session, snap_id)
+        release_history = api.snap_release_history(flask.session, snap_name)
     except ApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
@@ -414,7 +406,7 @@ def get_release_history(snap_name):
 
     context = {
         'snap_name': snap_name,
-        'revision_history': revision_history,
+        'release_history': release_history,
         'release_ui_enabled': flask.current_app.config['RELEASE_UI_ENABLED']
     }
 
