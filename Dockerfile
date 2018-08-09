@@ -5,12 +5,11 @@ RUN apt-get update && apt-get install --yes python3-pip libsodium-dev
 
 # Python dependencies
 ENV LANG C.UTF-8
-RUN pip3 install --upgrade pip
 
 # Import code, install code dependencies
 WORKDIR /srv
 ADD . .
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Set git commit ID
 ARG COMMIT_ID
@@ -24,6 +23,6 @@ RUN test -n "${WEBAPP}"
 ENV WEBAPP "${WEBAPP}"
 
 # Setup commands to run server
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint"]
 CMD ["0.0.0.0:80"]
 
