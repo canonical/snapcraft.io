@@ -5,7 +5,7 @@ import moment from 'moment';
 export default class RevisionsList extends Component {
   renderRows(revisions) {
     return revisions.map((revision) => {
-      const uploadDate = moment(revision.uploaded_at);
+      const uploadDate = moment(revision.created_at);
 
       return (
         <tr key={revision.revision}>
