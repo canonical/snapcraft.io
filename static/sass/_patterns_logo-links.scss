@@ -6,6 +6,10 @@
     display: block;
     margin-top: 0;
 
+    img {
+      display: block;
+    }
+
     &:hover {
       border-color: $color-mid-light;
       text-decoration: none;
@@ -16,34 +20,14 @@
     }
   }
 
-  .p-logo-links {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+  .p-logo-link {
+    // by default (on mobile) use col-3 width (4 items in a row)
+    min-width: 150px;
+    width: 21.875%; // mobile-col-1
 
-    .p-logo-link {
-      // by default (on mobile) use col-3 width (4 items in a row)
-      min-width: 150px;
-      width: 21.875%; // mobile-col-1
-
-      // on larger screens use col-2 width (6 items in a row)
-      @media screen and (min-width: $breakpoint-small) {
-        width: 15.04854%; // col-2
-      }
-    }
-
-    // don't limit max-height of logo in card header
-    .p-card__header img {
-      display: block;
-      max-height: none;
-      width: 100%;
-    }
-
-    &.no-border {
-      .p-logo-link:hover {
-        border-color: transparent;
-      }
+    // on larger screens use col-2 width (6 items in a row)
+    @media screen and (min-width: $breakpoint-small) {
+      width: 15.04854%; // col-2
     }
   }
 

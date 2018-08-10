@@ -45,12 +45,13 @@ $color-navigation-background: #252525;
 @include vf-u-hide;
 
 // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1880
+// can be removed when we update to Vanilla >= 1.8
 img {
   align-self: initial;
 }
 
-@import 'base_image-grid';
-@include base-image-grid;
+@import 'patterns_flex-grid';
+@include p-flex-grid;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;

@@ -1,0 +1,18 @@
+@mixin p-flex-grid {
+  %flex-grid {
+    align-items: center;
+    background-color: $color-x-light;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .p-flex-grid {
+    @extend %flex-grid;
+  }
+
+  .p-flex-grid--centered {
+    @extend %flex-grid;
+    justify-content: space-around;
+  }
+}
