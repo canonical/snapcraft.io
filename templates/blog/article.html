@@ -2,6 +2,7 @@
 
 {% block meta_title %}{{ article.title.rendered|safe }} | Snapcraft{% endblock %}
 {% block meta_description %}{{ article.excerpt.raw }}{% endblock %}
+{% block meta_copydoc %}{% endblock %}
 {% block meta_type %}article{% endblock %}
 {% if article.image and article.image.source_url %}
   {% block meta_image %}{{ article.image.source_url }}{% endblock %}
