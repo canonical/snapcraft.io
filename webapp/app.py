@@ -12,7 +12,7 @@ import prometheus_flask_exporter
 import talisker.flask
 import webapp.helpers as helpers
 from webapp.blog.views import blog
-from webapp.extensions import cache, csrf, sentry
+from webapp.extensions import csrf, sentry
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.publisher.snaps.views import publisher_snaps
@@ -48,9 +48,6 @@ def create_app(testing=False):
         init_extensions(app)
 
     app.config.from_object('webapp.configs.' + app.config['WEBAPP'])
-    cache.init_app(app)
-    with app.app_context():
-        cache.clear()
 
     set_handlers(app)
 

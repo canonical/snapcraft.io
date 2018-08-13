@@ -3,7 +3,6 @@ import flask
 import webapp.api.blog as api
 from webapp.api.exceptions import ApiError
 from webapp.blog import logic
-from webapp.extensions import cache
 
 blog = flask.Blueprint(
     'blog', __name__,
@@ -11,7 +10,6 @@ blog = flask.Blueprint(
 
 
 @blog.route('/')
-@cache.cached(timeout=300)
 def homepage():
     page_param = flask.request.args.get('page', default=1, type=int)
 
@@ -46,7 +44,6 @@ def homepage():
 
 
 @blog.route('/feed')
-@cache.cached(timeout=300)
 def feed():
     try:
         feed = api.get_feed()
@@ -62,7 +59,6 @@ def feed():
 
 
 @blog.route('/<slug>')
-@cache.cached(timeout=300)
 def article(slug):
     try:
         articles = api.get_article(slug)
