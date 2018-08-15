@@ -1,13 +1,13 @@
 FROM ubuntu:bionic
 
+# Set up environment
+ENV LANG C.UTF-8
+WORKDIR /srv
+
 # System dependencies
 RUN apt-get update && apt-get install --yes python3-pip libsodium-dev
 
-# Python dependencies
-ENV LANG C.UTF-8
-
 # Import code, install code dependencies
-WORKDIR /srv
 ADD . .
 RUN pip3 install -r requirements.txt
 
@@ -18,8 +18,7 @@ RUN echo "${COMMIT_ID}" > version-info.txt
 ENV COMMIT_ID "${COMMIT_ID}"
 
 # Set which webapp configuration to load
-ARG WEBAPP
-RUN test -n "${WEBAPP}"
+ARG WEBAPP=snapcraft
 ENV WEBAPP "${WEBAPP}"
 
 # Setup commands to run server
