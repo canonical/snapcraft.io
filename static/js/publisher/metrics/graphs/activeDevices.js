@@ -50,10 +50,7 @@ export default function activeDevices(days, activeDevices, type) {
     activeDevices.forEach(activeDevice => {
       let series = activeDevice.slice(0);
       let label = series[0];
-      if(label.indexOf('ubuntu') == -1 && label.indexOf('/') > -1) {
-        label = label.split('/')[0];
-        series[0] = label;
-      }
+
       if (!groupedActiveDevices[label]) {
         groupedActiveDevices[label] = [series.slice(1)];
       } else {
