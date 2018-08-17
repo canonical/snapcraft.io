@@ -1,6 +1,8 @@
-import bleach
 import re
+from html import escape
 from urllib.parse import parse_qs, urlparse
+
+import bleach
 
 
 def get_searched_snaps(search_results):
@@ -133,7 +135,7 @@ def split_description_into_paragraphs(unformatted_description):
         callbacks = bleach.linkifier.DEFAULT_CALLBACKS
         callbacks.append(external)
 
-        paragraph = bleach.clean(paragraph, tags=[])
+        paragraph = escape(paragraph)
         paragraph = bleach.linkify(paragraph, callbacks=callbacks)
 
         formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
