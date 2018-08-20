@@ -1,7 +1,7 @@
 @mixin snapcraft-p-navigation {
   $navigation-border-color: rgba(255, 255, 255, .2);
   $navigation-hover-color: rgba(0, 0, 0, .92);
-  $navigation-highlight-color: rgba(250,90, 64,1);
+  $navigation-highlight-color: rgba(250, 90, 64, 1);
 
   .p-navigation {
     z-index: 100; // appear over channel map
