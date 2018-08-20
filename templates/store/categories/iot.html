@@ -1,0 +1,456 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block meta_copydoc %}{% endblock %}
+
+{% block meta_title %}
+  Publish, install and update IoT apps - Snapcraft
+{% endblock %}
+
+{% block meta_description %}
+  An IoT app store for smart devices, with transactional updates, airtight security, and compatibility across architectures and operating systems.
+{% endblock %}
+
+{% block content %}
+  <section id="main-content" class="p-strip--image snapcraft-banner-background">
+    <div class="row">
+      <div class="col-7">
+        <h1 class="p-heading--two">Internet of Things</h1>
+        <p>Transactional updates, airtight security, and compatibility across architectures and OSes make snaps a perfect fit for IoT.</p>
+        <p><a href="https://docs.snapcraft.io/build-snaps/languages">Publish IoT applications with Snapcraft &rsaquo;</a></p>
+      </div>
+      <div class="col-5">
+        <img src="https://assets.ubuntu.com/v1/2c5e93c5-fast-easy-safe-illustration.svg" />
+      </div>
+    </div>
+  </section>
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <h3 class="p-heading--four">IoT tools and server</h3>
+    </div>
+    <div class="row p-snap-row">
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/mosquitto">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/08/mosquitto-logo-only.svg.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              mosquitto
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Roger Light
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/node-red">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2017/01/nr-hex_1.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Node-RED
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>DaveCJ
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/soracom-console">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2017/02/logo-256_1.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              soracom-console
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>SORACOM Snap Administrator
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/thinger-maker-server">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2017/03/thinger_256.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Thinger.io Maker Server
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Alvaro Luis Bustamante
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/nymea">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/03/icon.svg_UYFdU9y.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              nymea
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>guh GmbH developer
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row is-bordered">
+      <h3 class="p-heading--four">Industrial IoT</h3>
+    </div>
+    <div class="row p-snap-row">
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/kura">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/07/icon_8BAXEYq.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Kura&trade;
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Ondrej Kubik
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/hunt-r">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/05/logo_huntr256x256.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Lantern Tech - Hunt-R Series Gateway Firmware
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Lantern Technologies
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/ammp-edge">
+          <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              ammp-edge
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Svet Bajlekov
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/lantern-water-iot">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/05/smart_water_logo_256x256.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Lantern Tech - Smart Water Gateway Firmware
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Lantern Technologies
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/bl-gateway">
+          <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              bl-gateway
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Jesse Grant
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/ixagent">
+          <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              ixagent
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Michael Hathaway
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="p-card--highlighted p-case-study">
+          <div class="col-6">
+            <h4 class="p-muted-heading">Case Study</h4>
+            <h3 class="p-heading--four"><a href="">Fing snaps up 30,000 customers with a secure, future-proof IoT device &rsaquo;</a></h3>
+            <p>The number of IoT devices set to be in use worldwide is due to explode depending on the source over the next couple of years...</p>
+          </div>
+          <div class="col-6">
+            <img src="https://admin.insights.ubuntu.com/wp-content/uploads/d5ce/fingbox.jpg" class="p-case-study__image" />
+          </div>
+      </div>
+    </div>
+
+    <div class="row is-bordered">
+      <h3 class="p-heading--four">Networking</h3>
+    </div>
+    <div class="row p-snap-row">
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/flexran">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/04/m5g-flexran.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              flexran
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Mosaic 5G
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/oai-cn">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/04/m5g-oai-cn.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              oai-cn
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Mosaic 5G
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/oai-ran">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/04/m5g-oai-ran.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              oai-ran
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Mosaic 5G
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/ll-mec">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/03/m5g-llmec.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              ll-mec
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Mosaic 5G
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/wifi-ap">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2016/08/icon_16.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              wifi-ap
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Canonical
+                <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="vlc-tooltip">
+                  <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
+                  <span class="p-tooltip__message u-align--center" role="tooltip" id="vlc-tooltip">Verified account</span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row is-bordered">
+      <h3 class="p-heading--four">Home gateway</h3>
+    </div>
+    <div class="row p-snap-row">
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/openhab">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2017/11/favicon.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              openHAB
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>openHAB Foundation e.V.
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/homebridge">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/06/40754647-531702de-6448-11e8-84c1-9f950d71d4cd.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              HOMEbridge
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Ondrej Kubik
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/domotzpro-agent-publicstore">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2018/05/domotz.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Domotz Pro Agent – Remote Network Monitoring and Management
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Domotz
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row is-bordered">
+      <h3 class="p-heading--four">Board images</h3>
+    </div>
+    <div class="row p-snap-row">
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/pi2">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2015/04/berry.jpg.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              pi2
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Canonical
+                <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="vlc-tooltip">
+                  <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
+                  <span class="p-tooltip__message u-align--center" role="tooltip" id="vlc-tooltip">Verified account</span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <a class="p-media-object--snap" href="/dragonboard">
+          <img src="https://dashboard.snapcraft.io/site_media/appmedia/2016/07/icon_32.png" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              dragonboard
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>Canonical
+                <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="vlc-tooltip">
+                  <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
+                  <span class="p-tooltip__message u-align--center" role="tooltip" id="vlc-tooltip">Verified account</span>
+                </span>
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-2">
+        <span class="p-media-object--snap">
+          <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              PC
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>
+                <span class="u-off-screen">Publisher: </span>SORACOM Snap Administrator
+              </p>
+            </div>
+          </div>
+        </span>
+      </div>
+    </div>
+
+    <div class="row is-bordered">
+      <h3 class="p-heading--four">More on IoT & Snapcraft</h3>
+    </div>
+    <div class="row">
+      <div class="u-equal-height">
+        <div class="col-4 p-card--post">
+          <div class="p-card__content">
+            <h3 class="p-heading--four">
+              <a href="https://blog.ubuntu.com/2018/04/05/the-nextcloud-box-a-review-of-building-an-iot-device-with-snaps">The Nextcloud Box: a review of building an IoT device with snaps</a>
+            </h3>
+            <p>In 2016, Canonical, Nextcloud and WDLabs introduced the Nextcloud Box, the first IoT style device running with snaps out of the box. Besides sales of nearly 2K boxes before Western Digital shut down their research division WD…</p>
+            <p class="u-no-padding--bottom">
+              <a href="https://blog.ubuntu.com/2018/04/05/the-nextcloud-box-a-review-of-building-an-iot-device-with-snaps">Read more &rsaquo;</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-4 p-card--post">
+          <div class="p-card__content">
+            <div class="u-crop--16-9">
+              <a href="https://blog.ubuntu.com/2018/07/18/iot-security-at-scale-managing-end-to-end-security">
+                <img src="https://admin.insights.ubuntu.com/wp-content/uploads/02da/Rigado-Image1080.png" />
+              </a>
+            </div>
+            <h3 class="p-heading--four">
+              <a href="https://blog.ubuntu.com/2018/07/18/iot-security-at-scale-managing-end-to-end-security">Iot Security at Scale: Managing end-to-end security</a>
+            </h3>
+          </div>
+        </div>
+
+        <div class="col-4 p-card--post">
+          <div class="p-card__content">
+            <h3 class="p-heading--four">
+              <a href="https://blog.ubuntu.com/2017/10/26/thinger-io-uses-ubuntu-core-snaps-for-easy-iot-deployment">Ubuntu Core and snaps for easy IoT deployment</a>
+            </h3>
+            <p>Thinger.io is a Spanish start up founded in 2015 who aim to enable any developer or organisation to develop IoT applications across a range of sectors, with examples including smart cities, Industry 4.0 and energy…</p>
+            <p class="u-no-padding--bottom">
+              <a href="https://blog.ubuntu.com/2017/10/26/thinger-io-uses-ubuntu-core-snaps-for-easy-iot-deployment">Read more &rsaquo;</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
