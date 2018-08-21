@@ -45,6 +45,18 @@ def get_article(slug):
     return response.json()
 
 
+def get_tag(name):
+    url = ''.join([
+        API_URL,
+        '/tags?search=',
+        name
+    ])
+
+    response = api_session.get(url)
+
+    return response.json()
+
+
 def get_media(media_id):
     url = ''.join([API_URL, '/media/', str(media_id)])
     response = api_session.get(url)

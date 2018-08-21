@@ -148,6 +148,24 @@
     </div>
   </div>
 
+  {% if blog_articles %}
+    <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
+    </div>
+    <div class="p-strip is-shallow">
+      <div class="row">
+        <h4>Related blog posts</h4>
+      </div>
+      <div class="row u-equal-height">
+        {% for article in blog_articles %}
+          {% include 'partials/blog-card.html' %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
   {% if countries or normalized_os %}
     <div class="row">
       <div class="col-12">
@@ -188,15 +206,15 @@
   {% endif %}
 
   {% if api_error %}
-  <div class="row">
-    <div class="col-12">
-      <div class="p-notification--negative">
-        <p class="p-notification__response">
-          <span class="p-notification__status">Error:</span> API request failed
-        </p>
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
+        </div>
       </div>
     </div>
-  </div>
   {% endif %}
 {% endblock %}
 
