@@ -296,22 +296,10 @@ def store_blueprint(store_query=None):
                 blog_articles = None
 
             for article in blog_articles:
-                try:
-                    featured_image = blog_api.get_media(
-                        article['featured_media']
-                    )
-                except ApiError:
-                    featured_image = None
-
-                try:
-                    author = blog_api.get_user(article['author'])
-                except ApiError:
-                    author = None
-
                 article = blog_logic.transform_article(
                     article,
-                    featured_image=featured_image,
-                    author=author)
+                    featured_image=None,
+                    author=None)
 
         formatted_paragraphs = logic.split_description_into_paragraphs(
             details['snap']['description'])

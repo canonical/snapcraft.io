@@ -49,12 +49,15 @@
       z-index: 1;
     }
 
-    > .p-card__content {
+    .p-card__header + .p-card__content {
       border-top: 1px dotted $color-mid-light;
+    }
+
+    .p-card__content {
       display: flex;
       flex-direction: column;
       height: 100%;
-      margin: 0 $sp-x-small;
+      margin: 0;
       padding: $sp-medium;
 
       > a,
@@ -62,6 +65,11 @@
       p {
         display: block;
         margin: $sp-x-small 0;
+      }
+
+      > *:last-child,
+      > *:first-child {
+        margin: 0;
       }
     }
 
