@@ -34,6 +34,15 @@
         </li>
         <li class="p-navigation__link" role="menuitem">
           <a
+            {% if page_slug == 'iot' %}
+              class="is-selected"
+            {% endif %}
+              href="/iot">
+            IoT
+          </a>
+        </li>
+        <li class="p-navigation__link" role="menuitem">
+          <a
             {% if page_slug == 'build' %}
               class="is-selected"
             {% endif %}
