@@ -2,9 +2,11 @@
 
 set -e
 
-if ${FLASK_DEBUG}; then
-    talisker.gunicorn.gevent webapp.app:create_app\(\) --reload --log-level debug --timeout 9999 --worker-class gevent --bind $1
-else
-    talisker.gunicorn.gevent webapp.app:create_app\(\) --worker-class gevent --name talisker-`hostname`
+RUN_COMMAND="talisker.gunicorn.gevent webapp.app:create_app() --bind $1 --worker-class gevent --name talisker-`hostname`"
+
+if [ "${FLASK_DEBUG}" = true ] || [ "${FLASK_DEBUG}" = 1 ]; then
+    RUN_COMMAND="${RUN_COMMAND} --reload --log-level debug --timeout 9999"
 fi
+
+${RUN_COMMAND}
 
