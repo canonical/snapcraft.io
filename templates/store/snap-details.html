@@ -148,7 +148,7 @@
     </div>
   </div>
 
-  {% if blog_articles %}
+  <div data-js="blog-articles" style="display: none;">
     <div class="row">
       <div class="col-12">
         <hr />
@@ -158,14 +158,13 @@
       <div class="row">
         <h4>Related blog posts</h4>
       </div>
-      <div class="row u-equal-height">
-        {% for article in blog_articles %}
-          {% include 'partials/blog-card--minimal.html' %}
-        {% endfor %}
+      <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
       </div>
     </div>
-  {% endif %}
-
+  </div>
+  {% set article_title = {'rendered': '${title}'} %}
+  {% set article = {'slug': '${slug}', 'title': article_title} %}
+  <script type="text/template" id="blog-article-template">{% include 'partials/blog-card--minimal.html' %}</script>
   {% if countries or normalized_os %}
     <div class="row">
       <div class="col-12">
@@ -231,6 +230,12 @@
     Raven.context(function () {
       try {
         snapcraft.public.screenshots('#js-snap-screenshots');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
+      try {
+        snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
       } catch(e) {
         Raven.captureException(e);
       }

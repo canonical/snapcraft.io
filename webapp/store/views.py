@@ -4,8 +4,6 @@ import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 from webapp.api.store import StoreApi
 import webapp.store.logic as logic
-import webapp.api.blog as blog_api
-import webapp.blog.logic as blog_logic
 from dateutil import parser
 from math import floor
 from webapp.api.exceptions import (
@@ -278,29 +276,6 @@ def store_blueprint(store_query=None):
         if not details.get('channel-map'):
             flask.abort(404, 'No snap named {}'.format(snap_name))
 
-        try:
-            blog_tags = blog_api.get_tag(''.join(['sc:snap:', snap_name]))
-        except ApiError:
-            blog_tags = None
-
-        blog_articles = None
-
-        if blog_tags:
-            blog_tags_ids = blog_logic.get_tag_id_list(blog_tags)
-            try:
-                blog_articles, total_pages = blog_api.get_articles(
-                    blog_tags_ids,
-                    3
-                )
-            except ApiError:
-                blog_articles = None
-
-            for article in blog_articles:
-                article = blog_logic.transform_article(
-                    article,
-                    featured_image=None,
-                    author=None)
-
         formatted_paragraphs = logic.split_description_into_paragraphs(
             details['snap']['description'])
 
@@ -408,7 +383,6 @@ def store_blueprint(store_query=None):
             'default_track': default_track,
             'lowest_risk_available': lowest_risk_available,
             'confinement': confinement,
-            'blog_articles': blog_articles,
 
             # Transformed API data
             'filesize': humanize.naturalsize(binary_filesize),
