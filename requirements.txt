@@ -14,4 +14,6 @@ raven[flask]==6.5.0
 requests==2.18.4
 requests-cache==0.4.13
 responses==0.9.0
-talisker==0.9.8
+gunicorn[gevent]
+statsd<3.3.0
+talisker==0.9.14
