@@ -24,8 +24,10 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
 {% block scripts %}
   <script src="{{ static_url('js/dist/release.js') }}"></script>
   <script>
-    snapcraft.release.initReleases('#release-history', {{ release_history|tojson }}, {
-      releaseUiEnabled: {{ release_ui_enabled|tojson }}
+    snapcraft.release.initReleases('#release-history',
+      {{ release_history|tojson }},
+      {{ channel_maps_list|tojson }},
+      { releaseUiEnabled: {{ release_ui_enabled|tojson }}
     });
   </script>
 {% endblock %}
