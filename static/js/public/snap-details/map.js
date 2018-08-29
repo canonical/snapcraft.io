@@ -3,6 +3,10 @@
 import SnapEvents from '../../libs/events';
 
 export default function renderMap(el, snapData) {
+  // Fail fast
+  if (!d3) {
+    return;
+  }
   const mapEl = d3.select(el);
 
   d3.queue()
