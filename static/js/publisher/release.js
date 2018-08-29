@@ -5,7 +5,7 @@ import RevisionsList from './release/revisionsList';
 import RevisionsTable from './release/revisionsTable';
 
 
-const initReleases = (id, data, options) => {
+const initReleases = (id, data, channelMaps, options) => {
 
   // init channel data in revisions list
   const revisionsMap = {};
