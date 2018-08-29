@@ -1,46 +1,107 @@
 import 'whatwg-fetch';
 
+class BlogPosts {
+  constructor(url, holderSelector, templateSelector) {
+    if (!url) {
+      throw new Error('`url` must be defined');
+    }
+    if (!holderSelector) {
+      throw new Error('`holderSelector` must be defined');
+    }
+    if (!templateSelector) {
+      throw new Error('`templateSelector` must be defined');
+    }
+
+    this.url = url;
+    this.path = '';
+    this.holder = document.querySelector(holderSelector);
+    this.template = document.querySelector(templateSelector);
+
+    if (!this.holder) {
+      throw new Error(`${holderSelector} does not exist`);
+    }
+
+    if (!this.template) {
+      throw new Error(`${templateSelector} does not exist`);
+    }
+  }
+
+  setResultModifiers(modifiers) {
+    this.modifiers = modifiers;
+  }
+
+  fetch(callback) {
+    const _callback = callback || null;
+    return fetch(`${this.url}${this.path}`).
+      then(response => response.json()).
+      then(posts => {
+        if (posts.length === 0) {
+          return;
+        }
+        const postsHTML = [];
+
+        if (this.modifiers) {
+          this.modifiers.forEach(modifier => {
+            posts = modifier(posts);
+          });
+        }
+
+        posts.forEach(post => {
+          let postHTML = this.template.innerHTML;
+          Object.keys(post).forEach(key => {
+            postHTML = postHTML.split('${' + key + '}').join(post[key]);
+          });
+          postsHTML.push(postHTML);
+        });
+
+        if (postsHTML.length > 0) {
+          this.holder.innerHTML = postsHTML.join('');
+        }
+
+        return;
+      }).
+      then(_callback).
+      catch(error => {
+        throw new Error(error);
+      });
+  }
+}
+
 function snapDetailsPosts(holderSelector, templateSelector, showOnSuccessSelector) {
-  const URL = '/blog/api/snap-posts/';
-  const holder = document.querySelector(holderSelector);
-  const template = document.querySelector(templateSelector);
-  const showOnSuccess = document.querySelector(showOnSuccessSelector);
+  const blogPosts = new BlogPosts('/blog/api/snap-posts/', holderSelector, templateSelector);
 
-  if (!holder) {
-    throw new Error('No holder element');
-  }
-  if (!template) {
-    throw new Error('No template');
-  }
-
-  const snap = holder.dataset.snap;
+  const snap = blogPosts.holder.dataset.snap;
   if (!snap) {
     throw new Error('Snap not defined');
   }
 
-  fetch(`${URL}${snap}`).then(response => response.json()).then(posts => {
-    if (posts.length === 0) {
-      return;
-    }
-    const postsHTML = [];
-    posts.forEach(post => {
-      let postHTML = template.innerHTML;
-      Object.keys(post).forEach(key => {
-        postHTML = postHTML.split('${' + key + '}').join(post[key]);
-      });
-      postsHTML.push(postHTML);
-    });
+  blogPosts.path = snap;
 
-    if (postsHTML.length > 0) {
-      holder.innerHTML = postsHTML.join('');
+  blogPosts.fetch(function() {
+    if (showOnSuccessSelector) {
+      const showOnSuccess = document.querySelector(showOnSuccessSelector);
+      if (showOnSuccess) {
+        showOnSuccess.style.display = 'block';
+      }
     }
-
-    if (showOnSuccess) {
-      showOnSuccess.style.display = 'block';
-    }
-  }).catch(error => {
-    throw new Error(error.message);
   });
 }
 
-export { snapDetailsPosts };
+function seriesPosts(holderSelector, templateSelector) {
+  const blogPosts = new BlogPosts('/blog/api/series/', holderSelector, templateSelector);
+
+  const series = blogPosts.holder.dataset.series;
+
+  blogPosts.path = series;
+
+  blogPosts.setResultModifiers([
+    function reverse(posts) {
+      return posts.reverse();
+    }
+  ]);
+
+  blogPosts.fetch();
+
+}
+
+export { snapDetailsPosts, seriesPosts };

@@ -45,11 +45,23 @@ def get_article(slug):
     return response.json()
 
 
-def get_tag(name):
+def get_tag_by_name(name):
     url = ''.join([
         API_URL,
         '/tags?search=',
         name
+    ])
+
+    response = api_session.get(url)
+
+    return response.json()
+
+
+def get_tags_by_ids(ids):
+    url = ''.join([
+        API_URL,
+        '/tags?include=',
+        ','.join(str(id) for id in ids)
     ])
 
     response = api_session.get(url)
