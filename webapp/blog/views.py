@@ -99,3 +99,36 @@ def article(slug):
     return flask.render_template(
         'blog/article.html',
         **context)
+
+
+@blog.route('/api/snap-posts/<snap>')
+def snap_posts(snap):
+    try:
+        blog_tags = api.get_tag(''.join(['sc:snap:', snap]))
+    except ApiError:
+        blog_tags = None
+
+    blog_articles = None
+    articles = []
+
+    if blog_tags:
+        blog_tags_ids = logic.get_tag_id_list(blog_tags)
+        try:
+            blog_articles, total_pages = api.get_articles(
+                blog_tags_ids,
+                3
+            )
+        except ApiError:
+            blog_articles = None
+
+        for article in blog_articles:
+            transformed_article = logic.transform_article(
+                article,
+                featured_image=None,
+                author=None)
+            articles.append({
+                'slug': transformed_article['slug'],
+                'title': transformed_article['title']['rendered']
+            })
+
+    return flask.jsonify(articles)

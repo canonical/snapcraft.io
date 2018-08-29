@@ -68,3 +68,16 @@ def change_url(feed, host):
     updated_feed = re.sub(url_regex, host, feed)
 
     return updated_feed
+
+
+def get_tag_id_list(tags):
+    """Get a list of tag ids from a list of tag dicts
+
+    :param tags: Tag dict
+
+    :returns: A list of ids
+    """
+    def get_id(tag):
+        return tag['id']
+
+    return [get_id(tag) for tag in tags]
