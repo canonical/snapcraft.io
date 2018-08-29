@@ -108,7 +108,11 @@ export default function renderMap(el, snapData) {
   function ready(error, world) {
     if (error) {
       // let sentry catch it, so we get notified why it fails
-      throw error;
+      if (error instanceof ProgressEvent) {
+        throw new Error(`${error.target.status}: ${error.target.statusText} (${error.target.responseURL})`);
+      } else {
+        throw new Error(error);
+      }
     }
 
     render(mapEl, snapData, world);
