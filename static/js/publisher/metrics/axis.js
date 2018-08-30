@@ -1,4 +1,4 @@
-/* globals moment */
+import moment from 'moment';
 
 import { TICKS } from './config';
 

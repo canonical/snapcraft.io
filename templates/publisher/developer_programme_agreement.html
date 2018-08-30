@@ -39,15 +39,17 @@
         </div>
       </div>
       <script>
-       var checkbox = document.querySelector('#id_i_agree');
-       var button = document.querySelector('button[type="submit"]');
-       checkbox.addEventListener('change', function(event) {
-         if (this.checked) {
-           button.removeAttribute('disabled');
-         } else {
-           button.setAttribute('disabled', 'disabled');
-         }
-       });
+        Raven.context(function() {
+          var checkbox = document.querySelector('#id_i_agree');
+          var button = document.querySelector('button[type="submit"]');
+          checkbox.addEventListener('change', function (event) {
+            if (this.checked) {
+              button.removeAttribute('disabled');
+            } else {
+              button.setAttribute('disabled', 'disabled');
+            }
+          });
+        });
       </script>
     </form>
   </div>
