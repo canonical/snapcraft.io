@@ -121,7 +121,8 @@ def publisher_snap_metrics(snap_name):
     metrics_query_json = metrics_helper.build_metrics_json(
         snap_id=details['snap_id'],
         installed_base=installed_base,
-        metric_period=metric_requested['int'],
+        # Magic -1 otherwise for 7 days we get 8, for 30 days we get 31?
+        metric_period=metric_requested['int'] - 1,
         metric_bucket=metric_requested['bucket'])
 
     try:

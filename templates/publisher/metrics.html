@@ -49,7 +49,15 @@ Publisher metrics for {{ snap_title }}
             </select>
           </div>
         </div>
-        <div id="active_devices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices"></div>
+        <div id="activeDevices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices">
+          <div class="row">
+            <div class="col-12">
+              <div id="area-holder">
+                <svg width="100%" height="320"></svg>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <section class="p-strip is-shallow{% if nodata %} is-empty{% endif %}">

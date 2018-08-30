@@ -34,7 +34,13 @@ export default [
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
       }),
-      uglify()
+      uglify(),
+      commonjs({
+        include: [
+          'node_modules/polylabel/**',
+          'node_modules/tinyqueue/**'
+        ]
+      })
     ],
     output: {
       file: 'static/js/dist/publisher.js',
