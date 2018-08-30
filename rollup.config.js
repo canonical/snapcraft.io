@@ -2,6 +2,7 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
+import { uglify } from 'rollup-plugin-uglify';
 
 export default [
   {
@@ -13,7 +14,8 @@ export default [
       babel({
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
-      })
+      }),
+      uglify()
     ],
     output: {
       file: 'static/js/dist/base.js',
@@ -31,7 +33,8 @@ export default [
       babel({
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
-      })
+      }),
+      uglify()
     ],
     output: {
       file: 'static/js/dist/publisher.js',
@@ -49,7 +52,8 @@ export default [
       babel({
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
-      })
+      }),
+      uglify()
     ],
     output: {
       file: 'static/js/dist/public.js',
@@ -96,7 +100,8 @@ export default [
       // https://github.com/rollup/rollup/issues/487
       replace({
         'process.env.NODE_ENV': JSON.stringify( 'production' )
-      })
+      }),
+      uglify()
     ],
     output: {
       file: 'static/js/dist/release.js',
