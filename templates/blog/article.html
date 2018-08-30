@@ -39,23 +39,16 @@
 {% endblock %}
 
 {% block content %}
-<section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
-  <div class="row">
-    <div class="col-8">
-      <h1 class="p-heading--two">{{ article.title.rendered|safe }}</h1>
-      <p>by {{ article.author.name }} on {{ article.date }}</p>
-    </div>
-  </div>
-</section>
-
-<section class="p-strip is-bordered">
+<section id="main-content" class="p-strip">
   <div class="row">
     <div class="col-8 p-blog-post">
+      <h1 class="p-heading--two">{{ article.title.rendered|safe }}</h1>
+      <p>by {{ article.author.name }} on {{ article.date }}</p>
       {{ article.content.rendered|safe }}
     </div>
     {% for tag in tags %}
       {% if tag.name.startswith('sc:series') %}
-        <div class="col-4">
+        <div class="col-4 prefix-1">
           <h4>Other posts in the series</h4>
           <ul class="p-list" data-js="blog-series" data-series="{{ tag.id }}">
             <li class="p-list__item u-align--center">
