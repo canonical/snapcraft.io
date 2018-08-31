@@ -1,4 +1,6 @@
-/* globals bb, moment */
+/* globals bb */
+
+import moment from 'moment';
 
 import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
 import debounce from '../../../libs/debounce';

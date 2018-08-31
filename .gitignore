@@ -58,6 +58,6 @@ env[23]/
 *.css
 
 # Project specific ignores
-static/js/modules/*.js
-static/js/dist/*.js
+static/js/modules
+static/js/dist
 cache.tmp/

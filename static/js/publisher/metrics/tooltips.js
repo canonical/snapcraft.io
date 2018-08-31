@@ -1,4 +1,4 @@
-/* globals moment */
+import moment from 'moment';
 
 import mouse from '../../libs/mouse';
 

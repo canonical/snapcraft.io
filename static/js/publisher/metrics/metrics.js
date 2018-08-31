@@ -1,4 +1,4 @@
-/* globals d3 bb moment */
+import moment from 'moment';
 
 import activeDevicesMetrics from './graphs/activeDevices';
 import territoriesMetrics from './graphs/territories';
@@ -8,10 +8,6 @@ import territoriesMetrics from './graphs/territories';
  * @param {Object} metrics An object of metrics from the API.
  */
 function renderMetrics(metrics) {
-  if (!d3 || !bb) {
-    return false;
-  }
-
   // Active devices
   let activeDevices = {
     series: [],
