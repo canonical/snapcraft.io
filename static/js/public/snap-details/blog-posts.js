@@ -91,12 +91,23 @@ function seriesPosts(holderSelector, templateSelector) {
   const blogPosts = new BlogPosts('/blog/api/series/', holderSelector, templateSelector);
 
   const series = blogPosts.holder.dataset.series;
+  const currentSlug = blogPosts.holder.dataset.currentslug;
 
   blogPosts.path = series;
 
   blogPosts.setResultModifiers([
     function reverse(posts) {
       return posts.reverse();
+    },
+    function filter(posts) {
+      return posts.map(post => {
+        if (post.slug === currentSlug) {
+          post.className = 'is-current';
+        } else {
+          post.className = '';
+        }
+        return post;
+      });
     }
   ]);
 
