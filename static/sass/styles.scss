@@ -50,8 +50,8 @@ img {
   align-self: initial;
 }
 
-@import 'patterns_flex-grid';
-@include p-flex-grid;
+@import 'patterns_fluid-grid';
+@include p-fluid-grid;
 
 @import 'patterns_inline-list--compact';
 @include p-inline-list--compact;
