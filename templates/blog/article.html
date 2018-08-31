@@ -39,20 +39,25 @@
 {% endblock %}
 
 {% block content %}
-<section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
+<section id="main-content" class="p-strip">
   <div class="row">
-    <div class="col-10">
+    <div class="col-8 p-blog-post">
       <h1 class="p-heading--two">{{ article.title.rendered|safe }}</h1>
       <p>by {{ article.author.name }} on {{ article.date }}</p>
-    </div>
-  </div>
-</section>
-
-<section class="p-strip is-bordered">
-  <div class="row">
-    <div class="col-10 p-blog-post">
       {{ article.content.rendered|safe }}
     </div>
+    {% for tag in tags %}
+      {% if tag.name.startswith('sc:series') %}
+        <div class="col-4 prefix-1 p-blog-aside">
+          <h4>In this series</h4>
+          <ul class="p-list p-blog-list" data-js="blog-series" data-series="{{ tag.id }}" data-currentslug="{{ article.slug }}">
+            <li class="p-list__item u-align--center">
+              <i class="p-icon--spinner u-animation--spin"></i>
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 </section>
 
@@ -79,4 +84,28 @@
     </div>
   </section>
 {% endif %}
+
+<script type="text/template" id="blog-series-item-template">
+  <li class="p-list__item">
+    <h5>
+      <a href="/blog/${slug}" class="p-blog-list__item ${className}">
+        ${title}
+      </a>
+    </h5>
+  </li>
+</script>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script>
+    Raven.context(function () {
+      try {
+        snapcraft.public.seriesPosts('[data-js="blog-series"]', '#blog-series-item-template');
+      } catch(e) {
+        console.error(e);
+        Raven.captureException(e);
+      }
+    });
+  </script>
 {% endblock %}

@@ -78,6 +78,18 @@ def article(slug):
     transformed_article = logic.transform_article(article, author=author)
 
     tags = article['tags']
+    tag_names = []
+    try:
+        tag_names_response = api.get_tags_by_ids(tags)
+    except ApiError:
+        tag_names_response = None
+
+    if tag_names_response:
+        for tag in tag_names_response:
+            tag_names.append({
+                'id': tag['id'],
+                'name': tag['name']
+            })
 
     try:
         related_articles, total_pages = api.get_articles(
@@ -93,7 +105,8 @@ def article(slug):
 
     context = {
         'article': transformed_article,
-        'related_articles': related_articles
+        'related_articles': related_articles,
+        'tags': tag_names
     }
 
     return flask.render_template(
@@ -104,7 +117,7 @@ def article(slug):
 @blog.route('/api/snap-posts/<snap>')
 def snap_posts(snap):
     try:
-        blog_tags = api.get_tag(''.join(['sc:snap:', snap]))
+        blog_tags = api.get_tag_by_name(''.join(['sc:snap:', snap]))
     except ApiError:
         blog_tags = None
 
@@ -130,5 +143,28 @@ def snap_posts(snap):
                 'slug': transformed_article['slug'],
                 'title': transformed_article['title']['rendered']
             })
+
+    return flask.jsonify(articles)
+
+
+@blog.route('/api/series/<series>')
+def snap_series(series):
+    blog_articles = None
+    articles = []
+
+    try:
+        blog_articles, total_pages = api.get_articles(series)
+    except ApiError:
+        blog_articles = None
+
+    for article in blog_articles:
+        transformed_article = logic.transform_article(
+            article,
+            featured_image=None,
+            author=None)
+        articles.append({
+            'slug': transformed_article['slug'],
+            'title': transformed_article['title']['rendered']
+        })
 
     return flask.jsonify(articles)
