@@ -1,9 +1,0 @@
-@mixin base-image-grid {
-  %image-grid {
-    align-items: center;
-    background-color: $color-x-light;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-}

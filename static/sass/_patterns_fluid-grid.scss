@@ -1,0 +1,48 @@
+@mixin p-fluid-grid {
+  %fluid-grid {
+    align-items: center;
+    background-color: $color-x-light;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .p-fluid-grid {
+    @extend %fluid-grid;
+  }
+
+  .p-fluid-grid--centered {
+    @extend %fluid-grid;
+    justify-content: space-around;
+  }
+
+  // default fluid-grid item
+  // small screen:  1 item per row (full width)
+  // medium:        2 items per row
+  // > medium:      4 items per row
+  .p-fluid-grid__item {
+    width: 100%; // default to full width
+
+    @media screen and (min-width: $breakpoint-small) {
+      width: 50%; // half width for medium screens
+    }
+
+    @media screen and (min-width: $breakpoint-navigation-threshold) {
+      width: 21.875%; // 4 items per row = col-3
+    }
+  }
+
+  // small fluid-grid item
+  // small screen:   4 items in a row (min width 150px)
+  // larger screens: 6 items in a row (min width 150px)
+  .p-fluid-grid__item--small {
+    // by default use col-3 width (4 items in a row)
+    min-width: 150px;
+    width: 21.875%;
+
+    // on larger screens use col-2 width (6 items in a row)
+    @media screen and (min-width: $breakpoint-small) {
+      width: 15.04854%; // col-2
+    }
+  }
+}
