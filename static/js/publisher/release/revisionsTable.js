@@ -32,45 +32,42 @@ export default class RevisionsTable extends Component {
     return tracks;
   }
 
-  // getting 'channel map' kind of data out of revisions list
-  // TODO: possibly it would be good to do it in backend (or even get from API)
-  getReleaseDataFromList(revisions) {
+  // transforming channel map list data into format used by this component
+  getReleaseDataFromChannelMap(channelMapsList, data) {
     const releasedChannels = {};
     const releasedArchs = {};
 
-    revisions.forEach(revision => {
+    channelMapsList.forEach((mapInfo) => {
+      const { track, architecture, map } = mapInfo;
+      map.forEach((channelInfo) => {
+        if (channelInfo.info === 'released') {
+          const channel = track === 'latest' ? `${track}/${channelInfo.channel}` : channelInfo.channel;
 
-      revision.channels.forEach(channel => {
-        // append 'latest' track to default channels
-        if (channel.split('/').length === 1) {
-          channel = `latest/${channel}`;
-        }
-
-        if (!releasedChannels[channel]) {
-          releasedChannels[channel] = {};
-        }
-
-        // some revisions may have multiple architectures listed
-        revision.architectures.forEach(arch => {
-          if (releasedChannels[channel][arch]) {
-            if (revision.revision > releasedChannels[channel][arch]) {
-              releasedChannels[channel][arch] = revision;
-            }
-          } else {
-            releasedChannels[channel][arch] = revision;
+          if (!releasedChannels[channel]) {
+            releasedChannels[channel] = {};
           }
-          releasedArchs[arch] = true;
-        });
+
+          // XXX bartaz
+          // this may possibly lead to issues with revisions in multiple architectures
+          // if we have data about given revision in revision history we can store it
+          if (data.revisionsMap[channelInfo.revision]) {
+            releasedChannels[channel][architecture] = data.revisionsMap[channelInfo.revision];
+          // but if for some reason we don't have full data about revision in channel map
+          // we need to ducktype it from channel info
+          } else {
+            releasedChannels[channel][architecture] = channelInfo;
+            releasedChannels[channel][architecture].architectures = [ architecture ];
+          }
+
+          releasedArchs[architecture] = true;
+        }
       });
     });
 
-    // channels - key-value map of a channel and all revisions released in it
-    //            for different architectures
-    // archs - list of archs that have released revisions
-    // tracks - list of tracks that have released revisions
     return {
       channels: releasedChannels,
       archs: Object.keys(releasedArchs).sort(),
+      // TODO: now should be easier to get list of tracks
       tracks: this.getTracksFromChannels(releasedChannels)
     };
   }
@@ -318,7 +315,7 @@ export default class RevisionsTable extends Component {
   }
 
   render() {
-    const releaseData = this.getReleaseDataFromList(this.props.revisions);
+    const releaseData = this.getReleaseDataFromChannelMap(this.props.channelMaps, this.props.data);
 
     return (
       <Fragment>
@@ -347,6 +344,7 @@ export default class RevisionsTable extends Component {
 }
 
 RevisionsTable.propTypes = {
-  revisions: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
+  channelMaps: PropTypes.object.isRequired,
   options: PropTypes.object.isRequired
 };

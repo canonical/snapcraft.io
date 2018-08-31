@@ -31,9 +31,10 @@ const initReleases = (id, data, channelMaps, options) => {
     }
   });
 
+  data.revisionsMap = revisionsMap;
   ReactDOM.render(
     <Fragment>
-      <RevisionsTable revisions={data.revisions} options={options}/>
+      <RevisionsTable data={data} channelMaps={channelMaps} options={options}/>
       <RevisionsList revisions={data.revisions} />
     </Fragment>,
     document.querySelector(id)
