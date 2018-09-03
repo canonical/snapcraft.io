@@ -402,8 +402,8 @@ def validate_spdx_license_expression(expression):
     try:
         parsed = licensing.parse(expression, validate=True, strict=True)
     except ExpressionError as e:
-        msg = e.message
-        if 'TypeError' in e.message:
+        msg = str(e)
+        if 'TypeError' in msg:
             # license_expression exposes low level exception message
             msg = 'Invalid syntax/malformed operands'
         raise ValidationError(msg)
