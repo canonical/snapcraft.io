@@ -1,20 +1,16 @@
+from json import loads
+
 import flask
-from webapp import authentication
+
+import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-import webapp.api.dashboard as api
+from webapp import authentication, spdx
+from webapp.api.exceptions import (AgreementNotSigned, ApiError,
+                                   ApiResponseErrorList, ApiTimeoutError,
+                                   MacaroonRefreshRequired, MissingUsername)
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
-from json import loads
-from webapp.api.exceptions import (
-    AgreementNotSigned,
-    ApiError,
-    ApiResponseErrorList,
-    ApiTimeoutError,
-    MacaroonRefreshRequired,
-    MissingUsername
-)
-
 
 publisher_snaps = flask.Blueprint(
     'publisher_snaps', __name__,
@@ -231,6 +227,7 @@ def get_listing_snap(snap_name):
         "public_metrics_enabled": snap_details['public_metrics_enabled'],
         "public_metrics_blacklist": snap_details['public_metrics_blacklist'],
         "is_on_stable": is_on_stable,
+        "licenses_list": spdx.VALID_LICENSES,
     }
 
     return flask.render_template(
