@@ -22,7 +22,6 @@ export default class Releases extends Component {
     const { csrfToken } = this.props.options;
 
     console.log('fetch', revision, channels );
-    // TODO; get snap name
     return fetch(`/account/snaps/${this.props.snapName}/release/snap-release`, {
       method: "POST",
       mode: "cors",
@@ -39,22 +38,38 @@ export default class Releases extends Component {
       .then(response => response.json());
   }
 
+  handleReleaseResponse(json) {
+    console.log("response", json);
+
+    // TODO: update state/channel map after each successful release
+    if (json.success) {
+      console.log("update channel map", json.channel_map);
+    } else {
+      console.log("error")
+    }
+  }
+
   fetchReleases(releases) {
-    var p = Promise.resolve(); // Q() in q
+    var queue = Promise.resolve(); // Q() in q
 
     // handle releases as a queue
     releases.forEach(release => {
-      // TODO: update state/channel map after each successful release (?)
-      return p = p.then(() => this.fetchRelease(release.revision, release.channels));
+      return queue = queue
+        .then(() => {
+          return this
+            .fetchRelease(release.revision, release.channels)
+            .then(this.handleReleaseResponse.bind(this));
+        });
+      //.then(json => this.handleReleaseResponse(json));
     });
-    return p;
+    return queue;
   }
 
   releaseRevisions(revisionsToRelease) {
     console.log("revisions to release", revisionsToRelease);
 
     const releases = Object.keys(revisionsToRelease).map(id => {
-      return { revision: id, channels: revisionsToRelease[id].channels }
+      return { revision: id, channels: revisionsToRelease[id].channels };
     });
 
     console.log('fetchReleases', releases);
