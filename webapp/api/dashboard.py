@@ -58,6 +58,9 @@ SNAP_RELEASE_HISTORY_URL = "".join(
 )
 
 
+SNAP_RELEASE = "".join([DASHBOARD_API, "snap-release/"])
+
+
 def process_response(response):
     try:
         body = response.json()
@@ -81,7 +84,7 @@ def process_response(response):
                 response.status_code,
                 body["error_list"],
             )
-        else:
+        elif not body:
             raise ApiResponseError(
                 "Unknown error from api", response.status_code
             )
@@ -276,6 +279,17 @@ def snap_release_history(session, snap_name):
     response = api_session.get(
         url=SNAP_RELEASE_HISTORY_URL.format(snap_name=snap_name),
         headers=get_authorization_header(session),
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def post_snap_release(session, snap_name, json):
+    response = api_session.post(
+        url=SNAP_RELEASE, headers=get_authorization_header(session), json=json
     )
 
     if authentication.is_macaroon_expired(response.headers):

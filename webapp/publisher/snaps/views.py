@@ -425,3 +425,22 @@ def get_release_history(snap_name):
     }
 
     return flask.render_template("publisher/release-history.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/release", methods=["POST"])
+@login_required
+def post_release(snap_name):
+    data = flask.request.json
+
+    if not data:
+        return flask.jsonify({})
+
+    try:
+        response = api.post_snap_release(flask.session, snap_name, data)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    return flask.jsonify(response)
