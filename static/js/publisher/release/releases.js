@@ -58,7 +58,10 @@ export default class Releases extends Component {
     });
 
     console.log('fetchReleases', releases);
-    this.fetchReleases(releases).then(() => console.log('all done'));
+    this.setState({ isLoading: true });
+    this.fetchReleases(releases)
+      .then(() => console.log('all done'))
+      .then(() => this.setState({ isLoading: false }));
   }
 
   render() {
@@ -71,6 +74,7 @@ export default class Releases extends Component {
         archs={archs}
         options={options}
         releaseRevisions={this.releaseRevisions.bind(this)}
+        fetchStatus={this.state}
       />
     );
   }

@@ -7,6 +7,7 @@ export default class RevisionsTable extends Component {
   constructor() {
     super();
 
+    // TODO: move out to parent component ?
     this.state = {
       // default to latest track
       currentTrack: 'latest',
@@ -206,6 +207,7 @@ export default class RevisionsTable extends Component {
     const { releases } = this.state;
     const releasesCount = Object.keys(releases).length;
 
+    const { isLoading } = this.props.fetchStatus;
     return (releasesCount > 0 &&
       <p>
         <span className="p-tooltip">
@@ -226,7 +228,7 @@ export default class RevisionsTable extends Component {
           </span>
         </span>
         {' '}
-        <button className="p-button--positive is-inline" onClick={ this.onApplyClick.bind(this) }>Apply</button>
+        <button className="p-button--positive is-inline" disabled={ isLoading } onClick={ this.onApplyClick.bind(this) }>{ isLoading ? 'Loading...' : 'Apply' }</button>
         <button className="p-button--neutral" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
       </p>
     );
@@ -301,5 +303,6 @@ RevisionsTable.propTypes = {
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired,
-  releaseRevisions: PropTypes.func.isRequired
+  releaseRevisions: PropTypes.func.isRequired,
+  fetchStatus: PropTypes.object.isRequired
 };
