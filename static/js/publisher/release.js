@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 
+import Releases from './release/releases';
 import RevisionsList from './release/revisionsList';
-import RevisionsTable from './release/revisionsTable';
-
 
 // getting list of tracks names from channel maps list
 function getTracksFromChannelMap(channelMapsList) {
@@ -68,8 +67,7 @@ function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
   return releasedChannels;
 }
 
-const initReleases = (id, releasesData, channelMapsList, options) => {
-
+const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
   // init channel data in revisions list
   const revisionsMap = {};
   releasesData.revisions.forEach(rev => {
@@ -100,7 +98,13 @@ const initReleases = (id, releasesData, channelMapsList, options) => {
 
   ReactDOM.render(
     <Fragment>
-      <RevisionsTable releasedChannels={releasedChannels} tracks={tracks} archs={archs} options={options} />
+      <Releases
+        snapName={snapName}
+        releasedChannels={releasedChannels}
+        tracks={tracks}
+        archs={archs}
+        options={options}
+      />
       <RevisionsList revisions={releasesData.revisions} />
     </Fragment>,
     document.querySelector(id)

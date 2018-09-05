@@ -226,7 +226,7 @@ export default class RevisionsTable extends Component {
           </span>
         </span>
         {' '}
-        <button className="p-button--positive is-inline" disabled title="Not implemented yet...">Apply</button>
+        <button className="p-button--positive is-inline" onClick={ this.onApplyClick.bind(this) }>Apply</button>
         <button className="p-button--neutral" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
       </p>
     );
@@ -263,6 +263,10 @@ export default class RevisionsTable extends Component {
     });
   }
 
+  onApplyClick() {
+    this.props.releaseRevisions(this.state.releases);
+  }
+
   render() {
     const { releasedChannels, archs, tracks } = this.props;
 
@@ -296,5 +300,6 @@ RevisionsTable.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
-  options: PropTypes.object.isRequired
+  options: PropTypes.object.isRequired,
+  releaseRevisions: PropTypes.func.isRequired
 };
