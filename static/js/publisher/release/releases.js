@@ -15,8 +15,72 @@ export default class Releases extends Component {
     this.state = {
       error: null,
       isLoading: false,
-      releasedChannels: this.props.releasedChannels
+      releasedChannels: this.props.releasedChannels,
+
+      // revisions to be released:
+      // key is the id of revision to release
+      // value is object containing release object and channels to release to
+      // {
+      //  <revisionId>: {
+      //    revision: { revision: <revisionId>, version, ... },
+      //    channels: [ ... ]
+      //  }
+      // }
+      pendingReleases: {}
     };
+  }
+
+
+  promoteRevision(revision, channel) {
+    this.setState((state) => {
+      const { pendingReleases } = state;
+
+      if (!pendingReleases[revision.revision]) {
+        pendingReleases[revision.revision] = {
+          revision: revision,
+          channels: []
+        };
+      }
+
+      let channels = pendingReleases[revision.revision].channels;
+      channels.push(channel);
+
+      // make sure channels are unique
+      channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
+
+      pendingReleases[revision.revision].channels = channels;
+
+      return {
+        pendingReleases
+      };
+    });
+  }
+
+  undoRelease(revision, channel) {
+    this.setState((state) => {
+      const { pendingReleases } = state;
+
+      if (pendingReleases[revision.revision]) {
+        const channels = pendingReleases[revision.revision].channels;
+        if (channels.indexOf(channel) !== -1) {
+          channels.splice(channels.indexOf(channel), 1);
+        }
+
+        if (channels.length === 0) {
+          delete pendingReleases[revision.revision];
+        }
+      }
+
+      return {
+        pendingReleases
+      };
+    });
+  }
+
+  clearPendingReleases() {
+    this.setState({
+      pendingReleases: {}
+    });
   }
 
   fetchRelease(revision, channels) {
@@ -110,19 +174,18 @@ export default class Releases extends Component {
     return queue;
   }
 
-  releaseRevisions(revisionsToRelease) {
-    console.log("revisions to release", revisionsToRelease);
-
-    const releases = Object.keys(revisionsToRelease).map(id => {
-      return { id, revision: revisionsToRelease[id].revision, channels: revisionsToRelease[id].channels };
+  releaseRevisions() {
+    const { pendingReleases } = this.state;
+    const releases = Object.keys(pendingReleases).map(id => {
+      return { id, revision: pendingReleases[id].revision, channels: pendingReleases[id].channels };
     });
 
     console.log('fetchReleases', releases);
     this.setState({ isLoading: true });
     this.fetchReleases(releases)
       .then(() => console.log('all done'))
-      // TODO: reset pending releases
-      .then(() => this.setState({ isLoading: false }));
+      .then(() => this.setState({ isLoading: false }))
+      .then(() => this.clearPendingReleases());
   }
 
   render() {
@@ -137,6 +200,11 @@ export default class Releases extends Component {
         options={options}
         releaseRevisions={this.releaseRevisions.bind(this)}
         fetchStatus={this.state}
+
+        pendingReleases={this.state.pendingReleases}
+        promoteRevision={this.promoteRevision.bind(this)}
+        undoRelease={this.undoRelease.bind(this)}
+        clearPendingReleases={this.clearPendingReleases.bind(this)}
       />
     );
   }

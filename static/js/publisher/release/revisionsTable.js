@@ -11,64 +11,10 @@ export default class RevisionsTable extends Component {
     this.state = {
       // default to latest track
       currentTrack: 'latest',
-      // revisions to be released:
-      // key is the id of revision to release
-      // value is object containing release object and channels to release to
-      // {
-      //  <revisionId>: {
-      //    revision: { revision: <revisionId>, version, ... },
-      //    channels: [ ... ]
-      //  }
-      // }
-      releases: {}
     };
   }
 
-  promoteRevision(revision, channel) {
-    this.setState((state) => {
-      const { releases } = state;
 
-      if (!releases[revision.revision]) {
-        releases[revision.revision] = {
-          revision: revision,
-          channels: []
-        };
-      }
-
-      let channels = releases[revision.revision].channels;
-      channels.push(channel);
-
-      // make sure channels are unique
-      channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
-
-      releases[revision.revision].channels = channels;
-
-      return {
-        releases
-      };
-    });
-  }
-
-  undoRelease(revision, channel) {
-    this.setState((state) => {
-      const { releases } = state;
-
-      if (releases[revision.revision]) {
-        const channels = releases[revision.revision].channels;
-        if (channels.indexOf(channel) !== -1) {
-          channels.splice(channels.indexOf(channel), 1);
-        }
-
-        if (channels.length === 0) {
-          delete releases[revision.revision];
-        }
-      }
-
-      return {
-        releases
-      };
-    });
-  }
 
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
@@ -81,12 +27,12 @@ export default class RevisionsTable extends Component {
     let targetRisk;
     targetRisk = RISKS[RISKS.indexOf(risk) - 1];
     if (targetRisk) {
-      this.promoteRevision(revision, `${track}/${targetRisk}`);
+      this.props.promoteRevision(revision, `${track}/${targetRisk}`);
     }
   }
 
   undoClick(revision, track, risk) {
-    this.undoRelease(revision, `${track}/${risk}`);
+    this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
@@ -164,7 +110,7 @@ export default class RevisionsTable extends Component {
   }
 
   renderRows(releasedChannels, archs) {
-    const nextChannelReleases = this.getNextReleasesData(releasedChannels, this.state.releases);
+    const nextChannelReleases = this.getNextReleasesData(releasedChannels, this.props.pendingReleases);
     const track = this.state.currentTrack;
 
     return RISKS.map(risk => {
@@ -204,8 +150,8 @@ export default class RevisionsTable extends Component {
   }
 
   renderReleasesConfirm() {
-    const { releases } = this.state;
-    const releasesCount = Object.keys(releases).length;
+    const { pendingReleases } = this.props;
+    const releasesCount = Object.keys(pendingReleases).length;
 
     const { isLoading } = this.props.fetchStatus;
     return (releasesCount > 0 &&
@@ -215,8 +161,8 @@ export default class RevisionsTable extends Component {
           {' '}
           { releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release
           <span className="p-tooltip__message" role="tooltip" id="default-tooltip">
-            { Object.keys(releases).map(revId => {
-              const release = releases[revId];
+            { Object.keys(pendingReleases).map(revId => {
+              const release = pendingReleases[revId];
 
               return <span key={revId}>
                 {release.revision.version} ({release.revision.revision}) {release.revision.architectures.join(', ')}
@@ -260,13 +206,11 @@ export default class RevisionsTable extends Component {
   }
 
   onRevertClick() {
-    this.setState({
-      releases: {}
-    });
+    this.props.clearPendingReleases();
   }
 
   onApplyClick() {
-    this.props.releaseRevisions(this.state.releases);
+    this.props.releaseRevisions();
   }
 
   render() {
@@ -300,9 +244,13 @@ export default class RevisionsTable extends Component {
 
 RevisionsTable.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
+  pendingReleases: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
+  promoteRevision: PropTypes.func.isRequired,
+  undoRelease: PropTypes.func.isRequired,
+  clearPendingReleases: PropTypes.func.isRequired,
   fetchStatus: PropTypes.object.isRequired
 };
