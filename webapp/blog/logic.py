@@ -81,3 +81,17 @@ def get_tag_id_list(tags):
         return tag['id']
 
     return [get_id(tag) for tag in tags]
+
+
+def is_in_series(tags):
+    """Does the list of tags include a tag that starts 'sc:series'
+
+    :param tags: Tag dict
+
+    :returns: Boolean
+    """
+    for tag in tags:
+        if tag['name'].startswith('sc:series'):
+            return True
+
+    return False
