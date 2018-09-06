@@ -91,6 +91,8 @@ def article(slug):
                 'name': tag['name']
             })
 
+    is_in_series = logic.is_in_series(tag_names)
+
     try:
         related_articles, total_pages = api.get_articles(
             tags=tags,
@@ -106,7 +108,8 @@ def article(slug):
     context = {
         'article': transformed_article,
         'related_articles': related_articles,
-        'tags': tag_names
+        'tags': tag_names,
+        'is_in_series': is_in_series
     }
 
     return flask.render_template(
