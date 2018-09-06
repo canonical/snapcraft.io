@@ -16,10 +16,10 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: pip3 install flake8
+          command: pip3 install -r requirements.txt
       - run:
-          name: Lint webapp with Flake8
-          command: flake8 webapp
+          name: Lint webapp with Black
+          command: yarn run lint-py
   python-tests:
     <<: *defaults
     steps:

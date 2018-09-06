@@ -2,6 +2,7 @@
   "scripts": {
     "lint-js": "eslint static/js",
     "lint-scss": "sass-lint static/**/*.scss --verbose --no-exit",
+    "lint-py": "black --check --line-length 79 tests webapp",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
     "test-js": "jest",
     "test-js-all": "yarn run lint-js && yarn run test-js",
@@ -16,6 +17,17 @@
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "watch -p 'static/js/**/*.js' -c 'yarn run build-js'",
     "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.py": [
+      "black --line-length 79",
+      "git add"
+    ]
   },
   "author": "Canonical webteam",
   "dependencies": {
@@ -35,10 +47,13 @@
     "eslint": "^4.18.2",
     "eslint-plugin-jest": "^21.13.0",
     "eslint-plugin-react": "^7.10.0",
+    "husky": "^1.0.0-rc.13",
     "jest": "^22.4.2",
+    "lint-staged": "^7.2.2",
     "moment": "^2.19.3",
     "node-sass": "^4.5.3",
     "postcss-cli": "^4.1.0",
+    "prettier": "^1.14.2",
     "raven-js": "^3.24.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
