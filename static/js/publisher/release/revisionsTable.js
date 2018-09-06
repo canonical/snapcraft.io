@@ -7,71 +7,19 @@ export default class RevisionsTable extends Component {
   constructor() {
     super();
 
-    // default to latest track
     this.state = {
+      // default to latest track
       currentTrack: 'latest',
-      releases: {} // revisions to be released
-    };
-  }
-
-  // getting list of tracks names from track/channel names list
-  getTracksFromChannels(releasedChannels) {
-    const channels = Object.keys(releasedChannels);
-    const tracks = ['latest'];
-
-    channels.forEach(channel => {
-      const split = channel.split('/');
-
-      // if there is a track name in the channel name
-      // and we haven't saved it yet
-      if (split.length > 1 && tracks.indexOf(split[0]) === -1) {
-        tracks.push(split[0]);
-      }
-    });
-
-    return tracks;
-  }
-
-  // getting 'channel map' kind of data out of revisions list
-  // TODO: possibly it would be good to do it in backend (or even get from API)
-  getReleaseDataFromList(revisions) {
-    const releasedChannels = {};
-    const releasedArchs = {};
-
-    revisions.forEach(revision => {
-
-      revision.channels.forEach(channel => {
-        // append 'latest' track to default channels
-        if (channel.split('/').length === 1) {
-          channel = `latest/${channel}`;
-        }
-
-        if (!releasedChannels[channel]) {
-          releasedChannels[channel] = {};
-        }
-
-        // some revisions may have multiple architectures listed
-        revision.architectures.forEach(arch => {
-          if (releasedChannels[channel][arch]) {
-            if (revision.revision > releasedChannels[channel][arch]) {
-              releasedChannels[channel][arch] = revision;
-            }
-          } else {
-            releasedChannels[channel][arch] = revision;
-          }
-          releasedArchs[arch] = true;
-        });
-      });
-    });
-
-    // channels - key-value map of a channel and all revisions released in it
-    //            for different architectures
-    // archs - list of archs that have released revisions
-    // tracks - list of tracks that have released revisions
-    return {
-      channels: releasedChannels,
-      archs: Object.keys(releasedArchs).sort(),
-      tracks: this.getTracksFromChannels(releasedChannels)
+      // revisions to be released:
+      // key is the id of revision to release
+      // value is object containing release object and channels to release to
+      // {
+      //  <revisionId>: {
+      //    revision: { revision: <revisionId>, version, ... },
+      //    channels: [ ... ]
+      //  }
+      // }
+      releases: {}
     };
   }
 
@@ -121,9 +69,9 @@ export default class RevisionsTable extends Component {
     });
   }
 
-  getRevisionToDisplay(channels, nextReleases, channel, arch) {
+  getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
-    const currentRelease = channels[channel] && channels[channel][arch];
+    const currentRelease = releasedChannels[channel] && releasedChannels[channel][arch];
 
     return pendingRelease || currentRelease;
   }
@@ -140,12 +88,12 @@ export default class RevisionsTable extends Component {
     this.undoRelease(revision, `${track}/${risk}`);
   }
 
-  renderRevisionCell(track, risk, arch, channels, nextChannelReleases) {
+  renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
     const channel = `${track}/${risk}`;
 
     let canBePromoted = false;
-    let thisRevision = this.getRevisionToDisplay(channels, nextChannelReleases, channel, arch);
-    let thisPreviousRevision = channels[channel] && channels[channel][arch];
+    let thisRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, channel, arch);
+    let thisPreviousRevision = releasedChannels[channel] && releasedChannels[channel][arch];
 
     // check for revision and pending release in target channel (risk - 1)
     let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
@@ -156,8 +104,8 @@ export default class RevisionsTable extends Component {
     if (targetRisk) {
       const targetChannel = `${track}/${targetRisk}`;
 
-      targetRevision = this.getRevisionToDisplay(channels, nextChannelReleases, targetChannel, arch);
-      targetPreviousRevision = channels[targetChannel] && channels[targetChannel][arch];
+      targetRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, targetChannel, arch);
+      targetPreviousRevision = releasedChannels[targetChannel] && releasedChannels[targetChannel][arch];
       targetHasPendingRelease = (
         targetRevision && (!targetPreviousRevision || (targetPreviousRevision.revision !== targetRevision.revision))
       );
@@ -214,10 +162,8 @@ export default class RevisionsTable extends Component {
     );
   }
 
-  renderRows(releaseData) {
-    const { channels, archs } = releaseData;
-
-    const nextChannelReleases = this.getNextReleasesData(channels, this.state.releases);
+  renderRows(releasedChannels, archs) {
+    const nextChannelReleases = this.getNextReleasesData(releasedChannels, this.state.releases);
     const track = this.state.currentTrack;
 
     return RISKS.map(risk => {
@@ -227,7 +173,7 @@ export default class RevisionsTable extends Component {
         <tr key={channel}>
           <td>{ channel }</td>
           {
-            archs.map(arch => this.renderRevisionCell(track, risk, arch, channels, nextChannelReleases))
+            archs.map(arch => this.renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases))
           }
         </tr>
       );
@@ -318,13 +264,13 @@ export default class RevisionsTable extends Component {
   }
 
   render() {
-    const releaseData = this.getReleaseDataFromList(this.props.revisions);
+    const { releasedChannels, archs, tracks } = this.props;
 
     return (
       <Fragment>
         <div className="u-clearfix">
           <h4 className="u-float--left">Releases available for install</h4>
-          { releaseData.tracks.length > 1 && this.renderTrackDropdown(releaseData.tracks) }
+          { tracks.length > 1 && this.renderTrackDropdown(tracks) }
         </div>
         { this.renderReleasesConfirm() }
         <table className="p-release-table">
@@ -332,13 +278,13 @@ export default class RevisionsTable extends Component {
             <tr>
               <th width="22%" scope="col"></th>
               {
-                releaseData.archs.map(arch => <th width="13%" key={`${arch}`}>{ arch }</th>)
+                archs.map(arch => <th width="13%" key={`${arch}`}>{ arch }</th>)
               }
             </tr>
           </thead>
 
           <tbody>
-            { this.renderRows(releaseData) }
+            { this.renderRows(releasedChannels, archs) }
           </tbody>
         </table>
       </Fragment>
@@ -347,6 +293,8 @@ export default class RevisionsTable extends Component {
 }
 
 RevisionsTable.propTypes = {
-  revisions: PropTypes.object.isRequired,
+  releasedChannels: PropTypes.object.isRequired,
+  archs: PropTypes.array.isRequired,
+  tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
 };
