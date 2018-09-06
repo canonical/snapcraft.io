@@ -97,15 +97,23 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
-  <script>
-    Raven.context(function () {
-      try {
-        snapcraft.public.seriesPosts('[data-js="blog-series"]', '#blog-series-item-template');
-      } catch(e) {
-        console.error(e);
-        Raven.captureException(e);
-      }
-    });
-  </script>
+  {% set hasScript = false %}
+  {% for tag in tags %}
+    {% if not hasScript %}
+      {% if tag.name.startswith('sc:series') %}
+        <script src="{{ static_url('js/dist/public.js') }}"></script>
+        <script>
+          Raven.context(function () {
+            try {
+              snapcraft.public.seriesPosts('[data-js="blog-series"]', '#blog-series-item-template');
+            } catch(e) {
+              console.error(e);
+              Raven.captureException(e);
+            }
+          });
+        </script>
+        {% set hasScript = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
 {% endblock %}
