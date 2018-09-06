@@ -23,9 +23,10 @@ from webapp.store.views import store_blueprint
 
 def create_app(testing=False):
     app = flask.Flask(
-        __name__, template_folder='../templates', static_folder='../static')
+        __name__, template_folder="../templates", static_folder="../static"
+    )
 
-    app.config.from_object('webapp.config')
+    app.config.from_object("webapp.config")
     app.testing = testing
 
     app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -33,7 +34,7 @@ def create_app(testing=False):
         app.wsgi_app = DebuggedApplication(app.wsgi_app)
 
     app.url_map.strict_slashes = False
-    app.url_map.converters['regex'] = helpers.RegexConverter
+    app.url_map.converters["regex"] = helpers.RegexConverter
 
     if not testing:
         talisker.flask.register(app)
@@ -42,16 +43,16 @@ def create_app(testing=False):
             app,
             group_by_endpoint=True,
             buckets=[0.25, 0.5, 0.75, 1, 2],
-            path=None
+            path=None,
         )
 
         init_extensions(app)
 
-    app.config.from_object('webapp.configs.' + app.config['WEBAPP'])
+    app.config.from_object("webapp.configs." + app.config["WEBAPP"])
 
     set_handlers(app)
 
-    if app.config['WEBAPP'] == 'snapcraft':
+    if app.config["WEBAPP"] == "snapcraft":
         init_snapcraft(app)
     else:
         init_brandstore(app)
@@ -60,18 +61,18 @@ def create_app(testing=False):
 
 
 def init_brandstore(app):
-    store = app.config.get('WEBAPP_CONFIG').get('STORE_QUERY')
+    store = app.config.get("WEBAPP_CONFIG").get("STORE_QUERY")
     app.register_blueprint(store_blueprint(store))
 
 
 def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(login)
-    csrf.exempt('webapp.login.views.login_handler')
+    csrf.exempt("webapp.login.views.login_handler")
     app.register_blueprint(store_blueprint())
-    app.register_blueprint(account, url_prefix='/account')
-    app.register_blueprint(publisher_snaps, url_prefix='/account/snaps')
-    app.register_blueprint(blog, url_prefix='/blog')
+    app.register_blueprint(account, url_prefix="/account")
+    app.register_blueprint(publisher_snaps, url_prefix="/account/snaps")
+    app.register_blueprint(blog, url_prefix="/blog")
 
 
 def init_extensions(app):

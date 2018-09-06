@@ -1,11 +1,7 @@
 import flask
 import socket
 import webapp.template_utils as template_utils
-from urllib.parse import (
-    unquote,
-    urlparse,
-    urlunparse,
-)
+from urllib.parse import unquote, urlparse, urlunparse
 from webapp import authentication
 
 
@@ -19,7 +15,7 @@ def set_handlers(app):
         """
 
         if authentication.is_authenticated(flask.session):
-            user_name = flask.session['openid']['fullname']
+            user_name = flask.session["openid"]["fullname"]
         else:
             user_name = None
 
@@ -27,22 +23,21 @@ def set_handlers(app):
 
         return {
             # Variables
-            'LOGIN_URL': app.config['LOGIN_URL'],
-            'SENTRY_PUBLIC_DSN': app.config['SENTRY_PUBLIC_DSN'],
-            'COMMIT_ID': app.config['COMMIT_ID'],
-            'ENVIRONMENT': app.config['ENVIRONMENT'],
-            'path': flask.request.path,
-            'page_slug': page_slug,
-            'user_name': user_name,
-            'VERIFIED_PUBLISHER': 'verified',
-            'webapp_config': app.config['WEBAPP_CONFIG'],
-            'BSI_URL': app.config['BSI_URL'],
-
+            "LOGIN_URL": app.config["LOGIN_URL"],
+            "SENTRY_PUBLIC_DSN": app.config["SENTRY_PUBLIC_DSN"],
+            "COMMIT_ID": app.config["COMMIT_ID"],
+            "ENVIRONMENT": app.config["ENVIRONMENT"],
+            "path": flask.request.path,
+            "page_slug": page_slug,
+            "user_name": user_name,
+            "VERIFIED_PUBLISHER": "verified",
+            "webapp_config": app.config["WEBAPP_CONFIG"],
+            "BSI_URL": app.config["BSI_URL"],
             # Functions
-            'contains': template_utils.contains,
-            'join': template_utils.join,
-            'static_url': template_utils.static_url,
-            'format_number': template_utils.format_number,
+            "contains": template_utils.contains,
+            "join": template_utils.join,
+            "static_url": template_utils.static_url,
+            "format_number": template_utils.format_number,
         }
 
     # Error handlers
@@ -54,9 +49,7 @@ def set_handlers(app):
         passing through the error description.
         """
 
-        return flask.render_template(
-            '404.html', error=error.description
-        ), 404
+        return flask.render_template("404.html", error=error.description), 404
 
     # Global tasks for all requests
     # ===
@@ -70,10 +63,8 @@ def set_handlers(app):
         parsed_url = urlparse(unquote(flask.request.url))
         path = parsed_url.path
 
-        if path != '/' and path.endswith('/'):
-            new_uri = urlunparse(
-                parsed_url._replace(path=path[:-1])
-            )
+        if path != "/" and path.endswith("/"):
+            new_uri = urlunparse(parsed_url._replace(path=path[:-1]))
 
             return flask.redirect(new_uri)
 
@@ -90,14 +81,16 @@ def set_handlers(app):
 
         if response.status_code == 200:
             if flask.session:
-                response.headers['Cache-Control'] = 'private'
+                response.headers["Cache-Control"] = "private"
             else:
                 # Only add caching headers to successful responses
-                response.headers['Cache-Control'] = ', '.join({
-                    'public',
-                    'max-age=61',
-                    'stale-while-revalidate=300',
-                    'stale-if-error=86400',
-                })
+                response.headers["Cache-Control"] = ", ".join(
+                    {
+                        "public",
+                        "max-age=61",
+                        "stale-while-revalidate=300",
+                        "stale-if-error=86400",
+                    }
+                )
 
         return response
