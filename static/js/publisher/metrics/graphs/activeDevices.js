@@ -6,8 +6,9 @@ import { schemePaired } from 'd3-scale-chromatic';
 import { area, stack, curveMonotoneX, stackOrderReverse } from 'd3-shape';
 import { extent, bisector } from 'd3-array';
 import { axisBottom, axisLeft } from 'd3-axis';
-import { cullXAxis, cullYAxis, singleLine } from './helpers';
+import { cullXAxis, cullYAxis } from './helpers';
 import { isMobile } from '../../../libs/mobile';
+import debounce from '../../../libs/debounce';
 
 function showGraph(el) {
   el.style.opacity = 1;
@@ -87,27 +88,30 @@ const tooltipRows = (data, currentHoverKey, colorScale) => {
 
   return dataArr.map(item => {
     if (!item.skip) {
-      return `<span class="snapcraft-graph-tooltip__series${item.key === currentHoverKey ? ' is-hovered' : ''}" title="${item.key}">
-          <span class="snapcraft-graph-tooltip__series-name">${item.key}</span>
-          <span class="snapcraft-graph-tooltip__series-color"${!item.count ? `style="background:${colorScale(item.key)};"` : ''}></span>
-          <span class="snapcraft-graph-tooltip__series-value">${commaValue(item.value)}</span>
-        </span>`;
+      return [
+        `<span class="snapcraft-graph-tooltip__series${item.key === currentHoverKey ? ' is-hovered' : ''}" title="${item.key}">`,
+        `<span class="snapcraft-graph-tooltip__series-name">${item.key}</span>`,
+        `<span class="snapcraft-graph-tooltip__series-color"${!item.count ? `style="background:${colorScale(item.key)};"` : ''}></span>`,
+        `<span class="snapcraft-graph-tooltip__series-value">${commaValue(item.value)}</span>`,
+        `</span>`
+      ].join('');
     }
   }).join('');
 };
 
 const tooltipTemplate = (data, currentHoverKey, colorScale) => {
-  return singleLine(`<div class="p-tooltip p-tooltip--top-center" style="display: block;">\
-      <span class="p-tooltip__message" role="tooltip" style="display: block;">\
-        <span class="snapcraft-graph-tooltip__title">${tooltipTimeFormat(data.date)}</span>\
-        ${tooltipRows(data, currentHoverKey, colorScale)}\
-      </span>\
-    </div>`);
+  return [
+    `<div class="p-tooltip p-tooltip--top-center" style="display: block;">`,
+    `<span class="p-tooltip__message" role="tooltip" style="display: block;">`,
+    `<span class="snapcraft-graph-tooltip__title">${tooltipTimeFormat(data.date)}</span>`,
+    tooltipRows(data, currentHoverKey, colorScale),
+    `</span>`,
+    `</div>`
+  ].join('');
 };
 
-function drawGraph(activeDevices) {
+function drawGraph(holder, activeDevices) {
   // Basic svg setup
-  const holder = document.getElementById('activeDevices');
   const svg = select('svg');
   svg.attr('width', holder.clientWidth);
   svg.selectAll("*").remove();
@@ -243,11 +247,18 @@ function drawGraph(activeDevices) {
   showGraph(holder);
 }
 
-export default function activeDevices(activeDevices) {
-  drawGraph(activeDevices);
+export default function activeDevices(holderSelector, activeDevices) {
+  const holder = document.querySelector(holderSelector);
 
-  select(window).on('resize', () => {
-    drawGraph(activeDevices);
-  });
+  if (!holder) {
+    return;
+  }
 
+  drawGraph(holder, activeDevices);
+
+  const resize = debounce(function() {
+    drawGraph(holder, activeDevices);
+  }, 100);
+
+  select(window).on('resize', resize);
 }

@@ -22,10 +22,10 @@ function renderMetrics(metrics) {
     });
   });
 
-  activeDevicesMetrics(activeDevices);
+  activeDevicesMetrics(metrics.activeDevices.selector, activeDevices);
 
   // Territories
-  territoriesMetrics('#territories', metrics.territories);
+  territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
 }
 
 export default renderMetrics;

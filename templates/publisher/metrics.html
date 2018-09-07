@@ -90,10 +90,14 @@ Publisher metrics for {{ snap_title }}
       snapcraft.publisher.selector('.active-devices', 'active-devices');
       snapcraft.publisher.metrics({
         activeDevices: {
+          selector: '#activeDevices',
           metrics: {{ active_devices|safe }},
           type: '{{ active_device_metric }}'
         },
-        territories: {{ territories|safe }}
+        territories: {
+          selector: '#territories',
+          metrics: {{ territories|safe }}
+        }
       });
     });
   </script>

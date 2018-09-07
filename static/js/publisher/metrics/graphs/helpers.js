@@ -46,8 +46,4 @@ function cullYAxis() {
   }
 }
 
-function singleLine(str) {
-  return str.replace(/\s\s+/g, '');
-}
-
-export { cullXAxis, cullYAxis, singleLine };
+export { cullXAxis, cullYAxis };
