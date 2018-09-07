@@ -5,13 +5,13 @@ from webapp.api.exceptions import ApiError
 from webapp.blog import logic
 
 blog = flask.Blueprint(
-    'blog', __name__,
-    template_folder='/templates', static_folder='/static')
+    "blog", __name__, template_folder="/templates", static_folder="/static"
+)
 
 
-@blog.route('/')
+@blog.route("/")
 def homepage():
-    page_param = flask.request.args.get('page', default=1, type=int)
+    page_param = flask.request.args.get("page", default=1, type=int)
 
     try:
         articles, total_pages = api.get_articles(page=page_param)
@@ -20,30 +20,29 @@ def homepage():
 
     for article in articles:
         try:
-            featured_image = api.get_media(article['featured_media'])
+            featured_image = api.get_media(article["featured_media"])
         except ApiError:
             featured_image = None
 
         try:
-            author = api.get_user(article['author'])
+            author = api.get_user(article["author"])
         except ApiError:
             author = None
 
         article = logic.transform_article(
-            article,
-            featured_image=featured_image,
-            author=author)
+            article, featured_image=featured_image, author=author
+        )
 
     context = {
-        'current_page': page_param,
-        'total_pages': int(total_pages),
-        'articles': articles,
+        "current_page": page_param,
+        "total_pages": int(total_pages),
+        "articles": articles,
     }
 
-    return flask.render_template('blog/index.html', **context)
+    return flask.render_template("blog/index.html", **context)
 
 
-@blog.route('/feed')
+@blog.route("/feed")
 def feed():
     try:
         feed = api.get_feed()
@@ -51,14 +50,15 @@ def feed():
         return flask.abort(502)
 
     right_urls = logic.change_url(
-        feed, flask.request.base_url.replace('/feed', ''))
+        feed, flask.request.base_url.replace("/feed", "")
+    )
 
-    right_title = right_urls.replace('Ubuntu Blog', 'Snapcraft Blog')
+    right_title = right_urls.replace("Ubuntu Blog", "Snapcraft Blog")
 
-    return flask.Response(right_title, mimetype='text/xml')
+    return flask.Response(right_title, mimetype="text/xml")
 
 
-@blog.route('/<slug>')
+@blog.route("/<slug>")
 def article(slug):
     try:
         articles = api.get_article(slug)
@@ -66,18 +66,18 @@ def article(slug):
         return flask.abort(502, str(api_error))
 
     if not articles:
-        flask.abort(404, 'Article not found')
+        flask.abort(404, "Article not found")
 
     article = articles[0]
 
     try:
-        author = api.get_user(article['author'])
+        author = api.get_user(article["author"])
     except ApiError:
         author = None
 
     transformed_article = logic.transform_article(article, author=author)
 
-    tags = article['tags']
+    tags = article["tags"]
     tag_names = []
     try:
         tag_names_response = api.get_tags_by_ids(tags)
@@ -86,18 +86,14 @@ def article(slug):
 
     if tag_names_response:
         for tag in tag_names_response:
-            tag_names.append({
-                'id': tag['id'],
-                'name': tag['name']
-            })
+            tag_names.append({"id": tag["id"], "name": tag["name"]})
 
     is_in_series = logic.is_in_series(tag_names)
 
     try:
         related_articles, total_pages = api.get_articles(
-            tags=tags,
-            per_page=3,
-            exclude=article['id'])
+            tags=tags, per_page=3, exclude=article["id"]
+        )
     except ApiError:
         related_articles = None
 
@@ -106,21 +102,19 @@ def article(slug):
             related_article = logic.transform_article(related_article)
 
     context = {
-        'article': transformed_article,
-        'related_articles': related_articles,
-        'tags': tag_names,
-        'is_in_series': is_in_series
+        "article": transformed_article,
+        "related_articles": related_articles,
+        "tags": tag_names,
+        "is_in_series": is_in_series,
     }
 
-    return flask.render_template(
-        'blog/article.html',
-        **context)
+    return flask.render_template("blog/article.html", **context)
 
 
-@blog.route('/api/snap-posts/<snap>')
+@blog.route("/api/snap-posts/<snap>")
 def snap_posts(snap):
     try:
-        blog_tags = api.get_tag_by_name(''.join(['sc:snap:', snap]))
+        blog_tags = api.get_tag_by_name("".join(["sc:snap:", snap]))
     except ApiError:
         blog_tags = None
 
@@ -130,27 +124,25 @@ def snap_posts(snap):
     if blog_tags:
         blog_tags_ids = logic.get_tag_id_list(blog_tags)
         try:
-            blog_articles, total_pages = api.get_articles(
-                blog_tags_ids,
-                3
-            )
+            blog_articles, total_pages = api.get_articles(blog_tags_ids, 3)
         except ApiError:
             blog_articles = None
 
         for article in blog_articles:
             transformed_article = logic.transform_article(
-                article,
-                featured_image=None,
-                author=None)
-            articles.append({
-                'slug': transformed_article['slug'],
-                'title': transformed_article['title']['rendered']
-            })
+                article, featured_image=None, author=None
+            )
+            articles.append(
+                {
+                    "slug": transformed_article["slug"],
+                    "title": transformed_article["title"]["rendered"],
+                }
+            )
 
     return flask.jsonify(articles)
 
 
-@blog.route('/api/series/<series>')
+@blog.route("/api/series/<series>")
 def snap_series(series):
     blog_articles = None
     articles = []
@@ -162,12 +154,13 @@ def snap_series(series):
 
     for article in blog_articles:
         transformed_article = logic.transform_article(
-            article,
-            featured_image=None,
-            author=None)
-        articles.append({
-            'slug': transformed_article['slug'],
-            'title': transformed_article['title']['rendered']
-        })
+            article, featured_image=None, author=None
+        )
+        articles.append(
+            {
+                "slug": transformed_article["slug"],
+                "title": transformed_article["title"]["rendered"],
+            }
+        )
 
     return flask.jsonify(articles)

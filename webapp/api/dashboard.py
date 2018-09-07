@@ -8,7 +8,7 @@ from webapp.api.exceptions import (
     ApiResponseError,
     ApiResponseErrorList,
     MacaroonRefreshRequired,
-    MissingUsername
+    MissingUsername,
 )
 
 
@@ -21,64 +21,41 @@ api_session = api.requests.Session(timeout=(.5, 6))
 
 
 DASHBOARD_API = os.getenv(
-    'DASHBOARD_API',
-    'https://dashboard.snapcraft.io/dev/api/',
+    "DASHBOARD_API", "https://dashboard.snapcraft.io/dev/api/"
 )
 
 DASHBOARD_API_V2 = os.getenv(
-    'DASHBOARD_API_V2',
-    'https://dashboard.snapcraft.io/api/v2/'
+    "DASHBOARD_API_V2", "https://dashboard.snapcraft.io/api/v2/"
 )
 
-SNAP_PUB_METRICS_URL = ''.join([
-    DASHBOARD_API,
-    'snaps/metrics',
-])
-PUB_METRICS_QUERY_HEADERS = {
-    'Content-Type': 'application/json'
-}
+SNAP_PUB_METRICS_URL = "".join([DASHBOARD_API, "snaps/metrics"])
+PUB_METRICS_QUERY_HEADERS = {"Content-Type": "application/json"}
 
-ACCOUNT_URL = ''.join([
-    DASHBOARD_API,
-    'account',
-])
+ACCOUNT_URL = "".join([DASHBOARD_API, "account"])
 
-AGREEMENT_URL = ''.join([
-    DASHBOARD_API,
-    'agreement/'
-])
+AGREEMENT_URL = "".join([DASHBOARD_API, "agreement/"])
 
-METADATA_QUERY_URL = ''.join([
-    DASHBOARD_API,
-    'snaps/{snap_id}/metadata',
-    '?conflict_on_update=true'
-])
+METADATA_QUERY_URL = "".join(
+    [DASHBOARD_API, "snaps/{snap_id}/metadata", "?conflict_on_update=true"]
+)
 
-SCREENSHOTS_QUERY_URL = ''.join([
-    DASHBOARD_API,
-    'snaps/{snap_id}/binary-metadata',
-    '?conflict_on_update=true'
-])
+SCREENSHOTS_QUERY_URL = "".join(
+    [
+        DASHBOARD_API,
+        "snaps/{snap_id}/binary-metadata",
+        "?conflict_on_update=true",
+    ]
+)
 
-SNAP_INFO_URL = ''.join([
-    DASHBOARD_API,
-    'snaps/info/{snap_name}',
-])
+SNAP_INFO_URL = "".join([DASHBOARD_API, "snaps/info/{snap_name}"])
 
-REGISTER_NAME_URL = ''.join([
-    DASHBOARD_API,
-    'register-name/'
-])
+REGISTER_NAME_URL = "".join([DASHBOARD_API, "register-name/"])
 
-REVISION_HISTORY_URL = ''.join([
-    DASHBOARD_API,
-    'snaps/{snap_id}/history'
-])
+REVISION_HISTORY_URL = "".join([DASHBOARD_API, "snaps/{snap_id}/history"])
 
-SNAP_RELEASE_HISTORY_URL = ''.join([
-    DASHBOARD_API_V2,
-    'snaps/{snap_name}/releases?page=1&size=100'
-])
+SNAP_RELEASE_HISTORY_URL = "".join(
+    [DASHBOARD_API_V2, "snaps/{snap_name}/releases?page=1&size=100"]
+)
 
 
 def process_response(response):
@@ -86,28 +63,27 @@ def process_response(response):
         body = response.json()
     except ValueError as decode_error:
         api_error_exception = ApiResponseDecodeError(
-            'JSON decoding failed: {}'.format(decode_error),
+            "JSON decoding failed: {}".format(decode_error)
         )
         raise api_error_exception
 
     if not response.ok:
-        if 'error_list' in body:
-            for error in body['error_list']:
-                if error['code'] == 'user-not-ready':
-                    if 'has not signed agreement' in error['message']:
+        if "error_list" in body:
+            for error in body["error_list"]:
+                if error["code"] == "user-not-ready":
+                    if "has not signed agreement" in error["message"]:
                         raise AgreementNotSigned
-                    elif 'missing namespace' in error['message']:
+                    elif "missing namespace" in error["message"]:
                         raise MissingUsername
 
             raise ApiResponseErrorList(
-                'The api returned a list of errors',
+                "The api returned a list of errors",
                 response.status_code,
-                body['error_list']
+                body["error_list"],
             )
         else:
             raise ApiResponseError(
-                'Unknown error from api',
-                response.status_code
+                "Unknown error from api", response.status_code
             )
 
     return body
@@ -115,22 +91,16 @@ def process_response(response):
 
 def get_authorization_header(session):
     authorization = authentication.get_authorization_header(
-        session['macaroon_root'],
-        session['macaroon_discharge']
+        session["macaroon_root"], session["macaroon_discharge"]
     )
 
-    return {
-        'Authorization': authorization
-    }
+    return {"Authorization": authorization}
 
 
 def get_account(session):
     headers = get_authorization_header(session)
 
-    response = api_session.get(
-        url=ACCOUNT_URL,
-        headers=headers,
-    )
+    response = api_session.get(url=ACCOUNT_URL, headers=headers)
 
     if authentication.is_macaroon_expired(response.headers):
         raise MacaroonRefreshRequired
@@ -141,10 +111,7 @@ def get_account(session):
 def get_agreement(session):
     headers = get_authorization_header(session)
 
-    agreement_response = api_session.get(
-        url=AGREEMENT_URL,
-        headers=headers,
-    )
+    agreement_response = api_session.get(url=AGREEMENT_URL, headers=headers)
 
     if authentication.is_macaroon_expired(agreement_response.headers):
         raise MacaroonRefreshRequired
@@ -155,13 +122,9 @@ def get_agreement(session):
 def post_agreement(session, agreed):
     headers = get_authorization_header(session)
 
-    json = {
-        'latest_tos_accepted': agreed
-    }
+    json = {"latest_tos_accepted": agreed}
     agreement_response = api_session.post(
-        url=AGREEMENT_URL,
-        headers=headers,
-        json=json,
+        url=AGREEMENT_URL, headers=headers, json=json
     )
 
     if authentication.is_macaroon_expired(agreement_response.headers):
@@ -172,13 +135,9 @@ def post_agreement(session, agreed):
 
 def post_username(session, username):
     headers = get_authorization_header(session)
-    json = {
-        'short_namespace': username
-    }
+    json = {"short_namespace": username}
     username_response = api_session.patch(
-        url=ACCOUNT_URL,
-        headers=headers,
-        json=json,
+        url=ACCOUNT_URL, headers=headers, json=json
     )
 
     if authentication.is_macaroon_expired(username_response.headers):
@@ -192,13 +151,11 @@ def post_username(session, username):
 
 def get_publisher_metrics(session, json):
     authed_metrics_headers = PUB_METRICS_QUERY_HEADERS.copy()
-    auth_header = get_authorization_header(session)['Authorization']
-    authed_metrics_headers['Authorization'] = auth_header
+    auth_header = get_authorization_header(session)["Authorization"]
+    authed_metrics_headers["Authorization"] = auth_header
 
     metrics_response = api_session.post(
-        url=SNAP_PUB_METRICS_URL,
-        headers=authed_metrics_headers,
-        json=json,
+        url=SNAP_PUB_METRICS_URL, headers=authed_metrics_headers, json=json
     )
 
     if authentication.is_macaroon_expired(metrics_response.headers):
@@ -208,21 +165,19 @@ def get_publisher_metrics(session, json):
 
 
 def post_register_name(
-        session, snap_name,
-        registrant_comment=None, is_private=False, store=None):
+    session, snap_name, registrant_comment=None, is_private=False, store=None
+):
 
-    json = {
-        'snap_name': snap_name,
-    }
+    json = {"snap_name": snap_name}
 
     if registrant_comment:
-        json['registrant_comment'] = registrant_comment
+        json["registrant_comment"] = registrant_comment
 
     if is_private:
-        json['is_private'] = is_private
+        json["is_private"] = is_private
 
     if store:
-        json['store'] = store
+        json["store"] = store
 
     response = api_session.post(
         url=REGISTER_NAME_URL,
@@ -251,7 +206,7 @@ def get_snap_info(snap_name, session):
 def get_snap_id(snap_name, session):
     snap_info = get_snap_info(snap_name, session)
 
-    return snap_info['snap_id']
+    return snap_info["snap_id"]
 
 
 def snap_metadata(snap_id, session, json=None):
@@ -271,13 +226,13 @@ def snap_metadata(snap_id, session, json=None):
 
 
 def snap_screenshots(snap_id, session, data=None, files=None):
-    method = 'GET'
+    method = "GET"
     files_array = None
     headers = get_authorization_header(session)
-    headers['Accept'] = 'application/json'
+    headers["Accept"] = "application/json"
 
     if data:
-        method = 'PUT'
+        method = "PUT"
 
         files_array = []
         if files:
@@ -288,7 +243,7 @@ def snap_screenshots(snap_id, session, data=None, files=None):
         else:
             # API requires a multipart request, but we have no files to push
             # https://github.com/requests/requests/issues/1081
-            files_array = {'info': ('', data['info'])}
+            files_array = {"info": ("", data["info"])}
             data = None
 
     screenshot_response = api_session.request(

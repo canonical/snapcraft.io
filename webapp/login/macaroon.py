@@ -2,8 +2,8 @@ from openid.extension import Extension as OpenIDExtension
 
 
 class MacaroonRequest(OpenIDExtension):
-    ns_uri = 'http://ns.login.ubuntu.com/2016/openid-macaroon'
-    ns_alias = 'macaroon'
+    ns_uri = "http://ns.login.ubuntu.com/2016/openid-macaroon"
+    ns_alias = "macaroon"
 
     def __init__(self, caveat_id):
         self.caveat_id = caveat_id
@@ -13,23 +13,19 @@ class MacaroonRequest(OpenIDExtension):
         Return the arguments to add to the OpenID request query
         """
 
-        return {
-            'caveat_id': self.caveat_id
-        }
+        return {"caveat_id": self.caveat_id}
 
 
 class MacaroonResponse(OpenIDExtension):
-    ns_uri = 'http://ns.login.ubuntu.com/2016/openid-macaroon'
-    ns_alias = 'macaroon'
+    ns_uri = "http://ns.login.ubuntu.com/2016/openid-macaroon"
+    ns_alias = "macaroon"
 
     def getExtensionArgs(self):
         """
         Return the arguments to add to the OpenID request query
         """
 
-        return {
-            'discharge': self.discharge
-        }
+        return {"discharge": self.discharge}
 
     def fromSuccessResponse(cls, success_response, signed_only=True):
         self = cls()
@@ -41,7 +37,7 @@ class MacaroonResponse(OpenIDExtension):
         if not args:
             return None
 
-        self.discharge = args['discharge']
+        self.discharge = args["discharge"]
 
         return self
 

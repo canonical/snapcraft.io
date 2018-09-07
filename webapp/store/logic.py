@@ -13,8 +13,8 @@ def get_searched_snaps(search_results):
     :returns: The list of the searched snaps
     """
     return (
-        search_results['_embedded']['clickindex:package']
-        if '_embedded' in search_results
+        search_results["_embedded"]["clickindex:package"]
+        if "_embedded" in search_results
         else []
     )
 
@@ -30,34 +30,29 @@ def get_pages_details(url, links):
     """
     links_result = {}
 
-    if('first' in links):
-        links_result['first'] = convert_navigation_url(
-            url,
-            links['first']['href']
+    if "first" in links:
+        links_result["first"] = convert_navigation_url(
+            url, links["first"]["href"]
         )
 
-    if('last' in links):
-        links_result['last'] = convert_navigation_url(
-            url,
-            links['last']['href']
+    if "last" in links:
+        links_result["last"] = convert_navigation_url(
+            url, links["last"]["href"]
         )
 
-    if('next' in links):
-        links_result['next'] = convert_navigation_url(
-            url,
-            links['next']['href']
+    if "next" in links:
+        links_result["next"] = convert_navigation_url(
+            url, links["next"]["href"]
         )
 
-    if('prev' in links):
-        links_result['prev'] = convert_navigation_url(
-            url,
-            links['prev']['href']
+    if "prev" in links:
+        links_result["prev"] = convert_navigation_url(
+            url, links["prev"]["href"]
         )
 
-    if('self' in links):
-        links_result['self'] = convert_navigation_url(
-            url,
-            links['self']['href']
+    if "self" in links:
+        links_result["self"] = convert_navigation_url(
+            url, links["self"]["href"]
         )
 
     return links_result
@@ -76,35 +71,29 @@ def convert_navigation_url(url, link):
     :returns: The new navigation link
     """
     url_parsed = urlparse(link)
-    host_url = (
-        "{base_url}"
-        "?q={q}&limit={limit}&offset={offset}"
-    )
+    host_url = "{base_url}" "?q={q}&limit={limit}&offset={offset}"
 
     url_queries = parse_qs(url_parsed.query)
 
-    if 'q' in url_queries:
-        q = url_queries['q'][0]
+    if "q" in url_queries:
+        q = url_queries["q"][0]
     else:
-        q = ''
+        q = ""
 
-    if 'section' in url_queries:
-        category = url_queries['section'][0]
+    if "section" in url_queries:
+        category = url_queries["section"][0]
     else:
-        category = ''
+        category = ""
 
-    size = int(url_queries['size'][0])
-    page = int(url_queries['page'][0])
+    size = int(url_queries["size"][0])
+    page = int(url_queries["page"][0])
 
     url = host_url.format(
-        base_url=url,
-        q=q,
-        limit=size,
-        offset=size*(page-1)
+        base_url=url, q=q, limit=size, offset=size * (page - 1)
     )
 
-    if category != '':
-        url += '&category=' + category
+    if category != "":
+        url += "&category=" + category
 
     return url
 
@@ -118,13 +107,13 @@ def split_description_into_paragraphs(unformatted_description):
     :returns: The formatted paragraphs
     """
     description = unformatted_description.strip()
-    paragraphs = re.compile(r'[\n\r]{2,}').split(description)
+    paragraphs = re.compile(r"[\n\r]{2,}").split(description)
     formatted_paragraphs = []
 
     # Sanitise paragraphs
     def external(attrs, new=False):
         url_parts = urlparse(attrs[(None, "href")])
-        if url_parts.netloc and url_parts.netloc != 'snapcraft.io':
+        if url_parts.netloc and url_parts.netloc != "snapcraft.io":
             if (None, "class") not in attrs:
                 attrs[(None, "class")] = "p-link--external"
             elif "p-link--external" not in attrs[(None, "class")]:
@@ -138,7 +127,7 @@ def split_description_into_paragraphs(unformatted_description):
         paragraph = escape(paragraph)
         paragraph = bleach.linkify(paragraph, callbacks=callbacks)
 
-        formatted_paragraphs.append(paragraph.replace('\n', '<br />'))
+        formatted_paragraphs.append(paragraph.replace("\n", "<br />"))
 
     return formatted_paragraphs
 
@@ -171,20 +160,20 @@ def convert_channel_maps(channel_map):
     """
     channel_map_restruct = {}
     for channel in channel_map:
-        arch = channel.get('channel').get('architecture')
-        track = channel.get('channel').get('track')
+        arch = channel.get("channel").get("architecture")
+        track = channel.get("channel").get("track")
         if arch not in channel_map_restruct:
             channel_map_restruct[arch] = {}
         if track not in channel_map_restruct[arch]:
             channel_map_restruct[arch][track] = []
 
         info = {
-            'created-at': channel.get('created-at'),
-            'version': channel.get('version'),
-            'channel': channel.get('channel').get('name'),
-            'risk': channel.get('channel').get('risk'),
-            'confinement': channel.get('confinement'),
-            'size': channel.get('download').get('size')
+            "created-at": channel.get("created-at"),
+            "version": channel.get("version"),
+            "channel": channel.get("channel").get("name"),
+            "risk": channel.get("channel").get("risk"),
+            "confinement": channel.get("confinement"),
+            "size": channel.get("download").get("size"),
         }
         channel_map_restruct[arch][track].append(info)
 
@@ -197,19 +186,21 @@ def get_categories(categories_json):
     :param categories_json: The returned json
     :returns: A list of categories
     """
-    categories_list = ['featured', 'developers', 'games', 'social-networking']
+    categories_list = ["featured", "developers", "games", "social-networking"]
     categories = []
 
-    if '_embedded' in categories_json:
-        for cat in categories_json['_embedded']['clickindex:sections']:
-            if cat['name'] not in categories_list:
-                categories_list.append(cat['name'])
+    if "_embedded" in categories_json:
+        for cat in categories_json["_embedded"]["clickindex:sections"]:
+            if cat["name"] not in categories_list:
+                categories_list.append(cat["name"])
 
         for category in categories_list:
-            categories.append({
-                'slug': category,
-                'name': category.capitalize().replace('-', ' ')
-            })
+            categories.append(
+                {
+                    "slug": category,
+                    "name": category.capitalize().replace("-", " "),
+                }
+            )
 
     return categories
 
@@ -226,10 +217,10 @@ def get_last_updated_version(channel_maps):
         if not newest_channel:
             newest_channel = channel_map
         else:
-            if channel_map['channel']['risk'] == 'stable':
+            if channel_map["channel"]["risk"] == "stable":
                 newest_channel = channel_map
 
-        if newest_channel['channel']['risk'] == 'stable':
+        if newest_channel["channel"]["risk"] == "stable":
             break
 
     return newest_channel
@@ -246,7 +237,7 @@ def has_stable(channel_maps_list):
         for arch in channel_maps_list:
             for track in channel_maps_list[arch]:
                 for release in channel_maps_list[arch][track]:
-                    if release['risk'] == 'stable':
+                    if release["risk"] == "stable":
                         return True
 
     return False
@@ -260,19 +251,19 @@ def get_lowest_available_risk(channel_map, track):
 
     :returns: The lowest available risk
     """
-    risk_order = ['stable', 'candidate', 'beta', 'edge']
+    risk_order = ["stable", "candidate", "beta", "edge"]
     lowest_available_risk = None
     for arch in channel_map:
         if arch in channel_map and track in channel_map[arch]:
             releases = channel_map[arch][track]
             for release in releases:
                 if not lowest_available_risk:
-                    lowest_available_risk = release['risk']
+                    lowest_available_risk = release["risk"]
                 else:
-                    risk_index = risk_order.index(release['risk'])
+                    risk_index = risk_order.index(release["risk"])
                     lowest_index = risk_order.index(lowest_available_risk)
                     if risk_index < lowest_index:
-                        lowest_available_risk = release['risk']
+                        lowest_available_risk = release["risk"]
 
     return lowest_available_risk
 
@@ -290,7 +281,7 @@ def get_confinement(channel_map, track, risk):
         if arch in channel_map and track in channel_map[arch]:
             releases = channel_map[arch][track]
             for release in releases:
-                if release['risk'] == risk:
-                    return release['confinement']
+                if release["risk"] == risk:
+                    return release["confinement"]
 
     return None

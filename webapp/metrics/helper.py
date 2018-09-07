@@ -6,8 +6,8 @@ def get_filter(metric_name, snap_id, start, end):
     return {
         "metric_name": metric_name,
         "snap_id": snap_id,
-        "start": start.strftime('%Y-%m-%d'),
-        "end": end.strftime('%Y-%m-%d')
+        "start": start.strftime("%Y-%m-%d"),
+        "end": end.strftime("%Y-%m-%d"),
     }
 
 
@@ -23,8 +23,8 @@ def get_last_metrics_processed_date():
 
 
 def build_metrics_json(
-        snap_id, installed_base, metric_period=30,
-        metric_bucket='d'):
+    snap_id, installed_base, metric_period=30, metric_bucket="d"
+):
     """Build the json that will be requested to the API
 
     :param snap_id The snap id
@@ -37,12 +37,10 @@ def build_metrics_json(
     """
     end = get_last_metrics_processed_date()
 
-    if metric_bucket == 'd':
-        start = end - relativedelta.relativedelta(
-            days=metric_period)
-    elif metric_bucket == 'm':
-        start = end - relativedelta.relativedelta(
-            months=metric_period)
+    if metric_bucket == "d":
+        start = end - relativedelta.relativedelta(days=metric_period)
+    elif metric_bucket == "m":
+        start = end - relativedelta.relativedelta(months=metric_period)
 
     return {
         "filters": [
@@ -50,12 +48,16 @@ def build_metrics_json(
                 metric_name=installed_base,
                 snap_id=snap_id,
                 start=start,
-                end=end),
+                end=end,
+            ),
             get_filter(
                 metric_name="weekly_installed_base_by_country",
                 snap_id=snap_id,
                 start=end,
-                end=end)]}
+                end=end,
+            ),
+        ]
+    }
 
 
 def find_metric(full_response, name):
@@ -67,5 +69,5 @@ def find_metric(full_response, name):
     :returns: A dictionary with the metric information
     """
     for metric in full_response:
-        if metric['metric_name'] == name:
+        if metric["metric_name"] == name:
             return metric
