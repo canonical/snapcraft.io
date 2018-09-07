@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 
 import RevisionsTable from './revisionsTable';
+import Notification from './notification';
 
 // TODO: not needed here?
 // const RISKS = ['stable', 'candidate', 'beta', 'edge'];
@@ -86,7 +87,6 @@ export default class Releases extends Component {
   fetchRelease(revision, channels) {
     const { csrfToken } = this.props.options;
 
-    console.log('fetch', revision, channels );
     return fetch(`/account/snaps/${this.props.snapName}/release`, {
       method: "POST",
       mode: "cors",
@@ -104,19 +104,14 @@ export default class Releases extends Component {
   }
 
   handleReleaseResponse(json, release) {
-    console.log("response", json);
-
-    // TODO: update state/channel map after each successful release
     if (json.success) {
-      console.log("update channel map", json.channel_map);
-
       this.setState(state => {
         const releasedChannels = state.releasedChannels;
 
         // update releasedChannels based on channel map from the response
         json.channel_map.forEach(map => {
-          console.log('map', map)
           // TODO:
+          // possible improvements but not needed for functionality:
           // - close channels when there is no release?
           // - ignore revisions other then the one just released?
           // - get revision data from revisionsMap?
@@ -155,8 +150,22 @@ export default class Releases extends Component {
         };
       });
     } else {
-      console.log("error")
+      let error = new Error(`Error while releasing ${release.revision.version} (${release.revision.revision}) to ${release.channels.join(', ')}.`);
+      error.json = json;
+      throw error;
     }
+  }
+
+  handleReleaseError(error) {
+    let message = error.message || "Error while performing the release. Please try again later.";
+
+    if (error.json && error.json.length) {
+      message = message + " " + error.json.map(e => e.message).filter(m => m).join(' ');
+    }
+
+    this.setState({
+      error: message
+    });
   }
 
   fetchReleases(releases) {
@@ -180,10 +189,9 @@ export default class Releases extends Component {
       return { id, revision: pendingReleases[id].revision, channels: pendingReleases[id].channels };
     });
 
-    console.log('fetchReleases', releases);
     this.setState({ isLoading: true });
     this.fetchReleases(releases)
-      .then(() => console.log('all done'))
+      .catch(error => this.handleReleaseError(error))
       .then(() => this.setState({ isLoading: false }))
       .then(() => this.clearPendingReleases());
   }
@@ -193,19 +201,26 @@ export default class Releases extends Component {
     const { releasedChannels } = this.state;
 
     return (
-      <RevisionsTable
-        releasedChannels={releasedChannels}
-        tracks={tracks}
-        archs={archs}
-        options={options}
-        releaseRevisions={this.releaseRevisions.bind(this)}
-        fetchStatus={this.state}
+      <Fragment>
+        { this.state.error &&
+          <Notification status="error" appearance="negative">
+            {this.state.error}
+          </Notification>
+        }
+        <RevisionsTable
+          releasedChannels={releasedChannels}
+          tracks={tracks}
+          archs={archs}
+          options={options}
+          releaseRevisions={this.releaseRevisions.bind(this)}
+          fetchStatus={this.state}
 
-        pendingReleases={this.state.pendingReleases}
-        promoteRevision={this.promoteRevision.bind(this)}
-        undoRelease={this.undoRelease.bind(this)}
-        clearPendingReleases={this.clearPendingReleases.bind(this)}
-      />
+          pendingReleases={this.state.pendingReleases}
+          promoteRevision={this.promoteRevision.bind(this)}
+          undoRelease={this.undoRelease.bind(this)}
+          clearPendingReleases={this.clearPendingReleases.bind(this)}
+        />
+      </Fragment>
     );
   }
 }
