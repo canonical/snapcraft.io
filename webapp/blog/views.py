@@ -18,6 +18,8 @@ def homepage():
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
+    category_cache = {}
+
     for article in articles:
         try:
             featured_image = api.get_media(article["featured_media"])
@@ -29,14 +31,29 @@ def homepage():
         except ApiError:
             author = None
 
+        category_ids = article['categories']
+
+        for category_id in category_ids:
+            if not category_id in category_cache:
+                category_cache[category_id] = {}
+
         article = logic.transform_article(
             article, featured_image=featured_image, author=author
         )
+
+    for key, category in category_cache.items():
+        try:
+            resolved_category = api.get_category_by_id(key)
+        except ApiError:
+            resolved_category = None
+
+        category_cache[key] = resolved_category
 
     context = {
         "current_page": page_param,
         "total_pages": int(total_pages),
         "articles": articles,
+        "categories": category_cache
     }
 
     return flask.render_template("blog/index.html", **context)

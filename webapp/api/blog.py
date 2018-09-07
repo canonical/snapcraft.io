@@ -61,6 +61,18 @@ def get_tags_by_ids(ids):
     return response.json()
 
 
+def get_category_by_id(id):
+    url = ''.join([
+        API_URL,
+        '/categories/',
+        str(id)
+    ])
+
+    response = api_session.get(url)
+
+    return response.json()
+
+
 def get_media(media_id):
     url = "".join([API_URL, "/media/", str(media_id)])
     response = api_session.get(url)
