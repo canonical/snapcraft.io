@@ -22,9 +22,7 @@ def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
         url_parts = url_parts + ["&exclude=", str(exclude)]
 
     if category:
-        url_parts = url_parts + [
-            "&categories=",
-            str(category)]
+        url_parts = url_parts + ["&categories=", str(category)]
 
     url = "".join(url_parts)
 
@@ -67,11 +65,7 @@ def get_tags_by_ids(ids):
 
 
 def get_categories():
-    url = ''.join([
-        API_URL,
-        '/categories?',
-        'per_page=100'
-    ])
+    url = "".join([API_URL, "/categories?", "per_page=100"])
 
     response = api_session.get(url)
 
@@ -79,11 +73,7 @@ def get_categories():
 
 
 def get_category_by_id(id):
-    url = ''.join([
-        API_URL,
-        '/categories/',
-        str(id)
-    ])
+    url = "".join([API_URL, "/categories/", str(id)])
 
     response = api_session.get(url)
 

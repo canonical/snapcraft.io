@@ -101,12 +101,12 @@ def is_in_series(tags):
 
 def whitelist_categories(categories):
     whitelist = [
-        'Articles',
-        'Canonical News',
-        'Case studies',
-        'Design',
-        'Desktop',
-        'Development'
+        "Articles",
+        "Canonical News",
+        "Case studies",
+        "Design",
+        "Desktop",
+        "Development",
     ]
 
-    return [item for item in categories if item['name'] in whitelist]
+    return [item for item in categories if item["name"] in whitelist]

@@ -26,12 +26,13 @@ def homepage():
 
     filter_category = next(
         (item["id"] for item in categories if item["name"].lower() == filter),
-        None
+        None,
     )
 
     try:
         articles, total_pages = api.get_articles(
-            page=page_param, category=filter_category)
+            page=page_param, category=filter_category
+        )
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
@@ -72,7 +73,7 @@ def homepage():
         "articles": articles,
         "categories": categories,
         "used_categories": category_cache,
-        "filter": filter
+        "filter": filter,
     }
 
     return flask.render_template("blog/index.html", **context)

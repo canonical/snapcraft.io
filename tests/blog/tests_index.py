@@ -33,7 +33,7 @@ class BlogPage(TestCase):
                 "featured_media": 123,
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
-                "categories": [123]
+                "categories": [123],
             }
         ]
 
@@ -47,21 +47,12 @@ class BlogPage(TestCase):
             headers=posts_headers,
         )
 
-        categories_url = "".join([
-            self.api_url,
-            "/categories?per_page=100"])
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
 
-        categories_payload = [
-            {
-                "name": "Articles"
-            }
-        ]
+        categories_payload = [{"name": "Articles"}]
 
         responses.add(
-            responses.GET,
-            categories_url,
-            json=categories_payload,
-            status=200
+            responses.GET, categories_url, json=categories_payload, status=200
         )
 
         media_url = "".join([self.api_url, "/media/123"])
@@ -76,14 +67,14 @@ class BlogPage(TestCase):
             "articles",
             [
                 {
-                "date": "11 June 2018",
-                "date_gmt": "2018-06-11T11:11:11",
-                "featured_media": 123,
-                "image": {},
-                "author": None,
-                "categories": [123]
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:11",
+                    "featured_media": 123,
+                    "image": {},
+                    "author": None,
+                    "categories": [123],
                 }
-            ]
+            ],
         )
 
     @responses.activate
@@ -100,21 +91,12 @@ class BlogPage(TestCase):
             headers=headers,
         )
 
-        categories_url = "".join([
-            self.api_url,
-            "/categories?per_page=100"])
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
 
-        categories_payload = [
-            {
-                "name": "Articles"
-            }
-        ]
+        categories_payload = [{"name": "Articles"}]
 
         responses.add(
-            responses.GET,
-            categories_url,
-            json=categories_payload,
-            status=200
+            responses.GET, categories_url, json=categories_payload, status=200
         )
 
         response = self.client.get("/blog")
@@ -130,7 +112,7 @@ class BlogPage(TestCase):
                 "featured_media": 123,
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
-                "categories": [123]
+                "categories": [123],
             }
         ]
 
@@ -150,21 +132,12 @@ class BlogPage(TestCase):
             responses.GET, url, body=requests.exceptions.Timeout(), status=504
         )
 
-        categories_url = "".join([
-            self.api_url,
-            "/categories?per_page=100"])
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
 
-        categories_payload = [
-            {
-                "name": "Articles"
-            }
-        ]
+        categories_payload = [{"name": "Articles"}]
 
         responses.add(
-            responses.GET,
-            categories_url,
-            json=categories_payload,
-            status=200
+            responses.GET, categories_url, json=categories_payload, status=200
         )
 
         response = self.client.get("/blog")
@@ -180,7 +153,7 @@ class BlogPage(TestCase):
                     "featured_media": 123,
                     "image": None,
                     "author": None,
-                    "categories": [123]
+                    "categories": [123],
                 }
             ],
         )
@@ -194,7 +167,7 @@ class BlogPage(TestCase):
                 "featured_media": 123,
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
-                "categories": [123]
+                "categories": [123],
             }
         ]
 
@@ -214,21 +187,12 @@ class BlogPage(TestCase):
             responses.GET, url, body=requests.exceptions.Timeout(), status=504
         )
 
-        categories_url = "".join([
-            self.api_url,
-            "/categories?per_page=100"])
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
 
-        categories_payload = [
-            {
-                "name": "Articles"
-            }
-        ]
+        categories_payload = [{"name": "Articles"}]
 
         responses.add(
-            responses.GET,
-            categories_url,
-            json=categories_payload,
-            status=200
+            responses.GET, categories_url, json=categories_payload, status=200
         )
 
         response = self.client.get("/blog")
@@ -244,7 +208,7 @@ class BlogPage(TestCase):
                     "featured_media": 123,
                     "image": None,
                     "author": None,
-                    "categories": [123]
+                    "categories": [123],
                 }
             ],
         )
