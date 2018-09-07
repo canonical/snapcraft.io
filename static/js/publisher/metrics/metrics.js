@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import activeDevicesMetrics from './graphs/activeDevices';
 import territoriesMetrics from './graphs/territories';
 
@@ -13,27 +11,21 @@ function renderMetrics(metrics) {
     series: [],
     buckets: metrics.activeDevices.metrics.buckets
   };
+
   metrics.activeDevices.metrics.series.forEach(series => {
     let fullSeries = series.values.map(value => {
       return value === null ? 0 : value;
     });
-    fullSeries.unshift(series.name);
-    activeDevices.series.push(fullSeries);
+    activeDevices.series.push({
+      name: series.name,
+      values: fullSeries
+    });
   });
 
-  activeDevices.buckets = activeDevices.buckets.map(bucket => {
-    return moment(bucket);
-  });
-  activeDevices.buckets.unshift('x');
-
-  activeDevicesMetrics(
-    activeDevices.buckets,
-    activeDevices.series,
-    metrics.activeDevices.type
-  );
+  activeDevicesMetrics(metrics.activeDevices.selector, activeDevices);
 
   // Territories
-  territoriesMetrics('#territories', metrics.territories);
+  territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
 }
 
 export default renderMetrics;

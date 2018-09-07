@@ -1,200 +1,264 @@
-/* globals bb */
-
-import moment from 'moment';
-
-import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
+import { select, mouse } from 'd3-selection';
+import { format } from 'd3-format';
+import { utcParse, utcFormat } from 'd3-time-format';
+import { scaleLinear, scaleOrdinal } from 'd3-scale';
+import { schemePaired } from 'd3-scale-chromatic';
+import { area, stack, curveMonotoneX, stackOrderReverse } from 'd3-shape';
+import { extent, bisector } from 'd3-array';
+import { axisBottom, axisLeft } from 'd3-axis';
+import { cullXAxis, cullYAxis } from './helpers';
+import { isMobile } from '../../../libs/mobile';
 import debounce from '../../../libs/debounce';
-import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
-import { PADDING, COLOR_SCALE } from '../config';
 
 function showGraph(el) {
-  formatAxis(el);
   el.style.opacity = 1;
 }
 
-export default function activeDevices(days, activeDevices, type) {
-  const el = document.getElementById('active_devices');
+const shortValue = number => number < 1000 ? number : format('.2s')(number);
+const commaValue = number => format(',')(number);
+const tooltipTimeFormat = utcFormat('%Y-%m-%d');
 
-  // If there's no data, we still want to show the axis
-  let minYAxisValue;
-  if (days.length === 1) { // Only includes the 'x'
-    let offset = 0;
-    const start = moment.utc().startOf('day').subtract(30, 'days');
-    let dummyActiveDevices = [''];
+const xScaleFunc = (padding, width, data) => {
+  return scaleLinear()
+    .rangeRound([padding.left, width - padding.left - padding.right])
+    .domain(extent(data, d => d.date));
+};
 
-    while(offset < 30) {
-      days.push(start.clone().add(offset, 'days'));
-      dummyActiveDevices.push(0);
-      offset++;
-    }
-    activeDevices.push(dummyActiveDevices);
-    minYAxisValue = 1;
+const yScaleFunc = (padding, height, max) => {
+  return scaleLinear()
+    .rangeRound([height - padding.top - padding.bottom, padding.top]).nice()
+    .domain([0, max + Math.ceil(max * 0.1)]);
+};
+
+const colourScaleFunc = (keys) => {
+  return scaleOrdinal(schemePaired)
+    .domain(keys);
+};
+
+const getStackedData = (keys, data) => {
+  const stackFunc = stack()
+    .order(stackOrderReverse)
+    .keys(keys);
+
+  return stackFunc(data);
+};
+
+const bisectDate = bisector(d => d.date).left;
+
+const tooltipRows = (data, currentHoverKey, colorScale) => {
+  let dataArr = [];
+  let total = 0;
+  let other = {
+    key: 'other',
+    value: 0,
+    count: 0
+  };
+
+  Object.keys(data)
+    .filter(key => key !== 'date')
+    .forEach(key => {
+      total += data[key];
+
+      dataArr.push({
+        key: key,
+        value: data[key]
+      });
+    });
+
+  dataArr.sort((a, b) => b.value - a.value);
+
+  // Filter out anything below 0.1% of the total users
+  // If there are more than 10 series
+  if (dataArr.length > 10) {
+    dataArr.forEach(item => {
+      if (item.value / total < 0.001) {
+        other.value += item.value;
+        other.count += 1;
+        other.key = `${other.count} other`;
+        item.skip = true;
+      }
+    });
   }
 
-  activeDevices.sort((a, b) => {
-    const a1 = a.slice(1); // Remove the first item as it's the label
-    const b1 = b.slice(1); // Same again.
+  // If we've added anything to the 'other' series,
+  // add it to the array
+  if (other.value > 0) {
+    dataArr.push(other);
+  }
 
-    const reducer = (accumulator, currentValue) => {
-      return accumulator + currentValue;
+  return dataArr.map(item => {
+    if (!item.skip) {
+      return [
+        `<span class="snapcraft-graph-tooltip__series${item.key === currentHoverKey ? ' is-hovered' : ''}" title="${item.key}">`,
+        `<span class="snapcraft-graph-tooltip__series-name">${item.key}</span>`,
+        `<span class="snapcraft-graph-tooltip__series-color"${!item.count ? `style="background:${colorScale(item.key)};"` : ''}></span>`,
+        `<span class="snapcraft-graph-tooltip__series-value">${commaValue(item.value)}</span>`,
+        `</span>`
+      ].join('');
+    }
+  }).join('');
+};
+
+const tooltipTemplate = (data, currentHoverKey, colorScale) => {
+  return [
+    `<div class="p-tooltip p-tooltip--top-center" style="display: block;">`,
+    `<span class="p-tooltip__message" role="tooltip" style="display: block;">`,
+    `<span class="snapcraft-graph-tooltip__title">${tooltipTimeFormat(data.date)}</span>`,
+    tooltipRows(data, currentHoverKey, colorScale),
+    `</span>`,
+    `</div>`
+  ].join('');
+};
+
+function drawGraph(holder, activeDevices) {
+  // Basic svg setup
+  const svg = select('svg');
+  svg.attr('width', holder.clientWidth);
+  svg.selectAll("*").remove();
+
+  const margin = { top: 20, right: 0, bottom: 30, left: 50 };
+  const padding = { top: 0, right: 0, bottom: 16, left: 16 };
+  const width = svg.attr('width') - margin.left - margin.right - padding.left - padding.right;
+  const height = svg.attr('height') - margin.top - margin.bottom - padding.top - padding.bottom;
+  const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // Prepare the data
+  const _data = [];
+  const _keys = [];
+  let max = 0;
+  activeDevices.buckets.forEach((bucket, i) => {
+    let obj = {
+      date: utcParse('%Y-%m-%d')(bucket)
     };
 
-    const a1Total = a1.reduce(reducer);
-    const b1Total = b1.reduce(reducer);
+    activeDevices.series.forEach(series => {
+      obj[series.name] = series.values[i];
+      if (_keys.indexOf(series.name) < 0) {
+        _keys.push(series.name);
+      }
+    });
 
-    return b1Total - a1Total;
+    _data.push(obj);
   });
 
-  let groupedActiveDevices = {};
-  let deviceData;
+  _data.forEach(date => {
+    const _max = Object.keys(date)
+      .filter(key => key !== 'date')
+      .reduce((previous, key) => previous + date[key], 0);
 
-  if (type === 'os') {
-    activeDevices.forEach(activeDevice => {
-      let series = activeDevice.slice(0);
-      let label = series[0];
+    if (_max > max) {
+      max = _max;
+    }
+  });
 
-      if (!groupedActiveDevices[label]) {
-        groupedActiveDevices[label] = [series.slice(1)];
-      } else {
-        groupedActiveDevices[label].push(series.slice(1));
+  // Colours
+  const colorScale = colourScaleFunc(_keys);
+
+  // Scales
+  const xScale = xScaleFunc(padding, width, _data);
+  const yScale = yScaleFunc(padding, height, max);
+
+  // Stack the data
+  const stackData = getStackedData(_keys, _data);
+
+  // Add the 'layer' group
+  const layer = g.selectAll('.layer')
+    .data(stackData)
+    .enter()
+    .append('g')
+    .attr('class', 'layer');
+
+  // Add the areas
+  const areas = area()
+    .curve(curveMonotoneX)
+    .x(d => xScale(d.data.date))
+    .y0(d => yScale(d[0]))
+    .y1(d => yScale(d[1]));
+
+  layer.append('path')
+    .attr('class', 'area')
+    .style('fill', d => colorScale(d.key))
+    .attr('d', areas)
+    .on('mousemove', mouseMove)
+    .on('mouseout', cancelTooltip);
+
+  // Add the x axix
+  let tickValues = [];
+  if (isMobile() && _data.length > 90) {
+    // Get the first day of each month
+    let monthCache = false;
+    tickValues = _data.filter(item => {
+      if (!monthCache || item.date.getMonth() !== monthCache) {
+        monthCache = item.date.getMonth();
+        return true;
       }
-    });
-
-    let mergedActiveDevices = [];
-    Object.keys(groupedActiveDevices).forEach(key => {
-      let base = groupedActiveDevices[key][0];
-      for (let seriesIndex = groupedActiveDevices[key].length - 1; seriesIndex > 0; seriesIndex -= 1) {
-        const series = groupedActiveDevices[key][seriesIndex];
-        for (let valueIndex = 0, jj = series.length; valueIndex < jj; valueIndex += 1) {
-          base[valueIndex] += series[valueIndex];
-        }
-      }
-      groupedActiveDevices[key] = groupedActiveDevices[key][0];
-      mergedActiveDevices.push([key].concat(groupedActiveDevices[key]));
-    });
-
-    deviceData = mergedActiveDevices;
+      return false;
+    }).map(item => item.date);
   } else {
-    deviceData = activeDevices;
+    tickValues = _data.map(item => item.date);
   }
 
-  let types = {};
-  let colors = {};
-  let colorScale = COLOR_SCALE.reduce((accumulator, color) => {
-    return [].concat(accumulator, color);
-  });
+  const xAxis = axisBottom(xScale)
+    .tickValues(tickValues)
+    .tickPadding(16);
 
-  let _colors = [];
+  g.append('g')
+    .attr('class', 'axis axis--x')
+    .attr('transform', `translate(0, ${height})`)
+    .call(xAxis.tickFormat(utcFormat('%b %e')));
 
-  const diff = Math.ceil(deviceData.length / colorScale.length);
-  let i = 0;
-  while (i < diff) {
-    _colors = _colors.concat(colorScale);
-    i++;
+  cullXAxis();
+
+  // Add the y axis
+  g.append('g')
+    .attr('class', 'axis axis--y')
+    .call(axisLeft(yScale).tickFormat(d => d === 0 ? '0' : shortValue(d)));
+
+  cullYAxis();
+
+  const tooltip = select(holder)
+    .append('div')
+    .attr('class', 'p-tooltip');
+
+  function mouseMove(d) {
+    const mousePosition = mouse(this);
+
+    const x0 = xScale.invert(mousePosition[0]);
+    const _date = new Date(x0);
+    _date.setHours(0);
+    _date.setMinutes(0);
+    _date.setSeconds(0);
+    _date.setMilliseconds(0);
+    const i = bisectDate(_data, _date.getTime(), 0);
+
+    const current = d.key;
+    const dateData = _data[i];
+
+    tooltip.html(tooltipTemplate(dateData, current, colorScale))
+      .style('top', `${mousePosition[1]}px`)
+      .style('left', `${mousePosition[0] + margin.left}px`)
+      .style('display', 'block');
   }
 
-  let _colorIndex = 0;
-  const group = deviceData.map(version => {
-    const name = version[0];
-    types[name] = 'area-spline';
-    colors[name] = `${_colors[_colorIndex]}`;
-    _colorIndex++;
-    return name;
-  });
+  function cancelTooltip() {
+    tooltip.style('display', 'none');
+  }
 
-  const activeDevicesMetrics = bb.generate({
-    bindto: '#active_devices',
-    legend: {
-      hide: true
-    },
-    padding: PADDING,
-    tooltip: {
-      contents: snapcraftGraphTooltip.bind(this, {
-        colors: colors,
-        showLabels: true
-      }, el),
-      position: positionTooltip.bind(this, el)
-    },
-    transition: {
-      duration: 0
-    },
-    point: {
-      focus: false,
-      show: false
-    },
-    axis: {
-      x: {
-        tick: {
-          culling: false,
-          outer: true,
-          format: formatXAxisTickLabels
-        }
-      },
-      y: {
-        tick: {
-          format: formatYAxisTickLabels
-        },
-        padding: {
-          top: 30, bottom: 30
-        },
-        min: minYAxisValue
-      }
-    },
-    resize: {
-      auto: false
-    },
-    spline: {
-      interpolation: {
-        type: 'basis'
-      }
-    },
-    data: {
-      colors: colors,
-      types: types,
-      groups: [
-        group
-      ],
-      x: 'x',
-      columns: [days].concat(deviceData)
-    },
-    onrendered: () => {
-      // Because we're modifying the axis with CSS the mask crops the labels
-      // We don't need the masks, so here we remove them each render.
-      Array.from(
-        el.querySelectorAll('clipPath')
-      ).forEach(mask => {
-        if (mask.id.indexOf('axis') !== -1) {
-          mask.remove();
-        }
-      });
-    }
-  });
+  showGraph(holder);
+}
 
-  showGraph(el);
+export default function activeDevices(holderSelector, activeDevices) {
+  const holder = document.querySelector(holderSelector);
 
-  deviceData.forEach(device => {
-    const labelClass = device[0].replace(/\W+/g, '-');
-    const area = el.querySelector(`.bb-area-${labelClass}`);
-    if (area) {
-      area.dataset.label = device[0];
-    }
-  });
+  if (!holder) {
+    return;
+  }
 
-  // Extra events
-  let elWidth = el.clientWidth;
+  drawGraph(holder, activeDevices);
 
-  const resize = debounce(function () {
-    if (el.clientWidth !== elWidth) {
-      el.style.opacity = 0;
-      debounce(function () {
-        activeDevicesMetrics.resize();
-        showGraph(el);
-        elWidth = el.clientWidth;
-      }, 100)();
-    }
-  }, 500);
+  const resize = debounce(function() {
+    drawGraph(holder, activeDevices);
+  }, 100);
 
-  window.addEventListener('resize', resize);
-
-  return activeDevicesMetrics;
+  select(window).on('resize', resize);
 }
