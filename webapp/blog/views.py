@@ -12,9 +12,26 @@ blog = flask.Blueprint(
 @blog.route("/")
 def homepage():
     page_param = flask.request.args.get("page", default=1, type=int)
+    filter = flask.request.args.get("filter", default=None, type=str)
+
+    if filter == "all":
+        filter = None
 
     try:
-        articles, total_pages = api.get_articles(page=page_param)
+        categories_list = api.get_categories()
+    except ApiError:
+        categories_list = None
+
+    categories = logic.exclude_categories(categories_list)
+
+    filter_category = next(
+        (item["id"] for item in categories if item["name"].lower() == filter),
+        None
+    )
+
+    try:
+        articles, total_pages = api.get_articles(
+            page=page_param, category=filter_category)
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
@@ -31,10 +48,10 @@ def homepage():
         except ApiError:
             author = None
 
-        category_ids = article['categories']
+        category_ids = article["categories"]
 
         for category_id in category_ids:
-            if not category_id in category_cache:
+            if category_id not in category_cache:
                 category_cache[category_id] = {}
 
         article = logic.transform_article(
@@ -53,7 +70,9 @@ def homepage():
         "current_page": page_param,
         "total_pages": int(total_pages),
         "articles": articles,
-        "categories": category_cache
+        "categories": category_cache,
+        "used_categories": category_cache,
+        "filter": filter
     }
 
     return flask.render_template("blog/index.html", **context)

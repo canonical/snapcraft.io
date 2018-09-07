@@ -97,3 +97,16 @@ def is_in_series(tags):
             return True
 
     return False
+
+
+def exclude_categories(categories):
+    whitelist = [
+        'Articles',
+        'Canonical News',
+        'Case studies',
+        'Design',
+        'Desktop',
+        'Development'
+    ]
+
+    return [item for item in categories if item['name'] in whitelist]
