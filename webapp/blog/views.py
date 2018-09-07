@@ -22,7 +22,7 @@ def homepage():
     except ApiError:
         categories_list = None
 
-    categories = logic.exclude_categories(categories_list)
+    categories = logic.whitelist_categories(categories_list)
 
     filter_category = next(
         (item["id"] for item in categories if item["name"].lower() == filter),
@@ -70,7 +70,7 @@ def homepage():
         "current_page": page_param,
         "total_pages": int(total_pages),
         "articles": articles,
-        "categories": category_cache,
+        "categories": categories,
         "used_categories": category_cache,
         "filter": filter
     }

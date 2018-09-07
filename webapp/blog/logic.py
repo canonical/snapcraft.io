@@ -99,7 +99,7 @@ def is_in_series(tags):
     return False
 
 
-def exclude_categories(categories):
+def whitelist_categories(categories):
     whitelist = [
         'Articles',
         'Canonical News',
