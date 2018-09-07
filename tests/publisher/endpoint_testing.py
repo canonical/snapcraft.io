@@ -6,8 +6,7 @@ import responses
 from webapp.app import create_app
 from flask_testing import TestCase
 
-from webapp.authentication import (
-    get_authorization_header)
+from webapp.authentication import get_authorization_header
 
 
 # Make sure tests fail on stray responses.
@@ -15,12 +14,13 @@ responses.mock.assert_all_requests_are_fired = True
 
 
 class BaseTestCases:
-    '''
+    """
     This class has a set of test classes that should be inherited by endpoint
     that have authentication.
 
     It is also used to avoid unittest to run this tests file.
-    '''
+    """
+
     class BaseAppTesting(TestCase):
         render_templates = False
 
@@ -34,13 +34,13 @@ class BaseTestCases:
 
         def create_app(self):
             app = create_app(testing=True)
-            app.secret_key = 'secret_key'
-            app.config['WTF_CSRF_METHODS'] = []
+            app.secret_key = "secret_key"
+            app.config["WTF_CSRF_METHODS"] = []
 
             return app
 
         def _get_location(self):
-            return 'http://localhost{}'.format(self.endpoint_url)
+            return "http://localhost{}".format(self.endpoint_url)
 
         def _log_in(self, client):
             """Emulates test client login in the store.
@@ -52,50 +52,56 @@ class BaseTestCases:
             in API requests.
             """
             # Basic root/discharge macaroons pair.
-            root = pymacaroons.Macaroon('test', 'testing', 'a_key')
-            root.add_third_party_caveat('3rd', 'a_caveat-key', 'a_ident')
-            discharge = pymacaroons.Macaroon('3rd', 'a_ident', 'a_caveat_key')
+            root = pymacaroons.Macaroon("test", "testing", "a_key")
+            root.add_third_party_caveat("3rd", "a_caveat-key", "a_ident")
+            discharge = pymacaroons.Macaroon("3rd", "a_ident", "a_caveat_key")
 
             with client.session_transaction() as s:
-                s['openid'] = {
-                    'image': None,
-                    'nickname': 'Toto',
-                    'fullname': 'El Toto',
-                    'email': 'testing@testing.com'
+                s["openid"] = {
+                    "image": None,
+                    "nickname": "Toto",
+                    "fullname": "El Toto",
+                    "email": "testing@testing.com",
                 }
-                s['macaroon_root'] = root.serialize()
-                s['macaroon_discharge'] = discharge.serialize()
+                s["macaroon_root"] = root.serialize()
+                s["macaroon_discharge"] = discharge.serialize()
 
             return get_authorization_header(
-                root.serialize(), discharge.serialize())
+                root.serialize(), discharge.serialize()
+            )
 
     class EndpointLoggedOut(BaseAppTesting):
-        def setUp(self, snap_name,
-                  endpoint_url, method_endpoint='GET'):
+        def setUp(self, snap_name, endpoint_url, method_endpoint="GET"):
 
             self.method_endpoint = method_endpoint
             super().setUp(snap_name, None, endpoint_url)
 
         def test_access_not_logged_in(self):
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data={})
 
             self.assertEqual(302, response.status_code)
             self.assertEqual(
-                'http://localhost/login?next={}'.format(self.endpoint_url),
-                response.location)
+                "http://localhost/login?next={}".format(self.endpoint_url),
+                response.location,
+            )
 
     class EndpointLoggedIn(BaseAppTesting):
-        def setUp(self, snap_name,
-                  endpoint_url, api_url,
-                  method_endpoint='GET', method_api='GET', data=None):
+        def setUp(
+            self,
+            snap_name,
+            endpoint_url,
+            api_url,
+            method_endpoint="GET",
+            method_api="GET",
+            data=None,
+        ):
 
             super().setUp(
-                snap_name=snap_name,
-                api_url=api_url,
-                endpoint_url=endpoint_url)
+                snap_name=snap_name, api_url=api_url, endpoint_url=endpoint_url
+            )
 
             self.method_endpoint = method_endpoint
             self.method_api = method_api
@@ -109,22 +115,20 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     body=requests.exceptions.Timeout(),
-                    status=504
+                    status=504,
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             assert response.status_code == 504
 
@@ -135,22 +139,20 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     body=requests.exceptions.ConnectionError(),
-                    status=500
+                    status=500,
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             assert response.status_code == 502
 
@@ -160,24 +162,20 @@ class BaseTestCases:
             # call to the function response.json() raise a ValueError exception
             responses.add(
                 responses.Response(
-                    method=self.method_api,
-                    url=self.api_url,
-                    status=500
+                    method=self.method_api, url=self.api_url, status=500
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             assert response.status_code == 502
 
@@ -188,22 +186,20 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     json={},
-                    status=500
+                    status=500,
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             assert response.status_code == 502
 
@@ -215,23 +211,26 @@ class BaseTestCases:
                     url=self.api_url,
                     json={},
                     status=500,
-                    headers={'WWW-Authenticate': 'Macaroon needs_refresh=1'}
+                    headers={"WWW-Authenticate": "Macaroon needs_refresh=1"},
                 )
             )
             responses.add(
                 responses.POST,
-                'https://login.ubuntu.com/api/v2/tokens/refresh',
-                json={'discharge_macaroon': 'macaroon'}, status=200)
+                "https://login.ubuntu.com/api/v2/tokens/refresh",
+                json={"discharge_macaroon": "macaroon"},
+                status=200,
+            )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
             self.assertEqual(
-                'https://login.ubuntu.com/api/v2/tokens/refresh',
-                called.request.url)
+                "https://login.ubuntu.com/api/v2/tokens/refresh",
+                called.request.url,
+            )
 
             assert response.status_code == 302
             assert response.location == self._get_location()
@@ -239,9 +238,7 @@ class BaseTestCases:
     class EndpointLoggedInErrorHandling(EndpointLoggedIn):
         @responses.activate
         def test_error_4xx(self):
-            payload = {
-                'error_list': []
-            }
+            payload = {"error_list": []}
             responses.add(
                 responses.Response(
                     method=self.method_api,
@@ -251,31 +248,25 @@ class BaseTestCases:
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             assert response.status_code == 502
 
         @responses.activate
         def test_custom_error(self):
             payload = {
-                'error_list': [
-                    {
-                        'code': 'error-code1'
-                    },
-                    {
-                        'code': 'error-code2'
-                    }
+                "error_list": [
+                    {"code": "error-code1"},
+                    {"code": "error-code2"},
                 ]
             }
             responses.add(
@@ -287,28 +278,26 @@ class BaseTestCases:
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             assert response.status_code == 502
 
         @responses.activate
         def test_account_not_signed_agreement_logged_in(self):
             payload = {
-                'error_list': [
+                "error_list": [
                     {
-                        'code': 'user-not-ready',
-                        'message': 'has not signed agreement'
+                        "code": "user-not-ready",
+                        "message": "has not signed agreement",
                     }
                 ]
             }
@@ -317,36 +306,31 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     json=payload,
-                    status=403
+                    status=403,
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             self.assertEqual(302, response.status_code)
             self.assertEqual(
-                'http://localhost/account/agreement',
-                response.location)
+                "http://localhost/account/agreement", response.location
+            )
 
         @responses.activate
         def test_account_no_username_logged_in(self):
             payload = {
-                'error_list': [
-                    {
-                        'code': 'user-not-ready',
-                        'message': 'missing namespace'
-                    }
+                "error_list": [
+                    {"code": "user-not-ready", "message": "missing namespace"}
                 ]
             }
             responses.add(
@@ -354,24 +338,22 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     json=payload,
-                    status=403
+                    status=403,
                 )
             )
 
-            if self.method_endpoint == 'GET':
+            if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls)-1]
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(self.api_url, called.request.url)
             self.assertEqual(
-                self.api_url,
-                called.request.url)
-            self.assertEqual(
-                self.authorization,
-                called.request.headers.get('Authorization'))
+                self.authorization, called.request.headers.get("Authorization")
+            )
 
             self.assertEqual(302, response.status_code)
             self.assertEqual(
-                'http://localhost/account/username',
-                response.location)
+                "http://localhost/account/username", response.location
+            )

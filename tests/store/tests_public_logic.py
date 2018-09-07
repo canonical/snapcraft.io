@@ -15,32 +15,30 @@ class StoreLogicTest(unittest.TestCase):
     def test_one_track_channel_map(self):
         channel_maps_list = [
             {
-                'channel': {
-                    'name': 'channel',
-                    'architecture': 'arch',
-                    'track': 'track',
-                    'risk': 'risk'
+                "channel": {
+                    "name": "channel",
+                    "architecture": "arch",
+                    "track": "track",
+                    "risk": "risk",
                 },
-                'created-at': 'date',
-                'confinement': 'confinement',
-                'download': {
-                    'size': 'size'
-                },
-                'version': 'version'
+                "created-at": "date",
+                "confinement": "confinement",
+                "download": {"size": "size"},
+                "version": "version",
             }
         ]
 
         result = logic.convert_channel_maps(channel_maps_list)
         expected_result = {
-            'arch': {
-                'track': [
+            "arch": {
+                "track": [
                     {
-                        'channel': 'channel',
-                        'created-at': 'date',
-                        'confinement': 'confinement',
-                        'size': 'size',
-                        'risk': 'risk',
-                        'version': 'version'
+                        "channel": "channel",
+                        "created-at": "date",
+                        "confinement": "confinement",
+                        "size": "size",
+                        "risk": "risk",
+                        "version": "version",
                     }
                 ]
             }
@@ -51,57 +49,53 @@ class StoreLogicTest(unittest.TestCase):
     def test_multiple_track_same_arch_channel_map(self):
         channel_maps_list = [
             {
-                'channel': {
-                    'name': 'channel',
-                    'architecture': 'arch',
-                    'track': 'track',
-                    'risk': 'risk'
+                "channel": {
+                    "name": "channel",
+                    "architecture": "arch",
+                    "track": "track",
+                    "risk": "risk",
                 },
-                'created-at': 'date',
-                'confinement': 'confinement',
-                'download': {
-                    'size': 'size'
-                },
-                'version': 'version'
+                "created-at": "date",
+                "confinement": "confinement",
+                "download": {"size": "size"},
+                "version": "version",
             },
             {
-                'channel': {
-                    'name': 'channel',
-                    'architecture': 'arch',
-                    'track': 'track1',
-                    'risk': 'risk'
+                "channel": {
+                    "name": "channel",
+                    "architecture": "arch",
+                    "track": "track1",
+                    "risk": "risk",
                 },
-                'created-at': 'date',
-                'confinement': 'confinement',
-                'download': {
-                    'size': 'size'
-                },
-                'version': 'version'
-            }
+                "created-at": "date",
+                "confinement": "confinement",
+                "download": {"size": "size"},
+                "version": "version",
+            },
         ]
         result = logic.convert_channel_maps(channel_maps_list)
         expected_result = {
-            'arch': {
-                'track': [
+            "arch": {
+                "track": [
                     {
-                        'channel': 'channel',
-                        'created-at': 'date',
-                        'confinement': 'confinement',
-                        'size': 'size',
-                        'risk': 'risk',
-                        'version': 'version'
+                        "channel": "channel",
+                        "created-at": "date",
+                        "confinement": "confinement",
+                        "size": "size",
+                        "risk": "risk",
+                        "version": "version",
                     }
                 ],
-                'track1': [
+                "track1": [
                     {
-                        'channel': 'channel',
-                        'created-at': 'date',
-                        'confinement': 'confinement',
-                        'size': 'size',
-                        'risk': 'risk',
-                        'version': 'version'
+                        "channel": "channel",
+                        "created-at": "date",
+                        "confinement": "confinement",
+                        "size": "size",
+                        "risk": "risk",
+                        "version": "version",
                     }
-                ]
+                ],
             }
         }
 
@@ -110,135 +104,104 @@ class StoreLogicTest(unittest.TestCase):
     def test_multiple_track_different_arch_channel_map(self):
         channel_maps_list = [
             {
-                'channel': {
-                    'name': 'channel',
-                    'architecture': 'arch',
-                    'track': 'track',
-                    'risk': 'risk'
+                "channel": {
+                    "name": "channel",
+                    "architecture": "arch",
+                    "track": "track",
+                    "risk": "risk",
                 },
-                'created-at': 'date',
-                'confinement': 'confinement',
-                'download': {
-                    'size': 'size'
-                },
-                'version': 'version'
+                "created-at": "date",
+                "confinement": "confinement",
+                "download": {"size": "size"},
+                "version": "version",
             },
             {
-                'channel': {
-                    'name': 'channel',
-                    'architecture': 'arch1',
-                    'track': 'track',
-                    'risk': 'risk'
+                "channel": {
+                    "name": "channel",
+                    "architecture": "arch1",
+                    "track": "track",
+                    "risk": "risk",
                 },
-                'created-at': 'date',
-                'confinement': 'confinement',
-                'download': {
-                    'size': 'size'
-                },
-                'version': 'version'
-            }
+                "created-at": "date",
+                "confinement": "confinement",
+                "download": {"size": "size"},
+                "version": "version",
+            },
         ]
 
         result = logic.convert_channel_maps(channel_maps_list)
         expected_result = {
-            'arch': {
-                'track': [
+            "arch": {
+                "track": [
                     {
-                        'channel': 'channel',
-                        'created-at': 'date',
-                        'confinement': 'confinement',
-                        'size': 'size',
-                        'risk': 'risk',
-                        'version': 'version'
+                        "channel": "channel",
+                        "created-at": "date",
+                        "confinement": "confinement",
+                        "size": "size",
+                        "risk": "risk",
+                        "version": "version",
                     }
                 ]
             },
-            'arch1': {
-                'track': [
+            "arch1": {
+                "track": [
                     {
-                        'channel': 'channel',
-                        'created-at': 'date',
-                        'confinement': 'confinement',
-                        'size': 'size',
-                        'risk': 'risk',
-                        'version': 'version'
+                        "channel": "channel",
+                        "created-at": "date",
+                        "confinement": "confinement",
+                        "size": "size",
+                        "risk": "risk",
+                        "version": "version",
                     }
                 ]
-            }
+            },
         }
 
         self.assertEqual(result, expected_result)
 
-
     def test_get_lowest_available_risk(self):
-        channel_map = {
-            'arch': {
-                'track': [
-                    {
-                        'risk': 'edge'
-                    }
-                ]
-            }
-        }
-        edge_result = logic.get_lowest_available_risk(channel_map, 'track')
-        self.assertEqual(edge_result, 'edge')
+        channel_map = {"arch": {"track": [{"risk": "edge"}]}}
+        edge_result = logic.get_lowest_available_risk(channel_map, "track")
+        self.assertEqual(edge_result, "edge")
 
-        channel_map['arch']['track'].append({
-            'risk': 'beta'
-        })
-        beta_result = logic.get_lowest_available_risk(channel_map, 'track')
-        self.assertEqual(beta_result, 'beta')
+        channel_map["arch"]["track"].append({"risk": "beta"})
+        beta_result = logic.get_lowest_available_risk(channel_map, "track")
+        self.assertEqual(beta_result, "beta")
 
-        channel_map['arch']['track'].append({
-            'risk': 'candidate'
-        })
-        cand_result = logic.get_lowest_available_risk(channel_map, 'track')
-        self.assertEqual(cand_result, 'candidate')
+        channel_map["arch"]["track"].append({"risk": "candidate"})
+        cand_result = logic.get_lowest_available_risk(channel_map, "track")
+        self.assertEqual(cand_result, "candidate")
 
-        channel_map['arch']['track'].append({
-            'risk': 'stable'
-        })
-        stable_result = logic.get_lowest_available_risk(channel_map, 'track')
-        self.assertEqual(stable_result, 'stable')
+        channel_map["arch"]["track"].append({"risk": "stable"})
+        stable_result = logic.get_lowest_available_risk(channel_map, "track")
+        self.assertEqual(stable_result, "stable")
 
         # assert that channel_map has been updated successfully
-        self.assertEqual(channel_map, {
-            'arch': {
-                'track': [
-                    {
-                        'risk': 'edge'
-                    },
-                    {
-                        'risk': 'beta'
-                    },
-                    {
-                        'risk': 'candidate'
-                    },
-                    {
-                        'risk': 'stable'
-                    }
-                ]
-            }
-        })
-
+        self.assertEqual(
+            channel_map,
+            {
+                "arch": {
+                    "track": [
+                        {"risk": "edge"},
+                        {"risk": "beta"},
+                        {"risk": "candidate"},
+                        {"risk": "stable"},
+                    ]
+                }
+            },
+        )
 
     def test_get_confinement(self):
         channel_map = {
-            'arch': {
-                'track': [
-                    {
-                        'risk': 'edge',
-                        'confinement': 'classic'
-                    },
-                    {
-                        'risk': 'stable',
-                        'confinement': 'strict'
-                    }
+            "arch": {
+                "track": [
+                    {"risk": "edge", "confinement": "classic"},
+                    {"risk": "stable", "confinement": "strict"},
                 ]
             }
         }
-        classic_result = logic.get_confinement(channel_map, 'track', 'edge')
-        self.assertEqual(classic_result, 'classic')
+        classic_result = logic.get_confinement(channel_map, "track", "edge")
+        self.assertEqual(classic_result, "classic")
 
-        strict_result = logic.get_confinement(channel_map, 'track', 'stable')
-        self.assertEqual(strict_result, 'strict')
+        strict_result = logic.get_confinement(channel_map, "track", "stable")
+        self.assertEqual(strict_result, "strict")

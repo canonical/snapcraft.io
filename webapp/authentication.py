@@ -4,13 +4,9 @@ from pymacaroons import Macaroon
 from urllib.parse import urlparse
 
 DASHBOARD_API = os.getenv(
-    'DASHBOARD_API',
-    "https://dashboard.snapcraft.io/dev/api/",
+    "DASHBOARD_API", "https://dashboard.snapcraft.io/dev/api/"
 )
-LOGIN_URL = os.getenv(
-    'LOGIN_URL',
-    "https://login.ubuntu.com",
-)
+LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
 
 def get_authorization_header(root, discharge):
@@ -22,7 +18,7 @@ def get_authorization_header(root, discharge):
         Macaroon.deserialize(discharge)
     )
 
-    return 'Macaroon root={}, discharge={}'.format(root, bound.serialize())
+    return "Macaroon root={}, discharge={}".format(root, bound.serialize())
 
 
 def is_authenticated(session):
@@ -31,9 +27,9 @@ def is_authenticated(session):
     Returns True if the user is authenticated
     """
     return (
-        'openid' in session and
-        'macaroon_discharge' in session and
-        'macaroon_root' in session
+        "openid" in session
+        and "macaroon_discharge" in session
+        and "macaroon_root" in session
     )
 
 
@@ -41,9 +37,9 @@ def empty_session(session):
     """
     Empty the session, used to logout.
     """
-    session.pop('macaroon_root', None)
-    session.pop('macaroon_discharge', None)
-    session.pop('openid', None)
+    session.pop("macaroon_root", None)
+    session.pop("macaroon_discharge", None)
+    session.pop("openid", None)
 
 
 def get_caveat_id(root):
@@ -52,7 +48,8 @@ def get_caveat_id(root):
     """
     location = urlparse(LOGIN_URL).hostname
     caveat, = [
-        c for c in Macaroon.deserialize(root).third_party_caveats()
+        c
+        for c in Macaroon.deserialize(root).third_party_caveats()
         if c.location == location
     ]
 
@@ -64,28 +61,21 @@ def request_macaroon():
     Request a macaroon from dashboard.
     Returns the macaroon.
     """
-    url = ''.join([
-        DASHBOARD_API,
-        'acl/',
-    ])
+    url = "".join([DASHBOARD_API, "acl/"])
     response = requests.request(
         url=url,
-        method='POST',
+        method="POST",
         json={
-            'permissions': [
-                'package_access',
-                'package_upload',
-                'edit_account'
-            ]
+            "permissions": ["package_access", "package_upload", "edit_account"]
         },
         headers={
-            'Accept': 'application/json, application/hal+json',
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache',
-        }
+            "Accept": "application/json, application/hal+json",
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+        },
     )
 
-    return response.json()['macaroon']
+    return response.json()["macaroon"]
 
 
 def get_refreshed_discharge(discharge):
@@ -93,22 +83,19 @@ def get_refreshed_discharge(discharge):
     Get a refresh macaroon if the macaroon is not valid anymore.
     Returns the new discharge macaroon.
     """
-    url = ''.join([
-        LOGIN_URL,
-        '/api/v2/tokens/refresh',
-    ])
+    url = "".join([LOGIN_URL, "/api/v2/tokens/refresh"])
     response = requests.request(
         url=url,
-        method='POST',
-        json={'discharge_macaroon': discharge},
+        method="POST",
+        json={"discharge_macaroon": discharge},
         headers={
-            'Accept': 'application/json, application/hal+json',
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache',
-        }
+            "Accept": "application/json, application/hal+json",
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+        },
     )
 
-    return response.json()['discharge_macaroon']
+    return response.json()["discharge_macaroon"]
 
 
 def is_macaroon_expired(headers):
@@ -116,5 +103,4 @@ def is_macaroon_expired(headers):
     Returns True if the macaroon needs to be refreshed from
     the header response.
     """
-    return headers.get('WWW-Authenticate') == (
-            'Macaroon needs_refresh=1')
+    return headers.get("WWW-Authenticate") == ("Macaroon needs_refresh=1")

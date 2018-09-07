@@ -71,5 +71,6 @@ class MacaroonRefreshRequired(ApiError):
     """
     The macaroon needs to be refreshed
     """
+
     def __init__(self):
-        return super().__init__('The Macaroon needs to be refreshed')
+        return super().__init__("The Macaroon needs to be refreshed")

@@ -8,22 +8,22 @@ def generate_slug(path):
     """
     Generate a slug for each page
     """
-    if path.startswith('/account'):
-        return 'account'
+    if path.startswith("/account"):
+        return "account"
 
-    if path == '/':
-        return 'home'
+    if path == "/":
+        return "home"
 
-    if path.startswith('/build'):
-        return 'build'
+    if path.startswith("/build"):
+        return "build"
 
-    if path.startswith('/blog'):
-        return 'blog'
+    if path.startswith("/blog"):
+        return "blog"
 
-    if path.startswith('/iot'):
-        return 'iot'
+    if path.startswith("/iot"):
+        return "iot"
 
-    return 'store'
+    return "store"
 
 
 # template filters
@@ -35,7 +35,7 @@ def contains(arr, contents):
     return contents in arr
 
 
-def join(arr, separator=''):
+def join(arr, separator=""):
     """
     Template helper for joining array items into a string, using a separator
     """
@@ -50,11 +50,11 @@ def static_url(filename):
     with a hex hash as a query string for versioning
     """
 
-    filepath = os.path.join('static', filename)
-    url = '/' + filepath
+    filepath = os.path.join("static", filename)
+    url = "/" + filepath
 
     if not os.path.isfile(filepath):
-        print('Could not find static file: ' + filepath)
+        print("Could not find static file: " + filepath)
         return url
 
     # Use MD5 as we care about speed a lot
@@ -64,7 +64,7 @@ def static_url(filename):
         for chunk in iter(lambda: file_contents.read(4096), b""):
             file_hash.update(chunk)
 
-    return url + '?v=' + file_hash.hexdigest()[:7]
+    return url + "?v=" + file_hash.hexdigest()[:7]
 
 
 def format_number(number: int):
@@ -72,4 +72,4 @@ def format_number(number: int):
     Template function that transforms a int into a string
     with a comma between every thousands
     """
-    return '{:,}'.format(number)
+    return "{:,}".format(number)
