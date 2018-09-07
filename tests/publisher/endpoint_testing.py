@@ -70,6 +70,18 @@ class BaseTestCases:
                 root.serialize(), discharge.serialize()
             )
 
+        def check_call_by_api_url(self, calls):
+            found = False
+            for called in calls:
+                if self.api_url == called.request.url:
+                    found = True
+                    self.assertEqual(
+                        self.authorization,
+                        called.request.headers.get("Authorization"),
+                    )
+
+            assert found
+
     class EndpointLoggedOut(BaseAppTesting):
         def setUp(self, snap_name, endpoint_url, method_endpoint="GET"):
 
@@ -124,11 +136,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             assert response.status_code == 504
 
@@ -148,11 +156,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             assert response.status_code == 502
 
@@ -171,11 +175,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             assert response.status_code == 502
 
@@ -195,11 +195,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             assert response.status_code == 502
 
@@ -253,11 +249,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             assert response.status_code == 502
 
@@ -283,11 +275,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             assert response.status_code == 502
 
@@ -315,11 +303,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             self.assertEqual(302, response.status_code)
             self.assertEqual(
@@ -347,11 +331,7 @@ class BaseTestCases:
             else:
                 response = self.client.post(self.endpoint_url, data=self.data)
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(self.api_url, called.request.url)
-            self.assertEqual(
-                self.authorization, called.request.headers.get("Authorization")
-            )
+            self.check_call_by_api_url(responses.calls)
 
             self.assertEqual(302, response.status_code)
             self.assertEqual(

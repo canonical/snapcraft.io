@@ -35,12 +35,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 404
         self.assert_template_used("404.html")
@@ -70,12 +65,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
         self.assert_template_used("publisher/listing.html")
@@ -118,12 +108,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
         self.assert_template_used("publisher/listing.html")
@@ -153,12 +138,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
         self.assert_template_used("publisher/listing.html")

@@ -1,5 +1,6 @@
 import flask
 from webapp import authentication
+from webapp.helpers import get_licenses
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.api.dashboard as api
@@ -212,6 +213,8 @@ def get_listing_snap(snap_name):
         m["url"] for m in snap_details["media"] if m["type"] == "screenshot"
     ]
 
+    licenses = get_licenses()
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -228,6 +231,7 @@ def get_listing_snap(snap_name):
         "public_metrics_enabled": snap_details["public_metrics_enabled"],
         "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
         "is_on_stable": is_on_stable,
+        "licenses": licenses,
     }
 
     return flask.render_template("publisher/listing.html", **context)

@@ -7,7 +7,8 @@
     "test-js": "jest",
     "test-js-all": "yarn run lint-js && yarn run test-js",
     "test-python": "python3 -m unittest discover tests",
-    "build": "yarn run build-js && yarn run build-css",
+    "get-licenses": "curl https://raw.githubusercontent.com/spdx/license-list-data/master/json/licenses.json -o webapp/licenses.json",
+    "build": "yarn run get-licenses && yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output static/css && postcss --use autoprefixer --replace 'static/css/**/*.css' && postcss --use cssnano --dir static/minified 'static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-transpile",
     "copy-3rd-party-js": "cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
@@ -16,7 +17,7 @@
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "watch -p 'static/js/**/*.js' -c 'yarn run build-js'",
-    "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp"
+    "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp webapp/licenses.json"
   },
   "husky": {
     "hooks": {
