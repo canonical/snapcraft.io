@@ -39,10 +39,11 @@ def build_metrics_json(
 
     if metric_bucket == 'd':
         start = end - relativedelta.relativedelta(
-            days=metric_period)
+            days=metric_period - 1)
     elif metric_bucket == 'm':
         start = end - relativedelta.relativedelta(
-            months=metric_period)
+            months=metric_period,
+            days=-1)
 
     return {
         "filters": [
