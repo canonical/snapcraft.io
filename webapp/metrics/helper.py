@@ -37,6 +37,8 @@ def build_metrics_json(
     """
     end = get_last_metrics_processed_date()
 
+    # -1 day counteracts an issue that the api call is inclusive of the dates
+    # specified, meaning you receive 1 extra data point then required
     if metric_bucket == 'd':
         start = end - relativedelta.relativedelta(
             days=metric_period - 1)
