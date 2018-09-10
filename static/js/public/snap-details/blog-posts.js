@@ -36,7 +36,7 @@ class BlogPosts {
       then(response => response.json()).
       then(posts => {
         if (posts.length === 0) {
-          return;
+          return false;
         }
         const postsHTML = [];
 
@@ -58,7 +58,7 @@ class BlogPosts {
           this.holder.innerHTML = postsHTML.join('');
         }
 
-        return;
+        return posts;
       }).
       then(_callback).
       catch(error => {
@@ -77,8 +77,8 @@ function snapDetailsPosts(holderSelector, templateSelector, showOnSuccessSelecto
 
   blogPosts.path = snap;
 
-  blogPosts.fetch(function() {
-    if (showOnSuccessSelector) {
+  blogPosts.fetch(function(posts) {
+    if (posts.length > 0 && showOnSuccessSelector) {
       const showOnSuccess = document.querySelector(showOnSuccessSelector);
       if (showOnSuccess) {
         showOnSuccess.style.display = 'block';
