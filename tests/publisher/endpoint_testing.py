@@ -109,6 +109,7 @@ class BaseTestCases:
             method_endpoint="GET",
             method_api="GET",
             data=None,
+            json=None,
         ):
 
             super().setUp(
@@ -118,6 +119,7 @@ class BaseTestCases:
             self.method_endpoint = method_endpoint
             self.method_api = method_api
             self.data = data
+            self.json = json
             self.authorization = self._log_in(self.client)
 
         @responses.activate
@@ -134,7 +136,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -154,7 +163,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -173,7 +189,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -193,7 +216,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -220,7 +250,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             called = responses.calls[len(responses.calls) - 1]
             self.assertEqual(
@@ -247,7 +284,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -273,7 +317,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -301,7 +352,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
@@ -329,7 +387,14 @@ class BaseTestCases:
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
-                response = self.client.post(self.endpoint_url, data=self.data)
+                if self.data:
+                    response = self.client.post(
+                        self.endpoint_url, data=self.data
+                    )
+                else:
+                    response = self.client.post(
+                        self.endpoint_url, json=self.json
+                    )
 
             self.check_call_by_api_url(responses.calls)
 
