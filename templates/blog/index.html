@@ -97,6 +97,7 @@
 {% endblock %}
 
 {% block scripts %}
+  {% if categories %}
   <script>
     Raven.context(function () {
       var filter = document.getElementById('filter');
@@ -106,4 +107,5 @@
       });
     });
   </script>
+  {% endif %}
 {% endblock %}
