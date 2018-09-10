@@ -11,13 +11,13 @@ blog = flask.Blueprint(
 
 @blog.route("/")
 def homepage():
-    BLOG_CATEGORIES_ENABLED = flask.current_app.config[
-        "BLOG_CATEGORIES_ENABLED"
-    ]
+    BLOG_CATEGORIES_ENABLED = (
+        flask.current_app.config["BLOG_CATEGORIES_ENABLED"] == "true"
+    )
     page_param = flask.request.args.get("page", default=1, type=int)
 
     # Feature flag
-    if BLOG_CATEGORIES_ENABLED == True:
+    if BLOG_CATEGORIES_ENABLED:
         filter = flask.request.args.get("filter", default=None, type=str)
 
         if filter == "all":
@@ -64,7 +64,7 @@ def homepage():
             author = None
 
         # Feature flag
-        if BLOG_CATEGORIES_ENABLED == True:
+        if BLOG_CATEGORIES_ENABLED:
             category_ids = article["categories"]
 
             for category_id in category_ids:
@@ -76,7 +76,7 @@ def homepage():
         )
 
     # Feature flag
-    if BLOG_CATEGORIES_ENABLED == True:
+    if BLOG_CATEGORIES_ENABLED:
         for key, category in category_cache.items():
             try:
                 resolved_category = api.get_category_by_id(key)

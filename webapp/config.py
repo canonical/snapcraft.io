@@ -17,6 +17,8 @@ COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
 SENTRY_PUBLIC_DSN = os.getenv("SENTRY_PUBLIC_DSN", "").strip()
 SENTRY_CONFIG = {"release": COMMIT_ID, "environment": ENVIRONMENT}
 
+BLOG_CATEGORIES_ENABLED = os.getenv("BLOG_CATEGORIES_ENABLED", "true")
+
 WEBAPP = os.getenv("WEBAPP")
 if not WEBAPP:
     raise ConfigurationError("`WEBAPP` is not configured")

@@ -16,6 +16,7 @@ class BlogPage(TestCase):
 
     def create_app(self):
         app = create_app(testing=True)
+        app.config["BLOG_CATEGORIES_ENABLED"] = "true"
         app.secret_key = "secret_key"
 
         return app
