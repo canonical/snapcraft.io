@@ -11,23 +11,37 @@ blog = flask.Blueprint(
 
 @blog.route("/")
 def homepage():
+    BLOG_CATEGORIES_ENABLED = flask.current_app.config[
+        "BLOG_CATEGORIES_ENABLED"
+    ]
     page_param = flask.request.args.get("page", default=1, type=int)
-    filter = flask.request.args.get("filter", default=None, type=str)
 
-    if filter == "all":
+    # Feature flag
+    if BLOG_CATEGORIES_ENABLED == True:
+        filter = flask.request.args.get("filter", default=None, type=str)
+
+        if filter == "all":
+            filter = None
+
+        try:
+            categories_list = api.get_categories()
+        except ApiError:
+            categories_list = None
+
+        categories = logic.whitelist_categories(categories_list)
+
+        filter_category = next(
+            (
+                item["id"]
+                for item in categories
+                if item["name"].lower() == filter
+            ),
+            None,
+        )
+    else:
+        filter_category = None
+        categories = None
         filter = None
-
-    try:
-        categories_list = api.get_categories()
-    except ApiError:
-        categories_list = None
-
-    categories = logic.whitelist_categories(categories_list)
-
-    filter_category = next(
-        (item["id"] for item in categories if item["name"].lower() == filter),
-        None,
-    )
 
     try:
         articles, total_pages = api.get_articles(
@@ -49,23 +63,27 @@ def homepage():
         except ApiError:
             author = None
 
-        category_ids = article["categories"]
+        # Feature flag
+        if BLOG_CATEGORIES_ENABLED == True:
+            category_ids = article["categories"]
 
-        for category_id in category_ids:
-            if category_id not in category_cache:
-                category_cache[category_id] = {}
+            for category_id in category_ids:
+                if category_id not in category_cache:
+                    category_cache[category_id] = {}
 
         article = logic.transform_article(
             article, featured_image=featured_image, author=author
         )
 
-    for key, category in category_cache.items():
-        try:
-            resolved_category = api.get_category_by_id(key)
-        except ApiError:
-            resolved_category = None
+    # Feature flag
+    if BLOG_CATEGORIES_ENABLED == True:
+        for key, category in category_cache.items():
+            try:
+                resolved_category = api.get_category_by_id(key)
+            except ApiError:
+                resolved_category = None
 
-        category_cache[key] = resolved_category
+            category_cache[key] = resolved_category
 
     context = {
         "current_page": page_param,
