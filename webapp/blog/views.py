@@ -53,10 +53,13 @@ def homepage():
     category_cache = {}
 
     for article in articles:
-        try:
-            featured_image = api.get_media(article["featured_media"])
-        except ApiError:
-            featured_image = None
+        # XXX Luke 10-09-2018
+        # Until the blog api returns smaller images
+        # preventing this, should speed the page up
+        # try:
+        #    featured_image = api.get_media(article["featured_media"])
+        # except ApiError:
+        featured_image = None
 
         try:
             author = api.get_user(article["author"])
