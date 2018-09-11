@@ -19,6 +19,7 @@ from webapp.api.exceptions import (
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
+import pycountry
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -233,9 +234,28 @@ def get_listing_snap(snap_name):
     ]
 
     licenses = get_licenses()
+
+    if "whitelist_country_codes" in snap_details:
+        whitelist_country_codes = (
+            snap_details["whitelist_country_codes"]
+            if len(snap_details["whitelist_country_codes"]) > 0
+            else []
+        )
+    else:
+        whitelist_country_codes = []
+
+    if "blacklist_country_codes" in snap_details:
+        blacklist_country_codes = (
+            snap_details["blacklist_country_codes"]
+            if len(snap_details["blacklist_country_codes"]) > 0
+            else []
+        )
+    else:
+        blacklist_country_codes = []
+
     countries = []
     for country in pycountry.countries:
-        countries.append({"alpha_2": country.alpha_2, "name": country.name})
+        countries.append({"key": country.alpha_2, "name": country.name})
 
     context = {
         "snap_id": snap_details["snap_id"],
@@ -256,6 +276,8 @@ def get_listing_snap(snap_name):
         "is_on_stable": is_on_stable,
         "licenses": licenses,
         "countries": countries,
+        "whitelist_country_codes": whitelist_country_codes,
+        "blacklist_country_codes": blacklist_country_codes,
     }
 
     return flask.render_template("publisher/listing.html", **context)
@@ -376,6 +398,30 @@ def post_listing_snap(snap_name):
                 if m["type"] == "screenshot"
             ]
 
+            countries = []
+            for country in pycountry.countries:
+                countries.append(
+                    {"key": country.alpha_2, "name": country.name}
+                )
+
+            if "whitelist_country_codes" in snap_details:
+                whitelist_country_codes = (
+                    snap_details["whitelist_country_codes"]
+                    if len(snap_details["whitelist_country_codes"]) > 0
+                    else []
+                )
+            else:
+                whitelist_country_codes = []
+
+            if "blacklist_country_codes" in snap_details:
+                blacklist_country_codes = (
+                    snap_details["blacklist_country_codes"]
+                    if len(snap_details["blacklist_country_codes"]) > 0
+                    else []
+                )
+            else:
+                blacklist_country_codes = []
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
@@ -416,6 +462,10 @@ def post_listing_snap(snap_name):
                     else snap_details["website"] or ""
                 ),
                 "is_on_stable": is_on_stable,
+                "licenses": get_licenses(),
+                "countries": countries,
+                "whitelist_country_codes": whitelist_country_codes,
+                "blacklist_country_codes": blacklist_country_codes,
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,

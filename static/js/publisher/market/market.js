@@ -1,6 +1,7 @@
 import { initSnapScreenshotsEdit } from './screenshots';
 import { updateState, diffState } from './state';
 import { publicMetrics } from './publicMetrics';
+import { whitelistBlacklist } from './whitelistBlacklist';
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -184,6 +185,8 @@ function initForm(config, initialState, errors) {
   function updateFormState() {
     // Some extra modifications need to happen for the checkboxes
     publicMetrics(marketForm);
+    whitelistBlacklist(marketForm);
+
 
     let formData = new FormData(marketForm);
 

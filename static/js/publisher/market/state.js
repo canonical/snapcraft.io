@@ -1,3 +1,5 @@
+import { transformWhitelistBlacklist } from "./whitelistBlacklist";
+
 const allowedKeys = [
   'title',
   'summary',
@@ -7,8 +9,15 @@ const allowedKeys = [
   'contact',
   'private',
   'public_metrics_enabled',
-  'public_metrics_blacklist'
+  'public_metrics_blacklist',
+  'whitelist_countries',
+  'blacklist_countries'
 ];
+
+const transform = {
+  'whitelist_countries': transformWhitelistBlacklist,
+  'blacklist_countries': transformWhitelistBlacklist
+};
 
 function updateState(state, values) {
   if (values) {
@@ -18,7 +27,13 @@ function updateState(state, values) {
         if (allowedKeys.includes(key)) {
           // FormData values encode new lines as \r\n which are invalid for our API
           // so we need to replace them back to \n
-          state[key] = value.replace(/\r\n/g, '\n');
+          let newValue = value.replace(/\r\n/g, '\n');
+
+          // Some values will need to be transformed in some way for the API
+          if (transform[key]) {
+            newValue = transform[key](newValue);
+          }
+          state[key] = newValue;
         }
       });
     // else if it's just a plain object
