@@ -14,6 +14,24 @@
 </section>
 
 <section class="p-strip is-shallow">
+  {% if categories %}
+    <div class="row u-align--right">
+      <form class="p-form p-form--inline" data-js="filterForm" method="get">
+        <div class="p-form__group">
+          <label class="p-form__label" for="filter" aria-label="Filter posts by category">Filter:</label>
+          <select id="filter" name="filter" class="p-form__control" name="filter">
+            <option value="all">All</option>
+            {% for category in categories %}
+              <option value="{{ category.name.lower() }}"{% if filter == category.name.lower() %} selected="selected"{% endif %}>
+                {{ category.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </form>
+    </div>
+  {% endif %}
+  </div>
   <div class="row u-equal-height u-clearfix">
   {% for article in articles %}
     {% if (loop.index - 1) % 3 == 0 and loop.index > 1 %}
@@ -76,4 +94,18 @@
   </div>
 </section>
 
+{% endblock %}
+
+{% block scripts %}
+  {% if categories %}
+  <script>
+    Raven.context(function () {
+      var filter = document.getElementById('filter');
+      var filterForm = document.querySelector('[data-js="filterForm"]');
+      filter.addEventListener('change', function(e) {
+        filterForm.submit();
+      });
+    });
+  </script>
+  {% endif %}
 {% endblock %}

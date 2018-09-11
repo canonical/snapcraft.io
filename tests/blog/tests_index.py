@@ -16,6 +16,7 @@ class BlogPage(TestCase):
 
     def create_app(self):
         app = create_app(testing=True)
+        app.config["BLOG_CATEGORIES_ENABLED"] = "true"
         app.secret_key = "secret_key"
 
         return app
@@ -33,6 +34,7 @@ class BlogPage(TestCase):
                 "featured_media": 123,
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
+                "categories": [123],
             }
         ]
 
@@ -44,6 +46,14 @@ class BlogPage(TestCase):
             json=payload,
             status=200,
             headers=posts_headers,
+        )
+
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
+
+        categories_payload = [{"name": "Articles"}]
+
+        responses.add(
+            responses.GET, categories_url, json=categories_payload, status=200
         )
 
         media_url = "".join([self.api_url, "/media/123"])
@@ -63,6 +73,7 @@ class BlogPage(TestCase):
                     "featured_media": 123,
                     "image": {},
                     "author": None,
+                    "categories": [123],
                 }
             ],
         )
@@ -81,6 +92,14 @@ class BlogPage(TestCase):
             headers=headers,
         )
 
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
+
+        categories_payload = [{"name": "Articles"}]
+
+        responses.add(
+            responses.GET, categories_url, json=categories_payload, status=200
+        )
+
         response = self.client.get("/blog")
 
         assert response.status_code == 502
@@ -94,6 +113,7 @@ class BlogPage(TestCase):
                 "featured_media": 123,
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
+                "categories": [123],
             }
         ]
 
@@ -113,6 +133,14 @@ class BlogPage(TestCase):
             responses.GET, url, body=requests.exceptions.Timeout(), status=504
         )
 
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
+
+        categories_payload = [{"name": "Articles"}]
+
+        responses.add(
+            responses.GET, categories_url, json=categories_payload, status=200
+        )
+
         response = self.client.get("/blog")
 
         assert response.status_code == 200
@@ -126,6 +154,7 @@ class BlogPage(TestCase):
                     "featured_media": 123,
                     "image": None,
                     "author": None,
+                    "categories": [123],
                 }
             ],
         )
@@ -139,6 +168,7 @@ class BlogPage(TestCase):
                 "featured_media": 123,
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
+                "categories": [123],
             }
         ]
 
@@ -158,6 +188,14 @@ class BlogPage(TestCase):
             responses.GET, url, body=requests.exceptions.Timeout(), status=504
         )
 
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
+
+        categories_payload = [{"name": "Articles"}]
+
+        responses.add(
+            responses.GET, categories_url, json=categories_payload, status=200
+        )
+
         response = self.client.get("/blog")
 
         assert response.status_code == 200
@@ -171,6 +209,7 @@ class BlogPage(TestCase):
                     "featured_media": 123,
                     "image": None,
                     "author": None,
+                    "categories": [123],
                 }
             ],
         )

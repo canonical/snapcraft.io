@@ -7,7 +7,7 @@ TAGS = [2996]  # 'snapcraft.io'
 api_session = api.requests.CachedSession(expire_after=300)
 
 
-def get_articles(tags=TAGS, per_page=12, page=1, exclude=None):
+def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
     url_parts = [
         API_URL,
         "/posts?tags=",
@@ -20,6 +20,9 @@ def get_articles(tags=TAGS, per_page=12, page=1, exclude=None):
 
     if exclude:
         url_parts = url_parts + ["&exclude=", str(exclude)]
+
+    if category:
+        url_parts = url_parts + ["&categories=", str(category)]
 
     url = "".join(url_parts)
 
@@ -55,6 +58,22 @@ def get_tag_by_name(name):
 
 def get_tags_by_ids(ids):
     url = "".join([API_URL, "/tags?include=", ",".join(str(id) for id in ids)])
+
+    response = api_session.get(url)
+
+    return response.json()
+
+
+def get_categories():
+    url = "".join([API_URL, "/categories?", "per_page=100"])
+
+    response = api_session.get(url)
+
+    return response.json()
+
+
+def get_category_by_id(id):
+    url = "".join([API_URL, "/categories/", str(id)])
 
     response = api_session.get(url)
 
