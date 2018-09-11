@@ -56,9 +56,10 @@ class BlogPage(TestCase):
             responses.GET, categories_url, json=categories_payload, status=200
         )
 
-        media_url = "".join([self.api_url, "/media/123"])
-
-        responses.add(responses.GET, media_url, json={}, status=200)
+        # See webapp/blog/views.py:22
+        # media_url = "".join([self.api_url, "/media/123"])
+        #
+        # responses.add(responses.GET, media_url, json={}, status=200)
 
         response = self.client.get("/blog")
 
@@ -71,7 +72,7 @@ class BlogPage(TestCase):
                     "date": "11 June 2018",
                     "date_gmt": "2018-06-11T11:11:11",
                     "featured_media": 123,
-                    "image": {},
+                    "image": None,
                     "author": None,
                     "categories": [123],
                 }
@@ -104,60 +105,51 @@ class BlogPage(TestCase):
 
         assert response.status_code == 502
 
-    @responses.activate
-    def test_media_timeout(self):
-        posts_url = "".join([self.api_url, "/posts?tag=2065"])
-
-        payload = [
-            {
-                "featured_media": 123,
-                "date_gmt": "2018-06-11T11:11:11",
-                "author": 321,
-                "categories": [123],
-            }
-        ]
-
-        posts_headers = {"X-WP-TotalPages": "1"}
-
-        responses.add(
-            responses.GET,
-            posts_url,
-            json=payload,
-            status=200,
-            headers=posts_headers,
-        )
-
-        url = "".join([self.api_url, "/media/123"])
-
-        responses.add(
-            responses.GET, url, body=requests.exceptions.Timeout(), status=504
-        )
-
-        categories_url = "".join([self.api_url, "/categories?per_page=100"])
-
-        categories_payload = [{"name": "Articles"}]
-
-        responses.add(
-            responses.GET, categories_url, json=categories_payload, status=200
-        )
-
-        response = self.client.get("/blog")
-
-        assert response.status_code == 200
-        self.assert_template_used("blog/index.html")
-        self.assert_context(
-            "articles",
-            [
-                {
-                    "date": "11 June 2018",
-                    "date_gmt": "2018-06-11T11:11:11",
-                    "featured_media": 123,
-                    "image": None,
-                    "author": None,
-                    "categories": [123],
-                }
-            ],
-        )
+    # See webapp/blog/views.py:22
+    # @responses.activate
+    # def test_media_timeout(self):
+    #     posts_url = "".join([self.api_url, "/posts?tag=2065"])
+    #
+    #     payload = [
+    #         {
+    #             "featured_media": 123,
+    #             "date_gmt": "2018-06-11T11:11:11",
+    #             "author": 321,
+    #         }
+    #     ]
+    #
+    #     posts_headers = {"X-WP-TotalPages": "1"}
+    #
+    #     responses.add(
+    #         responses.GET,
+    #         posts_url,
+    #         json=payload,
+    #         status=200,
+    #         headers=posts_headers,
+    #     )
+    #
+    #     url = "".join([self.api_url, "/media/123"])
+    #
+    #     responses.add(
+    #         responses.GET, url, body=requests.exceptions.Timeout(), status=504
+    #     )
+    #
+    #     response = self.client.get("/blog")
+    #
+    #     assert response.status_code == 200
+    #     self.assert_template_used("blog/index.html")
+    #     self.assert_context(
+    #         "articles",
+    #         [
+    #             {
+    #                 "date": "11 June 2018",
+    #                 "date_gmt": "2018-06-11T11:11:11",
+    #                 "featured_media": 123,
+    #                 "image": None,
+    #                 "author": None,
+    #             }
+    #         ],
+    #     )
 
     @responses.activate
     def test_user_timeout(self):
