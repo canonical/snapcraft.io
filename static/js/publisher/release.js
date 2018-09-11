@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 
-import Releases from './release/releases';
+import ReleasesController from './release/releasesController';
 import RevisionsList from './release/revisionsList';
 
 // getting list of tracks names from channel maps list
@@ -98,7 +98,7 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
 
   ReactDOM.render(
     <Fragment>
-      <Releases
+      <ReleasesController
         snapName={snapName}
         releasedChannels={releasedChannels}
         tracks={tracks}

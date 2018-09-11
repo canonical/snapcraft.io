@@ -5,14 +5,10 @@ import 'whatwg-fetch';
 import RevisionsTable from './revisionsTable';
 import Notification from './notification';
 
-// TODO: not needed here?
-// const RISKS = ['stable', 'candidate', 'beta', 'edge'];
-
-export default class Releases extends Component {
+export default class ReleasesController extends Component {
   constructor(props) {
     super(props);
 
-    // TODO: update state on fetch, pass it to RevisionsTable
     this.state = {
       error: null,
       isLoading: false,
@@ -225,7 +221,7 @@ export default class Releases extends Component {
   }
 }
 
-Releases.propTypes = {
+ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
