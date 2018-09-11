@@ -44,6 +44,9 @@ def login_handler():
 def after_login(resp):
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
 
+    if not resp.nickname:
+        return flask.redirect(LOGIN_URL)
+
     try:
         account = dashboard.get_account(flask.session)
         flask.session["openid"] = {
