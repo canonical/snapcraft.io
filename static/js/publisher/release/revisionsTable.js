@@ -7,14 +7,11 @@ export default class RevisionsTable extends Component {
   constructor() {
     super();
 
-    // TODO: move out to parent component ?
     this.state = {
       // default to latest track
       currentTrack: 'latest',
     };
   }
-
-
 
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];

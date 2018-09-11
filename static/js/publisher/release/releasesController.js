@@ -27,7 +27,6 @@ export default class ReleasesController extends Component {
     };
   }
 
-
   promoteRevision(revision, channel) {
     this.setState((state) => {
       const { pendingReleases } = state;
@@ -48,6 +47,7 @@ export default class ReleasesController extends Component {
       pendingReleases[revision.revision].channels = channels;
 
       return {
+        error: null,
         pendingReleases
       };
     });
