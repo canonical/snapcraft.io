@@ -1,4 +1,5 @@
 import flask
+import pycountry
 from webapp import authentication
 from webapp.helpers import get_licenses
 import webapp.metrics.helper as metrics_helper
@@ -214,6 +215,9 @@ def get_listing_snap(snap_name):
     ]
 
     licenses = get_licenses()
+    countries = []
+    for country in pycountry.countries:
+        countries.append({"alpha_2": country.alpha_2, "name": country.name})
 
     context = {
         "snap_id": snap_details["snap_id"],
@@ -232,6 +236,7 @@ def get_listing_snap(snap_name):
         "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
         "is_on_stable": is_on_stable,
         "licenses": licenses,
+        "countries": countries,
     }
 
     return flask.render_template("publisher/listing.html", **context)
