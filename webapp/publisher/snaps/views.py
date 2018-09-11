@@ -1,13 +1,12 @@
+from json import loads
+
 import flask
+
 import pycountry
-from webapp import authentication
-from webapp.helpers import get_licenses
+import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-import webapp.api.dashboard as api
-from webapp.decorators import login_required
-from webapp.publisher.snaps import logic
-from json import loads
+from webapp import authentication
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
@@ -16,7 +15,9 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-
+from webapp.decorators import login_required
+from webapp.helpers import get_licenses
+from webapp.publisher.snaps import logic
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
