@@ -44,7 +44,7 @@ FEATURE_SNAPS_URL = "".join(
     [
         SNAPCRAFT_IO_API,
         "snaps/search",
-        "?confinement=strict,classic&section=featured",
+        "?confinement=strict,classic&section=featured&scope=wide",
         "&fields=package_name,title,icon_url",
     ]
 )
