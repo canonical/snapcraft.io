@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 
 import RevisionsTable from './revisionsTable';
+import RevisionsList from './revisionsList';
 import Notification from './notification';
 
 export default class ReleasesController extends Component {
@@ -216,6 +217,7 @@ export default class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
         />
+        <RevisionsList revisions={this.props.revisions} />
       </Fragment>
     );
   }
@@ -224,6 +226,7 @@ export default class ReleasesController extends Component {
 ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
+  revisions: PropTypes.array.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
