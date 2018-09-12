@@ -11,6 +11,9 @@ export default class ReleasesController extends Component {
     super(props);
 
     this.state = {
+      // default to latest track
+      currentTrack: 'latest',
+
       error: null,
       isLoading: false,
       releasedChannels: this.props.releasedChannels,
@@ -26,6 +29,10 @@ export default class ReleasesController extends Component {
       // }
       pendingReleases: {}
     };
+  }
+
+  setCurrentTrack(track) {
+    this.setState({ currentTrack: track });
   }
 
   promoteRevision(revision, channel) {
@@ -194,7 +201,7 @@ export default class ReleasesController extends Component {
   }
 
   render() {
-    const { archs, tracks, options } = this.props;
+    const { archs, tracks } = this.props;
     const { releasedChannels } = this.state;
 
     return (
@@ -206,13 +213,14 @@ export default class ReleasesController extends Component {
         }
         <RevisionsTable
           releasedChannels={releasedChannels}
+          currentTrack={this.state.currentTrack}
           tracks={tracks}
           archs={archs}
-          options={options}
-          releaseRevisions={this.releaseRevisions.bind(this)}
-          fetchStatus={this.state}
-
+          isLoading={this.state.isLoading}
           pendingReleases={this.state.pendingReleases}
+
+          setCurrentTrack={this.setCurrentTrack.bind(this)}
+          releaseRevisions={this.releaseRevisions.bind(this)}
           promoteRevision={this.promoteRevision.bind(this)}
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}

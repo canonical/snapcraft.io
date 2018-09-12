@@ -4,15 +4,6 @@ import PropTypes from 'prop-types';
 const RISKS = ['stable', 'candidate', 'beta', 'edge'];
 
 export default class RevisionsTable extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      // default to latest track
-      currentTrack: 'latest',
-    };
-  }
-
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
     const currentRelease = releasedChannels[channel] && releasedChannels[channel][arch];
@@ -103,7 +94,7 @@ export default class RevisionsTable extends Component {
 
   renderRows(releasedChannels, archs) {
     const nextChannelReleases = this.getNextReleasesData(releasedChannels, this.props.pendingReleases);
-    const track = this.state.currentTrack;
+    const track = this.props.currentTrack;
 
     return RISKS.map(risk => {
       const channel = `${track}/${risk}`;
@@ -142,10 +133,9 @@ export default class RevisionsTable extends Component {
   }
 
   renderReleasesConfirm() {
-    const { pendingReleases } = this.props;
+    const { pendingReleases, isLoading } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
 
-    const { isLoading } = this.props.fetchStatus;
     return (releasesCount > 0 &&
       <p>
         <span className="p-tooltip">
@@ -173,7 +163,7 @@ export default class RevisionsTable extends Component {
   }
 
   onTrackChange(event) {
-    this.setState({ currentTrack: event.target.value });
+    this.props.setCurrentTrack(event.target.value);
   }
 
   getNextReleasesData(currentReleaseData, releases) {
@@ -237,12 +227,14 @@ export default class RevisionsTable extends Component {
 RevisionsTable.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
+  currentTrack: PropTypes.string.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
-  options: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+
+  setCurrentTrack:  PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
-  fetchStatus: PropTypes.object.isRequired
 };
