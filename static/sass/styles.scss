@@ -187,3 +187,6 @@ img {
 
 @import 'patterns_blog-list';
 @include snapcraft-p-blog-list;
+
+@import 'global-nav';
+@include global-nav;
