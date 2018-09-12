@@ -444,6 +444,8 @@ def post_release(snap_name):
     except ApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return flask.jsonify(api_response_error_list.errors), 400
     except ApiError as api_error:
         return _handle_errors(api_error)
 
