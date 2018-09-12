@@ -33,10 +33,10 @@
   }
 
   %post-card-header {
+    border-bottom: 0;    
     border-radius: 2px;
-    padding: $sp-small $sp-medium;    
     margin-bottom: 0;
-    border-bottom: 0;
+    padding: $sp-small $sp-medium;    
   }
 
   .p-card--post {
