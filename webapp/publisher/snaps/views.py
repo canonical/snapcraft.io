@@ -431,7 +431,6 @@ def get_release_history(snap_name):
         "snap_name": snap_name,
         "release_history": release_history,
         "channel_maps_list": info.get("channel_maps_list"),
-        "release_ui_enabled": flask.current_app.config["RELEASE_UI_ENABLED"],
     }
 
     return flask.render_template("publisher/release-history.html", **context)

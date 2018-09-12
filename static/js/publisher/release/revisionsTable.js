@@ -61,11 +61,6 @@ export default class RevisionsTable extends Component {
       canBePromoted = true;
     }
 
-    // if feature is disabled don't show the buttons
-    if (!this.props.options.releaseUiEnabled) {
-      canBePromoted = false;
-    }
-
     const hasPendingRelease = (
       thisRevision && (!thisPreviousRevision || (thisPreviousRevision.revision !== thisRevision.revision))
     );
