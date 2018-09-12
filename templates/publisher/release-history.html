@@ -29,7 +29,6 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
       {{ release_history|tojson }},
       {{ channel_maps_list|tojson }},
       {
-        releaseUiEnabled: {{ release_ui_enabled|tojson }},
         csrfToken: {{ csrf_token()|tojson }}
       }
     );
