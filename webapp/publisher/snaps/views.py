@@ -1,12 +1,12 @@
+from json import loads
+
 import flask
-from webapp import authentication
-from webapp.helpers import get_licenses
+
+import pycountry
+import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-import webapp.api.dashboard as api
-from webapp.decorators import login_required
-from webapp.publisher.snaps import logic
-from json import loads
+from webapp import authentication
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
@@ -15,7 +15,9 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-
+from webapp.decorators import login_required
+from webapp.helpers import get_licenses
+from webapp.publisher.snaps import logic
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -214,6 +216,9 @@ def get_listing_snap(snap_name):
     ]
 
     licenses = get_licenses()
+    countries = []
+    for country in pycountry.countries:
+        countries.append({"alpha_2": country.alpha_2, "name": country.name})
 
     context = {
         "snap_id": snap_details["snap_id"],
@@ -232,6 +237,7 @@ def get_listing_snap(snap_name):
         "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
         "is_on_stable": is_on_stable,
         "licenses": licenses,
+        "countries": countries,
     }
 
     return flask.render_template("publisher/listing.html", **context)
