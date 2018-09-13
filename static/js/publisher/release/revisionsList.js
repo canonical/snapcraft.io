@@ -10,6 +10,13 @@ export default class RevisionsList extends Component {
   renderRows(revisions) {
     return revisions.map((revision) => {
       const uploadDate = moment(revision.created_at);
+      let canBeReleased = true;
+      let hasPendingRelease = false;
+
+      if (this.props.pendingReleases[revision.revision]) {
+        hasPendingRelease = true;
+        canBeReleased = false;
+      }
 
       return (
         <tr key={revision.revision}>
@@ -27,7 +34,12 @@ export default class RevisionsList extends Component {
           </td>
 
           <td className="u-align--right">
-            <button className="p-icon-button" onClick={this.releaseClick.bind(this, revision)}>&uarr;</button>
+            { canBeReleased &&
+              <button className="p-icon-button" onClick={this.releaseClick.bind(this, revision)} title={`Release ${revision.version} (${revision.revision}) to ${this.props.currentTrack}/edge`}>&uarr;</button>
+            }
+            { hasPendingRelease &&
+              <button className="p-icon-button" onClick={this.undoClick.bind(this, revision)} title={`Undo this release`}>&#x2715;</button>
+            }
           </td>
         </tr>
       );
@@ -36,6 +48,10 @@ export default class RevisionsList extends Component {
 
   releaseClick(revision) {
     this.props.promoteRevision(revision, `${this.props.currentTrack}/edge`);
+  }
+
+  undoClick(revision) {
+    this.props.undoRelease(revision, `${this.props.currentTrack}/edge`);
   }
 
   render() {
@@ -65,6 +81,8 @@ export default class RevisionsList extends Component {
 
 RevisionsList.propTypes = {
   currentTrack: PropTypes.string.isRequired,
+  pendingReleases: PropTypes.object.isRequired,
   revisions: PropTypes.object.isRequired,
   promoteRevision: PropTypes.func.isRequired,
+  undoRelease: PropTypes.func.isRequired
 };

@@ -230,6 +230,7 @@ export default class ReleasesController extends Component {
           revisions={this.props.revisions}
           pendingReleases={this.state.pendingReleases}
           promoteRevision={this.promoteRevision.bind(this)}
+          undoRelease={this.undoRelease.bind(this)}
         />
       </Fragment>
     );
