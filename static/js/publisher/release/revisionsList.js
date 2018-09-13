@@ -18,6 +18,10 @@ export default class RevisionsList extends Component {
         canBeReleased = false;
       }
 
+      if (this.isAlreadyReleased(revision)) {
+        canBeReleased = false;
+      }
+
       return (
         <tr key={revision.revision}>
           <td>{ revision.revision }</td>
@@ -54,6 +58,14 @@ export default class RevisionsList extends Component {
     this.props.undoRelease(revision, `${this.props.currentTrack}/edge`);
   }
 
+  isAlreadyReleased(revision) {
+    return Object.keys(this.props.releasedChannels).some((channel) => {
+      return Object.keys(this.props.releasedChannels[channel]).some((arch) => {
+        return this.props.releasedChannels[channel][arch].revision === revision.revision;
+      });
+    });
+  }
+
   render() {
     return (
       <Fragment>
@@ -83,6 +95,7 @@ RevisionsList.propTypes = {
   currentTrack: PropTypes.string.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   revisions: PropTypes.object.isRequired,
+  releasedChannels: PropTypes.object.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired
 };
