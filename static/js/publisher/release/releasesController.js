@@ -225,7 +225,12 @@ export default class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
         />
-        <RevisionsList revisions={this.props.revisions} />
+        <RevisionsList
+          currentTrack={this.state.currentTrack}
+          revisions={this.props.revisions}
+          pendingReleases={this.state.pendingReleases}
+          promoteRevision={this.promoteRevision.bind(this)}
+        />
       </Fragment>
     );
   }

@@ -2,6 +2,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+// TODO:
+// - don't allow releasing something already released
+// - don't allow releasing multiple revisions into same arch/channel
+
 export default class RevisionsList extends Component {
   renderRows(revisions) {
     return revisions.map((revision) => {
@@ -21,9 +25,17 @@ export default class RevisionsList extends Component {
               </span>
             </span>
           </td>
+
+          <td className="u-align--right">
+            <button className="p-icon-button" onClick={this.releaseClick.bind(this, revision)}>&uarr;</button>
+          </td>
         </tr>
       );
     });
+  }
+
+  releaseClick(revision) {
+    this.props.promoteRevision(revision, `${this.props.currentTrack}/edge`);
   }
 
   render() {
@@ -34,10 +46,11 @@ export default class RevisionsList extends Component {
           <thead>
             <tr>
               <th width="10%" scope="col">Revision</th>
-              <th width="28%" scope="col">Version</th>
+              <th width="23%" scope="col">Version</th>
               <th width="12%" scope="col">Architecture</th>
-              <th width="35%" scope="col">Channels</th>
+              <th width="30%" scope="col">Channels</th>
               <th width="15%" scope="col" className="u-align--right">Submission date</th>
+              <th width="10%" scope="col" className="u-align--right">Release</th>
             </tr>
           </thead>
 
@@ -51,5 +64,7 @@ export default class RevisionsList extends Component {
 }
 
 RevisionsList.propTypes = {
-  revisions: PropTypes.object.isRequired
+  currentTrack: PropTypes.string.isRequired,
+  revisions: PropTypes.object.isRequired,
+  promoteRevision: PropTypes.func.isRequired,
 };
