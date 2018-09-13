@@ -38,20 +38,23 @@
           <button class="p-button--positive" disabled="disabled" type="submit">Continue</button>
         </div>
       </div>
-      <script>
-        Raven.context(function() {
-          var checkbox = document.querySelector('#id_i_agree');
-          var button = document.querySelector('button[type="submit"]');
-          checkbox.addEventListener('change', function (event) {
-            if (this.checked) {
-              button.removeAttribute('disabled');
-            } else {
-              button.setAttribute('disabled', 'disabled');
-            }
-          });
-        });
-      </script>
     </form>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+ Raven.context(function() {
+   var checkbox = document.querySelector('#id_i_agree');
+   var button = document.querySelector('button[type="submit"]');
+   checkbox.addEventListener('change', function (event) {
+     if (this.checked) {
+       button.removeAttribute('disabled');
+     } else {
+       button.setAttribute('disabled', 'disabled');
+     }
+   });
+ });
+</script>
 {% endblock %}
