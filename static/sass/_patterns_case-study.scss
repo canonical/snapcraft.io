@@ -1,7 +1,7 @@
 @mixin snapcraft-p-case-study {
   .p-case-study {
-    margin-top: $spv-inter--regular;
     margin-bottom: $spv-inter--regular-scaleable;
+    margin-top: $spv-inter--regular;
 
     .p-case-study__image {
       display: block;
