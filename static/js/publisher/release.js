@@ -77,7 +77,7 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
 
   // go through releases from older to newest
   releasesData.releases.slice().reverse().forEach(release => {
-    if (release.revision) {
+    if (release.revision && !release.branch) {
       const rev = revisionsMap[release.revision];
 
       if (rev) {
@@ -85,7 +85,7 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
           ? release.risk
           : `${release.track}/${release.risk}`;
 
-        if (rev.channels.indexOf(`${release.track}/${release.risk}`) === -1) {
+        if (rev.channels.indexOf(channel) === -1) {
           rev.channels.push(channel);
         }
       }
