@@ -35,9 +35,10 @@ export default class RevisionsTable extends Component {
     let targetRevision = null;
     let targetPreviousRevision = null;
     let targetHasPendingRelease = false;
+    let targetChannel = null;
 
     if (targetRisk) {
-      const targetChannel = `${track}/${targetRisk}`;
+      targetChannel = `${track}/${targetRisk}`;
 
       targetRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, targetChannel, arch);
       targetPreviousRevision = releasedChannels[targetChannel] && releasedChannels[targetChannel][arch];
@@ -81,10 +82,16 @@ export default class RevisionsTable extends Component {
         { (canBePromoted || hasPendingRelease) &&
           <div className="p-release-buttons">
             { canBePromoted &&
-              <button className="p-icon-button" onClick={this.releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
+              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.releaseClick.bind(this, thisRevision, track, risk)}>
+                &uarr;
+                <span className="p-tooltip__message">{`Promote to ${targetChannel}`}</span>
+              </button>
             }
             { hasPendingRelease &&
-              <button className="p-icon-button" onClick={this.undoClick.bind(this, thisRevision, track, risk)} title={`Undo this release`}>&#x2715;</button>
+              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, thisRevision, track, risk)}>
+                &#x2715;
+                <span className="p-tooltip__message">Revert promoting this revision</span>
+              </button>
             }
           </div>
         }

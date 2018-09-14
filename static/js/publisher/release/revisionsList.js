@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 // TODO:
-// - don't allow releasing something already released
 // - don't allow releasing multiple revisions into same arch/channel
 
 export default class RevisionsList extends Component {
@@ -39,10 +38,16 @@ export default class RevisionsList extends Component {
 
           <td className="u-align--right">
             { canBeReleased &&
-              <button className="p-icon-button" onClick={this.releaseClick.bind(this, revision)} title={`Release ${revision.version} (${revision.revision}) to ${this.props.currentTrack}/edge`}>&uarr;</button>
+              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.releaseClick.bind(this, revision)}>
+                &uarr;
+                <span className="p-tooltip__message">{`Promote to ${this.props.currentTrack}/edge`}</span>
+              </button>
             }
             { hasPendingRelease &&
-              <button className="p-icon-button" onClick={this.undoClick.bind(this, revision)} title={`Undo this release`}>&#x2715;</button>
+              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, revision)}>
+                &#x2715;
+                <span className="p-tooltip__message">Revert promoting this revision</span>
+              </button>
             }
           </td>
         </tr>
