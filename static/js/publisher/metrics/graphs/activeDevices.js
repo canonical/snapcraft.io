@@ -110,9 +110,9 @@ const tooltipTemplate = (data, currentHoverKey, colorScale) => {
   ].join('');
 };
 
-function drawGraph(holder, activeDevices) {
+function drawGraph(holderSelector, holder, activeDevices) {
   // Basic svg setup
-  const svg = select('svg');
+  const svg = select(`${holderSelector} svg`);
   svg.attr('width', holder.clientWidth);
   svg.selectAll("*").remove();
 
@@ -254,10 +254,10 @@ export default function activeDevices(holderSelector, activeDevices) {
     return;
   }
 
-  drawGraph(holder, activeDevices);
+  drawGraph(holderSelector, holder, activeDevices);
 
   const resize = debounce(function() {
-    drawGraph(holder, activeDevices);
+    drawGraph(holderSelector, holder, activeDevices);
   }, 100);
 
   select(window).on('resize', resize);
