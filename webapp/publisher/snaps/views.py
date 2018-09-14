@@ -239,7 +239,6 @@ def get_listing_snap(snap_name):
         "snap_title": snap_details["title"],
         "summary": snap_details["summary"],
         "description": snap_details["description"],
-        "license": snap_details["license"],
         "icon_url": icon_urls[0] if icon_urls else None,
         "publisher_name": snap_details["publisher"]["display-name"],
         "username": snap_details["publisher"]["username"],
@@ -363,7 +362,6 @@ def post_listing_snap(snap_name):
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
                 "snap_name": snap_details["snap_name"],
-                "license": snap_details["license"],
                 "icon_url": icon_urls[0] if icon_urls else None,
                 "publisher_name": snap_details["publisher"]["display-name"],
                 "username": snap_details["publisher"]["username"],
@@ -606,8 +604,6 @@ def get_admin(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    is_on_stable = logic.is_snap_on_stable(snap_details["channel_maps_list"])
-
     licenses = get_licenses()
 
     if "whitelist_country_codes" in snap_details:
@@ -639,7 +635,6 @@ def get_admin(snap_name):
         "private": snap_details["private"],
         "public_metrics_enabled": snap_details["public_metrics_enabled"],
         "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
-        "is_on_stable": is_on_stable,
         "licenses": licenses,
         "countries": countries,
         "whitelist_country_codes": whitelist_country_codes,
@@ -701,10 +696,6 @@ def post_admin(snap_name):
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
-            is_on_stable = logic.is_snap_on_stable(
-                snap_details["channel_maps_list"]
-            )
-
             countries = []
             for country in pycountry.countries:
                 countries.append(
@@ -737,7 +728,6 @@ def post_admin(snap_name):
                 "public_metrics_enabled": details_metrics_enabled,
                 "public_metrics_blacklist": details_blacklist,
                 "private": snap_details["private"],
-                "is_on_stable": is_on_stable,
                 "licenses": get_licenses(),
                 "countries": countries,
                 "whitelist_country_codes": whitelist_country_codes,

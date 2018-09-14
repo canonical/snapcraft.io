@@ -50,15 +50,12 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "title": "Snap title",
             "summary": "This is a summary",
             "description": "This is a description",
-            "license": "license",
             "media": [],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
-            "public_metrics_enabled": True,
-            "public_metrics_blacklist": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -75,15 +72,12 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("snap_title", "Snap title")
         self.assert_context("summary", "This is a summary")
         self.assert_context("description", "This is a description")
-        self.assert_context("license", "license")
         self.assert_context("icon_url", None)
         self.assert_context("publisher_name", "The publisher")
         self.assert_context("username", "toto")
         self.assert_context("screenshot_urls", [])
         self.assert_context("contact", "contact adress")
         self.assert_context("website", "website_url")
-        self.assert_context("public_metrics_enabled", True)
-        self.assert_context("public_metrics_blacklist", True)
         self.assert_context("is_on_stable", False)
 
     @responses.activate
@@ -94,7 +88,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "title": "Snap title",
             "summary": "This is a summary",
             "description": "This is a description",
-            "license": "license",
             "media": [{"url": "this is a url", "type": "icon"}],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
@@ -124,7 +117,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "title": "Snap title",
             "summary": "This is a summary",
             "description": "This is a description",
-            "license": "license",
             "media": [{"url": "this is a url", "type": "screenshot"}],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
