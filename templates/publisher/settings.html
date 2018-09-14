@@ -142,7 +142,7 @@
               <div class="js-whitelist">
                 <input type="radio" name="territories_custom_type" value="whitelist" id="territories_custom_whitelist"
                   {% if whitelist_country_codes or not blacklist_country_codes %}
-                       checked="checked"
+                      checked="checked"
                   {% endif %}
                 />
                 <label for="territories_custom_whitelist">Only these territories</label>
@@ -151,11 +151,11 @@
                     {{ territory }}{{ "," if not loop.last }}
                   {% endfor %}
                  " />
-                <div class="js-multiselect-holder"></div>
+                <div class="js-multiselect-holder{% if blacklist_country_codes %} is-disabled{% endif %}"></div>
               </div>
               <div class="js-blacklist">
                 <input type="radio" name="territories_custom_type" value="blacklist" id="territories_custom_blacklist"
-                  {% if territories_blacklist %}
+                  {% if blacklist_country_codes %}
                        checked="checked"
                   {% endif %}
                 />
@@ -165,7 +165,7 @@
                     {{ territory }}{{ "," if not loop.last }}
                   {% endfor %}
                  " />
-                <div class="js-multiselect-holder"></div>
+                <div class="js-multiselect-holder{% if whitelist_country_codes or not blacklist_country_codes %} is-disabled{% endif %}"></div>
               </div>
             </div>
           </div>
@@ -238,6 +238,7 @@
 {% block scripts %}
   <script src="{{ static_url('js/dist/publisher.js') }}"></script>
   <script>
+    Raven.context(function () {
       snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
       snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
 
@@ -258,18 +259,18 @@
         {% endif %}
       );
 
-      function toggleCustomTerritories(e) {
-        var custom = document.getElementById('territories_custom');
-        var checked = custom.checked;
-        var nested = custom.parentNode.querySelector('.p-nested-inputs');
-        if (checked) {
-          nested.classList.remove('is-hidden');
-        } else {
-          nested.classList.add('is-hidden');
-        }
-      }
+      document
+        .getElementById('settings-form')
+        .addEventListener(
+          'change',
+          snapcraft.publisher.settings.changeHandler
+        );
 
-      document.getElementById('territories_custom').addEventListener('change', toggleCustomTerritories);
-      document.getElementById('territories_all').addEventListener('change', toggleCustomTerritories);
+      {% if whitelist_country_codes or not blacklist_country_codes %}
+        snapcraft.publisher.settings.enableInput('whitelist');
+      {% elif blacklist_country_codes %}
+        snapcraft.publisher.settings.enableInput('blacklist');
+      {% endif %}
+    });
   </script>
 {% endblock %}

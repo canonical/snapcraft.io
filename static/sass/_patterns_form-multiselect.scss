@@ -15,6 +15,12 @@
     position: relative;
     width: 100%;
 
+    &.is-disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: .6;
+    }
+
     &.is-focused {
       outline: 1px solid $color-link;
       outline-offset: 2px;
