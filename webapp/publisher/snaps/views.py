@@ -591,9 +591,9 @@ def post_register_name():
 
     return flask.redirect(flask.url_for("account.get_account"))
 
-@publisher_snaps.route("/<snap_name>/admin")
+@publisher_snaps.route("/<snap_name>/settings")
 @login_required
-def get_admin(snap_name):
+def get_settings(snap_name):
     try:
         snap_details = api.get_snap_info(snap_name, flask.session)
     except ApiResponseErrorList as api_response_error_list:
@@ -641,12 +641,12 @@ def get_admin(snap_name):
         "blacklist_country_codes": blacklist_country_codes,
     }
 
-    return flask.render_template("publisher/admin.html", **context)
+    return flask.render_template("publisher/settings.html", **context)
 
 
-@publisher_snaps.route("/<snap_name>/admin", methods=["POST"])
+@publisher_snaps.route("/<snap_name>/settings", methods=["POST"])
 @login_required
-def post_admin(snap_name):
+def post_settings(snap_name):
     changes = None
     changed_fields = flask.request.form.get("changes")
 
@@ -738,10 +738,10 @@ def post_admin(snap_name):
                 "other_errors": other_errors,
             }
 
-            return flask.render_template("publisher/admin.html", **context)
+            return flask.render_template("publisher/settings.html", **context)
 
         flask.flash("Changes applied successfully.", "positive")
     else:
         flask.flash("No changes to save.", "information")
 
-    return flask.redirect(flask.url_for(".get_admin", snap_name=snap_name))
+    return flask.redirect(flask.url_for(".get_settings", snap_name=snap_name))

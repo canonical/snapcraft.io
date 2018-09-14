@@ -16,17 +16,6 @@
         <ul class="p-tabs__list u-float--right" role="tablist">
           <li class="p-tabs__item" role="presentation">
             <a
-              href="/account/snaps/{{ snap_name }}/admin"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'admin' %}
-              aria-selected="true"
-              {% endif %}
-            >
-              Admin
-            </a>
-            <a
               href="/account/snaps/{{ snap_name }}/listing"
               class="p-tabs__link"
               tabindex="0"
@@ -62,6 +51,19 @@
               {% endif %}
             >
             Metrics
+            </a>
+          </li>
+          <li class="p-tabs__item" role="presentation">
+            <a
+              href="/account/snaps/{{ snap_name }}/settings"
+              class="p-tabs__link"
+              tabindex="0"
+              role="tab"
+              {% if selected_tab == 'settings' %}
+              aria-selected="true"
+              {% endif %}
+            >
+              Settings
             </a>
           </li>
         </ul>

@@ -4,21 +4,21 @@ import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 
-class AdminPageNotAuth(BaseTestCases.EndpointLoggedOut):
+class SettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/admin".format(snap_name)
+        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
 
         super().setUp(snap_name=snap_name, endpoint_url=endpoint_url)
 
 
-class GetAdminPage(BaseTestCases.EndpointLoggedInErrorHandling):
+class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         snap_name = "test-snap"
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
-        endpoint_url = "/account/snaps/{}/admin".format(snap_name)
+        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -60,7 +60,7 @@ class GetAdminPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/admin.html")
+        self.assert_template_used("publisher/settings.html")
 
         self.assert_context("snap_id", "id")
         self.assert_context("snap_name", snap_name)

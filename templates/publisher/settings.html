@@ -1,15 +1,15 @@
 {% extends "publisher/_publisher_layout.html" %}
 
 {% block meta_title %}
-  Admin settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+  Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
 {% endblock %}
 
 {% block content %}
   <div id="main-content">
-    {% set selected_tab='admin' %}
+    {% set selected_tab='settings' %}
     {% include "publisher/_header.html" %}
 
-    <form id="admin-form" method="POST" enctype='multipart/form-data'>
+    <form id="settings-form" method="POST" enctype='multipart/form-data'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
@@ -19,7 +19,7 @@
             <div class="row">
               <div class="col-12">
                 {% for category, message in messages %}
-                  <div id="admin-form-status" class="p-notification--{{ category }}">
+                  <div id="settings-form-status" class="p-notification--{{ category }}">
                     <p class="p-notification__response">
                       {{ message }}
                     </p>
@@ -248,8 +248,8 @@
       console.log('Whitelist_countries', {{ whitelist_country_codes|tojson }});
 
       snapcraft.publisher.market.initForm({
-          form: "admin-form",
-          formNotification: "admin-form-status",
+          form: "settings-form",
+          formNotification: "settings-form-status",
         }, {
           'private': {{ private|tojson }},
           'public_metrics_enabled': {{ public_metrics_enabled|tojson }},

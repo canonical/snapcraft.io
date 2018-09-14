@@ -5,10 +5,10 @@ import json
 from tests.publisher.endpoint_testing import BaseTestCases
 
 
-class PostAdminPageNotAuth(BaseTestCases.EndpointLoggedOut):
+class PostSettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/admin".format(snap_name)
+        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -17,12 +17,12 @@ class PostAdminPageNotAuth(BaseTestCases.EndpointLoggedOut):
         )
 
 
-class PostMetadataAminPage(BaseTestCases.EndpointLoggedIn):
+class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         self.snap_id = "complexId"
 
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/admin".format(snap_name)
+        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/metadata?conflict_on_update=true"
@@ -198,7 +198,7 @@ class PostMetadataAminPage(BaseTestCases.EndpointLoggedIn):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/admin.html")
+        self.assert_template_used("publisher/settings.html")
 
         self.assert_context("snap_id", self.snap_id)
         self.assert_context("snap_name", self.snap_name)
@@ -256,7 +256,7 @@ class PostMetadataAminPage(BaseTestCases.EndpointLoggedIn):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/admin.html")
+        self.assert_template_used("publisher/settings.html")
 
         # Not updatable fields
         self.assert_context("snap_id", self.snap_id)
@@ -323,7 +323,7 @@ class PostMetadataAminPage(BaseTestCases.EndpointLoggedIn):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/admin.html")
+        self.assert_template_used("publisher/settings.html")
 
         self.assert_context("field_errors", {"description": "error message"})
 
