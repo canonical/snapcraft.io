@@ -1,0 +1,30 @@
+@mixin global-nav {
+  .global-nav {
+    align-items: center;
+    background: $color-navigation-background;
+    border-bottom: 1px solid $color-x-dark;
+    display: flex;
+    min-height: 1.5rem;
+    position: relative;
+
+    .global-nav__row {
+      display: flex;
+    }
+
+    .global-nav__links {
+      flex-grow: 1;
+      margin-bottom: 0;
+      text-align: right;
+
+      .global-nav__link-anchor {
+        color: #fff;
+        display: inline-block;
+        font-size: .875rem;
+        line-height: 1.25rem;
+        margin-bottom: 0;
+        padding: 0;
+        transition: all .25s;
+      }
+    }
+  }
+}
