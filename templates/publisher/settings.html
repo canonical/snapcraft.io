@@ -240,12 +240,9 @@
 
 {% block scripts %}
   <script src="{{ static_url('js/dist/publisher.js') }}"></script>
-  <script src="{{ static_url('js/dist/publisher/form/multiselect.js') }}"></script>
   <script>
-      snapcraft.form.multiselect.initMultiselect('.js-whitelist', {{ countries|tojson }});
-      snapcraft.form.multiselect.initMultiselect('.js-blacklist', {{ countries|tojson }});
-
-      console.log('Whitelist_countries', {{ whitelist_country_codes|tojson }});
+      snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
+      snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
 
       snapcraft.publisher.market.initForm({
           form: "settings-form",
