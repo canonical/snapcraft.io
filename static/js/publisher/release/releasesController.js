@@ -39,6 +39,20 @@ export default class ReleasesController extends Component {
     this.setState((state) => {
       const { pendingReleases } = state;
 
+      // cancel any other pending release for the same channel in same architectures
+      revision.architectures.forEach((arch) => {
+        Object.keys(pendingReleases).forEach((revisionId) => {
+          const pendingRelease = pendingReleases[revisionId];
+
+          if (
+            pendingRelease.channels.indexOf(channel) !== -1 &&
+            pendingRelease.revision.architectures.indexOf(arch) !== -1
+          ) {
+            this.undoRelease(pendingRelease.revision, channel);
+          }
+        });
+      });
+
       if (!pendingReleases[revision.revision]) {
         pendingReleases[revision.revision] = {
           revision: revision,
