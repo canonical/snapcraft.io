@@ -97,12 +97,14 @@ class MultiSelect extends React.Component {
     const newSelected = this.state.selected.slice(0);
     newSelected.push(toAdd);
     const newValues = this.state.values.filter(item => item.key !== key);
+    this.searchInput.value = '';
 
     this.setState({
       values: newValues,
       selected: newSelected,
+      searchTerm: '',
       // Preserve the filtered list in the dropdown
-      searchResults: this.filterByTerm(newValues)
+      searchResults: newValues
     });
   }
 
@@ -115,7 +117,7 @@ class MultiSelect extends React.Component {
    */
   filterByTerm(values, searchTerm) {
     searchTerm = searchTerm || this.state.searchTerm;
-    return values.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    return values.filter(item => item.name.toLowerCase().startsWith(searchTerm.toLowerCase()));
   }
 
   /**

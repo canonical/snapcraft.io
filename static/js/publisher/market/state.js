@@ -1,4 +1,5 @@
 import { transformWhitelistBlacklist } from "./whitelistBlacklist";
+import { arraysEqual } from "../../libs/arrays";
 
 const allowedKeys = [
   'title',
@@ -16,7 +17,9 @@ const allowedKeys = [
 
 const transform = {
   'whitelist_countries': transformWhitelistBlacklist,
-  'blacklist_countries': transformWhitelistBlacklist
+  'blacklist_countries': transformWhitelistBlacklist,
+  'private': value => (value === 'private'),
+  'public_metrics_enabled': value => (value === 'on')
 };
 
 function updateState(state, values) {
@@ -33,6 +36,7 @@ function updateState(state, values) {
           if (transform[key]) {
             newValue = transform[key](newValue);
           }
+
           state[key] = newValue;
         }
       });
@@ -67,7 +71,13 @@ function diffState(initialState, state) {
       }
     } else {
       if (initialState[key] !== state[key]) {
-        diff[key] = state[key];
+        if (Array.isArray(initialState[key]) && Array.isArray(state[key])) {
+          if(!arraysEqual(initialState[key], state[key])) {
+            diff[key] = state[key];
+          }
+        } else {
+          diff[key] = state[key];
+        }
       }
     }
   }

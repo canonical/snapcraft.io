@@ -233,30 +233,6 @@ def get_listing_snap(snap_name):
         m["url"] for m in snap_details["media"] if m["type"] == "screenshot"
     ]
 
-    licenses = get_licenses()
-
-    if "whitelist_country_codes" in snap_details:
-        whitelist_country_codes = (
-            snap_details["whitelist_country_codes"]
-            if len(snap_details["whitelist_country_codes"]) > 0
-            else []
-        )
-    else:
-        whitelist_country_codes = []
-
-    if "blacklist_country_codes" in snap_details:
-        blacklist_country_codes = (
-            snap_details["blacklist_country_codes"]
-            if len(snap_details["blacklist_country_codes"]) > 0
-            else []
-        )
-    else:
-        blacklist_country_codes = []
-
-    countries = []
-    for country in pycountry.countries:
-        countries.append({"key": country.alpha_2, "name": country.name})
-
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -271,13 +247,7 @@ def get_listing_snap(snap_name):
         "contact": snap_details["contact"],
         "private": snap_details["private"],
         "website": snap_details["website"] or "",
-        "public_metrics_enabled": snap_details["public_metrics_enabled"],
-        "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
         "is_on_stable": is_on_stable,
-        "licenses": licenses,
-        "countries": countries,
-        "whitelist_country_codes": whitelist_country_codes,
-        "blacklist_country_codes": blacklist_country_codes,
     }
 
     return flask.render_template("publisher/listing.html", **context)
@@ -343,12 +313,6 @@ def post_listing_snap(snap_name):
         body_json = logic.filter_changes_data(changes)
 
         if body_json:
-            if "public_metrics_blacklist" in body_json:
-                converted_metrics = logic.convert_metrics_blacklist(
-                    body_json["public_metrics_blacklist"]
-                )
-                body_json["public_metrics_blacklist"] = converted_metrics
-
             if "description" in body_json:
                 body_json["description"] = logic.remove_invalid_characters(
                     body_json["description"]
@@ -379,9 +343,6 @@ def post_listing_snap(snap_name):
             except ApiError as api_error:
                 return _handle_errors(api_error)
 
-            details_metrics_enabled = snap_details["public_metrics_enabled"]
-            details_blacklist = snap_details["public_metrics_blacklist"]
-
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
             is_on_stable = logic.is_snap_on_stable(
@@ -398,30 +359,6 @@ def post_listing_snap(snap_name):
                 if m["type"] == "screenshot"
             ]
 
-            countries = []
-            for country in pycountry.countries:
-                countries.append(
-                    {"key": country.alpha_2, "name": country.name}
-                )
-
-            if "whitelist_country_codes" in snap_details:
-                whitelist_country_codes = (
-                    snap_details["whitelist_country_codes"]
-                    if len(snap_details["whitelist_country_codes"]) > 0
-                    else []
-                )
-            else:
-                whitelist_country_codes = []
-
-            if "blacklist_country_codes" in snap_details:
-                blacklist_country_codes = (
-                    snap_details["blacklist_country_codes"]
-                    if len(snap_details["blacklist_country_codes"]) > 0
-                    else []
-                )
-            else:
-                blacklist_country_codes = []
-
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
@@ -431,8 +368,6 @@ def post_listing_snap(snap_name):
                 "publisher_name": snap_details["publisher"]["display-name"],
                 "username": snap_details["publisher"]["username"],
                 "screenshot_urls": screenshot_urls,
-                "public_metrics_enabled": details_metrics_enabled,
-                "public_metrics_blacklist": details_blacklist,
                 "display_title": snap_details["title"],
                 # values posted by user
                 "snap_title": (
@@ -462,10 +397,6 @@ def post_listing_snap(snap_name):
                     else snap_details["website"] or ""
                 ),
                 "is_on_stable": is_on_stable,
-                "licenses": get_licenses(),
-                "countries": countries,
-                "whitelist_country_codes": whitelist_country_codes,
-                "blacklist_country_codes": blacklist_country_codes,
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
@@ -661,3 +592,166 @@ def post_register_name():
     )
 
     return flask.redirect(flask.url_for("account.get_account"))
+
+@publisher_snaps.route("/<snap_name>/admin")
+@login_required
+def get_admin(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    is_on_stable = logic.is_snap_on_stable(snap_details["channel_maps_list"])
+
+    licenses = get_licenses()
+
+    if "whitelist_country_codes" in snap_details:
+        whitelist_country_codes = (
+            snap_details["whitelist_country_codes"]
+            if len(snap_details["whitelist_country_codes"]) > 0
+            else []
+        )
+    else:
+        whitelist_country_codes = []
+
+    if "blacklist_country_codes" in snap_details:
+        blacklist_country_codes = (
+            snap_details["blacklist_country_codes"]
+            if len(snap_details["blacklist_country_codes"]) > 0
+            else []
+        )
+    else:
+        blacklist_country_codes = []
+
+    countries = []
+    for country in pycountry.countries:
+        countries.append({"key": country.alpha_2, "name": country.name})
+
+    context = {
+        "snap_name": snap_details["snap_name"],
+        "snap_id": snap_details["snap_id"],
+        "license": snap_details["license"],
+        "private": snap_details["private"],
+        "public_metrics_enabled": snap_details["public_metrics_enabled"],
+        "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
+        "is_on_stable": is_on_stable,
+        "licenses": licenses,
+        "countries": countries,
+        "whitelist_country_codes": whitelist_country_codes,
+        "blacklist_country_codes": blacklist_country_codes,
+    }
+
+    return flask.render_template("publisher/admin.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/admin", methods=["POST"])
+@login_required
+def post_admin(snap_name):
+    changes = None
+    changed_fields = flask.request.form.get("changes")
+
+    if changed_fields:
+        changes = loads(changed_fields)
+
+    if changes:
+        snap_id = flask.request.form.get("snap_id")
+        error_list = []
+
+        body_json = logic.filter_changes_data(changes)
+
+        if body_json:
+            if "public_metrics_blacklist" in body_json:
+                converted_metrics = logic.convert_metrics_blacklist(
+                    body_json["public_metrics_blacklist"]
+                )
+                body_json["public_metrics_blacklist"] = converted_metrics
+
+            try:
+                api.snap_metadata(snap_id, flask.session, body_json)
+            except ApiResponseErrorList as api_response_error_list:
+                if api_response_error_list.status_code == 404:
+                    return flask.abort(
+                        404, "No snap named {}".format(snap_name)
+                    )
+                else:
+                    error_list = error_list + api_response_error_list.errors
+            except ApiError as api_error:
+                return _handle_errors(api_error)
+
+        if error_list:
+            try:
+                snap_details = api.get_snap_info(snap_name, flask.session)
+            except ApiResponseErrorList as api_response_error_list:
+                if api_response_error_list.status_code == 404:
+                    return flask.abort(
+                        404, "No snap named {}".format(snap_name)
+                    )
+                else:
+                    error_list = error_list + api_response_error_list.errors
+            except ApiError as api_error:
+                return _handle_errors(api_error)
+
+            details_metrics_enabled = snap_details["public_metrics_enabled"]
+            details_blacklist = snap_details["public_metrics_blacklist"]
+
+            field_errors, other_errors = logic.invalid_field_errors(error_list)
+
+            is_on_stable = logic.is_snap_on_stable(
+                snap_details["channel_maps_list"]
+            )
+
+            countries = []
+            for country in pycountry.countries:
+                countries.append(
+                    {"key": country.alpha_2, "name": country.name}
+                )
+
+            if "whitelist_country_codes" in snap_details:
+                whitelist_country_codes = (
+                    snap_details["whitelist_country_codes"]
+                    if len(snap_details["whitelist_country_codes"]) > 0
+                    else []
+                )
+            else:
+                whitelist_country_codes = []
+
+            if "blacklist_country_codes" in snap_details:
+                blacklist_country_codes = (
+                    snap_details["blacklist_country_codes"]
+                    if len(snap_details["blacklist_country_codes"]) > 0
+                    else []
+                )
+            else:
+                blacklist_country_codes = []
+
+            context = {
+                # read-only values from details API
+                "snap_name": snap_details["snap_name"],
+                "snap_id": snap_details["snap_id"],
+                "license": snap_details["license"],
+                "public_metrics_enabled": details_metrics_enabled,
+                "public_metrics_blacklist": details_blacklist,
+                "private": snap_details["private"],
+                "is_on_stable": is_on_stable,
+                "licenses": get_licenses(),
+                "countries": countries,
+                "whitelist_country_codes": whitelist_country_codes,
+                "blacklist_country_codes": blacklist_country_codes,
+                # errors
+                "error_list": error_list,
+                "field_errors": field_errors,
+                "other_errors": other_errors,
+            }
+
+            return flask.render_template("publisher/admin.html", **context)
+
+        flask.flash("Changes applied successfully.", "positive")
+    else:
+        flask.flash("No changes to save.", "information")
+
+    return flask.redirect(flask.url_for(".get_admin", snap_name=snap_name))

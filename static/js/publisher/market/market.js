@@ -84,8 +84,8 @@ function initForm(config, initialState, errors) {
 
   // setup form functionality
   const marketForm = document.getElementById(config.form);
-  const submitButton = marketForm.querySelector('.js-market-submit');
-  const revertButton = marketForm.querySelector('.js-market-revert');
+  const submitButton = marketForm.querySelector('.js-form-submit');
+  const revertButton = marketForm.querySelector('.js-form-revert');
   const revertURL = revertButton.getAttribute('href');
   const disabledRevertClass = 'is-disabled';
 
@@ -125,17 +125,23 @@ function initForm(config, initialState, errors) {
 
   marketForm.appendChild(diffInput);
 
-  initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
+  if (config.snapIconImage && config.snapIconInput) {
+    initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
+  }
+
   initFormNotification(config.form, config.formNotification);
-  initSnapScreenshotsEdit(
-    config.screenshotsToolbar,
-    config.screenshotsWrapper,
-    state,
-    (nextState) => {
-      updateState(state, nextState);
-      updateFormState();
-    }
-  );
+
+  if (config.screenshotsToolbar && config.screenshotsWrapper) {
+    initSnapScreenshotsEdit(
+      config.screenshotsToolbar,
+      config.screenshotsWrapper,
+      state,
+      (nextState) => {
+        updateState(state, nextState);
+        updateFormState();
+      }
+    );
+  }
 
   let ignoreChangesOnUnload = false;
 
@@ -184,9 +190,12 @@ function initForm(config, initialState, errors) {
 
   function updateFormState() {
     // Some extra modifications need to happen for the checkboxes
-    publicMetrics(marketForm);
-    whitelistBlacklist(marketForm);
-
+    if (marketForm['public_metrics_enabled']) {
+      publicMetrics(marketForm);
+    }
+    if (marketForm['territories']) {
+      whitelistBlacklist(marketForm);
+    }
 
     let formData = new FormData(marketForm);
 
@@ -195,10 +204,17 @@ function initForm(config, initialState, errors) {
 
     // checkboxes are tricky,
     // make sure to update state based on their 'checked' status
-    updateState(state, {
-      'public_metrics_enabled': marketForm['public_metrics_enabled'].checked,
-      'private': marketForm['private'].value === 'private'
-    });
+    if (marketForm['private']) {
+      updateState(state, {
+        'private': marketForm['private'].value === 'private'
+      });
+    }
+
+    if (marketForm['public_metrics_enabled']) {
+      updateState(state, {
+        'public_metrics_enabled': marketForm['public_metrics_enabled'].checked
+      });
+    }
 
     checkForm();
   }
@@ -216,7 +232,10 @@ function initForm(config, initialState, errors) {
     // TODO: temporary soluton - save clean state in state input,
     // so save still works until backend is update to understand diff
       const cleanState = JSON.parse(JSON.stringify(state));
-      cleanState.images = cleanState.images.filter(image => image.status !== 'delete');
+      if (cleanState.images) {
+        cleanState.images = cleanState.images.filter(image => image.status !== 'delete');
+      }
+
       stateInput.value = JSON.stringify(cleanState);
       diffInput.value = JSON.stringify(diff);
 
@@ -364,11 +383,14 @@ function initForm(config, initialState, errors) {
     }
   }
 
-  const prefixableFields = [marketForm['website'], marketForm['contact']];
-  prefixableFields.forEach(input => {
-    input.addEventListener('blur', function (event) {
-      prefixInput(event.target);
-    });
+  const prefixableFields = ['website', 'contact'];
+  prefixableFields.forEach(inputName => {
+    const input = marketForm[inputName];
+    if (input) {
+      input.addEventListener('blur', function (event) {
+        prefixInput(event.target);
+      });
+    }
   });
 }
 
