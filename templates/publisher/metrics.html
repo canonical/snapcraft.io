@@ -76,12 +76,6 @@ Publisher metrics for {{ snap_title }}
   </div>
 {% endblock %}
 
-{% block scripts_modules %}
-  {# still required until implement new graphs in d3 #}
-  <script src="{{ static_url('js/modules/d3.min.js') }}"></script>
-  <script src="{{ static_url('js/modules/billboard.min.js') }}"></script>
-{% endblock %}
-
 {% block scripts %}
   <script src="{{ static_url('js/dist/publisher.js') }}"></script>
   <script>
