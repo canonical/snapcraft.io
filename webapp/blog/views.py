@@ -208,7 +208,7 @@ def snap_series(series):
     try:
         blog_articles, total_pages = api.get_articles(series)
     except ApiError:
-        blog_articles = None
+        blog_articles = []
 
     for article in blog_articles:
         transformed_article = logic.transform_article(
