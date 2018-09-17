@@ -45,10 +45,6 @@ def store_blueprint(store_query=None):
 
         return status_code, error
 
-    @store.route("/snaps")
-    def snaps_view():
-        return flask.redirect(flask.url_for(".homepage"))
-
     @store.route("/discover")
     def discover():
         return flask.redirect(flask.url_for(".homepage"))

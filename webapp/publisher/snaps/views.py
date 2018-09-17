@@ -56,7 +56,13 @@ def _handle_error_list(errors):
     return flask.abort(502, error_messages)
 
 
-@publisher_snaps.route("/")
+@publisher_snaps.route("/account/snaps")
+@login_required
+def redirect_get_account_snaps():
+    return flask.redirect(flask.url_for(".get_account_snaps"))
+
+
+@publisher_snaps.route("/snaps")
 @login_required
 def get_account_snaps():
     try:
@@ -79,7 +85,8 @@ def get_account_snaps():
     return flask.render_template("publisher/account-snaps.html", **context)
 
 
-@publisher_snaps.route("/<snap_name>/measure")
+@publisher_snaps.route("/account/snaps/<snap_name>/measure")
+@publisher_snaps.route("/account/snaps/<snap_name>/metrics")
 @login_required
 def get_measure_snap(snap_name):
     return flask.redirect(
@@ -185,7 +192,8 @@ def publisher_snap_metrics(snap_name):
     return flask.render_template("publisher/metrics.html", **context)
 
 
-@publisher_snaps.route("/<snap_name>/market")
+@publisher_snaps.route("/account/snaps/<snap_name>/market")
+@publisher_snaps.route("/account/snaps/<snap_name>/listing", methods=["GET"])
 def get_market_snap(snap_name):
     return flask.redirect(
         flask.url_for(".get_listing_snap", snap_name=snap_name)
@@ -241,6 +249,13 @@ def get_listing_snap(snap_name):
     }
 
     return flask.render_template("publisher/listing.html", **context)
+
+
+@publisher_snaps.route("/account/snaps/<snap_name>/listing", methods=["POST"])
+def redirect_post_market_snap(snap_name):
+    return flask.redirect(
+        flask.url_for(".post_listing_snap", snap_name=snap_name)
+    )
 
 
 @publisher_snaps.route("/<snap_name>/listing", methods=["POST"])
@@ -407,6 +422,14 @@ def post_listing_snap(snap_name):
     )
 
 
+@publisher_snaps.route("/account/snaps/<snap_name>/release")
+@login_required
+def redirect_get_release_history(snap_name):
+    return flask.redirect(
+        flask.url_for(".get_release_history", snap_name=snap_name)
+    )
+
+
 @publisher_snaps.route("/<snap_name>/release")
 @login_required
 def get_release_history(snap_name):
@@ -436,6 +459,14 @@ def get_release_history(snap_name):
     return flask.render_template("publisher/release-history.html", **context)
 
 
+@publisher_snaps.route("/account/snaps/<snap_name>/release", methods=["POST"])
+@login_required
+def redirect_post_release(snap_name):
+    return flask.redirect(
+        flask.url_for(".post_release", snap_name=snap_name), 307
+    )
+
+
 @publisher_snaps.route("/<snap_name>/release", methods=["POST"])
 @login_required
 def post_release(snap_name):
@@ -455,3 +486,117 @@ def post_release(snap_name):
         return _handle_errors(api_error)
 
     return flask.jsonify(response)
+
+
+@publisher_snaps.route("/account/register-snap")
+def redirect_get_register_name():
+    return flask.redirect(flask.url_for(".get_register_name"))
+
+
+@publisher_snaps.route("/register-snap")
+@login_required
+def get_register_name():
+    snap_name = flask.request.args.get("snap_name", default="", type=str)
+    is_private_str = flask.request.args.get(
+        "is_private", default="False", type=str
+    )
+    is_private = is_private_str == "True"
+
+    conflict_str = flask.request.args.get(
+        "conflict", default="False", type=str
+    )
+    conflict = conflict_str == "True"
+
+    already_owned_str = flask.request.args.get(
+        "already_owned", default="False", type=str
+    )
+    already_owned = already_owned_str == "True"
+
+    is_private_str = flask.request.args.get(
+        "is_private", default="False", type=str
+    )
+    is_private = is_private_str == "True"
+
+    context = {
+        "snap_name": snap_name,
+        "is_private": is_private,
+        "conflict": conflict,
+        "already_owned": already_owned,
+    }
+    return flask.render_template("publisher/register-snap.html", **context)
+
+
+@publisher_snaps.route("/account/register-snap", methods=["POST"])
+def redirect_post_register_name():
+    return flask.redirect(flask.url_for(".post_register_name"), 307)
+
+
+@publisher_snaps.route("/register-snap", methods=["POST"])
+@login_required
+def post_register_name():
+    snap_name = flask.request.form.get("snap-name")
+
+    if not snap_name:
+        return flask.redirect(flask.url_for(".get_register_name"))
+
+    is_private = flask.request.form.get("is_private") == "private"
+    store = flask.request.form.get("store")
+    registrant_comment = flask.request.form.get("registrant_comment")
+
+    try:
+        api.post_register_name(
+            session=flask.session,
+            snap_name=snap_name,
+            is_private=is_private,
+            store=store,
+            registrant_comment=registrant_comment,
+        )
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 409:
+            for error in api_response_error_list.errors:
+                if error["code"] == "already_claimed":
+                    return flask.redirect(
+                        flask.url_for("account.get_account_details")
+                    )
+                elif error["code"] == "already_registered":
+                    return flask.redirect(
+                        flask.url_for(
+                            "account.get_register_name",
+                            snap_name=snap_name,
+                            is_private=is_private,
+                            conflict=True,
+                        )
+                    )
+                elif error["code"] == "already_owned":
+                    return flask.redirect(
+                        flask.url_for(
+                            ".get_register_name",
+                            snap_name=snap_name,
+                            is_private=is_private,
+                            already_owned=True,
+                        )
+                    )
+
+        context = {
+            "snap_name": snap_name,
+            "is_private": is_private,
+            "errors": api_response_error_list.errors,
+        }
+
+        return flask.render_template("publisher/register-snap.html", **context)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    flask.flash(
+        "".join(
+            [
+                snap_name,
+                " registered.",
+                ' <a href="https://docs.snapcraft.io/build-snaps/upload"',
+                ' class="p-link--external"',
+                ' target="blank">How to upload a Snap</a>',
+            ]
+        )
+    )
+
+    return flask.redirect(flask.url_for("account.get_account"))

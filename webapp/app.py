@@ -71,7 +71,7 @@ def init_snapcraft(app):
     csrf.exempt("webapp.login.views.login_handler")
     app.register_blueprint(store_blueprint())
     app.register_blueprint(account, url_prefix="/account")
-    app.register_blueprint(publisher_snaps, url_prefix="/account/snaps")
+    app.register_blueprint(publisher_snaps)
     app.register_blueprint(blog, url_prefix="/blog")
 
 
