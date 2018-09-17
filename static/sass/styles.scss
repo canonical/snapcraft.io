@@ -44,12 +44,6 @@ $color-navigation-background: #252525;
 @include vf-u-equal-height;
 @include vf-u-hide;
 
-// FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1880
-// can be removed when we update to Vanilla >= 1.8
-img {
-  align-self: initial;
-}
-
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;
 
@@ -146,7 +140,7 @@ img {
 @import 'snapcraft_p-form-validation';
 @include snapcraft-p-form-validation;
 
-@import 'snapcraft_p-beta-notification';
+@import 'snapcraft_p-notifications';
 @include snapcraft-p-beta-notification;
 
 @import 'snapcraft_distro-chart';

@@ -44,6 +44,7 @@ def snapcraft_blueprint():
         featured_snaps = []
         error_info = {}
         status_code = 200
+        nps = flask.request.args.get("nps")
         try:
             featured_snaps = logic.get_searched_snaps(api.get_featured_snaps())
         except ApiError as api_error:
@@ -54,6 +55,7 @@ def snapcraft_blueprint():
                 "index.html",
                 featured_snaps=featured_snaps,
                 error_info=error_info,
+                nps=nps,
             ),
             status_code,
         )

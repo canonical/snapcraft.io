@@ -6,6 +6,13 @@
 <div id="main-content" class="p-strip--image snapcraft-banner-background">
   <h1 class="u-off-screen">Snapcraft</h1>
   <div class="row">
+    {% if nps %}
+      <div class="p-notification p-snapcraft-nps-banner">
+        <p class="p-notification__response">
+          Thank you so much 🙏. Your feedback is really valuable to us.
+        </p>
+      </div>
+    {% endif %}
     <div class="col-12">
       <p class="p-heading--two">A Universal App Store for Linux</p>
       <p>Deliver and update your app on any Linux distribution - for desktop, cloud,  and Internet of Things.</p>
