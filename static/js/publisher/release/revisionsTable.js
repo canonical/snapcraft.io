@@ -65,10 +65,22 @@ export default class RevisionsTable extends Component {
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
             <span className={ hasPendingRelease ? 'p-previous-revision' : '' }>
-              { thisPreviousRevision ? thisPreviousRevision.version : '-' }
+              { thisPreviousRevision ?
+                <span className="p-revision-info">{thisPreviousRevision.version}
+                  <span className="p-revision-info__revision">({thisPreviousRevision.revision})</span>
+                </span> :
+                '–'
+              }
             </span>
             { hasPendingRelease &&
-              <span> &rarr; { thisRevision.version }</span>
+              <span>
+                {' '}
+                &rarr;
+                {' '}
+                <span className="p-revision-info">{thisRevision.version}
+                  <span className="p-revision-info__revision">({thisRevision.revision})</span>
+                </span>
+              </span>
             }
           </span>
 
@@ -144,7 +156,7 @@ export default class RevisionsTable extends Component {
     const releasesCount = Object.keys(pendingReleases).length;
 
     return (releasesCount > 0 &&
-      <p>
+      <div className="p-release-confirm">
         <span className="p-tooltip">
           <i className="p-icon--question" />
           {' '}
@@ -163,9 +175,11 @@ export default class RevisionsTable extends Component {
           </span>
         </span>
         {' '}
-        <button className="p-button--positive is-inline" disabled={ isLoading } onClick={ this.onApplyClick.bind(this) }>{ isLoading ? 'Loading...' : 'Apply' }</button>
-        <button className="p-button--neutral" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
-      </p>
+        <div className="p-release-confirm__buttons">
+          <button className="p-button--positive is-inline u-no-margin--bottom" disabled={ isLoading } onClick={ this.onApplyClick.bind(this) }>{ isLoading ? 'Loading...' : 'Apply' }</button>
+          <button className="p-button--neutral u-no-margin--bottom" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
+        </div>
+      </div>
     );
   }
 
