@@ -2,8 +2,10 @@
   $navigation-border-color: rgba(255, 255, 255, .2);
   $navigation-hover-color: rgba(0, 0, 0, .92);
   $navigation-highlight-color: rgba(250, 90, 64, 1);
+  $navigation-background-color: rgba(51, 51, 51, 1);
 
   .p-navigation {
+    background: $navigation-background-color;
     z-index: 100; // appear over channel map
 
     // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1892
