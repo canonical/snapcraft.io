@@ -8,7 +8,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class PostBinaryMetadataListingPageLoggedOut(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/listing".format(snap_name)
+        endpoint_url = "/{}/listing".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -21,7 +21,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         self.snap_id = "complexId"
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/listing".format(snap_name)
+        endpoint_url = "/{}/listing".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/binary-metadata?conflict_on_update=true"
@@ -46,7 +46,7 @@ class PostBinaryMetadataErrorListingPage(BaseTestCases.EndpointLoggedIn):
 
         self.snap_id = "complexId"
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/listing".format(snap_name)
+        endpoint_url = "/{}/listing".format(snap_name)
         binary_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/binary-metadata?conflict_on_update=true"
@@ -97,7 +97,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
 
         self.snap_id = "complexId"
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/listing".format(snap_name)
+        endpoint_url = "/{}/listing".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/binary-metadata?conflict_on_update=true"

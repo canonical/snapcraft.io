@@ -6,7 +6,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class PostReleasePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/release".format(snap_name)
+        endpoint_url = "/{}/release".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -18,7 +18,7 @@ class PostReleasePageNotAuth(BaseTestCases.EndpointLoggedOut):
 class PostDataReleasePage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/release".format(snap_name)
+        endpoint_url = "/{}/release".format(snap_name)
         api_url = "https://dashboard.snapcraft.io/dev/api/snap-release/"
 
         super().setUp(

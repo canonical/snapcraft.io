@@ -561,7 +561,7 @@ def post_register_name():
                 elif error["code"] == "already_registered":
                     return flask.redirect(
                         flask.url_for(
-                            "account.get_register_name",
+                            ".get_register_name",
                             snap_name=snap_name,
                             is_private=is_private,
                             conflict=True,
