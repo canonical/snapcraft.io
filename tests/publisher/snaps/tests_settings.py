@@ -7,7 +7,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class SettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
+        endpoint_url = "/{}/settings".format(snap_name)
 
         super().setUp(snap_name=snap_name, endpoint_url=endpoint_url)
 
@@ -18,7 +18,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
-        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
+        endpoint_url = "/{}/settings".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -49,8 +49,6 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "snap_name": snap_name,
             "private": True,
             "license": "License",
-            "public_metrics_enabled": True,
-            "public_metrics_blacklist": False,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -66,8 +64,6 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("snap_name", snap_name)
         self.assert_context("private", True)
         self.assert_context("license", "License")
-        self.assert_context("public_metrics_enabled", True)
-        self.assert_context("public_metrics_blacklist", False)
 
 
 if __name__ == "__main__":

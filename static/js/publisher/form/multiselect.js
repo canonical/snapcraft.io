@@ -69,7 +69,7 @@ class MultiSelect extends React.Component {
       selected: newSelected,
       // Preserve the filtered list in the dropdown
       searchResults: this.filterByTerm(newValues)
-    });
+    }, this.updateInputValue);
   }
 
   /**
@@ -105,7 +105,7 @@ class MultiSelect extends React.Component {
       searchTerm: '',
       // Preserve the filtered list in the dropdown
       searchResults: newValues
-    });
+    }, this.updateInputValue);
   }
 
   /**

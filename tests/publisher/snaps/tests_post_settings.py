@@ -8,7 +8,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class PostSettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
+        endpoint_url = "/{}/settings".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -22,7 +22,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.snap_id = "complexId"
 
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/settings".format(snap_name)
+        endpoint_url = "/{}/settings".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/metadata?conflict_on_update=true"
@@ -171,8 +171,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "snap_name": self.snap_name,
             "license": "license",
             "private": True,
-            "public_metrics_enabled": True,
-            "public_metrics_blacklist": True,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -204,8 +202,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("private", True)
         self.assert_context("license", "license")
-        self.assert_context("public_metrics_enabled", True)
-        self.assert_context("public_metrics_blacklist", True)
 
     @responses.activate
     def test_return_error_udpate_all_field(self):
@@ -231,12 +227,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         responses.add(responses.GET, info_url, json=payload, status=200)
 
-        changes = {
-            "license": "newLicense",
-            "private": False,
-            "public_metrics_enabled": True,
-            "public_metrics_blacklist": "new metric1,new metric2",
-        }
+        changes = {"license": "newLicense", "private": False}
 
         response = self.client.post(
             self.endpoint_url,
@@ -261,8 +252,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         # Not updatable fields
         self.assert_context("snap_id", self.snap_id)
         self.assert_context("snap_name", self.snap_name)
-        self.assert_context("public_metrics_enabled", False)
-        self.assert_context("public_metrics_blacklist", True)
         self.assert_context("license", "license")
         self.assert_context("private", True)
 
@@ -297,8 +286,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "private": True,
             "contact": "contact adress",
             "website": "website_url",
-            "public_metrics_enabled": True,
-            "public_metrics_blacklist": True,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)

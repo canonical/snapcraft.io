@@ -223,6 +223,9 @@ def get_listing_snap(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
+    details_metrics_enabled = snap_details["public_metrics_enabled"]
+    details_blacklist = snap_details["public_metrics_blacklist"]
+
     is_on_stable = logic.is_snap_on_stable(snap_details["channel_maps_list"])
 
     # Filter icon & screenshot urls from the media set.
@@ -246,6 +249,8 @@ def get_listing_snap(snap_name):
         "contact": snap_details["contact"],
         "private": snap_details["private"],
         "website": snap_details["website"] or "",
+        "public_metrics_enabled": details_metrics_enabled,
+        "public_metrics_blacklist": details_blacklist,
         "is_on_stable": is_on_stable,
     }
 
@@ -344,6 +349,9 @@ def post_listing_snap(snap_name):
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
+            details_metrics_enabled = snap_details["public_metrics_enabled"]
+            details_blacklist = snap_details["public_metrics_blacklist"]
+
             is_on_stable = logic.is_snap_on_stable(
                 snap_details["channel_maps_list"]
             )
@@ -394,6 +402,8 @@ def post_listing_snap(snap_name):
                     if "website" in changes
                     else snap_details["website"] or ""
                 ),
+                "public_metrics_enabled": details_metrics_enabled,
+                "public_metrics_blacklist": details_blacklist,
                 "is_on_stable": is_on_stable,
                 # errors
                 "error_list": error_list,
@@ -633,8 +643,6 @@ def get_settings(snap_name):
         "snap_id": snap_details["snap_id"],
         "license": snap_details["license"],
         "private": snap_details["private"],
-        "public_metrics_enabled": snap_details["public_metrics_enabled"],
-        "public_metrics_blacklist": snap_details["public_metrics_blacklist"],
         "licenses": licenses,
         "countries": countries,
         "whitelist_country_codes": whitelist_country_codes,
@@ -691,9 +699,6 @@ def post_settings(snap_name):
             except ApiError as api_error:
                 return _handle_errors(api_error)
 
-            details_metrics_enabled = snap_details["public_metrics_enabled"]
-            details_blacklist = snap_details["public_metrics_blacklist"]
-
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
             countries = []
@@ -725,8 +730,6 @@ def post_settings(snap_name):
                 "snap_name": snap_details["snap_name"],
                 "snap_id": snap_details["snap_id"],
                 "license": snap_details["license"],
-                "public_metrics_enabled": details_metrics_enabled,
-                "public_metrics_blacklist": details_blacklist,
                 "private": snap_details["private"],
                 "licenses": get_licenses(),
                 "countries": countries,

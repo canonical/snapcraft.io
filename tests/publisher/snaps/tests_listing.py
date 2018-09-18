@@ -56,6 +56,8 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
+            "public_metrics_enabled": True,
+            "public_metrics_blacklist": False,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -79,6 +81,8 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("contact", "contact adress")
         self.assert_context("website", "website_url")
         self.assert_context("is_on_stable", False)
+        self.assert_context("public_metrics_enabled", True)
+        self.assert_context("public_metrics_blacklist", False)
 
     @responses.activate
     def test_icon(self):

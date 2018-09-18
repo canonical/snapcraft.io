@@ -129,6 +129,8 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
+            "public_metrics_enabled": True,
+            "public_metrics_blacklist": True,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -173,6 +175,8 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("contact", "contact adress")
         self.assert_context("website", "website_url")
         self.assert_context("is_on_stable", False)
+        self.assert_context("public_metrics_enabled", True)
+        self.assert_context("public_metrics_blacklist", True)
 
     @responses.activate
     def test_return_error_udpate_all_field(self):
@@ -199,6 +203,8 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
+            "public_metrics_enabled": False,
+            "public_metrics_blacklist": True,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -212,6 +218,8 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "screenshot_urls": [],
             "contact": "New contact",
             "website": "New website",
+            "public_metrics_enabled": True,
+            "public_metrics_blacklist": "new metric1,new metric2",
         }
 
         response = self.client.post(
@@ -243,6 +251,8 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("screenshot_urls", [])
         self.assert_context("snap_title", "Snap title")
         self.assert_context("is_on_stable", False)
+        self.assert_context("public_metrics_enabled", False)
+        self.assert_context("public_metrics_blacklist", True)
 
         # All updatable fields
         self.assert_context("summary", "New summary")
