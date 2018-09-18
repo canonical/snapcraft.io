@@ -13,11 +13,9 @@ export default class ReleasesController extends Component {
     this.state = {
       // default to latest track
       currentTrack: 'latest',
-
       error: null,
       isLoading: false,
       releasedChannels: this.props.releasedChannels,
-
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -45,8 +43,8 @@ export default class ReleasesController extends Component {
           const pendingRelease = pendingReleases[revisionId];
 
           if (
-            pendingRelease.channels.indexOf(channel) !== -1 &&
-            pendingRelease.revision.architectures.indexOf(arch) !== -1
+            pendingRelease.channels.includes(channel) &&
+            pendingRelease.revision.architectures.includes(arch)
           ) {
             this.undoRelease(pendingRelease.revision, channel);
           }
@@ -81,7 +79,8 @@ export default class ReleasesController extends Component {
 
       if (pendingReleases[revision.revision]) {
         const channels = pendingReleases[revision.revision].channels;
-        if (channels.indexOf(channel) !== -1) {
+
+        if (channels.includes(channel)) {
           channels.splice(channels.indexOf(channel), 1);
         }
 
@@ -232,7 +231,6 @@ export default class ReleasesController extends Component {
           archs={archs}
           isLoading={this.state.isLoading}
           pendingReleases={this.state.pendingReleases}
-
           setCurrentTrack={this.setCurrentTrack.bind(this)}
           releaseRevisions={this.releaseRevisions.bind(this)}
           promoteRevision={this.promoteRevision.bind(this)}
