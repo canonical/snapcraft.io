@@ -16,7 +16,7 @@
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
-    "watch-js": "watch -p 'static/js/**/*.js' -c 'yarn run build-js'",
+    "watch-js": "rollup -c -w",
     "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp webapp/licenses.json"
   },
   "husky": {

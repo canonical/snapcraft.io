@@ -4,6 +4,9 @@ import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
 import { uglify } from 'rollup-plugin-uglify';
 
+/* global process */
+const production = process.env.ENVIRONMENT !== 'devel';
+
 export default [
   {
     input: 'static/js/base/base.js',
@@ -15,7 +18,7 @@ export default [
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
       }),
-      uglify()
+      production && uglify()
     ],
     output: {
       file: 'static/js/dist/base.js',
@@ -34,7 +37,7 @@ export default [
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
       }),
-      uglify(),
+      production && uglify(),
       commonjs({
         include: [
           'node_modules/polylabel/**',
@@ -59,7 +62,7 @@ export default [
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
       }),
-      uglify()
+      production && uglify()
     ],
     output: {
       file: 'static/js/dist/public.js',
@@ -107,7 +110,7 @@ export default [
       replace({
         'process.env.NODE_ENV': JSON.stringify( 'production' )
       }),
-      uglify()
+      production && uglify()
     ],
     output: {
       file: 'static/js/dist/release.js',
