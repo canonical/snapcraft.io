@@ -22,19 +22,10 @@ class StorePage(TestCase):
 
     @responses.activate
     def test_index(self):
-        url = (
-            "https://api.snapcraft.io/api/v1/snaps/search"
-            "?confinement=strict,classic&q=&section=featured."
-        )
-
-        responses.add(responses.GET, url, json={}, status=200)
-
         response = self.client.get("/")
 
         assert response.status_code == 200
         self.assert_template_used("index.html")
-        self.assert_context("featured_snaps", [])
-        self.assert_context("error_info", {})
 
 
 if __name__ == "__main__":
