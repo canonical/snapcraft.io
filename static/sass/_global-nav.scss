@@ -12,10 +12,6 @@
       display: flex;
     }
 
-    .global-nav__logo-anchor {
-      padding: .6875rem 1rem .6875rem 1rem;
-    }
-
     .global-nav__links {
       flex-grow: 1;
       margin-bottom: 0;
@@ -27,6 +23,7 @@
         font-size: .875rem;
         line-height: 1.25rem;
         margin-bottom: 0;
+        margin-right: 0.6rem;
         transition: all .25s;
       }
     }
