@@ -12,7 +12,7 @@ export default class ReleasesController extends Component {
 
     this.state = {
       // default to latest track
-      currentTrack: 'latest',
+      currentTrack: this.props.options.defaultTrack || 'latest',
       error: null,
       isLoading: false,
       releasedChannels: this.props.releasedChannels,
