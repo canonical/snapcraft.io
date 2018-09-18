@@ -47,6 +47,13 @@ def after_login(resp):
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
+    if resp.email.endswith("ubuntu.com") or resp.email.endswith(
+        "canonical.com"
+    ):
+        flask.session["features_enabled"] = True
+    else:
+        flask.session["features_enabled"] = False
+
     try:
         account = dashboard.get_account(flask.session)
         flask.session["openid"] = {
