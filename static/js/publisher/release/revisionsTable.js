@@ -4,15 +4,6 @@ import PropTypes from 'prop-types';
 const RISKS = ['stable', 'candidate', 'beta', 'edge'];
 
 export default class RevisionsTable extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      // default to latest track
-      currentTrack: 'latest',
-    };
-  }
-
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
     const currentRelease = releasedChannels[channel] && releasedChannels[channel][arch];
@@ -44,9 +35,10 @@ export default class RevisionsTable extends Component {
     let targetRevision = null;
     let targetPreviousRevision = null;
     let targetHasPendingRelease = false;
+    let targetChannel = null;
 
     if (targetRisk) {
-      const targetChannel = `${track}/${targetRisk}`;
+      targetChannel = `${track}/${targetRisk}`;
 
       targetRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, targetChannel, arch);
       targetPreviousRevision = releasedChannels[targetChannel] && releasedChannels[targetChannel][arch];
@@ -73,10 +65,22 @@ export default class RevisionsTable extends Component {
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
             <span className={ hasPendingRelease ? 'p-previous-revision' : '' }>
-              { thisPreviousRevision ? thisPreviousRevision.version : '-' }
+              { thisPreviousRevision ?
+                <span className="p-revision-info">{thisPreviousRevision.version}
+                  <span className="p-revision-info__revision">({thisPreviousRevision.revision})</span>
+                </span> :
+                '–'
+              }
             </span>
             { hasPendingRelease &&
-              <span> &rarr; { thisRevision.version }</span>
+              <span>
+                {' '}
+                &rarr;
+                {' '}
+                <span className="p-revision-info">{thisRevision.version}
+                  <span className="p-revision-info__revision">({thisRevision.revision})</span>
+                </span>
+              </span>
             }
           </span>
 
@@ -90,10 +94,16 @@ export default class RevisionsTable extends Component {
         { (canBePromoted || hasPendingRelease) &&
           <div className="p-release-buttons">
             { canBePromoted &&
-              <button className="p-icon-button" onClick={this.releaseClick.bind(this, thisRevision, track, risk)} title={`Promote ${thisRevision.version} (${thisRevision.revision})`}>&uarr;</button>
+              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.releaseClick.bind(this, thisRevision, track, risk)}>
+                &uarr;
+                <span className="p-tooltip__message">{`Promote to ${targetChannel}`}</span>
+              </button>
             }
             { hasPendingRelease &&
-              <button className="p-icon-button" onClick={this.undoClick.bind(this, thisRevision, track, risk)} title={`Undo this release`}>&#x2715;</button>
+              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, thisRevision, track, risk)}>
+                &#x2715;
+                <span className="p-tooltip__message">Revert promoting this revision</span>
+              </button>
             }
           </div>
         }
@@ -103,7 +113,7 @@ export default class RevisionsTable extends Component {
 
   renderRows(releasedChannels, archs) {
     const nextChannelReleases = this.getNextReleasesData(releasedChannels, this.props.pendingReleases);
-    const track = this.state.currentTrack;
+    const track = this.props.currentTrack;
 
     return RISKS.map(risk => {
       const channel = `${track}/${risk}`;
@@ -142,12 +152,11 @@ export default class RevisionsTable extends Component {
   }
 
   renderReleasesConfirm() {
-    const { pendingReleases } = this.props;
+    const { pendingReleases, isLoading } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
 
-    const { isLoading } = this.props.fetchStatus;
     return (releasesCount > 0 &&
-      <p>
+      <div className="p-release-confirm">
         <span className="p-tooltip">
           <i className="p-icon--question" />
           {' '}
@@ -166,14 +175,16 @@ export default class RevisionsTable extends Component {
           </span>
         </span>
         {' '}
-        <button className="p-button--positive is-inline" disabled={ isLoading } onClick={ this.onApplyClick.bind(this) }>{ isLoading ? 'Loading...' : 'Apply' }</button>
-        <button className="p-button--neutral" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
-      </p>
+        <div className="p-release-confirm__buttons">
+          <button className="p-button--positive is-inline u-no-margin--bottom" disabled={ isLoading } onClick={ this.onApplyClick.bind(this) }>{ isLoading ? 'Loading...' : 'Apply' }</button>
+          <button className="p-button--neutral u-no-margin--bottom" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
+        </div>
+      </div>
     );
   }
 
   onTrackChange(event) {
-    this.setState({ currentTrack: event.target.value });
+    this.props.setCurrentTrack(event.target.value);
   }
 
   getNextReleasesData(currentReleaseData, releases) {
@@ -237,12 +248,14 @@ export default class RevisionsTable extends Component {
 RevisionsTable.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
+  currentTrack: PropTypes.string.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
-  options: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+
+  setCurrentTrack:  PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
-  fetchStatus: PropTypes.object.isRequired
 };

@@ -32,4 +32,31 @@
     right: 1rem; // match table padding
     top: .5rem;
   }
+
+  .p-revision-info {
+    display: inline-block;
+    padding-bottom: 1.2em;
+    position: relative;
+  }
+
+  .p-revision-info__revision {
+    color: $color-mid-dark;
+    font-size: .8em;
+    left: 0;
+    position: absolute;
+    top: 1.6em;
+  }
+
+  .p-release-confirm {
+    background: $color-light;
+    margin-bottom: 1em;
+    padding: 1em;
+    position: relative;
+  }
+
+  .p-release-confirm__buttons {
+    position: absolute;
+    right: 0;
+    top: 10px;
+  }
 }

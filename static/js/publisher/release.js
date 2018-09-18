@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import ReleasesController from './release/releasesController';
-import RevisionsList from './release/revisionsList';
 
 // getting list of tracks names from channel maps list
 function getTracksFromChannelMap(channelMapsList) {
@@ -97,16 +96,14 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
   const archs = getArchsFromChannelMap(channelMapsList);
 
   ReactDOM.render(
-    <Fragment>
-      <ReleasesController
-        snapName={snapName}
-        releasedChannels={releasedChannels}
-        tracks={tracks}
-        archs={archs}
-        options={options}
-      />
-      <RevisionsList revisions={releasesData.revisions} />
-    </Fragment>,
+    <ReleasesController
+      snapName={snapName}
+      releasedChannels={releasedChannels}
+      revisions={releasesData.revisions}
+      tracks={tracks}
+      archs={archs}
+      options={options}
+    />,
     document.querySelector(id)
   );
 };

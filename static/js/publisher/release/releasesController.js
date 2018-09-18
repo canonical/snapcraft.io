@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 
 import RevisionsTable from './revisionsTable';
+import RevisionsList from './revisionsList';
 import Notification from './notification';
 
 export default class ReleasesController extends Component {
@@ -10,10 +11,11 @@ export default class ReleasesController extends Component {
     super(props);
 
     this.state = {
+      // default to latest track
+      currentTrack: this.props.options.defaultTrack || 'latest',
       error: null,
       isLoading: false,
       releasedChannels: this.props.releasedChannels,
-
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -27,9 +29,27 @@ export default class ReleasesController extends Component {
     };
   }
 
+  setCurrentTrack(track) {
+    this.setState({ currentTrack: track });
+  }
+
   promoteRevision(revision, channel) {
     this.setState((state) => {
       const { pendingReleases } = state;
+
+      // cancel any other pending release for the same channel in same architectures
+      revision.architectures.forEach((arch) => {
+        Object.keys(pendingReleases).forEach((revisionId) => {
+          const pendingRelease = pendingReleases[revisionId];
+
+          if (
+            pendingRelease.channels.includes(channel) &&
+            pendingRelease.revision.architectures.includes(arch)
+          ) {
+            this.undoRelease(pendingRelease.revision, channel);
+          }
+        });
+      });
 
       if (!pendingReleases[revision.revision]) {
         pendingReleases[revision.revision] = {
@@ -59,7 +79,8 @@ export default class ReleasesController extends Component {
 
       if (pendingReleases[revision.revision]) {
         const channels = pendingReleases[revision.revision].channels;
-        if (channels.indexOf(channel) !== -1) {
+
+        if (channels.includes(channel)) {
           channels.splice(channels.indexOf(channel), 1);
         }
 
@@ -193,7 +214,7 @@ export default class ReleasesController extends Component {
   }
 
   render() {
-    const { archs, tracks, options } = this.props;
+    const { archs, tracks } = this.props;
     const { releasedChannels } = this.state;
 
     return (
@@ -205,16 +226,24 @@ export default class ReleasesController extends Component {
         }
         <RevisionsTable
           releasedChannels={releasedChannels}
+          currentTrack={this.state.currentTrack}
           tracks={tracks}
           archs={archs}
-          options={options}
-          releaseRevisions={this.releaseRevisions.bind(this)}
-          fetchStatus={this.state}
-
+          isLoading={this.state.isLoading}
           pendingReleases={this.state.pendingReleases}
+          setCurrentTrack={this.setCurrentTrack.bind(this)}
+          releaseRevisions={this.releaseRevisions.bind(this)}
           promoteRevision={this.promoteRevision.bind(this)}
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
+        />
+        <RevisionsList
+          currentTrack={this.state.currentTrack}
+          revisions={this.props.revisions}
+          pendingReleases={this.state.pendingReleases}
+          releasedChannels={releasedChannels}
+          promoteRevision={this.promoteRevision.bind(this)}
+          undoRelease={this.undoRelease.bind(this)}
         />
       </Fragment>
     );
@@ -224,6 +253,7 @@ export default class ReleasesController extends Component {
 ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
+  revisions: PropTypes.array.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
