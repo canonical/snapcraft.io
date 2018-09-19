@@ -33,6 +33,42 @@ export default class ReleasesController extends Component {
     this.setState({ currentTrack: track });
   }
 
+  // get channel map data updated with any pending releases
+  getNextReleasedChannels() {
+    const nextReleaseData = JSON.parse(JSON.stringify(this.state.releasedChannels));
+    const { pendingReleases } = this.state;
+
+    // for each release
+    Object.keys(pendingReleases).forEach(releasedRevision => {
+      pendingReleases[releasedRevision].channels.forEach(channel => {
+        const revision = pendingReleases[releasedRevision].revision;
+
+        if (!nextReleaseData[channel]) {
+          nextReleaseData[channel] = {};
+        }
+
+        revision.architectures.forEach(arch => {
+          nextReleaseData[channel][arch] = revision;
+        });
+      });
+    });
+
+    return nextReleaseData;
+  }
+
+  promoteChannel(channel, targetChannel) {
+    const releasedChannels = this.getNextReleasedChannels();
+    const archRevisions = releasedChannels[channel];
+
+    if (archRevisions) {
+      Object.keys(archRevisions).forEach((arch) => {
+        this.promoteRevision(archRevisions[arch], targetChannel);
+      });
+    }
+  }
+
+  // TODO:
+  // - ignore if revision is already in given channel
   promoteRevision(revision, channel) {
     this.setState((state) => {
       const { pendingReleases } = state;
@@ -231,9 +267,11 @@ export default class ReleasesController extends Component {
           archs={archs}
           isLoading={this.state.isLoading}
           pendingReleases={this.state.pendingReleases}
+          getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
           releaseRevisions={this.releaseRevisions.bind(this)}
           promoteRevision={this.promoteRevision.bind(this)}
+          promoteChannel={this.promoteChannel.bind(this)}
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
         />

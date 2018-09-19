@@ -111,16 +111,95 @@ export default class RevisionsTable extends Component {
     );
   }
 
+  promoteChannelClick(channel, targetChannel, event) {
+    this.props.promoteChannel(channel, targetChannel);
+    this.closeAllDropdowns();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  dropdownButtonClick(event) {
+    this.closeAllDropdowns();
+    const controlId = event.target.closest('[aria-controls]').getAttribute('aria-controls');
+
+    if (controlId) {
+      const controlsEl = document.getElementById(controlId);
+      controlsEl.setAttribute('aria-hidden', false);
+    }
+
+    event.stopPropagation();
+  }
+
+  closeAllDropdowns() {
+    [].slice.call(document.querySelectorAll(".p-contextual-menu__dropdown")).forEach((dropdown) => {
+      dropdown.setAttribute('aria-hidden', true);
+    });
+  }
+
+  componentDidMount() {
+    // use window instead of document, as React catches all events in document
+    window.addEventListener('click', this.closeAllDropdowns);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('click', this.closeAllDropdowns);
+  }
+
   renderRows(releasedChannels, archs) {
-    const nextChannelReleases = this.getNextReleasesData(releasedChannels, this.props.pendingReleases);
+    const nextChannelReleases = this.props.getNextReleasedChannels();
     const track = this.props.currentTrack;
 
     return RISKS.map(risk => {
       const channel = `${track}/${risk}`;
 
+      // TODO: check if there are any revisions in the channel
+      let canBePromoted = true;
+
+      if (risk === 'stable') {
+        canBePromoted = false;
+      }
+
+      // TODO: show cell buttons only on hover
+      const dropdownId = `promote-dropdown-${channel}`;
       return (
         <tr key={channel}>
-          <td>{ channel }</td>
+          <td className="">
+            <span className="p-channel-buttons">
+              { canBePromoted &&
+                <button
+                  className="p-button--base p-icon-button p-contextual-menu--left"
+                  aria-controls={dropdownId}
+                  onClick={this.dropdownButtonClick.bind(this)}
+                >
+                  <i className="p-icon--contextual-menu"></i>
+                  <span className="p-contextual-menu__dropdown" id={dropdownId} aria-hidden="true">
+                    <span className="p-contextual-menu__group">
+                      <span className="p-contextual-menu__item">Promote to:</span>
+                      {
+                        RISKS.map((targetRisk, i) => {
+                          if (i < RISKS.indexOf(risk)) {
+                            return (
+                              <a
+                                className="p-contextual-menu__link is-indented"
+                                href="#"
+                                key={`promote-to-${track}/${targetRisk}`}
+                                onClick={this.promoteChannelClick.bind(this, channel, `${track}/${targetRisk}`)}
+                              >
+                                {`${track}/${targetRisk}`}
+                              </a>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })
+                      }
+                    </span>
+                  </span>
+                </button>
+              }
+            </span>
+            { channel }
+          </td>
           {
             archs.map(arch => this.renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases))
           }
@@ -187,27 +266,6 @@ export default class RevisionsTable extends Component {
     this.props.setCurrentTrack(event.target.value);
   }
 
-  getNextReleasesData(currentReleaseData, releases) {
-    const nextReleaseData = JSON.parse(JSON.stringify(currentReleaseData));
-
-    // for each release
-    Object.keys(releases).forEach(releasedRevision => {
-      releases[releasedRevision].channels.forEach(channel => {
-        const revision = releases[releasedRevision].revision;
-
-        if (!nextReleaseData[channel]) {
-          nextReleaseData[channel] = {};
-        }
-
-        revision.architectures.forEach(arch => {
-          nextReleaseData[channel][arch] = revision;
-        });
-      });
-    });
-
-    return nextReleaseData;
-  }
-
   onRevertClick() {
     this.props.clearPendingReleases();
   }
@@ -252,10 +310,11 @@ RevisionsTable.propTypes = {
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-
+  getNextReleasedChannels: PropTypes.func.isRequired,
   setCurrentTrack:  PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
+  promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
 };

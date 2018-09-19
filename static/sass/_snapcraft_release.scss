@@ -59,4 +59,24 @@
     right: 0;
     top: 10px;
   }
+
+  .p-channel-buttons {
+    display: inline-block;
+    margin-right: .5rem;
+    width: 2rem;
+  }
+
+
+  .p-contextual-menu__item {
+    @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
+
+    &:hover {
+      background: transparent;
+      cursor: default;
+    }
+  }
+
+  .p-contextual-menu__link.is-indented {
+    padding-left: 1rem;
+  }
 }
