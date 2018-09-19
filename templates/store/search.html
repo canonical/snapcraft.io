@@ -72,7 +72,7 @@
                   </h3>
                   <ul class="p-media-object__meta-list u-no-margin">
                     <li class="p-media-object__meta-list-item">
-                      <span class="u-off-screen">Publisher: </span>{{ snap.publisher }} ({{ snap.origin }})
+                      <span class="u-off-screen">Publisher: </span>{{ display_name(snap.publisher, snap.origin) }}
                       {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
                         <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ snap.package_name }}-tooltip">
                           <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
