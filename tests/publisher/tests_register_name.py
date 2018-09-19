@@ -4,13 +4,13 @@ from tests.publisher.endpoint_testing import BaseTestCases
 
 class GetRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = "/account/register-snap"
+        endpoint_url = "/register-snap"
         super().setUp(snap_name=None, endpoint_url=endpoint_url)
 
 
 class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
-        endpoint_url = "/account/register-snap"
+        endpoint_url = "/register-snap"
         super().setUp(snap_name=None, api_url=None, endpoint_url=endpoint_url)
 
     @responses.activate
@@ -25,7 +25,7 @@ class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
 class GetReserveNamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = (
-            "/account/register-snap"
+            "/register-snap"
             "?snap_name=test-snap&is_private=False&conflict=True"
         )
         super().setUp(snap_name=None, api_url=None, endpoint_url=endpoint_url)
@@ -44,7 +44,7 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
 
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = "/account/register-snap"
+        endpoint_url = "/register-snap"
 
         super().setUp(
             snap_name=None, endpoint_url=endpoint_url, method_endpoint="POST"
@@ -53,8 +53,8 @@ class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
-        endpoint_url = "/account/register-snap"
-        api_url = "https://dashboard.snapcraft.io/dev/api/" "register-name/"
+        endpoint_url = "/register-snap"
+        api_url = "https://dashboard.snapcraft.io/dev/api/register-name/"
 
         data = {"snap-name": "test-snap"}
 
@@ -168,9 +168,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         assert response.status_code == 302
         self.assertIn("snap_name=test-snap", response.location)
         self.assertIn("is_private=False", response.location)
-        self.assertIn(
-            "http://localhost/account/register-snap", response.location
-        )
+        self.assertIn("http://localhost/register-snap", response.location)
 
     @responses.activate
     def test_claim_dispute(self):
@@ -180,4 +178,4 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, data=self.data)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        self.assertEqual(response.location, "http://localhost/account/details")

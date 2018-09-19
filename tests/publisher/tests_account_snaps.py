@@ -8,7 +8,7 @@ responses.mock.assert_all_requests_are_fired = True
 
 class AccountSnapsNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = "/account/snaps"
+        endpoint_url = "/snaps"
 
         super().setUp(snap_name=None, endpoint_url=endpoint_url)
 
@@ -16,7 +16,7 @@ class AccountSnapsNotAuth(BaseTestCases.EndpointLoggedOut):
 class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         api_url = "https://dashboard.snapcraft.io/dev/api/account"
-        endpoint_url = "/account/snaps"
+        endpoint_url = "/snaps"
 
         super().setUp(
             snap_name=None,

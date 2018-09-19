@@ -8,7 +8,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class MetricsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/account/snaps/{}/metrics".format(snap_name)
+        endpoint_url = "/{}/metrics".format(snap_name)
 
         super().setUp(snap_name=snap_name, endpoint_url=endpoint_url)
 
@@ -19,7 +19,7 @@ class GetMetricsGetInfoPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
-        endpoint_url = "/account/snaps/{}/metrics".format(snap_name)
+        endpoint_url = "/{}/metrics".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -43,7 +43,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.info_url, json=payload, status=200)
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/metrics"
-        endpoint_url = "/account/snaps/{}/metrics".format(snap_name)
+        endpoint_url = "/{}/metrics".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,

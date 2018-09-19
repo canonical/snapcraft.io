@@ -116,7 +116,7 @@ class PublisherPage(TestCase):
         self._log_in(self.client)
         response = self.client.get("/account")
         self.assertEqual(302, response.status_code)
-        self.assertEqual("http://localhost/account/snaps/", response.location)
+        self.assertEqual("http://localhost/snaps", response.location)
 
     # /account/username endpoint
     # ===
