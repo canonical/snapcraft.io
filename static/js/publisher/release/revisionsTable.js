@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+import PromoteButton from './promoteButton';
+
 const RISKS = ['stable', 'candidate', 'beta', 'edge'];
 
 export default class RevisionsTable extends Component {
@@ -112,40 +114,6 @@ export default class RevisionsTable extends Component {
     );
   }
 
-  promoteChannelClick(channel, targetChannel, event) {
-    this.props.promoteChannel(channel, targetChannel);
-    this.closeAllDropdowns();
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  dropdownButtonClick(event) {
-    this.closeAllDropdowns();
-    const controlId = event.target.closest('[aria-controls]').getAttribute('aria-controls');
-
-    if (controlId) {
-      const controlsEl = document.getElementById(controlId);
-      controlsEl.setAttribute('aria-hidden', false);
-    }
-
-    event.stopPropagation();
-  }
-
-  closeAllDropdowns() {
-    [].slice.call(document.querySelectorAll(".p-contextual-menu__dropdown")).forEach((dropdown) => {
-      dropdown.setAttribute('aria-hidden', true);
-    });
-  }
-
-  componentDidMount() {
-    // use window instead of document, as React catches all events in document
-    window.addEventListener('click', this.closeAllDropdowns);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('click', this.closeAllDropdowns);
-  }
-
   renderRows(releasedChannels, archs) {
     const nextChannelReleases = this.props.getNextReleasedChannels();
     const track = this.props.currentTrack;
@@ -164,42 +132,16 @@ export default class RevisionsTable extends Component {
       }
 
       // TODO: show cell buttons only on hover
-      const dropdownId = `promote-dropdown-${channel}`;
       return (
         <tr key={channel}>
           <td>
             <span className="p-channel-buttons">
               { canBePromoted &&
-                <button
-                  className="p-button--base p-icon-button p-contextual-menu--left"
-                  aria-controls={dropdownId}
-                  onClick={this.dropdownButtonClick.bind(this)}
-                >
-                  <i className="p-icon--contextual-menu"></i>
-                  <span className="p-contextual-menu__dropdown" id={dropdownId} aria-hidden="true">
-                    <span className="p-contextual-menu__group">
-                      <span className="p-contextual-menu__item">Promote to:</span>
-                      {
-                        RISKS.map((targetRisk, i) => {
-                          if (i < RISKS.indexOf(risk)) {
-                            return (
-                              <a
-                                className="p-contextual-menu__link is-indented"
-                                href="#"
-                                key={`promote-to-${track}/${targetRisk}`}
-                                onClick={this.promoteChannelClick.bind(this, channel, `${track}/${targetRisk}`)}
-                              >
-                                {`${track}/${targetRisk}`}
-                              </a>
-                            );
-                          } else {
-                            return null;
-                          }
-                        })
-                      }
-                    </span>
-                  </span>
-                </button>
+                <PromoteButton
+                  track={track}
+                  risk={risk}
+                  promoteChannel={this.props.promoteChannel}
+                />
               }
             </span>
             { channel }
