@@ -376,6 +376,7 @@ def store_blueprint(store_query=None):
             "version": last_version,
             "license": details["snap"]["license"],
             "publisher": details["snap"]["publisher"]["display-name"],
+            "username": details["snap"]["publisher"]["username"],
             "screenshots": screenshots,
             "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),

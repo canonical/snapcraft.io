@@ -73,3 +73,13 @@ def format_number(number: int):
     with a comma between every thousands
     """
     return "{:,}".format(number)
+
+
+def display_name(display_name, username):
+    """Tempalate function that returns the displayed name if the username
+    is the same, or the dispayed name and the username if differents
+    """
+    if display_name.lower() == username.lower():
+        return display_name
+    else:
+        return f"{display_name} ({username})"
