@@ -198,7 +198,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "description": "This is a description",
             "license": "license",
             "media": [],
-            "publisher": {"display-name": "The publisher"},
+            "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
@@ -245,6 +245,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("license", "license")
         self.assert_context("icon_url", None)
         self.assert_context("publisher_name", "The publisher")
+        self.assert_context("username", "toto")
         self.assert_context("screenshot_urls", [])
         self.assert_context("contact", "contact adress")
         self.assert_context("website", "website_url")
@@ -273,7 +274,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "description": "This is a description",
             "license": "license",
             "media": [],
-            "publisher": {"display-name": "The publisher"},
+            "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
@@ -325,6 +326,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("license", "license")
         self.assert_context("icon_url", None)
         self.assert_context("publisher_name", "The publisher")
+        self.assert_context("username", "toto")
         self.assert_context("screenshot_urls", [])
         self.assert_context("snap_title", "Snap title")
         self.assert_context("is_on_stable", False)
@@ -362,7 +364,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "description": "This is a description",
             "license": "license",
             "media": [],
-            "publisher": {"display-name": "The publisher"},
+            "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
