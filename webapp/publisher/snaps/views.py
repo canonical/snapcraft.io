@@ -238,6 +238,7 @@ def get_listing_snap(snap_name):
         "license": snap_details["license"],
         "icon_url": icon_urls[0] if icon_urls else None,
         "publisher_name": snap_details["publisher"]["display-name"],
+        "username": snap_details["publisher"]["username"],
         "screenshot_urls": screenshot_urls,
         "contact": snap_details["contact"],
         "private": snap_details["private"],
