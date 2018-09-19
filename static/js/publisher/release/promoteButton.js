@@ -11,8 +11,8 @@ export default class PromoteButton extends Component {
     window.removeEventListener('click', this.closeAllDropdowns);
   }
 
-  promoteChannelClick(targetChannel, event) {
-    this.props.promoteChannel(targetChannel);
+  promoteToChannelClick(targetChannel, event) {
+    this.props.promoteToChannel(targetChannel);
     this.closeAllDropdowns();
     event.preventDefault(); // prevent link from changing URL
     event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
@@ -38,12 +38,12 @@ export default class PromoteButton extends Component {
   }
 
   render() {
-    const { track } = this.props;
+    const { position, track } = this.props;
+    const menuClass =  'p-contextual-menu' + (position ? `--${position}` : '');
 
     return (
       <button
-        className="p-promote-button p-button--base p-icon-button p-contextual-menu--left"
-
+        className={`p-promote-button p-button--base p-icon-button ${menuClass}`}
         onClick={this.dropdownButtonClick.bind(this)}
       >
         <i className="p-icon--contextual-menu"></i>
@@ -57,7 +57,7 @@ export default class PromoteButton extends Component {
                     className="p-contextual-menu__link is-indented"
                     href="#"
                     key={`promote-to-${track}/${targetRisk}`}
-                    onClick={this.promoteChannelClick.bind(this, `${track}/${targetRisk}`)}
+                    onClick={this.promoteToChannelClick.bind(this, `${track}/${targetRisk}`)}
                   >
                     {`${track}/${targetRisk}`}
                   </a>
@@ -72,7 +72,8 @@ export default class PromoteButton extends Component {
 }
 
 PromoteButton.propTypes = {
+  position: PropTypes.oneOf(['left', 'center']), // right is by default
   track: PropTypes.string.isRequired,
   targetRisks: PropTypes.array.isRequired,
-  promoteChannel: PropTypes.func.isRequired
+  promoteToChannel: PropTypes.func.isRequired
 };

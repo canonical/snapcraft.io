@@ -2,6 +2,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+import PromoteButton from './promoteButton';
+
+const RISKS = ['stable', 'candidate', 'beta', 'edge'];
+
 // TODO:
 // - don't allow releasing multiple revisions into same arch/channel
 
@@ -17,9 +21,7 @@ export default class RevisionsList extends Component {
         canBeReleased = false;
       }
 
-      if (this.isAlreadyReleased(revision)) {
-        canBeReleased = false;
-      }
+      // TODO: disable channels revision is released to currently
 
       return (
         <tr key={revision.revision}>
@@ -38,10 +40,11 @@ export default class RevisionsList extends Component {
 
           <td className="u-align--right">
             { canBeReleased &&
-              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.releaseClick.bind(this, revision)}>
-                &uarr;
-                <span className="p-tooltip__message">{`Promote to ${this.props.currentTrack}/edge`}</span>
-              </button>
+              <PromoteButton
+                track={this.props.currentTrack}
+                targetRisks={RISKS}
+                promoteToChannel={this.onPromoteToChannel.bind(this, revision)}
+              />
             }
             { hasPendingRelease &&
               <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, revision)}>
@@ -55,12 +58,18 @@ export default class RevisionsList extends Component {
     });
   }
 
-  releaseClick(revision) {
-    this.props.promoteRevision(revision, `${this.props.currentTrack}/edge`);
+  onPromoteToChannel(revision, targetChannel) {
+    this.props.promoteRevision(revision, targetChannel);
   }
 
+  // TODO:
+  // - undo doesn't work if release is in channel different then edge
+  // - do it nicer?
   undoClick(revision) {
     this.props.undoRelease(revision, `${this.props.currentTrack}/edge`);
+    this.props.undoRelease(revision, `${this.props.currentTrack}/beta`);
+    this.props.undoRelease(revision, `${this.props.currentTrack}/candidate`);
+    this.props.undoRelease(revision, `${this.props.currentTrack}/stable`);
   }
 
   isAlreadyReleased(revision) {
@@ -83,7 +92,7 @@ export default class RevisionsList extends Component {
               <th width="12%" scope="col">Architecture</th>
               <th width="30%" scope="col">Channels</th>
               <th width="15%" scope="col" className="u-align--right">Submission date</th>
-              <th width="10%" scope="col" className="u-align--right">Release</th>
+              <th width="10%" scope="col" className="u-align--right">Actions</th>
             </tr>
           </thead>
 

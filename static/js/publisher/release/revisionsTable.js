@@ -114,7 +114,7 @@ export default class RevisionsTable extends Component {
     );
   }
 
-  onPromoteChannel(channel, targetChannel) {
+  onPromoteToChannel(channel, targetChannel) {
     this.props.promoteChannel(channel, targetChannel);
   }
 
@@ -142,9 +142,10 @@ export default class RevisionsTable extends Component {
             <span className="p-channel-buttons">
               { canBePromoted &&
                 <PromoteButton
+                  position="left"
                   track={track}
                   targetRisks={RISKS.slice(0, RISKS.indexOf(risk))}
-                  promoteChannel={this.onPromoteChannel.bind(this, channel)}
+                  promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
               }
             </span>
