@@ -184,7 +184,7 @@ def snap_posts(snap):
         try:
             blog_articles, total_pages = api.get_articles(blog_tags_ids, 3)
         except ApiError:
-            blog_articles = None
+            blog_articles = []
 
         for article in blog_articles:
             transformed_article = logic.transform_article(
