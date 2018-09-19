@@ -59,6 +59,7 @@ export default class RevisionsTable extends Component {
 
     return (
       <td
+        className="p-release-table__cell"
         style={ { position: 'relative' } }
         key={`${channel}/${arch}`}
       >
@@ -152,10 +153,13 @@ export default class RevisionsTable extends Component {
     return RISKS.map(risk => {
       const channel = `${track}/${risk}`;
 
-      // TODO: check if there are any revisions in the channel
       let canBePromoted = true;
 
       if (risk === 'stable') {
+        canBePromoted = false;
+      }
+
+      if (!nextChannelReleases[channel]) {
         canBePromoted = false;
       }
 
@@ -163,7 +167,7 @@ export default class RevisionsTable extends Component {
       const dropdownId = `promote-dropdown-${channel}`;
       return (
         <tr key={channel}>
-          <td className="">
+          <td>
             <span className="p-channel-buttons">
               { canBePromoted &&
                 <button
