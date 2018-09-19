@@ -28,32 +28,8 @@ export default class RevisionsTable extends Component {
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
     const channel = `${track}/${risk}`;
 
-    let canBePromoted = false;
     let thisRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, channel, arch);
     let thisPreviousRevision = releasedChannels[channel] && releasedChannels[channel][arch];
-
-    // check for revision and pending release in target channel (risk - 1)
-    let targetRisk = RISKS[RISKS.indexOf(risk) - 1];
-    let targetRevision = null;
-    let targetPreviousRevision = null;
-    let targetHasPendingRelease = false;
-    let targetChannel = null;
-
-    if (targetRisk) {
-      targetChannel = `${track}/${targetRisk}`;
-
-      targetRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, targetChannel, arch);
-      targetPreviousRevision = releasedChannels[targetChannel] && releasedChannels[targetChannel][arch];
-      targetHasPendingRelease = (
-        targetRevision && (!targetPreviousRevision || (targetPreviousRevision.revision !== targetRevision.revision))
-      );
-    }
-
-    if (risk !== 'stable' && thisRevision && !targetHasPendingRelease &&
-      (!targetRevision || targetRevision.revision !== thisRevision.revision)
-    ) {
-      canBePromoted = true;
-    }
 
     const hasPendingRelease = (
       thisRevision && (!thisPreviousRevision || (thisPreviousRevision.revision !== thisRevision.revision))
@@ -94,20 +70,12 @@ export default class RevisionsTable extends Component {
             }
           </span>
         </span>
-        { (canBePromoted || hasPendingRelease) &&
+        { hasPendingRelease &&
           <div className="p-release-buttons">
-            { canBePromoted &&
-              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.releaseClick.bind(this, thisRevision, track, risk)}>
-                &uarr;
-                <span className="p-tooltip__message">{`Promote to ${targetChannel}`}</span>
-              </button>
-            }
-            { hasPendingRelease &&
-              <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, thisRevision, track, risk)}>
-                &#x2715;
-                <span className="p-tooltip__message">Revert promoting this revision</span>
-              </button>
-            }
+            <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, thisRevision, track, risk)}>
+              &#x2715;
+              <span className="p-tooltip__message">Revert promoting this revision</span>
+            </button>
           </div>
         }
       </td>
@@ -135,7 +103,6 @@ export default class RevisionsTable extends Component {
         canBePromoted = false;
       }
 
-      // TODO: show cell buttons only on hover
       return (
         <tr key={channel}>
           <td>
