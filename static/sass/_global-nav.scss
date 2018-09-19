@@ -1,10 +1,11 @@
 @mixin global-nav {
+  $white-color: rgba(255, 255, 255, 1);
+
   .global-nav {
     align-items: center;
     background: $color-navigation-background;
-    border-bottom: 1px solid $color-x-dark;
     display: flex;
-    min-height: 1.5rem;
+    min-height: 2rem;
     position: relative;
 
     .global-nav__row {
@@ -17,12 +18,12 @@
       text-align: right;
 
       .global-nav__link-anchor {
-        color: #fff;
+        color: $white-color;
         display: inline-block;
         font-size: .875rem;
         line-height: 1.25rem;
         margin-bottom: 0;
-        padding: 0;
+        margin-right: .6rem;
         transition: all .25s;
       }
     }
