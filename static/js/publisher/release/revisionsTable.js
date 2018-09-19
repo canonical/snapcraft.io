@@ -114,6 +114,10 @@ export default class RevisionsTable extends Component {
     );
   }
 
+  onPromoteChannel(channel, targetChannel) {
+    this.props.promoteChannel(channel, targetChannel);
+  }
+
   renderRows(releasedChannels, archs) {
     const nextChannelReleases = this.props.getNextReleasedChannels();
     const track = this.props.currentTrack;
@@ -139,8 +143,8 @@ export default class RevisionsTable extends Component {
               { canBePromoted &&
                 <PromoteButton
                   track={track}
-                  risk={risk}
-                  promoteChannel={this.props.promoteChannel}
+                  targetRisks={RISKS.slice(0, RISKS.indexOf(risk))}
+                  promoteChannel={this.onPromoteChannel.bind(this, channel)}
                 />
               }
             </span>

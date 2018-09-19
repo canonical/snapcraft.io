@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-const RISKS = ['stable', 'candidate', 'beta', 'edge'];
-
 export default class PromoteButton extends Component {
   componentDidMount() {
     // use window instead of document, as React catches all events in document
@@ -13,8 +11,8 @@ export default class PromoteButton extends Component {
     window.removeEventListener('click', this.closeAllDropdowns);
   }
 
-  promoteChannelClick(channel, targetChannel, event) {
-    this.props.promoteChannel(channel, targetChannel);
+  promoteChannelClick(targetChannel, event) {
+    this.props.promoteChannel(targetChannel);
     this.closeAllDropdowns();
     event.preventDefault(); // prevent link from changing URL
     event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
@@ -22,11 +20,12 @@ export default class PromoteButton extends Component {
 
   dropdownButtonClick(event) {
     this.closeAllDropdowns();
-    const controlId = event.target.closest('[aria-controls]').getAttribute('aria-controls');
+    const dropdownEl = event.target
+      .closest('.p-promote-button')
+      .querySelector('.p-contextual-menu__dropdown');
 
-    if (controlId) {
-      const controlsEl = document.getElementById(controlId);
-      controlsEl.setAttribute('aria-hidden', false);
+    if (dropdownEl) {
+      dropdownEl.setAttribute('aria-hidden', false);
     }
 
     event.stopPropagation();
@@ -39,37 +38,30 @@ export default class PromoteButton extends Component {
   }
 
   render() {
-    const { track, risk } = this.props;
-    const channel = `${track}/${risk}`;
-
-    const dropdownId = `promote-dropdown-${channel}`;
+    const { track } = this.props;
 
     return (
       <button
-        className="p-button--base p-icon-button p-contextual-menu--left"
-        aria-controls={dropdownId}
+        className="p-promote-button p-button--base p-icon-button p-contextual-menu--left"
+
         onClick={this.dropdownButtonClick.bind(this)}
       >
         <i className="p-icon--contextual-menu"></i>
-        <span className="p-contextual-menu__dropdown" id={dropdownId} aria-hidden="true">
+        <span className="p-contextual-menu__dropdown" aria-hidden="true">
           <span className="p-contextual-menu__group">
             <span className="p-contextual-menu__item">Promote to:</span>
             {
-              RISKS.map((targetRisk, i) => {
-                if (i < RISKS.indexOf(risk)) {
-                  return (
-                    <a
-                      className="p-contextual-menu__link is-indented"
-                      href="#"
-                      key={`promote-to-${track}/${targetRisk}`}
-                      onClick={this.promoteChannelClick.bind(this, channel, `${track}/${targetRisk}`)}
-                    >
-                      {`${track}/${targetRisk}`}
-                    </a>
-                  );
-                } else {
-                  return null;
-                }
+              this.props.targetRisks.map((targetRisk) => {
+                return (
+                  <a
+                    className="p-contextual-menu__link is-indented"
+                    href="#"
+                    key={`promote-to-${track}/${targetRisk}`}
+                    onClick={this.promoteChannelClick.bind(this, `${track}/${targetRisk}`)}
+                  >
+                    {`${track}/${targetRisk}`}
+                  </a>
+                );
               })
             }
           </span>
@@ -81,8 +73,6 @@ export default class PromoteButton extends Component {
 
 PromoteButton.propTypes = {
   track: PropTypes.string.isRequired,
-  risk: PropTypes.string.isRequired,
-  // TODO: only needed when not computing tracks from risk (?)
-  // targetChannels: PropTypes.array.isRequired,
+  targetRisks: PropTypes.array.isRequired,
   promoteChannel: PropTypes.func.isRequired
 };
