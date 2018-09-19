@@ -1,10 +1,11 @@
-import flask
 import os
 
-from flask_openid import OpenID
+import flask
 
+from flask_openid import OpenID
 from webapp import authentication
 from webapp.api import dashboard
+from webapp.api.exceptions import ApiError, ApiResponseError
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 
 login = flask.Blueprint(
@@ -26,7 +27,16 @@ def login_handler():
     if authentication.is_authenticated(flask.session):
         return flask.redirect(open_id.get_next_url())
 
-    root = authentication.request_macaroon()
+    try:
+        root = authentication.request_macaroon()
+    except ApiResponseError as api_response_error:
+        if api_response_error.status_code == 401:
+            return flask.redirect(flask.url_for(".logout"))
+        else:
+            return flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        return flask.abort(502, str(api_error))
+
     openid_macaroon = MacaroonRequest(
         caveat_id=authentication.get_caveat_id(root)
     )

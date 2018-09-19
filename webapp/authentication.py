@@ -1,11 +1,8 @@
 import os
-import requests
+from webapp.api import sso
 from pymacaroons import Macaroon
 from urllib.parse import urlparse
 
-DASHBOARD_API = os.getenv(
-    "DASHBOARD_API", "https://dashboard.snapcraft.io/dev/api/"
-)
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
 
@@ -61,21 +58,11 @@ def request_macaroon():
     Request a macaroon from dashboard.
     Returns the macaroon.
     """
-    url = "".join([DASHBOARD_API, "acl/"])
-    response = requests.request(
-        url=url,
-        method="POST",
-        json={
-            "permissions": ["package_access", "package_upload", "edit_account"]
-        },
-        headers={
-            "Accept": "application/json, application/hal+json",
-            "Content-Type": "application/json",
-            "Cache-Control": "no-cache",
-        },
+    response = sso.post_macaroon(
+        {"permissions": ["package_access", "package_upload", "edit_account"]}
     )
 
-    return response.json()["macaroon"]
+    return response["macaroon"]
 
 
 def get_refreshed_discharge(discharge):
@@ -83,19 +70,9 @@ def get_refreshed_discharge(discharge):
     Get a refresh macaroon if the macaroon is not valid anymore.
     Returns the new discharge macaroon.
     """
-    url = "".join([LOGIN_URL, "/api/v2/tokens/refresh"])
-    response = requests.request(
-        url=url,
-        method="POST",
-        json={"discharge_macaroon": discharge},
-        headers={
-            "Accept": "application/json, application/hal+json",
-            "Content-Type": "application/json",
-            "Cache-Control": "no-cache",
-        },
-    )
+    response = sso.get_refreshed_discharge({"discharge_macaroon": discharge})
 
-    return response.json()["discharge_macaroon"]
+    return response["discharge_macaroon"]
 
 
 def is_macaroon_expired(headers):

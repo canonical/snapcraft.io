@@ -10,6 +10,7 @@ from webapp import authentication
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
+    ApiResponseError,
     ApiResponseErrorList,
     ApiTimeoutError,
     MacaroonRefreshRequired,
@@ -28,11 +29,19 @@ publisher_snaps = flask.Blueprint(
 
 
 def refresh_redirect(path):
-    macaroon_discharge = authentication.get_refreshed_discharge(
-        flask.session["macaroon_discharge"]
-    )
-    flask.session["macaroon_discharge"] = macaroon_discharge
+    try:
+        macaroon_discharge = authentication.get_refreshed_discharge(
+            flask.session["macaroon_discharge"]
+        )
+    except ApiResponseError as api_response_error:
+        if api_response_error.status_code == 401:
+            return flask.redirect(flask.url_for("login.logout"))
+        else:
+            return flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        return flask.abort(502, str(api_error))
 
+    flask.session["macaroon_discharge"] = macaroon_discharge
     return flask.redirect(path)
 
 
