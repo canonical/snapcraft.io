@@ -10,18 +10,35 @@ const RISKS = ['stable', 'candidate', 'beta', 'edge'];
 // - don't allow releasing multiple revisions into same arch/channel
 
 export default class RevisionsList extends Component {
+  isRevisionReleased(revision, channel) {
+    const releasedChannels = this.props.getNextReleasedChannels();
+
+    const channelReleases = releasedChannels[channel];
+    if (channelReleases) {
+      return Object.keys(channelReleases).some((arch) => {
+        return channelReleases[arch].revision === revision.revision;
+      });
+    }
+    return false;
+  }
+
   renderRows(revisions) {
     return revisions.map((revision) => {
       const uploadDate = moment(revision.created_at);
       let canBeReleased = true;
       let hasPendingRelease = false;
 
-      if (this.props.pendingReleases[revision.revision]) {
-        hasPendingRelease = true;
+      const targetRisks = RISKS.filter((risk) => {
+        return !this.isRevisionReleased(revision, `${this.props.currentTrack}/${risk}`);
+      });
+
+      if (targetRisks.length === 0) {
         canBeReleased = false;
       }
 
-      // TODO: disable channels revision is released to currently
+      if (!canBeReleased && this.props.pendingReleases[revision.revision]) {
+        hasPendingRelease = true;
+      }
 
       return (
         <tr key={revision.revision}>
@@ -42,14 +59,14 @@ export default class RevisionsList extends Component {
             { canBeReleased &&
               <PromoteButton
                 track={this.props.currentTrack}
-                targetRisks={RISKS}
+                targetRisks={targetRisks}
                 promoteToChannel={this.onPromoteToChannel.bind(this, revision)}
               />
             }
             { hasPendingRelease &&
               <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, revision)}>
                 &#x2715;
-                <span className="p-tooltip__message">Revert promoting this revision</span>
+                <span className="p-tooltip__message">Cancel promoting this revision</span>
               </button>
             }
           </td>
@@ -72,13 +89,7 @@ export default class RevisionsList extends Component {
     this.props.undoRelease(revision, `${this.props.currentTrack}/stable`);
   }
 
-  isAlreadyReleased(revision) {
-    return Object.keys(this.props.releasedChannels).some((channel) => {
-      return Object.keys(this.props.releasedChannels[channel]).some((arch) => {
-        return this.props.releasedChannels[channel][arch].revision === revision.revision;
-      });
-    });
-  }
+
 
   render() {
     return (
@@ -109,7 +120,7 @@ RevisionsList.propTypes = {
   currentTrack: PropTypes.string.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   revisions: PropTypes.object.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
+  getNextReleasedChannels: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired
 };

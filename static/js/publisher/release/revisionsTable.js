@@ -74,7 +74,7 @@ export default class RevisionsTable extends Component {
           <div className="p-release-buttons">
             <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, thisRevision, track, risk)}>
               &#x2715;
-              <span className="p-tooltip__message">Revert promoting this revision</span>
+              <span className="p-tooltip__message">Cancel promoting this revision</span>
             </button>
           </div>
         }
@@ -84,6 +84,21 @@ export default class RevisionsTable extends Component {
 
   onPromoteToChannel(channel, targetChannel) {
     this.props.promoteChannel(channel, targetChannel);
+  }
+
+  compareChannels(channel, targetChannel) {
+    const nextChannelReleases = this.props.getNextReleasedChannels();
+
+    const channelArchs = nextChannelReleases[channel];
+    const targetChannelArchs = nextChannelReleases[targetChannel];
+
+    if (channelArchs) {
+      return Object.keys(channelArchs).every((arch) => {
+        return targetChannelArchs && targetChannelArchs[arch] && channelArchs[arch].revision === targetChannelArchs[arch].revision;
+      });
+    }
+
+    return channelArchs === targetChannelArchs;
   }
 
   renderRows(releasedChannels, archs) {
@@ -103,6 +118,18 @@ export default class RevisionsTable extends Component {
         canBePromoted = false;
       }
 
+      // take all risks above current one
+      let targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
+
+      // filter out risks that have the same revisions already released
+      targetRisks = targetRisks.filter((targetRisk) => {
+        return !this.compareChannels(channel, `${track}/${targetRisk}`);
+      });
+
+      if (targetRisks.length === 0) {
+        canBePromoted = false;
+      }
+
       return (
         <tr key={channel}>
           <td>
@@ -111,7 +138,7 @@ export default class RevisionsTable extends Component {
                 <PromoteButton
                   position="left"
                   track={track}
-                  targetRisks={RISKS.slice(0, RISKS.indexOf(risk))}
+                  targetRisks={targetRisks}
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
               }

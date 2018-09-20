@@ -280,6 +280,7 @@ export default class ReleasesController extends Component {
           revisions={this.props.revisions}
           pendingReleases={this.state.pendingReleases}
           releasedChannels={releasedChannels}
+          getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           promoteRevision={this.promoteRevision.bind(this)}
           undoRelease={this.undoRelease.bind(this)}
         />
