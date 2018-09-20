@@ -53,7 +53,10 @@ def homepage():
     category_cache = {}
 
     for article in articles:
-        featured_image = api.get_media(article["featured_media"])
+        try:
+            featured_image = api.get_media(article["featured_media"])
+        except ApiError:
+            featured_image = None
 
         try:
             author = api.get_user(article["author"])
