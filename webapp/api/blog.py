@@ -1,10 +1,26 @@
 from webapp import api
+from webapp.api.exceptions import ApiResponseError, ApiResponseDecodeError
 
 API_URL = "https://admin.insights.ubuntu.com/wp-json/wp/v2"
 TAGS = [2996]  # 'snapcraft.io'
 
 
 api_session = api.requests.CachedSession(expire_after=300)
+
+
+def process_response(response):
+    if not response.ok:
+        raise ApiResponseError("Error from api", response.status_code)
+
+    try:
+        body = response.json()
+    except ValueError as decode_error:
+        api_error_exception = ApiResponseDecodeError(
+            "JSON decoding failed: {}".format(decode_error)
+        )
+        raise api_error_exception
+
+    return body
 
 
 def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
@@ -29,7 +45,7 @@ def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
     response = api_session.get(url)
     total_pages = response.headers.get("X-WP-TotalPages")
 
-    return response.json(), total_pages
+    return process_response(response), total_pages
 
 
 def get_article(slug):
@@ -45,7 +61,7 @@ def get_article(slug):
 
     response = api_session.get(url)
 
-    return response.json()
+    return process_response(response)
 
 
 def get_tag_by_name(name):
@@ -53,7 +69,7 @@ def get_tag_by_name(name):
 
     response = api_session.get(url)
 
-    return response.json()
+    return process_response(response)
 
 
 def get_tags_by_ids(ids):
@@ -61,7 +77,7 @@ def get_tags_by_ids(ids):
 
     response = api_session.get(url)
 
-    return response.json()
+    return process_response(response)
 
 
 def get_categories():
@@ -69,7 +85,7 @@ def get_categories():
 
     response = api_session.get(url)
 
-    return response.json()
+    return process_response(response)
 
 
 def get_category_by_id(id):
@@ -77,7 +93,7 @@ def get_category_by_id(id):
 
     response = api_session.get(url)
 
-    return response.json()
+    return process_response(response)
 
 
 def get_media(media_id):
@@ -87,7 +103,7 @@ def get_media(media_id):
     if not response.ok:
         return None
 
-    return response.json()
+    return process_response(response)
 
 
 def get_user(user_id):
@@ -97,7 +113,7 @@ def get_user(user_id):
     if not response.ok:
         return None
 
-    return response.json()
+    return process_response(response)
 
 
 def get_feed():
