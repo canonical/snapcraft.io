@@ -12,7 +12,7 @@ import prometheus_flask_exporter
 import talisker.flask
 import webapp.helpers as helpers
 from webapp.blog.views import blog
-from webapp.extensions import csrf, sentry
+from webapp.extensions import csrf
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.publisher.snaps.views import publisher_snaps
@@ -77,4 +77,3 @@ def init_snapcraft(app):
 
 def init_extensions(app):
     csrf.init_app(app)
-    sentry.init_app(app)
