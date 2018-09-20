@@ -56,7 +56,7 @@ export default class RevisionsTable extends Component {
                 {' '}
                 &rarr;
                 {' '}
-                <span className="p-revision-info">{thisRevision.version}
+                <span className="p-revision-info is-pending">{thisRevision.version}
                   <span className="p-revision-info__revision">({thisRevision.revision})</span>
                 </span>
               </span>

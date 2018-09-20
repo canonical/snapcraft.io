@@ -43,10 +43,10 @@ export default class PromoteButton extends Component {
 
     return (
       <button
-        className={`p-promote-button p-button--base p-icon-button ${menuClass}`}
+        className={`p-promote-button p-icon-button ${menuClass}`}
         onClick={this.dropdownButtonClick.bind(this)}
       >
-        <i className="p-icon--contextual-menu"></i>
+        &uarr;
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
           <span className="p-contextual-menu__group">
             <span className="p-contextual-menu__item">Promote to:</span>

@@ -41,6 +41,10 @@
     min-width: 30px;
     padding-bottom: 1.2em;
     position: relative;
+
+    &.is-pending {
+      font-weight: 400;
+    }
   }
 
   .p-revision-info__revision {
