@@ -56,8 +56,7 @@ class MultiSelect extends React.Component {
    * Remove an item from the 'selected' list.
    * Add it back into the 'values' list.
    */
-  removeItem(e) {
-    const key = e.target.parentNode.dataset.key;
+  removeItem(key) {
     const toRemove = this.state.selected.filter(item => item.key === key)[0];
     const newValues = this.state.values.slice(0);
     newValues.push(toRemove);
@@ -76,22 +75,20 @@ class MultiSelect extends React.Component {
    * If an element is clicked, remove the highlightedOption before adding
    * the item to the 'selected' list.
    *
-   * @param event
+   * @param key
    */
-  clickItem(event) {
+  clickItem(key) {
     this.setState({
       highlightedOption: null
     });
-    this.addItem(event);
+    this.addItem(key);
   }
 
   /**
    * Add an item to the 'selected' list.
    * Remove it from the 'values' list.
    */
-  addItem(e) {
-    // Get the key from the 'data-key' attribute of the element
-    const key = e.target.dataset.key;
+  addItem(key) {
     // Get the object based on the key
     const toAdd = this.state.values.filter(item => item.key === key)[0];
     const newSelected = this.state.selected.slice(0);
@@ -148,14 +145,10 @@ class MultiSelect extends React.Component {
    * Update the original input value and dispatch a change event to the input and form.
    */
   updateInputValue() {
-    this.props.input.setAttribute('value', this.state.selected.map(item => item.key).join(', '));
-    const changeEvent = new Event('change');
-    const form = this.props.input.closest('form');
+    this.props.input.value = this.state.selected.map(item => item.key).join(', ');
+    const changeEvent = new Event('change',  { 'bubbles': true });
 
     this.props.input.dispatchEvent(changeEvent);
-    if (form) {
-      form.dispatchEvent(changeEvent);
-    }
   }
 
   /**
@@ -194,26 +187,12 @@ class MultiSelect extends React.Component {
         case 'Enter':
           event.preventDefault();
           if (highlighted >= 0) {
-            this.addItem({
-              target: {
-                dataset: {
-                  key: results[highlighted].key
-                }
-              }
-            });
+            this.addItem(results[highlighted].key);
           }
           break;
         case 'Backspace':
           if (this.state.selected.length > 0 && this.state.searchTerm === '') {
-            this.removeItem({
-              target: {
-                parentNode: {
-                  dataset: {
-                    key: this.state.selected[this.state.selected.length - 1].key
-                  }
-                }
-              }
-            });
+            this.removeItem(this.state.selected[this.state.selected.length - 1].key);
           }
           break;
         default:
@@ -293,7 +272,7 @@ class MultiSelect extends React.Component {
                 className={`p-multiselect__option${this.state.highlightedOption === i ? ' is-highlighted' : ''}`}
                 data-key={item.key}
                 key={item.key}
-                onClick={this.clickItem}
+                onClick={this.clickItem.bind(this, item.key)}
               >
                 {item.name}
               </li>
@@ -309,7 +288,7 @@ class MultiSelect extends React.Component {
     const items = this.state.selected.map(value => (
       <span className="p-multiselect__item" data-key={ value.key } key={ value.key }>
         { value.name }
-        <i className="p-icon--close p-multiselect__item-remove" onClick={this.removeItem}></i>
+        <i className="p-icon--close p-multiselect__item-remove" onClick={this.removeItem.bind(this, value.key)}></i>
       </span>
     ));
 

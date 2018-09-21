@@ -19,7 +19,6 @@ from webapp.api.exceptions import (
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
-import pycountry
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -600,6 +599,7 @@ def post_register_name():
     )
 
     return flask.redirect(flask.url_for("account.get_account"))
+
 
 @publisher_snaps.route("/<snap_name>/settings")
 @login_required

@@ -1,7 +1,7 @@
-import { initSnapScreenshotsEdit } from './screenshots';
+import { initSnapScreenshotsEdit } from './market/screenshots';
 import { updateState, diffState } from './state';
-import { publicMetrics } from './publicMetrics';
-import { whitelistBlacklist } from './whitelistBlacklist';
+import { publicMetrics } from './market/publicMetrics';
+import { whitelistBlacklist } from './market/whitelistBlacklist';
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -83,9 +83,9 @@ function initForm(config, initialState, errors) {
   }
 
   // setup form functionality
-  const marketForm = document.getElementById(config.form);
-  const submitButton = marketForm.querySelector('.js-form-submit');
-  const revertButton = marketForm.querySelector('.js-form-revert');
+  const formEl = document.getElementById(config.form);
+  const submitButton = formEl.querySelector('.js-form-submit');
+  const revertButton = formEl.querySelector('.js-form-revert');
   const revertURL = revertButton.getAttribute('href');
   const disabledRevertClass = 'is-disabled';
 
@@ -117,13 +117,13 @@ function initForm(config, initialState, errors) {
   stateInput.type = "hidden";
   stateInput.name = "state";
 
-  marketForm.appendChild(stateInput);
+  formEl.appendChild(stateInput);
 
   const diffInput = document.createElement('input');
   diffInput.type = "hidden";
   diffInput.name = "changes";
 
-  marketForm.appendChild(diffInput);
+  formEl.appendChild(diffInput);
 
   if (config.snapIconImage && config.snapIconInput) {
     initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
@@ -190,29 +190,29 @@ function initForm(config, initialState, errors) {
 
   function updateFormState() {
     // Some extra modifications need to happen for the checkboxes
-    if (marketForm['public_metrics_enabled']) {
-      publicMetrics(marketForm);
+    if (formEl['public_metrics_enabled']) {
+      publicMetrics(formEl);
     }
-    if (marketForm['territories']) {
-      whitelistBlacklist(marketForm);
+    if (formEl['territories']) {
+      whitelistBlacklist(formEl);
     }
 
-    let formData = new FormData(marketForm);
+    let formData = new FormData(formEl);
 
     // update state based on data of all inputs
     updateState(state, formData);
 
     // checkboxes are tricky,
     // make sure to update state based on their 'checked' status
-    if (marketForm['private']) {
+    if (formEl['private']) {
       updateState(state, {
-        'private': marketForm['private'].value === 'private'
+        'private': formEl['private'].value === 'private'
       });
     }
 
-    if (marketForm['public_metrics_enabled']) {
+    if (formEl['public_metrics_enabled']) {
       updateState(state, {
-        'public_metrics_enabled': marketForm['public_metrics_enabled'].checked
+        'public_metrics_enabled': formEl['public_metrics_enabled'].checked
       });
     }
 
@@ -220,11 +220,11 @@ function initForm(config, initialState, errors) {
   }
 
   // when anything is changed update the state
-  marketForm.addEventListener('change', function() {
+  formEl.addEventListener('change', function() {
     updateFormState();
   });
 
-  marketForm.addEventListener('submit', function(event) {
+  formEl.addEventListener('submit', function(event) {
     const diff = diffState(initialState, state);
 
     // if anything was changed, update state inputs and submit
@@ -255,7 +255,7 @@ function initForm(config, initialState, errors) {
   // client side validation
 
   const validation = {};
-  const validateInputs = Array.from(marketForm.querySelectorAll('input,textarea'));
+  const validateInputs = Array.from(formEl.querySelectorAll('input,textarea'));
 
   function isFormValid() {
     // form is valid if every validated input is valid
@@ -358,7 +358,7 @@ function initForm(config, initialState, errors) {
   });
 
   // validate inputs on change
-  marketForm.addEventListener('input', function (event) {
+  formEl.addEventListener('input', function (event) {
     validateInput(event.target);
     updateFormState();
   });
@@ -385,7 +385,7 @@ function initForm(config, initialState, errors) {
 
   const prefixableFields = ['website', 'contact'];
   prefixableFields.forEach(inputName => {
-    const input = marketForm[inputName];
+    const input = formEl[inputName];
     if (input) {
       input.addEventListener('blur', function (event) {
         prefixInput(event.target);

@@ -1,4 +1,4 @@
-import * as market from './market';
+import * as market from './form';
 
 describe('initSnapIconEdit', () => {
   let input;

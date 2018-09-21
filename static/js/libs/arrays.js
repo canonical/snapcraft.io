@@ -8,11 +8,14 @@ function arraysEqual(oldArray, newArray) {
     return false;
   }
 
-  oldArray.sort();
-  newArray.sort();
+  const _oldArray = oldArray.splice(0);
+  const _newArray = newArray.splice(0);
 
-  for(let i = 0; i < oldArray.length; i++) {
-    if (oldArray[i] !== newArray[i]) {
+  _oldArray.sort();
+  _newArray.sort();
+
+  for(let i = 0; i < _oldArray.length; i++) {
+    if (_oldArray[i] !== _newArray[i]) {
       return false;
     }
   }

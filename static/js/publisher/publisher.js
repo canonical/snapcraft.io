@@ -1,6 +1,6 @@
 import metrics from './metrics/metrics';
 import { selector } from './metrics/filters';
-import * as market from './market/market';
+import * as market from './form';
 import { initMultiselect } from "./form/multiselect";
 import { enableInput, changeHandler } from "./settings";
 

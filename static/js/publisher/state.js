@@ -1,5 +1,5 @@
-import { transformWhitelistBlacklist } from "./whitelistBlacklist";
-import { arraysEqual } from "../../libs/arrays";
+import { transformWhitelistBlacklist } from "./market/whitelistBlacklist";
+import { arraysEqual } from "../libs/arrays";
 
 const allowedKeys = [
   'title',
