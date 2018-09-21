@@ -17,6 +17,13 @@
   .p-heading--one,
   .p-heading--two {
     @extend %heading-copy--short;
+    font-weight: 100;
+
+    // & + p,
+    // & + h5,
+    // & + h6 {
+    //   margin-top: - $sp-unit * 3;
+    // }
   }
 
   h1,
