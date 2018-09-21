@@ -17,7 +17,7 @@ from webapp.api.exceptions import (
 from urllib.parse import quote_plus
 
 
-def store_blueprint(store_query=None):
+def store_blueprint(store_query=None, brand_snap_displayed="featured"):
     api = StoreApi(store_query)
 
     store = flask.Blueprint(
@@ -84,7 +84,10 @@ def store_blueprint(store_query=None):
         status_code = 200
 
         try:
-            snaps_results = api.get_all_snaps(size=12)
+            if brand_snap_displayed == "featured":
+                snaps_results = api.get_featured_snaps()
+            else:
+                snaps_results = api.get_all_snaps(size=12)
         except ApiError as api_error:
             snaps_results = []
             status_code, error_info = _handle_errors(api_error)

@@ -62,7 +62,10 @@ def create_app(testing=False):
 
 def init_brandstore(app):
     store = app.config.get("WEBAPP_CONFIG").get("STORE_QUERY")
-    app.register_blueprint(store_blueprint(store))
+    displayed_snaps = app.config.get("WEBAPP_CONFIG").get(
+        "DISPLAYED_SNAPS_HOMEPAGE"
+    )
+    app.register_blueprint(store_blueprint(store, displayed_snaps))
 
 
 def init_snapcraft(app):
