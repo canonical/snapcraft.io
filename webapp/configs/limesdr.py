@@ -6,8 +6,14 @@ WEBAPP_CONFIG = {
         "COLOUR": "#fff",
     },
     "STORE_LINKS": [
-        {"title": "Lime Micro", "href": "http://www.limemicro.com/"},
-        {"title": "Myriad-RF", "href": "https://myriadrf.org/"},
+        {
+            "title": "Documentation",
+            "href": "https://wiki.myriadrf.org/LimeSDR_App_Store",
+        },
+        {
+            "title": "Myriad-RF",
+            "href": "https://limemicro.com/products/boards/",
+        },
     ],
     "CUSTOM_STYLES": ".p-navigation__link a,.p-navigation__link a:visited,\
      .p-navigation__link a:focus {color: #000;}\

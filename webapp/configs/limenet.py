@@ -6,8 +6,14 @@ WEBAPP_CONFIG = {
         "COLOUR": "#fff",
     },
     "STORE_LINKS": [
-        {"title": "Lime Micro", "href": "http://www.limemicro.com/"},
-        {"title": "Myriad-RF", "href": "https://myriadrf.org/"},
+        {
+            "title": "Documentation",
+            "href": "https://wiki.myriadrf.org/LimeNET_App_Store",
+        },
+        {
+            "title": "LimeNET",
+            "href": "https://limemicro.com/initiatives/limenet/",
+        },
     ],
     "CUSTOM_STYLES": ".p-navigation__link a,.p-navigation__link a:visited,\
      .p-navigation__link a:focus {color: #000;}\
