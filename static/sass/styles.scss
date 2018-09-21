@@ -7,7 +7,7 @@ $color-navigation-background: #252525;
 @import 'vanilla-framework/scss/vanilla';
 
 @include vf-base;
-
+@include vf-b-box-sizing;
 @include vf-p-card; // required by vf-p-tooltips
 @include vf-p-divider;
 @include vf-p-links;
@@ -43,6 +43,9 @@ $color-navigation-background: #252525;
 @include vf-u-image-position;
 @include vf-u-equal-height;
 @include vf-u-hide;
+@include vf-u-baseline-grid;
+
+@include vf-u-vertical-spacing;
 
 // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1880
 // can be removed when we update to Vanilla >= 1.8
