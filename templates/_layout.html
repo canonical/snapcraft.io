@@ -27,7 +27,7 @@
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/css/swiper.min.css">
     <link rel="stylesheet" href="{{ static_url('minified/styles.css') }}" />
 
     <!-- Google Tag Manager -->
@@ -37,6 +37,7 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
     <!-- End Google Tag Manager -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.4.1/js/swiper.min.js"></script>
   </head>
 
   <body class="has-sticky-footer">
@@ -93,6 +94,25 @@
         "name": "Snapcraft",
         "url": "https://snapcraft.io{{ self.meta_path() }}"
       }
+    </script>
+
+    <script>
+        function fragmentFromString(htmlString) {
+            var temp = document.createElement('template');
+            temp.innerHTML = htmlString;
+            return temp.content;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var body = document.body;
+            var controls = fragmentFromString('<div class="u-baseline-grid__toggle"><label>Toggle baseline grid<input type="checkbox" class="p-switch js-baseline-toggle" /><div class="p-switch__slider"></div></label></div>');
+            body.appendChild(controls);
+
+            var toggle = document.querySelector('.js-baseline-toggle');
+            toggle.addEventListener('click', function (event) {
+                body.classList.toggle('u-baseline-grid');
+            });
+        });
     </script>
 
     {% block meta_schema %}{% endblock %}

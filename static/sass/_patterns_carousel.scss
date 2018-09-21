@@ -1,28 +1,75 @@
 @mixin snapcraft-p-carousel {
   // below this breakpoint we don't show buttons to move carousels
   // but leave scroll to allow swiping them on mobile
-  $carousel-buttons-breakpoint: $breakpoint-medium;
+  // $carousel-buttons-breakpoint: $breakpoint-medium;
+
+.swiper-container {
+  overflow: visible;
+}
+
+//experimental full width slider
+.swiper-container.swiper--featured.swiper-container-horizontal:after {
+  display: block;
+  position: absolute;
+  right: -100%;
+  top: 0;
+  /* background: #f7f7f7c4; */
+  width: 100%;
+  height: 20rem;
+  content: '';
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+.p-carousel__item--featured-0 *,
+.p-carousel__item--featured-1 * {
+  &,
+  &:active,
+  &:hover,
+  &:focus,
+  &:visited {
+    color: $color-x-light !important;
+  }
+}
 
   .p-carousel {
-    margin-bottom: $spv-inter--scaleable;
+    margin: $spv-inter--scaleable 0;
     position: relative;
 
-    .p-carousel__mask {
-      overflow-x: scroll;
-      overflow-y: hidden;
-      position: relative;
+    &__item {
+      $item-height: 18 * $sp-unit;
+      $item-gap: 3 * $sp-unit;
 
-      @media screen and (min-width: $carousel-buttons-breakpoint) {
-        overflow-x: hidden;
+      box-sizing: border-box;
+      height: $item-height;
+
+      &--featured-0,
+      &--featured-1,
+      &:nth-child(3n+3) {
+        height: $item-height * 2 + $item-gap;
       }
-    }
 
-    .p-carousel__scroller {
-      position: relative;
-      transition: transform .333s ease;
+      &--featured-0,
+      &--featured-1 {
+        height: $item-height * 2 + $item-gap;
+        @extend %vf-card;
+        @extend %vf-has-box-shadow;
+        @extend %vf-has-round-corners;
+      }
 
-      .p-carousel__item {
-        width: 12.375rem;
+      &--featured-0 {
+        background-color: $color-dark;
+        * {
+          //@extend %white-text;
+        }
+      }
+
+      &--featured-1 {
+        background-color: #0062B5;
+        * {
+          //@extend %white-text;
+        }
       }
     }
 
@@ -30,47 +77,34 @@
     // based on vbox-next vbox-prev from _patterns_maas_modal.scss
     .p-carousel__next,
     .p-carousel__prev {
+      $button-width: map-get($icon-sizes, social);
+      @extend %vf-has-box-shadow;
+
       background: {
         color: $color-x-light;
         position: center;
         repeat: no-repeat;
         size: .25rem;
       }
-      border-radius: 3rem;
-      box-sizing: content-box;
+
+      border: 0;
+      border-radius: $button-width;
       cursor: pointer;
-      display: none;
-      height: 3rem;
+      height: $button-width;
       margin: {
         bottom: 0;
         left: 0;
-        top: -1.5rem;
+        top: - .5 * $button-width;
       }
-      opacity: 0;
+
       overflow: hidden;
       padding: 0;
-      pointer-events: none;
       position: absolute;
       text-indent: -999px;
       top: 50%;
-      transition: opacity .165s;
-      width: 3rem;
-
-      @media screen and (min-width: $carousel-buttons-breakpoint) {
-        display: block;
-      }
-    }
-
-    &:hover .p-carousel__next,
-    &:hover .p-carousel__prev {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .p-carousel__next:disabled,
-    .p-carousel__prev:disabled {
-      cursor: default;
-      opacity: 0;
+      transition: opacity map-get($animation-duration, fast);
+      width: $button-width;
+      z-index: 1;
     }
 
     .p-carousel__prev {

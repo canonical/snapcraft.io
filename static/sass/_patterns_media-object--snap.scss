@@ -1,14 +1,19 @@
 // Based on the matrix component https://github.com/vanilla-framework/vanilla-framework/blob/develop/scss/_patterns_matrix.scss
 @mixin snapcraft-p-media-object--snap {
-  $matrix-img-width: map-get($icon-sizes, thumb--small);
+  $matrix-img-width: map-get($icon-sizes, heading-icon--small);
   $matrix-img-gutter: $sph-inter;
+  %ellipsize {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .p-media-object--snap {
     display: block;
+    margin-bottom: 0;
 
-    &__img {
-      align-self: flex-start;
-      margin-bottom: $spv-inter--condensed;
+    &__image {
+      margin-bottom: $spv-intra;
       margin-right: $matrix-img-gutter;
       max-height: $matrix-img-width;
       max-width: $matrix-img-width;
@@ -16,44 +21,45 @@
     }
 
     &__content {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      padding-right: $sph-intra;
+      // display: flex;
+      // flex: 1 1 auto;
+      // flex-direction: column;
+      // padding-right: $sph-intra;
+      margin-bottom: $sp-unit * 1 - map-get($nudges, nudge--p);
     }
 
     &__title {
       @extend %vf-heading-5;
-      margin-top: -$sp-unit;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @extend %ellipsize;
+      color: $color-dark;
+      margin-bottom: - map-get($nudges, nudge--p);
 
       &:hover {
         text-decoration: underline;
       }
     }
 
-    &__desc {
-      color: $color-mid-dark;
-      margin-bottom: $spv-nudge-compensation;
-      margin-top: - $sp-unit * 3;
+    // &__desc {
+    //   @extend %ellipsize;
+    //   color: $color-mid-dark;
+    //   margin-bottom: $spv-nudge-compensation;
+    //   margin-top: - $sp-unit * 1;
 
-      > p:last-child {
-        margin-bottom: 0;
-      }
+    //   > p:last-child {
+    //     margin-bottom: 0;
+    //   }
 
-      & + & {
-        margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
-      }
+    //   & + & {
+    //     margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
+    //   }
 
-      @media (max-width: $breakpoint-heading-threshold) {
-        margin-top: - $sp-unit;
-      }
-    }
+    //   @media (max-width: $breakpoint-heading-threshold) {
+    //     margin-top: - $sp-unit;
+    //   }
+    // }
 
-    &:hover {
-      text-decoration: none;
-    }
+    // &:hover {
+    //   text-decoration: none;
+    // }
   }
 }
