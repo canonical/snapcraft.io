@@ -440,7 +440,8 @@ def store_blueprint(store_query=None):
 
         if category == 'featured':
             return (
-                flask.render_template("store/_category-featured-partial.html", **context),
+                flask.render_template("store/_category-featured-partial.html",
+                 **context),
                 status_code,
             )
         else:
