@@ -42,8 +42,8 @@ export default class PromoteButton extends Component {
     const menuClass =  'p-contextual-menu' + (position ? `--${position}` : '');
 
     return (
-      <button
-        className={`p-promote-button p-icon-button ${menuClass}`}
+      <span
+        className={`p-promote-button p-button--neutral p-icon-button ${menuClass}`}
         onClick={this.dropdownButtonClick.bind(this)}
       >
         &uarr;
@@ -66,7 +66,7 @@ export default class PromoteButton extends Component {
             }
           </span>
         </span>
-      </button>
+      </span>
     );
   }
 }
