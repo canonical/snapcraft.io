@@ -64,7 +64,7 @@
     "raven-js": "^3.24.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "rollup": "^0.52.1",
+    "rollup": "^0.66.2",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "8.3.0",
     "rollup-plugin-node-resolve": "^3.0.0",
