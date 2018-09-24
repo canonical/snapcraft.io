@@ -5,6 +5,9 @@
     }
   }
 
+  .p-release-table__cell {
+    position: relative;
+  }
 
   .p-icon-button {
     padding-left: .5rem;
@@ -35,8 +38,13 @@
 
   .p-revision-info {
     display: inline-block;
+    min-width: 30px;
     padding-bottom: 1.2em;
     position: relative;
+
+    &.is-pending {
+      font-weight: 400;
+    }
   }
 
   .p-revision-info__revision {
@@ -58,5 +66,25 @@
     position: absolute;
     right: 0;
     top: 10px;
+  }
+
+  .p-channel-buttons {
+    display: inline-block;
+    margin-right: .5rem;
+    width: 2rem;
+  }
+
+
+  .p-contextual-menu__item {
+    @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
+
+    &:hover {
+      background: transparent;
+      cursor: default;
+    }
+  }
+
+  .p-contextual-menu__link.is-indented {
+    padding-left: 1rem;
   }
 }
