@@ -8,7 +8,16 @@ def generate_slug(path):
     """
     Generate a slug for each page
     """
-    if path.startswith("/account"):
+    if path.endswith(
+        (
+            "/snaps",
+            "/listing",
+            "/release",
+            "/metrics",
+            "/settings",
+            "/account/details",
+        )
+    ):
         return "account"
 
     if path == "/":
