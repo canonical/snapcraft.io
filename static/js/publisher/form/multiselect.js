@@ -6,29 +6,15 @@ class MultiSelect extends React.Component {
   constructor(props) {
     super(props);
 
-    // hide the original input
-    this.props.input.style.display = 'none';
-
-    // If there's anything in the current input, use it
-    // split a list of , seperated strings to an array
-    let currentValue = this.props.input.value.split(',');
-
-    // If a currentValue exists, trim the whitespace
-    if (currentValue.length > 0) {
-      currentValue = currentValue.map(val => val.trim());
-    } else {
-      currentValue = null;
-    }
-
     // The available values should be the full list minus the current values
     // sorted by name
     const values = this.props.values.filter(
-      value => !currentValue.includes(value.key)
+      value => !this.props.value.includes(value.key)
     ).sort(this.sortByName);
 
     this.state = {
       // Get the correct objects for the currentValues as selected
-      selected: this.props.values.filter(value => currentValue.includes(value.key)),
+      selected: this.props.values.filter(value => this.props.value.includes(value.key)),
       values: values,
       searchTerm: '',
       searchResults: values,
@@ -38,6 +24,7 @@ class MultiSelect extends React.Component {
 
     // Bind all the things
     // Clicking outside the component should hide the dropdown
+    this.blur = this.blur.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.removeItem = this.removeItem.bind(this);
     this.clickItem = this.clickItem.bind(this);
@@ -45,7 +32,6 @@ class MultiSelect extends React.Component {
     this.focusInput = this.focusInput.bind(this);
     this.search = this.search.bind(this);
     this.handleKeypress = this.handleKeypress.bind(this);
-    this.updateInputValue = this.updateInputValue.bind(this);
   }
 
   sortByName(a, b) {
@@ -68,7 +54,7 @@ class MultiSelect extends React.Component {
       selected: newSelected,
       // Preserve the filtered list in the dropdown
       searchResults: this.filterByTerm(newValues)
-    }, this.updateInputValue);
+    }, this.props.updateHandler.bind(this,  this.state.selected));
   }
 
   /**
@@ -102,7 +88,7 @@ class MultiSelect extends React.Component {
       searchTerm: '',
       // Preserve the filtered list in the dropdown
       searchResults: newValues
-    }, this.updateInputValue);
+    }, this.props.updateHandler.bind(this,  this.state.selected));
   }
 
   /**
@@ -124,13 +110,10 @@ class MultiSelect extends React.Component {
     const searchTerm = e.target.value;
     const searchResults = this.filterByTerm(this.state.values, searchTerm);
     let highlighted = this.state.highlightedOption;
-    if (highlighted) {
-      if (highlighted > searchResults.length - 1) {
-        highlighted = searchResults.length - 1;
-      }
-      if (highlighted < 0) {
-        highlighted = 0;
-      }
+    if (!highlighted || highlighted < 0) {
+      highlighted = 0;
+    } else if (highlighted > searchResults.length - 1) {
+      highlighted = searchResults.length - 1;
     }
 
     this.setState({
@@ -142,22 +125,13 @@ class MultiSelect extends React.Component {
   }
 
   /**
-   * Update the original input value and dispatch a change event to the input and form.
-   */
-  updateInputValue() {
-    this.props.input.value = this.state.selected.map(item => item.key).join(', ');
-    const changeEvent = new Event('change',  { 'bubbles': true });
-
-    this.props.input.dispatchEvent(changeEvent);
-  }
-
-  /**
    * Focus on the input
    */
   focusInput() {
     this.searchInput.focus();
     this.setState({
-      showSearch: true
+      showSearch: true,
+      highlightedOption: this.state.highlightedOption || 0
     });
   }
 
@@ -195,6 +169,9 @@ class MultiSelect extends React.Component {
             this.removeItem(this.state.selected[this.state.selected.length - 1].key);
           }
           break;
+        case 'Tab':
+          this.blur();
+          break;
         default:
           break;
       }
@@ -213,6 +190,14 @@ class MultiSelect extends React.Component {
     }
   }
 
+  blur() {
+    this.setState({
+      showSearch: false
+    });
+
+    this.props.updateHandler(this.state.selected);
+  }
+
   /**
    * When clicking outside the component, blur the component
    * and update the original input
@@ -220,12 +205,10 @@ class MultiSelect extends React.Component {
    * @param event
    */
   handleClickOutside(event) {
-    if (this.wrapperEl && !this.wrapperEl.contains(event.target)) {
-      this.setState({
-        showSearch: false
-      });
-
-      this.updateInputValue();
+    if (this.state.showSearch) {
+      if (this.wrapperEl && !this.wrapperEl.contains(event.target)) {
+        this.blur();
+      }
     }
   }
 
@@ -323,9 +306,23 @@ class MultiSelect extends React.Component {
 }
 
 MultiSelect.propTypes = {
-  input: PropTypes.any,
-  values: PropTypes.array
+  value: PropTypes.array,
+  values: PropTypes.array,
+  updateHandler: PropTypes.func
 };
+
+/**
+ * Update the original input value and dispatch a change event to the input and form.
+ */
+function updateHandler(input) {
+  const _input = input;
+  return function(values) {
+    _input.value = values.map(item => item.key).join(', ');
+    const changeEvent = new Event('change', { 'bubbles': true });
+
+    _input.dispatchEvent(changeEvent);
+  };
+}
 
 
 /**
@@ -346,8 +343,30 @@ function init(selector, values) {
   if (el) {
     const holder = el.querySelector('.js-multiselect-holder');
     const input = el.querySelector('.js-multiselect-input');
+
+    // hide the original input
+    input.style.display = 'none';
+
+    // If there's anything in the current input, use it
+    // split a list of , seperated strings to an array
+    let currentValue = input.value.split(',');
+
+    // If a currentValue exists, trim the whitespace
+    if (currentValue.length > 0) {
+      currentValue = currentValue.map(val => val.trim());
+    } else {
+      currentValue = null;
+    }
+
     // do the react
-    ReactDOM.render(<MultiSelect input={ input } values={ values } />, holder);
+    ReactDOM.render(
+      <MultiSelect
+        value={ currentValue }
+        values={ values }
+        updateHandler={updateHandler(input)}
+      />,
+      holder
+    );
   }
 }
 

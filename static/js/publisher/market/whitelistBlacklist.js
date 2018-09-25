@@ -4,17 +4,16 @@ function whitelistBlacklist(form) {
   const blacklist = form['blacklist_countries'];
   const customType = form['territories_custom_type'].value;
 
-
   if (type === 'all') {
-    whitelist.setAttribute('value', '');
-    blacklist.setAttribute('value', '');
+    whitelist.value = '';
+    blacklist.value = '';
   }
 
   if (type === 'custom') {
     if (customType === 'whitelist') {
-      blacklist.setAttribute('value', '');
+      blacklist.value = '';
     } else if (customType === 'blacklist') {
-      whitelist.setAttribute('value', '');
+      whitelist.value = '';
     }
   }
 }

@@ -1,3 +1,11 @@
+/**
+ * Checks the items in an array are equal.
+ * The order of the items doesn't matter
+ *
+ * @param {array} oldArray
+ * @param {array} newArray
+ * @returns {boolean}
+ */
 function arraysEqual(oldArray, newArray) {
   if (oldArray === newArray) {
     return true;
