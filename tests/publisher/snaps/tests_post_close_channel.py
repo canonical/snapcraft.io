@@ -15,16 +15,66 @@ class PostCloseChannelPageNotAuth(BaseTestCases.EndpointLoggedOut):
         )
 
 
+class PostDataCloseChannelGetSnapIdPage(BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        snap_name = "test-snap"
+        endpoint_url = "/{}/release/close-channel".format(snap_name)
+        json = {"info": "json"}
+
+        api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
+        api_url = api_url.format(snap_name)
+
+        super().setUp(
+            snap_name=snap_name,
+            api_url=api_url,
+            endpoint_url=endpoint_url,
+            method_api="GET",
+            method_endpoint="POST",
+            json=json,
+        )
+
+    @responses.activate
+    def test_page_not_found(self):
+        payload = {"error_list": []}
+        responses.add(responses.GET, self.api_url, json=payload, status=404)
+
+        response = self.client.post(self.endpoint_url, json=self.json)
+        self.check_call_by_api_url(responses.calls)
+
+        assert response.status_code == 404
+        self.assert_template_used("404.html")
+
+    @responses.activate
+    def test_error_4xx(self):
+        payload = {"error_list": []}
+        responses.add(responses.GET, self.api_url, json=payload, status=400)
+
+        response = self.client.post(self.endpoint_url, json=self.json)
+        self.check_call_by_api_url(responses.calls)
+
+        assert response.status_code == 400
+        assert response.get_json() == []
+
+
 class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
-        snap_id = "test-id"
+        snap_id = "test_id"
         endpoint_url = "/{}/release/close-channel".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/close".format(snap_id)
         )
-        json = {"id": snap_id, "info": "json"}
+        json = {"info": "json"}
+
+        api_info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
+        api_info_url = api_info_url.format(snap_name)
+        responses.add(
+            method=responses.GET,
+            url=api_info_url,
+            json={"snap_id": snap_id},
+            status=200,
+        )
 
         super().setUp(
             snap_name=snap_name,
@@ -41,18 +91,11 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.POST, self.api_url, json=payload, status=404)
 
         response = self.client.post(self.endpoint_url, json=self.json)
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 404
         self.assert_template_used("404.html")
 
-    @responses.activate
     def test_post_no_data(self):
         response = self.client.post(self.endpoint_url)
 
@@ -66,13 +109,7 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.POST, self.api_url, json=payload, status=200)
 
         response = self.client.post(self.endpoint_url, json=self.json)
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        self.check_call_by_api_url(responses.calls)
 
         assert response.json == payload
 
@@ -83,5 +120,17 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.POST, self.api_url, json=payload, status=400)
 
         response = self.client.post(self.endpoint_url, json=self.json)
+        self.check_call_by_api_url(responses.calls)
 
         assert response.json == payload
+
+    @responses.activate
+    def test_error_4xx(self):
+        payload = {"error_list": []}
+        responses.add(responses.POST, self.api_url, json=payload, status=400)
+
+        response = self.client.post(self.endpoint_url, json=self.json)
+        self.check_call_by_api_url(responses.calls)
+
+        assert response.status_code == 400
+        assert response.get_json() == []
