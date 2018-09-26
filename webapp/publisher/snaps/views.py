@@ -640,6 +640,7 @@ def get_settings(snap_name):
 
     context = {
         "snap_name": snap_details["snap_name"],
+        "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
         "license": snap_details["license"],
         "private": snap_details["private"],
@@ -728,6 +729,7 @@ def post_settings(snap_name):
             context = {
                 # read-only values from details API
                 "snap_name": snap_details["snap_name"],
+                "snap_title": snap_details["title"],
                 "snap_id": snap_details["snap_id"],
                 "license": snap_details["license"],
                 "private": snap_details["private"],

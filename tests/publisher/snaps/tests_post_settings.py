@@ -168,6 +168,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         payload = {
             "snap_id": self.snap_id,
+            "title": "test snap",
             "snap_name": self.snap_name,
             "license": "license",
             "private": True,
@@ -199,6 +200,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_template_used("publisher/settings.html")
 
         self.assert_context("snap_id", self.snap_id)
+        self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("private", True)
         self.assert_context("license", "license")
@@ -218,6 +220,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         payload = {
             "snap_id": self.snap_id,
+            "title": "test snap",
             "snap_name": self.snap_name,
             "license": "license",
             "private": True,
@@ -251,6 +254,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         # Not updatable fields
         self.assert_context("snap_id", self.snap_id)
+        self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("license", "license")
         self.assert_context("private", True)
@@ -276,8 +280,8 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         payload = {
             "snap_id": self.snap_id,
+            "title": "test snap",
             "snap_name": self.snap_name,
-            "title": "Snap title",
             "summary": "This is a summary",
             "description": "This is a description",
             "license": "license",

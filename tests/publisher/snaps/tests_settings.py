@@ -46,6 +46,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         payload = {
             "snap_id": "id",
+            "title": "test snap",
             "snap_name": snap_name,
             "private": True,
             "license": "License",
@@ -61,6 +62,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_template_used("publisher/settings.html")
 
         self.assert_context("snap_id", "id")
+        self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", snap_name)
         self.assert_context("private", True)
         self.assert_context("license", "License")
