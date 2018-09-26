@@ -15,6 +15,8 @@ export default class ReleasesController extends Component {
       currentTrack: this.props.options.defaultTrack || 'latest',
       error: null,
       isLoading: false,
+      // released channels contains channel map for each channel in current track
+      // also includes 'unassigned' fake channel to show selected unassigned revision
       releasedChannels: this.props.releasedChannels,
       // revisions to be released:
       // key is the id of revision to release
@@ -26,8 +28,38 @@ export default class ReleasesController extends Component {
       //  }
       // }
       pendingReleases: {},
-      pendingCloses: []
+      pendingCloses: [],
+      // list of selected revisions, to know which ones to render selected
+      selectedRevisions: []
     };
+  }
+
+  selectRevision(revision) {
+    this.setState((state) => {
+      const releasedChannels = state.releasedChannels;
+      // TODO: export as a constant?
+      const UNASSIGNED = 'unassigned';
+
+      // TODO: support multiple archs
+      const arch = revision.architectures[0];
+
+      if (!releasedChannels[UNASSIGNED]) {
+        releasedChannels[UNASSIGNED] = {};
+      }
+
+      if (releasedChannels[UNASSIGNED][arch] && (releasedChannels[UNASSIGNED][arch].revision === revision.revision)) {
+        delete releasedChannels[UNASSIGNED][arch];
+      } else {
+        releasedChannels[UNASSIGNED][arch] = revision;
+      }
+
+      const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(arch => releasedChannels[UNASSIGNED][arch].revision);
+
+      return {
+        selectedRevisions,
+        releasedChannels
+      };
+    });
   }
 
   setCurrentTrack(track) {
@@ -371,13 +403,10 @@ export default class ReleasesController extends Component {
           closeChannel={this.closeChannel.bind(this)}
         />
         <RevisionsList
-          currentTrack={this.state.currentTrack}
           revisions={this.props.revisions}
-          pendingReleases={this.state.pendingReleases}
           releasedChannels={releasedChannels}
-          getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
-          promoteRevision={this.promoteRevision.bind(this)}
-          undoRelease={this.undoRelease.bind(this)}
+          selectedRevisions={this.state.selectedRevisions}
+          selectRevision={this.selectRevision.bind(this)}
         />
       </Fragment>
     );
