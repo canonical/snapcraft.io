@@ -1,6 +1,6 @@
 /* global ga */
 
-import moment from '../../../../node_modules/moment/src/moment';
+import distanceInWords from 'date-fns/distance_in_words_strict';
 import SnapEvents from '../../libs/events';
 
 class ChannelMap {
@@ -401,7 +401,10 @@ class ChannelMap {
           trackName,
           trackInfo['risk'],
           trackInfo['version'],
-          moment.utc(trackInfo['created-at']).fromNow(),
+          distanceInWords(
+            new Date(), 
+            new Date(trackInfo['created-at']), 
+            { addSuffix: true }),
           trackInfo['confinement']
         ]);
       });
