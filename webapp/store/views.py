@@ -438,10 +438,17 @@ def store_blueprint(store_query=None):
             "error_info": error_info,
         }
 
-        return (
-            flask.render_template("store/_category-partial.html", **context),
-            status_code,
-        )
+        if category == 'featured':
+            return (
+                flask.render_template("store/_category-featured-partial.html",
+                 **context),
+                status_code,
+            )
+        else:
+            return (
+                flask.render_template("store/_category-partial.html", **context),
+                status_code,
+            )
 
     if store_query:
         store.add_url_rule("/", "homepage", brand_store_view)

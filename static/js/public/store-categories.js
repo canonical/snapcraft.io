@@ -12,7 +12,29 @@ function getCategory(holder) {
   // Write the html and init the carousel
   const writeCategory = function(response) {
     holder.innerHTML = response;
-    new Carousel(holder.querySelector('.p-carousel'));
+    switch(category) {
+      case 'featured':
+        new Swiper (`.swiper-container.swiper--${category}`, {
+          loop: false,
+          slidesPerView: 'auto',
+          slidesPerGroup: 3,
+          navigation: {
+            nextEl: `.swiper-button-next--${category}`,
+            prevEl: `.swiper-button-prev--${category}`,
+          }
+        });
+        break;
+      default:
+        new Swiper (`.swiper-container.swiper--${category}`, {
+          loop: false,
+          slidesPerView: 'auto',
+          slidesPerGroup: 4,
+          navigation: {
+            nextEl: `.swiper-button-next--${category}`,
+            prevEl: `.swiper-button-prev--${category}`,
+          }
+        });
+    }
   };
 
   const url = `/store/categories/${category}`;

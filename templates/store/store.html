@@ -25,23 +25,30 @@
 
 {% block content %}
   {% include 'partials/search-bar.html' %}
-
-  <section class="p-strip is-shallow">
     {% for category in categories %}
-      {% if loop.index > 1 %}
+      {% if loop.index == 1 %}
+      <section class="p-strip--light is-shallow">
         <div class="row">
-          <hr />
+          <h3 class="p-heading--four"><a href="/search?category={{ category.slug }}">{{ category.name }}&nbsp;&rsaquo;</a></h3>
         </div>
+        <div data-category="{{ category.slug }}" class="row js-store-category">
+          {# _category-partial.html loaded via JS #}
+        </div>
+      </section>
+      {% else %}
+      <section class="p-strip is-shallow">
+        {% if loop.index != 2 %}
+        <div class="row"><hr></div>
+        {% endif %}
+        <div class="row">
+          <h3 class="p-heading--four"><a href="/search?category={{ category.slug }}">{{ category.name }}&nbsp;&rsaquo;</a></h3>
+        </div>
+        <div data-category="{{ category.slug }}" class="row js-store-category">
+          {# _category-partial.html loaded via JS #}
+        </div>
+      </section>
       {% endif %}
-
-      <div class="row">
-        <h3><a href="/search?category={{ category.slug }}">{{ category.name }}&nbsp;&rsaquo;</a></h3>
-      </div>
-      <div data-category="{{ category.slug }}" class="row js-store-category">
-        {# _category-partial.html loaded via JS #}
-      </div>
     {% endfor %}
-  </section>
 {% endblock %}
 
 {% block scripts %}
@@ -50,5 +57,8 @@
     Raven.context(function () {
       snapcraft.public.storeCategories();
     });
+  </script>
+  <script>
+
   </script>
 {% endblock %}

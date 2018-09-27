@@ -2,17 +2,13 @@
   .p-snap-list {
 
     &__image {
-      height: 32px;
-      width: 32px;
+      height: map-get($icon-sizes, heading-icon--small);
+      width: map-get($icon-sizes, heading-icon--small);
     }
 
     &__image,
     &__name {
       margin-right: $sp-medium;
-    }
-
-    &__register {
-      margin-top: .45rem;
     }
   }
 

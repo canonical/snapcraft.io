@@ -1,59 +1,50 @@
-// Based on the matrix component https://github.com/vanilla-framework/vanilla-framework/blob/develop/scss/_patterns_matrix.scss
 @mixin snapcraft-p-media-object--snap {
-  $matrix-img-width: map-get($icon-sizes, thumb--small);
+  $matrix-img-width: map-get($icon-sizes, heading-icon--small);
   $matrix-img-gutter: $sph-inter;
+  %ellipsize {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .p-media-object--snap {
     display: block;
+    margin-bottom: 0;
 
-    &__img {
-      align-self: flex-start;
-      margin-bottom: $spv-inter--condensed;
+    &__image {
+      margin-bottom: $spv-intra;
       margin-right: $matrix-img-gutter;
-      max-height: $matrix-img-width;
+      height: $matrix-img-width;
       max-width: $matrix-img-width;
       width: auto;
     }
 
     &__content {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      padding-right: $sph-intra;
+      @extend %ellipsize;
+      margin-bottom: $sp-unit * 1 - map-get($nudges, nudge--p);
+      &,
+      &:active,
+      &:hover,
+      &:focus,
+      &:visited {
+        color: $color-mid-dark;
+        text-decoration: none;
+      }
     }
 
     &__title {
       @extend %vf-heading-5;
-      margin-top: -$sp-unit;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @extend %ellipsize;
+      margin-bottom: - map-get($nudges, nudge--p);
 
-      &:hover {
-        text-decoration: underline;
+      &,
+      &:active,
+      &:hover,
+      &:focus,
+      &:visited {
+        color: $color-dark;
+        text-decoration: none;
       }
-    }
-
-    &__desc {
-      color: $color-mid-dark;
-      margin-bottom: $spv-nudge-compensation;
-      margin-top: - $sp-unit * 3;
-
-      > p:last-child {
-        margin-bottom: 0;
-      }
-
-      & + & {
-        margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
-      }
-
-      @media (max-width: $breakpoint-heading-threshold) {
-        margin-top: - $sp-unit;
-      }
-    }
-
-    &:hover {
-      text-decoration: none;
     }
   }
 }
