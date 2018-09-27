@@ -111,18 +111,23 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)
 
-        assert response.json == payload
+        result = {"success": True}
+        assert response.json == result
 
     @responses.activate
     def test_return_error(self):
-        payload = {"errors": [{"name": ["message"]}]}
+        payload = {"error_list": [{"code": "code", "name": ["message"]}]}
 
         responses.add(responses.POST, self.api_url, json=payload, status=400)
 
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)
 
-        assert response.json == payload
+        expected_response = {
+            "errors": [{"code": "code", "name": ["message"]}],
+            "success": False,
+        }
+        assert response.json == expected_response
 
     @responses.activate
     def test_error_4xx(self):
@@ -132,5 +137,6 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)
 
+        expected_response = {"errors": [], "success": False}
         assert response.status_code == 400
-        assert response.get_json() == []
+        assert response.get_json() == expected_response
