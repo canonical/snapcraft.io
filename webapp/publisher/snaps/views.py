@@ -250,6 +250,7 @@ def get_listing_snap(snap_name):
         "website": snap_details["website"] or "",
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
+        "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
     }
 
@@ -402,6 +403,7 @@ def post_listing_snap(snap_name):
                     else snap_details["website"] or ""
                 ),
                 "public_metrics_enabled": details_metrics_enabled,
+                "video_urls": snap_details["video_urls"],
                 "public_metrics_blacklist": details_blacklist,
                 "is_on_stable": is_on_stable,
                 # errors
@@ -648,6 +650,10 @@ def get_settings(snap_name):
         "countries": countries,
         "whitelist_country_codes": whitelist_country_codes,
         "blacklist_country_codes": blacklist_country_codes,
+        "price": snap_details["price"],
+        "store": snap_details["store"],
+        "keywords": snap_details["keywords"],
+        "status": snap_details["status"],
     }
 
     return flask.render_template("publisher/settings.html", **context)
@@ -737,6 +743,10 @@ def post_settings(snap_name):
                 "countries": countries,
                 "whitelist_country_codes": whitelist_country_codes,
                 "blacklist_country_codes": blacklist_country_codes,
+                "price": snap_details["price"],
+                "store": snap_details["store"],
+                "keywords": snap_details["keywords"],
+                "status": snap_details["status"],
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,

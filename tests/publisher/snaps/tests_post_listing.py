@@ -131,6 +131,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "video_urls": [],
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -177,6 +178,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", True)
         self.assert_context("public_metrics_blacklist", True)
+        self.assert_context("video_urls", [])
 
     @responses.activate
     def test_return_error_udpate_all_field(self):
@@ -205,6 +207,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
+            "video_urls": [],
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -253,6 +256,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", False)
         self.assert_context("public_metrics_blacklist", True)
+        self.assert_context("video_urls", [])
 
         # All updatable fields
         self.assert_context("summary", "New summary")
@@ -293,6 +297,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "video_urls": [],
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
