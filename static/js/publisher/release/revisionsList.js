@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import distanceInWords from 'date-fns/distance_in_words_strict';
+import format from 'date-fns/format';
 
 export default class RevisionsList extends Component {
   renderRows(revisions) {
     return revisions.map((revision) => {
-      const uploadDate = moment(revision.created_at);
+      const uploadDate = new Date(revision.created_at);
 
       return (
         <tr key={revision.revision}>
@@ -15,9 +16,13 @@ export default class RevisionsList extends Component {
           <td>{ revision.channels.join(", ") }</td>
           <td className="u-align--right">
             <span className="p-tooltip p-tooltip--btm-center" aria-describedby={`revision-uploaded-${revision.revision}`}>
-              { uploadDate.fromNow() }
+              { distanceInWords(
+                new Date(), 
+                uploadDate, 
+                { addSuffix: true }
+              ) }
               <span className="p-tooltip__message u-align--center" role="tooltip" id={`revision-uploaded-${revision.revision}`}>
-                { uploadDate.format("YYYY-MM-DD HH:mm") }
+                { format(uploadDate, "YYYY-MM-DD HH:mm") }
               </span>
             </span>
           </td>

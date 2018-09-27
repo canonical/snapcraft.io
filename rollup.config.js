@@ -85,6 +85,12 @@ export default [
         exclude: 'node_modules/**',
         plugins: ['external-helpers']
       }),
+      commonjs({
+        exclude: 'node_modules/process-es6/**',
+        include: [
+          'node_modules/date-fns/**'
+        ]
+      }),
       production && uglify()
     ],
     output: {
@@ -115,7 +121,8 @@ export default [
           'node_modules/react/**',
           'node_modules/react-dom/**',
           'node_modules/prop-types/**',
-          'node_modules/vanilla-framework-react/**'
+          'node_modules/vanilla-framework-react/**',
+          'node_modules/date-fns/**'
         ],
         namedExports: {
           'node_modules/react/index.js': [
