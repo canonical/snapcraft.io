@@ -50,6 +50,10 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "snap_name": snap_name,
             "private": True,
             "license": "License",
+            "price": 0,
+            "store": "stotore",
+            "keywords": [],
+            "status": "published",
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -66,6 +70,10 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("snap_name", snap_name)
         self.assert_context("private", True)
         self.assert_context("license", "License")
+        self.assert_context("price", 0)
+        self.assert_context("store", "stotore")
+        self.assert_context("keywords", [])
+        self.assert_context("status", "published")
 
 
 if __name__ == "__main__":

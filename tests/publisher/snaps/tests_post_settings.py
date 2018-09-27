@@ -172,6 +172,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "snap_name": self.snap_name,
             "license": "license",
             "private": True,
+            "price": 0,
+            "store": "stotore",
+            "keywords": [],
+            "status": "published",
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -204,6 +208,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("private", True)
         self.assert_context("license", "license")
+        self.assert_context("price", 0)
+        self.assert_context("store", "stotore")
+        self.assert_context("keywords", [])
+        self.assert_context("status", "published")
 
     @responses.activate
     def test_return_error_udpate_all_field(self):
@@ -226,6 +234,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "private": True,
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
+            "price": 0,
+            "store": "stotore",
+            "keywords": [],
+            "status": "published",
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -258,6 +270,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("license", "license")
         self.assert_context("private", True)
+        self.assert_context("price", 0)
+        self.assert_context("store", "stotore")
+        self.assert_context("keywords", [])
+        self.assert_context("status", "published")
 
     @responses.activate
     def test_return_error_invalid_field(self):
@@ -290,6 +306,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "private": True,
             "contact": "contact adress",
             "website": "website_url",
+            "price": 0,
+            "store": "stotore",
+            "keywords": [],
+            "status": "published",
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)

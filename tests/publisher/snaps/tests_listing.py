@@ -58,6 +58,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": False,
+            "video_urls": [],
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -83,6 +84,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", True)
         self.assert_context("public_metrics_blacklist", False)
+        self.assert_context("video_urls", [])
 
     @responses.activate
     def test_icon(self):
@@ -100,6 +102,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "video_urls": [],
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -129,6 +132,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "video_urls": [],
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
