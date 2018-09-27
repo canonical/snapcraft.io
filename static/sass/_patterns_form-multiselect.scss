@@ -1,4 +1,13 @@
 @mixin snapcraft-p-multiselect {
+  .p-multiselect__wrapper {
+    margin-top: .5rem;
+  }
+
+  .p-multiselect__clear {
+    float: right;
+    margin-top: -2rem;
+  }
+
   .p-multiselect {
     @extend %vf-clearfix;
     align-content: flex-start;
@@ -10,6 +19,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     line-height: 1.5rem;
+    margin-top: $spv-inter--condensed;
     min-width: 10em;
     padding: 0 .5rem;
     position: relative;

@@ -137,9 +137,9 @@
                    checked="checked"
               {% endif %}
             />
-            <label for="territories_custom">Custom list</label>
+            <label for="territories_custom">Selected territories</label>
             <div class="p-nested-inputs{% if not whitelist_country_codes and not blacklist_country_codes %} is-hidden{% endif %}">
-              <div class="js-whitelist">
+              <div class="js-whitelist p-multiselect__wrapper">
                 <input type="radio" name="territories_custom_type" value="whitelist" id="territories_custom_whitelist"
                   {% if whitelist_country_codes or not blacklist_country_codes %}
                       checked="checked"
@@ -153,7 +153,7 @@
                  " />
                 <div class="js-multiselect-holder{% if blacklist_country_codes %} is-disabled{% endif %}"></div>
               </div>
-              <div class="js-blacklist">
+              <div class="js-blacklist p-multiselect__wrapper">
                 <input type="radio" name="territories_custom_type" value="blacklist" id="territories_custom_blacklist"
                   {% if blacklist_country_codes %}
                        checked="checked"

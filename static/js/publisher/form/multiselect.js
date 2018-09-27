@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
@@ -32,6 +32,7 @@ class MultiSelect extends React.Component {
     this.focusInput = this.focusInput.bind(this);
     this.search = this.search.bind(this);
     this.handleKeypress = this.handleKeypress.bind(this);
+    this.clearAll = this.clearAll.bind(this);
   }
 
   sortByName(a, b) {
@@ -190,6 +191,26 @@ class MultiSelect extends React.Component {
     }
   }
 
+  /**
+   * Clear all selected values
+   */
+  clearAll() {
+    const toRemove = this.state.selected.slice(0);
+    let newValues = this.state.values.slice(0);
+    newValues = newValues.concat(toRemove);
+    newValues.sort(this.sortByName);
+
+    this.setState({
+      values: newValues,
+      selected: [],
+      // Preserve the filtered list in the dropdown
+      searchResults: newValues
+    }, () => {
+      this.props.updateHandler.bind(this,  this.state.selected);
+      this.focusInput();
+    });
+  }
+
   blur() {
     this.setState({
       showSearch: false
@@ -245,6 +266,20 @@ class MultiSelect extends React.Component {
     }
   }
 
+  renderClear() {
+    if (this.state.selected.length > 3 && this.state.showSearch) {
+      return (
+        <a 
+          className="p-multiselect__clear" 
+          onClick={ this.clearAll }
+        >
+          Clear all
+        </a>
+      );
+    }
+    return false;
+  }
+
   renderSearch() {
     if (this.state.showSearch) {
       return (
@@ -292,14 +327,18 @@ class MultiSelect extends React.Component {
   render() {
     return (
       <div
-        className={`p-multiselect${this.state.showSearch ? ' is-focused' : ''}`}
-        onClick={this.focusInput}
-        onKeyDown={this.handleKeypress}
         ref={el => {this.wrapperEl = el;}}
       >
-        { this.renderItems() }
-        { this.renderInput() }
-        { this.renderSearch() }
+        { this.renderClear() }
+        <div
+          className={`p-multiselect${this.state.showSearch ? ' is-focused' : ''}`}
+          onClick={this.focusInput}
+          onKeyDown={this.handleKeypress}
+        >
+          { this.renderItems() }
+          { this.renderInput() }
+          { this.renderSearch() }
+        </div>
       </div>
     );
   }
