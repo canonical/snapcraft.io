@@ -652,8 +652,6 @@ def get_settings(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    licenses = get_licenses()
-
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
             snap_details["whitelist_country_codes"]
@@ -676,11 +674,17 @@ def get_settings(snap_name):
     for country in pycountry.countries:
         countries.append({"key": country.alpha_2, "name": country.name})
 
+    licenses = []
+    for license in get_licenses():
+        licenses.append({"key": license["licenseId"], "name": license["name"]})
+
+    license = ",".join(snap_details["license"].split(" OR "))
+
     context = {
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
-        "license": snap_details["license"],
+        "license": license,
         "private": snap_details["private"],
         "licenses": licenses,
         "countries": countries,
@@ -768,14 +772,22 @@ def post_settings(snap_name):
             else:
                 blacklist_country_codes = []
 
+            licenses = []
+            for license in get_licenses():
+                licenses.append(
+                    {"key": license["licenseId"], "name": license["name"]}
+                )
+
+            license = ",".join(snap_details["license"].split(" OR "))
+
             context = {
                 # read-only values from details API
                 "snap_name": snap_details["snap_name"],
                 "snap_title": snap_details["title"],
                 "snap_id": snap_details["snap_id"],
-                "license": snap_details["license"],
+                "license": license,
                 "private": snap_details["private"],
-                "licenses": get_licenses(),
+                "licenses": licenses,
                 "countries": countries,
                 "whitelist_country_codes": whitelist_country_codes,
                 "blacklist_country_codes": blacklist_country_codes,

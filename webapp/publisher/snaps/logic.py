@@ -227,6 +227,7 @@ def filter_changes_data(changes):
         "public_metrics_blacklist",
         "whitelist_countries",
         "blacklist_countries",
+        "license",
     ]
 
     return {key: changes[key] for key in whitelist if key in changes}

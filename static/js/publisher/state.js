@@ -1,4 +1,3 @@
-import { transformWhitelistBlacklist } from "./market/whitelistBlacklist";
 import { arraysEqual } from "../libs/arrays";
 
 const allowedKeys = [
@@ -12,12 +11,22 @@ const allowedKeys = [
   'public_metrics_enabled',
   'public_metrics_blacklist',
   'whitelist_countries',
-  'blacklist_countries'
+  'blacklist_countries',
+  'license'
 ];
 
+function commaSeperatedStringToArray(str) {
+  if (str !== '') {
+    return str.split(', ');
+  } else {
+    return [];
+  }
+}
+
 const transform = {
-  'whitelist_countries': transformWhitelistBlacklist,
-  'blacklist_countries': transformWhitelistBlacklist,
+  'whitelist_countries': commaSeperatedStringToArray,
+  'blacklist_countries': commaSeperatedStringToArray,
+  'license': (value) => commaSeperatedStringToArray(value).join(' OR '),
   'private': value => (value === 'private'),
   'public_metrics_enabled': value => (value === 'on')
 };
