@@ -184,3 +184,6 @@ $color-navigation-background: #252525;
 
 @import 'global-nav';
 @include global-nav;
+
+@import 'patterns_form-multiselect';
+@include snapcraft-p-multiselect;

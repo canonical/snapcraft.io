@@ -5,7 +5,7 @@
   <nav class="p-tabs-bordered">
     <div class="row">
       <div class="col-12">
-        <a href="/account/snaps">&lsaquo; My snaps</a>
+        <a href="/snaps">&lsaquo; My snaps</a>
       </div>
     </div>
     <div class="row p-tabs__group">
@@ -16,7 +16,7 @@
         <ul class="p-tabs__list u-float--right" role="tablist">
           <li class="p-tabs__item" role="presentation">
             <a
-              href="/account/snaps/{{ snap_name }}/listing"
+              href="/{{ snap_name }}/listing"
               class="p-tabs__link"
               tabindex="0"
               role="tab"
@@ -29,7 +29,7 @@
           </li>
           <li class="p-tabs__item" role="presentation">
             <a
-              href="/account/snaps/{{ snap_name }}/release"
+              href="/{{ snap_name }}/release"
               class="p-tabs__link"
               tabindex="0"
               role="tab"
@@ -42,7 +42,7 @@
           </li>
           <li class="p-tabs__item" role="presentation">
             <a
-              href="/account/snaps/{{ snap_name }}/metrics"
+              href="/{{ snap_name }}/metrics"
               class="p-tabs__link"
               tabindex="0"
               role="tab"
@@ -51,6 +51,19 @@
               {% endif %}
             >
             Metrics
+            </a>
+          </li>
+          <li class="p-tabs__item" role="presentation">
+            <a
+              href="/{{ snap_name }}/settings"
+              class="p-tabs__link"
+              tabindex="0"
+              role="tab"
+              {% if selected_tab == 'settings' %}
+              aria-selected="true"
+              {% endif %}
+            >
+              Settings
             </a>
           </li>
         </ul>

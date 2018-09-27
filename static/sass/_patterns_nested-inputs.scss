@@ -1,5 +1,9 @@
 @mixin snapcraft-p-nested-inputs {
   .p-nested-inputs {
     margin-left: $sp-x-large;
+
+    &.is-hidden {
+      display: none;
+    }
   }
 }
