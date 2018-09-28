@@ -46,4 +46,8 @@ def snapcraft_blueprint():
 
         return flask.render_template("snapcraft/build.html"), status_code
 
+    @snapcraft.route("/robots.txt")
+    def robots():
+        return flask.Response("", mimetype="text/plain")
+
     return snapcraft
