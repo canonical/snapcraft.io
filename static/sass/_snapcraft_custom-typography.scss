@@ -1,15 +1,4 @@
 @mixin snapcraft-custom-typography {
-  // Sizing fixes for headings on home page
-  h2,
-  .p-heading--two {
-    line-height: 1.3333;
-  }
-
-  h5,
-  .p-heading--five {
-    line-height: 1.4;
-  }
-
   // max-width based on font size for better readability
   %heading-copy--short {
     max-width: 20em;
@@ -25,8 +14,10 @@
 
   h1,
   h2,
+  .p-heading--one,
   .p-heading--two {
     @extend %heading-copy--short;
+    font-weight: 100;
   }
 
   h3,
@@ -41,12 +32,5 @@
   .p-heading--five,
   .p-heading--six {
     @extend %paragraph-copy;
-  }
-
-  // This can be removed when
-  // https://github.com/vanilla-framework/vanilla-framework/issues/1627
-  // is resolved.
-  br {
-    margin-top: 0;
   }
 }
