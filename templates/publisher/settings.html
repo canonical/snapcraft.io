@@ -15,20 +15,7 @@
 
       <div class="snapcraft-p-sticky">
         <div class="row">
-          <div class="col-6">
-            <ul class="p-inline-list u-no-margin--bottom">
-              <li class="p-inline-list__item">
-                Price: {% if price %}{{ price }}{% else %}Free{% endif %}
-              </li>
-              <li class="p-inline-list__item">
-                Store: {{ store }}
-              </li>
-              <li class="p-inline-list__item">
-                Status: {{ status }}
-              </li>
-            </ul>
-          </div>
-          <div class="col-5 push-1">
+          <div class="col-5 push-7">
             <div class="u-align--right u-clearfix">
               <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
                 {#
@@ -181,6 +168,51 @@
                 <div class="js-multiselect-holder{% if whitelist_country_codes or not blacklist_country_codes %} is-disabled{% endif %}"></div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            Price:
+          </div>
+          <div class="col-8">
+            {% if price %}{{ price }}{% else %}Free{% endif %}
+          </div>
+        </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            Store:
+          </div>
+          <div class="col-8">
+            {{ store }}
+          </div>
+        </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+      
+        <div class="row">
+          <div class="col-2">
+            Status:
+          </div>
+          <div class="col-8">
+            {{ status }}
           </div>
         </div>
       </section>
