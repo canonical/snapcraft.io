@@ -489,6 +489,42 @@ def post_release(snap_name):
     return flask.jsonify(response)
 
 
+@publisher_snaps.route("/<snap_name>/release/close-channel", methods=["POST"])
+@login_required
+def post_close_channel(snap_name):
+    data = flask.request.json
+
+    if not data:
+        return flask.jsonify({})
+
+    try:
+        snap_id = api.get_snap_id(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return flask.jsonify(api_response_error_list.errors), 400
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    try:
+        response = api.post_close_channel(flask.session, snap_id, data)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            response = {
+                "errors": api_response_error_list.errors,
+                "success": False,
+            }
+            return flask.jsonify(response), 400
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    response["success"] = True
+    return flask.jsonify(response)
+
+
 @publisher_snaps.route("/account/register-snap")
 def redirect_get_register_name():
     return flask.redirect(flask.url_for(".get_register_name"))

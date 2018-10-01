@@ -60,6 +60,8 @@ SNAP_RELEASE_HISTORY_URL = "".join(
 
 SNAP_RELEASE = "".join([DASHBOARD_API, "snap-release/"])
 
+CLOSE_CHANNEL = "".join([DASHBOARD_API, "snaps/{snap_id}/close"])
+
 
 def process_response(response):
     try:
@@ -290,6 +292,18 @@ def snap_release_history(session, snap_name):
 def post_snap_release(session, snap_name, json):
     response = api_session.post(
         url=SNAP_RELEASE, headers=get_authorization_header(session), json=json
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def post_close_channel(session, snap_id, json):
+    url = CLOSE_CHANNEL.format(snap_id=snap_id)
+    response = api_session.post(
+        url=url, headers=get_authorization_header(session), json=json
     )
 
     if authentication.is_macaroon_expired(response.headers):
