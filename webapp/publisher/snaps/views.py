@@ -235,6 +235,12 @@ def get_listing_snap(snap_name):
         m["url"] for m in snap_details["media"] if m["type"] == "screenshot"
     ]
 
+    licenses = []
+    for license in get_licenses():
+        licenses.append({"key": license["licenseId"], "name": license["name"]})
+
+    license = ",".join(snap_details["license"].split(" OR "))
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -250,6 +256,8 @@ def get_listing_snap(snap_name):
         "website": snap_details["website"] or "",
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
+        "license": license,
+        "licenses": licenses,
         "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
     }
@@ -366,6 +374,14 @@ def post_listing_snap(snap_name):
                 if m["type"] == "screenshot"
             ]
 
+            licenses = []
+            for license in get_licenses():
+                licenses.append(
+                    {"key": license["licenseId"], "name": license["name"]}
+                )
+
+            license = ",".join(snap_details["license"].split(" OR "))
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
@@ -405,6 +421,8 @@ def post_listing_snap(snap_name):
                 "public_metrics_enabled": details_metrics_enabled,
                 "video_urls": snap_details["video_urls"],
                 "public_metrics_blacklist": details_blacklist,
+                "license": license,
+                "licenses": licenses,
                 "is_on_stable": is_on_stable,
                 # errors
                 "error_list": error_list,
@@ -674,19 +692,12 @@ def get_settings(snap_name):
     for country in pycountry.countries:
         countries.append({"key": country.alpha_2, "name": country.name})
 
-    licenses = []
-    for license in get_licenses():
-        licenses.append({"key": license["licenseId"], "name": license["name"]})
-
-    license = ",".join(snap_details["license"].split(" OR "))
-
     context = {
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
         "license": license,
         "private": snap_details["private"],
-        "licenses": licenses,
         "countries": countries,
         "whitelist_country_codes": whitelist_country_codes,
         "blacklist_country_codes": blacklist_country_codes,
@@ -772,22 +783,12 @@ def post_settings(snap_name):
             else:
                 blacklist_country_codes = []
 
-            licenses = []
-            for license in get_licenses():
-                licenses.append(
-                    {"key": license["licenseId"], "name": license["name"]}
-                )
-
-            license = ",".join(snap_details["license"].split(" OR "))
-
             context = {
                 # read-only values from details API
                 "snap_name": snap_details["snap_name"],
                 "snap_title": snap_details["title"],
                 "snap_id": snap_details["snap_id"],
-                "license": license,
                 "private": snap_details["private"],
-                "licenses": licenses,
                 "countries": countries,
                 "whitelist_country_codes": whitelist_country_codes,
                 "blacklist_country_codes": blacklist_country_codes,

@@ -170,7 +170,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "snap_id": self.snap_id,
             "title": "test snap",
             "snap_name": self.snap_name,
-            "license": "license",
             "private": True,
             "price": 0,
             "store": "stotore",
@@ -207,7 +206,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("private", True)
-        self.assert_context("license", "license")
         self.assert_context("price", 0)
         self.assert_context("store", "stotore")
         self.assert_context("keywords", [])
@@ -230,7 +228,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "snap_id": self.snap_id,
             "title": "test snap",
             "snap_name": self.snap_name,
-            "license": "license",
             "private": True,
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
@@ -268,7 +265,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_id", self.snap_id)
         self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", self.snap_name)
-        self.assert_context("license", "license")
         self.assert_context("private", True)
         self.assert_context("price", 0)
         self.assert_context("store", "stotore")

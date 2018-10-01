@@ -131,6 +131,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "license": "test OR testing",
             "video_urls": [],
         }
 
@@ -178,6 +179,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", True)
         self.assert_context("public_metrics_blacklist", True)
+        self.assert_context("license", "test,testing")
         self.assert_context("video_urls", [])
 
     @responses.activate
@@ -207,6 +209,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
+            "license": "test OR testing",
             "video_urls": [],
         }
 
@@ -223,6 +226,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "New website",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": "new metric1,new metric2",
+            "license": ["test1", "test", "testing"],
         }
 
         response = self.client.post(
@@ -257,6 +261,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("public_metrics_enabled", False)
         self.assert_context("public_metrics_blacklist", True)
         self.assert_context("video_urls", [])
+        self.assert_context("license", "test,testing")
 
         # All updatable fields
         self.assert_context("summary", "New summary")
@@ -297,6 +302,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "license": "test,testing",
             "video_urls": [],
         }
 

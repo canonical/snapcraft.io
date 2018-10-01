@@ -226,7 +226,6 @@
     Raven.context(function () {
       snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
       snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
-      snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }});
 
       snapcraft.publisher.market.initForm({
           form: "settings-form",
@@ -234,8 +233,7 @@
         }, {
           'private': {{ private|tojson }},
           'whitelist_countries': {{ whitelist_country_codes|tojson }},
-          'blacklist_countries': {{ blacklist_country_codes|tojson }},
-          'license': {{ license|tojson }}
+          'blacklist_countries': {{ blacklist_country_codes|tojson }}
         },
         {% if error_list %}
           {{ error_list|tojson}}

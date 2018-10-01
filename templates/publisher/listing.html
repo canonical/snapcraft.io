@@ -318,6 +318,24 @@
             </div>
           </div>
         </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="license">License</label>
+          </div>
+          <div class="col-8">
+            <div class="js-license p-multiselect__wrapper">
+              <input type="text" class="js-multiselect-input" name="license" value="{{ license }}" />
+              <div class="js-multiselect-holder"></div>
+            </div>
+          </div>
+        </div>
       </section>
     </form>
   </div>
@@ -327,6 +345,7 @@
 <script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
   Raven.context(function () {
+    snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }});
     snapcraft.publisher.market.initForm({
       snapIconImage: "snap_icon_image",
       snapIconInput: "snap_icon",
@@ -350,6 +369,7 @@
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
+      'license': {{ license|tojson }}
     },
     {% if error_list %}
       {{ error_list|tojson}}

@@ -58,6 +58,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": False,
+            "license": "License",
             "video_urls": [],
         }
 
@@ -84,6 +85,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", True)
         self.assert_context("public_metrics_blacklist", False)
+        self.assert_context("license", "License")
         self.assert_context("video_urls", [])
 
     @responses.activate
@@ -102,6 +104,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "license": "license",
             "video_urls": [],
         }
 
@@ -132,6 +135,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
+            "license": "license",
             "video_urls": [],
         }
 
