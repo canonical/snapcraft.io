@@ -3,7 +3,8 @@
 
   .global-nav {
     align-items: center;
-    background: $color-navigation-background;
+    background: $color-dark;
+    border-bottom: 1px solid $color-navigation-background;
     display: flex;
     min-height: 2rem;
     position: relative;
@@ -20,10 +21,6 @@
       .global-nav__link-anchor {
         color: $white-color;
         display: inline-block;
-        font-size: .875rem;
-        line-height: 1.25rem;
-        margin-bottom: 0;
-        margin-right: .6rem;
         transition: all .25s;
       }
     }
