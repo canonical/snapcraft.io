@@ -8,10 +8,10 @@ export default function initScreenshots(screenshotsId) {
     return;
   }
 
-  const images = Array.from(screenshotsEl.querySelectorAll('img')).map(image => image.src);
+  const images = Array.from(screenshotsEl.querySelectorAll('img')).map(image => image.dataset.original);
 
   screenshotsEl.addEventListener('click', (event) => {
-    const url = event.target.src;
+    const url = event.target.dataset.original;
 
     if (url) {
       if (isMobile()) {
