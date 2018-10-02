@@ -231,6 +231,11 @@ export default class RevisionsTable extends Component {
                 {'\n'}
               </span>;
             })}
+            { closesCount > 0 &&
+              <span>
+                Close channels: {pendingCloses.join(', ')}
+              </span>
+            }
           </span>
         </span>
         {' '}
