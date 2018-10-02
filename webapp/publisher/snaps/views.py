@@ -242,7 +242,7 @@ def get_listing_snap(snap_name):
     license = snap_details["license"]
     license_type = "custom"
 
-    if "AND" not in license.upper() and "WITH" not in license.upper():
+    if " AND " not in license.upper() and " WITH " not in license.upper():
         license_type = "simple"
 
     context = {
@@ -388,7 +388,10 @@ def post_listing_snap(snap_name):
             license = snap_details["license"]
             license_type = "custom"
 
-            if "AND" not in license.upper() and "WITH" not in license.upper():
+            if (
+                " AND " not in license.upper()
+                and " WITH " not in license.upper()
+            ):
                 license_type = "simple"
 
             context = {
