@@ -74,3 +74,7 @@ class MacaroonRefreshRequired(ApiError):
 
     def __init__(self):
         return super().__init__("The Macaroon needs to be refreshed")
+
+
+class ApiCircuitBreaker(ApiError):
+    pass

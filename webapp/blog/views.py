@@ -1,7 +1,7 @@
 import flask
 
 import webapp.api.blog as api
-from webapp.api.exceptions import ApiError
+from webapp.api.exceptions import ApiError, ApiCircuitBreaker
 from webapp.blog import logic
 
 blog = flask.Blueprint(
@@ -26,7 +26,7 @@ def homepage():
         try:
             categories_list = api.get_categories()
         except ApiError:
-            categories_list = None
+            categories_list = []
 
         categories = logic.whitelist_categories(categories_list)
 
@@ -47,6 +47,8 @@ def homepage():
         articles, total_pages = api.get_articles(
             page=page_param, category=filter_category
         )
+    except ApiCircuitBreaker:
+        return flask.abort(503)
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
@@ -101,6 +103,8 @@ def homepage():
 def feed():
     try:
         feed = api.get_feed()
+    except ApiCircuitBreaker:
+        return flask.abort(503)
     except ApiError:
         return flask.abort(502)
 
@@ -117,6 +121,8 @@ def feed():
 def article(slug):
     try:
         articles = api.get_article(slug)
+    except ApiCircuitBreaker:
+        return flask.abort(503)
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 

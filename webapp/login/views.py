@@ -5,7 +5,7 @@ import flask
 from flask_openid import OpenID
 from webapp import authentication
 from webapp.api import dashboard
-from webapp.api.exceptions import ApiError, ApiResponseError
+from webapp.api.exceptions import ApiError, ApiCircuitBreaker, ApiResponseError
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 
 login = flask.Blueprint(
@@ -34,6 +34,8 @@ def login_handler():
             return flask.redirect(flask.url_for(".logout"))
         else:
             return flask.abort(502, str(api_response_error))
+    except ApiCircuitBreaker:
+        flask.abort(503)
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
@@ -66,6 +68,8 @@ def after_login(resp):
             "image": resp.image,
             "email": account["email"],
         }
+    except ApiCircuitBreaker:
+        flask.abort(503)
     except Exception:
         flask.session["openid"] = {
             "identity_url": resp.identity_url,

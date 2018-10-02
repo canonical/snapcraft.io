@@ -4,6 +4,7 @@ import webapp.api.dashboard as api
 from webapp.decorators import login_required
 from webapp.api.exceptions import (
     AgreementNotSigned,
+    ApiCircuitBreaker,
     ApiError,
     ApiResponseError,
     ApiResponseErrorList,
@@ -44,6 +45,8 @@ def _handle_errors(api_error: ApiError):
         return flask.redirect(flask.url_for(".get_agreement"))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
+    elif type(api_error) is ApiCircuitBreaker:
+        return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
 
