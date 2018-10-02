@@ -327,13 +327,25 @@
 
         <div class="row">
           <div class="col-2">
-            <label for="license">License</label>
+            <label>License</label>
           </div>
           <div class="col-8">
-            <div class="js-license p-multiselect__wrapper">
-              <input type="text" class="js-multiselect-input" name="license" value="{{ license }}" />
+            <input type="hidden" name="license" value="{{ license }}" />
+            <input type="radio" name="license-type" value="simple" id="license-simple-option" {% if license_type == 'simple' %}checked="checked"{% endif %} />
+            <label for="license-simple-option">Simple</label>
+            <div class="js-license p-multiselect__wrapper" {% if license_type != 'simple' %}style="display: none;"{% endif %} id="license-simple-input">
+              <input type="text" class="js-multiselect-input" name="license-simple" value="{% if license_type == 'simple' %}{{ license }}{% endif %}" />
               <div class="js-multiselect-holder"></div>
+              <p class="p-form-help-text">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
             </div>
+            <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
+            <label for="license-custom-option">Custom SPDX expression</label>
+            <textarea
+              type="text"
+              id="license-custom-input"
+              name="license-custom"
+              {% if license_type != 'custom' %}style="display: none;"{% endif %}
+            >{% if license_type == 'custom' %}{{ license }}{% endif %}</textarea>
           </div>
         </div>
       </section>
@@ -345,7 +357,7 @@
 <script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
   Raven.context(function () {
-    snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }});
+    snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
     snapcraft.publisher.market.initForm({
       snapIconImage: "snap_icon_image",
       snapIconInput: "snap_icon",
@@ -377,6 +389,29 @@
       null
     {% endif %}
     );
+
+    var licenseRadioContent = [
+      document.getElementById('license-simple-input'),
+      document.getElementById('license-custom-input')
+    ];
+
+    function licenseTypeChange(e) {
+      var type = this.value;
+      licenseRadioContent.forEach(item => {
+        if (item.id.includes(type)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    var licenseRadio = document.querySelectorAll('[name="license-type"]');
+    if (licenseRadio) {
+      for (var i = 0; i < licenseRadio.length; i++) {
+        licenseRadio[i].addEventListener('change', licenseTypeChange);
+      }
+    }
   });
 </script>
 {% endblock %}

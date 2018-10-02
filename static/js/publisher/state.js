@@ -26,7 +26,6 @@ function commaSeperatedStringToArray(str) {
 const transform = {
   'whitelist_countries': commaSeperatedStringToArray,
   'blacklist_countries': commaSeperatedStringToArray,
-  'license': (value) => commaSeperatedStringToArray(value).join(' OR '),
   'private': value => (value === 'private'),
   'public_metrics_enabled': value => (value === 'on')
 };

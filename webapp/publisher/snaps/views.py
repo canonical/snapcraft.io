@@ -239,7 +239,11 @@ def get_listing_snap(snap_name):
     for license in get_licenses():
         licenses.append({"key": license["licenseId"], "name": license["name"]})
 
-    license = ",".join(snap_details["license"].split(" OR "))
+    license = snap_details["license"]
+    license_type = "custom"
+
+    if "AND" not in license.upper() and "WITH" not in license.upper():
+        license_type = "simple"
 
     context = {
         "snap_id": snap_details["snap_id"],
@@ -257,6 +261,7 @@ def get_listing_snap(snap_name):
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
         "license": license,
+        "license_type": license_type,
         "licenses": licenses,
         "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
@@ -380,7 +385,11 @@ def post_listing_snap(snap_name):
                     {"key": license["licenseId"], "name": license["name"]}
                 )
 
-            license = ",".join(snap_details["license"].split(" OR "))
+            license = snap_details["license"]
+            license_type = "custom"
+
+            if "AND" not in license.upper() and "WITH" not in license.upper():
+                license_type = "simple"
 
             context = {
                 # read-only values from details API
@@ -422,6 +431,7 @@ def post_listing_snap(snap_name):
                 "video_urls": snap_details["video_urls"],
                 "public_metrics_blacklist": details_blacklist,
                 "license": license,
+                "license_type": license_type,
                 "licenses": licenses,
                 "is_on_stable": is_on_stable,
                 # errors

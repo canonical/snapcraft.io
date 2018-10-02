@@ -101,7 +101,10 @@ class MultiSelect extends React.Component {
    */
   filterByTerm(values, searchTerm) {
     searchTerm = searchTerm || this.state.searchTerm;
-    return values.filter(item => item.name.toLowerCase().startsWith(searchTerm.toLowerCase()));
+    return values.filter(item => (
+      item.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+      item.key.toLowerCase().startsWith(searchTerm.toLowerCase())
+    ));
   }
 
   /**
@@ -353,10 +356,11 @@ MultiSelect.propTypes = {
 /**
  * Update the original input value and dispatch a change event to the input and form.
  */
-function updateHandler(input) {
+function updateHandler(input, delimiter) {
   const _input = input;
+  const _delimiter = delimiter;
   return function(values) {
-    _input.value = values.map(item => item.key).join(', ');
+    _input.value = values.map(item => item.key).join(_delimiter);
     const changeEvent = new Event('change', { 'bubbles': true });
 
     _input.dispatchEvent(changeEvent);
@@ -375,8 +379,9 @@ function updateHandler(input) {
  *
  * @param {HTMLElement} selector
  * @param {{name: string, key: string}[]} values
+ * @param {String} delimiter
  */
-function init(selector, values) {
+function init(selector, values, delimiter = ',') {
   const el = document.querySelector(selector);
 
   if (el) {
@@ -388,7 +393,7 @@ function init(selector, values) {
 
     // If there's anything in the current input, use it
     // split a list of , seperated strings to an array
-    let currentValue = input.value.split(',');
+    let currentValue = input.value.split(delimiter);
 
     // If a currentValue exists, trim the whitespace
     if (currentValue.length > 0) {
@@ -402,7 +407,7 @@ function init(selector, values) {
       <MultiSelect
         value={ currentValue }
         values={ values }
-        updateHandler={updateHandler(input)}
+        updateHandler={updateHandler(input, delimiter)}
       />,
       holder
     );

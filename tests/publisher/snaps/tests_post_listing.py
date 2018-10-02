@@ -179,7 +179,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", True)
         self.assert_context("public_metrics_blacklist", True)
-        self.assert_context("license", "test,testing")
+        self.assert_context("license", "test OR testing")
         self.assert_context("video_urls", [])
 
     @responses.activate
@@ -261,7 +261,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("public_metrics_enabled", False)
         self.assert_context("public_metrics_blacklist", True)
         self.assert_context("video_urls", [])
-        self.assert_context("license", "test,testing")
+        self.assert_context("license", "test OR testing")
 
         # All updatable fields
         self.assert_context("summary", "New summary")
@@ -302,7 +302,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
-            "license": "test,testing",
+            "license": "test OR testing",
             "video_urls": [],
         }
 

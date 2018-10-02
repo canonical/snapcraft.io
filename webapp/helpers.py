@@ -22,21 +22,6 @@ def get_licenses():
         CUSTOM_LICENSES = [
             _build_custom_license("Proprietary", "Proprietary"),
             _build_custom_license("Other Open Source", "Other Open Source"),
-            _build_custom_license(
-                "AGPL-3.0+", "GNU Affero General Public License v3.0 or later"
-            ),
-            _build_custom_license(
-                "GPL-2.0+", "GNU General Public License v2.0 or later"
-            ),
-            _build_custom_license(
-                "GPL-3.0+", "GNU General Public License v3.0 or later"
-            ),
-            _build_custom_license(
-                "LGPL-2.1+", "GNU Lesser General Public License v2.1 or later"
-            ),
-            _build_custom_license(
-                "LGPL-3.0+", "GNU Lesser General Public License v3.0 or later"
-            ),
         ]
 
         licenses = licenses + CUSTOM_LICENSES
