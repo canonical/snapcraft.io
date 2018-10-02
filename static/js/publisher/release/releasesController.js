@@ -25,7 +25,8 @@ export default class ReleasesController extends Component {
       //    channels: [ ... ]
       //  }
       // }
-      pendingReleases: {}
+      pendingReleases: {},
+      pendingCloses: []
     };
   }
 
@@ -65,6 +66,34 @@ export default class ReleasesController extends Component {
         this.promoteRevision(archRevisions[arch], targetChannel);
       });
     }
+  }
+
+  closeChannel(channel) {
+    this.setState((state) => {
+      let { pendingCloses, pendingReleases } = state;
+
+      pendingCloses.push(channel);
+      // make sure channels are unique
+      pendingCloses = pendingCloses.filter((item, i, ar) => ar.indexOf(item) === i);
+
+      // undo any pending releases to closed channel
+      Object.keys(pendingReleases).forEach(revision => {
+        const channels = pendingReleases[revision].channels;
+
+        if (channels.includes(channel)) {
+          channels.splice(channels.indexOf(channel), 1);
+        }
+
+        if (channels.length === 0) {
+          delete pendingReleases[revision];
+        }
+      });
+
+      return {
+        pendingCloses,
+        pendingReleases
+      };
+    });
   }
 
   // TODO:
@@ -133,14 +162,15 @@ export default class ReleasesController extends Component {
 
   clearPendingReleases() {
     this.setState({
-      pendingReleases: {}
+      pendingReleases: {},
+      pendingCloses: []
     });
   }
 
   fetchRelease(revision, channels) {
     const { csrfToken } = this.props.options;
 
-    return fetch(`/account/snaps/${this.props.snapName}/release`, {
+    return fetch(`/${this.props.snapName}/release`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -152,6 +182,25 @@ export default class ReleasesController extends Component {
       redirect: "follow",
       referrer: "no-referrer",
       body: JSON.stringify({ revision, channels, name: this.props.snapName }),
+    })
+      .then(response => response.json());
+  }
+
+  fetchClose(channels) {
+    const { csrfToken } = this.props.options;
+
+    return fetch(`/${this.props.snapName}/release/close-channel`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "X-CSRFToken": csrfToken
+      },
+      redirect: "follow",
+      referrer: "no-referrer",
+      body: JSON.stringify({ channels }),
     })
       .then(response => response.json());
   }
@@ -210,15 +259,50 @@ export default class ReleasesController extends Component {
   }
 
   handleReleaseError(error) {
+    console.log(error, error.json);
     let message = error.message || "Error while performing the release. Please try again later.";
 
-    if (error.json && error.json.length) {
-      message = message + " " + error.json.map(e => e.message).filter(m => m).join(' ');
+    // try to find error messages in response json
+    // which may be an array or errors or object with errors property
+    if (error.json) {
+      const errors = error.json.length ? error.json : error.json.errors;
+
+      if (errors.length) {
+        message = message + " " + errors.map(e => e.message).filter(m => m).join(' ');
+      }
     }
 
     this.setState({
       error: message
     });
+  }
+
+  handleCloseResponse(json, channels) {
+    if (json.success) {
+      this.setState((state) => {
+        const { releasedChannels } = state;
+
+        if(json.closed_channels && json.closed_channels.length > 0) {
+          json.closed_channels.forEach(channel => {
+
+            // make sure default channels get prefixed with 'latest'
+            if (channel.indexOf('/') === -1) {
+              channel = `latest/${channel}`;
+            }
+
+            releasedChannels[channel] = {};
+          });
+        }
+
+        return {
+          releasedChannels
+        };
+      });
+    } else {
+      let error = new Error(`Error while closing channels: ${channels.join(', ')}.`);
+      error.json = json;
+      throw error;
+    }
   }
 
   fetchReleases(releases) {
@@ -236,14 +320,24 @@ export default class ReleasesController extends Component {
     return queue;
   }
 
+  fetchCloses(channels) {
+    if (channels.length) {
+      return this.fetchClose(channels)
+        .then(json => this.handleCloseResponse(json, channels));
+    } else {
+      return Promise.resolve();
+    }
+  }
+
   releaseRevisions() {
-    const { pendingReleases } = this.state;
+    const { pendingReleases, pendingCloses } = this.state;
     const releases = Object.keys(pendingReleases).map(id => {
       return { id, revision: pendingReleases[id].revision, channels: pendingReleases[id].channels };
     });
 
     this.setState({ isLoading: true });
     this.fetchReleases(releases)
+      .then(() => this.fetchCloses(pendingCloses))
       .catch(error => this.handleReleaseError(error))
       .then(() => this.setState({ isLoading: false }))
       .then(() => this.clearPendingReleases());
@@ -267,6 +361,7 @@ export default class ReleasesController extends Component {
           archs={archs}
           isLoading={this.state.isLoading}
           pendingReleases={this.state.pendingReleases}
+          pendingCloses={this.state.pendingCloses}
           getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
           releaseRevisions={this.releaseRevisions.bind(this)}
@@ -274,6 +369,7 @@ export default class ReleasesController extends Component {
           promoteChannel={this.promoteChannel.bind(this)}
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
+          closeChannel={this.closeChannel.bind(this)}
         />
         <RevisionsList
           currentTrack={this.state.currentTrack}

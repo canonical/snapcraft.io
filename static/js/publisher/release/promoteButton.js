@@ -18,6 +18,13 @@ export default class PromoteButton extends Component {
     event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
   }
 
+  closeChannelClick(channel, event) {
+    this.props.closeChannel(channel);
+    this.closeAllDropdowns();
+    event.preventDefault(); // prevent link from changing URL
+    event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
+  }
+
   dropdownButtonClick(event) {
     this.closeAllDropdowns();
     const dropdownEl = event.target
@@ -65,6 +72,17 @@ export default class PromoteButton extends Component {
               })
             }
           </span>
+          { this.props.closeRisk &&
+            <span className="p-contextual-menu__group">
+              <a
+                className="p-contextual-menu__link"
+                href="#"
+                onClick={this.closeChannelClick.bind(this, `${track}/${this.props.closeRisk}`)}
+              >
+                Close {`${track}/${this.props.closeRisk}`}
+              </a>
+            </span>
+          }
         </span>
       </span>
     );
@@ -75,5 +93,7 @@ PromoteButton.propTypes = {
   position: PropTypes.oneOf(['left', 'center']), // right is by default
   track: PropTypes.string.isRequired,
   targetRisks: PropTypes.array.isRequired,
-  promoteToChannel: PropTypes.func.isRequired
+  closeRisk: PropTypes.string,
+  promoteToChannel: PropTypes.func.isRequired,
+  closeChannel: PropTypes.func
 };
