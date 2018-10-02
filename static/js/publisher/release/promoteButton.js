@@ -55,23 +55,25 @@ export default class PromoteButton extends Component {
       >
         &uarr;
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
-          <span className="p-contextual-menu__group">
-            <span className="p-contextual-menu__item">Promote to:</span>
-            {
-              this.props.targetRisks.map((targetRisk) => {
-                return (
-                  <a
-                    className="p-contextual-menu__link is-indented"
-                    href="#"
-                    key={`promote-to-${track}/${targetRisk}`}
-                    onClick={this.promoteToChannelClick.bind(this, `${track}/${targetRisk}`)}
-                  >
-                    {`${track}/${targetRisk}`}
-                  </a>
-                );
-              })
-            }
-          </span>
+          { (this.props.targetRisks.length > 0) &&
+            <span className="p-contextual-menu__group">
+              <span className="p-contextual-menu__item">Promote to:</span>
+              {
+                this.props.targetRisks.map((targetRisk) => {
+                  return (
+                    <a
+                      className="p-contextual-menu__link is-indented"
+                      href="#"
+                      key={`promote-to-${track}/${targetRisk}`}
+                      onClick={this.promoteToChannelClick.bind(this, `${track}/${targetRisk}`)}
+                    >
+                      {`${track}/${targetRisk}`}
+                    </a>
+                  );
+                })
+              }
+            </span>
+          }
           { this.props.closeRisk &&
             <span className="p-contextual-menu__group">
               <a

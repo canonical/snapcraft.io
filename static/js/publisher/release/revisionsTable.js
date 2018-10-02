@@ -121,6 +121,7 @@ export default class RevisionsTable extends Component {
       const channel = `${track}/${risk}`;
 
       let canBePromoted = true;
+      let canBeClosed = true;
 
       if (risk === 'stable') {
         canBePromoted = false;
@@ -128,31 +129,41 @@ export default class RevisionsTable extends Component {
 
       if (!nextChannelReleases[channel]) {
         canBePromoted = false;
+        canBeClosed = false;
       }
 
-      // take all risks above current one
-      let targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
-
-      // filter out risks that have the same revisions already released
-      targetRisks = targetRisks.filter((targetRisk) => {
-        return !this.compareChannels(channel, `${track}/${targetRisk}`);
-      });
-
-      if (targetRisks.length === 0) {
+      if (this.props.pendingCloses.includes(channel)) {
+        canBeClosed = false;
         canBePromoted = false;
+      }
+
+      let targetRisks = [];
+
+      if (canBePromoted) {
+        // take all risks above current one
+        targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
+
+        // filter out risks that have the same revisions already released
+        targetRisks = targetRisks.filter((targetRisk) => {
+          return !this.compareChannels(channel, `${track}/${targetRisk}`);
+        });
+
+        if (targetRisks.length === 0) {
+          canBePromoted = false;
+        }
       }
 
       return (
         <tr key={channel}>
           <td>
             <span className="p-channel-buttons">
-              { canBePromoted &&
+              { (canBePromoted || canBeClosed) &&
                 <PromoteButton
                   position="left"
                   track={track}
                   targetRisks={targetRisks}
                   closeRisk={risk}
-                  closeChannel={this.onCloseChannel.bind(this, channel)}
+                  closeChannel={canBeClosed && this.onCloseChannel.bind(this, channel)}
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
               }
@@ -196,8 +207,6 @@ export default class RevisionsTable extends Component {
 
     // TODO:
     // add closes to tooltip
-    // add close to all channels
-    // no close if already closed
     // undo close
     return ((releasesCount > 0 || closesCount > 0) &&
       <div className="p-release-confirm">

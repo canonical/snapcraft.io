@@ -259,7 +259,6 @@ export default class ReleasesController extends Component {
   }
 
   handleReleaseError(error) {
-    console.log(error, error.json);
     let message = error.message || "Error while performing the release. Please try again later.";
 
     // try to find error messages in response json
