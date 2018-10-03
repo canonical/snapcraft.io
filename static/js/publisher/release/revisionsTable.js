@@ -205,9 +205,6 @@ export default class RevisionsTable extends Component {
     const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
 
-    // TODO:
-    // add closes to tooltip
-    // undo close
     return ((releasesCount > 0 || closesCount > 0) &&
       <div className="p-release-confirm">
         <span className="p-tooltip">

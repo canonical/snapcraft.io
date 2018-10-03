@@ -289,7 +289,7 @@ export default class ReleasesController extends Component {
               channel = `latest/${channel}`;
             }
 
-            releasedChannels[channel] = {};
+            delete releasedChannels[channel];
           });
         }
 
