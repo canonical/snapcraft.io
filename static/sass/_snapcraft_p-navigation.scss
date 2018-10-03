@@ -1,7 +1,7 @@
 @mixin snapcraft-p-navigation {
   $nav-bg-color: #333;
   $navigation-border-color: rgba(255, 255, 255, .2);
-  $navigation-hover-color: rgba(0, 0, 0, .92);
+  $navigation-hover-color: #2b2b2b;
   $navigation-highlight-color: rgba(250, 90, 64, 1);
 
   .p-navigation {
@@ -15,6 +15,10 @@
 
     // custom styles for dark header with hover
     .p-navigation__link {
+      a:hover {
+        background: $navigation-hover-color;
+      }
+
       .is-selected {
         background: $navigation-hover-color;
         box-shadow: 0 -3px 0 $navigation-highlight-color inset;
@@ -103,7 +107,7 @@
 
     // making it specific enough to override Vanilla selectors :(
     .p-navigation__links .p-dropdown__menu {
-      background-color: $color-navigation-background;
+      background-color: $nav-bg-color;
 
       margin: 0;
       padding: 0;
