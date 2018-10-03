@@ -24,6 +24,7 @@
       "pre-commit": "lint-staged"
     }
   },
+
   "lint-staged": {
     "**/*.py": [
       "./run exec black --line-length 79",
