@@ -50,4 +50,8 @@ def snapcraft_blueprint():
     def robots():
         return flask.Response("", mimetype="text/plain")
 
+    @snapcraft.route("/_status/check")
+    def check():
+        return "OK"
+
     return snapcraft
