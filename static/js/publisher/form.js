@@ -2,7 +2,7 @@ import { initSnapScreenshotsEdit } from './market/screenshots';
 import { updateState, diffState } from './state';
 import { publicMetrics } from './market/publicMetrics';
 import { whitelistBlacklist } from './market/whitelistBlacklist';
-import { license } from "./market/license";
+import { initLicenses, license } from "./market/license";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -142,6 +142,10 @@ function initForm(config, initialState, errors) {
         updateFormState();
       }
     );
+  }
+
+  if (config.licenseRadioContent) {
+    initLicenses(config.licenseRadioContent);
   }
 
   let ignoreChangesOnUnload = false;
