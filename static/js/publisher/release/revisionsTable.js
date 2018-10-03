@@ -137,6 +137,10 @@ export default class RevisionsTable extends Component {
         canBePromoted = false;
       }
 
+      if (risk === 'unassigned') {
+        canBeClosed = false;
+      }
+
       if (!nextChannelReleases[channel]) {
         canBePromoted = false;
         canBeClosed = false;
@@ -172,8 +176,8 @@ export default class RevisionsTable extends Component {
                   position="left"
                   track={track}
                   targetRisks={targetRisks}
-                  closeRisk={risk}
-                  closeChannel={canBeClosed && this.onCloseChannel.bind(this, channel)}
+                  closeRisk={canBeClosed ? risk : null}
+                  closeChannel={canBeClosed ? this.onCloseChannel.bind(this, channel) : null}
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
               }
