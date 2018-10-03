@@ -18,6 +18,13 @@ export default class PromoteButton extends Component {
     event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
   }
 
+  closeChannelClick(channel, event) {
+    this.props.closeChannel(channel);
+    this.closeAllDropdowns();
+    event.preventDefault(); // prevent link from changing URL
+    event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
+  }
+
   dropdownButtonClick(event) {
     this.closeAllDropdowns();
     const dropdownEl = event.target
@@ -46,25 +53,38 @@ export default class PromoteButton extends Component {
         className={`p-promote-button p-button--neutral p-icon-button ${menuClass}`}
         onClick={this.dropdownButtonClick.bind(this)}
       >
-        &uarr;
+        <i className="p-icon--contextual-menu"></i>
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
-          <span className="p-contextual-menu__group">
-            <span className="p-contextual-menu__item">Promote to:</span>
-            {
-              this.props.targetRisks.map((targetRisk) => {
-                return (
-                  <a
-                    className="p-contextual-menu__link is-indented"
-                    href="#"
-                    key={`promote-to-${track}/${targetRisk}`}
-                    onClick={this.promoteToChannelClick.bind(this, `${track}/${targetRisk}`)}
-                  >
-                    {`${track}/${targetRisk}`}
-                  </a>
-                );
-              })
-            }
-          </span>
+          { (this.props.targetRisks.length > 0) &&
+            <span className="p-contextual-menu__group">
+              <span className="p-contextual-menu__item">Promote to:</span>
+              {
+                this.props.targetRisks.map((targetRisk) => {
+                  return (
+                    <a
+                      className="p-contextual-menu__link is-indented"
+                      href="#"
+                      key={`promote-to-${track}/${targetRisk}`}
+                      onClick={this.promoteToChannelClick.bind(this, `${track}/${targetRisk}`)}
+                    >
+                      {`${track}/${targetRisk}`}
+                    </a>
+                  );
+                })
+              }
+            </span>
+          }
+          { this.props.closeRisk &&
+            <span className="p-contextual-menu__group">
+              <a
+                className="p-contextual-menu__link"
+                href="#"
+                onClick={this.closeChannelClick.bind(this, `${track}/${this.props.closeRisk}`)}
+              >
+                Close {`${track}/${this.props.closeRisk}`}
+              </a>
+            </span>
+          }
         </span>
       </span>
     );
@@ -75,5 +95,7 @@ PromoteButton.propTypes = {
   position: PropTypes.oneOf(['left', 'center']), // right is by default
   track: PropTypes.string.isRequired,
   targetRisks: PropTypes.array.isRequired,
-  promoteToChannel: PropTypes.func.isRequired
+  closeRisk: PropTypes.string,
+  promoteToChannel: PropTypes.func.isRequired,
+  closeChannel: PropTypes.func
 };

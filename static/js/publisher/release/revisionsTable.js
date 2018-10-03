@@ -35,6 +35,8 @@ export default class RevisionsTable extends Component {
       thisRevision && (!thisPreviousRevision || (thisPreviousRevision.revision !== thisRevision.revision))
     );
 
+    const isChannelClosed = this.props.pendingCloses.includes(channel);
+
     return (
       <td
         className="p-release-table__cell"
@@ -43,7 +45,7 @@ export default class RevisionsTable extends Component {
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
-            <span className={ hasPendingRelease ? 'p-previous-revision' : '' }>
+            <span className={ (hasPendingRelease || isChannelClosed) ? 'p-previous-revision' : '' }>
               { thisPreviousRevision ?
                 <span className="p-revision-info">{thisPreviousRevision.version}
                   <span className="p-revision-info__revision">({thisPreviousRevision.revision})</span>
@@ -51,14 +53,17 @@ export default class RevisionsTable extends Component {
                 '–'
               }
             </span>
-            { hasPendingRelease &&
+            { (hasPendingRelease || isChannelClosed) &&
               <span>
                 {' '}
                 &rarr;
                 {' '}
-                <span className="p-revision-info is-pending">{thisRevision.version}
-                  <span className="p-revision-info__revision">({thisRevision.revision})</span>
-                </span>
+                { hasPendingRelease ?
+                  <span className="p-revision-info is-pending">{thisRevision.version}
+                    <span className="p-revision-info__revision">({thisRevision.revision})</span>
+                  </span> :
+                  <em>close channel</em>
+                }
               </span>
             }
           </span>
@@ -67,6 +72,9 @@ export default class RevisionsTable extends Component {
             { thisPreviousRevision ? `${thisPreviousRevision.version} (${thisPreviousRevision.revision})` : 'None' }
             { hasPendingRelease &&
               <span> &rarr; { `${thisRevision.version} (${thisRevision.revision})` }</span>
+            }
+            { isChannelClosed &&
+              <span> &rarr; <em>close channel</em></span>
             }
           </span>
         </span>
@@ -84,6 +92,10 @@ export default class RevisionsTable extends Component {
 
   onPromoteToChannel(channel, targetChannel) {
     this.props.promoteChannel(channel, targetChannel);
+  }
+
+  onCloseChannel(channel) {
+    this.props.closeChannel(channel);
   }
 
   compareChannels(channel, targetChannel) {
@@ -109,6 +121,7 @@ export default class RevisionsTable extends Component {
       const channel = `${track}/${risk}`;
 
       let canBePromoted = true;
+      let canBeClosed = true;
 
       if (risk === 'stable') {
         canBePromoted = false;
@@ -116,29 +129,41 @@ export default class RevisionsTable extends Component {
 
       if (!nextChannelReleases[channel]) {
         canBePromoted = false;
+        canBeClosed = false;
       }
 
-      // take all risks above current one
-      let targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
-
-      // filter out risks that have the same revisions already released
-      targetRisks = targetRisks.filter((targetRisk) => {
-        return !this.compareChannels(channel, `${track}/${targetRisk}`);
-      });
-
-      if (targetRisks.length === 0) {
+      if (this.props.pendingCloses.includes(channel)) {
+        canBeClosed = false;
         canBePromoted = false;
+      }
+
+      let targetRisks = [];
+
+      if (canBePromoted) {
+        // take all risks above current one
+        targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
+
+        // filter out risks that have the same revisions already released
+        targetRisks = targetRisks.filter((targetRisk) => {
+          return !this.compareChannels(channel, `${track}/${targetRisk}`);
+        });
+
+        if (targetRisks.length === 0) {
+          canBePromoted = false;
+        }
       }
 
       return (
         <tr key={channel}>
           <td>
             <span className="p-channel-buttons">
-              { canBePromoted &&
+              { (canBePromoted || canBeClosed) &&
                 <PromoteButton
                   position="left"
                   track={track}
                   targetRisks={targetRisks}
+                  closeRisk={risk}
+                  closeChannel={canBeClosed && this.onCloseChannel.bind(this, channel)}
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
               }
@@ -176,15 +201,22 @@ export default class RevisionsTable extends Component {
   }
 
   renderReleasesConfirm() {
-    const { pendingReleases, isLoading } = this.props;
+    const { pendingReleases, pendingCloses, isLoading } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
+    const closesCount = pendingCloses.length;
 
-    return (releasesCount > 0 &&
+    return ((releasesCount > 0 || closesCount > 0) &&
       <div className="p-release-confirm">
         <span className="p-tooltip">
           <i className="p-icon--question" />
           {' '}
-          { releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release
+          { releasesCount > 0 &&
+            <span>{ releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release.</span>
+          }
+          {' '}
+          { closesCount > 0 &&
+            <span>{ closesCount } channel{ closesCount > 1 ? 's' : '' } to close.</span>
+          }
           <span className="p-tooltip__message" role="tooltip" id="default-tooltip">
             { Object.keys(pendingReleases).map(revId => {
               const release = pendingReleases[revId];
@@ -196,6 +228,11 @@ export default class RevisionsTable extends Component {
                 {'\n'}
               </span>;
             })}
+            { closesCount > 0 &&
+              <span>
+                Close channels: {pendingCloses.join(', ')}
+              </span>
+            }
           </span>
         </span>
         {' '}
@@ -251,6 +288,7 @@ export default class RevisionsTable extends Component {
 RevisionsTable.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
+  pendingCloses: PropTypes.object.isRequired,
   currentTrack: PropTypes.string.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
@@ -262,4 +300,5 @@ RevisionsTable.propTypes = {
   promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
+  closeChannel: PropTypes.func.isRequired
 };
