@@ -318,6 +318,37 @@
             </div>
           </div>
         </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>License</label>
+          </div>
+          <div class="col-8">
+            <input type="hidden" name="license" value="{{ license }}" />
+            <input type="radio" name="license-type" value="simple" id="license-simple-option" {% if license_type == 'simple' %}checked="checked"{% endif %} />
+            <label for="license-simple-option">Simple</label>
+            <div class="js-license p-multiselect__wrapper" {% if license_type != 'simple' %}style="display: none;"{% endif %} id="license-simple-input">
+              <input type="text" class="js-multiselect-input" name="license-simple" value="{% if license_type == 'simple' %}{{ license }}{% endif %}" />
+              <div class="js-multiselect-holder"></div>
+              <p class="p-form-help-text">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
+            </div>
+            <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
+            <label for="license-custom-option">Custom SPDX expression</label>
+            <textarea
+              type="text"
+              id="license-custom-input"
+              name="license-custom"
+              {% if license_type != 'custom' %}style="display: none;"{% endif %}
+            >{{ license }}</textarea>
+            <p class="p-form-help-text">Visit <a class="p-link--external" href="https://spdx.org/spdx-specification-21-web-version#h.jxpfx0ykyb60" target="_blank">SPDX Specification 21</a> for more information.</p>
+          </div>
+        </div>
       </section>
     </form>
   </div>
@@ -327,13 +358,18 @@
 <script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
   Raven.context(function () {
+    snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
     snapcraft.publisher.market.initForm({
       snapIconImage: "snap_icon_image",
       snapIconInput: "snap_icon",
       form: "market-form",
       formNotification: "market-form-status",
       screenshotsToolbar: "screenshots-toolbar",
-      screenshotsWrapper: "snap-screenshots"
+      screenshotsWrapper: "snap-screenshots",
+      licenseRadioContent: [
+        document.getElementById('license-simple-input'),
+        document.getElementById('license-custom-input')
+      ]
     }, {
       title: {{ snap_title|tojson }},
       summary: {{ summary|tojson }},
@@ -350,6 +386,7 @@
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
+      'license': {{ license|tojson }}
     },
     {% if error_list %}
       {{ error_list|tojson}}

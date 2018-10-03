@@ -235,6 +235,16 @@ def get_listing_snap(snap_name):
         m["url"] for m in snap_details["media"] if m["type"] == "screenshot"
     ]
 
+    licenses = []
+    for license in get_licenses():
+        licenses.append({"key": license["licenseId"], "name": license["name"]})
+
+    license = snap_details["license"]
+    license_type = "custom"
+
+    if " AND " not in license.upper() and " WITH " not in license.upper():
+        license_type = "simple"
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -250,6 +260,9 @@ def get_listing_snap(snap_name):
         "website": snap_details["website"] or "",
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
+        "license": license,
+        "license_type": license_type,
+        "licenses": licenses,
         "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
     }
@@ -366,6 +379,21 @@ def post_listing_snap(snap_name):
                 if m["type"] == "screenshot"
             ]
 
+            licenses = []
+            for license in get_licenses():
+                licenses.append(
+                    {"key": license["licenseId"], "name": license["name"]}
+                )
+
+            license = snap_details["license"]
+            license_type = "custom"
+
+            if (
+                " AND " not in license.upper()
+                and " WITH " not in license.upper()
+            ):
+                license_type = "simple"
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
@@ -405,6 +433,9 @@ def post_listing_snap(snap_name):
                 "public_metrics_enabled": details_metrics_enabled,
                 "video_urls": snap_details["video_urls"],
                 "public_metrics_blacklist": details_blacklist,
+                "license": license,
+                "license_type": license_type,
+                "licenses": licenses,
                 "is_on_stable": is_on_stable,
                 # errors
                 "error_list": error_list,
@@ -652,8 +683,6 @@ def get_settings(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    licenses = get_licenses()
-
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
             snap_details["whitelist_country_codes"]
@@ -680,9 +709,8 @@ def get_settings(snap_name):
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
-        "license": snap_details["license"],
+        "license": license,
         "private": snap_details["private"],
-        "licenses": licenses,
         "countries": countries,
         "whitelist_country_codes": whitelist_country_codes,
         "blacklist_country_codes": blacklist_country_codes,
@@ -773,9 +801,7 @@ def post_settings(snap_name):
                 "snap_name": snap_details["snap_name"],
                 "snap_title": snap_details["title"],
                 "snap_id": snap_details["snap_id"],
-                "license": snap_details["license"],
                 "private": snap_details["private"],
-                "licenses": get_licenses(),
                 "countries": countries,
                 "whitelist_country_codes": whitelist_country_codes,
                 "blacklist_country_codes": blacklist_country_codes,

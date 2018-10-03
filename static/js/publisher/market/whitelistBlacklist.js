@@ -18,12 +18,4 @@ function whitelistBlacklist(form) {
   }
 }
 
-function transformWhitelistBlacklist(str) {
-  if (str !== '') {
-    return str.split(', ');
-  } else {
-    return [];
-  }
-}
-
-export { whitelistBlacklist, transformWhitelistBlacklist };
+export { whitelistBlacklist };

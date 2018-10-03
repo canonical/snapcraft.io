@@ -2,6 +2,7 @@ import { initSnapScreenshotsEdit } from './market/screenshots';
 import { updateState, diffState } from './state';
 import { publicMetrics } from './market/publicMetrics';
 import { whitelistBlacklist } from './market/whitelistBlacklist';
+import { initLicenses, license } from "./market/license";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -143,6 +144,10 @@ function initForm(config, initialState, errors) {
     );
   }
 
+  if (config.licenseRadioContent) {
+    initLicenses(config.licenseRadioContent);
+  }
+
   let ignoreChangesOnUnload = false;
 
   window.addEventListener("beforeunload", function (event) {
@@ -195,6 +200,9 @@ function initForm(config, initialState, errors) {
     }
     if (formEl['territories']) {
       whitelistBlacklist(formEl);
+    }
+    if (formEl['license']) {
+      license(formEl);
     }
 
     let formData = new FormData(formEl);
