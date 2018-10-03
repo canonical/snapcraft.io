@@ -53,7 +53,7 @@ export default class PromoteButton extends Component {
         className={`p-promote-button p-button--neutral p-icon-button ${menuClass}`}
         onClick={this.dropdownButtonClick.bind(this)}
       >
-        &uarr;
+        <i className="p-icon--contextual-menu"></i>
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
           { (this.props.targetRisks.length > 0) &&
             <span className="p-contextual-menu__group">
