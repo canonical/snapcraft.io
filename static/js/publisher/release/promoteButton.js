@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class PromoteButton extends Component {
+  constructor() {
+    super();
+    this.closeAllDropdowns = this.closeAllDropdowns.bind(this);
+  }
+
   componentDidMount() {
     // use window instead of document, as React catches all events in document
     window.addEventListener('click', this.closeAllDropdowns);
