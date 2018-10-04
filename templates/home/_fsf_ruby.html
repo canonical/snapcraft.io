@@ -1,0 +1,32 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="ruby">
+  <div class='col-6'>
+    <h4>Why are snaps good for Ruby projects?</h4>
+    <ul>
+      <li>Bundle all the runtime requirements.</li>
+      <li>Simplify installation instructions, regardless of distribution, to snap install myrubyapp.</li>
+      <li>Directly control the delivery of automatic application updates.</li>
+      <li>Extremely simple creation of services.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here’s how mdl uses it:</h4>
+    <code><pre>name: mdl
+version: "0.5.0"
+summary: Markdown lint tool
+description: >
+  Style checker/lint tool for markdown files
+
+confinement: devmode
+
+parts:
+  mdl:
+    plugin: ruby
+    gems:
+      - mdl
+
+apps:
+  mdl:
+    command: mdl</pre></code>
+  </div>
+</div>

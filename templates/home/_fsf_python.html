@@ -1,0 +1,34 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="python">
+  <div class='col-6'>
+    <h4>Why are snaps good for Python projects?</h4>
+    <ul>
+      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+      <li>Snaps install and run the same across Linux. They bundle the exact version of Python required and all of your app’s dependencies, be they Python modules or system libraries.</li>
+      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here’s how offlineimap uses it:</h4>
+    <code><pre>name: offlineimap
+version: git
+summary: OfflineIMAP
+description: >
+  OfflineIMAP is software that downloads your email mailbox(es) as local
+  Maildirs. OfflineIMAP will synchronize both sides via IMAP.
+
+confinement: devmode
+
+parts:
+  offlineimap:
+    plugin: python
+    python-version: python2
+    source: .
+
+apps:
+  offlineimap:
+    command: bin/offlineimap</pre></code>
+  </div>
+</div>

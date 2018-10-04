@@ -175,7 +175,7 @@
       <p>Snapcraft works with your language or framework to make preparing your software for the Snap Store easy.</p>
     </div>
   </div>
-  <div class="row">
+  <div class="row js-fsf-language-select">
     <div class="col-12 p-fluid-grid--centered">
       <a class="p-logo-link p-fluid-grid__item--small p-card" href="https://docs.snapcraft.io/build-snaps/pre-built">
         <header class="p-card__header">
@@ -213,13 +213,13 @@
         </header>
         <span>Electron</span>
       </a>
-      <a class="p-logo-link p-fluid-grid__item--small p-card" href="https://docs.snapcraft.io/build-snaps/python">
+      <a class="p-logo-link p-fluid-grid__item--small p-card p-flow-link" href="https://docs.snapcraft.io/build-snaps/python" data-flow-link="python">
         <header class="p-card__header">
           <img src="https://assets.ubuntu.com/v1/5398ed20-logo-python.svg" alt="">
         </header>
         <span>Python</span>
       </a>
-      <a class="p-logo-link p-fluid-grid__item--small p-card" href="https://docs.snapcraft.io/build-snaps/ruby">
+      <a class="p-logo-link p-fluid-grid__item--small p-card p-flow-link" href="https://docs.snapcraft.io/build-snaps/ruby" data-flow-link="ruby">
         <header class="p-card__header">
           <img src="https://assets.ubuntu.com/v1/eacdd4e1-logo-ruby.svg" alt="">
         </header>
@@ -249,6 +249,9 @@
         </header>
         <span>ROS 2</span>
       </a>
+
+      {% include "home/_fsf_python.html" %}
+      {% include "home/_fsf_ruby.html" %}
     </div>
   </div>
 </div>
@@ -267,4 +270,13 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static_url('js/dist/public.js') }}"></script>
+<script>
+  Raven.context(function () {
+    snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+  });
+</script>
 {% endblock %}
