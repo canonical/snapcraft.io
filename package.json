@@ -1,7 +1,7 @@
 {
   "scripts": {
     "lint-js": "eslint static/js",
-    "lint-scss": "sass-lint static/**/*.scss --verbose --no-exit",
+    "lint-scss": "sass-lint 'static/**/*.scss' --verbose --no-exit",
     "lint-py": "black --check --line-length 79 tests webapp",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
     "test-js": "jest",
