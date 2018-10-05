@@ -1,0 +1,45 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="electron">
+  <div class='col-6'>
+    <h4>Why are snaps good for Electron projects?</h4>
+    <ul>
+      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+      <li>Snaps install and run the same across Linux. They bundle Electron and all of your app’s dependencies, be they Node modules or system libraries.</li>
+      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here's how to use it with electron-quick-start:</h4>
+    <code class="p-code-yaml"><pre>{
+  <b>"name"</b>: "electron-quick-start",
+  <b>"version"</b>: "1.0.0",
+  <b>"description"</b>: "A minimal Electron application",
+  <b>"main"</b>: "main.js",
+  <b>"scripts"</b>: {
+    <b>"start"</b>: "electron .",
+    <b>"dist"</b>: "build --linux snap"
+  },
+  <b>"repository"</b>: "https://github.com/electron/electron-quick-start",
+  <b>"keywords"</b>: [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  <b>"author"</b>: "GitHub",
+  <b>"license"</b>: "CC0-1.0",
+  <b>"devDependencies"</b>: {
+    <b>"electron"</b>: "^2.0.0",
+    <b>"electron-builder"</b>: "^20.27.1"
+  }
+}</pre></code>
+  </div>
+
+  <div class="p-flow-details__continue">
+    In just a few steps, you’ll have an example Electron app in the Snap Store.
+    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/electron">Continue</a>
+  </div>
+</div>
