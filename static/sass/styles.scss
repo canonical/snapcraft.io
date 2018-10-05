@@ -187,3 +187,6 @@ $color-navigation-background: #252525;
 
 @import 'patterns_form-multiselect';
 @include snapcraft-p-multiselect;
+
+@import 'patterns_first-snap-flow';
+@include snapcraft-p-first-snap-flow;

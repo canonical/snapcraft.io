@@ -1,0 +1,10 @@
+@mixin snapcraft-p-first-snap-flow {
+  .p-code-yaml {
+    font-size: 14px;
+    line-height: 1.5em;
+
+    b {
+      color: $color-positive;
+    }
+  }
+}

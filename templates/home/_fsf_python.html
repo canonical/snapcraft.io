@@ -12,23 +12,23 @@
 
   <div class='col-6'>
     <h4>Here’s how offlineimap uses it:</h4>
-    <code><pre>name: offlineimap
-version: git
-summary: OfflineIMAP
-description: >
+    <code class="p-code-yaml"><pre><b>name</b>: offlineimap
+<b>version</b>: git
+<b>summary</b>: OfflineIMAP
+<b>description</b>: >
   OfflineIMAP is software that downloads your email mailbox(es) as local
   Maildirs. OfflineIMAP will synchronize both sides via IMAP.
 
-confinement: devmode
+<b>confinement</b>: devmode
 
-parts:
-  offlineimap:
-    plugin: python
-    python-version: python2
-    source: .
+<b>parts</b>:
+  <b>offlineimap</b>:
+    <b>plugin</b>: python
+    <b>python-version</b>: python2
+    <b>source</b>: .
 
-apps:
-  offlineimap:
-    command: bin/offlineimap</pre></code>
+<b>apps</b>:
+  <b>offlineimap</b>:
+    <b>command</b>: bin/offlineimap</pre></code>
   </div>
 </div>
