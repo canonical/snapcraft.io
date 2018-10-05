@@ -18,11 +18,11 @@ function initFSFLanguageSelect(rootEl) {
 
       if (link && link.dataset.flowLink) {
         // find where the next row of links starts to insert details panel before
-        var top = link.getBoundingClientRect().top;
+        var top = link.offsetTop;
 
         var nextRow = null;
         for (var i = flowLinks.indexOf(link); i < flowLinks.length && !nextRow; i++) {
-          if (flowLinks[i].getBoundingClientRect().top > top) {
+          if (flowLinks[i].offsetTop > top) {
             nextRow = flowLinks[i];
           }
         }
@@ -44,6 +44,7 @@ function initFSFLanguageSelect(rootEl) {
           link.classList.remove('is-open');
         }
 
+        window.scrollTo(0, link.offsetTop);
         event.preventDefault();
       }
     });
