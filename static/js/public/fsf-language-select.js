@@ -1,13 +1,17 @@
 // TODO:
-// - update style of the links to underlines (with arrow?)
 // - add details data for all languages
 // - add button to the docs
+import debounce from '../libs/debounce';
 
 function initFSFLanguageSelect(rootEl) {
-  var flowLinks = [].slice.call(rootEl.querySelectorAll('.p-flow-link'));
+  const flowLinks = [].slice.call(rootEl.querySelectorAll('.p-flow-link'));
+  const flowDetails = [].slice.call(rootEl.querySelectorAll('.p-flow-details'));
 
-  // TODO:
-  // close on click as well
+  const closeDetails = () => {
+    flowDetails.forEach(e => e.style.display = 'none');
+    flowLinks.forEach(l => l.classList.remove('is-open'));
+  };
+
   flowLinks.forEach(link => {
     link.addEventListener('click', (event) => {
       var link = event.target.closest('.p-flow-link');
@@ -22,27 +26,31 @@ function initFSFLanguageSelect(rootEl) {
             nextRow = flowLinks[i];
           }
         }
+        const isOpen = link.classList.contains('is-open');
 
-        var flowDetails = [].slice.call(document.querySelectorAll('.p-flow-details'));
-        flowDetails.forEach(e => e.style.display = 'none');
+        closeDetails();
 
-        var details = document.querySelector(`[data-flow-details='${link.dataset.flowLink}'`);
-        if (nextRow) {
-          nextRow.parentNode.insertBefore(details, nextRow);
+        if (!isOpen) {
+          // find the end of the row of icons to place details panel properly
+          var details = rootEl.querySelector(`[data-flow-details='${link.dataset.flowLink}'`);
+          if (nextRow) {
+            nextRow.parentNode.insertBefore(details, nextRow);
+          } else {
+            rootEl.appendChild(details);
+          }
+          details.style.display = 'block';
+          link.classList.add('is-open');
         } else {
-          rootEl.appendChild(details);
+          link.classList.remove('is-open');
         }
-        details.style.display = 'block';
+
         event.preventDefault();
       }
     });
   });
 
-  // TODO: debounce
-  window.addEventListener('resize', () => {
-    var flowDetails = [].slice.call(document.querySelectorAll('.p-flow-details'));
-    flowDetails.forEach(e => e.style.display = 'none');
-  });
+  const onResize = debounce(closeDetails, 500);
+  window.addEventListener('resize', onResize);
 }
 
 export {
