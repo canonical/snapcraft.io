@@ -61,18 +61,9 @@ def store_blueprint(store_query=None):
 
         categories = logic.get_categories(categories_results)
 
-        try:
-            featured_snaps_results = api.get_featured_snaps()
-        except ApiError as api_error:
-            featured_snaps_results = []
-            status_code, error_info = _handle_errors(api_error)
-
-        featured_snaps = logic.get_searched_snaps(featured_snaps_results)
-
         return (
             flask.render_template(
                 "store/store.html",
-                featured_snaps=featured_snaps,
                 categories=categories,
                 error_info=error_info,
             ),
