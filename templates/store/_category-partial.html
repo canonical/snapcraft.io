@@ -1,8 +1,8 @@
-<div class="p-carousel" id="js-snap-carousel-{{ category }}">
-  <div class="p-carousel__mask">
-    <div class="p-carousel__scroller u-clearfix">
+<div class="p-carousel">
+  <div class="swiper-container" id="js-snap-carousel-{{ category }}">
+    <div class="swiper-wrapper">
       {% for snap in snaps %}
-        <div class="p-carousel__item u-float--left">
+        <div class="p-carousel__item--snap swiper-slide">
           <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
             {% if snap.icon_url %}
               <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
@@ -31,6 +31,6 @@
       {% endfor %}
     </div>
   </div>
-  <button class="p-carousel__next">Next</button>
-  <button class="p-carousel__prev" disabled="disabled">Previous</button>
+  <button class="p-carousel__next swiper-button__next--{{ category }}">Next</button>
+  <button class="p-carousel__prev swiper-button__prev--{{ category }}">Previous</button>
 </div>

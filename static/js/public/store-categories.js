@@ -1,5 +1,8 @@
-import Carousel from "./carousel";
+import { Swiper, Navigation } from 'swiper/dist/js/swiper.esm';
 import 'whatwg-fetch';
+import { CATEGORY_CONFIG } from '../config/swiper.config';
+
+Swiper.use([Navigation]);
 
 /**
  *
@@ -10,10 +13,19 @@ function getCategory(holder) {
   const category = holder.dataset.category;
 
   // Write the html and init the carousel
-  const writeCategory = function(response) {
-    holder.innerHTML = response;
-    new Carousel(holder.querySelector('.p-carousel'));
-  };
+  const writeCategory = function() {
+    const _category = category;
+
+    return function(response) {
+      holder.innerHTML = response;
+      new Swiper(holder.querySelector('.swiper-container'), Object.assign({
+        navigation: {
+          nextEl: `.swiper-button__next--${_category}`,
+          prevEl: `.swiper-button__prev--${_category}`
+        },
+      }, CATEGORY_CONFIG));
+    };
+  }();
 
   const url = `/store/categories/${category}`;
 

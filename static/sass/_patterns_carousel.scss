@@ -4,92 +4,183 @@
   $carousel-buttons-breakpoint: $breakpoint-medium;
 
   .p-carousel {
-    margin-bottom: $spv-inter--scaleable;
+    margin: $spv-inter--scaleable 0;
     position: relative;
 
-    .p-carousel__mask {
-      overflow-x: scroll;
-      overflow-y: hidden;
-      position: relative;
-
-      @media screen and (min-width: $carousel-buttons-breakpoint) {
-        overflow-x: hidden;
-      }
+    .p-carousel__item,
+    .p-carousel__item--snap,
+    .p-carousel__item--screenshot {
+      box-sizing: border-box;
     }
 
-    .p-carousel__scroller {
-      position: relative;
-      transition: transform .333s ease;
-
-      .p-carousel__item {
-        width: 12.375rem;
-      }
-    }
-
-    // p-carousel__next p-carousel__prev
-    // based on vbox-next vbox-prev from _patterns_maas_modal.scss
-    .p-carousel__next,
-    .p-carousel__prev {
-      background: {
-        color: $color-x-light;
-        position: center;
-        repeat: no-repeat;
-        size: .25rem;
-      }
-      border-radius: 3rem;
-      box-sizing: content-box;
+    .p-carousel__item--screenshot {
       cursor: pointer;
-      display: none;
-      height: 3rem;
-      margin: {
-        bottom: 0;
-        left: 0;
-        top: -1.5rem;
-      }
-      opacity: 0;
-      overflow: hidden;
-      padding: 0;
-      pointer-events: none;
-      position: absolute;
-      text-indent: -999px;
-      top: 50%;
-      transition: opacity .165s;
-      width: 3rem;
+      padding: 0 .5rem;
 
-      @media screen and (min-width: $carousel-buttons-breakpoint) {
+      img {
         display: block;
+        max-width: 100%;
+      }
+
+      &:hover {
+        &::after {
+          background-color: $color-x-light;
+          background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
+          background-position: 50% 50%;
+          background-repeat: no-repeat;
+          background-size: 12px 12px;
+          border: 1px solid $color-light;
+          border-radius: 2px;
+          content: '';
+          display: block;
+          height: 24px;
+          pointer-events: none;
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          width: 24px;
+        }
       }
     }
+  }
 
-    &:hover .p-carousel__next,
-    &:hover .p-carousel__prev {
-      opacity: 1;
-      pointer-events: all;
+  // p-carousel__next p-carousel__prev
+  // based on vbox-next vbox-prev from _patterns_maas_modal.scss
+  .p-carousel__next,
+  .p-carousel__prev {
+    background: {
+      color: $color-x-light;
+      position: center;
+      repeat: no-repeat;
+      size: .25rem;
     }
+    border-radius: 3rem;
+    box-sizing: content-box;
+    cursor: pointer;
+    height: 3rem;
+    margin: {
+      bottom: 0;
+      left: 0;
+      right: 0 !important;
+      top: -1.5rem;
+    }
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    text-indent: -999px;
+    top: 50%;
+    transition: opacity .165s;
+    width: 3rem;
+    z-index: 10;
 
-    .p-carousel__next:disabled,
-    .p-carousel__prev:disabled {
+    &.swiper-button-disabled {
       cursor: default;
       opacity: 0;
     }
 
-    .p-carousel__prev {
-      background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
-      left: -1rem;
-
-      @media screen and (min-width: $breakpoint-large) {
-        left: -1.5rem;
-      }
+    @media screen and (max-width: $breakpoint-small) {
+      display: none;
     }
+  }
 
-    .p-carousel__next {
-      background-image: url('#{$assets-path}9716bbab-chevron.svg');
-      right: -1rem;
+  &:hover .p-carousel__next,
+  &:hover .p-carousel__prev {
+    pointer-events: all;
+  }
 
-      @media screen and (min-width: $breakpoint-large) {
-        right: -1.5rem;
-      }
+  .p-carousel__prev {
+    background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
+    left: -1rem;
 
+    @media screen and (min-width: $breakpoint-large) {
+      left: -1.5rem;
     }
+  }
+
+  .p-carousel__next {
+    background-image: url('#{$assets-path}9716bbab-chevron.svg');
+    right: -1rem;
+
+    @media screen and (min-width: $breakpoint-large) {
+      right: -1.5rem;
+    }
+  }
+
+  .swiper-container {
+    list-style: none;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    // Fix of Webkit flickering
+    z-index: 1;
+  }
+
+  .swiper-container-no-flexbox {
+    .swiper-slide {
+      float: left;
+    }
+  }
+
+  .swiper-container-vertical > .swiper-wrapper {
+    flex-direction: column;
+  }
+
+  .swiper-wrapper {
+    box-sizing: content-box;
+    display: flex;
+    height: 100%;
+    position: relative;
+    transition-property: transform;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .swiper-container-android .swiper-slide,
+  .swiper-wrapper {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .swiper-container-multirow > .swiper-wrapper {
+    flex-wrap: wrap;
+  }
+
+  .swiper-container-free-mode > .swiper-wrapper {
+    margin: 0 auto;
+    transition-timing-function: ease-out;
+  }
+
+  .swiper-slide {
+    flex-shrink: 0;
+    height: 100%;
+    position: relative;
+    transition-property: transform;
+    width: 100%;
+  }
+
+  .swiper-slide-invisible-blank {
+    visibility: hidden;
+  }
+
+  // Auto Height
+  .swiper-container-autoheight,
+  .swiper-container-autoheight .swiper-slide {
+    height: auto;
+  }
+
+  .swiper-container-autoheight .swiper-wrapper {
+    align-items: flex-start;
+    transition-property: transform, height;
+  }
+
+  // IE10 Windows Phone 8 Fixes
+  .swiper-container-wp8-horizontal,
+  .swiper-container-wp8-horizontal > .swiper-wrapper {
+    touch-action: pan-y;
+  }
+
+  .swiper-container-wp8-vertical,
+  .swiper-container-wp8-vertical > .swiper-wrapper {
+    touch-action: pan-x;
   }
 }
