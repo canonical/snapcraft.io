@@ -1,6 +1,9 @@
 @mixin snapcraft-p-snap-row {
+  // Can be removed when vanilla is upgraded to $spv-inter--expanded
+  $margin-bottom: $spv-inter--regular + $spv-inter--condensed;
+
   .p-snap-row {
-    margin-bottom: $spv-inter--regular;
+    margin-bottom: $margin-bottom;
 
     @media screen and (max-width: $breakpoint-navigation-threshold) {
       .col-2 {
@@ -9,7 +12,7 @@
       }
 
       .p-media-object--snap {
-        margin-bottom: $spv-inter--regular;
+        margin-bottom: $margin-bottom;
       }
     }
   }
