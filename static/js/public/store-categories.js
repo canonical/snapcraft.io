@@ -13,20 +13,16 @@ function getCategory(holder) {
   const category = holder.dataset.category;
 
   // Write the html and init the carousel
-  const writeCategory = function() {
-    const _category = category;
-
-    return function(response) {
-      holder.innerHTML = response;
-      new Swiper(holder.querySelector('.swiper-container'), Object.assign({
-        navigation: {
-          nextEl: `.swiper-button__next--${_category}`,
-          prevEl: `.swiper-button__prev--${_category}`
-        },
-      }, CATEGORY_CONFIG));
-    };
-  }();
-
+  const writeCategory = function(response) {
+    holder.innerHTML = response;
+    new Swiper(holder.querySelector('.swiper-container'), Object.assign({
+      navigation: {
+        nextEl: `.swiper-button__next--${category}`,
+        prevEl: `.swiper-button__prev--${category}`
+      },
+    }, CATEGORY_CONFIG));
+  };
+  
   const url = `/store/categories/${category}`;
 
   // Use fetch ¯\_(ツ)_/¯
