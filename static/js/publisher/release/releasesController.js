@@ -18,6 +18,8 @@ export default class ReleasesController extends Component {
       // released channels contains channel map for each channel in current track
       // also includes 'unassigned' fake channel to show selected unassigned revision
       releasedChannels: this.props.releasedChannels,
+      // list of architectures released to (or selected to be released to)
+      archs: this.getArchsFromReleasedChannels(this.props.releasedChannels),
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -32,6 +34,21 @@ export default class ReleasesController extends Component {
       // list of selected revisions, to know which ones to render selected
       selectedRevisions: []
     };
+  }
+
+  // update list of architectures based on revisions released (or selected)
+  getArchsFromReleasedChannels(releasedChannels) {
+    let archs = [];
+    Object.keys(releasedChannels).forEach(channel => {
+      Object.keys(releasedChannels[channel]).forEach(arch => {
+        archs.push(arch);
+      });
+    });
+
+    // make archs unique and sorted
+    archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
+
+    return archs.sort();
   }
 
   selectRevision(revision) {
@@ -54,10 +71,12 @@ export default class ReleasesController extends Component {
       }
 
       const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(arch => releasedChannels[UNASSIGNED][arch].revision);
+      const archs = this.getArchsFromReleasedChannels(releasedChannels);
 
       return {
         selectedRevisions,
-        releasedChannels
+        releasedChannels,
+        archs
       };
     });
   }
@@ -279,8 +298,11 @@ export default class ReleasesController extends Component {
           }
         });
 
+        const archs = this.getArchsFromReleasedChannels(releasedChannels);
+
         return {
-          releasedChannels
+          releasedChannels,
+          archs
         };
       });
     } else {
@@ -375,8 +397,8 @@ export default class ReleasesController extends Component {
   }
 
   render() {
-    const { archs, tracks } = this.props;
-    const { releasedChannels } = this.state;
+    const { tracks } = this.props;
+    const { archs, releasedChannels } = this.state;
 
     return (
       <Fragment>
@@ -417,7 +439,6 @@ ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisions: PropTypes.array.isRequired,
-  archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
 };
