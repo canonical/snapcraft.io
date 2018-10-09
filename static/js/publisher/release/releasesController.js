@@ -6,6 +6,8 @@ import RevisionsTable from './revisionsTable';
 import RevisionsList from './revisionsList';
 import Notification from './notification';
 
+import { UNASSIGNED } from './constants';
+
 export default class ReleasesController extends Component {
   constructor(props) {
     super(props);
@@ -54,8 +56,6 @@ export default class ReleasesController extends Component {
   selectRevision(revision) {
     this.setState((state) => {
       const releasedChannels = state.releasedChannels;
-      // TODO: export as a constant?
-      const UNASSIGNED = 'unassigned';
 
       // TODO: support multiple archs
       const arch = revision.architectures[0];

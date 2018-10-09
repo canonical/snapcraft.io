@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+import { RISKS_WITH_UNASSIGNED as RISKS, UNASSIGNED, STABLE } from './constants';
 import PromoteButton from './promoteButton';
-
-const RISKS = ['stable', 'candidate', 'beta', 'edge', 'unassigned'];
 
 export default class RevisionsTable extends Component {
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
@@ -27,7 +26,7 @@ export default class RevisionsTable extends Component {
 
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
     // TODO: extract or try not to duplicate?
-    const channel = risk === 'unassigned' ? risk : `${track}/${risk}`;
+    const channel = risk === UNASSIGNED ? risk : `${track}/${risk}`;
 
     let thisRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, channel, arch);
     let thisPreviousRevision = releasedChannels[channel] && releasedChannels[channel][arch];
@@ -120,11 +119,11 @@ export default class RevisionsTable extends Component {
 
     return RISKS.map(risk => {
       // TODO: extract or try not to duplicate?
-      const channel = risk === 'unassigned' ? risk : `${track}/${risk}`;
+      const channel = risk === UNASSIGNED ? risk : `${track}/${risk}`;
 
       // don't show unassigned revisions until some are selected from the table
       // TODO: always show (when we can click on it)
-      if (risk === 'unassigned' &&
+      if (risk === UNASSIGNED &&
         !releasedChannels[channel] ||
         (releasedChannels[channel] && Object.keys(releasedChannels[channel]).length === 0)) {
         return null;
@@ -133,11 +132,11 @@ export default class RevisionsTable extends Component {
       let canBePromoted = true;
       let canBeClosed = true;
 
-      if (risk === 'stable') {
+      if (risk === STABLE) {
         canBePromoted = false;
       }
 
-      if (risk === 'unassigned') {
+      if (risk === UNASSIGNED) {
         canBeClosed = false;
       }
 
@@ -182,7 +181,7 @@ export default class RevisionsTable extends Component {
                 />
               }
             </span>
-            { risk === 'unassigned'
+            { risk === UNASSIGNED
               ? <em>Unassigned revisions</em>
               : channel
             }

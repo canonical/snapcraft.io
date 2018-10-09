@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import distanceInWords from 'date-fns/distance_in_words_strict';
 import format from 'date-fns/format';
 
+import { UNASSIGNED } from './constants';
+
 export default class RevisionsList extends Component {
   revisionSelectChange(revision) {
     this.props.selectRevision(revision);
@@ -12,8 +14,7 @@ export default class RevisionsList extends Component {
     return revisions.map((revision) => {
       const uploadDate = new Date(revision.created_at);
       const isSelected = this.props.selectedRevisions.includes(revision.revision);
-      // TODO: try not to hardcode 'unassigned' name, better way to check if there are any?
-      const isDisabled = !isSelected && revision.architectures.some((arch) => this.props.releasedChannels['unassigned'] && this.props.releasedChannels['unassigned'][arch]);
+      const isDisabled = !isSelected && revision.architectures.some((arch) => this.props.releasedChannels[UNASSIGNED] && this.props.releasedChannels[UNASSIGNED][arch]);
 
       return (
         <tr key={revision.revision} className={isDisabled ? 'is-disabled' : ''}>
