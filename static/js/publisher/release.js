@@ -17,20 +17,6 @@ function getTracksFromChannelMap(channelMapsList) {
   return tracks;
 }
 
-// getting list of tracks names from channel maps list
-function getArchsFromChannelMap(channelMapsList) {
-  const archs = [];
-
-  channelMapsList.map(a => a.architecture).forEach(arch => {
-    // if we haven't saved it yet
-    if (archs.indexOf(arch) === -1) {
-      archs.push(arch);
-    }
-  });
-
-  return archs.sort();
-}
-
 // transforming channel map list data into format used by this component
 function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
   const releasedChannels = {};
@@ -93,7 +79,6 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
 
   const releasedChannels = getReleaseDataFromChannelMap(channelMapsList, revisionsMap);
   const tracks = getTracksFromChannelMap(channelMapsList);
-  const archs = getArchsFromChannelMap(channelMapsList);
 
   ReactDOM.render(
     <ReleasesController
@@ -101,7 +86,6 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
       releasedChannels={releasedChannels}
       revisions={releasesData.revisions}
       tracks={tracks}
-      archs={archs}
       options={options}
     />,
     document.querySelector(id)

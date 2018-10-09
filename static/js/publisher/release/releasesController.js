@@ -6,6 +6,8 @@ import RevisionsTable from './revisionsTable';
 import RevisionsList from './revisionsList';
 import Notification from './notification';
 
+import { UNASSIGNED } from './constants';
+
 export default class ReleasesController extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +17,11 @@ export default class ReleasesController extends Component {
       currentTrack: this.props.options.defaultTrack || 'latest',
       error: null,
       isLoading: false,
+      // released channels contains channel map for each channel in current track
+      // also includes 'unassigned' fake channel to show selected unassigned revision
       releasedChannels: this.props.releasedChannels,
+      // list of architectures released to (or selected to be released to)
+      archs: this.getArchsFromReleasedChannels(this.props.releasedChannels),
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -26,8 +32,53 @@ export default class ReleasesController extends Component {
       //  }
       // }
       pendingReleases: {},
-      pendingCloses: []
+      pendingCloses: [],
+      // list of selected revisions, to know which ones to render selected
+      selectedRevisions: []
     };
+  }
+
+  // update list of architectures based on revisions released (or selected)
+  getArchsFromReleasedChannels(releasedChannels) {
+    let archs = [];
+    Object.keys(releasedChannels).forEach(channel => {
+      Object.keys(releasedChannels[channel]).forEach(arch => {
+        archs.push(arch);
+      });
+    });
+
+    // make archs unique and sorted
+    archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
+
+    return archs.sort();
+  }
+
+  selectRevision(revision) {
+    this.setState((state) => {
+      const releasedChannels = state.releasedChannels;
+
+      // TODO: support multiple archs
+      const arch = revision.architectures[0];
+
+      if (!releasedChannels[UNASSIGNED]) {
+        releasedChannels[UNASSIGNED] = {};
+      }
+
+      if (releasedChannels[UNASSIGNED][arch] && (releasedChannels[UNASSIGNED][arch].revision === revision.revision)) {
+        delete releasedChannels[UNASSIGNED][arch];
+      } else {
+        releasedChannels[UNASSIGNED][arch] = revision;
+      }
+
+      const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(arch => releasedChannels[UNASSIGNED][arch].revision);
+      const archs = this.getArchsFromReleasedChannels(releasedChannels);
+
+      return {
+        selectedRevisions,
+        releasedChannels,
+        archs
+      };
+    });
   }
 
   setCurrentTrack(track) {
@@ -247,8 +298,11 @@ export default class ReleasesController extends Component {
           }
         });
 
+        const archs = this.getArchsFromReleasedChannels(releasedChannels);
+
         return {
-          releasedChannels
+          releasedChannels,
+          archs
         };
       });
     } else {
@@ -343,8 +397,8 @@ export default class ReleasesController extends Component {
   }
 
   render() {
-    const { archs, tracks } = this.props;
-    const { releasedChannels } = this.state;
+    const { tracks } = this.props;
+    const { archs, releasedChannels } = this.state;
 
     return (
       <Fragment>
@@ -371,13 +425,10 @@ export default class ReleasesController extends Component {
           closeChannel={this.closeChannel.bind(this)}
         />
         <RevisionsList
-          currentTrack={this.state.currentTrack}
           revisions={this.props.revisions}
-          pendingReleases={this.state.pendingReleases}
           releasedChannels={releasedChannels}
-          getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
-          promoteRevision={this.promoteRevision.bind(this)}
-          undoRelease={this.undoRelease.bind(this)}
+          selectedRevisions={this.state.selectedRevisions}
+          selectRevision={this.selectRevision.bind(this)}
         />
       </Fragment>
     );
@@ -388,7 +439,6 @@ ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisions: PropTypes.array.isRequired,
-  archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
 };

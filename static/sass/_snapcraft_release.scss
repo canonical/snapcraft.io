@@ -74,7 +74,6 @@
     width: 2rem;
   }
 
-
   .p-contextual-menu__item {
     @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
 
@@ -86,5 +85,15 @@
 
   .p-contextual-menu__link.is-indented {
     padding-left: 1rem;
+  }
+
+  .p-revisions-list {
+    .col-has-checkbox {
+      padding-left: 2rem;
+    }
+
+    .is-disabled {
+      opacity: .5;
+    }
   }
 }
