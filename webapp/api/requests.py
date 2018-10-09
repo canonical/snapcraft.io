@@ -1,15 +1,16 @@
-# Core packages
 import os
 from urllib.parse import urlparse
 
-# Third-party packages
 import requests
-import requests_cache
+
 import prometheus_client
-
-# Local packages
-from webapp.api.exceptions import ApiTimeoutError, ApiConnectionError
-
+import requests_cache
+from pybreaker import CircuitBreaker, CircuitBreakerError
+from webapp.api.exceptions import (
+    ApiCircuitBreaker,
+    ApiConnectionError,
+    ApiTimeoutError,
+)
 
 timeout_counter = prometheus_client.Counter(
     "feed_timeouts", "A counter of timed out requests", ["domain"]
@@ -57,12 +58,15 @@ class BaseSession:
 
         headers = {"User-Agent": storefront_header}
         self.headers.update(headers)
+        self.api_breaker = CircuitBreaker(fail_max=5, reset_timeout=60)
 
     def request(self, method, url, **kwargs):
         domain = urlparse(url).netloc
 
         try:
-            request = super().request(method=method, url=url, **kwargs)
+            request = self.api_breaker.call(
+                super().request, method=method, url=url, **kwargs
+            )
         except requests.exceptions.Timeout:
             timeout_counter.labels(domain=domain).inc()
 
@@ -74,6 +78,10 @@ class BaseSession:
 
             raise ApiConnectionError(
                 "Failed to establish connection to {}.".format(url)
+            )
+        except CircuitBreakerError:
+            raise ApiCircuitBreaker(
+                "Requests are closed because of too many failures".format(url)
             )
 
         latency_histogram.labels(

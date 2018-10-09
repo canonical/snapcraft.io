@@ -52,6 +52,10 @@ def set_handlers(app):
 
         return flask.render_template("404.html", error=error.description), 404
 
+    @app.errorhandler(503)
+    def service_unavailable(error):
+        return flask.render_template("503.html"), 503
+
     # Global tasks for all requests
     # ===
     @app.before_request

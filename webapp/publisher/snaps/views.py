@@ -13,6 +13,7 @@ from webapp.api.exceptions import (
     ApiResponseError,
     ApiResponseErrorList,
     ApiTimeoutError,
+    ApiCircuitBreaker,
     MacaroonRefreshRequired,
     MissingUsername,
 )
@@ -54,6 +55,8 @@ def _handle_errors(api_error: ApiError):
         return flask.redirect(flask.url_for("account.get_agreement"))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
+    elif type(api_error) is ApiCircuitBreaker:
+        return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
 

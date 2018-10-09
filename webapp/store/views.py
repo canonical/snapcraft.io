@@ -13,6 +13,7 @@ from webapp.api.exceptions import (
     ApiResponseError,
     ApiResponseErrorList,
     ApiConnectionError,
+    ApiCircuitBreaker,
 )
 from urllib.parse import quote_plus
 
@@ -42,6 +43,10 @@ def store_blueprint(store_query=None):
             status_code = 502
         elif type(api_error) is ApiConnectionError:
             status_code = 502
+        elif type(api_error) is ApiCircuitBreaker:
+            # Special case for this one, because it is the only case where we
+            # don't want the user to be able to access the page.
+            return flask.abort(503)
 
         return status_code, error
 
@@ -249,6 +254,8 @@ def store_blueprint(store_query=None):
                 flask.abort(502, error_messages)
         except ApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
+        except ApiCircuitBreaker:
+            flask.abort(503)
         except ApiError as api_error:
             flask.abort(502, str(api_error))
 
