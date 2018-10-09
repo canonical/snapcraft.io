@@ -88,11 +88,6 @@
   }
 
   .p-revisions-list {
-    // TODO: instead of fighting vanilla specificity add a class name
-    input+label {
-      margin-bottom: 0;
-    }
-
     .col-has-checkbox {
       padding-left: 2rem;
     }

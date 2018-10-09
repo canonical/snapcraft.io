@@ -20,7 +20,7 @@ export default class RevisionsList extends Component {
         <tr key={revision.revision} className={isDisabled ? 'is-disabled' : ''}>
           <td>
             <input type="checkbox" checked={isSelected} id={`revision-check-${revision.revision}`} onChange={this.revisionSelectChange.bind(this, revision)}/>
-            <label htmlFor={`revision-check-${revision.revision}`}>{ revision.revision }</label>
+            <label className="u-no-margin--bottom" htmlFor={`revision-check-${revision.revision}`}>{ revision.revision }</label>
           </td>
           <td>{ revision.version }</td>
           <td>{ revision.architectures.join(", ") }</td>
