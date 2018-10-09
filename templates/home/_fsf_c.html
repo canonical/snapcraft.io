@@ -1,0 +1,48 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="c">
+  <div class='col-6'>
+    <h4>Why are snaps good for C/C++ projects?</h4>
+    <ul>
+      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+      <li>Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
+      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here’s how dosbox uses it:</h4>
+    <code class="p-code-yaml"><pre><b>name</b>: dosbox
+<b>version</b>: "0.74-svn"
+<b>summary</b>: DOS emulator
+<b>description</b>: |
+  DOSBox is a x86 emulator with Tandy/Hercules/CGA/EGA/VGA/SVGA graphics
+  sound and DOS. It's been designed to run old DOS games under platforms that
+  don't support it.
+
+<b>confinement</b>: devmode
+
+<b>parts</b>:
+  <b>dosbox</b>:
+    <b>plugin</b>: autotools
+    <b>source-type</b>: tar
+    <b>source</b>: http://source.dosbox.com/dosboxsvn.tgz
+    <b>build-package</b>s:
+      - g++
+      - make
+      - libsdl1.2-dev
+      - libpng12-dev
+      - libsdl-net1.2-dev
+      - libsdl-sound1.2-dev
+      - libasound2-dev
+
+<b>apps</b>:
+  <b>dosbox</b>:
+    <b>command</b>: dosbox</pre></code>
+  </div>
+
+  <div class="p-flow-details__continue">
+    In just a few steps, you’ll have an example C/C++ app in the Snap Store.
+    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/c">Continue</a>
+  </div>
+</div>

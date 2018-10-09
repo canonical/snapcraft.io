@@ -1,0 +1,37 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="ruby">
+  <div class='col-6'>
+    <h4>Why are snaps good for Ruby projects?</h4>
+    <ul>
+      <li>Bundle all the runtime requirements.</li>
+      <li>Simplify installation instructions, regardless of distribution, to snap install myrubyapp.</li>
+      <li>Directly control the delivery of automatic application updates.</li>
+      <li>Extremely simple creation of services.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here’s how mdl uses it:</h4>
+    <code class="p-code-yaml"><pre><b>name</b>: mdl
+<b>version</b>: "0.5.0"
+<b>summary</b>: Markdown lint tool
+<b>description</b>: >
+  Style checker/lint tool for markdown files
+
+<b>confinement</b>: devmode
+
+<b>parts</b>:
+  <b>mdl</b>:
+    <b>plugin</b>: ruby
+    <b>gems</b>:
+      - mdl
+
+<b>apps</b>:
+  <b>mdl</b>:
+    <b>command</b>: mdl</pre></code>
+  </div>
+
+  <div class="p-flow-details__continue">
+    In just a few steps, you’ll have an example Ruby app in the Snap Store.
+    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/ruby">Continue</a>
+  </div>
+</div>

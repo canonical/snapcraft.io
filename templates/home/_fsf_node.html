@@ -1,0 +1,42 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="node">
+  <div class='col-6'>
+    <h4>Why are snaps good for Node.js projects?</h4>
+    <ul>
+      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+      <li>Snaps install and run the same across Linux. They bundle the exact version of Node required and all of your app’s dependencies, be they Node modules or other applications.</li>
+      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here's how wethr uses it:</h4>
+    <code class="p-code-yaml"><pre><b>name</b>: wethr
+<b>version</b>: git
+<b>summary</b>: Command line weather tool.
+<b>description</b>: >
+  Get current weather:-
+    $ wethr
+  Get current weather in metric units
+    $ wethr --metric
+  Get current weather in imperial units
+    $ wethr --imperial
+
+<b>confinement</b>: devmode
+
+<b>parts</b>:
+  <b>wethr</b>:
+    <b>plugin</b>: nodejs
+    <b>source</b>: .
+
+<b>apps</b>:
+  <b>wethr</b>:
+    <b>command</b>: wethr</pre></code>
+  </div>
+
+  <div class="p-flow-details__continue">
+    In just a few steps, you’ll have an example Node.js app in the Snap Store.
+    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/node">Continue</a>
+  </div>
+</div>

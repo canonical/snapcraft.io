@@ -1,0 +1,40 @@
+<div class="col-12 p-flow-details" style="display: none" data-flow-details="pre-built">
+  <div class='col-6'>
+    <h4>Why are snaps good for pre-built apps?</h4>
+    <ul>
+      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+      <li>Snaps install and run the same across Linux. They bundle your app’s exact versioned dependencies.</li>
+      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+    </ul>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here's how geekbench uses it:</h4>
+    <code class="p-code-yaml"><pre><b>name</b>: geekbench4
+<b>version</b>: 4.2.0
+<b>summary</b>: Cross-Platform Benchmark
+<b>description</b>: >
+  Geekbench 4 measures your system's power and tells you whether your
+  computer is ready to roar. How strong is your mobile device or desktop
+  computer? How will it perform when push comes to crunch? These are the
+  questions that Geekbench can answer.
+
+<b>confinement</b>: devmode
+
+<b>parts</b>:
+  <b>geekbench4</b>:
+    <b>plugin</b>: dump
+    <b>source</b>: http://cdn.geekbench.com/Geekbench-$SNAPCRAFT_PROJECT_VERSION-Linux.tar.gz
+
+<b>apps</b>:
+  <b>geekbench4</b>:
+    <b>command</b>: geekbench4</pre></code>
+  </div>
+
+  <div class="p-flow-details__continue">
+    In just a few steps, you’ll have an example pre-built app in the Snap Store.
+    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/pre-built">Continue</a>
+  </div>
+</div>
