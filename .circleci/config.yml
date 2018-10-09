@@ -32,7 +32,9 @@ jobs:
           command: pip3 install coverage
       - run:
           name: Run tests with coverage
-          command: coverage run  --source=. -m unittest discover tests
+          command: |
+            coverage run  --source=. -m unittest discover tests
+            bash <(curl -s https://codecov.io/bash)
   js-lint:
     <<: *defaults
     steps:
