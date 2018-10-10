@@ -263,16 +263,13 @@ export default class ReleasesController extends Component {
 
         // update releasedChannels based on channel map from the response
         json.channel_map.forEach(map => {
-          // TODO:
-          // possible improvements but not needed for functionality:
-          // - close channels when there is no release?
-          // - ignore revisions other then the one just released?
-          // - get revision data from revisionsMap?
           if (map.revision) {
-
             let revision;
-            if (map.revision === release.id) {
+
+            if (map.revision === (+release.id)) { // release.id is a string so turn it into a number for comparison
               revision = release.revision;
+            } else if (this.props.revisionsMap[map.revision]) {
+              revision = this.props.revisionsMap[map.revision];
             } else {
               revision = {
                 revision: map.revision,
@@ -290,9 +287,13 @@ export default class ReleasesController extends Component {
               releasedChannels[channel] = {};
             }
 
-
             revision.architectures.forEach(arch => {
-              releasedChannels[channel][arch] = revision;
+              const currentlyReleased = releasedChannels[channel][arch];
+
+              // only update revision in channel map if it changed since last time
+              if (!currentlyReleased || currentlyReleased.revision !== revision.revision) {
+                releasedChannels[channel][arch] = revision;
+              }
             });
 
           }
@@ -439,6 +440,7 @@ ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisions: PropTypes.array.isRequired,
+  revisionsMap: PropTypes.object.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
 };
