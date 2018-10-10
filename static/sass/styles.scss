@@ -122,9 +122,6 @@ $color-navigation-background: #252525;
 @import 'snapcraft_details_heading';
 @include snapcraft-details-heading;
 
-@import 'snapcraft_details_screenshots';
-@include snapcraft-details-screenshots;
-
 @import 'snapcraft_footer';
 @include snapcraft-footer;
 

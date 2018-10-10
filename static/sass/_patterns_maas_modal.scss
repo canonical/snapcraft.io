@@ -134,6 +134,8 @@ $color-modal-controls: rgba($color-x-dark, .2);
 
   .vbox-next {
     background-image: url('#{$assets-path}9716bbab-chevron.svg');
+    // Overrides a rule in vanilla that adds margin to the right of buttons
+    margin-right: 0 !important;
     right: 1rem;
   }
 
@@ -248,6 +250,7 @@ $color-modal-controls: rgba($color-x-dark, .2);
   }
 
   .vbox-container img {
+    align-self: initial;
     max-height: 100%;
     max-width: 100%;
   }
