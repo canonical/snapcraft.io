@@ -5,7 +5,7 @@ Flask-Testing==0.6.2
 Flask-WTF==0.14.2
 gunicorn[gevent]
 humanize==0.5.1
-prometheus_client==0.4.1
+prometheus_client==0.3.1
 prometheus-flask-exporter==0.2.0
 pybreaker==0.4.4
 pycountry==17.9.23
