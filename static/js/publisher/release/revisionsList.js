@@ -10,6 +10,10 @@ export default class RevisionsList extends Component {
     this.props.selectRevision(revision);
   }
 
+  isInDevmode(revision) {
+    return revision.confinement === 'devmode' || revision.grade === 'devel';
+  }
+
   renderRows(revisions) {
     return revisions.map((revision) => {
       const uploadDate = new Date(revision.created_at);
@@ -22,7 +26,19 @@ export default class RevisionsList extends Component {
             <input type="checkbox" checked={isSelected} id={`revision-check-${revision.revision}`} onChange={this.revisionSelectChange.bind(this, revision)}/>
             <label className="u-no-margin--bottom" htmlFor={`revision-check-${revision.revision}`}>{ revision.revision }</label>
           </td>
-          <td>{ revision.version }</td>
+          <td>
+            { revision.version }
+            {' '}
+            { this.isInDevmode(revision) &&
+              <span className="p-tooltip p-tooltip--btm-center" aria-describedby={`revision-devmode-${revision.revision}`}>
+                <i className="p-icon--warning"></i>
+                <span className="p-tooltip__message u-align--center" role="tooltip" id={`revision-devmode-${revision.revision}`}>
+                  Revisions with { revision.confinement === 'devmode' ? 'devmode confinement' : 'devel grade'} cannot<br/>
+                  be released to stable or beta channels.
+                </span>
+              </span>
+            }
+          </td>
           <td>{ revision.architectures.join(", ") }</td>
           <td>{ revision.channels.join(", ") }</td>
           <td className="u-align--right">
