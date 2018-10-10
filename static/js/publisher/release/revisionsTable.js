@@ -1,9 +1,19 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { RISKS_WITH_UNASSIGNED as RISKS, UNASSIGNED, STABLE } from './constants';
-import DevmodeIcon from './devmodeIcon';
+import {
+  RISKS_WITH_UNASSIGNED as RISKS,
+  UNASSIGNED,
+  STABLE,
+  BETA,
+  EDGE
+} from './constants';
+import DevmodeIcon, { isInDevmode } from './devmodeIcon';
 import PromoteButton from './promoteButton';
+
+function getChannelName(track, risk) {
+  return risk === UNASSIGNED ? risk : `${track}/${risk}`;
+}
 
 export default class RevisionsTable extends Component {
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
@@ -26,8 +36,7 @@ export default class RevisionsTable extends Component {
   }
 
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
-    // TODO: extract or try not to duplicate?
-    const channel = risk === UNASSIGNED ? risk : `${track}/${risk}`;
+    const channel = getChannelName(track, risk);
 
     let thisRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, channel, arch);
     let thisPreviousRevision = releasedChannels[channel] && releasedChannels[channel][arch];
@@ -125,8 +134,7 @@ export default class RevisionsTable extends Component {
     const track = this.props.currentTrack;
 
     return RISKS.map(risk => {
-      // TODO: extract or try not to duplicate?
-      const channel = risk === UNASSIGNED ? risk : `${track}/${risk}`;
+      const channel = getChannelName(track, risk);
 
       // don't show unassigned revisions until some are selected from the table
       // TODO: always show (when we can click on it)
@@ -162,6 +170,17 @@ export default class RevisionsTable extends Component {
       if (canBePromoted) {
         // take all risks above current one
         targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
+
+        // check for devmode revisions
+        if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
+          const hasDevmodeRevisions = Object.values(nextChannelReleases[channel]).some(isInDevmode);
+
+          // remove stable and beta channels as targets if any revision
+          // is in devmode
+          if (hasDevmodeRevisions) {
+            targetRisks = targetRisks.slice(2);
+          }
+        }
 
         // filter out risks that have the same revisions already released
         targetRisks = targetRisks.filter((targetRisk) => {

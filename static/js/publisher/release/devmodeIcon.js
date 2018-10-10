@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function isInDevmode(revision) {
+export function isInDevmode(revision) {
   return revision.confinement === 'devmode' || revision.grade === 'devel';
 }
 
