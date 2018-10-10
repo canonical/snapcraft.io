@@ -3,15 +3,12 @@ import PropTypes from 'prop-types';
 import distanceInWords from 'date-fns/distance_in_words_strict';
 import format from 'date-fns/format';
 
+import DevmodeIcon from './devmodeIcon';
 import { UNASSIGNED } from './constants';
 
 export default class RevisionsList extends Component {
   revisionSelectChange(revision) {
     this.props.selectRevision(revision);
-  }
-
-  isInDevmode(revision) {
-    return revision.confinement === 'devmode' || revision.grade === 'devel';
   }
 
   renderRows(revisions) {
@@ -29,15 +26,7 @@ export default class RevisionsList extends Component {
           <td>
             { revision.version }
             {' '}
-            { this.isInDevmode(revision) &&
-              <span className="p-tooltip p-tooltip--btm-center" aria-describedby={`revision-devmode-${revision.revision}`}>
-                <i className="p-icon--warning"></i>
-                <span className="p-tooltip__message u-align--center" role="tooltip" id={`revision-devmode-${revision.revision}`}>
-                  Revisions with { revision.confinement === 'devmode' ? 'devmode confinement' : 'devel grade'} cannot<br/>
-                  be released to stable or beta channels.
-                </span>
-              </span>
-            }
+            <DevmodeIcon revision={revision} />
           </td>
           <td>{ revision.architectures.join(", ") }</td>
           <td>{ revision.channels.join(", ") }</td>

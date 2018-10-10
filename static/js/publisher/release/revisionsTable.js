@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { RISKS_WITH_UNASSIGNED as RISKS, UNASSIGNED, STABLE } from './constants';
+import DevmodeIcon from './devmodeIcon';
 import PromoteButton from './promoteButton';
 
 export default class RevisionsTable extends Component {
@@ -36,6 +37,7 @@ export default class RevisionsTable extends Component {
     );
 
     const isChannelClosed = this.props.pendingCloses.includes(channel);
+    const isPending = hasPendingRelease || isChannelClosed;
 
     return (
       <td
@@ -45,16 +47,21 @@ export default class RevisionsTable extends Component {
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
-            <span className={ (hasPendingRelease || isChannelClosed) ? 'p-previous-revision' : '' }>
+            <span className={ isPending ? 'p-previous-revision' : '' }>
               { thisPreviousRevision ?
-                <span className="p-revision-info">{thisPreviousRevision.version}
+                <span className="p-revision-info">
+                  {thisPreviousRevision.version}
+                  {' '}
+                  { !isPending &&
+                    <DevmodeIcon revision={thisPreviousRevision} showTooltip={false} />
+                  }
                   <span className="p-revision-info__revision">({thisPreviousRevision.revision})</span>
                 </span> :
                 '–'
               }
             </span>
-            { (hasPendingRelease || isChannelClosed) &&
-              <span>
+            { isPending &&
+              <Fragment>
                 {' '}
                 &rarr;
                 {' '}
@@ -64,7 +71,7 @@ export default class RevisionsTable extends Component {
                   </span> :
                   <em>close channel</em>
                 }
-              </span>
+              </Fragment>
             }
           </span>
 
