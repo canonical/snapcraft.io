@@ -13,6 +13,7 @@ import talisker.flask
 import webapp.helpers as helpers
 from webapp.blog.views import blog
 from webapp.extensions import csrf
+from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.publisher.snaps.views import publisher_snaps
@@ -67,6 +68,7 @@ def init_brandstore(app):
 
 def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
+    app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
     csrf.exempt("webapp.login.views.login_handler")
     app.register_blueprint(store_blueprint())
