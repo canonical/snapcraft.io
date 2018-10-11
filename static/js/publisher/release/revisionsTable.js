@@ -92,6 +92,12 @@ export default class RevisionsTable extends Component {
             { isChannelClosed &&
               <span> &rarr; <em>close channel</em></span>
             }
+            { thisPreviousRevision && isInDevmode(thisPreviousRevision) &&
+              <Fragment>
+                <br/>
+                { thisPreviousRevision.confinement === 'devmode' ? 'confinement: devmode' : 'grade: devel' }
+              </Fragment>
+            }
           </span>
         </span>
         { hasPendingRelease &&
