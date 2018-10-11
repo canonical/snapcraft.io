@@ -5,7 +5,7 @@ import 'whatwg-fetch';
 import RevisionsTable from './revisionsTable';
 import RevisionsList from './revisionsList';
 import Notification from './notification';
-
+import { isInDevmode } from './devmodeIcon';
 import { UNASSIGNED } from './constants';
 
 export default class ReleasesController extends Component {
@@ -401,12 +401,25 @@ export default class ReleasesController extends Component {
     const { tracks } = this.props;
     const { archs, releasedChannels } = this.state;
 
+    const hasDevmodeRevisions = Object.values(releasedChannels).some(archReleases => {
+      return Object.values(archReleases).some(isInDevmode);
+    });
+
+
     return (
       <Fragment>
         { this.state.error &&
           <Notification status="error" appearance="negative">
             {this.state.error}
           </Notification>
+        }
+        { hasDevmodeRevisions &&
+          <Notification appearance="caution">
+            Revisions in development mode cannot be released to stable or candidate channels.
+            <br/>
+            You can read more about <code>devmode</code> confinement and <code>devel</code> grade in <a href="https://docs.snapcraft.io/build-snaps/syntax">the Snapraft docs</a>.
+          </Notification>
+
         }
         <RevisionsTable
           releasedChannels={releasedChannels}

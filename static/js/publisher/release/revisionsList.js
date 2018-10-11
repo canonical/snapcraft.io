@@ -26,7 +26,7 @@ export default class RevisionsList extends Component {
           <td>
             { revision.version }
             {' '}
-            <DevmodeIcon revision={revision} />
+            <DevmodeIcon revision={revision} showTooltip={true} />
           </td>
           <td>{ revision.architectures.join(", ") }</td>
           <td>{ revision.channels.join(", ") }</td>
