@@ -82,7 +82,6 @@ export default [
         jsnext: true
       }),
       babel({
-        exclude: 'node_modules/**',
         plugins: ['external-helpers']
       }),
       commonjs({
