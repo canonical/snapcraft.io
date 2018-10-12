@@ -56,14 +56,16 @@ export default class RevisionsTable extends Component {
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
+
+            <span className="p-revision-icon">
+              { thisPreviousRevision && !isPending &&
+                <DevmodeIcon revision={thisPreviousRevision} showTooltip={false} />
+              }
+            </span>
             <span className={ isPending ? 'p-previous-revision' : '' }>
               { thisPreviousRevision ?
                 <span className="p-revision-info">
                   {thisPreviousRevision.version}
-                  {' '}
-                  { !isPending &&
-                    <DevmodeIcon revision={thisPreviousRevision} showTooltip={false} />
-                  }
                   <span className="p-revision-info__revision">({thisPreviousRevision.revision})</span>
                 </span> :
                 '–'
@@ -319,7 +321,7 @@ export default class RevisionsTable extends Component {
             <tr>
               <th width="22%" scope="col"></th>
               {
-                archs.map(arch => <th width="13%" key={`${arch}`}>{ arch }</th>)
+                archs.map(arch => <th width="13%" className="p-release-table__arch" key={`${arch}`}>{ arch }</th>)
               }
             </tr>
           </thead>

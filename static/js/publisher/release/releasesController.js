@@ -417,7 +417,7 @@ export default class ReleasesController extends Component {
           <Notification appearance="caution">
             Revisions in development mode cannot be released to stable or candidate channels.
             <br/>
-            You can read more about <code>devmode</code> confinement and <code>devel</code> grade in <a href="https://docs.snapcraft.io/build-snaps/syntax">the Snapraft docs</a>.
+            You can read more about <a href="https://docs.snapcraft.io/t/snap-confinement/6233"><code>devmode</code> confinement</a> and <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276"><code>devel</code> grade</a>.
           </Notification>
 
         }

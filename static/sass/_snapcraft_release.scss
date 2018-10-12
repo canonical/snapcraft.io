@@ -5,6 +5,10 @@
     }
   }
 
+  .p-release-table__arch {
+    padding-left: 20px;
+  }
+
   .p-release-table__cell {
     position: relative;
   }
@@ -45,6 +49,11 @@
     &.is-pending {
       font-weight: 400;
     }
+  }
+
+  .p-revision-icon {
+    display: inline-block;
+    width: 20px;
   }
 
   .p-revision-info__revision {

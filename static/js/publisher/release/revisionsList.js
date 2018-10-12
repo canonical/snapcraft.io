@@ -24,9 +24,10 @@ export default class RevisionsList extends Component {
             <label className="u-no-margin--bottom" htmlFor={`revision-check-${revision.revision}`}>{ revision.revision }</label>
           </td>
           <td>
-            { revision.version }
-            {' '}
             <DevmodeIcon revision={revision} showTooltip={true} />
+          </td>
+          <td>
+            { revision.version }
           </td>
           <td>{ revision.architectures.join(", ") }</td>
           <td>{ revision.channels.join(", ") }</td>
@@ -55,6 +56,7 @@ export default class RevisionsList extends Component {
           <thead>
             <tr>
               <th className="col-has-checkbox" width="10%" scope="col">Revision</th>
+              <th width="20px"></th>
               <th width="23%" scope="col">Version</th>
               <th width="12%" scope="col">Architecture</th>
               <th width="30%" scope="col">Channels</th>
