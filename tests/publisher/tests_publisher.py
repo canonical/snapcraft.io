@@ -1,14 +1,13 @@
 import unittest
 
-import pymacaroons
-import responses
 from requests.exceptions import ConnectionError
 
+import pymacaroons
+import responses
+from flask_testing import TestCase
 from tests.publisher.endpoint_testing import BaseTestCases
 from webapp.app import create_app
-from flask_testing import TestCase
 from webapp.authentication import get_authorization_header
-
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True

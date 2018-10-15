@@ -1,7 +1,7 @@
-import requests_cache
-import responses
 import unittest
 
+import requests_cache
+import responses
 from webapp.api import requests
 
 

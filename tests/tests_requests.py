@@ -1,7 +1,8 @@
-import responses
 import unittest
+
 from requests.exceptions import ConnectionError, Timeout
 
+import responses
 from webapp.api import requests
 from webapp.api.exceptions import ApiConnectionError, ApiTimeoutError
 

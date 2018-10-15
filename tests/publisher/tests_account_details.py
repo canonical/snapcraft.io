@@ -1,7 +1,7 @@
 import unittest
+
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
-
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True

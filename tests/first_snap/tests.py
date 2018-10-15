@@ -1,5 +1,5 @@
-from webapp.app import create_app
 from flask_testing import TestCase
+from webapp.app import create_app
 
 
 class FirstSnap(TestCase):
