@@ -1,0 +1,47 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block content %}
+  <div id="main-content" class="p-strip">
+    {% set fsf_step = "test" %}
+    {% include "first-snap/_breadcrumb.html" %}
+
+    <div class="row">
+      <div class="col-8">
+        <ol class="p-list-step">
+          {% for step in steps %}
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">{{ loop.index }}</span>
+              </h3>
+              <div class="p-list-step__content">
+                <p>{{ step.action }}</p>
+                {% if step.command %}
+                  {% set snippet_value = step.command %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </div>
+
+    <div class="row">
+      <hr />
+    </div>
+
+    <div class="row">
+      Next, we'll package an example snap.
+      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/push">Continue</a>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    Raven.context(function() {
+
+    });
+  </script>
+{% endblock %}

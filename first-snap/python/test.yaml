@@ -1,0 +1,14 @@
+macos:
+  - action: 'Install Multipass (https://github.com/CanonicalLtd/multipass/releases/), a virtualisation product that can set up a complete Linux environment in a couple of minutes'
+  - action: Create a Linux virtual machine for testing snaps
+    command: multipass launch -n snaps
+  - action: Return to the directory containing the snapcraft.yaml and map it into the virtual machine
+    command: 'multipass copy-files *.snap snaps:'
+  - action: Install the snap by telling multipass to run snap install inside the virtual machine
+    command: multipass exec snaps -- sudo snap install --dangerous \*.snap
+  - action: The snap is now installed in the virtual machine. Connect to the virtual machine and list your installed snaps to confirm
+    command: >
+      multipass shell snaps
+      snap list
+  - action: Run the snap inside the virtual machine
+    command: offlineimap

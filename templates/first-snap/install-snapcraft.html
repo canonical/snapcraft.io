@@ -1,0 +1,306 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block content %}
+  <div id="main-content" class="p-strip">
+    {% set fsf_step = "install" %}
+    {% include "first-snap/_breadcrumb.html" %}
+    <div class="row">
+      <p>Now we'll set up Snapcraft, the tool for building snaps.</p>
+    </div>
+    <div class="row">
+      <h4>What operating system are you developing on?</h4>
+    </div>
+    <div class="row">
+      <div class="col-6 p-fluid-grid">
+        <a class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="linux">
+          <header class="p-card__header">
+            <img src="https://assets.ubuntu.com/v1/701da9c0-icon-prepackaged-apps.svg" alt="">
+          </header>
+          <span>Linux</span>
+        </a>
+        <a class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="macos">
+          <header class="p-card__header">
+            <img src="https://assets.ubuntu.com/v1/701da9c0-icon-prepackaged-apps.svg" alt="">
+          </header>
+          <span>macOS</span>
+        </a>
+        <a class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="windows">
+          <header class="p-card__header">
+            <img src="https://assets.ubuntu.com/v1/701da9c0-icon-prepackaged-apps.svg" alt="">
+          </header>
+          <span>Windows</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="row js-os-wrapper js-linux" style="display: none;">
+      <h4>How would you like to set up your build environment?</h4>
+      <div class="p-strip is-shallow u-no-padding--top">
+        <input type="radio" name="os" value="linux-auto" checked="checked" id="linux-auto" />
+        <label for="linux-auto">Automatic (recommended)</label>
+        <input type="radio" name="os" value="linux-manual" id="linux-manual" />
+        <label for="linux-manual">Set up manually with Docker</label>
+      </div>
+
+      <div class="row js-linux-type js-linux-auto" style="display: none;">
+        <div class="col-8">
+          <ol class="p-list-step">
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">1</span>
+                <a href="https://docs.snapcraft.io/core/install">Install snap support</a>, if you don't have it already
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Install Snapcraft, the command-line tool for building snaps
+              </h3>
+              <div class="p-list-step__content">
+                {% set snippet_value = "snap install snapcraft --classic" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">3</span>
+                Refresh your path
+              </h3>
+              <div class="p-list-step__content">
+                {% set snippet_value = "hash -r" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="row js-linux-type js-linux-manual" style="display: none;">
+        <div class="col-8">
+          <ol class="p-list-step">
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">1</span>
+                <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Install Docker</a>, if you don't have it already
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Check that Docker is correctly configured
+              </h3>
+              <div class="p-list-site__content">
+                {% set snippet_value = "docker run hello-world" %}
+                {% include "/partials/_code-snippet.html" %}
+                <p>
+                  If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
+                </p>
+              </div>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Pull the latest snapcraft image:
+              </h3>
+              <div class="p-list-site__content">
+                {% set snippet_value = "docker pull snapcore/snapcraft" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="row js-os-wrapper js-macos" style="display: none;">
+      <h4>How would you like to set up your build environment?</h4>
+      <div class="p-strip is-shallow u-no-padding--top">
+        <input type="radio" name="os" value="macos-auto" checked="checked" id="macos-auto" />
+        <label for="macos-auto">Automatic (recommended)</label>
+        <input type="radio" name="os" value="macos-manual" id="macos-manual" />
+        <label for="macos-manual">Set up manually with Docker</label>
+      </div>
+
+      <div class="row js-macos-type js-macos-auto" style="display: none;">
+        <div class="col-8">
+          <ol class="p-list-step">
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">1</span>
+                <a href="https://brew.sh">Install Homebrew</a>, if you don't have it already
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Install Snapcraft, the command-line tool for building snaps
+              </h3>
+              <div class="p-list-step__content">
+                {% set snippet_value = "brew install snapcraft" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="row js-macos-type js-macos-manual" style="display: none;">
+        <div class="col-8">
+          <ol class="p-list-step">
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">1</span>
+                <a href="https://docs.docker.com/docker-for-mac/install/">Install Docker</a>, if you don't have it already
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Check that Docker is correctly configured
+              </h3>
+              <div class="p-list-site__content">
+                {% set snippet_value = "docker run hello-world" %}
+                {% include "/partials/_code-snippet.html" %}
+                <p>
+                  If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
+                </p>
+              </div>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Pull the latest snapcraft image:
+              </h3>
+              <div class="p-list-site__content">
+                {% set snippet_value = "docker pull snapcore/snapcraft" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="row js-os-wrapper js-windows" style="display: none;">
+      <h4>How would you like to set up your build environment?</h4>
+      <div class="p-strip is-shallow u-no-padding--top">
+        <input type="radio" name="os" value="windows-auto" checked="checked" id="windows-auto" />
+        <label for="windows-auto">Automatic (recommended)</label>
+        <input type="radio" name="os" value="windows-manual" id="windows-manual" />
+        <label for="windows-manual">Set up manually with Docker</label>
+      </div>
+
+      <div class="row js-windows-type js-windows-auto" style="display: none;">
+        <div class="col-8">
+          <ol class="p-list-step">
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">1</span>
+                <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Install Windows Subsystem for Linux</a>, choosing Ubuntu
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Run WSL from the Windows Start menu
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">3</span>
+                Install Snapcraft, the command-line tool for building snaps
+              </h3>
+              <div class="p-list-step__content">
+                {% set snippet_value = "sudo apt install snapcraft" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="row js-windows-type js-windows-manual" style="display: none;">
+        <div class="col-8">
+          <ol class="p-list-step">
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">1</span>
+                <a href="https://docs.docker.com/docker-for-windows/install/">Install Docker</a>, if you don't have it already
+              </h3>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Check that Docker is correctly configured
+              </h3>
+              <div class="p-list-site__content">
+                {% set snippet_value = "docker run hello-world" %}
+                {% include "/partials/_code-snippet.html" %}
+                <p>
+                  If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
+                </p>
+              </div>
+            </li>
+            <li class="p-list-step__item">
+              <h3 class="p-list-step__title">
+                <span class="p-list-step__bullet">2</span>
+                Pull the latest snapcraft image:
+              </h3>
+              <div class="p-list-site__content">
+                {% set snippet_value = "docker pull snapcore/snapcraft" %}
+                {% include "/partials/_code-snippet.html" %}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <hr />
+    </div>
+
+    <div class="row">
+      Next, we'll package an example snap.
+      <a class="p-button--positive u-float--right js-continue">Continue</a>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    Raven.context(function() {
+      var osPickers = document.querySelectorAll('.js-os-select');
+      var osWrappers = document.querySelectorAll('.js-os-wrapper');
+
+      osPickers.forEach(function (os) {
+        os.addEventListener('click', function (e) {
+          var osSelect = e.target.closest('.js-os-select');
+          selectedOs = osSelect.dataset.os;
+          osWrappers.forEach(function (wrapper) {
+            wrapper.style.display = 'none';
+          });
+          document.querySelector('.js-' + selectedOs).style.display = 'block';
+        });
+      });
+
+      function onChange(e) {
+        var type = e.target.value;
+        var os = type.split('-')[0];
+        var selected = document.querySelector('.js-' + type);
+        var unselected = document.querySelector('[class*="js-' + os + '-"]:not(.js-' + type + ')');
+
+        osWrappers.forEach(function (wrapper) {
+          var rows = wrapper.querySelectorAll('.row');
+          rows.forEach(function (row) {
+            row.style.display = 'none';
+          });
+        });
+
+        selected.style.display = 'block';
+        unselected.style.display = 'none';
+        document.querySelector('.js-continue').href = '/first-snap/{{ language }}/' + type + '/package';
+      }
+
+      document.addEventListener('change', onChange);
+    });
+  </script>
+{% endblock %}

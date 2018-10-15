@@ -1,4 +1,8 @@
+import os
 import flask
+import yaml
+
+dir = os.path.dirname(os.path.realpath(__file__))
 
 first_snap = flask.Blueprint(
     "fist_snap_flow",
@@ -10,34 +14,112 @@ first_snap = flask.Blueprint(
 
 @first_snap.route("/")
 def get_first_snap():
-    return "first snap"
+    return "choose language"
 
 
 @first_snap.route("/<language>")
 def get_language(language):
-    return language
+    context = {"language": language}
+    return flask.render_template(
+        "first-snap/install-snapcraft.html", **context
+    )
 
 
-@first_snap.route("/<language>/<os>")
-def get_os(language, os):
-    return language + os
+@first_snap.route("/<language>/<operating_system>/package")
+def get_package(language, operating_system):
+    filename = "".join(["../../first-snap/", language, "/package.yaml"])
+
+    filepath = os.path.join(dir, filename)
+
+    try:
+        with open(filepath, "r") as stream:
+            steps = yaml.safe_load(stream)
+    except yaml.YAMLError as error:
+        return flask.abort(404)
+
+    context = {"language": language, "os": operating_system, "steps": steps}
+
+    return flask.render_template("first-snap/package.html", **context)
 
 
-@first_snap.route("/<language>/<os>/test")
-def get_test(language, os):
-    return language + os + "test"
+@first_snap.route("/<language>/<operating_system>/build")
+def get_build(language, operating_system):
+    filename = "".join(["../../first-snap/", language, "/build.yaml"])
+
+    filepath = os.path.join(dir, filename)
+
+    try:
+        with open(filepath, "r") as stream:
+            steps = yaml.safe_load(stream)
+    except yaml.YAMLError as error:
+        return flask.abort(404)
+
+    operating_system_only = operating_system.split("-")[0]
+    install_type = operating_system.split("-")[1]
+
+    context = {
+        "language": language,
+        "os": operating_system,
+        "steps": steps[operating_system_only][install_type],
+    }
+
+    return flask.render_template("first-snap/build.html", **context)
 
 
-@first_snap.route("/<language>/<os>/push")
-def get_push(language, os):
-    return language + os + "push"
+@first_snap.route("/<language>/<operating_system>/test")
+def get_test(language, operating_system):
+    filename = "".join(["../../first-snap/", language, "/test.yaml"])
+
+    filepath = os.path.join(dir, filename)
+
+    try:
+        with open(filepath, "r") as stream:
+            steps = yaml.safe_load(stream)
+    except yaml.YAMLError as error:
+        print(error)
+        return flask.abort(404)
+
+    operating_system_only = operating_system.split("-")[0]
+
+    context = {
+        "language": language,
+        "os": operating_system,
+        "steps": steps[operating_system_only],
+    }
+
+    return flask.render_template("first-snap/test.html", **context)
 
 
-@first_snap.route("/<language>/<os>/package")
-def get_package(language, os):
-    return language + os + "package"
+@first_snap.route("/<language>/<operating_system>/push")
+def get_push(language, operating_system):
+    filename = "".join(["../../first-snap/", language, "/package.yaml"])
 
+    filepath = os.path.join(dir, filename)
 
-@first_snap.route("/<language>/<os>/build")
-def get_build(language, os):
-    return language + os + "build"
+    try:
+        with open(filepath, "r") as stream:
+            data = yaml.safe_load(stream)
+    except yaml.YAMLError as error:
+        print(error)
+        return flask.abort(404)
+
+    flask_user = flask.session["openid"]
+
+    if "nickname" in flask_user:
+        user = {
+            "image": flask_user["image"],
+            "username": flask_user["nickname"],
+            "display_name": flask_user["fullname"],
+            "email": flask_user["email"],
+        }
+    else:
+        user = None
+
+    context = {
+        "language": language,
+        "os": operating_system,
+        "user": user,
+        "snap_name": data["name"],
+    }
+
+    return flask.render_template("first-snap/push.html", **context)
