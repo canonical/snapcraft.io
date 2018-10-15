@@ -1,6 +1,6 @@
 import unittest
-import responses
 
+import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 # Make sure tests fail on stray responses.

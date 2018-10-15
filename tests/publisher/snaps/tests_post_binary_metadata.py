@@ -1,7 +1,8 @@
-import unittest
-import responses
-import json
 import io
+import json
+import unittest
+
+import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 

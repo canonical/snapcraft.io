@@ -2,12 +2,9 @@ import requests
 
 import pymacaroons
 import responses
-
-from webapp.app import create_app
 from flask_testing import TestCase
-
+from webapp.app import create_app
 from webapp.authentication import get_authorization_header
-
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True

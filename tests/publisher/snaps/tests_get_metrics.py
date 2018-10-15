@@ -1,7 +1,7 @@
-from datetime import datetime
 import random
-import responses
+from datetime import datetime
 
+import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 
