@@ -85,6 +85,7 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
       snapName={snapName}
       releasedChannels={releasedChannels}
       revisions={releasesData.revisions}
+      revisionsMap={revisionsMap}
       tracks={tracks}
       options={options}
     />,

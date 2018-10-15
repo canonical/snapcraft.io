@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import distanceInWords from 'date-fns/distance_in_words_strict';
 import format from 'date-fns/format';
 
+import DevmodeIcon from './devmodeIcon';
 import { UNASSIGNED } from './constants';
 
 export default class RevisionsList extends Component {
@@ -22,7 +23,12 @@ export default class RevisionsList extends Component {
             <input type="checkbox" checked={isSelected} id={`revision-check-${revision.revision}`} onChange={this.revisionSelectChange.bind(this, revision)}/>
             <label className="u-no-margin--bottom" htmlFor={`revision-check-${revision.revision}`}>{ revision.revision }</label>
           </td>
-          <td>{ revision.version }</td>
+          <td>
+            <DevmodeIcon revision={revision} showTooltip={true} />
+          </td>
+          <td>
+            { revision.version }
+          </td>
           <td>{ revision.architectures.join(", ") }</td>
           <td>{ revision.channels.join(", ") }</td>
           <td className="u-align--right">
@@ -50,6 +56,7 @@ export default class RevisionsList extends Component {
           <thead>
             <tr>
               <th className="col-has-checkbox" width="10%" scope="col">Revision</th>
+              <th width="20px"></th>
               <th width="23%" scope="col">Version</th>
               <th width="12%" scope="col">Architecture</th>
               <th width="30%" scope="col">Channels</th>

@@ -5,7 +5,7 @@ import 'whatwg-fetch';
 import RevisionsTable from './revisionsTable';
 import RevisionsList from './revisionsList';
 import Notification from './notification';
-
+import { isInDevmode } from './devmodeIcon';
 import { UNASSIGNED } from './constants';
 
 export default class ReleasesController extends Component {
@@ -263,16 +263,13 @@ export default class ReleasesController extends Component {
 
         // update releasedChannels based on channel map from the response
         json.channel_map.forEach(map => {
-          // TODO:
-          // possible improvements but not needed for functionality:
-          // - close channels when there is no release?
-          // - ignore revisions other then the one just released?
-          // - get revision data from revisionsMap?
           if (map.revision) {
-
             let revision;
-            if (map.revision === release.id) {
+
+            if (map.revision === (+release.id)) { // release.id is a string so turn it into a number for comparison
               revision = release.revision;
+            } else if (this.props.revisionsMap[map.revision]) {
+              revision = this.props.revisionsMap[map.revision];
             } else {
               revision = {
                 revision: map.revision,
@@ -290,9 +287,13 @@ export default class ReleasesController extends Component {
               releasedChannels[channel] = {};
             }
 
-
             revision.architectures.forEach(arch => {
-              releasedChannels[channel][arch] = revision;
+              const currentlyReleased = releasedChannels[channel][arch];
+
+              // only update revision in channel map if it changed since last time
+              if (!currentlyReleased || currentlyReleased.revision !== revision.revision) {
+                releasedChannels[channel][arch] = revision;
+              }
             });
 
           }
@@ -400,12 +401,25 @@ export default class ReleasesController extends Component {
     const { tracks } = this.props;
     const { archs, releasedChannels } = this.state;
 
+    const hasDevmodeRevisions = Object.values(releasedChannels).some(archReleases => {
+      return Object.values(archReleases).some(isInDevmode);
+    });
+
+
     return (
       <Fragment>
         { this.state.error &&
           <Notification status="error" appearance="negative">
             {this.state.error}
           </Notification>
+        }
+        { hasDevmodeRevisions &&
+          <Notification appearance="caution">
+            Revisions in development mode cannot be released to stable or candidate channels.
+            <br/>
+            You can read more about <a href="https://docs.snapcraft.io/t/snap-confinement/6233"><code>devmode</code> confinement</a> and <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276"><code>devel</code> grade</a>.
+          </Notification>
+
         }
         <RevisionsTable
           releasedChannels={releasedChannels}
@@ -439,6 +453,7 @@ ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisions: PropTypes.array.isRequired,
+  revisionsMap: PropTypes.object.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
 };
