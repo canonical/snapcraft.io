@@ -157,7 +157,11 @@ My published snaps — Linux software in the Snap Store
               {% else %}
                 <td>Not released</td>
               {% endif %}
-              <td>{{ snaps[snap].latest_revisions[0].version }}</td>
+              <td>
+                <a href="/account/snaps/{{snap}}/release">
+                  {{ snaps[snap].latest_revisions[0].version }}
+                </a>
+              </td>
             </tr>
           {% endfor %}
         </tbody>

@@ -9,6 +9,7 @@ import {
   EDGE
 } from "./constants";
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
+import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
 
 function getChannelName(track, risk) {
@@ -55,24 +56,26 @@ export default class RevisionsTable extends Component {
 
     const isChannelClosed = this.props.pendingCloses.includes(channel);
     const isPending = hasPendingRelease || isChannelClosed;
+    const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     return (
-      <td
+      <div
         className="p-release-table__cell"
         style={{ position: "relative" }}
         key={`${channel}/${arch}`}
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
-            <span className="p-revision-icon">
-              {thisPreviousRevision &&
-                !isPending && (
+            {thisPreviousRevision &&
+              isInDevmode(thisPreviousRevision) &&
+              !isPending && (
+                <span className="p-revision-icon">
                   <DevmodeIcon
                     revision={thisPreviousRevision}
                     showTooltip={false}
                   />
-                )}
-            </span>
+                </span>
+              )}
             <span className={isPending ? "p-previous-revision" : ""}>
               {thisPreviousRevision ? (
                 <span className="p-revision-info">
@@ -82,7 +85,9 @@ export default class RevisionsTable extends Component {
                   </span>
                 </span>
               ) : (
-                "–"
+                <span className={!isPending ? "p-revision-info--empty" : ""}>
+                  {trackingChannel ? "↑" : "–"}
+                </span>
               )}
             </span>
             {isPending && (
@@ -108,7 +113,9 @@ export default class RevisionsTable extends Component {
               ? `${thisPreviousRevision.version} (${
                   thisPreviousRevision.revision
                 })`
-              : "None"}
+              : hasPendingRelease || !trackingChannel
+                ? "None"
+                : `Tracking channel ${trackingChannel}`}
             {hasPendingRelease && (
               <span>
                 {" "}
@@ -145,7 +152,7 @@ export default class RevisionsTable extends Component {
             </button>
           </div>
         )}
-      </td>
+      </div>
     );
   }
 
@@ -244,24 +251,31 @@ export default class RevisionsTable extends Component {
       }
 
       return (
-        <tr key={channel}>
-          <td>
-            <span className="p-channel-buttons">
-              {(canBePromoted || canBeClosed) && (
+        <div className="p-release-channel-row" key={channel}>
+          <div className="p-release-channel-row__channel">
+            <span className="p-release-channel-row__promote">
+              {canBePromoted && (
                 <PromoteButton
                   position="left"
                   track={track}
                   targetRisks={targetRisks}
-                  closeRisk={canBeClosed ? risk : null}
-                  closeChannel={
-                    canBeClosed ? this.onCloseChannel.bind(this, channel) : null
-                  }
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
               )}
             </span>
-            {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
-          </td>
+            <span className="p-release-channel-row__name">
+              {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
+            </span>
+            <span className="p-release-channel-row__menu">
+              {canBeClosed && (
+                <ChannelMenu
+                  position="left"
+                  channel={channel}
+                  closeChannel={this.onCloseChannel.bind(this, channel)}
+                />
+              )}
+            </span>
+          </div>
           {archs.map(arch =>
             this.renderRevisionCell(
               track,
@@ -271,7 +285,7 @@ export default class RevisionsTable extends Component {
               nextChannelReleases
             )
           )}
-        </tr>
+        </div>
       );
     });
   }
@@ -386,24 +400,20 @@ export default class RevisionsTable extends Component {
           {tracks.length > 1 && this.renderTrackDropdown(tracks)}
         </div>
         {this.renderReleasesConfirm()}
-        <table className="p-release-table">
-          <thead>
-            <tr>
-              <th width="22%" scope="col" />
-              {archs.map(arch => (
-                <th
-                  width="13%"
-                  className="p-release-table__arch"
-                  key={`${arch}`}
-                >
-                  {arch}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>{this.renderRows(releasedChannels, archs)}</tbody>
-        </table>
+        <div className="p-release-table">
+          <div className="p-release-channel-row">
+            <div className="p-release-channel-row__channel" />
+            {archs.map(arch => (
+              <div
+                className="p-release-table__cell p-release-table__arch"
+                key={`${arch}`}
+              >
+                {arch}
+              </div>
+            ))}
+          </div>
+          {this.renderRows(releasedChannels, archs)}
+        </div>
       </Fragment>
     );
   }
@@ -424,5 +434,6 @@ RevisionsTable.propTypes = {
   promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func.isRequired
+  closeChannel: PropTypes.func.isRequired,
+  getTrackingChannel: PropTypes.func.isRequired
 };
