@@ -1,0 +1,85 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block content %}
+  <div id="main-content" class="p-strip">
+    {% set fsf_step = "push" %}
+    {% include "first-snap/_breadcrumb.html" %}
+
+    <div class="row">
+      <ol class="p-list-step">
+        {% if not user %}
+          <li class="p-list-step__item col-8">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">1</span>
+              Create an Ubuntu One account
+            </h3>
+            <div class="p-list-step__content">
+              <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+              <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
+            </div>
+          </li>
+        {% else %}
+          <li class="p-list-step__item col-8 u-no-margin--left">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">1</span>
+              Create an Ubuntu One account
+            </h3>
+            <div class="p-list-step__content">
+              <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+            </div>
+          </li>
+          <li class="p-list-step__item col-8 u-no-margin--left">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">2</span>
+              Okay {{ user.display_name }}, now log in with the same account at the terminal
+            </h3>
+            <div class="p-list-step__content">
+              {% set snippet_value = "snapcraft login" %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </li>
+          <li class="p-list-step__item col-8 u-no-margin--left">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">3</span>
+              Register the snap name from the snapcraft.yaml
+            </h3>
+            <div class="p-list-step__content">
+              {% set snippet_value = "snapcraft register " + snap_name %}
+              {% include "/partials/_code-snippet.html" %}
+              <p>If you chose a different name, update the snapcraft.yaml as well, and run snapcraft again.</p>
+            </div>
+          </li>
+          <li class="p-list-step__item col-8 u-no-margin--left">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">4</span>
+              Push to the Snap store
+            </h3>
+            <div class="p-list-step__content">
+              {% set snippet_value = "snapcraft push" %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </li>
+        {% endif %}
+      </ol>
+    </div>
+
+    <div class="row">
+      <hr />
+    </div>
+
+    <div class="row">
+      Once you've pushed to the Snap store, visit your published snaps.
+      <a class="p-button--neutral u-float--right js-continue">
+        <i class="p-icon--spinner u-animation--spin"></i>
+        &nbsp;Waiting for push...</a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    Raven.context(function() {
+
+    });
+  </script>
+{% endblock %}

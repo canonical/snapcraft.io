@@ -1,0 +1,107 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block content %}
+  <div id="main-content" class="p-strip">
+    {% set fsf_step = "package" %}
+    {% include "first-snap/_breadcrumb.html" %}
+
+    <div class="row">
+      <p>Now we'll take a Hello World app, and package it as a snap.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-8">
+        <ol class="p-list-step">
+          <li class="p-list-step__item">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">1</span>
+              Download a copy of the app
+            </h3>
+            <div class="p-list-step__content">
+              {% set snippet_value = steps.download %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </li>
+          <li class="p-list-step__item">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">2</span>
+              Begin a snapcraft.yaml file
+            </h3>
+            <div class="p-list-step__content">
+              <p>Create a snap/directory and begin a snapcraft.yaml file</p>
+              {% set snippet_value = steps.createDir %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </li>
+          <li class="p-list-step__item">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">3</span>
+              Add basic metadata from your app
+            </h3>
+            <div class="p-list-step__content">
+              <p>Begin the file with basic metadata for the app</p>
+              {% set snippet_value = steps.metadata %}
+              {% include "/partials/_code-snippet.html" %}
+              <p>The summary must by 79 characters or less.</p>
+              {% set snippet_value = "description: >" %}
+              {% include "/partials/_code-snippet.html" %}
+              <p>This indicates that the description may extend to multiple lines.</p>
+            </div>
+          </li>
+          <li class="p-list-step__item">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">4</span>
+              Specify confinement
+            </h3>
+            <div class="p-list-step__content">
+              <p>Next, specify that the initial version of the snap should not be confined</p>
+              {% set snippet_value = "confinement: devmode" %}
+              {% include "/partials/_code-snippet.html" %}
+              <p>With a real app, you'd set up <a href="" class="p-link--external">confinement</a> later to allow stable releases.</p>
+            </div>
+          </li>
+          <li class="p-list-step__item">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">5</span>
+              Include the parts of the app
+            </h3>
+            <div class="p-list-step__content">
+              <p>Add an "parts:" section to specify the language and include the source code for the app</p>
+              {% set snippet_value = steps.parts %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </li>
+          <li class="p-list-step__item">
+            <h3 class="p-list-step__title">
+              <span class="p-list-step__bullet">6</span>
+              Include the runnable command
+            </h3>
+            <div class="p-list-step__content">
+              <p>Add an "apps:" section to specify the runnable command</p>
+              {% set snippet_value = steps.apps %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row">
+      <hr />
+    </div>
+
+    <div class="row">
+      Next, we'll package an example snap.
+      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/build">Continue</a>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    Raven.context(function() {
+
+    });
+  </script>
+{% endblock %}
