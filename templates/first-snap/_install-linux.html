@@ -1,13 +1,13 @@
 <div class="p-strip is-shallow js-os-wrapper js-linux u-hide">
-  <div class="row">
+  {#<div class="row">
     <h4>How would you like to set up your build environment?</h4>
     <input type="radio" name="os" value="linux-auto" id="linux-auto" />
     <label for="linux-auto">Automatic (recommended)</label>
     <input type="radio" name="os" value="linux-manual" id="linux-manual" />
     <label for="linux-manual">Set up manually with Docker</label>
-  </div>
+  </div>#}
 
-  <div class="row js-os-type js-linux-auto u-hide">
+  <div class="row js-os-type js-linux-auto{# u-hide#}">
     <div class="col-8">
       <ol class="p-list-step has-margin">
         <li class="p-list-step__item">
@@ -37,7 +37,7 @@
       </ol>
     </div>
   </div>
-  <div class="row js-os-type js-linux-manual u-hide">
+  {#<div class="row js-os-type js-linux-manual u-hide">
     <div class="col-8">
       <ol class="p-list-step has-margin">
         <li class="p-list-step__item">
@@ -70,5 +70,5 @@
         </li>
       </ol>
     </div>
-  </div>
+  </div>#}
 </div>

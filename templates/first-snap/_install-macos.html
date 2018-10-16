@@ -1,13 +1,13 @@
 <div class="p-strip is-shallow js-os-wrapper js-macos u-hide">
-  <div class="row">
+  {#<div class="row">
     <h4>How would you like to set up your build environment?</h4>
     <input type="radio" name="os" value="macos-auto" id="macos-auto" />
     <label for="macos-auto">Automatic (recommended)</label>
     <input type="radio" name="os" value="macos-manual" id="macos-manual" />
     <label for="macos-manual">Set up manually with Docker</label>
-  </div>
+  </div>#}
 
-  <div class="row js-os-type js-macos-auto u-hide">
+  <div class="row js-os-type js-macos-auto{# u-hide#}">
     <div class="col-8">
       <ol class="p-list-step has-margin">
         <li class="p-list-step__item">
@@ -28,7 +28,7 @@
       </ol>
     </div>
   </div>
-  <div class="row js-os-type js-macos-manual u-hide">
+  {#<div class="row js-os-type js-macos-manual u-hide">
     <div class="col-8">
       <ol class="p-list-step has-margin">
         <li class="p-list-step__item">
@@ -61,5 +61,5 @@
         </li>
       </ol>
     </div>
-  </div>
+  </div>#}
 </div>
