@@ -50,8 +50,14 @@ def get_build(language, operating_system):
     filename = f"first-snap/{language}/build.yaml"
     steps = get_file(filename)
 
-    operating_system_only = operating_system.split("-")[0]
-    install_type = operating_system.split("-")[1]
+    operating_system_parts = operating_system.split("-")
+
+    operating_system_only = operating_system_parts[0]
+    install_type = (
+        operating_system_parts[1]
+        if len(operating_system_parts) == 2
+        else "auto"
+    )
 
     if (
         (not steps)

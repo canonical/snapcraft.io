@@ -31,6 +31,13 @@ function install(language) {
         if (selectedEl) {
           selectedEl.classList.remove('u-hide');
         }
+
+        if (!document.querySelector('.js-linux-manual')) {
+          const continueBtn = document.querySelector('.js-continue');
+          if (continueBtn) {
+            continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
+          }
+        }
       });
     });
   }
