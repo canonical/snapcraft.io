@@ -4,8 +4,6 @@ from ruamel.yaml import YAML, YAMLError
 
 yaml = YAML(typ="safe")
 
-dir = os.path.dirname(os.path.realpath(__file__))
-
 first_snap = flask.Blueprint(
     "fist_snap_flow",
     __name__,
@@ -16,7 +14,9 @@ first_snap = flask.Blueprint(
 
 def get_file(file):
     try:
-        with open(os.path.join(dir, file), "r") as stream:
+        with open(
+            os.path.join(flask.current_app.root_path, file), "r"
+        ) as stream:
             data = yaml.load(stream)
     except YAMLError as error:
         data = None
@@ -34,7 +34,7 @@ def get_language(language):
 
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
-    filename = f"../../first-snap/{language}/package.yaml"
+    filename = f"first-snap/{language}/package.yaml"
     steps = get_file(filename)
 
     if not steps:
@@ -47,7 +47,7 @@ def get_package(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/build")
 def get_build(language, operating_system):
-    filename = f"../../first-snap/{language}/build.yaml"
+    filename = f"first-snap/{language}/build.yaml"
     steps = get_file(filename)
 
     operating_system_only = operating_system.split("-")[0]
@@ -71,7 +71,7 @@ def get_build(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/test")
 def get_test(language, operating_system):
-    filename = f"../../first-snap/{language}/test.yaml"
+    filename = f"first-snap/{language}/test.yaml"
     steps = get_file(filename)
 
     operating_system_only = operating_system.split("-")[0]
@@ -90,7 +90,7 @@ def get_test(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
-    filename = f"../../first-snap/{language}/package.yaml"
+    filename = f"first-snap/{language}/package.yaml"
     data = get_file(filename)
 
     if not data:
