@@ -11,37 +11,31 @@ class FirstSnap(TestCase):
 
         return app
 
-    def test_index(self):
-        response = self.client.get("/first-snap")
-        assert response.status_code == 200
-        assert response.data == b"first snap"
-
-    def test_get_language(self):
+    def test_get_os(self):
         response = self.client.get("/first-snap/python")
         assert response.status_code == 200
-        assert response.data == b"python"
-
-    def test_get_os(self):
-        response = self.client.get("/first-snap/python/linux")
-        assert response.status_code == 200
-        assert response.data == b"pythonlinux"
-
-    def test_get_test(self):
-        response = self.client.get("/first-snap/python/linux/test")
-        assert response.status_code == 200
-        assert response.data == b"pythonlinuxtest"
+        self.assert_context("language", "python")
 
     def test_get_build(self):
-        response = self.client.get("/first-snap/python/linux/build")
+        response = self.client.get("/first-snap/python/linux-auto/build")
         assert response.status_code == 200
-        assert response.data == b"pythonlinuxbuild"
+        self.assert_context("language", "python")
+        self.assert_context("os", "linux-auto")
 
     def test_get_package(self):
-        response = self.client.get("/first-snap/python/linux/package")
+        response = self.client.get("/first-snap/python/linux-auto/package")
         assert response.status_code == 200
-        assert response.data == b"pythonlinuxpackage"
+        self.assert_context("language", "python")
+        self.assert_context("os", "linux-auto")
+
+    def test_get_test(self):
+        response = self.client.get("/first-snap/python/macos-auto/test")
+        assert response.status_code == 200
+        self.assert_context("language", "python")
+        self.assert_context("os", "macos-auto")
 
     def test_get_push(self):
         response = self.client.get("/first-snap/python/linux/push")
+
         assert response.status_code == 200
         assert response.data == b"pythonlinuxpush"

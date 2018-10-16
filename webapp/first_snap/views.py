@@ -14,11 +14,6 @@ first_snap = flask.Blueprint(
 )
 
 
-@first_snap.route("/")
-def get_first_snap():
-    return "choose language"
-
-
 @first_snap.route("/<language>")
 def get_language(language):
     context = {"language": language}
