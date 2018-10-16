@@ -1,3 +1,5 @@
+/* globals ClipboardJS */
+
 export default function (language) {
   const osPickers = document.querySelectorAll('.js-os-select');
   const osWrappers = document.querySelectorAll('.js-os-wrapper');
