@@ -1,6 +1,6 @@
 import os
 import flask
-from ruamel.yaml import YAML, YAMLError
+from ruamel.yaml import YAML
 
 yaml = YAML(typ="safe")
 
@@ -18,14 +18,22 @@ def get_file(file):
             os.path.join(flask.current_app.root_path, file), "r"
         ) as stream:
             data = yaml.load(stream)
-    except YAMLError as error:
+    except Exception:
         data = None
 
     return data
 
 
+def directory_exists(file):
+    return os.path.isdir(os.path.join(flask.current_app.root_path, file))
+
+
 @first_snap.route("/<language>")
 def get_language(language):
+    filename = f"first-snap/{language}"
+    if not directory_exists(filename):
+        return flask.abort(404)
+
     context = {"language": language}
     return flask.render_template(
         "first-snap/install-snapcraft.html", **context
@@ -102,7 +110,7 @@ def get_push(language, operating_system):
     if not data:
         return flask.abort(404)
 
-    flask_user = flask.session["openid"]
+    flask_user = flask.session.get("openid", {})
 
     if "nickname" in flask_user:
         user = {
