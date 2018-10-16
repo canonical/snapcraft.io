@@ -1,14 +1,14 @@
 @mixin snapcraft-p-code-snippet {
-  textarea.p-code-snippet__input {
+  textarea.p-code-snippet__input { // sass-lint:disable-line no-qualifying-elements
     background-position: 0 .25rem;
     color: $color-mid-dark;
     outline: none;
     overflow: hidden;
   }
 
-  textarea.p-code-snippet__input + .p-code-snippet__action {
-    height: 2rem;
+  textarea.p-code-snippet__input + .p-code-snippet__action { // sass-lint:disable-line no-qualifying-elements
     border-bottom: 1px solid $color-mid-light;
     border-radius: 0 0 0 $border-radius;
+    height: 2rem;
   }
 }
