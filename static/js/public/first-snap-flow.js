@@ -1,6 +1,8 @@
 /* globals ClipboardJS */
 
-export default function (language) {
+import 'whatwg-fetch';
+
+function install(language) {
   const osPickers = document.querySelectorAll('.js-os-select');
   const osWrappers = document.querySelectorAll('.js-os-wrapper');
 
@@ -69,3 +71,48 @@ export default function (language) {
     new ClipboardJS('.js-clipboard-copy');
   }
 }
+
+function getSnapCount(cb) {
+  fetch('/snaps/api/snap-count').then(r => r.json())
+    .then(data => {
+      cb(data.count);
+    });
+}
+
+function push() {
+  let initialCount = null;
+  let timer;
+  let ready = false;
+
+  function getCount(cb) {
+    clearTimeout(timer);
+
+    getSnapCount(count => {
+      if (initialCount === null) {
+        initialCount = count;
+      } else if (count !== initialCount) {
+        ready = true;
+        cb();
+      }
+    });
+
+    if (!ready) {
+      timer = setTimeout(getCount.bind(this, cb), 2500);
+    }
+  }
+
+  getCount(() => {
+    const continueBtn = document.querySelector('.js-continue');
+    if (continueBtn) {
+      continueBtn.href = '/snaps';
+      continueBtn.classList.add('p-button--positive');
+      continueBtn.classList.remove('p-button--neutral');
+      continueBtn.innerHTML = 'Continue';
+    }
+  });
+}
+
+export default {
+  install,
+  push
+};
