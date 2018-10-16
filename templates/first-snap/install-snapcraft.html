@@ -57,7 +57,7 @@
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function() {
-      snapcraft.public.firstSnapFlow({{ language|tojson }});
+      snapcraft.public.firstSnapFlow.install({{ language|tojson }});
     });
   </script>
 {% endblock %}
