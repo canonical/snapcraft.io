@@ -1,11 +1,7 @@
 <div class="row">
   <ul class="p-breadcrumbs p-heading--four" style="max-width: 100%;">
     <li class="p-breadcrumbs__item">
-      {% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
-        <a href="/">Language</a>
-      {% else %}
-        Language
-      {% endif %}
+      <a href="/#language">Language</a>
     </li>
     <li class="p-breadcrumbs__item">
       {% if fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
@@ -14,14 +10,14 @@
         Install Snapcraft
       {% endif %}
     </li>
-    <li class="p-breadcrumbs__item">
+    <li class="p-breadcrumbs__item{% if fsf_step == 'install' %} is-disabled{% endif %}">
       {% if fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
-        <a href="/first-snap/{{ language }}/{{ os }}">Package</a>
+        <a href="/first-snap/{{ language }}/{{ os }}/package">Package</a>
       {% else %}
         Package
       {% endif %}
     </li>
-    <li class="p-breadcrumbs__item">
+    <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' %} is-disabled{% endif %}">
       {% if fsf_step == 'test' or fsf_step == 'push' %}
         <a href="/first-snap/{{ language }}/{{ os }}/build">Build</a>
       {% else %}
@@ -29,7 +25,7 @@
       {% endif %}
     </li>
     {% if os and os.startswith('macos') %}
-      <li class="p-breadcrumbs__item">
+      <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' %} is-disabled{% endif %}">
         {% if fsf_step == 'push' %}
           <a href="/first-snap/{{ language }}/{{ os }}/test">Test</a>
         {% else %}
@@ -37,6 +33,8 @@
         {% endif %}
       </li>
     {% endif %}
-    <li class="p-breadcrumbs__item">Push</li>
+    <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' %} is-disabled{% endif %}">
+      Push
+    </li>
   </ul>
 </div>

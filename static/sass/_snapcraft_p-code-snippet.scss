@@ -1,0 +1,14 @@
+@mixin snapcraft-p-code-snippet {
+  textarea.p-code-snippet__input {
+    background-position: 0 .25rem;
+    color: $color-mid-dark;
+    outline: none;
+    overflow: hidden;
+  }
+
+  textarea.p-code-snippet__input + .p-code-snippet__action {
+    height: 2rem;
+    border-bottom: 1px solid $color-mid-light;
+    border-radius: 0 0 0 $border-radius;
+  }
+}

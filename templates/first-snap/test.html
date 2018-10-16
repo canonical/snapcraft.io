@@ -10,16 +10,15 @@
         <ol class="p-list-step">
           {% for step in steps %}
             <li class="p-list-step__item">
-              <h3 class="p-list-step__title">
+              <h4 class="p-list-step__title">
                 <span class="p-list-step__bullet">{{ loop.index }}</span>
-              </h3>
-              <div class="p-list-step__content">
-                <p>{{ step.action }}</p>
-                {% if step.command %}
-                  {% set snippet_value = step.command %}
-                  {% include "/partials/_code-snippet.html" %}
-                {% endif %}
-              </div>
+                {{ step.action }}
+              </h4>
+              {% if step.command %}
+                {% set snippet_value = step.command %}
+                {% set snippet_id = loop.index %}
+                {% include "/partials/_code-snippet.html" %}
+              {% endif %}
             </li>
           {% endfor %}
         </ol>
@@ -31,17 +30,23 @@
     </div>
 
     <div class="row">
-      Next, we'll package an example snap.
+      If it's working, the next step is to push it to the Snap Store.
       <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/push">Continue</a>
     </div>
 
   </div>
 {% endblock %}
 
+{% block scripts_modules %}
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+{% endblock %}
+
 {% block scripts %}
   <script>
     Raven.context(function() {
-
+      if (typeof ClipboardJS !== 'undefined') {
+        new ClipboardJS('.js-clipboard-copy');
+      }
     });
   </script>
 {% endblock %}

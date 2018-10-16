@@ -7,7 +7,7 @@ macos:
   - action: Install the snap by telling multipass to run snap install inside the virtual machine
     command: multipass exec snaps -- sudo snap install --dangerous \*.snap
   - action: The snap is now installed in the virtual machine. Connect to the virtual machine and list your installed snaps to confirm
-    command: >
+    command: |
       multipass shell snaps
       snap list
   - action: Run the snap inside the virtual machine

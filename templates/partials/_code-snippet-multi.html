@@ -1,4 +1,4 @@
 <div class="p-code-snippet">
-  <input class="p-code-snippet__input" id="snippet-{{ snippet_id }}" value="{{ snippet_value }}" readonly="readonly">
+  <textarea class="p-code-snippet__input" id="snippet-{{ snippet_id }}" readonly="readonly" rows="{{ snippet_value.count('\n') }}">{{ snippet_value }}</textarea>
   <button class="p-code-snippet__action js-clipboard-copy" data-clipboard-target="#snippet-{{ snippet_id }}">Copy to clipboard</button>
 </div>
