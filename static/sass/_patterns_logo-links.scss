@@ -10,7 +10,8 @@
       margin: 0 auto;
     }
 
-    &:hover {
+    &:hover,
+    &.is-selected {
       border-color: $color-mid-light;
       text-decoration: none;
     }

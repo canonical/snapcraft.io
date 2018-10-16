@@ -1,0 +1,6 @@
+@mixin snapcraft-p-code-block {
+  pre {
+    background: $color-x-light;
+    color: $color-mid-dark;
+  }
+}

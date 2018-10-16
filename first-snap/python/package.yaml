@@ -1,22 +1,22 @@
 name: offlineimap
 download: git clone https://github.com/snapcraft-docs/offlineimap
-createDir: >
+createDir: |
   cd offlineimap
   $EDITOR snapcraft.yaml
-metadata: >
+metadata: |
   name: offlineimap
   version: git
   summary: OfflineIMAP
   description: >
     OfflineIMAP is software that downloads your email mailbox(es) as local
     Maildirs. OfflineIMAP will synchronize both sides via IMAP.
-parts: >
+parts: |
   parts:
     offlineimap:
       plugin: python
       python-version: python2
       source: .
-apps: >
+apps: |
   apps:
     offlineimap:
       command: bin/offlineimap

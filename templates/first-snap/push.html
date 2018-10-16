@@ -6,13 +6,13 @@
     {% include "first-snap/_breadcrumb.html" %}
 
     <div class="row">
-      <ol class="p-list-step">
+      <ol class="p-list-step has-margin">
         {% if not user %}
           <li class="p-list-step__item col-8">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">1</span>
               Create an Ubuntu One account
-            </h3>
+            </h4>
             <div class="p-list-step__content">
               <p>This lets you make releases, alter your store listing and see usage metrics.</p>
               <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
@@ -20,44 +20,42 @@
           </li>
         {% else %}
           <li class="p-list-step__item col-8 u-no-margin--left">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">1</span>
               Create an Ubuntu One account
-            </h3>
+            </h4>
             <div class="p-list-step__content">
               <p>This lets you make releases, alter your store listing and see usage metrics.</p>
             </div>
           </li>
           <li class="p-list-step__item col-8 u-no-margin--left">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">2</span>
               Okay {{ user.display_name }}, now log in with the same account at the terminal
-            </h3>
-            <div class="p-list-step__content">
-              {% set snippet_value = "snapcraft login" %}
-              {% include "/partials/_code-snippet.html" %}
-            </div>
+            </h4>
+            {% set snippet_value = "snapcraft login" %}
+            {% set snippet_id = "snapcraft-login" %}
+            {% include "/partials/_code-snippet.html" %}
           </li>
           <li class="p-list-step__item col-8 u-no-margin--left">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">3</span>
               Register the snap name from the snapcraft.yaml
-            </h3>
-            <div class="p-list-step__content">
-              {% set snippet_value = "snapcraft register " + snap_name %}
-              {% include "/partials/_code-snippet.html" %}
-              <p>If you chose a different name, update the snapcraft.yaml as well, and run snapcraft again.</p>
-            </div>
+            </h4>
+            {% set snippet_value = "snapcraft register " + snap_name %}
+            {% set snippet_id = "snapcraft-login" %}
+            {% set snippet_id = "snapcraft-register" %}
+            {% include "/partials/_code-snippet.html" %}
+            <p class="p-list-step__content">If you chose a different name, update the snapcraft.yaml as well, and run snapcraft again.</p>
           </li>
           <li class="p-list-step__item col-8 u-no-margin--left">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">4</span>
               Push to the Snap store
-            </h3>
-            <div class="p-list-step__content">
-              {% set snippet_value = "snapcraft push" %}
-              {% include "/partials/_code-snippet.html" %}
-            </div>
+            </h4>
+            {% set snippet_value = "snapcraft push" %}
+            {% set snippet_id = "snapcraft-push" %}
+            {% include "/partials/_code-snippet.html" %}
           </li>
         {% endif %}
       </ol>
@@ -76,10 +74,16 @@
   </div>
 {% endblock %}
 
+{% block scripts_modules %}
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+{% endblock %}
+
 {% block scripts %}
   <script>
     Raven.context(function() {
-
+      if (typeof ClipboardJS !== 'undefined') {
+        new ClipboardJS('.js-clipboard-copy');
+      }
     });
   </script>
 {% endblock %}

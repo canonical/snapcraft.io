@@ -1,8 +1,10 @@
 import os
 import flask
-import yaml
+from ruamel.yaml import YAML, YAMLError
 
 dir = os.path.dirname(os.path.realpath(__file__))
+
+yaml = YAML(typ="safe")
 
 first_snap = flask.Blueprint(
     "fist_snap_flow",
@@ -33,8 +35,8 @@ def get_package(language, operating_system):
 
     try:
         with open(filepath, "r") as stream:
-            steps = yaml.safe_load(stream)
-    except yaml.YAMLError as error:
+            steps = yaml.load(stream)
+    except YAMLError as error:
         return flask.abort(404)
 
     context = {"language": language, "os": operating_system, "steps": steps}
@@ -50,8 +52,8 @@ def get_build(language, operating_system):
 
     try:
         with open(filepath, "r") as stream:
-            steps = yaml.safe_load(stream)
-    except yaml.YAMLError as error:
+            steps = yaml.load(stream)
+    except YAMLError as error:
         return flask.abort(404)
 
     operating_system_only = operating_system.split("-")[0]
@@ -74,9 +76,8 @@ def get_test(language, operating_system):
 
     try:
         with open(filepath, "r") as stream:
-            steps = yaml.safe_load(stream)
-    except yaml.YAMLError as error:
-        print(error)
+            steps = yaml.load(stream)
+    except YAMLError as error:
         return flask.abort(404)
 
     operating_system_only = operating_system.split("-")[0]
@@ -98,9 +99,8 @@ def get_push(language, operating_system):
 
     try:
         with open(filepath, "r") as stream:
-            data = yaml.safe_load(stream)
-    except yaml.YAMLError as error:
-        print(error)
+            data = yaml.load(stream)
+    except YAMLError as error:
         return flask.abort(404)
 
     flask_user = flask.session["openid"]

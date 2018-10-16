@@ -6,81 +6,76 @@
     {% include "first-snap/_breadcrumb.html" %}
 
     <div class="row">
-      <p>Now we'll take a Hello World app, and package it as a snap.</p>
+      <p>Now we'll take a real world app, and package it as a snap</p>
     </div>
 
     <div class="row">
       <div class="col-8">
-        <ol class="p-list-step">
+        <ol class="p-list-step has-margin">
           <li class="p-list-step__item">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">1</span>
               Download a copy of the app
-            </h3>
-            <div class="p-list-step__content">
-              {% set snippet_value = steps.download %}
-              {% include "/partials/_code-snippet.html" %}
-            </div>
+            </h4>
+            {% set snippet_value = steps.download %}
+            {% set snippet_id = "download" %}
+            {% include "/partials/_code-snippet.html" %}
           </li>
           <li class="p-list-step__item">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">2</span>
               Begin a snapcraft.yaml file
-            </h3>
-            <div class="p-list-step__content">
-              <p>Create a snap/directory and begin a snapcraft.yaml file</p>
-              {% set snippet_value = steps.createDir %}
-              {% include "/partials/_code-snippet.html" %}
-            </div>
+            </h4>
+            <p class="p-list-step__content">Create a snap/directory and begin a snapcraft.yaml file</p>
+            {% set snippet_value = steps.createDir %}
+            {% set snippet_id = "createdir" %}
+            {% include "/partials/_code-snippet-multi.html" %}
           </li>
           <li class="p-list-step__item">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">3</span>
               Add basic metadata from your app
-            </h3>
+            </h4>
             <div class="p-list-step__content">
               <p>Begin the file with basic metadata for the app</p>
               {% set snippet_value = steps.metadata %}
-              {% include "/partials/_code-snippet.html" %}
+              {% set snippet_id = "metadata" %}
+              {% include "/partials/_code-copyable.html" %}
               <p>The summary must by 79 characters or less.</p>
-              {% set snippet_value = "description: >" %}
-              {% include "/partials/_code-snippet.html" %}
+              <pre class="u-no-margin--bottom"><code>description: ></code></pre>
               <p>This indicates that the description may extend to multiple lines.</p>
             </div>
           </li>
           <li class="p-list-step__item">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">4</span>
               Specify confinement
-            </h3>
+            </h4>
             <div class="p-list-step__content">
               <p>Next, specify that the initial version of the snap should not be confined</p>
-              {% set snippet_value = "confinement: devmode" %}
-              {% include "/partials/_code-snippet.html" %}
+              <pre class="u-no-margin--bottom"><code>confinement: devmode</code></pre>
               <p>With a real app, you'd set up <a href="" class="p-link--external">confinement</a> later to allow stable releases.</p>
             </div>
           </li>
           <li class="p-list-step__item">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">5</span>
               Include the parts of the app
-            </h3>
-            <div class="p-list-step__content">
-              <p>Add an "parts:" section to specify the language and include the source code for the app</p>
-              {% set snippet_value = steps.parts %}
-              {% include "/partials/_code-snippet.html" %}
-            </div>
+            </h4>
+            <p class="p-list-step__content">Add an "parts:" section to specify the language and include the source code for the app</p>
+            {% set snippet_value = steps.parts %}
+            {% set snippet_id = "parts" %}
+            {% include "/partials/_code-copyable.html" %}
           </li>
           <li class="p-list-step__item">
-            <h3 class="p-list-step__title">
+            <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">6</span>
               Include the runnable command
-            </h3>
-            <div class="p-list-step__content">
-              <p>Add an "apps:" section to specify the runnable command</p>
-              {% set snippet_value = steps.apps %}
-              {% include "/partials/_code-snippet.html" %}
-            </div>
+            </h4>
+            <p class="p-list-step__content">Add an "apps:" section to specify the runnable command</p>
+            {% set snippet_value = steps.apps %}
+            {% set snippet_id = "apps" %}
+            {% include "/partials/_code-copyable.html" %}
           </li>
         </ol>
       </div>
@@ -91,17 +86,23 @@
     </div>
 
     <div class="row">
-      Next, we'll package an example snap.
+      <p class="u-float--left">Next, we'll build and test the snap.</p>
       <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/build">Continue</a>
     </div>
 
   </div>
 {% endblock %}
 
+{% block scripts_modules %}
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+{% endblock %}
+
 {% block scripts %}
   <script>
     Raven.context(function() {
-
+      if (typeof ClipboardJS !== 'undefined') {
+        new ClipboardJS('.js-clipboard-copy');
+      }
     });
   </script>
 {% endblock %}
