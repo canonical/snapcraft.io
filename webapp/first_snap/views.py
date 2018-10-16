@@ -2,9 +2,9 @@ import os
 import flask
 from ruamel.yaml import YAML, YAMLError
 
-dir = os.path.dirname(os.path.realpath(__file__))
-
 yaml = YAML(typ="safe")
+
+dir = os.path.dirname(os.path.realpath(__file__))
 
 first_snap = flask.Blueprint(
     "fist_snap_flow",
@@ -12,6 +12,16 @@ first_snap = flask.Blueprint(
     template_folder="/templates",
     static_folder="/static",
 )
+
+
+def get_file(file):
+    try:
+        with open(os.path.join(dir, file), "r") as stream:
+            data = yaml.load(stream)
+    except YAMLError as error:
+        data = None
+
+    return data
 
 
 @first_snap.route("/<language>")
@@ -24,14 +34,10 @@ def get_language(language):
 
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
-    filename = "".join(["../../first-snap/", language, "/package.yaml"])
+    filename = f"../../first-snap/{language}/package.yaml"
+    steps = get_file(filename)
 
-    filepath = os.path.join(dir, filename)
-
-    try:
-        with open(filepath, "r") as stream:
-            steps = yaml.load(stream)
-    except YAMLError as error:
+    if not steps:
         return flask.abort(404)
 
     context = {"language": language, "os": operating_system, "steps": steps}
@@ -41,18 +47,18 @@ def get_package(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/build")
 def get_build(language, operating_system):
-    filename = "".join(["../../first-snap/", language, "/build.yaml"])
-
-    filepath = os.path.join(dir, filename)
-
-    try:
-        with open(filepath, "r") as stream:
-            steps = yaml.load(stream)
-    except YAMLError as error:
-        return flask.abort(404)
+    filename = f"../../first-snap/{language}/build.yaml"
+    steps = get_file(filename)
 
     operating_system_only = operating_system.split("-")[0]
     install_type = operating_system.split("-")[1]
+
+    if (
+        (not steps)
+        or (operating_system_only not in steps)
+        or (install_type not in steps[operating_system_only])
+    ):
+        return flask.abort(404)
 
     context = {
         "language": language,
@@ -65,17 +71,13 @@ def get_build(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/test")
 def get_test(language, operating_system):
-    filename = "".join(["../../first-snap/", language, "/test.yaml"])
-
-    filepath = os.path.join(dir, filename)
-
-    try:
-        with open(filepath, "r") as stream:
-            steps = yaml.load(stream)
-    except YAMLError as error:
-        return flask.abort(404)
+    filename = f"../../first-snap/{language}/test.yaml"
+    steps = get_file(filename)
 
     operating_system_only = operating_system.split("-")[0]
+
+    if not steps or operating_system_only not in steps:
+        return flask.abort(404)
 
     context = {
         "language": language,
@@ -88,14 +90,10 @@ def get_test(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
-    filename = "".join(["../../first-snap/", language, "/package.yaml"])
+    filename = f"../../first-snap/{language}/package.yaml"
+    data = get_file(filename)
 
-    filepath = os.path.join(dir, filename)
-
-    try:
-        with open(filepath, "r") as stream:
-            data = yaml.load(stream)
-    except YAMLError as error:
+    if not data:
         return flask.abort(404)
 
     flask_user = flask.session["openid"]
