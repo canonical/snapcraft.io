@@ -16,9 +16,17 @@ LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
 BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
 
+maintenance_mode = os.getenv("MAINTENANCE_MODE_LOGIN", False)
+
 open_id = OpenID(
     stateless=True, safe_roots=[], extension_responses=[MacaroonResponse]
 )
+
+
+@login.before_request
+def before_request():
+    if maintenance_mode:
+        return flask.abort(503)
 
 
 @login.route("/login", methods=["GET", "POST"])

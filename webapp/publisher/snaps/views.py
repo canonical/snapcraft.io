@@ -1,3 +1,4 @@
+import os
 from json import loads
 
 import flask
@@ -27,6 +28,14 @@ publisher_snaps = flask.Blueprint(
     template_folder="/templates",
     static_folder="/static",
 )
+
+maintenance_mode = os.getenv("MAINTENANCE_MODE_PUBLISHER", False)
+
+
+@publisher_snaps.before_request
+def before_request():
+    if maintenance_mode:
+        return flask.abort(503)
 
 
 def refresh_redirect(path):

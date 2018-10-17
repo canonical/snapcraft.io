@@ -1,3 +1,4 @@
+import os
 import flask
 import humanize
 import webapp.metrics.helper as metrics_helper
@@ -17,6 +18,8 @@ from webapp.api.exceptions import (
 )
 from urllib.parse import quote_plus
 
+maintenance_mode = os.getenv("MAINTENANCE_MODE_STORE", False)
+
 
 def store_blueprint(store_query=None):
     api = StoreApi(store_query)
@@ -27,6 +30,11 @@ def store_blueprint(store_query=None):
         template_folder="/templates",
         static_folder="/static",
     )
+
+    @store.before_request
+    def before_request():
+        if maintenance_mode:
+            return flask.abort(503)
 
     def _handle_errors(api_error: ApiError):
         status_code = 502

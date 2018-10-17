@@ -1,3 +1,4 @@
+import os
 import flask
 
 import webapp.api.blog as api
@@ -7,6 +8,14 @@ from webapp.blog import logic
 blog = flask.Blueprint(
     "blog", __name__, template_folder="/templates", static_folder="/static"
 )
+
+maintenance_mode = os.getenv("MAINTENANCE_MODE_BLOG", False)
+
+
+@blog.before_request
+def before_request():
+    if maintenance_mode:
+        return flask.abort(503)
 
 
 @blog.route("/")

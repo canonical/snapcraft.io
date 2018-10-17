@@ -1,3 +1,4 @@
+import os
 import flask
 from webapp import authentication
 import webapp.api.dashboard as api
@@ -17,6 +18,14 @@ from webapp.api.exceptions import (
 account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
+
+maintenance_mode = os.getenv("MAINTENANCE_MODE_PUBLISHER", False)
+
+
+@account.before_request
+def before_request():
+    if maintenance_mode:
+        return flask.abort(503)
 
 
 def refresh_redirect(path):
