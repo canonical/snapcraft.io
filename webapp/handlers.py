@@ -52,9 +52,17 @@ def set_handlers(app):
 
         return flask.render_template("404.html", error=error.description), 404
 
+    @app.errorhandler(500)
+    def internal_error(error):
+        return flask.render_template("50X.html", error=error), 500
+
     @app.errorhandler(503)
     def service_unavailable(error):
         return flask.render_template("503.html"), 503
+
+    @app.errorhandler(504)
+    def gateway_timeout(error):
+        return flask.render_template("50X.html", error=error), 504
 
     # Global tasks for all requests
     # ===
