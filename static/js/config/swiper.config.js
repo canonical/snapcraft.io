@@ -1,15 +1,11 @@
 const SCREENSHOTS = {
+  freeMode: true,
   watchOverflow: true,
-  slidesPerView: 2.2,
-  spaceBetween: 8,
+  slidesPerView: 'auto',
+  spaceBetween: 16,
   navigation: {
     nextEl: `.swiper-button__next`,
     prevEl: `.swiper-button__prev`
-  },
-  breakpoints: {
-    460: {
-      slidesPerView: 1.2
-    }
   }
 };
 
