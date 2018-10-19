@@ -34,8 +34,7 @@ def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
         str(page),
     ]
 
-    if exclude:
-        url_parts = url_parts + ["&exclude=", str(exclude)]
+    url_parts = url_parts + ["&exclude=", str(exclude)]
 
     if category:
         url_parts = url_parts + ["&categories=", str(category)]
