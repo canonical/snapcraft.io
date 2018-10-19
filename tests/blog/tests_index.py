@@ -22,6 +22,7 @@ class BlogPage(TestCase):
 
     def setUp(self):
         api.blog.api_session = api.requests.Session()
+        api.blog.api_short_session = api.requests.Session()
         self.api_url = "https://admin.insights.ubuntu.com/wp-json/wp/v2"
 
     @responses.activate
