@@ -5,7 +5,8 @@ API_URL = "https://admin.insights.ubuntu.com/wp-json/wp/v2"
 TAGS = [2996]  # 'snapcraft.io'
 
 
-api_session = api.requests.CachedSession(expire_after=300)
+api_session = api.requests.CachedSession(expire_after=3600)
+api_short_session = api.requests.CachedSession(expire_after=300)
 
 
 def process_response(response):
@@ -42,7 +43,7 @@ def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
 
     url = "".join(url_parts)
 
-    response = api_session.get(url)
+    response = api_short_session.get(url)
     total_pages = response.headers.get("X-WP-TotalPages")
 
     return process_response(response), total_pages
