@@ -28,6 +28,10 @@
     "**/*.py": [
       "./run exec black --line-length 79",
       "git add"
+    ],
+    "**/*.js": [
+      "prettier --write",
+      "git add"
     ]
   },
   "author": "Canonical webteam",
@@ -52,7 +56,9 @@
     "d3-time-format": "^2.1.3",
     "date-fns": "^1.29.0",
     "eslint": "^4.18.2",
+    "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-jest": "^21.13.0",
+    "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.10.0",
     "husky": "^1.0.0-rc.13",
     "jest": "^22.4.2",
