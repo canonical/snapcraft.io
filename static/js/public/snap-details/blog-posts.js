@@ -1,19 +1,19 @@
-import 'whatwg-fetch';
+import "whatwg-fetch";
 
 class BlogPosts {
   constructor(url, holderSelector, templateSelector) {
     if (!url) {
-      throw new Error('`url` must be defined');
+      throw new Error("`url` must be defined");
     }
     if (!holderSelector) {
-      throw new Error('`holderSelector` must be defined');
+      throw new Error("`holderSelector` must be defined");
     }
     if (!templateSelector) {
-      throw new Error('`templateSelector` must be defined');
+      throw new Error("`templateSelector` must be defined");
     }
 
     this.url = url;
-    this.path = '';
+    this.path = "";
     this.holder = document.querySelector(holderSelector);
     this.template = document.querySelector(templateSelector);
 
@@ -32,9 +32,9 @@ class BlogPosts {
 
   fetch(callback) {
     const _callback = callback || null;
-    return fetch(`${this.url}${this.path}`).
-      then(response => response.json()).
-      then(posts => {
+    return fetch(`${this.url}${this.path}`)
+      .then(response => response.json())
+      .then(posts => {
         if (posts.length === 0) {
           return false;
         }
@@ -49,30 +49,38 @@ class BlogPosts {
         posts.forEach(post => {
           let postHTML = this.template.innerHTML;
           Object.keys(post).forEach(key => {
-            postHTML = postHTML.split('${' + key + '}').join(post[key]);
+            postHTML = postHTML.split("${" + key + "}").join(post[key]);
           });
           postsHTML.push(postHTML);
         });
 
         if (postsHTML.length > 0) {
-          this.holder.innerHTML = postsHTML.join('');
+          this.holder.innerHTML = postsHTML.join("");
         }
 
         return posts;
-      }).
-      then(_callback).
-      catch(error => {
+      })
+      .then(_callback)
+      .catch(error => {
         throw new Error(error);
       });
   }
 }
 
-function snapDetailsPosts(holderSelector, templateSelector, showOnSuccessSelector) {
-  const blogPosts = new BlogPosts('/blog/api/snap-posts/', holderSelector, templateSelector);
+function snapDetailsPosts(
+  holderSelector,
+  templateSelector,
+  showOnSuccessSelector
+) {
+  const blogPosts = new BlogPosts(
+    "/blog/api/snap-posts/",
+    holderSelector,
+    templateSelector
+  );
 
   const snap = blogPosts.holder.dataset.snap;
   if (!snap) {
-    throw new Error('Snap not defined');
+    throw new Error("Snap not defined");
   }
 
   blogPosts.path = snap;
@@ -81,14 +89,18 @@ function snapDetailsPosts(holderSelector, templateSelector, showOnSuccessSelecto
     if (posts.length > 0 && showOnSuccessSelector) {
       const showOnSuccess = document.querySelector(showOnSuccessSelector);
       if (showOnSuccess) {
-        showOnSuccess.style.display = 'block';
+        showOnSuccess.style.display = "block";
       }
     }
   });
 }
 
 function seriesPosts(holderSelector, templateSelector) {
-  const blogPosts = new BlogPosts('/blog/api/series/', holderSelector, templateSelector);
+  const blogPosts = new BlogPosts(
+    "/blog/api/series/",
+    holderSelector,
+    templateSelector
+  );
 
   const series = blogPosts.holder.dataset.series;
   const currentSlug = blogPosts.holder.dataset.currentslug;
@@ -102,9 +114,9 @@ function seriesPosts(holderSelector, templateSelector) {
     function filter(posts) {
       return posts.map(post => {
         if (post.slug === currentSlug) {
-          post.className = 'is-current';
+          post.className = "is-current";
         } else {
-          post.className = '';
+          post.className = "";
         }
         return post;
       });
@@ -112,7 +124,6 @@ function seriesPosts(holderSelector, templateSelector) {
   ]);
 
   blogPosts.fetch();
-
 }
 
 export { snapDetailsPosts, seriesPosts };

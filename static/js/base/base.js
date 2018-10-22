@@ -1,3 +1,3 @@
-import './polyfills';
-import './dropdown-menu-toggle';
-import './notification-dismiss';
+import "./polyfills";
+import "./dropdown-menu-toggle";
+import "./notification-dismiss";

@@ -19,7 +19,7 @@
    * </div>
    */
   function dismissNotifications() {
-    const links = document.querySelectorAll('.p-notification__action');
+    const links = document.querySelectorAll(".p-notification__action");
 
     for (let i = 0; i < links.length; i++) {
       dismissNotification(links[i]);
@@ -27,27 +27,30 @@
   }
 
   function dismissNotification(ele) {
-    const notificationHolder = ele.closest('.js-notification-holder');
+    const notificationHolder = ele.closest(".js-notification-holder");
     const isPermanent = ele.dataset.ispermanent;
     const name = ele.dataset.name;
 
-    if (window.localStorage && window.localStorage.getItem(name) === 'suppress') {
+    if (
+      window.localStorage &&
+      window.localStorage.getItem(name) === "suppress"
+    ) {
       notificationHolder.parentNode.removeChild(notificationHolder);
     }
 
-    const removeNotification = function() {
-      return function (e) {
+    const removeNotification = (function() {
+      return function(e) {
         e.preventDefault();
         if (isPermanent) {
           if (window.localStorage) {
-            window.localStorage.setItem(name, 'suppress');
+            window.localStorage.setItem(name, "suppress");
           }
         }
         notificationHolder.parentNode.removeChild(notificationHolder);
       };
-    }();
+    })();
 
-    ele.addEventListener('click', removeNotification);
+    ele.addEventListener("click", removeNotification);
   }
 
   dismissNotifications();

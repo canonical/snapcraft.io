@@ -1,7 +1,7 @@
-import { initSnapScreenshotsEdit } from './market/screenshots';
-import { updateState, diffState } from './state';
-import { publicMetrics } from './market/publicMetrics';
-import { whitelistBlacklist } from './market/whitelistBlacklist';
+import { initSnapScreenshotsEdit } from "./market/screenshots";
+import { updateState, diffState } from "./state";
+import { publicMetrics } from "./market/publicMetrics";
+import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
 
 // https://gist.github.com/dperini/729294
@@ -12,28 +12,27 @@ const MAILTO_REGEXP = /[^@]+@[^@]+\.[^@]+/;
 
 // check if browser is on chromium engine, based on:
 // https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
-const IS_CHROMIUM = (
+const IS_CHROMIUM =
   window.chrome !== null &&
   typeof window.chrome !== "undefined" &&
-  window.navigator.userAgent.indexOf("Edge") === -1 // Edge pretends to have window.chrome
-);
+  window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
 function initSnapIconEdit(iconElId, iconInputId, state) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
 
-  snapIconInput.addEventListener("change", function(){
+  snapIconInput.addEventListener("change", function() {
     const iconFile = this.files[0];
     snapIconEl.src = URL.createObjectURL(iconFile);
 
     // remove existing icon from state object
-    const images = state.images.filter(image => image.type !== 'icon');
+    const images = state.images.filter(image => image.type !== "icon");
     // replace it with a new one
     images.unshift({
       url: URL.createObjectURL(iconFile),
       file: iconFile,
       name: iconFile.name,
-      status: 'new'
+      status: "new"
     });
 
     updateState(state, { images });
@@ -57,7 +56,7 @@ function initFormNotification(formElId, notificationElId) {
   var notification = document.getElementById(notificationElId);
 
   if (notification) {
-    setTimeout(function(){
+    setTimeout(function() {
       if (notification && notification.parentNode) {
         notification.parentNode.removeChild(notification);
       }
@@ -65,14 +64,13 @@ function initFormNotification(formElId, notificationElId) {
   }
 }
 
-
-
 function initForm(config, initialState, errors) {
   // if there are errors focus first error
   if (errors && errors.length) {
     // find input with error or error notification and scroll it into view
-    const errorInput = document.querySelector('.is-error input')
-      || document.querySelector('.p-notification--negative');
+    const errorInput =
+      document.querySelector(".is-error input") ||
+      document.querySelector(".p-notification--negative");
 
     if (errorInput) {
       errorInput.focus();
@@ -85,13 +83,13 @@ function initForm(config, initialState, errors) {
 
   // setup form functionality
   const formEl = document.getElementById(config.form);
-  const submitButton = formEl.querySelector('.js-form-submit');
-  const revertButton = formEl.querySelector('.js-form-revert');
-  const revertURL = revertButton.getAttribute('href');
-  const disabledRevertClass = 'is-disabled';
+  const submitButton = formEl.querySelector(".js-form-submit");
+  const revertButton = formEl.querySelector(".js-form-revert");
+  const revertURL = revertButton.getAttribute("href");
+  const disabledRevertClass = "is-disabled";
 
   function disableSubmit() {
-    submitButton.disabled = 'disabled';
+    submitButton.disabled = "disabled";
   }
 
   function enableSubmit() {
@@ -99,12 +97,12 @@ function initForm(config, initialState, errors) {
   }
 
   function disableRevert() {
-    revertButton.setAttribute('href','javascript:void(0);');
+    revertButton.setAttribute("href", "javascript:void(0);");
     revertButton.classList.add(disabledRevertClass);
   }
 
   function enableRevert() {
-    revertButton.setAttribute('href',revertURL);
+    revertButton.setAttribute("href", revertURL);
     revertButton.classList.remove(disabledRevertClass);
   }
 
@@ -114,13 +112,13 @@ function initForm(config, initialState, errors) {
 
   let state = JSON.parse(JSON.stringify(initialState));
 
-  const stateInput = document.createElement('input');
+  const stateInput = document.createElement("input");
   stateInput.type = "hidden";
   stateInput.name = "state";
 
   formEl.appendChild(stateInput);
 
-  const diffInput = document.createElement('input');
+  const diffInput = document.createElement("input");
   diffInput.type = "hidden";
   diffInput.name = "changes";
 
@@ -137,7 +135,7 @@ function initForm(config, initialState, errors) {
       config.screenshotsToolbar,
       config.screenshotsWrapper,
       state,
-      (nextState) => {
+      nextState => {
         updateState(state, nextState);
         updateFormState();
       }
@@ -150,7 +148,7 @@ function initForm(config, initialState, errors) {
 
   let ignoreChangesOnUnload = false;
 
-  window.addEventListener("beforeunload", function (event) {
+  window.addEventListener("beforeunload", function(event) {
     const diff = diffState(initialState, state);
 
     if (!ignoreChangesOnUnload && diff) {
@@ -159,10 +157,11 @@ function initForm(config, initialState, errors) {
 
       // confirmation message (ignored by most browsers),
       // but may be showed by some older ones
-      var confirmationMessage = "Changes that you made will not be saved if you leave the page.";
+      var confirmationMessage =
+        "Changes that you made will not be saved if you leave the page.";
 
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-      return confirmationMessage;              // Gecko, WebKit, Chrome <34
+      return confirmationMessage; // Gecko, WebKit, Chrome <34
     }
 
     // make sure to show unload warning dialog during submit in progress
@@ -173,7 +172,7 @@ function initForm(config, initialState, errors) {
     }
   });
 
-  revertButton.addEventListener('click', () => {
+  revertButton.addEventListener("click", () => {
     // make sure we don't warn user about leaving the page when reverting
     ignoreChangesOnUnload = true;
   });
@@ -184,7 +183,7 @@ function initForm(config, initialState, errors) {
     if (diff) {
       enableRevert();
       if (isFormValid()) {
-        enableSubmit(); 
+        enableSubmit();
       } else {
         disableSubmit();
       }
@@ -195,13 +194,13 @@ function initForm(config, initialState, errors) {
 
   function updateFormState() {
     // Some extra modifications need to happen for the checkboxes
-    if (formEl['public_metrics_enabled']) {
+    if (formEl["public_metrics_enabled"]) {
       publicMetrics(formEl);
     }
-    if (formEl['territories']) {
+    if (formEl["territories"]) {
       whitelistBlacklist(formEl);
     }
-    if (formEl['license']) {
+    if (formEl["license"]) {
       license(formEl);
     }
 
@@ -212,15 +211,15 @@ function initForm(config, initialState, errors) {
 
     // checkboxes are tricky,
     // make sure to update state based on their 'checked' status
-    if (formEl['private']) {
+    if (formEl["private"]) {
       updateState(state, {
-        'private': formEl['private'].value === 'private'
+        private: formEl["private"].value === "private"
       });
     }
 
-    if (formEl['public_metrics_enabled']) {
+    if (formEl["public_metrics_enabled"]) {
       updateState(state, {
-        'public_metrics_enabled': formEl['public_metrics_enabled'].checked
+        public_metrics_enabled: formEl["public_metrics_enabled"].checked
       });
     }
 
@@ -228,20 +227,22 @@ function initForm(config, initialState, errors) {
   }
 
   // when anything is changed update the state
-  formEl.addEventListener('change', function() {
+  formEl.addEventListener("change", function() {
     updateFormState();
   });
 
-  formEl.addEventListener('submit', function(event) {
+  formEl.addEventListener("submit", function(event) {
     const diff = diffState(initialState, state);
 
     // if anything was changed, update state inputs and submit
     if (diff) {
-    // TODO: temporary soluton - save clean state in state input,
-    // so save still works until backend is update to understand diff
+      // TODO: temporary soluton - save clean state in state input,
+      // so save still works until backend is update to understand diff
       const cleanState = JSON.parse(JSON.stringify(state));
       if (cleanState.images) {
-        cleanState.images = cleanState.images.filter(image => image.status !== 'delete');
+        cleanState.images = cleanState.images.filter(
+          image => image.status !== "delete"
+        );
       }
 
       stateInput.value = JSON.stringify(cleanState);
@@ -253,7 +254,7 @@ function initForm(config, initialState, errors) {
       // disable button and show spinner when loading is long
       disableSubmit();
       setTimeout(() => {
-        submitButton.classList.add('has-spinner');
+        submitButton.classList.add("has-spinner");
       }, 2000);
     } else {
       event.preventDefault();
@@ -263,7 +264,7 @@ function initForm(config, initialState, errors) {
   // client side validation
 
   const validation = {};
-  const validateInputs = Array.from(formEl.querySelectorAll('input,textarea'));
+  const validateInputs = Array.from(formEl.querySelectorAll("input,textarea"));
 
   function isFormValid() {
     // form is valid if every validated input is valid
@@ -271,10 +272,10 @@ function initForm(config, initialState, errors) {
   }
 
   function validateInput(input) {
-    const field = input.closest('.p-form-validation');
+    const field = input.closest(".p-form-validation");
 
     if (field) {
-      const message = field.querySelector('.p-form-validation__message');
+      const message = field.querySelector(".p-form-validation__message");
       if (message) {
         message.remove();
       }
@@ -299,7 +300,7 @@ function initForm(config, initialState, errors) {
           isValid = false;
           showCounter = true;
         } else {
-          inputValidation.counterEl.innerHTML = '';
+          inputValidation.counterEl.innerHTML = "";
           showCounter = false;
         }
       }
@@ -307,7 +308,10 @@ function initForm(config, initialState, errors) {
       // only validate contents when there is any value
       if (input.value.length > 0) {
         if (inputValidation.mailto) {
-          if (!URL_REGEXP.test(input.value) && !MAILTO_REGEXP.test(input.value)) {
+          if (
+            !URL_REGEXP.test(input.value) &&
+            !MAILTO_REGEXP.test(input.value)
+          ) {
             isValid = false;
           }
         } else if (inputValidation.url) {
@@ -318,17 +322,17 @@ function initForm(config, initialState, errors) {
       }
 
       if (isValid) {
-        field.classList.remove('is-error');
+        field.classList.remove("is-error");
         inputValidation.isValid = true;
       } else {
-        field.classList.add('is-error');
+        field.classList.add("is-error");
         inputValidation.isValid = false;
       }
 
       if (showCounter) {
-        field.classList.add('has-counter');
+        field.classList.add("has-counter");
       } else {
-        field.classList.remove('has-counter');
+        field.classList.remove("has-counter");
       }
     }
   }
@@ -340,11 +344,11 @@ function initForm(config, initialState, errors) {
     if (input.maxLength > 0) {
       // save max length, but remove it from input so more chars can be entered
       inputValidation.maxLength = input.maxLength;
-      input.removeAttribute('maxlength');
+      input.removeAttribute("maxlength");
 
       // prepare counter element to show how many chars need to be removed
-      const counter = document.createElement('span');
-      counter.className = 'p-form-validation__counter';
+      const counter = document.createElement("span");
+      counter.className = "p-form-validation__counter";
       inputValidation.counterEl = counter;
       input.parentNode.appendChild(counter);
     }
@@ -353,12 +357,12 @@ function initForm(config, initialState, errors) {
       inputValidation.required = true;
     }
 
-    if (input.type === 'url') {
+    if (input.type === "url") {
       inputValidation.url = true;
     }
 
     // allow mailto: addresses for contact field
-    if (input.name === 'contact') {
+    if (input.name === "contact") {
       inputValidation.mailto = true;
     }
 
@@ -366,23 +370,26 @@ function initForm(config, initialState, errors) {
   });
 
   // validate inputs on change
-  formEl.addEventListener('input', function (event) {
+  formEl.addEventListener("input", function(event) {
     validateInput(event.target);
     updateFormState();
   });
 
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
   function prefixInput(input) {
-    if (['website', 'contact'].includes(input.name)) {
+    if (["website", "contact"].includes(input.name)) {
       if (
         validation[input.name].isValid &&
         input.value.length > 0 &&
-        !input.value.includes('http') &&
-        !input.value.includes('mailto')
-      ){
-        if (input.name === 'website') {
+        !input.value.includes("http") &&
+        !input.value.includes("mailto")
+      ) {
+        if (input.name === "website") {
           input.value = `https://${input.value}`;
-        } else if (input.name === 'contact' && MAILTO_REGEXP.test(input.value)) {
+        } else if (
+          input.name === "contact" &&
+          MAILTO_REGEXP.test(input.value)
+        ) {
           input.value = `mailto:${input.value}`;
         }
         validateInput(input);
@@ -391,18 +398,15 @@ function initForm(config, initialState, errors) {
     }
   }
 
-  const prefixableFields = ['website', 'contact'];
+  const prefixableFields = ["website", "contact"];
   prefixableFields.forEach(inputName => {
     const input = formEl[inputName];
     if (input) {
-      input.addEventListener('blur', function (event) {
+      input.addEventListener("blur", function(event) {
         prefixInput(event.target);
       });
     }
   });
 }
 
-export {
-  initSnapIconEdit,
-  initForm
-};
+export { initSnapIconEdit, initForm };

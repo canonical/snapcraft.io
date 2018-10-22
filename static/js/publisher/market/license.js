@@ -1,6 +1,6 @@
 function license(form) {
-  const type = form['license-type'].value;
-  form['license'].value = form[`license-${type}`].value;
+  const type = form["license-type"].value;
+  form["license"].value = form[`license-${type}`].value;
 }
 
 function initLicenses(inputs) {
@@ -8,9 +8,9 @@ function initLicenses(inputs) {
     var type = this.value;
     inputs.forEach(item => {
       if (item.id.includes(type)) {
-        item.style.display = 'block';
+        item.style.display = "block";
       } else {
-        item.style.display = 'none';
+        item.style.display = "none";
       }
     });
   }
@@ -18,7 +18,7 @@ function initLicenses(inputs) {
   var licenseRadio = document.querySelectorAll('[name="license-type"]');
   if (licenseRadio) {
     for (var i = 0; i < licenseRadio.length; i++) {
-      licenseRadio[i].addEventListener('change', licenseTypeChange);
+      licenseRadio[i].addEventListener("change", licenseTypeChange);
     }
   }
 }

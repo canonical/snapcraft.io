@@ -1,9 +1,13 @@
 /* globals bb */
 
-import { formatAxis, formatXAxisTickLabels, formatYAxisTickLabels } from '../axis';
-import debounce from '../../../libs/debounce';
-import { snapcraftGraphTooltip, positionTooltip } from '../tooltips';
-import { COLORS, PADDING } from '../config';
+import {
+  formatAxis,
+  formatXAxisTickLabels,
+  formatYAxisTickLabels
+} from "../axis";
+import debounce from "../../../libs/debounce";
+import { snapcraftGraphTooltip, positionTooltip } from "../tooltips";
+import { COLORS, PADDING } from "../config";
 
 function showGraph(el) {
   formatAxis(el);
@@ -11,10 +15,10 @@ function showGraph(el) {
 }
 
 export default function installsMetrics(days, installs) {
-  const el = document.getElementById('installs_metrics');
+  const el = document.getElementById("installs_metrics");
 
   const installsMetrics = bb.generate({
-    bindto: '#installs_metrics',
+    bindto: "#installs_metrics",
     legend: {
       hide: true
     },
@@ -51,12 +55,9 @@ export default function installsMetrics(days, installs) {
     },
     data: {
       colors: COLORS,
-      type: 'bar',
-      x: 'x',
-      columns: [
-        days,
-        installs
-      ]
+      type: "bar",
+      x: "x",
+      columns: [days, installs]
     }
   });
 
@@ -65,10 +66,10 @@ export default function installsMetrics(days, installs) {
   // Extra events
   let elWidth = el.clientWidth;
 
-  const resize = debounce(function () {
+  const resize = debounce(function() {
     if (el.clientWidth !== elWidth) {
       el.style.opacity = 0;
-      debounce(function () {
+      debounce(function() {
         installsMetrics.resize();
         showGraph(el);
         elWidth = el.clientWidth;
@@ -76,7 +77,7 @@ export default function installsMetrics(days, installs) {
     }
   }, 500);
 
-  window.addEventListener('resize', resize);
+  window.addEventListener("resize", resize);
 
   return installsMetrics;
 }

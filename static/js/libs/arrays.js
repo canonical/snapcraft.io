@@ -11,8 +11,10 @@ function arraysEqual(oldArray, newArray) {
     return true;
   }
   if (
-    oldArray === null || newArray === null ||
-    (oldArray.length !== newArray.length)) {
+    oldArray === null ||
+    newArray === null ||
+    oldArray.length !== newArray.length
+  ) {
     return false;
   }
 
@@ -22,7 +24,7 @@ function arraysEqual(oldArray, newArray) {
   _oldArray.sort();
   _newArray.sort();
 
-  for(let i = 0; i < _oldArray.length; i++) {
+  for (let i = 0; i < _oldArray.length; i++) {
     if (_oldArray[i] !== _newArray[i]) {
       return false;
     }

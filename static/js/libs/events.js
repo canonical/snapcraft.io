@@ -1,5 +1,4 @@
 class Events {
-
   constructor(defaultBindTarget) {
     this.defaultBindTarget = defaultBindTarget || document.body;
     this.events = {};
@@ -9,7 +8,8 @@ class Events {
   }
 
   _addListener(type, selector) {
-    const bindTarget = typeof(selector) === 'string' ? this.defaultBindTarget : selector;
+    const bindTarget =
+      typeof selector === "string" ? this.defaultBindTarget : selector;
     bindTarget.addEventListener(type, this._handleEvent.bind(this, type));
   }
 
@@ -17,7 +17,10 @@ class Events {
     const eventTarget = event.target;
 
     this.events[type].forEach(ev => {
-      const target = typeof(ev.selector) === 'string' ? eventTarget.closest(ev.selector) : ev.selector;
+      const target =
+        typeof ev.selector === "string"
+          ? eventTarget.closest(ev.selector)
+          : ev.selector;
 
       if (target) {
         ev.func(event, target);
