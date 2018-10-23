@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
 
 import {
   RISKS_WITH_UNASSIGNED as RISKS,
@@ -7,9 +7,9 @@ import {
   STABLE,
   BETA,
   EDGE
-} from './constants';
-import DevmodeIcon, { isInDevmode } from './devmodeIcon';
-import PromoteButton from './promoteButton';
+} from "./constants";
+import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
+import PromoteButton from "./promoteButton";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -18,7 +18,8 @@ function getChannelName(track, risk) {
 export default class RevisionsTable extends Component {
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
-    const currentRelease = releasedChannels[channel] && releasedChannels[channel][arch];
+    const currentRelease =
+      releasedChannels[channel] && releasedChannels[channel][arch];
 
     return pendingRelease || currentRelease;
   }
@@ -38,12 +39,19 @@ export default class RevisionsTable extends Component {
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
     const channel = getChannelName(track, risk);
 
-    let thisRevision = this.getRevisionToDisplay(releasedChannels, nextChannelReleases, channel, arch);
-    let thisPreviousRevision = releasedChannels[channel] && releasedChannels[channel][arch];
-
-    const hasPendingRelease = (
-      thisRevision && (!thisPreviousRevision || (thisPreviousRevision.revision !== thisRevision.revision))
+    let thisRevision = this.getRevisionToDisplay(
+      releasedChannels,
+      nextChannelReleases,
+      channel,
+      arch
     );
+    let thisPreviousRevision =
+      releasedChannels[channel] && releasedChannels[channel][arch];
+
+    const hasPendingRelease =
+      thisRevision &&
+      (!thisPreviousRevision ||
+        thisPreviousRevision.revision !== thisRevision.revision);
 
     const isChannelClosed = this.props.pendingCloses.includes(channel);
     const isPending = hasPendingRelease || isChannelClosed;
@@ -51,65 +59,92 @@ export default class RevisionsTable extends Component {
     return (
       <td
         className="p-release-table__cell"
-        style={ { position: 'relative' } }
+        style={{ position: "relative" }}
         key={`${channel}/${arch}`}
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
-
             <span className="p-revision-icon">
-              { thisPreviousRevision && !isPending &&
-                <DevmodeIcon revision={thisPreviousRevision} showTooltip={false} />
-              }
+              {thisPreviousRevision &&
+                !isPending && (
+                  <DevmodeIcon
+                    revision={thisPreviousRevision}
+                    showTooltip={false}
+                  />
+                )}
             </span>
-            <span className={ isPending ? 'p-previous-revision' : '' }>
-              { thisPreviousRevision ?
+            <span className={isPending ? "p-previous-revision" : ""}>
+              {thisPreviousRevision ? (
                 <span className="p-revision-info">
                   {thisPreviousRevision.version}
-                  <span className="p-revision-info__revision">({thisPreviousRevision.revision})</span>
-                </span> :
-                '–'
-              }
+                  <span className="p-revision-info__revision">
+                    ({thisPreviousRevision.revision})
+                  </span>
+                </span>
+              ) : (
+                "–"
+              )}
             </span>
-            { isPending &&
+            {isPending && (
               <Fragment>
-                {' '}
-                &rarr;
-                {' '}
-                { hasPendingRelease ?
-                  <span className="p-revision-info is-pending">{thisRevision.version}
-                    <span className="p-revision-info__revision">({thisRevision.revision})</span>
-                  </span> :
+                {" "}
+                &rarr;{" "}
+                {hasPendingRelease ? (
+                  <span className="p-revision-info is-pending">
+                    {thisRevision.version}
+                    <span className="p-revision-info__revision">
+                      ({thisRevision.revision})
+                    </span>
+                  </span>
+                ) : (
                   <em>close channel</em>
-                }
+                )}
               </Fragment>
-            }
+            )}
           </span>
 
           <span className="p-tooltip__message">
-            { thisPreviousRevision ? `${thisPreviousRevision.version} (${thisPreviousRevision.revision})` : 'None' }
-            { hasPendingRelease &&
-              <span> &rarr; { `${thisRevision.version} (${thisRevision.revision})` }</span>
-            }
-            { isChannelClosed &&
-              <span> &rarr; <em>close channel</em></span>
-            }
-            { thisPreviousRevision && isInDevmode(thisPreviousRevision) &&
-              <Fragment>
-                <br/>
-                { thisPreviousRevision.confinement === 'devmode' ? 'confinement: devmode' : 'grade: devel' }
-              </Fragment>
-            }
+            {thisPreviousRevision
+              ? `${thisPreviousRevision.version} (${
+                  thisPreviousRevision.revision
+                })`
+              : "None"}
+            {hasPendingRelease && (
+              <span>
+                {" "}
+                &rarr; {`${thisRevision.version} (${thisRevision.revision})`}
+              </span>
+            )}
+            {isChannelClosed && (
+              <span>
+                {" "}
+                &rarr; <em>close channel</em>
+              </span>
+            )}
+            {thisPreviousRevision &&
+              isInDevmode(thisPreviousRevision) && (
+                <Fragment>
+                  <br />
+                  {thisPreviousRevision.confinement === "devmode"
+                    ? "confinement: devmode"
+                    : "grade: devel"}
+                </Fragment>
+              )}
           </span>
         </span>
-        { hasPendingRelease &&
+        {hasPendingRelease && (
           <div className="p-release-buttons">
-            <button className="p-icon-button p-tooltip p-tooltip--btm-center" onClick={this.undoClick.bind(this, thisRevision, track, risk)}>
+            <button
+              className="p-icon-button p-tooltip p-tooltip--btm-center"
+              onClick={this.undoClick.bind(this, thisRevision, track, risk)}
+            >
               &#x2715;
-              <span className="p-tooltip__message">Cancel promoting this revision</span>
+              <span className="p-tooltip__message">
+                Cancel promoting this revision
+              </span>
             </button>
           </div>
-        }
+        )}
       </td>
     );
   }
@@ -129,8 +164,12 @@ export default class RevisionsTable extends Component {
     const targetChannelArchs = nextChannelReleases[targetChannel];
 
     if (channelArchs) {
-      return Object.keys(channelArchs).every((arch) => {
-        return targetChannelArchs && targetChannelArchs[arch] && channelArchs[arch].revision === targetChannelArchs[arch].revision;
+      return Object.keys(channelArchs).every(arch => {
+        return (
+          targetChannelArchs &&
+          targetChannelArchs[arch] &&
+          channelArchs[arch].revision === targetChannelArchs[arch].revision
+        );
       });
     }
 
@@ -146,9 +185,11 @@ export default class RevisionsTable extends Component {
 
       // don't show unassigned revisions until some are selected from the table
       // TODO: always show (when we can click on it)
-      if (risk === UNASSIGNED &&
-        !releasedChannels[channel] ||
-        (releasedChannels[channel] && Object.keys(releasedChannels[channel]).length === 0)) {
+      if (
+        (risk === UNASSIGNED && !releasedChannels[channel]) ||
+        (releasedChannels[channel] &&
+          Object.keys(releasedChannels[channel]).length === 0)
+      ) {
         return null;
       }
 
@@ -181,7 +222,9 @@ export default class RevisionsTable extends Component {
 
         // check for devmode revisions
         if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
-          const hasDevmodeRevisions = Object.values(nextChannelReleases[channel]).some(isInDevmode);
+          const hasDevmodeRevisions = Object.values(
+            nextChannelReleases[channel]
+          ).some(isInDevmode);
 
           // remove stable and beta channels as targets if any revision
           // is in devmode
@@ -191,7 +234,7 @@ export default class RevisionsTable extends Component {
         }
 
         // filter out risks that have the same revisions already released
-        targetRisks = targetRisks.filter((targetRisk) => {
+        targetRisks = targetRisks.filter(targetRisk => {
           return !this.compareChannels(channel, `${track}/${targetRisk}`);
         });
 
@@ -204,25 +247,30 @@ export default class RevisionsTable extends Component {
         <tr key={channel}>
           <td>
             <span className="p-channel-buttons">
-              { (canBePromoted || canBeClosed) &&
+              {(canBePromoted || canBeClosed) && (
                 <PromoteButton
                   position="left"
                   track={track}
                   targetRisks={targetRisks}
                   closeRisk={canBeClosed ? risk : null}
-                  closeChannel={canBeClosed ? this.onCloseChannel.bind(this, channel) : null}
+                  closeChannel={
+                    canBeClosed ? this.onCloseChannel.bind(this, channel) : null
+                  }
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />
-              }
+              )}
             </span>
-            { risk === UNASSIGNED
-              ? <em>Unassigned revisions</em>
-              : channel
-            }
+            {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
           </td>
-          {
-            archs.map(arch => this.renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases))
-          }
+          {archs.map(arch =>
+            this.renderRevisionCell(
+              track,
+              risk,
+              arch,
+              releasedChannels,
+              nextChannelReleases
+            )
+          )}
         </tr>
       );
     });
@@ -240,9 +288,11 @@ export default class RevisionsTable extends Component {
               id="track-dropdown"
               onChange={this.onTrackChange.bind(this)}
             >
-              {
-                tracks.map(track => <option key={`${track}`} value={track}>{ track }</option>)
-              }
+              {tracks.map(track => (
+                <option key={`${track}`} value={track}>
+                  {track}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -255,42 +305,62 @@ export default class RevisionsTable extends Component {
     const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
 
-    return ((releasesCount > 0 || closesCount > 0) &&
-      <div className="p-release-confirm">
-        <span className="p-tooltip">
-          <i className="p-icon--question" />
-          {' '}
-          { releasesCount > 0 &&
-            <span>{ releasesCount } revision{ releasesCount > 1 ? 's' : '' } to release.</span>
-          }
-          {' '}
-          { closesCount > 0 &&
-            <span>{ closesCount } channel{ closesCount > 1 ? 's' : '' } to close.</span>
-          }
-          <span className="p-tooltip__message" role="tooltip" id="default-tooltip">
-            { Object.keys(pendingReleases).map(revId => {
-              const release = pendingReleases[revId];
-
-              return <span key={revId}>
-                {release.revision.version} ({release.revision.revision}) {release.revision.architectures.join(', ')}
-                {' '}
-                to {release.channels.join(', ')}
-                {'\n'}
-              </span>;
-            })}
-            { closesCount > 0 &&
+    return (
+      (releasesCount > 0 || closesCount > 0) && (
+        <div className="p-release-confirm">
+          <span className="p-tooltip">
+            <i className="p-icon--question" />{" "}
+            {releasesCount > 0 && (
               <span>
-                Close channels: {pendingCloses.join(', ')}
+                {releasesCount} revision
+                {releasesCount > 1 ? "s" : ""} to release.
               </span>
-            }
-          </span>
-        </span>
-        {' '}
-        <div className="p-release-confirm__buttons">
-          <button className="p-button--positive is-inline u-no-margin--bottom" disabled={ isLoading } onClick={ this.onApplyClick.bind(this) }>{ isLoading ? 'Loading...' : 'Apply' }</button>
-          <button className="p-button--neutral u-no-margin--bottom" onClick={ this.onRevertClick.bind(this) }>Cancel</button>
+            )}{" "}
+            {closesCount > 0 && (
+              <span>
+                {closesCount} channel
+                {closesCount > 1 ? "s" : ""} to close.
+              </span>
+            )}
+            <span
+              className="p-tooltip__message"
+              role="tooltip"
+              id="default-tooltip"
+            >
+              {Object.keys(pendingReleases).map(revId => {
+                const release = pendingReleases[revId];
+
+                return (
+                  <span key={revId}>
+                    {release.revision.version} ({release.revision.revision}){" "}
+                    {release.revision.architectures.join(", ")} to{" "}
+                    {release.channels.join(", ")}
+                    {"\n"}
+                  </span>
+                );
+              })}
+              {closesCount > 0 && (
+                <span>Close channels: {pendingCloses.join(", ")}</span>
+              )}
+            </span>
+          </span>{" "}
+          <div className="p-release-confirm__buttons">
+            <button
+              className="p-button--positive is-inline u-no-margin--bottom"
+              disabled={isLoading}
+              onClick={this.onApplyClick.bind(this)}
+            >
+              {isLoading ? "Loading..." : "Apply"}
+            </button>
+            <button
+              className="p-button--neutral u-no-margin--bottom"
+              onClick={this.onRevertClick.bind(this)}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-      </div>
+      )
     );
   }
 
@@ -313,22 +383,26 @@ export default class RevisionsTable extends Component {
       <Fragment>
         <div className="u-clearfix">
           <h4 className="u-float--left">Releases available for install</h4>
-          { tracks.length > 1 && this.renderTrackDropdown(tracks) }
+          {tracks.length > 1 && this.renderTrackDropdown(tracks)}
         </div>
-        { this.renderReleasesConfirm() }
+        {this.renderReleasesConfirm()}
         <table className="p-release-table">
           <thead>
             <tr>
-              <th width="22%" scope="col"></th>
-              {
-                archs.map(arch => <th width="13%" className="p-release-table__arch" key={`${arch}`}>{ arch }</th>)
-              }
+              <th width="22%" scope="col" />
+              {archs.map(arch => (
+                <th
+                  width="13%"
+                  className="p-release-table__arch"
+                  key={`${arch}`}
+                >
+                  {arch}
+                </th>
+              ))}
             </tr>
           </thead>
 
-          <tbody>
-            { this.renderRows(releasedChannels, archs) }
-          </tbody>
+          <tbody>{this.renderRows(releasedChannels, archs)}</tbody>
         </table>
       </Fragment>
     );
@@ -344,7 +418,7 @@ RevisionsTable.propTypes = {
   tracks: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
   getNextReleasedChannels: PropTypes.func.isRequired,
-  setCurrentTrack:  PropTypes.func.isRequired,
+  setCurrentTrack: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,

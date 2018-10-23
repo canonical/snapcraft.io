@@ -1,33 +1,33 @@
 import { arraysEqual } from "../libs/arrays";
 
 const allowedKeys = [
-  'title',
-  'summary',
-  'description',
-  'images',
-  'website',
-  'contact',
-  'private',
-  'public_metrics_enabled',
-  'public_metrics_blacklist',
-  'whitelist_countries',
-  'blacklist_countries',
-  'license'
+  "title",
+  "summary",
+  "description",
+  "images",
+  "website",
+  "contact",
+  "private",
+  "public_metrics_enabled",
+  "public_metrics_blacklist",
+  "whitelist_countries",
+  "blacklist_countries",
+  "license"
 ];
 
 function commaSeperatedStringToArray(str) {
-  if (str !== '') {
-    return str.split(', ');
+  if (str !== "") {
+    return str.split(", ");
   } else {
     return [];
   }
 }
 
 const transform = {
-  'whitelist_countries': commaSeperatedStringToArray,
-  'blacklist_countries': commaSeperatedStringToArray,
-  'private': value => (value === 'private'),
-  'public_metrics_enabled': value => (value === 'on')
+  whitelist_countries: commaSeperatedStringToArray,
+  blacklist_countries: commaSeperatedStringToArray,
+  private: value => value === "private",
+  public_metrics_enabled: value => value === "on"
 };
 
 function updateState(state, values) {
@@ -38,7 +38,7 @@ function updateState(state, values) {
         if (allowedKeys.includes(key)) {
           // FormData values encode new lines as \r\n which are invalid for our API
           // so we need to replace them back to \n
-          let newValue = value.replace(/\r\n/g, '\n');
+          let newValue = value.replace(/\r\n/g, "\n");
 
           // Some values will need to be transformed in some way for the API
           if (transform[key]) {
@@ -48,7 +48,7 @@ function updateState(state, values) {
           state[key] = newValue;
         }
       });
-    // else if it's just a plain object
+      // else if it's just a plain object
     } else {
       for (let key in values) {
         if (allowedKeys.includes(key)) {
@@ -64,10 +64,10 @@ function diffState(initialState, state) {
 
   for (let key of allowedKeys) {
     // images is an array of objects so compare stringified version
-    if (key === 'images' && state[key]) {
+    if (key === "images" && state[key]) {
       const images = state[key]
         // remove images to delete from the diff
-        .filter(image => image.status !== 'delete')
+        .filter(image => image.status !== "delete")
         // ignore selected status when comparing
         .map(image => {
           delete image.selected;
@@ -80,7 +80,7 @@ function diffState(initialState, state) {
     } else {
       if (initialState[key] !== state[key]) {
         if (Array.isArray(initialState[key]) && Array.isArray(state[key])) {
-          if(!arraysEqual(initialState[key], state[key])) {
+          if (!arraysEqual(initialState[key], state[key])) {
             diff[key] = state[key];
           }
         } else {
@@ -94,7 +94,4 @@ function diffState(initialState, state) {
   return Object.keys(diff).length > 0 ? diff : null;
 }
 
-export {
-  updateState,
-  diffState
-};
+export { updateState, diffState };

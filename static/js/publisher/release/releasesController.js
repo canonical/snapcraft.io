@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import 'whatwg-fetch';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+import "whatwg-fetch";
 
-import RevisionsTable from './revisionsTable';
-import RevisionsList from './revisionsList';
-import Notification from './notification';
-import { isInDevmode } from './devmodeIcon';
-import { UNASSIGNED } from './constants';
+import RevisionsTable from "./revisionsTable";
+import RevisionsList from "./revisionsList";
+import Notification from "./notification";
+import { isInDevmode } from "./devmodeIcon";
+import { UNASSIGNED } from "./constants";
 
 export default class ReleasesController extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class ReleasesController extends Component {
 
     this.state = {
       // default to latest track
-      currentTrack: this.props.options.defaultTrack || 'latest',
+      currentTrack: this.props.options.defaultTrack || "latest",
       error: null,
       isLoading: false,
       // released channels contains channel map for each channel in current track
@@ -54,7 +54,7 @@ export default class ReleasesController extends Component {
   }
 
   selectRevision(revision) {
-    this.setState((state) => {
+    this.setState(state => {
       const releasedChannels = state.releasedChannels;
 
       // TODO: support multiple archs
@@ -64,13 +64,18 @@ export default class ReleasesController extends Component {
         releasedChannels[UNASSIGNED] = {};
       }
 
-      if (releasedChannels[UNASSIGNED][arch] && (releasedChannels[UNASSIGNED][arch].revision === revision.revision)) {
+      if (
+        releasedChannels[UNASSIGNED][arch] &&
+        releasedChannels[UNASSIGNED][arch].revision === revision.revision
+      ) {
         delete releasedChannels[UNASSIGNED][arch];
       } else {
         releasedChannels[UNASSIGNED][arch] = revision;
       }
 
-      const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(arch => releasedChannels[UNASSIGNED][arch].revision);
+      const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(
+        arch => releasedChannels[UNASSIGNED][arch].revision
+      );
       const archs = this.getArchsFromReleasedChannels(releasedChannels);
 
       return {
@@ -87,7 +92,9 @@ export default class ReleasesController extends Component {
 
   // get channel map data updated with any pending releases
   getNextReleasedChannels() {
-    const nextReleaseData = JSON.parse(JSON.stringify(this.state.releasedChannels));
+    const nextReleaseData = JSON.parse(
+      JSON.stringify(this.state.releasedChannels)
+    );
     const { pendingReleases } = this.state;
 
     // for each release
@@ -113,19 +120,21 @@ export default class ReleasesController extends Component {
     const archRevisions = releasedChannels[channel];
 
     if (archRevisions) {
-      Object.keys(archRevisions).forEach((arch) => {
+      Object.keys(archRevisions).forEach(arch => {
         this.promoteRevision(archRevisions[arch], targetChannel);
       });
     }
   }
 
   closeChannel(channel) {
-    this.setState((state) => {
+    this.setState(state => {
       let { pendingCloses, pendingReleases } = state;
 
       pendingCloses.push(channel);
       // make sure channels are unique
-      pendingCloses = pendingCloses.filter((item, i, ar) => ar.indexOf(item) === i);
+      pendingCloses = pendingCloses.filter(
+        (item, i, ar) => ar.indexOf(item) === i
+      );
 
       // undo any pending releases to closed channel
       Object.keys(pendingReleases).forEach(revision => {
@@ -150,12 +159,12 @@ export default class ReleasesController extends Component {
   // TODO:
   // - ignore if revision is already in given channel
   promoteRevision(revision, channel) {
-    this.setState((state) => {
+    this.setState(state => {
       const { pendingReleases } = state;
 
       // cancel any other pending release for the same channel in same architectures
-      revision.architectures.forEach((arch) => {
-        Object.keys(pendingReleases).forEach((revisionId) => {
+      revision.architectures.forEach(arch => {
+        Object.keys(pendingReleases).forEach(revisionId => {
           const pendingRelease = pendingReleases[revisionId];
 
           if (
@@ -190,7 +199,7 @@ export default class ReleasesController extends Component {
   }
 
   undoRelease(revision, channel) {
-    this.setState((state) => {
+    this.setState(state => {
       const { pendingReleases } = state;
 
       if (pendingReleases[revision.revision]) {
@@ -232,9 +241,8 @@ export default class ReleasesController extends Component {
       },
       redirect: "follow",
       referrer: "no-referrer",
-      body: JSON.stringify({ revision, channels, name: this.props.snapName }),
-    })
-      .then(response => response.json());
+      body: JSON.stringify({ revision, channels, name: this.props.snapName })
+    }).then(response => response.json());
   }
 
   fetchClose(channels) {
@@ -251,9 +259,8 @@ export default class ReleasesController extends Component {
       },
       redirect: "follow",
       referrer: "no-referrer",
-      body: JSON.stringify({ channels }),
-    })
-      .then(response => response.json());
+      body: JSON.stringify({ channels })
+    }).then(response => response.json());
   }
 
   handleReleaseResponse(json, release) {
@@ -266,7 +273,8 @@ export default class ReleasesController extends Component {
           if (map.revision) {
             let revision;
 
-            if (map.revision === (+release.id)) { // release.id is a string so turn it into a number for comparison
+            if (map.revision === +release.id) {
+              // release.id is a string so turn it into a number for comparison
               revision = release.revision;
             } else if (this.props.revisionsMap[map.revision]) {
               revision = this.props.revisionsMap[map.revision];
@@ -279,7 +287,7 @@ export default class ReleasesController extends Component {
             }
 
             let channel = map.channel;
-            if (channel.indexOf('/') === -1) {
+            if (channel.indexOf("/") === -1) {
               channel = `latest/${channel}`;
             }
 
@@ -291,11 +299,13 @@ export default class ReleasesController extends Component {
               const currentlyReleased = releasedChannels[channel][arch];
 
               // only update revision in channel map if it changed since last time
-              if (!currentlyReleased || currentlyReleased.revision !== revision.revision) {
+              if (
+                !currentlyReleased ||
+                currentlyReleased.revision !== revision.revision
+              ) {
                 releasedChannels[channel][arch] = revision;
               }
             });
-
           }
         });
 
@@ -307,14 +317,20 @@ export default class ReleasesController extends Component {
         };
       });
     } else {
-      let error = new Error(`Error while releasing ${release.revision.version} (${release.revision.revision}) to ${release.channels.join(', ')}.`);
+      let error = new Error(
+        `Error while releasing ${release.revision.version} (${
+          release.revision.revision
+        }) to ${release.channels.join(", ")}.`
+      );
       error.json = json;
       throw error;
     }
   }
 
   handleReleaseError(error) {
-    let message = error.message || "Error while performing the release. Please try again later.";
+    let message =
+      error.message ||
+      "Error while performing the release. Please try again later.";
 
     // try to find error messages in response json
     // which may be an array or errors or object with errors property
@@ -322,7 +338,13 @@ export default class ReleasesController extends Component {
       const errors = error.json.length ? error.json : error.json.errors;
 
       if (errors.length) {
-        message = message + " " + errors.map(e => e.message).filter(m => m).join(' ');
+        message =
+          message +
+          " " +
+          errors
+            .map(e => e.message)
+            .filter(m => m)
+            .join(" ");
       }
     }
 
@@ -333,14 +355,13 @@ export default class ReleasesController extends Component {
 
   handleCloseResponse(json, channels) {
     if (json.success) {
-      this.setState((state) => {
+      this.setState(state => {
         const { releasedChannels } = state;
 
-        if(json.closed_channels && json.closed_channels.length > 0) {
+        if (json.closed_channels && json.closed_channels.length > 0) {
           json.closed_channels.forEach(channel => {
-
             // make sure default channels get prefixed with 'latest'
-            if (channel.indexOf('/') === -1) {
+            if (channel.indexOf("/") === -1) {
               channel = `latest/${channel}`;
             }
 
@@ -353,7 +374,9 @@ export default class ReleasesController extends Component {
         };
       });
     } else {
-      let error = new Error(`Error while closing channels: ${channels.join(', ')}.`);
+      let error = new Error(
+        `Error while closing channels: ${channels.join(", ")}.`
+      );
       error.json = json;
       throw error;
     }
@@ -364,20 +387,20 @@ export default class ReleasesController extends Component {
 
     // handle releases as a queue
     releases.forEach(release => {
-      return queue = queue
-        .then(() => {
-          return this
-            .fetchRelease(release.id, release.channels)
-            .then(json => this.handleReleaseResponse(json, release));
-        });
+      return (queue = queue.then(() => {
+        return this.fetchRelease(release.id, release.channels).then(json =>
+          this.handleReleaseResponse(json, release)
+        );
+      }));
     });
     return queue;
   }
 
   fetchCloses(channels) {
     if (channels.length) {
-      return this.fetchClose(channels)
-        .then(json => this.handleCloseResponse(json, channels));
+      return this.fetchClose(channels).then(json =>
+        this.handleCloseResponse(json, channels)
+      );
     } else {
       return Promise.resolve();
     }
@@ -386,7 +409,11 @@ export default class ReleasesController extends Component {
   releaseRevisions() {
     const { pendingReleases, pendingCloses } = this.state;
     const releases = Object.keys(pendingReleases).map(id => {
-      return { id, revision: pendingReleases[id].revision, channels: pendingReleases[id].channels };
+      return {
+        id,
+        revision: pendingReleases[id].revision,
+        channels: pendingReleases[id].channels
+      };
     });
 
     this.setState({ isLoading: true });
@@ -401,26 +428,35 @@ export default class ReleasesController extends Component {
     const { tracks } = this.props;
     const { archs, releasedChannels } = this.state;
 
-    const hasDevmodeRevisions = Object.values(releasedChannels).some(archReleases => {
-      return Object.values(archReleases).some(isInDevmode);
-    });
-
+    const hasDevmodeRevisions = Object.values(releasedChannels).some(
+      archReleases => {
+        return Object.values(archReleases).some(isInDevmode);
+      }
+    );
 
     return (
       <Fragment>
-        { this.state.error &&
+        {this.state.error && (
           <Notification status="error" appearance="negative">
             {this.state.error}
           </Notification>
-        }
-        { hasDevmodeRevisions &&
+        )}
+        {hasDevmodeRevisions && (
           <Notification appearance="caution">
-            Revisions in development mode cannot be released to stable or candidate channels.
-            <br/>
-            You can read more about <a href="https://docs.snapcraft.io/t/snap-confinement/6233"><code>devmode</code> confinement</a> and <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276"><code>devel</code> grade</a>.
+            Revisions in development mode cannot be released to stable or
+            candidate channels.
+            <br />
+            You can read more about{" "}
+            <a href="https://docs.snapcraft.io/t/snap-confinement/6233">
+              <code>devmode</code> confinement
+            </a>{" "}
+            and{" "}
+            <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276">
+              <code>devel</code> grade
+            </a>
+            .
           </Notification>
-
-        }
+        )}
         <RevisionsTable
           releasedChannels={releasedChannels}
           currentTrack={this.state.currentTrack}

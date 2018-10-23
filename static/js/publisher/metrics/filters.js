@@ -9,7 +9,7 @@ function selector(selector, name) {
     window.location.search = params.toString();
   }
 
-  dropDown.addEventListener('change', onChange);
+  dropDown.addEventListener("change", onChange);
 }
 
 export { selector };

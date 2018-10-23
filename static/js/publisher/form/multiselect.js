@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+import React from "react";
+import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 
 class MultiSelect extends React.Component {
   constructor(props) {
@@ -8,15 +8,17 @@ class MultiSelect extends React.Component {
 
     // The available values should be the full list minus the current values
     // sorted by name
-    const values = this.props.values.filter(
-      value => !this.props.value.includes(value.key)
-    ).sort(this.sortByName);
+    const values = this.props.values
+      .filter(value => !this.props.value.includes(value.key))
+      .sort(this.sortByName);
 
     this.state = {
       // Get the correct objects for the currentValues as selected
-      selected: this.props.values.filter(value => this.props.value.includes(value.key)),
+      selected: this.props.values.filter(value =>
+        this.props.value.includes(value.key)
+      ),
       values: values,
-      searchTerm: '',
+      searchTerm: "",
       searchResults: values,
       showSearch: false,
       highlightedOption: null
@@ -50,12 +52,15 @@ class MultiSelect extends React.Component {
     newValues.sort(this.sortByName);
     const newSelected = this.state.selected.filter(item => item.key !== key);
 
-    this.setState({
-      values: newValues,
-      selected: newSelected,
-      // Preserve the filtered list in the dropdown
-      searchResults: this.filterByTerm(newValues)
-    }, this.props.updateHandler.bind(this,  this.state.selected));
+    this.setState(
+      {
+        values: newValues,
+        selected: newSelected,
+        // Preserve the filtered list in the dropdown
+        searchResults: this.filterByTerm(newValues)
+      },
+      this.props.updateHandler.bind(this, this.state.selected)
+    );
   }
 
   /**
@@ -81,15 +86,18 @@ class MultiSelect extends React.Component {
     const newSelected = this.state.selected.slice(0);
     newSelected.push(toAdd);
     const newValues = this.state.values.filter(item => item.key !== key);
-    this.searchInput.value = '';
+    this.searchInput.value = "";
 
-    this.setState({
-      values: newValues,
-      selected: newSelected,
-      searchTerm: '',
-      // Preserve the filtered list in the dropdown
-      searchResults: newValues
-    }, this.props.updateHandler.bind(this,  this.state.selected));
+    this.setState(
+      {
+        values: newValues,
+        selected: newSelected,
+        searchTerm: "",
+        // Preserve the filtered list in the dropdown
+        searchResults: newValues
+      },
+      this.props.updateHandler.bind(this, this.state.selected)
+    );
   }
 
   /**
@@ -101,10 +109,11 @@ class MultiSelect extends React.Component {
    */
   filterByTerm(values, searchTerm) {
     searchTerm = searchTerm || this.state.searchTerm;
-    return values.filter(item => (
-      item.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
-      item.key.toLowerCase().startsWith(searchTerm.toLowerCase())
-    ));
+    return values.filter(
+      item =>
+        item.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+        item.key.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
   }
 
   /**
@@ -150,30 +159,32 @@ class MultiSelect extends React.Component {
       let results = this.state.searchResults;
 
       switch (event.key) {
-        case 'ArrowDown':
+        case "ArrowDown":
           if (highlighted === null) {
             highlighted = 0;
           } else {
             highlighted += 1;
           }
           break;
-        case 'ArrowUp':
+        case "ArrowUp":
           if (highlighted > 0) {
             highlighted -= 1;
           }
           break;
-        case 'Enter':
+        case "Enter":
           event.preventDefault();
           if (highlighted >= 0) {
             this.addItem(results[highlighted].key);
           }
           break;
-        case 'Backspace':
-          if (this.state.selected.length > 0 && this.state.searchTerm === '') {
-            this.removeItem(this.state.selected[this.state.selected.length - 1].key);
+        case "Backspace":
+          if (this.state.selected.length > 0 && this.state.searchTerm === "") {
+            this.removeItem(
+              this.state.selected[this.state.selected.length - 1].key
+            );
           }
           break;
-        case 'Tab':
+        case "Tab":
           this.blur();
           break;
         default:
@@ -203,15 +214,18 @@ class MultiSelect extends React.Component {
     newValues = newValues.concat(toRemove);
     newValues.sort(this.sortByName);
 
-    this.setState({
-      values: newValues,
-      selected: [],
-      // Preserve the filtered list in the dropdown
-      searchResults: newValues
-    }, () => {
-      this.props.updateHandler.bind(this,  this.state.selected);
-      this.focusInput();
-    });
+    this.setState(
+      {
+        values: newValues,
+        selected: [],
+        // Preserve the filtered list in the dropdown
+        searchResults: newValues
+      },
+      () => {
+        this.props.updateHandler.bind(this, this.state.selected);
+        this.focusInput();
+      }
+    );
   }
 
   blur() {
@@ -237,11 +251,11 @@ class MultiSelect extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
+    document.addEventListener("mousedown", this.handleClickOutside);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
   /**
@@ -250,8 +264,12 @@ class MultiSelect extends React.Component {
    */
   componentDidUpdate() {
     if (this.wrapperEl) {
-      const optionsHolder = this.wrapperEl.querySelector('.p-multiselect__options');
-      const selected = this.wrapperEl.querySelector('.p-multiselect__option.is-highlighted');
+      const optionsHolder = this.wrapperEl.querySelector(
+        ".p-multiselect__options"
+      );
+      const selected = this.wrapperEl.querySelector(
+        ".p-multiselect__option.is-highlighted"
+      );
       if (optionsHolder && selected) {
         const selectedTop = selected.offsetTop;
         const selectedHeight = selected.clientHeight;
@@ -260,7 +278,8 @@ class MultiSelect extends React.Component {
         const optionsScroll = optionsHolder.scrollTop;
         const scrollBottom = optionsHeight + optionsScroll;
         if (selectedBottom > scrollBottom) {
-          optionsHolder.scrollTop = optionsScroll + selectedBottom - scrollBottom;
+          optionsHolder.scrollTop =
+            optionsScroll + selectedBottom - scrollBottom;
         }
         if (selectedTop < optionsScroll) {
           optionsHolder.scrollTop = selectedTop;
@@ -272,10 +291,7 @@ class MultiSelect extends React.Component {
   renderClear() {
     if (this.state.selected.length > 3 && this.state.showSearch) {
       return (
-        <a 
-          className="p-multiselect__clear" 
-          onClick={ this.clearAll }
-        >
+        <a className="p-multiselect__clear" onClick={this.clearAll}>
           Clear all
         </a>
       );
@@ -287,18 +303,18 @@ class MultiSelect extends React.Component {
     if (this.state.showSearch) {
       return (
         <ul className="p-multiselect__options">
-          {
-            this.state.searchResults.map((item, i) => (
-              <li
-                className={`p-multiselect__option${this.state.highlightedOption === i ? ' is-highlighted' : ''}`}
-                data-key={item.key}
-                key={item.key}
-                onClick={this.clickItem.bind(this, item.key)}
-              >
-                {item.name}
-              </li>
-            ))
-          }
+          {this.state.searchResults.map((item, i) => (
+            <li
+              className={`p-multiselect__option${
+                this.state.highlightedOption === i ? " is-highlighted" : ""
+              }`}
+              data-key={item.key}
+              key={item.key}
+              onClick={this.clickItem.bind(this, item.key)}
+            >
+              {item.name}
+            </li>
+          ))}
         </ul>
       );
     }
@@ -307,9 +323,16 @@ class MultiSelect extends React.Component {
 
   renderItems() {
     const items = this.state.selected.map(value => (
-      <span className="p-multiselect__item" data-key={ value.key } key={ value.key }>
-        { value.name }
-        <i className="p-icon--close p-multiselect__item-remove" onClick={this.removeItem.bind(this, value.key)}></i>
+      <span
+        className="p-multiselect__item"
+        data-key={value.key}
+        key={value.key}
+      >
+        {value.name}
+        <i
+          className="p-icon--close p-multiselect__item-remove"
+          onClick={this.removeItem.bind(this, value.key)}
+        />
       </span>
     ));
 
@@ -321,8 +344,10 @@ class MultiSelect extends React.Component {
       <input
         type="text"
         className="p-multiselect__input"
-        onKeyUp={ this.search }
-        ref={input => {this.searchInput = input;}}
+        onKeyUp={this.search}
+        ref={input => {
+          this.searchInput = input;
+        }}
       />
     );
   }
@@ -330,17 +355,21 @@ class MultiSelect extends React.Component {
   render() {
     return (
       <div
-        ref={el => {this.wrapperEl = el;}}
+        ref={el => {
+          this.wrapperEl = el;
+        }}
       >
-        { this.renderClear() }
+        {this.renderClear()}
         <div
-          className={`p-multiselect${this.state.showSearch ? ' is-focused' : ''}`}
+          className={`p-multiselect${
+            this.state.showSearch ? " is-focused" : ""
+          }`}
           onClick={this.focusInput}
           onKeyDown={this.handleKeypress}
         >
-          { this.renderItems() }
-          { this.renderInput() }
-          { this.renderSearch() }
+          {this.renderItems()}
+          {this.renderInput()}
+          {this.renderSearch()}
         </div>
       </div>
     );
@@ -361,12 +390,11 @@ function updateHandler(input, delimiter) {
   const _delimiter = delimiter;
   return function(values) {
     _input.value = values.map(item => item.key).join(_delimiter);
-    const changeEvent = new Event('change', { 'bubbles': true });
+    const changeEvent = new Event("change", { bubbles: true });
 
     _input.dispatchEvent(changeEvent);
   };
 }
-
 
 /**
  * Initialize the component if used outside of a react app
@@ -381,15 +409,15 @@ function updateHandler(input, delimiter) {
  * @param {{name: string, key: string}[]} values
  * @param {String} delimiter
  */
-function init(selector, values, delimiter = ',') {
+function init(selector, values, delimiter = ",") {
   const el = document.querySelector(selector);
 
   if (el) {
-    const holder = el.querySelector('.js-multiselect-holder');
-    const input = el.querySelector('.js-multiselect-input');
+    const holder = el.querySelector(".js-multiselect-holder");
+    const input = el.querySelector(".js-multiselect-input");
 
     // hide the original input
-    input.style.display = 'none';
+    input.style.display = "none";
 
     // If there's anything in the current input, use it
     // split a list of , seperated strings to an array
@@ -405,8 +433,8 @@ function init(selector, values, delimiter = ',') {
     // do the react
     ReactDOM.render(
       <MultiSelect
-        value={ currentValue }
-        values={ values }
+        value={currentValue}
+        values={values}
         updateHandler={updateHandler(input, delimiter)}
       />,
       holder
@@ -415,4 +443,3 @@ function init(selector, values, delimiter = ',') {
 }
 
 export { MultiSelect as default, init as initMultiselect };
-

@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import distanceInWords from 'date-fns/distance_in_words_strict';
-import format from 'date-fns/format';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
+import distanceInWords from "date-fns/distance_in_words_strict";
+import format from "date-fns/format";
 
-import DevmodeIcon from './devmodeIcon';
-import { UNASSIGNED } from './constants';
+import DevmodeIcon from "./devmodeIcon";
+import { UNASSIGNED } from "./constants";
 
 export default class RevisionsList extends Component {
   revisionSelectChange(revision) {
@@ -12,34 +12,53 @@ export default class RevisionsList extends Component {
   }
 
   renderRows(revisions) {
-    return revisions.map((revision) => {
+    return revisions.map(revision => {
       const uploadDate = new Date(revision.created_at);
-      const isSelected = this.props.selectedRevisions.includes(revision.revision);
-      const isDisabled = !isSelected && revision.architectures.some((arch) => this.props.releasedChannels[UNASSIGNED] && this.props.releasedChannels[UNASSIGNED][arch]);
+      const isSelected = this.props.selectedRevisions.includes(
+        revision.revision
+      );
+      const isDisabled =
+        !isSelected &&
+        revision.architectures.some(
+          arch =>
+            this.props.releasedChannels[UNASSIGNED] &&
+            this.props.releasedChannels[UNASSIGNED][arch]
+        );
 
       return (
-        <tr key={revision.revision} className={isDisabled ? 'is-disabled' : ''}>
+        <tr key={revision.revision} className={isDisabled ? "is-disabled" : ""}>
           <td>
-            <input type="checkbox" checked={isSelected} id={`revision-check-${revision.revision}`} onChange={this.revisionSelectChange.bind(this, revision)}/>
-            <label className="u-no-margin--bottom" htmlFor={`revision-check-${revision.revision}`}>{ revision.revision }</label>
+            <input
+              type="checkbox"
+              checked={isSelected}
+              id={`revision-check-${revision.revision}`}
+              onChange={this.revisionSelectChange.bind(this, revision)}
+            />
+            <label
+              className="u-no-margin--bottom"
+              htmlFor={`revision-check-${revision.revision}`}
+            >
+              {revision.revision}
+            </label>
           </td>
           <td>
             <DevmodeIcon revision={revision} showTooltip={true} />
           </td>
-          <td>
-            { revision.version }
-          </td>
-          <td>{ revision.architectures.join(", ") }</td>
-          <td>{ revision.channels.join(", ") }</td>
+          <td>{revision.version}</td>
+          <td>{revision.architectures.join(", ")}</td>
+          <td>{revision.channels.join(", ")}</td>
           <td className="u-align--right">
-            <span className="p-tooltip p-tooltip--btm-center" aria-describedby={`revision-uploaded-${revision.revision}`}>
-              { distanceInWords(
-                new Date(),
-                uploadDate,
-                { addSuffix: true }
-              ) }
-              <span className="p-tooltip__message u-align--center" role="tooltip" id={`revision-uploaded-${revision.revision}`}>
-                { format(uploadDate, "YYYY-MM-DD HH:mm") }
+            <span
+              className="p-tooltip p-tooltip--btm-center"
+              aria-describedby={`revision-uploaded-${revision.revision}`}
+            >
+              {distanceInWords(new Date(), uploadDate, { addSuffix: true })}
+              <span
+                className="p-tooltip__message u-align--center"
+                role="tooltip"
+                id={`revision-uploaded-${revision.revision}`}
+              >
+                {format(uploadDate, "YYYY-MM-DD HH:mm")}
               </span>
             </span>
           </td>
@@ -55,18 +74,26 @@ export default class RevisionsList extends Component {
         <table className="p-revisions-list">
           <thead>
             <tr>
-              <th className="col-has-checkbox" width="10%" scope="col">Revision</th>
-              <th width="20px"></th>
-              <th width="23%" scope="col">Version</th>
-              <th width="12%" scope="col">Architecture</th>
-              <th width="30%" scope="col">Channels</th>
-              <th width="15%" scope="col" className="u-align--right">Submission date</th>
+              <th className="col-has-checkbox" width="10%" scope="col">
+                Revision
+              </th>
+              <th width="20px" />
+              <th width="23%" scope="col">
+                Version
+              </th>
+              <th width="12%" scope="col">
+                Architecture
+              </th>
+              <th width="30%" scope="col">
+                Channels
+              </th>
+              <th width="15%" scope="col" className="u-align--right">
+                Submission date
+              </th>
             </tr>
           </thead>
 
-          <tbody>
-            { this.renderRows(this.props.revisions) }
-          </tbody>
+          <tbody>{this.renderRows(this.props.revisions)}</tbody>
         </table>
       </Fragment>
     );

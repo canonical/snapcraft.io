@@ -15,22 +15,24 @@
   function toggle(toggleCtrl) {
     var toggles = document.querySelectorAll(toggleCtrl);
     for (var i = 0, ii = toggles.length; i < ii; i += 1) {
-      toggles[i].addEventListener('click', function(evt) {
+      toggles[i].addEventListener("click", function(evt) {
         evt.preventDefault();
-        var targetMenu = document.getElementById(this.getAttribute('aria-controls'));
+        var targetMenu = document.getElementById(
+          this.getAttribute("aria-controls")
+        );
 
         if (targetMenu) {
-          if (targetMenu.getAttribute('aria-hidden') === 'true') {
-            this.setAttribute('aria-expanded', true);
-            targetMenu.setAttribute('aria-hidden', false);
+          if (targetMenu.getAttribute("aria-hidden") === "true") {
+            this.setAttribute("aria-expanded", true);
+            targetMenu.setAttribute("aria-hidden", false);
           } else {
-            this.setAttribute('aria-expanded', false);
-            targetMenu.setAttribute('aria-hidden', true);
+            this.setAttribute("aria-expanded", false);
+            targetMenu.setAttribute("aria-hidden", true);
           }
         }
       });
     }
   }
 
-  toggle('.p-dropdown__toggle');
+  toggle(".p-dropdown__toggle");
 })();
