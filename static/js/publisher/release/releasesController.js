@@ -6,7 +6,7 @@ import RevisionsTable from "./revisionsTable";
 import RevisionsList from "./revisionsList";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
-import { UNASSIGNED } from "./constants";
+import { RISKS, UNASSIGNED } from "./constants";
 
 export default class ReleasesController extends Component {
   constructor(props) {
@@ -113,6 +113,33 @@ export default class ReleasesController extends Component {
     });
 
     return nextReleaseData;
+  }
+
+  getTrackingChannel(track, risk, arch) {
+    const { releasedChannels } = this.state;
+
+    let tracking = null;
+    // if there is no revision for this arch in given channel (track/risk)
+    if (
+      !(
+        releasedChannels[`${track}/${risk}`] &&
+        releasedChannels[`${track}/${risk}`][arch]
+      )
+    ) {
+      // find the next channel that has any revision
+      for (let i = RISKS.indexOf(risk); i >= 0; i--) {
+        const trackingChannel = `${track}/${RISKS[i]}`;
+
+        if (
+          releasedChannels[trackingChannel] &&
+          releasedChannels[trackingChannel][arch]
+        ) {
+          tracking = trackingChannel;
+        }
+      }
+    }
+
+    return tracking;
   }
 
   promoteChannel(channel, targetChannel) {
@@ -473,6 +500,7 @@ export default class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
+          getTrackingChannel={this.getTrackingChannel.bind(this)}
         />
         <RevisionsList
           revisions={this.props.revisions}

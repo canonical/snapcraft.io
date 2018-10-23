@@ -5,12 +5,20 @@
     }
   }
 
-  .p-release-table__arch {
-    padding-left: 20px;
+  .p-release-table__cell {
+    background: $color-light;
+    flex-basis: 100px;
+    flex-grow: 1;
+    margin-left: $sph-inter;
+    max-width: 22.53423%; // col-3
+    min-width: 100px;
+    padding: $spv-intra $sph-intra;
+    position: relative;
   }
 
-  .p-release-table__cell {
-    position: relative;
+  .p-release-table__arch {
+    background: none;
+    padding: 0 1em;
   }
 
   .p-icon-button {
@@ -23,7 +31,7 @@
   }
 
   .p-previous-revision {
-    opacity: .5;
+    display: none;
   }
 
   .p-release-version {
@@ -36,19 +44,25 @@
 
   .p-release-buttons {
     position: absolute;
-    right: 1rem; // match table padding
+    right: .5rem;
     top: .5rem;
   }
 
   .p-revision-info {
     display: inline-block;
     min-width: 30px;
-    padding-bottom: 1.2em;
+    padding-bottom: 1em;
     position: relative;
 
     &.is-pending {
       font-weight: 400;
     }
+  }
+
+  .p-revision-info--empty {
+    display: inline-block;
+    padding-bottom: .5em;
+    padding-top: .5em;
   }
 
   .p-revision-icon {
@@ -77,10 +91,15 @@
     top: 10px;
   }
 
-  .p-channel-buttons {
-    display: inline-block;
+  .p-release-channel-row__promote {
+    flex-grow: 0;
+    flex-shrink: 0;
     margin-right: .5rem;
     width: 2rem;
+  }
+
+  .p-release-channel-row__name {
+    flex-grow: 1;
   }
 
   .p-contextual-menu__item {
@@ -104,5 +123,17 @@
     .is-disabled {
       opacity: .5;
     }
+  }
+
+  .p-release-channel-row {
+    display: flex;
+    margin-bottom: $spv-inter--regular;
+  }
+
+  .p-release-channel-row__channel {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    width: 22.53423%; // col-3
   }
 }
