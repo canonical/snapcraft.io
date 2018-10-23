@@ -52,6 +52,20 @@ def set_handlers(app):
 
         return flask.render_template("404.html", error=error.description), 404
 
+    @app.errorhandler(500)
+    @app.errorhandler(501)
+    @app.errorhandler(502)
+    @app.errorhandler(504)
+    @app.errorhandler(505)
+    def internal_error(error):
+        error_name = getattr(error, "name", type(error).__name__)
+        return_code = getattr(error, "code", 500)
+
+        return (
+            flask.render_template("50X.html", error_name=error_name),
+            return_code,
+        )
+
     @app.errorhandler(503)
     def service_unavailable(error):
         return flask.render_template("503.html"), 503
