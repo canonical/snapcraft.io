@@ -26,7 +26,7 @@ export default function DevmodeIcon({ revision, showTooltip }) {
               : "devel grade"}{" "}
             cannot
             <br />
-            be released to stable or beta channels.
+            be released to stable or candidate channels.
           </span>
         )}
       </span>
