@@ -24,7 +24,8 @@ module.exports = {
   entry: {
     base: "./static/js/base/base.js",
     release: "./static/js/publisher/release.js",
-    publisher: "./static/js/publisher/publisher.js"
+    publisher: "./static/js/publisher/publisher.js",
+    public: "./static/js/public/public.js"
   },
   output: {
     filename: "[name].js",
@@ -36,7 +37,8 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        // http://idangero.us/swiper/get-started/
+        exclude: /node_modules\/(?!(dom7|ssr-window|swiper)\/).*/,
         use: {
           loader: "babel-loader"
         }
@@ -57,6 +59,10 @@ module.exports = {
       {
         test: require.resolve(__dirname + "/static/js/publisher/publisher.js"),
         use: ["expose-loader?snapcraft.publisher", "babel-loader"]
+      },
+      {
+        test: require.resolve(__dirname + "/static/js/public/public.js"),
+        use: ["expose-loader?snapcraft.public", "babel-loader"]
       }
     ]
   },
