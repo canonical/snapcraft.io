@@ -5,6 +5,7 @@
 - hot module reloading
 - don't export globals (bundle to read data from template) https://github.com/webpack/webpack/issues/2683#issuecomment-228181205
 - once rollup is gone update to babel-loader@8 and @babel/core, etc
+- publisher bundle is big (webpack warning) - try to chunk it down
 */
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
@@ -21,7 +22,8 @@ const plugins = production
 
 module.exports = {
   entry: {
-    release: "./static/js/publisher/release.js"
+    release: "./static/js/publisher/release.js",
+    publisher: "./static/js/publisher/publisher.js"
   },
   output: {
     filename: "[name].js",
@@ -40,19 +42,16 @@ module.exports = {
       },
       // TODO:
       // we should get rid of using globals making expose-loader unnecessary
+
+      // loaders are evaluated from bottom to top (right to left)
+      // so first transpile via babel, then expose as global
       {
         test: require.resolve(__dirname + "/static/js/publisher/release.js"),
-        use: [
-          // loaders are evaluated from bottom to top
-          // so first transpile via babel, then expose as global
-          {
-            loader: "expose-loader",
-            options: "snapcraft.release"
-          },
-          {
-            loader: "babel-loader"
-          }
-        ]
+        use: ["expose-loader?snapcraft.release", "babel-loader"]
+      },
+      {
+        test: require.resolve(__dirname + "/static/js/publisher/publisher.js"),
+        use: ["expose-loader?snapcraft.publisher", "babel-loader"]
       }
     ]
   },
