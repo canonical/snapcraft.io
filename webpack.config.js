@@ -1,13 +1,24 @@
 /* eslint-env node */
 
 /* TODO:
-- dev vs production env
-- uglify
 - watch
 - hot module reloading
 - don't export globals (bundle to read data from template) https://github.com/webpack/webpack/issues/2683#issuecomment-228181205
 - once rollup is gone update to babel-loader@8 and @babel/core, etc
 */
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+
+const production = process.env.ENVIRONMENT !== "devel";
+
+// turn on uglify plygin on production
+const plugins = production
+  ? [
+      new UglifyJsPlugin({
+        sourceMap: true
+      })
+    ]
+  : [];
+
 module.exports = {
   entry: {
     release: "./static/js/publisher/release.js"
@@ -16,8 +27,8 @@ module.exports = {
     filename: "[name].js",
     path: __dirname + "/static/js/dist"
   },
-  mode: "production",
-  devtool: "source-map",
+  mode: production ? "production" : "development",
+  devtool: production ? "source-map" : "inline-source-map",
   module: {
     rules: [
       {
@@ -45,10 +56,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    // TODO: uglify on production
-    // new UglifyJsPlugin({
-    //   sourceMap: true
-    // }),
-  ]
+  plugins: plugins
 };
