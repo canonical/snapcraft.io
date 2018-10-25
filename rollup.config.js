@@ -8,25 +8,6 @@ const production = process.env.ENVIRONMENT !== "devel";
 
 export default [
   {
-    input: "static/js/base/base.js",
-    plugins: [
-      nodeResolve({
-        jsnext: true
-      }),
-      babel({
-        exclude: "node_modules/**",
-        plugins: ["external-helpers"]
-      }),
-      production && uglify()
-    ],
-    output: {
-      file: "static/js/dist/base.js",
-      format: "iife",
-      name: "snapcraft.base",
-      sourcemap: true
-    }
-  },
-  {
     input: "static/js/public/public.js",
     plugins: [
       nodeResolve({

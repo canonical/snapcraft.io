@@ -22,6 +22,7 @@ const plugins = production
 
 module.exports = {
   entry: {
+    base: "./static/js/base/base.js",
     release: "./static/js/publisher/release.js",
     publisher: "./static/js/publisher/publisher.js"
   },
@@ -45,6 +46,10 @@ module.exports = {
 
       // loaders are evaluated from bottom to top (right to left)
       // so first transpile via babel, then expose as global
+      {
+        test: require.resolve(__dirname + "/static/js/base/base.js"),
+        use: ["expose-loader?snapcraft.base", "babel-loader"]
+      },
       {
         test: require.resolve(__dirname + "/static/js/publisher/release.js"),
         use: ["expose-loader?snapcraft.release", "babel-loader"]
