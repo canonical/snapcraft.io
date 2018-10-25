@@ -97,53 +97,5 @@ export default [
       sourcemap: true
     },
     context: "window" // This is set for whatwg-fetch to work
-  },
-  {
-    input: "static/js/publisher/release.js",
-    plugins: [
-      nodeResolve({
-        jsnext: true
-      }),
-      babel({
-        exclude: "node_modules/**",
-        plugins: ["external-helpers"]
-      }),
-      // https://github.com/rollup/rollup-plugin-commonjs/issues/200
-      commonjs({
-        exclude: "node_modules/process-es6/**",
-        include: [
-          "node_modules/create-react-class/**",
-          "node_modules/fbjs/**",
-          "node_modules/object-assign/**",
-          "node_modules/react/**",
-          "node_modules/react-dom/**",
-          "node_modules/prop-types/**",
-          "node_modules/vanilla-framework-react/**",
-          "node_modules/date-fns/**"
-        ],
-        namedExports: {
-          "node_modules/react/index.js": [
-            "Children",
-            "Component",
-            "Fragment",
-            "PropTypes",
-            "createElement"
-          ],
-          "node_modules/react-dom/index.js": ["render"]
-        }
-      }),
-      // needed for React
-      // https://github.com/rollup/rollup/issues/487
-      replace({
-        "process.env.NODE_ENV": JSON.stringify("production")
-      }),
-      production && uglify()
-    ],
-    output: {
-      file: "static/js/dist/release.js",
-      format: "iife",
-      name: "snapcraft.release",
-      sourcemap: true
-    }
   }
 ];
