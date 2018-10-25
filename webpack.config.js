@@ -1,7 +1,6 @@
 /* eslint-env node */
 
 /* TODO:
-- watch
 - hot module reloading
 - don't export globals (bundle to read data from template) https://github.com/webpack/webpack/issues/2683#issuecomment-228181205
 - once rollup is gone update to babel-loader@8 and @babel/core, etc
@@ -32,7 +31,7 @@ module.exports = {
     path: __dirname + "/static/js/dist"
   },
   mode: production ? "production" : "development",
-  devtool: production ? "source-map" : "inline-source-map",
+  devtool: production ? "source-map" : "eval-source-map",
   module: {
     rules: [
       {
