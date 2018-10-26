@@ -1,15 +1,10 @@
 /* eslint-env node */
 
-/* TODO:
-- hot module reloading
-- don't export globals (bundle to read data from template) https://github.com/webpack/webpack/issues/2683#issuecomment-228181205
-- publisher bundle is big (webpack warning) - try to chunk it down
-*/
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const production = process.env.ENVIRONMENT !== "devel";
 
-// turn on uglify plygin on production
+// turn on uglify plugin on production
 const plugins = production
   ? [
       new UglifyJsPlugin({
@@ -22,8 +17,11 @@ module.exports = {
   entry: {
     base: "./static/js/base/base.js",
     release: "./static/js/publisher/release.js",
-    publisher: "./static/js/publisher/publisher.js",
-    public: "./static/js/public/public.js"
+    public: "./static/js/public/public.js",
+    // TODO:
+    // publisher bundle is big (webpack warning) - try to chunk it down
+    // https://github.com/canonical-websites/snapcraft.io/issues/1246
+    publisher: "./static/js/publisher/publisher.js"
   },
   output: {
     filename: "[name].js",
@@ -43,6 +41,7 @@ module.exports = {
       },
       // TODO:
       // we should get rid of using globals making expose-loader unnecessary
+      // https://github.com/canonical-websites/snapcraft.io/issues/1245
 
       // loaders are evaluated from bottom to top (right to left)
       // so first transpile via babel, then expose as global
