@@ -3,7 +3,6 @@
 /* TODO:
 - hot module reloading
 - don't export globals (bundle to read data from template) https://github.com/webpack/webpack/issues/2683#issuecomment-228181205
-- once rollup is gone update to babel-loader@8 and @babel/core, etc
 - publisher bundle is big (webpack warning) - try to chunk it down
 */
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
