@@ -101,7 +101,7 @@ export default class RevisionsList extends Component {
 }
 
 RevisionsList.propTypes = {
-  revisions: PropTypes.object.isRequired,
+  revisions: PropTypes.array.isRequired,
   selectedRevisions: PropTypes.array.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   selectRevision: PropTypes.func.isRequired

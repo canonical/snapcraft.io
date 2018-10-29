@@ -422,7 +422,7 @@ export default class RevisionsTable extends Component {
 RevisionsTable.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
-  pendingCloses: PropTypes.object.isRequired,
+  pendingCloses: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
