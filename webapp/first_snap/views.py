@@ -2,6 +2,8 @@ import os
 import flask
 from ruamel.yaml import YAML
 
+from webapp.first_snap import logic
+
 yaml = YAML(typ="safe")
 
 first_snap = flask.Blueprint(
@@ -26,6 +28,11 @@ def get_file(file):
 
 def directory_exists(file):
     return os.path.isdir(os.path.join(flask.current_app.root_path, file))
+
+
+@first_snap.route("/")
+def get_pick_language():
+    return flask.render_template("first-snap/language.html")
 
 
 @first_snap.route("/<language>")
@@ -93,10 +100,21 @@ def get_test(language, operating_system):
     if not steps or operating_system_only not in steps:
         return flask.abort(404)
 
+    converted_steps = []
+
+    for step in steps[operating_system_only]:
+        action = logic.convert_md(step["action"])
+        converted_steps.append(
+            {
+                "action": action,
+                "command": step["command"] if "command" in step else None,
+            }
+        )
+
     context = {
         "language": language,
         "os": operating_system,
-        "steps": steps[operating_system_only],
+        "steps": converted_steps,
     }
 
     return flask.render_template("first-snap/test.html", **context)

@@ -7,17 +7,21 @@
 
     <div class="row">
       <div class="col-8">
-        <ol class="p-list-step">
+        <ol class="p-list-step has-margin">
           {% for step in steps %}
             <li class="p-list-step__item">
               <h4 class="p-list-step__title">
                 <span class="p-list-step__bullet">{{ loop.index }}</span>
-                {{ step.action }}
+                {{ step.action|safe }}
               </h4>
               {% if step.command %}
                 {% set snippet_value = step.command %}
                 {% set snippet_id = loop.index %}
-                {% include "/partials/_code-snippet.html" %}
+                {% if snippet_value.count('\n') == 0 %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% else %}
+                  {% include "/partials/_code-snippet-multi.html" %}
+                {% endif %}
               {% endif %}
             </li>
           {% endfor %}

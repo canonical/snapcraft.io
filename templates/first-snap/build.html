@@ -17,7 +17,11 @@
               {% if step.command %}
                 {% set snippet_value = step.command %}
                 {% set snippet_id = loop.index %}
-                {% include "/partials/_code-snippet.html" %}
+                {% if snippet_value.count('\n') == 0 %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% else %}
+                  {% include "/partials/_code-snippet-multi.html" %}
+                {% endif %}
               {% endif %}
             </li>
           {% endfor %}

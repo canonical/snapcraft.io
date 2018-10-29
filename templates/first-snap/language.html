@@ -1,0 +1,24 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block content %}
+<div id="main-content" class="p-strip">
+  {% set fsf_step = "language" %}
+
+  <div class="row">
+    <div class="col-12">
+      <h3 class="p-heading--four">What language or framework does your app use?</h3>
+    </div>
+  </div>
+
+  {% include "partials/fsf_language.html" %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ static_url('js/dist/public.js') }}"></script>
+<script>
+  Raven.context(function () {
+    snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+  });
+</script>
+{% endblock %}
