@@ -8,7 +8,6 @@ import flask
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
-import prometheus_flask_exporter
 import talisker.flask
 import webapp.helpers as helpers
 from webapp.blog.views import blog
@@ -39,14 +38,6 @@ def create_app(testing=False):
 
     if not testing:
         talisker.flask.register(app)
-
-        prometheus_flask_exporter.PrometheusMetrics(
-            app,
-            group_by_endpoint=True,
-            buckets=[0.25, 0.5, 0.75, 1, 2],
-            path=None,
-        )
-
         init_extensions(app)
 
     app.config.from_object("webapp.configs." + app.config["WEBAPP"])
