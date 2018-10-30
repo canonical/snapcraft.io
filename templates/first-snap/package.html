@@ -1,5 +1,7 @@
 {% extends webapp_config['LAYOUT'] %}
 
+{% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
+
 {% block content %}
   <div id="main-content" class="p-strip">
     {% set fsf_step = "package" %}
@@ -40,7 +42,7 @@
               <p>Begin the file with basic metadata for the app</p>
               {% set snippet_value = steps.metadata %}
               {% set snippet_id = "metadata" %}
-              {% include "/partials/_code-copyable.html" %}
+              {% include "/partials/_code.html" %}
               <p>The summary must by 79 characters or less.</p>
               <pre class="u-no-margin--bottom"><code>description: ></code></pre>
               <p>This indicates that the description may extend to multiple lines.</p>
@@ -65,7 +67,7 @@
             <p class="p-list-step__content">Add an "parts:" section to specify the language and include the source code for the app</p>
             {% set snippet_value = steps.parts %}
             {% set snippet_id = "parts" %}
-            {% include "/partials/_code-copyable.html" %}
+            {% include "/partials/_code.html" %}
           </li>
           <li class="p-list-step__item">
             <h4 class="p-list-step__title">
@@ -75,7 +77,7 @@
             <p class="p-list-step__content">Add an "apps:" section to specify the runnable command</p>
             {% set snippet_value = steps.apps %}
             {% set snippet_id = "apps" %}
-            {% include "/partials/_code-copyable.html" %}
+            {% include "/partials/_code.html" %}
           </li>
         </ol>
       </div>
