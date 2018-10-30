@@ -47,7 +47,9 @@ export default class RevisionsList extends Component {
             <DevmodeIcon revision={revision} showTooltip={true} />
           </td>
           <td>{revision.version}</td>
-          <td>{revision.architectures.join(", ")}</td>
+          {this.props.showArchitectures && (
+            <td>{revision.architectures.join(", ")}</td>
+          )}
           {this.props.showChannels && <td>{revision.channels.join(", ")}</td>}
           <td className="u-align--right">
             <span
@@ -72,7 +74,7 @@ export default class RevisionsList extends Component {
   render() {
     return (
       <Fragment>
-        <h4>Revisions available</h4>
+        <h4>{this.props.title ? this.props.title : "Revisions available"}</h4>
         <table className="p-revisions-list">
           <thead>
             <tr>
@@ -83,9 +85,11 @@ export default class RevisionsList extends Component {
               <th width="23%" scope="col">
                 Version
               </th>
-              <th width="12%" scope="col">
-                Architecture
-              </th>
+              {this.props.showArchitectures && (
+                <th width="12%" scope="col">
+                  Architecture
+                </th>
+              )}
               {this.props.showChannels && (
                 <th width="30%" scope="col">
                   Channels
@@ -110,5 +114,7 @@ RevisionsList.propTypes = {
   selectedRevisions: PropTypes.array.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   selectRevision: PropTypes.func.isRequired,
-  showChannels: PropTypes.bool
+  showChannels: PropTypes.bool,
+  showArchitectures: PropTypes.bool,
+  title: PropTypes.string
 };

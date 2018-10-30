@@ -37,13 +37,24 @@ export default class RevisionsPopover extends Component {
     } = this.props;
 
     const style = { top, left };
+
+    let filteredRevisions = revisions;
+    let title = "Latest revisions";
+
+    if (filters.arch) {
+      filteredRevisions = filteredRevisions.filter(revision => {
+        return revision.architectures.includes(filters.arch);
+      });
+
+      title = `${title} in ${filters.arch}`;
+    }
+
     return (
       <div className="p-revisions-popover" style={style}>
-        <h4>Latest revisions...</h4>
-        <p>{JSON.stringify(filters)}</p>
         <RevisionsList
+          title={title}
           idPrefix="popover"
-          revisions={revisions}
+          revisions={filteredRevisions}
           releasedChannels={releasedChannels}
           selectedRevisions={selectedRevisions}
           selectRevision={selectRevision}

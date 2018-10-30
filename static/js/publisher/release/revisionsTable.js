@@ -37,11 +37,11 @@ export default class RevisionsTable extends Component {
     this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
-  handleReleaseCellClick(event) {
+  handleReleaseCellClick(arch, event) {
     const cell = event.currentTarget;
     const top = cell.offsetTop + cell.clientHeight;
     const left = cell.offsetLeft;
-    this.props.openRevisionsPopover(top, left, { test: "test" });
+    this.props.openRevisionsPopover(top, left, { arch });
 
     event.preventDefault();
     event.stopPropagation();
@@ -73,12 +73,15 @@ export default class RevisionsTable extends Component {
     const className = `p-release-table__cell ${
       isUnassigned ? "is-clickable" : ""
     }`;
+
     return (
       <div
         className={className}
         style={{ position: "relative" }}
         key={`${channel}/${arch}`}
-        onClick={isUnassigned ? this.handleReleaseCellClick.bind(this) : null}
+        onClick={
+          isUnassigned ? this.handleReleaseCellClick.bind(this, arch) : null
+        }
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">

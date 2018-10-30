@@ -536,6 +536,7 @@ export default class ReleasesController extends Component {
           selectedRevisions={this.state.selectedRevisions}
           selectRevision={this.selectRevision.bind(this)}
           showChannels={true}
+          showArchitectures={true}
         />
         {this.state.revisionsPopover.isOpen && (
           <RevisionsPopover
