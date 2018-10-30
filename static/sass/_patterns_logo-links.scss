@@ -61,6 +61,24 @@
     &.is-open:focus {
       outline: none;
     }
+
+    &.is-disabled {
+      opacity: 0.6;
+
+      &::after {
+        content: 'Coming soon';
+        display: block;
+        font-size: .875rem;
+      }
+
+      &:hover {
+        border-color: transparent;
+      }
+
+      img {
+        filter: grayscale(1);
+      }
+    }
   }
 
   .p-logo-image {
