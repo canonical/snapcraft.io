@@ -4,6 +4,7 @@ import "whatwg-fetch";
 
 import RevisionsTable from "./revisionsTable";
 import RevisionsList from "./revisionsList";
+import RevisionsPopover from "./revisionsPopover";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
@@ -34,7 +35,13 @@ export default class ReleasesController extends Component {
       pendingReleases: {},
       pendingCloses: [],
       // list of selected revisions, to know which ones to render selected
-      selectedRevisions: []
+      selectedRevisions: [],
+      revisionsPopover: {
+        isOpen: false,
+        top: 0,
+        left: 0,
+        filters: null
+      }
     };
   }
 
@@ -451,6 +458,25 @@ export default class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
+  openRevisionsPopover(top, left, filters) {
+    this.setState({
+      revisionsPopover: {
+        isOpen: true,
+        top,
+        left,
+        filters
+      }
+    });
+  }
+
+  closeRevisionsPopover() {
+    this.setState({
+      revisionsPopover: {
+        isOpen: false
+      }
+    });
+  }
+
   render() {
     const { tracks } = this.props;
     const { archs, releasedChannels } = this.state;
@@ -501,13 +527,26 @@ export default class ReleasesController extends Component {
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
+          openRevisionsPopover={this.openRevisionsPopover.bind(this)}
         />
         <RevisionsList
+          idPrefix="main"
           revisions={this.props.revisions}
           releasedChannels={releasedChannels}
           selectedRevisions={this.state.selectedRevisions}
           selectRevision={this.selectRevision.bind(this)}
+          showChannels={true}
         />
+        {this.state.revisionsPopover.isOpen && (
+          <RevisionsPopover
+            {...this.state.revisionsPopover}
+            closeRevisionsPopover={this.closeRevisionsPopover.bind(this)}
+            revisions={this.props.revisions}
+            releasedChannels={releasedChannels}
+            selectedRevisions={this.state.selectedRevisions}
+            selectRevision={this.selectRevision.bind(this)}
+          />
+        )}
       </Fragment>
     );
   }

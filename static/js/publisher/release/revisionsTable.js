@@ -37,6 +37,16 @@ export default class RevisionsTable extends Component {
     this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
+  handleReleaseCellClick(event) {
+    const cell = event.currentTarget;
+    const top = cell.offsetTop + cell.clientHeight;
+    const left = cell.offsetLeft;
+    this.props.openRevisionsPopover(top, left, { test: "test" });
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
     const channel = getChannelName(track, risk);
 
@@ -58,11 +68,17 @@ export default class RevisionsTable extends Component {
     const isPending = hasPendingRelease || isChannelClosed;
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
+    const isUnassigned = risk === UNASSIGNED;
+
+    const className = `p-release-table__cell ${
+      isUnassigned ? "is-clickable" : ""
+    }`;
     return (
       <div
-        className="p-release-table__cell"
+        className={className}
         style={{ position: "relative" }}
         key={`${channel}/${arch}`}
+        onClick={isUnassigned ? this.handleReleaseCellClick.bind(this) : null}
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
@@ -86,7 +102,15 @@ export default class RevisionsTable extends Component {
                 </span>
               ) : (
                 <span className={!isPending ? "p-revision-info--empty" : ""}>
-                  {trackingChannel ? "↑" : "–"}
+                  {trackingChannel ? (
+                    "↑"
+                  ) : isUnassigned ? (
+                    <span>
+                      <i className="p-icon--plus" /> Add revision
+                    </span>
+                  ) : (
+                    "–"
+                  )}
                 </span>
               )}
             </span>
@@ -190,15 +214,15 @@ export default class RevisionsTable extends Component {
     return RISKS.map(risk => {
       const channel = getChannelName(track, risk);
 
-      // don't show unassigned revisions until some are selected from the table
-      // TODO: always show (when we can click on it)
-      if (
-        (risk === UNASSIGNED && !releasedChannels[channel]) ||
-        (releasedChannels[channel] &&
-          Object.keys(releasedChannels[channel]).length === 0)
-      ) {
-        return null;
-      }
+      // // don't show unassigned revisions until some are selected from the table
+      // // TODO: always show (when we can click on it)
+      // if (
+      //   (risk === UNASSIGNED && !releasedChannels[channel]) ||
+      //   (releasedChannels[channel] &&
+      //     Object.keys(releasedChannels[channel]).length === 0)
+      // ) {
+      //   return null;
+      // }
 
       let canBePromoted = true;
       let canBeClosed = true;
@@ -435,5 +459,6 @@ RevisionsTable.propTypes = {
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
-  getTrackingChannel: PropTypes.func.isRequired
+  getTrackingChannel: PropTypes.func.isRequired,
+  openRevisionsPopover: PropTypes.func.isRequired
 };

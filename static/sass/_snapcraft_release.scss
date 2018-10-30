@@ -7,6 +7,7 @@
 
   .p-release-table__cell {
     background: $color-light;
+    border: 1px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
     margin-left: $sph-inter;
@@ -14,6 +15,18 @@
     min-width: 100px;
     padding: $spv-intra $sph-intra;
     position: relative;
+
+    &.is-clickable {
+      @include vf-animation (#{background-color, border-color}, fast, in);
+      background-color: $color-x-light;
+      border-color: $color-mid-light;
+      border-radius: 2px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-light;
+      }
+    }
   }
 
   .p-release-table__arch {
@@ -135,5 +148,19 @@
     display: flex;
     flex-shrink: 0;
     width: 22.53423%; // col-3
+  }
+
+
+  .p-revisions-popover {
+    background: $color-x-light;
+    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
+    max-width: 500px;
+    padding: 1rem;
+    position: absolute;
+    z-index: 100;
+  }
+
+  .p-release-table__cell .p-tooltip__message {
+    z-index: 101;
   }
 }

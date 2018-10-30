@@ -31,12 +31,14 @@ export default class RevisionsList extends Component {
             <input
               type="checkbox"
               checked={isSelected}
-              id={`revision-check-${revision.revision}`}
+              id={`${this.props.idPrefix}-revision-check-${revision.revision}`}
               onChange={this.revisionSelectChange.bind(this, revision)}
             />
             <label
               className="u-no-margin--bottom"
-              htmlFor={`revision-check-${revision.revision}`}
+              htmlFor={`${this.props.idPrefix}-revision-check-${
+                revision.revision
+              }`}
             >
               {revision.revision}
             </label>
@@ -46,7 +48,7 @@ export default class RevisionsList extends Component {
           </td>
           <td>{revision.version}</td>
           <td>{revision.architectures.join(", ")}</td>
-          <td>{revision.channels.join(", ")}</td>
+          {this.props.showChannels && <td>{revision.channels.join(", ")}</td>}
           <td className="u-align--right">
             <span
               className="p-tooltip p-tooltip--btm-center"
@@ -84,9 +86,11 @@ export default class RevisionsList extends Component {
               <th width="12%" scope="col">
                 Architecture
               </th>
-              <th width="30%" scope="col">
-                Channels
-              </th>
+              {this.props.showChannels && (
+                <th width="30%" scope="col">
+                  Channels
+                </th>
+              )}
               <th width="15%" scope="col" className="u-align--right">
                 Submission date
               </th>
@@ -101,8 +105,10 @@ export default class RevisionsList extends Component {
 }
 
 RevisionsList.propTypes = {
+  idPrefix: PropTypes.string,
   revisions: PropTypes.array.isRequired,
   selectedRevisions: PropTypes.array.isRequired,
   releasedChannels: PropTypes.object.isRequired,
-  selectRevision: PropTypes.func.isRequired
+  selectRevision: PropTypes.func.isRequired,
+  showChannels: PropTypes.bool
 };
