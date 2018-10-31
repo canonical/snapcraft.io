@@ -71,10 +71,25 @@ export default class RevisionsList extends Component {
     });
   }
 
+  onCloseClick(event) {
+    event.preventDefault();
+    this.props.closeRevisionsPopover();
+  }
+
   render() {
     return (
       <Fragment>
-        <h4>{this.props.title ? this.props.title : "Revisions available"}</h4>
+        <div>
+          <h4 className="u-float--left">
+            {this.props.title ? this.props.title : "Revisions available"}
+          </h4>
+          <a
+            style={{ marginTop: "0.5rem" }}
+            href="#"
+            onClick={this.onCloseClick.bind(this)}
+            className="p-icon--close u-float--right"
+          />
+        </div>
         <table className="p-revisions-list">
           <thead>
             <tr>
@@ -107,5 +122,6 @@ RevisionsList.propTypes = {
   selectRevision: PropTypes.func.isRequired,
   showChannels: PropTypes.bool,
   showArchitectures: PropTypes.bool,
-  title: PropTypes.string
+  title: PropTypes.string,
+  closeRevisionsPopover: PropTypes.func.isRequired
 };

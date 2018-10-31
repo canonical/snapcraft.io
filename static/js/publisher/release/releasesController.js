@@ -41,7 +41,8 @@ export default class ReleasesController extends Component {
         top: 0,
         left: 0,
         filters: null
-      }
+      },
+      isRevisionsListVisible: false
     };
   }
 
@@ -477,6 +478,17 @@ export default class ReleasesController extends Component {
     });
   }
 
+  toggleRevisionsList(event) {
+    event.preventDefault();
+
+    this.setState({
+      revisionsPopover: {
+        isOpen: true,
+        filter: null
+      }
+    });
+  }
+
   render() {
     const { tracks } = this.props;
     const { archs, releasedChannels } = this.state;
@@ -486,6 +498,20 @@ export default class ReleasesController extends Component {
         return Object.values(archReleases).some(isInDevmode);
       }
     );
+
+    let filteredRevisions = this.props.revisions;
+    let title = null;
+    let { filters } = this.state.revisionsPopover;
+
+    if (filters && filters.arch) {
+      title = "Latest revisions";
+
+      filteredRevisions = filteredRevisions.filter(revision => {
+        return revision.architectures.includes(filters.arch);
+      });
+
+      title = `${title} in ${filters.arch}`;
+    }
 
     return (
       <Fragment>
@@ -529,16 +555,25 @@ export default class ReleasesController extends Component {
           getTrackingChannel={this.getTrackingChannel.bind(this)}
           openRevisionsPopover={this.openRevisionsPopover.bind(this)}
         />
-        <RevisionsList
-          idPrefix="main"
-          revisions={this.props.revisions}
-          releasedChannels={releasedChannels}
-          selectedRevisions={this.state.selectedRevisions}
-          selectRevision={this.selectRevision.bind(this)}
-          showChannels={true}
-          showArchitectures={true}
-        />
+        <div style={{ textAlign: "right" }}>
+          <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
+            Show available revisions ({this.props.revisions.length})
+          </a>
+        </div>
         {this.state.revisionsPopover.isOpen && (
+          <RevisionsList
+            title={title}
+            idPrefix="main"
+            revisions={filteredRevisions}
+            releasedChannels={releasedChannels}
+            selectedRevisions={this.state.selectedRevisions}
+            selectRevision={this.selectRevision.bind(this)}
+            showChannels={true}
+            showArchitectures={true}
+            closeRevisionsPopover={this.closeRevisionsPopover.bind(this)}
+          />
+        )}
+        {false && (
           <RevisionsPopover
             {...this.state.revisionsPopover}
             closeRevisionsPopover={this.closeRevisionsPopover.bind(this)}
