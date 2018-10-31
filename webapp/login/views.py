@@ -5,7 +5,8 @@ import flask
 from flask_openid import OpenID
 from webapp import authentication
 from webapp.api import dashboard
-from webapp.api.exceptions import ApiError, ApiCircuitBreaker, ApiResponseError
+from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
+from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 
 login = flask.Blueprint(
@@ -22,6 +23,7 @@ open_id = OpenID(
 
 
 @login.route("/login", methods=["GET", "POST"])
+@csrf.exempt
 @open_id.loginhandler
 def login_handler():
     if authentication.is_authenticated(flask.session):
