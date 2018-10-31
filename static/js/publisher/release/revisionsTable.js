@@ -135,36 +135,40 @@ export default class RevisionsTable extends Component {
             )}
           </span>
 
-          <span className="p-tooltip__message">
-            {thisPreviousRevision
-              ? `${thisPreviousRevision.version} (${
-                  thisPreviousRevision.revision
-                })`
-              : hasPendingRelease || !trackingChannel
-                ? "None"
-                : `Tracking channel ${trackingChannel}`}
-            {hasPendingRelease && (
-              <span>
-                {" "}
-                &rarr; {`${thisRevision.version} (${thisRevision.revision})`}
-              </span>
-            )}
-            {isChannelClosed && (
-              <span>
-                {" "}
-                &rarr; <em>close channel</em>
-              </span>
-            )}
-            {thisPreviousRevision &&
-              isInDevmode(thisPreviousRevision) && (
-                <Fragment>
-                  <br />
-                  {thisPreviousRevision.confinement === "devmode"
-                    ? "confinement: devmode"
-                    : "grade: devel"}
-                </Fragment>
+          {(hasPendingRelease ||
+            isChannelClosed ||
+            (thisPreviousRevision && isInDevmode(thisPreviousRevision))) && (
+            <span className="p-tooltip__message">
+              {thisPreviousRevision
+                ? `${thisPreviousRevision.version} (${
+                    thisPreviousRevision.revision
+                  })`
+                : hasPendingRelease || !trackingChannel
+                  ? "None"
+                  : `Tracking channel ${trackingChannel}`}
+              {hasPendingRelease && (
+                <span>
+                  {" "}
+                  &rarr; {`${thisRevision.version} (${thisRevision.revision})`}
+                </span>
               )}
-          </span>
+              {isChannelClosed && (
+                <span>
+                  {" "}
+                  &rarr; <em>close channel</em>
+                </span>
+              )}
+              {thisPreviousRevision &&
+                isInDevmode(thisPreviousRevision) && (
+                  <Fragment>
+                    <br />
+                    {thisPreviousRevision.confinement === "devmode"
+                      ? "confinement: devmode"
+                      : "grade: devel"}
+                  </Fragment>
+                )}
+            </span>
+          )}
         </span>
         {hasPendingRelease && (
           <div className="p-release-buttons">
