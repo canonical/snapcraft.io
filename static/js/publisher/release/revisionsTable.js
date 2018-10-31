@@ -282,7 +282,10 @@ export default class RevisionsTable extends Component {
       }
 
       return (
-        <div className="p-release-channel-row" key={channel}>
+        <div
+          className={`p-release-channel-row p-release-channel-row--${risk}`}
+          key={channel}
+        >
           <div className="p-release-channel-row__channel">
             <span className="p-release-channel-row__promote">
               {canBePromoted && (

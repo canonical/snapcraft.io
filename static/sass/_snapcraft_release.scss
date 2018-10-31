@@ -1,5 +1,7 @@
 @mixin snapcraft-release {
   .p-release-table {
+    margin-bottom: 2 * $spv-inter--regular;
+
     th {
       text-transform: none;
     }
@@ -143,13 +145,16 @@
     margin-bottom: $spv-inter--regular;
   }
 
+  .p-release-channel-row--unassigned {
+    margin-top: 2 * $spv-inter--regular;
+  }
+
   .p-release-channel-row__channel {
     align-items: center;
     display: flex;
     flex-shrink: 0;
     width: 22.53423%; // col-3
   }
-
 
   .p-revisions-popover {
     background: $color-x-light;
