@@ -78,29 +78,20 @@ export default class RevisionsList extends Component {
         <table className="p-revisions-list">
           <thead>
             <tr>
-              <th className="col-has-checkbox" width="10%" scope="col">
+              <th className="col-has-checkbox" width="100px" scope="col">
                 Revision
               </th>
               <th width="20px" />
-              <th width="23%" scope="col">
-                Version
-              </th>
+              <th scope="col">Version</th>
               {this.props.showArchitectures && (
-                <th width="12%" scope="col">
-                  Architecture
-                </th>
+                <th scope="col">Architecture</th>
               )}
-              {this.props.showChannels && (
-                <th width="30%" scope="col">
-                  Channels
-                </th>
-              )}
-              <th width="15%" scope="col" className="u-align--right">
+              {this.props.showChannels && <th scope="col">Channels</th>}
+              <th scope="col" className="u-align--right">
                 Submission date
               </th>
             </tr>
           </thead>
-
           <tbody>{this.renderRows(this.props.revisions)}</tbody>
         </table>
       </Fragment>
