@@ -900,3 +900,31 @@ def get_publicise(snap_name):
     }
 
     return flask.render_template("publisher/publicise.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/image", methods=["GET"])
+@login_required
+def get_snap_image(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    url = flask.request.args.get("url")
+
+    images = []
+    base64_image = None
+
+    for image in snap_details["media"]:
+        if image["type"] == "icon" or image["type"] == "screenshot":
+            images.append(image["url"])
+
+    if url in images:
+        base64_image = logic.encode_image(url)
+
+    return flask.jsonify({"image": base64_image})

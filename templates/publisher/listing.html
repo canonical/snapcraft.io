@@ -12,7 +12,7 @@
     <form id="market-form" method="POST" enctype='multipart/form-data'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="hidden" name="snap_id" value="{{ snap_id }}" />
-      <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
+      <input type="file" name="_icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
 
       <div class="snapcraft-p-sticky">
         <div class="row">
@@ -92,13 +92,15 @@
         <div class="row" data-validation-name="icon">
           <div class="col-2">
             <div class="p-media-object__image--large p-editable-icon">
-              <img id="snap_icon_image"
-                {% if icon_url %}
+              {% if icon_url %}
+                <img id="snap_icon_image"
                   src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                {% else %}
-                  src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
-                {% endif %}
-              />
+                />
+              {% else %}
+                <img id="snap_icon_image"
+                   src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
+                />
+              {% endif %}
             </div>
           </div>
           <div class="col-8">

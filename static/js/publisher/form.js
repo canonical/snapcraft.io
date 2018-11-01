@@ -3,6 +3,9 @@ import { updateState, diffState } from "./state";
 import { publicMetrics } from "./market/publicMetrics";
 import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
+import { initImageCropper } from "../components/ImageCropper";
+
+import "whatwg-fetch";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -17,29 +20,57 @@ const IS_CHROMIUM =
   typeof window.chrome !== "undefined" &&
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
-function initSnapIconEdit(iconElId, iconInputId, state) {
+function initSnapIconEdit(iconElId, iconInputId, state, updateFormState) {
   const snapIconInput = document.getElementById(iconInputId);
   const snapIconEl = document.getElementById(iconElId);
 
-  snapIconInput.addEventListener("change", function() {
-    const iconFile = this.files[0];
-    snapIconEl.src = URL.createObjectURL(iconFile);
+  function openImage() {
+    const imageFile = this.files[0];
+
+    return URL.createObjectURL(imageFile);
+  }
+
+  function updateImage(imageBlob) {
+    const url = URL.createObjectURL(imageBlob);
 
     // remove existing icon from state object
     const images = state.images.filter(image => image.type !== "icon");
     // replace it with a new one
     images.unshift({
-      url: URL.createObjectURL(iconFile),
-      file: iconFile,
-      name: iconFile.name,
+      url: url,
+      file: imageBlob,
+      name: imageBlob.name || "icon",
       status: "new"
     });
 
+    snapIconEl.src = url;
+
     updateState(state, { images });
-  });
+    updateFormState();
+  }
 
   snapIconEl.addEventListener("click", function() {
-    snapIconInput.click();
+    // snapIconInput.click();
+    let imageUrl = snapIconEl.src;
+    const holder = document.createElement("div");
+    holder.classList.add("js-imageCropper-container");
+    snapIconEl.parentNode.appendChild(holder);
+
+    if (imageUrl.indexOf("snapcraft-default-snap-icon") > -1) {
+      imageUrl = null;
+    }
+
+    let snapName = window.location.href.split("/");
+    snapName = snapName[snapName.length - 2];
+
+    initImageCropper(
+      holder,
+      imageUrl,
+      snapIconInput,
+      openImage.bind(snapIconInput),
+      updateImage.bind(snapIconInput),
+      snapName
+    );
   });
 }
 
@@ -125,7 +156,12 @@ function initForm(config, initialState, errors) {
   formEl.appendChild(diffInput);
 
   if (config.snapIconImage && config.snapIconInput) {
-    initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
+    initSnapIconEdit(
+      config.snapIconImage,
+      config.snapIconInput,
+      state,
+      updateFormState
+    );
   }
 
   initFormNotification(config.form, config.formNotification);
@@ -251,14 +287,58 @@ function initForm(config, initialState, errors) {
       // make sure we don't warn user about leaving the page when submitting
       ignoreChangesOnUnload = true;
 
+      // Add the icon field
+      let formData = new FormData();
+
+      for (let i = 0; i < formEl.elements.length; i++) {
+        const element = formEl[i];
+        formData.append(element.name, element.value);
+      }
+
+      if (formData.get("_icon")) {
+        const icons = state.images.filter(
+          image => image.name === "icon" && image.status === "new"
+        );
+
+        if (icons.length > 0) {
+          // Get the last one, incase there are multiple updates
+          const icon = icons[icons.length - 1];
+          formData.append("icon", icon.file, icon.name);
+        }
+
+        formData.delete("_icon");
+      }
+
+      if (formData.get("screenshots")) {
+        const screenshots = state.images.filter(
+          image => image.type === "screenshot" && image.status === "new"
+        );
+
+        formData.delete("screenshots");
+
+        screenshots.forEach(screenshot => {
+          formData.append("screenshots", screenshot.file, screenshot.name);
+        });
+      }
+
+      // Post via ajax
+      fetch(window.location.href, {
+        method: "POST",
+        body: formData
+      })
+        .then(() => {
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+
       // disable button and show spinner when loading is long
       disableSubmit();
-      setTimeout(() => {
-        submitButton.classList.add("has-spinner");
-      }, 2000);
-    } else {
-      event.preventDefault();
+      submitButton.classList.add("has-spinner");
     }
+
+    event.preventDefault();
   });
 
   // client side validation

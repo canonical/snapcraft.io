@@ -206,3 +206,5 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
+
+@import 'react-image-crop/lib/ReactCrop.scss';

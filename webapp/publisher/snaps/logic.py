@@ -1,6 +1,8 @@
 import hashlib
 import datetime
 from json import dumps
+from urllib.request import urlopen
+import base64
 
 
 def get_snaps_account_info(account_info):
@@ -253,3 +255,10 @@ def invalid_field_errors(errors):
             other_errors.append(error)
 
     return field_errors, other_errors
+
+
+def encode_image(url):
+    file = urlopen(url).read()
+    return "".join(
+        ["data:image/png;base64,", base64.b64encode(file).decode("utf-8")]
+    )
