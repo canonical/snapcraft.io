@@ -19,5 +19,5 @@ parts: |
       source: .
 apps: |
   apps:
-    offlineimap:
-      command: bin/offlineimap
+    test-offlineimap-{name}:
+      command: bin/test-offlineimap-{name}
