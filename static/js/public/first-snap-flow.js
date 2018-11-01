@@ -1,39 +1,38 @@
-/* globals ClipboardJS */
+/* globals ClipboardJS, ga */
 
-import 'whatwg-fetch';
+import "whatwg-fetch";
 
 function install(language) {
-  const osPickers = document.querySelectorAll('.js-os-select');
-  const osWrappers = document.querySelectorAll('.js-os-wrapper');
+  const osPickers = document.querySelectorAll(".js-os-select");
+  const osWrappers = document.querySelectorAll(".js-os-wrapper");
 
   if (osPickers) {
-    osPickers.forEach(function (os) {
-      os.addEventListener('click', function (e) {
-        const osSelect = e.target.closest('.js-os-select');
+    osPickers.forEach(function(os) {
+      os.addEventListener("click", function(e) {
+        const osSelect = e.target.closest(".js-os-select");
         if (!osSelect) {
           return;
         }
 
         const selectedOs = osSelect.dataset.os;
 
-        osPickers.forEach(function (picker) {
-          picker.classList.remove('is-selected');
+        osPickers.forEach(function(picker) {
+          picker.classList.remove("is-selected");
         });
-        osSelect.classList.add('is-selected');
+        osSelect.classList.add("is-selected");
 
         if (osWrappers) {
-          osWrappers.forEach(function (wrapper) {
-            wrapper.classList.add('u-hide');
+          osWrappers.forEach(function(wrapper) {
+            wrapper.classList.add("u-hide");
           });
-
         }
-        const selectedEl = document.querySelector('.js-' + selectedOs);
+        const selectedEl = document.querySelector(".js-" + selectedOs);
         if (selectedEl) {
-          selectedEl.classList.remove('u-hide');
+          selectedEl.classList.remove("u-hide");
         }
 
-        if (!document.querySelector('.js-linux-manual')) {
-          const continueBtn = document.querySelector('.js-continue');
+        if (!document.querySelector(".js-linux-manual")) {
+          const continueBtn = document.querySelector(".js-continue");
           if (continueBtn) {
             continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
           }
@@ -44,60 +43,113 @@ function install(language) {
 
   function onChange(e) {
     const type = e.target.value;
-    const os = type.split('-')[0];
-    const selected = document.querySelector('.js-' + type);
-    const unselected = document.querySelector('[class*="js-' + os + '-"]:not(.js-' + type + ')');
+    const os = type.split("-")[0];
+    const selected = document.querySelector(".js-" + type);
+    const unselected = document.querySelector(
+      '[class*="js-' + os + '-"]:not(.js-' + type + ")"
+    );
 
     if (!selected && !unselected) {
       return;
     }
 
     if (osWrappers) {
-      osWrappers.forEach(function (wrapper) {
-        const rows = wrapper.querySelectorAll('.js-os-type');
+      osWrappers.forEach(function(wrapper) {
+        const rows = wrapper.querySelectorAll(".js-os-type");
         if (rows) {
-          rows.forEach(function (row) {
-            row.classList.add('u-hide');
+          rows.forEach(function(row) {
+            row.classList.add("u-hide");
           });
         }
       });
     }
 
-    selected.classList.remove('u-hide');
-    unselected.classList.add('u-hide');
+    selected.classList.remove("u-hide");
+    unselected.classList.add("u-hide");
 
-    const continueBtn = document.querySelector('.js-continue');
+    const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
       continueBtn.href = `/first-snap/${language}/${type}/package`;
     }
   }
 
-  document.addEventListener('change', onChange);
+  document.addEventListener("change", onChange);
 
-  if (typeof ClipboardJS !== 'undefined') {
-    new ClipboardJS('.js-clipboard-copy');
+  if (typeof ClipboardJS !== "undefined") {
+    new ClipboardJS(".js-clipboard-copy");
   }
 }
 
 function getSnapCount(cb) {
-  fetch('/snaps/api/snap-count').then(r => r.json())
+  fetch("/snaps/api/snap-count")
+    .then(r => r.json())
     .then(data => {
-      cb(data.count);
+      cb(data);
     });
+}
+
+function newArrayValue(arr1, arr2) {
+  let newArr;
+  let oldArr;
+  if (arr1.length === arr2.length) {
+    return false;
+  }
+
+  if (arr1.length > arr2.length) {
+    newArr = arr1;
+    oldArr = arr2;
+  } else {
+    newArr = arr2;
+    oldArr = arr1;
+  }
+
+  let newValues = [];
+
+  newArr.forEach(item => {
+    if (!oldArr.includes(item)) {
+      newValues.push(item);
+    }
+  });
+
+  return newValues;
 }
 
 function push() {
   let initialCount = null;
+  let initialSnaps = [];
   let timer;
   let ready = false;
 
   function getCount(cb) {
     clearTimeout(timer);
 
-    getSnapCount(count => {
+    getSnapCount(data => {
+      if (data.snaps.length !== initialSnaps.length) {
+        const newSnaps = newArrayValue(initialSnaps, data.snaps);
+        if (newSnaps.length > 0 && typeof ga !== "undefined") {
+          ga("gtm1.send", {
+            hitType: "event",
+            eventCategory: "First Snap Flow",
+            eventAction: "Snap pushed",
+            eventLabel: `${newSnaps.join(",")}`
+          });
+        }
+      }
       if (initialCount === null) {
-        initialCount = count;
-      } else if (count !== initialCount) {
+        initialCount = data.count;
+        initialSnaps = data.snaps;
+      } else if (data.count !== initialCount) {
+        const newSnaps = newArrayValue(initialSnaps, data.snaps);
+
+        if (newSnaps.length > 0 && typeof ga !== "undefined") {
+          ga("gtm1.send", {
+            hitType: "event",
+            eventCategory: "First Snap Flow",
+            eventAction: "Snap pushed",
+            eventLabel: `${newSnaps.join(",")}`
+          });
+        }
+
         ready = true;
         cb();
       }
@@ -109,12 +161,12 @@ function push() {
   }
 
   getCount(() => {
-    const continueBtn = document.querySelector('.js-continue');
+    const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
-      continueBtn.href = '/snaps';
-      continueBtn.classList.add('p-button--positive');
-      continueBtn.classList.remove('p-button--neutral');
-      continueBtn.innerHTML = 'Continue';
+      continueBtn.href = "/snaps";
+      continueBtn.classList.add("p-button--positive");
+      continueBtn.classList.remove("p-button--neutral");
+      continueBtn.innerHTML = "Continue";
     }
   });
 }

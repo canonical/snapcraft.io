@@ -839,6 +839,6 @@ def snap_count():
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
-    context = {"count": len(user_snaps)}
+    context = {"count": len(user_snaps), "snaps": list(user_snaps.keys())}
 
     return flask.jsonify(context)
