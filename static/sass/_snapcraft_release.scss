@@ -44,8 +44,7 @@
   }
 
   .p-icon-button {
-    padding-left: .5rem;
-    padding-right: .5rem;
+    padding: $spv-nudge - $px $sph-intra--condensed * 1.5 - ($px * 2);
 
     &:not(:last-of-type):not(:only-of-type) {
       margin-right: .25rem;
