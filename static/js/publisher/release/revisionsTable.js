@@ -38,10 +38,7 @@ export default class RevisionsTable extends Component {
   }
 
   handleReleaseCellClick(arch, event) {
-    const cell = event.currentTarget;
-    const top = cell.offsetTop + cell.clientHeight;
-    const left = cell.offsetLeft;
-    this.props.openRevisionsPopover(top, left, { arch });
+    this.props.openRevisionsList({ arch });
 
     event.preventDefault();
     event.stopPropagation();
@@ -464,6 +461,6 @@ RevisionsTable.propTypes = {
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
   getTrackingChannel: PropTypes.func.isRequired,
-  openRevisionsPopover: PropTypes.func.isRequired,
+  openRevisionsList: PropTypes.func.isRequired,
   filters: PropTypes.object
 };

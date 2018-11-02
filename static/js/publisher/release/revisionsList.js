@@ -73,7 +73,7 @@ export default class RevisionsList extends Component {
 
   onCloseClick(event) {
     event.preventDefault();
-    this.props.closeRevisionsPopover();
+    this.props.closeRevisionsList();
   }
 
   render() {
@@ -123,5 +123,5 @@ RevisionsList.propTypes = {
   showChannels: PropTypes.bool,
   showArchitectures: PropTypes.bool,
   title: PropTypes.string,
-  closeRevisionsPopover: PropTypes.func.isRequired
+  closeRevisionsList: PropTypes.func.isRequired
 };

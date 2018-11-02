@@ -4,7 +4,6 @@ import "whatwg-fetch";
 
 import RevisionsTable from "./revisionsTable";
 import RevisionsList from "./revisionsList";
-import RevisionsPopover from "./revisionsPopover";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
@@ -36,13 +35,12 @@ export default class ReleasesController extends Component {
       pendingCloses: [],
       // list of selected revisions, to know which ones to render selected
       selectedRevisions: [],
-      revisionsPopover: {
-        isOpen: false,
-        top: 0,
-        left: 0,
-        filters: null
-      },
-      isRevisionsListVisible: false
+      // filters for revisions list
+      // {
+      //   arch: 'architecture'
+      // }
+      revisionsFilters: null,
+      isRevisionsListOpen: false
     };
   }
 
@@ -459,22 +457,17 @@ export default class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
-  openRevisionsPopover(top, left, filters) {
+  openRevisionsList(filters) {
     this.setState({
-      revisionsPopover: {
-        isOpen: true,
-        top,
-        left,
-        filters
-      }
+      revisionsFilters: filters,
+      isRevisionsListOpen: true
     });
   }
 
-  closeRevisionsPopover() {
+  closeRevisionsList() {
     this.setState({
-      revisionsPopover: {
-        isOpen: false
-      }
+      revisionsFilters: null,
+      isRevisionsListOpen: false
     });
   }
 
@@ -482,10 +475,8 @@ export default class ReleasesController extends Component {
     event.preventDefault();
 
     this.setState({
-      revisionsPopover: {
-        isOpen: true,
-        filter: null
-      }
+      revisionsFilters: null,
+      isRevisionsListOpen: true
     });
   }
 
@@ -501,7 +492,7 @@ export default class ReleasesController extends Component {
 
     let filteredRevisions = this.props.revisions;
     let title = null;
-    let { filters } = this.state.revisionsPopover;
+    let filters = this.state.revisionsFilters;
 
     if (filters && filters.arch) {
       title = "Latest revisions";
@@ -553,15 +544,15 @@ export default class ReleasesController extends Component {
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
-          openRevisionsPopover={this.openRevisionsPopover.bind(this)}
-          filters={this.state.revisionsPopover.filters}
+          openRevisionsList={this.openRevisionsList.bind(this)}
+          filters={this.state.revisionsFilters}
         />
         <div style={{ textAlign: "right" }}>
           <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
             Show available revisions ({this.props.revisions.length})
           </a>
         </div>
-        {this.state.revisionsPopover.isOpen && (
+        {this.state.isRevisionsListOpen && (
           <RevisionsList
             title={title}
             idPrefix="main"
@@ -571,17 +562,7 @@ export default class ReleasesController extends Component {
             selectRevision={this.selectRevision.bind(this)}
             showChannels={true}
             showArchitectures={true}
-            closeRevisionsPopover={this.closeRevisionsPopover.bind(this)}
-          />
-        )}
-        {false && (
-          <RevisionsPopover
-            {...this.state.revisionsPopover}
-            closeRevisionsPopover={this.closeRevisionsPopover.bind(this)}
-            revisions={this.props.revisions}
-            releasedChannels={releasedChannels}
-            selectedRevisions={this.state.selectedRevisions}
-            selectRevision={this.selectRevision.bind(this)}
+            closeRevisionsList={this.closeRevisionsList.bind(this)}
           />
         )}
       </Fragment>
