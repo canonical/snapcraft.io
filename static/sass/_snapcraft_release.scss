@@ -1,6 +1,8 @@
 @mixin snapcraft-release {
+  $color-selected: rgba(255, 255, 0, .25);
+
   .p-release-table {
-    margin-bottom: 2 * $spv-inter--regular;
+    margin-bottom: $spv-inter--regular;
 
     th {
       text-transform: none;
@@ -12,7 +14,7 @@
     border: 1px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
-    margin-left: $sph-inter;
+    margin-left: 2px;
     max-width: 22.53423%; // col-3
     min-width: 100px;
     padding: $spv-intra $sph-intra;
@@ -31,7 +33,7 @@
     }
 
     &.is-active {
-      background-color: $color-light;
+      background-color: $color-selected;
       box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
     }
   }
@@ -147,17 +149,18 @@
 
   .p-release-channel-row {
     display: flex;
-    margin-bottom: $spv-inter--regular;
+    margin-bottom: 2px;
   }
 
   .p-release-channel-row--unassigned {
-    margin-top: 2 * $spv-inter--regular;
+    margin-top: $spv-inter--regular;
   }
 
   .p-release-channel-row__channel {
     align-items: center;
     display: flex;
     flex-shrink: 0;
+    margin-right: $sph-inter;
     width: 22.53423%; // col-3
   }
 
