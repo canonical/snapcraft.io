@@ -72,6 +72,10 @@ export default class RevisionsTable extends Component {
 
     const className = `p-release-table__cell ${
       isUnassigned ? "is-clickable" : ""
+    } ${
+      isUnassigned && this.props.filters && this.props.filters.arch === arch
+        ? "is-active"
+        : ""
     }`;
 
     return (
@@ -220,16 +224,6 @@ export default class RevisionsTable extends Component {
 
     return RISKS.map(risk => {
       const channel = getChannelName(track, risk);
-
-      // // don't show unassigned revisions until some are selected from the table
-      // // TODO: always show (when we can click on it)
-      // if (
-      //   (risk === UNASSIGNED && !releasedChannels[channel]) ||
-      //   (releasedChannels[channel] &&
-      //     Object.keys(releasedChannels[channel]).length === 0)
-      // ) {
-      //   return null;
-      // }
 
       let canBePromoted = true;
       let canBeClosed = true;
@@ -470,5 +464,6 @@ RevisionsTable.propTypes = {
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
   getTrackingChannel: PropTypes.func.isRequired,
-  openRevisionsPopover: PropTypes.func.isRequired
+  openRevisionsPopover: PropTypes.func.isRequired,
+  filters: PropTypes.object
 };

@@ -554,6 +554,7 @@ export default class ReleasesController extends Component {
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
           openRevisionsPopover={this.openRevisionsPopover.bind(this)}
+          filters={this.state.revisionsPopover.filters}
         />
         <div style={{ textAlign: "right" }}>
           <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
