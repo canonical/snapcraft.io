@@ -11,4 +11,4 @@ macos:
       multipass shell snaps
       snap list
   - action: Run the snap inside the virtual machine
-    command: offlineimap
+    command: test-offlineimap-{name}

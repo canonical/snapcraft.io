@@ -37,7 +37,7 @@ def get_pick_language():
 
 @first_snap.route("/<language>")
 def get_language(language):
-    filename = f"first-snap/{language}"
+    filename = f"first_snap/content/{language}"
     if not directory_exists(filename):
         return flask.abort(404)
 
@@ -49,7 +49,7 @@ def get_language(language):
 
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
-    filename = f"first-snap/{language}/package.yaml"
+    filename = f"first_snap/content/{language}/package.yaml"
     steps = get_file(filename)
 
     if not steps:
@@ -62,7 +62,7 @@ def get_package(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/build")
 def get_build(language, operating_system):
-    filename = f"first-snap/{language}/build.yaml"
+    filename = f"first_snap/content/{language}/build.yaml"
     steps = get_file(filename)
 
     operating_system_parts = operating_system.split("-")
@@ -92,7 +92,7 @@ def get_build(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/test")
 def get_test(language, operating_system):
-    filename = f"first-snap/{language}/test.yaml"
+    filename = f"first_snap/content/{language}/test.yaml"
     steps = get_file(filename)
 
     operating_system_only = operating_system.split("-")[0]
@@ -122,7 +122,7 @@ def get_test(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
-    filename = f"first-snap/{language}/package.yaml"
+    filename = f"first_snap/content/{language}/package.yaml"
     data = get_file(filename)
 
     if not data:
