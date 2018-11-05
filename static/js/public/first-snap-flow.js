@@ -1,4 +1,4 @@
-/* globals ClipboardJS */
+/* globals ClipboardJS, ga */
 
 import "whatwg-fetch";
 
@@ -84,22 +84,61 @@ function getSnapCount(cb) {
   fetch("/snaps/api/snap-count")
     .then(r => r.json())
     .then(data => {
-      cb(data.count);
+      cb(data);
     });
+}
+
+function getArrayDiff(arr1, arr2) {
+  let newArr;
+  let oldArr;
+  if (arr1.length === arr2.length) {
+    return false;
+  }
+
+  if (arr1.length > arr2.length) {
+    newArr = arr1;
+    oldArr = arr2;
+  } else {
+    newArr = arr2;
+    oldArr = arr1;
+  }
+
+  let newValues = [];
+
+  newArr.forEach(item => {
+    if (!oldArr.includes(item)) {
+      newValues.push(item);
+    }
+  });
+
+  return newValues;
 }
 
 function push() {
   let initialCount = null;
+  let initialSnaps = [];
   let timer;
   let ready = false;
 
   function getCount(cb) {
     clearTimeout(timer);
 
-    getSnapCount(count => {
+    getSnapCount(data => {
       if (initialCount === null) {
-        initialCount = count;
-      } else if (count !== initialCount) {
+        initialCount = data.count;
+        initialSnaps = data.snaps;
+      } else if (data.count !== initialCount) {
+        const newSnaps = getArrayDiff(initialSnaps, data.snaps);
+
+        if (newSnaps.length > 0 && typeof ga !== "undefined") {
+          ga("gtm1.send", {
+            hitType: "event",
+            eventCategory: "First Snap Flow",
+            eventAction: "Snap pushed",
+            eventLabel: `${newSnaps.join(",")}`
+          });
+        }
+
         ready = true;
         cb();
       }
