@@ -257,7 +257,7 @@ export default class ReleasesController extends Component {
   fetchRelease(revision, channels) {
     const { csrfToken } = this.props.options;
 
-    return fetch(`/${this.props.snapName}/release`, {
+    return fetch(`/${this.props.snapName}/releases`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
@@ -275,7 +275,7 @@ export default class ReleasesController extends Component {
   fetchClose(channels) {
     const { csrfToken } = this.props.options;
 
-    return fetch(`/${this.props.snapName}/release/close-channel`, {
+    return fetch(`/${this.props.snapName}/releases/close-channel`, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",

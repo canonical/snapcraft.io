@@ -458,6 +458,7 @@ def post_listing_snap(snap_name):
 
 
 @publisher_snaps.route("/account/snaps/<snap_name>/release")
+@publisher_snaps.route("/<snap_name>/release")
 @login_required
 def redirect_get_release_history(snap_name):
     return flask.redirect(
@@ -465,7 +466,7 @@ def redirect_get_release_history(snap_name):
     )
 
 
-@publisher_snaps.route("/<snap_name>/release")
+@publisher_snaps.route("/<snap_name>/releases")
 @login_required
 def get_release_history(snap_name):
     try:
@@ -495,6 +496,7 @@ def get_release_history(snap_name):
 
 
 @publisher_snaps.route("/account/snaps/<snap_name>/release", methods=["POST"])
+@publisher_snaps.route("/<snap_name>/release", methods=["POST"])
 @login_required
 def redirect_post_release(snap_name):
     return flask.redirect(
@@ -502,7 +504,7 @@ def redirect_post_release(snap_name):
     )
 
 
-@publisher_snaps.route("/<snap_name>/release", methods=["POST"])
+@publisher_snaps.route("/<snap_name>/releases", methods=["POST"])
 @login_required
 def post_release(snap_name):
     data = flask.request.json
@@ -524,6 +526,14 @@ def post_release(snap_name):
 
 
 @publisher_snaps.route("/<snap_name>/release/close-channel", methods=["POST"])
+@login_required
+def redirect_post_close_channel(snap_name):
+    return flask.redirect(
+        flask.url_for(".post_close_channel", snap_name=snap_name), 307
+    )
+
+
+@publisher_snaps.route("/<snap_name>/releases/close-channel", methods=["POST"])
 @login_required
 def post_close_channel(snap_name):
     data = flask.request.json

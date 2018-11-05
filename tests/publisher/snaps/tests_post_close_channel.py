@@ -5,7 +5,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class PostCloseChannelPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/{}/release/close-channel".format(snap_name)
+        endpoint_url = "/{}/releases/close-channel".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -17,7 +17,7 @@ class PostCloseChannelPageNotAuth(BaseTestCases.EndpointLoggedOut):
 class PostDataCloseChannelGetSnapIdPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/{}/release/close-channel".format(snap_name)
+        endpoint_url = "/{}/releases/close-channel".format(snap_name)
         json = {"info": "json"}
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -59,7 +59,7 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
         snap_id = "test_id"
-        endpoint_url = "/{}/release/close-channel".format(snap_name)
+        endpoint_url = "/{}/releases/close-channel".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
             "snaps/{}/close".format(snap_id)
