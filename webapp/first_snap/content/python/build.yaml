@@ -9,7 +9,7 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: offlineimap
+      command: test-offlineimap-{name}
   manual:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
       command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
@@ -20,7 +20,7 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: offlineimap
+      command: test-offlineimap-{name}
 macos:
   auto:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft

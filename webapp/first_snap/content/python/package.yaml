@@ -1,4 +1,4 @@
-name: offlineimap
+name: test-offlineimap-{name}
 download: git clone https://github.com/snapcraft-docs/offlineimap
 createDir: |
   cd offlineimap
@@ -19,5 +19,5 @@ parts: |
       source: .
 apps: |
   apps:
-    offlineimap:
-      command: bin/offlineimap
+    test-offlineimap-{name}:
+      command: bin/test-offlineimap-{name}

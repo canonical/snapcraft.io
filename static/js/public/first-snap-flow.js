@@ -46,7 +46,7 @@ function install(language) {
     const os = type.split("-")[0];
     const selected = document.querySelector(".js-" + type);
     const unselected = document.querySelector(
-      '[class*="js-' + os + '-"]:not(.js-' + type + ")"
+      "[class*='js-" + os + "-']:not(.js-" + type + ")"
     );
 
     if (!selected && !unselected) {
