@@ -124,17 +124,6 @@ function push() {
     clearTimeout(timer);
 
     getSnapCount(data => {
-      if (data.snaps.length !== initialSnaps.length) {
-        const newSnaps = newArrayValue(initialSnaps, data.snaps);
-        if (newSnaps.length > 0 && typeof ga !== "undefined") {
-          ga("gtm1.send", {
-            hitType: "event",
-            eventCategory: "First Snap Flow",
-            eventAction: "Snap pushed",
-            eventLabel: `${newSnaps.join(",")}`
-          });
-        }
-      }
       if (initialCount === null) {
         initialCount = data.count;
         initialSnaps = data.snaps;
