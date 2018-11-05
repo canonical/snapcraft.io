@@ -88,7 +88,7 @@ function getSnapCount(cb) {
     });
 }
 
-function newArrayValue(arr1, arr2) {
+function getArrayDiff(arr1, arr2) {
   let newArr;
   let oldArr;
   if (arr1.length === arr2.length) {
@@ -128,7 +128,7 @@ function push() {
         initialCount = data.count;
         initialSnaps = data.snaps;
       } else if (data.count !== initialCount) {
-        const newSnaps = newArrayValue(initialSnaps, data.snaps);
+        const newSnaps = getArrayDiff(initialSnaps, data.snaps);
 
         if (newSnaps.length > 0 && typeof ga !== "undefined") {
           ga("gtm1.send", {
