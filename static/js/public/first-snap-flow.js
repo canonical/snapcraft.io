@@ -140,7 +140,7 @@ function push() {
         }
 
         ready = true;
-        cb();
+        cb(newSnaps[0]);
       }
     });
 
@@ -149,10 +149,10 @@ function push() {
     }
   }
 
-  getCount(() => {
+  getCount(snapName => {
     const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
-      continueBtn.href = "/snaps";
+      continueBtn.href = `/${snapName}/listing?from=fsf`;
       continueBtn.classList.add("p-button--positive");
       continueBtn.classList.remove("p-button--neutral");
       continueBtn.innerHTML = "Continue";

@@ -1,5 +1,4 @@
 macos:
-
   - action: Create a Linux virtual machine for testing snaps
     command: multipass launch -n testvm
   - action: Return to the directory containing the snapcraft.yaml and map it into the virtual machine

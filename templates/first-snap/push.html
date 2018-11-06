@@ -29,10 +29,15 @@
           <li class="p-list-step__item col-8 u-no-margin--left">
             <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">1</span>
-              Create an Ubuntu One account
+              Create an Ubuntu One account <i class="p-icon--success"></i>
             </h4>
             <div class="p-list-step__content">
               <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+              <div class="row">
+                <p class="col-5">
+                  <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
+                </p>
+              </div>
             </div>
           </li>
           <li class="p-list-step__item col-8 u-no-margin--left">
@@ -54,11 +59,11 @@
             {% set snippet_id = "snapcraft-register" %}
             {% include "/partials/_code-snippet.html" %}
             <div class="p-notification--caution">
-                <p class="p-notification__response">
-                  <span class="p-notification__status"></span>
-                  You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name).
-                </p>
-              </div>
+              <p class="p-notification__response">
+                <span class="p-notification__status"></span>
+                You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name).
+              </p>
+            </div>
           </li>
 
           <li class="p-list-step__item col-8 u-no-margin--left">
@@ -66,7 +71,7 @@
               <span class="p-list-step__bullet">4</span>
               Push to the Snap store
             </h4>
-            {% set snippet_value = "snapcraft push --release edge start.snap" %}
+            {% set snippet_value = "snapcraft push --release edge *.snap" %}
             {% set snippet_id = "snapcraft-push" %}
             {% include "/partials/_code-snippet.html" %}
           </li>
@@ -80,7 +85,7 @@
 
     <div class="row">
       <p class="u-float--left">
-        Once you've pushed to the Snap store, <a href="/snaps">visit your published snaps</a>.
+        Once you've pushed to the Snap store, visit your published snaps.
       </p>
       <a class="p-button--neutral u-float--right js-continue">
         <i class="p-icon--spinner u-animation--spin"></i>
