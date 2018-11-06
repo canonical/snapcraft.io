@@ -44,16 +44,17 @@
               {% include "/partials/_code.html" %}
               <p>The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.</p>
               <pre><code>name: offlineimap</code></pre>
+              <div class="p-notification--caution">
+                  <p class="p-notification__response">
+                    <span class="p-notification__status"></span>
+                    You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicts later in this guide.
+                  </p>
+                </div>
               <p>By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps.</p>
               <pre><code>version: git</code></pre>
               <p>The summary can not exceed 79 characters. You can use a chevron ‘>’ in the description key to declare a multi-line description.</p>
               <pre><code>description: ></code></pre>
-              <div class="p-notification--caution">
-                <p class="p-notification__response">
-                  <span class="p-notification__status"></span>
-                  You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicts later in this guide.
-                </p>
-              </div>
+
             </div>
           </li>
           <li class="p-list-step__item">
@@ -79,7 +80,7 @@
               {% set snippet_value = steps.parts %}
               {% set snippet_id = "parts" %}
               {% include "/partials/_code.html" %}
-              <p>The <code>python</code> plugin builds upon the work you’ve already done to describe your Python dependencies in setup.py and requirements.txt. It will automatically include these in your snap.</p>
+              <p>The <code>python</code> plugin builds upon the work you’ve already done to describe your Python dependencies in <code>setup.py</code> and <code>requirements.txt</code>. It will automatically include these in your snap.</p>
               <p>The <code>python-version</code> keyword instructs the python plugin to include a copy of Python 2 in your snap.</p>
               <p>The <code>source</code> keyword points to the root of your Python project and can be a local directory or remote Git repository.</p>
             </div>
@@ -94,6 +95,12 @@
               {% set snippet_value = steps.apps %}
               {% set snippet_id = "apps" %}
               {% include "/partials/_code.html" %}
+              <div class="p-notification--caution">
+                  <p class="p-notification__response">
+                    <span class="p-notification__status"></span>
+                    You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicts later in this guide.
+                  </p>
+                </div>
               <p>The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.</p>
               <p>If your command name matches the snap name, users will be able run the command directly.</p>
             </div>

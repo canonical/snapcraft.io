@@ -53,14 +53,20 @@
             {% set snippet_id = "snapcraft-login" %}
             {% set snippet_id = "snapcraft-register" %}
             {% include "/partials/_code-snippet.html" %}
-            <p class="p-list-step__content">If you chose a different name, update the snapcraft.yaml as well, and run snapcraft again.</p>
+            <div class="p-notification--caution">
+                <p class="p-notification__response">
+                  <span class="p-notification__status"></span>
+                  You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name).
+                </p>
+              </div>
           </li>
+
           <li class="p-list-step__item col-8 u-no-margin--left">
             <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">4</span>
               Push to the Snap store
             </h4>
-            {% set snippet_value = "snapcraft push" %}
+            {% set snippet_value = "snapcraft push --release edge start.snap" %}
             {% set snippet_id = "snapcraft-push" %}
             {% include "/partials/_code-snippet.html" %}
           </li>
