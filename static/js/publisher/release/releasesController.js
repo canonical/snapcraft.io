@@ -34,7 +34,13 @@ export default class ReleasesController extends Component {
       pendingReleases: {},
       pendingCloses: [],
       // list of selected revisions, to know which ones to render selected
-      selectedRevisions: []
+      selectedRevisions: [],
+      // filters for revisions list
+      // {
+      //   arch: 'architecture'
+      // }
+      revisionsFilters: null,
+      isRevisionsListOpen: false
     };
   }
 
@@ -451,6 +457,29 @@ export default class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
+  openRevisionsList(filters) {
+    this.setState({
+      revisionsFilters: filters,
+      isRevisionsListOpen: true
+    });
+  }
+
+  closeRevisionsList() {
+    this.setState({
+      revisionsFilters: null,
+      isRevisionsListOpen: false
+    });
+  }
+
+  toggleRevisionsList(event) {
+    event.preventDefault();
+
+    this.setState({
+      revisionsFilters: null,
+      isRevisionsListOpen: true
+    });
+  }
+
   render() {
     const { tracks } = this.props;
     const { archs, releasedChannels } = this.state;
@@ -460,6 +489,20 @@ export default class ReleasesController extends Component {
         return Object.values(archReleases).some(isInDevmode);
       }
     );
+
+    let filteredRevisions = this.props.revisions;
+    let title = null;
+    let filters = this.state.revisionsFilters;
+
+    if (filters && filters.arch) {
+      title = "Latest revisions";
+
+      filteredRevisions = filteredRevisions.filter(revision => {
+        return revision.architectures.includes(filters.arch);
+      });
+
+      title = `${title} in ${filters.arch}`;
+    }
 
     return (
       <Fragment>
@@ -501,13 +544,27 @@ export default class ReleasesController extends Component {
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
+          openRevisionsList={this.openRevisionsList.bind(this)}
+          filters={this.state.revisionsFilters}
         />
-        <RevisionsList
-          revisions={this.props.revisions}
-          releasedChannels={releasedChannels}
-          selectedRevisions={this.state.selectedRevisions}
-          selectRevision={this.selectRevision.bind(this)}
-        />
+        <div className="p-release-actions">
+          <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
+            Show available revisions ({this.props.revisions.length})
+          </a>
+        </div>
+        {this.state.isRevisionsListOpen && (
+          <RevisionsList
+            title={title}
+            idPrefix="main"
+            revisions={filteredRevisions}
+            releasedChannels={releasedChannels}
+            selectedRevisions={this.state.selectedRevisions}
+            selectRevision={this.selectRevision.bind(this)}
+            showChannels={true}
+            showArchitectures={true}
+            closeRevisionsList={this.closeRevisionsList.bind(this)}
+          />
+        )}
       </Fragment>
     );
   }

@@ -37,6 +37,13 @@ export default class RevisionsTable extends Component {
     this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
+  handleReleaseCellClick(arch, event) {
+    this.props.openRevisionsList({ arch });
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
     const channel = getChannelName(track, risk);
 
@@ -58,11 +65,24 @@ export default class RevisionsTable extends Component {
     const isPending = hasPendingRelease || isChannelClosed;
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
+    const isUnassigned = risk === UNASSIGNED;
+
+    const className = `p-release-table__cell ${
+      isUnassigned ? "is-clickable" : ""
+    } ${
+      isUnassigned && this.props.filters && this.props.filters.arch === arch
+        ? "is-active"
+        : ""
+    }`;
+
     return (
       <div
-        className="p-release-table__cell"
+        className={className}
         style={{ position: "relative" }}
         key={`${channel}/${arch}`}
+        onClick={
+          isUnassigned ? this.handleReleaseCellClick.bind(this, arch) : null
+        }
       >
         <span className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
@@ -86,7 +106,15 @@ export default class RevisionsTable extends Component {
                 </span>
               ) : (
                 <span className={!isPending ? "p-revision-info--empty" : ""}>
-                  {trackingChannel ? "↑" : "–"}
+                  {trackingChannel ? (
+                    "↑"
+                  ) : isUnassigned ? (
+                    <span>
+                      <i className="p-icon--plus" /> Add revision
+                    </span>
+                  ) : (
+                    "–"
+                  )}
                 </span>
               )}
             </span>
@@ -108,36 +136,41 @@ export default class RevisionsTable extends Component {
             )}
           </span>
 
-          <span className="p-tooltip__message">
-            {thisPreviousRevision
-              ? `${thisPreviousRevision.version} (${
-                  thisPreviousRevision.revision
-                })`
-              : hasPendingRelease || !trackingChannel
-                ? "None"
-                : `Tracking channel ${trackingChannel}`}
-            {hasPendingRelease && (
-              <span>
-                {" "}
-                &rarr; {`${thisRevision.version} (${thisRevision.revision})`}
-              </span>
-            )}
-            {isChannelClosed && (
-              <span>
-                {" "}
-                &rarr; <em>close channel</em>
-              </span>
-            )}
-            {thisPreviousRevision &&
-              isInDevmode(thisPreviousRevision) && (
-                <Fragment>
-                  <br />
-                  {thisPreviousRevision.confinement === "devmode"
-                    ? "confinement: devmode"
-                    : "grade: devel"}
-                </Fragment>
+          {(hasPendingRelease ||
+            isChannelClosed ||
+            trackingChannel ||
+            (thisPreviousRevision && isInDevmode(thisPreviousRevision))) && (
+            <span className="p-tooltip__message">
+              {thisPreviousRevision
+                ? `${thisPreviousRevision.version} (${
+                    thisPreviousRevision.revision
+                  })`
+                : hasPendingRelease || !trackingChannel
+                  ? "None"
+                  : `Tracking channel ${trackingChannel}`}
+              {hasPendingRelease && (
+                <span>
+                  {" "}
+                  &rarr; {`${thisRevision.version} (${thisRevision.revision})`}
+                </span>
               )}
-          </span>
+              {isChannelClosed && (
+                <span>
+                  {" "}
+                  &rarr; <em>close channel</em>
+                </span>
+              )}
+              {thisPreviousRevision &&
+                isInDevmode(thisPreviousRevision) && (
+                  <Fragment>
+                    <br />
+                    {thisPreviousRevision.confinement === "devmode"
+                      ? "confinement: devmode"
+                      : "grade: devel"}
+                  </Fragment>
+                )}
+            </span>
+          )}
         </span>
         {hasPendingRelease && (
           <div className="p-release-buttons">
@@ -190,16 +223,6 @@ export default class RevisionsTable extends Component {
     return RISKS.map(risk => {
       const channel = getChannelName(track, risk);
 
-      // don't show unassigned revisions until some are selected from the table
-      // TODO: always show (when we can click on it)
-      if (
-        (risk === UNASSIGNED && !releasedChannels[channel]) ||
-        (releasedChannels[channel] &&
-          Object.keys(releasedChannels[channel]).length === 0)
-      ) {
-        return null;
-      }
-
       let canBePromoted = true;
       let canBeClosed = true;
 
@@ -251,7 +274,10 @@ export default class RevisionsTable extends Component {
       }
 
       return (
-        <div className="p-release-channel-row" key={channel}>
+        <div
+          className={`p-release-channel-row p-release-channel-row--${risk}`}
+          key={channel}
+        >
           <div className="p-release-channel-row__channel">
             <span className="p-release-channel-row__promote">
               {canBePromoted && (
@@ -435,5 +461,7 @@ RevisionsTable.propTypes = {
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
-  getTrackingChannel: PropTypes.func.isRequired
+  getTrackingChannel: PropTypes.func.isRequired,
+  openRevisionsList: PropTypes.func.isRequired,
+  filters: PropTypes.object
 };

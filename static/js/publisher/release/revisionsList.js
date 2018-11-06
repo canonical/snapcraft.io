@@ -31,12 +31,14 @@ export default class RevisionsList extends Component {
             <input
               type="checkbox"
               checked={isSelected}
-              id={`revision-check-${revision.revision}`}
+              id={`${this.props.idPrefix}-revision-check-${revision.revision}`}
               onChange={this.revisionSelectChange.bind(this, revision)}
             />
             <label
               className="u-no-margin--bottom"
-              htmlFor={`revision-check-${revision.revision}`}
+              htmlFor={`${this.props.idPrefix}-revision-check-${
+                revision.revision
+              }`}
             >
               {revision.revision}
             </label>
@@ -45,8 +47,10 @@ export default class RevisionsList extends Component {
             <DevmodeIcon revision={revision} showTooltip={true} />
           </td>
           <td>{revision.version}</td>
-          <td>{revision.architectures.join(", ")}</td>
-          <td>{revision.channels.join(", ")}</td>
+          {this.props.showArchitectures && (
+            <td>{revision.architectures.join(", ")}</td>
+          )}
+          {this.props.showChannels && <td>{revision.channels.join(", ")}</td>}
           <td className="u-align--right">
             <span
               className="p-tooltip p-tooltip--btm-center"
@@ -67,32 +71,42 @@ export default class RevisionsList extends Component {
     });
   }
 
+  onCloseClick(event) {
+    event.preventDefault();
+    this.props.closeRevisionsList();
+  }
+
   render() {
     return (
       <Fragment>
-        <h4>Revisions available</h4>
+        <div>
+          <h4 className="u-float--left">
+            {this.props.title ? this.props.title : "Revisions available"}
+          </h4>
+          <a
+            style={{ marginTop: "0.5rem" }}
+            href="#"
+            onClick={this.onCloseClick.bind(this)}
+            className="p-icon--close u-float--right"
+          />
+        </div>
         <table className="p-revisions-list">
           <thead>
             <tr>
-              <th className="col-has-checkbox" width="10%" scope="col">
+              <th className="col-has-checkbox" width="100px" scope="col">
                 Revision
               </th>
               <th width="20px" />
-              <th width="23%" scope="col">
-                Version
-              </th>
-              <th width="12%" scope="col">
-                Architecture
-              </th>
-              <th width="30%" scope="col">
-                Channels
-              </th>
-              <th width="15%" scope="col" className="u-align--right">
+              <th scope="col">Version</th>
+              {this.props.showArchitectures && (
+                <th scope="col">Architecture</th>
+              )}
+              {this.props.showChannels && <th scope="col">Channels</th>}
+              <th scope="col" className="u-align--right">
                 Submission date
               </th>
             </tr>
           </thead>
-
           <tbody>{this.renderRows(this.props.revisions)}</tbody>
         </table>
       </Fragment>
@@ -101,8 +115,13 @@ export default class RevisionsList extends Component {
 }
 
 RevisionsList.propTypes = {
+  idPrefix: PropTypes.string,
   revisions: PropTypes.array.isRequired,
   selectedRevisions: PropTypes.array.isRequired,
   releasedChannels: PropTypes.object.isRequired,
-  selectRevision: PropTypes.func.isRequired
+  selectRevision: PropTypes.func.isRequired,
+  showChannels: PropTypes.bool,
+  showArchitectures: PropTypes.bool,
+  title: PropTypes.string,
+  closeRevisionsList: PropTypes.func.isRequired
 };
