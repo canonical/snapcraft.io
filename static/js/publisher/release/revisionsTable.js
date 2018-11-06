@@ -138,6 +138,7 @@ export default class RevisionsTable extends Component {
 
           {(hasPendingRelease ||
             isChannelClosed ||
+            trackingChannel ||
             (thisPreviousRevision && isInDevmode(thisPreviousRevision))) && (
             <span className="p-tooltip__message">
               {thisPreviousRevision
