@@ -547,7 +547,7 @@ export default class ReleasesController extends Component {
           openRevisionsList={this.openRevisionsList.bind(this)}
           filters={this.state.revisionsFilters}
         />
-        <div style={{ textAlign: "right" }}>
+        <div className="p-release-actions">
           <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
             Show available revisions ({this.props.revisions.length})
           </a>
