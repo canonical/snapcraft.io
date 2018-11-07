@@ -141,6 +141,7 @@ export default class ReleasesController extends Component {
           releasedChannels[trackingChannel][arch]
         ) {
           tracking = trackingChannel;
+          break;
         }
       }
     }
