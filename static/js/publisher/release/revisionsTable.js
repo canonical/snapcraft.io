@@ -11,6 +11,7 @@ import {
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
+import RevisionsList from "./revisionsList";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -437,6 +438,24 @@ export default class RevisionsTable extends Component {
           </div>
           {this.renderRows(releasedChannels, archs)}
         </div>
+        <div className="p-release-actions">
+          <a href="#" onClick={this.props.toggleRevisionsList}>
+            Show available revisions ({this.props.revisions.length})
+          </a>
+        </div>
+        {this.props.isRevisionsListOpen && (
+          <RevisionsList
+            title={this.props.title}
+            idPrefix="main"
+            revisions={this.props.filteredRevisions}
+            releasedChannels={releasedChannels}
+            selectedRevisions={this.props.selectedRevisions}
+            selectRevision={this.props.selectRevision}
+            showChannels={true}
+            showArchitectures={true}
+            closeRevisionsList={this.props.closeRevisionsList}
+          />
+        )}
       </Fragment>
     );
   }
@@ -460,5 +479,13 @@ RevisionsTable.propTypes = {
   closeChannel: PropTypes.func.isRequired,
   getTrackingChannel: PropTypes.func.isRequired,
   openRevisionsList: PropTypes.func.isRequired,
-  filters: PropTypes.object
+  filters: PropTypes.object,
+  filteredRevisions: PropTypes.array,
+  title: PropTypes.string,
+  selectedRevisions: PropTypes.array,
+  selectRevision: PropTypes.func,
+  closeRevisionsList: PropTypes.func,
+  revisions: PropTypes.array,
+  toggleRevisionsList: PropTypes.func,
+  isRevisionsListOpen: PropTypes.bool
 };

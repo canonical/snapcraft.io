@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import "whatwg-fetch";
 
 import RevisionsTable from "./revisionsTable";
-import RevisionsList from "./revisionsList";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
@@ -547,25 +546,15 @@ export default class ReleasesController extends Component {
           getTrackingChannel={this.getTrackingChannel.bind(this)}
           openRevisionsList={this.openRevisionsList.bind(this)}
           filters={this.state.revisionsFilters}
+          revisions={this.props.revisions}
+          filteredRevisions={filteredRevisions}
+          title={title}
+          selectedRevisions={this.state.selectedRevisions}
+          selectRevision={this.selectRevision.bind(this)}
+          closeRevisionsList={this.closeRevisionsList.bind(this)}
+          toggleRevisionsList={this.toggleRevisionsList.bind(this)}
+          isRevisionsListOpen={this.state.isRevisionsListOpen}
         />
-        <div className="p-release-actions">
-          <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
-            Show available revisions ({this.props.revisions.length})
-          </a>
-        </div>
-        {this.state.isRevisionsListOpen && (
-          <RevisionsList
-            title={title}
-            idPrefix="main"
-            revisions={filteredRevisions}
-            releasedChannels={releasedChannels}
-            selectedRevisions={this.state.selectedRevisions}
-            selectRevision={this.selectRevision.bind(this)}
-            showChannels={true}
-            showArchitectures={true}
-            closeRevisionsList={this.closeRevisionsList.bind(this)}
-          />
-        )}
       </Fragment>
     );
   }
