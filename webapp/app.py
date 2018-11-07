@@ -61,7 +61,6 @@ def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
-    csrf.exempt("webapp.login.views.login_handler")
     app.register_blueprint(store_blueprint())
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)
