@@ -31,14 +31,12 @@ export default class RevisionsList extends Component {
             <input
               type="checkbox"
               checked={isSelected}
-              id={`${this.props.idPrefix}-revision-check-${revision.revision}`}
+              id={`revision-check-${revision.revision}`}
               onChange={this.revisionSelectChange.bind(this, revision)}
             />
             <label
               className="u-no-margin--bottom"
-              htmlFor={`${this.props.idPrefix}-revision-check-${
-                revision.revision
-              }`}
+              htmlFor={`revision-check-${revision.revision}`}
             >
               {revision.revision}
             </label>
@@ -77,12 +75,24 @@ export default class RevisionsList extends Component {
   }
 
   render() {
+    let filteredRevisions = this.props.revisions;
+    let title = "Revisions available";
+    let filters = this.props.revisionsFilters;
+
+    if (filters && filters.arch) {
+      title = "Latest revisions";
+
+      filteredRevisions = filteredRevisions.filter(revision => {
+        return revision.architectures.includes(filters.arch);
+      });
+
+      title = `${title} in ${filters.arch}`;
+    }
+
     return (
       <Fragment>
         <div>
-          <h4 className="u-float--left">
-            {this.props.title ? this.props.title : "Revisions available"}
-          </h4>
+          <h4 className="u-float--left">{title}</h4>
           <a
             style={{ marginTop: "0.5rem" }}
             href="#"
@@ -107,7 +117,7 @@ export default class RevisionsList extends Component {
               </th>
             </tr>
           </thead>
-          <tbody>{this.renderRows(this.props.revisions)}</tbody>
+          <tbody>{this.renderRows(filteredRevisions)}</tbody>
         </table>
       </Fragment>
     );
@@ -115,13 +125,14 @@ export default class RevisionsList extends Component {
 }
 
 RevisionsList.propTypes = {
-  idPrefix: PropTypes.string,
+  // state
   revisions: PropTypes.array.isRequired,
-  selectedRevisions: PropTypes.array.isRequired,
   releasedChannels: PropTypes.object.isRequired,
-  selectRevision: PropTypes.func.isRequired,
+  revisionsFilters: PropTypes.object,
+  selectedRevisions: PropTypes.array.isRequired,
   showChannels: PropTypes.bool,
   showArchitectures: PropTypes.bool,
-  title: PropTypes.string,
+  // actions
+  selectRevision: PropTypes.func.isRequired,
   closeRevisionsList: PropTypes.func.isRequired
 };

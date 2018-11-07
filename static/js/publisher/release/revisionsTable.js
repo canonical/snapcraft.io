@@ -67,11 +67,12 @@ export default class RevisionsTable extends Component {
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
-
     const className = `p-release-table__cell ${
       isUnassigned ? "is-clickable" : ""
     } ${
-      isUnassigned && this.props.filters && this.props.filters.arch === arch
+      isUnassigned &&
+      this.props.revisionsFilters &&
+      this.props.revisionsFilters.arch === arch
         ? "is-active"
         : ""
     }`;
@@ -445,9 +446,8 @@ export default class RevisionsTable extends Component {
         </div>
         {this.props.isRevisionsListOpen && (
           <RevisionsList
-            title={this.props.title}
-            idPrefix="main"
-            revisions={this.props.filteredRevisions}
+            revisions={this.props.revisions}
+            revisionsFilters={this.props.revisionsFilters}
             releasedChannels={releasedChannels}
             selectedRevisions={this.props.selectedRevisions}
             selectRevision={this.props.selectRevision}
@@ -462,16 +462,23 @@ export default class RevisionsTable extends Component {
 }
 
 RevisionsTable.propTypes = {
+  // state
+  revisions: PropTypes.array,
+  archs: PropTypes.array.isRequired,
+  tracks: PropTypes.array.isRequired,
+  currentTrack: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired,
-  archs: PropTypes.array.isRequired,
-  tracks: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  revisionsFilters: PropTypes.object,
+  selectedRevisions: PropTypes.array,
+  isRevisionsListOpen: PropTypes.bool,
+
+  // actions
   getNextReleasedChannels: PropTypes.func.isRequired,
-  setCurrentTrack: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
+  setCurrentTrack: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -479,13 +486,7 @@ RevisionsTable.propTypes = {
   closeChannel: PropTypes.func.isRequired,
   getTrackingChannel: PropTypes.func.isRequired,
   openRevisionsList: PropTypes.func.isRequired,
-  filters: PropTypes.object,
-  filteredRevisions: PropTypes.array,
-  title: PropTypes.string,
-  selectedRevisions: PropTypes.array,
-  selectRevision: PropTypes.func,
-  closeRevisionsList: PropTypes.func,
-  revisions: PropTypes.array,
-  toggleRevisionsList: PropTypes.func,
-  isRevisionsListOpen: PropTypes.bool
+  selectRevision: PropTypes.func.isRequired,
+  closeRevisionsList: PropTypes.func.isRequired,
+  toggleRevisionsList: PropTypes.func.isRequired
 };
