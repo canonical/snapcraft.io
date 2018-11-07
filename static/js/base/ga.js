@@ -20,41 +20,47 @@ const events = {
   ".p-strip a": "content-link"
 };
 
-window.addEventListener("click", function(e) {
-  let target = e.target.closest("a");
-  if (!target) {
-    target = e.target.closest("button");
+function triggerEvent(category, from, to, label) {
+  if (dataLayer) {
+    dataLayer.push({
+      event: "GAEvent",
+      eventCategory: `${categoryPrefix}${category}`,
+      eventAction: `from:${origin} to:${to}`,
+      eventLabel: label,
+      eventValue: undefined
+    });
   }
+}
 
-  if (!target) {
-    return;
-  }
-
-  for (let key in events) {
-    if (target.matches(key)) {
-      // This prevents subsequent matches triggering
-      // So the order the events are added is important!
-      e.stopImmediatePropagation();
-      let label = target.text.trim();
-      if (label === "") {
-        if (target.children[0] && target.children[0].alt) {
-          label = `Image alt: ${target.children[0].alt}`;
-        }
-      }
-
-      const event = {
-        event: "GAEvent",
-        eventCategory: `${categoryPrefix}${events[key]}`,
-        eventAction: `from:${origin} to:${target.href}`,
-        eventLabel: label,
-        eventValue: undefined
-      };
-
-      if (dataLayer) {
-        dataLayer.push(event);
-      }
-
-      break;
+if (dataLayer) {
+  window.addEventListener("click", function(e) {
+    let target = e.target.closest("a");
+    if (!target) {
+      target = e.target.closest("button");
     }
-  }
-});
+
+    if (!target) {
+      return;
+    }
+
+    for (let key in events) {
+      if (target.matches(key)) {
+        // This prevents subsequent matches triggering
+        // So the order the events are added is important!
+        e.stopImmediatePropagation();
+        let label = target.text ? target.text.trim() : target.innerText.trim();
+        if (label === "") {
+          if (target.children[0] && target.children[0].alt) {
+            label = `Image alt: ${target.children[0].alt}`;
+          }
+        }
+
+        triggerEvent(events[key], origin, target.href, label);
+
+        break;
+      }
+    }
+  });
+}
+
+export { triggerEvent };
