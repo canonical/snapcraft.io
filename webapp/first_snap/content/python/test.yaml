@@ -7,7 +7,7 @@ macos:
     command: multipass shell testvm
   - action: Install the snap inside the virtual machine
     command: sudo snap install --dangerous
-  - action: Confirm the snap is installed by listing your installed snaps to confirm
+  - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine
     command: test-offlineimap-{name}
