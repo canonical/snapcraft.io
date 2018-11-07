@@ -51,7 +51,7 @@ if (dataLayer) {
         let label = target.text ? target.text.trim() : target.innerText.trim();
         if (label === "") {
           if (target.children[0] && target.children[0].alt) {
-            label = `Image alt: ${target.children[0].alt}`;
+            label = `image: ${target.children[0].alt}`;
           }
         }
 

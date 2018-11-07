@@ -1,5 +1,3 @@
-/* global dataLayer */
-
 import distanceInWords from "date-fns/distance_in_words_strict";
 import SnapEvents from "../../libs/events";
 import { triggerEvent } from "../../base/ga";
