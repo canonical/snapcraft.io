@@ -858,3 +858,25 @@ def snap_count():
     context = {"count": len(user_snaps), "snaps": list(user_snaps.keys())}
 
     return flask.jsonify(context)
+
+
+@publisher_snaps.route("/<snap_name>/publicise")
+@login_required
+def get_publicise(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "snap_name": snap_details["snap_name"],
+        "snap_title": snap_details["title"],
+        "snap_id": snap_details["snap_id"],
+    }
+
+    return flask.render_template("publisher/publicise.html", **context)

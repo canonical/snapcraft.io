@@ -64,6 +64,19 @@
           </li>
           <li class="p-tabs__item" role="presentation">
             <a
+              href="/{{ snap_name }}/publicise"
+              class="p-tabs__link"
+              tabindex="0"
+              role="tab"
+              {% if selected_tab == 'publicise' %}
+            aria-selected="true"
+            {% endif %}
+            >
+              Publicise
+            </a>
+          </li>
+          <li class="p-tabs__item" role="presentation">
+            <a
               href="/{{ snap_name }}/settings"
               class="p-tabs__link"
               tabindex="0"
