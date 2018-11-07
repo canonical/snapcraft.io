@@ -123,17 +123,12 @@ class ChannelMap {
           } else {
             this.openChannelMap(target);
             // As discussed with David Calle, we should just track 'install' button clicks
-            if (
-              this.openScreenName === "channel-map-install" &&
-              typeof ga !== "undefined"
-            ) {
+            if (typeof ga !== "undefined") {
               ga("gtm1.send", {
                 hitType: "event",
                 eventCategory: "Snap details",
-                eventAction: "Open install dialog",
-                eventLabel: `Open install dialog screen for ${
-                  this.packageName
-                } snap`
+                eventAction: this.openScreenName,
+                eventLabel: this.packageName
               });
             }
           }
