@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import "whatwg-fetch";
 
 import RevisionsTable from "./revisionsTable";
-import RevisionsList from "./revisionsList";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
@@ -20,6 +19,10 @@ export default class ReleasesController extends Component {
       // released channels contains channel map for each channel in current track
       // also includes 'unassigned' fake channel to show selected unassigned revision
       releasedChannels: this.props.releasedChannels,
+      // list of revisions returned by API (from releases interval)
+      revisions: this.props.revisions,
+      // list of all available tracks
+      tracks: this.props.tracks,
       // list of architectures released to (or selected to be released to)
       archs: this.getArchsFromReleasedChannels(this.props.releasedChannels),
       // revisions to be released:
@@ -482,28 +485,11 @@ export default class ReleasesController extends Component {
   }
 
   render() {
-    const { tracks } = this.props;
-    const { archs, releasedChannels } = this.state;
-
-    const hasDevmodeRevisions = Object.values(releasedChannels).some(
+    const hasDevmodeRevisions = Object.values(this.state.releasedChannels).some(
       archReleases => {
         return Object.values(archReleases).some(isInDevmode);
       }
     );
-
-    let filteredRevisions = this.props.revisions;
-    let title = null;
-    let filters = this.state.revisionsFilters;
-
-    if (filters && filters.arch) {
-      title = "Latest revisions";
-
-      filteredRevisions = filteredRevisions.filter(revision => {
-        return revision.architectures.includes(filters.arch);
-      });
-
-      title = `${title} in ${filters.arch}`;
-    }
 
     return (
       <Fragment>
@@ -528,14 +514,11 @@ export default class ReleasesController extends Component {
             .
           </Notification>
         )}
+
         <RevisionsTable
-          releasedChannels={releasedChannels}
-          currentTrack={this.state.currentTrack}
-          tracks={tracks}
-          archs={archs}
-          isLoading={this.state.isLoading}
-          pendingReleases={this.state.pendingReleases}
-          pendingCloses={this.state.pendingCloses}
+          // map all the state into props
+          {...this.state}
+          // actions
           getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
           releaseRevisions={this.releaseRevisions.bind(this)}
@@ -546,26 +529,10 @@ export default class ReleasesController extends Component {
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
           openRevisionsList={this.openRevisionsList.bind(this)}
-          filters={this.state.revisionsFilters}
+          selectRevision={this.selectRevision.bind(this)}
+          closeRevisionsList={this.closeRevisionsList.bind(this)}
+          toggleRevisionsList={this.toggleRevisionsList.bind(this)}
         />
-        <div className="p-release-actions">
-          <a href="#" onClick={this.toggleRevisionsList.bind(this)}>
-            Show available revisions ({this.props.revisions.length})
-          </a>
-        </div>
-        {this.state.isRevisionsListOpen && (
-          <RevisionsList
-            title={title}
-            idPrefix="main"
-            revisions={filteredRevisions}
-            releasedChannels={releasedChannels}
-            selectedRevisions={this.state.selectedRevisions}
-            selectRevision={this.selectRevision.bind(this)}
-            showChannels={true}
-            showArchitectures={true}
-            closeRevisionsList={this.closeRevisionsList.bind(this)}
-          />
-        )}
       </Fragment>
     );
   }

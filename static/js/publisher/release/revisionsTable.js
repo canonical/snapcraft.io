@@ -11,6 +11,7 @@ import {
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
+import RevisionsList from "./revisionsList";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -66,11 +67,12 @@ export default class RevisionsTable extends Component {
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
-
     const className = `p-release-table__cell ${
       isUnassigned ? "is-clickable" : ""
     } ${
-      isUnassigned && this.props.filters && this.props.filters.arch === arch
+      isUnassigned &&
+      this.props.revisionsFilters &&
+      this.props.revisionsFilters.arch === arch
         ? "is-active"
         : ""
     }`;
@@ -437,22 +439,46 @@ export default class RevisionsTable extends Component {
           </div>
           {this.renderRows(releasedChannels, archs)}
         </div>
+        <div className="p-release-actions">
+          <a href="#" onClick={this.props.toggleRevisionsList}>
+            Show available revisions ({this.props.revisions.length})
+          </a>
+        </div>
+        {this.props.isRevisionsListOpen && (
+          <RevisionsList
+            revisions={this.props.revisions}
+            revisionsFilters={this.props.revisionsFilters}
+            releasedChannels={releasedChannels}
+            selectedRevisions={this.props.selectedRevisions}
+            selectRevision={this.props.selectRevision}
+            showChannels={true}
+            showArchitectures={true}
+            closeRevisionsList={this.props.closeRevisionsList}
+          />
+        )}
       </Fragment>
     );
   }
 }
 
 RevisionsTable.propTypes = {
+  // state
+  revisions: PropTypes.array,
+  archs: PropTypes.array.isRequired,
+  tracks: PropTypes.array.isRequired,
+  currentTrack: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired,
-  archs: PropTypes.array.isRequired,
-  tracks: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  revisionsFilters: PropTypes.object,
+  selectedRevisions: PropTypes.array,
+  isRevisionsListOpen: PropTypes.bool,
+
+  // actions
   getNextReleasedChannels: PropTypes.func.isRequired,
-  setCurrentTrack: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
+  setCurrentTrack: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -460,5 +486,7 @@ RevisionsTable.propTypes = {
   closeChannel: PropTypes.func.isRequired,
   getTrackingChannel: PropTypes.func.isRequired,
   openRevisionsList: PropTypes.func.isRequired,
-  filters: PropTypes.object
+  selectRevision: PropTypes.func.isRequired,
+  closeRevisionsList: PropTypes.func.isRequired,
+  toggleRevisionsList: PropTypes.func.isRequired
 };
