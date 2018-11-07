@@ -56,11 +56,9 @@
   }
 
   .p-release-version {
-    display: inline-block;
+    display: flex;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
   }
 
   .p-release-buttons {
@@ -70,13 +68,13 @@
   }
 
   .p-revision-info {
-    display: inline-block;
-    min-width: 30px;
-    padding-bottom: 1em;
-    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     &.is-pending {
       font-weight: 400;
+      padding-right: $sph-inter;
     }
   }
 
@@ -87,16 +85,14 @@
   }
 
   .p-revision-icon {
-    display: inline-block;
-    width: 20px;
+    margin-right: 4px;
   }
 
   .p-revision-info__revision {
     color: $color-mid-dark;
+    display: block;
     font-size: .8em;
-    left: 0;
-    position: absolute;
-    top: 1.6em;
+    margin-top: -.3rem;
   }
 
   .p-release-confirm {

@@ -84,7 +84,7 @@ export default class RevisionsTable extends Component {
           isUnassigned ? this.handleReleaseCellClick.bind(this, arch) : null
         }
       >
-        <span className="p-tooltip p-tooltip--btm-center">
+        <div className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
             {thisPreviousRevision &&
               isInDevmode(thisPreviousRevision) &&
@@ -96,32 +96,10 @@ export default class RevisionsTable extends Component {
                   />
                 </span>
               )}
-            <span className={isPending ? "p-previous-revision" : ""}>
-              {thisPreviousRevision ? (
-                <span className="p-revision-info">
-                  {thisPreviousRevision.version}
-                  <span className="p-revision-info__revision">
-                    ({thisPreviousRevision.revision})
-                  </span>
-                </span>
-              ) : (
-                <span className={!isPending ? "p-revision-info--empty" : ""}>
-                  {trackingChannel ? (
-                    "↑"
-                  ) : isUnassigned ? (
-                    <span>
-                      <i className="p-icon--plus" /> Add revision
-                    </span>
-                  ) : (
-                    "–"
-                  )}
-                </span>
-              )}
-            </span>
-            {isPending && (
+
+            {isPending ? (
               <Fragment>
-                {" "}
-                &rarr;{" "}
+                <span className="p-revision-icon">&rarr;</span>
                 {hasPendingRelease ? (
                   <span className="p-revision-info is-pending">
                     {thisRevision.version}
@@ -133,6 +111,25 @@ export default class RevisionsTable extends Component {
                   <em>close channel</em>
                 )}
               </Fragment>
+            ) : thisPreviousRevision ? (
+              <span className="p-revision-info">
+                {thisPreviousRevision.version}
+                <span className="p-revision-info__revision">
+                  ({thisPreviousRevision.revision})
+                </span>
+              </span>
+            ) : (
+              <span className="p-revision-info--empty">
+                {trackingChannel ? (
+                  "↑"
+                ) : isUnassigned ? (
+                  <Fragment>
+                    <i className="p-icon--plus" /> Add revision
+                  </Fragment>
+                ) : (
+                  "–"
+                )}
+              </span>
             )}
           </span>
 
@@ -171,7 +168,7 @@ export default class RevisionsTable extends Component {
                 )}
             </span>
           )}
-        </span>
+        </div>
         {hasPendingRelease && (
           <div className="p-release-buttons">
             <button
