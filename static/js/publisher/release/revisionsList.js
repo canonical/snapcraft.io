@@ -11,9 +11,11 @@ export default class RevisionsList extends Component {
     this.props.selectRevision(revision);
   }
 
-  renderRows(revisions) {
+  renderRows(revisions, showCheckboxes) {
     return revisions.map(revision => {
-      const uploadDate = new Date(revision.created_at);
+      const revisionDate = revision.release
+        ? new Date(revision.release.when)
+        : new Date(revision.created_at);
       const isSelected = this.props.selectedRevisions.includes(
         revision.revision
       );
@@ -25,21 +27,26 @@ export default class RevisionsList extends Component {
             this.props.releasedChannels[UNASSIGNED][arch]
         );
 
+      const id = `revision-check-${revision.revision}`;
+
       return (
-        <tr key={revision.revision} className={isDisabled ? "is-disabled" : ""}>
+        <tr key={id} className={isDisabled ? "is-disabled" : ""}>
           <td>
-            <input
-              type="checkbox"
-              checked={isSelected}
-              id={`revision-check-${revision.revision}`}
-              onChange={this.revisionSelectChange.bind(this, revision)}
-            />
-            <label
-              className="u-no-margin--bottom"
-              htmlFor={`revision-check-${revision.revision}`}
-            >
-              {revision.revision}
-            </label>
+            {showCheckboxes ? (
+              <Fragment>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  id={id}
+                  onChange={this.revisionSelectChange.bind(this, revision)}
+                />
+                <label className="u-no-margin--bottom" htmlFor={id}>
+                  {revision.revision}
+                </label>
+              </Fragment>
+            ) : (
+              <span className="col-checkbox-spacer">{revision.revision}</span>
+            )}
           </td>
           <td>
             <DevmodeIcon revision={revision} showTooltip={true} />
@@ -54,13 +61,13 @@ export default class RevisionsList extends Component {
               className="p-tooltip p-tooltip--btm-center"
               aria-describedby={`revision-uploaded-${revision.revision}`}
             >
-              {distanceInWords(new Date(), uploadDate, { addSuffix: true })}
+              {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
               <span
                 className="p-tooltip__message u-align--center"
                 role="tooltip"
                 id={`revision-uploaded-${revision.revision}`}
               >
-                {format(uploadDate, "YYYY-MM-DD HH:mm")}
+                {format(revisionDate, "YYYY-MM-DD HH:mm")}
               </span>
             </span>
           </td>
@@ -78,6 +85,7 @@ export default class RevisionsList extends Component {
     let filteredRevisions = this.props.revisions;
     let title = "Revisions available";
     let filters = this.props.revisionsFilters;
+    let isReleaseHistory = false;
 
     if (filters && filters.arch) {
       title = "Latest revisions";
@@ -87,6 +95,15 @@ export default class RevisionsList extends Component {
       });
 
       title = `${title} in ${filters.arch}`;
+
+      if (filters.risk !== UNASSIGNED) {
+        isReleaseHistory = true;
+        title = `Releases history ${filters.arch} in ${filters.track}/${
+          filters.risk
+        }`;
+
+        filteredRevisions = this.props.getReleaseHistory(filters);
+      }
     }
 
     return (
@@ -103,7 +120,7 @@ export default class RevisionsList extends Component {
         <table className="p-revisions-list">
           <thead>
             <tr>
-              <th className="col-has-checkbox" width="100px" scope="col">
+              <th className="col-checkbox-spacer" width="100px" scope="col">
                 Revision
               </th>
               <th width="20px" />
@@ -113,11 +130,21 @@ export default class RevisionsList extends Component {
               )}
               {this.props.showChannels && <th scope="col">Channels</th>}
               <th scope="col" className="u-align--right">
-                Submission date
+                {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
           </thead>
-          <tbody>{this.renderRows(filteredRevisions)}</tbody>
+          <tbody>
+            {filteredRevisions.length > 0 ? (
+              this.renderRows(filteredRevisions, !isReleaseHistory)
+            ) : (
+              <tr>
+                <td colSpan="6" className="col-checkbox-spacer">
+                  <em>No releases</em>
+                </td>
+              </tr>
+            )}
+          </tbody>
         </table>
       </Fragment>
     );
@@ -134,5 +161,6 @@ RevisionsList.propTypes = {
   showArchitectures: PropTypes.bool,
   // actions
   selectRevision: PropTypes.func.isRequired,
-  closeRevisionsList: PropTypes.func.isRequired
+  closeRevisionsList: PropTypes.func.isRequired,
+  getReleaseHistory: PropTypes.func.isRequired
 };

@@ -38,8 +38,8 @@ export default class RevisionsTable extends Component {
     this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
-  handleReleaseCellClick(arch, event) {
-    this.props.openRevisionsList({ arch });
+  handleReleaseCellClick(arch, risk, track, event) {
+    this.props.openRevisionsList({ arch, risk, track });
 
     event.preventDefault();
     event.stopPropagation();
@@ -70,9 +70,9 @@ export default class RevisionsTable extends Component {
     const className = `p-release-table__cell ${
       isUnassigned ? "is-clickable" : ""
     } ${
-      isUnassigned &&
       this.props.revisionsFilters &&
-      this.props.revisionsFilters.arch === arch
+      this.props.revisionsFilters.arch === arch &&
+      this.props.revisionsFilters.risk === risk
         ? "is-active"
         : ""
     }`;
@@ -82,9 +82,7 @@ export default class RevisionsTable extends Component {
         className={className}
         style={{ position: "relative" }}
         key={`${channel}/${arch}`}
-        onClick={
-          isUnassigned ? this.handleReleaseCellClick.bind(this, arch) : null
-        }
+        onClick={this.handleReleaseCellClick.bind(this, arch, risk, track)}
       >
         <div className="p-tooltip p-tooltip--btm-center">
           <span className="p-release-version">
@@ -454,6 +452,7 @@ export default class RevisionsTable extends Component {
             showChannels={true}
             showArchitectures={true}
             closeRevisionsList={this.props.closeRevisionsList}
+            getReleaseHistory={this.props.getReleaseHistory}
           />
         )}
       </Fragment>
@@ -488,5 +487,6 @@ RevisionsTable.propTypes = {
   openRevisionsList: PropTypes.func.isRequired,
   selectRevision: PropTypes.func.isRequired,
   closeRevisionsList: PropTypes.func.isRequired,
-  toggleRevisionsList: PropTypes.func.isRequired
+  toggleRevisionsList: PropTypes.func.isRequired,
+  getReleaseHistory: PropTypes.func.isRequired
 };
