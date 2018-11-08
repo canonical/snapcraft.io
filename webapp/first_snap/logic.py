@@ -1,6 +1,6 @@
 import markdown
 
-md = markdown.Markdown()
+md = markdown.Markdown(extensions=["extra"])
 
 
 def convert_md(text):

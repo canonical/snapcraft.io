@@ -11,30 +11,34 @@
       <div class="col-8">
         <ol class="p-list-step has-margin">
           {% for step in steps %}
-            <li class="p-list-step__item">
-              <h4 class="p-list-step__title">
-                <span class="p-list-step__bullet">{{ loop.index }}</span>
-                {{ step.action }}
-              </h4>
-              {% if step.command %}
-                {% set snippet_value = step.command %}
-                {% set snippet_id = loop.index %}
-                {% if snippet_value.count('\n') == 0 %}
-                  {% include "/partials/_code-snippet.html" %}
-                {% else %}
-                  {% include "/partials/_code-snippet-multi.html" %}
+            {% if not loop.last %}
+              <li class="p-list-step__item">
+                <h4 class="p-list-step__title">
+                  <span class="p-list-step__bullet">{{ loop.index }}</span>
+                  {{ step.action }}
+                </h4>
+                {% if step.command %}
+                  {% set snippet_value = step.command %}
+                  {% set snippet_id = loop.index %}
+                  {% if snippet_value.count('\n') == 0 %}
+                    {% include "/partials/_code-snippet.html" %}
+                  {% else %}
+                    {% include "/partials/_code-snippet-multi.html" %}
+                  {% endif %}
                 {% endif %}
-              {% endif %}
-            </li>
+              </li>
+            {% endif %}
           {% endfor %}
-          {% if os.startswith('linux') %}
-            <div class="p-notification--caution">
-              <p class="p-notification__response">
-                <span class="p-notification__status"></span>
-                You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name).
-              </p>
-            </div>
-          {% endif %}
+          {% for step in steps %}
+            {% if loop.last and step.warning %}
+              <div class="p-notification--caution">
+                <p class="p-notification__response">
+                  <span class="p-notification__status"></span>
+                  {{ step.warning|safe }}
+                </p>
+              </div>
+            {% endif %}
+          {% endfor %}
         </ol>
       </div>
     </div>

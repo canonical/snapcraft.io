@@ -152,7 +152,7 @@ function push() {
   getCount(snapName => {
     const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
-      continueBtn.href = `/${snapName}/listing?from=fsf`;
+      continueBtn.href = `/${snapName}/listing?from=first-snap`;
       continueBtn.classList.add("p-button--positive");
       continueBtn.classList.remove("p-button--neutral");
       continueBtn.innerHTML = "Continue";
