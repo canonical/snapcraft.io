@@ -1,7 +1,6 @@
-/* global ga */
-
 import distanceInWords from "date-fns/distance_in_words_strict";
 import SnapEvents from "../../libs/events";
+import { triggerEvent } from "../../base/ga";
 
 class ChannelMap {
   constructor(selectorString, packageName, channelMapData, defaultTrack) {
@@ -122,20 +121,13 @@ class ChannelMap {
             this.openButton = null;
           } else {
             this.openChannelMap(target);
-            // As discussed with David Calle, we should just track 'install' button clicks
-            if (
-              this.openScreenName === "channel-map-install" &&
-              typeof ga !== "undefined"
-            ) {
-              ga("gtm1.send", {
-                hitType: "event",
-                eventCategory: "Snap details",
-                eventAction: "Open install dialog",
-                eventLabel: `Open install dialog screen for ${
-                  this.packageName
-                } snap`
-              });
-            }
+
+            triggerEvent(
+              this.openScreenName === "channel-map-install" ? "cta-0" : "cta-1",
+              window.location.href,
+              target.dataset.controls,
+              target.innerText
+            );
           }
         },
 
@@ -159,6 +151,12 @@ class ChannelMap {
         '[data-js="open-desktop"]': (event, target) => {
           event.preventDefault();
           this.openDesktop(target);
+          triggerEvent(
+            "cta-1",
+            window.location.href,
+            `snap://${target.dataset.snap}`,
+            target.innerText
+          );
         },
 
         '[data-js="slide-install-instructions"]': (event, target) => {
