@@ -67,8 +67,8 @@ export default class RevisionsTable extends Component {
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
-    const className = `p-release-table__cell ${
-      isUnassigned ? "is-clickable" : ""
+    const className = `p-release-table__cell is-clickable ${
+      isUnassigned ? "is-unassigned" : ""
     } ${
       this.props.revisionsFilters &&
       this.props.revisionsFilters.arch === arch &&
