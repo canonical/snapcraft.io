@@ -19,7 +19,11 @@ export default class RevisionsList extends Component {
       const isSelected = this.props.selectedRevisions.includes(
         revision.revision
       );
+
+      // disable revisions from the same architecture that already selected
+      // but only if checkboxes are visible (not in channel history)
       const isDisabled =
+        showCheckboxes &&
         !isSelected &&
         revision.architectures.some(
           arch =>
