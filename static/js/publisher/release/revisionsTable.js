@@ -34,7 +34,8 @@ export default class RevisionsTable extends Component {
     }
   }
 
-  undoClick(revision, track, risk) {
+  undoClick(revision, track, risk, event) {
+    event.stopPropagation();
     this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
