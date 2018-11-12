@@ -248,6 +248,11 @@ def get_listing_snap(snap_name):
     if " AND " not in license.upper() and " WITH " not in license.upper():
         license_type = "simple"
 
+    referrer = None
+
+    if flask.request.args.get("from"):
+        referrer = flask.request.args.get("from")
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -268,6 +273,7 @@ def get_listing_snap(snap_name):
         "licenses": licenses,
         "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
+        "from": referrer,
     }
 
     return flask.render_template("publisher/listing.html", **context)

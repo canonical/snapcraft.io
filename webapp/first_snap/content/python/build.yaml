@@ -10,6 +10,8 @@ linux:
       command: snap list
     - action: Run the snap
       command: test-offlineimap-{name}
+    - warning: |
+        Make sure the name matches what has been used previously (i.e <code>test-offlineimap-{name}</code>)
   manual:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
       command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
@@ -21,6 +23,8 @@ linux:
       command: snap list
     - action: Run the snap
       command: test-offlineimap-{name}
+    - warning: |
+        Make sure the name matches what has been used previously (i.e <code>test-offlineimap-{name}</code>)
 macos:
   auto:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
