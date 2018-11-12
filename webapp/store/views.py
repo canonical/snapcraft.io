@@ -248,9 +248,12 @@ def store_blueprint(store_query=None):
             if api_response_error_list.status_code == 404:
                 flask.abort(404, "No snap named {}".format(snap_name))
             else:
-                error_messages = ", ".join(
-                    api_response_error_list.errors.key()
-                )
+                if api_response_error_list.errors:
+                    error_messages = ", ".join(
+                        api_response_error_list.errors.key()
+                    )
+                else:
+                    error_messages = ""
                 flask.abort(502, error_messages)
         except ApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
