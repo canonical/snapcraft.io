@@ -29,7 +29,7 @@ SNAP_SEARCH_URL = "".join(
     [
         SNAPCRAFT_IO_API,
         "snaps/search",
-        "?q={snap_name}&page={page}&size={size}&scope=wide",
+        "?q={snap_name}&page={page}&size={size}&scope=wide&arch=wide",
         "&confinement=strict,classic",
         "&fields=package_name,title,summary,icon_url,publisher,",
         "developer_validation,origin",
