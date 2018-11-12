@@ -155,6 +155,7 @@ function push() {
       continueBtn.href = `/${snapName}/listing?from=first-snap`;
       continueBtn.classList.add("p-button--positive");
       continueBtn.classList.remove("p-button--neutral");
+      continueBtn.classList.remove("is--disabled");
       continueBtn.innerHTML = "Continue";
     }
   });
