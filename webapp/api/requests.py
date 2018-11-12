@@ -103,6 +103,7 @@ class CachedSession(BaseSession, requests_cache.CachedSession):
             "expire_after": 5,
             # Include headers in cache key
             "include_get_headers": True,
+            "old_data_on_error": True,
         }
 
         options.update(kwargs)
