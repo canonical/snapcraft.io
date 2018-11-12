@@ -17,7 +17,7 @@ explain:
     - code: |
         name: offlineimap
     - warning: |
-        You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicts later in this guide.
+        <b>Snap names are globally unique.</b> You should change any instance of `offlineimap` to `test-offlineimap-{name}` (where `{name}` is your name) before continuing to avoid conflicting with the official offlineimap snap.
     - text: By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps.
     - code: |
         version: git
@@ -50,6 +50,6 @@ explain:
           test-offlineimap-{name}:
             command: bin/test-offlineimap-{name}
     - warning: |
-        Make sure the name matches what has been used previously (i.e <code>test-offlineimap-{name}</code>)
+        <b>Snap names are globally unique.</b> You should change any instance of `offlineimap` to `test-offlineimap-{name}` (where `{name}` is your name) before continuing to avoid conflicting with the official offlineimap snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
     - text: If your command name matches the snap name, users will be able run the command directly.
