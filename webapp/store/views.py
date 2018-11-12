@@ -253,7 +253,7 @@ def store_blueprint(store_query=None, testing=False):
                         api_response_error_list.errors.key()
                     )
                 else:
-                    error_messages = ""
+                    error_messages = "An error occurred."
                 flask.abort(502, error_messages)
         except ApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
