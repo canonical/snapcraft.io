@@ -117,6 +117,16 @@ def feed():
     return flask.Response(right_title, mimetype="text/xml")
 
 
+@blog.route(
+    '/<regex("[0-9]{4}"):year>/<regex("[0-9]{2}"):month>/'
+    '<regex("[0-9]{2}"):day>/<slug>'
+)
+@blog.route('/<regex("[0-9]{4}"):year>/<regex("[0-9]{2}"):month>/<slug>')
+@blog.route('/<regex("[0-9]{4}"):year>/<slug>')
+def article_redirect(slug, year, month=None, day=None):
+    return flask.redirect(flask.url_for(".article", slug=slug))
+
+
 @blog.route("/<slug>")
 def article(slug):
     try:
