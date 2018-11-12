@@ -64,7 +64,9 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
 
-        response = self.client.get(self.endpoint_url)
+        endpoint = "?".join([self.endpoint_url, "from=test"])
+
+        response = self.client.get(endpoint)
 
         self.check_call_by_api_url(responses.calls)
 
@@ -87,6 +89,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("public_metrics_blacklist", False)
         self.assert_context("license", "License")
         self.assert_context("video_urls", [])
+        self.assert_context("from", "test")
 
     @responses.activate
     def test_icon(self):

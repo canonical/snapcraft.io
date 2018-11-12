@@ -19,3 +19,5 @@ statsd<3.3.0
 prometheus_client==0.3.1
 talisker==0.9.16
 black==18.6b4
+ruamel.yaml==0.15.72
+Markdown==3.0.1

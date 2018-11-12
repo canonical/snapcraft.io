@@ -4,6 +4,7 @@ import channelMap from "./snap-details/channelMap";
 import { storeCategories } from "./store-categories";
 import { snapDetailsPosts, seriesPosts } from "./snap-details/blog-posts";
 import { initFSFLanguageSelect } from "./fsf-language-select";
+import firstSnapFlow from "./first-snap-flow";
 
 export {
   map,
@@ -12,5 +13,6 @@ export {
   storeCategories,
   snapDetailsPosts,
   seriesPosts,
-  initFSFLanguageSelect
+  initFSFLanguageSelect,
+  firstSnapFlow
 };

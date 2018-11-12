@@ -248,6 +248,11 @@ def get_listing_snap(snap_name):
     if " AND " not in license.upper() and " WITH " not in license.upper():
         license_type = "simple"
 
+    referrer = None
+
+    if flask.request.args.get("from"):
+        referrer = flask.request.args.get("from")
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -268,6 +273,7 @@ def get_listing_snap(snap_name):
         "licenses": licenses,
         "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
+        "from": referrer,
     }
 
     return flask.render_template("publisher/listing.html", **context)
@@ -835,3 +841,20 @@ def post_settings(snap_name):
         flask.flash("No changes to save.", "information")
 
     return flask.redirect(flask.url_for(".get_settings", snap_name=snap_name))
+
+
+@publisher_snaps.route("/snaps/api/snap-count")
+@login_required
+def snap_count():
+    try:
+        account_info = api.get_account(flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
+
+    context = {"count": len(user_snaps), "snaps": list(user_snaps.keys())}
+
+    return flask.jsonify(context)

@@ -30,6 +30,7 @@ $color-navigation-background: #252525;
 @include vf-p-code-snippet;
 @include vf-p-form-validation;
 @include vf-p-contextual-menu;
+@include vf-p-breadcrumbs;
 
 // vanilla utilities
 @include vf-u-floats;
@@ -187,3 +188,18 @@ $color-navigation-background: #252525;
 
 @import 'patterns_first-snap-flow';
 @include snapcraft-p-first-snap-flow;
+
+@import 'snapcraft_p-list-step';
+@include snapcraft-p-list-step;
+
+@import 'snapcraft_p-breadcrumbs';
+@include snapcraft-p-breadcrumbs;
+
+@import 'patterns_code-copyable';
+@include vf-p-code-copyable;
+
+@import 'snapcraft_p-code-block';
+@include snapcraft-p-code-block;
+
+@import 'snapcraft_p-code-snippet';
+@include snapcraft-p-code-snippet;

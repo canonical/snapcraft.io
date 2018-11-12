@@ -1,6 +1,16 @@
 {% include "publisher/_beta-notification.html" %}
 
 <section class="p-strip is-shallow u-no-padding--bottom">
+  {% if from == "first-snap" %}
+    <div class="row">
+      <div class="p-notification--information">
+        <p class="p-notification__response">
+          <span class="p-notification__status">Congratulations</span>
+          {{ snap_name }} is pushed to the Store. Modify its public information, include screenshots then visit <a href="/{{ snap_name }}">your published Snap</a>.
+        </p>
+      </div>
+    </div>
+  {% endif %}
   <nav class="p-tabs-bordered">
     <div class="row">
       <div class="col-12">

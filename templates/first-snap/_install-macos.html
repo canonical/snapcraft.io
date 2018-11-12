@@ -1,0 +1,71 @@
+<div class="p-strip is-shallow js-os-wrapper js-macos u-hide">
+  {#<div class="row">
+    <h4>How would you like to set up your build environment?</h4>
+    <input type="radio" name="os" value="macos-auto" id="macos-auto" />
+    <label for="macos-auto">Automatic (recommended)</label>
+    <input type="radio" name="os" value="macos-manual" id="macos-manual" />
+    <label for="macos-manual">Set up manually with Docker</label>
+  </div>#}
+
+  <div class="row js-os-type js-macos-auto{# u-hide#}">
+    <div class="col-8">
+      <ol class="p-list-step">
+        <li class="p-list-step__item">
+            <h4 class="p-list-step__title">
+              <span class="p-list-step__bullet">1</span>
+              <a href="https://github.com/CanonicalLtd/multipass/releases/" target="_blank" class="p-link--external">Install Multipass</a>, a virtualisation product from <br/>Canonical that can set up a complete Linux environment <br/>in a couple of minutes
+            </h4>
+          </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">2</span>
+            <a href="https://brew.sh" target="_blank" class="p-link--external">Install Homebrew</a>, if you don't have it already
+          </h4>
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">3</span>
+            Install Snapcraft, the command-line tool for building snaps
+          </h4>
+          {% set snippet_value = "brew install snapcraft" %}
+          {% set snippet_id = "macos-install-snapcraft" %}
+          {% include "/partials/_code-snippet.html" %}
+        </li>
+      </ol>
+    </div>
+  </div>
+  {#<div class="row js-os-type js-macos-manual u-hide">
+    <div class="col-8">
+      <ol class="p-list-step has-margin">
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">1</span>
+            <a href="https://docs.docker.com/docker-for-mac/install/" target="_blank" class="p-link--external">Install Docker</a>
+            , if you don't have it already
+          </h4>
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">2</span>
+            Check that Docker is correctly configured
+          </h4>
+          {% set snippet_value = "docker run hello-world" %}
+          {% set snippet_id = "macos-docker" %}
+          {% include "/partials/_code-snippet.html" %}
+          <p class="p-list-step__content">
+            If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
+          </p>
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">2</span>
+            Pull the latest snapcraft image:
+          </h4>
+          {% set snippet_value = "docker pull snapcore/snapcraft" %}
+          {% set snippet_id = "macos-docker-pull" %}
+          {% include "/partials/_code-snippet.html" %}
+        </li>
+      </ol>
+    </div>
+  </div>#}
+</div>

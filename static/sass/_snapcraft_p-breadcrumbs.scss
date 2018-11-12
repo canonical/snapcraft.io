@@ -1,0 +1,6 @@
+@mixin snapcraft-p-breadcrumbs {
+  .p-breadcrumbs__item::before,
+  .p-breadcrumbs__item.is-disabled {
+    color: $color-mid-light;
+  }
+}

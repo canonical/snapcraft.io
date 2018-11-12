@@ -1,0 +1,19 @@
+@mixin snapcraft-p-list-step {
+  .p-list-step {
+    li.p-list-step__item::before { // sass-lint:disable-line no-qualifying-elements
+      @extend %vf-heading-4;
+      background-color: transparent;
+      color: initial;
+      content: "." counter(li);
+    }
+
+    // Override max-width of 25em
+    .p-list-step__title {
+      max-width: 100%;
+    }
+
+    &.has-margin {
+      margin-top: $spv-intra--scaleable;
+    }
+  }
+}
