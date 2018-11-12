@@ -18,8 +18,8 @@ from webapp.api.exceptions import (
 from urllib.parse import quote_plus
 
 
-def store_blueprint(store_query=None):
-    api = StoreApi(store_query)
+def store_blueprint(store_query=None, testing=False):
+    api = StoreApi(store=store_query, testing=testing)
 
     store = flask.Blueprint(
         "store",
@@ -248,9 +248,12 @@ def store_blueprint(store_query=None):
             if api_response_error_list.status_code == 404:
                 flask.abort(404, "No snap named {}".format(snap_name))
             else:
-                error_messages = ", ".join(
-                    api_response_error_list.errors.key()
-                )
+                if api_response_error_list.errors:
+                    error_messages = ", ".join(
+                        api_response_error_list.errors.key()
+                    )
+                else:
+                    error_messages = "An error occurred."
                 flask.abort(502, error_messages)
         except ApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
