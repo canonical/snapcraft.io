@@ -5,11 +5,11 @@ linux:
     - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
       command: unsquashfs -l *.snap
     - action: Install the snap
-      command: sudo snap install --dangerous *.snap
+      command: sudo snap install --devmode --dangerous *.snap
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-offlineimap-{name}
+      command: test-offlineimap-{name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-offlineimap-{name}</code>)
   manual:
@@ -18,11 +18,11 @@ linux:
     - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
       command: unsquashfs -l *.snap
     - action: Install the snap
-      command: sudo snap install --dangerous *.snap
+      command: sudo snap install --devmode --dangerous *.snap
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-offlineimap-{name}
+      command: test-offlineimap-{name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-offlineimap-{name}</code>)
 macos:
