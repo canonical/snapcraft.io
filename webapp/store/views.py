@@ -18,8 +18,8 @@ from webapp.api.exceptions import (
 from urllib.parse import quote_plus
 
 
-def store_blueprint(store_query=None):
-    api = StoreApi(store_query)
+def store_blueprint(store_query=None, testing=False):
+    api = StoreApi(store=store_query, testing=testing)
 
     store = flask.Blueprint(
         "store",

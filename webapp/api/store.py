@@ -66,12 +66,15 @@ class StoreApi:
     headers = {"X-Ubuntu-Series": "16"}
     headers_v2 = {"Snap-Device-Series": "16"}
 
-    def __init__(self, store=None):
+    def __init__(self, store=None, testing=False):
         if store:
             self.headers.update({"X-Ubuntu-Store": store})
             self.headers_v2.update({"Snap-Device-Store": store})
 
-        self.session = api.requests.CachedSession()
+        if testing:
+            self.session = api.requests.Session()
+        else:
+            self.session = api.requests.CachedSession()
         self.session.headers.update(self.headers)
         self.session.headers.update(self.headers_v2)
 
