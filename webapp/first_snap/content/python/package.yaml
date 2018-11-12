@@ -40,6 +40,7 @@ explain:
             plugin: python
             python-version: python2
             source: .
+            source-type: git
             stage-packages:
               - python-six
     - text: The <code>python</code> plugin builds upon the work you’ve already done to describe your Python dependencies in <code>setup.py</code> and <code>requirements.txt</code>. You can include the latter by setting the <code>requirements</code> keyword to the path of your <code>requirements.txt</code>.
