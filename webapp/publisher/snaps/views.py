@@ -873,10 +873,24 @@ def get_publicise(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
+    available_languages = {
+        "en": {"title": "English", "text": "Get it from the Snap Store"},
+        "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
+        "es": {"title": "Español", "text": "Instala desde Snap Store"},
+        "fr": {
+            "title": "Français",
+            "text": "Installer à partir du Snap Store",
+        },
+        "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
+        "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
+        "tw": {"title": "中華民國國語", "text": "安裝軟體敬請移駕 Snap Store"},
+    }
+
     context = {
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
+        "available": available_languages,
     }
 
     return flask.render_template("publisher/publicise.html", **context)

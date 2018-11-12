@@ -16,457 +16,113 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
       </div>
       <div class="col-8">
         <form class="p-form--inline js-language-select">
-          <div class="p-form__group">
-            <input type="radio" name="language" value="en" id="en" />
-            <label for="en">English</label>
-          </div>
-          <div class="p-form__group">
-            <input type="radio" name="language" value="de" id="de" />
-            <label for="de">Deutsch</label>
-          </div>
-          <div class="p-form__group">
-            <input type="radio" name="language" value="fr" id="fr" />
-            <label for="fr">French</label>
-          </div>
-          <div class="p-form__group">
-            <input type="radio" name="language" value="jp" id="jp" />
-            <label for="jp">Japanese</label>
-          </div>
-          <div class="p-form__group">
-            <input type="radio" name="language" value="es" id="es" />
-            <label for="es">Spanish</label>
-          </div>
+          <select name="language">
+            {% for lang, data in available.items() %}
+              <option value="{{ lang }}">{{ data.title }}</option>
+            {% endfor %}
+          </select>
         </form>
+        <p class="u-no-margin--bottom">You can contribute to translate these assets <a href="https://github.com/snapcore/snap-store-badges" target="_blank" class="p-link--external">in this repository</a>.</p>
+      </div>
+    </div>
+`
+    <div class="row">
+      <hr />
+    </div>
+
+    {% for lang, data in available.items() %}
+      <div id="{{ lang }}_content" class="js-language-content{% if loop.index != 1 %} u-hide{% endif %}">
+        <div class="row">
+          <div class="col-2">
+          </div>
+          <div class="col-8">
+            <div class="col-5">
+              <p class="snapcraft-publicise__images">
+                {% set url = "images/badges/" + lang + "/snap-store-black.svg" %}
+                <a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}">
+                  <img src="{{ static_url(url) }}" />
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>HTML:</label>
+          </div>
+          <div class="col-8">
+            <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}"&gt;
+  &lt;img src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg" alt="" /&gt;
+&lt;/a&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>Markdown:</label>
+          </div>
+          <div class="col-8">
+            <pre><code>[![{{ data.text }}](https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <hr />
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+          </div>
+          <div class="col-8">
+            <div class="col-5">
+              <p class="snapcraft-publicise__images">
+                {% set url = "images/badges/" + lang + "/snap-store-white.svg" %}
+                <a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}">
+                  <img src="{{ static_url(url) }}" />
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>HTML:</label>
+          </div>
+          <div class="col-8">
+            <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}"&gt;
+  &lt;img src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg" alt="" /&gt;
+&lt;/a&gt;</code></pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>Markdown:</label>
+          </div>
+          <div class="col-8">
+            <pre><code>[![{{ data.text }}](https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="row">
+      <hr />
+    </div>
+
+    <div class="row">
+      <div class="col-2">
+        Download all:
+      </div>
+      <div class="col-8">
+        <a href="https://github.com/snapcore/snap-store-badges/archive/v1.zip" class="p-button">zip</a>
+        <a href="https://github.com/snapcore/snap-store-badges/archive/v1.tar.gz" class="p-button">tar.gz</a>
+        <a href="https://raw.githubusercontent.com/snapcore/snap-store-badges/master/LICENSE.md" target="_blank" class="p-link--external">View license</a>
       </div>
     </div>
   </div>
-
-  <div class="row">
-    <hr class="u-no-margin--bottom" />
-  </div>
-
-  <div class="p-strip is-shallow">
-    <div id="en_content" class="js-language-content">
-      <div class="row">
-        <div class="col-2">
-          <label>Snap store badge:</label>
-        </div>
-        <div class="col-8">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              <img src="https://assets.ubuntu.com/v1/ab1e8e6c-EN-snap-store-black-uneditable.svg" />
-              <img src="https://assets.ubuntu.com/v1/207ed097-EN-snap-store-white-uneditable.svg" />
-            </p>
-          </div>
-          <div class="col-3">
-            <a href="https://assets.ubuntu.com/v1/d9fdbcfe-EN.zip" class="p-button u-no-margin--bottom snapcraft-publicise__download">Download (zip)</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>HTML:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="Get it from the Snap Store"&gt;
-  &lt;img src="https://assets.ubuntu.com/v1/ab1e8e6c-EN-snap-store-black-uneditable.svg" alt="" /&gt;
-&lt;/a&gt;</code></pre>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>Markdown:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>[![Get it from the Snap Store](https://assets.ubuntu.com/v1/ab1e8e6c-EN-snap-store-black-uneditable.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div id="de_content" class="js-language-content u-hide">
-      <div class="row">
-        <div class="col-2">
-          <label>Snap store badge:</label>
-        </div>
-        <div class="col-8">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              <img src="https://assets.ubuntu.com/v1/0b4af9f2-DE-snap-store-black-uneditable.svg" />
-              <img src="https://assets.ubuntu.com/v1/ee634808-DE-snap-store-white-uneditable.svg" />
-            </p>
-          </div>
-          <div class="col-3">
-            <a href="https://assets.ubuntu.com/v1/267d99db-DE.zip" class="p-button u-no-margin--bottom snapcraft-publicise__download">Download (zip)</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>HTML:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="Installieren vom Snap Store"&gt;
-  &lt;img src="https://assets.ubuntu.com/v1/0b4af9f2-DE-snap-store-black-uneditable.svg.svg" alt="" /&gt;
-&lt;/a&gt;</code></pre>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>Markdown:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>[![Installieren vom Snap Store](https://assets.ubuntu.com/v1/0b4af9f2-DE-snap-store-black-uneditable.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div id="fr_content" class="js-language-content u-hide">
-      <div class="row">
-        <div class="col-2">
-          <label>Snap store badge:</label>
-        </div>
-        <div class="col-8">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              <img src="https://assets.ubuntu.com/v1/dacb32c0-FR-snap-store-black-uneditable.svg" />
-              <img src="https://assets.ubuntu.com/v1/e157a46a-FR-snap-store-white-uneditable.svg" />
-            </p>
-          </div>
-          <div class="col-3">
-            <a href="https://assets.ubuntu.com/v1/9c0ac8ee-FR.zip" class="p-button u-no-margin--bottom snapcraft-publicise__download">Download (zip)</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>HTML:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="Installer à partir du Snap Store"&gt;
-  &lt;img src="https://assets.ubuntu.com/v1/dacb32c0-FR-snap-store-black-uneditable.svg" alt="" /&gt;
-&lt;/a&gt;</code></pre>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>Markdown:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>[![Installer à partir du Snap Store](https://assets.ubuntu.com/v1/dacb32c0-FR-snap-store-black-uneditable.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div id="jp_content" class="js-language-content u-hide">
-      <div class="row">
-        <div class="col-2">
-          <label>Snap store badge:</label>
-        </div>
-        <div class="col-8">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              <img src="https://assets.ubuntu.com/v1/dd5ab12a-JP-snap-store-black-uneditable.svg" />
-              <img src="https://assets.ubuntu.com/v1/50df5ee8-JP-snap-store-white-uneditable.svg" />
-            </p>
-          </div>
-          <div class="col-3">
-            <a href="https://assets.ubuntu.com/v1/a1969218-JP.zip" class="p-button u-no-margin--bottom snapcraft-publicise__download">Download (zip)</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>HTML:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="Get it from the Snap Store"&gt;
-  &lt;img src="https://assets.ubuntu.com/v1/dd5ab12a-JP-snap-store-black-uneditable.svg" alt="" /&gt;
-&lt;/a&gt;</code></pre>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>Markdown:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>[![Get it from the Snap Store](https://assets.ubuntu.com/v1/dd5ab12a-JP-snap-store-black-uneditable.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div id="es_content" class="js-language-content u-hide">
-      <div class="row">
-        <div class="col-2">
-          <label>Snap store badge:</label>
-        </div>
-        <div class="col-8">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              <img src="https://assets.ubuntu.com/v1/06b199ba-ES-snap-store-black-uneditable.svg" />
-              <img src="https://assets.ubuntu.com/v1/4ed2cce2-ES-snap-store-white-uneditable.svg" />
-            </p>
-          </div>
-          <div class="col-3">
-            <a href="https://assets.ubuntu.com/v1/b145cca1-ES.zip" class="p-button u-no-margin--bottom snapcraft-publicise__download">Download (zip)</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>HTML:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="Instala desde Snap Store"&gt;
-  &lt;img src="https://assets.ubuntu.com/v1/06b199ba-ES-snap-store-black-uneditable.svg" alt="" /&gt;
-&lt;/a&gt;</code></pre>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-2">
-          <label>Markdown:</label>
-        </div>
-        <div class="col-8">
-          <pre><code>[![Instala desde Snap Store](https://assets.ubuntu.com/v1/06b199ba-ES-snap-store-black-uneditable.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <p>The Snapcraft logo is licensed under CC BY-ND 2.0 UK, a registered trademark of Canonical Limited, 2018. Full license can be found on <a href="#" class="js-show-license">here</a>.</p>
-  </div>
-
-  <div id="license" class="u-hide">
-    <div class="vbox-overlay" style="display: block; opacity: 1;">
-      <div class="vbox-container">
-        <div class="vbox-content" style="opacity: 1;">
-          <div class="col-8" style="max-height: 500px; overflow: auto;">
-                <pre class="u-no-margin--bottom"><code>The Snapcraft logo is licensed under CC BY-ND 2.0 UK,
-a registered trademark of Canonical Limited, 2018.
-
-Creative Commons Attribution-NoDerivs 2.0 CREATIVE COMMONS CORPORATION IS
-NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL SERVICES. DISTRIBUTION OF THIS LICENSE
-DOES NOT CREATE AN ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES
-THIS INFORMATION ON AN "AS-IS" BASIS. CREATIVE COMMONS MAKES NO WARRANTIES
-REGARDING THE INFORMATION PROVIDED, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING
-FROM ITS USE.
-
-License
-
-THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE COMMONS
-PUBLIC LICENSE ("CCPL" OR "LICENSE"). THE WORK IS PROTECTED BY COPYRIGHT AND/OR
-OTHER APPLICABLE LAW. ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS
-LICENSE OR COPYRIGHT LAW IS PROHIBITED.
-
-BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO
-BE BOUND BY THE TERMS OF THIS LICENSE. THE LICENSOR GRANTS YOU THE RIGHTS
-CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
-
-   1. Definitions
-
-a. "Collective Work" means a work, such as a periodical issue, anthology or
-encyclopedia, in which the Work in its entirety in unmodified form, along
-with a number of other contributions, constituting separate and independent
-works in themselves, are assembled into a collective whole. A work that constitutes
-a Collective Work will not be considered a Derivative Work (as defined below)
-for the purposes of this License.
-
-b. "Derivative Work" means a work based upon the Work or upon the Work and
-other pre-existing works, such as a translation, musical arrangement, dramatization,
-fictionalization, motion picture version, sound recording, art reproduction,
-abridgment, condensation, or any other form in which the Work may be recast,
-transformed, or adapted, except that a work that constitutes a Collective
-Work will not be considered a Derivative Work for the purpose of this License.
-For the avoidance of doubt, where the Work is a musical composition or sound
-recording, the synchronization of the Work in timed-relation with a moving
-image ("synching") will be considered a Derivative Work for the purpose of
-this License.
-
-c. "Licensor" means the individual or entity that offers the Work under the
-terms of this License.
-
-      d. "Original Author" means the individual or entity who created the Work.
-
-e. "Work" means the copyrightable work of authorship offered under the terms
-of this License.
-
-f. "You" means an individual or entity exercising rights under this License
-who has not previously violated the terms of this License with respect to
-the Work, or who has received express permission from the Licensor to exercise
-rights under this License despite a previous violation.
-
-2. Fair Use Rights. Nothing in this license is intended to reduce, limit,
-or restrict any rights arising from fair use, first sale or other limitations
-on the exclusive rights of the copyright owner under copyright law or other
-applicable laws.
-
-3. License Grant. Subject to the terms and conditions of this License, Licensor
-hereby grants You a worldwide, royalty-free, non-exclusive, perpetual (for
-the duration of the applicable copyright) license to exercise the rights in
-the Work as stated below:
-
-a. to reproduce the Work, to incorporate the Work into one or more Collective
-Works, and to reproduce the Work as incorporated in the Collective Works;
-
-b. to distribute copies or phonorecords of, display publicly, perform publicly,
-and perform publicly by means of a digital audio transmission the Work including
-as incorporated in Collective Works.
-
-      c. For the avoidance of doubt, where the work is a musical composition:
-
-i. Performance Royalties Under Blanket Licenses. Licensor waives the exclusive
-right to collect, whether individually or via a performance rights society
-(e.g. ASCAP, BMI, SESAC), royalties for the public performance or public digital
-performance (e.g. webcast) of the Work.
-
-ii. Mechanical Rights and Statutory Royalties. Licensor waives the exclusive
-right to collect, whether individually or via a music rights society or designated
-agent (e.g. Harry Fox Agency), royalties for any phonorecord You create from
-the Work ("cover version") and distribute, subject to the compulsory license
-created by 17 USC Section 115 of the US Copyright Act (or the equivalent in
-other jurisdictions).
-
-d. Webcasting Rights and Statutory Royalties. For the avoidance of doubt,
-where the Work is a sound recording, Licensor waives the exclusive right to
-collect, whether individually or via a performance-rights society (e.g. SoundExchange),
-royalties for the public digital performance (e.g. webcast) of the Work, subject
-to the compulsory license created by 17 USC Section 114 of the US Copyright
-Act (or the equivalent in other jurisdictions).
-
-
-
-The above rights may be exercised in all media and formats whether now known
-or hereafter devised. The above rights include the right to make such modifications
-as are technically necessary to exercise the rights in other media and formats,
-but otherwise you have no rights to make Derivative Works. All rights not
-expressly granted by Licensor are hereby reserved.
-
-4. Restrictions. The license granted in Section 3 above is expressly made
-subject to and limited by the following restrictions:
-
-a. You may distribute, publicly display, publicly perform, or publicly digitally
-perform the Work only under the terms of this License, and You must include
-a copy of, or the Uniform Resource Identifier for, this License with every
-copy or phonorecord of the Work You distribute, publicly display, publicly
-perform, or publicly digitally perform. You may not offer or impose any terms
-on the Work that alter or restrict the terms of this License or the recipients'
-exercise of the rights granted hereunder. You may not sublicense the Work.
-You must keep intact all notices that refer to this License and to the disclaimer
-of warranties. You may not distribute, publicly display, publicly perform,
-or publicly digitally perform the Work with any technological measures that
-control access or use of the Work in a manner inconsistent with the terms
-of this License Agreement. The above applies to the Work as incorporated in
-a Collective Work, but this does not require the Collective Work apart from
-the Work itself to be made subject to the terms of this License. If You create
-a Collective Work, upon notice from any Licensor You must, to the extent practicable,
-remove from the Collective Work any reference to such Licensor or the Original
-Author, as requested.
-
-b. If you distribute, publicly display, publicly perform, or publicly digitally
-perform the Work or Collective Works, You must keep intact all copyright notices
-for the Work and give the Original Author credit reasonable to the medium
-or means You are utilizing by conveying the name (or pseudonym if applicable)
-of the Original Author if supplied; the title of the Work if supplied; and
-to the extent reasonably practicable, the Uniform Resource Identifier, if
-any, that Licensor specifies to be associated with the Work, unless such URI
-does not refer to the copyright notice or licensing information for the Work.
-Such credit may be implemented in any reasonable manner; provided, however,
-that in the case of a Collective Work, at a minimum such credit will appear
-where any other comparable authorship credit appears and in a manner at least
-as prominent as such other comparable authorship credit.
-
-   5. Representations, Warranties and Disclaimer
-
-UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING, LICENSOR OFFERS
-THE WORK AS-IS AND MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY KIND CONCERNING
-THE MATERIALS, EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING, WITHOUT
-LIMITATION, WARRANTIES OF TITLE, MERCHANTIBILITY, FITNESS FOR A PARTICULAR
-PURPOSE, NONINFRINGEMENT, OR THE ABSENCE OF LATENT OR OTHER DEFECTS, ACCURACY,
-OR THE PRESENCE OF ABSENCE OF ERRORS, WHETHER OR NOT DISCOVERABLE. SOME JURISDICTIONS
-DO NOT ALLOW THE EXCLUSION OF IMPLIED WARRANTIES, SO SUCH EXCLUSION MAY NOT
-APPLY TO YOU.
-
-6. Limitation on Liability. EXCEPT TO THE EXTENT REQUIRED BY APPLICABLE LAW,
-IN NO EVENT WILL LICENSOR BE LIABLE TO YOU ON ANY LEGAL THEORY FOR ANY SPECIAL,
-INCIDENTAL, CONSEQUENTIAL, PUNITIVE OR EXEMPLARY DAMAGES ARISING OUT OF THIS
-LICENSE OR THE USE OF THE WORK, EVEN IF LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY
-OF SUCH DAMAGES.
-
-   7. Termination
-
-a. This License and the rights granted hereunder will terminate automatically
-upon any breach by You of the terms of this License. Individuals or entities
-who have received Collective Works from You under this License, however, will
-not have their licenses terminated provided such individuals or entities remain
-in full compliance with those licenses. Sections 1, 2, 5, 6, 7, and 8 will
-survive any termination of this License.
-
-b. Subject to the above terms and conditions, the license granted here is
-perpetual (for the duration of the applicable copyright in the Work). Notwithstanding
-the above, Licensor reserves the right to release the Work under different
-license terms or to stop distributing the Work at any time; provided, however
-that any such election will not serve to withdraw this License (or any other
-license that has been, or is required to be, granted under the terms of this
-License), and this License will continue in full force and effect unless terminated
-as stated above.
-
-   8. Miscellaneous
-
-a. Each time You distribute or publicly digitally perform the Work, the Licensor
-offers to the recipient a license to the Work on the same terms and conditions
-as the license granted to You under this License.
-
-b. If any provision of this License is invalid or unenforceable under applicable
-law, it shall not affect the validity or enforceability of the remainder of
-the terms of this License, and without further action by the parties to this
-agreement, such provision shall be reformed to the minimum extent necessary
-to make such provision valid and enforceable.
-
-c. No term or provision of this License shall be deemed waived and no breach
-consented to unless such waiver or consent shall be in writing and signed
-by the party to be charged with such waiver or consent.
-
-d. This License constitutes the entire agreement between the parties with
-respect to the Work licensed here. There are no understandings, agreements
-or representations with respect to the Work not specified here. Licensor shall
-not be bound by any additional provisions that may appear in any communication
-from You. This License may not be modified without the mutual written agreement
-of the Licensor and You.
-
-Creative Commons is not a party to this License, and makes no warranty whatsoever
-in connection with the Work. Creative Commons will not be liable to You or
-any party on any legal theory for any damages whatsoever, including without
-limitation any general, special, incidental or consequential damages arising
-in connection to this license. Notwithstanding the foregoing two (2) sentences,
-if Creative Commons has expressly identified itself as the Licensor hereunder,
-it shall have all rights and obligations of Licensor.
-
-Except for the limited purpose of indicating to the public that the Work is
-licensed under the CCPL, neither party will use the trademark "Creative Commons"
-or any related trademark or logo of Creative Commons without the prior written
-consent of Creative Commons. Any permitted use will be in compliance with
-Creative Commons' then-current trademark usage guidelines, as may be published
-on its website or otherwise made available upon request from time to time.
-
-Creative Commons may be contacted at http s ://creativecommons.org/.</code></pre>
-          </div>
-        </div>
-      </div>
-
-      <div class="vbox-close">X</div>
-    </div>
-  </div>
-
 </div>
 {% endblock %}
 
@@ -492,24 +148,8 @@ Creative Commons may be contacted at http s ://creativecommons.org/.</code></pre
     showLanguage(checked.value);
 
     languagePicker.addEventListener("change", function(e) {
+      console.log(this.elements["language"].value);
       showLanguage(this.elements["language"].value);
-    });
-
-    var showLicense = document.querySelector('.js-show-license');
-    var license = document.querySelector("#license");
-    var closeLicense = document.querySelector("#license .vbox-close");
-    var overlay = document.querySelector(".vbox-overlay");
-    showLicense.addEventListener("click", function(e) {
-      e.preventDefault();
-
-      license.classList.remove("u-hide");
-    });
-
-    closeLicense.addEventListener("click", function() {
-      license.classList.add("u-hide");
-    });
-    overlay.addEventListener("click", function() {
-      license.classList.add("u-hide");
     });
   });
 </script>
