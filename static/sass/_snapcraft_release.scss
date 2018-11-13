@@ -90,8 +90,8 @@
 
   .p-revision-info--empty {
     display: inline-block;
-    padding-bottom: .5em;
-    padding-top: .5em;
+    padding-bottom: .6em;
+    padding-top: .6em;
   }
 
   .p-revision-icon {
@@ -154,6 +154,15 @@
 
     .is-disabled {
       opacity: .5;
+    }
+
+    .is-clickable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-light;
+
+      }
     }
   }
 

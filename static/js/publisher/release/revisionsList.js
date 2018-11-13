@@ -11,7 +11,7 @@ export default class RevisionsList extends Component {
     this.props.selectRevision(revision);
   }
 
-  renderRows(revisions, showCheckboxes) {
+  renderRows(revisions, isHistory) {
     return revisions.map(revision => {
       const revisionDate = revision.release
         ? new Date(revision.release.when)
@@ -23,7 +23,7 @@ export default class RevisionsList extends Component {
       // disable revisions from the same architecture that already selected
       // but only if checkboxes are visible (not in channel history)
       const isDisabled =
-        showCheckboxes &&
+        isHistory &&
         !isSelected &&
         revision.architectures.some(
           arch =>
@@ -32,11 +32,20 @@ export default class RevisionsList extends Component {
         );
 
       const id = `revision-check-${revision.revision}`;
+      const className = `${isDisabled ? "is-disabled" : ""} ${
+        isHistory ? "is-clickable" : ""
+      }`;
 
       return (
-        <tr key={id} className={isDisabled ? "is-disabled" : ""}>
+        <tr
+          key={id}
+          className={className}
+          onClick={
+            isHistory ? this.revisionSelectChange.bind(this, revision) : null
+          }
+        >
           <td>
-            {showCheckboxes ? (
+            {isHistory ? (
               <Fragment>
                 <input
                   type="checkbox"
