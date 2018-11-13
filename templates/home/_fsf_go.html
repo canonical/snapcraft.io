@@ -1,15 +1,37 @@
 <div class="col-12 p-flow-details" style="display: none" data-flow-details="go">
   <div class='col-6'>
     <h4>Why are snaps good for Go projects?</h4>
+    <p>Go doesn't offer a method for delivering app updates to end users, and you're on your own when it comes to showcasing your project. Snaps offer a way to fill these gaps.</p>
     <ul>
-      <li>Simplify installation instructions, regardless of distribution, to snap install mygoapp.</li>
-      <li>Directly control the delivery of application updates.</li>
-      <li>Extremely simple creation of daemons.</li>
-      <li>Deliver assets such as images or static web content inside the snap.</li>
+      <li>Snaps are easy to discover and install, with millions installing from the Snap Store every day.</li>
+      <li>They auto-update, ensuring users always have the latest stable version of your app.</li>
+      <li>They're reliable, rolling back on failure while preserving your app's versioned data.</li>
     </ul>
   </div>
 
-  <div class="p-flow-details__continue">
+  <div class='col-6'>
+    <h4>Here’s how httplab uses it:</h4>
+    <code class="p-code-yaml"><pre><b>name</b>: httplab
+<b>version</b>: git
+<b>summary</b>: An interactive web server.
+<b>description</b>: >
+  HTTPLab let you inspect HTTP requests and forge responses.
+
+<b>confinement</b>: devmode
+
+<b>parts</b>:
+  <b>httplab</b>:
+    <b>plugin</b>: go
+    <b>go-importpath</b>: github.com/gchaincl/httplab
+    <b>source</b>: .
+    <b>source-type</b>: git
+
+<b>apps</b>:
+  <b>httplab</b>:
+    <b>command</b>: bin/httplab</pre></code>
+</div>
+
+<div class="p-flow-details__continue">
     In just a few steps, you’ll have an example Go app in the Snap Store.
     <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/go">Continue</a>
   </div>
