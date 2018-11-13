@@ -191,6 +191,7 @@ def publisher_snap_metrics(snap_name):
         "snap_title": details["title"],
         "metric_period": metric_requested["period"],
         "active_device_metric": installed_base_metric,
+        "private": details["private"],
         # Metrics data
         "nodata": nodata,
         "latest_active_devices": latest_active,
@@ -495,6 +496,7 @@ def get_release_history(snap_name):
     context = {
         "snap_name": snap_name,
         "release_history": release_history,
+        "private": info.get("private"),
         "channel_maps_list": info.get("channel_maps_list"),
     }
 
@@ -872,6 +874,9 @@ def get_publicise(snap_name):
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
         return _handle_errors(api_error)
+
+    if snap_details["private"]:
+        return flask.abort(404, "No snap named {}".format(snap_name))
 
     available_languages = {
         "en": {"title": "English", "text": "Get it from the Snap Store"},

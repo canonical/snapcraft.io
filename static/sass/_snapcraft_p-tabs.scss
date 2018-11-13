@@ -3,6 +3,7 @@
 
   .p-tabs-bordered {
     @extend .p-tabs; // sass-lint:disable-line placeholder-in-extend
+    overflow: visible;
 
     .p-tabs__group {
       &::after {
@@ -15,8 +16,26 @@
 
     .p-tabs__list {
       margin-bottom: -1px;
+      overflow: visible;
       padding-right: 0;
       width: auto;
+    }
+
+    .p-tabs__item {
+      display: inline-block;
+      float: none;
+
+      &.is--disabled {
+
+        .p-tabs__link {
+          color: $color-mid-dark;
+          pointer-events: none;
+        }
+
+        .p-tooltip__message {
+          z-index: 2;
+        }
+      }
     }
   }
 }

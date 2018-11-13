@@ -41,12 +41,13 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_template_used("404.html")
 
     @responses.activate
-    def test_account_logged_in(self):
+    def test_publicise_logged_in(self):
         snap_name = "test-snap"
 
         payload = {
             "snap_id": "id",
             "title": "test snap",
+            "public": True,
             "snap_name": snap_name,
             "keywords": [],
         }
@@ -63,6 +64,27 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("snap_id", "id")
         self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", snap_name)
+
+    @responses.activate
+    def test_publicise_private_snap(self):
+        snap_name = "test-snap"
+
+        payload = {
+            "snap_id": "id",
+            "title": "test snap",
+            "public": False,
+            "snap_name": snap_name,
+            "keywords": [],
+        }
+
+        responses.add(responses.GET, self.api_url, json=payload, status=200)
+
+        response = self.client.get(self.endpoint_url)
+
+        self.check_call_by_api_url(responses.calls)
+
+        assert response.status_code == 404
+        self.assert_template_used("404.html")
 
 
 if __name__ == "__main__":

@@ -38,7 +38,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         self.info_url = info_url.format(snap_name)
 
-        payload = {"snap_id": "id", "title": "Test Snap"}
+        payload = {"snap_id": "id", "title": "Test Snap", "private": False}
 
         responses.add(responses.GET, self.info_url, json=payload, status=200)
 
