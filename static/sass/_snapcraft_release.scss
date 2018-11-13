@@ -154,6 +154,10 @@
 
     .is-disabled {
       opacity: .5;
+
+      .p-tooltip__message {
+        display: none;
+      }
     }
 
     .is-clickable {
@@ -190,9 +194,5 @@
     padding: 1rem;
     position: absolute;
     z-index: 100;
-  }
-
-  .p-release-table__cell .p-tooltip__message {
-    z-index: 101;
   }
 }
