@@ -11,7 +11,7 @@ import {
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
-import RevisionsList from "./revisionsList";
+import ReleasesOverlay from "./releasesOverlay";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -419,32 +419,34 @@ export default class RevisionsTable extends Component {
 
     return (
       <Fragment>
-        <div className="u-clearfix">
-          <h4 className="u-float--left">Releases available for install</h4>
-          {tracks.length > 1 && this.renderTrackDropdown(tracks)}
-        </div>
-        {this.renderReleasesConfirm()}
-        <div className="p-release-table">
-          <div className="p-release-channel-row">
-            <div className="p-release-channel-row__channel" />
-            {archs.map(arch => (
-              <div
-                className="p-release-table__cell p-release-table__arch"
-                key={`${arch}`}
-              >
-                {arch}
-              </div>
-            ))}
+        <div className="row">
+          <div className="u-clearfix">
+            <h4 className="u-float--left">Releases available for install</h4>
+            {tracks.length > 1 && this.renderTrackDropdown(tracks)}
           </div>
-          {this.renderRows(releasedChannels, archs)}
-        </div>
-        <div className="p-release-actions">
-          <a href="#" onClick={this.props.toggleRevisionsList}>
-            Show available revisions ({this.props.revisions.length})
-          </a>
+          {this.renderReleasesConfirm()}
+          <div className="p-release-table">
+            <div className="p-release-channel-row">
+              <div className="p-release-channel-row__channel" />
+              {archs.map(arch => (
+                <div
+                  className="p-release-table__cell p-release-table__arch"
+                  key={`${arch}`}
+                >
+                  {arch}
+                </div>
+              ))}
+            </div>
+            {this.renderRows(releasedChannels, archs)}
+          </div>
+          <div className="p-release-actions">
+            <a href="#" onClick={this.props.toggleRevisionsList}>
+              Show available revisions ({this.props.revisions.length})
+            </a>
+          </div>
         </div>
         {this.props.isRevisionsListOpen && (
-          <RevisionsList
+          <ReleasesOverlay
             revisions={this.props.revisions}
             revisionsFilters={this.props.revisionsFilters}
             releasedChannels={releasedChannels}
