@@ -15,8 +15,7 @@ class GetRevisionGetInfoPage(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         api_url = (
-            "https://dashboard.snapcraft.io/api/v2/snaps/{}"
-            + "/releases?page=1&size=100"
+            "https://dashboard.snapcraft.io/api/v2/snaps/{}" + "/releases"
         )
         api_url = api_url.format(snap_name)
         endpoint_url = "/{}/releases".format(snap_name)
@@ -35,8 +34,7 @@ class GetRevisionHistory(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         api_url = (
-            "https://dashboard.snapcraft.io/api/v2/snaps/{}"
-            + "/releases?page=1&size=100"
+            "https://dashboard.snapcraft.io/api/v2/snaps/{}" + "/releases"
         )
         api_url = api_url.format(snap_name)
         endpoint_url = "/{}/releases".format(snap_name)

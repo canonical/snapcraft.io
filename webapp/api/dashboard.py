@@ -54,7 +54,7 @@ REGISTER_NAME_URL = "".join([DASHBOARD_API, "register-name/"])
 REVISION_HISTORY_URL = "".join([DASHBOARD_API, "snaps/{snap_id}/history"])
 
 SNAP_RELEASE_HISTORY_URL = "".join(
-    [DASHBOARD_API_V2, "snaps/{snap_name}/releases?page=1&size=100"]
+    [DASHBOARD_API_V2, "snaps/{snap_name}/releases"]
 )
 
 

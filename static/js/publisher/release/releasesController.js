@@ -484,6 +484,44 @@ export default class ReleasesController extends Component {
     });
   }
 
+  getReleaseHistory(filters) {
+    return (
+      this.props.releases
+        // only releases of revisions (ignore closing channels)
+        .filter(release => release.revision)
+        // only releases in given architecture
+        .filter(release => {
+          return filters && filters.arch
+            ? release.architecture === filters.arch
+            : true;
+        })
+        // only releases in given track
+        .filter(release => {
+          return filters && filters.track
+            ? release.track === filters.track
+            : true;
+        })
+        // only releases in given risk
+        .filter(release => {
+          return filters && filters.risk ? release.risk === filters.risk : true;
+        })
+        // before we have branches support we ignore any releases to branches
+        .filter(release => !release.branch)
+        // only one latest release of every revision
+        .filter((release, index, all) => {
+          return all.findIndex(r => r.revision === release.revision) === index;
+        })
+        // map release history to revisions
+        .map(release => {
+          const revision = JSON.parse(
+            JSON.stringify(this.props.revisionsMap[release.revision])
+          );
+          revision.release = release;
+          return revision;
+        })
+    );
+  }
+
   render() {
     const hasDevmodeRevisions = Object.values(this.state.releasedChannels).some(
       archReleases => {
@@ -532,6 +570,7 @@ export default class ReleasesController extends Component {
           selectRevision={this.selectRevision.bind(this)}
           closeRevisionsList={this.closeRevisionsList.bind(this)}
           toggleRevisionsList={this.toggleRevisionsList.bind(this)}
+          getReleaseHistory={this.getReleaseHistory.bind(this)}
         />
       </Fragment>
     );
@@ -542,6 +581,7 @@ ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisions: PropTypes.array.isRequired,
+  releases: PropTypes.array.isRequired,
   revisionsMap: PropTypes.object.isRequired,
   tracks: PropTypes.array.isRequired,
   options: PropTypes.object.isRequired
