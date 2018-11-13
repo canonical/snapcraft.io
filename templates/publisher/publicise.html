@@ -127,30 +127,10 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
 {% endblock %}
 
 {% block scripts %}
-<script>
-  Raven.context(function () {
-    var languagePicker = document.querySelector('.js-language-select');
-
-    function showLanguage(language) {
-      var open = document.querySelector("#" + language + "_content");
-
-      document.querySelector(".js-language-content:not(.u-hide)").classList.add("u-hide");
-      open.classList.remove("u-hide");
-    }
-
-    var checked = document.querySelector("[name='language']:checked");
-
-    if (!checked) {
-      checked = document.querySelector("[name='language']");
-      checked.setAttribute("checked", "checked");
-    }
-
-    showLanguage(checked.value);
-
-    languagePicker.addEventListener("change", function(e) {
-      console.log(this.elements["language"].value);
-      showLanguage(this.elements["language"].value);
+  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+  <script>
+    Raven.context(function () {
+      snapcraft.publisher.publicise();
     });
-  });
-</script>
+  </script>
 {% endblock %}
