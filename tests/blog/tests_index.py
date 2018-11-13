@@ -308,3 +308,31 @@ class BlogPage(TestCase):
         response = self.client.get("/blog/feed")
 
         assert response.status_code == 502
+
+    def test_article_redirects(self):
+        """
+        Check that blog articles can be requested with
+        year, month and day parts in the URL, which will
+        result in a redirect to the canonical URL, with just the slug
+        """
+
+        year_redirect = self.client.get("/blog/2005/article_slug")
+        month_redirect = self.client.get("/blog/2005/10/article_slug")
+        day_redirect = self.client.get("/blog/2005/10/31/article_slug")
+
+        assert year_redirect.status_code == 302
+        assert month_redirect.status_code == 302
+        assert day_redirect.status_code == 302
+
+        assert (
+            year_redirect.headers.get("Location")
+            == "http://localhost/blog/article_slug"
+        )
+        assert (
+            month_redirect.headers.get("Location")
+            == "http://localhost/blog/article_slug"
+        )
+        assert (
+            day_redirect.headers.get("Location")
+            == "http://localhost/blog/article_slug"
+        )
