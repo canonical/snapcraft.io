@@ -1,0 +1,11 @@
+@mixin snapcraft-publicise {
+  .snapcraft-publicise__images {
+    img + img {
+      margin-left: 1.5rem;
+    }
+  }
+
+  .snapcraft-publicise__download {
+    margin-top: 1.6rem;
+  }
+}

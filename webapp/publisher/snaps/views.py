@@ -191,6 +191,7 @@ def publisher_snap_metrics(snap_name):
         "snap_title": details["title"],
         "metric_period": metric_requested["period"],
         "active_device_metric": installed_base_metric,
+        "private": details["private"],
         # Metrics data
         "nodata": nodata,
         "latest_active_devices": latest_active,
@@ -495,6 +496,7 @@ def get_release_history(snap_name):
     context = {
         "snap_name": snap_name,
         "release_history": release_history,
+        "private": info.get("private"),
         "channel_maps_list": info.get("channel_maps_list"),
     }
 
@@ -858,3 +860,42 @@ def snap_count():
     context = {"count": len(user_snaps), "snaps": list(user_snaps.keys())}
 
     return flask.jsonify(context)
+
+
+@publisher_snaps.route("/<snap_name>/publicise")
+@login_required
+def get_publicise(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    if snap_details["private"]:
+        return flask.abort(404, "No snap named {}".format(snap_name))
+
+    available_languages = {
+        "en": {"title": "English", "text": "Get it from the Snap Store"},
+        "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
+        "es": {"title": "Español", "text": "Instala desde Snap Store"},
+        "fr": {
+            "title": "Français",
+            "text": "Installer à partir du Snap Store",
+        },
+        "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
+        "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
+        "tw": {"title": "中華民國國語", "text": "安裝軟體敬請移駕 Snap Store"},
+    }
+
+    context = {
+        "snap_name": snap_details["snap_name"],
+        "snap_title": snap_details["title"],
+        "snap_id": snap_details["snap_id"],
+        "available": available_languages,
+    }
+
+    return flask.render_template("publisher/publicise.html", **context)

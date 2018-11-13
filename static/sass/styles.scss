@@ -203,3 +203,6 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-code-snippet';
 @include snapcraft-p-code-snippet;
+
+@import 'snapcraft-publicise';
+@include snapcraft-publicise;
