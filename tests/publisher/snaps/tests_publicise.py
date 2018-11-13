@@ -47,7 +47,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
         payload = {
             "snap_id": "id",
             "title": "test snap",
-            "public": True,
+            "private": False,
             "snap_name": snap_name,
             "keywords": [],
         }
@@ -72,7 +72,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
         payload = {
             "snap_id": "id",
             "title": "test snap",
-            "public": False,
+            "private": True,
             "snap_name": snap_name,
             "keywords": [],
         }
@@ -85,7 +85,3 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         assert response.status_code == 404
         self.assert_template_used("404.html")
-
-
-if __name__ == "__main__":
-    unittest.main()
