@@ -18,6 +18,12 @@ function getChannelName(track, risk) {
 }
 
 export default class RevisionsTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.unassignedRowRef = React.createRef();
+  }
+
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
     const currentRelease =
@@ -40,7 +46,10 @@ export default class RevisionsTable extends Component {
   }
 
   handleReleaseCellClick(arch, risk, track, event) {
-    this.props.openRevisionsList({ arch, risk, track });
+    const cell = event.currentTarget;
+    const top = cell.offsetTop + cell.clientHeight;
+
+    this.props.openRevisionsList(top, { arch, risk, track });
 
     event.preventDefault();
     event.stopPropagation();
@@ -275,6 +284,7 @@ export default class RevisionsTable extends Component {
         <div
           className={`p-release-channel-row p-release-channel-row--${risk}`}
           key={channel}
+          ref={risk === UNASSIGNED ? this.unassignedRowRef : null}
         >
           <div className="p-release-channel-row__channel">
             <span className="p-release-channel-row__promote">
@@ -414,6 +424,15 @@ export default class RevisionsTable extends Component {
     this.props.releaseRevisions();
   }
 
+  onShowAvailableRevisionsClick(event) {
+    event.preventDefault();
+
+    const row = this.unassignedRowRef.current;
+    const top = row.offsetTop + row.clientHeight - 1;
+
+    this.props.openRevisionsList(top, null);
+  }
+
   render() {
     const { releasedChannels, archs, tracks } = this.props;
 
@@ -440,12 +459,12 @@ export default class RevisionsTable extends Component {
             {this.renderRows(releasedChannels, archs)}
           </div>
           <div className="p-release-actions">
-            <a href="#" onClick={this.props.toggleRevisionsList}>
+            <a href="#" onClick={this.onShowAvailableRevisionsClick.bind(this)}>
               Show available revisions ({this.props.revisions.length})
             </a>
           </div>
         </div>
-        {this.props.isRevisionsListOpen && (
+        {this.props.isReleasesOverlayOpen && (
           <ReleasesOverlay
             revisions={this.props.revisions}
             revisionsFilters={this.props.revisionsFilters}
@@ -456,6 +475,7 @@ export default class RevisionsTable extends Component {
             showArchitectures={true}
             closeRevisionsList={this.props.closeRevisionsList}
             getReleaseHistory={this.props.getReleaseHistory}
+            releasesOverlayTop={this.props.releasesOverlayTop}
           />
         )}
       </Fragment>
@@ -475,8 +495,8 @@ RevisionsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array,
-  isRevisionsListOpen: PropTypes.bool,
-
+  isReleasesOverlayOpen: PropTypes.bool,
+  releasesOverlayTop: PropTypes.number,
   // actions
   getNextReleasedChannels: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
@@ -490,6 +510,5 @@ RevisionsTable.propTypes = {
   openRevisionsList: PropTypes.func.isRequired,
   selectRevision: PropTypes.func.isRequired,
   closeRevisionsList: PropTypes.func.isRequired,
-  toggleRevisionsList: PropTypes.func.isRequired,
   getReleaseHistory: PropTypes.func.isRequired
 };

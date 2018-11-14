@@ -6,8 +6,14 @@ import RevisionsList from "./revisionsList";
 export default class ReleasesOverlay extends Component {
   render() {
     return (
-      <div className="p-strip is-shallow">
+      <div
+        className="p-release-overlay"
+        style={{
+          top: this.props.releasesOverlayTop
+        }}
+      >
         <div className="row">
+          <hr />
           <RevisionsList
             revisions={this.props.revisions}
             revisionsFilters={this.props.revisionsFilters}
@@ -33,6 +39,7 @@ ReleasesOverlay.propTypes = {
   selectedRevisions: PropTypes.array.isRequired,
   showChannels: PropTypes.bool,
   showArchitectures: PropTypes.bool,
+  releasesOverlayTop: PropTypes.number,
   // actions
   selectRevision: PropTypes.func.isRequired,
   closeRevisionsList: PropTypes.func.isRequired,

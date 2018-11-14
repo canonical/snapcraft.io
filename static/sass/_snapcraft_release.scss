@@ -7,7 +7,13 @@
     th {
       text-transform: none;
     }
+
+    .p-tooltip__message,
+    .p-contextual-menu__dropdown {
+      z-index: 11; // show above releases overlay
+    }
   }
+
 
   .p-release-table__cell {
     @include vf-animation (#{background-color, border-color}, fast, in);
@@ -186,12 +192,12 @@
     width: 22.53423%; // col-3
   }
 
-  .p-revisions-popover {
+  .p-release-overlay {
     background: $color-x-light;
-    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
-    max-width: 500px;
-    padding: 1rem;
+    bottom: 0;
+    left: 0;
     position: absolute;
-    z-index: 100;
+    right: 0;
+    z-index: 10;
   }
 }

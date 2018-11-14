@@ -43,7 +43,8 @@ export default class ReleasesController extends Component {
       //   arch: 'architecture'
       // }
       revisionsFilters: null,
-      isRevisionsListOpen: false
+      isReleasesOverlayOpen: false,
+      releasesOverlayTop: null
     };
   }
 
@@ -191,6 +192,8 @@ export default class ReleasesController extends Component {
         pendingReleases
       };
     });
+
+    this.closeRevisionsList();
   }
 
   // TODO:
@@ -233,6 +236,8 @@ export default class ReleasesController extends Component {
         pendingReleases
       };
     });
+
+    this.closeRevisionsList();
   }
 
   undoRelease(revision, channel) {
@@ -262,6 +267,8 @@ export default class ReleasesController extends Component {
       pendingReleases: {},
       pendingCloses: []
     });
+
+    this.closeRevisionsList();
   }
 
   fetchRelease(revision, channels) {
@@ -461,26 +468,18 @@ export default class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
-  openRevisionsList(filters) {
+  openRevisionsList(top, filters) {
     this.setState({
       revisionsFilters: filters,
-      isRevisionsListOpen: true
+      isReleasesOverlayOpen: true,
+      releasesOverlayTop: top
     });
   }
 
   closeRevisionsList() {
     this.setState({
       revisionsFilters: null,
-      isRevisionsListOpen: false
-    });
-  }
-
-  toggleRevisionsList(event) {
-    event.preventDefault();
-
-    this.setState({
-      revisionsFilters: null,
-      isRevisionsListOpen: true
+      isReleasesOverlayOpen: false
     });
   }
 
@@ -571,7 +570,6 @@ export default class ReleasesController extends Component {
           openRevisionsList={this.openRevisionsList.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
           closeRevisionsList={this.closeRevisionsList.bind(this)}
-          toggleRevisionsList={this.toggleRevisionsList.bind(this)}
           getReleaseHistory={this.getReleaseHistory.bind(this)}
         />
       </Fragment>
