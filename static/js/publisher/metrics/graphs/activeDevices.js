@@ -253,7 +253,7 @@ function drawGraph(holderSelector, holder, activeDevices) {
 
     const x0 = xScale.invert(mousePosition[0]);
     const _date = new Date(x0);
-    _date.setHours(0);
+    _date.setHours(_date.getHours() - 12);
     _date.setMinutes(0);
     _date.setSeconds(0);
     _date.setMilliseconds(0);
