@@ -5,11 +5,19 @@ import RevisionsList from "./revisionsList";
 
 export default class ReleasesOverlay extends Component {
   render() {
+    // body height in DOM is 100% of window height instead of content height
+    // because of `sticky footer`, so we need to figure out where content ends
+    // by finding a bottom of the footer
+    const footerEl = document.querySelector("footer");
+    const bodyHeight = footerEl.offsetTop + footerEl.clientHeight;
+    const overlayHeight = bodyHeight - this.props.releasesOverlayTop;
+
     return (
       <div
         className="p-release-overlay"
         style={{
-          top: this.props.releasesOverlayTop
+          top: this.props.releasesOverlayTop,
+          minHeight: overlayHeight
         }}
       >
         <div className="row">
