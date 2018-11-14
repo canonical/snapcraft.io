@@ -881,7 +881,7 @@ def get_publicise(snap_name):
     available_languages = {
         "en": {"title": "English", "text": "Get it from the Snap Store"},
         "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
-        "es": {"title": "Español", "text": "Instala desde Snap Store"},
+        "es": {"title": "Español", "text": "Instalar desde Snap Store"},
         "fr": {
             "title": "Français",
             "text": "Installer à partir du Snap Store",
@@ -896,6 +896,7 @@ def get_publicise(snap_name):
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
         "available": available_languages,
+        "download_version": "v1.1",
     }
 
     return flask.render_template("publisher/publicise.html", **context)
