@@ -15,8 +15,8 @@ def get_last_metrics_processed_date():
     # We want to give time to the store to proccess all the metrics,
     # since the metrics are processed during the night
     # https://github.com/canonical-websites/snapcraft.io/pull/616
-    twelve_hours = relativedelta.relativedelta(hours=12)
-    last_metrics_processed = datetime.datetime.utcnow() - twelve_hours
+    three_hours = relativedelta.relativedelta(hours=3)
+    last_metrics_processed = datetime.datetime.utcnow() - three_hours
 
     one_day = relativedelta.relativedelta(days=1)
     return last_metrics_processed.date() - one_day
