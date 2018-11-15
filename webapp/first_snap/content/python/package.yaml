@@ -2,7 +2,7 @@ name: test-offlineimap-{name}
 download: git clone https://github.com/snapcraft-docs/offlineimap
 createDir: |
   cd offlineimap
-  $EDITOR snapcraft.yaml
+  nano snapcraft.yaml
 metadata: |
   name: offlineimap
   version: git

@@ -2,7 +2,7 @@ name: test-httplab-{name}
 download: git clone https://github.com/snapcraft-docs/httplab
 createDir: |
   cd httplab
-  $EDITOR snapcraft.yaml
+  nano snapcraft.yaml
 metadata: |
   name: httplab
   version: git
