@@ -1,15 +1,60 @@
 @mixin snapcraft-release {
-  $color-selected: rgba(255, 255, 0, .25);
+  // RELEASES CONFIRM
 
-  .p-release-table {
-    margin-bottom: $spv-inter--regular;
-
-    th {
-      text-transform: none;
-    }
+  .p-releases-confirm {
+    background: $color-light;
+    margin-bottom: 1em;
+    padding: 1em;
+    position: relative;
   }
 
-  .p-release-table__cell {
+  .p-releases-confirm__buttons {
+    position: absolute;
+    right: 0;
+    top: 10px;
+  }
+
+  // RELEASES TABLE
+
+  .p-releases-table {
+    margin-bottom: $spv-inter--regular;
+  }
+
+  // row
+
+  .p-releases-table__row {
+    border-bottom: 1px solid $color-mid-light;
+    display: flex;
+  }
+
+  .p-releases-table__row--unassigned {
+    margin-top: $spv-inter--regular;
+  }
+
+  // channel cell
+
+  .p-releases-channel {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    margin-right: $sph-inter;
+    width: 22.53423%; // col-3
+  }
+
+  .p-releases-channel__promote {
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-right: .5rem;
+    width: 2rem;
+  }
+
+  .p-releases-channel__name {
+    flex-grow: 1;
+  }
+
+  // release cell
+
+  .p-releases-table__cell {
     @include vf-animation (#{background-color, border-color}, 0, in);
     background: $color-light;
     border-bottom: 3px solid transparent;
@@ -36,28 +81,12 @@
     }
   }
 
-  .p-release-table__arch {
+  .p-releases-table__arch {
     background: none;
     padding: 0 1em;
   }
 
-  .p-icon-button {
-    padding: $spv-nudge - $px $sph-intra--condensed * 1.5 - ($px * 2);
-
-    &:not(:last-of-type):not(:only-of-type) {
-      margin-right: .25rem;
-    }
-  }
-
-  .p-previous-revision {
-    display: none;
-  }
-
-  .p-release-version {
-    display: flex;
-    max-width: 100%;
-
-  }
+  // cell contents (release info)
 
   .p-release-buttons {
     position: absolute;
@@ -65,7 +94,16 @@
     top: .5rem;
   }
 
-  .p-revision-info {
+  .p-release-data {
+    display: flex;
+    max-width: 100%;
+  }
+
+  .p-release-data__icon {
+    margin-right: 4px;
+  }
+
+  .p-release-data__info {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -76,63 +114,26 @@
     }
   }
 
-  .p-revision-info--empty {
+  .p-release-data__info--empty {
     display: inline-block;
     padding-bottom: .6em;
     padding-top: .6em;
   }
 
-  .p-revision-icon {
-    margin-right: 4px;
-  }
-
-  .p-revision-info__revision {
+  .p-release-data__revision {
     color: $color-mid-dark;
     display: block;
     font-size: .8em;
     margin-top: -.3rem;
   }
 
-  .p-release-confirm {
-    background: $color-light;
-    margin-bottom: 1em;
-    padding: 1em;
-    position: relative;
-  }
-
-  .p-release-confirm__buttons {
-    position: absolute;
-    right: 0;
-    top: 10px;
-  }
-
-  .p-release-channel-row__promote {
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-right: .5rem;
-    width: 2rem;
-  }
-
-  .p-release-channel-row__name {
-    flex-grow: 1;
-  }
-
-  .p-contextual-menu__item {
-    @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
-
-    &:hover {
-      background: transparent;
-      cursor: default;
-    }
-  }
-
-  .p-contextual-menu__link.is-indented {
-    padding-left: 1rem;
-  }
+  // actions
 
   .p-release-actions {
     text-align: right;
   }
+
+  // REVISIONS LIST
 
   .p-revisions-list {
     .col-checkbox-spacer {
@@ -157,20 +158,26 @@
     }
   }
 
-  .p-release-channel-row {
-    border-bottom: 1px solid $color-mid-light;
-    display: flex;
+  // HELPERS
+
+  .p-icon-button {
+    padding: $spv-nudge - $px $sph-intra--condensed * 1.5 - ($px * 2);
+
+    &:not(:last-of-type):not(:only-of-type) {
+      margin-right: .25rem;
+    }
   }
 
-  .p-release-channel-row--unassigned {
-    margin-top: $spv-inter--regular;
+  .p-contextual-menu__item {
+    @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
+
+    &:hover {
+      background: transparent;
+      cursor: default;
+    }
   }
 
-  .p-release-channel-row__channel {
-    align-items: center;
-    display: flex;
-    flex-shrink: 0;
-    margin-right: $sph-inter;
-    width: 22.53423%; // col-3
+  .p-contextual-menu__link.is-indented {
+    padding-left: 1rem;
   }
 }

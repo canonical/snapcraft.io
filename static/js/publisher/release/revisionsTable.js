@@ -75,7 +75,7 @@ export default class RevisionsTable extends Component {
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
-    const className = `p-release-table__cell is-clickable ${
+    const className = `p-releases-table__cell is-clickable ${
       isUnassigned ? "is-unassigned" : ""
     } ${
       this.props.revisionsFilters &&
@@ -88,16 +88,15 @@ export default class RevisionsTable extends Component {
     return (
       <div
         className={className}
-        style={{ position: "relative" }}
         key={`${channel}/${arch}`}
         onClick={this.handleReleaseCellClick.bind(this, arch, risk, track)}
       >
         <div className="p-tooltip p-tooltip--btm-center">
-          <span className="p-release-version">
+          <span className="p-release-data">
             {thisPreviousRevision &&
               isInDevmode(thisPreviousRevision) &&
               !isPending && (
-                <span className="p-revision-icon">
+                <span className="p-release-data__icon">
                   <DevmodeIcon
                     revision={thisPreviousRevision}
                     showTooltip={false}
@@ -107,11 +106,11 @@ export default class RevisionsTable extends Component {
 
             {isPending ? (
               <Fragment>
-                <span className="p-revision-icon">&rarr;</span>
+                <span className="p-release-data__icon">&rarr;</span>
                 {hasPendingRelease ? (
-                  <span className="p-revision-info is-pending">
+                  <span className="p-release-data__info is-pending">
                     {thisRevision.version}
-                    <span className="p-revision-info__revision">
+                    <span className="p-release-data__revision">
                       ({thisRevision.revision})
                     </span>
                   </span>
@@ -120,14 +119,14 @@ export default class RevisionsTable extends Component {
                 )}
               </Fragment>
             ) : thisPreviousRevision ? (
-              <span className="p-revision-info">
+              <span className="p-release-data__info">
                 {thisPreviousRevision.version}
-                <span className="p-revision-info__revision">
+                <span className="p-release-data__revision">
                   ({thisPreviousRevision.revision})
                 </span>
               </span>
             ) : (
-              <span className="p-revision-info--empty">
+              <span className="p-release-data__info--empty">
                 {trackingChannel ? (
                   "↑"
                 ) : isUnassigned ? (
@@ -281,11 +280,11 @@ export default class RevisionsTable extends Component {
 
     return (
       <div
-        className={`p-release-channel-row p-release-channel-row--${risk}`}
+        className={`p-releases-table__row p-releases-table__row--${risk}`}
         key={channel}
       >
-        <div className="p-release-channel-row__channel">
-          <span className="p-release-channel-row__promote">
+        <div className="p-releases-channel">
+          <span className="p-releases-channel__promote">
             {canBePromoted && (
               <PromoteButton
                 position="left"
@@ -295,10 +294,10 @@ export default class RevisionsTable extends Component {
               />
             )}
           </span>
-          <span className="p-release-channel-row__name">
+          <span className="p-releases-channel__name">
             {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
           </span>
-          <span className="p-release-channel-row__menu">
+          <span className="p-releases-table__row__menu">
             {canBeClosed && (
               <ChannelMenu
                 position="left"
@@ -353,8 +352,8 @@ export default class RevisionsTable extends Component {
       this.props.revisionsFilters.risk
     ) {
       const historyPanelRow = (
-        <div className="p-release-channel-row" key="history-panel-row">
-          <div className="p-release-channel-row__channel u-hide--small" />
+        <div className="p-releases-table__row" key="history-panel-row">
+          <div className="p-releases-channel u-hide--small" />
           {this.renderHistoryPanel(false)}
         </div>
       );
@@ -400,7 +399,7 @@ export default class RevisionsTable extends Component {
 
     return (
       (releasesCount > 0 || closesCount > 0) && (
-        <div className="p-release-confirm">
+        <div className="p-releases-confirm">
           <span className="p-tooltip">
             <i className="p-icon--question" />{" "}
             {releasesCount > 0 && (
@@ -437,7 +436,7 @@ export default class RevisionsTable extends Component {
               )}
             </span>
           </span>{" "}
-          <div className="p-release-confirm__buttons">
+          <div className="p-releases-confirm__buttons">
             <button
               className="p-button--positive is-inline u-no-margin--bottom"
               disabled={isLoading}
@@ -480,12 +479,12 @@ export default class RevisionsTable extends Component {
             {tracks.length > 1 && this.renderTrackDropdown(tracks)}
           </div>
           {this.renderReleasesConfirm()}
-          <div className="p-release-table">
-            <div className="p-release-channel-row">
-              <div className="p-release-channel-row__channel" />
+          <div className="p-releases-table">
+            <div className="p-releases-table__row">
+              <div className="p-releases-channel" />
               {archs.map(arch => (
                 <div
-                  className="p-release-table__cell p-release-table__arch"
+                  className="p-releases-table__cell p-releases-table__arch"
                   key={`${arch}`}
                 >
                   {arch}
