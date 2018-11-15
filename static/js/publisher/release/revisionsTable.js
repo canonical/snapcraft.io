@@ -354,7 +354,7 @@ export default class RevisionsTable extends Component {
     ) {
       const historyPanelRow = (
         <div className="p-release-channel-row" key="history-panel-row">
-          <div className="p-release-channel-row__channel" />
+          <div className="p-release-channel-row__channel u-hide--small" />
           {this.renderHistoryPanel(false)}
         </div>
       );

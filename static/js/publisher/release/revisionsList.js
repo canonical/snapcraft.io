@@ -58,7 +58,7 @@ export default class RevisionsList extends Component {
                 </label>
               </Fragment>
             ) : (
-              <span className="col-checkbox-spacer">{revision.revision}</span>
+              <span>{revision.revision}</span>
             )}
           </td>
           <td>
@@ -101,17 +101,15 @@ export default class RevisionsList extends Component {
     let isReleaseHistory = false;
 
     if (filters && filters.arch) {
-      title = "Latest revisions";
+      title = `Latest revisions: ${filters.arch}`;
 
       filteredRevisions = filteredRevisions.filter(revision => {
         return revision.architectures.includes(filters.arch);
       });
 
-      title = `${title} in ${filters.arch}`;
-
       if (filters.risk !== UNASSIGNED) {
         isReleaseHistory = true;
-        title = `Releases history ${filters.arch} in ${filters.track}/${
+        title = `Releases history: ${filters.arch} – ${filters.track}/${
           filters.risk
         }`;
 
@@ -133,7 +131,11 @@ export default class RevisionsList extends Component {
         <table className="p-revisions-list">
           <thead>
             <tr>
-              <th className="col-checkbox-spacer" width="100px" scope="col">
+              <th
+                className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
+                width="100px"
+                scope="col"
+              >
                 Revision
               </th>
               <th width="20px" />
@@ -152,7 +154,7 @@ export default class RevisionsList extends Component {
               this.renderRows(filteredRevisions, !isReleaseHistory)
             ) : (
               <tr>
-                <td colSpan="6" className="col-checkbox-spacer">
+                <td colSpan="5">
                   <em>No releases</em>
                 </td>
               </tr>
