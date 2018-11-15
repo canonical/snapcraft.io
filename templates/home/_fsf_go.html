@@ -1,16 +1,17 @@
 <div class="col-12 p-flow-details" style="display: none" data-flow-details="go">
   <div class='col-6'>
     <h4>Why are snaps good for Go projects?</h4>
-    <p>Go doesn't offer a method for delivering app updates to end users, and you're on your own when it comes to showcasing your project. Snaps offer a way to fill these gaps.</p>
     <ul>
       <li>Snaps are easy to discover and install, with millions installing from the Snap Store every day.</li>
       <li>They auto-update, ensuring users always have the latest stable version of your app.</li>
       <li>They're reliable, rolling back on failure while preserving your app's versioned data.</li>
     </ul>
+    <p>Go doesn't offer a method for delivering app updates to end users, and you're on your own when it comes to showcasing your project. Snaps offer a way to fill these gaps.</p>
   </div>
 
   <div class='col-6'>
-    <h4>Here’s how httplab uses it:</h4>
+    <h4>Here’s how <a href="/httplab">httplab</a> uses it:</h4>
+    <!-- <p>Take a look at the <code>httplab/snapcraft.yaml</code></p> -->
     <code class="p-code-yaml"><pre><b>name</b>: httplab
 <b>version</b>: git
 <b>summary</b>: An interactive web server.
