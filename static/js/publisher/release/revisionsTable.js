@@ -40,7 +40,14 @@ export default class RevisionsTable extends Component {
   }
 
   handleReleaseCellClick(arch, risk, track, event) {
-    this.props.openRevisionsList({ arch, risk, track });
+    this.props.toggleHistoryPanel({ arch, risk, track });
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  handleShowRevisionsClick(event) {
+    this.props.toggleHistoryPanel();
 
     event.preventDefault();
     event.stopPropagation();
@@ -488,7 +495,7 @@ export default class RevisionsTable extends Component {
             {this.renderRows()}
           </div>
           <div className="p-release-actions">
-            <a href="#" onClick={this.props.toggleRevisionsList}>
+            <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
               Show available revisions ({this.props.revisions.length})
             </a>
           </div>
@@ -525,9 +532,8 @@ RevisionsTable.propTypes = {
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
   getTrackingChannel: PropTypes.func.isRequired,
-  openRevisionsList: PropTypes.func.isRequired,
+  toggleHistoryPanel: PropTypes.func.isRequired,
   selectRevision: PropTypes.func.isRequired,
   closeRevisionsList: PropTypes.func.isRequired,
-  toggleRevisionsList: PropTypes.func.isRequired,
   getReleaseHistory: PropTypes.func.isRequired
 };

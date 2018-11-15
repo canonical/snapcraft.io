@@ -461,6 +461,22 @@ export default class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
+  toggleHistoryPanel(filters) {
+    const currentFilters = this.state.revisionsFilters;
+
+    if (
+      filters &&
+      currentFilters &&
+      filters.track === currentFilters.track &&
+      filters.arch === currentFilters.arch &&
+      filters.risk === currentFilters.risk
+    ) {
+      this.closeRevisionsList();
+    } else {
+      this.openRevisionsList(filters);
+    }
+  }
+
   openRevisionsList(filters) {
     this.setState({
       revisionsFilters: filters,
@@ -472,15 +488,6 @@ export default class ReleasesController extends Component {
     this.setState({
       revisionsFilters: null,
       isRevisionsListOpen: false
-    });
-  }
-
-  toggleRevisionsList(event) {
-    event.preventDefault();
-
-    this.setState({
-      revisionsFilters: null,
-      isRevisionsListOpen: true
     });
   }
 
@@ -568,10 +575,9 @@ export default class ReleasesController extends Component {
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
-          openRevisionsList={this.openRevisionsList.bind(this)}
+          toggleHistoryPanel={this.toggleHistoryPanel.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
           closeRevisionsList={this.closeRevisionsList.bind(this)}
-          toggleRevisionsList={this.toggleRevisionsList.bind(this)}
           getReleaseHistory={this.getReleaseHistory.bind(this)}
         />
       </Fragment>
