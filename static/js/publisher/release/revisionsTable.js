@@ -314,7 +314,7 @@ export default class RevisionsTable extends Component {
     );
   }
 
-  renderHistoryPanel() {
+  renderHistoryPanel(showArchitectures) {
     return (
       <ReleasesOverlay
         key="history-panel"
@@ -323,8 +323,7 @@ export default class RevisionsTable extends Component {
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         selectRevision={this.props.selectRevision}
-        showChannels={true}
-        showArchitectures={true}
+        showArchitectures={!!showArchitectures}
         closeRevisionsList={this.props.closeRevisionsList}
         getReleaseHistory={this.props.getReleaseHistory}
       />
@@ -349,7 +348,7 @@ export default class RevisionsTable extends Component {
       const historyPanelRow = (
         <div className="p-release-channel-row" key="history-panel-row">
           <div className="p-release-channel-row__channel" />
-          {this.renderHistoryPanel()}
+          {this.renderHistoryPanel(false)}
         </div>
       );
 
@@ -495,7 +494,7 @@ export default class RevisionsTable extends Component {
           </div>
           {this.props.isRevisionsListOpen &&
             !this.props.revisionsFilters &&
-            this.renderHistoryPanel()}
+            this.renderHistoryPanel(true)}
         </div>
       </Fragment>
     );
