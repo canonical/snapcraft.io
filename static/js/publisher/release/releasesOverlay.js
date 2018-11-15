@@ -7,7 +7,7 @@ export default class ReleasesOverlay extends Component {
   render() {
     return (
       <div className="p-history-panel">
-        <div className="p-strip">
+        <div className="p-strip is-shallow">
           <RevisionsList
             revisions={this.props.revisions}
             revisionsFilters={this.props.revisionsFilters}

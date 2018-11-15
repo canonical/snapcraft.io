@@ -10,9 +10,9 @@
   }
 
   .p-release-table__cell {
-    @include vf-animation (#{background-color, border-color}, fast, in);
+    @include vf-animation (#{background-color, border-color}, 0, in);
     background: $color-light;
-    border: 1px solid transparent;
+    border-bottom: 3px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
     margin-left: 2px;
@@ -20,31 +20,19 @@
     min-width: 100px;
     padding: $spv-intra $sph-intra;
     position: relative;
+    transition-duration: 0s; // vf-animation doesn't allow to do that
 
     &.is-unassigned {
       background-color: $color-x-light;
-      border-color: $color-mid-light;
-      border-radius: 2px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: $color-light;
-      }
     }
 
-
-    &.is-clickable {
-      cursor: pointer;
-
-      &:hover {
-        border-color: $color-mid-light;
-      }
-    }
-
+    &.is-clickable:focus,
+    &.is-clickable:hover,
     &.is-active {
-      background-color: $color-selected;
-      border-color: $color-mid-light;
-      box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
+      @include vf-animation (#{background-color, border-color}, fast, in);
+      background-color: $color-x-light;
+      border-color: $color-mid-dark;
+      cursor: pointer;
     }
   }
 
@@ -170,8 +158,8 @@
   }
 
   .p-release-channel-row {
+    border-bottom: 1px solid $color-mid-light;
     display: flex;
-    margin-bottom: 2px;
   }
 
   .p-release-channel-row--unassigned {
