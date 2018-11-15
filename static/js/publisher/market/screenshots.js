@@ -163,9 +163,17 @@ function initSnapScreenshotsEdit(
       document
         .querySelector(".js-delete-screenshot")
         .setAttribute("disabled", "disabled");
+
+      document
+        .querySelector(".js-fullscreen-screenshot")
+        .setAttribute("disabled", "disabled");
     } else {
       document
         .querySelector(".js-delete-screenshot")
+        .removeAttribute("disabled");
+
+      document
+        .querySelector(".js-fullscreen-screenshot")
         .removeAttribute("disabled");
     }
   };
