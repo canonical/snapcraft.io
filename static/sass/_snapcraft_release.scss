@@ -185,13 +185,4 @@
     margin-right: $sph-inter;
     width: 22.53423%; // col-3
   }
-
-  .p-revisions-popover {
-    background: $color-x-light;
-    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
-    max-width: 500px;
-    padding: 1rem;
-    position: absolute;
-    z-index: 100;
-  }
 }

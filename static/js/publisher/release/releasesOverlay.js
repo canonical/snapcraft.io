@@ -6,8 +6,8 @@ import RevisionsList from "./revisionsList";
 export default class ReleasesOverlay extends Component {
   render() {
     return (
-      <div className="p-strip is-shallow">
-        <div className="row">
+      <div className="p-history-panel">
+        <div className="p-strip">
           <RevisionsList
             revisions={this.props.revisions}
             revisionsFilters={this.props.revisionsFilters}

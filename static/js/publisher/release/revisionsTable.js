@@ -214,104 +214,153 @@ export default class RevisionsTable extends Component {
     return channelArchs === targetChannelArchs;
   }
 
-  renderRows(releasedChannels, archs) {
-    const nextChannelReleases = this.props.getNextReleasedChannels();
+  renderChannelRow(risk) {
     const track = this.props.currentTrack;
+    const archs = this.props.archs;
+    const releasedChannels = this.props.releasedChannels;
+    const nextChannelReleases = this.props.getNextReleasedChannels();
 
-    return RISKS.map(risk => {
-      const channel = getChannelName(track, risk);
+    const channel = getChannelName(track, risk);
 
-      let canBePromoted = true;
-      let canBeClosed = true;
+    let canBePromoted = true;
+    let canBeClosed = true;
 
-      if (risk === STABLE) {
-        canBePromoted = false;
-      }
+    if (risk === STABLE) {
+      canBePromoted = false;
+    }
 
-      if (risk === UNASSIGNED) {
-        canBeClosed = false;
-      }
+    if (risk === UNASSIGNED) {
+      canBeClosed = false;
+    }
 
-      if (!nextChannelReleases[channel]) {
-        canBePromoted = false;
-        canBeClosed = false;
-      }
+    if (!nextChannelReleases[channel]) {
+      canBePromoted = false;
+      canBeClosed = false;
+    }
 
-      if (this.props.pendingCloses.includes(channel)) {
-        canBeClosed = false;
-        canBePromoted = false;
-      }
+    if (this.props.pendingCloses.includes(channel)) {
+      canBeClosed = false;
+      canBePromoted = false;
+    }
 
-      let targetRisks = [];
+    let targetRisks = [];
 
-      if (canBePromoted) {
-        // take all risks above current one
-        targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
+    if (canBePromoted) {
+      // take all risks above current one
+      targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
 
-        // check for devmode revisions
-        if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
-          const hasDevmodeRevisions = Object.values(
-            nextChannelReleases[channel]
-          ).some(isInDevmode);
+      // check for devmode revisions
+      if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
+        const hasDevmodeRevisions = Object.values(
+          nextChannelReleases[channel]
+        ).some(isInDevmode);
 
-          // remove stable and beta channels as targets if any revision
-          // is in devmode
-          if (hasDevmodeRevisions) {
-            targetRisks = targetRisks.slice(2);
-          }
-        }
-
-        // filter out risks that have the same revisions already released
-        targetRisks = targetRisks.filter(targetRisk => {
-          return !this.compareChannels(channel, `${track}/${targetRisk}`);
-        });
-
-        if (targetRisks.length === 0) {
-          canBePromoted = false;
+        // remove stable and beta channels as targets if any revision
+        // is in devmode
+        if (hasDevmodeRevisions) {
+          targetRisks = targetRisks.slice(2);
         }
       }
 
-      return (
-        <div
-          className={`p-release-channel-row p-release-channel-row--${risk}`}
-          key={channel}
-        >
-          <div className="p-release-channel-row__channel">
-            <span className="p-release-channel-row__promote">
-              {canBePromoted && (
-                <PromoteButton
-                  position="left"
-                  track={track}
-                  targetRisks={targetRisks}
-                  promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
-                />
-              )}
-            </span>
-            <span className="p-release-channel-row__name">
-              {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
-            </span>
-            <span className="p-release-channel-row__menu">
-              {canBeClosed && (
-                <ChannelMenu
-                  position="left"
-                  channel={channel}
-                  closeChannel={this.onCloseChannel.bind(this, channel)}
-                />
-              )}
-            </span>
-          </div>
-          {archs.map(arch =>
-            this.renderRevisionCell(
-              track,
-              risk,
-              arch,
-              releasedChannels,
-              nextChannelReleases
-            )
-          )}
+      // filter out risks that have the same revisions already released
+      targetRisks = targetRisks.filter(targetRisk => {
+        return !this.compareChannels(channel, `${track}/${targetRisk}`);
+      });
+
+      if (targetRisks.length === 0) {
+        canBePromoted = false;
+      }
+    }
+
+    return (
+      <div
+        className={`p-release-channel-row p-release-channel-row--${risk}`}
+        key={channel}
+      >
+        <div className="p-release-channel-row__channel">
+          <span className="p-release-channel-row__promote">
+            {canBePromoted && (
+              <PromoteButton
+                position="left"
+                track={track}
+                targetRisks={targetRisks}
+                promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
+              />
+            )}
+          </span>
+          <span className="p-release-channel-row__name">
+            {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
+          </span>
+          <span className="p-release-channel-row__menu">
+            {canBeClosed && (
+              <ChannelMenu
+                position="left"
+                channel={channel}
+                closeChannel={this.onCloseChannel.bind(this, channel)}
+              />
+            )}
+          </span>
+        </div>
+        {archs.map(arch =>
+          this.renderRevisionCell(
+            track,
+            risk,
+            arch,
+            releasedChannels,
+            nextChannelReleases
+          )
+        )}
+      </div>
+    );
+  }
+
+  renderHistoryPanel() {
+    return (
+      <ReleasesOverlay
+        key="history-panel"
+        revisions={this.props.revisions}
+        revisionsFilters={this.props.revisionsFilters}
+        releasedChannels={this.props.releasedChannels}
+        selectedRevisions={this.props.selectedRevisions}
+        selectRevision={this.props.selectRevision}
+        showChannels={true}
+        showArchitectures={true}
+        closeRevisionsList={this.props.closeRevisionsList}
+        getReleaseHistory={this.props.getReleaseHistory}
+      />
+    );
+  }
+
+  renderRows() {
+    // rows can consist of a channel row or expanded history panel
+    const rows = [];
+
+    RISKS.forEach(risk => {
+      rows.push(this.renderChannelRow(risk));
+    });
+
+    // if any channel is in current filters
+    // inject history panel after that channel row
+    if (
+      this.props.isRevisionsListOpen &&
+      this.props.revisionsFilters &&
+      this.props.revisionsFilters.risk
+    ) {
+      const historyPanelRow = (
+        <div className="p-release-channel-row" key="history-panel-row">
+          <div className="p-release-channel-row__channel" />
+          {this.renderHistoryPanel()}
         </div>
       );
-    });
+
+      rows.splice(
+        RISKS.indexOf(this.props.revisionsFilters.risk) + 1,
+        0,
+        historyPanelRow
+      );
+    }
+
+    return rows;
   }
 
   renderTrackDropdown(tracks) {
@@ -415,7 +464,7 @@ export default class RevisionsTable extends Component {
   }
 
   render() {
-    const { releasedChannels, archs, tracks } = this.props;
+    const { archs, tracks } = this.props;
 
     return (
       <Fragment>
@@ -437,27 +486,17 @@ export default class RevisionsTable extends Component {
                 </div>
               ))}
             </div>
-            {this.renderRows(releasedChannels, archs)}
+            {this.renderRows()}
           </div>
           <div className="p-release-actions">
             <a href="#" onClick={this.props.toggleRevisionsList}>
               Show available revisions ({this.props.revisions.length})
             </a>
           </div>
+          {this.props.isRevisionsListOpen &&
+            !this.props.revisionsFilters &&
+            this.renderHistoryPanel()}
         </div>
-        {this.props.isRevisionsListOpen && (
-          <ReleasesOverlay
-            revisions={this.props.revisions}
-            revisionsFilters={this.props.revisionsFilters}
-            releasedChannels={releasedChannels}
-            selectedRevisions={this.props.selectedRevisions}
-            selectRevision={this.props.selectRevision}
-            showChannels={true}
-            showArchitectures={true}
-            closeRevisionsList={this.props.closeRevisionsList}
-            getReleaseHistory={this.props.getReleaseHistory}
-          />
-        )}
       </Fragment>
     );
   }
