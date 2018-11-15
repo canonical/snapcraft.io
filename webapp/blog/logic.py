@@ -16,7 +16,32 @@ def strip_excerpt(raw_html):
     return html.unescape(cleantext).replace("\n", "")
 
 
-def transform_article(article, featured_image=None, author=None):
+def replace_images_with_cloudinary(content):
+    """Prefixes images with cloudinary optimised URLs and adds srcset for
+    image scaling
+
+    :param content: The HTML string to convert
+
+    :returns: Update HTML string with converted images
+    """
+    cloudinary = (
+        "https://res.cloudinary.com/" "canonical/image/fetch/q_auto,f_auto,"
+    )
+    return re.sub(
+        r"img(.*)src=\"(.[^\"]*)\"",
+        r'img\1 src="{url}w_1120/\2"'
+        r'srcset="{url}w_750/\2 750w,'
+        r'{url}w_960/\2 960w, {url}w_1120/\2 1120w"'
+        r'sizes="(max-width: 375px) 560px,'
+        r"(max-width: 480px) 880px,"
+        r'1120px"'.format(url=cloudinary),
+        content,
+    )
+
+
+def transform_article(
+    article, featured_image=None, author=None, optimise_images=False
+):
     """Transform article to include featured image, human readable
     date and a stipped version of the excerpt
 
@@ -51,6 +76,15 @@ def transform_article(article, featured_image=None, author=None):
         # join it back up
         article["excerpt"]["raw"] = "".join(
             [raw_article_start, raw_article_end, " […]"]
+        )
+
+    if (
+        optimise_images
+        and "content" in article
+        and "rendered" in article["content"]
+    ):
+        article["content"]["rendered"] = replace_images_with_cloudinary(
+            article["content"]["rendered"]
         )
 
     return article

@@ -212,7 +212,14 @@ class BlogPage(TestCase):
             "posts?slug=test-page&tags=2065"
         )
 
-        payload = [{"author": 321, "tags": [10], "id": 20}]
+        payload = [
+            {
+                "author": 321,
+                "tags": [10],
+                "id": 20,
+                "content": {"rendered": "test"},
+            }
+        ]
 
         responses.add(responses.GET, url, json=payload, status=200)
 
@@ -221,7 +228,14 @@ class BlogPage(TestCase):
         assert response.status_code == 200
         self.assert_template_used("blog/article.html")
         self.assert_context(
-            "article", {"author": None, "image": None, "id": 20, "tags": [10]}
+            "article",
+            {
+                "author": None,
+                "image": None,
+                "id": 20,
+                "tags": [10],
+                "content": {"rendered": "test"},
+            },
         )
 
     @responses.activate
