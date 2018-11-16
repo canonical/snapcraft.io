@@ -96,12 +96,12 @@ export default class RevisionsList extends Component {
 
   render() {
     let filteredRevisions = this.props.revisions;
-    let title = "Revisions available";
+    let title = "Latest revisions";
     let filters = this.props.revisionsFilters;
     let isReleaseHistory = false;
 
     if (filters && filters.arch) {
-      title = `Latest revisions: ${filters.arch}`;
+      title = `${title}: ${filters.arch}`;
 
       filteredRevisions = filteredRevisions.filter(revision => {
         return revision.architectures.includes(filters.arch);
@@ -141,10 +141,12 @@ export default class RevisionsList extends Component {
               <th width="20px" />
               <th scope="col">Version</th>
               {this.props.showArchitectures && (
-                <th scope="col">Architecture</th>
+                <th width="120px" scope="col">
+                  Architecture
+                </th>
               )}
               {this.props.showChannels && <th scope="col">Channels</th>}
-              <th scope="col" width="15%" className="u-align--right">
+              <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
