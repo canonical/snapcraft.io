@@ -495,7 +495,8 @@ export default class ReleasesTable extends Component {
           </div>
           <div className="p-release-actions">
             <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
-              Show available revisions ({this.props.revisions.length})
+              Show {this.props.revisions.length} latest revision
+              {this.props.revisions.length > 1 ? "s" : ""}
             </a>
           </div>
           {this.props.isHistoryOpen &&
