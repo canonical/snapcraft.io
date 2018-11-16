@@ -295,7 +295,7 @@ export default class ReleasesTable extends Component {
             )}
           </span>
           <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
+            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
           </span>
           <span className="p-releases-table__row__menu">
             {canBeClosed && (
