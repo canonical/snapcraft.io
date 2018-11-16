@@ -1,4 +1,6 @@
 @mixin snapcraft-release {
+  $color-highlighted: #fff8ee;
+
   // RELEASES CONFIRM
 
   .p-releases-confirm {
@@ -86,6 +88,10 @@
       background-color: $color-x-light;
       border-color: $color-mid-dark;
       cursor: pointer;
+    }
+
+    &.is-highlighted {
+      background: $color-highlighted;
     }
   }
 

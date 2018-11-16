@@ -75,15 +75,14 @@ export default class ReleasesTable extends Component {
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
-    const className = `p-releases-table__cell is-clickable ${
-      isUnassigned ? "is-unassigned" : ""
-    } ${
+    const isActive =
       this.props.revisionsFilters &&
       this.props.revisionsFilters.arch === arch &&
-      this.props.revisionsFilters.risk === risk
-        ? "is-active"
-        : ""
-    }`;
+      this.props.revisionsFilters.risk === risk;
+    const isHighlighted = isPending || (isUnassigned && thisRevision);
+    const className = `p-releases-table__cell is-clickable ${
+      isUnassigned ? "is-unassigned" : ""
+    } ${isActive ? "is-active" : ""} ${isHighlighted ? "is-highlighted" : ""}`;
 
     return (
       <div
