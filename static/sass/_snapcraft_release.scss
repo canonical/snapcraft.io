@@ -123,8 +123,11 @@
 
   .p-release-data__info--empty {
     display: inline-block;
+    overflow: hidden;
     padding-bottom: .6em;
     padding-top: .6em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .p-release-data__revision {
