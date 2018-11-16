@@ -83,6 +83,12 @@
       cursor: pointer;
     }
 
+    &.is-active {
+      .p-release-data__version {
+        font-weight: bold;
+      }
+    }
+
     &.is-highlighted {
       background: $color-highlighted;
     }

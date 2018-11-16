@@ -108,7 +108,9 @@ export default class ReleasesTable extends Component {
                 <span className="p-release-data__icon">&rarr;</span>
                 {hasPendingRelease ? (
                   <span className="p-release-data__info is-pending">
-                    {thisRevision.version}
+                    <span className="p-release-data__version">
+                      {thisRevision.version}
+                    </span>
                     <span className="p-release-data__revision">
                       ({thisRevision.revision})
                     </span>
@@ -119,7 +121,9 @@ export default class ReleasesTable extends Component {
               </Fragment>
             ) : thisPreviousRevision ? (
               <span className="p-release-data__info">
-                {thisPreviousRevision.version}
+                <span className="p-release-data__version">
+                  {thisPreviousRevision.version}
+                </span>
                 <span className="p-release-data__revision">
                   ({thisPreviousRevision.revision})
                 </span>
