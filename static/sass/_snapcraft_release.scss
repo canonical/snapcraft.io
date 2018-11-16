@@ -27,6 +27,14 @@
     display: flex;
   }
 
+  .p-releases-table__row--channel {
+    height: 4rem;
+  }
+
+  .p-releases-table__row--heading {
+    height: 2.5rem;
+  }
+
   .p-releases-table__row--unassigned {
     margin-top: $spv-inter--regular;
   }
@@ -60,10 +68,10 @@
     border-bottom: 3px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
-    margin-left: 2px;
+    margin-left: 1px;
     max-width: 22.53423%; // col-3
     min-width: 100px;
-    padding: $spv-intra $sph-intra;
+    padding: ($spv-intra - .1rem) $sph-intra;
     position: relative;
     transition-duration: 0s; // vf-animation doesn't allow to do that
 
@@ -83,7 +91,6 @@
 
   .p-releases-table__arch {
     background: none;
-    padding: 0 1em;
   }
 
   // cell contents (release info)
@@ -124,7 +131,6 @@
     color: $color-mid-dark;
     display: block;
     font-size: .8em;
-    margin-top: -.3rem;
   }
 
   // actions

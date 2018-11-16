@@ -280,7 +280,7 @@ export default class ReleasesTable extends Component {
 
     return (
       <div
-        className={`p-releases-table__row p-releases-table__row--${risk}`}
+        className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk}`}
         key={channel}
       >
         <div className="p-releases-channel">
@@ -480,7 +480,7 @@ export default class ReleasesTable extends Component {
           </div>
           {this.renderReleasesConfirm()}
           <div className="p-releases-table">
-            <div className="p-releases-table__row">
+            <div className="p-releases-table__row p-releases-table__row--heading">
               <div className="p-releases-channel" />
               {archs.map(arch => (
                 <div
