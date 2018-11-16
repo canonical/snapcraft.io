@@ -463,13 +463,16 @@ export default class ReleasesController extends Component {
 
   toggleHistoryPanel(filters) {
     const currentFilters = this.state.revisionsFilters;
+    const isHistoryOpen = this.state.isHistoryOpen;
 
     if (
-      filters &&
-      currentFilters &&
-      filters.track === currentFilters.track &&
-      filters.arch === currentFilters.arch &&
-      filters.risk === currentFilters.risk
+      isHistoryOpen &&
+      (filters == currentFilters ||
+        (filters &&
+          currentFilters &&
+          filters.track === currentFilters.track &&
+          filters.arch === currentFilters.arch &&
+          filters.risk === currentFilters.risk))
     ) {
       this.closeHistoryPanel();
     } else {
