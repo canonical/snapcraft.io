@@ -144,7 +144,7 @@ export default class RevisionsList extends Component {
                 <th scope="col">Architecture</th>
               )}
               {this.props.showChannels && <th scope="col">Channels</th>}
-              <th scope="col" className="u-align--right">
+              <th scope="col" width="15%" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
