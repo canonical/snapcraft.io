@@ -239,14 +239,12 @@ export default class ReleasesTable extends Component {
       canBeClosed = false;
     }
 
-    if (!nextChannelReleases[channel]) {
+    if (
+      !nextChannelReleases[channel] ||
+      this.props.pendingCloses.includes(channel)
+    ) {
       canBePromoted = false;
       canBeClosed = false;
-    }
-
-    if (this.props.pendingCloses.includes(channel)) {
-      canBeClosed = false;
-      canBePromoted = false;
     }
 
     let targetRisks = [];
