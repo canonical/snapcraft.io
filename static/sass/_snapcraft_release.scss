@@ -176,6 +176,19 @@
     }
   }
 
+  .p-action-button {
+    background: none;
+    border: 0;
+    display: block;
+    line-height: 14px;
+    padding: 2px 4px;
+
+    .p-icon--close {
+      height: 14px;
+      width: 14px;
+    }
+  }
+
   .p-contextual-menu__item {
     @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
 

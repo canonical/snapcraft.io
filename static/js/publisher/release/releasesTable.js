@@ -178,10 +178,10 @@ export default class ReleasesTable extends Component {
         {hasPendingRelease && (
           <div className="p-release-buttons">
             <button
-              className="p-icon-button p-tooltip p-tooltip--btm-center"
+              className="p-action-button p-tooltip p-tooltip--btm-center"
               onClick={this.undoClick.bind(this, thisRevision, track, risk)}
             >
-              &#x2715;
+              <i className="p-icon--close" />
               <span className="p-tooltip__message">
                 Cancel promoting this revision
               </span>
