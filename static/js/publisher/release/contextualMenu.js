@@ -54,10 +54,11 @@ export default class ContextualMenu extends Component {
   render() {
     const { position } = this.props;
     const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
+    const appearance = this.props.appearance || "neutral";
 
     return (
       <span
-        className={`p-promote-button p-button--neutral p-icon-button ${menuClass}`}
+        className={`p-promote-button p-button--${appearance} p-icon-button ${menuClass}`}
         onClick={this.dropdownButtonClick.bind(this)}
       >
         {this.renderIcon()}
@@ -71,6 +72,7 @@ export default class ContextualMenu extends Component {
 
 ContextualMenu.propTypes = {
   position: PropTypes.oneOf(["left", "center"]), // right is by default
+  appearance: PropTypes.oneOf(["base", "neutral"]),
   channel: PropTypes.string.isRequired,
   closeChannel: PropTypes.func.isRequired
 };

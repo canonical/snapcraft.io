@@ -281,7 +281,10 @@ export default class ReleasesTable extends Component {
         key={channel}
       >
         <div className="p-releases-channel">
-          <span className="p-releases-channel__promote">
+          <span className="p-releases-channel__name">
+            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
+          </span>
+          <span className="p-releases-table__row__menu">
             {canBePromoted && (
               <PromoteButton
                 position="left"
@@ -290,13 +293,9 @@ export default class ReleasesTable extends Component {
                 promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
               />
             )}
-          </span>
-          <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
-          </span>
-          <span className="p-releases-table__row__menu">
             {canBeClosed && (
               <ChannelMenu
+                appearance="base"
                 position="left"
                 channel={channel}
                 closeChannel={this.onCloseChannel.bind(this, channel)}
