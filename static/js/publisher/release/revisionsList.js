@@ -58,7 +58,7 @@ export default class RevisionsList extends Component {
                 </label>
               </Fragment>
             ) : (
-              <span className="col-checkbox-spacer">{revision.revision}</span>
+              <span>{revision.revision}</span>
             )}
           </td>
           <td>
@@ -91,27 +91,25 @@ export default class RevisionsList extends Component {
 
   onCloseClick(event) {
     event.preventDefault();
-    this.props.closeRevisionsList();
+    this.props.closeHistoryPanel();
   }
 
   render() {
     let filteredRevisions = this.props.revisions;
-    let title = "Revisions available";
+    let title = "Latest revisions";
     let filters = this.props.revisionsFilters;
     let isReleaseHistory = false;
 
     if (filters && filters.arch) {
-      title = "Latest revisions";
+      title = `${title}: ${filters.arch}`;
 
       filteredRevisions = filteredRevisions.filter(revision => {
         return revision.architectures.includes(filters.arch);
       });
 
-      title = `${title} in ${filters.arch}`;
-
       if (filters.risk !== UNASSIGNED) {
         isReleaseHistory = true;
-        title = `Releases history ${filters.arch} in ${filters.track}/${
+        title = `Releases history: ${filters.arch} – ${filters.track}/${
           filters.risk
         }`;
 
@@ -133,16 +131,22 @@ export default class RevisionsList extends Component {
         <table className="p-revisions-list">
           <thead>
             <tr>
-              <th className="col-checkbox-spacer" width="100px" scope="col">
+              <th
+                className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
+                width="100px"
+                scope="col"
+              >
                 Revision
               </th>
               <th width="20px" />
               <th scope="col">Version</th>
               {this.props.showArchitectures && (
-                <th scope="col">Architecture</th>
+                <th width="120px" scope="col">
+                  Architecture
+                </th>
               )}
               {this.props.showChannels && <th scope="col">Channels</th>}
-              <th scope="col" className="u-align--right">
+              <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
@@ -152,7 +156,7 @@ export default class RevisionsList extends Component {
               this.renderRows(filteredRevisions, !isReleaseHistory)
             ) : (
               <tr>
-                <td colSpan="6" className="col-checkbox-spacer">
+                <td colSpan="5">
                   <em>No releases</em>
                 </td>
               </tr>
@@ -174,6 +178,6 @@ RevisionsList.propTypes = {
   showArchitectures: PropTypes.bool,
   // actions
   selectRevision: PropTypes.func.isRequired,
-  closeRevisionsList: PropTypes.func.isRequired,
+  closeHistoryPanel: PropTypes.func.isRequired,
   getReleaseHistory: PropTypes.func.isRequired
 };

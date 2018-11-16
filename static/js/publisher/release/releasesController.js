@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import "whatwg-fetch";
 
-import RevisionsTable from "./revisionsTable";
+import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
@@ -43,7 +43,7 @@ export default class ReleasesController extends Component {
       //   arch: 'architecture'
       // }
       revisionsFilters: null,
-      isRevisionsListOpen: false
+      isHistoryOpen: false
     };
   }
 
@@ -461,26 +461,36 @@ export default class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
-  openRevisionsList(filters) {
+  toggleHistoryPanel(filters) {
+    const currentFilters = this.state.revisionsFilters;
+    const isHistoryOpen = this.state.isHistoryOpen;
+
+    if (
+      isHistoryOpen &&
+      (filters == currentFilters ||
+        (filters &&
+          currentFilters &&
+          filters.track === currentFilters.track &&
+          filters.arch === currentFilters.arch &&
+          filters.risk === currentFilters.risk))
+    ) {
+      this.closeHistoryPanel();
+    } else {
+      this.openHistoryPanel(filters);
+    }
+  }
+
+  openHistoryPanel(filters) {
     this.setState({
       revisionsFilters: filters,
-      isRevisionsListOpen: true
+      isHistoryOpen: true
     });
   }
 
-  closeRevisionsList() {
+  closeHistoryPanel() {
     this.setState({
       revisionsFilters: null,
-      isRevisionsListOpen: false
-    });
-  }
-
-  toggleRevisionsList(event) {
-    event.preventDefault();
-
-    this.setState({
-      revisionsFilters: null,
-      isRevisionsListOpen: true
+      isHistoryOpen: false
     });
   }
 
@@ -555,7 +565,7 @@ export default class ReleasesController extends Component {
           )}
         </div>
 
-        <RevisionsTable
+        <ReleasesTable
           // map all the state into props
           {...this.state}
           // actions
@@ -568,10 +578,9 @@ export default class ReleasesController extends Component {
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
           getTrackingChannel={this.getTrackingChannel.bind(this)}
-          openRevisionsList={this.openRevisionsList.bind(this)}
+          toggleHistoryPanel={this.toggleHistoryPanel.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
-          closeRevisionsList={this.closeRevisionsList.bind(this)}
-          toggleRevisionsList={this.toggleRevisionsList.bind(this)}
+          closeHistoryPanel={this.closeHistoryPanel.bind(this)}
           getReleaseHistory={this.getReleaseHistory.bind(this)}
         />
       </Fragment>
