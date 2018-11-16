@@ -91,7 +91,7 @@ export default class RevisionsList extends Component {
 
   onCloseClick(event) {
     event.preventDefault();
-    this.props.closeRevisionsList();
+    this.props.closeHistoryPanel();
   }
 
   render() {
@@ -176,6 +176,6 @@ RevisionsList.propTypes = {
   showArchitectures: PropTypes.bool,
   // actions
   selectRevision: PropTypes.func.isRequired,
-  closeRevisionsList: PropTypes.func.isRequired,
+  closeHistoryPanel: PropTypes.func.isRequired,
   getReleaseHistory: PropTypes.func.isRequired
 };

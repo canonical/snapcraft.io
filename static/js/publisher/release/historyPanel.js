@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import RevisionsList from "./revisionsList";
 
-export default class ReleasesOverlay extends Component {
+export default class HistoryPanel extends Component {
   render() {
     return (
       <div className="p-history-panel">
@@ -16,7 +16,7 @@ export default class ReleasesOverlay extends Component {
             selectRevision={this.props.selectRevision}
             showChannels={true}
             showArchitectures={this.props.showArchitectures}
-            closeRevisionsList={this.props.closeRevisionsList}
+            closeHistoryPanel={this.props.closeHistoryPanel}
             getReleaseHistory={this.props.getReleaseHistory}
           />
         </div>
@@ -25,7 +25,7 @@ export default class ReleasesOverlay extends Component {
   }
 }
 
-ReleasesOverlay.propTypes = {
+HistoryPanel.propTypes = {
   // state
   revisions: PropTypes.array.isRequired,
   releasedChannels: PropTypes.object.isRequired,
@@ -34,6 +34,6 @@ ReleasesOverlay.propTypes = {
   showArchitectures: PropTypes.bool,
   // actions
   selectRevision: PropTypes.func.isRequired,
-  closeRevisionsList: PropTypes.func.isRequired,
+  closeHistoryPanel: PropTypes.func.isRequired,
   getReleaseHistory: PropTypes.func.isRequired
 };

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import "whatwg-fetch";
 
-import RevisionsTable from "./revisionsTable";
+import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
@@ -43,7 +43,7 @@ export default class ReleasesController extends Component {
       //   arch: 'architecture'
       // }
       revisionsFilters: null,
-      isRevisionsListOpen: false
+      isHistoryOpen: false
     };
   }
 
@@ -471,23 +471,23 @@ export default class ReleasesController extends Component {
       filters.arch === currentFilters.arch &&
       filters.risk === currentFilters.risk
     ) {
-      this.closeRevisionsList();
+      this.closeHistoryPanel();
     } else {
-      this.openRevisionsList(filters);
+      this.openHistoryPanel(filters);
     }
   }
 
-  openRevisionsList(filters) {
+  openHistoryPanel(filters) {
     this.setState({
       revisionsFilters: filters,
-      isRevisionsListOpen: true
+      isHistoryOpen: true
     });
   }
 
-  closeRevisionsList() {
+  closeHistoryPanel() {
     this.setState({
       revisionsFilters: null,
-      isRevisionsListOpen: false
+      isHistoryOpen: false
     });
   }
 
@@ -562,7 +562,7 @@ export default class ReleasesController extends Component {
           )}
         </div>
 
-        <RevisionsTable
+        <ReleasesTable
           // map all the state into props
           {...this.state}
           // actions
@@ -577,7 +577,7 @@ export default class ReleasesController extends Component {
           getTrackingChannel={this.getTrackingChannel.bind(this)}
           toggleHistoryPanel={this.toggleHistoryPanel.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
-          closeRevisionsList={this.closeRevisionsList.bind(this)}
+          closeHistoryPanel={this.closeHistoryPanel.bind(this)}
           getReleaseHistory={this.getReleaseHistory.bind(this)}
         />
       </Fragment>

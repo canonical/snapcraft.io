@@ -11,13 +11,13 @@ import {
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
-import ReleasesOverlay from "./releasesOverlay";
+import HistoryPanel from "./historyPanel";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
 
-export default class RevisionsTable extends Component {
+export default class ReleasesTable extends Component {
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
     const currentRelease =
@@ -322,7 +322,7 @@ export default class RevisionsTable extends Component {
 
   renderHistoryPanel(showArchitectures) {
     return (
-      <ReleasesOverlay
+      <HistoryPanel
         key="history-panel"
         revisions={this.props.revisions}
         revisionsFilters={this.props.revisionsFilters}
@@ -330,7 +330,7 @@ export default class RevisionsTable extends Component {
         selectedRevisions={this.props.selectedRevisions}
         selectRevision={this.props.selectRevision}
         showArchitectures={!!showArchitectures}
-        closeRevisionsList={this.props.closeRevisionsList}
+        closeHistoryPanel={this.props.closeHistoryPanel}
         getReleaseHistory={this.props.getReleaseHistory}
       />
     );
@@ -347,7 +347,7 @@ export default class RevisionsTable extends Component {
     // if any channel is in current filters
     // inject history panel after that channel row
     if (
-      this.props.isRevisionsListOpen &&
+      this.props.isHistoryOpen &&
       this.props.revisionsFilters &&
       this.props.revisionsFilters.risk
     ) {
@@ -498,7 +498,7 @@ export default class RevisionsTable extends Component {
               Show available revisions ({this.props.revisions.length})
             </a>
           </div>
-          {this.props.isRevisionsListOpen &&
+          {this.props.isHistoryOpen &&
             !this.props.revisionsFilters &&
             this.renderHistoryPanel(true)}
         </div>
@@ -507,7 +507,7 @@ export default class RevisionsTable extends Component {
   }
 }
 
-RevisionsTable.propTypes = {
+ReleasesTable.propTypes = {
   // state
   revisions: PropTypes.array,
   archs: PropTypes.array.isRequired,
@@ -519,7 +519,7 @@ RevisionsTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array,
-  isRevisionsListOpen: PropTypes.bool,
+  isHistoryOpen: PropTypes.bool,
 
   // actions
   getNextReleasedChannels: PropTypes.func.isRequired,
@@ -533,6 +533,6 @@ RevisionsTable.propTypes = {
   getTrackingChannel: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
   selectRevision: PropTypes.func.isRequired,
-  closeRevisionsList: PropTypes.func.isRequired,
+  closeHistoryPanel: PropTypes.func.isRequired,
   getReleaseHistory: PropTypes.func.isRequired
 };
