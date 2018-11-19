@@ -288,9 +288,10 @@ export default class ReleasesTable extends Component {
           <span className="p-releases-channel__name">
             {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
           </span>
-          <span className="p-releases-table__row__menu">
+          <span className="p-releases-table__menus">
             {canBePromoted && (
               <PromoteButton
+                className="p-releases-channel__promote"
                 position="left"
                 track={track}
                 targetRisks={targetRisks}

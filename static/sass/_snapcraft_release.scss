@@ -41,18 +41,31 @@
     margin-top: $spv-inter--regular;
   }
 
+  .p-releases-table__menus {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: flex-end;
+    margin-top: $sp-unit;
+    width: 78px; // to fit 2 icon buttons exactly
+  }
+
+  // align first (promote) button to left
+  .p-releases-channel__promote {
+    margin-right: auto;
+  }
   // channel cell
 
   .p-releases-channel {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     flex-shrink: 0;
     margin-right: $grid-gutter-width / 2;
-    width: 22.53423%; // col-3
+    width: 222px; // fixed width col-3
   }
 
   .p-releases-channel__name {
     flex-grow: 1;
+    padding-top: ($spv-intra - .1rem);
   }
 
   // release cell
@@ -179,6 +192,11 @@
 
     &:not(:last-of-type):not(:only-of-type) {
       margin-right: .25rem;
+    }
+
+    // don't grow these buttons to 100% width on mobile
+    @media (max-width: $breakpoint-small) {
+      width: auto;
     }
   }
 
