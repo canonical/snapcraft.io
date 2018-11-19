@@ -39,7 +39,7 @@ def replace_images_with_cloudinary(content):
         "<img\g<prefix>"
         f' decoding="async"'
         f' src="{urls[0]}"'
-        f' srcset="{urls[0]} 650w, {urls[1]} 1300w 2x, {urls[2]} 1950w 3x"'
+        f' srcset="{urls[0]} 650w, {urls[1]} 1300w, {urls[2]} 1950w"'
         f' sizes="650px"'
         "\g<suffix>>"
     )
