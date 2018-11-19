@@ -27,7 +27,24 @@ def replace_images_with_cloudinary(content):
     cloudinary = (
         "https://res.cloudinary.com/" "canonical/image/fetch/q_auto,f_auto,"
     )
-    return re.sub(
+    cloudinary = 'https://res.cloudinary.com/'
+
+    urls = [
+        cloudinary + 'canonical/image/fetch/q_auto,f_auto,w_750/\g<url>',
+        cloudinary + 'canonical/image/fetch/q_auto,f_auto,w_960/\g<url>',
+        cloudinary + 'canonical/image/fetch/q_auto,f_auto,w_1120/\g<url>',
+    ]
+    
+    image_match = r'<img(?P<prefix>[^>]*) src="(?P<url>[^"]+)"(?P<suffix>[^>]*)>'
+    replacement = (
+        '<img\g<prefix>'
+        f' src="{urls[2]}"'
+        f' srcset="{urls[0]} 750w, {urls[1]} 960w, {urls[2]} 1120w"'
+        ' sizes="(max-width: 375px) 560px, (max-width: 480px) 880px, 1120px"'
+        '\g<suffix>>'
+    )
+
+    return re.sub(image_match, replacement, content)
         r"img(.*)src=\"(.[^\"]*)\"",
         r'img\1 src="{url}w_1120/\2"'
         r'srcset="{url}w_750/\2 750w,'
