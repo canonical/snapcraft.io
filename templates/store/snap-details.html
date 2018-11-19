@@ -115,6 +115,7 @@
                   <video autoplay loop muted playsinline data-original="{{ screenshot }}">
                     <source src="https://res.cloudinary.com/canonical/image/fetch/f_webm/{{ screenshot }}" type="video/webm">
                     <source src="https://res.cloudinary.com/canonical/image/fetch/f_mp4/{{ screenshot }}" type="video/mp4">
+                    <img src="https://res.cloudinary.com/canonical/image/fetch/f_jpg,q_auto,f_auto,w_430/{{ screenshot }}" />
                   </video>
                   {% else %}
                     <img src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }}"
