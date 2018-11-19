@@ -27,9 +27,9 @@ def replace_images_with_cloudinary(content):
     cloudinary = "https://res.cloudinary.com/"
 
     urls = [
-        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_540/\g<url>",
-        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_1080/\g<url>",
-        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_1620/\g<url>",
+        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_650/\g<url>",
+        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_1300/\g<url>",
+        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_1950/\g<url>",
     ]
 
     image_match = (
@@ -39,8 +39,8 @@ def replace_images_with_cloudinary(content):
         "<img\g<prefix>"
         f' decoding="async"'
         f' src="{urls[0]}"'
-        f' srcset="{urls[0]} 540w, {urls[1]} 1080w 2x, {urls[2]} 1620w 3x"'
-        f' sizes="540px"'
+        f' srcset="{urls[0]} 650w, {urls[1]} 1300w 2x, {urls[2]} 1950w 3x"'
+        f' sizes="650px"'
         "\g<suffix>>"
     )
 
