@@ -24,36 +24,27 @@ def replace_images_with_cloudinary(content):
 
     :returns: Update HTML string with converted images
     """
-    cloudinary = (
-        "https://res.cloudinary.com/" "canonical/image/fetch/q_auto,f_auto,"
-    )
-    cloudinary = 'https://res.cloudinary.com/'
+    cloudinary = "https://res.cloudinary.com/"
 
     urls = [
-        cloudinary + 'canonical/image/fetch/q_auto,f_auto,w_750/\g<url>',
-        cloudinary + 'canonical/image/fetch/q_auto,f_auto,w_960/\g<url>',
-        cloudinary + 'canonical/image/fetch/q_auto,f_auto,w_1120/\g<url>',
+        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_540/\g<url>",
+        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_1080/\g<url>",
+        cloudinary + "canonical/image/fetch/q_auto,f_auto,w_1620/\g<url>",
     ]
-    
-    image_match = r'<img(?P<prefix>[^>]*) src="(?P<url>[^"]+)"(?P<suffix>[^>]*)>'
+
+    image_match = (
+        r'<img(?P<prefix>[^>]*) src="(?P<url>[^"]+)"(?P<suffix>[^>]*)>'
+    )
     replacement = (
-        '<img\g<prefix>'
-        f' src="{urls[2]}"'
-        f' srcset="{urls[0]} 750w, {urls[1]} 960w, {urls[2]} 1120w"'
-        ' sizes="(max-width: 375px) 560px, (max-width: 480px) 880px, 1120px"'
-        '\g<suffix>>'
+        "<img\g<prefix>"
+        f' decoding="async"'
+        f' src="{urls[0]}"'
+        f' srcset="{urls[0]} 540w, {urls[1]} 1080w 2x, {urls[2]} 1620w 3x"'
+        f' sizes="540px"'
+        "\g<suffix>>"
     )
 
     return re.sub(image_match, replacement, content)
-        r"img(.*)src=\"(.[^\"]*)\"",
-        r'img\1 src="{url}w_1120/\2"'
-        r'srcset="{url}w_750/\2 750w,'
-        r'{url}w_960/\2 960w, {url}w_1120/\2 1120w"'
-        r'sizes="(max-width: 375px) 560px,'
-        r"(max-width: 480px) 880px,"
-        r'1120px"'.format(url=cloudinary),
-        content,
-    )
 
 
 def transform_article(
