@@ -16,7 +16,8 @@
     .p-carousel__item--screenshot {
       cursor: pointer;
 
-      img {
+      img,
+      video {
         display: block;
         max-height: 248px;
         max-width: 100%;
