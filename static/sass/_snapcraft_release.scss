@@ -1,4 +1,6 @@
 @mixin snapcraft-release {
+  $color-highlighted: #fff8ee;
+
   // RELEASES CONFIRM
 
   .p-releases-confirm {
@@ -39,25 +41,31 @@
     margin-top: $spv-inter--regular;
   }
 
+  .p-releases-table__menus {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: flex-end;
+    margin-top: $sp-unit;
+    width: 78px; // to fit 2 icon buttons exactly
+  }
+
+  // align first (promote) button to left
+  .p-releases-channel__promote {
+    margin-right: auto;
+  }
   // channel cell
 
   .p-releases-channel {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     flex-shrink: 0;
-    margin-right: $sph-inter;
-    width: 22.53423%; // col-3
-  }
-
-  .p-releases-channel__promote {
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-right: .5rem;
-    width: 2rem;
+    margin-right: $grid-gutter-width / 2;
+    width: 222px; // fixed width col-3
   }
 
   .p-releases-channel__name {
     flex-grow: 1;
+    padding-top: ($spv-intra - .1rem);
   }
 
   // release cell
@@ -69,7 +77,7 @@
     flex-basis: 100px;
     flex-grow: 1;
     margin-left: 1px;
-    max-width: 22.53423%; // col-3
+    max-width: 25.2%; // fill the whole space for 3 archs
     min-width: 100px;
     padding: ($spv-intra - .1rem) $sph-intra;
     position: relative;
@@ -86,6 +94,16 @@
       background-color: $color-x-light;
       border-color: $color-mid-dark;
       cursor: pointer;
+    }
+
+    &.is-active {
+      .p-release-data__version {
+        font-weight: bold;
+      }
+    }
+
+    &.is-highlighted {
+      background: $color-highlighted;
     }
   }
 
@@ -123,8 +141,11 @@
 
   .p-release-data__info--empty {
     display: inline-block;
+    overflow: hidden;
     padding-bottom: .6em;
     padding-top: .6em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .p-release-data__revision {
@@ -171,6 +192,24 @@
 
     &:not(:last-of-type):not(:only-of-type) {
       margin-right: .25rem;
+    }
+
+    // don't grow these buttons to 100% width on mobile
+    @media (max-width: $breakpoint-small) {
+      width: auto;
+    }
+  }
+
+  .p-action-button {
+    background: none;
+    border: 0;
+    display: block;
+    line-height: 14px;
+    padding: 2px 4px;
+
+    .p-icon--close {
+      height: 14px;
+      width: 14px;
     }
   }
 

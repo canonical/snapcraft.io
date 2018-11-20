@@ -75,15 +75,14 @@ export default class ReleasesTable extends Component {
     const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
-    const className = `p-releases-table__cell is-clickable ${
-      isUnassigned ? "is-unassigned" : ""
-    } ${
+    const isActive =
       this.props.revisionsFilters &&
       this.props.revisionsFilters.arch === arch &&
-      this.props.revisionsFilters.risk === risk
-        ? "is-active"
-        : ""
-    }`;
+      this.props.revisionsFilters.risk === risk;
+    const isHighlighted = isPending || (isUnassigned && thisRevision);
+    const className = `p-releases-table__cell is-clickable ${
+      isUnassigned ? "is-unassigned" : ""
+    } ${isActive ? "is-active" : ""} ${isHighlighted ? "is-highlighted" : ""}`;
 
     return (
       <div
@@ -109,7 +108,9 @@ export default class ReleasesTable extends Component {
                 <span className="p-release-data__icon">&rarr;</span>
                 {hasPendingRelease ? (
                   <span className="p-release-data__info is-pending">
-                    {thisRevision.version}
+                    <span className="p-release-data__version">
+                      {thisRevision.version}
+                    </span>
                     <span className="p-release-data__revision">
                       ({thisRevision.revision})
                     </span>
@@ -120,7 +121,9 @@ export default class ReleasesTable extends Component {
               </Fragment>
             ) : thisPreviousRevision ? (
               <span className="p-release-data__info">
-                {thisPreviousRevision.version}
+                <span className="p-release-data__version">
+                  {thisPreviousRevision.version}
+                </span>
                 <span className="p-release-data__revision">
                   ({thisPreviousRevision.revision})
                 </span>
@@ -179,10 +182,10 @@ export default class ReleasesTable extends Component {
         {hasPendingRelease && (
           <div className="p-release-buttons">
             <button
-              className="p-icon-button p-tooltip p-tooltip--btm-center"
+              className="p-action-button p-tooltip p-tooltip--btm-center"
               onClick={this.undoClick.bind(this, thisRevision, track, risk)}
             >
-              &#x2715;
+              <i className="p-icon--close" />
               <span className="p-tooltip__message">
                 Cancel promoting this revision
               </span>
@@ -282,22 +285,22 @@ export default class ReleasesTable extends Component {
         key={channel}
       >
         <div className="p-releases-channel">
-          <span className="p-releases-channel__promote">
+          <span className="p-releases-channel__name">
+            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
+          </span>
+          <span className="p-releases-table__menus">
             {canBePromoted && (
               <PromoteButton
+                className="p-releases-channel__promote"
                 position="left"
                 track={track}
                 targetRisks={targetRisks}
                 promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
               />
             )}
-          </span>
-          <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
-          </span>
-          <span className="p-releases-table__row__menu">
             {canBeClosed && (
               <ChannelMenu
+                appearance="base"
                 position="left"
                 channel={channel}
                 closeChannel={this.onCloseChannel.bind(this, channel)}
