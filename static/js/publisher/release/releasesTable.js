@@ -150,8 +150,8 @@ export default class ReleasesTable extends Component {
                     thisPreviousRevision.revision
                   })`
                 : hasPendingRelease || !trackingChannel
-                  ? "None"
-                  : `Tracking channel ${trackingChannel}`}
+                ? "None"
+                : `Tracking channel ${trackingChannel}`}
               {hasPendingRelease && (
                 <span>
                   {" "}
@@ -164,15 +164,14 @@ export default class ReleasesTable extends Component {
                   &rarr; <em>close channel</em>
                 </span>
               )}
-              {thisPreviousRevision &&
-                isInDevmode(thisPreviousRevision) && (
-                  <Fragment>
-                    <br />
-                    {thisPreviousRevision.confinement === "devmode"
-                      ? "confinement: devmode"
-                      : "grade: devel"}
-                  </Fragment>
-                )}
+              {thisPreviousRevision && isInDevmode(thisPreviousRevision) && (
+                <Fragment>
+                  <br />
+                  {thisPreviousRevision.confinement === "devmode"
+                    ? "confinement: devmode"
+                    : "grade: devel"}
+                </Fragment>
+              )}
             </span>
           )}
         </div>

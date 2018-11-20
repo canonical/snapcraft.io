@@ -31,26 +31,30 @@ function initSnapIconEdit(iconElId, iconInputId, state, updateFormState) {
   }
 
   function updateImage(imageBlob) {
-    const url = URL.createObjectURL(imageBlob);
+    const url = imageBlob ? URL.createObjectURL(imageBlob) : null;
 
     // remove existing icon from state object
     const images = state.images.filter(image => image.type !== "icon");
-    // replace it with a new one
-    images.unshift({
-      url: url,
-      file: imageBlob,
-      name: imageBlob.name || "icon",
-      status: "new"
-    });
 
-    snapIconEl.src = url;
+    // replace it with a new one if it exists
+    if (url) {
+      images.unshift({
+        url: url,
+        file: imageBlob,
+        name: imageBlob.name || "icon",
+        status: "new"
+      });
+    }
+
+    snapIconEl.src =
+      url ||
+      "https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg";
 
     updateState(state, { images });
     updateFormState();
   }
 
   snapIconEl.addEventListener("click", function() {
-    // snapIconInput.click();
     let imageUrl = snapIconEl.src;
     const holder = document.createElement("div");
     holder.classList.add("js-imageCropper-container");
@@ -330,7 +334,7 @@ function initForm(config, initialState, errors) {
           window.location.reload();
         })
         .catch(error => {
-          console.error(error);
+          throw new Error(error);
         });
 
       // disable button and show spinner when loading is long

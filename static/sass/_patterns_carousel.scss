@@ -85,10 +85,10 @@
     }
   }
 
-  &:hover .p-carousel__next,
-  &:hover .p-carousel__prev {
-    pointer-events: all;
-  }
+  //&:hover .p-carousel__next,
+  //&:hover .p-carousel__prev {
+  //  pointer-events: all;
+  //}
 
   .p-carousel__prev {
     background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');

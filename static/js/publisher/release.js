@@ -7,12 +7,14 @@ import ReleasesController from "./release/releasesController";
 function getTracksFromChannelMap(channelMapsList) {
   const tracks = ["latest"];
 
-  channelMapsList.map(t => t.track).forEach(track => {
-    // if we haven't saved it yet
-    if (tracks.indexOf(track) === -1) {
-      tracks.push(track);
-    }
-  });
+  channelMapsList
+    .map(t => t.track)
+    .forEach(track => {
+      // if we haven't saved it yet
+      if (tracks.indexOf(track) === -1) {
+        tracks.push(track);
+      }
+    });
 
   return tracks;
 }

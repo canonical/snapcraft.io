@@ -25,9 +25,23 @@ class ImageCropper extends React.Component {
 
     this.props.snapIconInput.addEventListener("change", () => {
       const imageUrl = this.props.openImage();
+      let cropState = this.state.crop;
 
+      if (this.image) {
+        const crop = this.getCrop();
+        cropState = {
+          crop: {
+            aspect: 1,
+            x: 0,
+            y: 0,
+            width: crop[0],
+            height: crop[1]
+          }
+        };
+      }
       this.setState({
-        imageUrl: imageUrl
+        imageUrl: imageUrl,
+        crop: cropState
       });
     });
   }
@@ -67,6 +81,12 @@ class ImageCropper extends React.Component {
 
     ctx.clearRect(0, 0, 256, 256);
 
+    if (width > height) {
+      width = height;
+    } else {
+      height = width;
+    }
+
     ctx.drawImage(image, x, y, width, height, 0, 0, 256, 256);
   }
 
@@ -89,11 +109,17 @@ class ImageCropper extends React.Component {
             gettingImage: false
           });
         })
-        .catch(console.error);
+        .catch(error => {
+          throw new Error(error);
+        });
     }
 
     if (this.canvasHolder && this.state.hasImage) {
       this.renderPreview();
+    }
+
+    if (!this.props.imageUrl) {
+      this.props.snapIconInput.click();
     }
   }
 
@@ -107,16 +133,49 @@ class ImageCropper extends React.Component {
     this.setState({ crop });
   }
 
+  getCrop() {
+    let width = (256 / this.image.width) * 100;
+    let height = (256 / this.image.height) * 100;
+
+    return [width, height];
+  }
+
   onImageLoaded(image) {
     this.image = image;
+
+    const crop = this.getCrop();
+
     this.setState({
-      hasImage: true
+      hasImage: true,
+      crop: {
+        aspect: 1,
+        x: 0,
+        y: 0,
+        width: crop[0],
+        height: crop[1]
+      }
     });
   }
 
   openImage(event) {
     event.preventDefault();
     this.props.snapIconInput.click();
+  }
+
+  removeImage(event) {
+    event.preventDefault();
+    this.props.updateImage(null);
+    this.setState({
+      imageUrl: false,
+      hasImage: false,
+      gettingImage: false,
+      crop: {
+        aspect: 1,
+        x: 0,
+        y: 0
+      }
+    });
+    this.props.close();
   }
 
   saveCrop(event) {
@@ -172,6 +231,12 @@ class ImageCropper extends React.Component {
         >
           Change image
         </button>
+        <button
+          className="p-button--negative u-float--left u-no-margin--bottom"
+          onClick={this.removeImage.bind(this)}
+        >
+          Remove image
+        </button>
         <div className="u-float--right">
           <button
             className="p-button--neutral u-no-margin--bottom"
@@ -194,33 +259,18 @@ class ImageCropper extends React.Component {
     );
   }
 
-  renderUpload() {
-    return (
-      <Fragment>
-        <div className="row">
-          <div className="col-4 push-4">
-            <button
-              className="p-button--neutral u-float--left u-no-margin--bottom"
-              onClick={this.openImage.bind(this)}
-            >
-              Change image
-            </button>
-          </div>
-        </div>
-      </Fragment>
-    );
-  }
-
   render() {
-    return (
-      <Modal visible={true} close={this.props.close}>
-        <div className="col-10">
-          <Card>
-            {this.state.imageUrl ? this.renderCropper() : this.renderUpload()}
-          </Card>
-        </div>
-      </Modal>
-    );
+    if (this.state.imageUrl) {
+      return (
+        <Modal visible={true} close={this.props.close}>
+          <div className="col-10">
+            <Card>{this.renderCropper()}</Card>
+          </div>
+        </Modal>
+      );
+    }
+
+    return false;
   }
 }
 
