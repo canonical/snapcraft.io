@@ -515,10 +515,7 @@ def redirect_post_release(snap_name):
 @publisher_snaps.route("/<snap_name>/releases/json")
 @login_required
 def get_release_history_json(snap_name):
-    page = 1
-
-    if flask.request.args.get("page"):
-        page = flask.request.args.get("page")
+    page = flask.request.args.get("page", default=1, type=int)
 
     try:
         release_history = api.snap_release_history(
