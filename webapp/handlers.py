@@ -121,14 +121,20 @@ def set_handlers(app):
             if flask.session:
                 response.headers["Cache-Control"] = "private"
             else:
+                cache_control = {"public"}
+
+                if "/static/images/badges" in flask.request.url:
+                    cache_control.update({"max-age=31556952"})
+                else:
+                    cache_control.update(
+                        {
+                            "max-age=61",
+                            "stale-while-revalidate=300",
+                            "stale-if-error=86400",
+                        }
+                    )
+
                 # Only add caching headers to successful responses
-                response.headers["Cache-Control"] = ", ".join(
-                    {
-                        "public",
-                        "max-age=61",
-                        "stale-while-revalidate=300",
-                        "stale-if-error=86400",
-                    }
-                )
+                response.headers["Cache-Control"] = ", ".join(cache_control)
 
         return response
