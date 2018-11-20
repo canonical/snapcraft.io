@@ -146,7 +146,9 @@ def article(slug):
     except ApiError:
         author = None
 
-    transformed_article = logic.transform_article(article, author=author)
+    transformed_article = logic.transform_article(
+        article, author=author, optimise_images=True
+    )
 
     tags = article["tags"]
     tag_names = []
