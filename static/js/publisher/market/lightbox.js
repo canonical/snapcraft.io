@@ -8,7 +8,6 @@ const lightboxTpl = `
   <div class="vbox-preloader">Loading...</div>
   <div class="vbox-container">
     <div class="vbox-content">
-      <img class="figlio" >
     </div>
   </div>
 
@@ -25,14 +24,6 @@ const initLightboxEl = () => {
   lightboxEl.style.display = "none";
   lightboxEl.style.display = "0";
   lightboxEl.innerHTML = lightboxTpl;
-
-  // adjust positioning when image loads
-  const contentEl = lightboxEl.querySelector(".vbox-content");
-  const lightboxImgEl = lightboxEl.querySelector(".vbox-content img");
-
-  lightboxImgEl.addEventListener("load", () => {
-    contentEl.style.opacity = "1";
-  });
 
   const closeLightbox = event => {
     event.preventDefault();
@@ -54,11 +45,42 @@ const initLightboxEl = () => {
 };
 
 const loadLightboxImage = (lightboxEl, url, images) => {
+  let media;
   // hide content before it loads
-  lightboxEl.querySelector(".vbox-content").style.opacity = "0";
+  const contentEl = lightboxEl.querySelector(".vbox-content");
+  contentEl.style.opacity = "0";
 
-  // load image
-  lightboxEl.querySelector(".vbox-content img").src = url;
+  const currentMedia = contentEl.querySelector(".figlio");
+  if (currentMedia) {
+    contentEl.removeChild(currentMedia);
+  }
+
+  // load media
+  if (url.includes(".gif")) {
+    media = document.createElement("video");
+    media.autoplay = true;
+    media.loop = true;
+    media.classList.add("figlio");
+    contentEl.appendChild(media);
+    contentEl.style.opacity = "1";
+
+    const originalEl = document.body.querySelector(`[data-original="${url}"]`);
+
+    if (media.canPlayType("video/webm")) {
+      media.src = originalEl.querySelector("[type='video/webm']").src;
+    } else if (media.canPlayType("video/mp4")) {
+      media.src = originalEl.querySelector("[type='video/mp4']").src;
+    }
+  } else {
+    media = new Image();
+    media.classList.add("figlio");
+    contentEl.appendChild(media);
+
+    media.addEventListener("load", () => {
+      contentEl.style.opacity = "1";
+    });
+    media.src = url;
+  }
 
   // update prev/next buttons
   if (images && images.length) {

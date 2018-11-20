@@ -12,9 +12,9 @@ export default function initScreenshots(screenshotsId) {
     return;
   }
 
-  const images = Array.from(screenshotsEl.querySelectorAll("img")).map(
-    image => image.dataset.original
-  );
+  const images = Array.from(screenshotsEl.querySelectorAll("img, video"))
+    .filter(image => image.dataset.original)
+    .map(image => image.dataset.original);
 
   screenshotsEl.addEventListener("click", event => {
     const url = event.target.dataset.original;
