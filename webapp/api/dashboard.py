@@ -54,7 +54,7 @@ REGISTER_NAME_URL = "".join([DASHBOARD_API, "register-name/"])
 REVISION_HISTORY_URL = "".join([DASHBOARD_API, "snaps/{snap_id}/history"])
 
 SNAP_RELEASE_HISTORY_URL = "".join(
-    [DASHBOARD_API_V2, "snaps/{snap_name}/releases"]
+    [DASHBOARD_API_V2, "snaps/{snap_name}/releases?page={page}"]
 )
 
 
@@ -277,9 +277,9 @@ def snap_revision_history(session, snap_id):
     return process_response(response)
 
 
-def snap_release_history(session, snap_name):
+def snap_release_history(session, snap_name, page=1):
     response = api_session.get(
-        url=SNAP_RELEASE_HISTORY_URL.format(snap_name=snap_name),
+        url=SNAP_RELEASE_HISTORY_URL.format(snap_name=snap_name, page=page),
         headers=get_authorization_header(session),
     )
 

@@ -512,6 +512,26 @@ def redirect_post_release(snap_name):
     )
 
 
+@publisher_snaps.route("/<snap_name>/releases/json")
+@login_required
+def get_release_history_json(snap_name):
+    page = flask.request.args.get("page", default=1, type=int)
+
+    try:
+        release_history = api.snap_release_history(
+            flask.session, snap_name, page
+        )
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return flask.jsonify(api_response_error_list.errors), 400
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    return flask.jsonify(release_history)
+
+
 @publisher_snaps.route("/<snap_name>/releases", methods=["POST"])
 @login_required
 def post_release(snap_name):
