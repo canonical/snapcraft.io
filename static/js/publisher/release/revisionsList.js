@@ -6,6 +6,8 @@ import format from "date-fns/format";
 import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
+import { getFilteredReleaseHistory } from "./releasesState";
+
 export default class RevisionsList extends Component {
   revisionSelectChange(revision) {
     this.props.selectRevision(revision);
@@ -113,7 +115,11 @@ export default class RevisionsList extends Component {
           filters.risk
         }`;
 
-        filteredRevisions = this.props.getReleaseHistory(filters);
+        filteredRevisions = getFilteredReleaseHistory(
+          this.props.releases,
+          this.props.revisionsMap,
+          filters
+        );
       }
     }
 
@@ -170,6 +176,7 @@ export default class RevisionsList extends Component {
 
 RevisionsList.propTypes = {
   // state
+  releases: PropTypes.array.isRequired,
   revisionsMap: PropTypes.object.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
@@ -178,6 +185,5 @@ RevisionsList.propTypes = {
   showArchitectures: PropTypes.bool,
   // actions
   selectRevision: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired,
-  getReleaseHistory: PropTypes.func.isRequired
+  closeHistoryPanel: PropTypes.func.isRequired
 };
