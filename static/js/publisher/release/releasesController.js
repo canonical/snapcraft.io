@@ -7,9 +7,111 @@ import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { RISKS, UNASSIGNED } from "./constants";
 
+// getting list of tracks names from channel maps list
+function getTracksFromChannelMap(channelMapsList) {
+  const tracks = ["latest"];
+
+  channelMapsList.map(t => t.track).forEach(track => {
+    // if we haven't saved it yet
+    if (tracks.indexOf(track) === -1) {
+      tracks.push(track);
+    }
+  });
+
+  return tracks;
+}
+
+function getRevisionsMap(revisions) {
+  const revisionsMap = {};
+  revisions.forEach(rev => {
+    rev.channels = [];
+    revisionsMap[rev.revision] = rev;
+  });
+
+  return revisionsMap;
+}
+
+// init channels data in revision history
+function initReleasesData(revisionsMap, releases) {
+  // go through releases from older to newest
+  releases
+    .slice()
+    .reverse()
+    .forEach(release => {
+      if (release.revision && !release.branch) {
+        const rev = revisionsMap[release.revision];
+
+        if (rev) {
+          const channel =
+            release.track === "latest"
+              ? release.risk
+              : `${release.track}/${release.risk}`;
+
+          if (rev.channels.indexOf(channel) === -1) {
+            rev.channels.push(channel);
+          }
+        }
+      }
+    });
+
+  return releases;
+}
+
+// transforming channel map list data into format used by this component
+function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
+  const releasedChannels = {};
+  const releasedArchs = {};
+
+  channelMapsList.forEach(mapInfo => {
+    const { track, architecture, map } = mapInfo;
+    map.forEach(channelInfo => {
+      if (channelInfo.info === "released") {
+        const channel =
+          track === "latest"
+            ? `${track}/${channelInfo.channel}`
+            : channelInfo.channel;
+
+        if (!releasedChannels[channel]) {
+          releasedChannels[channel] = {};
+        }
+
+        // XXX bartaz
+        // this may possibly lead to issues with revisions in multiple architectures
+        // if we have data about given revision in revision history we can store it
+        if (revisionsMap[channelInfo.revision]) {
+          releasedChannels[channel][architecture] =
+            revisionsMap[channelInfo.revision];
+          // but if for some reason we don't have full data about revision in channel map
+          // we need to ducktype it from channel info
+        } else {
+          releasedChannels[channel][architecture] = channelInfo;
+          releasedChannels[channel][architecture].architectures = [
+            architecture
+          ];
+        }
+
+        releasedArchs[architecture] = true;
+      }
+    });
+  });
+
+  return releasedChannels;
+}
+
 export default class ReleasesController extends Component {
   constructor(props) {
     super(props);
+
+    // init channel data in revisions list
+    const revisionsMap = getRevisionsMap(this.props.releasesData.revisions);
+    initReleasesData(revisionsMap, this.props.releasesData.releases);
+
+    const releasedChannels = getReleaseDataFromChannelMap(
+      this.props.channelMapsList,
+      revisionsMap
+    );
+
+    const tracks = getTracksFromChannelMap(this.props.channelMapsList);
 
     this.state = {
       // default to latest track
@@ -18,13 +120,15 @@ export default class ReleasesController extends Component {
       isLoading: false,
       // released channels contains channel map for each channel in current track
       // also includes 'unassigned' fake channel to show selected unassigned revision
-      releasedChannels: this.props.releasedChannels,
-      // list of revisions returned by API (from releases interval)
-      revisions: this.props.revisions,
+      releasedChannels: releasedChannels,
+      // list of releases returned by API
+      releases: this.props.releasesData.releases,
+      // map of revisions (with revisionId as a key)
+      revisionsMap: revisionsMap,
       // list of all available tracks
-      tracks: this.props.tracks,
+      tracks: tracks,
       // list of architectures released to (or selected to be released to)
-      archs: this.getArchsFromReleasedChannels(this.props.releasedChannels),
+      archs: this.getArchsFromReleasedChannels(releasedChannels),
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -45,6 +149,17 @@ export default class ReleasesController extends Component {
       revisionsFilters: null,
       isHistoryOpen: false
     };
+  }
+
+  updateReleasesData(releasesData) {
+    // init channel data in revisions list
+    const revisionsMap = getRevisionsMap(releasesData.revisions);
+    initReleasesData(revisionsMap, releasesData.releases);
+
+    this.setState({
+      revisionsMap,
+      releases: releasesData.releases
+    });
   }
 
   // update list of architectures based on revisions released (or selected)
@@ -264,6 +379,23 @@ export default class ReleasesController extends Component {
     });
   }
 
+  fetchReleasesHistory() {
+    const { csrfToken } = this.props.options;
+
+    return fetch(`/${this.props.snapName}/releases/json`, {
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "X-CSRFToken": csrfToken
+      },
+      redirect: "follow",
+      referrer: "no-referrer"
+    }).then(response => response.json());
+  }
+
   fetchRelease(revision, channels) {
     const { csrfToken } = this.props.options;
 
@@ -313,8 +445,8 @@ export default class ReleasesController extends Component {
             if (map.revision === +release.id) {
               // release.id is a string so turn it into a number for comparison
               revision = release.revision;
-            } else if (this.props.revisionsMap[map.revision]) {
-              revision = this.props.revisionsMap[map.revision];
+            } else if (this.state.revisionsMap[map.revision]) {
+              revision = this.state.revisionsMap[map.revision];
             } else {
               revision = {
                 revision: map.revision,
@@ -443,6 +575,12 @@ export default class ReleasesController extends Component {
     }
   }
 
+  fetchUpdatedReleasesHistory() {
+    return this.fetchReleasesHistory().then(json =>
+      this.updateReleasesData(json)
+    );
+  }
+
   releaseRevisions() {
     const { pendingReleases, pendingCloses } = this.state;
     const releases = Object.keys(pendingReleases).map(id => {
@@ -456,6 +594,7 @@ export default class ReleasesController extends Component {
     this.setState({ isLoading: true });
     this.fetchReleases(releases)
       .then(() => this.fetchCloses(pendingCloses))
+      .then(() => this.fetchUpdatedReleasesHistory())
       .catch(error => this.handleReleaseError(error))
       .then(() => this.setState({ isLoading: false }))
       .then(() => this.clearPendingReleases());
@@ -496,7 +635,7 @@ export default class ReleasesController extends Component {
 
   getReleaseHistory(filters) {
     return (
-      this.props.releases
+      this.state.releases
         // only releases of revisions (ignore closing channels)
         .filter(release => release.revision)
         // only releases in given architecture
@@ -524,7 +663,7 @@ export default class ReleasesController extends Component {
         // map release history to revisions
         .map(release => {
           const revision = JSON.parse(
-            JSON.stringify(this.props.revisionsMap[release.revision])
+            JSON.stringify(this.state.revisionsMap[release.revision])
           );
           revision.release = release;
           return revision;
@@ -590,10 +729,7 @@ export default class ReleasesController extends Component {
 
 ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
-  revisions: PropTypes.array.isRequired,
-  releases: PropTypes.array.isRequired,
-  revisionsMap: PropTypes.object.isRequired,
-  tracks: PropTypes.array.isRequired,
+  channelMapsList: PropTypes.array.isRequired,
+  releasesData: PropTypes.object.isRequired,
   options: PropTypes.object.isRequired
 };

@@ -325,7 +325,7 @@ export default class ReleasesTable extends Component {
     return (
       <HistoryPanel
         key="history-panel"
-        revisions={this.props.revisions}
+        revisionsMap={this.props.revisionsMap}
         revisionsFilters={this.props.revisionsFilters}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
@@ -471,6 +471,7 @@ export default class ReleasesTable extends Component {
 
   render() {
     const { archs, tracks } = this.props;
+    const revisionsCount = Object.keys(this.props.revisionsMap).length;
 
     return (
       <Fragment>
@@ -496,8 +497,8 @@ export default class ReleasesTable extends Component {
           </div>
           <div className="p-release-actions">
             <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
-              Show {this.props.revisions.length} latest revision
-              {this.props.revisions.length > 1 ? "s" : ""}
+              Show {revisionsCount} latest revision
+              {revisionsCount > 1 ? "s" : ""}
             </a>
           </div>
           {this.props.isHistoryOpen &&
@@ -511,7 +512,7 @@ export default class ReleasesTable extends Component {
 
 ReleasesTable.propTypes = {
   // state
-  revisions: PropTypes.array,
+  revisionsMap: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,

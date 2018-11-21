@@ -95,7 +95,7 @@ export default class RevisionsList extends Component {
   }
 
   render() {
-    let filteredRevisions = this.props.revisions;
+    let filteredRevisions = Object.values(this.props.revisionsMap).reverse();
     let title = "Latest revisions";
     let filters = this.props.revisionsFilters;
     let isReleaseHistory = false;
@@ -170,7 +170,7 @@ export default class RevisionsList extends Component {
 
 RevisionsList.propTypes = {
   // state
-  revisions: PropTypes.array.isRequired,
+  revisionsMap: PropTypes.object.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array.isRequired,
