@@ -163,6 +163,10 @@
   // REVISIONS LIST
 
   .p-revisions-list {
+    &.is-narrow {
+      max-width: 500px;
+    }
+
     .col-checkbox-spacer {
       padding-left: 2rem;
     }

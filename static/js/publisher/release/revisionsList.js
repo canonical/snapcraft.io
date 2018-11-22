@@ -13,7 +13,7 @@ export default class RevisionsList extends Component {
     this.props.selectRevision(revision);
   }
 
-  renderRows(revisions, isHistory) {
+  renderRows(revisions, isSelectable, showChannels) {
     return revisions.map(revision => {
       const revisionDate = revision.release
         ? new Date(revision.release.when)
@@ -25,7 +25,7 @@ export default class RevisionsList extends Component {
       // disable revisions from the same architecture that already selected
       // but only if checkboxes are visible (not in channel history)
       const isDisabled =
-        isHistory &&
+        isSelectable &&
         !isSelected &&
         revision.architectures.some(
           arch =>
@@ -35,7 +35,7 @@ export default class RevisionsList extends Component {
 
       const id = `revision-check-${revision.revision}`;
       const className = `${isDisabled ? "is-disabled" : ""} ${
-        isHistory ? "is-clickable" : ""
+        isSelectable ? "is-clickable" : ""
       }`;
 
       return (
@@ -43,11 +43,11 @@ export default class RevisionsList extends Component {
           key={id}
           className={className}
           onClick={
-            isHistory ? this.revisionSelectChange.bind(this, revision) : null
+            isSelectable ? this.revisionSelectChange.bind(this, revision) : null
           }
         >
           <td>
-            {isHistory ? (
+            {isSelectable ? (
               <Fragment>
                 <input
                   type="checkbox"
@@ -70,7 +70,7 @@ export default class RevisionsList extends Component {
           {this.props.showArchitectures && (
             <td>{revision.architectures.join(", ")}</td>
           )}
-          {this.props.showChannels && <td>{revision.channels.join(", ")}</td>}
+          {showChannels && <td>{revision.channels.join(", ")}</td>}
           <td className="u-align--right">
             <span
               className="p-tooltip p-tooltip--btm-center"
@@ -97,6 +97,7 @@ export default class RevisionsList extends Component {
   }
 
   render() {
+    let { showChannels, showArchitectures } = this.props;
     let filteredRevisions = Object.values(this.props.revisionsMap).reverse();
     let title = "Latest revisions";
     let filters = this.props.revisionsFilters;
@@ -109,7 +110,14 @@ export default class RevisionsList extends Component {
         return revision.architectures.includes(filters.arch);
       });
 
-      if (filters.risk !== UNASSIGNED) {
+      if (filters.risk === UNASSIGNED) {
+        // when listing 'unassigned' revisions show revisions with no channels
+        showChannels = false;
+        filteredRevisions = filteredRevisions.filter(revision => {
+          return !revision.channels || revision.channels.length === 0;
+        });
+      } else {
+        // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
         title = `Releases history: ${filters.arch} – ${filters.track}/${
           filters.risk
@@ -123,6 +131,7 @@ export default class RevisionsList extends Component {
       }
     }
 
+    const isNarrow = !showChannels && !showArchitectures;
     return (
       <Fragment>
         <div>
@@ -134,7 +143,7 @@ export default class RevisionsList extends Component {
             className="p-icon--close u-float--right"
           />
         </div>
-        <table className="p-revisions-list">
+        <table className={`p-revisions-list ${isNarrow ? "is-narrow" : ""}`}>
           <thead>
             <tr>
               <th
@@ -146,12 +155,12 @@ export default class RevisionsList extends Component {
               </th>
               <th width="20px" />
               <th scope="col">Version</th>
-              {this.props.showArchitectures && (
+              {showArchitectures && (
                 <th width="120px" scope="col">
                   Architecture
                 </th>
               )}
-              {this.props.showChannels && <th scope="col">Channels</th>}
+              {showChannels && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
@@ -159,7 +168,11 @@ export default class RevisionsList extends Component {
           </thead>
           <tbody>
             {filteredRevisions.length > 0 ? (
-              this.renderRows(filteredRevisions, !isReleaseHistory)
+              this.renderRows(
+                filteredRevisions,
+                !isReleaseHistory,
+                showChannels
+              )
             ) : (
               <tr>
                 <td colSpan="5">
