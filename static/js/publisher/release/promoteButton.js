@@ -51,12 +51,13 @@ export default class PromoteButton extends Component {
       targetChannel => targetChannel.isDisabled
     );
 
-    const className = `p-releases-channel__promote ${
-      isDisabled ? "is--disabled" : ""
-    }`;
-
     return (
-      <ContextualMenu className={className} icon="⤴" ref={this.setMenuRef}>
+      <ContextualMenu
+        className="p-releases-channel__promote"
+        isDisabled={isDisabled}
+        icon="⤴"
+        ref={this.setMenuRef}
+      >
         {this.renderItems()}
       </ContextualMenu>
     );

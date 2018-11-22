@@ -48,15 +48,17 @@ export default class ContextualMenu extends Component {
   }
 
   render() {
-    const { position } = this.props;
+    const { isDisabled, position } = this.props;
     const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
     const appearance = this.props.appearance || "neutral";
-    const className = this.props.className || "";
+    const className = `p-promote-button p-icon-button p-button--${appearance} ${
+      isDisabled ? "is--disabled" : ""
+    } ${menuClass} ${this.props.className || ""}`;
 
     return (
       <span
-        className={`p-promote-button p-button--${appearance} p-icon-button ${menuClass} ${className}`}
-        onClick={this.dropdownButtonClick.bind(this)}
+        className={className}
+        onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
       >
         {this.renderIcon()}
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
@@ -68,6 +70,7 @@ export default class ContextualMenu extends Component {
 }
 
 ContextualMenu.propTypes = {
+  isDisabled: PropTypes.bool,
   icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   children: PropTypes.node,
   className: PropTypes.string,
