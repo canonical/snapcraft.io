@@ -250,11 +250,13 @@ export default class ReleasesTable extends Component {
       canBeClosed = false;
     }
 
-    let targetRisks = [];
+    let targetChannels = [];
 
     if (canBePromoted) {
       // take all risks above current one
-      targetRisks = RISKS.slice(0, RISKS.indexOf(risk));
+      targetChannels = RISKS.slice(0, RISKS.indexOf(risk)).map(risk => {
+        return { channel: getChannelName(track, risk) };
+      });
 
       // check for devmode revisions
       if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
@@ -265,16 +267,19 @@ export default class ReleasesTable extends Component {
         // remove stable and beta channels as targets if any revision
         // is in devmode
         if (hasDevmodeRevisions) {
-          targetRisks = targetRisks.slice(2);
+          targetChannels[0].isDisabled = true;
+          targetChannels[1].isDisabled = true;
         }
       }
 
-      // filter out risks that have the same revisions already released
-      targetRisks = targetRisks.filter(targetRisk => {
-        return !this.compareChannels(channel, `${track}/${targetRisk}`);
+      // filter out channels that have the same revisions already released
+      targetChannels.forEach(targetChannel => {
+        if (this.compareChannels(channel, targetChannel.channel)) {
+          targetChannel.isDisabled = true;
+        }
       });
 
-      if (targetRisks.length === 0) {
+      if (targetChannels.length === 0) {
         canBePromoted = false;
       }
     }
@@ -291,8 +296,7 @@ export default class ReleasesTable extends Component {
           <span className="p-releases-table__menus">
             {canBePromoted && (
               <PromoteButton
-                track={track}
-                targetRisks={targetRisks}
+                targetChannels={targetChannels}
                 promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
               />
             )}

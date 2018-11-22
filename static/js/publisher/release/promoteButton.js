@@ -18,23 +18,27 @@ export default class PromoteButton extends Component {
   }
 
   renderItems() {
-    const { track } = this.props;
-
     return (
       <span className="p-contextual-menu__group">
         <span className="p-contextual-menu__item">Promote to:</span>
-        {this.props.targetRisks.map(targetRisk => {
+        {this.props.targetChannels.map(targetChannel => {
+          const { channel, isDisabled } = targetChannel;
+          const className = `p-contextual-menu__link is-indented ${
+            isDisabled ? "is-disabled" : ""
+          }`;
+
           return (
             <a
-              className="p-contextual-menu__link is-indented"
+              className={className}
               href="#"
-              key={`promote-to-${track}/${targetRisk}`}
-              onClick={this.promoteToChannelClick.bind(
-                this,
-                `${track}/${targetRisk}`
-              )}
+              key={`promote-to-${channel}`}
+              onClick={
+                isDisabled
+                  ? null
+                  : this.promoteToChannelClick.bind(this, channel)
+              }
             >
-              {`${track}/${targetRisk}`}
+              {channel}
             </a>
           );
         })}
@@ -43,12 +47,16 @@ export default class PromoteButton extends Component {
   }
 
   render() {
+    const isDisabled = this.props.targetChannels.every(
+      targetChannel => targetChannel.isDisabled
+    );
+
+    const className = `p-releases-channel__promote ${
+      isDisabled ? "is--disabled" : ""
+    }`;
+
     return (
-      <ContextualMenu
-        className="p-releases-channel__promote"
-        icon="⤴"
-        ref={this.setMenuRef}
-      >
+      <ContextualMenu className={className} icon="⤴" ref={this.setMenuRef}>
         {this.renderItems()}
       </ContextualMenu>
     );
@@ -56,7 +64,6 @@ export default class PromoteButton extends Component {
 }
 
 PromoteButton.propTypes = {
-  track: PropTypes.string.isRequired,
-  targetRisks: PropTypes.array.isRequired,
+  targetChannels: PropTypes.array.isRequired,
   promoteToChannel: PropTypes.func.isRequired
 };
