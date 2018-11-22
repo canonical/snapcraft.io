@@ -298,7 +298,7 @@ export default class ReleasesTable extends Component {
       >
         <div className="p-releases-channel">
           <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
+            {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
           </span>
           <span className="p-releases-table__menus">
             {canBePromoted && (
@@ -484,7 +484,7 @@ export default class ReleasesTable extends Component {
       <Fragment>
         <div className="row">
           <div className="u-clearfix">
-            <h4 className="u-float--left">Releases available for install</h4>
+            <h4 className="u-float--left">Releases available to install</h4>
             {tracks.length > 1 && this.renderTrackDropdown(tracks)}
           </div>
           {this.renderReleasesConfirm()}
