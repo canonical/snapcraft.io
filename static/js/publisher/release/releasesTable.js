@@ -13,6 +13,8 @@ import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
 import HistoryPanel from "./historyPanel";
 
+import { getTrackingChannel } from "./releasesState";
+
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
@@ -72,7 +74,12 @@ export default class ReleasesTable extends Component {
 
     const isChannelClosed = this.props.pendingCloses.includes(channel);
     const isPending = hasPendingRelease || isChannelClosed;
-    const trackingChannel = this.props.getTrackingChannel(track, risk, arch);
+    const trackingChannel = getTrackingChannel(
+      releasedChannels,
+      track,
+      risk,
+      arch
+    );
 
     const isUnassigned = risk === UNASSIGNED;
     const isActive =
@@ -325,14 +332,14 @@ export default class ReleasesTable extends Component {
     return (
       <HistoryPanel
         key="history-panel"
-        revisions={this.props.revisions}
+        releases={this.props.releases}
+        revisionsMap={this.props.revisionsMap}
         revisionsFilters={this.props.revisionsFilters}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         selectRevision={this.props.selectRevision}
         showArchitectures={!!showArchitectures}
         closeHistoryPanel={this.props.closeHistoryPanel}
-        getReleaseHistory={this.props.getReleaseHistory}
       />
     );
   }
@@ -471,6 +478,7 @@ export default class ReleasesTable extends Component {
 
   render() {
     const { archs, tracks } = this.props;
+    const revisionsCount = Object.keys(this.props.revisionsMap).length;
 
     return (
       <Fragment>
@@ -496,8 +504,8 @@ export default class ReleasesTable extends Component {
           </div>
           <div className="p-release-actions">
             <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
-              Show {this.props.revisions.length} latest revision
-              {this.props.revisions.length > 1 ? "s" : ""}
+              Show {revisionsCount} latest revision
+              {revisionsCount > 1 ? "s" : ""}
             </a>
           </div>
           {this.props.isHistoryOpen &&
@@ -511,7 +519,8 @@ export default class ReleasesTable extends Component {
 
 ReleasesTable.propTypes = {
   // state
-  revisions: PropTypes.array,
+  releases: PropTypes.array.isRequired,
+  revisionsMap: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
@@ -532,9 +541,7 @@ ReleasesTable.propTypes = {
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
-  getTrackingChannel: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
   selectRevision: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired,
-  getReleaseHistory: PropTypes.func.isRequired
+  closeHistoryPanel: PropTypes.func.isRequired
 };

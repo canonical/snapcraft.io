@@ -5,11 +5,30 @@ import "whatwg-fetch";
 import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
-import { RISKS, UNASSIGNED } from "./constants";
+import { UNASSIGNED } from "./constants";
+
+import {
+  getArchsFromReleasedChannels,
+  getTracksFromChannelMap,
+  getRevisionsMap,
+  initReleasesData,
+  getReleaseDataFromChannelMap
+} from "./releasesState";
 
 export default class ReleasesController extends Component {
   constructor(props) {
     super(props);
+
+    // init channel data in revisions list
+    const revisionsMap = getRevisionsMap(this.props.releasesData.revisions);
+    initReleasesData(revisionsMap, this.props.releasesData.releases);
+
+    const releasedChannels = getReleaseDataFromChannelMap(
+      this.props.channelMapsList,
+      revisionsMap
+    );
+
+    const tracks = getTracksFromChannelMap(this.props.channelMapsList);
 
     this.state = {
       // default to latest track
@@ -18,13 +37,15 @@ export default class ReleasesController extends Component {
       isLoading: false,
       // released channels contains channel map for each channel in current track
       // also includes 'unassigned' fake channel to show selected unassigned revision
-      releasedChannels: this.props.releasedChannels,
-      // list of revisions returned by API (from releases interval)
-      revisions: this.props.revisions,
+      releasedChannels: releasedChannels,
+      // list of releases returned by API
+      releases: this.props.releasesData.releases,
+      // map of revisions (with revisionId as a key)
+      revisionsMap: revisionsMap,
       // list of all available tracks
-      tracks: this.props.tracks,
+      tracks: tracks,
       // list of architectures released to (or selected to be released to)
-      archs: this.getArchsFromReleasedChannels(this.props.releasedChannels),
+      archs: getArchsFromReleasedChannels(releasedChannels),
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -47,19 +68,15 @@ export default class ReleasesController extends Component {
     };
   }
 
-  // update list of architectures based on revisions released (or selected)
-  getArchsFromReleasedChannels(releasedChannels) {
-    let archs = [];
-    Object.keys(releasedChannels).forEach(channel => {
-      Object.keys(releasedChannels[channel]).forEach(arch => {
-        archs.push(arch);
-      });
+  updateReleasesData(releasesData) {
+    // init channel data in revisions list
+    const revisionsMap = getRevisionsMap(releasesData.revisions);
+    initReleasesData(revisionsMap, releasesData.releases);
+
+    this.setState({
+      revisionsMap,
+      releases: releasesData.releases
     });
-
-    // make archs unique and sorted
-    archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
-
-    return archs.sort();
   }
 
   selectRevision(revision) {
@@ -85,7 +102,7 @@ export default class ReleasesController extends Component {
       const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(
         arch => releasedChannels[UNASSIGNED][arch].revision
       );
-      const archs = this.getArchsFromReleasedChannels(releasedChannels);
+      const archs = getArchsFromReleasedChannels(releasedChannels);
 
       return {
         selectedRevisions,
@@ -122,34 +139,6 @@ export default class ReleasesController extends Component {
     });
 
     return nextReleaseData;
-  }
-
-  getTrackingChannel(track, risk, arch) {
-    const { releasedChannels } = this.state;
-
-    let tracking = null;
-    // if there is no revision for this arch in given channel (track/risk)
-    if (
-      !(
-        releasedChannels[`${track}/${risk}`] &&
-        releasedChannels[`${track}/${risk}`][arch]
-      )
-    ) {
-      // find the next channel that has any revision
-      for (let i = RISKS.indexOf(risk); i >= 0; i--) {
-        const trackingChannel = `${track}/${RISKS[i]}`;
-
-        if (
-          releasedChannels[trackingChannel] &&
-          releasedChannels[trackingChannel][arch]
-        ) {
-          tracking = trackingChannel;
-          break;
-        }
-      }
-    }
-
-    return tracking;
   }
 
   promoteChannel(channel, targetChannel) {
@@ -264,6 +253,23 @@ export default class ReleasesController extends Component {
     });
   }
 
+  fetchReleasesHistory() {
+    const { csrfToken } = this.props.options;
+
+    return fetch(`/${this.props.snapName}/releases/json`, {
+      method: "GET",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "X-CSRFToken": csrfToken
+      },
+      redirect: "follow",
+      referrer: "no-referrer"
+    }).then(response => response.json());
+  }
+
   fetchRelease(revision, channels) {
     const { csrfToken } = this.props.options;
 
@@ -300,6 +306,7 @@ export default class ReleasesController extends Component {
     }).then(response => response.json());
   }
 
+  // TODO: move inside of this function out
   handleReleaseResponse(json, release) {
     if (json.success) {
       this.setState(state => {
@@ -313,8 +320,8 @@ export default class ReleasesController extends Component {
             if (map.revision === +release.id) {
               // release.id is a string so turn it into a number for comparison
               revision = release.revision;
-            } else if (this.props.revisionsMap[map.revision]) {
-              revision = this.props.revisionsMap[map.revision];
+            } else if (this.state.revisionsMap[map.revision]) {
+              revision = this.state.revisionsMap[map.revision];
             } else {
               revision = {
                 revision: map.revision,
@@ -346,7 +353,7 @@ export default class ReleasesController extends Component {
           }
         });
 
-        const archs = this.getArchsFromReleasedChannels(releasedChannels);
+        const archs = getArchsFromReleasedChannels(releasedChannels);
 
         return {
           releasedChannels,
@@ -443,6 +450,12 @@ export default class ReleasesController extends Component {
     }
   }
 
+  fetchUpdatedReleasesHistory() {
+    return this.fetchReleasesHistory().then(json =>
+      this.updateReleasesData(json)
+    );
+  }
+
   releaseRevisions() {
     const { pendingReleases, pendingCloses } = this.state;
     const releases = Object.keys(pendingReleases).map(id => {
@@ -456,6 +469,7 @@ export default class ReleasesController extends Component {
     this.setState({ isLoading: true });
     this.fetchReleases(releases)
       .then(() => this.fetchCloses(pendingCloses))
+      .then(() => this.fetchUpdatedReleasesHistory())
       .catch(error => this.handleReleaseError(error))
       .then(() => this.setState({ isLoading: false }))
       .then(() => this.clearPendingReleases());
@@ -492,44 +506,6 @@ export default class ReleasesController extends Component {
       revisionsFilters: null,
       isHistoryOpen: false
     });
-  }
-
-  getReleaseHistory(filters) {
-    return (
-      this.props.releases
-        // only releases of revisions (ignore closing channels)
-        .filter(release => release.revision)
-        // only releases in given architecture
-        .filter(release => {
-          return filters && filters.arch
-            ? release.architecture === filters.arch
-            : true;
-        })
-        // only releases in given track
-        .filter(release => {
-          return filters && filters.track
-            ? release.track === filters.track
-            : true;
-        })
-        // only releases in given risk
-        .filter(release => {
-          return filters && filters.risk ? release.risk === filters.risk : true;
-        })
-        // before we have branches support we ignore any releases to branches
-        .filter(release => !release.branch)
-        // only one latest release of every revision
-        .filter((release, index, all) => {
-          return all.findIndex(r => r.revision === release.revision) === index;
-        })
-        // map release history to revisions
-        .map(release => {
-          const revision = JSON.parse(
-            JSON.stringify(this.props.revisionsMap[release.revision])
-          );
-          revision.release = release;
-          return revision;
-        })
-    );
   }
 
   render() {
@@ -577,11 +553,9 @@ export default class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
-          getTrackingChannel={this.getTrackingChannel.bind(this)}
           toggleHistoryPanel={this.toggleHistoryPanel.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
           closeHistoryPanel={this.closeHistoryPanel.bind(this)}
-          getReleaseHistory={this.getReleaseHistory.bind(this)}
         />
       </Fragment>
     );
@@ -590,10 +564,7 @@ export default class ReleasesController extends Component {
 
 ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
-  revisions: PropTypes.array.isRequired,
-  releases: PropTypes.array.isRequired,
-  revisionsMap: PropTypes.object.isRequired,
-  tracks: PropTypes.array.isRequired,
+  channelMapsList: PropTypes.array.isRequired,
+  releasesData: PropTypes.object.isRequired,
   options: PropTypes.object.isRequired
 };
