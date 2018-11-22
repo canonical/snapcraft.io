@@ -1,16 +1,20 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import ContextualMenu from "./contextualMenu";
 
-export default class PromoteButton extends ContextualMenu {
-  promoteToChannelClick(targetChannel, event) {
-    this.props.promoteToChannel(targetChannel);
-    this.itemClickHandler(event);
+export default class PromoteButton extends Component {
+  constructor(props) {
+    super(props);
+    this.setMenuRef = menu => (this.menu = menu);
   }
 
-  renderIcon() {
-    return "⤴";
+  promoteToChannelClick(targetChannel, event) {
+    this.props.promoteToChannel(targetChannel);
+
+    if (this.menu) {
+      this.menu.itemClickHandler(event);
+    }
   }
 
   renderItems() {
@@ -35,6 +39,18 @@ export default class PromoteButton extends ContextualMenu {
           );
         })}
       </span>
+    );
+  }
+
+  render() {
+    return (
+      <ContextualMenu
+        className="p-releases-channel__promote"
+        icon="⤴"
+        ref={this.setMenuRef}
+      >
+        {this.renderItems()}
+      </ContextualMenu>
     );
   }
 }

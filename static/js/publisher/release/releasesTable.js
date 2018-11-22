@@ -291,8 +291,6 @@ export default class ReleasesTable extends Component {
           <span className="p-releases-table__menus">
             {canBePromoted && (
               <PromoteButton
-                className="p-releases-channel__promote"
-                position="left"
                 track={track}
                 targetRisks={targetRisks}
                 promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
@@ -300,8 +298,6 @@ export default class ReleasesTable extends Component {
             )}
             {canBeClosed && (
               <ChannelMenu
-                appearance="base"
-                position="left"
                 channel={channel}
                 closeChannel={this.onCloseChannel.bind(this, channel)}
               />

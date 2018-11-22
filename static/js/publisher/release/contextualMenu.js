@@ -44,11 +44,7 @@ export default class ContextualMenu extends Component {
   }
 
   renderIcon() {
-    return <i className="p-icon--contextual-menu" />;
-  }
-
-  renderItems() {
-    return null;
+    return this.props.icon || <i className="p-icon--contextual-menu" />;
   }
 
   render() {
@@ -64,7 +60,7 @@ export default class ContextualMenu extends Component {
       >
         {this.renderIcon()}
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
-          {this.renderItems()}
+          {this.props.children}
         </span>
       </span>
     );
@@ -72,9 +68,9 @@ export default class ContextualMenu extends Component {
 }
 
 ContextualMenu.propTypes = {
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+  children: PropTypes.node,
   className: PropTypes.string,
   position: PropTypes.oneOf(["left", "center"]), // right is by default
-  appearance: PropTypes.oneOf(["base", "neutral"]),
-  channel: PropTypes.string.isRequired,
-  closeChannel: PropTypes.func.isRequired
+  appearance: PropTypes.oneOf(["base", "neutral"])
 };
