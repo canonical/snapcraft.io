@@ -907,6 +907,7 @@ def get_publicise(snap_name):
             "text": "Installer à partir du Snap Store",
         },
         "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
+        "pt": {"title": "Português", "text": "Disponível na Snap Store"},
         "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
         "tw": {"title": "中華民國國語", "text": "安裝軟體敬請移駕 Snap Store"},
     }
