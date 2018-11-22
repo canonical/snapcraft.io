@@ -22,7 +22,7 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
             {% endfor %}
           </select>
         </form>
-        <p class="u-no-margin--bottom">You can contribute to translate these assets <a href="https://github.com/snapcore/snap-store-badges" target="_blank" class="p-link--external">in this repository</a>.</p>
+        <p class="u-no-margin--bottom">You can help translate these buttons <a href="https://github.com/snapcore/snap-store-badges" target="_blank" class="p-link--external">in this repository</a>.</p>
       </div>
     </div>
 `
@@ -39,8 +39,8 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
             <div class="col-5">
               <p class="snapcraft-publicise__images">
                 {% set url = "images/badges/" + lang + "/snap-store-black.svg" %}
-                <a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}">
-                  <img src="{{ static_url(url) }}" />
+                <a href="https://snapcraft.io/{{ snap_name }}">
+                  <img alt="{{ data.text }} src="{{ static_url(url) }}" />
                 </a>
               </p>
             </div>
@@ -52,8 +52,8 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
             <label>HTML:</label>
           </div>
           <div class="col-8">
-            <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}"&gt;
-  &lt;img src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg" alt="" /&gt;
+            <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
+  &lt;img alt="{{ data.text }}" src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg" /&gt;
 &lt;/a&gt;</code></pre>
           </div>
         </div>
@@ -78,8 +78,8 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
             <div class="col-5">
               <p class="snapcraft-publicise__images">
                 {% set url = "images/badges/" + lang + "/snap-store-white.svg" %}
-                <a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}">
-                  <img src="{{ static_url(url) }}" />
+                <a href="https://snapcraft.io/{{ snap_name }}">
+                  <img alt="{{ data.text }} src="{{ static_url(url) }}" />
                 </a>
               </p>
             </div>
@@ -91,8 +91,8 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
             <label>HTML:</label>
           </div>
           <div class="col-8">
-            <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}" title="{{ data.text }}"&gt;
-  &lt;img src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg" alt="" /&gt;
+            <pre><code>&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
+  &lt;img alt="{{ data.text }}" src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg" /&gt;
 &lt;/a&gt;</code></pre>
           </div>
         </div>
