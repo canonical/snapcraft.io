@@ -186,36 +186,48 @@ export default class ReleasesController extends Component {
   // - ignore if revision is already in given channel
   promoteRevision(revision, channel) {
     this.setState(state => {
-      const { pendingReleases } = state;
+      const { pendingReleases, releasedChannels } = state;
 
-      // cancel any other pending release for the same channel in same architectures
-      revision.architectures.forEach(arch => {
-        Object.keys(pendingReleases).forEach(revisionId => {
-          const pendingRelease = pendingReleases[revisionId];
+      // compare given revision with released revisions in this arch and channel
+      const isAlreadyReleased = revision.architectures.every(arch => {
+        const releasedRevision =
+          releasedChannels[channel] && releasedChannels[channel][arch];
 
-          if (
-            pendingRelease.channels.includes(channel) &&
-            pendingRelease.revision.architectures.includes(arch)
-          ) {
-            this.undoRelease(pendingRelease.revision, channel);
-          }
-        });
+        return (
+          releasedRevision && releasedRevision.revision === revision.revision
+        );
       });
 
-      if (!pendingReleases[revision.revision]) {
-        pendingReleases[revision.revision] = {
-          revision: revision,
-          channels: []
-        };
+      if (!isAlreadyReleased) {
+        // cancel any other pending release for the same channel in same architectures
+        revision.architectures.forEach(arch => {
+          Object.keys(pendingReleases).forEach(revisionId => {
+            const pendingRelease = pendingReleases[revisionId];
+
+            if (
+              pendingRelease.channels.includes(channel) &&
+              pendingRelease.revision.architectures.includes(arch)
+            ) {
+              this.undoRelease(pendingRelease.revision, channel);
+            }
+          });
+        });
+
+        if (!pendingReleases[revision.revision]) {
+          pendingReleases[revision.revision] = {
+            revision: revision,
+            channels: []
+          };
+        }
+
+        let channels = pendingReleases[revision.revision].channels;
+        channels.push(channel);
+
+        // make sure channels are unique
+        channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
+
+        pendingReleases[revision.revision].channels = channels;
       }
-
-      let channels = pendingReleases[revision.revision].channels;
-      channels.push(channel);
-
-      // make sure channels are unique
-      channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
-
-      pendingReleases[revision.revision].channels = channels;
 
       return {
         error: null,
