@@ -17,31 +17,32 @@ export default class PromoteButton extends Component {
     }
   }
 
+  renderItem(targetChannel) {
+    const { channel, isDisabled } = targetChannel;
+    const className = [
+      "p-contextual-menu__link is-indented",
+      isDisabled ? "is-disabled" : ""
+    ].join(" ");
+
+    return (
+      <a
+        className={className}
+        href="#"
+        key={`promote-to-${channel}`}
+        onClick={
+          isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
+        }
+      >
+        {channel}
+      </a>
+    );
+  }
+
   renderItems() {
     return (
       <span className="p-contextual-menu__group">
         <span className="p-contextual-menu__item">Promote to:</span>
-        {this.props.targetChannels.map(targetChannel => {
-          const { channel, isDisabled } = targetChannel;
-          const className = `p-contextual-menu__link is-indented ${
-            isDisabled ? "is-disabled" : ""
-          }`;
-
-          return (
-            <a
-              className={className}
-              href="#"
-              key={`promote-to-${channel}`}
-              onClick={
-                isDisabled
-                  ? null
-                  : this.promoteToChannelClick.bind(this, channel)
-              }
-            >
-              {channel}
-            </a>
-          );
-        })}
+        {this.props.targetChannels.map(this.renderItem.bind(this))}
       </span>
     );
   }

@@ -51,9 +51,13 @@ export default class ContextualMenu extends Component {
     const { isDisabled, position } = this.props;
     const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
     const appearance = this.props.appearance || "neutral";
-    const className = `p-promote-button p-icon-button p-button--${appearance} ${
-      isDisabled ? "is--disabled" : ""
-    } ${menuClass} ${this.props.className || ""}`;
+    const className = [
+      "p-promote-button p-icon-button",
+      `p-button--${appearance}`,
+      menuClass,
+      isDisabled ? "is--disabled" : "",
+      this.props.className || ""
+    ].join(" ");
 
     return (
       <span
