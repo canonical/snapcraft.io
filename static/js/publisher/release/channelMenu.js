@@ -1,12 +1,20 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import ContextualMenu from "./contextualMenu";
 
-export default class ChannelMenu extends ContextualMenu {
+export default class ChannelMenu extends Component {
+  constructor(props) {
+    super(props);
+    this.setMenuRef = menu => (this.menu = menu);
+  }
+
   closeChannelClick(channel, event) {
     this.props.closeChannel(channel);
-    this.itemClickHandler(event);
+
+    if (this.menu) {
+      this.menu.itemClickHandler(event);
+    }
   }
 
   renderItems() {
@@ -22,6 +30,14 @@ export default class ChannelMenu extends ContextualMenu {
           Close {channel}
         </a>
       </span>
+    );
+  }
+
+  render() {
+    return (
+      <ContextualMenu appearance="base" ref={this.setMenuRef}>
+        {this.renderItems()}
+      </ContextualMenu>
     );
   }
 }

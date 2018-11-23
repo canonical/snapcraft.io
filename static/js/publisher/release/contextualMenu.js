@@ -44,27 +44,29 @@ export default class ContextualMenu extends Component {
   }
 
   renderIcon() {
-    return <i className="p-icon--contextual-menu" />;
-  }
-
-  renderItems() {
-    return null;
+    return this.props.icon || <i className="p-icon--contextual-menu" />;
   }
 
   render() {
-    const { position } = this.props;
+    const { isDisabled, position } = this.props;
     const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
     const appearance = this.props.appearance || "neutral";
-    const className = this.props.className || "";
+    const className = [
+      "p-promote-button p-icon-button",
+      `p-button--${appearance}`,
+      menuClass,
+      isDisabled ? "is--disabled" : "",
+      this.props.className || ""
+    ].join(" ");
 
     return (
       <span
-        className={`p-promote-button p-button--${appearance} p-icon-button ${menuClass} ${className}`}
-        onClick={this.dropdownButtonClick.bind(this)}
+        className={className}
+        onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
       >
         {this.renderIcon()}
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
-          {this.renderItems()}
+          {this.props.children}
         </span>
       </span>
     );
@@ -72,9 +74,10 @@ export default class ContextualMenu extends Component {
 }
 
 ContextualMenu.propTypes = {
+  isDisabled: PropTypes.bool,
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+  children: PropTypes.node,
   className: PropTypes.string,
   position: PropTypes.oneOf(["left", "center"]), // right is by default
-  appearance: PropTypes.oneOf(["base", "neutral"]),
-  channel: PropTypes.string.isRequired,
-  closeChannel: PropTypes.func.isRequired
+  appearance: PropTypes.oneOf(["base", "neutral"])
 };

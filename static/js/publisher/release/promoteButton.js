@@ -1,46 +1,71 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import ContextualMenu from "./contextualMenu";
 
-export default class PromoteButton extends ContextualMenu {
-  promoteToChannelClick(targetChannel, event) {
-    this.props.promoteToChannel(targetChannel);
-    this.itemClickHandler(event);
+export default class PromoteButton extends Component {
+  constructor(props) {
+    super(props);
+    this.setMenuRef = menu => (this.menu = menu);
   }
 
-  renderIcon() {
-    return "⤴";
+  promoteToChannelClick(targetChannel, event) {
+    this.props.promoteToChannel(targetChannel);
+
+    if (this.menu) {
+      this.menu.itemClickHandler(event);
+    }
+  }
+
+  renderItem(targetChannel) {
+    const { channel, isDisabled } = targetChannel;
+    const className = [
+      "p-contextual-menu__link is-indented",
+      isDisabled ? "is-disabled" : ""
+    ].join(" ");
+
+    return (
+      <a
+        className={className}
+        href="#"
+        key={`promote-to-${channel}`}
+        onClick={
+          isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
+        }
+      >
+        {channel}
+      </a>
+    );
   }
 
   renderItems() {
-    const { track } = this.props;
-
     return (
       <span className="p-contextual-menu__group">
         <span className="p-contextual-menu__item">Promote to:</span>
-        {this.props.targetRisks.map(targetRisk => {
-          return (
-            <a
-              className="p-contextual-menu__link is-indented"
-              href="#"
-              key={`promote-to-${track}/${targetRisk}`}
-              onClick={this.promoteToChannelClick.bind(
-                this,
-                `${track}/${targetRisk}`
-              )}
-            >
-              {`${track}/${targetRisk}`}
-            </a>
-          );
-        })}
+        {this.props.targetChannels.map(this.renderItem.bind(this))}
       </span>
+    );
+  }
+
+  render() {
+    const isDisabled = this.props.targetChannels.every(
+      targetChannel => targetChannel.isDisabled
+    );
+
+    return (
+      <ContextualMenu
+        className="p-releases-channel__promote"
+        isDisabled={isDisabled}
+        icon="⤴"
+        ref={this.setMenuRef}
+      >
+        {this.renderItems()}
+      </ContextualMenu>
     );
   }
 }
 
 PromoteButton.propTypes = {
-  track: PropTypes.string.isRequired,
-  targetRisks: PropTypes.array.isRequired,
+  targetChannels: PropTypes.array.isRequired,
   promoteToChannel: PropTypes.func.isRequired
 };
