@@ -79,7 +79,7 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
               <p class="snapcraft-publicise__images">
                 {% set url = "images/badges/" + lang + "/snap-store-white.svg" %}
                 <a href="https://snapcraft.io/{{ snap_name }}">
-                  <img alt="{{ data.text }} src="{{ static_url(url) }}" />
+                  <img alt="{{ data.text }}" src="{{ static_url(url) }}" />
                 </a>
               </p>
             </div>
