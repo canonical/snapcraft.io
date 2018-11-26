@@ -908,7 +908,7 @@ def get_publicise(snap_name):
         },
         "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
         "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
-        "tw": {"title": "中華民國國語", "text": "安裝軟體敬請移駕 Snap Store"},
+        "tw": {"title": "中文（台灣）", "text": "安裝軟體敬請移駕 Snap Store"},
     }
 
     context = {
