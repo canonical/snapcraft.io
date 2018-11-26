@@ -344,6 +344,7 @@ export default class ReleasesTable extends Component {
         revisionsFilters={this.props.revisionsFilters}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
+        pendingReleases={this.props.pendingReleases}
         selectRevision={this.props.selectRevision}
         showArchitectures={!!showAllColumns}
         showChannels={!!showAllColumns}

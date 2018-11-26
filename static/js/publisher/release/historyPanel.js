@@ -14,9 +14,10 @@ export default class HistoryPanel extends Component {
             revisionsFilters={this.props.revisionsFilters}
             releasedChannels={this.props.releasedChannels}
             selectedRevisions={this.props.selectedRevisions}
-            selectRevision={this.props.selectRevision}
+            pendingReleases={this.props.pendingReleases}
             showChannels={this.props.showChannels}
             showArchitectures={this.props.showArchitectures}
+            selectRevision={this.props.selectRevision}
             closeHistoryPanel={this.props.closeHistoryPanel}
           />
         </div>
@@ -32,6 +33,7 @@ HistoryPanel.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array.isRequired,
+  pendingReleases: PropTypes.object.isRequired,
   showChannels: PropTypes.bool,
   showArchitectures: PropTypes.bool,
   // actions
