@@ -131,7 +131,6 @@ export default class RevisionsList extends Component {
       }
     }
 
-    const isNarrow = !showChannels && !showArchitectures;
     return (
       <Fragment>
         <div>
@@ -143,12 +142,12 @@ export default class RevisionsList extends Component {
             className="p-icon--close u-float--right"
           />
         </div>
-        <table className={`p-revisions-list ${isNarrow ? "is-narrow" : ""}`}>
+        <table className="p-revisions-list">
           <thead>
             <tr>
               <th
                 className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
-                width="100px"
+                width="150px"
                 scope="col"
               >
                 Revision
@@ -175,7 +174,7 @@ export default class RevisionsList extends Component {
               )
             ) : (
               <tr>
-                <td colSpan="5">
+                <td colSpan="4">
                   <em>No releases</em>
                 </td>
               </tr>

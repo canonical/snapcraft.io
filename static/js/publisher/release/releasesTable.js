@@ -328,7 +328,7 @@ export default class ReleasesTable extends Component {
     );
   }
 
-  renderHistoryPanel(showArchitectures) {
+  renderHistoryPanel(showAllColumns) {
     return (
       <HistoryPanel
         key="history-panel"
@@ -338,7 +338,8 @@ export default class ReleasesTable extends Component {
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         selectRevision={this.props.selectRevision}
-        showArchitectures={!!showArchitectures}
+        showArchitectures={!!showAllColumns}
+        showChannels={!!showAllColumns}
         closeHistoryPanel={this.props.closeHistoryPanel}
       />
     );
