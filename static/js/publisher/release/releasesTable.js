@@ -298,7 +298,7 @@ export default class ReleasesTable extends Component {
       >
         <div className="p-releases-channel">
           <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Unassigned revisions</em> : channel}
+            {risk === UNASSIGNED ? <em>Unreleased revisions</em> : channel}
           </span>
           <span className="p-releases-table__menus">
             {canBePromoted && (
@@ -505,8 +505,7 @@ export default class ReleasesTable extends Component {
           </div>
           <div className="p-release-actions">
             <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
-              Show {revisionsCount} latest revision
-              {revisionsCount > 1 ? "s" : ""}
+              Show all latest revisions ({revisionsCount})
             </a>
           </div>
           {this.props.isHistoryOpen &&

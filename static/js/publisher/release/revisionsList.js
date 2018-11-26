@@ -104,7 +104,7 @@ export default class RevisionsList extends Component {
     let isReleaseHistory = false;
 
     if (filters && filters.arch) {
-      title = `${title}: ${filters.arch}`;
+      title = `Unreleased revisions: ${filters.arch}`;
 
       filteredRevisions = filteredRevisions.filter(revision => {
         return revision.architectures.includes(filters.arch);
