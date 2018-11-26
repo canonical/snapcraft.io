@@ -916,7 +916,7 @@ def get_publicise(snap_name):
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
         "available": available_languages,
-        "download_version": "v1.1",
+        "download_version": "v1.2",
     }
 
     return flask.render_template("publisher/publicise.html", **context)
