@@ -13,7 +13,7 @@ import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
 import HistoryPanel from "./historyPanel";
 
-import { getTrackingChannel } from "./releasesState";
+import { getTrackingChannel, getUnassignedRevisions } from "./releasesState";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -90,7 +90,10 @@ export default class ReleasesTable extends Component {
     const className = `p-releases-table__cell is-clickable ${
       isUnassigned ? "is-unassigned" : ""
     } ${isActive ? "is-active" : ""} ${isHighlighted ? "is-highlighted" : ""}`;
-
+    const unassignedCount = getUnassignedRevisions(
+      this.props.revisionsMap,
+      arch
+    ).length;
     return (
       <div
         className={className}
@@ -135,17 +138,21 @@ export default class ReleasesTable extends Component {
                   ({thisPreviousRevision.revision})
                 </span>
               </span>
+            ) : isUnassigned ? (
+              <Fragment>
+                <span className="p-release-data__icon">
+                  <i className="p-icon--plus" />
+                </span>
+                <span className="p-release-data__info">
+                  <span className="p-release-data__version">Add revision</span>
+                  <span className="p-release-data__revision">
+                    {unassignedCount} available
+                  </span>
+                </span>
+              </Fragment>
             ) : (
               <span className="p-release-data__info--empty">
-                {trackingChannel ? (
-                  "↑"
-                ) : isUnassigned ? (
-                  <Fragment>
-                    <i className="p-icon--plus" /> Add revision
-                  </Fragment>
-                ) : (
-                  "–"
-                )}
+                {trackingChannel ? "↑" : "–"}
               </span>
             )}
           </span>

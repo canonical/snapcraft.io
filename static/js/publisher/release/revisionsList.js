@@ -6,7 +6,10 @@ import format from "date-fns/format";
 import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
-import { getFilteredReleaseHistory } from "./releasesState";
+import {
+  getFilteredReleaseHistory,
+  getUnassignedRevisions
+} from "./releasesState";
 
 export default class RevisionsList extends Component {
   revisionSelectChange(revision) {
@@ -104,18 +107,15 @@ export default class RevisionsList extends Component {
     let isReleaseHistory = false;
 
     if (filters && filters.arch) {
-      title = `Unreleased revisions: ${filters.arch}`;
-
-      filteredRevisions = filteredRevisions.filter(revision => {
-        return revision.architectures.includes(filters.arch);
-      });
-
       if (filters.risk === UNASSIGNED) {
+        title = `Unreleased revisions: ${filters.arch}`;
         // when listing 'unassigned' revisions show revisions with no channels
         showChannels = false;
-        filteredRevisions = filteredRevisions.filter(revision => {
-          return !revision.channels || revision.channels.length === 0;
-        });
+
+        filteredRevisions = getUnassignedRevisions(
+          this.props.revisionsMap,
+          filters.arch
+        );
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
