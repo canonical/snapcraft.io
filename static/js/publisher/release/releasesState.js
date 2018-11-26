@@ -171,7 +171,21 @@ function getTrackingChannel(releasedChannels, track, risk, arch) {
   return tracking;
 }
 
+function getUnassignedRevisions(revisionsMap, arch) {
+  let filteredRevisions = Object.values(revisionsMap).reverse();
+  if (arch) {
+    filteredRevisions = filteredRevisions.filter(revision => {
+      return (
+        revision.architectures.includes(arch) &&
+        (!revision.channels || revision.channels.length === 0)
+      );
+    });
+  }
+  return filteredRevisions;
+}
+
 export {
+  getUnassignedRevisions,
   getArchsFromReleasedChannels,
   getFilteredReleaseHistory,
   getTracksFromChannelMap,

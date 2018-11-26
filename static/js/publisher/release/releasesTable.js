@@ -13,7 +13,7 @@ import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
 import HistoryPanel from "./historyPanel";
 
-import { getTrackingChannel } from "./releasesState";
+import { getTrackingChannel, getUnassignedRevisions } from "./releasesState";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -90,7 +90,10 @@ export default class ReleasesTable extends Component {
     const className = `p-releases-table__cell is-clickable ${
       isUnassigned ? "is-unassigned" : ""
     } ${isActive ? "is-active" : ""} ${isHighlighted ? "is-highlighted" : ""}`;
-
+    const unassignedCount = getUnassignedRevisions(
+      this.props.revisionsMap,
+      arch
+    ).length;
     return (
       <div
         className={className}
@@ -135,17 +138,21 @@ export default class ReleasesTable extends Component {
                   ({thisPreviousRevision.revision})
                 </span>
               </span>
+            ) : isUnassigned ? (
+              <Fragment>
+                <span className="p-release-data__icon">
+                  <i className="p-icon--plus" />
+                </span>
+                <span className="p-release-data__info">
+                  <span className="p-release-data__version">Add revision</span>
+                  <span className="p-release-data__revision">
+                    {unassignedCount} available
+                  </span>
+                </span>
+              </Fragment>
             ) : (
               <span className="p-release-data__info--empty">
-                {trackingChannel ? (
-                  "↑"
-                ) : isUnassigned ? (
-                  <Fragment>
-                    <i className="p-icon--plus" /> Add revision
-                  </Fragment>
-                ) : (
-                  "–"
-                )}
+                {trackingChannel ? "↑" : "–"}
               </span>
             )}
           </span>
@@ -298,7 +305,7 @@ export default class ReleasesTable extends Component {
       >
         <div className="p-releases-channel">
           <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Available revisions</em> : channel}
+            {risk === UNASSIGNED ? <em>Unreleased revisions</em> : channel}
           </span>
           <span className="p-releases-table__menus">
             {canBePromoted && (
@@ -328,7 +335,7 @@ export default class ReleasesTable extends Component {
     );
   }
 
-  renderHistoryPanel(showArchitectures) {
+  renderHistoryPanel(showAllColumns) {
     return (
       <HistoryPanel
         key="history-panel"
@@ -338,7 +345,8 @@ export default class ReleasesTable extends Component {
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         selectRevision={this.props.selectRevision}
-        showArchitectures={!!showArchitectures}
+        showArchitectures={!!showAllColumns}
+        showChannels={!!showAllColumns}
         closeHistoryPanel={this.props.closeHistoryPanel}
       />
     );
@@ -484,7 +492,7 @@ export default class ReleasesTable extends Component {
       <Fragment>
         <div className="row">
           <div className="u-clearfix">
-            <h4 className="u-float--left">Releases available for install</h4>
+            <h4 className="u-float--left">Releases available to install</h4>
             {tracks.length > 1 && this.renderTrackDropdown(tracks)}
           </div>
           {this.renderReleasesConfirm()}
@@ -504,8 +512,7 @@ export default class ReleasesTable extends Component {
           </div>
           <div className="p-release-actions">
             <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
-              Show {revisionsCount} latest revision
-              {revisionsCount > 1 ? "s" : ""}
+              Show all latest revisions ({revisionsCount})
             </a>
           </div>
           {this.props.isHistoryOpen &&

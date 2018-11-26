@@ -6,14 +6,17 @@ import format from "date-fns/format";
 import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
-import { getFilteredReleaseHistory } from "./releasesState";
+import {
+  getFilteredReleaseHistory,
+  getUnassignedRevisions
+} from "./releasesState";
 
 export default class RevisionsList extends Component {
   revisionSelectChange(revision) {
     this.props.selectRevision(revision);
   }
 
-  renderRows(revisions, isHistory) {
+  renderRows(revisions, isSelectable, showChannels) {
     return revisions.map(revision => {
       const revisionDate = revision.release
         ? new Date(revision.release.when)
@@ -25,7 +28,7 @@ export default class RevisionsList extends Component {
       // disable revisions from the same architecture that already selected
       // but only if checkboxes are visible (not in channel history)
       const isDisabled =
-        isHistory &&
+        isSelectable &&
         !isSelected &&
         revision.architectures.some(
           arch =>
@@ -35,7 +38,7 @@ export default class RevisionsList extends Component {
 
       const id = `revision-check-${revision.revision}`;
       const className = `${isDisabled ? "is-disabled" : ""} ${
-        isHistory ? "is-clickable" : ""
+        isSelectable ? "is-clickable" : ""
       }`;
 
       return (
@@ -43,11 +46,11 @@ export default class RevisionsList extends Component {
           key={id}
           className={className}
           onClick={
-            isHistory ? this.revisionSelectChange.bind(this, revision) : null
+            isSelectable ? this.revisionSelectChange.bind(this, revision) : null
           }
         >
           <td>
-            {isHistory ? (
+            {isSelectable ? (
               <Fragment>
                 <input
                   type="checkbox"
@@ -70,7 +73,7 @@ export default class RevisionsList extends Component {
           {this.props.showArchitectures && (
             <td>{revision.architectures.join(", ")}</td>
           )}
-          {this.props.showChannels && <td>{revision.channels.join(", ")}</td>}
+          {showChannels && <td>{revision.channels.join(", ")}</td>}
           <td className="u-align--right">
             <span
               className="p-tooltip p-tooltip--btm-center"
@@ -97,19 +100,24 @@ export default class RevisionsList extends Component {
   }
 
   render() {
+    let { showChannels, showArchitectures } = this.props;
     let filteredRevisions = Object.values(this.props.revisionsMap).reverse();
     let title = "Latest revisions";
     let filters = this.props.revisionsFilters;
     let isReleaseHistory = false;
 
     if (filters && filters.arch) {
-      title = `${title}: ${filters.arch}`;
+      if (filters.risk === UNASSIGNED) {
+        title = `Unreleased revisions: ${filters.arch}`;
+        // when listing 'unassigned' revisions show revisions with no channels
+        showChannels = false;
 
-      filteredRevisions = filteredRevisions.filter(revision => {
-        return revision.architectures.includes(filters.arch);
-      });
-
-      if (filters.risk !== UNASSIGNED) {
+        filteredRevisions = getUnassignedRevisions(
+          this.props.revisionsMap,
+          filters.arch
+        );
+      } else {
+        // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
         title = `Releases history: ${filters.arch} – ${filters.track}/${
           filters.risk
@@ -139,19 +147,19 @@ export default class RevisionsList extends Component {
             <tr>
               <th
                 className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
-                width="100px"
+                width="150px"
                 scope="col"
               >
                 Revision
               </th>
               <th width="20px" />
               <th scope="col">Version</th>
-              {this.props.showArchitectures && (
+              {showArchitectures && (
                 <th width="120px" scope="col">
                   Architecture
                 </th>
               )}
-              {this.props.showChannels && <th scope="col">Channels</th>}
+              {showChannels && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
@@ -159,10 +167,14 @@ export default class RevisionsList extends Component {
           </thead>
           <tbody>
             {filteredRevisions.length > 0 ? (
-              this.renderRows(filteredRevisions, !isReleaseHistory)
+              this.renderRows(
+                filteredRevisions,
+                !isReleaseHistory,
+                showChannels
+              )
             ) : (
               <tr>
-                <td colSpan="5">
+                <td colSpan="4">
                   <em>No releases</em>
                 </td>
               </tr>
