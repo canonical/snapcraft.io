@@ -37,12 +37,14 @@ def build_metrics_json(
     """
     end = get_last_metrics_processed_date()
 
-    # -1 day counteracts an issue that the api call is inclusive of the dates
-    # specified, meaning you receive 1 extra data point then required
     if metric_bucket == "d":
-        start = end - relativedelta.relativedelta(days=metric_period)
+        start = end + relativedelta.relativedelta(days=-metric_period)
     elif metric_bucket == "m":
-        start = end - relativedelta.relativedelta(months=metric_period)
+        start = end + relativedelta.relativedelta(months=-metric_period)
+    elif metric_bucket == "y":
+        start = end + relativedelta.relativedelta(
+            years=-metric_period, days=-1
+        )
 
     return {
         "filters": [

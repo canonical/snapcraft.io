@@ -75,12 +75,14 @@ def extract_metrics_period(metric_period):
 
     :returns A dictionnary with the differents values of the period
     """
+    allowed_periods = ["d", "m", "y"]
+
     if not metric_period[:-1].isdigit():
         metric_period = "30d"
 
     metric_period_int = int(metric_period[:-1])
     metric_bucket = metric_period[-1:]
-    if metric_bucket != "d" and metric_bucket != "m":
+    if metric_bucket not in allowed_periods:
         metric_bucket = "d"
 
     return {
