@@ -8,7 +8,7 @@ import { isInDevmode } from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import {
-  getArchsFromReleasedChannels,
+  getArchsFromRevisionsMap,
   getTracksFromChannelMap,
   getRevisionsMap,
   initReleasesData,
@@ -45,7 +45,7 @@ export default class ReleasesController extends Component {
       // list of all available tracks
       tracks: tracks,
       // list of architectures released to (or selected to be released to)
-      archs: getArchsFromReleasedChannels(releasedChannels),
+      archs: getArchsFromRevisionsMap(revisionsMap),
       // revisions to be released:
       // key is the id of revision to release
       // value is object containing release object and channels to release to
@@ -102,12 +102,10 @@ export default class ReleasesController extends Component {
       const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(
         arch => releasedChannels[UNASSIGNED][arch].revision
       );
-      const archs = getArchsFromReleasedChannels(releasedChannels);
 
       return {
         selectedRevisions,
-        releasedChannels,
-        archs
+        releasedChannels
       };
     });
   }
@@ -365,11 +363,8 @@ export default class ReleasesController extends Component {
           }
         });
 
-        const archs = getArchsFromReleasedChannels(releasedChannels);
-
         return {
-          releasedChannels,
-          archs
+          releasedChannels
         };
       });
     } else {

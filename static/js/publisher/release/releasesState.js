@@ -91,13 +91,11 @@ function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
   return releasedChannels;
 }
 
-// update list of architectures based on revisions released (or selected)
-function getArchsFromReleasedChannels(releasedChannels) {
+// update list of architectures based on revisions uploaded
+function getArchsFromRevisionsMap(revisionsMap) {
   let archs = [];
-  Object.keys(releasedChannels).forEach(channel => {
-    Object.keys(releasedChannels[channel]).forEach(arch => {
-      archs.push(arch);
-    });
+  Object.values(revisionsMap).forEach(revision => {
+    archs = archs.concat(revision.architectures);
   });
 
   // make archs unique and sorted
@@ -206,7 +204,7 @@ function getPendingRelease(pendingReleases, arch, channel) {
 export {
   getPendingRelease,
   getUnassignedRevisions,
-  getArchsFromReleasedChannels,
+  getArchsFromRevisionsMap,
   getFilteredReleaseHistory,
   getTracksFromChannelMap,
   getTrackingChannel,
