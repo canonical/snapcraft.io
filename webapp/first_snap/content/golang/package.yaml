@@ -29,6 +29,11 @@ explain:
     - text: Snaps are containerised to ensure more predictable application behaviour and greater security.
     - text: It’s best to start a snap with the confinement in warning mode, rather than strictly applied. This is indicated through the <code>devmode</code> keyword.
     - text: Once an app is working well in devmode, you can review confinement violations, add appropriate interfaces, and switch to strict confinement.
+  base:
+    - text: Snaps cannot see the root filesystem on end user systems. This prevents conflict with other applications and increases security. The <code>base</code> keyword specifies a special kind of snap that will be mounted as the root filesystem for your application.
+    - code: |
+        base: core18
+    - text: The <code>core18</code> base is recommended.
   parts:
     - text: |
         Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
