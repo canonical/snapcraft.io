@@ -8,7 +8,8 @@ import { UNASSIGNED } from "./constants";
 
 import {
   getFilteredReleaseHistory,
-  getUnassignedRevisions
+  getUnassignedRevisions,
+  getPendingRelease
 } from "./releasesState";
 
 export default class RevisionsList extends Component {
@@ -16,65 +17,65 @@ export default class RevisionsList extends Component {
     this.props.selectRevision(revision);
   }
 
-  renderRows(revisions, isSelectable, showChannels) {
-    return revisions.map(revision => {
-      const revisionDate = revision.release
-        ? new Date(revision.release.when)
-        : new Date(revision.created_at);
-      const isSelected = this.props.selectedRevisions.includes(
-        revision.revision
+  renderRow(revision, isSelectable, showChannels, isPending) {
+    const revisionDate = revision.release
+      ? new Date(revision.release.when)
+      : new Date(revision.created_at);
+    const isSelected = this.props.selectedRevisions.includes(revision.revision);
+
+    // disable revisions from the same architecture that already selected
+    // but only if checkboxes are visible (not in channel history)
+    const isDisabled =
+      isSelectable &&
+      !isSelected &&
+      revision.architectures.some(
+        arch =>
+          this.props.releasedChannels[UNASSIGNED] &&
+          this.props.releasedChannels[UNASSIGNED][arch]
       );
 
-      // disable revisions from the same architecture that already selected
-      // but only if checkboxes are visible (not in channel history)
-      const isDisabled =
-        isSelectable &&
-        !isSelected &&
-        revision.architectures.some(
-          arch =>
-            this.props.releasedChannels[UNASSIGNED] &&
-            this.props.releasedChannels[UNASSIGNED][arch]
-        );
+    const id = `revision-check-${revision.revision}`;
+    const className = `${isDisabled ? "is-disabled" : ""} ${
+      isSelectable ? "is-clickable" : ""
+    } ${isPending ? "is-pending" : ""}`;
 
-      const id = `revision-check-${revision.revision}`;
-      const className = `${isDisabled ? "is-disabled" : ""} ${
-        isSelectable ? "is-clickable" : ""
-      }`;
-
-      return (
-        <tr
-          key={id}
-          className={className}
-          onClick={
-            isSelectable ? this.revisionSelectChange.bind(this, revision) : null
-          }
-        >
-          <td>
-            {isSelectable ? (
-              <Fragment>
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  id={id}
-                  onChange={this.revisionSelectChange.bind(this, revision)}
-                />
-                <label className="u-no-margin--bottom" htmlFor={id}>
-                  {revision.revision}
-                </label>
-              </Fragment>
-            ) : (
-              <span>{revision.revision}</span>
-            )}
-          </td>
-          <td>
-            <DevmodeIcon revision={revision} showTooltip={true} />
-          </td>
-          <td>{revision.version}</td>
-          {this.props.showArchitectures && (
-            <td>{revision.architectures.join(", ")}</td>
+    return (
+      <tr
+        key={id}
+        className={className}
+        onClick={
+          isSelectable ? this.revisionSelectChange.bind(this, revision) : null
+        }
+      >
+        <td>
+          {isSelectable ? (
+            <Fragment>
+              <input
+                type="checkbox"
+                checked={isSelected}
+                id={id}
+                onChange={this.revisionSelectChange.bind(this, revision)}
+              />
+              <label className="u-no-margin--bottom" htmlFor={id}>
+                {revision.revision}
+              </label>
+            </Fragment>
+          ) : (
+            <span>{revision.revision}</span>
           )}
-          {showChannels && <td>{revision.channels.join(", ")}</td>}
-          <td className="u-align--right">
+        </td>
+        <td>
+          <DevmodeIcon revision={revision} showTooltip={true} />
+        </td>
+        <td>{revision.version}</td>
+        {this.props.showArchitectures && (
+          <td>{revision.architectures.join(", ")}</td>
+        )}
+        {showChannels && <td>{revision.channels.join(", ")}</td>}
+        <td className="u-align--right">
+          {isPending ? (
+            <em>pending release</em>
+          ) : (
             <span
               className="p-tooltip p-tooltip--btm-center"
               aria-describedby={`revision-uploaded-${revision.revision}`}
@@ -88,9 +89,15 @@ export default class RevisionsList extends Component {
                 {format(revisionDate, "YYYY-MM-DD HH:mm")}
               </span>
             </span>
-          </td>
-        </tr>
-      );
+          )}
+        </td>
+      </tr>
+    );
+  }
+
+  renderRows(revisions, isSelectable, showChannels) {
+    return revisions.map(revision => {
+      return this.renderRow(revision, isSelectable, showChannels);
     });
   }
 
@@ -105,6 +112,7 @@ export default class RevisionsList extends Component {
     let title = "Latest revisions";
     let filters = this.props.revisionsFilters;
     let isReleaseHistory = false;
+    let pendingRelease = null;
 
     if (filters && filters.arch) {
       if (filters.risk === UNASSIGNED) {
@@ -128,6 +136,16 @@ export default class RevisionsList extends Component {
           this.props.revisionsMap,
           filters
         );
+
+        pendingRelease = getPendingRelease(
+          this.props.pendingReleases,
+          filters.arch,
+          `${filters.track}/${filters.risk}`
+        );
+
+        if (pendingRelease) {
+          pendingRelease = this.props.revisionsMap[pendingRelease];
+        }
       }
     }
 
@@ -166,6 +184,13 @@ export default class RevisionsList extends Component {
             </tr>
           </thead>
           <tbody>
+            {pendingRelease &&
+              this.renderRow(
+                pendingRelease,
+                !isReleaseHistory,
+                showChannels,
+                true
+              )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
                 filteredRevisions,
@@ -193,6 +218,7 @@ RevisionsList.propTypes = {
   releasedChannels: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array.isRequired,
+  pendingReleases: PropTypes.object.isRequired,
   showChannels: PropTypes.bool,
   showArchitectures: PropTypes.bool,
   // actions
