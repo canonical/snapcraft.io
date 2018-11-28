@@ -25,14 +25,9 @@
     }
   },
   "lint-staged": {
-    "**/*.py": [
-      "./run exec black --line-length 79",
-      "git add"
-    ],
-    "**/*.js": [
-      "prettier --write",
-      "git add"
-    ]
+    "**/*.py": "./run exec yarn lint-py",
+    "**/*.js": "./run exec yarn lint-js",
+    "**/*.scss": "./run exec yarn lint-scss"
   },
   "jest": {
     "collectCoverage": true
