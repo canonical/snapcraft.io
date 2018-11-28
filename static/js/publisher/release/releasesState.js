@@ -201,7 +201,47 @@ function getPendingRelease(pendingReleases, arch, channel) {
   return pendingRelease;
 }
 
+// get channel map data updated with any pending releases
+function getNextReleasedChannels(releasedChannels, pendingReleases) {
+  const nextReleaseData = JSON.parse(JSON.stringify(releasedChannels));
+
+  // for each release
+  Object.keys(pendingReleases).forEach(releasedRevision => {
+    pendingReleases[releasedRevision].channels.forEach(channel => {
+      const revision = pendingReleases[releasedRevision].revision;
+
+      if (!nextReleaseData[channel]) {
+        nextReleaseData[channel] = {};
+      }
+
+      revision.architectures.forEach(arch => {
+        nextReleaseData[channel][arch] = revision;
+      });
+    });
+  });
+
+  return nextReleaseData;
+}
+
+// remove pending revisions from given channel
+function removePendingRelease(pendingReleases, revision, channel) {
+  if (pendingReleases[revision.revision]) {
+    const channels = pendingReleases[revision.revision].channels;
+
+    if (channels.includes(channel)) {
+      channels.splice(channels.indexOf(channel), 1);
+    }
+
+    if (channels.length === 0) {
+      delete pendingReleases[revision.revision];
+    }
+  }
+
+  return pendingReleases;
+}
+
 export {
+  getNextReleasedChannels,
   getPendingRelease,
   getUnassignedRevisions,
   getArchsFromRevisionsMap,
@@ -209,6 +249,7 @@ export {
   getTracksFromChannelMap,
   getTrackingChannel,
   getRevisionsMap,
+  removePendingRelease,
   initReleasesData,
   getReleaseDataFromChannelMap
 };

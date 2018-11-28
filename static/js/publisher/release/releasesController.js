@@ -8,9 +8,11 @@ import { isInDevmode } from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import {
+  getNextReleasedChannels,
   getArchsFromRevisionsMap,
   getTracksFromChannelMap,
   getRevisionsMap,
+  removePendingRelease,
   initReleasesData,
   getReleaseDataFromChannelMap
 } from "./releasesState";
@@ -116,27 +118,10 @@ export default class ReleasesController extends Component {
 
   // get channel map data updated with any pending releases
   getNextReleasedChannels() {
-    const nextReleaseData = JSON.parse(
-      JSON.stringify(this.state.releasedChannels)
+    return getNextReleasedChannels(
+      this.state.releasedChannels,
+      this.state.pendingReleases
     );
-    const { pendingReleases } = this.state;
-
-    // for each release
-    Object.keys(pendingReleases).forEach(releasedRevision => {
-      pendingReleases[releasedRevision].channels.forEach(channel => {
-        const revision = pendingReleases[releasedRevision].revision;
-
-        if (!nextReleaseData[channel]) {
-          nextReleaseData[channel] = {};
-        }
-
-        revision.architectures.forEach(arch => {
-          nextReleaseData[channel][arch] = revision;
-        });
-      });
-    });
-
-    return nextReleaseData;
   }
 
   promoteChannel(channel, targetChannel) {
@@ -180,12 +165,13 @@ export default class ReleasesController extends Component {
     });
   }
 
-  // TODO:
-  // - ignore if revision is already in given channel
   promoteRevision(revision, channel) {
     this.setState(state => {
-      const { pendingReleases, releasedChannels } = state;
-
+      const { pendingReleases } = state;
+      const releasedChannels = getNextReleasedChannels(
+        this.state.releasedChannels,
+        pendingReleases
+      );
       // compare given revision with released revisions in this arch and channel
       const isAlreadyReleased = revision.architectures.every(arch => {
         const releasedRevision =
@@ -206,7 +192,11 @@ export default class ReleasesController extends Component {
               pendingRelease.channels.includes(channel) &&
               pendingRelease.revision.architectures.includes(arch)
             ) {
-              this.undoRelease(pendingRelease.revision, channel);
+              removePendingRelease(
+                pendingReleases,
+                pendingRelease.revision,
+                channel
+              );
             }
           });
         });
@@ -236,19 +226,11 @@ export default class ReleasesController extends Component {
 
   undoRelease(revision, channel) {
     this.setState(state => {
-      const { pendingReleases } = state;
-
-      if (pendingReleases[revision.revision]) {
-        const channels = pendingReleases[revision.revision].channels;
-
-        if (channels.includes(channel)) {
-          channels.splice(channels.indexOf(channel), 1);
-        }
-
-        if (channels.length === 0) {
-          delete pendingReleases[revision.revision];
-        }
-      }
+      const pendingReleases = removePendingRelease(
+        state.pendingReleases,
+        revision,
+        channel
+      );
 
       return {
         pendingReleases
