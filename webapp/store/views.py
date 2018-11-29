@@ -365,6 +365,10 @@ def store_blueprint(store_query=None, testing=False):
             channel_maps_list, default_track, lowest_risk_available
         )
 
+        last_version = logic.get_version(
+            channel_maps_list, default_track, lowest_risk_available
+        )
+
         context = {
             # Data direct from details API
             "snap_title": details["snap"]["title"],
