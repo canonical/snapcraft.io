@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import "whatwg-fetch";
 
 import ReleasesTable from "./releasesTable";
@@ -17,13 +18,18 @@ import {
   getReleaseDataFromChannelMap
 } from "./releasesState";
 
-export default class ReleasesController extends Component {
+class ReleasesController extends Component {
   constructor(props) {
     super(props);
 
     // init channel data in revisions list
+    // TODO: should be done in reducers?
     const revisionsMap = getRevisionsMap(this.props.releasesData.revisions);
     initReleasesData(revisionsMap, this.props.releasesData.releases);
+
+    // init redux store
+    // TODO: should be done outside component as initial state?
+    this.props.updateRevisions(revisionsMap);
 
     const releasedChannels = getReleaseDataFromChannelMap(
       this.props.channelMapsList,
@@ -42,8 +48,6 @@ export default class ReleasesController extends Component {
       releasedChannels: releasedChannels,
       // list of releases returned by API
       releases: this.props.releasesData.releases,
-      // map of revisions (with revisionId as a key)
-      revisionsMap: revisionsMap,
       // list of all available tracks
       tracks: tracks,
       // list of architectures released to (or selected to be released to)
@@ -75,8 +79,8 @@ export default class ReleasesController extends Component {
     const revisionsMap = getRevisionsMap(releasesData.revisions);
     initReleasesData(revisionsMap, releasesData.releases);
 
+    this.props.updateRevisions(revisionsMap);
     this.setState({
-      revisionsMap,
       releases: releasesData.releases
     });
   }
@@ -302,6 +306,7 @@ export default class ReleasesController extends Component {
   handleReleaseResponse(json, release) {
     if (json.success) {
       this.setState(state => {
+        const { revisions } = this.props;
         const releasedChannels = state.releasedChannels;
 
         // update releasedChannels based on channel map from the response
@@ -312,8 +317,8 @@ export default class ReleasesController extends Component {
             if (map.revision === +release.id) {
               // release.id is a string so turn it into a number for comparison
               revision = release.revision;
-            } else if (this.state.revisionsMap[map.revision]) {
-              revision = this.state.revisionsMap[map.revision];
+            } else if (revisions[map.revision]) {
+              revision = revisions[map.revision];
             } else {
               revision = {
                 revision: map.revision,
@@ -555,5 +560,33 @@ ReleasesController.propTypes = {
   snapName: PropTypes.string.isRequired,
   channelMapsList: PropTypes.array.isRequired,
   releasesData: PropTypes.object.isRequired,
-  options: PropTypes.object.isRequired
+  options: PropTypes.object.isRequired,
+
+  revisions: PropTypes.object,
+  state: PropTypes.object,
+  updateRevisions: PropTypes.func
 };
+
+const mapStateToProps = state => {
+  return {
+    revisions: state.revisions
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    // TODO: extract to outside actions module
+    updateRevisions: revisions => {
+      dispatch({
+        type: "UPDATE_REVISIONS",
+        payload: {
+          revisions
+        }
+      });
+    }
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesController);

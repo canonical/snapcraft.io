@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 import {
   RISKS_WITH_UNASSIGNED as RISKS,
@@ -19,7 +20,7 @@ function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
 
-export default class ReleasesTable extends Component {
+class ReleasesTable extends Component {
   getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
     const currentRelease =
@@ -90,10 +91,9 @@ export default class ReleasesTable extends Component {
     const className = `p-releases-table__cell is-clickable ${
       isUnassigned ? "is-unassigned" : ""
     } ${isActive ? "is-active" : ""} ${isHighlighted ? "is-highlighted" : ""}`;
-    const unassignedCount = getUnassignedRevisions(
-      this.props.revisionsMap,
-      arch
-    ).length;
+    const unassignedCount = getUnassignedRevisions(this.props.revisions, arch)
+      .length;
+
     return (
       <div
         className={className}
@@ -340,7 +340,6 @@ export default class ReleasesTable extends Component {
       <HistoryPanel
         key="history-panel"
         releases={this.props.releases}
-        revisionsMap={this.props.revisionsMap}
         revisionsFilters={this.props.revisionsFilters}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
@@ -487,7 +486,7 @@ export default class ReleasesTable extends Component {
 
   render() {
     const { archs, tracks } = this.props;
-    const revisionsCount = Object.keys(this.props.revisionsMap).length;
+    const revisionsCount = Object.keys(this.props.revisions).length;
 
     return (
       <Fragment>
@@ -528,7 +527,7 @@ export default class ReleasesTable extends Component {
 ReleasesTable.propTypes = {
   // state
   releases: PropTypes.array.isRequired,
-  revisionsMap: PropTypes.object.isRequired,
+  revisions: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
@@ -553,3 +552,11 @@ ReleasesTable.propTypes = {
   selectRevision: PropTypes.func.isRequired,
   closeHistoryPanel: PropTypes.func.isRequired
 };
+
+const mapStateToProps = state => {
+  return {
+    revisions: state.revisions
+  };
+};
+
+export default connect(mapStateToProps)(ReleasesTable);
