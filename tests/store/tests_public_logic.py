@@ -202,10 +202,10 @@ class StoreLogicTest(unittest.TestCase):
             }
         }
         edge_version = logic.get_version(channel_map, "track", "edge")
-        self.assertEqual(classic_result, "12")
+        self.assertEqual(edge_version, "12")
 
         stable_version = logic.get_version(channel_map, "track", "stable")
-        self.assertEqual(strict_result, "10")
+        self.assertEqual(stable_version, "10")
 
     def test_get_confinement(self):
         channel_map = {
