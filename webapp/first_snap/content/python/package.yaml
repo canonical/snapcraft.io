@@ -7,7 +7,7 @@ metadata: |
   name: offlineimap
   version: git
   summary: OfflineIMAP
-  description: >
+  description: |
     OfflineIMAP is software that downloads your email mailbox(es)
     as local Maildirs. OfflineIMAP will synchronize both sides via
     IMAP.
@@ -21,9 +21,9 @@ explain:
     - text: By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps.
     - code: |
         version: git
-    - text: The summary can not exceed 79 characters. You can use a chevron ‘>’ in the description key to declare a multi-line description.
+    - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
     - code: |
-        description: >
+        description: |
   security:
     - text: The next section describes the level of confinement applied to your app.
     - code: |
