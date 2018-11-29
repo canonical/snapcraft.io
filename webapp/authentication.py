@@ -59,7 +59,16 @@ def request_macaroon():
     Returns the macaroon.
     """
     response = sso.post_macaroon(
-        {"permissions": ["package_access", "package_upload", "edit_account"]}
+        {
+            "permissions": [
+                "package_access",
+                "package_metrics",
+                "package_update",
+                "package_register",
+                "package_release",
+                "edit_account",
+            ]
+        }
     )
 
     return response["macaroon"]
