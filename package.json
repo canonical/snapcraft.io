@@ -73,6 +73,8 @@
     "raven-js": "^3.24.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1",
     "sass-lint": "^1.10.2",
     "swiper": "^4.4.1",
     "topojson-client": "^3.0.0",
