@@ -2,16 +2,21 @@
   <div class='col-6'>
     <h4>Why are snaps good for Python projects?</h4>
     <ul>
-      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
-      <li>Snaps install and run the same across Linux. They bundle the exact version of Python required and all of your app’s dependencies, be they Python modules or system libraries.</li>
-      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
-      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
-      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      <li>Easy to discover and install by millions using the Snap Store or command-line every day</li>
+      <li>Automatically updated to the latest stable version of your app</li>
+      <li>Revert to the previous version if an update fails, preserving data</li>
+      <li>Isolation ensures no conflicts between applications</li>
+      <li>Identical behaviour across Linux distributions, even with library dependencies</li>
     </ul>
+    <p>
+      With PyPI you can distribute apps to other developers, but it’s not tailored to end users.
+      Virtualenv lets you install an app’s dependencies in isolation, but it’s not automatically used for installs from PyPI.
+      Snaps let you distribute a dependency-isolated Python app in an app store experience for end users.
+    </p>
   </div>
 
   <div class='col-6'>
-    <h4>Here’s how offlineimap uses it:</h4>
+    <h4>How <a href="https://github.com/OfflineIMAP/offlineimap">offlineimap</a> defines <code>snapcraft.yaml</code></h4>
     <code class="p-code-yaml"><pre><b>name</b>: offlineimap
 <b>version</b>: git
 <b>summary</b>: OfflineIMAP
