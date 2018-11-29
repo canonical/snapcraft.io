@@ -294,7 +294,7 @@ def get_version(channel_map, track, risk):
     :param track: The track of the channel
     :param risk: The risk of the channel
 
-    :returns: The confinement
+    :returns: The version
     """
     for arch in channel_map:
         if arch in channel_map and track in channel_map[arch]:
