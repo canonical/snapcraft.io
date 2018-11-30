@@ -8,6 +8,8 @@ import Notification from "./notification";
 import { isInDevmode } from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
+import { updateRevisions } from "./actions/revisions";
+
 import {
   getNextReleasedChannels,
   getArchsFromRevisionsMap,
@@ -575,17 +577,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // TODO: extract to outside actions module
-    updateRevisions: revisions => {
-      dispatch({
-        type: "UPDATE_REVISIONS",
-        payload: {
-          revisions
-        }
-      });
-    }
+    updateRevisions: revisions => dispatch(updateRevisions(revisions))
   };
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
