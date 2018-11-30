@@ -62,3 +62,4 @@ static/js/modules
 static/js/dist
 cache.tmp/
 webapp/licenses.json
+coverage/
