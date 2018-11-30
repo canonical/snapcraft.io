@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
@@ -12,7 +13,7 @@ import {
   getPendingRelease
 } from "./releasesState";
 
-export default class RevisionsList extends Component {
+class RevisionsList extends Component {
   revisionSelectChange(revision) {
     this.props.selectRevision(revision);
   }
@@ -225,3 +226,11 @@ RevisionsList.propTypes = {
   selectRevision: PropTypes.func.isRequired,
   closeHistoryPanel: PropTypes.func.isRequired
 };
+
+const mapStateToProps = state => {
+  return {
+    revisionsMap: state.revisions
+  };
+};
+
+export default connect(mapStateToProps)(RevisionsList);

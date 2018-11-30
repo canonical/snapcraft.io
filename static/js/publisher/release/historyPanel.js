@@ -10,7 +10,6 @@ export default class HistoryPanel extends Component {
         <div className="p-strip is-shallow">
           <RevisionsList
             releases={this.props.releases}
-            revisionsMap={this.props.revisionsMap}
             revisionsFilters={this.props.revisionsFilters}
             releasedChannels={this.props.releasedChannels}
             selectedRevisions={this.props.selectedRevisions}
@@ -29,7 +28,6 @@ export default class HistoryPanel extends Component {
 HistoryPanel.propTypes = {
   // state
   releases: PropTypes.array.isRequired,
-  revisionsMap: PropTypes.object.isRequired,
   releasedChannels: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array.isRequired,
