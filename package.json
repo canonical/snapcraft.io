@@ -25,14 +25,12 @@
     }
   },
   "lint-staged": {
-    "**/*.py": [
-      "./run exec black --line-length 79",
-      "git add"
-    ],
-    "**/*.js": [
-      "prettier --write",
-      "git add"
-    ]
+    "linters": {
+      "**/*.py": "./run exec yarn lint-py",
+      "**/*.js": "./run exec yarn lint-js",
+      "**/*.scss": "./run exec yarn lint-scss"
+    },
+    "relative": true
   },
   "jest": {
     "collectCoverage": true
@@ -69,7 +67,7 @@
     "expose-loader": "^0.7.5",
     "husky": "^1.0.0-rc.13",
     "jest": "^22.4.2",
-    "lint-staged": "^7.2.2",
+    "lint-staged": "^8.1.0",
     "node-sass": "^4.5.3",
     "polylabel": "^1.0.2",
     "postcss-cli": "^4.1.0",
