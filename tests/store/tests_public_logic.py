@@ -192,6 +192,28 @@ class StoreLogicTest(unittest.TestCase):
             },
         )
 
+    def test_get_version(self):
+        channel_map = {
+            "arch": {
+                "track": [
+                    {"risk": "edge", "version": "12"},
+                    {"risk": "stable", "version": "10"},
+                ]
+            }
+        }
+        edge_version = logic.get_version(channel_map, "track", "edge")
+        self.assertEqual(edge_version, "12")
+
+        stable_version = logic.get_version(channel_map, "track", "stable")
+        self.assertEqual(stable_version, "10")
+
+    def test_get_no_version(self):
+        channel_map = {
+            "arch": {"track": [{"risk": "stable", "version": "10"}]}
+        }
+        no_version = logic.get_version(channel_map, "track", "edge")
+        self.assertEqual(no_version, None)
+
     def test_get_confinement(self):
         channel_map = {
             "arch": {
@@ -206,3 +228,10 @@ class StoreLogicTest(unittest.TestCase):
 
         strict_result = logic.get_confinement(channel_map, "track", "stable")
         self.assertEqual(strict_result, "strict")
+
+    def test_get_no_confinement(self):
+        channel_map = {
+            "arch": {"track": [{"risk": "stable", "confinement": "strict"}]}
+        }
+        no_version = logic.get_confinement(channel_map, "track", "edge")
+        self.assertEqual(no_version, None)

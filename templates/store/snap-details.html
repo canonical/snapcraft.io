@@ -69,6 +69,13 @@
       </div>
       {% if not webapp_config['STORE_QUERY'] %}
         <div class="col-5 p-snap-install-buttons">
+          <button
+            class="p-button--neutral p-snap-install-buttons__versions"
+            data-js="open-channel-map"
+            data-controls="channel-map-versions"
+            aria-controls="channel-map-versions">
+            {{ default_track }}/{{ lowest_risk_available }} {{ version }}&nbsp;&nbsp;<i class="p-icon--chevron"></i>
+          </button>
           {% if has_stable %}
             <button
               class="p-button--positive p-snap-install-buttons__install"
@@ -78,13 +85,6 @@
                 Install
             </button>
           {% endif %}
-          <button
-            class="p-button--neutral p-snap-install-buttons__versions"
-            data-js="open-channel-map"
-            data-controls="channel-map-versions"
-            aria-controls="channel-map-versions">
-              All versions&nbsp;&nbsp;<i class="p-icon--chevron"></i>
-          </button>
         </div>
       {% else %}
         <div class="col-5 p-snap-install-buttons">

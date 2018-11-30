@@ -278,10 +278,29 @@ def get_confinement(channel_map, track, risk):
     :returns: The confinement
     """
     for arch in channel_map:
-        if arch in channel_map and track in channel_map[arch]:
+        if track in channel_map[arch]:
             releases = channel_map[arch][track]
             for release in releases:
                 if release["risk"] == risk:
                     return release["confinement"]
+
+    return None
+
+
+def get_version(channel_map, track, risk):
+    """Get the version for a channel
+
+    :param channel_map: Channel map list
+    :param track: The track of the channel
+    :param risk: The risk of the channel
+
+    :returns: The version
+    """
+    for arch in channel_map:
+        if track in channel_map[arch]:
+            releases = channel_map[arch][track]
+            for release in releases:
+                if release["risk"] == risk:
+                    return release["version"]
 
     return None
