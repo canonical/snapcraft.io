@@ -34,7 +34,7 @@ jobs:
           name: Run tests with coverage
           command: |
             coverage run  --source=. -m unittest discover tests
-            bash <(curl -s https://codecov.io/bash)
+            bash <(curl -s https://codecov.io/bash) -cF python
   js-lint:
     <<: *defaults
     steps:
@@ -54,7 +54,9 @@ jobs:
           command: yarn
       - run:
           name: Run tests with jest
-          command: yarn run test-js
+          command: |
+            yarn run test-js
+            bash <(curl -s https://codecov.io/bash) -cF javascript
   scss-lint:
     <<: *defaults
     steps:
