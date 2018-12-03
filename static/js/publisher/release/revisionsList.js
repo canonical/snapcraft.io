@@ -8,12 +8,9 @@ import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import { closeHistory } from "./actions/history";
+import { getFilteredReleaseHistory } from "./selectors";
 
-import {
-  getFilteredReleaseHistory,
-  getUnassignedRevisions,
-  getPendingRelease
-} from "./releasesState";
+import { getUnassignedRevisions, getPendingRelease } from "./releasesState";
 
 class RevisionsList extends Component {
   revisionSelectChange(revision) {
@@ -111,9 +108,9 @@ class RevisionsList extends Component {
 
   render() {
     let { showChannels, showArchitectures } = this.props;
-    let filteredRevisions = Object.values(this.props.revisionsMap).reverse();
+    let filteredRevisions = Object.values(this.props.revisions).reverse();
     let title = "Latest revisions";
-    let filters = this.props.revisionsFilters;
+    let filters = this.props.filters;
     let isReleaseHistory = false;
     let pendingRelease = null;
 
@@ -124,7 +121,7 @@ class RevisionsList extends Component {
         showChannels = false;
 
         filteredRevisions = getUnassignedRevisions(
-          this.props.revisionsMap,
+          this.props.revisions,
           filters.arch
         );
       } else {
@@ -134,11 +131,7 @@ class RevisionsList extends Component {
           filters.risk
         }`;
 
-        filteredRevisions = getFilteredReleaseHistory(
-          this.props.releases,
-          this.props.revisionsMap,
-          filters
-        );
+        filteredRevisions = this.props.filteredReleaseHistory;
 
         pendingRelease = getPendingRelease(
           this.props.pendingReleases,
@@ -147,7 +140,7 @@ class RevisionsList extends Component {
         );
 
         if (pendingRelease) {
-          pendingRelease = this.props.revisionsMap[pendingRelease];
+          pendingRelease = this.props.revisions[pendingRelease];
         }
       }
     }
@@ -216,12 +209,11 @@ class RevisionsList extends Component {
 
 RevisionsList.propTypes = {
   // state
-  revisionsMap: PropTypes.object.isRequired,
-  revisionsFilters: PropTypes.object,
-  // TODO:
-  // getFilteredReleaseHistory - can be selector
-  // requires: releases, revisionsMap, filters
-  releases: PropTypes.array.isRequired, // 1: for getFilteredReleaseHistory
+  revisions: PropTypes.object.isRequired,
+  filters: PropTypes.object,
+
+  // computed state (selectors)
+  filteredReleaseHistory: PropTypes.array,
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
@@ -247,9 +239,9 @@ RevisionsList.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    revisionsFilters: state.history.filters,
-    revisionsMap: state.revisions,
-    releases: state.releases
+    filters: state.history.filters,
+    revisions: state.revisions,
+    filteredReleaseHistory: getFilteredReleaseHistory(state)
   };
 };
 
