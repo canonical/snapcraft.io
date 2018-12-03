@@ -9,7 +9,6 @@ import { isInDevmode } from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import { updateRevisions } from "./actions/revisions";
-import { openHistory, closeHistory } from "./actions/history";
 
 import {
   getNextReleasedChannels,
@@ -466,26 +465,6 @@ class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
-  // move to reducer ?
-  toggleHistoryPanel(filters) {
-    const currentFilters = this.props.revisionsFilters;
-    const isHistoryOpen = this.props.isHistoryOpen;
-
-    if (
-      isHistoryOpen &&
-      (filters == currentFilters ||
-        (filters &&
-          currentFilters &&
-          filters.track === currentFilters.track &&
-          filters.arch === currentFilters.arch &&
-          filters.risk === currentFilters.risk))
-    ) {
-      this.props.closeHistoryPanel();
-    } else {
-      this.props.openHistoryPanel(filters);
-    }
-  }
-
   render() {
     const hasDevmodeRevisions = Object.values(this.state.releasedChannels).some(
       archReleases => {
@@ -532,7 +511,6 @@ class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
-          toggleHistoryPanel={this.toggleHistoryPanel.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
         />
       </Fragment>
@@ -550,8 +528,6 @@ ReleasesController.propTypes = {
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
 
-  openHistoryPanel: PropTypes.func,
-  closeHistoryPanel: PropTypes.func,
   updateRevisions: PropTypes.func
 };
 
@@ -565,8 +541,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    openHistoryPanel: filters => dispatch(openHistory(filters)),
-    closeHistoryPanel: () => dispatch(closeHistory()),
     updateRevisions: revisions => dispatch(updateRevisions(revisions))
   };
 };

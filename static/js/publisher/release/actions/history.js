@@ -13,3 +13,21 @@ export function closeHistory() {
     type: CLOSE_HISTORY
   };
 }
+
+export function toggleHistory(filters) {
+  return (dispatch, getState) => {
+    const { history } = getState();
+
+    if (
+      history.isOpen &&
+      history.filters &&
+      filters.track === history.filters.track &&
+      filters.arch === history.filters.arch &&
+      filters.risk === history.filters.risk
+    ) {
+      dispatch(closeHistory());
+    } else {
+      dispatch(openHistory(filters));
+    }
+  };
+}

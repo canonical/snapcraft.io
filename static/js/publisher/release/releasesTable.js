@@ -16,6 +16,8 @@ import HistoryPanel from "./historyPanel";
 
 import { getTrackingChannel, getUnassignedRevisions } from "./releasesState";
 
+import { toggleHistory } from "./actions/history";
+
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
@@ -560,4 +562,13 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ReleasesTable);
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleHistoryPanel: filters => dispatch(toggleHistory(filters))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesTable);
