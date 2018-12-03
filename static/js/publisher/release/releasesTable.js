@@ -340,14 +340,12 @@ class ReleasesTable extends Component {
       <HistoryPanel
         key="history-panel"
         releases={this.props.releases}
-        revisionsFilters={this.props.revisionsFilters}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         pendingReleases={this.props.pendingReleases}
         selectRevision={this.props.selectRevision}
         showArchitectures={!!showAllColumns}
         showChannels={!!showAllColumns}
-        closeHistoryPanel={this.props.closeHistoryPanel}
       />
     );
   }
@@ -527,6 +525,10 @@ class ReleasesTable extends Component {
 ReleasesTable.propTypes = {
   // state
   releases: PropTypes.array.isRequired,
+  isHistoryOpen: PropTypes.bool,
+  revisionsFilters: PropTypes.object,
+
+  // state (non redux)
   revisions: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
@@ -535,9 +537,7 @@ ReleasesTable.propTypes = {
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array,
-  isHistoryOpen: PropTypes.bool,
 
   // actions
   getNextReleasedChannels: PropTypes.func.isRequired,
@@ -549,12 +549,13 @@ ReleasesTable.propTypes = {
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired
+  selectRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
+    revisionsFilters: state.history.filters,
+    isHistoryOpen: state.history.isOpen,
     revisions: state.revisions
   };
 };

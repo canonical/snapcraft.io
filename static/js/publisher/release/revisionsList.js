@@ -7,6 +7,8 @@ import format from "date-fns/format";
 import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
+import { closeHistory } from "./actions/history";
+
 import {
   getFilteredReleaseHistory,
   getUnassignedRevisions,
@@ -214,23 +216,49 @@ class RevisionsList extends Component {
 
 RevisionsList.propTypes = {
   // state
-  releases: PropTypes.array.isRequired,
   revisionsMap: PropTypes.object.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
-  selectedRevisions: PropTypes.array.isRequired,
-  pendingReleases: PropTypes.object.isRequired,
-  showChannels: PropTypes.bool,
-  showArchitectures: PropTypes.bool,
+
   // actions
-  selectRevision: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired
+  closeHistoryPanel: PropTypes.func.isRequired,
+
+  // state (TODO: move to redux)
+  // TODO:
+  // getFilteredReleaseHistory - can be selector
+  // requires: releases, revisionsMap, filters
+  releases: PropTypes.array.isRequired, // 1: for getFilteredReleaseHistory
+
+  // TODO: create selector to list selected architectures (?)
+  releasedChannels: PropTypes.object.isRequired, // 1: check if arch is selected
+
+  // TODO: just move to state
+  selectedRevisions: PropTypes.array.isRequired, // 1: isSelected
+
+  // TODO: just move to state
+  pendingReleases: PropTypes.object.isRequired, // 1: get pending release
+
+  // view props (don't depend on state)
+  showChannels: PropTypes.bool, // ~: render channels column
+  showArchitectures: PropTypes.bool, // 4: render architectures
+
+  // actions
+  selectRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
+    revisionsFilters: state.history.filters,
     revisionsMap: state.revisions
   };
 };
 
-export default connect(mapStateToProps)(RevisionsList);
+const mapDispatchToProps = dispatch => {
+  return {
+    closeHistoryPanel: () => dispatch(closeHistory())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RevisionsList);
