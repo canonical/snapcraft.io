@@ -1,7 +1,11 @@
-from webapp import api
-from webapp.api.exceptions import ApiResponseError, ApiResponseDecodeError
+import os
 
-API_URL = "https://admin.insights.ubuntu.com/wp-json/wp/v2"
+from webapp import api
+from webapp.api.exceptions import ApiResponseDecodeError, ApiResponseError
+
+API_URL = os.getenv(
+    "BLOG_API", "https://admin.insights.ubuntu.com/wp-json/wp/v2"
+)
 TAGS = [2996]  # 'snapcraft.io'
 
 
