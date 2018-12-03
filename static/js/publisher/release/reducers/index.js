@@ -1,16 +1,6 @@
 import { combineReducers } from "redux";
 
-const revisions = function(state = {}, action) {
-  switch (action.type) {
-    case "UPDATE_REVISIONS":
-      return {
-        ...state,
-        ...action.payload.revisions
-      };
-    default:
-      return state;
-  }
-};
+import revisions from "./revisions";
 
 const releases = combineReducers({
   revisions
