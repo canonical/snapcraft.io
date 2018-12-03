@@ -9,6 +9,7 @@ import { isInDevmode } from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import { updateRevisions } from "./actions/revisions";
+import { updateReleases } from "./actions/releases";
 
 import {
   getNextReleasedChannels,
@@ -32,6 +33,7 @@ class ReleasesController extends Component {
     // init redux store
     // TODO: should be done outside component as initial state?
     this.props.updateRevisions(revisionsMap);
+    this.props.updateReleases(this.props.releasesData.releases);
 
     const releasedChannels = getReleaseDataFromChannelMap(
       this.props.channelMapsList,
@@ -48,8 +50,6 @@ class ReleasesController extends Component {
       // released channels contains channel map for each channel in current track
       // also includes 'unassigned' fake channel to show selected unassigned revision
       releasedChannels: releasedChannels,
-      // list of releases returned by API
-      releases: this.props.releasesData.releases,
       // list of all available tracks
       tracks: tracks,
       // list of architectures released to (or selected to be released to)
@@ -76,9 +76,7 @@ class ReleasesController extends Component {
     initReleasesData(revisionsMap, releasesData.releases);
 
     this.props.updateRevisions(revisionsMap);
-    this.setState({
-      releases: releasesData.releases
-    });
+    this.props.updateReleases(releasesData.releases);
   }
 
   selectRevision(revision) {
@@ -501,7 +499,6 @@ class ReleasesController extends Component {
         <ReleasesTable
           // map all the state into props
           {...this.state}
-          revisionsFilters={this.props.revisionsFilters}
           // actions
           getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
@@ -528,6 +525,7 @@ ReleasesController.propTypes = {
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
 
+  updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func
 };
 
@@ -541,7 +539,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateRevisions: revisions => dispatch(updateRevisions(revisions))
+    updateRevisions: revisions => dispatch(updateRevisions(revisions)),
+    updateReleases: releases => dispatch(updateReleases(releases))
   };
 };
 

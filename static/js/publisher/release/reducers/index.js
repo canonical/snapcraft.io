@@ -1,11 +1,13 @@
 import { combineReducers } from "redux";
 
-import revisions from "./revisions";
 import history from "./history";
+import releases from "./releases";
+import revisions from "./revisions";
 
-const releases = combineReducers({
+const releasesReducers = combineReducers({
   history,
-  revisions
+  revisions,
+  releases
 });
 
-export default releases;
+export default releasesReducers;

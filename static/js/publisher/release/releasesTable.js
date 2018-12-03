@@ -341,7 +341,6 @@ class ReleasesTable extends Component {
     return (
       <HistoryPanel
         key="history-panel"
-        releases={this.props.releases}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         pendingReleases={this.props.pendingReleases}
@@ -526,12 +525,12 @@ class ReleasesTable extends Component {
 
 ReleasesTable.propTypes = {
   // state
+  revisions: PropTypes.object.isRequired,
   releases: PropTypes.array.isRequired,
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
 
   // state (non redux)
-  revisions: PropTypes.object.isRequired,
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
@@ -558,7 +557,8 @@ const mapStateToProps = state => {
   return {
     revisionsFilters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
-    revisions: state.revisions
+    revisions: state.revisions,
+    releases: state.releases
   };
 };
 

@@ -218,15 +218,15 @@ RevisionsList.propTypes = {
   // state
   revisionsMap: PropTypes.object.isRequired,
   revisionsFilters: PropTypes.object,
+  // TODO:
+  // getFilteredReleaseHistory - can be selector
+  // requires: releases, revisionsMap, filters
+  releases: PropTypes.array.isRequired, // 1: for getFilteredReleaseHistory
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
 
   // state (TODO: move to redux)
-  // TODO:
-  // getFilteredReleaseHistory - can be selector
-  // requires: releases, revisionsMap, filters
-  releases: PropTypes.array.isRequired, // 1: for getFilteredReleaseHistory
 
   // TODO: create selector to list selected architectures (?)
   releasedChannels: PropTypes.object.isRequired, // 1: check if arch is selected
@@ -248,7 +248,8 @@ RevisionsList.propTypes = {
 const mapStateToProps = state => {
   return {
     revisionsFilters: state.history.filters,
-    revisionsMap: state.revisions
+    revisionsMap: state.revisions,
+    releases: state.releases
   };
 };
 
