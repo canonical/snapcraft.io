@@ -9,7 +9,11 @@ import { UNASSIGNED } from "./constants";
 
 import { closeHistory } from "./actions/history";
 import { selectRevision } from "./actions/channelMap";
-import { getFilteredReleaseHistory, getSelectedRevisions } from "./selectors";
+import {
+  getFilteredReleaseHistory,
+  getSelectedRevisions,
+  getSelectedArchitectures
+} from "./selectors";
 
 import { getUnassignedRevisions, getPendingRelease } from "./releasesState";
 
@@ -18,7 +22,7 @@ class RevisionsList extends Component {
     this.props.selectRevision(revision);
   }
 
-  renderRow(revision, isSelectable, showChannels, isPending) {
+  renderRow(revision, isSelectable, showAllColumns, isPending) {
     const revisionDate = revision.release
       ? new Date(revision.release.when)
       : new Date(revision.created_at);
@@ -29,10 +33,8 @@ class RevisionsList extends Component {
     const isDisabled =
       isSelectable &&
       !isSelected &&
-      revision.architectures.some(
-        arch =>
-          this.props.releasedChannels[UNASSIGNED] &&
-          this.props.releasedChannels[UNASSIGNED][arch]
+      revision.architectures.some(arch =>
+        this.props.selectedArchitectures.includes(arch)
       );
 
     const id = `revision-check-${revision.revision}`;
@@ -69,10 +71,10 @@ class RevisionsList extends Component {
           <DevmodeIcon revision={revision} showTooltip={true} />
         </td>
         <td>{revision.version}</td>
-        {this.props.showArchitectures && (
+        {this.props.showAllColumns && (
           <td>{revision.architectures.join(", ")}</td>
         )}
-        {showChannels && <td>{revision.channels.join(", ")}</td>}
+        {showAllColumns && <td>{revision.channels.join(", ")}</td>}
         <td className="u-align--right">
           {isPending ? (
             <em>pending release</em>
@@ -96,9 +98,9 @@ class RevisionsList extends Component {
     );
   }
 
-  renderRows(revisions, isSelectable, showChannels) {
+  renderRows(revisions, isSelectable, showAllColumns) {
     return revisions.map(revision => {
-      return this.renderRow(revision, isSelectable, showChannels);
+      return this.renderRow(revision, isSelectable, showAllColumns);
     });
   }
 
@@ -108,7 +110,7 @@ class RevisionsList extends Component {
   }
 
   render() {
-    let { showChannels, showArchitectures } = this.props;
+    let { showAllColumns } = this.props;
     let filteredRevisions = Object.values(this.props.revisions).reverse();
     let title = "Latest revisions";
     let filters = this.props.filters;
@@ -118,8 +120,6 @@ class RevisionsList extends Component {
     if (filters && filters.arch) {
       if (filters.risk === UNASSIGNED) {
         title = `Unreleased revisions: ${filters.arch}`;
-        // when listing 'unassigned' revisions show revisions with no channels
-        showChannels = false;
 
         filteredRevisions = getUnassignedRevisions(
           this.props.revisions,
@@ -169,12 +169,12 @@ class RevisionsList extends Component {
               </th>
               <th width="20px" />
               <th scope="col">Version</th>
-              {showArchitectures && (
+              {showAllColumns && (
                 <th width="120px" scope="col">
                   Architecture
                 </th>
               )}
-              {showChannels && <th scope="col">Channels</th>}
+              {showAllColumns && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
@@ -185,14 +185,14 @@ class RevisionsList extends Component {
               this.renderRow(
                 pendingRelease,
                 !isReleaseHistory,
-                showChannels,
+                showAllColumns,
                 true
               )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
                 filteredRevisions,
                 !isReleaseHistory,
-                showChannels
+                showAllColumns
               )
             ) : (
               <tr>
@@ -212,32 +212,29 @@ RevisionsList.propTypes = {
   // state
   revisions: PropTypes.object.isRequired,
   filters: PropTypes.object,
-  // TODO: create selector to list selected architectures (?)
-  releasedChannels: PropTypes.object.isRequired, // 1: check if arch is selected
 
   // computed state (selectors)
+  showAllColumns: PropTypes.bool,
   filteredReleaseHistory: PropTypes.array,
   selectedRevisions: PropTypes.array.isRequired,
+  selectedArchitectures: PropTypes.array.isRequired,
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
   selectRevision: PropTypes.func.isRequired,
 
   // state (TODO: move to redux)
-  pendingReleases: PropTypes.object.isRequired, // 1: get pending release
-
-  // view props (don't depend on state)
-  showChannels: PropTypes.bool, // ~: render channels column
-  showArchitectures: PropTypes.bool // 4: render architectures
+  pendingReleases: PropTypes.object.isRequired // 1: get pending release
 };
 
 const mapStateToProps = state => {
   return {
+    showAllColumns: !state.history.filters,
     filters: state.history.filters,
     revisions: state.revisions,
-    releasedChannels: state.channelMap,
     selectedRevisions: getSelectedRevisions(state),
-    filteredReleaseHistory: getFilteredReleaseHistory(state)
+    filteredReleaseHistory: getFilteredReleaseHistory(state),
+    selectedArchitectures: getSelectedArchitectures(state)
   };
 };
 

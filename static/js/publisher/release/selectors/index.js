@@ -48,12 +48,21 @@ export function getSelectedRevisions(state) {
   let selectedRevisions = [];
 
   if (state.channelMap[UNASSIGNED]) {
-    selectedRevisions = Object.keys(state.channelMap[UNASSIGNED]).map(
-      arch => state.channelMap[UNASSIGNED][arch].revision
+    selectedRevisions = Object.values(state.channelMap[UNASSIGNED]).map(
+      revision => revision.revision
     );
   }
 
   return selectedRevisions;
+}
+
+// returns list of selected architectures
+export function getSelectedArchitectures(state) {
+  if (state.channelMap[UNASSIGNED]) {
+    return Object.keys(state.channelMap[UNASSIGNED]);
+  }
+
+  return [];
 }
 
 // return true if there are any devmode revisions in the state

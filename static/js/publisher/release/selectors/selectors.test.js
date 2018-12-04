@@ -2,6 +2,7 @@ import { UNASSIGNED } from "../constants";
 import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
+  getSelectedArchitectures,
   hasDevmodeRevisions
 } from "./index";
 
@@ -160,6 +161,31 @@ describe("getSelectedRevisions", () => {
 
   it("should return list of selected revision ids", () => {
     expect(getSelectedRevisions(stateWithSelectedRevisions)).toEqual([1, 2]);
+  });
+});
+
+describe("getSelectedArchitectures", () => {
+  const initialState = reducers(undefined, {});
+
+  const stateWithSelectedRevisions = {
+    ...initialState,
+    channelMap: {
+      [UNASSIGNED]: {
+        abc42: { revision: 1, version: "1" },
+        test64: { revision: 2, version: "2" }
+      }
+    }
+  };
+
+  it("should be empty for initial state", () => {
+    expect(getSelectedArchitectures(initialState)).toHaveLength(0);
+  });
+
+  it("should return list of selected revision ids", () => {
+    expect(getSelectedArchitectures(stateWithSelectedRevisions)).toEqual([
+      "abc42",
+      "test64"
+    ]);
   });
 });
 

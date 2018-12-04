@@ -8,11 +8,7 @@ export default class HistoryPanel extends Component {
     return (
       <div className="p-history-panel">
         <div className="p-strip is-shallow">
-          <RevisionsList
-            pendingReleases={this.props.pendingReleases}
-            showChannels={this.props.showChannels}
-            showArchitectures={this.props.showArchitectures}
-          />
+          <RevisionsList pendingReleases={this.props.pendingReleases} />
         </div>
       </div>
     );
@@ -20,8 +16,6 @@ export default class HistoryPanel extends Component {
 }
 
 HistoryPanel.propTypes = {
-  // state
-  pendingReleases: PropTypes.object.isRequired,
-  showChannels: PropTypes.bool,
-  showArchitectures: PropTypes.bool
+  // state (non-redux)
+  pendingReleases: PropTypes.object.isRequired
 };
