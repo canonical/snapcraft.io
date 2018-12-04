@@ -1,4 +1,9 @@
-import { getFilteredReleaseHistory } from "./index";
+import { UNASSIGNED } from "../constants";
+import {
+  getFilteredReleaseHistory,
+  getSelectedRevisions,
+  hasDevmodeRevisions
+} from "./index";
 
 import reducers from "../reducers";
 
@@ -133,5 +138,79 @@ describe("getFilteredReleaseHistory", () => {
       new Set(filteredRevisions).size === filteredRevisions.length;
 
     expect(isUnique).toBe(true);
+  });
+});
+
+describe("getSelectedRevisions", () => {
+  const initialState = reducers(undefined, {});
+
+  const stateWithSelectedRevisions = {
+    ...initialState,
+    channelMap: {
+      [UNASSIGNED]: {
+        abc42: { revision: 1, version: "1" },
+        test64: { revision: 2, version: "2" }
+      }
+    }
+  };
+
+  it("should be empty for initial state", () => {
+    expect(getSelectedRevisions(initialState)).toHaveLength(0);
+  });
+
+  it("should return list of selected revision ids", () => {
+    expect(getSelectedRevisions(stateWithSelectedRevisions)).toEqual([1, 2]);
+  });
+});
+
+describe("hasDevmodeRevisions", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithReleasedRevisions = {
+    ...initialState,
+    channelMap: {
+      "test/edge": {
+        abc42: { revision: 1, version: "1" },
+        test64: { revision: 2, version: "2" },
+        armf: { revision: 3, version: "3" }
+      }
+    }
+  };
+
+  const stateWithConfinementDevmode = {
+    ...initialState,
+    channelMap: {
+      "test/edge": {
+        abc42: { revision: 1, version: "1" },
+        test64: { revision: 2, version: "2", confinement: "devmode" },
+        armf: { revision: 3, version: "3" }
+      }
+    }
+  };
+
+  const stateWithGradeDevel = {
+    ...initialState,
+    channelMap: {
+      "test/edge": {
+        abc42: { revision: 1, version: "1" },
+        test64: { revision: 2, version: "2", grade: "devel" },
+        armf: { revision: 3, version: "3" }
+      }
+    }
+  };
+
+  it("should be false for initial empty state", () => {
+    expect(hasDevmodeRevisions(initialState)).toBe(false);
+  });
+
+  it("should be false if none of released revisions is in devmode or devel grade", () => {
+    expect(hasDevmodeRevisions(stateWithReleasedRevisions)).toBe(false);
+  });
+
+  it("should be true if any revision has devmode confinement", () => {
+    expect(hasDevmodeRevisions(stateWithConfinementDevmode)).toBe(true);
+  });
+
+  it("should be true if any revision has devel grade", () => {
+    expect(hasDevmodeRevisions(stateWithGradeDevel)).toBe(true);
   });
 });

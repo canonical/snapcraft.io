@@ -56,6 +56,7 @@ export function getSelectedRevisions(state) {
   return selectedRevisions;
 }
 
+// return true if there are any devmode revisions in the state
 export function hasDevmodeRevisions(state) {
   return Object.values(state.channelMap).some(archReleases => {
     return Object.values(archReleases).some(isInDevmode);

@@ -224,6 +224,7 @@ RevisionsList.propTypes = {
   releasedChannels: PropTypes.object.isRequired, // 1: check if arch is selected
 
   // TODO: just move to state
+  // calculated from releasedChannels (so can be selector)
   selectedRevisions: PropTypes.array.isRequired, // 1: isSelected
 
   // TODO: just move to state

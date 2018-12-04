@@ -48,6 +48,11 @@ function releaseRevision(state, revision, channel) {
 }
 
 function closeChannel(state, channel) {
+  // if channel is already closed do nothing
+  if (!state[channel]) {
+    return state;
+  }
+
   state = { ...state };
   delete state[channel];
 
