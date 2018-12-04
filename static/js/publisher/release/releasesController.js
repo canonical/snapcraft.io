@@ -9,6 +9,7 @@ import { isInDevmode } from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import { updateRevisions } from "./actions/revisions";
+import { updateReleases } from "./actions/releases";
 
 import {
   getNextReleasedChannels,
@@ -32,6 +33,7 @@ class ReleasesController extends Component {
     // init redux store
     // TODO: should be done outside component as initial state?
     this.props.updateRevisions(revisionsMap);
+    this.props.updateReleases(this.props.releasesData.releases);
 
     const releasedChannels = getReleaseDataFromChannelMap(
       this.props.channelMapsList,
@@ -48,8 +50,6 @@ class ReleasesController extends Component {
       // released channels contains channel map for each channel in current track
       // also includes 'unassigned' fake channel to show selected unassigned revision
       releasedChannels: releasedChannels,
-      // list of releases returned by API
-      releases: this.props.releasesData.releases,
       // list of all available tracks
       tracks: tracks,
       // list of architectures released to (or selected to be released to)
@@ -66,13 +66,7 @@ class ReleasesController extends Component {
       pendingReleases: {},
       pendingCloses: [],
       // list of selected revisions, to know which ones to render selected
-      selectedRevisions: [],
-      // filters for revisions list
-      // {
-      //   arch: 'architecture'
-      // }
-      revisionsFilters: null,
-      isHistoryOpen: false
+      selectedRevisions: []
     };
   }
 
@@ -82,9 +76,7 @@ class ReleasesController extends Component {
     initReleasesData(revisionsMap, releasesData.releases);
 
     this.props.updateRevisions(revisionsMap);
-    this.setState({
-      releases: releasesData.releases
-    });
+    this.props.updateReleases(releasesData.releases);
   }
 
   selectRevision(revision) {
@@ -471,39 +463,6 @@ class ReleasesController extends Component {
       .then(() => this.clearPendingReleases());
   }
 
-  toggleHistoryPanel(filters) {
-    const currentFilters = this.state.revisionsFilters;
-    const isHistoryOpen = this.state.isHistoryOpen;
-
-    if (
-      isHistoryOpen &&
-      (filters == currentFilters ||
-        (filters &&
-          currentFilters &&
-          filters.track === currentFilters.track &&
-          filters.arch === currentFilters.arch &&
-          filters.risk === currentFilters.risk))
-    ) {
-      this.closeHistoryPanel();
-    } else {
-      this.openHistoryPanel(filters);
-    }
-  }
-
-  openHistoryPanel(filters) {
-    this.setState({
-      revisionsFilters: filters,
-      isHistoryOpen: true
-    });
-  }
-
-  closeHistoryPanel() {
-    this.setState({
-      revisionsFilters: null,
-      isHistoryOpen: false
-    });
-  }
-
   render() {
     const hasDevmodeRevisions = Object.values(this.state.releasedChannels).some(
       archReleases => {
@@ -549,9 +508,7 @@ class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
-          toggleHistoryPanel={this.toggleHistoryPanel.bind(this)}
           selectRevision={this.selectRevision.bind(this)}
-          closeHistoryPanel={this.closeHistoryPanel.bind(this)}
         />
       </Fragment>
     );
@@ -565,19 +522,25 @@ ReleasesController.propTypes = {
   options: PropTypes.object.isRequired,
 
   revisions: PropTypes.object,
-  state: PropTypes.object,
+  isHistoryOpen: PropTypes.bool,
+  revisionsFilters: PropTypes.object,
+
+  updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func
 };
 
 const mapStateToProps = state => {
   return {
+    isHistoryOpen: state.history.isOpen,
+    revisionsFilters: state.history.filters,
     revisions: state.revisions
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateRevisions: revisions => dispatch(updateRevisions(revisions))
+    updateRevisions: revisions => dispatch(updateRevisions(revisions)),
+    updateReleases: releases => dispatch(updateReleases(releases))
   };
 };
 

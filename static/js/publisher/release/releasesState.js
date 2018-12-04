@@ -104,44 +104,6 @@ function getArchsFromRevisionsMap(revisionsMap) {
   return archs.sort();
 }
 
-function getFilteredReleaseHistory(releases, revisionsMap, filters) {
-  return (
-    releases
-      // only releases of revisions (ignore closing channels)
-      .filter(release => release.revision)
-      // only releases in given architecture
-      .filter(release => {
-        return filters && filters.arch
-          ? release.architecture === filters.arch
-          : true;
-      })
-      // only releases in given track
-      .filter(release => {
-        return filters && filters.track
-          ? release.track === filters.track
-          : true;
-      })
-      // only releases in given risk
-      .filter(release => {
-        return filters && filters.risk ? release.risk === filters.risk : true;
-      })
-      // before we have branches support we ignore any releases to branches
-      .filter(release => !release.branch)
-      // only one latest release of every revision
-      .filter((release, index, all) => {
-        return all.findIndex(r => r.revision === release.revision) === index;
-      })
-      // map release history to revisions
-      .map(release => {
-        const revision = JSON.parse(
-          JSON.stringify(revisionsMap[release.revision])
-        );
-        revision.release = release;
-        return revision;
-      })
-  );
-}
-
 // for channel without release get next (less risk) channel with a release
 function getTrackingChannel(releasedChannels, track, risk, arch) {
   let tracking = null;
@@ -245,7 +207,6 @@ export {
   getPendingRelease,
   getUnassignedRevisions,
   getArchsFromRevisionsMap,
-  getFilteredReleaseHistory,
   getTracksFromChannelMap,
   getTrackingChannel,
   getRevisionsMap,

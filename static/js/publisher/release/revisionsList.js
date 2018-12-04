@@ -7,11 +7,10 @@ import format from "date-fns/format";
 import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
-import {
-  getFilteredReleaseHistory,
-  getUnassignedRevisions,
-  getPendingRelease
-} from "./releasesState";
+import { closeHistory } from "./actions/history";
+import { getFilteredReleaseHistory } from "./selectors";
+
+import { getUnassignedRevisions, getPendingRelease } from "./releasesState";
 
 class RevisionsList extends Component {
   revisionSelectChange(revision) {
@@ -109,9 +108,9 @@ class RevisionsList extends Component {
 
   render() {
     let { showChannels, showArchitectures } = this.props;
-    let filteredRevisions = Object.values(this.props.revisionsMap).reverse();
+    let filteredRevisions = Object.values(this.props.revisions).reverse();
     let title = "Latest revisions";
-    let filters = this.props.revisionsFilters;
+    let filters = this.props.filters;
     let isReleaseHistory = false;
     let pendingRelease = null;
 
@@ -122,7 +121,7 @@ class RevisionsList extends Component {
         showChannels = false;
 
         filteredRevisions = getUnassignedRevisions(
-          this.props.revisionsMap,
+          this.props.revisions,
           filters.arch
         );
       } else {
@@ -132,11 +131,7 @@ class RevisionsList extends Component {
           filters.risk
         }`;
 
-        filteredRevisions = getFilteredReleaseHistory(
-          this.props.releases,
-          this.props.revisionsMap,
-          filters
-        );
+        filteredRevisions = this.props.filteredReleaseHistory;
 
         pendingRelease = getPendingRelease(
           this.props.pendingReleases,
@@ -145,7 +140,7 @@ class RevisionsList extends Component {
         );
 
         if (pendingRelease) {
-          pendingRelease = this.props.revisionsMap[pendingRelease];
+          pendingRelease = this.props.revisions[pendingRelease];
         }
       }
     }
@@ -214,23 +209,49 @@ class RevisionsList extends Component {
 
 RevisionsList.propTypes = {
   // state
-  releases: PropTypes.array.isRequired,
-  revisionsMap: PropTypes.object.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
-  revisionsFilters: PropTypes.object,
-  selectedRevisions: PropTypes.array.isRequired,
-  pendingReleases: PropTypes.object.isRequired,
-  showChannels: PropTypes.bool,
-  showArchitectures: PropTypes.bool,
+  revisions: PropTypes.object.isRequired,
+  filters: PropTypes.object,
+
+  // computed state (selectors)
+  filteredReleaseHistory: PropTypes.array,
+
   // actions
-  selectRevision: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired
+  closeHistoryPanel: PropTypes.func.isRequired,
+
+  // state (TODO: move to redux)
+
+  // TODO: create selector to list selected architectures (?)
+  releasedChannels: PropTypes.object.isRequired, // 1: check if arch is selected
+
+  // TODO: just move to state
+  selectedRevisions: PropTypes.array.isRequired, // 1: isSelected
+
+  // TODO: just move to state
+  pendingReleases: PropTypes.object.isRequired, // 1: get pending release
+
+  // view props (don't depend on state)
+  showChannels: PropTypes.bool, // ~: render channels column
+  showArchitectures: PropTypes.bool, // 4: render architectures
+
+  // actions
+  selectRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    revisionsMap: state.revisions
+    filters: state.history.filters,
+    revisions: state.revisions,
+    filteredReleaseHistory: getFilteredReleaseHistory(state)
   };
 };
 
-export default connect(mapStateToProps)(RevisionsList);
+const mapDispatchToProps = dispatch => {
+  return {
+    closeHistoryPanel: () => dispatch(closeHistory())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RevisionsList);

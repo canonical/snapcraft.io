@@ -16,6 +16,8 @@ import HistoryPanel from "./historyPanel";
 
 import { getTrackingChannel, getUnassignedRevisions } from "./releasesState";
 
+import { toggleHistory } from "./actions/history";
+
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
@@ -339,15 +341,12 @@ class ReleasesTable extends Component {
     return (
       <HistoryPanel
         key="history-panel"
-        releases={this.props.releases}
-        revisionsFilters={this.props.revisionsFilters}
         releasedChannels={this.props.releasedChannels}
         selectedRevisions={this.props.selectedRevisions}
         pendingReleases={this.props.pendingReleases}
         selectRevision={this.props.selectRevision}
         showArchitectures={!!showAllColumns}
         showChannels={!!showAllColumns}
-        closeHistoryPanel={this.props.closeHistoryPanel}
       />
     );
   }
@@ -526,8 +525,12 @@ class ReleasesTable extends Component {
 
 ReleasesTable.propTypes = {
   // state
-  releases: PropTypes.array.isRequired,
   revisions: PropTypes.object.isRequired,
+  releases: PropTypes.array.isRequired,
+  isHistoryOpen: PropTypes.bool,
+  revisionsFilters: PropTypes.object,
+
+  // state (non redux)
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
@@ -535,9 +538,7 @@ ReleasesTable.propTypes = {
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  revisionsFilters: PropTypes.object,
   selectedRevisions: PropTypes.array,
-  isHistoryOpen: PropTypes.bool,
 
   // actions
   getNextReleasedChannels: PropTypes.func.isRequired,
@@ -549,14 +550,25 @@ ReleasesTable.propTypes = {
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired
+  selectRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    revisions: state.revisions
+    revisionsFilters: state.history.filters,
+    isHistoryOpen: state.history.isOpen,
+    revisions: state.revisions,
+    releases: state.releases
   };
 };
 
-export default connect(mapStateToProps)(ReleasesTable);
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleHistoryPanel: filters => dispatch(toggleHistory(filters))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesTable);
