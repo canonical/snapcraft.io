@@ -58,6 +58,23 @@ describe("history actions", () => {
       });
     });
 
+    describe("when history with empty filters is open", () => {
+      it("should dispatch action to close history panel", () => {
+        const store = mockStore({
+          history: {
+            isOpen: true,
+            filters: null
+          }
+        });
+
+        store.dispatch(toggleHistory());
+
+        const actions = store.getActions();
+        const expectedAction = closeHistory();
+        expect(actions).toEqual([expectedAction]);
+      });
+    });
+
     describe("when history with different filters is open", () => {
       it("should dispatch action to open history panel with new filters", () => {
         const store = mockStore({
