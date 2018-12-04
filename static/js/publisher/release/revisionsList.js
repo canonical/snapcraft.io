@@ -8,7 +8,8 @@ import DevmodeIcon from "./devmodeIcon";
 import { UNASSIGNED } from "./constants";
 
 import { closeHistory } from "./actions/history";
-import { getFilteredReleaseHistory } from "./selectors";
+import { selectRevision } from "./actions/channelMap";
+import { getFilteredReleaseHistory, getSelectedRevisions } from "./selectors";
 
 import { getUnassignedRevisions, getPendingRelease } from "./releasesState";
 
@@ -211,44 +212,39 @@ RevisionsList.propTypes = {
   // state
   revisions: PropTypes.object.isRequired,
   filters: PropTypes.object,
-
-  // computed state (selectors)
-  filteredReleaseHistory: PropTypes.array,
-
-  // actions
-  closeHistoryPanel: PropTypes.func.isRequired,
-
-  // state (TODO: move to redux)
-
   // TODO: create selector to list selected architectures (?)
   releasedChannels: PropTypes.object.isRequired, // 1: check if arch is selected
 
-  // TODO: just move to state
-  // calculated from releasedChannels (so can be selector)
-  selectedRevisions: PropTypes.array.isRequired, // 1: isSelected
+  // computed state (selectors)
+  filteredReleaseHistory: PropTypes.array,
+  selectedRevisions: PropTypes.array.isRequired,
 
-  // TODO: just move to state
+  // actions
+  closeHistoryPanel: PropTypes.func.isRequired,
+  selectRevision: PropTypes.func.isRequired,
+
+  // state (TODO: move to redux)
   pendingReleases: PropTypes.object.isRequired, // 1: get pending release
 
   // view props (don't depend on state)
   showChannels: PropTypes.bool, // ~: render channels column
-  showArchitectures: PropTypes.bool, // 4: render architectures
-
-  // actions
-  selectRevision: PropTypes.func.isRequired
+  showArchitectures: PropTypes.bool // 4: render architectures
 };
 
 const mapStateToProps = state => {
   return {
     filters: state.history.filters,
     revisions: state.revisions,
+    releasedChannels: state.channelMap,
+    selectedRevisions: getSelectedRevisions(state),
     filteredReleaseHistory: getFilteredReleaseHistory(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    closeHistoryPanel: () => dispatch(closeHistory())
+    closeHistoryPanel: () => dispatch(closeHistory()),
+    selectRevision: revision => dispatch(selectRevision(revision))
   };
 };
 

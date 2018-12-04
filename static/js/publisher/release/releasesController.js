@@ -14,7 +14,7 @@ import {
   releaseRevisionSuccess,
   closeChannelSuccess
 } from "./actions/channelMap";
-import { getSelectedRevisions, hasDevmodeRevisions } from "./selectors";
+import { hasDevmodeRevisions } from "./selectors";
 
 import {
   getNextReleasedChannels,
@@ -433,9 +433,6 @@ class ReleasesController extends Component {
         <ReleasesTable
           // map all the state into props
           {...this.state}
-          // TODO:
-          releasedChannels={this.props.releasedChannels}
-          selectedRevisions={this.props.selectedRevisions}
           // actions
           getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
@@ -445,8 +442,6 @@ class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
-          // TODO:
-          selectRevision={this.props.selectRevision}
         />
       </Fragment>
     );
@@ -463,7 +458,6 @@ ReleasesController.propTypes = {
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
   releasedChannels: PropTypes.object,
-  selectedRevisions: PropTypes.array,
   hasDevmodeRevisions: PropTypes.bool,
 
   closeChannelSuccess: PropTypes.func,
@@ -480,7 +474,6 @@ const mapStateToProps = state => {
     revisionsFilters: state.history.filters,
     revisions: state.revisions,
     releasedChannels: state.channelMap,
-    selectedRevisions: getSelectedRevisions(state),
     hasDevmodeRevisions: hasDevmodeRevisions(state)
   };
 };

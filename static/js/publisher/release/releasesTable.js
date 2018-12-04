@@ -341,10 +341,7 @@ class ReleasesTable extends Component {
     return (
       <HistoryPanel
         key="history-panel"
-        releasedChannels={this.props.releasedChannels}
-        selectedRevisions={this.props.selectedRevisions}
         pendingReleases={this.props.pendingReleases}
-        selectRevision={this.props.selectRevision}
         showArchitectures={!!showAllColumns}
         showChannels={!!showAllColumns}
       />
@@ -529,18 +526,20 @@ ReleasesTable.propTypes = {
   releases: PropTypes.array.isRequired,
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
+  releasedChannels: PropTypes.object.isRequired,
+
+  // actions
+  toggleHistoryPanel: PropTypes.func.isRequired,
 
   // state (non redux)
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  selectedRevisions: PropTypes.array,
 
-  // actions
+  // actions (non redux)
   getNextReleasedChannels: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
@@ -548,9 +547,7 @@ ReleasesTable.propTypes = {
   promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func.isRequired,
-  toggleHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired
+  closeChannel: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -558,7 +555,8 @@ const mapStateToProps = state => {
     revisionsFilters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
     revisions: state.revisions,
-    releases: state.releases
+    releases: state.releases,
+    releasedChannels: state.channelMap
   };
 };
 
