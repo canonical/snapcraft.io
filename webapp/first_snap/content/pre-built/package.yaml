@@ -8,10 +8,11 @@ metadata: |
   version: 4.2.0
   summary: Cross-Platform Benchmark
   description: |
-    Geekbench 4 measures your system's power and tells you whether your
-    computer is ready to roar. How strong is your mobile device or desktop
-    computer? How will it perform when push comes to crunch? These are the
-    questions that Geekbench can answer.
+    Geekbench 4 measures your system's power and tells
+    you whether your computer is ready to roar. How
+    strong is your mobile device or desktop computer?
+    How will it perform when push comes to crunch?
+    These are the questions that Geekbench can answer.
 explain:
   metadata:
     - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
