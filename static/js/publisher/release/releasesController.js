@@ -5,11 +5,16 @@ import "whatwg-fetch";
 
 import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
-import { isInDevmode } from "./devmodeIcon";
-import { UNASSIGNED } from "./constants";
 
 import { updateRevisions } from "./actions/revisions";
 import { updateReleases } from "./actions/releases";
+import {
+  initChannelMap,
+  selectRevision,
+  releaseRevisionSuccess,
+  closeChannelSuccess
+} from "./actions/channelMap";
+import { getSelectedRevisions, hasDevmodeRevisions } from "./selectors";
 
 import {
   getNextReleasedChannels,
@@ -34,10 +39,8 @@ class ReleasesController extends Component {
     // TODO: should be done outside component as initial state?
     this.props.updateRevisions(revisionsMap);
     this.props.updateReleases(this.props.releasesData.releases);
-
-    const releasedChannels = getReleaseDataFromChannelMap(
-      this.props.channelMapsList,
-      revisionsMap
+    this.props.initChannelMap(
+      getReleaseDataFromChannelMap(this.props.channelMapsList, revisionsMap)
     );
 
     const tracks = getTracksFromChannelMap(this.props.channelMapsList);
@@ -47,9 +50,6 @@ class ReleasesController extends Component {
       currentTrack: this.props.options.defaultTrack || "latest",
       error: null,
       isLoading: false,
-      // released channels contains channel map for each channel in current track
-      // also includes 'unassigned' fake channel to show selected unassigned revision
-      releasedChannels: releasedChannels,
       // list of all available tracks
       tracks: tracks,
       // list of architectures released to (or selected to be released to)
@@ -64,9 +64,7 @@ class ReleasesController extends Component {
       //  }
       // }
       pendingReleases: {},
-      pendingCloses: [],
-      // list of selected revisions, to know which ones to render selected
-      selectedRevisions: []
+      pendingCloses: []
     };
   }
 
@@ -79,45 +77,15 @@ class ReleasesController extends Component {
     this.props.updateReleases(releasesData.releases);
   }
 
-  selectRevision(revision) {
-    this.setState(state => {
-      const releasedChannels = state.releasedChannels;
-
-      // TODO: support multiple archs
-      const arch = revision.architectures[0];
-
-      if (!releasedChannels[UNASSIGNED]) {
-        releasedChannels[UNASSIGNED] = {};
-      }
-
-      if (
-        releasedChannels[UNASSIGNED][arch] &&
-        releasedChannels[UNASSIGNED][arch].revision === revision.revision
-      ) {
-        delete releasedChannels[UNASSIGNED][arch];
-      } else {
-        releasedChannels[UNASSIGNED][arch] = revision;
-      }
-
-      const selectedRevisions = Object.keys(releasedChannels[UNASSIGNED]).map(
-        arch => releasedChannels[UNASSIGNED][arch].revision
-      );
-
-      return {
-        selectedRevisions,
-        releasedChannels
-      };
-    });
-  }
-
   setCurrentTrack(track) {
     this.setState({ currentTrack: track });
   }
 
   // get channel map data updated with any pending releases
+  // TODO: move to state/selector (when pendingReleases are moved)
   getNextReleasedChannels() {
     return getNextReleasedChannels(
-      this.state.releasedChannels,
+      this.props.releasedChannels,
       this.state.pendingReleases
     );
   }
@@ -166,10 +134,11 @@ class ReleasesController extends Component {
   promoteRevision(revision, channel) {
     this.setState(state => {
       const { pendingReleases } = state;
-      const releasedChannels = getNextReleasedChannels(
-        this.state.releasedChannels,
+      const releasedChannels = this.getNextReleasedChannels(
+        this.props.releasedChannels,
         pendingReleases
       );
+
       // compare given revision with released revisions in this arch and channel
       const isAlreadyReleased = revision.architectures.every(arch => {
         const releasedRevision =
@@ -299,54 +268,33 @@ class ReleasesController extends Component {
   // TODO: move inside of this function out
   handleReleaseResponse(json, release) {
     if (json.success) {
-      this.setState(state => {
-        const { revisions } = this.props;
-        const releasedChannels = state.releasedChannels;
+      const { revisions } = this.props;
 
-        // update releasedChannels based on channel map from the response
-        json.channel_map.forEach(map => {
-          if (map.revision) {
-            let revision;
+      // update channel map based on the response
+      json.channel_map.forEach(map => {
+        if (map.revision) {
+          let revision;
 
-            if (map.revision === +release.id) {
-              // release.id is a string so turn it into a number for comparison
-              revision = release.revision;
-            } else if (revisions[map.revision]) {
-              revision = revisions[map.revision];
-            } else {
-              revision = {
-                revision: map.revision,
-                version: map.version,
-                architectures: release.revision.architectures
-              };
-            }
-
-            let channel = map.channel;
-            if (channel.indexOf("/") === -1) {
-              channel = `latest/${channel}`;
-            }
-
-            if (!releasedChannels[channel]) {
-              releasedChannels[channel] = {};
-            }
-
-            revision.architectures.forEach(arch => {
-              const currentlyReleased = releasedChannels[channel][arch];
-
-              // only update revision in channel map if it changed since last time
-              if (
-                !currentlyReleased ||
-                currentlyReleased.revision !== revision.revision
-              ) {
-                releasedChannels[channel][arch] = revision;
-              }
-            });
+          if (map.revision === +release.id) {
+            // release.id is a string so turn it into a number for comparison
+            revision = release.revision;
+          } else if (revisions[map.revision]) {
+            revision = revisions[map.revision];
+          } else {
+            revision = {
+              revision: map.revision,
+              version: map.version,
+              architectures: release.revision.architectures
+            };
           }
-        });
 
-        return {
-          releasedChannels
-        };
+          let channel = map.channel;
+          if (channel.indexOf("/") === -1) {
+            channel = `latest/${channel}`;
+          }
+
+          this.props.releaseRevisionSuccess(revision, channel);
+        }
       });
     } else {
       let error = new Error(
@@ -387,24 +335,16 @@ class ReleasesController extends Component {
 
   handleCloseResponse(json, channels) {
     if (json.success) {
-      this.setState(state => {
-        const { releasedChannels } = state;
+      if (json.closed_channels && json.closed_channels.length > 0) {
+        json.closed_channels.forEach(channel => {
+          // make sure default channels get prefixed with 'latest'
+          if (channel.indexOf("/") === -1) {
+            channel = `latest/${channel}`;
+          }
 
-        if (json.closed_channels && json.closed_channels.length > 0) {
-          json.closed_channels.forEach(channel => {
-            // make sure default channels get prefixed with 'latest'
-            if (channel.indexOf("/") === -1) {
-              channel = `latest/${channel}`;
-            }
-
-            delete releasedChannels[channel];
-          });
-        }
-
-        return {
-          releasedChannels
-        };
-      });
+          this.props.closeChannelSuccess(channel);
+        });
+      }
     } else {
       let error = new Error(
         `Error while closing channels: ${channels.join(", ")}.`
@@ -464,12 +404,6 @@ class ReleasesController extends Component {
   }
 
   render() {
-    const hasDevmodeRevisions = Object.values(this.state.releasedChannels).some(
-      archReleases => {
-        return Object.values(archReleases).some(isInDevmode);
-      }
-    );
-
     return (
       <Fragment>
         <div className="row">
@@ -478,7 +412,7 @@ class ReleasesController extends Component {
               {this.state.error}
             </Notification>
           )}
-          {hasDevmodeRevisions && (
+          {this.props.hasDevmodeRevisions && (
             <Notification appearance="caution">
               Revisions in development mode cannot be released to stable or
               candidate channels.
@@ -499,6 +433,9 @@ class ReleasesController extends Component {
         <ReleasesTable
           // map all the state into props
           {...this.state}
+          // TODO:
+          releasedChannels={this.props.releasedChannels}
+          selectedRevisions={this.props.selectedRevisions}
           // actions
           getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
@@ -508,7 +445,8 @@ class ReleasesController extends Component {
           undoRelease={this.undoRelease.bind(this)}
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           closeChannel={this.closeChannel.bind(this)}
-          selectRevision={this.selectRevision.bind(this)}
+          // TODO:
+          selectRevision={this.props.selectRevision}
         />
       </Fragment>
     );
@@ -524,7 +462,14 @@ ReleasesController.propTypes = {
   revisions: PropTypes.object,
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
+  releasedChannels: PropTypes.object,
+  selectedRevisions: PropTypes.array,
+  hasDevmodeRevisions: PropTypes.bool,
 
+  closeChannelSuccess: PropTypes.func,
+  releaseRevisionSuccess: PropTypes.func,
+  selectRevision: PropTypes.func,
+  initChannelMap: PropTypes.func,
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func
 };
@@ -533,12 +478,20 @@ const mapStateToProps = state => {
   return {
     isHistoryOpen: state.history.isOpen,
     revisionsFilters: state.history.filters,
-    revisions: state.revisions
+    revisions: state.revisions,
+    releasedChannels: state.channelMap,
+    selectedRevisions: getSelectedRevisions(state),
+    hasDevmodeRevisions: hasDevmodeRevisions(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    closeChannelSuccess: channel => dispatch(closeChannelSuccess(channel)),
+    releaseRevisionSuccess: (revision, channel) =>
+      dispatch(releaseRevisionSuccess(revision, channel)),
+    selectRevision: revision => dispatch(selectRevision(revision)),
+    initChannelMap: channelMap => dispatch(initChannelMap(channelMap)),
     updateRevisions: revisions => dispatch(updateRevisions(revisions)),
     updateReleases: releases => dispatch(updateReleases(releases))
   };
