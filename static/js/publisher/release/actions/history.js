@@ -20,10 +20,12 @@ export function toggleHistory(filters) {
 
     if (
       history.isOpen &&
-      history.filters &&
-      filters.track === history.filters.track &&
-      filters.arch === history.filters.arch &&
-      filters.risk === history.filters.risk
+      (history.filters == filters ||
+        (history.filters &&
+          filters &&
+          filters.track === history.filters.track &&
+          filters.arch === history.filters.arch &&
+          filters.risk === history.filters.risk))
     ) {
       dispatch(closeHistory());
     } else {

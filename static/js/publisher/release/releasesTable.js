@@ -23,10 +23,9 @@ function getChannelName(track, risk) {
 }
 
 class ReleasesTable extends Component {
-  getRevisionToDisplay(releasedChannels, nextReleases, channel, arch) {
+  getRevisionToDisplay(channelMap, nextReleases, channel, arch) {
     const pendingRelease = nextReleases[channel] && nextReleases[channel][arch];
-    const currentRelease =
-      releasedChannels[channel] && releasedChannels[channel][arch];
+    const currentRelease = channelMap[channel] && channelMap[channel][arch];
 
     return pendingRelease || currentRelease;
   }
@@ -58,17 +57,16 @@ class ReleasesTable extends Component {
     event.stopPropagation();
   }
 
-  renderRevisionCell(track, risk, arch, releasedChannels, nextChannelReleases) {
+  renderRevisionCell(track, risk, arch, channelMap, nextChannelReleases) {
     const channel = getChannelName(track, risk);
 
     let thisRevision = this.getRevisionToDisplay(
-      releasedChannels,
+      channelMap,
       nextChannelReleases,
       channel,
       arch
     );
-    let thisPreviousRevision =
-      releasedChannels[channel] && releasedChannels[channel][arch];
+    let thisPreviousRevision = channelMap[channel] && channelMap[channel][arch];
 
     const hasPendingRelease =
       thisRevision &&
@@ -77,18 +75,13 @@ class ReleasesTable extends Component {
 
     const isChannelClosed = this.props.pendingCloses.includes(channel);
     const isPending = hasPendingRelease || isChannelClosed;
-    const trackingChannel = getTrackingChannel(
-      releasedChannels,
-      track,
-      risk,
-      arch
-    );
+    const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
 
     const isUnassigned = risk === UNASSIGNED;
     const isActive =
-      this.props.revisionsFilters &&
-      this.props.revisionsFilters.arch === arch &&
-      this.props.revisionsFilters.risk === risk;
+      this.props.filters &&
+      this.props.filters.arch === arch &&
+      this.props.filters.risk === risk;
     const isHighlighted = isPending || (isUnassigned && thisRevision);
     const className = `p-releases-table__cell is-clickable ${
       isUnassigned ? "is-unassigned" : ""
@@ -242,7 +235,7 @@ class ReleasesTable extends Component {
   renderChannelRow(risk) {
     const track = this.props.currentTrack;
     const archs = this.props.archs;
-    const releasedChannels = this.props.releasedChannels;
+    const channelMap = this.props.channelMap;
     const nextChannelReleases = this.props.getNextReleasedChannels();
 
     const channel = getChannelName(track, risk);
@@ -329,7 +322,7 @@ class ReleasesTable extends Component {
             track,
             risk,
             arch,
-            releasedChannels,
+            channelMap,
             nextChannelReleases
           )
         )}
@@ -337,16 +330,11 @@ class ReleasesTable extends Component {
     );
   }
 
-  renderHistoryPanel(showAllColumns) {
+  renderHistoryPanel() {
     return (
       <HistoryPanel
         key="history-panel"
-        releasedChannels={this.props.releasedChannels}
-        selectedRevisions={this.props.selectedRevisions}
         pendingReleases={this.props.pendingReleases}
-        selectRevision={this.props.selectRevision}
-        showArchitectures={!!showAllColumns}
-        showChannels={!!showAllColumns}
       />
     );
   }
@@ -363,18 +351,18 @@ class ReleasesTable extends Component {
     // inject history panel after that channel row
     if (
       this.props.isHistoryOpen &&
-      this.props.revisionsFilters &&
-      this.props.revisionsFilters.risk
+      this.props.filters &&
+      this.props.filters.risk
     ) {
       const historyPanelRow = (
         <div className="p-releases-table__row" key="history-panel-row">
           <div className="p-releases-channel u-hide--small" />
-          {this.renderHistoryPanel(false)}
+          {this.renderHistoryPanel()}
         </div>
       );
 
       rows.splice(
-        RISKS.indexOf(this.props.revisionsFilters.risk) + 1,
+        RISKS.indexOf(this.props.filters.risk) + 1,
         0,
         historyPanelRow
       );
@@ -515,8 +503,8 @@ class ReleasesTable extends Component {
             </a>
           </div>
           {this.props.isHistoryOpen &&
-            !this.props.revisionsFilters &&
-            this.renderHistoryPanel(true)}
+            !this.props.filters &&
+            this.renderHistoryPanel()}
         </div>
       </Fragment>
     );
@@ -528,19 +516,21 @@ ReleasesTable.propTypes = {
   revisions: PropTypes.object.isRequired,
   releases: PropTypes.array.isRequired,
   isHistoryOpen: PropTypes.bool,
-  revisionsFilters: PropTypes.object,
+  filters: PropTypes.object,
+  channelMap: PropTypes.object.isRequired,
+
+  // actions
+  toggleHistoryPanel: PropTypes.func.isRequired,
 
   // state (non redux)
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
-  releasedChannels: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  selectedRevisions: PropTypes.array,
 
-  // actions
+  // actions (non redux)
   getNextReleasedChannels: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
@@ -548,17 +538,16 @@ ReleasesTable.propTypes = {
   promoteChannel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func.isRequired,
-  toggleHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired
+  closeChannel: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    revisionsFilters: state.history.filters,
+    filters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
     revisions: state.revisions,
-    releases: state.releases
+    releases: state.releases,
+    channelMap: state.channelMap
   };
 };
 

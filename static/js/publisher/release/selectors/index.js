@@ -1,3 +1,6 @@
+import { UNASSIGNED } from "../constants";
+import { isInDevmode } from "../devmodeIcon";
+
 // returns release history filtered by history filters
 export function getFilteredReleaseHistory(state) {
   const releases = state.releases;
@@ -38,4 +41,33 @@ export function getFilteredReleaseHistory(state) {
         };
       })
   );
+}
+
+// returns list of selected revisions, to know which ones to render selected
+export function getSelectedRevisions(state) {
+  let selectedRevisions = [];
+
+  if (state.channelMap[UNASSIGNED]) {
+    selectedRevisions = Object.values(state.channelMap[UNASSIGNED]).map(
+      revision => revision.revision
+    );
+  }
+
+  return selectedRevisions;
+}
+
+// returns list of selected architectures
+export function getSelectedArchitectures(state) {
+  if (state.channelMap[UNASSIGNED]) {
+    return Object.keys(state.channelMap[UNASSIGNED]);
+  }
+
+  return [];
+}
+
+// return true if there are any devmode revisions in the state
+export function hasDevmodeRevisions(state) {
+  return Object.values(state.channelMap).some(archReleases => {
+    return Object.values(archReleases).some(isInDevmode);
+  });
 }
