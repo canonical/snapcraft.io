@@ -1,8 +1,14 @@
 import flask
 import socket
+import prometheus_client
 import webapp.template_utils as template_utils
 from urllib.parse import unquote, urlparse, urlunparse
 from webapp import authentication
+
+
+badge_counter = prometheus_client.Counter(
+    "badge_counter", "A counter of badges requests"
+)
 
 
 def set_handlers(app):
@@ -86,6 +92,11 @@ def set_handlers(app):
             new_uri = urlunparse(parsed_url._replace(path=path[:-1]))
 
             return flask.redirect(new_uri)
+
+    @app.before_request
+    def prometheus_metrics():
+        if "/static/images/badges" in flask.request.url:
+            badge_counter.inc()
 
     @app.after_request
     def add_headers(response):
