@@ -79,7 +79,6 @@
     margin-left: 1px;
     max-width: 25.2%; // fill the whole space for 3 archs
     min-width: 100px;
-    padding: ($spv-intra - .1rem) $sph-intra;
     position: relative;
     transition-duration: 0s; // vf-animation doesn't allow to do that
 
@@ -100,6 +99,10 @@
       .p-release-data__title {
         font-weight: bold;
       }
+
+      .p-tooltip__message {
+        display: none;
+      }
     }
 
     &.is-highlighted {
@@ -109,6 +112,7 @@
 
   .p-releases-table__arch {
     background: none;
+    padding: ($spv-intra - .1rem) $sph-intra; // same as p-release-data
   }
 
   // cell contents (release info)
@@ -121,7 +125,10 @@
 
   .p-release-data {
     display: flex;
+    height: 100%;
     max-width: 100%;
+    padding: ($spv-intra - .1rem) $sph-intra; // p-releases-table__arch
+    padding-right: .6rem; // give it a bit more space for version ellipsis
   }
 
   .p-release-data__icon {

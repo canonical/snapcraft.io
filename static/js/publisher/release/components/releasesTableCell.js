@@ -28,30 +28,39 @@ class ReleasesTableCell extends Component {
   renderRevision(revision, isPending) {
     return (
       <Fragment>
-        <span className="p-release-data">
-          {isPending ? (
-            <span className="p-release-data__icon">&rarr;</span>
-          ) : (
-            isInDevmode(revision) && (
-              <span className="p-release-data__icon">
-                <DevmodeIcon revision={revision} showTooltip={false} />
-              </span>
-            )
-          )}
-          <span className="p-release-data__info">
-            <span className="p-release-data__title">{revision.revision}</span>
-            <span className="p-release-data__meta">{revision.version}</span>
-          </span>
+        {isPending ? (
+          <span className="p-release-data__icon">&rarr;</span>
+        ) : (
+          isInDevmode(revision) && (
+            <span className="p-release-data__icon">
+              <DevmodeIcon revision={revision} showTooltip={false} />
+            </span>
+          )
+        )}
+        <span className="p-release-data__info">
+          <span className="p-release-data__title">{revision.revision}</span>
+          <span className="p-release-data__meta">{revision.version}</span>
         </span>
         <span className="p-tooltip__message">
-          {isPending && "Pending release of "}
-          {revision.version} ({revision.revision})
+          {isPending && "Pending release of:"}
+          <div>
+            Revision: <b>{revision.revision}</b>
+          </div>
+          <div>
+            Version: <b>{revision.version}</b>
+          </div>
+
           {isInDevmode(revision) && (
             <Fragment>
-              <br />
-              {revision.confinement === "devmode"
-                ? "confinement: devmode"
-                : "grade: devel"}
+              {revision.confinement === "devmode" ? (
+                <div>
+                  Confinement: <b>devmode</b>
+                </div>
+              ) : (
+                <div>
+                  Grade: <b>devel</b>
+                </div>
+              )}
             </Fragment>
           )}
         </span>
@@ -62,10 +71,8 @@ class ReleasesTableCell extends Component {
   renderCloseChannel() {
     return (
       <Fragment>
-        <span className="p-release-data">
-          <span className="p-release-data__icon">&rarr;</span>
-          <em>close channel</em>
-        </span>
+        <span className="p-release-data__icon">&rarr;</span>
+        <em>close channel</em>
         <span className="p-tooltip__message">Pending channel close</span>
       </Fragment>
     );
@@ -74,30 +81,30 @@ class ReleasesTableCell extends Component {
   renderEmpty(isUnassigned, unassignedCount, trackingChannel) {
     return (
       <Fragment>
-        <span className="p-release-data">
-          {isUnassigned ? (
-            <Fragment>
-              <span className="p-release-data__icon">
-                <i className="p-icon--plus" />
+        {isUnassigned ? (
+          <Fragment>
+            <span className="p-release-data__icon">
+              <i className="p-icon--plus" />
+            </span>
+            <span className="p-release-data__info">
+              <span className="p-release-data__title">Add revision</span>
+              <span className="p-release-data__meta">
+                {unassignedCount} available
               </span>
-              <span className="p-release-data__info">
-                <span className="p-release-data__title">Add revision</span>
-                <span className="p-release-data__meta">
-                  {unassignedCount} available
-                </span>
-              </span>
-            </Fragment>
-          ) : (
-            <Fragment>
-              <span className="p-release-data__info--empty">
-                {trackingChannel ? "↑" : "–"}
-              </span>
-            </Fragment>
-          )}
-        </span>
+            </span>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <span className="p-release-data__info--empty">
+              {trackingChannel ? "↑" : "–"}
+            </span>
+          </Fragment>
+        )}
         {!isUnassigned && (
           <span className="p-tooltip__message">
-            {trackingChannel ? `Tracking channel ${trackingChannel}` : "None"}
+            {trackingChannel
+              ? `Tracking channel ${trackingChannel}`
+              : "Nothing currently released"}
           </span>
         )}
       </Fragment>
@@ -148,7 +155,7 @@ class ReleasesTableCell extends Component {
         className={className}
         onClick={this.handleReleaseCellClick.bind(this, arch, risk, track)}
       >
-        <div className="p-tooltip p-tooltip--btm-center">
+        <div className="p-release-data p-tooltip p-tooltip--btm-center">
           {isChannelPendingClose
             ? this.renderCloseChannel()
             : currentRevision
