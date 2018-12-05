@@ -5,16 +5,7 @@ class DescriptionBlock(BlockLexer):
 
     default_rules = ["block_code", "list_block", "paragraph", "text"]
 
-    list_rules = (
-        "block_code",
-        "list_block",
-        "text",
-        "list",
-        "list_item",
-        "paragraph",
-        "autolink",
-        "link",
-    )
+    list_rules = ("block_code", "list_block", "text")
 
 
 parser = Markdown(
