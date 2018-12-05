@@ -1,8 +1,4 @@
-import re
-from html import escape
 from urllib.parse import parse_qs, urlparse
-
-import bleach
 
 
 def get_searched_snaps(search_results):
