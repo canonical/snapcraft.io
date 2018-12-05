@@ -39,10 +39,8 @@ class ReleasesTableCell extends Component {
             )
           )}
           <span className="p-release-data__info">
-            <span className="p-release-data__version">{revision.version}</span>
-            <span className="p-release-data__revision">
-              {revision.revision}
-            </span>
+            <span className="p-release-data__title">{revision.revision}</span>
+            <span className="p-release-data__meta">{revision.version}</span>
           </span>
         </span>
         <span className="p-tooltip__message">
@@ -83,8 +81,8 @@ class ReleasesTableCell extends Component {
                 <i className="p-icon--plus" />
               </span>
               <span className="p-release-data__info">
-                <span className="p-release-data__version">Add revision</span>
-                <span className="p-release-data__revision">
+                <span className="p-release-data__title">Add revision</span>
+                <span className="p-release-data__meta">
                   {unassignedCount} available
                 </span>
               </span>

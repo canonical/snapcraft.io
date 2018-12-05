@@ -97,7 +97,7 @@
     }
 
     &.is-active {
-      .p-release-data__version {
+      .p-release-data__title {
         font-weight: bold;
       }
     }
@@ -129,8 +129,7 @@
   }
 
   .p-release-data__info {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: 100%;
     white-space: nowrap;
 
     &.is-pending {
@@ -148,10 +147,12 @@
     white-space: nowrap;
   }
 
-  .p-release-data__revision {
+  .p-release-data__meta {
     color: $color-mid-dark;
     display: block;
     font-size: .8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   // actions
