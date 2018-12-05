@@ -46,7 +46,7 @@ class ReleasesController extends Component {
     const tracks = getTracksFromChannelMap(this.props.channelMapsList);
 
     this.state = {
-      // default to latest track
+      // use "latest" if default track is not defined
       currentTrack: this.props.options.defaultTrack || "latest",
       error: null,
       isLoading: false,
@@ -337,7 +337,7 @@ class ReleasesController extends Component {
     if (json.success) {
       if (json.closed_channels && json.closed_channels.length > 0) {
         json.closed_channels.forEach(channel => {
-          // make sure default channels get prefixed with 'latest'
+          // make sure channels without track name get prefixed with 'latest'
           if (channel.indexOf("/") === -1) {
             channel = `latest/${channel}`;
           }
