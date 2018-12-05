@@ -1,5 +1,3 @@
-import unittest
-
 from requests.exceptions import ConnectionError
 
 import pymacaroons
@@ -202,7 +200,3 @@ class PublisherPage(TestCase):
         self.assert_template_used("publisher/username.html")
         self.assert_context("username", "toto")
         self.assert_context("error_list", payload["error_list"])
-
-
-if __name__ == "__main__":
-    unittest.main()

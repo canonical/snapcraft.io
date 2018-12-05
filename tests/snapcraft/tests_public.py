@@ -1,5 +1,3 @@
-import unittest
-
 import responses
 from flask_testing import TestCase
 from webapp.app import create_app
@@ -24,7 +22,3 @@ class StorePage(TestCase):
 
         assert response.status_code == 200
         self.assert_template_used("index.html")
-
-
-if __name__ == "__main__":
-    unittest.main()

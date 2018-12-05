@@ -1,5 +1,3 @@
-import unittest
-
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
@@ -72,7 +70,3 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("store", "stotore")
         self.assert_context("keywords", [])
         self.assert_context("status", "published")
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,5 +1,3 @@
-import unittest
-
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
@@ -46,7 +44,3 @@ class AccountDetailsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("displayname", "El Toto")
         self.assert_context("email", "testing@testing.com")
         self.assert_context("image", None)
-
-
-if __name__ == "__main__":
-    unittest.main()

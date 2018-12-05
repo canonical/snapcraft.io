@@ -1,5 +1,3 @@
-import unittest
-
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
@@ -152,7 +150,3 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_template_used("publisher/listing.html")
 
         self.assert_context("screenshot_urls", ["this is a url"])
-
-
-if __name__ == "__main__":
-    unittest.main()
