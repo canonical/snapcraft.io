@@ -130,7 +130,8 @@ class BlogPage(TestCase):
     #     url = "".join([self.api_url, "/media/123"])
     #
     #     responses.add(
-    #         responses.GET, url, body=requests.exceptions.Timeout(), status=504
+    #         responses.GET, url, body=requests.exceptions.Timeout(),
+    #         status=504
     #     )
     #
     #     response = self.client.get("/blog")
