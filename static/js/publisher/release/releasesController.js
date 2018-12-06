@@ -103,7 +103,7 @@ class ReleasesController extends Component {
         const channels = pendingReleases[revision].channels;
 
         if (channels.includes(channel)) {
-          this.props.undoRelease(revision, channel);
+          this.props.undoRelease(pendingReleases[revision].revision, channel);
         }
       });
 
@@ -134,11 +134,6 @@ class ReleasesController extends Component {
     this.setState({
       error: null
     });
-  }
-
-  // TODO: remove, use action directly
-  undoRelease(revision, channel) {
-    this.props.undoRelease(revision, channel);
   }
 
   // TODO: remove when pendingCloses are moved to redux
@@ -380,8 +375,6 @@ class ReleasesController extends Component {
           promoteRevision={this.promoteRevision.bind(this)}
           // can be moved now (?) - together with getNextReleasedChannels
           promoteChannel={this.promoteChannel.bind(this)}
-          // can be moved now
-          undoRelease={this.undoRelease.bind(this)}
           // depends on pendingCloses
           clearPendingReleases={this.clearPendingReleases.bind(this)}
           // depends on pendingCloses

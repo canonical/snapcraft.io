@@ -7,6 +7,7 @@ import { getTrackingChannel, getUnassignedRevisions } from "../releasesState";
 import DevmodeIcon, { isInDevmode } from "../devmodeIcon";
 
 import { toggleHistory } from "../actions/history";
+import { undoRelease } from "../actions/pendingReleases";
 
 import { getPendingChannelMap } from "../selectors";
 
@@ -195,9 +196,9 @@ ReleasesTableCell.propTypes = {
   pendingChannelMap: PropTypes.object,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
+  undoRelease: PropTypes.func.isRequired,
   // non-redux
   pendingCloses: PropTypes.array,
-  undoRelease: PropTypes.func.isRequired,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -215,7 +216,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleHistoryPanel: filters => dispatch(toggleHistory(filters))
+    toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
+    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
   };
 };
 

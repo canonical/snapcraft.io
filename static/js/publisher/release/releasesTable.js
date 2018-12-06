@@ -46,7 +46,6 @@ class ReleasesTable extends Component {
         risk={risk}
         arch={arch}
         pendingCloses={this.props.pendingCloses}
-        undoRelease={this.props.undoRelease}
       />
     );
   }
@@ -378,7 +377,6 @@ ReleasesTable.propTypes = {
   setCurrentTrack: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
-  undoRelease: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired
 };
