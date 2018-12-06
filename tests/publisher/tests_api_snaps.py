@@ -1,4 +1,3 @@
-import unittest
 from flask import json
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
@@ -164,7 +163,3 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         assert response.status_code == 200
         data = json.loads(response.get_data())
         assert data["count"] == 1
-
-
-if __name__ == "__main__":
-    unittest.main()

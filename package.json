@@ -2,11 +2,11 @@
   "scripts": {
     "lint-js": "eslint static/js",
     "lint-scss": "sass-lint 'static/**/*.scss' --verbose --no-exit",
-    "lint-py": "black --check --line-length 79 tests webapp",
+    "lint-py": "flake8 webapp tests && black --check --line-length 79 tests webapp",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
     "test-js": "jest",
     "test-js-all": "yarn run lint-js && yarn run test-js",
-    "test-python": "python3 -m unittest discover tests",
+    "test-python": "yarn run lint-py && python3 -m unittest discover tests",
     "get-licenses": "if [ ! -f webapp/licenses.json ] ; then curl https://raw.githubusercontent.com/spdx/license-list-data/master/json/licenses.json -o webapp/licenses.json; fi",
     "build": "yarn run get-licenses && yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output-style compressed --output static/css && postcss --use autoprefixer --no-map --replace 'static/css/**/*.css'",

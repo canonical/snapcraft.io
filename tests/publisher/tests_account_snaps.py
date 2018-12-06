@@ -1,5 +1,3 @@
-import unittest
-from flask import json
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
@@ -240,7 +238,3 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", uploaded_snaps)
         self.assert_context("registered_snaps", registered_snaps)
-
-
-if __name__ == "__main__":
-    unittest.main()

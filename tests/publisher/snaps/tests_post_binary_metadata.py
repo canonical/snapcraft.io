@@ -1,6 +1,5 @@
 import io
 import json
-import unittest
 
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
@@ -303,7 +302,3 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
 
         assert response.status_code == 302
         assert response.location == self._get_location()
-
-
-if __name__ == "__main__":
-    unittest.main()

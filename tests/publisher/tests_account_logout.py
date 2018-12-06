@@ -1,5 +1,3 @@
-import unittest
-
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
@@ -38,7 +36,3 @@ class LogoutRedirects(BaseTestCases.BaseAppTesting):
 
         self.assertEqual(302, response.status_code)
         self.assertEqual("http://localhost/", response.location)
-
-
-if __name__ == "__main__":
-    unittest.main()

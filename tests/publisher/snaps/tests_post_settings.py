@@ -1,5 +1,4 @@
 import json
-import unittest
 
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
@@ -333,7 +332,3 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_template_used("publisher/settings.html")
 
         self.assert_context("field_errors", {"description": "error message"})
-
-
-if __name__ == "__main__":
-    unittest.main()
