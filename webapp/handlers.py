@@ -96,7 +96,8 @@ def set_handlers(app):
     @app.before_request
     def prometheus_metrics():
         if "/static/images/badges" in flask.request.url:
-            badge_counter.inc()
+            if not flask.session:
+                badge_counter.inc()
 
     @app.after_request
     def add_headers(response):
