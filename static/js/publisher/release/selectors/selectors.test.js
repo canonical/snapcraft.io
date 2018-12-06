@@ -3,6 +3,7 @@ import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
   getSelectedArchitectures,
+  getPendingChannelMap,
   hasDevmodeRevisions
 } from "./index";
 
@@ -238,5 +239,24 @@ describe("hasDevmodeRevisions", () => {
 
   it("should be true if any revision has devel grade", () => {
     expect(hasDevmodeRevisions(stateWithGradeDevel)).toBe(true);
+  });
+});
+
+describe("getPendingChannelMap", () => {
+  describe("when there are no pending releases", () => {
+    const stateWithNoPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {}
+    };
+
+    it("should return channel map as it is", () => {
+      expect(getPendingChannelMap(stateWithNoPendingReleases)).toEqual(
+        stateWithNoPendingReleases.channelMap
+      );
+    });
   });
 });

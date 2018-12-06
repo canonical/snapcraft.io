@@ -19,10 +19,9 @@ import {
   undoRelease,
   cancelPendingReleases
 } from "./actions/pendingReleases";
-import { hasDevmodeRevisions } from "./selectors";
+import { hasDevmodeRevisions, getPendingChannelMap } from "./selectors";
 
 import {
-  getNextReleasedChannels,
   getArchsFromRevisionsMap,
   getTracksFromChannelMap,
   getRevisionsMap,
@@ -75,17 +74,8 @@ class ReleasesController extends Component {
     this.setState({ currentTrack: track });
   }
 
-  // get channel map data updated with any pending releases
-  // TODO: move to state/selector (when pendingReleases are moved)
-  getNextReleasedChannels() {
-    return getNextReleasedChannels(
-      this.props.releasedChannels,
-      this.props.pendingReleases
-    );
-  }
-
   promoteChannel(channel, targetChannel) {
-    const releasedChannels = this.getNextReleasedChannels();
+    const releasedChannels = this.props.pendingChannelMap;
     const archRevisions = releasedChannels[channel];
 
     if (archRevisions) {
@@ -125,7 +115,7 @@ class ReleasesController extends Component {
 
   // TODO: move to action creator
   promoteRevision(revision, channel) {
-    const releasedChannels = this.getNextReleasedChannels();
+    const releasedChannels = this.props.pendingChannelMap;
 
     // compare given revision with released revisions in this arch and channel
     const isAlreadyReleased = revision.architectures.every(arch => {
@@ -382,7 +372,6 @@ class ReleasesController extends Component {
           // map all the state into props
           {...this.state}
           // actions
-          getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
           // triggers posting data to API
           releaseRevisions={this.releaseRevisions.bind(this)}
@@ -415,6 +404,7 @@ ReleasesController.propTypes = {
   releasedChannels: PropTypes.object,
   hasDevmodeRevisions: PropTypes.bool,
   pendingReleases: PropTypes.object,
+  pendingChannelMap: PropTypes.object,
 
   closeChannelSuccess: PropTypes.func,
   releaseRevisionSuccess: PropTypes.func,
@@ -434,7 +424,8 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     releasedChannels: state.channelMap,
     hasDevmodeRevisions: hasDevmodeRevisions(state),
-    pendingReleases: state.pendingReleases
+    pendingReleases: state.pendingReleases,
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 

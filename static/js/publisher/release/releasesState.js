@@ -163,30 +163,7 @@ function getPendingRelease(pendingReleases, arch, channel) {
   return pendingRelease;
 }
 
-// get channel map data updated with any pending releases
-function getNextReleasedChannels(releasedChannels, pendingReleases) {
-  const nextReleaseData = JSON.parse(JSON.stringify(releasedChannels));
-
-  // for each release
-  Object.keys(pendingReleases).forEach(releasedRevision => {
-    pendingReleases[releasedRevision].channels.forEach(channel => {
-      const revision = pendingReleases[releasedRevision].revision;
-
-      if (!nextReleaseData[channel]) {
-        nextReleaseData[channel] = {};
-      }
-
-      revision.architectures.forEach(arch => {
-        nextReleaseData[channel][arch] = revision;
-      });
-    });
-  });
-
-  return nextReleaseData;
-}
-
 export {
-  getNextReleasedChannels,
   getPendingRelease,
   getUnassignedRevisions,
   getArchsFromRevisionsMap,

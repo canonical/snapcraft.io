@@ -71,3 +71,26 @@ export function hasDevmodeRevisions(state) {
     return Object.values(archReleases).some(isInDevmode);
   });
 }
+
+// get channel map data updated with any pending releases
+export function getPendingChannelMap(state) {
+  const { channelMap, pendingReleases } = state;
+  const pendingChannelMap = JSON.parse(JSON.stringify(channelMap));
+
+  // for each release
+  Object.keys(pendingReleases).forEach(releasedRevision => {
+    pendingReleases[releasedRevision].channels.forEach(channel => {
+      const revision = pendingReleases[releasedRevision].revision;
+
+      if (!pendingChannelMap[channel]) {
+        pendingChannelMap[channel] = {};
+      }
+
+      revision.architectures.forEach(arch => {
+        pendingChannelMap[channel][arch] = revision;
+      });
+    });
+  });
+
+  return pendingChannelMap;
+}

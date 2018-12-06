@@ -9,6 +9,7 @@ import {
   BETA,
   EDGE
 } from "./constants";
+import { getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
@@ -37,14 +38,13 @@ class ReleasesTable extends Component {
     event.stopPropagation();
   }
 
-  renderRevisionCell(track, risk, arch, channelMap, nextChannelReleases) {
+  renderRevisionCell(track, risk, arch) {
     return (
       <ReleasesTableCell
         key={`${track}/${risk}/${arch}`}
         track={track}
         risk={risk}
         arch={arch}
-        nextReleases={nextChannelReleases}
         pendingCloses={this.props.pendingCloses}
         undoRelease={this.props.undoRelease}
       />
@@ -60,10 +60,10 @@ class ReleasesTable extends Component {
   }
 
   compareChannels(channel, targetChannel) {
-    const nextChannelReleases = this.props.getNextReleasedChannels();
+    const channelMap = this.props.pendingChannelMap;
 
-    const channelArchs = nextChannelReleases[channel];
-    const targetChannelArchs = nextChannelReleases[targetChannel];
+    const channelArchs = channelMap[channel];
+    const targetChannelArchs = channelMap[targetChannel];
 
     if (channelArchs) {
       return Object.keys(channelArchs).every(arch => {
@@ -82,7 +82,7 @@ class ReleasesTable extends Component {
     const track = this.props.currentTrack;
     const archs = this.props.archs;
     const channelMap = this.props.channelMap;
-    const nextChannelReleases = this.props.getNextReleasedChannels();
+    const pendingChannelMap = this.props.pendingChannelMap;
 
     const channel = getChannelName(track, risk);
 
@@ -98,7 +98,7 @@ class ReleasesTable extends Component {
     }
 
     if (
-      !nextChannelReleases[channel] ||
+      !pendingChannelMap[channel] ||
       this.props.pendingCloses.includes(channel)
     ) {
       canBePromoted = false;
@@ -116,7 +116,7 @@ class ReleasesTable extends Component {
       // check for devmode revisions
       if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
         const hasDevmodeRevisions = Object.values(
-          nextChannelReleases[channel]
+          pendingChannelMap[channel]
         ).some(isInDevmode);
 
         // remove stable and beta channels as targets if any revision
@@ -169,7 +169,7 @@ class ReleasesTable extends Component {
             risk,
             arch,
             channelMap,
-            nextChannelReleases
+            pendingChannelMap
           )
         )}
       </div>
@@ -361,6 +361,8 @@ ReleasesTable.propTypes = {
   channelMap: PropTypes.object.isRequired,
   pendingReleases: PropTypes.object.isRequired,
 
+  pendingChannelMap: PropTypes.object,
+
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
 
@@ -372,7 +374,6 @@ ReleasesTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
 
   // actions (non redux)
-  getNextReleasedChannels: PropTypes.func.isRequired,
   releaseRevisions: PropTypes.func.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
@@ -389,7 +390,8 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     releases: state.releases,
     channelMap: state.channelMap,
-    pendingReleases: state.pendingReleases
+    pendingReleases: state.pendingReleases,
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 
