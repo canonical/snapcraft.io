@@ -177,12 +177,7 @@ class ReleasesTable extends Component {
   }
 
   renderHistoryPanel() {
-    return (
-      <HistoryPanel
-        key="history-panel"
-        pendingReleases={this.props.pendingReleases}
-      />
-    );
+    return <HistoryPanel key="history-panel" />;
   }
 
   renderRows() {
@@ -364,6 +359,7 @@ ReleasesTable.propTypes = {
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
   channelMap: PropTypes.object.isRequired,
+  pendingReleases: PropTypes.object.isRequired,
 
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
@@ -372,7 +368,6 @@ ReleasesTable.propTypes = {
   archs: PropTypes.array.isRequired,
   tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
-  pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
 
@@ -393,7 +388,8 @@ const mapStateToProps = state => {
     isHistoryOpen: state.history.isOpen,
     revisions: state.revisions,
     releases: state.releases,
-    channelMap: state.channelMap
+    channelMap: state.channelMap,
+    pendingReleases: state.pendingReleases
   };
 };
 

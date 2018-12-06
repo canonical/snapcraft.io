@@ -381,8 +381,6 @@ class ReleasesController extends Component {
         <ReleasesTable
           // map all the state into props
           {...this.state}
-          // TODO: remove
-          pendingReleases={this.props.pendingReleases}
           // actions
           getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
