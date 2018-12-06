@@ -185,23 +185,6 @@ function getNextReleasedChannels(releasedChannels, pendingReleases) {
   return nextReleaseData;
 }
 
-// remove pending revisions from given channel
-function removePendingRelease(pendingReleases, revision, channel) {
-  if (pendingReleases[revision.revision]) {
-    const channels = pendingReleases[revision.revision].channels;
-
-    if (channels.includes(channel)) {
-      channels.splice(channels.indexOf(channel), 1);
-    }
-
-    if (channels.length === 0) {
-      delete pendingReleases[revision.revision];
-    }
-  }
-
-  return pendingReleases;
-}
-
 export {
   getNextReleasedChannels,
   getPendingRelease,
@@ -210,7 +193,6 @@ export {
   getTracksFromChannelMap,
   getTrackingChannel,
   getRevisionsMap,
-  removePendingRelease,
   initReleasesData,
   getReleaseDataFromChannelMap
 };
