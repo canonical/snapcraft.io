@@ -60,12 +60,18 @@
     display: flex;
     flex-shrink: 0;
     margin-right: $grid-gutter-width / 2;
-    width: 222px; // fixed width col-3
+    // TODO:
+    // width: 222px; // fixed width col-3
+    width: 230px; // temporary width until we merge menus into one
   }
 
   .p-releases-channel__name {
     flex-grow: 1;
     padding-top: ($spv-intra - .1rem);
+
+    &.is-active {
+      font-weight: bold;
+    }
   }
 
   // release cell
@@ -112,7 +118,12 @@
 
   .p-releases-table__arch {
     background: none;
+    border: 0;
     padding: ($spv-intra - .1rem) $sph-intra; // same as p-release-data
+
+    &.is-active {
+      font-weight: bold;
+    }
   }
 
   // cell contents (release info)
