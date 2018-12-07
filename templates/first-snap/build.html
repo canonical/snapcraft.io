@@ -11,7 +11,6 @@
       <div class="col-8">
         <ol class="p-list-step has-margin">
           {% for step in steps %}
-            {% if not loop.last %}
               <li class="p-list-step__item">
                 <h4 class="p-list-step__title">
                   <span class="p-list-step__bullet">{{ loop.index }}</span>
@@ -27,7 +26,6 @@
                   {% endif %}
                 {% endif %}
               </li>
-            {% endif %}
           {% endfor %}
           {% for step in steps %}
             {% if loop.last and step.warning %}

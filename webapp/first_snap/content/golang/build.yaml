@@ -9,7 +9,7 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-httplab-{name}
+      command: test-httplab-{name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-httplab-{name}</code>)
   manual:
@@ -22,7 +22,7 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-httplab-{name}
+      command: test-httplab-{name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-httplab-{name}</code>)
 macos:
@@ -30,7 +30,7 @@ macos:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
       command: snapcraft
     - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
-      command:  |
+      command: |
         brew install squashfs
         unsquashfs -l *.snap
   manual:
