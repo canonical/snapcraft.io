@@ -1,6 +1,6 @@
 import pendingReleases from "./pendingReleases";
 import {
-  PROMOTE_REVISION,
+  RELEASE_REVISION,
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES
 } from "../actions/pendingReleases";
@@ -10,9 +10,9 @@ describe("pendingReleases", () => {
     expect(pendingReleases(undefined, {})).toEqual({});
   });
 
-  describe("on PROMOTE_REVISION action", () => {
-    let promoteRevisionAction = {
-      type: PROMOTE_REVISION,
+  describe("on RELEASE_REVISION action", () => {
+    let releaseRevisionAction = {
+      type: RELEASE_REVISION,
       payload: {
         revision: { revision: 1, architectures: ["abc42", "test64"] },
         channel: "test/edge"
@@ -23,12 +23,12 @@ describe("pendingReleases", () => {
       const emptyState = {};
 
       it("should add promoted revision to state", () => {
-        const result = pendingReleases(emptyState, promoteRevisionAction);
+        const result = pendingReleases(emptyState, releaseRevisionAction);
 
         expect(result).toEqual({
           1: {
-            revision: promoteRevisionAction.payload.revision,
-            channels: [promoteRevisionAction.payload.channel]
+            revision: releaseRevisionAction.payload.revision,
+            channels: [releaseRevisionAction.payload.channel]
           }
         });
       });
@@ -46,16 +46,16 @@ describe("pendingReleases", () => {
       it("should add new channel to list of pending releases", () => {
         const result = pendingReleases(
           stateWithSamePendingRevision,
-          promoteRevisionAction
+          releaseRevisionAction
         );
 
         expect(result).toEqual({
           ...stateWithSamePendingRevision,
           1: {
-            revision: promoteRevisionAction.payload.revision,
+            revision: releaseRevisionAction.payload.revision,
             channels: [
               ...stateWithSamePendingRevision[1].channels,
-              promoteRevisionAction.payload.channel
+              releaseRevisionAction.payload.channel
             ]
           }
         });
@@ -79,14 +79,14 @@ describe("pendingReleases", () => {
       it("should add promoted revision to state", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          promoteRevisionAction
+          releaseRevisionAction
         );
 
         expect(result).toEqual({
           ...stateWithPendingReleases,
           1: {
-            revision: promoteRevisionAction.payload.revision,
-            channels: [promoteRevisionAction.payload.channel]
+            revision: releaseRevisionAction.payload.revision,
+            channels: [releaseRevisionAction.payload.channel]
           }
         });
       });
@@ -114,13 +114,13 @@ describe("pendingReleases", () => {
       it("should add promoted revision to state", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          promoteRevisionAction
+          releaseRevisionAction
         );
 
         expect(result).toMatchObject({
           1: {
-            revision: promoteRevisionAction.payload.revision,
-            channels: [promoteRevisionAction.payload.channel]
+            revision: releaseRevisionAction.payload.revision,
+            channels: [releaseRevisionAction.payload.channel]
           }
         });
       });
@@ -128,7 +128,7 @@ describe("pendingReleases", () => {
       it("should remove pending releases from same arch and channel", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          promoteRevisionAction
+          releaseRevisionAction
         );
 
         expect(Object.keys(result)).not.toContain(4);

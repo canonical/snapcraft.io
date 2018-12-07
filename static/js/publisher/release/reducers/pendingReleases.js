@@ -1,5 +1,5 @@
 import {
-  PROMOTE_REVISION,
+  RELEASE_REVISION,
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES
 } from "../actions/pendingReleases";
@@ -23,7 +23,7 @@ function removePendingRelease(state, revision, channel) {
   return state;
 }
 
-function promoteRevision(state = {}, revision, channel) {
+function releaseRevision(state = {}, revision, channel) {
   state = { ...state };
 
   // cancel any other pending release for the same channel in same architectures
@@ -69,8 +69,8 @@ function promoteRevision(state = {}, revision, channel) {
 // to prevent duplication of revison data
 export default function pendingReleases(state = {}, action) {
   switch (action.type) {
-    case PROMOTE_REVISION:
-      return promoteRevision(
+    case RELEASE_REVISION:
+      return releaseRevision(
         state,
         action.payload.revision,
         action.payload.channel

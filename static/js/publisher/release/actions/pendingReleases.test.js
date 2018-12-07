@@ -1,7 +1,15 @@
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+
+export const mockStore = configureMockStore([thunk]);
+
+import reducers from "../reducers";
+
 import {
-  PROMOTE_REVISION,
+  RELEASE_REVISION,
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES,
+  releaseRevision,
   promoteRevision,
   undoRelease,
   cancelPendingReleases
@@ -10,22 +18,58 @@ import {
 describe("pendingReleases actions", () => {
   const revision = { revision: 1, architectures: ["test64"] };
   const channel = "test/edge";
+  const initialState = reducers(undefined, {});
 
-  describe("promoteRevision", () => {
+  describe("releaseRevision", () => {
     it("should create an action to promote revision", () => {
-      expect(promoteRevision(revision, channel).type).toBe(PROMOTE_REVISION);
+      expect(releaseRevision(revision, channel).type).toBe(RELEASE_REVISION);
     });
 
     it("should supply a payload with revision", () => {
-      expect(promoteRevision(revision, channel).payload.revision).toEqual(
+      expect(releaseRevision(revision, channel).payload.revision).toEqual(
         revision
       );
     });
 
     it("should supply a payload with channel", () => {
-      expect(promoteRevision(revision, channel).payload.channel).toEqual(
+      expect(releaseRevision(revision, channel).payload.channel).toEqual(
         channel
       );
+    });
+  });
+
+  describe("promoteRevision", () => {
+    describe("when nothing is released yet", () => {
+      it("should dispatch RELEASE_REVISION action", () => {
+        const store = mockStore(initialState);
+
+        store.dispatch(promoteRevision(revision, channel));
+
+        const actions = store.getActions();
+        const expectedAction = releaseRevision(revision, channel);
+
+        expect(actions).toEqual([expectedAction]);
+      });
+    });
+
+    describe("when revision is already released in this arch and channel", () => {
+      const stateWithReleasedRevsion = {
+        ...initialState,
+        channelMap: {
+          "test/edge": {
+            test64: { ...revision }
+          }
+        }
+      };
+
+      it("should not dispatch RELEASE_REVISION action", () => {
+        const store = mockStore(stateWithReleasedRevsion);
+
+        store.dispatch(promoteRevision(revision, channel));
+
+        const actions = store.getActions();
+        expect(actions).toHaveLength(0);
+      });
     });
   });
 

@@ -17,6 +17,7 @@ import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
 import { toggleHistory } from "./actions/history";
+import { promoteRevision } from "./actions/pendingReleases";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -395,7 +396,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleHistoryPanel: filters => dispatch(toggleHistory(filters))
+    toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
+    promoteRevision: (revision, channel) =>
+      dispatch(promoteRevision(revision, channel))
   };
 };
 

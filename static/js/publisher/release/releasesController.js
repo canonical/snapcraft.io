@@ -80,7 +80,7 @@ class ReleasesController extends Component {
 
     if (archRevisions) {
       Object.keys(archRevisions).forEach(arch => {
-        this.promoteRevision(archRevisions[arch], targetChannel);
+        this.props.promoteRevision(archRevisions[arch], targetChannel);
       });
     }
   }
@@ -113,34 +113,12 @@ class ReleasesController extends Component {
     });
   }
 
-  // TODO: move to action creator
-  promoteRevision(revision, channel) {
-    const releasedChannels = this.props.pendingChannelMap;
-
-    // compare given revision with released revisions in this arch and channel
-    const isAlreadyReleased = revision.architectures.every(arch => {
-      const releasedRevision =
-        releasedChannels[channel] && releasedChannels[channel][arch];
-
-      return (
-        releasedRevision && releasedRevision.revision === revision.revision
-      );
-    });
-
-    if (!isAlreadyReleased) {
-      this.props.promoteRevision(revision, channel);
-    }
-
-    this.setState({
-      error: null
-    });
-  }
-
   // TODO: remove when pendingCloses are moved to redux
   clearPendingReleases() {
     this.props.cancelPendingReleases();
     this.setState({
-      pendingCloses: []
+      pendingCloses: [],
+      error: null
     });
   }
 
@@ -327,7 +305,7 @@ class ReleasesController extends Component {
       };
     });
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, error: null });
     this.fetchReleases(releases)
       .then(() => this.fetchCloses(pendingCloses))
       .then(() => this.fetchUpdatedReleasesHistory())
@@ -370,9 +348,6 @@ class ReleasesController extends Component {
           setCurrentTrack={this.setCurrentTrack.bind(this)}
           // triggers posting data to API
           releaseRevisions={this.releaseRevisions.bind(this)}
-          // TODO: move out to redux (?)
-          // depends on state of released revisoins
-          promoteRevision={this.promoteRevision.bind(this)}
           // can be moved now (?) - together with getNextReleasedChannels
           promoteChannel={this.promoteChannel.bind(this)}
           // depends on pendingCloses
