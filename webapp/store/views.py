@@ -121,7 +121,6 @@ def store_blueprint(store_query=None, testing=False):
             page = floor(offset / size) + 1
 
         error_info = {}
-        featured_snaps = []
         categories_results = []
         searched_results = []
 
@@ -152,15 +151,6 @@ def store_blueprint(store_query=None, testing=False):
             ),
         )
 
-        if not snaps_results:
-            featured_snaps_results = []
-            try:
-                featured_snaps_results = api.get_featured_snaps()
-            except ApiError as api_error:
-                status_code, error_info = _handle_errors(api_error)
-
-            featured_snaps = logic.get_searched_snaps(featured_snaps_results)
-
         context = {
             "query": snap_searched,
             "category": snap_category,
@@ -168,7 +158,6 @@ def store_blueprint(store_query=None, testing=False):
             "categories": categories,
             "snaps": snaps_results,
             "links": links,
-            "featured_snaps": featured_snaps,
             "error_info": error_info,
         }
 
