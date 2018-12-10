@@ -5,6 +5,7 @@ import "whatwg-fetch";
 
 import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
+import ReleasesHeading from "./components/ReleasesHeading";
 
 import { updateRevisions } from "./actions/revisions";
 import { updateReleases } from "./actions/releases";
@@ -339,13 +340,16 @@ class ReleasesController extends Component {
               .
             </Notification>
           )}
+          <ReleasesHeading
+            tracks={this.state.tracks}
+            setCurrentTrack={this.setCurrentTrack.bind(this)}
+          />
         </div>
 
         <ReleasesTable
           // map all the state into props
           {...this.state}
           // actions
-          setCurrentTrack={this.setCurrentTrack.bind(this)}
           // triggers posting data to API
           releaseRevisions={this.releaseRevisions.bind(this)}
           // can be moved now (?) - together with getNextReleasedChannels

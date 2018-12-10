@@ -223,30 +223,6 @@ class ReleasesTable extends Component {
     return rows;
   }
 
-  renderTrackDropdown(tracks) {
-    return (
-      <form className="p-form p-form--inline u-float--right">
-        <div className="p-form__group">
-          <label htmlFor="track-dropdown" className="p-form__label">
-            Show revisions released in
-          </label>
-          <div className="p-form__control u-clearfix">
-            <select
-              id="track-dropdown"
-              onChange={this.onTrackChange.bind(this)}
-            >
-              {tracks.map(track => (
-                <option key={`${track}`} value={track}>
-                  {track}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </form>
-    );
-  }
-
   renderReleasesConfirm() {
     const { pendingReleases, pendingCloses, isLoading } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
@@ -311,10 +287,6 @@ class ReleasesTable extends Component {
     );
   }
 
-  onTrackChange(event) {
-    this.props.setCurrentTrack(event.target.value);
-  }
-
   onRevertClick() {
     this.props.clearPendingReleases();
   }
@@ -324,16 +296,12 @@ class ReleasesTable extends Component {
   }
 
   render() {
-    const { archs, tracks } = this.props;
+    const { archs } = this.props;
     const revisionsCount = Object.keys(this.props.revisions).length;
     const filteredArch = this.props.filters && this.props.filters.arch;
     return (
       <Fragment>
         <div className="row">
-          <div className="u-clearfix">
-            <h4 className="u-float--left">Releases available to install</h4>
-            {tracks.length > 1 && this.renderTrackDropdown(tracks)}
-          </div>
           {this.renderReleasesConfirm()}
           <div className="p-releases-table">
             <div className="p-releases-table__row p-releases-table__row--heading">
@@ -381,14 +349,12 @@ ReleasesTable.propTypes = {
 
   // state (non redux)
   archs: PropTypes.array.isRequired,
-  tracks: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isLoading: PropTypes.bool.isRequired,
 
   // actions (non redux)
   releaseRevisions: PropTypes.func.isRequired,
-  setCurrentTrack: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
   clearPendingReleases: PropTypes.func.isRequired,
