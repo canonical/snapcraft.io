@@ -48,22 +48,10 @@ class PublisherPage(TestCase):
         return app
 
     def test_account(self):
-        """
-        Naive check that the basic redirects to the authentication system
-        are working for the /account page
-        """
-
         local_redirect = self.client.get("/account")
         redirect_url = "http://localhost/login?next=/account"
         assert local_redirect.status_code == 302
         assert local_redirect.headers.get("Location") == redirect_url
-
-        ext_redirect = self.client.get("/login?next=/account")
-        ext2_redirect = self.client.get("/login?next=/account")
-        assert ext_redirect.status_code == 302
-        assert ext2_redirect.status_code == 302
-        assert "login.ubuntu.com" in ext_redirect.headers.get("Location")
-        assert "login.ubuntu.com" in ext2_redirect.headers.get("Location")
 
     def _log_in(self, client):
         """Emulates test client login in the store.
