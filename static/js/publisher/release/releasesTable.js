@@ -223,78 +223,6 @@ class ReleasesTable extends Component {
     return rows;
   }
 
-  renderReleasesConfirm() {
-    const { pendingReleases, pendingCloses, isLoading } = this.props;
-    const releasesCount = Object.keys(pendingReleases).length;
-    const closesCount = pendingCloses.length;
-
-    return (
-      (releasesCount > 0 || closesCount > 0) && (
-        <div className="p-releases-confirm">
-          <span className="p-tooltip">
-            <i className="p-icon--question" />{" "}
-            {releasesCount > 0 && (
-              <span>
-                {releasesCount} revision
-                {releasesCount > 1 ? "s" : ""} to release.
-              </span>
-            )}{" "}
-            {closesCount > 0 && (
-              <span>
-                {closesCount} channel
-                {closesCount > 1 ? "s" : ""} to close.
-              </span>
-            )}
-            <span
-              className="p-tooltip__message"
-              role="tooltip"
-              id="default-tooltip"
-            >
-              {Object.keys(pendingReleases).map(revId => {
-                const release = pendingReleases[revId];
-
-                return (
-                  <span key={revId}>
-                    {release.revision.version} ({release.revision.revision}){" "}
-                    {release.revision.architectures.join(", ")} to{" "}
-                    {release.channels.join(", ")}
-                    {"\n"}
-                  </span>
-                );
-              })}
-              {closesCount > 0 && (
-                <span>Close channels: {pendingCloses.join(", ")}</span>
-              )}
-            </span>
-          </span>{" "}
-          <div className="p-releases-confirm__buttons">
-            <button
-              className="p-button--positive is-inline u-no-margin--bottom"
-              disabled={isLoading}
-              onClick={this.onApplyClick.bind(this)}
-            >
-              {isLoading ? "Loading..." : "Apply"}
-            </button>
-            <button
-              className="p-button--neutral u-no-margin--bottom"
-              onClick={this.onRevertClick.bind(this)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )
-    );
-  }
-
-  onRevertClick() {
-    this.props.clearPendingReleases();
-  }
-
-  onApplyClick() {
-    this.props.releaseRevisions();
-  }
-
   render() {
     const { archs } = this.props;
     const revisionsCount = Object.keys(this.props.revisions).length;
@@ -302,7 +230,6 @@ class ReleasesTable extends Component {
     return (
       <Fragment>
         <div className="row">
-          {this.renderReleasesConfirm()}
           <div className="p-releases-table">
             <div className="p-releases-table__row p-releases-table__row--heading">
               <div className="p-releases-channel" />
@@ -340,7 +267,6 @@ ReleasesTable.propTypes = {
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
   channelMap: PropTypes.object.isRequired,
-  pendingReleases: PropTypes.object.isRequired,
 
   pendingChannelMap: PropTypes.object,
 
@@ -351,13 +277,10 @@ ReleasesTable.propTypes = {
   archs: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
 
   // actions (non redux)
-  releaseRevisions: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
-  clearPendingReleases: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired
 };
 
@@ -368,7 +291,6 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     releases: state.releases,
     channelMap: state.channelMap,
-    pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state)
   };
 };
