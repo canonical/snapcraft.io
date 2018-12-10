@@ -14,14 +14,17 @@ import {
   releaseRevisionSuccess,
   closeChannelSuccess
 } from "./actions/channelMap";
-import { hasDevmodeRevisions } from "./selectors";
+import {
+  promoteRevision,
+  undoRelease,
+  cancelPendingReleases
+} from "./actions/pendingReleases";
+import { hasDevmodeRevisions, getPendingChannelMap } from "./selectors";
 
 import {
-  getNextReleasedChannels,
   getArchsFromRevisionsMap,
   getTracksFromChannelMap,
   getRevisionsMap,
-  removePendingRelease,
   initReleasesData,
   getReleaseDataFromChannelMap
 } from "./releasesState";
@@ -54,16 +57,6 @@ class ReleasesController extends Component {
       tracks: tracks,
       // list of architectures released to (or selected to be released to)
       archs: getArchsFromRevisionsMap(revisionsMap),
-      // revisions to be released:
-      // key is the id of revision to release
-      // value is object containing release object and channels to release to
-      // {
-      //  <revisionId>: {
-      //    revision: { revision: <revisionId>, version, ... },
-      //    channels: [ ... ]
-      //  }
-      // }
-      pendingReleases: {},
       pendingCloses: []
     };
   }
@@ -81,29 +74,20 @@ class ReleasesController extends Component {
     this.setState({ currentTrack: track });
   }
 
-  // get channel map data updated with any pending releases
-  // TODO: move to state/selector (when pendingReleases are moved)
-  getNextReleasedChannels() {
-    return getNextReleasedChannels(
-      this.props.releasedChannels,
-      this.state.pendingReleases
-    );
-  }
-
   promoteChannel(channel, targetChannel) {
-    const releasedChannels = this.getNextReleasedChannels();
+    const releasedChannels = this.props.pendingChannelMap;
     const archRevisions = releasedChannels[channel];
 
     if (archRevisions) {
       Object.keys(archRevisions).forEach(arch => {
-        this.promoteRevision(archRevisions[arch], targetChannel);
+        this.props.promoteRevision(archRevisions[arch], targetChannel);
       });
     }
   }
 
   closeChannel(channel) {
     this.setState(state => {
-      let { pendingCloses, pendingReleases } = state;
+      let { pendingCloses } = state;
 
       pendingCloses.push(channel);
       // make sure channels are unique
@@ -111,104 +95,30 @@ class ReleasesController extends Component {
         (item, i, ar) => ar.indexOf(item) === i
       );
 
+      // TODO: move to action (when pendingCloses are moved to redux)
+      let { pendingReleases } = this.props;
+
       // undo any pending releases to closed channel
       Object.keys(pendingReleases).forEach(revision => {
         const channels = pendingReleases[revision].channels;
 
         if (channels.includes(channel)) {
-          channels.splice(channels.indexOf(channel), 1);
-        }
-
-        if (channels.length === 0) {
-          delete pendingReleases[revision];
+          this.props.undoRelease(pendingReleases[revision].revision, channel);
         }
       });
 
       return {
-        pendingCloses,
-        pendingReleases
+        pendingCloses
       };
     });
   }
 
-  promoteRevision(revision, channel) {
-    this.setState(state => {
-      const { pendingReleases } = state;
-      const releasedChannels = this.getNextReleasedChannels(
-        this.props.releasedChannels,
-        pendingReleases
-      );
-
-      // compare given revision with released revisions in this arch and channel
-      const isAlreadyReleased = revision.architectures.every(arch => {
-        const releasedRevision =
-          releasedChannels[channel] && releasedChannels[channel][arch];
-
-        return (
-          releasedRevision && releasedRevision.revision === revision.revision
-        );
-      });
-
-      if (!isAlreadyReleased) {
-        // cancel any other pending release for the same channel in same architectures
-        revision.architectures.forEach(arch => {
-          Object.keys(pendingReleases).forEach(revisionId => {
-            const pendingRelease = pendingReleases[revisionId];
-
-            if (
-              pendingRelease.channels.includes(channel) &&
-              pendingRelease.revision.architectures.includes(arch)
-            ) {
-              removePendingRelease(
-                pendingReleases,
-                pendingRelease.revision,
-                channel
-              );
-            }
-          });
-        });
-
-        if (!pendingReleases[revision.revision]) {
-          pendingReleases[revision.revision] = {
-            revision: revision,
-            channels: []
-          };
-        }
-
-        let channels = pendingReleases[revision.revision].channels;
-        channels.push(channel);
-
-        // make sure channels are unique
-        channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
-
-        pendingReleases[revision.revision].channels = channels;
-      }
-
-      return {
-        error: null,
-        pendingReleases
-      };
-    });
-  }
-
-  undoRelease(revision, channel) {
-    this.setState(state => {
-      const pendingReleases = removePendingRelease(
-        state.pendingReleases,
-        revision,
-        channel
-      );
-
-      return {
-        pendingReleases
-      };
-    });
-  }
-
+  // TODO: remove when pendingCloses are moved to redux
   clearPendingReleases() {
+    this.props.cancelPendingReleases();
     this.setState({
-      pendingReleases: {},
-      pendingCloses: []
+      pendingCloses: [],
+      error: null
     });
   }
 
@@ -385,7 +295,8 @@ class ReleasesController extends Component {
   }
 
   releaseRevisions() {
-    const { pendingReleases, pendingCloses } = this.state;
+    const { pendingCloses } = this.state;
+    const { pendingReleases } = this.props;
     const releases = Object.keys(pendingReleases).map(id => {
       return {
         id,
@@ -394,7 +305,7 @@ class ReleasesController extends Component {
       };
     });
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, error: null });
     this.fetchReleases(releases)
       .then(() => this.fetchCloses(pendingCloses))
       .then(() => this.fetchUpdatedReleasesHistory())
@@ -434,13 +345,14 @@ class ReleasesController extends Component {
           // map all the state into props
           {...this.state}
           // actions
-          getNextReleasedChannels={this.getNextReleasedChannels.bind(this)}
           setCurrentTrack={this.setCurrentTrack.bind(this)}
+          // triggers posting data to API
           releaseRevisions={this.releaseRevisions.bind(this)}
-          promoteRevision={this.promoteRevision.bind(this)}
+          // can be moved now (?) - together with getNextReleasedChannels
           promoteChannel={this.promoteChannel.bind(this)}
-          undoRelease={this.undoRelease.bind(this)}
+          // depends on pendingCloses
           clearPendingReleases={this.clearPendingReleases.bind(this)}
+          // depends on pendingCloses
           closeChannel={this.closeChannel.bind(this)}
         />
       </Fragment>
@@ -459,13 +371,18 @@ ReleasesController.propTypes = {
   revisionsFilters: PropTypes.object,
   releasedChannels: PropTypes.object,
   hasDevmodeRevisions: PropTypes.bool,
+  pendingReleases: PropTypes.object,
+  pendingChannelMap: PropTypes.object,
 
   closeChannelSuccess: PropTypes.func,
   releaseRevisionSuccess: PropTypes.func,
   selectRevision: PropTypes.func,
   initChannelMap: PropTypes.func,
   updateReleases: PropTypes.func,
-  updateRevisions: PropTypes.func
+  updateRevisions: PropTypes.func,
+  undoRelease: PropTypes.func,
+  promoteRevision: PropTypes.func,
+  cancelPendingReleases: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -474,7 +391,9 @@ const mapStateToProps = state => {
     revisionsFilters: state.history.filters,
     revisions: state.revisions,
     releasedChannels: state.channelMap,
-    hasDevmodeRevisions: hasDevmodeRevisions(state)
+    hasDevmodeRevisions: hasDevmodeRevisions(state),
+    pendingReleases: state.pendingReleases,
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 
@@ -486,7 +405,12 @@ const mapDispatchToProps = dispatch => {
     selectRevision: revision => dispatch(selectRevision(revision)),
     initChannelMap: channelMap => dispatch(initChannelMap(channelMap)),
     updateRevisions: revisions => dispatch(updateRevisions(revisions)),
-    updateReleases: releases => dispatch(updateReleases(releases))
+    updateReleases: releases => dispatch(updateReleases(releases)),
+    undoRelease: (revision, channel) =>
+      dispatch(undoRelease(revision, channel)),
+    promoteRevision: (revision, channel) =>
+      dispatch(promoteRevision(revision, channel)),
+    cancelPendingReleases: () => dispatch(cancelPendingReleases())
   };
 };
 

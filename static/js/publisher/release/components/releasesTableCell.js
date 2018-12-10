@@ -7,6 +7,9 @@ import { getTrackingChannel, getUnassignedRevisions } from "../releasesState";
 import DevmodeIcon, { isInDevmode } from "../devmodeIcon";
 
 import { toggleHistory } from "../actions/history";
+import { undoRelease } from "../actions/pendingReleases";
+
+import { getPendingChannelMap } from "../selectors";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
@@ -117,7 +120,7 @@ class ReleasesTableCell extends Component {
       risk,
       arch,
       channelMap,
-      nextReleases,
+      pendingChannelMap,
       pendingCloses,
       filters,
       revisions
@@ -125,7 +128,8 @@ class ReleasesTableCell extends Component {
     const channel = getChannelName(track, risk);
 
     // current revision to show (released or pending)
-    let currentRevision = nextReleases[channel] && nextReleases[channel][arch];
+    let currentRevision =
+      pendingChannelMap[channel] && pendingChannelMap[channel][arch];
     // already released revision
     let releasedRevision = channelMap[channel] && channelMap[channel][arch];
 
@@ -189,12 +193,12 @@ ReleasesTableCell.propTypes = {
   channelMap: PropTypes.object,
   filters: PropTypes.object,
   revisions: PropTypes.object,
+  pendingChannelMap: PropTypes.object,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
-  // non-redux
-  nextReleases: PropTypes.object,
-  pendingCloses: PropTypes.array,
   undoRelease: PropTypes.func.isRequired,
+  // non-redux
+  pendingCloses: PropTypes.array,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -205,13 +209,15 @@ const mapStateToProps = state => {
   return {
     channelMap: state.channelMap,
     revisions: state.revisions,
-    filters: state.history.filters
+    filters: state.history.filters,
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleHistoryPanel: filters => dispatch(toggleHistory(filters))
+    toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
+    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
   };
 };
 

@@ -221,6 +221,7 @@ RevisionsList.propTypes = {
   // state
   revisions: PropTypes.object.isRequired,
   filters: PropTypes.object,
+  pendingReleases: PropTypes.object.isRequired,
 
   // computed state (selectors)
   showAllColumns: PropTypes.bool,
@@ -230,10 +231,7 @@ RevisionsList.propTypes = {
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired,
-
-  // state (TODO: move to redux)
-  pendingReleases: PropTypes.object.isRequired // 1: get pending release
+  selectRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -241,6 +239,7 @@ const mapStateToProps = state => {
     showAllColumns: !state.history.filters,
     filters: state.history.filters,
     revisions: state.revisions,
+    pendingReleases: state.pendingReleases,
     selectedRevisions: getSelectedRevisions(state),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
     selectedArchitectures: getSelectedArchitectures(state)

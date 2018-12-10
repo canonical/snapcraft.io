@@ -3,6 +3,7 @@ import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
   getSelectedArchitectures,
+  getPendingChannelMap,
   hasDevmodeRevisions
 } from "./index";
 
@@ -238,5 +239,78 @@ describe("hasDevmodeRevisions", () => {
 
   it("should be true if any revision has devel grade", () => {
     expect(hasDevmodeRevisions(stateWithGradeDevel)).toBe(true);
+  });
+});
+
+describe("getPendingChannelMap", () => {
+  describe("when there are no pending releases", () => {
+    const stateWithNoPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {}
+    };
+
+    it("should return channel map as it is", () => {
+      expect(getPendingChannelMap(stateWithNoPendingReleases)).toEqual(
+        stateWithNoPendingReleases.channelMap
+      );
+    });
+  });
+
+  describe("when there are pending releases to other channels", () => {
+    const stateWithPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {
+        2: {
+          revision: { revision: 2, architectures: ["test64"] },
+          channels: ["latest/stable"]
+        }
+      }
+    };
+
+    it("should return channel map with pending revisions added", () => {
+      expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
+        ...stateWithPendingReleases.channelMap,
+        "latest/stable": {
+          test64: {
+            ...stateWithPendingReleases.pendingReleases[2].revision
+          }
+        }
+      });
+    });
+  });
+
+  describe("when there are pending releases overriding existing releases", () => {
+    const stateWithPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {
+        2: {
+          revision: { revision: 2, architectures: ["test64"] },
+          channels: ["test/edge"]
+        }
+      }
+    };
+
+    it("should return channel map with pending revisions", () => {
+      expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
+        ...stateWithPendingReleases.channelMap,
+        "test/edge": {
+          test64: {
+            ...stateWithPendingReleases.pendingReleases[2].revision
+          }
+        }
+      });
+    });
   });
 });
