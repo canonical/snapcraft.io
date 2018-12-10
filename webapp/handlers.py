@@ -10,6 +10,11 @@ badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
 )
 
+badge_logged_in_counter = prometheus_client.Counter(
+    "badge_logged_in_counter",
+    "A counter of badges requests of logged in users",
+)
+
 
 def set_handlers(app):
     @app.context_processor
@@ -96,7 +101,9 @@ def set_handlers(app):
     @app.before_request
     def prometheus_metrics():
         if "/static/images/badges" in flask.request.url:
-            if not flask.session:
+            if flask.session:
+                badge_logged_in_counter.inc()
+            else:
                 badge_counter.inc()
 
     @app.after_request
