@@ -119,7 +119,11 @@ class RevisionsList extends Component {
 
     if (filters && filters.arch) {
       if (filters.risk === UNASSIGNED) {
-        title = `Unreleased revisions: ${filters.arch}`;
+        title = (
+          <Fragment>
+            Unreleased revisions for <b>{filters.arch}</b>
+          </Fragment>
+        );
 
         filteredRevisions = getUnassignedRevisions(
           this.props.revisions,
@@ -128,9 +132,14 @@ class RevisionsList extends Component {
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
-        title = `Releases history: ${filters.arch} – ${filters.track}/${
-          filters.risk
-        }`;
+        title = (
+          <Fragment>
+            Releases history for <b>{filters.arch}</b> in{" "}
+            <b>
+              {filters.track}/{filters.risk}
+            </b>
+          </Fragment>
+        );
 
         filteredRevisions = this.props.filteredReleaseHistory;
 
