@@ -139,14 +139,25 @@ class ReleasesTable extends Component {
       }
     }
 
+    const channelName =
+      risk === UNASSIGNED ? <em>Unreleased revisions</em> : channel;
+
+    const filteredChannel =
+      this.props.filters &&
+      getChannelName(this.props.filters.track, this.props.filters.risk);
+
     return (
       <div
         className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk}`}
         key={channel}
       >
         <div className="p-releases-channel">
-          <span className="p-releases-channel__name">
-            {risk === UNASSIGNED ? <em>Unreleased revisions</em> : channel}
+          <span
+            className={`p-releases-channel__name ${
+              filteredChannel === channel ? "is-active" : ""
+            }`}
+          >
+            {channelName}
           </span>
           <span className="p-releases-table__menus">
             {canBePromoted && (
@@ -315,7 +326,7 @@ class ReleasesTable extends Component {
   render() {
     const { archs, tracks } = this.props;
     const revisionsCount = Object.keys(this.props.revisions).length;
-
+    const filteredArch = this.props.filters && this.props.filters.arch;
     return (
       <Fragment>
         <div className="row">
@@ -329,7 +340,9 @@ class ReleasesTable extends Component {
               <div className="p-releases-channel" />
               {archs.map(arch => (
                 <div
-                  className="p-releases-table__cell p-releases-table__arch"
+                  className={`p-releases-table__cell p-releases-table__arch ${
+                    filteredArch === arch ? "is-active" : ""
+                  }`}
                   key={`${arch}`}
                 >
                   {arch}
