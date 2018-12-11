@@ -123,6 +123,17 @@ class TestMarkdownParser(unittest.TestCase):
 
         assert result == expected_result
 
+    def test_parse_list_special_char(self):
+        """Lists (• Foo)
+        """
+        markdown = "• item \n• item \n• item \n"
+        result = parse_markdown_description(markdown)
+        expected_result = (
+            "<ul>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ul>\n"
+        )
+
+        assert result == expected_result
+
     def test_parse_list_ordered(self):
         """Lists (* Foo)
         """
