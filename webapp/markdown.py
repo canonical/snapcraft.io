@@ -34,9 +34,15 @@ class DescriptionGrammar(BlockGrammar):
 class DescriptionBlock(BlockLexer):
     grammar_class = DescriptionGrammar
 
-    default_rules = ["block_code", "list_block", "paragraph", "text"]
+    default_rules = [
+        "block_code",
+        "list_block",
+        "paragraph",
+        "text",
+        "newline",
+    ]
 
-    list_rules = ("block_code", "list_block", "text")
+    list_rules = ("block_code", "list_block", "text", "newline")
 
 
 parser = Markdown(
