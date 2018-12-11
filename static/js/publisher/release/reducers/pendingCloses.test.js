@@ -1,7 +1,10 @@
 import pendingCloses from "./pendingCloses";
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
-import { CANCEL_PENDING_RELEASES } from "../actions/pendingReleases";
+import {
+  RELEASE_REVISION,
+  CANCEL_PENDING_RELEASES
+} from "../actions/pendingReleases";
 
 describe("pendingCloses", () => {
   it("should return the initial state", () => {
@@ -48,6 +51,52 @@ describe("pendingCloses", () => {
         );
 
         expect(result).toEqual(stateWithPendingCloses);
+      });
+    });
+  });
+
+  describe("on RELEASE_REVISION action", () => {
+    const releaseRevisionAction = {
+      type: RELEASE_REVISION,
+      payload: {
+        revision: { revision: 1, architectures: ["test64"] },
+        channel: "test/edge"
+      }
+    };
+
+    describe("when there are no closed channels", () => {
+      const emptyState = [];
+
+      it("should not change the state", () => {
+        const result = pendingCloses(emptyState, releaseRevisionAction);
+
+        expect(result).toBe(emptyState);
+      });
+    });
+
+    describe("when releasing to channel that is not pending close", () => {
+      const stateWithOtherPendingCloses = ["latest/candidate", "test/beta"];
+
+      it("should not change the state", () => {
+        const result = pendingCloses(
+          stateWithOtherPendingCloses,
+          releaseRevisionAction
+        );
+
+        expect(result).toBe(stateWithOtherPendingCloses);
+      });
+    });
+
+    describe("when releasing to channel that is pending close", () => {
+      const stateWithPendingCloses = ["test/edge", "latest/candidate"];
+
+      it("should remove pending close of the channel released to", () => {
+        const result = pendingCloses(
+          stateWithPendingCloses,
+          releaseRevisionAction
+        );
+
+        expect(result).toEqual(["latest/candidate"]);
       });
     });
   });
