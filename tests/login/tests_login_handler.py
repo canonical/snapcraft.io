@@ -61,7 +61,6 @@ class LoginHandlerTest(TestCase):
 
         assert len(responses.calls) == 1
         assert response.status_code == 302
-        assert "login.ubuntu.com" in response.headers.get("Location")
 
     @responses.activate
     def test_login_api_500(self):
