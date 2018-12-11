@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -19,42 +19,48 @@ class ReleasesConfirm extends Component {
     return (
       (releasesCount > 0 || closesCount > 0) && (
         <div className="p-releases-confirm">
-          <span className="p-tooltip">
-            <i className="p-icon--question" />{" "}
-            {releasesCount > 0 && (
-              <span>
-                {releasesCount} revision
-                {releasesCount > 1 ? "s" : ""} to release.
-              </span>
-            )}{" "}
-            {closesCount > 0 && (
-              <span>
-                {closesCount} channel
-                {closesCount > 1 ? "s" : ""} to close.
-              </span>
-            )}
-            <span
-              className="p-tooltip__message"
-              role="tooltip"
-              id="default-tooltip"
-            >
-              {Object.keys(pendingReleases).map(revId => {
-                const release = pendingReleases[revId];
+          {releasesCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {releasesCount} revision
+                  {releasesCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  Release revisions:
+                  <br />
+                  {Object.keys(pendingReleases).map(revId => {
+                    const release = pendingReleases[revId];
 
-                return (
-                  <span key={revId}>
-                    {release.revision.version} ({release.revision.revision}){" "}
-                    {release.revision.architectures.join(", ")} to{" "}
-                    {release.channels.join(", ")}
-                    {"\n"}
-                  </span>
-                );
-              })}
-              {closesCount > 0 && (
-                <span>Close channels: {pendingCloses.join(", ")}</span>
-              )}
-            </span>
-          </span>{" "}
+                    return (
+                      <span key={revId}>
+                        <b>{release.revision.revision}</b> (
+                        {release.revision.version}){" "}
+                        {release.revision.architectures.join(", ")} to{" "}
+                        {release.channels.join(", ")}
+                        {"\n"}
+                      </span>
+                    );
+                  })}
+                </span>
+              </span>{" "}
+              to release.
+            </Fragment>
+          )}{" "}
+          {closesCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {closesCount} channel
+                  {closesCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  Close channels: {pendingCloses.join(", ")}
+                </span>
+              </span>{" "}
+              to close.
+            </Fragment>
+          )}{" "}
           <div className="p-releases-confirm__buttons">
             <button
               className="p-button--positive is-inline u-no-margin--bottom"
