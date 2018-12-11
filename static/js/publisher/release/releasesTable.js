@@ -17,21 +17,14 @@ import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
 import { toggleHistory } from "./actions/history";
-import { promoteRevision } from "./actions/pendingReleases";
+import { promoteChannel } from "./actions/pendingReleases";
+import { closeChannel } from "./actions/pendingCloses";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
 
 class ReleasesTable extends Component {
-  releaseClick(revision, track, risk) {
-    let targetRisk;
-    targetRisk = RISKS[RISKS.indexOf(risk) - 1];
-    if (targetRisk) {
-      this.props.promoteRevision(revision, `${track}/${targetRisk}`);
-    }
-  }
-
   handleShowRevisionsClick(event) {
     this.props.toggleHistoryPanel();
 
@@ -267,21 +260,18 @@ ReleasesTable.propTypes = {
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
   channelMap: PropTypes.object.isRequired,
+  pendingCloses: PropTypes.array.isRequired,
 
   pendingChannelMap: PropTypes.object,
 
   // actions
-  promoteRevision: PropTypes.func.isRequired,
+  closeChannel: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
+  promoteChannel: PropTypes.func.isRequired,
 
   // state (non redux)
   archs: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired,
-  pendingCloses: PropTypes.array.isRequired,
-
-  // actions (non redux)
-  promoteChannel: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func.isRequired
+  currentTrack: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
@@ -291,6 +281,7 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     releases: state.releases,
     channelMap: state.channelMap,
+    pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state)
   };
 };
@@ -298,8 +289,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel))
+    promoteChannel: (channel, targetChannel) =>
+      dispatch(promoteChannel(channel, targetChannel)),
+    closeChannel: channel => dispatch(closeChannel(channel))
   };
 };
 

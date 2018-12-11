@@ -2,9 +2,11 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { cancelPendingReleases } from "../actions/pendingReleases";
+
 class ReleasesConfirm extends Component {
   onRevertClick() {
-    this.props.clearPendingReleases();
+    this.props.cancelPendingReleases();
   }
 
   onApplyClick() {
@@ -88,13 +90,23 @@ ReleasesConfirm.propTypes = {
   isLoading: PropTypes.bool.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
-  clearPendingReleases: PropTypes.func.isRequired
+  cancelPendingReleases: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
+    pendingCloses: state.pendingCloses,
     pendingReleases: state.pendingReleases
   };
 };
 
-export default connect(mapStateToProps)(ReleasesConfirm);
+const mapDispatchToProps = dispatch => {
+  return {
+    cancelPendingReleases: () => dispatch(cancelPendingReleases())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesConfirm);

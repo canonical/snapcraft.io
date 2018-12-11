@@ -16,12 +16,7 @@ import {
   releaseRevisionSuccess,
   closeChannelSuccess
 } from "./actions/channelMap";
-import { closeChannel } from "./actions/pendingCloses";
-import {
-  promoteRevision,
-  undoRelease,
-  cancelPendingReleases
-} from "./actions/pendingReleases";
+import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
 import { hasDevmodeRevisions, getPendingChannelMap } from "./selectors";
 
 import {
@@ -74,27 +69,6 @@ class ReleasesController extends Component {
 
   setCurrentTrack(track) {
     this.setState({ currentTrack: track });
-  }
-
-  // TODO: can be moved to redux already
-  promoteChannel(channel, targetChannel) {
-    const releasedChannels = this.props.pendingChannelMap;
-    const archRevisions = releasedChannels[channel];
-
-    if (archRevisions) {
-      Object.keys(archRevisions).forEach(arch => {
-        this.props.promoteRevision(archRevisions[arch], targetChannel);
-      });
-    }
-  }
-
-  closeChannel(channel) {
-    this.props.closeChannel(channel);
-  }
-
-  // TODO: remove when pendingCloses are moved to redux
-  clearPendingReleases() {
-    this.props.cancelPendingReleases();
   }
 
   fetchReleasesHistory() {
@@ -270,8 +244,7 @@ class ReleasesController extends Component {
   }
 
   releaseRevisions() {
-    const { pendingCloses } = this.props;
-    const { pendingReleases } = this.props;
+    const { pendingReleases, pendingCloses } = this.props;
     const releases = Object.keys(pendingReleases).map(id => {
       return {
         id,
@@ -286,7 +259,7 @@ class ReleasesController extends Component {
       .then(() => this.fetchUpdatedReleasesHistory())
       .catch(error => this.handleReleaseError(error))
       .then(() => this.setState({ isLoading: false }))
-      .then(() => this.clearPendingReleases());
+      .then(() => this.props.cancelPendingReleases());
   }
 
   render() {
@@ -319,25 +292,16 @@ class ReleasesController extends Component {
             setCurrentTrack={this.setCurrentTrack.bind(this)}
           />
           <ReleasesConfirm
-            pendingCloses={this.props.pendingCloses}
             isLoading={this.state.isLoading}
             // triggers posting data to API
             releaseRevisions={this.releaseRevisions.bind(this)}
-            // depends on pendingCloses
-            clearPendingReleases={this.clearPendingReleases.bind(this)}
           />
         </div>
 
         <ReleasesTable
-          // map all the state into props
+          // not moved to redux yet
           archs={this.state.archs}
           currentTrack={this.state.currentTrack}
-          pendingCloses={this.props.pendingCloses}
-          // actions
-          // can be moved now (?) - together with getNextReleasedChannels
-          promoteChannel={this.promoteChannel.bind(this)}
-          // depends on pendingCloses
-          closeChannel={this.closeChannel.bind(this)}
         />
       </Fragment>
     );
@@ -366,8 +330,6 @@ ReleasesController.propTypes = {
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
   undoRelease: PropTypes.func,
-  promoteRevision: PropTypes.func,
-  closeChannel: PropTypes.func,
   cancelPendingReleases: PropTypes.func
 };
 
@@ -395,9 +357,6 @@ const mapDispatchToProps = dispatch => {
     updateReleases: releases => dispatch(updateReleases(releases)),
     undoRelease: (revision, channel) =>
       dispatch(undoRelease(revision, channel)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel)),
-    closeChannel: channel => dispatch(closeChannel(channel)),
     cancelPendingReleases: () => dispatch(cancelPendingReleases())
   };
 };
