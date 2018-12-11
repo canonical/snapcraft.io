@@ -6,6 +6,11 @@ class DescriptionGrammar(BlockGrammar):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # This is an extention of the list block rule written in BlockGrammar
+        # of mistune library:
+        # https://github.com/lepture/mistune/blob/master/mistune.py#L120-L141
+        # We want to support the • as a tag for lists in markdown.
+        # To do this this [*+-•] is the list of supported tags
         self.list_block = re.compile(
             r"^( *)(?=[*+-•]|\d+\.)(([*+-•])?(?:\d+\.)?) [\s\S]+?"
             r"(?:"
