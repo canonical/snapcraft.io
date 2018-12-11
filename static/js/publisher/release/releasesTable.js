@@ -271,6 +271,7 @@ ReleasesTable.propTypes = {
   pendingChannelMap: PropTypes.object,
 
   // actions
+  promoteRevision: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
 
   // state (non redux)
@@ -279,7 +280,6 @@ ReleasesTable.propTypes = {
   pendingCloses: PropTypes.array.isRequired,
 
   // actions (non redux)
-  promoteRevision: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
   closeChannel: PropTypes.func.isRequired
 };
