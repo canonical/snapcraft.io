@@ -44,9 +44,9 @@
 {% endblock %}
 
 {% block content %}
-  <div class="p-strip--light is-shallow">
+  <div class="p-strip--light is-shallow snapcraft-banner-background">
     <div class="row">
-      <div class="col-7">
+      <div class="col-7 tablet-col-3 mobile-col-2">
         <div class="p-snap-heading">
           {% if icon_url %}
             <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" />
@@ -107,7 +107,7 @@
   {% endif %}
 
   {% if screenshots %}
-    <div class="p-strip is-shallow">
+    <div class="p-strip--light is-shallow">
       <div class="row">
         <div class="p-carousel" id="js-snap-screenshots">
           <div class="swiper-container">
@@ -143,12 +143,6 @@
         </div>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
-    </div>
   {% endif %}
 
   <div class="p-strip is-shallow">
@@ -166,6 +160,7 @@
         {% endif %}
       </div>
       <div class="col-4">
+        <h4>Details for {{ snap_title }}</h4>
         <table class="p-table-key-value">
           <tr><th>License</th><td>{{ license }}</td></tr>
           <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
@@ -182,9 +177,10 @@
     </div>
     <div class="p-strip is-shallow">
       <div class="row">
-        <h4>Related blog posts</h4>
-      </div>
-      <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+        <div class="col-3">
+          <h3 class="p-heading--four">Related blog posts</h3>
+        </div>
+        <div class="u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}"></div>
       </div>
     </div>
   </div>
