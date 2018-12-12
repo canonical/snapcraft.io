@@ -121,7 +121,7 @@
     <div class="row">
       <div class="col-8">
         {% if summary %}<h4>{{ summary }}</h4>{% endif %}
-        <div>{{ description | safe }}</div>
+        {{ description | safe }}
         {% if website %}<p><a href="{{ website }}">Developer website</a></p>{% endif %}
         {% if contact %}
           <p>
