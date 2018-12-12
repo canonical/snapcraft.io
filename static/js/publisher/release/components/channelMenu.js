@@ -17,7 +17,7 @@ export default class ChannelMenu extends Component {
     }
   }
 
-  renderItems() {
+  renderCloseItems() {
     const { channel } = this.props;
 
     return (
@@ -33,10 +33,49 @@ export default class ChannelMenu extends Component {
     );
   }
 
+  promoteToChannelClick(targetChannel, event) {
+    this.props.promoteToChannel(targetChannel);
+
+    if (this.menu) {
+      this.menu.itemClickHandler(event);
+    }
+  }
+
+  renderItem(targetChannel) {
+    const { channel, isDisabled } = targetChannel;
+    const className = [
+      "p-contextual-menu__link is-indented",
+      isDisabled ? "is-disabled" : ""
+    ].join(" ");
+
+    return (
+      <a
+        className={className}
+        href="#"
+        key={`promote-to-${channel}`}
+        onClick={
+          isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
+        }
+      >
+        {channel}
+      </a>
+    );
+  }
+
+  renderPromoteItems() {
+    return (
+      <span className="p-contextual-menu__group">
+        <span className="p-contextual-menu__item">Promote to:</span>
+        {this.props.targetChannels.map(this.renderItem.bind(this))}
+      </span>
+    );
+  }
+
   render() {
     return (
       <ContextualMenu appearance="base" ref={this.setMenuRef}>
-        {this.renderItems()}
+        {this.renderPromoteItems()}
+        {this.props.canBeClosed && this.renderCloseItems()}
       </ContextualMenu>
     );
   }
@@ -44,5 +83,8 @@ export default class ChannelMenu extends Component {
 
 ChannelMenu.propTypes = {
   channel: PropTypes.string.isRequired,
-  closeChannel: PropTypes.func.isRequired
+  targetChannels: PropTypes.array.isRequired,
+  canBeClosed: PropTypes.bool,
+  closeChannel: PropTypes.func.isRequired,
+  promoteToChannel: PropTypes.func.isRequired
 };
