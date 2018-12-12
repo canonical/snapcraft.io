@@ -366,6 +366,14 @@ def store_blueprint(store_query=None, testing=False):
             channel_maps_list, default_track, lowest_risk_available
         )
 
+        is_users_snap = False
+        if flask.session and "openid" in flask.session:
+            if (
+                flask.session.get("openid").get("nickname")
+                == details["snap"]["publisher"]["username"]
+            ):
+                is_users_snap = True
+
         context = {
             # Data direct from details API
             "snap_title": details["snap"]["title"],
@@ -396,6 +404,7 @@ def store_blueprint(store_query=None, testing=False):
                 country_devices.country_data if country_devices else None
             ),
             "normalized_os": os_metrics.os if os_metrics else None,
+            "is_users_snap": is_users_snap,
             # Context info
             "is_linux": (
                 "Linux" in flask.request.headers.get("User-Agent", "")
