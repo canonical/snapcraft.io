@@ -236,6 +236,13 @@
     }
   }
 
+  .p-icon--menu-dots {
+    display: block;
+    height: 16px;
+    line-height: 7px;
+    width: 16px;
+  }
+
   .p-contextual-menu__item {
     @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
 

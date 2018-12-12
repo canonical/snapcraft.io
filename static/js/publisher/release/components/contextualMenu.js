@@ -44,23 +44,21 @@ export default class ContextualMenu extends Component {
   }
 
   renderIcon() {
-    return this.props.icon || <i className="p-icon--contextual-menu" />;
+    return this.props.icon || <i className="p-icon--menu-dots">…</i>;
   }
 
   render() {
     const { isDisabled, position } = this.props;
     const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
-    const appearance = this.props.appearance || "neutral";
     const className = [
-      "p-promote-button p-icon-button",
-      `p-button--${appearance}`,
+      "p-promote-button p-action-button",
       menuClass,
       isDisabled ? "is--disabled" : "",
       this.props.className || ""
     ].join(" ");
 
     return (
-      <span
+      <button
         className={className}
         onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
       >
@@ -68,7 +66,7 @@ export default class ContextualMenu extends Component {
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
           {this.props.children}
         </span>
-      </span>
+      </button>
     );
   }
 }
@@ -78,6 +76,5 @@ ContextualMenu.propTypes = {
   icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   children: PropTypes.node,
   className: PropTypes.string,
-  position: PropTypes.oneOf(["left", "center"]), // right is by default
-  appearance: PropTypes.oneOf(["base", "neutral"])
+  position: PropTypes.oneOf(["left", "center"]) // right is by default
 };
