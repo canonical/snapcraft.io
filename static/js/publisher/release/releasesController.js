@@ -272,7 +272,7 @@ class ReleasesController extends Component {
             </Notification>
           )}
           {this.props.hasDevmodeRevisions && (
-            <Notification appearance="caution">
+            <Notification>
               Revisions in development mode cannot be released to stable or
               candidate channels.
               <br />

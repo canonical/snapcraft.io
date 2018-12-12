@@ -12,7 +12,7 @@ export default function DevmodeIcon({ revision, showTooltip }) {
         className="p-tooltip p-tooltip--btm-center"
         aria-describedby={`revision-devmode-${revision.revision}`}
       >
-        <i className="p-icon--warning" />
+        <i className="p-icon--information" />
 
         {showTooltip && (
           <span
