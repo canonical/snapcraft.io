@@ -2,7 +2,7 @@ const SCREENSHOTS = {
   freeMode: true,
   watchOverflow: true,
   slidesPerView: "auto",
-  spaceBetween: 16,
+  spaceBetween: 32,
   navigation: {
     nextEl: `.swiper-button__next`,
     prevEl: `.swiper-button__prev`
