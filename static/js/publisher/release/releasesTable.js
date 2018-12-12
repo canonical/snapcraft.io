@@ -11,8 +11,8 @@ import {
 } from "./constants";
 import { getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
-import ChannelMenu from "./channelMenu";
-import PromoteButton from "./promoteButton";
+import ChannelMenu from "./components/channelMenu";
+import PromoteButton from "./components/promoteButton";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
