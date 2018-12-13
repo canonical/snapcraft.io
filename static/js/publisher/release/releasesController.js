@@ -17,7 +17,7 @@ import {
   closeChannelSuccess
 } from "./actions/channelMap";
 import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
-import { hasDevmodeRevisions, getPendingChannelMap } from "./selectors";
+import { getPendingChannelMap } from "./selectors";
 
 import {
   getArchsFromRevisionsMap,
@@ -271,22 +271,6 @@ class ReleasesController extends Component {
               {this.state.error}
             </Notification>
           )}
-          {this.props.hasDevmodeRevisions && (
-            <Notification appearance="caution">
-              Revisions in development mode cannot be released to stable or
-              candidate channels.
-              <br />
-              You can read more about{" "}
-              <a href="https://docs.snapcraft.io/t/snap-confinement/6233">
-                <code>devmode</code> confinement
-              </a>{" "}
-              and{" "}
-              <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276">
-                <code>devel</code> grade
-              </a>
-              .
-            </Notification>
-          )}
           <ReleasesHeading
             tracks={this.state.tracks}
             setCurrentTrack={this.setCurrentTrack.bind(this)}
@@ -318,7 +302,6 @@ ReleasesController.propTypes = {
   isHistoryOpen: PropTypes.bool,
   revisionsFilters: PropTypes.object,
   releasedChannels: PropTypes.object,
-  hasDevmodeRevisions: PropTypes.bool,
   pendingCloses: PropTypes.array,
   pendingReleases: PropTypes.object,
   pendingChannelMap: PropTypes.object,
@@ -339,7 +322,6 @@ const mapStateToProps = state => {
     revisionsFilters: state.history.filters,
     revisions: state.revisions,
     releasedChannels: state.channelMap,
-    hasDevmodeRevisions: hasDevmodeRevisions(state),
     pendingCloses: state.pendingCloses,
     pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state)

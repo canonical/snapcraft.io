@@ -46,25 +46,33 @@ class ReleasesTableCell extends Component {
         </span>
         <span className="p-tooltip__message">
           {isPending && "Pending release of:"}
-          <div>
+
+          <div className="p-tooltip__group">
             Revision: <b>{revision.revision}</b>
-          </div>
-          <div>
+            <br />
             Version: <b>{revision.version}</b>
+            {isInDevmode(revision) && (
+              <Fragment>
+                <br />
+                {revision.confinement === "devmode" ? (
+                  <Fragment>
+                    Confinement: <b>devmode</b>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    Grade: <b>devel</b>
+                  </Fragment>
+                )}
+              </Fragment>
+            )}
           </div>
 
           {isInDevmode(revision) && (
-            <Fragment>
-              {revision.confinement === "devmode" ? (
-                <div>
-                  Confinement: <b>devmode</b>
-                </div>
-              ) : (
-                <div>
-                  Grade: <b>devel</b>
-                </div>
-              )}
-            </Fragment>
+            <div className="p-tooltip__group">
+              Revisions in devmode can’t be promoted
+              <br />
+              to stable or candidate channels.
+            </div>
           )}
         </span>
       </Fragment>

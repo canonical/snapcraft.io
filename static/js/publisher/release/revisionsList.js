@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import DevmodeIcon from "./devmodeIcon";
+import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
+import Notification from "./notification";
 import { UNASSIGNED } from "./constants";
 
 import { closeHistory } from "./actions/history";
@@ -155,9 +156,10 @@ class RevisionsList extends Component {
       }
     }
 
+    const hasDevmodeRevisions = filteredRevisions.some(isInDevmode);
     return (
       <Fragment>
-        <div>
+        <div className="u-clearfix">
           <h4 className="u-float--left">{title}</h4>
           <a
             style={{ marginTop: "0.5rem" }}
@@ -166,6 +168,22 @@ class RevisionsList extends Component {
             className="p-icon--close u-float--right"
           />
         </div>
+        {hasDevmodeRevisions && (
+          <Notification>
+            Revisions in development mode cannot be released to stable or
+            candidate channels.
+            <br />
+            You can read more about{" "}
+            <a href="https://docs.snapcraft.io/t/snap-confinement/6233">
+              <code>devmode</code> confinement
+            </a>{" "}
+            and{" "}
+            <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276">
+              <code>devel</code> grade
+            </a>
+            .
+          </Notification>
+        )}
         <table className="p-revisions-list">
           <thead>
             <tr>
