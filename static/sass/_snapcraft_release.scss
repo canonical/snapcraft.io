@@ -210,6 +210,11 @@
 
   // HELPERS
 
+  .p-help {
+    border-bottom: 1px dashed $color-mid-dark;
+    cursor: help;
+  }
+
   .p-icon-button {
     padding: $spv-nudge - $px $sph-intra--condensed * 1.5 - ($px * 2);
 

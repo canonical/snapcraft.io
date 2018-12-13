@@ -193,12 +193,11 @@ ReleasesTableCell.propTypes = {
   channelMap: PropTypes.object,
   filters: PropTypes.object,
   revisions: PropTypes.object,
+  pendingCloses: PropTypes.array,
   pendingChannelMap: PropTypes.object,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
-  // non-redux
-  pendingCloses: PropTypes.array,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -210,6 +209,7 @@ const mapStateToProps = state => {
     channelMap: state.channelMap,
     revisions: state.revisions,
     filters: state.history.filters,
+    pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state)
   };
 };

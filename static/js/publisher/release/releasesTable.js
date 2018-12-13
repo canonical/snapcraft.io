@@ -17,21 +17,14 @@ import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
 import { toggleHistory } from "./actions/history";
-import { promoteRevision } from "./actions/pendingReleases";
+import { promoteChannel } from "./actions/pendingReleases";
+import { closeChannel } from "./actions/pendingCloses";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED ? risk : `${track}/${risk}`;
 }
 
 class ReleasesTable extends Component {
-  releaseClick(revision, track, risk) {
-    let targetRisk;
-    targetRisk = RISKS[RISKS.indexOf(risk) - 1];
-    if (targetRisk) {
-      this.props.promoteRevision(revision, `${track}/${targetRisk}`);
-    }
-  }
-
   handleShowRevisionsClick(event) {
     this.props.toggleHistoryPanel();
 
@@ -223,118 +216,13 @@ class ReleasesTable extends Component {
     return rows;
   }
 
-  renderTrackDropdown(tracks) {
-    return (
-      <form className="p-form p-form--inline u-float--right">
-        <div className="p-form__group">
-          <label htmlFor="track-dropdown" className="p-form__label">
-            Show revisions released in
-          </label>
-          <div className="p-form__control u-clearfix">
-            <select
-              id="track-dropdown"
-              onChange={this.onTrackChange.bind(this)}
-            >
-              {tracks.map(track => (
-                <option key={`${track}`} value={track}>
-                  {track}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </form>
-    );
-  }
-
-  renderReleasesConfirm() {
-    const { pendingReleases, pendingCloses, isLoading } = this.props;
-    const releasesCount = Object.keys(pendingReleases).length;
-    const closesCount = pendingCloses.length;
-
-    return (
-      (releasesCount > 0 || closesCount > 0) && (
-        <div className="p-releases-confirm">
-          <span className="p-tooltip">
-            <i className="p-icon--question" />{" "}
-            {releasesCount > 0 && (
-              <span>
-                {releasesCount} revision
-                {releasesCount > 1 ? "s" : ""} to release.
-              </span>
-            )}{" "}
-            {closesCount > 0 && (
-              <span>
-                {closesCount} channel
-                {closesCount > 1 ? "s" : ""} to close.
-              </span>
-            )}
-            <span
-              className="p-tooltip__message"
-              role="tooltip"
-              id="default-tooltip"
-            >
-              {Object.keys(pendingReleases).map(revId => {
-                const release = pendingReleases[revId];
-
-                return (
-                  <span key={revId}>
-                    {release.revision.version} ({release.revision.revision}){" "}
-                    {release.revision.architectures.join(", ")} to{" "}
-                    {release.channels.join(", ")}
-                    {"\n"}
-                  </span>
-                );
-              })}
-              {closesCount > 0 && (
-                <span>Close channels: {pendingCloses.join(", ")}</span>
-              )}
-            </span>
-          </span>{" "}
-          <div className="p-releases-confirm__buttons">
-            <button
-              className="p-button--positive is-inline u-no-margin--bottom"
-              disabled={isLoading}
-              onClick={this.onApplyClick.bind(this)}
-            >
-              {isLoading ? "Loading..." : "Apply"}
-            </button>
-            <button
-              className="p-button--neutral u-no-margin--bottom"
-              onClick={this.onRevertClick.bind(this)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )
-    );
-  }
-
-  onTrackChange(event) {
-    this.props.setCurrentTrack(event.target.value);
-  }
-
-  onRevertClick() {
-    this.props.clearPendingReleases();
-  }
-
-  onApplyClick() {
-    this.props.releaseRevisions();
-  }
-
   render() {
-    const { archs, tracks } = this.props;
+    const { archs } = this.props;
     const revisionsCount = Object.keys(this.props.revisions).length;
     const filteredArch = this.props.filters && this.props.filters.arch;
     return (
       <Fragment>
         <div className="row">
-          <div className="u-clearfix">
-            <h4 className="u-float--left">Releases available to install</h4>
-            {tracks.length > 1 && this.renderTrackDropdown(tracks)}
-          </div>
-          {this.renderReleasesConfirm()}
           <div className="p-releases-table">
             <div className="p-releases-table__row p-releases-table__row--heading">
               <div className="p-releases-channel" />
@@ -372,27 +260,18 @@ ReleasesTable.propTypes = {
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
   channelMap: PropTypes.object.isRequired,
-  pendingReleases: PropTypes.object.isRequired,
+  pendingCloses: PropTypes.array.isRequired,
 
   pendingChannelMap: PropTypes.object,
 
   // actions
+  closeChannel: PropTypes.func.isRequired,
   toggleHistoryPanel: PropTypes.func.isRequired,
+  promoteChannel: PropTypes.func.isRequired,
 
   // state (non redux)
   archs: PropTypes.array.isRequired,
-  tracks: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired,
-  pendingCloses: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-
-  // actions (non redux)
-  releaseRevisions: PropTypes.func.isRequired,
-  setCurrentTrack: PropTypes.func.isRequired,
-  promoteRevision: PropTypes.func.isRequired,
-  promoteChannel: PropTypes.func.isRequired,
-  clearPendingReleases: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func.isRequired
+  currentTrack: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
@@ -402,7 +281,7 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     releases: state.releases,
     channelMap: state.channelMap,
-    pendingReleases: state.pendingReleases,
+    pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state)
   };
 };
@@ -410,8 +289,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel))
+    promoteChannel: (channel, targetChannel) =>
+      dispatch(promoteChannel(channel, targetChannel)),
+    closeChannel: channel => dispatch(closeChannel(channel))
   };
 };
 

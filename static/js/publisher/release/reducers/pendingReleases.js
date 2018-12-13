@@ -3,6 +3,7 @@ import {
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES
 } from "../actions/pendingReleases";
+import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 function removePendingRelease(state, revision, channel) {
   if (state[revision.revision]) {
@@ -11,7 +12,10 @@ function removePendingRelease(state, revision, channel) {
     if (channels.includes(channel)) {
       state = { ...state };
       channels.splice(channels.indexOf(channel), 1);
-      state[revision.revision].channels = channels;
+      state[revision.revision] = {
+        ...state[revision.revision],
+        channels
+      };
     }
 
     if (channels.length === 0) {
@@ -23,7 +27,7 @@ function removePendingRelease(state, revision, channel) {
   return state;
 }
 
-function releaseRevision(state = {}, revision, channel) {
+function releaseRevision(state, revision, channel) {
   state = { ...state };
 
   // cancel any other pending release for the same channel in same architectures
@@ -56,6 +60,16 @@ function releaseRevision(state = {}, revision, channel) {
 
   return state;
 }
+
+function closeChannel(state, channel) {
+  Object.values(state).forEach(pendingRelease => {
+    if (pendingRelease.channels.includes(channel)) {
+      state = removePendingRelease(state, pendingRelease.revision, channel);
+    }
+  });
+
+  return state;
+}
 // revisions to be released:
 // key is the id of revision to release
 // value is object containing release object and channels to release to
@@ -83,6 +97,8 @@ export default function pendingReleases(state = {}, action) {
       );
     case CANCEL_PENDING_RELEASES:
       return {};
+    case CLOSE_CHANNEL:
+      return closeChannel(state, action.payload.channel);
     default:
       return state;
   }

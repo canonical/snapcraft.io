@@ -4,6 +4,7 @@ import {
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES
 } from "../actions/pendingReleases";
+import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 describe("pendingReleases", () => {
   it("should return the initial state", () => {
@@ -245,6 +246,77 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({});
+      });
+    });
+  });
+
+  describe("on CLOSE_CHANNEL action", () => {
+    const channel = "test/edge";
+    const closeChannelAction = {
+      type: CLOSE_CHANNEL,
+      payload: { channel }
+    };
+
+    describe("when state is empty", () => {
+      const emptyState = {};
+
+      it("should not change the state", () => {
+        const result = pendingReleases(emptyState, closeChannelAction);
+
+        expect(result).toBe(emptyState);
+      });
+    });
+
+    describe("when there are pending releases to other channels", () => {
+      const stateWithOtherPendingReleases = {
+        1: {
+          revision: { revision: 1 },
+          channels: ["latest/candidate"]
+        }
+      };
+
+      it("should not change the state", () => {
+        const result = pendingReleases(
+          stateWithOtherPendingReleases,
+          closeChannelAction
+        );
+
+        expect(result).toBe(stateWithOtherPendingReleases);
+      });
+    });
+
+    describe("when there are pending releases to same channel", () => {
+      const stateWithPendingReleases = {
+        1: {
+          revision: { revision: 1 },
+          channels: ["latest/candidate"]
+        },
+        2: {
+          revision: { revision: 2 },
+          channels: ["test/edge", "latest/candidate"]
+        },
+        3: {
+          revision: { revision: 3 },
+          channels: ["test/edge"]
+        }
+      };
+
+      it("should remove closed channel from pending releases", () => {
+        const result = pendingReleases(
+          stateWithPendingReleases,
+          closeChannelAction
+        );
+
+        expect(result[2].channels).not.toContain(channel);
+      });
+
+      it("should remove pending releases to closed channel", () => {
+        const result = pendingReleases(
+          stateWithPendingReleases,
+          closeChannelAction
+        );
+
+        expect(result[3]).toBeUndefined();
       });
     });
   });

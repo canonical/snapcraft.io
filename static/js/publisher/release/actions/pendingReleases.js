@@ -31,6 +31,19 @@ export function promoteRevision(revision, channel) {
   };
 }
 
+export function promoteChannel(channel, targetChannel) {
+  return (dispatch, getState) => {
+    const pendingChannelMap = getPendingChannelMap(getState());
+    const pendingInChannel = pendingChannelMap[channel];
+
+    if (pendingInChannel) {
+      Object.values(pendingInChannel).forEach(revision => {
+        dispatch(promoteRevision(revision, targetChannel));
+      });
+    }
+  };
+}
+
 export function undoRelease(revision, channel) {
   return {
     type: UNDO_RELEASE,

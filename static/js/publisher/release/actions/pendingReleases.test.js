@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-export const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore([thunk]);
 
 import reducers from "../reducers";
 
@@ -11,6 +11,7 @@ import {
   CANCEL_PENDING_RELEASES,
   releaseRevision,
   promoteRevision,
+  promoteChannel,
   undoRelease,
   cancelPendingReleases
 } from "./pendingReleases";
@@ -53,7 +54,7 @@ describe("pendingReleases actions", () => {
     });
 
     describe("when revision is already released in this arch and channel", () => {
-      const stateWithReleasedRevsion = {
+      const stateWithReleasedRevision = {
         ...initialState,
         channelMap: {
           "test/edge": {
@@ -63,12 +64,62 @@ describe("pendingReleases actions", () => {
       };
 
       it("should not dispatch RELEASE_REVISION action", () => {
-        const store = mockStore(stateWithReleasedRevsion);
+        const store = mockStore(stateWithReleasedRevision);
 
         store.dispatch(promoteRevision(revision, channel));
 
         const actions = store.getActions();
         expect(actions).toHaveLength(0);
+      });
+    });
+  });
+
+  describe("promoteChannel", () => {
+    const targetChannel = "test/stable";
+
+    describe("when nothing is released yet", () => {
+      it("should not dispatch RELEASE_REVISION action", () => {
+        const store = mockStore(initialState);
+
+        store.dispatch(promoteChannel(channel, targetChannel));
+
+        const actions = store.getActions();
+        expect(actions).toHaveLength(0);
+      });
+    });
+
+    describe("when revisions are in source channel", () => {
+      const revision2 = { revision: 2, architectures: ["abc42"] };
+      const stateWithReleasedRevisions = {
+        ...initialState,
+        channelMap: {
+          "test/edge": {
+            test64: { ...revision },
+            abc42: { ...revision2 }
+          }
+        }
+      };
+
+      it("should dispatch RELEASE_REVISION for each revision to promote", () => {
+        const store = mockStore(stateWithReleasedRevisions);
+
+        store.dispatch(promoteChannel(channel, targetChannel));
+
+        const actions = store.getActions();
+        expect(actions).toContainEqual({
+          type: RELEASE_REVISION,
+          payload: {
+            revision,
+            channel: targetChannel
+          }
+        });
+        expect(actions).toContainEqual({
+          type: RELEASE_REVISION,
+          payload: {
+            revision: revision2,
+            channel: targetChannel
+          }
+        });
       });
     });
   });
