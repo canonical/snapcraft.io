@@ -352,6 +352,12 @@ def store_blueprint(store_query=None, testing=False):
             m["url"] for m in details["snap"]["media"] if m["type"] == "icon"
         ]
 
+        videos = [
+            logic.get_video_embed_code(m["url"])
+            for m in details["snap"]["media"]
+            if m["type"] == "video"
+        ]
+
         # until default tracks are supported by the API we special case node
         # to use 10, rather then latest
         default_track = "10" if details["name"] == "node" else "latest"
@@ -386,6 +392,7 @@ def store_blueprint(store_query=None, testing=False):
             "publisher": details["snap"]["publisher"]["display-name"],
             "username": details["snap"]["publisher"]["username"],
             "screenshots": screenshots,
+            "videos": videos,
             "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),

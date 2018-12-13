@@ -441,7 +441,11 @@ def post_listing_snap(snap_name):
                     else snap_details["website"] or ""
                 ),
                 "public_metrics_enabled": details_metrics_enabled,
-                "video_urls": snap_details["video_urls"],
+                "video_urls": (
+                    [changes["video_urls"]]
+                    if "video_urls" in changes
+                    else snap_details["video_urls"]
+                ),
                 "public_metrics_blacklist": details_blacklist,
                 "license": license,
                 "license_type": license_type,
