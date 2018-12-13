@@ -256,3 +256,24 @@ class StoreLogicTest(unittest.TestCase):
                 {"name": "Test", "slug": "test"},
             ],
         )
+
+    def test_get_video_embed_code(self):
+        youtube_url = "https://youtube.com/watch?v=123"
+        embed = logic.get_video_embed_code(youtube_url)
+        self.assertEqual(
+            embed, {"type": "youtube", "url": "https://youtube.com/embed/123"}
+        )
+
+        vimeo_url = "https://vimeo.com/123123"
+        embed = logic.get_video_embed_code(vimeo_url)
+        self.assertEqual(
+            embed,
+            {"type": "vimeo", "url": "https://player.vimeo.com/video/123123"},
+        )
+
+        asciicinema_url = "https://asciinema.org/a/123"
+        embed = logic.get_video_embed_code(asciicinema_url)
+        self.assertEqual(
+            embed,
+            {"type": "asciinema", "url": "https://asciinema.org/a/123.js"},
+        )

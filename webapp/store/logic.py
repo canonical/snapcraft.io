@@ -319,3 +319,10 @@ def get_video_embed_code(url):
     """
     if "youtube" in url:
         return {"type": "youtube", "url": url.replace("watch?v=", "embed/")}
+    if "vimeo" in url:
+        return {
+            "type": "vimeo",
+            "url": url.replace("vimeo.com/", "player.vimeo.com/video/"),
+        }
+    if "asciinema" in url:
+        return {"type": "asciinema", "url": url + ".js"}
