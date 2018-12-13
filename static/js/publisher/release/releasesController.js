@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "whatwg-fetch";
 
+import { RECENT } from "./constants";
 import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
 import ReleasesHeading from "./components/releasesHeading";
@@ -40,9 +41,24 @@ class ReleasesController extends Component {
     // TODO: should be done outside component as initial state?
     this.props.updateRevisions(revisionsMap);
     this.props.updateReleases(this.props.releasesData.releases);
-    this.props.initChannelMap(
-      getReleaseDataFromChannelMap(this.props.channelMapsList, revisionsMap)
+
+    const channelMap = getReleaseDataFromChannelMap(
+      this.props.channelMapsList,
+      revisionsMap
     );
+
+    // TODO:
+    // just a POC of initializing 'recent' channel
+    channelMap[RECENT] = {};
+    this.props.releasesData.revisions.forEach(revision => {
+      revision.architectures.forEach(arch => {
+        if (!channelMap[RECENT][arch]) {
+          channelMap[RECENT][arch] = revision;
+        }
+      });
+    });
+
+    this.props.initChannelMap(channelMap);
 
     const tracks = getTracksFromChannelMap(this.props.channelMapsList);
 

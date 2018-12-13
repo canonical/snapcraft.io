@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {
   RISKS_WITH_UNASSIGNED as RISKS,
   UNASSIGNED,
+  RECENT,
   STABLE,
   BETA,
   EDGE
@@ -21,7 +22,7 @@ import { promoteChannel } from "./actions/pendingReleases";
 import { closeChannel } from "./actions/pendingCloses";
 
 function getChannelName(track, risk) {
-  return risk === UNASSIGNED ? risk : `${track}/${risk}`;
+  return risk === UNASSIGNED || risk === RECENT ? risk : `${track}/${risk}`;
 }
 
 class ReleasesTable extends Component {
@@ -86,7 +87,7 @@ class ReleasesTable extends Component {
       canBePromoted = false;
     }
 
-    if (risk === UNASSIGNED) {
+    if (risk === UNASSIGNED || risk === RECENT) {
       canBeClosed = false;
     }
 
@@ -107,7 +108,12 @@ class ReleasesTable extends Component {
       });
 
       // check for devmode revisions
-      if (risk === EDGE || risk === BETA || risk === UNASSIGNED) {
+      if (
+        risk === EDGE ||
+        risk === BETA ||
+        risk === UNASSIGNED ||
+        risk === RECENT
+      ) {
         const hasDevmodeRevisions = Object.values(
           pendingChannelMap[channel]
         ).some(isInDevmode);
@@ -133,7 +139,13 @@ class ReleasesTable extends Component {
     }
 
     const channelName =
-      risk === UNASSIGNED ? <em>Unreleased revisions</em> : channel;
+      risk === UNASSIGNED ? (
+        <em>Unreleased revisions</em>
+      ) : risk === RECENT ? (
+        <em>Recent revisions</em>
+      ) : (
+        channel
+      );
 
     const filteredChannel =
       this.props.filters &&

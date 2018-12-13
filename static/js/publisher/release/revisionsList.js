@@ -6,7 +6,7 @@ import format from "date-fns/format";
 
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import Notification from "./notification";
-import { UNASSIGNED } from "./constants";
+import { UNASSIGNED, RECENT } from "./constants";
 
 import { closeHistory } from "./actions/history";
 import { selectRevision } from "./actions/channelMap";
@@ -129,6 +129,12 @@ class RevisionsList extends Component {
         filteredRevisions = getUnassignedRevisions(
           this.props.revisions,
           filters.arch
+        );
+      } else if (filters.risk === RECENT) {
+        title = (
+          <Fragment>
+            Recent revisions for <b>{filters.arch}</b>
+          </Fragment>
         );
       } else {
         // when listing any other (real) channel, show filtered release history
