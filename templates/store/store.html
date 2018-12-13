@@ -27,17 +27,25 @@
   {% include 'partials/search-bar.html' %}
 
   <section class="p-strip is-shallow">
+    <div class="row">
+      <h3 class="p-heading--four"><a href="/search?category=featured">Featured&nbsp;&rsaquo;</a></h3>
+    </div>
+    <div class="row">
+      {% set snaps = featured_snaps %}
+      {% set category = "featured" %}
+      {% include "store/_category-partial.html" %}
+    </div>
+
     {% for category in categories %}
-      {% if loop.index > 1 %}
-        <div class="row">
-          <hr />
-        </div>
-      {% endif %}
+      <div class="row">
+        <hr />
+      </div>
 
       <div class="row">
         <h3 class="p-heading--four"><a href="/search?category={{ category.slug }}">{{ category.name }}&nbsp;&rsaquo;</a></h3>
       </div>
       <div data-category="{{ category.slug }}" class="row js-store-category">
+        {% include "store/_empty-category-partial.html" %}
         {# _category-partial.html loaded via JS #}
       </div>
     {% endfor %}

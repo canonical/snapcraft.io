@@ -1,0 +1,22 @@
+<div class="p-carousel">
+  <div class="swiper-container" id="js-snap-carousel-{{ category }}">
+    <div class="swiper-wrapper">
+      {% set i = 0 %}
+      {% for _ in range(0, 5) %}
+      <div class="p-carousel__item--snap swiper-slide">
+        <div class="p-media-object--snap u-no-margin--bottom is-placeholder">
+          <div class="p-media-object--snap__img"></div>
+          <div class="p-media-object--snap__content">
+            <h4 class="p-media-object--snap__title">
+              Placeholder
+            </h4>
+            <div class="p-media-object--snap__desc">
+              <p>Placeholder</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

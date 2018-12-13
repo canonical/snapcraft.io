@@ -7,6 +7,10 @@
     margin: $spv-inter--scaleable 0;
     position: relative;
 
+    .p-carousel__item--snap {
+      min-width: 198px;
+    }
+
     .p-carousel__item,
     .p-carousel__item--snap,
     .p-carousel__item--screenshot {

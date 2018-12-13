@@ -54,6 +54,19 @@ function storeCategories() {
   for (let i = 0; i < holders.length; i++) {
     getCategory(holders[i]);
   }
+
+  new Swiper(
+    document.querySelector("#js-snap-carousel-featured"),
+    Object.assign(
+      {
+        navigation: {
+          nextEl: `.swiper-button__next--featured`,
+          prevEl: `.swiper-button__prev--featured`
+        }
+      },
+      CATEGORY_CONFIG
+    )
+  );
 }
 
 export { storeCategories };

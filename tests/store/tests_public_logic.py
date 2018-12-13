@@ -235,3 +235,24 @@ class StoreLogicTest(unittest.TestCase):
         }
         no_version = logic.get_confinement(channel_map, "track", "edge")
         self.assertEqual(no_version, None)
+
+    def test_get_categories(self):
+        categories = {
+            "_embedded": {
+                "clickindex:sections": [
+                    {"name": "featured"},
+                    {"name": "test"},
+                    {"name": "developers"},
+                ]
+            }
+        }
+        category_list = logic.get_categories(categories)
+        self.assertEqual(
+            category_list,
+            [
+                {"name": "Developers", "slug": "developers"},
+                {"name": "Games", "slug": "games"},
+                {"name": "Social networking", "slug": "social-networking"},
+                {"name": "Test", "slug": "test"},
+            ],
+        )

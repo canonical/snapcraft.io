@@ -67,7 +67,9 @@ def store_blueprint(store_query=None, testing=False):
         categories = logic.get_categories(categories_results)
 
         try:
-            featured_snaps_results = api.get_featured_snaps()
+            featured_snaps_results = api.get_searched_snaps(
+                snap_searched="", category="featured", size=24, page=1
+            )
         except ApiError as api_error:
             featured_snaps_results = []
 
