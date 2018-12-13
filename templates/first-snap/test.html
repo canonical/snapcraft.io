@@ -17,13 +17,13 @@
                 {{ step.action|safe }}
               </h4>
               {% if step.command %}
-              {% set snippet_value = step.command %}
-              {% set snippet_id = loop.index %}
-              {% if snippet_value.count('\n') == 0 %}
-              {% include "/partials/_code-snippet.html" %}
-              {% else %}
-              {% include "/partials/_code-snippet-multi.html" %}
-              {% endif %}
+                {% set snippet_value = step.command %}
+                {% set snippet_id = loop.index %}
+                {% if snippet_value.count('\n') == 0 %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% else %}
+                  {% include "/partials/_code-snippet-multi.html" %}
+                {% endif %}
               {% endif %}
               {% if step.warning %}
                   <div class="p-notification--caution">
