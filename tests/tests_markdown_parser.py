@@ -144,3 +144,12 @@ class TestMarkdownParser(unittest.TestCase):
         )
 
         assert result == expected_result
+
+    def test_parse_image_link(self):
+        """Image link is converted into a simple link
+        """
+        markdown = "![image](link.png)"
+        result = parse_markdown_description(markdown)
+        expected_result = '<p>!<a href="link.png">image</a></p>\n'
+
+        assert result == expected_result
