@@ -1,4 +1,11 @@
-from mistune import BlockGrammar, BlockLexer, Markdown, _pure_pattern
+from mistune import (
+    BlockGrammar,
+    BlockLexer,
+    Renderer,
+    Markdown,
+    _pure_pattern,
+    InlineLexer,
+)
 import re
 
 
@@ -50,8 +57,18 @@ class DescriptionBlock(BlockLexer):
     list_rules = ("block_code", "list_block", "text", "newline")
 
 
+class DescriptionInline(InlineLexer):
+    def _process_link(self, m, link, title=None):
+        line = m.group(0)
+        if line[0] != "!":
+            return super()._process_link(m, link, title)
+
+
+renderer = Renderer()
 parser = Markdown(
-    parse_block_html=True, parse_inline_html=True, block=DescriptionBlock()
+    renderer=renderer,
+    block=DescriptionBlock(),
+    inline=DescriptionInline(renderer=renderer),
 )
 
 
