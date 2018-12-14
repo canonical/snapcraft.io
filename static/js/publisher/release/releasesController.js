@@ -25,7 +25,8 @@ import {
   getTracksFromChannelMap,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMap,
+  getRecentRevisions
 } from "./releasesState";
 
 class ReleasesController extends Component {
@@ -49,8 +50,18 @@ class ReleasesController extends Component {
 
     // TODO:
     // just a POC of initializing 'recent' channel
+    // what is recent?
+    // - within last 7 days
+    // - unassigned
     channelMap[RECENT] = {};
-    this.props.releasesData.revisions.forEach(revision => {
+
+    let recentRevisions = this.props.releasesData.revisions.filter(
+      revision => !revision.channels || revision.channels.length === 0
+    );
+
+    recentRevisions = getRecentRevisions(recentRevisions, 7);
+
+    recentRevisions.forEach(revision => {
       revision.architectures.forEach(arch => {
         if (!channelMap[RECENT][arch]) {
           channelMap[RECENT][arch] = revision;

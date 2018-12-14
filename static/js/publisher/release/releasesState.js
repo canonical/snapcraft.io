@@ -163,6 +163,14 @@ function getPendingRelease(pendingReleases, arch, channel) {
   return pendingRelease;
 }
 
+function getRecentRevisions(revisions, days) {
+  const interval = 1000 * 60 * 60 * 24 * days;
+
+  return revisions.filter(
+    r => Date.now() - new Date(r.created_at).getTime() < interval
+  );
+}
+
 export {
   getPendingRelease,
   getUnassignedRevisions,
@@ -171,5 +179,6 @@ export {
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMap,
+  getRecentRevisions
 };

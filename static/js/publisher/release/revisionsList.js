@@ -16,7 +16,11 @@ import {
   getSelectedArchitectures
 } from "./selectors";
 
-import { getUnassignedRevisions, getPendingRelease } from "./releasesState";
+import {
+  getUnassignedRevisions,
+  getPendingRelease,
+  getRecentRevisions
+} from "./releasesState";
 
 class RevisionsList extends Component {
   revisionSelectChange(revision) {
@@ -133,9 +137,15 @@ class RevisionsList extends Component {
       } else if (filters.risk === RECENT) {
         title = (
           <Fragment>
-            Recent revisions for <b>{filters.arch}</b>
+            Recent unreleased revisions for <b>{filters.arch}</b>
           </Fragment>
         );
+
+        filteredRevisions = getUnassignedRevisions(
+          filteredRevisions,
+          filters.arch
+        );
+        filteredRevisions = getRecentRevisions(filteredRevisions, 7);
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
