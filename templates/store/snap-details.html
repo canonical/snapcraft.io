@@ -63,6 +63,9 @@
                 <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-tooltip">Verified account</span>
               </span>
               {% endif %}
+              {% if is_users_snap %}
+                <a href="/{{ package_name }}/listing">Edit</a>
+              {% endif %}
             </p>
           </div>
         </div>
