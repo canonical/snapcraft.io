@@ -1,12 +1,28 @@
-function youtube(holderEl, url) {
-  const frame = document.createElement("iframe");
-  frame.id = "ytplayer";
-  frame.type = "text/html";
-  frame.width = 440;
-  frame.height = 248;
-  frame.src = `${url}?autoplay=0&origin=${window.location.href}`;
-  frame.setAttribute("frameborder", "0");
-  holderEl.appendChild(frame);
+function vimeo() {
+  const vimeoPlayerScript = document.createElement("script");
+  vimeoPlayerScript.src = "https://player.vimeo.com/api/player.js";
+  const firstScript = document.getElementsByTagName("script")[0];
+  firstScript.parentNode.insertBefore(vimeoPlayerScript, firstScript);
+
+  const frame = document.getElementById("vimeoplayer");
+
+  const vimeoReady = () => {
+    const player = new window.Vimeo.Player(frame);
+    player.on("play", function() {
+      player.setVolume(0);
+    });
+    player.play();
+  };
+
+  const checkVimeo = () => {
+    if (window.Vimeo) {
+      vimeoReady();
+    } else {
+      setTimeout(checkVimeo, 200);
+    }
+  };
+
+  checkVimeo();
 }
 
 function videos(holderSelector) {
@@ -17,13 +33,9 @@ function videos(holderSelector) {
   }
 
   const videoType = holderEl.dataset.videoType;
-  const videoUrl = holderEl.dataset.videoUrl;
 
-  switch (videoType) {
-    case "youtube":
-      youtube(holderEl, videoUrl);
-      break;
-    default:
+  if (videoType === "vimeo") {
+    vimeo();
   }
 }
 

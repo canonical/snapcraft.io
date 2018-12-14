@@ -275,5 +275,9 @@ class StoreLogicTest(unittest.TestCase):
         embed = logic.get_video_embed_code(asciicinema_url)
         self.assertEqual(
             embed,
-            {"type": "asciinema", "url": "https://asciinema.org/a/123.js"},
+            {
+                "type": "asciinema",
+                "url": "https://asciinema.org/a/123.js",
+                "id": "123",
+            },
         )

@@ -30,6 +30,22 @@
       }
     }
 
+    .p-carousel__item--video {
+      position: relative;
+
+      iframe {
+        margin-bottom: 0;
+      }
+    }
+
+    .p-carousel__item--asciinema {
+      width: 492px;
+
+      .asciicast {
+        margin: 0 !important;
+      }
+    }
+
     .p-carousel__item--screenshot {
       &:hover {
         &::after {
