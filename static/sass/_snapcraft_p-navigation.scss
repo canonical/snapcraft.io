@@ -6,7 +6,7 @@
 
   .p-navigation {
     background: $nav-bg-color;
-    z-index: 100; // appear over channel map
+    z-index: 40; // appear over channel map
 
     // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1892
     .p-navigation__banner {
