@@ -308,3 +308,21 @@ def get_version(channel_map, track, risk):
                     return release["version"]
 
     return None
+
+
+def get_video_embed_code(url):
+    """Get the embed code for videos
+
+    :param url: The url of the video
+
+    :returns: Embed code
+    """
+    if "youtube" in url:
+        return {"type": "youtube", "url": url.replace("watch?v=", "embed/")}
+    if "vimeo" in url:
+        return {
+            "type": "vimeo",
+            "url": url.replace("vimeo.com/", "player.vimeo.com/video/"),
+        }
+    if "asciinema" in url:
+        return {"type": "asciinema", "url": url + ".js"}

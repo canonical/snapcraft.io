@@ -13,11 +13,13 @@
 
     .p-carousel__item,
     .p-carousel__item--snap,
-    .p-carousel__item--screenshot {
+    .p-carousel__item--screenshot,
+    .p-carousel__item--video {
       box-sizing: border-box;
     }
 
-    .p-carousel__item--screenshot {
+    .p-carousel__item--screenshot,
+    .p-carousel__item--video {
       cursor: pointer;
 
       img,
@@ -26,7 +28,9 @@
         max-height: 248px;
         max-width: 100%;
       }
+    }
 
+    .p-carousel__item--screenshot {
       &:hover {
         &::after {
           background-color: $color-x-light;

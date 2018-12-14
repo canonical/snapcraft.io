@@ -12,6 +12,7 @@ const allowedKeys = [
   "public_metrics_blacklist",
   "whitelist_countries",
   "blacklist_countries",
+  "video_urls",
   "license"
 ];
 

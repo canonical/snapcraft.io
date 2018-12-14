@@ -1,8 +1,9 @@
 import map from "./snap-details/map";
 import screenshots from "./snap-details/screenshots";
 import channelMap from "./snap-details/channelMap";
-import { storeCategories } from "./store-categories";
+import videos from "./snap-details/videos";
 import { snapDetailsPosts, seriesPosts } from "./snap-details/blog-posts";
+import { storeCategories } from "./store-categories";
 import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 
@@ -14,5 +15,6 @@ export {
   snapDetailsPosts,
   seriesPosts,
   initFSFLanguageSelect,
-  firstSnapFlow
+  firstSnapFlow,
+  videos
 };

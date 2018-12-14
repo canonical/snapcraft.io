@@ -216,6 +216,36 @@
 
         <div class="row">
           <div class="col-8">
+            <div class="p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}">
+              <label>Video: </label>
+              <div class="p-form-validation__field">
+                <input
+                  class="p-form-validation__input"
+                  type="text"
+                  name="video_urls"
+                  value="{{ video_urls[0] }}"
+                />
+                {% if field_errors and field_errors['video_urls'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['video_urls'] }}
+                </p>
+                {% endif %}
+                <p class="p-form-help-text">
+                  Vimeo, YouTube or asciicinema URL
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8">
             <div class="p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
               <label>Developer website: </label>
               <div class="p-form-validation__field">
