@@ -186,12 +186,16 @@ def get_categories(categories_json):
     :param categories_json: The returned json
     :returns: A list of categories
     """
-    categories_list = ["featured", "developers", "games", "social-networking"]
+    categories_list = ["developers", "games", "social-networking"]
+    blacklist = ["featured"]
     categories = []
 
     if "_embedded" in categories_json:
         for cat in categories_json["_embedded"]["clickindex:sections"]:
-            if cat["name"] not in categories_list:
+            if (
+                cat["name"] not in categories_list
+                and cat["name"] not in blacklist
+            ):
                 categories_list.append(cat["name"])
 
         for category in categories_list:

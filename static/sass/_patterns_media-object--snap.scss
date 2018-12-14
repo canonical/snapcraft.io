@@ -13,6 +13,7 @@
       max-height: $matrix-img-width;
       max-width: $matrix-img-width;
       width: auto;
+      height: $matrix-img-width;
     }
 
     &__content {
@@ -54,6 +55,37 @@
 
     &:hover {
       text-decoration: none;
+    }
+
+    &.is-placeholder {
+      .p-media-object--snap__img {
+        display: block;
+        width: $matrix-img-width;
+        background: $color-light;
+        border-radius: 2px;
+      }
+
+      .p-media-object--snap__title,
+      .p-media-object--snap__desc p {
+        color: transparent;
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: 0;
+          color: $color-light;
+          border-radius: 2px;
+          overflow: hidden;
+        }
+      }
+
+      .p-media-object--snap__title::before {
+        content: "████████";
+      }
+
+      .p-media-object--snap__desc p::before {
+        content: "███████████";
+      }
     }
   }
 }
