@@ -38,12 +38,16 @@
     })(window,document,'script','dataLayer','GTM-K92JCQ');</script>
     <!-- End Google Tag Manager -->
   </head>
-
+  
   <body class="has-sticky-footer">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K92JCQ"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    
+    <!-- JS that is needed right away -->
+    <script src="/static/js/modules/global-nav.js"></script>
+    <script>canonicalGlobalNav.createNav({maxWidth: '64.875rem', showLogins: false});</script>
 
     {% include "_header.html" %}
 
