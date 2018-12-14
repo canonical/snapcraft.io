@@ -107,6 +107,7 @@ def get_test(language, operating_system):
         converted_steps.append(
             {
                 "action": action,
+                "warning": step["warning"] if "warning" in step else None,
                 "command": step["command"] if "command" in step else None,
             }
         )

@@ -25,16 +25,15 @@
                   {% include "/partials/_code-snippet-multi.html" %}
                 {% endif %}
               {% endif %}
+              {% if step.warning %}
+                  <div class="p-notification--caution">
+                    <p class="p-notification__response">
+                      {{ step.warning|safe }}
+                    </p>
+                  </div>
+                {% endif %}
             </li>
           {% endfor %}
-          {% if os.startswith('macos') %}
-            <div class="p-notification--caution">
-              <p class="p-notification__response">
-                <span class="p-notification__status"></span>
-                You should change any instance of <code>offlineimap</code> to <code>test-offlineimap-{name}</code> (where <code>{name}</code> is your name).
-              </p>
-            </div>
-          {% endif %}
         </ol>
       </div>
     </div>

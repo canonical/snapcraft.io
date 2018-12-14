@@ -30,7 +30,7 @@ macos:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
       command: snapcraft
     - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
-      command:  |
+      command: |
         brew install squashfs
         unsquashfs -l *.snap
   manual:
