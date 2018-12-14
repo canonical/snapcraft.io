@@ -180,9 +180,6 @@ $color-navigation-background: #252525;
 @import 'patterns_blog-list';
 @include snapcraft-p-blog-list;
 
-@import 'global-nav';
-@include global-nav;
-
 @import 'patterns_form-multiselect';
 @include snapcraft-p-multiselect;
 
