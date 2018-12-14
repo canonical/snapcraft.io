@@ -35,8 +35,11 @@ function nps() {
     MARKETO_FORM_ID,
     mktoForm => {
       mktoForm.onSuccess(() => {
-        button.setAttribute("disabled", "disabled");
-        button.innerHTML = `Thanks 👍`;
+        button.innerHTML = `👍&nbsp;Dismiss`;
+        button.addEventListener("click", e => {
+          e.preventDefault();
+          document.querySelector(".p-snapcraft-nps-banner").remove();
+        });
         return false;
       });
       form.addEventListener("change", e => {
