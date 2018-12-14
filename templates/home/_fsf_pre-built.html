@@ -1,25 +1,31 @@
 <div class="col-12 p-flow-details" style="display: none" data-flow-details="pre-built">
   <div class='col-6'>
-    <h4>Why are snaps good for pre-built apps?</h4>
-    <ul>
-      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
-      <li>Snaps install and run the same across Linux. They bundle your app’s exact versioned dependencies.</li>
-      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
-      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
-      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
-    </ul>
+      <h4>Why are snaps good for pre-built apps?</h4>
+      <ul>
+        <li>Easy to discover and install by millions using the Snap Store or command-line every day</li>
+        <li>Automatically updated to the latest stable version of your app</li>
+        <li>Revert to the previous version if an update fails, preserving data</li>
+        <li>Isolation ensures no conflicts between applications</li>
+        <li>Identical behaviour across Linux distributions, even with library dependencies</li>
+      </ul>
+      <p>
+        Distributing the Linux build of your app as a zip lets you provide one download and set of instructions for all of Linux.
+        However, end user discovery and update management remain a challenge.
+        Snaps fill this gap, letting you wrap your existing Linux build in an app store experience for end users.
+      </p>
   </div>
 
   <div class='col-6'>
-    <h4>Here's how geekbench uses it:</h4>
+    <h4>How <a href="https://www.geekbench.com/">geekbench4</a> defines <code>snapcraft.yaml</code></h4>
     <code class="p-code-yaml"><pre><b>name</b>: geekbench4
 <b>version</b>: 4.2.0
 <b>summary</b>: Cross-Platform Benchmark
 <b>description</b>: |
-  Geekbench 4 measures your system's power and tells you whether your
-  computer is ready to roar. How strong is your mobile device or desktop
-  computer? How will it perform when push comes to crunch? These are the
-  questions that Geekbench can answer.
+  Geekbench 4 measures your system's power and tells
+  you whether your computer is ready to roar. How
+  strong is your mobile device or desktop computer?
+  How will it perform when push comes to crunch?
+  These are the questions that Geekbench can answer.
 
 <b>confinement</b>: devmode
 <b>base</b>: core18
@@ -36,6 +42,6 @@
 
   <div class="p-flow-details__continue">
     In just a few steps, you’ll have an example pre-built app in the Snap Store.
-    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/pre-built">Continue</a>
+    <a class="p-button--positive is-inline" href="/first-snap/pre-built">Continue</a>
   </div>
 </div>
