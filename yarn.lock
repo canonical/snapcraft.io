@@ -3441,6 +3441,10 @@ global-modules-path@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/global-modules-path/-/global-modules-path-2.3.0.tgz#b0e2bac6beac39745f7db5c59d26a36a0b94f7dc"
 
+global-nav@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/global-nav/-/global-nav-1.2.0.tgz#ebd6787c2c0ac49f7e53e967f0863458f9e05820"
+
 globals@^11.1.0:
   version "11.9.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.9.0.tgz#bde236808e987f290768a93d065060d78e6ab249"
