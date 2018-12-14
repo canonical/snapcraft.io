@@ -6,6 +6,7 @@ import { snapDetailsPosts, seriesPosts } from "./snap-details/blog-posts";
 import { storeCategories } from "./store-categories";
 import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
+import nps from "./nps";
 
 export {
   map,
@@ -16,5 +17,6 @@ export {
   seriesPosts,
   initFSFLanguageSelect,
   firstSnapFlow,
-  videos
+  videos,
+  nps
 };
