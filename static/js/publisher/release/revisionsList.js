@@ -148,7 +148,7 @@ class RevisionsList extends Component {
         } else {
           title = (
             <Fragment>
-              Ureleased revisions for <b>{this.props.currentSelect}</b>{" "}
+              Ureleased revisions of <b>{this.props.currentSelect}</b> for{" "}
               <b>{filters.arch}</b>
             </Fragment>
           );

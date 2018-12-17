@@ -24,7 +24,9 @@ import {
   getTracksFromChannelMap,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMap,
+  getUnassignedRevisions,
+  getRecentRevisions
 } from "./releasesState";
 
 class ReleasesController extends Component {
@@ -70,6 +72,8 @@ class ReleasesController extends Component {
     this.props.initChannelMap(channelMap);
 
     const tracks = getTracksFromChannelMap(this.props.channelMapsList);
+
+    this.props.selectRecent();
 
     this.state = {
       // use "latest" if default track is not defined
@@ -338,7 +342,9 @@ ReleasesController.propTypes = {
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
   undoRelease: PropTypes.func,
-  cancelPendingReleases: PropTypes.func
+  cancelPendingReleases: PropTypes.func,
+
+  selectRecent: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -364,7 +370,29 @@ const mapDispatchToProps = dispatch => {
     updateReleases: releases => dispatch(updateReleases(releases)),
     undoRelease: (revision, channel) =>
       dispatch(undoRelease(revision, channel)),
-    cancelPendingReleases: () => dispatch(cancelPendingReleases())
+    cancelPendingReleases: () => dispatch(cancelPendingReleases()),
+    selectRecent: () =>
+      dispatch((dispatch, getState) => {
+        dispatch({
+          type: "SELECT_FILTER",
+          payload: {
+            filter: "Recent"
+          }
+        });
+
+        const archs = getArchsFromRevisionsMap(getState().revisions);
+        archs.forEach(arch => {
+          let revisionToSelect = null;
+          let revs = getUnassignedRevisions(getState().revisions, arch);
+
+          revs = getRecentRevisions(revs, 7);
+
+          revisionToSelect = revs[0];
+          if (revisionToSelect) {
+            dispatch(selectRevision(revisionToSelect));
+          }
+        });
+      })
   };
 };
 

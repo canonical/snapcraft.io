@@ -39,7 +39,15 @@ export default class UnreleasedSelectMenu extends Component {
 
   render() {
     const icon = (
-      <span>
+      <span
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "block",
+          maxWidth: "125px"
+        }}
+      >
         {this.props.currentFilter} <i className="p-icon--chevron" />
       </span>
     );

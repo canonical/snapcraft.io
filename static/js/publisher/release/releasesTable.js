@@ -21,6 +21,13 @@ import ReleasesTableCell from "./components/releasesTableCell";
 import { toggleHistory } from "./actions/history";
 import { promoteChannel } from "./actions/pendingReleases";
 import { closeChannel } from "./actions/pendingCloses";
+import { selectRevision } from "./actions/channelMap";
+
+import {
+  getArchsFromRevisionsMap,
+  getUnassignedRevisions,
+  getRecentRevisions
+} from "./releasesState";
 
 function getChannelName(track, risk) {
   return risk === UNASSIGNED || risk === RECENT ? risk : `${track}/${risk}`;
@@ -326,11 +333,36 @@ const mapDispatchToProps = dispatch => {
       dispatch(promoteChannel(channel, targetChannel)),
     closeChannel: channel => dispatch(closeChannel(channel)),
     selectFilter: filter =>
-      dispatch({
-        type: "SELECT_FILTER",
-        payload: {
-          filter
-        }
+      dispatch((dispatch, getState) => {
+        dispatch({
+          type: "SELECT_FILTER",
+          payload: {
+            filter
+          }
+        });
+
+        dispatch({
+          type: "CLEAR_SELECTED_REVISIONS"
+        });
+
+        const archs = getArchsFromRevisionsMap(getState().revisions);
+        archs.forEach(arch => {
+          let revisionToSelect = null;
+          let revs = getUnassignedRevisions(getState().revisions, arch);
+
+          if (filter === "Unreleased") {
+            // revisionToSelect = revs[0];
+          } else if (filter === "Recent") {
+            revs = getRecentRevisions(revs, 7);
+          } else {
+            revs = revs.filter(r => r.version === filter);
+          }
+
+          revisionToSelect = revs[0];
+          if (revisionToSelect) {
+            dispatch(selectRevision(revisionToSelect));
+          }
+        });
       })
   };
 };

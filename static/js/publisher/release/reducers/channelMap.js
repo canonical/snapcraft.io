@@ -69,6 +69,11 @@ export default function channelMap(state = {}, action) {
       };
     case SELECT_REVISION:
       return selectRevision(state, action.payload.revision);
+    case "CLEAR_SELECTED_REVISIONS":
+      return {
+        ...state,
+        [UNASSIGNED]: {}
+      };
     case RELEASE_REVISION_SUCCESS:
       return releaseRevision(
         state,
