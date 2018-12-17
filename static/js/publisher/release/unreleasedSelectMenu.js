@@ -18,9 +18,9 @@ export default class UnreleasedSelectMenu extends Component {
   }
 
   renderItems() {
-    // const { filters } = this.props;
+    const { filters } = this.props;
 
-    let all = ["Unreleased", "Recent"];
+    let all = ["Unreleased", "Recent", ...filters];
     return (
       <span className="p-contextual-menu__group">
         {all.map(filter => (

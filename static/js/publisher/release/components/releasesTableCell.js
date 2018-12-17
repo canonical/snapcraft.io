@@ -157,8 +157,14 @@ class ReleasesTableCell extends Component {
 
     let unassigned = getUnassignedRevisions(revisions, arch);
 
-    if (this.props.currentSelect === "Recent") {
+    if (this.props.currentSelect === "Unreleased") {
+      //
+    } else if (this.props.currentSelect === "Recent") {
       unassigned = getRecentRevisions(unassigned, 7);
+    } else {
+      unassigned = unassigned.filter(
+        r => r.version === this.props.currentSelect
+      );
     }
     const unassignedCount = unassigned.length;
 

@@ -139,11 +139,24 @@ class ReleasesTable extends Component {
       }
     }
 
+    const unassigned = Object.values(this.props.revisions)
+      .reverse()
+      .filter(revision => {
+        return !revision.channels || revision.channels.length === 0;
+      });
+
+    const versions = [];
+    unassigned.forEach(r => {
+      if (!versions.includes(r.version)) {
+        versions.push(r.version);
+      }
+    });
+
     const channelName =
       risk === UNASSIGNED ? (
         <UnreleasedSelectMenu
           currentFilter={this.props.currentSelect}
-          filters={[]}
+          filters={versions}
           filterSelect={this.props.selectFilter}
         />
       ) : (

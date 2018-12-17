@@ -135,7 +135,9 @@ class RevisionsList extends Component {
           filters.arch
         );
 
-        if (this.props.currentSelect === "Recent") {
+        if (this.props.currentSelect === "Unreleased") {
+          // do nothing
+        } else if (this.props.currentSelect === "Recent") {
           title = (
             <Fragment>
               Recent unreleased revisions for <b>{filters.arch}</b>
@@ -143,6 +145,17 @@ class RevisionsList extends Component {
           );
 
           filteredRevisions = getRecentRevisions(filteredRevisions, 7);
+        } else {
+          title = (
+            <Fragment>
+              Ureleased revisions for <b>{this.props.currentSelect}</b>{" "}
+              <b>{filters.arch}</b>
+            </Fragment>
+          );
+
+          filteredRevisions = filteredRevisions.filter(
+            r => r.version === this.props.currentSelect
+          );
         }
       } else {
         // when listing any other (real) channel, show filtered release history
