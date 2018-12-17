@@ -6,7 +6,7 @@ import format from "date-fns/format";
 
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import Notification from "./notification";
-import { UNASSIGNED, RECENT } from "./constants";
+import { UNASSIGNED } from "./constants";
 
 import { closeHistory } from "./actions/history";
 import { selectRevision } from "./actions/channelMap";
@@ -134,18 +134,16 @@ class RevisionsList extends Component {
           this.props.revisions,
           filters.arch
         );
-      } else if (filters.risk === RECENT) {
-        title = (
-          <Fragment>
-            Recent unreleased revisions for <b>{filters.arch}</b>
-          </Fragment>
-        );
 
-        filteredRevisions = getUnassignedRevisions(
-          filteredRevisions,
-          filters.arch
-        );
-        filteredRevisions = getRecentRevisions(filteredRevisions, 7);
+        if (this.props.currentSelect === "Recent") {
+          title = (
+            <Fragment>
+              Recent unreleased revisions for <b>{filters.arch}</b>
+            </Fragment>
+          );
+
+          filteredRevisions = getRecentRevisions(filteredRevisions, 7);
+        }
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
@@ -265,7 +263,9 @@ RevisionsList.propTypes = {
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired
+  selectRevision: PropTypes.func.isRequired,
+
+  currentSelect: PropTypes.string
 };
 
 const mapStateToProps = state => {
@@ -276,7 +276,9 @@ const mapStateToProps = state => {
     pendingReleases: state.pendingReleases,
     selectedRevisions: getSelectedRevisions(state),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
-    selectedArchitectures: getSelectedArchitectures(state)
+    selectedArchitectures: getSelectedArchitectures(state),
+
+    currentSelect: state.unreleasedSelect.currentSelect
   };
 };
 

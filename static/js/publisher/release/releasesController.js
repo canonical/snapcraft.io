@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "whatwg-fetch";
 
-import { RECENT } from "./constants";
 import ReleasesTable from "./releasesTable";
 import Notification from "./notification";
 import ReleasesHeading from "./components/releasesHeading";
@@ -25,8 +24,7 @@ import {
   getTracksFromChannelMap,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap,
-  getRecentRevisions
+  getReleaseDataFromChannelMap
 } from "./releasesState";
 
 class ReleasesController extends Component {
@@ -53,21 +51,21 @@ class ReleasesController extends Component {
     // what is recent?
     // - within last 7 days
     // - unassigned
-    channelMap[RECENT] = {};
-
-    let recentRevisions = this.props.releasesData.revisions.filter(
-      revision => !revision.channels || revision.channels.length === 0
-    );
-
-    recentRevisions = getRecentRevisions(recentRevisions, 7);
-
-    recentRevisions.forEach(revision => {
-      revision.architectures.forEach(arch => {
-        if (!channelMap[RECENT][arch]) {
-          channelMap[RECENT][arch] = revision;
-        }
-      });
-    });
+    // channelMap[RECENT] = {};
+    //
+    // let recentRevisions = this.props.releasesData.revisions.filter(
+    //   revision => !revision.channels || revision.channels.length === 0
+    // );
+    //
+    // recentRevisions = getRecentRevisions(recentRevisions, 7);
+    //
+    // recentRevisions.forEach(revision => {
+    //   revision.architectures.forEach(arch => {
+    //     if (!channelMap[RECENT][arch]) {
+    //       channelMap[RECENT][arch] = revision;
+    //     }
+    //   });
+    // });
 
     this.props.initChannelMap(channelMap);
 

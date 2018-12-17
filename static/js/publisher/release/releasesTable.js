@@ -14,6 +14,7 @@ import { getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./channelMenu";
 import PromoteButton from "./promoteButton";
+import UnreleasedSelectMenu from "./unreleasedSelectMenu";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
@@ -140,9 +141,11 @@ class ReleasesTable extends Component {
 
     const channelName =
       risk === UNASSIGNED ? (
-        <em>Unreleased revisions</em>
-      ) : risk === RECENT ? (
-        <em>Recent revisions</em>
+        <UnreleasedSelectMenu
+          currentFilter={this.props.currentSelect}
+          filters={[]}
+          filterSelect={this.props.selectFilter}
+        />
       ) : (
         channel
       );
@@ -283,7 +286,10 @@ ReleasesTable.propTypes = {
 
   // state (non redux)
   archs: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired
+  currentTrack: PropTypes.string.isRequired,
+
+  currentSelect: PropTypes.string,
+  selectFilter: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -294,7 +300,9 @@ const mapStateToProps = state => {
     releases: state.releases,
     channelMap: state.channelMap,
     pendingCloses: state.pendingCloses,
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+
+    currentSelect: state.unreleasedSelect.currentSelect
   };
 };
 
@@ -303,7 +311,14 @@ const mapDispatchToProps = dispatch => {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
     promoteChannel: (channel, targetChannel) =>
       dispatch(promoteChannel(channel, targetChannel)),
-    closeChannel: channel => dispatch(closeChannel(channel))
+    closeChannel: channel => dispatch(closeChannel(channel)),
+    selectFilter: filter =>
+      dispatch({
+        type: "SELECT_FILTER",
+        payload: {
+          filter
+        }
+      })
   };
 };
 

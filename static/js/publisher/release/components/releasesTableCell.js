@@ -11,6 +11,8 @@ import { undoRelease } from "../actions/pendingReleases";
 
 import { getPendingChannelMap } from "../selectors";
 
+import { getRecentRevisions } from "../releasesState";
+
 function getChannelName(track, risk) {
   return risk === UNASSIGNED || risk === RECENT ? risk : `${track}/${risk}`;
 }
@@ -152,7 +154,14 @@ class ReleasesTableCell extends Component {
     const isUnassigned = risk === UNASSIGNED;
     const isActive = filters && filters.arch === arch && filters.risk === risk;
     const isHighlighted = isPending || (isUnassigned && currentRevision);
-    const unassignedCount = getUnassignedRevisions(revisions, arch).length;
+
+    let unassigned = getUnassignedRevisions(revisions, arch);
+
+    if (this.props.currentSelect === "Recent") {
+      unassigned = getRecentRevisions(unassigned, 7);
+    }
+    const unassignedCount = unassigned.length;
+
     const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
 
     const className = [
@@ -209,7 +218,9 @@ ReleasesTableCell.propTypes = {
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
-  arch: PropTypes.string
+  arch: PropTypes.string,
+
+  currentSelect: PropTypes.string
 };
 
 const mapStateToProps = state => {
@@ -218,7 +229,9 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+
+    currentSelect: state.unreleasedSelect.currentSelect
   };
 };
 

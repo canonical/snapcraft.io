@@ -6,14 +6,7 @@ const RECENT = "recent";
 const UNASSIGNED = "unassigned";
 
 const RISKS = [STABLE, CANDIDATE, BETA, EDGE];
-const RISKS_WITH_UNASSIGNED = [
-  STABLE,
-  CANDIDATE,
-  BETA,
-  EDGE,
-  RECENT,
-  UNASSIGNED
-];
+const RISKS_WITH_UNASSIGNED = [STABLE, CANDIDATE, BETA, EDGE, UNASSIGNED];
 
 export {
   STABLE,
