@@ -29,7 +29,7 @@ function videos(holderSelector) {
   const holderEl = document.querySelector(holderSelector);
 
   if (!holderEl) {
-    throw new Error("Video holder doesn't exist");
+    return;
   }
 
   const videoType = holderEl.dataset.videoType;

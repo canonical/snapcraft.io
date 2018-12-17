@@ -4,7 +4,6 @@
   $carousel-buttons-breakpoint: $breakpoint-medium;
 
   .p-carousel {
-    margin: $spv-inter--scaleable 0;
     position: relative;
 
     .p-carousel__item--snap {
@@ -23,9 +22,10 @@
       cursor: pointer;
 
       img,
-      video {
+      video,
+      iframe {
         display: block;
-        max-height: 248px;
+        max-height: 362px;
         max-width: 100%;
       }
     }
@@ -40,6 +40,7 @@
 
     .p-carousel__item--asciinema {
       width: 492px;
+      margin: 0 auto;
 
       .asciicast {
         margin: 0 !important;

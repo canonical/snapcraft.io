@@ -45,41 +45,69 @@ const initLightboxEl = () => {
 };
 
 const loadLightboxImage = (lightboxEl, url, images) => {
-  let media;
-  // hide content before it loads
   const contentEl = lightboxEl.querySelector(".vbox-content");
+  // hide content before it loads
   contentEl.style.opacity = "0";
-
   const currentMedia = contentEl.querySelector(".figlio");
   if (currentMedia) {
     contentEl.removeChild(currentMedia);
   }
 
-  // load media
-  if (url.includes(".gif")) {
-    media = document.createElement("video");
-    media.autoplay = true;
-    media.loop = true;
-    media.classList.add("figlio");
-    contentEl.appendChild(media);
-    contentEl.style.opacity = "1";
+  if (url === "video") {
+    const windowWidth = window.innerWidth;
+    const video = document
+      .querySelector(".js-video-slide iframe")
+      .cloneNode(true);
 
-    const originalEl = document.body.querySelector(`[data-original="${url}"]`);
+    let src = video.src;
+    if (src) {
+      if (src.indexOf("mute=1")) {
+        src = src.split("mute=1").join("mute=0");
+      }
+      if (src.indexOf("autoplay=1")) {
+        src = src.split("autoplay=1").join("autoplay=0");
+      }
 
-    if (media.canPlayType("video/webm")) {
-      media.src = originalEl.querySelector("[type='video/webm']").src;
-    } else if (media.canPlayType("video/mp4")) {
-      media.src = originalEl.querySelector("[type='video/mp4']").src;
+      video.src = src;
     }
+    const ratio = video.width / video.height;
+    video.width = windowWidth - 64;
+    video.height = video.width / ratio;
+    video.id = "lightbox-player";
+    video.classList.add("figlio");
+    contentEl.appendChild(video);
+    contentEl.style.opacity = "1";
   } else {
-    media = new Image();
-    media.classList.add("figlio");
-    contentEl.appendChild(media);
+    let media;
 
-    media.addEventListener("load", () => {
+    // load media
+    if (url.includes(".gif")) {
+      media = document.createElement("video");
+      media.autoplay = true;
+      media.loop = true;
+      media.classList.add("figlio");
+      contentEl.appendChild(media);
       contentEl.style.opacity = "1";
-    });
-    media.src = url;
+
+      const originalEl = document.body.querySelector(
+        `[data-original="${url}"]`
+      );
+
+      if (media.canPlayType("video/webm")) {
+        media.src = originalEl.querySelector("[type='video/webm']").src;
+      } else if (media.canPlayType("video/mp4")) {
+        media.src = originalEl.querySelector("[type='video/mp4']").src;
+      }
+    } else {
+      media = new Image();
+      media.classList.add("figlio");
+      contentEl.appendChild(media);
+
+      media.addEventListener("load", () => {
+        contentEl.style.opacity = "1";
+      });
+      media.src = url;
+    }
   }
 
   // update prev/next buttons

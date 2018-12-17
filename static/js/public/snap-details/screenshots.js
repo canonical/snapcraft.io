@@ -2,8 +2,20 @@ import lightbox from "./../../publisher/market/lightbox";
 import { isMobile } from "../../libs/mobile";
 import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
 import { SCREENSHOTS_CONFIG } from "../../config/swiper.config";
+import debounce from "../../libs/debounce";
 
 Swiper.use([Navigation]);
+
+const IFRAME_RATIO = 643 / 362;
+
+function sizeIframe() {
+  const iframe = document.querySelector(".js-video-slide iframe");
+
+  if (iframe) {
+    const width = iframe.clientWidth;
+    iframe.height = width / IFRAME_RATIO;
+  }
+}
 
 export default function initScreenshots(screenshotsId) {
   const screenshotsEl = document.querySelector(screenshotsId);
@@ -12,7 +24,9 @@ export default function initScreenshots(screenshotsId) {
     return;
   }
 
-  const images = Array.from(screenshotsEl.querySelectorAll("img, video"))
+  const images = Array.from(
+    screenshotsEl.querySelectorAll("img, video, .js-video-slide")
+  )
     .filter(image => image.dataset.original)
     .map(image => image.dataset.original);
 
@@ -42,6 +56,10 @@ export default function initScreenshots(screenshotsId) {
       }
     }
   });
+
+  window.addEventListener("resize", debounce(sizeIframe, 100));
+
+  sizeIframe();
 
   new Swiper(screenshotsEl.querySelector(".swiper-container"), config);
 }

@@ -6,6 +6,7 @@
 
   .p-snap-heading {
     display: flex;
+    flex-wrap: wrap;
 
 
     &__icon {
@@ -20,6 +21,7 @@
 
     &__title {
       flex-grow: 1;
+      flex-shrink: 0;
       margin: 0;
       overflow: hidden;
     }
@@ -31,33 +33,33 @@
     }
 
     &__publisher {
-      margin-top: $sp-x-small;
+      margin-top: -.5rem;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
-      flex-direction: column;
-
       &__title {
-        margin-top: $sp-x-small;
+        margin-top: -2 * $sp-x-small;
       }
     }
   }
 
   .p-snap-install-buttons {
     text-align: right;
+    flex-grow: 1;
 
     .p-snap-install-buttons__install,
     .p-snap-install-buttons__versions {
       position: relative;
+      margin-bottom: 2 * $sp-unit;
       z-index: 5;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
-      margin-top: 8.5 * $sp-unit; // align with snap name baseline
+      margin-top: $sp-unit; // align with snap name baseline
     }
 
     button:last-child {
-      margin-bottom: 0;
+      margin-right: 0;
     }
 
     .p-snap-install-buttons__install {

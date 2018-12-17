@@ -327,6 +327,7 @@ def get_video_embed_code(url):
         return {
             "type": "vimeo",
             "url": url.replace("vimeo.com/", "player.vimeo.com/video/"),
+            "id": url.rsplit("/", 1)[-1],
         }
     if "asciinema" in url:
         return {
