@@ -19,7 +19,9 @@
    * </div>
    */
   function dismissNotifications() {
-    const links = document.querySelectorAll(".p-notification__action");
+    const links = document.querySelectorAll(
+      ".p-notification__action, .p-notification__close"
+    );
 
     for (let i = 0; i < links.length; i++) {
       dismissNotification(links[i]);
