@@ -20,7 +20,7 @@
    */
   function dismissNotifications() {
     const links = document.querySelectorAll(
-      ".p-notification__action, .p-notification__close"
+      ".p-notification__action, .js-notification-close"
     );
 
     for (let i = 0; i < links.length; i++) {
