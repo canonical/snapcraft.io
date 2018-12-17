@@ -7,10 +7,19 @@
   <h1 class="u-off-screen">Snapcraft</h1>
   <div class="row">
     {% if nps %}
-      <div class="p-notification p-snapcraft-nps-banner">
-        <p class="p-notification__response">
-          Thank you so much 🙏. Your feedback is really valuable to us.
-        </p>
+      <div class="p-notification p-snapcraft-nps-banner js-notification-holder">
+        <div class="p-notification__response">
+          <p class="u-no-margin--bottom u-no-padding--top">
+            Thank you so much 🙏. Your feedback is really valuable to us. <a href="#" class="js-nps-comment-toggle">Provide further comments</a>
+          </p>
+          <div class="p-snapcraft-nps-banner__form js-nps-comment u-hide">
+            <form>
+              <textarea rows="5" name="snapcraftNPSNotes"></textarea>
+              <button type="submit" class="has-icon u-float--right button--dark">Send</button>
+            </form>
+          </div>
+        </div>
+        <button arial-label="Close notification" class="p-icon--close js-notification-close">Close</button>
       </div>
     {% endif %}
     <div class="col-12">
@@ -199,9 +208,16 @@
 
 {% block scripts %}
 <script src="{{ static_url('js/dist/public.js') }}"></script>
+{% if nps %}
+  <script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js"></script>
+{% endif %}
 <script>
   Raven.context(function () {
     snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+
+    {% if nps %}
+      snapcraft.public.nps();
+    {% endif %}
   });
 </script>
 {% endblock %}

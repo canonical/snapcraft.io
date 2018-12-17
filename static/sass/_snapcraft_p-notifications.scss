@@ -17,9 +17,16 @@
 
   .p-snapcraft-nps-banner {
     margin-top: -$spv-intra--scaleable;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    &__form {
+      margin-top: 1.1rem;
+    }
   }
 
-  .p-notification__response {
+  .p-notification__response,
+  .p-notification__response p {
     max-width: 100%;
   }
 }
