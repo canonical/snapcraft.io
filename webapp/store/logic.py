@@ -318,7 +318,11 @@ def get_video_embed_code(url):
     :returns: Embed code
     """
     if "youtube" in url:
-        return {"type": "youtube", "url": url.replace("watch?v=", "embed/")}
+        return {
+            "type": "youtube",
+            "url": url.replace("watch?v=", "embed/"),
+            "id": url.rsplit("?v=", 1)[-1],
+        }
     if "vimeo" in url:
         return {
             "type": "vimeo",
