@@ -1,5 +1,7 @@
 import history from "./history";
 import { OPEN_HISTORY, CLOSE_HISTORY } from "../actions/history";
+import { RELEASE_REVISION } from "../actions/pendingReleases";
+import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 describe("history", () => {
   it("should return the initial state", () => {
@@ -46,6 +48,42 @@ describe("history", () => {
 
     it("should remove history filters", () => {
       const result = history({}, closeHistoryAction);
+
+      expect(result.filters).toBe(null);
+    });
+  });
+
+  describe("on RELEASE_REVISION action", () => {
+    let releaseRevisionAction = {
+      type: RELEASE_REVISION
+    };
+
+    it("should mark history panel closed", () => {
+      const result = history({}, releaseRevisionAction);
+
+      expect(result.isOpen).toBe(false);
+    });
+
+    it("should remove history filters", () => {
+      const result = history({}, releaseRevisionAction);
+
+      expect(result.filters).toBe(null);
+    });
+  });
+
+  describe("on CLOSE_CHANNEL action", () => {
+    let closeChanneAction = {
+      type: CLOSE_CHANNEL
+    };
+
+    it("should mark history panel closed", () => {
+      const result = history({}, closeChanneAction);
+
+      expect(result.isOpen).toBe(false);
+    });
+
+    it("should remove history filters", () => {
+      const result = history({}, closeChanneAction);
 
       expect(result.filters).toBe(null);
     });
