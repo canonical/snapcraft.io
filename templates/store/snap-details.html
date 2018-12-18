@@ -112,12 +112,6 @@
         <div class="p-carousel" id="js-snap-screenshots">
           <div class="swiper-container">
             <div class="swiper-wrapper">
-              {# {% for video in videos %}
-                <div class="p-carousel__item--video swiper-slide">
-                  <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}">
-                  </div>
-                </div>
-              {% endfor %} #}
               {% for screenshot in screenshots %}
                 <div class="p-carousel__item--screenshot swiper-slide">
                   {% if screenshot.endswith('.gif') %}
@@ -253,12 +247,6 @@
     Raven.context(function () {
       try {
         snapcraft.public.screenshots('#js-snap-screenshots');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      try {
-        snapcraft.public.videos('.js-video-slide');
       } catch(e) {
         Raven.captureException(e);
       }
