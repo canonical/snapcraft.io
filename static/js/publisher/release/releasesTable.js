@@ -144,14 +144,12 @@ class ReleasesTable extends Component {
         className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk}`}
         key={channel}
       >
-        <div className="p-releases-channel">
-          <span
-            className={`p-releases-channel__name ${
-              filteredChannel === channel ? "is-active" : ""
-            }`}
-          >
-            {channelName}
-          </span>
+        <div
+          className={`p-releases-channel ${
+            filteredChannel === channel ? "is-active" : ""
+          }`}
+        >
+          <span className="p-releases-channel__name">{channelName}</span>
           <span className="p-releases-table__menus">
             {canBePromoted && (
               <PromoteButton
@@ -223,7 +221,11 @@ class ReleasesTable extends Component {
     return (
       <Fragment>
         <div className="row">
-          <div className="p-releases-table">
+          <div
+            className={`p-releases-table ${
+              this.props.isHistoryOpen && this.props.filters ? "has-active" : ""
+            }`}
+          >
             <div className="p-releases-table__row p-releases-table__row--heading">
               <div className="p-releases-channel" />
               {archs.map(arch => (

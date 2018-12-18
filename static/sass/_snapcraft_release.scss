@@ -1,5 +1,5 @@
 @mixin snapcraft-release {
-  $color-highlighted: #fff8ee;
+  $color-highlighted: #ffecd4;
 
   // RELEASES CONFIRM
 
@@ -63,15 +63,20 @@
     // TODO:
     // width: 222px; // fixed width col-3
     width: 230px; // temporary width until we merge menus into one
+
+    .has-active & {
+      opacity: .5;
+    }
+
+    &:hover,
+    &.is-active {
+      opacity: 1;
+    }
   }
 
   .p-releases-channel__name {
     flex-grow: 1;
     padding-top: ($spv-intra - .1rem);
-
-    &.is-active {
-      font-weight: bold;
-    }
   }
 
   // release cell
@@ -88,8 +93,8 @@
     position: relative;
     transition-duration: 0s; // vf-animation doesn't allow to do that
 
-    &.is-unassigned {
-      background-color: $color-x-light;
+    .has-active & {
+      opacity: .5;
     }
 
     &.is-clickable:focus,
@@ -97,11 +102,13 @@
     &.is-active {
       @include vf-animation (#{background-color, border-color}, fast, in);
       background-color: $color-x-light;
-      border-color: $color-mid-dark;
       cursor: pointer;
+      opacity: 1;
     }
 
     &.is-active {
+      border-color: $color-mid-dark;
+
       .p-release-data__title {
         font-weight: bold;
       }
@@ -120,10 +127,6 @@
     background: none;
     border: 0;
     padding: ($spv-intra - .1rem) $sph-intra; // same as p-release-data
-
-    &.is-active {
-      font-weight: bold;
-    }
   }
 
   // cell contents (release info)
