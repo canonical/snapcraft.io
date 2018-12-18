@@ -35,14 +35,12 @@ function getCategory(holder) {
   return fetch(url)
     .then(response => {
       if (!response.ok) {
-        throw `Response not ok for ${category} category \`${url}\``;
+        return;
       }
       return response.text();
     })
     .then(writeCategory)
-    .catch(error => {
-      throw new Error(error);
-    });
+    .catch(() => {});
 }
 
 /**
