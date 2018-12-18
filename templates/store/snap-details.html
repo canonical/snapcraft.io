@@ -108,7 +108,7 @@
   {% if screenshots or videos %}
     <div class="p-strip--light is-shallow">
       <div class="row">
-        {% if (videos and screenshots) or (not videos and len(screenshots) > 1) %}
+        {% if (videos and screenshots) or (not videos and (screenshots and screenshots|length > 1)) %}
           <div class="p-carousel" id="js-snap-screenshots">
             <div class="swiper-container">
               <div class="swiper-wrapper">
