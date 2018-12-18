@@ -35,14 +35,12 @@ function getCategory(holder) {
   return fetch(url)
     .then(response => {
       if (!response.ok) {
-        console.warn(`Response not ok for ${category} category \`${url}\``); // eslint-disable-line no-console
+        return;
       }
       return response.text();
     })
     .then(writeCategory)
-    .catch(error => {
-      console.warn(error); // eslint-disable-line no-console
-    });
+    .catch(() => {});
 }
 
 /**
