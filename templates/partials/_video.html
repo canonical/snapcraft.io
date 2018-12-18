@@ -7,4 +7,5 @@
           src="{{ video.url }}?loop=1&title=0&byline=0&portrait=0"></iframe>
 {% elif video.type == "asciinema" %}
   <script src="{{ video.url }}" id="asciicast-{{ video.id }}" async data-autoplay="1" data-loop="1" data-preload="0"></script>
+  <div class="p-carousel__item-blocker"></div>
 {% endif %}

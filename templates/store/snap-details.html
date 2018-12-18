@@ -109,12 +109,12 @@
     <div class="p-strip--light is-shallow">
       <div class="row">
         {% if (videos and screenshots) or (not videos and (screenshots and screenshots|length > 1)) %}
-          <div class="p-carousel" id="js-snap-screenshots">
+          <div class="p-carousel u-no-margin--bottom u-no-margin--top" id="js-snap-screenshots">
             <div class="swiper-container">
               <div class="swiper-wrapper">
                 {% for video in videos %}
                   <div class="p-carousel__item--video p-carousel__item--{{ video.type }} swiper-slide">
-                    <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}" data-original="video">
+                    <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}">
                       {% include "partials/_video.html" %}
                     </div>
                   </div>

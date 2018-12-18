@@ -58,46 +58,4 @@ describe("lightbox", () => {
       expect(document.querySelector(".vbox-prev")).toBeDefined();
     });
   });
-
-  describe("videos", () => {
-    const urls = ["video"];
-    const images = urls.map(src => {
-      const img = new Image();
-      img.src = src;
-    });
-
-    let jsVideoSlide;
-    let iframe;
-
-    beforeEach(() => {
-      jsVideoSlide = document.createElement("div");
-      jsVideoSlide.className = "js-video-slide";
-
-      iframe = document.createElement("iframe");
-      iframe.src = "?mute=1&autoplay=1";
-      iframe.width = "10";
-      iframe.height = "10";
-
-      jsVideoSlide.appendChild(iframe);
-      document.body.appendChild(jsVideoSlide);
-
-      lightbox.openLightbox(urls[0], images);
-    });
-
-    afterEach(() => {
-      jsVideoSlide.remove();
-      iframe.remove();
-    });
-
-    it("inits", () => {
-      expect(document.querySelector(".vbox-preloader")).toBeDefined();
-      expect(document.querySelector(".vbox-container")).toBeDefined();
-      expect(document.querySelector(".vbox-content")).toBeDefined();
-      expect(document.querySelector(".vbox-title")).toBeDefined();
-      expect(document.querySelector(".vbox-num")).toBeDefined();
-      expect(document.querySelector(".vbox-close")).toBeDefined();
-      expect(document.querySelector(".vbox-next")).toBeDefined();
-      expect(document.querySelector(".vbox-prev")).toBeDefined();
-    });
-  });
 });

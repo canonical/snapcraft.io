@@ -4,6 +4,7 @@
   $carousel-buttons-breakpoint: $breakpoint-medium;
 
   .p-carousel {
+    margin: 1.5rem 0;
     position: relative;
 
     .p-carousel__item--snap {
@@ -15,13 +16,13 @@
     .p-carousel__item--screenshot,
     .p-carousel__item--video {
       box-sizing: border-box;
-      text-align: center;
       transform-origin: top left;
     }
 
     .p-carousel__item--screenshot,
     .p-carousel__item--video {
       cursor: pointer;
+      text-align: center;
 
       img,
       video,
@@ -29,10 +30,6 @@
         display: block;
         margin-bottom: 0;
         max-width: 100%;
-      }
-
-      img,
-      video {
         max-height: 362px;
       }
     }
@@ -49,9 +46,29 @@
       margin: 0 auto;
       max-width: 643px;
       width: 100%;
+      background: $color-x-dark;
+
+      .p-carousel__item-blocker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
 
       .asciicast {
         margin: 0 auto !important;
+
+        &.is-fullscreen {
+          display: flex !important;
+          align-items: center !important;
+
+          iframe {
+            max-height: 100%;
+            max-width: 100%;
+            width: 100% !important;
+          }
+        }
       }
 
       iframe {
@@ -60,7 +77,8 @@
       }
     }
 
-    .p-carousel__item--screenshot {
+    .p-carousel__item--screenshot,
+    .p-carousel__item-blocker {
       &:hover {
         &::after {
           background-color: $color-x-light;
