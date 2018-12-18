@@ -31,14 +31,10 @@ class ReleasesTableCell extends Component {
   renderRevision(revision, isPending) {
     return (
       <Fragment>
-        {isPending ? (
-          <span className="p-release-data__icon">&rarr;</span>
-        ) : (
-          isInDevmode(revision) && (
-            <span className="p-release-data__icon">
-              <DevmodeIcon revision={revision} showTooltip={false} />
-            </span>
-          )
+        {isInDevmode(revision) && (
+          <span className="p-release-data__icon">
+            <DevmodeIcon revision={revision} showTooltip={false} />
+          </span>
         )}
         <span className="p-release-data__info">
           <span className="p-release-data__title">{revision.revision}</span>
@@ -82,7 +78,6 @@ class ReleasesTableCell extends Component {
   renderCloseChannel() {
     return (
       <Fragment>
-        <span className="p-release-data__icon">&rarr;</span>
         <em>close channel</em>
         <span className="p-tooltip__message">Pending channel close</span>
       </Fragment>
