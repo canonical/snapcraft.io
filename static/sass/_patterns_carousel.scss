@@ -15,6 +15,8 @@
     .p-carousel__item--screenshot,
     .p-carousel__item--video {
       box-sizing: border-box;
+      text-align: center;
+      transform-origin: top left;
     }
 
     .p-carousel__item--screenshot,
@@ -25,8 +27,13 @@
       video,
       iframe {
         display: block;
-        max-height: 362px;
+        margin-bottom: 0;
         max-width: 100%;
+      }
+
+      img,
+      video {
+        max-height: 362px;
       }
     }
 
@@ -39,11 +46,17 @@
     }
 
     .p-carousel__item--asciinema {
-      width: 492px;
       margin: 0 auto;
+      max-width: 643px;
+      width: 100%;
 
       .asciicast {
-        margin: 0 !important;
+        margin: 0 auto !important;
+      }
+
+      iframe {
+        display: block !important;
+        margin: 0 auto !important;
       }
     }
 
@@ -151,6 +164,7 @@
   }
 
   .swiper-wrapper {
+    align-items: center;
     box-sizing: content-box;
     display: flex;
     height: 100%;

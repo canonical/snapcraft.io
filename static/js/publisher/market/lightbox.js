@@ -1,3 +1,5 @@
+import iframeSize from "../../libs/iframeSize";
+
 function openLightbox(url, images) {
   const lightboxEl = initLightboxEl(images);
 
@@ -77,6 +79,9 @@ const loadLightboxImage = (lightboxEl, url, images) => {
     video.classList.add("figlio");
     contentEl.appendChild(video);
     contentEl.style.opacity = "1";
+
+    // We need to resize the iframe on window resize
+    iframeSize(".vbox-content", 1200);
   } else {
     let media;
 
