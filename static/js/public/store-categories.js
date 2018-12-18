@@ -35,13 +35,13 @@ function getCategory(holder) {
   return fetch(url)
     .then(response => {
       if (!response.ok) {
-        throw `Response not ok for ${category} category \`${url}\``;
+        console.warn(`Response not ok for ${category} category \`${url}\``); // eslint-disable-line no-console
       }
       return response.text();
     })
     .then(writeCategory)
     .catch(error => {
-      throw new Error(error);
+      console.warn(error); // eslint-disable-line no-console
     });
 }
 
