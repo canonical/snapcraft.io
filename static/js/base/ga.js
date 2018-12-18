@@ -34,7 +34,12 @@ function triggerEvent(category, from, to, label) {
 
 if (dataLayer) {
   window.addEventListener("click", function(e) {
-    let target = e.target.closest("a");
+    let target = e.target;
+    if (!target || !e.target.closest) {
+      return;
+    }
+
+    target = e.target.closest("a");
     if (!target) {
       target = e.target.closest("button");
     }
