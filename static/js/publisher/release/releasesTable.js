@@ -13,6 +13,7 @@ import { getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./components/channelMenu";
 import PromoteMenu from "./components/promoteMenu";
+import AvailableMenu from "./components/availableMenu";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
@@ -132,49 +133,50 @@ class ReleasesTable extends Component {
       }
     }
 
-    const channelName =
-      risk === UNASSIGNED ? <em>Unreleased revisions</em> : channel;
+    const channelName = risk === UNASSIGNED ? <AvailableMenu /> : channel;
 
     const filteredChannel =
       this.props.filters &&
       getChannelName(this.props.filters.track, this.props.filters.risk);
 
     return (
-      <div
-        className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk}`}
-        key={channel}
-      >
+      <Fragment key={channel}>
+        {risk === UNASSIGNED && <h4>Revisions available to promote</h4>}
         <div
-          className={`p-releases-channel ${
-            filteredChannel === channel ? "is-active" : ""
-          }`}
+          className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk}`}
         >
-          <span className="p-releases-channel__name">{channelName}</span>
-          <span className="p-releases-table__menus">
-            {canBePromoted && (
-              <PromoteMenu
-                targetChannels={targetChannels}
-                promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
-              />
-            )}
-            {canBeClosed && (
-              <ChannelMenu
-                channel={channel}
-                closeChannel={this.onCloseChannel.bind(this, channel)}
-              />
-            )}
-          </span>
+          <div
+            className={`p-releases-channel ${
+              filteredChannel === channel ? "is-active" : ""
+            }`}
+          >
+            <span className="p-releases-channel__name">{channelName}</span>
+            <span className="p-releases-table__menus">
+              {canBePromoted && (
+                <PromoteMenu
+                  targetChannels={targetChannels}
+                  promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
+                />
+              )}
+              {canBeClosed && (
+                <ChannelMenu
+                  channel={channel}
+                  closeChannel={this.onCloseChannel.bind(this, channel)}
+                />
+              )}
+            </span>
+          </div>
+          {archs.map(arch =>
+            this.renderRevisionCell(
+              track,
+              risk,
+              arch,
+              channelMap,
+              pendingChannelMap
+            )
+          )}
         </div>
-        {archs.map(arch =>
-          this.renderRevisionCell(
-            track,
-            risk,
-            arch,
-            channelMap,
-            pendingChannelMap
-          )
-        )}
-      </div>
+      </Fragment>
     );
   }
 
