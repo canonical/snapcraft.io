@@ -132,7 +132,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -217,7 +217,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -317,7 +317,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -381,7 +381,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
