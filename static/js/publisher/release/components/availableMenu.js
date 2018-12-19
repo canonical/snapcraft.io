@@ -40,7 +40,9 @@ export class AvailableMenu extends Component {
         {items.map(item => (
           <a
             key={`available-menu-item-${item}`}
-            className="p-contextual-menu__link"
+            className={`p-contextual-menu__link ${
+              item === AVAILABLE_SELECT_RECENT ? "is-disabled" : ""
+            }`}
             href="#"
             onClick={this.itemClick.bind(this, item)}
           >
