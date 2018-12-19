@@ -2,10 +2,10 @@ const STABLE = "stable";
 const CANDIDATE = "candidate";
 const BETA = "beta";
 const EDGE = "edge";
-const UNASSIGNED = "unassigned";
+const AVAILABLE = "AVAILABLE"; // fake 'risk' with all available revisions
 
 const RISKS = [STABLE, CANDIDATE, BETA, EDGE];
-const RISKS_WITH_UNASSIGNED = [STABLE, CANDIDATE, BETA, EDGE, UNASSIGNED];
+const RISKS_WITH_AVAILABLE = [STABLE, CANDIDATE, BETA, EDGE, AVAILABLE];
 
 // available revisions select values
 const AVAILABLE_SELECT_UNRELEASED = "AVAILABLE_SELECT_UNRELEASED";
@@ -20,7 +20,7 @@ export {
   CANDIDATE,
   BETA,
   EDGE,
-  UNASSIGNED,
+  AVAILABLE,
   RISKS,
-  RISKS_WITH_UNASSIGNED
+  RISKS_WITH_AVAILABLE
 };

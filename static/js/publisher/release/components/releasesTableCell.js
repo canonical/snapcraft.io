@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { UNASSIGNED } from "../constants";
+import { AVAILABLE } from "../constants";
 import { getTrackingChannel, getUnassignedRevisions } from "../releasesState";
 import DevmodeIcon, { isInDevmode } from "../devmodeIcon";
 
@@ -12,7 +12,7 @@ import { undoRelease } from "../actions/pendingReleases";
 import { getPendingChannelMap } from "../selectors";
 
 function getChannelName(track, risk) {
-  return risk === UNASSIGNED ? risk : `${track}/${risk}`;
+  return risk === AVAILABLE ? risk : `${track}/${risk}`;
 }
 
 class ReleasesTableCell extends Component {
@@ -144,7 +144,7 @@ class ReleasesTableCell extends Component {
 
     const isChannelPendingClose = pendingCloses.includes(channel);
     const isPending = hasPendingRelease || isChannelPendingClose;
-    const isUnassigned = risk === UNASSIGNED;
+    const isUnassigned = risk === AVAILABLE;
     const isActive = filters && filters.arch === arch && filters.risk === risk;
     const isHighlighted = isPending || (isUnassigned && currentRevision);
     const unassignedCount = getUnassignedRevisions(revisions, arch).length;

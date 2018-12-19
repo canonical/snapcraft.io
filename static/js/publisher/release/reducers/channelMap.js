@@ -1,4 +1,4 @@
-import { UNASSIGNED } from "../constants";
+import { AVAILABLE } from "../constants";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
@@ -12,16 +12,16 @@ function selectRevision(state, revision) {
 
   state = {
     ...state,
-    [UNASSIGNED]: { ...state[UNASSIGNED] }
+    [AVAILABLE]: { ...state[AVAILABLE] }
   };
 
   if (
-    state[UNASSIGNED][arch] &&
-    state[UNASSIGNED][arch].revision === revision.revision
+    state[AVAILABLE][arch] &&
+    state[AVAILABLE][arch].revision === revision.revision
   ) {
-    delete state[UNASSIGNED][arch];
+    delete state[AVAILABLE][arch];
   } else {
-    state[UNASSIGNED][arch] = { ...revision };
+    state[AVAILABLE][arch] = { ...revision };
   }
   return state;
 }

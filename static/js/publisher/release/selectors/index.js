@@ -1,4 +1,4 @@
-import { UNASSIGNED } from "../constants";
+import { AVAILABLE } from "../constants";
 import { isInDevmode } from "../devmodeIcon";
 
 // returns release history filtered by history filters
@@ -47,8 +47,8 @@ export function getFilteredReleaseHistory(state) {
 export function getSelectedRevisions(state) {
   let selectedRevisions = [];
 
-  if (state.channelMap[UNASSIGNED]) {
-    selectedRevisions = Object.values(state.channelMap[UNASSIGNED]).map(
+  if (state.channelMap[AVAILABLE]) {
+    selectedRevisions = Object.values(state.channelMap[AVAILABLE]).map(
       revision => revision.revision
     );
   }
@@ -58,8 +58,8 @@ export function getSelectedRevisions(state) {
 
 // returns list of selected architectures
 export function getSelectedArchitectures(state) {
-  if (state.channelMap[UNASSIGNED]) {
-    return Object.keys(state.channelMap[UNASSIGNED]);
+  if (state.channelMap[AVAILABLE]) {
+    return Object.keys(state.channelMap[AVAILABLE]);
   }
 
   return [];

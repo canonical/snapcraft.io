@@ -1,4 +1,4 @@
-import { UNASSIGNED } from "../constants";
+import { AVAILABLE } from "../constants";
 import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
@@ -149,7 +149,7 @@ describe("getSelectedRevisions", () => {
   const stateWithSelectedRevisions = {
     ...initialState,
     channelMap: {
-      [UNASSIGNED]: {
+      [AVAILABLE]: {
         abc42: { revision: 1, version: "1" },
         test64: { revision: 2, version: "2" }
       }
@@ -171,7 +171,7 @@ describe("getSelectedArchitectures", () => {
   const stateWithSelectedRevisions = {
     ...initialState,
     channelMap: {
-      [UNASSIGNED]: {
+      [AVAILABLE]: {
         abc42: { revision: 1, version: "1" },
         test64: { revision: 2, version: "2" }
       }

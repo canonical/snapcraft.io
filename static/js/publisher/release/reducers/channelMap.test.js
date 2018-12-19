@@ -5,7 +5,7 @@ import {
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS
 } from "../actions/channelMap";
-import { UNASSIGNED } from "../constants";
+import { AVAILABLE } from "../constants";
 
 describe("channelMap", () => {
   it("should return the initial state", () => {
@@ -56,27 +56,27 @@ describe("channelMap", () => {
     };
 
     describe("when revision is not yet selected", () => {
-      it("should add selected revision to UNASSIGNED channel", () => {
+      it("should add selected revision to AVAILABLE channel", () => {
         const result = channelMap({}, selectRevisionAction);
 
-        expect(result[UNASSIGNED]["abc42"]).toEqual(revision);
+        expect(result[AVAILABLE]["abc42"]).toEqual(revision);
       });
     });
 
     describe("when revision is already selected", () => {
       const stateWithSelectedRevision = {
-        [UNASSIGNED]: {
+        [AVAILABLE]: {
           abc42: revision
         }
       };
 
-      it("should remove selected revision from UNASSIGNED channel", () => {
+      it("should remove selected revision from AVAILABLE channel", () => {
         const result = channelMap(
           stateWithSelectedRevision,
           selectRevisionAction
         );
 
-        expect(result[UNASSIGNED]["abc42"]).toBeUndefined();
+        expect(result[AVAILABLE]["abc42"]).toBeUndefined();
       });
     });
   });
