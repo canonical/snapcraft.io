@@ -17,6 +17,8 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
+from webapp.api.store import StoreApi
+from webapp.store.logic import get_categories
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
@@ -27,6 +29,8 @@ publisher_snaps = flask.Blueprint(
     template_folder="/templates",
     static_folder="/static",
 )
+
+store_api = StoreApi(cache=False)
 
 
 def refresh_redirect(path):
@@ -254,10 +258,18 @@ def get_listing_snap(snap_name):
     if flask.request.args.get("from"):
         referrer = flask.request.args.get("from")
 
+    try:
+        categories_results = store_api.get_categories()
+    except ApiError:
+        categories_results = []
+
+    categories = get_categories(categories_results)
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
+        "snap_categories": snap_details["categories"],
         "summary": snap_details["summary"],
         "description": snap_details["description"],
         "icon_url": icon_urls[0] if icon_urls else None,
@@ -275,6 +287,7 @@ def get_listing_snap(snap_name):
         "video_urls": snap_details["video_urls"],
         "is_on_stable": is_on_stable,
         "from": referrer,
+        "categories": categories,
     }
 
     return flask.render_template("publisher/listing.html", **context)
@@ -404,10 +417,18 @@ def post_listing_snap(snap_name):
             ):
                 license_type = "simple"
 
+            try:
+                categories_results = store_api.get_categories()
+            except ApiError:
+                categories_results = []
+
+            categories = get_categories(categories_results)
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
                 "snap_name": snap_details["snap_name"],
+                "snap_categories": snap_details["categories"],
                 "icon_url": icon_urls[0] if icon_urls else None,
                 "publisher_name": snap_details["publisher"]["display-name"],
                 "username": snap_details["publisher"]["username"],
@@ -451,6 +472,7 @@ def post_listing_snap(snap_name):
                 "license_type": license_type,
                 "licenses": licenses,
                 "is_on_stable": is_on_stable,
+                "categories": categories,
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,

@@ -229,6 +229,7 @@ def filter_changes_data(changes):
         "blacklist_countries",
         "license",
         "video_urls",
+        "categories",
     ]
 
     return {key: changes[key] for key in whitelist if key in changes}
