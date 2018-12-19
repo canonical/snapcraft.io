@@ -6,7 +6,11 @@ import format from "date-fns/format";
 
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import Notification from "./notification";
-import { AVAILABLE } from "./constants";
+import {
+  AVAILABLE,
+  AVAILABLE_SELECT_UNRELEASED,
+  AVAILABLE_SELECT_ALL
+} from "./constants";
 
 import { closeHistory } from "./actions/history";
 import { selectRevision } from "./actions/channelMap";
@@ -72,9 +76,9 @@ class RevisionsList extends Component {
           <DevmodeIcon revision={revision} showTooltip={true} />
         </td>
         <td>{revision.version}</td>
-        {this.props.showAllColumns && (
-          <td>{revision.architectures.join(", ")}</td>
-        )}
+        {/* TODO: temporary workaround, remove later with 'Show all...'*/}
+        {showAllColumns &&
+          !this.props.filters && <td>{revision.architectures.join(", ")}</td>}
         {showAllColumns && <td>{revision.channels.join(", ")}</td>}
         <td className="u-align--right">
           {isPending ? (
@@ -111,7 +115,7 @@ class RevisionsList extends Component {
   }
 
   render() {
-    let { showAllColumns } = this.props;
+    let { availableSelect, showAllColumns } = this.props;
     let filteredRevisions = Object.values(this.props.revisions).reverse();
     let title = "Latest revisions";
     let filters = this.props.filters;
@@ -120,16 +124,28 @@ class RevisionsList extends Component {
 
     if (filters && filters.arch) {
       if (filters.risk === AVAILABLE) {
-        title = (
-          <Fragment>
-            Unreleased revisions for <b>{filters.arch}</b>
-          </Fragment>
-        );
+        if (availableSelect === AVAILABLE_SELECT_ALL) {
+          title = (
+            <Fragment>
+              Latest revisions for <b>{filters.arch}</b>
+            </Fragment>
+          );
 
-        filteredRevisions = getUnassignedRevisions(
-          this.props.revisions,
-          filters.arch
-        );
+          filteredRevisions = filteredRevisions.filter(r =>
+            r.architectures.includes(filters.arch)
+          );
+        } else if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
+          title = (
+            <Fragment>
+              Unreleased revisions for <b>{filters.arch}</b>
+            </Fragment>
+          );
+
+          filteredRevisions = getUnassignedRevisions(
+            this.props.revisions,
+            filters.arch
+          );
+        }
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
@@ -196,11 +212,13 @@ class RevisionsList extends Component {
               </th>
               <th width="20px" />
               <th scope="col">Version</th>
-              {showAllColumns && (
-                <th width="120px" scope="col">
-                  Architecture
-                </th>
-              )}
+              {/* TODO: temporary workaround, remove later with 'Show all...'*/}
+              {showAllColumns &&
+                !filters && (
+                  <th width="120px" scope="col">
+                    Architecture
+                  </th>
+                )}
               {showAllColumns && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
@@ -240,6 +258,7 @@ RevisionsList.propTypes = {
   revisions: PropTypes.object.isRequired,
   filters: PropTypes.object,
   pendingReleases: PropTypes.object.isRequired,
+  availableSelect: PropTypes.string.isRequired,
 
   // computed state (selectors)
   showAllColumns: PropTypes.bool,
@@ -254,7 +273,12 @@ RevisionsList.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    showAllColumns: !state.history.filters,
+    availableSelect: state.availableSelect,
+    showAllColumns:
+      !state.history.filters ||
+      (state.history.filters &&
+        state.history.filters.risk === AVAILABLE &&
+        state.availableSelect === AVAILABLE_SELECT_ALL),
     filters: state.history.filters,
     revisions: state.revisions,
     pendingReleases: state.pendingReleases,
