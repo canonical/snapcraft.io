@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 
+import availableSelect from "./availableSelect";
 import channelMap from "./channelMap";
 import history from "./history";
 import pendingCloses from "./pendingCloses";
@@ -8,6 +9,7 @@ import releases from "./releases";
 import revisions from "./revisions";
 
 const releasesReducers = combineReducers({
+  availableSelect,
   channelMap,
   history,
   pendingCloses,
