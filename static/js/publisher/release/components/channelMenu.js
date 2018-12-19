@@ -35,7 +35,11 @@ export default class ChannelMenu extends Component {
 
   render() {
     return (
-      <ContextualMenu appearance="base" ref={this.setMenuRef}>
+      <ContextualMenu
+        appearance="base"
+        ref={this.setMenuRef}
+        className="p-icon-button"
+      >
         {this.renderItems()}
       </ContextualMenu>
     );
