@@ -2,7 +2,11 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { AVAILABLE } from "../constants";
+import {
+  AVAILABLE,
+  AVAILABLE_SELECT_ALL,
+  AVAILABLE_SELECT_UNRELEASED
+} from "../constants";
 import { getTrackingChannel, getUnassignedRevisions } from "../releasesState";
 import DevmodeIcon, { isInDevmode } from "../devmodeIcon";
 
@@ -84,7 +88,7 @@ class ReleasesTableCell extends Component {
     );
   }
 
-  renderEmpty(isUnassigned, unassignedCount, trackingChannel) {
+  renderEmpty(isUnassigned, availableCount, trackingChannel) {
     return (
       <Fragment>
         {isUnassigned ? (
@@ -95,7 +99,7 @@ class ReleasesTableCell extends Component {
             <span className="p-release-data__info">
               <span className="p-release-data__title">Add revision</span>
               <span className="p-release-data__meta">
-                {unassignedCount} available
+                {availableCount} available
               </span>
             </span>
           </Fragment>
@@ -126,7 +130,8 @@ class ReleasesTableCell extends Component {
       pendingChannelMap,
       pendingCloses,
       filters,
-      revisions
+      revisions,
+      availableSelect
     } = this.props;
     const channel = getChannelName(track, risk);
 
@@ -147,8 +152,17 @@ class ReleasesTableCell extends Component {
     const isUnassigned = risk === AVAILABLE;
     const isActive = filters && filters.arch === arch && filters.risk === risk;
     const isHighlighted = isPending || (isUnassigned && currentRevision);
-    const unassignedCount = getUnassignedRevisions(revisions, arch).length;
     const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
+
+    let availableCount;
+
+    if (availableSelect === AVAILABLE_SELECT_ALL) {
+      availableCount = Object.values(revisions).filter(r =>
+        r.architectures.includes(arch)
+      ).length;
+    } else if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
+      availableCount = getUnassignedRevisions(revisions, arch).length;
+    }
 
     const className = [
       "p-releases-table__cell is-clickable",
@@ -167,11 +181,7 @@ class ReleasesTableCell extends Component {
             ? this.renderCloseChannel()
             : currentRevision
               ? this.renderRevision(currentRevision, hasPendingRelease)
-              : this.renderEmpty(
-                  isUnassigned,
-                  unassignedCount,
-                  trackingChannel
-                )}
+              : this.renderEmpty(isUnassigned, availableCount, trackingChannel)}
         </div>
         {hasPendingRelease && (
           <div className="p-release-buttons">
@@ -193,6 +203,7 @@ class ReleasesTableCell extends Component {
 
 ReleasesTableCell.propTypes = {
   // state
+  availableSelect: PropTypes.string,
   channelMap: PropTypes.object,
   filters: PropTypes.object,
   revisions: PropTypes.object,
@@ -209,6 +220,7 @@ ReleasesTableCell.propTypes = {
 
 const mapStateToProps = state => {
   return {
+    availableSelect: state.availableSelect,
     channelMap: state.channelMap,
     revisions: state.revisions,
     filters: state.history.filters,
