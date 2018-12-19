@@ -17,10 +17,12 @@ import { selectRevision } from "./actions/channelMap";
 import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
-  getSelectedArchitectures
+  getSelectedArchitectures,
+  getSelectedAvailableRevisions,
+  getSelectedAvailableRevisionsForArch
 } from "./selectors";
 
-import { getUnassignedRevisions, getPendingRelease } from "./releasesState";
+import { getPendingRelease } from "./releasesState";
 
 class RevisionsList extends Component {
   revisionSelectChange(revision) {
@@ -115,8 +117,12 @@ class RevisionsList extends Component {
   }
 
   render() {
-    let { availableSelect, showAllColumns } = this.props;
-    let filteredRevisions = Object.values(this.props.revisions).reverse();
+    let {
+      availableSelect,
+      showAllColumns,
+      selectedAvailableRevisions
+    } = this.props;
+    let filteredRevisions = selectedAvailableRevisions;
     let title = "Latest revisions";
     let filters = this.props.filters;
     let isReleaseHistory = false;
@@ -124,26 +130,21 @@ class RevisionsList extends Component {
 
     if (filters && filters.arch) {
       if (filters.risk === AVAILABLE) {
+        filteredRevisions = this.props.getSelectedAvailableRevisionsForArch(
+          filters.arch
+        );
+
         if (availableSelect === AVAILABLE_SELECT_ALL) {
           title = (
             <Fragment>
               Latest revisions for <b>{filters.arch}</b>
             </Fragment>
           );
-
-          filteredRevisions = filteredRevisions.filter(r =>
-            r.architectures.includes(filters.arch)
-          );
         } else if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
           title = (
             <Fragment>
               Unreleased revisions for <b>{filters.arch}</b>
             </Fragment>
-          );
-
-          filteredRevisions = getUnassignedRevisions(
-            this.props.revisions,
-            filters.arch
           );
         }
       } else {
@@ -265,6 +266,8 @@ RevisionsList.propTypes = {
   filteredReleaseHistory: PropTypes.array,
   selectedRevisions: PropTypes.array.isRequired,
   selectedArchitectures: PropTypes.array.isRequired,
+  selectedAvailableRevisions: PropTypes.array.isRequired,
+  getSelectedAvailableRevisionsForArch: PropTypes.func.isRequired,
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
@@ -284,7 +287,10 @@ const mapStateToProps = state => {
     pendingReleases: state.pendingReleases,
     selectedRevisions: getSelectedRevisions(state),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
-    selectedArchitectures: getSelectedArchitectures(state)
+    selectedArchitectures: getSelectedArchitectures(state),
+    selectedAvailableRevisions: getSelectedAvailableRevisions(state),
+    getSelectedAvailableRevisionsForArch: arch =>
+      getSelectedAvailableRevisionsForArch(state, arch)
   };
 };
 

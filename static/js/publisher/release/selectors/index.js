@@ -1,4 +1,4 @@
-import { AVAILABLE } from "../constants";
+import { AVAILABLE, AVAILABLE_SELECT_UNRELEASED } from "../constants";
 import { isInDevmode } from "../devmodeIcon";
 
 // returns release history filtered by history filters
@@ -93,4 +93,29 @@ export function getPendingChannelMap(state) {
   });
 
   return pendingChannelMap;
+}
+
+// return list of revisions based on current availableSelect value
+export function getSelectedAvailableRevisions(state) {
+  const { revisions, availableSelect } = state;
+
+  // get all revisions ordered from newest (based on revsion id)
+  let availableRevisions = Object.values(revisions).reverse();
+
+  if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
+    // filter revisions not released to any channel yet
+    availableRevisions = availableRevisions.filter(
+      revision => !revision.channels || revision.channels.length === 0
+    );
+  }
+
+  return availableRevisions;
+}
+
+// return list of revisions based on current availableSelect value
+// filtered by arch (can't be memoized)
+export function getSelectedAvailableRevisionsForArch(state, arch) {
+  return getSelectedAvailableRevisions(state).filter(revision =>
+    revision.architectures.includes(arch)
+  );
 }
