@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import ContextualMenu from "./contextualMenu";
 
-export default class PromoteButton extends Component {
+export default class PromoteMenu extends Component {
   constructor(props) {
     super(props);
     this.setMenuRef = menu => (this.menu = menu);
@@ -54,9 +54,10 @@ export default class PromoteButton extends Component {
 
     return (
       <ContextualMenu
-        className="p-releases-channel__promote"
+        className="p-releases-channel__promote p-icon-button"
+        appearance="neutral"
         isDisabled={isDisabled}
-        icon="⤴"
+        label="⤴"
         ref={this.setMenuRef}
       >
         {this.renderItems()}
@@ -65,7 +66,7 @@ export default class PromoteButton extends Component {
   }
 }
 
-PromoteButton.propTypes = {
+PromoteMenu.propTypes = {
   targetChannels: PropTypes.array.isRequired,
   promoteToChannel: PropTypes.func.isRequired
 };

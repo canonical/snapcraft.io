@@ -11,8 +11,8 @@ import {
 } from "./constants";
 import { getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
-import ChannelMenu from "./channelMenu";
-import PromoteButton from "./promoteButton";
+import ChannelMenu from "./components/channelMenu";
+import PromoteMenu from "./components/promoteMenu";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
@@ -152,7 +152,7 @@ class ReleasesTable extends Component {
           <span className="p-releases-channel__name">{channelName}</span>
           <span className="p-releases-table__menus">
             {canBePromoted && (
-              <PromoteButton
+              <PromoteMenu
                 targetChannels={targetChannels}
                 promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
               />
