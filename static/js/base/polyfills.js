@@ -188,3 +188,45 @@ if (!Element.prototype.closest) {
     return null;
   };
 }
+
+// Object.assign
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+if (typeof Object.assign != "function") {
+  // Must be writable: true, enumerable: false, configurable: true
+  Object.defineProperty(Object, "assign", {
+    // .length of function is 2
+    value: function assign(target, vargs) {
+      "use strict";
+
+      // I added this because prettier complains about the unused var, but
+      // the function needs to have 2 arguments
+      if (!vargs) {
+        return false;
+      }
+
+      // TypeError if undefined or null
+      if (target == null) {
+        throw new TypeError("Cannot convert undefined or null to object");
+      }
+
+      const to = Object(target);
+
+      for (let index = 1; index < arguments.length; index++) {
+        const nextSource = arguments[index];
+
+        // Skip over if undefined or null
+        if (nextSource != null) {
+          for (let nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    },
+    writable: true,
+    configurable: true
+  });
+}
