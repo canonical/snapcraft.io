@@ -6,7 +6,7 @@ import format from "date-fns/format";
 
 import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import Notification from "./notification";
-import { UNASSIGNED } from "./constants";
+import { AVAILABLE } from "./constants";
 
 import { closeHistory } from "./actions/history";
 import { selectRevision } from "./actions/channelMap";
@@ -119,7 +119,7 @@ class RevisionsList extends Component {
     let pendingRelease = null;
 
     if (filters && filters.arch) {
-      if (filters.risk === UNASSIGNED) {
+      if (filters.risk === AVAILABLE) {
         title = (
           <Fragment>
             Unreleased revisions for <b>{filters.arch}</b>
