@@ -58,9 +58,16 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": False,
             "license": "License",
             "video_urls": [],
+            "categories": {},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         endpoint = "?".join([self.endpoint_url, "from=test"])
 
@@ -107,9 +114,16 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": [],
+            "categories": {},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         response = self.client.get(self.endpoint_url)
 
@@ -138,9 +152,16 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": [],
+            "categories": {},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         response = self.client.get(self.endpoint_url)
 
@@ -169,9 +190,16 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": ["https://youtube.com/watch?v=1234"],
+            "categories": {},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         response = self.client.get(self.endpoint_url)
 
@@ -181,3 +209,41 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_template_used("publisher/listing.html")
 
         self.assert_context("video_urls", ["https://youtube.com/watch?v=1234"])
+
+    @responses.activate
+    def test_failed_categories_api(self):
+        payload = {
+            "snap_id": "id",
+            "snap_name": self.snap_name,
+            "title": "Snap title",
+            "summary": "This is a summary",
+            "description": "This is a description",
+            "media": [],
+            "publisher": {"display-name": "The publisher", "username": "toto"},
+            "private": True,
+            "channel_maps_list": [{"map": [{"info": "info"}]}],
+            "contact": "contact adress",
+            "website": "website_url",
+            "public_metrics_enabled": True,
+            "public_metrics_blacklist": True,
+            "license": "license",
+            "video_urls": ["https://youtube.com/watch?v=1234"],
+            "categories": {},
+        }
+
+        responses.add(responses.GET, self.api_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=500,
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        self.check_call_by_api_url(responses.calls)
+
+        assert response.status_code == 200
+        self.assert_template_used("publisher/listing.html")
+
+        self.assert_context("categories", [])

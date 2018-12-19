@@ -132,9 +132,16 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
+            "categories": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         changes = {"description": "This is an updated description"}
 
@@ -143,7 +150,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             data={"changes": json.dumps(changes), "snap_id": self.snap_id},
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -210,9 +217,16 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
+            "categories": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         changes = {
             "snap_title": "New title",
@@ -233,7 +247,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             data={"changes": json.dumps(changes), "snap_id": self.snap_id},
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -303,9 +317,16 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
+            "categories": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=200,
+        )
 
         changes = {"description": "This is an updated description"}
 
@@ -314,7 +335,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             data={"changes": json.dumps(changes), "snap_id": self.snap_id},
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -330,3 +351,64 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_template_used("publisher/listing.html")
 
         self.assert_context("field_errors", {"description": "error message"})
+
+    @responses.activate
+    def test_return_error_udpate_with_failed_categories_api(self):
+        metadata_payload = {
+            "error_list": [{"code": "code", "message": "message"}]
+        }
+
+        responses.add(
+            responses.PUT, self.api_url, json=metadata_payload, status=500
+        )
+
+        info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
+        info_url = info_url.format(self.snap_name)
+
+        payload = {
+            "snap_id": self.snap_id,
+            "snap_name": self.snap_name,
+            "title": "Snap title",
+            "summary": "This is a summary",
+            "description": "This is a description",
+            "media": [],
+            "publisher": {"display-name": "The publisher", "username": "toto"},
+            "private": True,
+            "channel_maps_list": [{"map": [{"info": "info"}]}],
+            "contact": "contact adress",
+            "website": "website_url",
+            "public_metrics_enabled": False,
+            "public_metrics_blacklist": True,
+            "license": "test OR testing",
+            "video_urls": [],
+            "categories": {},
+        }
+
+        responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/sections",
+            json=[],
+            status=500,
+        )
+
+        changes = {"description": "This is an updated description"}
+
+        self.client.post(
+            self.endpoint_url,
+            data={"changes": json.dumps(changes), "snap_id": self.snap_id},
+        )
+
+        self.assertEqual(3, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+        called = responses.calls[1]
+        self.assertEqual(info_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        self.assert_context("categories", [])
