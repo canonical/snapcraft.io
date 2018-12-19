@@ -1,10 +1,16 @@
-import { AVAILABLE } from "../constants";
+import {
+  AVAILABLE,
+  AVAILABLE_SELECT_ALL,
+  AVAILABLE_SELECT_UNRELEASED
+} from "../constants";
 import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
   getSelectedArchitectures,
   getPendingChannelMap,
-  hasDevmodeRevisions
+  hasDevmodeRevisions,
+  getSelectedAvailableRevisions,
+  getSelectedAvailableRevisionsForArch
 } from "./index";
 
 import reducers from "../reducers";
@@ -311,6 +317,99 @@ describe("getPendingChannelMap", () => {
           }
         }
       });
+    });
+  });
+});
+
+describe("getSelectedAvailableRevisions", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithRevisions = {
+    ...initialState,
+    revisions: {
+      1: { revision: 1, version: "1" },
+      2: { revision: 2, version: "2", channels: [] },
+      3: { revision: 3, version: "3", channels: ["test/edge"] }
+    }
+  };
+
+  describe("when there are no revisions", () => {
+    it("should return empty list", () => {
+      expect(getSelectedAvailableRevisions(initialState)).toEqual([]);
+    });
+  });
+
+  describe("when there are some revisions in state", () => {
+    describe("when 'All' is selected in available revisions select", () => {
+      const stateWithAllSelected = {
+        ...stateWithRevisions,
+        availableSelect: AVAILABLE_SELECT_ALL
+      };
+
+      it("should return all revisions by default", () => {
+        expect(getSelectedAvailableRevisions(stateWithAllSelected)).toEqual([
+          stateWithAllSelected.revisions[3],
+          stateWithAllSelected.revisions[2],
+          stateWithAllSelected.revisions[1]
+        ]);
+      });
+    });
+
+    describe("when 'Unreleased' are selected in available revisions select", () => {
+      const stateWithUnreleasedSelected = {
+        ...stateWithRevisions,
+        availableSelect: AVAILABLE_SELECT_UNRELEASED
+      };
+
+      it("should return all unreleased revisions by default", () => {
+        expect(
+          getSelectedAvailableRevisions(stateWithUnreleasedSelected)
+        ).toEqual([
+          stateWithUnreleasedSelected.revisions[2],
+          stateWithUnreleasedSelected.revisions[1]
+        ]);
+      });
+    });
+  });
+});
+
+describe("getSelectedAvailableRevisionsByArch", () => {
+  const arch = "test64";
+  const initialState = reducers(undefined, {});
+  const stateWithRevisions = {
+    ...initialState,
+    revisions: {
+      1: { revision: 1, architectures: [arch], version: "1" },
+      2: { revision: 2, architectures: ["amd42"], version: "2", channels: [] },
+      3: {
+        revision: 3,
+        architectures: [arch, "amd42"],
+        version: "3",
+        channels: ["test/edge"]
+      }
+    }
+  };
+
+  describe("when there are no revisions", () => {
+    it("should return empty list", () => {
+      expect(getSelectedAvailableRevisionsForArch(initialState, arch)).toEqual(
+        []
+      );
+    });
+  });
+
+  describe("when there are some revisions in state", () => {
+    const stateWithAllSelected = {
+      ...stateWithRevisions,
+      availableSelect: AVAILABLE_SELECT_ALL
+    };
+
+    it("should return selected revisions by for given architecture", () => {
+      expect(
+        getSelectedAvailableRevisionsForArch(stateWithAllSelected, arch)
+      ).toEqual([
+        stateWithAllSelected.revisions[3],
+        stateWithAllSelected.revisions[1]
+      ]);
     });
   });
 });

@@ -2,18 +2,17 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  AVAILABLE,
-  AVAILABLE_SELECT_ALL,
-  AVAILABLE_SELECT_UNRELEASED
-} from "../constants";
-import { getTrackingChannel, getUnassignedRevisions } from "../releasesState";
+import { AVAILABLE } from "../constants";
+import { getTrackingChannel } from "../releasesState";
 import DevmodeIcon, { isInDevmode } from "../devmodeIcon";
 
 import { toggleHistory } from "../actions/history";
 import { undoRelease } from "../actions/pendingReleases";
 
-import { getPendingChannelMap } from "../selectors";
+import {
+  getPendingChannelMap,
+  getSelectedAvailableRevisionsForArch
+} from "../selectors";
 
 function getChannelName(track, risk) {
   return risk === AVAILABLE ? risk : `${track}/${risk}`;
@@ -129,9 +128,7 @@ class ReleasesTableCell extends Component {
       channelMap,
       pendingChannelMap,
       pendingCloses,
-      filters,
-      revisions,
-      availableSelect
+      filters
     } = this.props;
     const channel = getChannelName(track, risk);
 
@@ -153,16 +150,7 @@ class ReleasesTableCell extends Component {
     const isActive = filters && filters.arch === arch && filters.risk === risk;
     const isHighlighted = isPending || (isUnassigned && currentRevision);
     const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
-
-    let availableCount;
-
-    if (availableSelect === AVAILABLE_SELECT_ALL) {
-      availableCount = Object.values(revisions).filter(r =>
-        r.architectures.includes(arch)
-      ).length;
-    } else if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
-      availableCount = getUnassignedRevisions(revisions, arch).length;
-    }
+    const availableCount = this.props.getAvailableCount(arch);
 
     const className = [
       "p-releases-table__cell is-clickable",
@@ -203,12 +191,12 @@ class ReleasesTableCell extends Component {
 
 ReleasesTableCell.propTypes = {
   // state
-  availableSelect: PropTypes.string,
   channelMap: PropTypes.object,
   filters: PropTypes.object,
-  revisions: PropTypes.object,
   pendingCloses: PropTypes.array,
   pendingChannelMap: PropTypes.object,
+  // compute state
+  getAvailableCount: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -220,12 +208,12 @@ ReleasesTableCell.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    availableSelect: state.availableSelect,
     channelMap: state.channelMap,
-    revisions: state.revisions,
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+    getAvailableCount: arch =>
+      getSelectedAvailableRevisionsForArch(state, arch).length
   };
 };
 
