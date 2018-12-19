@@ -1,11 +1,11 @@
+# App dependencies
 bleach==2.0.0
 Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
-Flask-Testing==0.6.2
 Flask-WTF==0.14.2
-gunicorn[gevent]
 humanize==0.5.1
-prometheus-flask-exporter==0.2.0
+Markdown==3.0.1
+prometheus_client==0.3.1
 pybreaker==0.4.4
 pycountry==17.9.23
 pymacaroons==0.12.0
@@ -14,10 +14,9 @@ raven[flask]==6.5.0
 requests==2.20.0
 requests-cache==0.4.13
 responses==0.9.0
-gunicorn[gevent]
-statsd<3.3.0
-prometheus_client==0.3.1
-talisker==0.9.16
-black==18.6b4
 ruamel.yaml==0.15.72
-Markdown==3.0.1
+talisker==0.11.0
+
+# Development dependencies
+black==18.6b4
+Flask-Testing==0.6.2
