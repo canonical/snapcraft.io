@@ -164,4 +164,9 @@ describe("commaSeperatedStringToArray", () => {
       "test2"
     ]);
   });
+
+  test("should return a single element array if multiple values and 1 is blank", () => {
+    expect(commaSeperatedStringToArray("test, ")).toEqual(["test"]);
+    expect(commaSeperatedStringToArray(", test")).toEqual(["test"]);
+  });
 });

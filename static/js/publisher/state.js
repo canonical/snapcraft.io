@@ -25,7 +25,8 @@ function commaSeperatedStringToArray(str) {
       .join("")
       .trim() !== ""
   ) {
-    return str.split(", ");
+    const split = str.split(", ");
+    return split.filter(item => item !== "");
   } else {
     return [];
   }

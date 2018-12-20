@@ -40,11 +40,15 @@ describe("initForm", () => {
   let submitButton;
   let revertButton;
   let titleInput;
+  let summaryInput;
+  let descriptionInput;
+  let websiteInput;
+  let contactInput;
   let primaryCategoryInput;
   let secondaryCategoryInput;
   let categoriesInput;
 
-  function setupForm(config) {
+  function setupForm(config, initialState) {
     form = document.createElement("form");
     form.id = config.form;
 
@@ -58,7 +62,14 @@ describe("initForm", () => {
     titleInput = document.createElement("input");
     titleInput.type = "text";
     titleInput.name = "title";
-    titleInput.value = "test";
+    titleInput.value = initialState.title;
+    titleInput.required = "true";
+    titleInput.maxlength = "64";
+
+    categoriesInput = document.createElement("input");
+    categoriesInput.type = "text";
+    categoriesInput.name = "categories";
+    categoriesInput.value = initialState.categories;
 
     primaryCategoryInput = document.createElement("input");
     primaryCategoryInput.type = "text";
@@ -70,10 +81,30 @@ describe("initForm", () => {
     secondaryCategoryInput.name = "secondary_category";
     secondaryCategoryInput.value = "";
 
-    categoriesInput = document.createElement("input");
-    categoriesInput.type = "text";
-    categoriesInput.name = "categories";
-    categoriesInput.value = "";
+    summaryInput = document.createElement("input");
+    summaryInput.type = "text";
+    summaryInput.name = "summary";
+    summaryInput.value = initialState.summary;
+    summaryInput.required = "true";
+    summaryInput.maxlength = "128";
+
+    descriptionInput = document.createElement("textarea");
+    descriptionInput.name = "description";
+    descriptionInput.rows = "10";
+    descriptionInput.required = "true";
+    descriptionInput.innerText = initialState.description;
+
+    websiteInput = document.createElement("input");
+    websiteInput.type = "url";
+    websiteInput.name = "website";
+    websiteInput.maxlength = "256";
+    websiteInput.value = initialState.website;
+
+    contactInput = document.createElement("input");
+    contactInput.type = "url";
+    contactInput.name = "contact";
+    contactInput.value = initialState.contact;
+    contactInput.maxlength = "256";
 
     form.appendChild(submitButton);
     form.appendChild(revertButton);
@@ -81,13 +112,7 @@ describe("initForm", () => {
 
     document.body.appendChild(form);
 
-    market.initForm(
-      config,
-      {
-        title: "test"
-      },
-      undefined
-    );
+    market.initForm(config, initialState, undefined);
   }
 
   describe("simple", () => {
@@ -95,8 +120,17 @@ describe("initForm", () => {
       form: "market-form"
     };
 
+    const initialState = {
+      title: "test",
+      categories: "",
+      summary: "Summary",
+      description: "Description",
+      website: "https://example.com",
+      contact: "mailto:test@example.com"
+    };
+
     beforeEach(() => {
-      setupForm(config);
+      setupForm(config, initialState);
     });
 
     afterEach(() => {
@@ -148,16 +182,16 @@ describe("initForm", () => {
         form.dispatchEvent(new Event("submit"));
       });
 
-      test("state is updated", () => {
+      test("state and diff are updated", () => {
         const stateInput = document.querySelector("[name='state']");
         expect(stateInput.value).toEqual(
-          JSON.stringify({
-            title: "test2"
-          })
+          JSON.stringify(
+            Object.assign(initialState, {
+              title: "test2"
+            })
+          )
         );
-      });
 
-      test("diff is updated", () => {
         const diffInput = document.querySelector("[name='changes']");
         expect(diffInput.value).toEqual(
           JSON.stringify({

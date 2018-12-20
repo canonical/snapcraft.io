@@ -145,7 +145,8 @@
             <label>Category:</label>
           </div>
           <div class="col-4">
-            <input type="hidden" name="categories" value="{{ snap_categories.items }}" />
+            <input type="hidden" name="categories"
+                   value="{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}" />
             <select
               name="primary_category"
               {% if snap_categories.categories[0] %}
@@ -492,6 +493,7 @@
       description: {{ description|tojson }},
       website: {{ website|tojson }},
       contact: {{ contact|tojson }},
+      categories: "{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}",
       images: [
         {% if icon_url %}
           { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
