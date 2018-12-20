@@ -1,4 +1,8 @@
-import { AVAILABLE, AVAILABLE_SELECT_UNRELEASED } from "../constants";
+import {
+  AVAILABLE,
+  AVAILABLE_SELECT_UNRELEASED,
+  AVAILABLE_SELECT_RECENT
+} from "../constants";
 import { isInDevmode } from "../devmodeIcon";
 
 // returns release history filtered by history filters
@@ -102,10 +106,21 @@ export function getSelectedAvailableRevisions(state) {
   // get all revisions ordered from newest (based on revsion id)
   let availableRevisions = Object.values(revisions).reverse();
 
-  if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
+  if (
+    availableSelect === AVAILABLE_SELECT_UNRELEASED ||
+    availableSelect === AVAILABLE_SELECT_RECENT
+  ) {
     // filter revisions not released to any channel yet
     availableRevisions = availableRevisions.filter(
       revision => !revision.channels || revision.channels.length === 0
+    );
+  }
+
+  if (availableSelect === AVAILABLE_SELECT_RECENT) {
+    const interval = 1000 * 60 * 60 * 24 * 7; // 7 days
+    // filter revisions not older then 7 days
+    availableRevisions = availableRevisions.filter(
+      r => Date.now() - new Date(r.created_at).getTime() < interval
     );
   }
 

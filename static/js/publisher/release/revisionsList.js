@@ -9,6 +9,7 @@ import Notification from "./notification";
 import {
   AVAILABLE,
   AVAILABLE_SELECT_UNRELEASED,
+  AVAILABLE_SELECT_RECENT,
   AVAILABLE_SELECT_ALL
 } from "./constants";
 
@@ -144,6 +145,12 @@ class RevisionsList extends Component {
           title = (
             <Fragment>
               Unreleased revisions for <b>{filters.arch}</b>
+            </Fragment>
+          );
+        } else if (availableSelect === AVAILABLE_SELECT_RECENT) {
+          title = (
+            <Fragment>
+              Recent unreleased revisions for <b>{filters.arch}</b>
             </Fragment>
           );
         }
