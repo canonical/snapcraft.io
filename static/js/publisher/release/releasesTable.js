@@ -17,7 +17,6 @@ import AvailableMenu from "./components/availableMenu";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
-import { toggleHistory } from "./actions/history";
 import { promoteChannel } from "./actions/pendingReleases";
 import { closeChannel } from "./actions/pendingCloses";
 
@@ -26,13 +25,6 @@ function getChannelName(track, risk) {
 }
 
 class ReleasesTable extends Component {
-  handleShowRevisionsClick(event) {
-    this.props.toggleHistoryPanel();
-
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
   renderRevisionCell(track, risk, arch) {
     return (
       <ReleasesTableCell
@@ -218,7 +210,6 @@ class ReleasesTable extends Component {
 
   render() {
     const { archs } = this.props;
-    const revisionsCount = Object.keys(this.props.revisions).length;
     const filteredArch = this.props.filters && this.props.filters.arch;
     return (
       <Fragment>
@@ -243,14 +234,6 @@ class ReleasesTable extends Component {
             </div>
             {this.renderRows()}
           </div>
-          <div className="p-release-actions">
-            <a href="#" onClick={this.handleShowRevisionsClick.bind(this)}>
-              Show all latest revisions ({revisionsCount})
-            </a>
-          </div>
-          {this.props.isHistoryOpen &&
-            !this.props.filters &&
-            this.renderHistoryPanel()}
         </div>
       </Fragment>
     );
@@ -259,8 +242,6 @@ class ReleasesTable extends Component {
 
 ReleasesTable.propTypes = {
   // state
-  revisions: PropTypes.object.isRequired,
-  releases: PropTypes.array.isRequired,
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
   channelMap: PropTypes.object.isRequired,
@@ -270,7 +251,6 @@ ReleasesTable.propTypes = {
 
   // actions
   closeChannel: PropTypes.func.isRequired,
-  toggleHistoryPanel: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
 
   // state (non redux)
@@ -282,8 +262,6 @@ const mapStateToProps = state => {
   return {
     filters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
-    revisions: state.revisions,
-    releases: state.releases,
     channelMap: state.channelMap,
     pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state)
@@ -292,7 +270,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
     promoteChannel: (channel, targetChannel) =>
       dispatch(promoteChannel(channel, targetChannel)),
     closeChannel: channel => dispatch(closeChannel(channel))
