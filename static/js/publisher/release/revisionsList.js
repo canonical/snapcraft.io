@@ -79,9 +79,6 @@ class RevisionsList extends Component {
           <DevmodeIcon revision={revision} showTooltip={true} />
         </td>
         <td>{revision.version}</td>
-        {/* TODO: temporary workaround, remove later with 'Show all...'*/}
-        {showAllColumns &&
-          !this.props.filters && <td>{revision.architectures.join(", ")}</td>}
         {showAllColumns && <td>{revision.channels.join(", ")}</td>}
         <td className="u-align--right">
           {isPending ? (
@@ -220,13 +217,6 @@ class RevisionsList extends Component {
               </th>
               <th width="20px" />
               <th scope="col">Version</th>
-              {/* TODO: temporary workaround, remove later with 'Show all...'*/}
-              {showAllColumns &&
-                !filters && (
-                  <th width="120px" scope="col">
-                    Architecture
-                  </th>
-                )}
               {showAllColumns && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
