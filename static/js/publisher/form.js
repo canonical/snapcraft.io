@@ -205,7 +205,7 @@ function initForm(config, initialState, errors) {
     if (formEl["license"]) {
       license(formEl);
     }
-    if (formEl["primary_category"]) {
+    if (formEl.elements["primary_category"]) {
       categories(formEl);
     }
 

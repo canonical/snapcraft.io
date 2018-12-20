@@ -1,4 +1,5 @@
 import * as market from "./form";
+import * as categories from "./market/categories";
 
 describe("initSnapIconEdit", () => {
   let input;
@@ -48,6 +49,8 @@ describe("initForm", () => {
   let secondaryCategoryInput;
   let categoriesInput;
 
+  const categoriesList = ["", "test1", "test2"];
+
   function setupForm(config, initialState) {
     form = document.createElement("form");
     form.id = config.form;
@@ -71,15 +74,31 @@ describe("initForm", () => {
     categoriesInput.name = "categories";
     categoriesInput.value = initialState.categories;
 
-    primaryCategoryInput = document.createElement("input");
-    primaryCategoryInput.type = "text";
+    primaryCategoryInput = document.createElement("select");
     primaryCategoryInput.name = "primary_category";
     primaryCategoryInput.value = "";
 
-    secondaryCategoryInput = document.createElement("input");
-    secondaryCategoryInput.type = "text";
+    categoriesList.forEach((category, index) => {
+      const option = document.createElement("option");
+      option.value = category;
+      if (index === 0) {
+        option.selected = "selected";
+      }
+      primaryCategoryInput.appendChild(option);
+    });
+
+    secondaryCategoryInput = document.createElement("select");
     secondaryCategoryInput.name = "secondary_category";
     secondaryCategoryInput.value = "";
+
+    categoriesList.forEach((category, index) => {
+      const option = document.createElement("option");
+      option.value = category;
+      if (index === 0) {
+        option.selected = "selected";
+      }
+      secondaryCategoryInput.appendChild(option);
+    });
 
     summaryInput = document.createElement("input");
     summaryInput.type = "text";
@@ -92,7 +111,7 @@ describe("initForm", () => {
     descriptionInput.name = "description";
     descriptionInput.rows = "10";
     descriptionInput.required = "true";
-    descriptionInput.innerText = initialState.description;
+    descriptionInput.value = initialState.description;
 
     websiteInput = document.createElement("input");
     websiteInput.type = "url";
@@ -109,9 +128,17 @@ describe("initForm", () => {
     form.appendChild(submitButton);
     form.appendChild(revertButton);
     form.appendChild(titleInput);
+    form.appendChild(categoriesInput);
+    form.appendChild(primaryCategoryInput);
+    form.appendChild(secondaryCategoryInput);
+    form.appendChild(summaryInput);
+    form.appendChild(descriptionInput);
+    form.appendChild(websiteInput);
+    form.appendChild(contactInput);
 
     document.body.appendChild(form);
 
+    categories.categories = jest.fn();
     market.initForm(config, initialState, undefined);
   }
 
@@ -122,7 +149,7 @@ describe("initForm", () => {
 
     const initialState = {
       title: "test",
-      categories: "",
+      categories: [],
       summary: "Summary",
       description: "Description",
       website: "https://example.com",
@@ -198,6 +225,45 @@ describe("initForm", () => {
             title: "test2"
           })
         );
+      });
+    });
+  });
+
+  describe("categories", () => {
+    const config = {
+      form: "market-form"
+    };
+
+    const initialState = {
+      title: "test",
+      categories: "",
+      summary: "Summary",
+      description: "Description",
+      website: "https://example.com",
+      contact: "mailto:test@example.com"
+    };
+
+    beforeEach(() => {
+      setupForm(config, initialState);
+    });
+
+    afterEach(() => {
+      form.parentNode.removeChild(form);
+    });
+
+    describe("on submit", () => {
+      beforeEach(() => {
+        primaryCategoryInput.click();
+        primaryCategoryInput.options[0].removeAttribute("selected");
+        primaryCategoryInput.options[1].selected = "selected";
+        primaryCategoryInput.dispatchEvent(
+          new Event("change", { bubbles: true })
+        );
+
+        form.dispatchEvent(new Event("submit"));
+      });
+      test("categories is called", () => {
+        expect(categories.categories.mock.calls.length).toEqual(1);
       });
     });
   });

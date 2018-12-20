@@ -1,12 +1,12 @@
 function categories(form) {
   let categoriesList = [];
-  if (form["primary_category"]) {
-    categoriesList.push(form["primary_category"].value);
+  if (form.elements["primary_category"]) {
+    categoriesList.push(form.elements["primary_category"].value);
   }
-  if (form["secondary_category"]) {
-    categoriesList.push(form["secondary_category"].value);
+  if (form.elements["secondary_category"]) {
+    categoriesList.push(form.elements["secondary_category"].value);
   }
-  form["categories"].value = categoriesList.join(", ");
+  form.elements["categories"].value = categoriesList.join(", ");
 }
 
 function initCategories() {
@@ -68,7 +68,6 @@ function initCategories() {
       categoryHelpTextEl.classList.remove("u-hide");
       categorySecondaryAddEl.classList.add("u-hide");
       categorySecondaryPickerEl.classList.add("u-hide");
-      resetSecondaryCategory();
     }
     setSecondaryOptions();
   });
