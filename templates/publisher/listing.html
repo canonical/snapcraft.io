@@ -162,6 +162,7 @@
                   {% endif %}
                 >{{ category.name }}</option>
               {% endfor %}
+              <option value="None">None</option>
             </select>
           </div>
         </div>
@@ -177,16 +178,16 @@
 
         <div class="js-categories-category2-add row{% if not snap_categories.categories[0] or snap_categories.categories[1] %} u-hide{% endif %}">
           <div class="col-8 push-2">
-            <p><a class="js-categories-category2-add-link">+ Add secondary category</a></p>
+            <p><a class="js-categories-category2-add-link">+ Add another category</a></p>
             <p class="p-form-help-text">
-              If your snap fits into multiple categories you can select a secondary.
+              If your snap fits into multiple categories you can select another.
             </p>
           </div>
         </div>
 
         <div class="js-categories-category2-picker row{% if not snap_categories.categories[1] %} u-hide{% endif %}">
           <div class="col-2">
-            <label>Secondary category:</label>
+            <label>Second category:</label>
           </div>
           <div class="col-4">
             <select
