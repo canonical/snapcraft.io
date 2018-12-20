@@ -1,6 +1,7 @@
 import {
   AVAILABLE,
   AVAILABLE_SELECT_ALL,
+  AVAILABLE_SELECT_RECENT,
   AVAILABLE_SELECT_UNRELEASED
 } from "../constants";
 import {
@@ -323,12 +324,29 @@ describe("getPendingChannelMap", () => {
 
 describe("getSelectedAvailableRevisions", () => {
   const initialState = reducers(undefined, {});
+
+  const dayAgo = new Date();
+  dayAgo.setDate(dayAgo.getDate() - 1);
+
+  const moreThenWeekAgo = new Date();
+  moreThenWeekAgo.setDate(moreThenWeekAgo.getDate() - 8);
+
   const stateWithRevisions = {
     ...initialState,
     revisions: {
-      1: { revision: 1, version: "1" },
-      2: { revision: 2, version: "2", channels: [] },
-      3: { revision: 3, version: "3", channels: ["test/edge"] }
+      1: { revision: 1, version: "1", created_at: dayAgo },
+      2: {
+        revision: 2,
+        version: "2",
+        channels: [],
+        created_at: moreThenWeekAgo
+      },
+      3: {
+        revision: 3,
+        version: "3",
+        channels: ["test/edge"],
+        created_at: dayAgo
+      }
     }
   };
 
@@ -360,12 +378,25 @@ describe("getSelectedAvailableRevisions", () => {
         availableSelect: AVAILABLE_SELECT_UNRELEASED
       };
 
-      it("should return all unreleased revisions by default", () => {
+      it("should return only unreleased revisions", () => {
         expect(
           getSelectedAvailableRevisions(stateWithUnreleasedSelected)
         ).toEqual([
           stateWithUnreleasedSelected.revisions[2],
           stateWithUnreleasedSelected.revisions[1]
+        ]);
+      });
+    });
+
+    describe("when 'Recent' are selected in available revisions select", () => {
+      const stateWithRecentSelected = {
+        ...stateWithRevisions,
+        availableSelect: AVAILABLE_SELECT_RECENT
+      };
+
+      it("should return unreleased revisions not older then a week", () => {
+        expect(getSelectedAvailableRevisions(stateWithRecentSelected)).toEqual([
+          stateWithRecentSelected.revisions[1]
         ]);
       });
     });
