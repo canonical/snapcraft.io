@@ -13,7 +13,7 @@ import { getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./components/channelMenu";
 import PromoteMenu from "./components/promoteMenu";
-import AvailableMenu from "./components/availableMenu";
+import AvailableRevisionsMenu from "./components/availableRevisionsMenu";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableCell from "./components/releasesTableCell";
 
@@ -125,7 +125,8 @@ class ReleasesTable extends Component {
       }
     }
 
-    const channelName = risk === AVAILABLE ? <AvailableMenu /> : channel;
+    const channelName =
+      risk === AVAILABLE ? <AvailableRevisionsMenu /> : channel;
 
     const filteredChannel =
       this.props.filters &&

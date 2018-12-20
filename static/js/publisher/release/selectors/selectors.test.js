@@ -1,8 +1,8 @@
 import {
   AVAILABLE,
-  AVAILABLE_SELECT_ALL,
-  AVAILABLE_SELECT_RECENT,
-  AVAILABLE_SELECT_UNRELEASED
+  AVAILABLE_REVISIONS_SELECT_ALL,
+  AVAILABLE_REVISIONS_SELECT_RECENT,
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED
 } from "../constants";
 import {
   getFilteredReleaseHistory,
@@ -360,7 +360,7 @@ describe("getSelectedAvailableRevisions", () => {
     describe("when 'All' is selected in available revisions select", () => {
       const stateWithAllSelected = {
         ...stateWithRevisions,
-        availableSelect: AVAILABLE_SELECT_ALL
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL
       };
 
       it("should return all revisions by default", () => {
@@ -375,7 +375,7 @@ describe("getSelectedAvailableRevisions", () => {
     describe("when 'Unreleased' are selected in available revisions select", () => {
       const stateWithUnreleasedSelected = {
         ...stateWithRevisions,
-        availableSelect: AVAILABLE_SELECT_UNRELEASED
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED
       };
 
       it("should return only unreleased revisions", () => {
@@ -391,7 +391,7 @@ describe("getSelectedAvailableRevisions", () => {
     describe("when 'Recent' are selected in available revisions select", () => {
       const stateWithRecentSelected = {
         ...stateWithRevisions,
-        availableSelect: AVAILABLE_SELECT_RECENT
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT
       };
 
       it("should return unreleased revisions not older then a week", () => {
@@ -431,7 +431,7 @@ describe("getSelectedAvailableRevisionsByArch", () => {
   describe("when there are some revisions in state", () => {
     const stateWithAllSelected = {
       ...stateWithRevisions,
-      availableSelect: AVAILABLE_SELECT_ALL
+      availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL
     };
 
     it("should return selected revisions by for given architecture", () => {

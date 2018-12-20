@@ -4,21 +4,21 @@ import { connect } from "react-redux";
 
 import ContextualMenu from "./contextualMenu";
 
-import { setAvailableSelect } from "../actions/availableSelect";
+import { setAvailableRevisionsSelect } from "../actions/availableRevisionsSelect";
 
 import {
-  AVAILABLE_SELECT_UNRELEASED,
-  AVAILABLE_SELECT_RECENT,
-  AVAILABLE_SELECT_ALL
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED,
+  AVAILABLE_REVISIONS_SELECT_RECENT,
+  AVAILABLE_REVISIONS_SELECT_ALL
 } from "../constants";
 
 const menuLabels = {
-  [AVAILABLE_SELECT_RECENT]: "Recent",
-  [AVAILABLE_SELECT_UNRELEASED]: "Unreleased",
-  [AVAILABLE_SELECT_ALL]: "All"
+  [AVAILABLE_REVISIONS_SELECT_RECENT]: "Recent",
+  [AVAILABLE_REVISIONS_SELECT_UNRELEASED]: "Unreleased",
+  [AVAILABLE_REVISIONS_SELECT_ALL]: "All"
 };
 
-export class AvailableMenu extends Component {
+export class AvailableRevisionsMenu extends Component {
   constructor(props) {
     super(props);
     this.setMenuRef = menu => (this.menu = menu);
@@ -65,24 +65,24 @@ export class AvailableMenu extends Component {
   }
 }
 
-AvailableMenu.propTypes = {
+AvailableRevisionsMenu.propTypes = {
   value: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    value: state.availableSelect
+    value: state.availableRevisionsSelect
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    setValue: value => dispatch(setAvailableSelect(value))
+    setValue: value => dispatch(setAvailableRevisionsSelect(value))
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AvailableMenu);
+)(AvailableRevisionsMenu);

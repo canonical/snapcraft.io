@@ -8,9 +8,9 @@ import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
 import Notification from "./notification";
 import {
   AVAILABLE,
-  AVAILABLE_SELECT_UNRELEASED,
-  AVAILABLE_SELECT_RECENT,
-  AVAILABLE_SELECT_ALL
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED,
+  AVAILABLE_REVISIONS_SELECT_RECENT,
+  AVAILABLE_REVISIONS_SELECT_ALL
 } from "./constants";
 
 import { closeHistory } from "./actions/history";
@@ -116,7 +116,7 @@ class RevisionsList extends Component {
 
   render() {
     let {
-      availableSelect,
+      availableRevisionsSelect,
       showAllColumns,
       selectedAvailableRevisions
     } = this.props;
@@ -132,19 +132,23 @@ class RevisionsList extends Component {
           filters.arch
         );
 
-        if (availableSelect === AVAILABLE_SELECT_ALL) {
+        if (availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL) {
           title = (
             <Fragment>
               Latest revisions for <b>{filters.arch}</b>
             </Fragment>
           );
-        } else if (availableSelect === AVAILABLE_SELECT_UNRELEASED) {
+        } else if (
+          availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_UNRELEASED
+        ) {
           title = (
             <Fragment>
               Unreleased revisions for <b>{filters.arch}</b>
             </Fragment>
           );
-        } else if (availableSelect === AVAILABLE_SELECT_RECENT) {
+        } else if (
+          availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT
+        ) {
           title = (
             <Fragment>
               Recent unreleased revisions for <b>{filters.arch}</b>
@@ -256,7 +260,7 @@ RevisionsList.propTypes = {
   revisions: PropTypes.object.isRequired,
   filters: PropTypes.object,
   pendingReleases: PropTypes.object.isRequired,
-  availableSelect: PropTypes.string.isRequired,
+  availableRevisionsSelect: PropTypes.string.isRequired,
 
   // computed state (selectors)
   showAllColumns: PropTypes.bool,
@@ -273,12 +277,12 @@ RevisionsList.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    availableSelect: state.availableSelect,
+    availableRevisionsSelect: state.availableRevisionsSelect,
     showAllColumns:
       !state.history.filters ||
       (state.history.filters &&
         state.history.filters.risk === AVAILABLE &&
-        state.availableSelect === AVAILABLE_SELECT_ALL),
+        state.availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL),
     filters: state.history.filters,
     revisions: state.revisions,
     pendingReleases: state.pendingReleases,

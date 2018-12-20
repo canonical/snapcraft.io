@@ -1,7 +1,7 @@
 import {
   AVAILABLE,
-  AVAILABLE_SELECT_UNRELEASED,
-  AVAILABLE_SELECT_RECENT
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED,
+  AVAILABLE_REVISIONS_SELECT_RECENT
 } from "../constants";
 import { isInDevmode } from "../devmodeIcon";
 
@@ -99,16 +99,16 @@ export function getPendingChannelMap(state) {
   return pendingChannelMap;
 }
 
-// return list of revisions based on current availableSelect value
+// return list of revisions based on current availableRevisionsSelect value
 export function getSelectedAvailableRevisions(state) {
-  const { revisions, availableSelect } = state;
+  const { revisions, availableRevisionsSelect } = state;
 
   // get all revisions ordered from newest (based on revsion id)
   let availableRevisions = Object.values(revisions).reverse();
 
   if (
-    availableSelect === AVAILABLE_SELECT_UNRELEASED ||
-    availableSelect === AVAILABLE_SELECT_RECENT
+    availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_UNRELEASED ||
+    availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT
   ) {
     // filter revisions not released to any channel yet
     availableRevisions = availableRevisions.filter(
@@ -116,7 +116,7 @@ export function getSelectedAvailableRevisions(state) {
     );
   }
 
-  if (availableSelect === AVAILABLE_SELECT_RECENT) {
+  if (availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT) {
     const interval = 1000 * 60 * 60 * 24 * 7; // 7 days
     // filter revisions not older then 7 days
     availableRevisions = availableRevisions.filter(
@@ -127,7 +127,7 @@ export function getSelectedAvailableRevisions(state) {
   return availableRevisions;
 }
 
-// return list of revisions based on current availableSelect value
+// return list of revisions based on current availableRevisionsSelect value
 // filtered by arch (can't be memoized)
 export function getSelectedAvailableRevisionsForArch(state, arch) {
   return getSelectedAvailableRevisions(state).filter(revision =>
