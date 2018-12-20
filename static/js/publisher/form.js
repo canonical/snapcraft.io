@@ -114,14 +114,15 @@ function initForm(config, initialState, errors) {
   let state = JSON.parse(JSON.stringify(initialState));
 
   const stateInput = document.createElement("input");
-  stateInput.type = "hidden";
   stateInput.name = "state";
+  stateInput.value = "";
 
   formEl.appendChild(stateInput);
 
   const diffInput = document.createElement("input");
   diffInput.type = "hidden";
   diffInput.name = "changes";
+  diffInput.value = "";
 
   formEl.appendChild(diffInput);
 

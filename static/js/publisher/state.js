@@ -103,4 +103,4 @@ function diffState(initialState, state) {
   return Object.keys(diff).length > 0 ? diff : null;
 }
 
-export { updateState, diffState };
+export { updateState, diffState, commaSeperatedStringToArray };
