@@ -58,7 +58,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": False,
             "license": "License",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -114,7 +114,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -152,7 +152,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": [],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -190,7 +190,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": ["https://youtube.com/watch?v=1234"],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -228,7 +228,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "public_metrics_blacklist": True,
             "license": "license",
             "video_urls": ["https://youtube.com/watch?v=1234"],
-            "categories": {},
+            "categories": {"items": []},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)

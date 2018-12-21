@@ -142,6 +142,93 @@
 
         <div class="row">
           <div class="col-2">
+            <label>Category:</label>
+          </div>
+          <div class="col-4">
+            <input type="hidden" name="categories"
+                   value="{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}" />
+            <select
+              name="primary_category"
+              {% if snap_categories.categories[0] %}
+                value="{{ snap_categories.categories[0].name }}"
+              {% endif %}
+              {% if snap_categories.locked %} disabled="disabled"{% endif %}
+            >
+              <option value="">Select category</option>
+              {% for category in categories %}
+                <option
+                  value="{{ category.slug }}"
+                  {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
+                    selected="selected"
+                  {% endif %}
+                >{{ category.name }}</option>
+              {% endfor %}
+              <option value="">None</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="js-categories-category1-help-text row{% if snap_categories.categories[0] %} u-hide{% endif %}">
+          <div class="col-8 push-2">
+            <p class="p-form-help-text">
+              Include a category and your snap will be better ranked within the Snap Store.
+              It will also allow users to discover your snap via browsing the available categories.
+            </p>
+          </div>
+        </div>
+
+        <div class="js-categories-category2-add row{% if not snap_categories.categories[0] or snap_categories.categories[1] %} u-hide{% endif %}">
+          <div class="col-8 push-2">
+            <p><a class="js-categories-category2-add-link">+ Add another category</a></p>
+            <p class="p-form-help-text">
+              If your snap fits into multiple categories you can select another.
+            </p>
+          </div>
+        </div>
+
+        <div class="js-categories-category2-picker row{% if not snap_categories.categories[1] %} u-hide{% endif %}">
+          <div class="col-2">
+            <label>Second category:</label>
+          </div>
+          <div class="col-4">
+            <select
+              name="secondary_category"
+              {% if snap_categories.categories[1] %}
+              value="{{ snap_categories.categories[1].name }}"
+              {% endif %}
+              {% if snap_categories.locked %} disabled="disabled"{% endif %}
+            >
+              <option value="">Select category</option>
+              {% for category in categories %}
+                <option
+                  value="{{ category.slug }}"
+                  {% if snap_categories.categories[1] and (snap_categories.categories[1].name == category.slug) %}
+                  selected="selected"
+                  {% endif %}
+                  {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0].name %}
+                  disabled="disabled"
+                  {% endif %}
+                >{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-2">
+            <p>
+              <a class="js-categories-category2-remove">
+                <i class="p-icon--delete"></i>
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
             <label>Summary: </label>
           </div>
           <div class="col-8">
@@ -406,6 +493,7 @@
       description: {{ description|tojson }},
       website: {{ website|tojson }},
       contact: {{ contact|tojson }},
+      categories: "{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}",
       images: [
         {% if icon_url %}
           { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
@@ -424,6 +512,8 @@
       null
     {% endif %}
     );
+
+    snapcraft.publisher.initCategories();
   });
 </script>
 {% endblock %}

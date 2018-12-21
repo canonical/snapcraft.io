@@ -255,3 +255,18 @@ def invalid_field_errors(errors):
             other_errors.append(error)
 
     return field_errors, other_errors
+
+
+def replace_reserved_categories_key(categories):
+    """The API returns `items` which is a reserved word in jinja2.
+    This method renames that key for snap_categories.
+
+    :param categories: Dict of categories
+
+    :return: Dict of categories"""
+    snap_categories = categories
+    snap_categories["categories"] = snap_categories["items"]
+
+    del snap_categories["items"]
+
+    return snap_categories

@@ -1,4 +1,4 @@
-import { updateState, diffState } from "./state";
+import { updateState, diffState, commaSeperatedStringToArray } from "./state";
 
 describe("updateState", () => {
   let state;
@@ -142,5 +142,31 @@ describe("diffState", () => {
         )
       ).toBeNull();
     });
+  });
+});
+
+describe("commaSeperatedStringToArray", () => {
+  test("should return empty array if single value is blank", () => {
+    expect(commaSeperatedStringToArray("")).toEqual([]);
+  });
+
+  test("should return empty array if all values are blank", () => {
+    expect(commaSeperatedStringToArray(", ")).toEqual([]);
+  });
+
+  test("should return an array if single value is not blank", () => {
+    expect(commaSeperatedStringToArray("test")).toEqual(["test"]);
+  });
+
+  test("should return an array if multiple values are not blank", () => {
+    expect(commaSeperatedStringToArray("test, test2")).toEqual([
+      "test",
+      "test2"
+    ]);
+  });
+
+  test("should return a single element array if multiple values and 1 is blank", () => {
+    expect(commaSeperatedStringToArray("test, ")).toEqual(["test"]);
+    expect(commaSeperatedStringToArray(", test")).toEqual(["test"]);
   });
 });

@@ -3,6 +3,7 @@ import { updateState, diffState } from "./state";
 import { publicMetrics } from "./market/publicMetrics";
 import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
+import { categories } from "./market/categories";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -115,12 +116,14 @@ function initForm(config, initialState, errors) {
   const stateInput = document.createElement("input");
   stateInput.type = "hidden";
   stateInput.name = "state";
+  stateInput.value = "";
 
   formEl.appendChild(stateInput);
 
   const diffInput = document.createElement("input");
   diffInput.type = "hidden";
   diffInput.name = "changes";
+  diffInput.value = "";
 
   formEl.appendChild(diffInput);
 
@@ -202,6 +205,9 @@ function initForm(config, initialState, errors) {
     }
     if (formEl["license"]) {
       license(formEl);
+    }
+    if (formEl.elements["primary_category"]) {
+      categories(formEl);
     }
 
     let formData = new FormData(formEl);

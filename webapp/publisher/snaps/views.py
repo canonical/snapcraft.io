@@ -265,11 +265,15 @@ def get_listing_snap(snap_name):
 
     categories = get_categories(categories_results)
 
+    snap_categories = logic.replace_reserved_categories_key(
+        snap_details["categories"]
+    )
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
-        "snap_categories": snap_details["categories"],
+        "snap_categories": snap_categories,
         "summary": snap_details["summary"],
         "description": snap_details["description"],
         "icon_url": icon_urls[0] if icon_urls else None,
@@ -424,11 +428,15 @@ def post_listing_snap(snap_name):
 
             categories = get_categories(categories_results)
 
+            snap_categories = logic.replace_reserved_categories_key(
+                snap_details["categories"]
+            )
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
                 "snap_name": snap_details["snap_name"],
-                "snap_categories": snap_details["categories"],
+                "snap_categories": snap_categories,
                 "icon_url": icon_urls[0] if icon_urls else None,
                 "publisher_name": snap_details["publisher"]["display-name"],
                 "username": snap_details["publisher"]["username"],

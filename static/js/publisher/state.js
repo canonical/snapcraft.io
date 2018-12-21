@@ -13,12 +13,20 @@ const allowedKeys = [
   "whitelist_countries",
   "blacklist_countries",
   "video_urls",
-  "license"
+  "license",
+  "categories"
 ];
 
 function commaSeperatedStringToArray(str) {
-  if (str !== "") {
-    return str.split(", ");
+  if (
+    str !== "" &&
+    str
+      .split(",")
+      .join("")
+      .trim() !== ""
+  ) {
+    const split = str.split(", ");
+    return split.filter(item => item !== "");
   } else {
     return [];
   }
@@ -27,6 +35,7 @@ function commaSeperatedStringToArray(str) {
 const transform = {
   whitelist_countries: commaSeperatedStringToArray,
   blacklist_countries: commaSeperatedStringToArray,
+  categories: commaSeperatedStringToArray,
   private: value => value === "private",
   public_metrics_enabled: value => value === "on"
 };
@@ -95,4 +104,4 @@ function diffState(initialState, state) {
   return Object.keys(diff).length > 0 ? diff : null;
 }
 
-export { updateState, diffState };
+export { updateState, diffState, commaSeperatedStringToArray };
