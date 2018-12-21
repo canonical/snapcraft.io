@@ -220,6 +220,13 @@
       margin-right: .25rem;
     }
 
+    // workaround for misaligned Vanilla icon
+    // https://github.com/vanilla-framework/vanilla-framework/issues/2085
+    & .p-icon--delete {
+      left: -1px;
+      top: -3px;
+    }
+
     // don't grow these buttons to 100% width on mobile
     @media (max-width: $breakpoint-small) {
       width: auto;
