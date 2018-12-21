@@ -2,6 +2,7 @@ import lightbox from "./../../publisher/market/lightbox";
 import { isMobile } from "../../libs/mobile";
 import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
 import { SCREENSHOTS_CONFIG } from "../../config/swiper.config";
+import iframeSize from "../../libs/iframeSize";
 
 Swiper.use([Navigation]);
 
@@ -12,7 +13,9 @@ export default function initScreenshots(screenshotsId) {
     return;
   }
 
-  const images = Array.from(screenshotsEl.querySelectorAll("img, video"))
+  const images = Array.from(
+    screenshotsEl.querySelectorAll("img, video, .js-video-slide")
+  )
     .filter(image => image.dataset.original)
     .map(image => image.dataset.original);
 
@@ -42,6 +45,9 @@ export default function initScreenshots(screenshotsId) {
       }
     }
   });
+
+  // We need to resize the iframe on window resize
+  iframeSize("#js-snap-screenshots", 643);
 
   new Swiper(screenshotsEl.querySelector(".swiper-container"), config);
 }

@@ -318,11 +318,20 @@ def get_video_embed_code(url):
     :returns: Embed code
     """
     if "youtube" in url:
-        return {"type": "youtube", "url": url.replace("watch?v=", "embed/")}
+        return {
+            "type": "youtube",
+            "url": url.replace("watch?v=", "embed/"),
+            "id": url.rsplit("?v=", 1)[-1],
+        }
     if "vimeo" in url:
         return {
             "type": "vimeo",
             "url": url.replace("vimeo.com/", "player.vimeo.com/video/"),
+            "id": url.rsplit("/", 1)[-1],
         }
     if "asciinema" in url:
-        return {"type": "asciinema", "url": url + ".js"}
+        return {
+            "type": "asciinema",
+            "url": url + ".js",
+            "id": url.rsplit("/", 1)[-1],
+        }

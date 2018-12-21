@@ -44,9 +44,8 @@
 {% endblock %}
 
 {% block content %}
-  <div class="p-strip--light is-shallow">
+  <div class="p-strip--light is-shallow snapcraft-banner-background">
     <div class="row">
-      <div class="col-7">
         <div class="p-snap-heading">
           {% if icon_url %}
             <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" />
@@ -68,10 +67,9 @@
               {% endif %}
             </p>
           </div>
-        </div>
-      </div>
+
       {% if not webapp_config['STORE_QUERY'] %}
-        <div class="col-5 p-snap-install-buttons">
+        <div class="p-snap-install-buttons">
           <button
             class="p-button--neutral p-snap-install-buttons__versions"
             data-js="open-channel-map"
@@ -90,7 +88,7 @@
           {% endif %}
         </div>
       {% else %}
-        <div class="col-5 p-snap-install-buttons">
+        <div class="p-snap-install-buttons">
           <div class="p-code-snippet">
             <input class="p-code-snippet__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
             <button class="p-code-snippet__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
@@ -99,6 +97,7 @@
           </div>
         </div>
       {% endif %}
+        </div>
     </div>
   </div>
 
@@ -106,41 +105,47 @@
     {% include "store/snap-details/_channel_map.html" %}
   {% endif %}
 
-  {% if screenshots %}
-    <div class="p-strip is-shallow">
+  {% if screenshots or videos %}
+    <div class="p-strip--light is-shallow">
       <div class="row">
-        <div class="p-carousel" id="js-snap-screenshots">
-          <div class="swiper-container">
-            <div class="swiper-wrapper">
-              {% for screenshot in screenshots %}
-                <div class="p-carousel__item--screenshot swiper-slide">
-                  {% if screenshot.endswith('.gif') %}
-                  <video autoplay loop muted playsinline data-original="{{ screenshot }}">
-                    <source src="https://res.cloudinary.com/canonical/image/fetch/f_webm/{{ screenshot }}" type="video/webm">
-                    <source src="https://res.cloudinary.com/canonical/image/fetch/f_mp4/{{ screenshot }}" type="video/mp4">
-                    <img src="https://res.cloudinary.com/canonical/image/fetch/f_jpg,q_auto,f_auto,w_430/{{ screenshot }}" />
-                  </video>
-                  {% else %}
-                    <img src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }}"
-                      srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }} 215w,
-                        https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/{{ screenshot }} 430w"
-                      sizes="(min-width: 1031px) 430px,
-                        (max-width: 1030px) and (min-width: 876px) 430px,
-                        (max-width: 760px) 215px" data-original="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_1170/{{ screenshot }}" alt="">
-                  {% endif %}
+        {% if (videos and screenshots) or (not videos and (screenshots and screenshots|length > 1)) %}
+          <div class="p-carousel u-no-margin--bottom u-no-margin--top" id="js-snap-screenshots">
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                {% for video in videos %}
+                  <div class="p-carousel__item--video p-carousel__item--{{ video.type }} swiper-slide">
+                    <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}">
+                      {% include "partials/_video.html" %}
+                    </div>
+                  </div>
+                {% endfor %}
+                {% for screenshot in screenshots %}
+                  {% include "partials/_snap-screenshot.html" %}
+                {% endfor %}
+              </div>
+            </div>
+            <button class="p-carousel__next swiper-button__next">Next</button>
+            <button class="p-carousel__prev swiper-button__prev">Previous</button>
+          </div>
+        {% else %}
+          <div class="p-carousel" id="js-snap-screenshots">
+            {% if videos %}
+              {% for video in videos %}
+                <div class="p-carousel__item--video p-carousel__item--{{ video.type }}">
+                  <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}" data-original="video">
+                    {% include "partials/_video.html" %}
+                  </div>
                 </div>
               {% endfor %}
-            </div>
+            {% else %}
+              {% for screenshot in screenshots %}
+                <div class="p-carousel__item--screenshot">
+                  {% include "partials/_snap-screenshot.html" %}
+                </div>
+              {% endfor %}
+            {% endif %}
           </div>
-          <button class="p-carousel__next swiper-button__next">Next</button>
-          <button class="p-carousel__prev swiper-button__prev">Previous</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <hr />
+        {% endif %}
       </div>
     </div>
   {% endif %}
@@ -160,6 +165,7 @@
         {% endif %}
       </div>
       <div class="col-4">
+        <h4>Details for {{ snap_title }}</h4>
         <table class="p-table-key-value">
           <tr><th>License</th><td>{{ license }}</td></tr>
           <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
@@ -176,15 +182,14 @@
     </div>
     <div class="p-strip is-shallow">
       <div class="row">
-        <h4>Related blog posts</h4>
+        <div class="col-3">
+          <h3 class="p-heading--four">Related blog posts</h3>
+        </div>
       </div>
       <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
-      </div>
     </div>
   </div>
-  {% set article_title = {'rendered': '${title}'} %}
-  {% set article = {'slug': '${slug}', 'title': article_title} %}
-  <script type="text/template" id="blog-article-template">{% include 'partials/blog-card--minimal.html' %}</script>
+
   {% if countries or normalized_os %}
     <div class="row">
       <div class="col-12">
@@ -235,6 +240,19 @@
       </div>
     </div>
   {% endif %}
+
+  {# templates #}
+  {% set article_title = {'rendered': '${title}'} %}
+  {% set article = {'slug': '${slug}', 'title': article_title} %}
+  <script type="text/template" id="blog-article-template">{% include 'partials/blog-card--minimal.html' %}</script>
+
+  {% set video = {'type': 'youtube', 'url': '${url}', 'id': '${id}'} %}
+  <script type="text/template" id="video-youtube-template">{% include 'partials/_video.html' %}</script>
+  {% set video = {'type': 'vimeo', 'url': '${url}', 'id': '${id}'} %}
+  <script type="text/template" id="video-vimeo-template">{% include 'partials/_video.html' %}</script>
+  {% set video = {'type': 'asciinema', 'url': '${url}', 'id': '${id}'} %}
+  <script type="text/template" id="video-asciinema-template">{% include 'partials/_video.html' %}</script>
+
 {% endblock %}
 
 {% block scripts_modules %}
@@ -247,6 +265,12 @@
     Raven.context(function () {
       try {
         snapcraft.public.screenshots('#js-snap-screenshots');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
+      try {
+        snapcraft.public.videos('.js-video-slide');
       } catch(e) {
         Raven.captureException(e);
       }

@@ -45,16 +45,15 @@ const initLightboxEl = () => {
 };
 
 const loadLightboxImage = (lightboxEl, url, images) => {
-  let media;
-  // hide content before it loads
   const contentEl = lightboxEl.querySelector(".vbox-content");
+  // hide content before it loads
   contentEl.style.opacity = "0";
-
   const currentMedia = contentEl.querySelector(".figlio");
   if (currentMedia) {
     contentEl.removeChild(currentMedia);
   }
 
+  let media;
   // load media
   if (url.includes(".gif")) {
     media = document.createElement("video");
