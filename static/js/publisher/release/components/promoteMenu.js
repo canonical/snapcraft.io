@@ -58,7 +58,7 @@ export default class PromoteMenu extends Component {
         appearance="neutral"
         isDisabled={isDisabled}
         label="⤴"
-        title="Promote revisions"
+        title="Promote to other channels"
         ref={this.setMenuRef}
       >
         {this.renderItems()}
