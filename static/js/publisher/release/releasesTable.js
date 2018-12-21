@@ -11,7 +11,6 @@ import {
 } from "./constants";
 import { getArchitectures, getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
-import ChannelMenu from "./components/channelMenu";
 import PromoteMenu from "./components/promoteMenu";
 import AvailableRevisionsMenu from "./components/availableRevisionsMenu";
 import HistoryPanel from "./historyPanel";
@@ -152,10 +151,13 @@ class ReleasesTable extends Component {
                 />
               )}
               {canBeClosed && (
-                <ChannelMenu
-                  channel={channel}
-                  closeChannel={this.onCloseChannel.bind(this, channel)}
-                />
+                <button
+                  className="p-button--base p-icon-button u-no-margin"
+                  onClick={this.onCloseChannel.bind(this, channel)}
+                  title={`Close channel ${channel}`}
+                >
+                  <i className="p-icon--delete" />
+                </button>
               )}
             </span>
           </div>
