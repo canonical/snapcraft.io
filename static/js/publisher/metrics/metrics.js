@@ -26,7 +26,8 @@ function renderMetrics(metrics) {
     metrics.activeDevices.selector,
     activeDevices,
     metrics.activeDevices.type,
-    metrics.defaultTrack
+    metrics.defaultTrack,
+    metrics.activeDevices.annotations
   );
 
   // Territories

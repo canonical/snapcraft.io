@@ -89,6 +89,7 @@ Publisher metrics for {{ snap_title }}
         activeDevices: {
           selector: '#activeDevices',
           metrics: {{ active_devices|safe }},
+          annotations: {{ active_devices_annotations|safe }},
           type: '{{ active_device_metric }}'
         },
         territories: {
