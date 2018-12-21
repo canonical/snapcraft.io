@@ -6,7 +6,7 @@ import {
   CLOSE_CHANNEL_SUCCESS
 } from "../actions/channelMap";
 
-function selectRevision(state, revision) {
+function selectRevision(state, revision, toggle) {
   // TODO: support multiple archs
   const arch = revision.architectures[0];
 
@@ -16,6 +16,7 @@ function selectRevision(state, revision) {
   };
 
   if (
+    toggle &&
     state[AVAILABLE][arch] &&
     state[AVAILABLE][arch].revision === revision.revision
   ) {
@@ -68,7 +69,11 @@ export default function channelMap(state = {}, action) {
         ...action.payload.channelMap
       };
     case SELECT_REVISION:
-      return selectRevision(state, action.payload.revision);
+      return selectRevision(
+        state,
+        action.payload.revision,
+        action.payload.toggle
+      );
     case RELEASE_REVISION_SUCCESS:
       return releaseRevision(
         state,

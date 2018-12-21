@@ -13,7 +13,14 @@ export function initChannelMap(channelMap) {
 export function selectRevision(revision) {
   return {
     type: SELECT_REVISION,
-    payload: { revision }
+    payload: { revision, toggle: false }
+  };
+}
+
+export function toggleRevision(revision) {
+  return {
+    type: SELECT_REVISION,
+    payload: { revision, toggle: true }
   };
 }
 

@@ -5,6 +5,7 @@ import {
   CLOSE_CHANNEL_SUCCESS,
   initChannelMap,
   selectRevision,
+  toggleRevision,
   releaseRevisionSuccess,
   closeChannelSuccess
 } from "./channelMap";
@@ -38,8 +39,26 @@ describe("channelMap actions", () => {
       expect(selectRevision(revision).type).toBe(SELECT_REVISION);
     });
 
-    it("should supply a payload with channel map data", () => {
+    it("should supply a payload with revision data", () => {
       expect(selectRevision(revision).payload.revision).toEqual(revision);
+    });
+
+    it("should supply a payload with toggle set to false", () => {
+      expect(selectRevision(revision).payload.toggle).toBe(false);
+    });
+  });
+
+  describe("toggleRevision", () => {
+    it("should create an action to select revision", () => {
+      expect(toggleRevision(revision).type).toBe(SELECT_REVISION);
+    });
+
+    it("should supply a payload with revision data", () => {
+      expect(toggleRevision(revision).payload.revision).toEqual(revision);
+    });
+
+    it("should supply a payload with toggle set to false", () => {
+      expect(toggleRevision(revision).payload.toggle).toBe(true);
     });
   });
 
