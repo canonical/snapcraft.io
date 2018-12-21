@@ -8,7 +8,7 @@ import {
   setAvailableRevisionsSelect,
   selectAvailableRevisions
 } from "./availableRevisionsSelect";
-import { selectRevision } from "./channelMap";
+import { selectRevision, clearSelectedRevisions } from "./channelMap";
 import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../constants";
 
 describe("availableRevisionsSelect actions", () => {
@@ -50,6 +50,10 @@ describe("availableRevisionsSelect actions", () => {
       expect(store.getActions()).toContainEqual(
         setAvailableRevisionsSelect(value)
       );
+    });
+
+    it("should dispatch CLEAR_SELECTED_REVISIONS action", () => {
+      expect(store.getActions()).toContainEqual(clearSelectedRevisions());
     });
 
     it("should dispatch SELECT_REVISION action for latest revision from every selected architecture", () => {
