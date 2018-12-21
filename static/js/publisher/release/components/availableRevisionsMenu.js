@@ -24,6 +24,10 @@ export class AvailableRevisionsMenu extends Component {
     this.setMenuRef = menu => (this.menu = menu);
   }
 
+  componentDidMount() {
+    this.props.setValue(AVAILABLE_REVISIONS_SELECT_RECENT);
+  }
+
   itemClick(value, event) {
     this.props.setValue(value);
 
