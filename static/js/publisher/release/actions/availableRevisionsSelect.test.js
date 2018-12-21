@@ -8,7 +8,11 @@ import {
   setAvailableRevisionsSelect,
   selectAvailableRevisions
 } from "./availableRevisionsSelect";
-import { selectRevision, clearSelectedRevisions } from "./channelMap";
+import {
+  SELECT_REVISION,
+  selectRevision,
+  clearSelectedRevisions
+} from "./channelMap";
 import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED
@@ -73,47 +77,77 @@ describe("availableRevisionsSelect actions", () => {
     describe("when 'Recent' are selected", () => {
       const value = AVAILABLE_REVISIONS_SELECT_RECENT;
 
-      const revisions = {
-        1: {
-          revision: 1,
-          version: "1.test",
-          architectures: ["arch1"],
-          created_at: new Date()
-        },
-        2: {
-          revision: 2,
-          version: "2.test",
-          architectures: ["arch2"],
-          created_at: new Date()
-        },
-        3: {
-          revision: 3,
-          version: "1.test",
-          architectures: ["arch3"],
-          created_at: new Date()
-        }
-      };
+      describe("when there are no revisions", () => {
+        const revisions = {};
 
-      beforeEach(() => {
-        store = mockStore({
-          // mock store state is not modified by actions
-          // so this is the value we expect after the actions are dispatched
-          availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
-          revisions
+        it("should not dispatch any SELECT_REVISION actions", () => {
+          store = mockStore({
+            // mock store state is not modified by actions
+            // so this is the value we expect after the actions are dispatched
+            availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
+            revisions
+          });
+          store.dispatch(selectAvailableRevisions(value));
+
+          const actions = store.getActions();
+
+          expect(actions).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                type: SELECT_REVISION
+              })
+            ])
+          );
+        });
+      });
+
+      describe("when there are revisions in the state", () => {
+        const revisions = {
+          1: {
+            revision: 1,
+            version: "1.test",
+            architectures: ["arch1"],
+            created_at: new Date()
+          },
+          2: {
+            revision: 2,
+            version: "2.test",
+            architectures: ["arch2"],
+            created_at: new Date()
+          },
+          3: {
+            revision: 3,
+            version: "1.test",
+            architectures: ["arch3"],
+            created_at: new Date()
+          }
+        };
+
+        beforeEach(() => {
+          store = mockStore({
+            // mock store state is not modified by actions
+            // so this is the value we expect after the actions are dispatched
+            availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
+            revisions
+          });
+
+          store.dispatch(selectAvailableRevisions(value));
         });
 
-        store.dispatch(selectAvailableRevisions(value));
-      });
+        it("should dispatch SELECT_REVISION action for latest revisions with most recent version", () => {
+          expect(store.getActions()).toContainEqual(
+            selectRevision(revisions[1])
+          );
+          expect(store.getActions()).toContainEqual(
+            selectRevision(revisions[3])
+          );
+        });
 
-      it("should dispatch SELECT_REVISION action for latest revisions with most recent version", () => {
-        expect(store.getActions()).toContainEqual(selectRevision(revisions[1]));
-        expect(store.getActions()).toContainEqual(selectRevision(revisions[3]));
-      });
-
-      it("should dispatch SELECT_REVISION action for latest revisions with other versions", () => {
-        expect(store.getActions()).not.toContainEqual(
-          selectRevision(revisions[2])
-        );
+        it("should dispatch SELECT_REVISION action for latest revisions with other versions", () => {
+          expect(store.getActions()).not.toContainEqual(
+            selectRevision(revisions[2])
+          );
+        });
       });
     });
   });
