@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import ContextualMenu from "./contextualMenu";
 
 import { selectAvailableRevisions } from "../actions/availableRevisionsSelect";
+import { getAvailableRevisionsBySelection } from "../selectors";
 
 import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -36,21 +37,27 @@ export class AvailableRevisionsMenu extends Component {
     }
   }
 
+  renderItem(item) {
+    const count = this.props.getFilteredCount(item);
+
+    return (
+      <a
+        key={`available-menu-item-${item}`}
+        className="p-contextual-menu__link"
+        href="#"
+        onClick={this.itemClick.bind(this, item)}
+      >
+        {menuLabels[item]} <span className="u-float--right">({count})</span>
+      </a>
+    );
+  }
+
   renderItems() {
     const items = Object.keys(menuLabels);
 
     return (
       <span className="p-contextual-menu__group">
-        {items.map(item => (
-          <a
-            key={`available-menu-item-${item}`}
-            className="p-contextual-menu__link"
-            href="#"
-            onClick={this.itemClick.bind(this, item)}
-          >
-            {menuLabels[item]}
-          </a>
-        ))}
+        {items.map(this.renderItem.bind(this))}
       </span>
     );
   }
@@ -71,12 +78,15 @@ export class AvailableRevisionsMenu extends Component {
 
 AvailableRevisionsMenu.propTypes = {
   value: PropTypes.string.isRequired,
-  setValue: PropTypes.func.isRequired
+  setValue: PropTypes.func.isRequired,
+  getFilteredCount: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
-    value: state.availableRevisionsSelect
+    value: state.availableRevisionsSelect,
+    getFilteredCount: value =>
+      getAvailableRevisionsBySelection(state, value).length
   };
 };
 

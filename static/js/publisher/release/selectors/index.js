@@ -119,11 +119,9 @@ export function getRecentRevisions(state) {
   );
 }
 
-// return list of revisions based on current availableRevisionsSelect value
-export function getSelectedAvailableRevisions(state) {
-  const { availableRevisionsSelect } = state;
-
-  switch (availableRevisionsSelect) {
+// return list of revisions based on given selection value
+export function getAvailableRevisionsBySelection(state, value) {
+  switch (value) {
     case AVAILABLE_REVISIONS_SELECT_RECENT:
       return getRecentRevisions(state);
     case AVAILABLE_REVISIONS_SELECT_UNRELEASED:
@@ -131,6 +129,12 @@ export function getSelectedAvailableRevisions(state) {
     default:
       return getAllRevisions(state);
   }
+}
+
+// return list of revisions based on current availableRevisionsSelect value
+export function getSelectedAvailableRevisions(state) {
+  const { availableRevisionsSelect } = state;
+  return getAvailableRevisionsBySelection(state, availableRevisionsSelect);
 }
 
 // return list of revisions based on current availableRevisionsSelect value
