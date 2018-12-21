@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import ContextualMenu from "./contextualMenu";
 
-import { setAvailableRevisionsSelect } from "../actions/availableRevisionsSelect";
+import { selectAvailableRevisions } from "../actions/availableRevisionsSelect";
 
 import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -78,7 +78,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setValue: value => dispatch(setAvailableRevisionsSelect(value))
+    setValue: value => dispatch(selectAvailableRevisions(value))
   };
 };
 
