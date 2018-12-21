@@ -39,13 +39,17 @@ export class AvailableRevisionsMenu extends Component {
 
   renderItem(item) {
     const count = this.props.getFilteredCount(item);
+    const isDisabled = count === 0;
+    const className = `p-contextual-menu__link ${
+      isDisabled ? "is-disabled" : ""
+    }`;
 
     return (
       <a
         key={`available-menu-item-${item}`}
-        className="p-contextual-menu__link"
+        className={className}
         href="#"
-        onClick={this.itemClick.bind(this, item)}
+        onClick={!isDisabled ? this.itemClick.bind(this, item) : undefined}
       >
         {menuLabels[item]} <span className="u-float--right">({count})</span>
       </a>
