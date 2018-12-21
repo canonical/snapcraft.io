@@ -1,6 +1,10 @@
-import { getArchitectures } from "../selectors";
+import { AVAILABLE_REVISIONS_SELECT_RECENT } from "../constants";
 import { selectRevision, clearSelectedRevisions } from "./channelMap";
-import { getSelectedAvailableRevisionsForArch } from "../selectors";
+import {
+  getArchitectures,
+  getSelectedAvailableRevisions,
+  getSelectedAvailableRevisionsForArch
+} from "../selectors";
 
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 
@@ -16,13 +20,25 @@ export function selectAvailableRevisions(value) {
     dispatch(setAvailableRevisionsSelect(value));
     dispatch(clearSelectedRevisions());
 
+    const state = getState();
+
     // for each architecture
     const archs = getArchitectures(getState());
+    let revisionsFilter = () => true;
+
+    // for Recent select only revisions from most recent uploaded version
+    if (value === AVAILABLE_REVISIONS_SELECT_RECENT) {
+      // find most recent version
+      const recentVersion = getSelectedAvailableRevisions(state)[0].version;
+      // filter most recent revision with given version
+      revisionsFilter = revision => revision.version === recentVersion;
+    }
+
     // get latest revision to select
     archs.forEach(arch => {
-      const revisions = getSelectedAvailableRevisionsForArch(getState(), arch);
+      const revisions = getSelectedAvailableRevisionsForArch(state, arch);
 
-      const revisionToSelect = revisions[0];
+      const revisionToSelect = revisions.filter(revisionsFilter)[0];
       if (revisionToSelect) {
         dispatch(selectRevision(revisionToSelect));
       }
