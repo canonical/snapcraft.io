@@ -2,6 +2,7 @@ import { AVAILABLE } from "../constants";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
+  CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS
 } from "../actions/channelMap";
@@ -74,6 +75,11 @@ export default function channelMap(state = {}, action) {
         action.payload.revision,
         action.payload.toggle
       );
+    case CLEAR_SELECTED_REVISIONS:
+      return {
+        ...state,
+        [AVAILABLE]: {}
+      };
     case RELEASE_REVISION_SUCCESS:
       return releaseRevision(
         state,

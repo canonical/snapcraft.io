@@ -1,5 +1,5 @@
 import { getArchsFromRevisionsMap } from "../releasesState";
-import { selectRevision } from "./channelMap";
+import { selectRevision, clearSelectedRevisions } from "./channelMap";
 import { getSelectedAvailableRevisionsForArch } from "../selectors";
 
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
@@ -14,6 +14,7 @@ export function setAvailableRevisionsSelect(value) {
 export function selectAvailableRevisions(value) {
   return (dispatch, getState) => {
     dispatch(setAvailableRevisionsSelect(value));
+    dispatch(clearSelectedRevisions());
 
     // for each architecture
     const archs = getArchsFromRevisionsMap(getState().revisions);

@@ -2,6 +2,7 @@ import channelMap from "./channelMap";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
+  CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS
 } from "../actions/channelMap";
@@ -113,6 +114,30 @@ describe("channelMap", () => {
           expect(result[AVAILABLE]["abc42"]).toBeUndefined();
         });
       });
+    });
+  });
+
+  describe("on CLEAR_SELECTED_REVISIONS action", () => {
+    const revision = {
+      revision: 1,
+      version: "1",
+      architectures: ["abc42"]
+    };
+
+    const stateWithSelectedRevision = {
+      [AVAILABLE]: {
+        abc42: revision
+      }
+    };
+
+    const clearSelectedAction = {
+      type: CLEAR_SELECTED_REVISIONS
+    };
+
+    it("should remove all selected revisions from AVAILABLE 'channel'", () => {
+      const result = channelMap(stateWithSelectedRevision, clearSelectedAction);
+
+      expect(result[AVAILABLE]).toEqual({});
     });
   });
 

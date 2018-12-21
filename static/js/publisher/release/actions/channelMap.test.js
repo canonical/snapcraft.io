@@ -1,11 +1,13 @@
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
+  CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
   initChannelMap,
   selectRevision,
   toggleRevision,
+  clearSelectedRevisions,
   releaseRevisionSuccess,
   closeChannelSuccess
 } from "./channelMap";
@@ -59,6 +61,12 @@ describe("channelMap actions", () => {
 
     it("should supply a payload with toggle set to false", () => {
       expect(toggleRevision(revision).payload.toggle).toBe(true);
+    });
+  });
+
+  describe("clearSelectedRevisions", () => {
+    it("should create an action to clear selected revisions", () => {
+      expect(clearSelectedRevisions().type).toBe(CLEAR_SELECTED_REVISIONS);
     });
   });
 
