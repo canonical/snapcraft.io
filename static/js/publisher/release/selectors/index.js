@@ -140,3 +140,17 @@ export function getSelectedAvailableRevisionsForArch(state, arch) {
     revision.architectures.includes(arch)
   );
 }
+
+// get list of architectures of uploaded revisions
+export function getArchitectures(state) {
+  let archs = [];
+
+  getAllRevisions(state).forEach(revision => {
+    archs = archs.concat(revision.architectures);
+  });
+
+  // make archs unique and sorted
+  archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
+
+  return archs.sort();
+}
