@@ -1,4 +1,4 @@
-import { getArchsFromRevisionsMap } from "../releasesState";
+import { getArchitectures } from "../selectors";
 import { selectRevision, clearSelectedRevisions } from "./channelMap";
 import { getSelectedAvailableRevisionsForArch } from "../selectors";
 
@@ -17,7 +17,7 @@ export function selectAvailableRevisions(value) {
     dispatch(clearSelectedRevisions());
 
     // for each architecture
-    const archs = getArchsFromRevisionsMap(getState().revisions);
+    const archs = getArchitectures(getState());
     // get latest revision to select
     archs.forEach(arch => {
       const revisions = getSelectedAvailableRevisionsForArch(getState(), arch);

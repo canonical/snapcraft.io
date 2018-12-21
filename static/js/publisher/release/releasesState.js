@@ -91,19 +91,6 @@ function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
   return releasedChannels;
 }
 
-// update list of architectures based on revisions uploaded
-function getArchsFromRevisionsMap(revisionsMap) {
-  let archs = [];
-  Object.values(revisionsMap).forEach(revision => {
-    archs = archs.concat(revision.architectures);
-  });
-
-  // make archs unique and sorted
-  archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
-
-  return archs.sort();
-}
-
 // for channel without release get next (less risk) channel with a release
 function getTrackingChannel(releasedChannels, track, risk, arch) {
   let tracking = null;
@@ -166,7 +153,6 @@ function getPendingRelease(pendingReleases, arch, channel) {
 export {
   getPendingRelease,
   getUnassignedRevisions,
-  getArchsFromRevisionsMap,
   getTracksFromChannelMap,
   getTrackingChannel,
   getRevisionsMap,

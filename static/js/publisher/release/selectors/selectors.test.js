@@ -11,7 +11,8 @@ import {
   getPendingChannelMap,
   hasDevmodeRevisions,
   getSelectedAvailableRevisions,
-  getSelectedAvailableRevisionsForArch
+  getSelectedAvailableRevisionsForArch,
+  getArchitectures
 } from "./index";
 
 import reducers from "../reducers";
@@ -442,5 +443,25 @@ describe("getSelectedAvailableRevisionsByArch", () => {
         stateWithAllSelected.revisions[1]
       ]);
     });
+  });
+});
+
+describe("getArchitectures", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithRevisions = {
+    ...initialState,
+    revisions: {
+      1: { revision: 1, architectures: ["test64"] },
+      2: { revision: 2, architectures: ["amd42", "abc64"] },
+      3: { revision: 3, architectures: ["test64", "amd42"] }
+    }
+  };
+
+  it("should return alphabetical list of all architectures", () => {
+    expect(getArchitectures(stateWithRevisions)).toEqual([
+      "abc64",
+      "amd42",
+      "test64"
+    ]);
   });
 });

@@ -9,7 +9,7 @@ import {
   BETA,
   EDGE
 } from "./constants";
-import { getPendingChannelMap } from "./selectors";
+import { getArchitectures, getPendingChannelMap } from "./selectors";
 import { isInDevmode } from "./devmodeIcon";
 import ChannelMenu from "./components/channelMenu";
 import PromoteMenu from "./components/promoteMenu";
@@ -248,6 +248,7 @@ ReleasesTable.propTypes = {
   channelMap: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
 
+  archs: PropTypes.array.isRequired,
   pendingChannelMap: PropTypes.object,
 
   // actions
@@ -255,7 +256,6 @@ ReleasesTable.propTypes = {
   promoteChannel: PropTypes.func.isRequired,
 
   // state (non redux)
-  archs: PropTypes.array.isRequired,
   currentTrack: PropTypes.string.isRequired
 };
 
@@ -265,6 +265,7 @@ const mapStateToProps = state => {
     isHistoryOpen: state.history.isOpen,
     channelMap: state.channelMap,
     pendingCloses: state.pendingCloses,
+    archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state)
   };
 };

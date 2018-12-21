@@ -20,7 +20,6 @@ import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
 import { getPendingChannelMap } from "./selectors";
 
 import {
-  getArchsFromRevisionsMap,
   getTracksFromChannelMap,
   getRevisionsMap,
   initReleasesData,
@@ -52,9 +51,7 @@ class ReleasesController extends Component {
       error: null,
       isLoading: false,
       // list of all available tracks
-      tracks: tracks,
-      // list of architectures released to (or selected to be released to)
-      archs: getArchsFromRevisionsMap(revisionsMap)
+      tracks: tracks
     };
   }
 
@@ -284,7 +281,6 @@ class ReleasesController extends Component {
 
         <ReleasesTable
           // not moved to redux yet
-          archs={this.state.archs}
           currentTrack={this.state.currentTrack}
         />
       </Fragment>
