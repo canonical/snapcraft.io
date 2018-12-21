@@ -23,15 +23,19 @@ export function selectAvailableRevisions(value) {
     const state = getState();
 
     // for each architecture
-    const archs = getArchitectures(getState());
+    const archs = getArchitectures(state);
     let revisionsFilter = () => true;
 
     // for Recent select only revisions from most recent uploaded version
     if (value === AVAILABLE_REVISIONS_SELECT_RECENT) {
-      // find most recent version
-      const recentVersion = getSelectedAvailableRevisions(state)[0].version;
-      // filter most recent revision with given version
-      revisionsFilter = revision => revision.version === recentVersion;
+      const recentRevisions = getSelectedAvailableRevisions(state);
+
+      if (recentRevisions.length > 0) {
+        // find most recent version
+        const recentVersion = recentRevisions[0].version;
+        // filter most recent revision with given version
+        revisionsFilter = revision => revision.version === recentVersion;
+      }
     }
 
     // get latest revision to select
