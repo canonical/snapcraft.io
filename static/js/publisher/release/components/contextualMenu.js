@@ -60,7 +60,7 @@ export default class ContextualMenu extends Component {
     ].join(" ");
 
     return (
-      <button
+      <span
         className={className}
         title={title}
         onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
@@ -69,7 +69,7 @@ export default class ContextualMenu extends Component {
         <span className="p-contextual-menu__dropdown" aria-hidden="true">
           {this.props.children}
         </span>
-      </button>
+      </span>
     );
   }
 }
