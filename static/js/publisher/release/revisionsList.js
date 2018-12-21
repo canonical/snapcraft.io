@@ -14,7 +14,7 @@ import {
 } from "./constants";
 
 import { closeHistory } from "./actions/history";
-import { selectRevision } from "./actions/channelMap";
+import { toggleRevision } from "./actions/channelMap";
 import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
@@ -27,7 +27,7 @@ import { getPendingRelease } from "./releasesState";
 
 class RevisionsList extends Component {
   revisionSelectChange(revision) {
-    this.props.selectRevision(revision);
+    this.props.toggleRevision(revision);
   }
 
   renderRow(revision, isSelectable, showAllColumns, isPending) {
@@ -272,7 +272,7 @@ RevisionsList.propTypes = {
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
-  selectRevision: PropTypes.func.isRequired
+  toggleRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -298,7 +298,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
-    selectRevision: revision => dispatch(selectRevision(revision))
+    toggleRevision: revision => dispatch(toggleRevision(revision))
   };
 };
 

@@ -66,17 +66,52 @@ describe("channelMap", () => {
     describe("when revision is already selected", () => {
       const stateWithSelectedRevision = {
         [AVAILABLE]: {
-          abc42: revision
+          abc42: { revision: 2 }
         }
       };
 
-      it("should remove selected revision from AVAILABLE channel", () => {
+      it("should update selected revision", () => {
         const result = channelMap(
           stateWithSelectedRevision,
           selectRevisionAction
         );
 
-        expect(result[AVAILABLE]["abc42"]).toBeUndefined();
+        expect(result[AVAILABLE]["abc42"]).toEqual(revision);
+      });
+    });
+
+    describe("when toggle is set to true", () => {
+      const toggleRevisionAction = {
+        ...selectRevisionAction,
+        payload: {
+          revision,
+          toggle: true
+        }
+      };
+
+      describe("when revision is not yet selected", () => {
+        it("should add selected revision to AVAILABLE channel", () => {
+          const result = channelMap({}, toggleRevisionAction);
+
+          expect(result[AVAILABLE]["abc42"]).toEqual(revision);
+        });
+      });
+
+      describe("when revision is already selected", () => {
+        const stateWithSelectedRevision = {
+          [AVAILABLE]: {
+            abc42: revision
+          }
+        };
+
+        it("should remove selected revision from AVAILABLE channel", () => {
+          const result = channelMap(
+            stateWithSelectedRevision,
+            toggleRevisionAction
+          );
+
+          expect(result[AVAILABLE]["abc42"]).toBeUndefined();
+        });
       });
     });
   });
