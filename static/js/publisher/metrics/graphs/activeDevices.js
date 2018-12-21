@@ -129,7 +129,7 @@ const tooltipTemplate = (data, currentHoverKey, colorScale) => {
   ].join("");
 };
 
-function drawGraph(holderSelector, holder, activeDevices) {
+function drawGraph(holderSelector, holder, activeDevices, annotations) {
   // Basic svg setup
   const svg = select(`${holderSelector} svg`);
   svg.attr("width", holder.clientWidth);
@@ -182,6 +182,22 @@ function drawGraph(holderSelector, holder, activeDevices) {
     }
   });
 
+  const annotationsData = [];
+  annotations.buckets.forEach((bucket, i) => {
+    let obj = {
+      date: utcParse("%Y-%m-%d")(bucket)
+    };
+
+    annotations.series.forEach(series => {
+      obj[series.name] = series.values[i];
+      if (_keys.indexOf(series.name) < 0) {
+        _keys.push(series.name);
+      }
+    });
+
+    annotationsData.push(obj);
+  });
+
   // Colours
   const colorScale = colourScaleFunc(_keys);
 
@@ -214,6 +230,29 @@ function drawGraph(holderSelector, holder, activeDevices) {
     .attr("d", areas)
     .on("mousemove", mouseMove)
     .on("mouseout", cancelTooltip);
+
+  // Add annotations
+  const annotationsLayer = g
+    .selectAll(".annotationsLayer")
+    .data(annotationsData)
+    .enter()
+    .append("g")
+    .attr("class", "annotationsLayer");
+
+  annotationsData.forEach(annotation => {
+    annotationsLayer
+      .append("line")
+      .attr("class", "annotation")
+      .attr("transform", `translate(${xScale(annotation.date)},0)`)
+      .attr("y0", 0)
+      .attr("y1", yScale(1))
+      .attr("stroke", "#000");
+    annotationsLayer
+      .append("text")
+      .attr("class", "annotation-text")
+      .attr("transform", `translate(${xScale(annotation.date)},0)`)
+      .text(Object.keys(annotation).filter(key => key !== "date")[0]);
+  });
 
   // Add the x axix
   let tickValues = [];
@@ -299,7 +338,8 @@ export default function activeDevices(
   holderSelector,
   activeDevices,
   type,
-  defaultTrack
+  defaultTrack,
+  annotations
 ) {
   const holder = document.querySelector(holderSelector);
   graphType = type;
@@ -309,10 +349,10 @@ export default function activeDevices(
     return;
   }
 
-  drawGraph(holderSelector, holder, activeDevices);
+  drawGraph(holderSelector, holder, activeDevices, annotations);
 
   const resize = debounce(function() {
-    drawGraph(holderSelector, holder, activeDevices);
+    drawGraph(holderSelector, holder, activeDevices, annotations);
   }, 100);
 
   select(window).on("resize", resize);

@@ -202,6 +202,12 @@ def publisher_snap_metrics(snap_name):
     # to use 10, rather then latest
     default_track = helpers.get_default_track(snap_name)
 
+    annotations = {"name": "annotations", "series": [], "buckets": []}
+
+    for category in details["categories"]["items"]:
+        annotations["series"].append({"values": [1], "name": category["name"]})
+        annotations["buckets"].append(category["since"].split("T")[0])
+
     context = {
         # Data direct from details API
         "snap_name": snap_name,
@@ -216,6 +222,7 @@ def publisher_snap_metrics(snap_name):
         "active_devices": dict(active_devices),
         "territories_total": territories_total,
         "territories": country_devices.country_data,
+        "active_devices_annotations": dict(annotations),
         # Context info
         "is_linux": "Linux" in flask.request.headers["User-Agent"],
     }
