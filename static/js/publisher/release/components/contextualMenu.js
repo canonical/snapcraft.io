@@ -44,7 +44,7 @@ export default class ContextualMenu extends Component {
   }
 
   renderIcon() {
-    return this.props.label || <i className="p-icon--contextual-menu" />;
+    return this.props.label || <i className="p-icon--delete" />;
   }
 
   render() {
