@@ -26,7 +26,15 @@ export class AvailableRevisionsMenu extends Component {
   }
 
   componentDidMount() {
-    this.props.setValue(AVAILABLE_REVISIONS_SELECT_RECENT);
+    const { setValue, getFilteredCount } = this.props;
+
+    if (getFilteredCount(AVAILABLE_REVISIONS_SELECT_RECENT) > 0) {
+      setValue(AVAILABLE_REVISIONS_SELECT_RECENT);
+    } else if (getFilteredCount(AVAILABLE_REVISIONS_SELECT_UNRELEASED) > 0) {
+      setValue(AVAILABLE_REVISIONS_SELECT_UNRELEASED);
+    } else {
+      setValue(AVAILABLE_REVISIONS_SELECT_ALL);
+    }
   }
 
   itemClick(value, event) {
