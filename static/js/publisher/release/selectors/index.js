@@ -99,32 +99,38 @@ export function getPendingChannelMap(state) {
   return pendingChannelMap;
 }
 
+// get all revisions ordered from newest (based on revsion id)
+export function getAllRevisions(state) {
+  return Object.values(state.revisions).reverse();
+}
+
+// get all revisions not released to any channel yet
+export function getUnreleasedRevisions(state) {
+  return getAllRevisions(state).filter(
+    revision => !revision.channels || revision.channels.length === 0
+  );
+}
+
+// get unreleased revisions not older then 7 days
+export function getRecentRevisions(state) {
+  const interval = 1000 * 60 * 60 * 24 * 7; // 7 days
+  return getUnreleasedRevisions(state).filter(
+    r => Date.now() - new Date(r.created_at).getTime() < interval
+  );
+}
+
 // return list of revisions based on current availableRevisionsSelect value
 export function getSelectedAvailableRevisions(state) {
-  const { revisions, availableRevisionsSelect } = state;
+  const { availableRevisionsSelect } = state;
 
-  // get all revisions ordered from newest (based on revsion id)
-  let availableRevisions = Object.values(revisions).reverse();
-
-  if (
-    availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_UNRELEASED ||
-    availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT
-  ) {
-    // filter revisions not released to any channel yet
-    availableRevisions = availableRevisions.filter(
-      revision => !revision.channels || revision.channels.length === 0
-    );
+  switch (availableRevisionsSelect) {
+    case AVAILABLE_REVISIONS_SELECT_RECENT:
+      return getRecentRevisions(state);
+    case AVAILABLE_REVISIONS_SELECT_UNRELEASED:
+      return getUnreleasedRevisions(state);
+    default:
+      return getAllRevisions(state);
   }
-
-  if (availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT) {
-    const interval = 1000 * 60 * 60 * 24 * 7; // 7 days
-    // filter revisions not older then 7 days
-    availableRevisions = availableRevisions.filter(
-      r => Date.now() - new Date(r.created_at).getTime() < interval
-    );
-  }
-
-  return availableRevisions;
 }
 
 // return list of revisions based on current availableRevisionsSelect value
