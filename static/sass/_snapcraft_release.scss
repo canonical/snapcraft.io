@@ -248,7 +248,12 @@
     }
   }
 
+  .p-contextual-menu__dropdown.is-wide {
+    min-width: 16rem;
+  }
+
   .p-contextual-menu__link {
+    color: $color-link;
     padding-bottom: $sp-x-small;
     padding-top: $sp-x-small;
   }
@@ -262,6 +267,16 @@
     color: $color-mid-dark;
     cursor: not-allowed;
     opacity: .5;
+  }
+
+  .p-contextual-menu__description {
+    color: $color-dark;
+    display: block;
+    font-size: .8rem;
+    line-height: 1.4;
+    margin-bottom: $sp-x-small;
+    margin-top: $sp-x-small;
+    white-space: normal;
   }
 
   .p-tooltip__group {
