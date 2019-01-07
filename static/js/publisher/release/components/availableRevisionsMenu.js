@@ -14,9 +14,18 @@ import {
 } from "../constants";
 
 const menuLabels = {
-  [AVAILABLE_REVISIONS_SELECT_RECENT]: "Recent",
-  [AVAILABLE_REVISIONS_SELECT_UNRELEASED]: "Unreleased",
-  [AVAILABLE_REVISIONS_SELECT_ALL]: "All"
+  [AVAILABLE_REVISIONS_SELECT_RECENT]: {
+    label: "Recent",
+    description: "Revisions from past week not released to any channel"
+  },
+  [AVAILABLE_REVISIONS_SELECT_UNRELEASED]: {
+    label: "Unreleased",
+    description: "Revisions not released to any channel"
+  },
+  [AVAILABLE_REVISIONS_SELECT_ALL]: {
+    label: "All",
+    description: "All uploaded revisions"
+  }
 };
 
 export class AvailableRevisionsMenu extends Component {
@@ -59,7 +68,11 @@ export class AvailableRevisionsMenu extends Component {
         href="#"
         onClick={!isDisabled ? this.itemClick.bind(this, item) : undefined}
       >
-        {menuLabels[item]} <span className="u-float--right">({count})</span>
+        {menuLabels[item].label}{" "}
+        <span className="u-float--right">({count})</span>
+        <span className="p-contextual-menu__description">
+          {menuLabels[item].description}
+        </span>
       </a>
     );
   }
@@ -77,10 +90,11 @@ export class AvailableRevisionsMenu extends Component {
   render() {
     return (
       <ContextualMenu
-        label={menuLabels[this.props.value]}
+        label={menuLabels[this.props.value].label}
         className="p-select-button"
         ref={this.setMenuRef}
         position="left"
+        isWide={true}
       >
         {this.renderItems()}
       </ContextualMenu>

@@ -48,7 +48,7 @@ export default class ContextualMenu extends Component {
   }
 
   render() {
-    const { appearance, isDisabled, position, title } = this.props;
+    const { appearance, isDisabled, position, title, isWide } = this.props;
     const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
     const buttonClass = `p-button${appearance ? `--${appearance}` : ""}`;
     const className = [
@@ -66,7 +66,10 @@ export default class ContextualMenu extends Component {
         onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
       >
         {this.renderIcon()}
-        <span className="p-contextual-menu__dropdown" aria-hidden="true">
+        <span
+          className={`p-contextual-menu__dropdown ${isWide ? "is-wide" : ""}`}
+          aria-hidden="true"
+        >
           {this.props.children}
         </span>
       </span>
@@ -80,6 +83,7 @@ ContextualMenu.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node,
   className: PropTypes.string,
+  isWide: PropTypes.bool,
   position: PropTypes.oneOf(["left", "center"]), // right is by default
   appearance: PropTypes.oneOf(["base", "neutral"])
 };
