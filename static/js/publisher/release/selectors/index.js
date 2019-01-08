@@ -132,15 +132,15 @@ export function getAvailableRevisionsBySelection(state, value) {
 }
 
 // return list of revisions based on current availableRevisionsSelect value
-export function getSelectedAvailableRevisions(state) {
+export function getFilteredAvailableRevisions(state) {
   const { availableRevisionsSelect } = state;
   return getAvailableRevisionsBySelection(state, availableRevisionsSelect);
 }
 
 // return list of revisions based on current availableRevisionsSelect value
 // filtered by arch (can't be memoized)
-export function getSelectedAvailableRevisionsForArch(state, arch) {
-  return getSelectedAvailableRevisions(state).filter(revision =>
+export function getFilteredAvailableRevisionsForArch(state, arch) {
+  return getFilteredAvailableRevisions(state).filter(revision =>
     revision.architectures.includes(arch)
   );
 }

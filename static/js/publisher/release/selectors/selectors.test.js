@@ -10,8 +10,8 @@ import {
   getSelectedArchitectures,
   getPendingChannelMap,
   hasDevmodeRevisions,
-  getSelectedAvailableRevisions,
-  getSelectedAvailableRevisionsForArch,
+  getFilteredAvailableRevisions,
+  getFilteredAvailableRevisionsForArch,
   getArchitectures
 } from "./index";
 
@@ -323,7 +323,7 @@ describe("getPendingChannelMap", () => {
   });
 });
 
-describe("getSelectedAvailableRevisions", () => {
+describe("getFilteredAvailableRevisions", () => {
   const initialState = reducers(undefined, {});
 
   const dayAgo = new Date();
@@ -353,7 +353,7 @@ describe("getSelectedAvailableRevisions", () => {
 
   describe("when there are no revisions", () => {
     it("should return empty list", () => {
-      expect(getSelectedAvailableRevisions(initialState)).toEqual([]);
+      expect(getFilteredAvailableRevisions(initialState)).toEqual([]);
     });
   });
 
@@ -365,7 +365,7 @@ describe("getSelectedAvailableRevisions", () => {
       };
 
       it("should return all revisions by default", () => {
-        expect(getSelectedAvailableRevisions(stateWithAllSelected)).toEqual([
+        expect(getFilteredAvailableRevisions(stateWithAllSelected)).toEqual([
           stateWithAllSelected.revisions[3],
           stateWithAllSelected.revisions[2],
           stateWithAllSelected.revisions[1]
@@ -381,7 +381,7 @@ describe("getSelectedAvailableRevisions", () => {
 
       it("should return only unreleased revisions", () => {
         expect(
-          getSelectedAvailableRevisions(stateWithUnreleasedSelected)
+          getFilteredAvailableRevisions(stateWithUnreleasedSelected)
         ).toEqual([
           stateWithUnreleasedSelected.revisions[2],
           stateWithUnreleasedSelected.revisions[1]
@@ -396,7 +396,7 @@ describe("getSelectedAvailableRevisions", () => {
       };
 
       it("should return unreleased revisions not older then a week", () => {
-        expect(getSelectedAvailableRevisions(stateWithRecentSelected)).toEqual([
+        expect(getFilteredAvailableRevisions(stateWithRecentSelected)).toEqual([
           stateWithRecentSelected.revisions[1]
         ]);
       });
@@ -404,7 +404,7 @@ describe("getSelectedAvailableRevisions", () => {
   });
 });
 
-describe("getSelectedAvailableRevisionsByArch", () => {
+describe("getFilteredAvailableRevisionsByArch", () => {
   const arch = "test64";
   const initialState = reducers(undefined, {});
   const stateWithRevisions = {
@@ -423,7 +423,7 @@ describe("getSelectedAvailableRevisionsByArch", () => {
 
   describe("when there are no revisions", () => {
     it("should return empty list", () => {
-      expect(getSelectedAvailableRevisionsForArch(initialState, arch)).toEqual(
+      expect(getFilteredAvailableRevisionsForArch(initialState, arch)).toEqual(
         []
       );
     });
@@ -437,7 +437,7 @@ describe("getSelectedAvailableRevisionsByArch", () => {
 
     it("should return selected revisions by for given architecture", () => {
       expect(
-        getSelectedAvailableRevisionsForArch(stateWithAllSelected, arch)
+        getFilteredAvailableRevisionsForArch(stateWithAllSelected, arch)
       ).toEqual([
         stateWithAllSelected.revisions[3],
         stateWithAllSelected.revisions[1]

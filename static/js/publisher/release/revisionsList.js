@@ -19,8 +19,8 @@ import {
   getFilteredReleaseHistory,
   getSelectedRevisions,
   getSelectedArchitectures,
-  getSelectedAvailableRevisions,
-  getSelectedAvailableRevisionsForArch
+  getFilteredAvailableRevisions,
+  getFilteredAvailableRevisionsForArch
 } from "./selectors";
 
 import { getPendingRelease } from "./releasesState";
@@ -118,9 +118,9 @@ class RevisionsList extends Component {
     let {
       availableRevisionsSelect,
       showAllColumns,
-      selectedAvailableRevisions
+      filteredAvailableRevisions
     } = this.props;
-    let filteredRevisions = selectedAvailableRevisions;
+    let filteredRevisions = filteredAvailableRevisions;
     let title = "Latest revisions";
     let filters = this.props.filters;
     let isReleaseHistory = false;
@@ -128,7 +128,7 @@ class RevisionsList extends Component {
 
     if (filters && filters.arch) {
       if (filters.risk === AVAILABLE) {
-        filteredRevisions = this.props.getSelectedAvailableRevisionsForArch(
+        filteredRevisions = this.props.getFilteredAvailableRevisionsForArch(
           filters.arch
         );
 
@@ -267,8 +267,8 @@ RevisionsList.propTypes = {
   filteredReleaseHistory: PropTypes.array,
   selectedRevisions: PropTypes.array.isRequired,
   selectedArchitectures: PropTypes.array.isRequired,
-  selectedAvailableRevisions: PropTypes.array.isRequired,
-  getSelectedAvailableRevisionsForArch: PropTypes.func.isRequired,
+  filteredAvailableRevisions: PropTypes.array.isRequired,
+  getFilteredAvailableRevisionsForArch: PropTypes.func.isRequired,
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
@@ -289,9 +289,9 @@ const mapStateToProps = state => {
     selectedRevisions: getSelectedRevisions(state),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
     selectedArchitectures: getSelectedArchitectures(state),
-    selectedAvailableRevisions: getSelectedAvailableRevisions(state),
-    getSelectedAvailableRevisionsForArch: arch =>
-      getSelectedAvailableRevisionsForArch(state, arch)
+    filteredAvailableRevisions: getFilteredAvailableRevisions(state),
+    getFilteredAvailableRevisionsForArch: arch =>
+      getFilteredAvailableRevisionsForArch(state, arch)
   };
 };
 
