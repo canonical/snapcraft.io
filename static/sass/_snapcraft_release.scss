@@ -239,15 +239,6 @@
     }
   }
 
-  .p-contextual-menu__item {
-    @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
-
-    &:hover {
-      background: transparent;
-      cursor: default;
-    }
-  }
-
   .p-contextual-menu__dropdown.is-wide {
     min-width: 16rem;
   }
@@ -267,6 +258,16 @@
     color: $color-mid-dark;
     cursor: not-allowed;
     opacity: .5;
+  }
+
+  .p-contextual-menu__item {
+    @extend .p-contextual-menu__link; // sass-lint:disable-line placeholder-in-extend
+    color: $color-dark;
+
+    &:hover {
+      background: transparent;
+      cursor: default;
+    }
   }
 
   .p-contextual-menu__description {
