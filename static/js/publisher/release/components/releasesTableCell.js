@@ -11,7 +11,7 @@ import { undoRelease } from "../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
-  getSelectedAvailableRevisionsForArch
+  getFilteredAvailableRevisionsForArch
 } from "../selectors";
 
 function getChannelName(track, risk) {
@@ -213,7 +213,7 @@ const mapStateToProps = state => {
     pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: arch =>
-      getSelectedAvailableRevisionsForArch(state, arch).length
+      getFilteredAvailableRevisionsForArch(state, arch).length
   };
 };
 
