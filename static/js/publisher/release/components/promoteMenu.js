@@ -52,12 +52,14 @@ export default class PromoteMenu extends Component {
       targetChannel => targetChannel.isDisabled
     );
 
+    const icon = <span className="p-text-icon">⤴</span>;
+
     return (
       <ContextualMenu
         className="p-releases-channel__promote p-icon-button"
         appearance="neutral"
         isDisabled={isDisabled}
-        label="⤴"
+        label={icon}
         title="Promote to other channels"
         ref={this.setMenuRef}
       >
