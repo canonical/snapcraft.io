@@ -16,15 +16,15 @@ import {
 const menuLabels = {
   [AVAILABLE_REVISIONS_SELECT_RECENT]: {
     label: "Recent",
-    description: "Revisions from past week not released to any channel"
+    description:
+      "Revisions from past week not released in any channel with most recent version"
   },
   [AVAILABLE_REVISIONS_SELECT_UNRELEASED]: {
     label: "Unreleased",
     description: "Revisions not released to any channel"
   },
   [AVAILABLE_REVISIONS_SELECT_ALL]: {
-    label: "All",
-    description: "All uploaded revisions"
+    label: "All revisions"
   }
 };
 
@@ -47,6 +47,11 @@ export class AvailableRevisionsMenu extends Component {
   }
 
   itemClick(value, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    event.nativeEvent.preventDefault();
+
     this.props.setValue(value);
 
     if (this.menu) {
@@ -62,18 +67,19 @@ export class AvailableRevisionsMenu extends Component {
     }`;
 
     return (
-      <a
+      <span
         key={`available-menu-item-${item}`}
         className={className}
-        href="#"
         onClick={!isDisabled ? this.itemClick.bind(this, item) : undefined}
       >
         {menuLabels[item].label}{" "}
         <span className="u-float--right">({count})</span>
-        <span className="p-contextual-menu__description">
-          {menuLabels[item].description}
-        </span>
-      </a>
+        {menuLabels[item].description && (
+          <span className="p-contextual-menu__description">
+            {menuLabels[item].description}
+          </span>
+        )}
+      </span>
     );
   }
 
