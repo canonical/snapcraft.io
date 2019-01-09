@@ -17,6 +17,7 @@ import { closeHistory } from "./actions/history";
 import { toggleRevision } from "./actions/channelMap";
 import {
   getFilteredReleaseHistory,
+  getSelectedRevision,
   getSelectedRevisions,
   getSelectedArchitectures,
   getFilteredAvailableRevisions,
@@ -126,6 +127,14 @@ class RevisionsList extends Component {
     let isReleaseHistory = false;
     let pendingRelease = null;
 
+    // selected revision in current architecture
+    let selectedRevision;
+    // list of revisions from other architectures that have same version (and are not selected yet)
+    let selectedVersionRevisions = [];
+    // list of architectures with revisions in selected version
+    let selectedVersionRevisionsArchs = [];
+
+    // TODO: is it still possible that filters will be null?
     if (filters && filters.arch) {
       if (filters.risk === AVAILABLE) {
         filteredRevisions = this.props.getFilteredAvailableRevisionsForArch(
@@ -179,9 +188,49 @@ class RevisionsList extends Component {
           pendingRelease = this.props.revisions[pendingRelease];
         }
       }
+
+      selectedRevision = this.props.getSelectedRevision(filters.arch);
+      if (selectedRevision) {
+        // find all revisions with same version as selected revision
+        // but only one (latest) per architecture
+        filteredAvailableRevisions.forEach(revision => {
+          if (
+            revision.version === selectedRevision.version &&
+            revision.architectures.some(
+              arch => selectedVersionRevisionsArchs.indexOf(arch) === -1
+            )
+          ) {
+            selectedVersionRevisions.push(revision);
+            selectedVersionRevisionsArchs = selectedVersionRevisionsArchs.concat(
+              revision.architectures
+            );
+          }
+        });
+
+        // filter out revisions that are already selected
+        selectedVersionRevisions = selectedVersionRevisions.filter(
+          revision =>
+            this.props.selectedRevisions.indexOf(revision.revision) === -1
+        );
+
+        // recalculate list of architectures from current list of revisions
+        selectedVersionRevisionsArchs = [];
+
+        selectedVersionRevisions.forEach(revision => {
+          selectedVersionRevisionsArchs = selectedVersionRevisionsArchs.concat(
+            revision.architectures
+          );
+        });
+
+        // make archs unique and sorted
+        selectedVersionRevisionsArchs = selectedVersionRevisionsArchs
+          .filter((item, i, ar) => ar.indexOf(item) === i)
+          .sort();
+      }
     }
 
     const hasDevmodeRevisions = filteredRevisions.some(isInDevmode);
+
     return (
       <Fragment>
         <div className="u-clearfix">
@@ -208,6 +257,20 @@ class RevisionsList extends Component {
             </a>
             .
           </Notification>
+        )}
+        {selectedVersionRevisions.length > 0 && (
+          <div className="p-releases-confirm">
+            <b>{selectedRevision.version}</b> is available in{" "}
+            <span className="p-tooltip">
+              <span className="p-help">
+                {selectedVersionRevisionsArchs.length} other architecture
+                {selectedVersionRevisionsArchs.length > 1 ? "s" : ""}
+              </span>
+              <span className="p-tooltip__message" role="tooltip">
+                {selectedVersionRevisionsArchs.join(", ")}
+              </span>
+            </span>
+          </div>
         )}
         <table className="p-revisions-list">
           <thead>
@@ -268,6 +331,7 @@ RevisionsList.propTypes = {
   selectedRevisions: PropTypes.array.isRequired,
   selectedArchitectures: PropTypes.array.isRequired,
   filteredAvailableRevisions: PropTypes.array.isRequired,
+  getSelectedRevision: PropTypes.func.isRequired,
   getFilteredAvailableRevisionsForArch: PropTypes.func.isRequired,
 
   // actions
@@ -287,6 +351,7 @@ const mapStateToProps = state => {
     revisions: state.revisions,
     pendingReleases: state.pendingReleases,
     selectedRevisions: getSelectedRevisions(state),
+    getSelectedRevision: arch => getSelectedRevision(state, arch),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
     selectedArchitectures: getSelectedArchitectures(state),
     filteredAvailableRevisions: getFilteredAvailableRevisions(state),

@@ -49,15 +49,20 @@ export function getFilteredReleaseHistory(state) {
 
 // returns list of selected revisions, to know which ones to render selected
 export function getSelectedRevisions(state) {
-  let selectedRevisions = [];
-
   if (state.channelMap[AVAILABLE]) {
-    selectedRevisions = Object.values(state.channelMap[AVAILABLE]).map(
+    return Object.values(state.channelMap[AVAILABLE]).map(
       revision => revision.revision
     );
   }
 
-  return selectedRevisions;
+  return [];
+}
+
+// return selected revision for given architecture
+export function getSelectedRevision(state, arch) {
+  if (state.channelMap[AVAILABLE]) {
+    return state.channelMap[AVAILABLE][arch];
+  }
 }
 
 // returns list of selected architectures
