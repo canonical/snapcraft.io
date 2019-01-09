@@ -72,7 +72,7 @@ class ReleasesConfirm extends Component {
               {isLoading ? "Loading..." : "Apply"}
             </button>
             <button
-              className="p-button--neutral u-no-margin--bottom"
+              className="p-button--neutral u-no-margin--bottom u-no-margin--right"
               onClick={this.onRevertClick.bind(this)}
             >
               Cancel
