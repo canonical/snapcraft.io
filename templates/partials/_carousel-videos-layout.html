@@ -1,0 +1,16 @@
+<div class="p-carousel p-carousel--videos u-equal-height">
+  <div class="col-10{% if not screenshots %} push-3{% endif %} u-align-text--center">
+    {% for video in videos %}
+      <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}">
+        {% include "partials/_video.html" %}
+      </div>
+    {% endfor %}
+  </div>
+  {% if screenshots %}
+    <div class="col-2 p-carousel__item-holder{% if screenshots|length > 3 %} p-carousel__item-holder--distributed{% endif %}">
+      {% for screenshot in screenshots %}
+        {% include "partials/_snap-screenshot.html" %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>

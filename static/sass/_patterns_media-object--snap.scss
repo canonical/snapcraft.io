@@ -8,12 +8,12 @@
 
     &__img {
       align-self: flex-start;
+      height: $matrix-img-width;
       margin-bottom: $spv-inter--condensed;
       margin-right: $matrix-img-gutter;
       max-height: $matrix-img-width;
       max-width: $matrix-img-width;
       width: auto;
-      height: $matrix-img-width;
     }
 
     &__content {
@@ -59,10 +59,10 @@
 
     &.is-placeholder {
       .p-media-object--snap__img {
-        display: block;
-        width: $matrix-img-width;
         background: $color-light;
         border-radius: 2px;
+        display: block;
+        width: $matrix-img-width;
       }
 
       .p-media-object--snap__title,
@@ -71,11 +71,11 @@
         position: relative;
 
         &::before {
-          position: absolute;
-          left: 0;
-          color: $color-light;
           border-radius: 2px;
+          color: $color-light;
+          left: 0;
           overflow: hidden;
+          position: absolute;
         }
       }
 

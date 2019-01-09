@@ -107,44 +107,11 @@
 
   {% if screenshots or videos %}
     <div class="p-strip--light is-shallow">
-      <div class="row">
-        {% if (videos and screenshots) or (not videos and (screenshots and screenshots|length > 1)) %}
-          <div class="p-carousel u-no-margin--bottom u-no-margin--top" id="js-snap-screenshots">
-            <div class="swiper-container">
-              <div class="swiper-wrapper">
-                {% for video in videos %}
-                  <div class="p-carousel__item--video p-carousel__item--{{ video.type }} swiper-slide">
-                    <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}">
-                      {% include "partials/_video.html" %}
-                    </div>
-                  </div>
-                {% endfor %}
-                {% for screenshot in screenshots %}
-                  {% include "partials/_snap-screenshot.html" %}
-                {% endfor %}
-              </div>
-            </div>
-            <button class="p-carousel__next swiper-button__next">Next</button>
-            <button class="p-carousel__prev swiper-button__prev">Previous</button>
-          </div>
-        {% else %}
-          <div class="p-carousel" id="js-snap-screenshots">
-            {% if videos %}
-              {% for video in videos %}
-                <div class="p-carousel__item--video p-carousel__item--{{ video.type }}">
-                  <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}" data-original="video">
-                    {% include "partials/_video.html" %}
-                  </div>
-                </div>
-              {% endfor %}
-            {% else %}
-              {% for screenshot in screenshots %}
-                <div class="p-carousel__item--screenshot">
-                  {% include "partials/_snap-screenshot.html" %}
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
+      <div class="row" id="js-snap-screenshots">
+        {% if videos %}
+          {% include "partials/_carousel-videos-layout.html" %}
+        {% elif screenshots %}
+          {% include "partials/_carousel-images-layout.html" %}
         {% endif %}
       </div>
     </div>
