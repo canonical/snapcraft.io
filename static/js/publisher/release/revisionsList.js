@@ -14,7 +14,7 @@ import {
 } from "./constants";
 
 import { closeHistory } from "./actions/history";
-import { toggleRevision } from "./actions/channelMap";
+import { toggleRevision, clearSelectedRevisions } from "./actions/channelMap";
 import {
   getFilteredReleaseHistory,
   getSelectedRevision,
@@ -32,6 +32,7 @@ class RevisionsList extends Component {
   }
 
   selectVersionClick(revisions) {
+    this.props.clearSelectedRevisions();
     revisions.forEach(revision => this.props.toggleRevision(revision));
   }
 
@@ -217,6 +218,11 @@ class RevisionsList extends Component {
             this.props.selectedRevisions.indexOf(revision.revision) === -1
         );
 
+        // filter out current architecture
+        selectedVersionRevisions = selectedVersionRevisions.filter(
+          revision => revision.architectures.indexOf(filters.arch) === -1
+        );
+
         // recalculate list of architectures from current list of revisions
         selectedVersionRevisionsArchs = [];
 
@@ -277,10 +283,10 @@ class RevisionsList extends Component {
             <div className="p-releases-confirm__buttons">
               <button
                 className="p-button--positive is-inline u-no-margin--bottom"
-                onClick={this.selectVersionClick.bind(
-                  this,
-                  selectedVersionRevisions
-                )}
+                onClick={this.selectVersionClick.bind(this, [
+                  selectedRevision,
+                  ...selectedVersionRevisions
+                ])}
               >
                 {"Select in all architectures"}
               </button>
@@ -351,6 +357,7 @@ RevisionsList.propTypes = {
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
+  clearSelectedRevisions: PropTypes.func.isRequired,
   toggleRevision: PropTypes.func.isRequired
 };
 
@@ -378,6 +385,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
+    clearSelectedRevisions: () => dispatch(clearSelectedRevisions()),
     toggleRevision: revision => dispatch(toggleRevision(revision))
   };
 };
