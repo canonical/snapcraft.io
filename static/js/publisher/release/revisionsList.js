@@ -31,6 +31,10 @@ class RevisionsList extends Component {
     this.props.toggleRevision(revision);
   }
 
+  selectVersionClick(revisions) {
+    revisions.forEach(revision => this.props.toggleRevision(revision));
+  }
+
   renderRow(revision, isSelectable, showAllColumns, isPending) {
     const revisionDate = revision.release
       ? new Date(revision.release.when)
@@ -270,6 +274,17 @@ class RevisionsList extends Component {
                 {selectedVersionRevisionsArchs.join(", ")}
               </span>
             </span>
+            <div className="p-releases-confirm__buttons">
+              <button
+                className="p-button--positive is-inline u-no-margin--bottom"
+                onClick={this.selectVersionClick.bind(
+                  this,
+                  selectedVersionRevisions
+                )}
+              >
+                {"Select in all architectures"}
+              </button>
+            </div>
           </div>
         )}
         <table className="p-revisions-list">
