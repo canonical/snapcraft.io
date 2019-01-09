@@ -6,6 +6,7 @@ import {
 } from "../constants";
 import {
   getFilteredReleaseHistory,
+  getSelectedRevision,
   getSelectedRevisions,
   getSelectedArchitectures,
   getPendingChannelMap,
@@ -170,6 +171,30 @@ describe("getSelectedRevisions", () => {
 
   it("should return list of selected revision ids", () => {
     expect(getSelectedRevisions(stateWithSelectedRevisions)).toEqual([1, 2]);
+  });
+});
+
+describe("getSelectedRevision", () => {
+  const initialState = reducers(undefined, {});
+
+  const stateWithSelectedRevisions = {
+    ...initialState,
+    channelMap: {
+      [AVAILABLE]: {
+        abc42: { revision: 1, version: "1" },
+        test64: { revision: 2, version: "2" }
+      }
+    }
+  };
+
+  it("should be empty for initial state", () => {
+    expect(getSelectedRevision(initialState, "test64")).toBeUndefined();
+  });
+
+  it("should return revision selected in given arch", () => {
+    expect(getSelectedRevision(stateWithSelectedRevisions, "test64")).toEqual(
+      stateWithSelectedRevisions.channelMap[AVAILABLE]["test64"]
+    );
   });
 });
 
