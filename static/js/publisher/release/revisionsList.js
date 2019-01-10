@@ -42,19 +42,10 @@ class RevisionsList extends Component {
       : new Date(revision.created_at);
     const isSelected = this.props.selectedRevisions.includes(revision.revision);
 
-    // disable revisions from the same architecture that already selected
-    // but only if checkboxes are visible (not in channel history)
-    const isDisabled =
-      isSelectable &&
-      !isSelected &&
-      revision.architectures.some(arch =>
-        this.props.selectedArchitectures.includes(arch)
-      );
-
     const id = `revision-check-${revision.revision}`;
-    const className = `${isDisabled ? "is-disabled" : ""} ${
-      isSelectable ? "is-clickable" : ""
-    } ${isPending ? "is-pending" : ""}`;
+    const className = `${isSelectable ? "is-clickable" : ""} ${
+      isPending || isSelected ? "is-pending" : ""
+    }`;
 
     return (
       <tr
