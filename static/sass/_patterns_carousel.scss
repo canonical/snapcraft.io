@@ -2,7 +2,6 @@
   // below this breakpoint we don't show buttons to move carousels
   // but leave scroll to allow swiping them on mobile
   $carousel-buttons-breakpoint: $breakpoint-medium;
-  $asciinema-background: #121314;
 
   .p-carousel {
     margin: 1.5rem 0;
@@ -28,102 +27,10 @@
       img,
       video {
         display: block;
-        margin-bottom: 0 !important;
+        margin-bottom: 0;
         max-height: 460px;
         max-width: 100%;
       }
-    }
-
-    // videos holder
-    &--videos {
-      .p-carousel__item-holder {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-
-        .p-carousel__item--screenshot {
-          display: flex;
-          flex-grow: 0;
-          height: auto;
-          margin-bottom: $spv-inter--regular;
-          max-height: 78px;
-          overflow: hidden;
-        }
-
-        .p-carousel__item-screenshot img,
-        .p-carousel__item-screenshot video {
-          align-self: center;
-          width: 100%;
-        }
-
-        @media screen and (max-width: $breakpoint-medium) {
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: flex-start !important;
-          margin-bottom: -$spv-inter--regular;
-          margin-right: -$sph-inter;
-          margin-top: $spv-inter--regular;
-
-          .p-carousel__item--screenshot {
-            margin-bottom: $spv-inter--regular !important;
-            margin-right: $sph-inter;
-            max-height: 100%;
-            max-width: 129px;
-          }
-        }
-
-        @media screen and (max-width: $breakpoint-x-small) {
-          .p-carousel__item--screenshot {
-            max-width: calc(50% - 1rem);
-          }
-        }
-      }
-
-      .p-carousel__item-holder--distributed {
-        justify-content: space-between;
-
-        .p-carousel__item--screenshot {
-          margin-bottom: 0;
-        }
-      }
-
-      iframe {
-        margin-bottom: 0;
-      }
-    }
-
-    .p-carousel__item--video {
-      position: relative;
-
-      iframe {
-        margin-bottom: 0;
-      }
-    }
-
-
-    .asciicast {
-      margin: 0 auto !important;
-      position: relative;
-
-      &::before {
-        background: $asciinema-background;
-        bottom: 1rem;
-        content: ' ';
-        display: block;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-
-      iframe {
-        position: relative;
-      }
-    }
-
-    iframe {
-      display: block !important;
-      margin: 0 auto !important;
     }
 
     .p-carousel__item--screenshot,
