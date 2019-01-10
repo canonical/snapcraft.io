@@ -46,23 +46,22 @@
     flex-shrink: 0;
     justify-content: flex-end;
     margin-top: ($sp-unit - .1rem);
-    width: 78px; // to fit 2 icon buttons exactly
+    width: 125px; // to fit 2 icon buttons exactly
   }
 
   // align first (promote) button to left
   .p-releases-channel__promote {
     margin-right: auto;
   }
+
   // channel cell
 
   .p-releases-channel {
     align-items: flex-start;
     display: flex;
     flex-shrink: 0;
-    margin-right: $grid-gutter-width / 2;
-    // TODO:
-    // width: 222px; // fixed width col-3
-    width: 230px; // temporary width until we merge menus into one
+    margin-right: 5px;
+    width: 260px;
 
     .has-active & {
       opacity: .5;

@@ -214,31 +214,30 @@ class ReleasesTable extends Component {
   render() {
     const { archs } = this.props;
     const filteredArch = this.props.filters && this.props.filters.arch;
+
+    const className = `p-releases-table ${
+      this.props.isHistoryOpen && this.props.filters ? "has-active" : ""
+    }`;
+
     return (
-      <Fragment>
-        <div className="row">
-          <div
-            className={`p-releases-table ${
-              this.props.isHistoryOpen && this.props.filters ? "has-active" : ""
-            }`}
-          >
-            <div className="p-releases-table__row p-releases-table__row--heading">
-              <div className="p-releases-channel" />
-              {archs.map(arch => (
-                <div
-                  className={`p-releases-table__cell p-releases-table__arch ${
-                    filteredArch === arch ? "is-active" : ""
-                  }`}
-                  key={`${arch}`}
-                >
-                  {arch}
-                </div>
-              ))}
-            </div>
-            {this.renderRows()}
+      <div className="row">
+        <div className={className}>
+          <div className="p-releases-table__row p-releases-table__row--heading">
+            <div className="p-releases-channel" />
+            {archs.map(arch => (
+              <div
+                className={`p-releases-table__cell p-releases-table__arch ${
+                  filteredArch === arch ? "is-active" : ""
+                }`}
+                key={`${arch}`}
+              >
+                {arch}
+              </div>
+            ))}
           </div>
+          {this.renderRows()}
         </div>
-      </Fragment>
+      </div>
     );
   }
 }
