@@ -48,6 +48,7 @@ class DescriptionBlock(BlockLexer):
 
     default_rules = [
         "block_code",
+        "fences",
         "list_block",
         "paragraph",
         "text",

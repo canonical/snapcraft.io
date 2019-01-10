@@ -149,7 +149,9 @@
     <div class="row">
       <div class="col-8">
         {% if summary %}<h4>{{ summary }}</h4>{% endif %}
-        {{ description | safe }}
+        <div class="snapcraft-snap-details__description">
+          {{ description | safe }}
+        </div>
         {% if website %}<p><a href="{{ website }}">Developer website</a></p>{% endif %}
         {% if contact %}
           <p>
