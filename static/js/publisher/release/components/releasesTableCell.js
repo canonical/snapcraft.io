@@ -92,9 +92,6 @@ class ReleasesTableCell extends Component {
       <Fragment>
         {isUnassigned ? (
           <Fragment>
-            <span className="p-release-data__icon">
-              <i className="p-icon--plus" />
-            </span>
             <span className="p-release-data__info">
               <span className="p-release-data__title">Add revision</span>
               <span className="p-release-data__meta">
