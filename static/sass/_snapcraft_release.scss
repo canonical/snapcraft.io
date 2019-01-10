@@ -184,24 +184,16 @@
       padding-left: 2rem;
     }
 
-    .is-disabled {
-      opacity: .5;
-
-      .p-tooltip__message {
-        display: none;
-      }
-    }
-
     .is-clickable {
       cursor: pointer;
 
       &:hover {
         background-color: $color-light;
-
       }
     }
 
-    .is-pending {
+    .is-pending,
+    .is-pending:hover {
       background: $color-highlighted;
     }
   }
