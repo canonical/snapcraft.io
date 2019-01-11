@@ -1,30 +1,4 @@
 @mixin snapcraft-snap-details {
-
-  .snapcraft-snap-details__description {
-    code {
-      background: $color-mid-dark;
-      border-radius: $border-radius;
-      color: $color-x-light;
-      padding: .12rem .25rem;
-    }
-
-    pre {
-      background: $color-mid-dark;
-      border: 0;
-      border-radius: $border-radius;
-      color: $color-x-light;
-      // For some reason Vanilla treats pre padding/margin differently
-      // than `p`'s this remedies it for better flow
-      margin-bottom: 1.1rem;
-      padding-top: .4rem;
-
-      code {
-        border-radius: 0;
-        padding: 0;
-      }
-    }
-  }
-
   @media screen and (max-width: $breakpoint-small) {
     .snapcraft-snap-details {
       &__snippet {
