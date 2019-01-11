@@ -242,6 +242,14 @@
     }
   }
 
+  .p-contextual-menu__dropdown {
+    overflow: visible; // allow tooltips inside menu
+
+    .p-tooltip {
+      display: block;
+    }
+  }
+
   .p-contextual-menu__dropdown.is-wide {
     min-width: 16rem;
   }

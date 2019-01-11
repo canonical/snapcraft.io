@@ -18,23 +18,35 @@ export default class PromoteMenu extends Component {
   }
 
   renderItem(targetChannel) {
-    const { channel, isDisabled } = targetChannel;
+    const { channel, isDisabled, reason } = targetChannel;
     const className = [
       "p-contextual-menu__link is-indented",
       isDisabled ? "is-disabled" : ""
     ].join(" ");
 
     return (
-      <a
-        className={className}
-        href="#"
+      <span
         key={`promote-to-${channel}`}
-        onClick={
-          isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
-        }
+        className="p-tooltip p-tooltip--btm-center"
       >
-        {channel}
-      </a>
+        <span
+          className={className}
+          onClick={
+            isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
+          }
+        >
+          {channel}
+        </span>
+        {reason && (
+          <span
+            className="p-tooltip__message u-align--center"
+            role="tooltip"
+            id={`promote-to-${channel}-devmode`}
+          >
+            {reason}
+          </span>
+        )}
+      </span>
     );
   }
 

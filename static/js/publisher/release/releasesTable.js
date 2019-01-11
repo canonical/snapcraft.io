@@ -23,6 +23,16 @@ function getChannelName(track, risk) {
   return risk === AVAILABLE ? risk : `${track}/${risk}`;
 }
 
+const disabledBecauseDevmode = (
+  <Fragment>
+    Revisions with devmode confinement or devel grade <br />
+    cannot be released to stable or candidate channels.
+  </Fragment>
+);
+
+const disabledBecauseReleased =
+  "Same revisions are already released to this channel.";
+
 class ReleasesTable extends Component {
   renderRevisionCell(track, risk, arch) {
     return (
@@ -108,7 +118,9 @@ class ReleasesTable extends Component {
         // is in devmode
         if (hasDevmodeRevisions) {
           targetChannels[0].isDisabled = true;
+          targetChannels[0].reason = disabledBecauseDevmode;
           targetChannels[1].isDisabled = true;
+          targetChannels[1].reason = disabledBecauseDevmode;
         }
       }
 
@@ -116,6 +128,7 @@ class ReleasesTable extends Component {
       targetChannels.forEach(targetChannel => {
         if (this.compareChannels(channel, targetChannel.channel)) {
           targetChannel.isDisabled = true;
+          targetChannel.reason = disabledBecauseReleased;
         }
       });
 
