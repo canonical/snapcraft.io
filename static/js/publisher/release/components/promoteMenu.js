@@ -64,17 +64,31 @@ export default class PromoteMenu extends Component {
       targetChannel => targetChannel.isDisabled
     );
 
+    const tooltip = isDisabled
+      ? this.props.targetChannels[0].reason
+      : undefined;
+
+    const className = `p-releases-channel__promote ${
+      tooltip ? "p-tooltip p-tooltip--btm-center" : ""
+    }`;
+
     return (
-      <ContextualMenu
-        className="p-releases-channel__promote p-icon-button"
-        appearance="neutral"
-        isDisabled={isDisabled}
-        label="Promote"
-        title="Promote to other channels"
-        ref={this.setMenuRef}
-      >
-        {this.renderItems()}
-      </ContextualMenu>
+      <span className={className}>
+        <ContextualMenu
+          className="p-icon-button"
+          appearance="neutral"
+          isDisabled={isDisabled}
+          label="Promote"
+          ref={this.setMenuRef}
+        >
+          {this.renderItems()}
+        </ContextualMenu>
+        {tooltip && (
+          <span className="p-tooltip__message u-align--center" role="tooltip">
+            {tooltip}
+          </span>
+        )}
+      </span>
     );
   }
 }

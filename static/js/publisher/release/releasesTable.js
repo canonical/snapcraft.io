@@ -30,8 +30,7 @@ const disabledBecauseDevmode = (
   </Fragment>
 );
 
-const disabledBecauseReleased =
-  "Same revisions are already released to this channel.";
+const disabledBecauseReleased = "The same revisions are already promoted.";
 
 class ReleasesTable extends Component {
   renderRevisionCell(track, risk, arch) {
