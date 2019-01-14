@@ -639,6 +639,10 @@ def redirect_get_register_name():
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
+    user = api.get_account(flask.session)
+
+    available_stores = logic.filter_available_stores(user["stores"])
+
     snap_name = flask.request.args.get("snap_name", default="", type=str)
     is_private_str = flask.request.args.get(
         "is_private", default="False", type=str
@@ -665,6 +669,7 @@ def get_register_name():
         "is_private": is_private,
         "conflict": conflict,
         "already_owned": already_owned,
+        "available_stores": available_stores,
     }
     return flask.render_template("publisher/register-snap.html", **context)
 
@@ -695,6 +700,10 @@ def post_register_name():
             registrant_comment=registrant_comment,
         )
     except ApiResponseErrorList as api_response_error_list:
+        user = api.get_account(flask.session)
+
+        available_stores = logic.filter_available_stores(user["stores"])
+
         if api_response_error_list.status_code == 409:
             for error in api_response_error_list.errors:
                 if error["code"] == "already_claimed":
@@ -723,6 +732,7 @@ def post_register_name():
         context = {
             "snap_name": snap_name,
             "is_private": is_private,
+            "available_stores": available_stores,
             "errors": api_response_error_list.errors,
         }
 
