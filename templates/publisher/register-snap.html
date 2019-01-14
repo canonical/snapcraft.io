@@ -70,7 +70,23 @@ Register new Snap name
   <form method="POST" action="/account/register-snap" class="u-no-margin--top">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
-   <div class="row">
+    {% if available_stores %}
+      <div class="row">
+        <div class="col-4 push-2">
+          <label for="snap-store">Store</label>
+          <div class="p-form-validation__field">
+            <select name="store" id="snap-store">
+              <option value="ubuntu" checked="checked">Global</option>
+              {% for store in available_stores %}
+                <option value="{{ store.id }}">{{ store.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="row">
       <div class="col-8 push-2">
         <div class="p-form-validation">
           <label for="snap-name">Snap name</label>
