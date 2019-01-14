@@ -32,25 +32,6 @@ function asciinema(holderEl) {
     setTimeout(asciinema.bind(this, holderEl), 200);
     return;
   }
-
-  const parent = asciinemaPlayer.parentNode;
-  const blocker = holderEl.querySelector(".p-carousel__item-blocker");
-
-  blocker.addEventListener("click", e => {
-    e.stopImmediatePropagation();
-    if (document.fullscreenEnabled) {
-      parent.requestFullscreen();
-    }
-  });
-
-  document.addEventListener("fullscreenchange", () => {
-    const fullScreenEl = document.fullscreenElement;
-    if (fullScreenEl && fullScreenEl === parent) {
-      parent.classList.add("is-fullscreen");
-    } else {
-      parent.classList.remove("is-fullscreen");
-    }
-  });
 }
 
 function videos(holderSelector) {
@@ -61,6 +42,11 @@ function videos(holderSelector) {
   }
 
   const videoType = holderEl.dataset.videoType;
+
+  const iframe = holderEl.querySelector("iframe");
+  if (iframe && iframe.src.indexOf("http://") !== -1) {
+    iframe.src = iframe.src.replace("http://", "https://");
+  }
 
   if (videoType === "vimeo") {
     vimeo();

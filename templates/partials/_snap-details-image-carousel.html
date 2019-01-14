@@ -1,0 +1,11 @@
+<div class="p-carousel u-no-margin--bottom u-no-margin--top">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      {% for screenshot in screenshots %}
+        {% include "partials/_snap-screenshot.html" %}
+      {% endfor %}
+    </div>
+  </div>
+  <button class="p-carousel__next swiper-button__next">Next</button>
+  <button class="p-carousel__prev swiper-button__prev">Previous</button>
+</div>

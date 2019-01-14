@@ -25,55 +25,11 @@
       text-align: center;
 
       img,
-      video,
-      iframe {
+      video {
         display: block;
         margin-bottom: 0;
+        max-height: 460px;
         max-width: 100%;
-        max-height: 362px;
-      }
-    }
-
-    .p-carousel__item--video {
-      position: relative;
-
-      iframe {
-        margin-bottom: 0;
-      }
-    }
-
-    .p-carousel__item--asciinema {
-      margin: 0 auto;
-      max-width: 643px;
-      width: 100%;
-      background: $color-x-dark;
-
-      .p-carousel__item-blocker {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-
-      .asciicast {
-        margin: 0 auto !important;
-
-        &.is-fullscreen {
-          display: flex !important;
-          align-items: center !important;
-
-          iframe {
-            max-height: 100%;
-            max-width: 100%;
-            width: 100% !important;
-          }
-        }
-      }
-
-      iframe {
-        display: block !important;
-        margin: 0 auto !important;
       }
     }
 

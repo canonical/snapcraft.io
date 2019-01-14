@@ -1,9 +1,5 @@
 import debounce from "./debounce";
 
-// This is a peculiar ratio because youtube seems to be 2 pixels narrower than
-// 16 / 9, so add's black lines to either side of the video
-const IFRAME_RATIO = 643 / 362;
-
 /**
  *
  * @param wrapperSelector   A query selector for the wrapping element
@@ -12,7 +8,7 @@ const IFRAME_RATIO = 643 / 362;
  *                           It's also used to find the iframe element.
  * @param maxWidth  The maximum width the iframe should go.
  */
-function sizeIframe(wrapperSelector, maxWidth) {
+function sizeIframe(wrapperSelector) {
   const wrapperEl = document.querySelector(wrapperSelector);
   if (!wrapperEl) {
     return;
@@ -25,21 +21,19 @@ function sizeIframe(wrapperSelector, maxWidth) {
     return;
   }
 
+  const IFRAME_RATIO = iframe.width / iframe.height;
+
   const width = wrapperEl.clientWidth;
-  if (width < maxWidth) {
-    iframe.width = width;
-    iframe.height = width / IFRAME_RATIO;
-  } else if (iframe.width !== maxWidth) {
-    iframe.width = maxWidth;
-    iframe.height = maxWidth / IFRAME_RATIO;
-  }
+
+  iframe.width = width;
+  iframe.height = width / IFRAME_RATIO;
 }
 
-export default (wrapperSelector, maxWidth) => {
+export default wrapperSelector => {
   window.addEventListener(
     "resize",
-    debounce(sizeIframe.bind(this, wrapperSelector, maxWidth), 100)
+    debounce(sizeIframe.bind(this, wrapperSelector), 100)
   );
 
-  sizeIframe(wrapperSelector, maxWidth);
+  sizeIframe(wrapperSelector);
 };

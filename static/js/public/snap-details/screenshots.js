@@ -47,7 +47,7 @@ export default function initScreenshots(screenshotsId) {
   });
 
   // We need to resize the iframe on window resize
-  iframeSize("#js-snap-screenshots", 643);
+  iframeSize(".js-video-slide");
 
   new Swiper(screenshotsEl.querySelector(".swiper-container"), config);
 }
