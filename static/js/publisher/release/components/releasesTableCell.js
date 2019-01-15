@@ -19,11 +19,8 @@ function getChannelName(track, risk) {
 }
 
 class ReleasesTableCell extends Component {
-  handleReleaseCellClick(arch, risk, track, event) {
+  handleReleaseCellClick(arch, risk, track) {
     this.props.toggleHistoryPanel({ arch, risk, track });
-
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   undoClick(revision, track, risk, event) {
