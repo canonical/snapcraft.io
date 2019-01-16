@@ -97,6 +97,56 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("nodata", True)
 
     @responses.activate
+    def test_data_version_1_year(self):
+        random_values = random.sample(range(1, 30), 29)
+        dates = [
+            datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
+        ]
+        coutries = [
+            {"values": [2], "name": "FR"},
+            {"values": [3], "name": "GB"},
+        ]
+        payload = {
+            "metrics": [
+                {
+                    "status": "OK",
+                    "series": [{"values": random_values, "name": "0.1"}],
+                    "buckets": dates,
+                    "metric_name": "weekly_installed_base_by_version",
+                },
+                {
+                    "status": "OK",
+                    "series": coutries,
+                    "buckets": ["2018-03-18"],
+                    "metric_name": "weekly_installed_base_by_country",
+                },
+            ]
+        }
+        responses.add(responses.POST, self.api_url, json=payload, status=200)
+
+        response = self.client.get(self.endpoint_url + "?period=1y")
+
+        self.assertEqual(2, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.info_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+        called = responses.calls[1]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("publisher/metrics.html")
+        self.assert_context("snap_name", self.snap_name)
+        self.assert_context("snap_title", "Test Snap")
+        self.assert_context("metric_period", "1y")
+        self.assert_context("active_device_metric", "version")
+        self.assert_context("nodata", False)
+
+    @responses.activate
     def test_data_version_1_month(self):
         random_values = random.sample(range(1, 30), 29)
         dates = [
@@ -299,6 +349,58 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("snap_title", "Test Snap")
         self.assert_context("metric_period", "7d")
+        self.assert_context("active_device_metric", "os")
+        self.assert_context("nodata", False)
+
+    @responses.activate
+    def test_data_os_1_year(self):
+        random_values = random.sample(range(1, 100), 59)
+        dates = [
+            datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
+        ]
+        coutries = [
+            {"values": [2], "name": "FR"},
+            {"values": [3], "name": "GB"},
+        ]
+        payload = {
+            "metrics": [
+                {
+                    "status": "OK",
+                    "series": [{"values": random_values, "name": "0.1"}],
+                    "buckets": dates,
+                    "metric_name": "weekly_installed_base_by_operating_system",
+                },
+                {
+                    "status": "OK",
+                    "series": coutries,
+                    "buckets": ["2018-03-18"],
+                    "metric_name": "weekly_installed_base_by_country",
+                },
+            ]
+        }
+        responses.add(responses.POST, self.api_url, json=payload, status=200)
+
+        response = self.client.get(
+            self.endpoint_url + "?period=1y&active-devices=os"
+        )
+
+        self.assertEqual(2, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.info_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+        called = responses.calls[1]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("publisher/metrics.html")
+        self.assert_context("snap_name", self.snap_name)
+        self.assert_context("snap_title", "Test Snap")
+        self.assert_context("metric_period", "1y")
         self.assert_context("active_device_metric", "os")
         self.assert_context("nodata", False)
 
