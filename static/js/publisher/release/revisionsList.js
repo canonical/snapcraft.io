@@ -259,31 +259,32 @@ class RevisionsList extends Component {
             .
           </Notification>
         )}
-        {selectedVersionRevisions.length > 0 && (
-          <div className="p-releases-confirm">
-            <b>{selectedRevision.version}</b> is available in{" "}
-            <span className="p-tooltip">
-              <span className="p-help">
-                {selectedVersionRevisionsArchs.length} other architecture
-                {selectedVersionRevisionsArchs.length > 1 ? "s" : ""}
+        {!isReleaseHistory &&
+          selectedVersionRevisions.length > 0 && (
+            <div className="p-releases-confirm">
+              <b>{selectedRevision.version}</b> is available in{" "}
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {selectedVersionRevisionsArchs.length} other architecture
+                  {selectedVersionRevisionsArchs.length > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  {selectedVersionRevisionsArchs.join(", ")}
+                </span>
               </span>
-              <span className="p-tooltip__message" role="tooltip">
-                {selectedVersionRevisionsArchs.join(", ")}
-              </span>
-            </span>
-            <div className="p-releases-confirm__buttons">
-              <button
-                className="p-button--positive is-inline u-no-margin--bottom"
-                onClick={this.selectVersionClick.bind(this, [
-                  selectedRevision,
-                  ...selectedVersionRevisions
-                ])}
-              >
-                {"Select in all architectures"}
-              </button>
+              <div className="p-releases-confirm__buttons">
+                <button
+                  className="p-button--positive is-inline u-no-margin--bottom"
+                  onClick={this.selectVersionClick.bind(this, [
+                    selectedRevision,
+                    ...selectedVersionRevisions
+                  ])}
+                >
+                  {"Select in all architectures"}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
         <table className="p-revisions-list">
           <thead>
             <tr>
