@@ -26,6 +26,9 @@ import {
   getReleaseDataFromChannelMap
 } from "./releasesState";
 
+const ERROR_MESSAGE =
+  "There was an error while processing your request, please try again later.";
+
 class ReleasesController extends Component {
   constructor(props) {
     super(props);
@@ -82,7 +85,11 @@ class ReleasesController extends Component {
       },
       redirect: "follow",
       referrer: "no-referrer"
-    }).then(response => response.json());
+    })
+      .then(response => response.json())
+      .catch(() => {
+        throw new Error(ERROR_MESSAGE);
+      });
   }
 
   fetchRelease(revision, channels) {
@@ -100,7 +107,11 @@ class ReleasesController extends Component {
       redirect: "follow",
       referrer: "no-referrer",
       body: JSON.stringify({ revision, channels, name: this.props.snapName })
-    }).then(response => response.json());
+    })
+      .then(response => response.json())
+      .catch(() => {
+        throw new Error(ERROR_MESSAGE);
+      });
   }
 
   fetchClose(channels) {
@@ -118,7 +129,11 @@ class ReleasesController extends Component {
       redirect: "follow",
       referrer: "no-referrer",
       body: JSON.stringify({ channels })
-    }).then(response => response.json());
+    })
+      .then(response => response.json())
+      .catch(() => {
+        throw new Error(ERROR_MESSAGE);
+      });
   }
 
   // TODO: move inside of this function out
@@ -164,9 +179,7 @@ class ReleasesController extends Component {
   }
 
   handleReleaseError(error) {
-    let message =
-      error.message ||
-      "Error while performing the release. Please try again later.";
+    let message = error.message || ERROR_MESSAGE;
 
     // try to find error messages in response json
     // which may be an array or errors or object with errors property
