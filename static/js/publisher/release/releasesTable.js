@@ -32,6 +32,8 @@ const disabledBecauseDevmode = (
 
 const disabledBecauseReleased = "The same revisions are already promoted.";
 
+const disabledBecauseNotSelected = "Select some revisions to promote them.";
+
 class ReleasesTable extends Component {
   renderRevisionCell(track, risk, arch) {
     return (
@@ -82,6 +84,7 @@ class ReleasesTable extends Component {
 
     let canBePromoted = true;
     let canBeClosed = true;
+    let promoteTooltip;
 
     if (risk === STABLE) {
       canBePromoted = false;
@@ -97,6 +100,14 @@ class ReleasesTable extends Component {
     ) {
       canBePromoted = false;
       canBeClosed = false;
+    }
+
+    if (
+      channel === AVAILABLE &&
+      (!pendingChannelMap[channel] ||
+        Object.keys(pendingChannelMap[channel]).length === 0)
+    ) {
+      promoteTooltip = disabledBecauseNotSelected;
     }
 
     let targetChannels = [];
@@ -158,6 +169,7 @@ class ReleasesTable extends Component {
             <span className="p-releases-table__menus">
               {canBePromoted && (
                 <PromoteMenu
+                  tooltip={promoteTooltip}
                   targetChannels={targetChannels}
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
                 />

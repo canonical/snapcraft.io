@@ -64,9 +64,11 @@ export default class PromoteMenu extends Component {
       targetChannel => targetChannel.isDisabled
     );
 
-    const tooltip = isDisabled
-      ? this.props.targetChannels[0].reason
-      : undefined;
+    // if tooltip is provided, use it
+    // otherwise if all items are disabled use the tooltip from disabled channel
+    const tooltip =
+      this.props.tooltip ||
+      (isDisabled ? this.props.targetChannels[0].reason : undefined);
 
     const className = `p-releases-channel__promote ${
       tooltip ? "p-tooltip p-tooltip--btm-center" : ""
@@ -94,6 +96,7 @@ export default class PromoteMenu extends Component {
 }
 
 PromoteMenu.propTypes = {
+  tooltip: PropTypes.string,
   targetChannels: PropTypes.array.isRequired,
   promoteToChannel: PropTypes.func.isRequired
 };
