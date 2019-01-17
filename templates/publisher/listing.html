@@ -257,6 +257,33 @@
                 </p>
               {% endif %}
             </div>
+            <p class="p-form-help-text u-no-margin--bottom">
+              <a href="#" class="js-toggle-markdown">Supported markdown syntax</a>
+            </p>
+            <div class="row js-markdown u-hide">
+              <div class="col-4">
+                <p><small>
+                  Code<br />Text blocks inside <code>`</code> or <code>```</code> pairs
+                </small></p>
+                <p><small>
+                  Lists<br /><code>* Foo</code>
+                </small></p>
+                <p><small>
+                  Italics<br /><code>__Foo__</code>
+                </small></p>
+              </div>
+              <div class="col-4">
+                <p><small>
+                  Bold<br /><code>**Foo**</code>
+                </small></p>
+                <p><small>
+                  Literal URLs<br /><code>https://foo.bar</code>
+                </small></p>
+                <p><small>
+                  URLs with title<br /><code>[foo bar](https://foo.bar)</code>
+                </small></p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -512,6 +539,8 @@
       null
     {% endif %}
     );
+
+    snapcraft.publisher.markdownToggle();
 
     snapcraft.publisher.initCategories();
   });
