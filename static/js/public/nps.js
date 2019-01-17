@@ -1,8 +1,8 @@
 const MARKETO_FORM_ID = 3308;
 
-const MktoForms2 = window.MktoForms2 || null;
-
 function nps() {
+  const MktoForms2 = window.MktoForms2 || null;
+
   const toggle = document.querySelector(".js-nps-comment-toggle");
   if (!MktoForms2) {
     toggle.classList.add("u-hide");
