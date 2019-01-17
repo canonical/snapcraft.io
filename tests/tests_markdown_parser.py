@@ -6,7 +6,7 @@ from webapp.markdown import parse_markdown_description
 class TestMarkdownParser(unittest.TestCase):
     """This class tests the custom parser for the snap description. This
     parser allows only a limited amount of tags. We want a lot of tests for
-    it to make sure on upgrades we don't loose the custom tags that we want
+    it to make sure on upgrades we don't lose the custom tags that we want
     to keep.
 
     List of approved markdown tag allowed:
