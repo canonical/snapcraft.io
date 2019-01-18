@@ -27,6 +27,12 @@ import {
 import { getPendingRelease } from "./releasesState";
 
 class RevisionsList extends Component {
+  constructor() {
+    super();
+
+    this.state = {};
+  }
+
   revisionSelectChange(revision) {
     this.props.toggleRevision(revision);
   }
@@ -111,6 +117,12 @@ class RevisionsList extends Component {
     this.props.closeHistoryPanel();
   }
 
+  showAllRevisions(key) {
+    this.setState({
+      [key]: true
+    });
+  }
+
   render() {
     let {
       availableRevisionsSelect,
@@ -130,6 +142,8 @@ class RevisionsList extends Component {
     // list of architectures with revisions in selected version
     let selectedVersionRevisionsArchs = [];
 
+    let key;
+    let showAllRevisions = false;
     // TODO: is it still possible that filters will be null?
     if (filters && filters.arch) {
       if (filters.risk === AVAILABLE) {
@@ -228,6 +242,13 @@ class RevisionsList extends Component {
           .filter((item, i, ar) => ar.indexOf(item) === i)
           .sort();
       }
+
+      key = `${filters.track}/${filters.risk}/${filters.arch}`;
+      if (filters.risk === AVAILABLE) {
+        key += `/${availableRevisionsSelect}`;
+      }
+
+      showAllRevisions = this.state[key];
     }
 
     const hasDevmodeRevisions = filteredRevisions.some(isInDevmode);
@@ -313,7 +334,9 @@ class RevisionsList extends Component {
               )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
-                filteredRevisions,
+                showAllRevisions
+                  ? filteredRevisions
+                  : filteredRevisions.slice(0, 10),
                 !isReleaseHistory,
                 showAllColumns
               )
@@ -324,6 +347,16 @@ class RevisionsList extends Component {
                 </td>
               </tr>
             )}
+            {!showAllRevisions &&
+              filteredRevisions.length > 10 && (
+                <tr>
+                  <td colSpan="4">
+                    <a onClick={this.showAllRevisions.bind(this, key)}>
+                      Show all {filteredRevisions.length} revisions
+                    </a>
+                  </td>
+                </tr>
+              )}
           </tbody>
         </table>
       </Fragment>
