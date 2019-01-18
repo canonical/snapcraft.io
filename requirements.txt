@@ -6,6 +6,7 @@ Flask-WTF==0.14.2
 humanize==0.5.1
 Markdown==3.0.1
 prometheus_client==0.3.1
+mistune==0.8.4
 pybreaker==0.4.4
 pycountry==17.9.23
 pymacaroons==0.12.0
