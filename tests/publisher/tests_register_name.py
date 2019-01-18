@@ -12,14 +12,35 @@ class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = "/register-snap"
         super().setUp(snap_name=None, api_url=None, endpoint_url=endpoint_url)
+        self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
 
     @responses.activate
     def test_register_name_logged_in(self):
         self._log_in(self.client)
+
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
+
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
         self.assert_template_used("publisher/register-snap.html")
+
+    @responses.activate
+    def test_register_name_user_api_error(self):
+        self._log_in(self.client)
+
+        user_payload = {"error_list": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=502
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 502
+        self.assert_template_used("50X.html")
 
 
 class GetReserveNamePage(BaseTestCases.BaseAppTesting):
@@ -29,10 +50,17 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
             "?snap_name=test-snap&is_private=False&conflict=True"
         )
         super().setUp(snap_name=None, api_url=None, endpoint_url=endpoint_url)
+        self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
 
     @responses.activate
     def test_reserve_name_logged_in(self):
         self._log_in(self.client)
+
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
+
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
@@ -66,6 +94,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             method_endpoint="POST",
             data=data,
         )
+        self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
 
     @responses.activate
     def test_post_no_data(self):
@@ -153,6 +182,11 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         payload = {"error_list": [{"code": "error-code"}]}
         responses.add(responses.POST, self.api_url, json=payload, status=400)
 
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
+
         self.client.post(self.endpoint_url, data=self.data)
 
         self.assert_template_used("publisher/register-snap.html")
@@ -162,6 +196,11 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
     def test_name_already_registered(self):
         payload = {"error_list": [{"code": "already_registered"}]}
         responses.add(responses.POST, self.api_url, json=payload, status=409)
+
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
 
         response = self.client.post(self.endpoint_url, data=self.data)
 
@@ -174,6 +213,11 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
     def test_claim_dispute(self):
         payload = {"error_list": [{"code": "already_claimed"}]}
         responses.add(responses.POST, self.api_url, json=payload, status=409)
+
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
 
         response = self.client.post(self.endpoint_url, data=self.data)
 

@@ -639,15 +639,14 @@ def redirect_get_register_name():
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
-    user = api.get_account(flask.session)
+    try:
+        user = api.get_account(flask.session)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
 
     available_stores = logic.filter_available_stores(user["stores"])
 
     snap_name = flask.request.args.get("snap_name", default="", type=str)
-    is_private_str = flask.request.args.get(
-        "is_private", default="False", type=str
-    )
-    is_private = is_private_str == "True"
 
     conflict_str = flask.request.args.get(
         "conflict", default="False", type=str
@@ -700,7 +699,10 @@ def post_register_name():
             registrant_comment=registrant_comment,
         )
     except ApiResponseErrorList as api_response_error_list:
-        user = api.get_account(flask.session)
+        try:
+            user = api.get_account(flask.session)
+        except ApiError as api_error:
+            return _handle_errors(api_error)
 
         available_stores = logic.filter_available_stores(user["stores"])
 
