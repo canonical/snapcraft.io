@@ -6,9 +6,9 @@ export default function() {
     e.preventDefault();
     markdownInfo.classList.toggle("u-hide");
     if (markdownInfo.classList.contains("u-hide")) {
-      markdownLink.innerHTML = markdownLink.innerHTML.replace("Hide", "Show");
+      markdownLink.innerHTML = "Show supported markdown syntax";
     } else {
-      markdownLink.innerHTML = markdownLink.innerHTML.replace("Show", "Hide");
+      markdownLink.innerHTML = "Hide supported markdown syntax";
     }
   });
 }
