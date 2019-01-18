@@ -270,3 +270,20 @@ def replace_reserved_categories_key(categories):
     del snap_categories["items"]
 
     return snap_categories
+
+
+def filter_available_stores(stores):
+    """Available stores that aren't publicly available
+
+    :param stores: List of stores as per the account endpoint
+
+    :return: List of stores
+    """
+    public_stores = ["ubuntu", "LimeNET", "LimeSDR", "orange-pi"]
+
+    available_stores = []
+    for store in stores:
+        if "access" in store["roles"] and store["id"] not in public_stores:
+            available_stores.append(store)
+
+    return available_stores
