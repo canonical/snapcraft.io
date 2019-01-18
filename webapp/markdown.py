@@ -47,6 +47,7 @@ class DescriptionBlock(BlockLexer):
     grammar_class = DescriptionGrammar
 
     default_rules = [
+        "fences",
         "block_code",
         "list_block",
         "paragraph",
