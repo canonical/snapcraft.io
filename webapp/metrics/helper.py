@@ -42,6 +42,7 @@ def build_metrics_json(
     elif metric_bucket == "m":
         start = end + relativedelta.relativedelta(months=-metric_period)
     elif metric_bucket == "y":
+        # Go back an extra day to ensure the granularity increases
         start = end + relativedelta.relativedelta(
             years=-metric_period, days=-1
         )
