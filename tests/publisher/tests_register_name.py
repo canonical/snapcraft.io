@@ -223,3 +223,18 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
 
         assert response.status_code == 302
         self.assertEqual(response.location, "http://localhost/account/details")
+
+    @responses.activate
+    def test_post_error_user_error(self):
+        payload = {"error_list": [{"code": "oops"}]}
+        responses.add(responses.POST, self.api_url, json=payload, status=409)
+
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=502
+        )
+
+        response = self.client.post(self.endpoint_url, data=self.data)
+
+        assert response.status_code == 502
+        self.assert_template_used("50X.html")
