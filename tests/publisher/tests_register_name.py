@@ -69,6 +69,39 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
         self.assert_context("is_private", False)
         self.assert_context("conflict", True)
 
+    @responses.activate
+    def test_reserve_name_with_stores(self):
+        self._log_in(self.client)
+
+        user_payload = {
+            "error_list": [],
+            "stores": [
+                {
+                    "id": "ubuntu",
+                    "name": "Global",
+                    "roles": ["access", "read"],
+                },
+                {"id": "ubuntu2", "name": "Global2", "roles": ["read"]},
+                {
+                    "id": "testing123",
+                    "name": "Test Store",
+                    "roles": ["access"],
+                },
+            ],
+        }
+
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+        self.assert_context(
+            "available_stores",
+            [{"id": "testing123", "name": "Test Store", "roles": ["access"]}],
+        )
+
 
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
