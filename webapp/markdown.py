@@ -19,15 +19,15 @@ class DescriptionGrammar(BlockGrammar):
         # We want to support the • as a tag for lists in markdown.
         # To do this this [*+-•] is the list of supported tags
         self.list_block = re.compile(
-            r"^( *)(?=[*+-•]|\d+\.)(([*+-•])?(?:\d+\.)?) [\s\S]+?"
+            r"^( *)(?=[•*+-]|\d+\.)(([•*+-])?(?:\d+\.)?) [\s\S]+?"
             r"(?:"
-            r"\n+(?=\1?(?:[-*_•] *){3,}(?:\n+|$))"  # hrule
+            r"\n+(?=\1?(?:[-*_] *){3,}(?:\n+|$))"  # hrule
             r"|\n+(?=%s)"  # def links
             r"|\n+(?=%s)"  # def footnotes\
-            r"|\n+(?=\1(?(3)\d+\.|[*+-•]) )"  # heterogeneous bullet
+            r"|\n+(?=\1(?(3)\d+\.|[•*+-]) )"  # heterogeneous bullet
             r"|\n{2,}"
             r"(?! )"
-            r"(?!\1(?:[*+-•]|\d+\.) )\n*"
+            r"(?!\1(?:[•*+-]|\d+\.) )\n*"
             r"|"
             r"\s*$)"
             % (
@@ -35,12 +35,12 @@ class DescriptionGrammar(BlockGrammar):
                 _pure_pattern(super().def_footnotes),
             )
         )
-        self.list_bullet = re.compile(r"^ *(?:[*+-•]|\d+\.) +")
         self.list_item = re.compile(
-            r"^(( *)(?:[*+-•]|\d+\.) [^\n]*"
-            r"(?:\n(?!\2(?:[*+-•]|\d+\.) )[^\n]*)*)",
+            r"^(( *)(?:[•*+-]|\d+\.) [^\n]*"
+            r"(?:\n(?!\2(?:[•*+-]|\d+\.) )[^\n]*)*)",
             flags=re.M,
         )
+        self.list_bullet = re.compile(r"^ *(?:[•*+-]|\d+\.) +")
 
 
 class DescriptionBlock(BlockLexer):
@@ -55,7 +55,7 @@ class DescriptionBlock(BlockLexer):
         "newline",
     ]
 
-    list_rules = ("block_code", "list_block", "text", "newline")
+    list_rules = ("fences", "block_code", "list_block", "text", "newline")
 
 
 class DescriptionInline(InlineLexer):
