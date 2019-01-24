@@ -186,7 +186,20 @@ def get_categories(categories_json):
     :param categories_json: The returned json
     :returns: A list of categories
     """
-    categories_list = ["developers", "games", "social-networking"]
+    categories_list = [
+        "development",
+        "games",
+        "social",
+        "productivity",
+        "utilities",
+        "photo-and-video",
+        "server-and-cloud",
+        "security",
+        "devices-and-iot",
+        "music-and-audio",
+        "entertainment",
+        "art-and-design",
+    ]
     blacklist = ["featured"]
     categories = []
 

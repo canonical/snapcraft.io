@@ -242,20 +242,16 @@ class StoreLogicTest(unittest.TestCase):
                 "clickindex:sections": [
                     {"name": "featured"},
                     {"name": "test"},
-                    {"name": "developers"},
+                    {"name": "development"},
                 ]
             }
         }
         category_list = logic.get_categories(categories)
-        self.assertEqual(
-            category_list,
-            [
-                {"name": "Developers", "slug": "developers"},
-                {"name": "Games", "slug": "games"},
-                {"name": "Social networking", "slug": "social-networking"},
-                {"name": "Test", "slug": "test"},
-            ],
+        self.assertTrue(
+            {"name": "Development", "slug": "development"} in category_list
         )
+        self.assertTrue({"name": "Games", "slug": "games"} in category_list)
+        self.assertTrue({"name": "Test", "slug": "test"} in category_list)
 
     def test_get_video_embed_code(self):
         youtube_url = "https://youtube.com/watch?v=123"
