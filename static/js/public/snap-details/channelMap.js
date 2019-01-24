@@ -1,4 +1,3 @@
-import distanceInWords from "date-fns/distance_in_words_strict";
 import SnapEvents from "../../libs/events";
 import { triggerEvent } from "../../base/ga";
 
@@ -432,9 +431,7 @@ class ChannelMap {
           trackName,
           trackInfo["risk"],
           trackInfo["version"],
-          distanceInWords(new Date(), new Date(trackInfo["created-at"]), {
-            addSuffix: true
-          }),
+          trackInfo["created-at"],
           trackInfo["confinement"]
         ]);
       });

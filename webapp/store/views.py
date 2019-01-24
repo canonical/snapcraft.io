@@ -8,7 +8,6 @@ import humanize
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
-from dateutil import parser
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiConnectionError,
@@ -409,7 +408,7 @@ def store_blueprint(store_query=None, testing=False):
             "confinement": confinement,
             # Transformed API data
             "filesize": humanize.naturalsize(binary_filesize),
-            "last_updated": (humanize.naturaldate(parser.parse(last_updated))),
+            "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
             # Data from metrics API
             "countries": (

@@ -1,5 +1,7 @@
 from urllib.parse import parse_qs, urlparse
 
+from dateutil import parser
+
 
 def get_searched_snaps(search_results):
     """Get search snaps from API response
@@ -130,7 +132,7 @@ def convert_channel_maps(channel_map):
             channel_map_restruct[arch][track] = []
 
         info = {
-            "created-at": channel.get("created-at"),
+            "created-at": convert_date(channel.get("created-at")),
             "version": channel.get("version"),
             "channel": channel.get("channel").get("name"),
             "risk": channel.get("channel").get("risk"),
@@ -140,6 +142,19 @@ def convert_channel_maps(channel_map):
         channel_map_restruct[arch][track].append(info)
 
     return channel_map_restruct
+
+
+def convert_date(date_to_convert):
+    """Convert date to human readable format: Month Day Year
+
+    Format of date to convert: 2019-01-12T16:48:41.821037+00:00
+    Output: Jan 12 2019
+
+    :param date_to_convert: Date to convert
+    :returns: Readable date
+    """
+    date_parsed = parser.parse(date_to_convert)
+    return date_parsed.strftime("%b %d %Y")
 
 
 def get_categories(categories_json):
