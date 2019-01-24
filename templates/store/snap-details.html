@@ -121,9 +121,7 @@
     <div class="row">
       <div class="col-8">
         {% if summary %}<h4>{{ summary }}</h4>{% endif %}
-        {% for paragraph in description_paragraphs %}
-          <p>{{ paragraph | safe }}</p>
-        {% endfor %}
+        {{ description | safe }}
         {% if website %}<p><a href="{{ website }}">Developer website</a></p>{% endif %}
         {% if contact %}
           <p>

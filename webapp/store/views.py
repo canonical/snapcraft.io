@@ -1,21 +1,25 @@
+from math import floor
+from urllib.parse import quote_plus
+
 import flask
+
+import bleach
 import humanize
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-from webapp.api.store import StoreApi
 import webapp.store.logic as logic
 from dateutil import parser
-from math import floor
 from webapp.api.exceptions import (
+    ApiCircuitBreaker,
+    ApiConnectionError,
     ApiError,
-    ApiTimeoutError,
     ApiResponseDecodeError,
     ApiResponseError,
     ApiResponseErrorList,
-    ApiConnectionError,
-    ApiCircuitBreaker,
+    ApiTimeoutError,
 )
-from urllib.parse import quote_plus
+from webapp.api.store import StoreApi
+from webapp.markdown import parse_markdown_description
 
 
 def store_blueprint(store_query=None, testing=False):
@@ -268,9 +272,8 @@ def store_blueprint(store_query=None, testing=False):
         if not details.get("channel-map"):
             flask.abort(404, "No snap named {}".format(snap_name))
 
-        formatted_paragraphs = logic.split_description_into_paragraphs(
-            details["snap"]["description"]
-        )
+        clean_description = bleach.clean(details["snap"]["description"])
+        formatted_description = parse_markdown_description(clean_description)
 
         channel_maps_list = logic.convert_channel_maps(
             details.get("channel-map")
@@ -397,7 +400,7 @@ def store_blueprint(store_query=None, testing=False):
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),
             "summary": details["snap"]["summary"],
-            "description_paragraphs": formatted_paragraphs,
+            "description": formatted_description,
             "channel_map": channel_maps_list,
             "has_stable": logic.has_stable(channel_maps_list),
             "developer_validation": details["snap"]["publisher"]["validation"],
