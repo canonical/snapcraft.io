@@ -35,7 +35,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -80,7 +80,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -90,7 +90,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track1": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -136,7 +136,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -148,7 +148,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",

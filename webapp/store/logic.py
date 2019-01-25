@@ -154,7 +154,7 @@ def convert_date(date_to_convert):
     :returns: Readable date
     """
     date_parsed = parser.parse(date_to_convert)
-    return date_parsed.strftime("%b %d %Y")
+    return date_parsed.strftime("%d %B %Y")
 
 
 def get_categories(categories_json):
