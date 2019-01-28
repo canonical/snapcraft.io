@@ -160,7 +160,7 @@ def convert_date(date_to_convert):
     date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
     delta = datetime.datetime.now() - datetime.timedelta(days=1)
     if delta < date_parsed:
-        return humanize.naturalday(date_parsed)
+        return humanize.naturalday(date_parsed).title()
     else:
         return date_parsed.strftime("%-d %B %Y")
 

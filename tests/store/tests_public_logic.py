@@ -298,4 +298,4 @@ class StoreLogicTest(unittest.TestCase):
         date_test = datetime.datetime.now().strftime("%Y-%m-%d")
         result = logic.convert_date(date_test)
 
-        self.assertEqual(result, "today")
+        self.assertEqual(result, "Today")
