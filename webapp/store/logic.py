@@ -162,7 +162,7 @@ def convert_date(date_to_convert):
     if delta < date_parsed:
         return humanize.naturalday(date_parsed)
     else:
-        return date_parsed.strftime("%d %B %Y")
+        return date_parsed.strftime("%-d %B %Y")
 
 
 def get_categories(categories_json):
