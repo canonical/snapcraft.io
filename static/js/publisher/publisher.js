@@ -6,16 +6,18 @@ import { enableInput, changeHandler } from "./settings";
 import { publicise } from "./publicise";
 import { initCategories } from "./market/categories";
 import markdownToggle from "./market/markdown";
+import stickyListingBar from "./market/stickyListingBar";
 
 const settings = { enableInput, changeHandler };
 
 export {
-  metrics,
-  selector,
-  market,
-  initMultiselect,
-  settings,
-  publicise,
   initCategories,
-  markdownToggle
+  initMultiselect,
+  markdownToggle,
+  metrics,
+  market,
+  publicise,
+  selector,
+  stickyListingBar,
+  settings
 };

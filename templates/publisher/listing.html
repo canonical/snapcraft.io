@@ -21,7 +21,7 @@
                 {% if private %}
                   This listing is not public because the snap is set to private.
                 {% else %}
-                  Changes to this Snap will appear immediately on its <a href="/{{ snap_name }}">Snap Store page</a>.
+                  Updates to this information will appear immediately on the <a href="/{{ snap_name }}">snap listing page</a>.
                 {% endif %}
             </p>
           </div>
@@ -41,9 +41,9 @@
             </div>
           </div>
         </div>
-        <div class="row">
+      </div>
+      <div class="row">
           <hr class="u-no-margin--bottom" />
-        </div>
       </div>
 
       <section class="p-strip is-shallow">
@@ -542,8 +542,8 @@
     {% endif %}
     );
 
+    snapcraft.publisher.stickyListingBar();
     snapcraft.publisher.markdownToggle();
-
     snapcraft.publisher.initCategories();
   });
 </script>

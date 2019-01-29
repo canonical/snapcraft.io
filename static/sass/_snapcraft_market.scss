@@ -56,13 +56,17 @@
   // Stick the Revert, Apply buttons to the top
   .snapcraft-p-sticky {
     background: $color-x-light;
-    margin-bottom: $sp-small;
     position: sticky;
     top: 0;
     z-index: 1;
 
     & .row {
+      padding-bottom: $sp-medium;
       padding-top: $sp-medium;
+    }
+
+    &.sticky-shadow {
+      box-shadow: 1px 1px 10px rgba(0, 0, 0, .2);
     }
 
     @media screen and (max-width: $breakpoint-x-small) {
