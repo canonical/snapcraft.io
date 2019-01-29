@@ -1,5 +1,6 @@
 import unittest
 
+import datetime
 import webapp.store.logic as logic
 
 
@@ -35,7 +36,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -80,7 +81,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -90,7 +91,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track1": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -136,7 +137,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -148,7 +149,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "Jan 12 2019",
+                        "created-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -286,3 +287,15 @@ class StoreLogicTest(unittest.TestCase):
                 "id": "123",
             },
         )
+
+    def test_convert_date_more_than_yesterday(self):
+        date_test = "2019-01-12T16:48:41.821037+00:00"
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "12 January 2019")
+
+    def test_convert_date_more_today(self):
+        date_test = datetime.datetime.now().strftime("%Y-%m-%d")
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "Today")
