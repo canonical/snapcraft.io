@@ -180,8 +180,12 @@ def build_changed_images(
     images_json = None
     for changed_screenshot in changed_screenshots:
         for current_screenshot in current_screenshots:
-            if changed_screenshot["url"] == current_screenshot["url"]:
+            if (
+                changed_screenshot["url"] == current_screenshot["url"]
+                and current_screenshot not in info
+            ):
                 info.append(current_screenshot)
+                break
 
     # Add new icon
     if icon is not None:
@@ -197,8 +201,10 @@ def build_changed_images(
             )
 
             if is_same:
-                info.append(build_image_info(new_screenshot, "screenshot"))
-                images_files.append(new_screenshot)
+                image_built = build_image_info(new_screenshot, "screenshot")
+                if image_built not in info:
+                    info.append(image_built)
+                    images_files.append(new_screenshot)
 
     images_json = {"info": dumps(info)}
 
