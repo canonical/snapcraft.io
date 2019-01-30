@@ -1,20 +1,13 @@
 export default function() {
-  const stickyBar = document.querySelector(".snapcraft-p-sticky");
-  const listings = document.querySelector(
-    ".u-float--left.p-heading--three.u-no-margin--bottom"
-  );
+  const stickyBar = document.querySelector("#store-listing-notification");
+  const listingsTitle = document.querySelector("#snap-name-listing");
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        stickyBar.classList.remove("sticky-shadow");
-      } else {
-        stickyBar.classList.add("sticky-shadow");
-      }
-    });
+  const observer = new IntersectionObserver(entry => {
+    if (entry[0].isIntersecting) {
+      stickyBar.classList.remove("sticky-shadow");
+    } else {
+      stickyBar.classList.add("sticky-shadow");
+    }
   });
-
-  listings.forEach(listing => {
-    observer.observe(listing);
-  });
+  observer.observe(listingsTitle);
 }
