@@ -62,9 +62,6 @@
               <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-tooltip">Verified account</span>
             </span>
             {% endif %}
-            {% if is_users_snap %}
-              <a href="/{{ package_name }}/listing">Edit</a>
-            {% endif %}
           </p>
         </div>
 
@@ -99,6 +96,15 @@
       {% endif %}
         </div>
     </div>
+    {% if is_users_snap %}
+      <div class="row">
+        <div class="p-notification--information">
+          <p class="p-notification__response">
+            Ensure your snap stay always relevant and compelling. <a href="/{{ package_name }}/listing">Update its listing information here</a>.
+          </p>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   {% if not webapp_config['STORE_QUERY'] %}
