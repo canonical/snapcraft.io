@@ -210,7 +210,19 @@ function drawGraph(holderSelector, holder, activeDevices) {
 
   // Add the x axix
   let tickValues = [];
-  if (isMobile() && _data.length > 90) {
+  let tickFormat = "%b %e";
+
+  // The ticks get cramped when there are too many data points
+  if (_data.length > 360) {
+    // This restricts anything over 1 year
+    tickValues = _data
+      .filter((item, i) => {
+        return i % 14 === 0;
+      })
+      .map(item => item.date);
+    tickFormat = "%b %e %Y";
+  } else if (isMobile() && _data.length > 90) {
+    // This restricts anything over 3 months and if viewing on a mobile
     // Get the first day of each month
     let monthCache = false;
     tickValues = _data
@@ -233,7 +245,7 @@ function drawGraph(holderSelector, holder, activeDevices) {
   g.append("g")
     .attr("class", "axis axis--x")
     .attr("transform", `translate(0, ${height})`)
-    .call(xAxis.tickFormat(utcFormat("%b %e")));
+    .call(xAxis.tickFormat(utcFormat(tickFormat)));
 
   cullXAxis();
 
