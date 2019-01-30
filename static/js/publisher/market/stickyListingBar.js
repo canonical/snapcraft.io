@@ -1,13 +1,10 @@
 export default function() {
-  const stickyBar = document.querySelector("#store-listing-notification");
-  const listingsTitle = document.querySelector("#snap-name-listing");
-
-  const observer = new IntersectionObserver(entry => {
-    if (entry[0].isIntersecting) {
-      stickyBar.classList.remove("sticky-shadow");
-    } else {
+  document.addEventListener("scroll", function() {
+    const stickyBar = document.querySelector("#store-listing-notification");
+    if (stickyBar.getBoundingClientRect().top == 0) {
       stickyBar.classList.add("sticky-shadow");
+    } else {
+      stickyBar.classList.remove("sticky-shadow");
     }
   });
-  observer.observe(listingsTitle);
 }
