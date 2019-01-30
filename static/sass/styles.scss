@@ -203,3 +203,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
+
+html,
+body {
+  background: #fff; // This will be fix on vanilla with https://github.com/vanilla-framework/vanilla-framework/issues/2129
+  min-height: 100vh;
+}
