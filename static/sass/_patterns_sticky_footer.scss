@@ -3,6 +3,11 @@
     margin-top: auto;
   }
 
+  html,
+  body {
+    min-height: 100vh;
+  }
+
   .has-sticky-footer {
     display: flex;
     flex-direction: column;
