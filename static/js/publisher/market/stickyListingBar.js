@@ -9,7 +9,7 @@ export default function() {
       stickyBar.classList.remove("sticky-shadow");
     }
   };
-  const onScroll = throttle(checkListingBarIsStuck, 10);
-  document.addEventListener("scroll", onScroll);
   checkListingBarIsStuck();
+  const onScroll = throttle(checkListingBarIsStuck, 30);
+  document.addEventListener("scroll", onScroll);
 }
