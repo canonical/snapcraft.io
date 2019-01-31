@@ -27,6 +27,10 @@
           </div>
           <div class="col-5">
             <div class="u-align--right u-clearfix">
+              <a href="/{{ snap_name }}?preview=true" target="_blank" class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" area-describedby="preview-tooltip">
+                Preview
+                <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
+              </a>
               <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
                   {#
                     to force dark icon variant we need a fake --dark class name:
@@ -517,6 +521,7 @@
         document.getElementById('license-custom-input')
       ]
     }, {
+      snap_name: {{ snap_name|tojson }},
       title: {{ snap_title|tojson }},
       summary: {{ summary|tojson }},
       description: {{ description|tojson }},

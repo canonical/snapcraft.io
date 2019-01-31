@@ -230,6 +230,16 @@ function initForm(config, initialState, errors) {
     }
 
     checkForm();
+    updateLocalStorage();
+  }
+
+  function updateLocalStorage() {
+    if (!window.localStorage) {
+      document.querySelector(".js-listing-preview").classList.add("u-hide");
+      return;
+    }
+    const key = state["snap_name"];
+    window.localStorage.setItem(key, JSON.stringify(state));
   }
 
   // when anything is changed update the state
@@ -413,6 +423,8 @@ function initForm(config, initialState, errors) {
       });
     }
   });
+
+  updateLocalStorage();
 }
 
 export { initSnapIconEdit, initForm };

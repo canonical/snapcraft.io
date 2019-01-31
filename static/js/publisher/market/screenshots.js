@@ -98,7 +98,7 @@ function initSnapScreenshotsEdit(
       screenshot.selected = false;
     }
 
-    setState();
+    setState(state);
   };
 
   const selectScreenshot = url => {

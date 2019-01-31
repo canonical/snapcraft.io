@@ -292,6 +292,8 @@ def store_blueprint(store_query=None, testing=False):
 
         webapp_config = flask.current_app.config.get("WEBAPP_CONFIG")
 
+        is_preview = flask.request.args.get("preview")
+
         if "STORE_QUERY" not in webapp_config:
             end = metrics_helper.get_last_metrics_processed_date()
 
@@ -424,6 +426,7 @@ def store_blueprint(store_query=None, testing=False):
                 not in flask.request.headers.get("User-Agent", "")
             ),
             "error_info": error_info,
+            "is_preview": is_preview,
         }
 
         return (

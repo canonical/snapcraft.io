@@ -40,6 +40,7 @@ describe("initForm", () => {
   let form;
   let submitButton;
   let revertButton;
+  let previewButton;
   let titleInput;
   let summaryInput;
   let descriptionInput;
@@ -61,6 +62,10 @@ describe("initForm", () => {
     revertButton = document.createElement("a");
     revertButton.classList.add("js-form-revert");
     revertButton.href = "/test";
+
+    previewButton = document.createElement("a");
+    previewButton.classList.add("js-listing-preview");
+    previewButton.href = "/test";
 
     titleInput = document.createElement("input");
     titleInput.type = "text";
@@ -127,6 +132,7 @@ describe("initForm", () => {
 
     form.appendChild(submitButton);
     form.appendChild(revertButton);
+    form.appendChild(previewButton);
     form.appendChild(titleInput);
     form.appendChild(categoriesInput);
     form.appendChild(primaryCategoryInput);
