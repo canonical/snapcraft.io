@@ -203,3 +203,8 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
+
+html,
+body {
+  background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
+}
