@@ -34,6 +34,7 @@ function install(language) {
         if (!document.querySelector(".js-linux-manual")) {
           const continueBtn = document.querySelector(".js-continue");
           if (continueBtn) {
+            continueBtn.classList.remove("is--disabled");
             continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
           }
         }
