@@ -97,7 +97,7 @@
         </div>
     </div>
     {% if is_users_snap %}
-      <div class="row">
+      <div class="row js-snap-owner-notification">
         <div class="p-notification--information">
           <p class="p-notification__response">
             Ensure your snap stay always relevant and compelling. <a href="/{{ package_name }}/listing">Update its listing information here</a>.
@@ -170,15 +170,15 @@
     </div>
 
     <div class="p-strip is-shallow">
-      <div class="row">
+      <div class="row" data-live="public_metrics_live">
         {% if countries %}
-          <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder">
+          <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
             <h4>Where people are using {{ snap_title }}</h4>
             <div id="js-snap-map" class="snapcraft-territories"></div>
           </div>
         {% endif %}
         {% if normalized_os %}
-          <div class="col-4">
+          <div class="col-4" data-live="weekly_installed_base_by_operating_system_normalized">
             <h4>Users by distribution (log)</h4>
             <div class="snapcraft-distro-chart">
               <div class="snapcraft-distro-chart__names">

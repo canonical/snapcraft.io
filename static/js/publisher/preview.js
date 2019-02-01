@@ -26,13 +26,13 @@ md.block.ruler.disable([
 
 // For the different elements we might need to change different properties
 const functionMap = {
-  title: "innerHTML",
-  summary: "innerHTML",
-  description: "innerHTML",
-  website: "href",
-  contact: "href",
-  screenshots: "appendChild",
-  license: "innerHTML"
+  title: (el, content) => (el.innerHTML = content),
+  summary: (el, content) => (el.innerHTML = content),
+  description: (el, content) => (el.innerHTML = content),
+  website: (el, content) => (el.href = content),
+  contact: (el, content) => (el.href = content),
+  screenshots: (el, content) => el.appendChild(content),
+  license: (el, content) => (el.innerHTML = content)
 };
 
 // For some elements we want to hide/ show a different element to the one
@@ -239,6 +239,8 @@ function render(packageName) {
     );
     return;
   }
+
+  // For basic content, loop through and update the content
   Object.keys(state).forEach(function(key) {
     if (key === "screenshots") {
       return;
@@ -250,7 +252,7 @@ function render(packageName) {
         content = transformMap[key](state[key]);
       }
       if (content !== "") {
-        el[functionMap[key]] = content;
+        functionMap[key](el, content);
 
         if (hideMap[key]) {
           hideMap[key](el).classList.remove("u-hide");
@@ -267,18 +269,70 @@ function render(packageName) {
     }
   });
 
-  const el = document.querySelector(`[data-live="screenshots"]`);
+  // Screenshots are a bit more involved, so treat them separately
+  const screenshotsEl = document.querySelector(`[data-live="screenshots"]`);
   if (state.video_urls !== "" || state.screenshots.length > 0) {
-    el.innerHTML = "";
-    el[functionMap.screenshots](
+    screenshotsEl.innerHTML = "";
+    functionMap.screenshots(
+      screenshotsEl,
       screenshotsAndVideos(state.screenshots, state.video_urls)
     );
-    hideMap.screenshots(el).classList.remove("u-hide");
-  } else {
-    hideMap.screenshots(el).classList.add("u-hide");
-  }
-  if (state.screenshots.length > 0) {
+    hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
     initScreenshots("#js-snap-screenshots");
+  } else {
+    hideMap.screenshots(screenshotsEl).classList.add("u-hide");
+  }
+
+  // We won't be changing any metrics, we just want to show them or not if selected
+  // on the listings page.
+  // Some of the elements won't exist because there aren't any metrics available, so make sure
+  // to check the elements exist before doing modifications.
+  const metricsEl = document.querySelector(`[data-live="public_metrics_live"]`);
+  if (metricsEl) {
+    const mapEl = metricsEl.querySelector(
+      `[data-live="installed_base_by_country_percent"]`
+    );
+    const distroEl = metricsEl.querySelector(
+      `[data-live="weekly_installed_base_by_operating_system_normalized"]`
+    );
+
+    if (state.public_metrics_enabled) {
+      metricsEl.classList.remove("u-hide");
+    } else {
+      metricsEl.classList.add("u-hide");
+    }
+
+    if (mapEl) {
+      if (
+        state.public_metrics_blacklist.indexOf(
+          "installed_base_by_country_percent"
+        ) > -1
+      ) {
+        mapEl.classList.add("u-hide");
+      } else {
+        mapEl.classList.remove("u-hide");
+      }
+    }
+
+    if (distroEl) {
+      if (
+        state.public_metrics_blacklist.indexOf(
+          "weekly_installed_base_by_operating_system_normalized"
+        ) > -1
+      ) {
+        distroEl.classList.add("u-hide");
+      } else {
+        distroEl.classList.remove("u-hide");
+      }
+    }
+  }
+
+  // Remove the notification that you can edit the snap
+  const snapOwnerNotification = document.querySelector(
+    ".js-snap-owner-notification"
+  );
+  if (snapOwnerNotification) {
+    snapOwnerNotification.classList.add("u-hide");
   }
 }
 
@@ -294,7 +348,9 @@ function preview(packageName) {
       render(packageName);
     }, 500);
   });
-  render(packageName);
+  setTimeout(() => {
+    render(packageName);
+  }, 500);
 }
 
 export { preview };
