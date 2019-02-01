@@ -1,5 +1,5 @@
 import Remarkable from "remarkable";
-import { default as initScreenshots } from "./snap-details/screenshots";
+import { default as initScreenshots } from "../public/snap-details/screenshots";
 
 // Ensure markdown is set to be the same as `webapp/markdown.py` config
 // doesn't include the custom ascii bullet-point (as this is legacy

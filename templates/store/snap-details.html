@@ -308,6 +308,9 @@
 
 {% block scripts %}
   <script src="{{ static_url('js/dist/public.js') }}"></script>
+  {% if is_preview %}
+    <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+  {% endif %}
   <script>
     Raven.context(function () {
       try {
@@ -363,7 +366,7 @@
       }
 
       {% if is_preview %}
-        snapcraft.public.preview({{ package_name|tojson }});
+        snapcraft.publisher.preview({{ package_name|tojson }});
       {% endif %}
     });
   </script>

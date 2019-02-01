@@ -8,7 +8,6 @@ import { storeCategories } from "./store-categories";
 import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
-import { preview } from "./preview";
 
 export {
   map,
@@ -21,6 +20,5 @@ export {
   initReportSnap,
   firstSnapFlow,
   videos,
-  nps,
-  preview
+  nps
 };

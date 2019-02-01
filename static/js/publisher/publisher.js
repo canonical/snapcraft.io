@@ -7,6 +7,7 @@ import { publicise } from "./publicise";
 import { initCategories } from "./market/categories";
 import markdownToggle from "./market/markdown";
 import stickyListingBar from "./market/stickyListingBar";
+import { preview } from "./preview";
 
 const settings = { enableInput, changeHandler };
 
@@ -19,5 +20,6 @@ export {
   publicise,
   selector,
   stickyListingBar,
-  settings
+  settings,
+  preview
 };
