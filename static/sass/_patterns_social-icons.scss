@@ -4,6 +4,7 @@
     background-image: url('#{$assets-path}6bfc3d6a-build.snapcraft.social.optimize.svg');
     background-repeat: no-repeat;
     background-size: 160px 80px; // 2x4 icons 40x40px each (in 2 rows for regular and hover state)
+    color: transparent;
     display: inline-block;
     height: 40px;
     overflow: hidden;
@@ -18,11 +19,6 @@
   .p-social-icon--twitter {
     @extend %p-social-icon;
     background-position: 0 0;
-  }
-
-  .p-social-icon--google {
-    @extend %p-social-icon;
-    background-position: -40px 0;
   }
 
   .p-social-icon--facebook {
