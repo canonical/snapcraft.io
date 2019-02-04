@@ -538,7 +538,8 @@
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
-      'license': {{ license|tojson }}
+      'license': {{ license|tojson }},
+      'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
     },
     {% if error_list %}
       {{ error_list|tojson}}

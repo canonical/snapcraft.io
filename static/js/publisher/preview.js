@@ -218,6 +218,10 @@ function getState(packageName) {
   return JSON.parse(window.localStorage.getItem(packageName));
 }
 
+function sendCommand(packageName, command) {
+  window.localStorage.setItem(`${packageName}-command`, command);
+}
+
 /**
  * Render the changes
  * @param packageName
@@ -278,7 +282,9 @@ function render(packageName) {
       screenshotsAndVideos(state.screenshots, state.video_urls)
     );
     hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
-    initScreenshots("#js-snap-screenshots");
+    if (state.video_urls === "") {
+      initScreenshots("#js-snap-screenshots");
+    }
   } else {
     hideMap.screenshots(screenshotsEl).classList.add("u-hide");
   }
@@ -341,15 +347,69 @@ function render(packageName) {
  * @param packageName
  */
 function preview(packageName) {
-  window.addEventListener("storage", () => {
-    // Slight delay to ensure the state has fully updated
-    // There was an issue with images when it was immediate.
-    setTimeout(() => {
-      render(packageName);
-    }, 500);
+  let editButton;
+  let revertButton;
+  let saveButton;
+
+  window.addEventListener("storage", e => {
+    if (e.key === packageName) {
+      // Slight delay to ensure the state has fully updated
+      // There was an issue with images when it was immediate.
+      setTimeout(() => {
+        render(packageName);
+        if (editButton) {
+          editButton.innerHTML = "Edit";
+        }
+        if (revertButton) {
+          revertButton.innerHTML = "Revert";
+        }
+        if (saveButton) {
+          saveButton.innerHTML = "Save";
+        }
+      }, 500);
+    }
   });
   setTimeout(() => {
     render(packageName);
+    // Add the toolbar
+    const toolbar = document.createElement("div");
+    toolbar.className = "snapcraft-p-sticky sticky-shadow";
+    toolbar.style.zIndex = 100;
+    toolbar.innerHTML = `<div class="row">
+<div class="col-7">
+  <p class="u-no-margin--bottom">You are previewing the listing page for ${packageName}</p>
+</div>
+<div class="col-5">
+  <div class="u-align--right u-clearfix">
+    <button class="p-button--base u-no-margin--bottom js-edit">Edit</button>
+    <button class="p-button--neutral u-no-margin--bottom js-revert">Revert</button>
+    <button class="p-button--positive u-no-margin--bottom icon--dark js-save">Save</button>
+  </div>
+</div>
+</div>`;
+    const banner = document.querySelector(".snapcraft-banner-background");
+    banner.parentNode.insertBefore(toolbar, banner);
+
+    editButton = document.querySelector(".js-edit");
+    revertButton = document.querySelector(".js-revert");
+    saveButton = document.querySelector(".js-save");
+
+    editButton.addEventListener("click", e => {
+      e.preventDefault();
+      sendCommand(packageName, "edit");
+      editButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
+      window.close();
+    });
+    revertButton.addEventListener("click", e => {
+      e.preventDefault();
+      sendCommand(packageName, "revert");
+      revertButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
+    });
+    saveButton.addEventListener("click", e => {
+      e.preventDefault();
+      sendCommand(packageName, "save");
+      saveButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
+    });
   }, 500);
 }
 

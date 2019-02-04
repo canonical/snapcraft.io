@@ -233,6 +233,31 @@ function initForm(config, initialState, errors) {
     updateLocalStorage();
   }
 
+  function receiveCommands() {
+    if (window.localStorage) {
+      window.addEventListener("storage", e => {
+        const key = `${state["snap_name"]}-command`;
+        if (e.key === key) {
+          switch (e.newValue) {
+            case "edit":
+              window.localStorage.removeItem(key);
+              window.focus();
+              break;
+            case "revert":
+              window.localStorage.removeItem(key);
+              ignoreChangesOnUnload = true;
+              window.location.reload(true);
+              break;
+            case "save":
+              window.localStorage.removeItem(key);
+              formEl.dispatchEvent(new Event("submit"));
+              break;
+          }
+        }
+      });
+    }
+  }
+
   function updateLocalStorage() {
     if (!window.localStorage) {
       document.querySelector(".js-listing-preview").classList.add("u-hide");
@@ -424,6 +449,7 @@ function initForm(config, initialState, errors) {
     }
   });
 
+  receiveCommands();
   updateLocalStorage();
 }
 
