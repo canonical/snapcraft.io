@@ -4,6 +4,7 @@ import { publicMetrics } from "./market/publicMetrics";
 import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
 import { categories } from "./market/categories";
+import { storageCommands } from "./market/storageCommands";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -236,24 +237,9 @@ function initForm(config, initialState, errors) {
   function receiveCommands() {
     if (window.localStorage) {
       window.addEventListener("storage", e => {
-        const key = `${state["snap_name"]}-command`;
-        if (e.key === key) {
-          switch (e.newValue) {
-            case "edit":
-              window.localStorage.removeItem(key);
-              window.focus();
-              break;
-            case "revert":
-              window.localStorage.removeItem(key);
-              ignoreChangesOnUnload = true;
-              window.location.reload(true);
-              break;
-            case "save":
-              window.localStorage.removeItem(key);
-              formEl.dispatchEvent(new Event("submit"));
-              break;
-          }
-        }
+        storageCommands(e, formEl, state["snap_name"], () => {
+          ignoreChangesOnUnload = true;
+        });
       });
     }
   }

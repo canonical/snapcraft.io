@@ -148,7 +148,7 @@ describe("initForm", () => {
     market.initForm(config, initialState, undefined);
   }
 
-  describe("simple", () => {
+  describe("", () => {
     const config = {
       form: "market-form"
     };
