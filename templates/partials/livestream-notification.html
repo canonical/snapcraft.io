@@ -1,3 +1,4 @@
+{% if is_stream_live == 0 %}
 <div class="col-12">
     <div class="p-notification--information p-snapcraft-nps-banner">
         <p class="p-notification__response">
@@ -6,3 +7,13 @@
         </p>
     </div>
 </div>
+{% elif is_stream_live == 1 %}
+<div class="col-12">
+    <div class="p-notification--information p-snapcraft-nps-banner">
+        <p class="p-notification__response">
+        <span class="p-notification__status">LIVE:</span>
+        <a href="https://www.youtube.com/watch?v=BEp_l2oUcD8&amp;ab_channel=snapcraft" target="_blank" class="p-link--external">Watch our Youtube Live Stream on building snaps</a> is now!
+        </p>
+    </div>
+</div>
+{% endif%}
