@@ -385,6 +385,7 @@ def store_blueprint(store_query=None, testing=False):
                 is_users_snap = True
 
         context = {
+            "details": details,
             # Data direct from details API
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
@@ -429,6 +430,31 @@ def store_blueprint(store_query=None, testing=False):
             flask.render_template("store/snap-details.html", **context),
             status_code,
         )
+
+    @store.route(
+        '/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>/report',
+        methods=["POST"],
+    )
+    def snap_report_post(snap_name):
+        import requests
+
+        # this probably needs to be moved to api
+        # also Google URL ideally should be hidden from source code and moved
+        # to config/env
+        # if Google API returns any kind of error we should error as well
+        # (but no error details are needed, just { "success": False })
+        requests.post(
+            "https://script.google.com/macros/s/"
+            + "AKfycbyLyPn-nVfVy5aLfaR7dqRhZngGSjKYpAm7PylOSi9yKSyxqUc/exec",
+            {
+                "snap": flask.request.form.get("snap"),
+                "reason": flask.request.form.get("reason"),
+                "comment": flask.request.form.get("comment"),
+                "email": flask.request.form.get("email"),
+            },
+        )
+
+        return flask.jsonify({"success": True})
 
     @store.route('/<regex("[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"):snap_name>')
     def snap_details_case_sensitive(snap_name):

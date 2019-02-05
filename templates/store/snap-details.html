@@ -233,6 +233,20 @@
     {% include 'partials/_video.html' %}
   </script>
 
+
+  <div class="row">
+    <div class="col-6">
+      <h4>Report this snap</h4>
+      <form action="/{{package_name}}/report" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="text" name="snap" value="{{package_name}}" readonly />
+        <input type="text" name="reason" placeholder="Reason..." required />
+        <input type="text" name="comment" placeholder="Comment..." required />
+        <input type="email" name="email" placeholder="test@email.com" />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts_modules %}
