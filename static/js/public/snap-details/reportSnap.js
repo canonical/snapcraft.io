@@ -2,15 +2,16 @@ import "whatwg-fetch";
 
 function toggleModal(modal) {
   if (modal.style.display === "none") {
+    showForm(modal);
     modal.style.display = "";
   } else {
     modal.style.display = "none";
-    showForm(modal);
   }
 }
 
 function showForm(modal) {
-  modal.querySelector("button[type=submit]").disabled = false;
+  buttonEnabled(modal.querySelector("button[type=submit]"));
+
   modal.querySelector(".js-report-snap-form").style.display = "";
   modal.querySelector(".js-report-snap-success").style.display = "none";
   modal.querySelector(".js-report-snap-error").style.display = "none";
@@ -28,6 +29,17 @@ function showError(modal) {
   modal.querySelector(".js-report-snap-error").style.display = "";
 }
 
+function buttonLoading(button) {
+  button.disabled = true;
+  button.innerHTML =
+    "<i class='p-icon--spinner u-animation--spin'></i> Submitting…";
+}
+
+function buttonEnabled(button) {
+  button.disabled = false;
+  button.innerHTML = "Submit report";
+}
+
 export default function initReportSnap(
   snapName,
   toggleSelector,
@@ -41,6 +53,7 @@ export default function initReportSnap(
     event.preventDefault();
     toggleModal(modal);
   });
+
   modal.addEventListener("click", event => {
     const target = event.target;
 
@@ -51,7 +64,8 @@ export default function initReportSnap(
 
   reportForm.addEventListener("submit", e => {
     e.preventDefault();
-    reportForm.querySelector("button[type=submit]").disabled = true;
+    buttonLoading(reportForm.querySelector("button[type=submit]"));
+
     fetch(`/${snapName}/report`, {
       method: "POST",
       body: new FormData(reportForm)

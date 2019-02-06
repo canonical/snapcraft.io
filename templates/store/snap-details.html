@@ -238,7 +238,8 @@
           <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
           <div class="u-align--right">
             <button type="button" class="js-modal-close">Cancel</button>
-            <button type="submit" type="submit">Submit report</button>
+            {# use --dark fake class for spinner icon to be rendered correctly... #}
+            <button type="submit" type="submit" class="--dark">Submit report</button>
           </div>
         </form>
       </div>
