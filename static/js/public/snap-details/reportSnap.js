@@ -1,7 +1,11 @@
 import "whatwg-fetch";
 
-function toggleModal(modal) {
-  if (modal.style.display === "none") {
+function toggleModal(modal, show) {
+  if (typeof show === "undefined") {
+    show = modal.style.display === "none";
+  }
+
+  if (show) {
     showForm(modal);
     modal.style.display = "";
   } else {
@@ -57,7 +61,7 @@ export default function initReportSnap(
   modal.addEventListener("click", event => {
     const target = event.target;
 
-    if (target.closest(".js-modal-close")) {
+    if (target.closest(".js-modal-close") || target === modal) {
       toggleModal(modal);
     }
   });
@@ -79,5 +83,12 @@ export default function initReportSnap(
         }
       })
       .catch(() => showError(modal));
+  });
+
+  // close modal on ESC
+  window.addEventListener("keyup", event => {
+    if (event.keyCode === 27) {
+      toggleModal(modal, false);
+    }
   });
 }
