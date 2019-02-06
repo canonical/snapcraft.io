@@ -201,6 +201,72 @@
     </div>
   {% endif %}
 
+  <div class="row">
+    <div class="col-12">
+      <hr />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
+    </div>
+  </div>
+
+  <div class="p-modal" id="report-snap-modal" style="display: none">
+    <div class="p-modal__dialog" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
+      <div class="js-report-snap-form">
+        <header class="p-modal__header">
+          <h2 class="p-modal__title" id="modal-title">Report {{snap_title}}</h2>
+          <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
+        </header>
+
+        <form>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <input type="hidden" name="snap" value="{{package_name}}" />
+          <label for="report-snap-reason">Choose a reason for reporting this snap</label>
+          <select id="report-snap-reason" name="reason" required>
+            <option value="" selected>Select an option</option>
+            <option value="copyright-violation">Copyright or trademark violation</option>
+            <option value="terms-violation">Snap Store terms of service violation</option>
+          </select>
+          <label for="report-snap-comment">Please provide more detailed reason to your report</label>
+          <textarea id="report-snap-comment" type="text" name="comment" placeholder="Comment..." rows="5" required></textarea>
+
+          <label for="report-snap-email">Your email (optional)</label>
+          <input id="report-snap-email" type="email" name="email" placeholder="email@example.com" />
+          <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
+          <div class="u-align--right">
+            <button type="button" class="js-modal-close">Cancel</button>
+            <button type="submit" type="submit">Submit report</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="js-report-snap-success" style="display: none;">
+        <header class="p-modal__header">
+          <h2 class="p-modal__title" id="modal-title">Report submitted successfully</h2>
+          <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
+        </header>
+        <p>Thanks for bringing this to our attention. Information you provided will help us investigate further.</p>
+        <div class="u-align--right">
+          <button type="button" class="p-button--positive js-modal-close">Close</button>
+        </div>
+      </div>
+
+      <div class="js-report-snap-error" style="display: none;">
+        <header class="p-modal__header">
+          <h2 class="p-modal__title" id="modal-title">Error submitting report</h2>
+          <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
+        </header>
+        <p>There was an error while sending your report. Please try again later.</p>
+        <div class="u-align--right">
+          <button type="button" class="p-button--positive js-modal-close">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   {% if api_error %}
     <div class="row">
       <div class="col-12">
@@ -232,7 +298,6 @@
   <script type="text/template" id="video-asciinema-template">
     {% include 'partials/_video.html' %}
   </script>
-
 {% endblock %}
 
 {% block scripts_modules %}
@@ -257,6 +322,12 @@
 
       try {
         snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
+      try {
+        snapcraft.public.initReportSnap('{{ package_name }}','.js-modal-open', '#report-snap-modal');
       } catch(e) {
         Raven.captureException(e);
       }

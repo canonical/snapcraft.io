@@ -16,6 +16,7 @@ $color-navigation-background: #252525;
 @include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
+@include vf-p-modal;
 @include vf-p-muted-heading;
 @include vf-p-navigation;
 @include vf-p-notification;
@@ -203,6 +204,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
+
+@import 'patterns_modal';
+@include vf-p-modal-snapcraft;
 
 html,
 body {
