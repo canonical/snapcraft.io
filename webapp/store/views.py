@@ -17,6 +17,7 @@ from webapp.api.exceptions import (
     ApiResponseErrorList,
     ApiTimeoutError,
 )
+from webapp.api.google import post_report_snap
 from webapp.api.store import StoreApi
 from webapp.markdown import parse_markdown_description
 
@@ -429,6 +430,25 @@ def store_blueprint(store_query=None, testing=False):
             flask.render_template("store/snap-details.html", **context),
             status_code,
         )
+
+    @store.route(
+        '/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>/report',
+        methods=["POST"],
+    )
+    def snap_report_post(snap_name):
+        try:
+            post_report_snap(
+                {
+                    "snap": flask.request.form.get("snap"),
+                    "reason": flask.request.form.get("reason"),
+                    "comment": flask.request.form.get("comment"),
+                    "email": flask.request.form.get("email"),
+                }
+            )
+
+            return flask.jsonify({"success": True})
+        except Exception:
+            return flask.jsonify({"success": False})
 
     @store.route('/<regex("[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"):snap_name>')
     def snap_details_case_sensitive(snap_name):
