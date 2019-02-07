@@ -19,7 +19,7 @@ SNAP_INFO_URL = "".join(
         SNAPCRAFT_IO_API_V2,
         "snaps/info/{snap_name}",
         "?fields=title,summary,description,license,contact,website,publisher,",
-        "prices,media,download,version,created-at,confinement",
+        "prices,media,download,version,created-at,confinement,categories",
     ]
 )
 

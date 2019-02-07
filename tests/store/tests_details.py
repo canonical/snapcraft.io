@@ -15,7 +15,7 @@ class GetDetailsPageTest(TestCase):
                 self.snap_name,
                 "?fields=title,summary,description,license,contact,website,",
                 "publisher,prices,media,download,version,created-at,"
-                "confinement",
+                "confinement,categories",
             ]
         )
         self.endpoint_url = "/" + self.snap_name
@@ -75,6 +75,7 @@ class GetDetailsPageTest(TestCase):
                     "username": "toto",
                     "validation": True,
                 },
+                "categories": [{"name": "test"}],
             },
             "channel-map": [
                 {
@@ -130,6 +131,7 @@ class GetDetailsPageTest(TestCase):
                     "username": "toto",
                     "validation": True,
                 },
+                "categories": [{"name": "test"}],
             },
             "channel-map": [
                 {
@@ -182,6 +184,7 @@ class GetDetailsPageTest(TestCase):
                     "username": "toto",
                     "validation": True,
                 },
+                "categories": [{"name": "test"}],
             },
             "channel-map": [
                 {
