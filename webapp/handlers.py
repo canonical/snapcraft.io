@@ -31,7 +31,7 @@ def set_handlers(app):
             user_name = None
 
         page_slug = template_utils.generate_slug(flask.request.path)
-        is_stream_live = template_utils.time_live_stream()
+
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
@@ -50,7 +50,6 @@ def set_handlers(app):
             "static_url": template_utils.static_url,
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
-            "is_stream_live": is_stream_live,
         }
 
     # Error handlers

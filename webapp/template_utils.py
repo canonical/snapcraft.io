@@ -92,29 +92,3 @@ def display_name(display_name, username):
         return display_name
     else:
         return f"{display_name} ({username})"
-
-
-def time_live_stream():
-    """Temporary function
-    returns: 0 if stream is before the time
-    returns: 1 if stream is now
-    returns: 2 uf stream is close
-    """
-
-    import datetime
-    import pytz
-
-    tz = pytz.timezone("Europe/London")
-    now = datetime.datetime.now(tz)
-    stream = datetime.datetime(year=2019, month=2, day=6, hour=20, tzinfo=tz)
-
-    end_stream = datetime.datetime(
-        year=2019, month=2, day=6, hour=22, tzinfo=tz
-    )
-
-    if now < stream:
-        return 0
-    elif end_stream < now:
-        return 2
-    else:
-        return 1
