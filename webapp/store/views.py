@@ -376,10 +376,14 @@ def store_blueprint(store_query=None, testing=False):
             ):
                 is_users_snap = True
 
+        # build list of categories of a snap
+        categories = logic.get_snap_categories(details["snap"]["categories"])
+
         context = {
             # Data direct from details API
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
+            "categories": categories,
             "icon_url": icons[0] if icons else None,
             "version": last_version,
             "license": details["snap"]["license"],

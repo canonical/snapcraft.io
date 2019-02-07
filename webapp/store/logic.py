@@ -165,27 +165,31 @@ def convert_date(date_to_convert):
         return date_parsed.strftime("%-d %B %Y")
 
 
+categories_list = [
+    "development",
+    "games",
+    "social",
+    "productivity",
+    "utilities",
+    "photo-and-video",
+    "server-and-cloud",
+    "security",
+    "devices-and-iot",
+    "music-and-audio",
+    "entertainment",
+    "art-and-design",
+]
+
+blacklist = ["featured"]
+
+
 def get_categories(categories_json):
     """Retrieve and flatten the nested array from the legacy API response.
 
     :param categories_json: The returned json
     :returns: A list of categories
     """
-    categories_list = [
-        "development",
-        "games",
-        "social",
-        "productivity",
-        "utilities",
-        "photo-and-video",
-        "server-and-cloud",
-        "security",
-        "devices-and-iot",
-        "music-and-audio",
-        "entertainment",
-        "art-and-design",
-    ]
-    blacklist = ["featured"]
+
     categories = []
 
     if "_embedded" in categories_json:
@@ -201,6 +205,26 @@ def get_categories(categories_json):
                 {
                     "slug": category,
                     "name": category.capitalize().replace("-", " "),
+                }
+            )
+
+    return categories
+
+
+def get_snap_categories(snap_categories):
+    """Retrieve list of categories with names for a snap.
+
+    :param snap_categories: List of snap categories from snap info API
+    :returns: A list of categories with names
+    """
+    categories = []
+
+    for cat in snap_categories:
+        if cat["name"] not in blacklist:
+            categories.append(
+                {
+                    "slug": cat["name"],
+                    "name": cat["name"].capitalize().replace("-", " "),
                 }
             )
 
