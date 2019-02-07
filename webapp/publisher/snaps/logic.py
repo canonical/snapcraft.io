@@ -138,24 +138,6 @@ def build_image_info(image, image_type):
     }
 
 
-def convert_metrics_blacklist(metrics_blacklist):
-    """Convert the blacklisted metrics to an array
-
-    Input:
-      "metric1,metric2"
-    Output:
-      ["metric1", "metric2"]
-
-    :param metrics_blacklist: The metrics blacklisted
-
-    :return: Array of metrics"""
-    converted_metrics_blacklist = []
-    if len(metrics_blacklist) > 0:
-        converted_metrics_blacklist = metrics_blacklist.split(",")
-
-    return converted_metrics_blacklist
-
-
 def remove_invalid_characters(description):
     """Remove invalid charcters from description
 

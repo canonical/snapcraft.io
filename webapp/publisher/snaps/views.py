@@ -826,12 +826,6 @@ def post_settings(snap_name):
         body_json = logic.filter_changes_data(changes)
 
         if body_json:
-            if "public_metrics_blacklist" in body_json:
-                converted_metrics = logic.convert_metrics_blacklist(
-                    body_json["public_metrics_blacklist"]
-                )
-                body_json["public_metrics_blacklist"] = converted_metrics
-
             try:
                 api.snap_metadata(snap_id, flask.session, body_json)
             except ApiResponseErrorList as api_response_error_list:
