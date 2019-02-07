@@ -1,27 +1,25 @@
-import Remarkable from "remarkable";
+import * as MarkdownIt from "markdown-it";
 import { default as initScreenshots } from "../public/snap-details/screenshots";
 
 // Ensure markdown is set to be the same as `webapp/markdown.py` config
 // doesn't include the custom ascii bullet-point (as this is legacy
 // and shouldn't be promoted).
-const md = new Remarkable({
+const md = new MarkdownIt({
   linkify: true
-});
-md.core.ruler.disable([
-  "references",
-  "footnote_tail",
-  "abbr2",
-  "replacements",
-  "smartquotes"
-]);
-md.block.ruler.disable([
+}).disable([
+  "table",
   "blockquote",
   "hr",
-  "footnote",
+  "reference",
   "heading",
   "lheading",
-  "htmlblock",
-  "table"
+  "html_block",
+  "replacements",
+  "smartquotes",
+  "escape",
+  "strikethrough",
+  "image",
+  "html_inline"
 ]);
 
 // For the different elements we might need to change different properties
@@ -343,6 +341,44 @@ function render(packageName) {
 }
 
 /**
+ * Render the toolbar on preview
+ * @param packageName
+ * @returns {{el: HTMLElement, lostConnection: lostConnection}}
+ */
+function renderPreviewToolbar(packageName) {
+  const DEFAULT_MESSAGE = `You are previewing the listing page for ${packageName}`;
+  const LOST_CONNECTION_MESSAGE = `<i class="p-icon--error"></i> The connection has been lost, please visit the <a href="/${packageName}/listing">listing page</a> and try again.`;
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "snapcraft-p-sticky sticky-shadow";
+  toolbar.style.zIndex = 100;
+  toolbar.innerHTML = `<div class="row">
+<div class="col-7">
+  <p class="u-no-margin--bottom" id="preview-message">${DEFAULT_MESSAGE}</p>
+</div>
+<div class="col-5 --dark">
+  <div class="u-align--right u-clearfix">
+    <button class="p-button--base u-no-margin--bottom js-edit">Edit</button>
+    <button class="p-button--neutral u-no-margin--bottom js-revert">Revert</button>
+    <button class="p-button--positive u-no-margin--bottom js-save">Save</button>
+  </div>
+</div>
+</div>`;
+
+  const previewMessageEl = toolbar.querySelector("#preview-message");
+
+  const lostConnection = disableButtons => {
+    previewMessageEl.innerHTML = LOST_CONNECTION_MESSAGE;
+    disableButtons();
+  };
+
+  return {
+    el: toolbar,
+    lostConnection
+  };
+}
+
+/**
  * Initial render and storage change listener
  * @param packageName
  */
@@ -351,44 +387,56 @@ function preview(packageName) {
   let revertButton;
   let saveButton;
 
+  let responseTimer;
+  const RESPONSE_TIMEOUT = 15000;
+
+  const resetButtons = () => {
+    if (editButton) {
+      editButton.innerHTML = "Edit";
+    }
+    if (revertButton) {
+      revertButton.innerHTML = "Revert";
+    }
+    if (saveButton) {
+      saveButton.innerHTML = "Save";
+    }
+  };
+
+  const disableButtons = () => {
+    resetButtons();
+    if (editButton) {
+      editButton.setAttribute("disabled", "disabled");
+    }
+    if (revertButton) {
+      revertButton.setAttribute("disabled", "disabled");
+    }
+    if (saveButton) {
+      saveButton.setAttribute("disabled", "disabled");
+    }
+  };
+
   window.addEventListener("storage", e => {
     if (e.key === packageName) {
       // Slight delay to ensure the state has fully updated
       // There was an issue with images when it was immediate.
       setTimeout(() => {
         render(packageName);
-        if (editButton) {
-          editButton.innerHTML = "Edit";
-        }
-        if (revertButton) {
-          revertButton.innerHTML = "Revert";
-        }
-        if (saveButton) {
-          saveButton.innerHTML = "Save";
+
+        resetButtons();
+
+        if (responseTimer) {
+          clearTimeout(responseTimer);
         }
       }, 500);
     }
   });
+
   setTimeout(() => {
     render(packageName);
     // Add the toolbar
-    const toolbar = document.createElement("div");
-    toolbar.className = "snapcraft-p-sticky sticky-shadow";
-    toolbar.style.zIndex = 100;
-    toolbar.innerHTML = `<div class="row">
-<div class="col-7">
-  <p class="u-no-margin--bottom">You are previewing the listing page for ${packageName}</p>
-</div>
-<div class="col-5">
-  <div class="u-align--right u-clearfix">
-    <button class="p-button--base u-no-margin--bottom js-edit">Edit</button>
-    <button class="p-button--neutral u-no-margin--bottom js-revert">Revert</button>
-    <button class="p-button--positive u-no-margin--bottom icon--dark js-save">Save</button>
-  </div>
-</div>
-</div>`;
+    const toolbar = renderPreviewToolbar(packageName);
     const banner = document.querySelector(".snapcraft-banner-background");
-    banner.parentNode.insertBefore(toolbar, banner);
+    banner.parentNode.insertBefore(toolbar.el, banner);
 
     editButton = document.querySelector(".js-edit");
     revertButton = document.querySelector(".js-revert");
@@ -396,17 +444,26 @@ function preview(packageName) {
 
     editButton.addEventListener("click", e => {
       e.preventDefault();
+      responseTimer = window.setTimeout(() => {
+        toolbar.lostConnection(disableButtons);
+      }, RESPONSE_TIMEOUT);
       sendCommand(packageName, "edit");
       editButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
       window.close();
     });
     revertButton.addEventListener("click", e => {
       e.preventDefault();
+      responseTimer = window.setTimeout(() => {
+        toolbar.lostConnection(disableButtons);
+      }, RESPONSE_TIMEOUT);
       sendCommand(packageName, "revert");
       revertButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
     });
     saveButton.addEventListener("click", e => {
       e.preventDefault();
+      responseTimer = window.setTimeout(() => {
+        toolbar.lostConnection(disableButtons);
+      }, RESPONSE_TIMEOUT);
       sendCommand(packageName, "save");
       saveButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
     });

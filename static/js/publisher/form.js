@@ -87,15 +87,18 @@ function initForm(config, initialState, errors) {
   const formEl = document.getElementById(config.form);
   const submitButton = formEl.querySelector(".js-form-submit");
   const revertButton = formEl.querySelector(".js-form-revert");
+  const previewButton = formEl.querySelector(".js-listing-preview");
   const revertURL = revertButton.getAttribute("href");
   const disabledRevertClass = "is-disabled";
 
-  function disableSubmit() {
+  function disableSubmitAndPreview() {
     submitButton.disabled = "disabled";
+    previewButton.classList.add("is--disabled");
   }
 
-  function enableSubmit() {
+  function enableSubmitAndPreview() {
     submitButton.disabled = false;
+    previewButton.classList.remove("is--disabled");
   }
 
   function disableRevert() {
@@ -109,7 +112,7 @@ function initForm(config, initialState, errors) {
   }
 
   // disable submit by default, it will be enabled on valid change
-  disableSubmit();
+  disableSubmitAndPreview();
   disableRevert();
 
   let state = JSON.parse(JSON.stringify(initialState));
@@ -165,6 +168,7 @@ function initForm(config, initialState, errors) {
         "Changes that you made will not be saved if you leave the page.";
 
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+
       return confirmationMessage; // Gecko, WebKit, Chrome <34
     }
 
@@ -187,9 +191,9 @@ function initForm(config, initialState, errors) {
     if (diff) {
       enableRevert();
       if (isFormValid()) {
-        enableSubmit();
+        enableSubmitAndPreview();
       } else {
-        disableSubmit();
+        disableSubmitAndPreview();
       }
     } else {
       disableRevert();
@@ -246,7 +250,7 @@ function initForm(config, initialState, errors) {
 
   function updateLocalStorage() {
     if (!window.localStorage) {
-      document.querySelector(".js-listing-preview").classList.add("u-hide");
+      previewButton.classList.add("u-hide");
       return;
     }
     const key = state["snap_name"];
@@ -279,11 +283,12 @@ function initForm(config, initialState, errors) {
       ignoreChangesOnUnload = true;
 
       // disable button and show spinner when loading is long
-      disableSubmit();
+      disableSubmitAndPreview();
       setTimeout(() => {
         submitButton.classList.add("has-spinner");
       }, 2000);
     } else {
+      updateLocalStorage();
       event.preventDefault();
     }
   });
