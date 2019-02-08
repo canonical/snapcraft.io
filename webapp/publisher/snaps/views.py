@@ -291,6 +291,7 @@ def get_listing_snap(snap_name):
         "screenshot_urls": screenshot_urls,
         "contact": snap_details["contact"],
         "private": snap_details["private"],
+        "status": snap_details["status"],
         "website": snap_details["website"] or "",
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
@@ -473,6 +474,7 @@ def post_listing_snap(snap_name):
                     else snap_details["contact"] or ""
                 ),
                 "private": snap_details["private"],
+                "status": snap_details["status"],
                 "website": (
                     changes["website"]
                     if "website" in changes

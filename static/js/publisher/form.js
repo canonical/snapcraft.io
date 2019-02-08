@@ -91,14 +91,12 @@ function initForm(config, initialState, errors) {
   const revertURL = revertButton.getAttribute("href");
   const disabledRevertClass = "is-disabled";
 
-  function disableSubmitAndPreview() {
+  function disableSubmit() {
     submitButton.disabled = "disabled";
-    previewButton.classList.add("is--disabled");
   }
 
-  function enableSubmitAndPreview() {
+  function enableSubmit() {
     submitButton.disabled = false;
-    previewButton.classList.remove("is--disabled");
   }
 
   function disableRevert() {
@@ -112,7 +110,7 @@ function initForm(config, initialState, errors) {
   }
 
   // disable submit by default, it will be enabled on valid change
-  disableSubmitAndPreview();
+  disableSubmit();
   disableRevert();
 
   let state = JSON.parse(JSON.stringify(initialState));
@@ -191,9 +189,9 @@ function initForm(config, initialState, errors) {
     if (diff) {
       enableRevert();
       if (isFormValid()) {
-        enableSubmitAndPreview();
+        enableSubmit();
       } else {
-        disableSubmitAndPreview();
+        disableSubmit();
       }
     } else {
       disableRevert();
@@ -284,7 +282,7 @@ function initForm(config, initialState, errors) {
       ignoreChangesOnUnload = true;
 
       // disable button and show spinner when loading is long
-      disableSubmitAndPreview();
+      disableSubmit();
       setTimeout(() => {
         submitButton.classList.add("has-spinner");
       }, 2000);

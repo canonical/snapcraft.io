@@ -27,9 +27,13 @@
           </div>
           <div class="col-5">
             <div class="u-align--right u-clearfix">
-              <a href="/{{ snap_name }}?preview=true" target="_blank" class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" area-describedby="preview-tooltip">
+              <a href="/{{ snap_name }}?preview=true" target="_blank" class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center{% if status == "unpublished" %} is--disabled{%endif %}" area-describedby="preview-tooltip">
                 Preview
-                <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
+                {% if status == "unpublished" %}
+                <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">You can only preview snaps that have already been published</span>
+                {% else %}
+                  <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
+                {% endif %}
               </a>
               <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
                   {#
