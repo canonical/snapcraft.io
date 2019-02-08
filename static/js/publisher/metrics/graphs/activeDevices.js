@@ -9,6 +9,7 @@ import { axisBottom, axisLeft } from "d3-axis";
 import { cullXAxis, cullYAxis } from "./helpers";
 import { isMobile } from "../../../libs/mobile";
 import debounce from "../../../libs/debounce";
+import { sortChannels } from "../../../libs/channels";
 
 function showGraph(el) {
   el.style.opacity = 1;
@@ -17,6 +18,9 @@ function showGraph(el) {
 const shortValue = number => (number < 1000 ? number : format(".2s")(number));
 const commaValue = number => format(",")(number);
 const tooltipTimeFormat = utcFormat("%Y-%m-%d");
+
+let graphType;
+let metricsDefaultTrack;
 
 const xScaleFunc = (padding, width, data) => {
   return scaleLinear()
@@ -47,31 +51,34 @@ const bisectDate = bisector(d => d.date).left;
 
 const tooltipRows = (data, currentHoverKey, colorScale) => {
   let dataArr = [];
-  let total = 0;
   let other = {
     key: "other",
     value: 0,
     count: 0
   };
 
-  Object.keys(data)
-    .filter(key => key !== "date")
-    .forEach(key => {
-      total += data[key];
+  let keys = Object.keys(data).filter(key => key !== "date");
 
-      dataArr.push({
-        key: key,
-        value: data[key]
-      });
+  if (graphType === "channel") {
+    keys = sortChannels(keys, {
+      defaultTrack: metricsDefaultTrack
+    }).list;
+  }
+
+  keys.forEach(key => {
+    dataArr.push({
+      key: key,
+      value: data[key]
     });
+  });
 
-  dataArr.sort((a, b) => b.value - a.value);
+  if (graphType !== "channel") {
+    dataArr.sort((a, b) => b.value - a.value);
+  }
 
-  // Filter out anything below 0.1% of the total users
-  // If there are more than 10 series
-  if (dataArr.length > 10) {
-    dataArr.forEach(item => {
-      if (item.value / total < 0.001) {
+  if (dataArr.length > 15) {
+    dataArr.forEach((item, index) => {
+      if (index >= 15) {
         other.value += item.value;
         other.count += 1;
         other.key = `${other.count} other`;
@@ -288,8 +295,15 @@ function drawGraph(holderSelector, holder, activeDevices) {
   showGraph(holder);
 }
 
-export default function activeDevices(holderSelector, activeDevices) {
+export default function activeDevices(
+  holderSelector,
+  activeDevices,
+  type,
+  defaultTrack
+) {
   const holder = document.querySelector(holderSelector);
+  graphType = type;
+  metricsDefaultTrack = defaultTrack;
 
   if (!holder) {
     return;

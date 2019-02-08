@@ -22,7 +22,12 @@ function renderMetrics(metrics) {
     });
   });
 
-  activeDevicesMetrics(metrics.activeDevices.selector, activeDevices);
+  activeDevicesMetrics(
+    metrics.activeDevices.selector,
+    activeDevices,
+    metrics.activeDevices.type,
+    metrics.defaultTrack
+  );
 
   // Territories
   territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
