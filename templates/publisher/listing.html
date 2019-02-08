@@ -527,7 +527,7 @@
       description: {{ description|tojson }},
       website: {{ website|tojson }},
       contact: {{ contact|tojson }},
-      categories: "{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}",
+      categories: {{ snap_categories.categories|tojson }},
       images: [
         {% if icon_url %}
           { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },

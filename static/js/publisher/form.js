@@ -254,6 +254,7 @@ function initForm(config, initialState, errors) {
       return;
     }
     const key = state["snap_name"];
+    window.localStorage.setItem(`${key}-initial`, JSON.stringify(initialState));
     window.localStorage.setItem(key, JSON.stringify(state));
   }
 

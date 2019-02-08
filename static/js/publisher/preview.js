@@ -1,5 +1,6 @@
 import * as MarkdownIt from "markdown-it";
 import { default as initScreenshots } from "../public/snap-details/screenshots";
+import { diffState } from "./state";
 
 // Ensure markdown is set to be the same as `webapp/markdown.py` config
 // doesn't include the custom ascii bullet-point (as this is legacy
@@ -225,9 +226,9 @@ function sendCommand(packageName, command) {
  * @param packageName
  */
 function render(packageName) {
-  let state;
+  let transformedState;
   try {
-    state = transformStateImages(getState(packageName));
+    transformedState = transformStateImages(getState(packageName));
   } catch (e) {
     const notification = `<div class="p-notification--negative">
 <p class="p-notification__response">Something went wrong. Please ensure you have permission to preview this snap.</p>
@@ -243,15 +244,15 @@ function render(packageName) {
   }
 
   // For basic content, loop through and update the content
-  Object.keys(state).forEach(function(key) {
+  Object.keys(transformedState).forEach(function(key) {
     if (key === "screenshots") {
       return;
     }
     const el = document.querySelector(`[data-live="${key}"]`);
     if (el && functionMap[key]) {
-      let content = state[key];
+      let content = transformedState[key];
       if (transformMap[key]) {
-        content = transformMap[key](state[key]);
+        content = transformMap[key](transformedState[key]);
       }
       if (content !== "") {
         functionMap[key](el, content);
@@ -273,14 +274,20 @@ function render(packageName) {
 
   // Screenshots are a bit more involved, so treat them separately
   const screenshotsEl = document.querySelector(`[data-live="screenshots"]`);
-  if (state.video_urls !== "" || state.screenshots.length > 0) {
+  if (
+    transformedState.video_urls !== "" ||
+    transformedState.screenshots.length > 0
+  ) {
     screenshotsEl.innerHTML = "";
     functionMap.screenshots(
       screenshotsEl,
-      screenshotsAndVideos(state.screenshots, state.video_urls)
+      screenshotsAndVideos(
+        transformedState.screenshots,
+        transformedState.video_urls
+      )
     );
     hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
-    if (state.video_urls === "") {
+    if (transformedState.video_urls === "") {
       initScreenshots("#js-snap-screenshots");
     }
   } else {
@@ -300,7 +307,7 @@ function render(packageName) {
       `[data-live="weekly_installed_base_by_operating_system_normalized"]`
     );
 
-    if (state.public_metrics_enabled) {
+    if (transformedState.public_metrics_enabled) {
       metricsEl.classList.remove("u-hide");
     } else {
       metricsEl.classList.add("u-hide");
@@ -308,7 +315,7 @@ function render(packageName) {
 
     if (mapEl) {
       if (
-        state.public_metrics_blacklist.indexOf(
+        transformedState.public_metrics_blacklist.indexOf(
           "installed_base_by_country_percent"
         ) > -1
       ) {
@@ -320,7 +327,7 @@ function render(packageName) {
 
     if (distroEl) {
       if (
-        state.public_metrics_blacklist.indexOf(
+        transformedState.public_metrics_blacklist.indexOf(
           "weekly_installed_base_by_operating_system_normalized"
         ) > -1
       ) {
@@ -340,42 +347,16 @@ function render(packageName) {
   }
 }
 
-/**
- * Render the toolbar on preview
- * @param packageName
- * @returns {{el: HTMLElement, lostConnection: lostConnection}}
- */
-function renderPreviewToolbar(packageName) {
-  const DEFAULT_MESSAGE = `You are previewing the listing page for ${packageName}`;
-  const LOST_CONNECTION_MESSAGE = `<i class="p-icon--error"></i> The connection has been lost, please visit the <a href="/${packageName}/listing">listing page</a> and try again.`;
+function lostConnection(packageName, disableButtons) {
+  const previewMessageEl = document.querySelector("#preview-message");
+  previewMessageEl.innerHTML = `<i class="p-icon--error"></i> This is taking longer then usual. You can click "Edit" to return to the form.`;
+  disableButtons();
+}
 
-  const toolbar = document.createElement("div");
-  toolbar.className = "snapcraft-p-sticky sticky-shadow";
-  toolbar.style.zIndex = 100;
-  toolbar.innerHTML = `<div class="row">
-<div class="col-7">
-  <p class="u-no-margin--bottom" id="preview-message">${DEFAULT_MESSAGE}</p>
-</div>
-<div class="col-5 --dark">
-  <div class="u-align--right u-clearfix">
-    <button class="p-button--base u-no-margin--bottom js-edit">Edit</button>
-    <button class="p-button--neutral u-no-margin--bottom js-revert">Revert</button>
-    <button class="p-button--positive u-no-margin--bottom js-save">Save</button>
-  </div>
-</div>
-</div>`;
-
-  const previewMessageEl = toolbar.querySelector("#preview-message");
-
-  const lostConnection = disableButtons => {
-    previewMessageEl.innerHTML = LOST_CONNECTION_MESSAGE;
-    disableButtons();
-  };
-
-  return {
-    el: toolbar,
-    lostConnection
-  };
+function establishedConnection(packageName, enableButtons) {
+  const previewMessageEl = document.querySelector("#preview-message");
+  previewMessageEl.innerHTML = `You are previewing the listing page for ${packageName}`;
+  enableButtons();
 }
 
 /**
@@ -383,12 +364,16 @@ function renderPreviewToolbar(packageName) {
  * @param packageName
  */
 function preview(packageName) {
+  let initialState = JSON.parse(
+    window.localStorage.getItem(`${packageName}-initial`)
+  );
   let editButton;
   let revertButton;
   let saveButton;
 
   let responseTimer;
-  const RESPONSE_TIMEOUT = 15000;
+  let timedOut = false;
+  const RESPONSE_TIMEOUT = 30000; // 30seconds
 
   const resetButtons = () => {
     if (editButton) {
@@ -404,9 +389,6 @@ function preview(packageName) {
 
   const disableButtons = () => {
     resetButtons();
-    if (editButton) {
-      editButton.setAttribute("disabled", "disabled");
-    }
     if (revertButton) {
       revertButton.setAttribute("disabled", "disabled");
     }
@@ -415,59 +397,98 @@ function preview(packageName) {
     }
   };
 
+  const enableButtons = () => {
+    resetButtons();
+    if (revertButton) {
+      revertButton.removeAttribute("disabled");
+    }
+    if (saveButton) {
+      saveButton.removeAttribute("disabled");
+    }
+  };
+
+  const checkState = () => {
+    const state = getState(packageName);
+    if (!diffState(initialState, state)) {
+      disableButtons();
+    } else {
+      enableButtons();
+    }
+  };
+
   window.addEventListener("storage", e => {
     if (e.key === packageName) {
       // Slight delay to ensure the state has fully updated
       // There was an issue with images when it was immediate.
       setTimeout(() => {
-        render(packageName);
+        render(packageName, initialState, disableButtons, enableButtons);
 
-        resetButtons();
+        if (timedOut === true) {
+          establishedConnection(packageName, enableButtons);
+          timedOut = false;
+        }
 
         if (responseTimer) {
           clearTimeout(responseTimer);
         }
+
+        checkState();
       }, 500);
+    } else if (e.key === `${packageName}-initial`) {
+      resetButtons();
+
+      // We've saved or reset the listing page form - the initialState might have changed
+      initialState = JSON.parse(e.newValue);
+      if (timedOut === true) {
+        establishedConnection(packageName, enableButtons);
+        timedOut = false;
+      }
+      if (responseTimer) {
+        clearTimeout(responseTimer);
+      }
+
+      checkState();
     }
   });
 
   setTimeout(() => {
+    checkState();
     render(packageName);
-    // Add the toolbar
-    const toolbar = renderPreviewToolbar(packageName);
-    const banner = document.querySelector(".snapcraft-banner-background");
-    banner.parentNode.insertBefore(toolbar.el, banner);
-
-    editButton = document.querySelector(".js-edit");
-    revertButton = document.querySelector(".js-revert");
-    saveButton = document.querySelector(".js-save");
-
-    editButton.addEventListener("click", e => {
-      e.preventDefault();
-      responseTimer = window.setTimeout(() => {
-        toolbar.lostConnection(disableButtons);
-      }, RESPONSE_TIMEOUT);
-      sendCommand(packageName, "edit");
-      editButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
-      window.close();
-    });
-    revertButton.addEventListener("click", e => {
-      e.preventDefault();
-      responseTimer = window.setTimeout(() => {
-        toolbar.lostConnection(disableButtons);
-      }, RESPONSE_TIMEOUT);
-      sendCommand(packageName, "revert");
-      revertButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
-    });
-    saveButton.addEventListener("click", e => {
-      e.preventDefault();
-      responseTimer = window.setTimeout(() => {
-        toolbar.lostConnection(disableButtons);
-      }, RESPONSE_TIMEOUT);
-      sendCommand(packageName, "save");
-      saveButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
-    });
   }, 500);
+
+  // Init the toolbar
+  editButton = document.querySelector(".js-edit");
+  revertButton = document.querySelector(".js-revert");
+  saveButton = document.querySelector(".js-save");
+
+  const timeoutTimer = () => {
+    responseTimer = window.setTimeout(() => {
+      lostConnection(packageName, disableButtons);
+      timedOut = true;
+    }, RESPONSE_TIMEOUT);
+  };
+
+  editButton.addEventListener("click", e => {
+    e.preventDefault();
+    timeoutTimer();
+    sendCommand(packageName, "edit");
+    editButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
+    window.close();
+  });
+  revertButton.addEventListener("click", e => {
+    e.preventDefault();
+    disableButtons();
+    timeoutTimer();
+    sendCommand(packageName, "revert");
+    revertButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
+  });
+  saveButton.addEventListener("click", e => {
+    e.preventDefault();
+    disableButtons();
+    timeoutTimer();
+    sendCommand(packageName, "save");
+    saveButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
+  });
 }
 
 export { preview };

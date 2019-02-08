@@ -44,6 +44,24 @@
 {% endblock %}
 
 {% block content %}
+  {% if is_preview %}
+    <div class="snapcraft-p-sticky sticky-shadow" style="z-index: 100;">
+      <div class="row">
+        <div class="col-7">
+            <p class="u-no-margin--bottom" id="preview-message">You are previewing the listing page for {{package_name}}</p>
+        </div>
+        <div class="col-5 --dark">
+          <div class="u-align--right u-clearfix">
+            <button class="p-button--base u-no-margin--bottom js-edit">Edit</button>
+            <button class="p-button--neutral u-no-margin--bottom js-revert" disabled="disabled">Revert</button>
+            <span class="--dark">
+              <button class="p-button--positive u-no-margin--bottom js-save" disabled="disabled">Save</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
   <div class="p-strip--light is-shallow snapcraft-banner-background">
     <div class="row">
       <div class="p-snap-heading">
@@ -96,7 +114,7 @@
       {% endif %}
         </div>
     </div>
-    {% if is_users_snap %}
+    {% if is_users_snap and not is_preview %}
       <div class="row js-snap-owner-notification">
         <div class="p-notification--information">
           <p class="p-notification__response">
