@@ -231,6 +231,41 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
+    @store.route(
+        '/publisher/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):publisher_name>'
+    )
+    def publisher_details(publisher_name):
+        """
+        A view to display the publisher details page for specific publisher.
+        """
+
+        context = {
+            "icon_url": (
+                "https://www.gravatar.com/avatar/"
+                + "3143c7995b1f1283f9b73c186f707f96"
+            ),
+            "publisher": "Bartek Szopka",
+            "username": "bartaz",
+            "summary": "He's awesome!",
+            "description": "<p>He really is!</p>",
+            "publisher_since": "March 2016",
+            "snaps_count": "1",
+            "snaps": [
+                {
+                    "origin": "bartaz",
+                    "package_name": "speed-test",
+                    "title": "Speed Test",
+                }
+            ],
+            "website": "https://webteam.space",
+            "contact": "mailto:spam@example.com",
+        }
+
+        return (
+            flask.render_template("store/publisher-details.html", **context),
+            200,
+        )
+
     @store.route("/store/categories/<category>")
     def store_category(category):
         status_code = 200
