@@ -1,0 +1,139 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block meta_copydoc %}{% endblock %}
+
+{# TODO: title, meta, etc #}
+{% block meta_title %}...{% endblock %}
+
+{% block meta_description %}...{% endblock %}
+
+{% if icon_url %}
+  {% block meta_image %}
+    {{ icon_url }}
+  {% endblock %}
+{% endif %}
+
+
+{% block content %}
+  <div class="p-strip--dark is-shallow">
+    <div class="row">
+      <div class="p-snap-heading">
+        {% if icon_url %}
+          <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ publisher }} snap" />
+        {% else %}
+          <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
+        {% endif %}
+        <div class="p-snap-heading__title">
+          <h1 class="p-heading--two p-snap-heading__name">{{ publisher }}</h1>
+          <p class="p-snap-heading__publisher">
+            ({{ username }})
+            {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
+            <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ username }}-tooltip">
+              <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
+              <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ username }}-tooltip">Verified account</span>
+            </span>
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="p-snap-install-buttons">
+          {% if website %}
+            <a href="{{ website }}" class="p-button--positive p-link--external">Visit publisher website</a>
+          {% endif %}
+          {% if contact %}
+            <a href="{{ contact }}" class="p-button--neutral p-link--external">Contact publisher</a>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-8">
+        {% if summary %}<h4>{{ summary }}</h4>{% endif %}
+        {{ description | safe }}
+      </div>
+      <div class="col-4">
+        <h4>About {{ publisher }}</h4>
+        <table class="p-table-key-value">
+          <tr><th>Snaps published</th><td>{{ snaps_count }}</td></tr>
+          <tr><th>Publisher since</th><td>{{ publisher_since }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div data-js="blog-articles" style="display: none;">
+    <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
+    </div>
+    <div class="p-strip is-shallow">
+      <div class="row">
+        <div class="col-3">
+          <h3 class="p-heading--four">Related blog posts</h3>
+        </div>
+      </div>
+      <div class="row u-equal-height" data-js="blog-article-list" data-snap="skype">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <hr />
+    </div>
+  </div>
+  <div class="row">
+    <h4>1 published snap</h4>
+    {% set snaps = snaps %}
+    {# TODO: has to be "featured" as this is hardcoded in JS #}
+    {% set category = "featured" %}
+    {% include "store/_category-partial.html" %}
+  </div>
+
+  {% if api_error %}
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# templates #}
+  {% set article_title = {'rendered': '${title}'} %}
+  {% set article = {'slug': '${slug}', 'title': article_title} %}
+  <script type="text/template" id="blog-article-template">
+    {% include 'partials/blog-card--minimal.html' %}
+  </script>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script>
+    Raven.context(function () {
+      try {
+        snapcraft.public.storeCategories();
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
+      try {
+        snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+    });
+
+
+  </script>
+{% endblock %}
