@@ -13,7 +13,7 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
-      <div class="snapcraft-p-sticky">
+      <div class="snapcraft-p-sticky" id="store-listing-notification">
         <div class="row">
           <div class="col-5 push-7">
             <div class="u-align--right u-clearfix">
@@ -31,10 +31,10 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <hr class="u-no-margin--bottom" />
-        </div>
       </div>
+      <div class="row">
+        <hr class="u-no-margin--bottom" />
+      </div>      
 
       <section class="p-strip is-shallow">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -249,6 +249,7 @@
           snapcraft.publisher.settings.changeHandler
         );
 
+      snapcraft.publisher.stickyListingBar();
       {% if whitelist_country_codes or not blacklist_country_codes %}
         snapcraft.publisher.settings.enableInput('whitelist');
       {% elif blacklist_country_codes %}
