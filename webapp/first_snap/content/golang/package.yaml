@@ -45,9 +45,13 @@ explain:
             go-importpath: github.com/gchaincl/httplab
             source: .
             source-type: git
+            build-packages:
+              - gcc
     - text: The Go plugin will build using the version of <a href="https://snapcraft.io/go">Go</a> present in the stable channel in the Snap Store. You can change this with the <code>go-channel</code> keyword (e.g. "1.8/stable").
     - text: The <code>source</code> keyword points to the root of your Go project and can be a local directory or remote Git repository.
     - text: When using local sources, snapcraft needs to construct a suitable <code>GOPATH</code>. For this it uses <code>go-importpath</code> to know where the sources should live within <code>GOPATH/src</code>
+    - text: |
+        The <code>build-packages</code> sections lists the library dependencies that will be used by snapcraft to build the parts.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
