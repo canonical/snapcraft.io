@@ -63,7 +63,7 @@ def static_url(filename):
     url = "/" + filepath
 
     if not os.path.isfile(filepath):
-        print("Could not find static file: " + filepath)
+        # Could not find static file
         return url
 
     # Use MD5 as we care about speed a lot
