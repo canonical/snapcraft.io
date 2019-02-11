@@ -43,7 +43,7 @@ explain:
     - text: |
         Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. In this case we have one: the DOSBox source release tarball. In other cases these can point to local directories, remote git repositories or other revision control systems.
     - text: |
-        Before building the part, the dependencies listed as <code>build-packages</code> are installed.
+            The <code>autotools</code> plugin uses the standard tools - configure and make to build the part. The command <code>snapcraft help autotools</code> gives more information on how this plugin works.
     - code: |
         parts:
           dosbox:
@@ -58,9 +58,6 @@ explain:
               - libsdl-net1.2-dev
               - libsdl-sound1.2-dev
               - libasound2-dev
-    - text: |
-        The <code>stage-packages</code> section specifies the list of libraries required by the DOSBox snap at runtime.
-    - code: |
             stage-packages:
               - libsdl-sound1.2
               - libsdl-net1.2
@@ -112,7 +109,9 @@ explain:
               - libxext6
               - zlib1g
     - text: |
-            The <code>autotools</code> plugin uses the standard tools - configure and make to build the part. The command <code>snapcraft help autotools</code> gives more information on how this plugin works.
+        The <code>build-packages</code> sections lists the library dependencies that will be used by snapcraft to build the parts.
+    - text: |
+        The <code>stage-packages</code> section specifies the list of libraries required by the DOSBox snap at runtime.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
