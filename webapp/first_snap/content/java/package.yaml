@@ -8,9 +8,7 @@ metadata: |
   version: '1.6.10'
   summary: Application for Mind Mapping, Knowledge and Project Management
   description: |
-    Freeplane is a free and open source software application that supports thinking, sharing information and getting things done 
-    at work, in school and at home. The core of the software is tools for mind mapping (also known as concept mapping or information 
-    mapping) and using mapped information.
+    Freeplane is a free and open source software application that supports thinking, sharing information and getting things done at work, in school and at home. The core of the software is tools for mind mapping (also known as concept mapping or information mapping) and using mapped information.
 explain:
   metadata:
     - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
