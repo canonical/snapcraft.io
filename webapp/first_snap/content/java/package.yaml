@@ -5,7 +5,7 @@ createDir: |
   $EDITOR snapcraft.yaml
 metadata: |
   name: freeplane
-  version: git
+  version: '1.6.10'
   summary: Application for Mind Mapping, Knowledge and Project Management
   description: |
     Freeplane is a free and open source software application that supports thinking, sharing information and getting things done at work, in school and at home. The core of the software is tools for mind mapping (also known as concept mapping or information mapping) and using mapped information.
@@ -16,7 +16,8 @@ explain:
         name: freeplane
     - warning: |
         <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>freeplane</code> to <code>freeplane-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official freeplane snap.
-    - text: Versions carry no semantic meaning in snaps.
+    - text: |
+        Versions carry no semantic meaning in snaps. Use text that best identifies that release, it won't be used to compare against the preceding or following one.
     - code: |
         version: '1.6.10' 
     - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
@@ -31,7 +32,7 @@ explain:
     - text: Once an app is working well in devmode, you can review confinement violations, add appropriate interfaces, and switch to strict confinement.
   parts:
     - text: |
-        Parts define how to build your app. Parts can be anything: programs, libraries, or other assets needed to create and run your application. Parts canpoint to local directories, remote git repositories, or tarballs. 
+        Parts define how to build your app. Parts can be anything: programs, libraries, or other assets needed to create and run your application. Parts can point to local directories, remote git repositories, or tarballs. 
     - code: |
         parts:
           freeplane:
