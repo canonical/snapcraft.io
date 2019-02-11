@@ -50,6 +50,15 @@
 
   </div>
 
+  {% if banner_url %}
+  <div class="p-strip--light is-shallow u-align--center">
+    <div class="row">
+      <img style="max-height:500px" src="{{ banner_url }}" alt="{{ publisher }}" />
+    </div>
+  </div>
+  {% endif %}
+
+
   <div class="p-strip is-shallow">
     <div class="row">
       <div class="col-8">
@@ -66,6 +75,7 @@
     </div>
   </div>
 
+  {% if blog_slug %}
   <div data-js="blog-articles" style="display: none;">
     <div class="row">
       <div class="col-12">
@@ -78,10 +88,11 @@
           <h3 class="p-heading--four">Related blog posts</h3>
         </div>
       </div>
-      <div class="row u-equal-height" data-js="blog-article-list" data-snap="skype">
+      <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ blog_slug }}">
       </div>
     </div>
   </div>
+  {% endif %}
 
   <div class="row">
     <div class="col-12">
@@ -89,7 +100,7 @@
     </div>
   </div>
   <div class="row">
-    <h4>1 published snap</h4>
+    <h4>{{ snaps_count }} published snap{% if snaps_count > 1 %}s{% endif %}</h4>
     {% set snaps = snaps %}
     {# TODO: has to be "featured" as this is hardcoded in JS #}
     {% set category = "featured" %}

@@ -231,10 +231,11 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
-    @store.route(
-        '/publisher/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):publisher_name>'
-    )
-    def publisher_details(publisher_name):
+    # @store.route(
+    #     '/publisher/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):publisher_name>'
+    # )
+    @store.route("/publisher/bartaz")
+    def publisher_details_bartaz():
         """
         A view to display the publisher details page for specific publisher.
         """
@@ -249,7 +250,7 @@ def store_blueprint(store_query=None, testing=False):
             "summary": "He's awesome!",
             "description": "<p>He really is!</p>",
             "publisher_since": "March 2016",
-            "snaps_count": "1",
+            "snaps_count": 1,
             "snaps": [
                 {
                     "origin": "bartaz",
@@ -258,7 +259,129 @@ def store_blueprint(store_query=None, testing=False):
                 }
             ],
             "website": "https://webteam.space",
-            "contact": "mailto:spam@example.com",
+        }
+
+        return (
+            flask.render_template("store/publisher-details.html", **context),
+            200,
+        )
+
+    @store.route("/publisher/canonical")
+    def publisher_details_canonical():
+        """
+        A view to display the publisher details page for specific publisher.
+        """
+
+        context = {
+            "icon_url": (
+                "https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png"
+            ),
+            "banner_url": (
+                "https://assets.ubuntu.com/v1/"
+                + "229279e2-openstack-autopilot-takeover-small.jpg"
+            ),
+            "publisher": "Canonical",
+            "username": "canonical",
+            "summary": "We are Canonical",
+            "description": (
+                "<p>It is our mission to make open source software available"
+                + " to people everywhere.</p>"
+                + "<p>We believe the best way to fuel innovation is to give"
+                + " the innovators the technology they need.</p>"
+                + "<p>Leading organisations all over the world turn to us for"
+                + " our services and expertise – from systems management to"
+                + " the deployment of Ubuntu on their own clouds, servers"
+                + " and desktops.</p>"
+            ),
+            "publisher_since": "March 2016",
+            "snaps_count": 10,
+            "snaps": [
+                {
+                    "origin": "canonical",
+                    "package_name": "canonical-livepatch",
+                    "title": "canonical-livepatch",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2016/08/pictogram-upgrade-orange-hex.svg.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "ubuntu-core",
+                    "title": "ubuntu-core",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "docker",
+                    "title": "Docker",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
+                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "canonical-livepatch",
+                    "title": "canonical-livepatch",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2016/08/pictogram-upgrade-orange-hex.svg.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "ubuntu-core",
+                    "title": "ubuntu-core",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "docker",
+                    "title": "Docker",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
+                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "canonical-livepatch",
+                    "title": "canonical-livepatch",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2016/08/pictogram-upgrade-orange-hex.svg.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "ubuntu-core",
+                    "title": "ubuntu-core",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
+                    ),
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "docker",
+                    "title": "Docker",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
+                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
+                    ),
+                },
+            ],
+            "website": "https://canonical.com",
+            "contact": "https://www.ubuntu.com/contact-us",
+            "developer_validation": "verified",
+            "blog_slug": "skype",
         }
 
         return (
