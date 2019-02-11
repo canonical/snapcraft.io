@@ -120,14 +120,14 @@ function createChannelTree(channelList) {
 function sortAlphaNum(list, hoistValue) {
   let numbers = [];
   let strings = [];
-  let latest = [];
+  let hoistList = [];
   list.forEach(item => {
     // numbers are defined by any string starting any of the following patterns:
     //   just a number – 1,2,3,4,
     //   numbers on the left in a pattern – 2018.3 , 1.1, 1.1.23 ...
     //   or numbers on the left with strings at the end – 1.1-hotfix
     if (hoistValue && item === hoistValue) {
-      latest.push(item);
+      hoistList.push(item);
     } else if (isNaN(parseInt(item.substr(0, 1)))) {
       strings.push(item);
     } else {
@@ -137,21 +137,20 @@ function sortAlphaNum(list, hoistValue) {
 
   // Ignore case
   strings.sort(function(a, b) {
-    return a[0].toLowerCase().localeCompare(b[0].toLowerCase());
+    return a.toLowerCase().localeCompare(b.toLowerCase());
   });
 
-  strings = latest.concat(strings);
+  strings = hoistList.concat(strings);
 
   // Sort numbers (that are actually strings)
   numbers.sort((a, b) => {
-    return b[0].localeCompare(a[0], undefined, {
+    return b.localeCompare(a, undefined, {
       numeric: true,
       sensitivity: "base"
     });
   });
 
   // Join the arrays together again
-
   return strings.concat(numbers);
 }
 

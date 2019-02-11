@@ -251,7 +251,8 @@ describe("createChannelTree", () => {
 
 describe("sortAlphaNum", () => {
   it("sorts numbers", () => {
-    expect(sortAlphaNum(["0", "5", "2", "6", "7", "1", "8"])).toEqual([
+    expect(sortAlphaNum(["0", "5", "2", "11", "6", "7", "1", "8"])).toEqual([
+      "11",
       "8",
       "7",
       "6",
@@ -280,30 +281,25 @@ describe("sortAlphaNum", () => {
   });
 
   it("sorts a mixture of numbers, semver and text", () => {
-    expect(sortAlphaNum(["0.0.1", "5", "zzz", "latest"])).toEqual([
+    expect(sortAlphaNum(["0.0.1", "5", "zzz", "11", "latest"])).toEqual([
       "latest",
       "zzz",
+      "11",
       "5",
       "0.0.1"
     ]);
   });
 
   it("puts latest first if isTrack and no defaultTrack", () => {
-    expect(sortAlphaNum(["0.0.1", "5", "test", "latest"], "latest")).toEqual([
-      "latest",
-      "test",
-      "5",
-      "0.0.1"
-    ]);
+    expect(
+      sortAlphaNum(["0.0.1", "5", "test", "11", "latest"], "latest")
+    ).toEqual(["latest", "test", "11", "5", "0.0.1"]);
   });
 
   it("puts defaultTrack first if isTrack and defaultTrack set", () => {
-    expect(sortAlphaNum(["0.0.1", "5", "test", "latest"], "test")).toEqual([
-      "test",
-      "latest",
-      "5",
-      "0.0.1"
-    ]);
+    expect(
+      sortAlphaNum(["0.0.1", "5", "test", "11", "latest"], "test")
+    ).toEqual(["test", "latest", "11", "5", "0.0.1"]);
   });
 });
 
