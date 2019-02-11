@@ -85,6 +85,7 @@ Publisher metrics for {{ snap_title }}
       snapcraft.publisher.selector('.metrics-period', 'period');
       snapcraft.publisher.selector('.active-devices', 'active-devices');
       snapcraft.publisher.metrics({
+        defaultTrack: {{ default_track|tojson }},
         activeDevices: {
           selector: '#activeDevices',
           metrics: {{ active_devices|safe }},

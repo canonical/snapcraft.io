@@ -5,6 +5,7 @@ import flask
 
 import bleach
 import humanize
+import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
@@ -362,7 +363,7 @@ def store_blueprint(store_query=None, testing=False):
 
         # until default tracks are supported by the API we special case node
         # to use 10, rather then latest
-        default_track = "10" if details["name"] == "node" else "latest"
+        default_track = helpers.get_default_track(details["name"])
 
         lowest_risk_available = logic.get_lowest_available_risk(
             channel_maps_list, default_track

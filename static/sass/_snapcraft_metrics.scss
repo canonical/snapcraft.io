@@ -6,6 +6,7 @@
 
     .p-tooltip {
       position: absolute;
+      z-index: 100;
 
       .p-tooltip__message {
         display: block;

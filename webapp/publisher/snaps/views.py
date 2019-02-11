@@ -3,6 +3,7 @@ from json import loads
 import flask
 
 import pycountry
+import webapp.helpers as helpers
 import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
@@ -189,12 +190,17 @@ def publisher_snap_metrics(snap_name):
 
     nodata = not any([country_devices, active_devices])
 
+    # until default tracks are supported by the API we special case node
+    # to use 10, rather then latest
+    default_track = helpers.get_default_track(snap_name)
+
     context = {
         # Data direct from details API
         "snap_name": snap_name,
         "snap_title": details["title"],
         "metric_period": metric_requested["period"],
         "active_device_metric": installed_base_metric,
+        "default_track": default_track,
         "private": details["private"],
         # Metrics data
         "nodata": nodata,
