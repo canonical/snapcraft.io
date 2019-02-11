@@ -8,9 +8,10 @@ metadata: |
   version: 0.74-svn
   summary: 
   description: |
-    DOSBox is an x86 emulator with Tandy/Hercules/CGA/EGA/VGA/SVGA 
-    graphics sound and DOS. It's been designed to run old DOS games
-    under platforms that don't support it.
+    DOSBox is an x86 emulator with Tandy/Hercules/
+    CGA/EGA/VGA/SVGA graphics sound and DOS. It's 
+    been designed to run old DOS games under 
+    platforms that don't support it.
 explain:
   metadata:
     - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
@@ -18,7 +19,8 @@ explain:
         name: dosbox
     - warning: |
         <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>dosbox</code> to <code>test-dosbox-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official DOSBox snap.
-    - text: Versions carry no semantic meaning in snaps.
+    - text: |
+        Versions carry no semantic meaning in snaps. Use text that best identifies that release, it won't be used to compare against the preceding or following one.
     - code: |
         version: 0.74-svn
     - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
@@ -39,26 +41,85 @@ explain:
     - text: The <code>core18</code> base is recommended.
   parts:
     - text: |
-        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. In this case we have one: the DOSBox source release tarball. In other cases these can point to local directories, remote git repositories or other revision control systems.
+    - text: |
+        Before building the part, the dependencies listed as <code>build-packages</code> are installed.
     - code: |
         parts:
-          DOSBox:
-            plugin: python
-            python-version: python2
-            source: .
-            source-type: git
+          dosbox:
+            plugin: autotools
+            source-type: tar
+            source: http://source.dosbox.com/dosboxsvn.tgz
+            build-packages:
+              - g++
+              - make
+              - libsdl1.2-dev
+              - libpng-dev
+              - libsdl-net1.2-dev
+              - libsdl-sound1.2-dev
+              - libasound2-dev
+    - text: |
+        The <code>stage-packages</code> section specifies the list of libraries required by the DOSBox snap at runtime.
+    - code: |
             stage-packages:
-              - python-six
-    - text: The <code>python</code> plugin builds upon the work you’ve already done to describe your Python dependencies in <code>setup.py</code> and <code>requirements.txt</code>. You can include the latter by setting the <code>requirements</code> keyword to the path of your <code>requirements.txt</code>.
-    - text: The <code>python-version</code> keyword instructs the python plugin to include a copy of Python 2 in your snap.
-    - text: The <code>source</code> keyword points to the root of your Python project and can be a local directory or remote Git repository.
+              - libsdl-sound1.2
+              - libsdl-net1.2
+              - libxcursor1
+              - libxi6
+              - libxinerama1
+              - libxrandr2
+              - libxrender1
+              - libopenal1
+              - libsndio6.1
+              - libspeex1
+              - libvorbisfile3
+              - libwayland-client0
+              - libwayland-cursor0
+              - libwayland-egl1-mesa
+              - libxkbcommon0
+              - libglu1-mesa
+              - libasound2
+              - libasyncns0
+              - libbsd0
+              - libcaca0
+              - libdbus-1-3
+              - libflac8
+              - libgcc1
+              - libgcrypt20
+              - libgl1
+              - libglvnd0
+              - libglx0
+              - libgpg-error0
+              - liblz4-1
+              - liblzma5
+              - libncursesw5
+              - libogg0
+              - libpng16-16
+              - libpulse0
+              - libsdl1.2debian
+              - libslang2
+              - libsndfile1
+              - libstdc++6
+              - libsystemd0
+              - libtinfo5
+              - libvorbis0a
+              - libvorbisenc2
+              - libwrap0
+              - libx11-6
+              - libxau6
+              - libxcb1
+              - libxdmcp6
+              - libxext6
+              - zlib1g
+    - text: |
+            The <code>autotools</code> plugin uses the standard tools - configure and make to build the part. The command <code>snapcraft help autotools</code> gives more information on how this plugin works.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
         apps:
           test-dosbox-{name}:
-            command: bin/DOSBox
+            command: bin/dosbox
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>DOSBox</code> to <code>test-dosbox-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official DOSBox snap.
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>dosbox</code> to <code>test-dosbox-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official DOSBox snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
     - text: If your command name matches the snap name, users will be able run the command directly.
