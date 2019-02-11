@@ -1,0 +1,69 @@
+name: freeplane-{name}
+download: git clone https://github.com/snapcraft-docs/freeplane
+createDir: |
+  cd freeplane
+  $EDITOR snapcraft.yaml
+metadata: |
+  name: freeplane
+  version: git
+  summary: Application for Mind Mapping, Knowledge and Project Management
+  description: |
+    Freeplane is a free and open source software application that supports thinking, sharing information and getting things done at work, in school and at home. The core of the software is tools for mind mapping (also known as concept mapping or information mapping) and using mapped information.
+explain:
+  metadata:
+    - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
+    - code: |
+        name: freeplane
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>freeplane</code> to <code>freeplane-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official freeplane snap.
+    - text: Versions carry no semantic meaning in snaps.
+    - code: |
+        version: '1.6.10' 
+    - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
+    - code: |
+        description: |
+  security:
+    - text: The next section describes the level of confinement applied to your app.
+    - code: |
+        confinement: devmode
+    - text: Snaps are containerised to ensure more predictable application behaviour and greater security.
+    - text: It’s best to start a snap with the confinement in warning mode, rather than strictly applied. This is indicated through the <code>devmode</code> keyword.
+    - text: Once an app is working well in devmode, you can review confinement violations, add appropriate interfaces, and switch to strict confinement.
+  parts:
+    - text: |
+        Parts define how to build your app. Parts can be anything: programs, libraries, or other assets needed to create and run your application. Parts canpoint to local directories, remote git repositories, or tarballs. 
+    - code: |
+        parts:
+          freeplane:
+            after: [desktop-glib-only]
+            plugin: gradle
+            source: .
+            build: |
+              export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+              gradle release -x test -x createGitTag
+            install: |
+              unzip DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
+            build-packages:
+              - unzip
+              - openjdk-8-jdk
+    - text: |
+        The gradle plugin can build the application using standard parameters. In this case however we have overridden some gradle parameters (to disable testing, and prevent a new git tag being created), and set an appropriate JAVA_HOME in a build: script snippet.
+    - text: |
+        In the install: script snippet we’re unpacking the built application into a directory which later gets incorporated into the final snap, defined by the $SNAPCRAFT_PART_INSTALL variable.
+    - text: |    
+        The build requires an appropriate JDK/JRE and the install step requires the addition of the unzip command, so these are specified as build-packages.
+  apps:
+    - text: |
+        Apps are the commands and services exposed to end users. If your command name matches the snap name, users will be able run the command directly.
+    - text: |
+        If you don’t want your command prefixed you can request an alias for it on the Snapcraft forum. These are set up automatically when your snap is installed from the Snap Store.
+    - text: |
+        We have prefixed the FreePlane launch script with the desktop-launch helper script, provided by the desktop-glib-only remote part.
+    - code: |
+          apps:
+            freeplane:
+                command: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>freeplane</code> to <code>freeplane-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official freeplane snap.
+    - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
+    - text: If your command name matches the snap name, users will be able run the command directly.
