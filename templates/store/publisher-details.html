@@ -47,15 +47,13 @@
 
       </div>
     </div>
-
   </div>
 
   {% if banner_url %}
-  <div class="p-strip--light is-shallow u-align--center">
-    <div class="row">
-      <img style="max-height:500px" src="{{ banner_url }}" alt="{{ publisher }}" />
-    </div>
-  </div>
+  <section
+    class="p-strip--image is-deep"
+    style="min-height: 400px; background-image:url('{{ banner_url }}'); background-position: center;">
+  </section>
   {% endif %}
 
 

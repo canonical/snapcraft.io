@@ -274,8 +274,7 @@ def store_blueprint(store_query=None, testing=False):
                 "https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png"
             ),
             "banner_url": (
-                "https://assets.ubuntu.com/v1/"
-                + "229279e2-openstack-autopilot-takeover-small.jpg"
+                "https://assets.ubuntu.com/v1/f43b5e66-mwc17-partners-hero.jpg"
             ),
             "publisher": "Canonical",
             "username": "canonical",
