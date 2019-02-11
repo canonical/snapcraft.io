@@ -6,9 +6,14 @@ createDir: |
 metadata: |
   name: freeplane
   version: '1.6.10'
-  summary: Application for Mind Mapping, Knowledge and Project Management
+  summary: Application for Mind Mapping, Knowledge and Project 
+  Management
   description: |
-    Freeplane is a free and open source software application that supports thinking, sharing information and getting things done at work, in school and at home. The core of the software is tools for mind mapping (also known as concept mapping or information mapping) and using mapped information.
+    Freeplane is a free and open source software application that 
+    supports thinking, sharing information and getting things done 
+    at work, in school and at home. The core of the software is tools 
+    for mind mapping (also known as concept mapping or information 
+    mapping) and using mapped information.
 explain:
   metadata:
     - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
@@ -56,10 +61,6 @@ explain:
   apps:
     - text: |
         Apps are the commands and services exposed to end users. If your command name matches the snap name, users will be able run the command directly.
-    - text: |
-        If you don’t want your command prefixed you can request an alias for it on the Snapcraft forum. These are set up automatically when your snap is installed from the Snap Store.
-    - text: |
-        We have prefixed the FreePlane launch script with the desktop-launch helper script, provided by the desktop-glib-only remote part.
     - code: |
           apps:
             freeplane:
@@ -67,4 +68,3 @@ explain:
     - warning: |
         <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>freeplane</code> to <code>freeplane-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official freeplane snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
-    - text: If your command name matches the snap name, users will be able run the command directly.
