@@ -2,17 +2,36 @@ import { storageCommands } from "./storageCommands";
 
 describe("storage commands", () => {
   let ignoreChangeOnUnload;
+
   let context = {
     localStorage: {},
     location: {}
   };
-
   beforeEach(() => {
     context.localStorage.removeItem = jest.fn();
     context.focus = jest.fn();
-    context.location.reload = jest.fn();
 
+    context.location.reload = jest.fn();
     ignoreChangeOnUnload = jest.fn();
+
+    // We set these specifcally as they're undefined as part for jsdom
+    window.localStorage = {
+      removeItem: jest.fn()
+    };
+    window.focus = jest.fn();
+  });
+
+  it("uses window if no context provided", () => {
+    storageCommands(
+      {
+        key: "test-command",
+        newValue: "edit"
+      },
+      document.createElement("form"),
+      "test",
+      ignoreChangeOnUnload
+    );
+    expect(window.localStorage.removeItem.mock.calls.length).toEqual(1);
   });
 
   describe("key doesn't match", () => {
