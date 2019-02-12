@@ -48,8 +48,7 @@ explain:
           wethr:
             plugin: nodejs
             source: .
-    - text: The <code>nodejs</code> plugin builds upon the work you’ve already done to describe your app’s dependencies in your <code>package.json</code>. It will automatically include these in your snap.
-    - text: It will also include Node 6. This can be changed with the <code>node-engine</code> keyword.
+    - text: The <code>nodejs</code> plugin builds upon the work you’ve already done to describe your app’s dependencies in your <code>package.json</code>. It will automatically include these in your snap, including the LTS version of Node. This can be changed with the <code>nodejs-version</code> keyword.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
