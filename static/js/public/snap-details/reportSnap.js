@@ -47,7 +47,8 @@ function buttonEnabled(button) {
 export default function initReportSnap(
   snapName,
   toggleSelector,
-  modalSelector
+  modalSelector,
+  formURL
 ) {
   const toggle = document.querySelector(toggleSelector);
   const modal = document.querySelector(modalSelector);
@@ -70,18 +71,12 @@ export default function initReportSnap(
     e.preventDefault();
     buttonLoading(reportForm.querySelector("button[type=submit]"));
 
-    fetch(`/${snapName}/report`, {
+    fetch(formURL, {
       method: "POST",
-      body: new FormData(reportForm)
+      body: new FormData(reportForm),
+      mode: "no-cors"
     })
-      .then(response => response.json())
-      .then(json => {
-        if (json.success) {
-          showSuccess(modal);
-        } else {
-          showError(modal);
-        }
-      })
+      .then(() => showSuccess(modal))
       .catch(() => showError(modal));
   });
 
