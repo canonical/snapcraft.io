@@ -1,36 +1,39 @@
 import "whatwg-fetch";
 
+const showEl = el => el.classList.remove("u-hide");
+const hideEl = el => el.classList.add("u-hide");
+
 function toggleModal(modal, show) {
   if (typeof show === "undefined") {
-    show = modal.style.display === "none";
+    show = modal.classList.contains("u-hide");
   }
 
   if (show) {
-    showForm(modal);
-    modal.style.display = "";
+    initForm(modal);
+    showEl(modal);
   } else {
-    modal.style.display = "none";
+    hideEl(modal);
   }
 }
 
-function showForm(modal) {
+function initForm(modal) {
   buttonEnabled(modal.querySelector("button[type=submit]"));
 
-  modal.querySelector(".js-report-snap-form").style.display = "";
-  modal.querySelector(".js-report-snap-success").style.display = "none";
-  modal.querySelector(".js-report-snap-error").style.display = "none";
+  showEl(modal.querySelector(".js-report-snap-form"));
+  hideEl(modal.querySelector(".js-report-snap-success"));
+  hideEl(modal.querySelector(".js-report-snap-error"));
 }
 
 function showSuccess(modal) {
-  modal.querySelector(".js-report-snap-form").style.display = "none";
-  modal.querySelector(".js-report-snap-success").style.display = "";
-  modal.querySelector(".js-report-snap-error").style.display = "none";
+  hideEl(modal.querySelector(".js-report-snap-form"));
+  showEl(modal.querySelector(".js-report-snap-success"));
+  hideEl(modal.querySelector(".js-report-snap-error"));
 }
 
 function showError(modal) {
-  modal.querySelector(".js-report-snap-form").style.display = "none";
-  modal.querySelector(".js-report-snap-success").style.display = "none";
-  modal.querySelector(".js-report-snap-error").style.display = "";
+  hideEl(modal.querySelector(".js-report-snap-form"));
+  hideEl(modal.querySelector(".js-report-snap-success"));
+  showEl(modal.querySelector(".js-report-snap-error"));
 }
 
 function buttonLoading(button) {
