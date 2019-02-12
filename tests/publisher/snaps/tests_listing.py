@@ -51,7 +51,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "media": [],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
-            "status": "published",
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
@@ -96,7 +95,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("license", "License")
         self.assert_context("video_urls", [])
         self.assert_context("from", "test")
-        self.assert_context("status", "published")
 
     @responses.activate
     def test_icon(self):
@@ -109,7 +107,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "media": [{"url": "this is a url", "type": "icon"}],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
-            "status": "published",
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
@@ -148,7 +145,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "media": [{"url": "this is a url", "type": "screenshot"}],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
-            "status": "published",
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
@@ -187,7 +183,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "media": [],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
-            "status": "published",
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",
@@ -226,7 +221,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "media": [],
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
-            "status": "published",
             "channel_maps_list": [{"map": [{"info": "info"}]}],
             "contact": "contact adress",
             "website": "website_url",

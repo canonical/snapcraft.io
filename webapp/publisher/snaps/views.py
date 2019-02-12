@@ -19,7 +19,12 @@ from webapp.api.exceptions import (
     MissingUsername,
 )
 from webapp.api.store import StoreApi
-from webapp.store.logic import get_categories
+from webapp.store.logic import (
+    get_categories,
+    filter_screenshots,
+    get_icon,
+    get_videos,
+)
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
@@ -291,7 +296,6 @@ def get_listing_snap(snap_name):
         "screenshot_urls": screenshot_urls,
         "contact": snap_details["contact"],
         "private": snap_details["private"],
-        "status": snap_details["status"],
         "website": snap_details["website"] or "",
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
@@ -474,7 +478,6 @@ def post_listing_snap(snap_name):
                     else snap_details["contact"] or ""
                 ),
                 "private": snap_details["private"],
-                "status": snap_details["status"],
                 "website": (
                     changes["website"]
                     if "website" in changes
@@ -971,3 +974,38 @@ def get_publicise(snap_name):
     }
 
     return flask.render_template("publisher/publicise.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/preview", methods=["POST"])
+@login_required
+def post_preview(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "publisher": snap_details["publisher"]["display-name"],
+        "username": snap_details["publisher"]["username"],
+    }
+
+    state = loads(flask.request.form["state"])
+
+    for item in state:
+        context[item] = state[item]
+
+    context["is_preview"] = True
+
+    icons = get_icon(context["images"])
+
+    context["screenshots"] = filter_screenshots(context["images"])
+    context["icon_url"] = icons[0] if icons else None
+    context["videos"] = get_videos(context["images"])
+    context["package_name"] = context["snap_name"]
+
+    return flask.render_template("store/snap-details.html", **context)

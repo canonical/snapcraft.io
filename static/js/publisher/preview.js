@@ -31,7 +31,15 @@ const functionMap = {
   website: (el, content) => (el.href = content),
   contact: (el, content) => (el.href = content),
   screenshots: (el, content) => el.appendChild(content),
-  license: (el, content) => (el.innerHTML = content)
+  license: (el, content) => (el.innerHTML = content),
+  icon: (el, content) => {
+    if (content) {
+      el.src = content;
+    } else {
+      el.src =
+        "https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg";
+    }
+  }
 };
 
 // For some elements we want to hide/ show a different element to the one

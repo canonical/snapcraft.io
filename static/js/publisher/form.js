@@ -34,7 +34,8 @@ function initSnapIconEdit(iconElId, iconInputId, state) {
       url: URL.createObjectURL(iconFile),
       file: iconFile,
       name: iconFile.name,
-      status: "new"
+      status: "new",
+      type: "icon"
     });
 
     updateState(state, { images });
@@ -404,6 +405,29 @@ function initForm(config, initialState, errors) {
   formEl.addEventListener("input", function(event) {
     validateInput(event.target);
     updateFormState();
+  });
+
+  previewButton.addEventListener("click", e => {
+    e.preventDefault();
+    const form = document.createElement("form");
+    form.method = "post";
+    form.action = `/${state["snap_name"]}/preview`;
+    form.enctype = "multipart/form-data";
+    form.className = "u-hide";
+    form.target = "_blank";
+    const csrf = document.createElement("input");
+    csrf.type = "hidden";
+    csrf.name = "csrf_token";
+    csrf.value = formEl.elements.csrf_token.value;
+    form.appendChild(csrf);
+    const input = document.createElement("input");
+    input.name = "state";
+    input.value = JSON.stringify(state);
+    input.type = "text";
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    form.parentNode.removeChild(form);
   });
 
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
