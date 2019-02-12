@@ -1,0 +1,74 @@
+name: test-parity-{name}
+download: git clone https://github.com/snapcraft-docs/parity
+createDir: |
+  cd parity
+  $EDITOR snapcraft.yaml
+metadata: |
+  name: parity
+  version: git
+  summary: Fast, light, robust Ethereum implementation
+  description: |
+    Parity's goal is to be the fastest, lightest, and most secure 
+    Ethereum client. We are developing Parity using the 
+    sophisticated and cutting-edge Rust programming language. 
+    Parity is licensed under the GPLv3, and can be used for all 
+    your Ethereum needs.
+explain:
+  metadata:
+    - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
+    - code: |
+        name: parity
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>parity</code> to <code>test-parity-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official parity snap.
+    - text: By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps.
+    - code: |
+        version: git
+    - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
+    - code: |
+        description: |
+  security:
+    - text: The next section describes the level of confinement applied to your app.
+    - code: |
+        confinement: devmode
+    - text: Snaps are containerised to ensure more predictable application behaviour and greater security.
+    - text: It’s best to start a snap with the confinement in warning mode, rather than strictly applied. This is indicated through the <code>devmode</code> keyword.
+    - text: Once an app is working well in devmode, you can review confinement violations, add appropriate interfaces, and switch to strict confinement.
+  base:
+    - text: In general, snaps cannot see the root filesystem on end user systems. This prevents conflict with other applications and increases security. However, applications still need some location to act as the root filesystem. They would also benefit from common libraries (e.g. libc) being in this root filesystem rather than bundled into each application.
+    - text: The base keyword specifies a special kind of snap that provides a minimal set of libraries common to most applications. It will be mounted as the root filesystem for your application.
+    - code: |
+        base: core18
+    - text: The <code>core18</code> base is recommended.
+  parts:
+    - text: |
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
+    - code: |
+        parts:
+          parity:
+            source: .
+            plugin: rust
+            build-attributes: [no-system-libraries]
+            build-packages:
+              - libudev-dev
+              - libssl-dev
+              - make
+              - pkg-config
+    - text: |
+        Parts define how to build your app. Parts can be anything: programs, libraries, or other assets needed to create and run your application. In this case we have one: the Parity source code. In other cases these can point to local directories, remote git repositories, or tarballs.
+    - text: |
+        This example will also bundle the current stable release of Rust in the snap using <code>Rustup</code>. You can define the exact version of Rust with the optional <code>rust-revision</code> keyword.
+    - text: Dependencies from your <code>Cargo.toml</code> will also be bundled.
+    - text: |
+        The <code>build-packages</code> sections lists the library dependencies that will be used by snapcraft to build the parts.
+    - text: |
+        The <code>stage-packages</code> section specifies the list of libraries required by the Parity snap at runtime.
+  apps:
+    - text: Apps are the commands you want to expose to users and any background services your application provides.
+    - code: |
+        apps:
+          parity:
+            command: parity
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>parity</code> to <code>test-parity-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official parity snap.
+    - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
+    - text: If your command name matches the snap name, users will be able run the command directly.
