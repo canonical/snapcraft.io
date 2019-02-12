@@ -48,7 +48,7 @@ explain:
               - unzip
               - openjdk-8-jdk
     - text: |
-        The gradle plugin can build the application using standard parameters. In this case however we have overridden some gradle parameters (to disable testing, and prevent a new git tag being created), and set an appropriate JAVA_HOME in a build: script snippet.
+        The gradle plugin can build the application using standard parameters. However, in this case, we have overridden some gradle parameters (to disable testing, and prevent a new git tag being created), and set an appropriate JAVA_HOME in a build: script snippet.
     - text: |
         In the install: script snippet we’re unpacking the built application into a directory which later gets incorporated into the final snap, defined by the $SNAPCRAFT_PART_INSTALL variable.
     - text: |    

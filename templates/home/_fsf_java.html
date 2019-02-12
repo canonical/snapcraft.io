@@ -35,7 +35,7 @@ Management
 	  java-8-openjdk-amd64"
       gradle release -x test -x createGitTag
     <b>install:</b> |
-      unzip DIST/freeplane_bin-*.zip -d 
+      unzip DIST/freeplane_bin-*.zip -d \
 	  $SNAPCRAFT_PART_INSTALL/
     <b>build-packages:</b>
       - unzip
@@ -43,7 +43,7 @@ Management
 
 <b>apps</b>:
   <b>freeplane</b>:
-    <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/
+    <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/ \
 	freeplane.sh</pre></code>
   </div>
 
