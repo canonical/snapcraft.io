@@ -221,20 +221,21 @@
           <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
         </header>
 
-        <form>
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-          <input type="hidden" name="snap" value="{{package_name}}" />
+        {# report snap form submits to a Google Forms #}
+        {# names of the inputs need to be consistend with the original form #}
+        <form id="report-snap-form" action="https://docs.google.com/forms/d/e/1FAIpQLSelELZwXzvnDkx52GL7cpnQyWdc_Te6APDs843gIKRBHbh6jA/formResponse" method="POST">
+          <input type="hidden" name="entry.1703677219" value="{{package_name}}" />
           <label for="report-snap-reason">Choose a reason for reporting this snap</label>
-          <select id="report-snap-reason" name="reason" required>
+          <select id="report-snap-reason" name="entry.1193754313" required>
             <option value="" selected>Select an option</option>
-            <option value="copyright-violation">Copyright or trademark violation</option>
-            <option value="terms-violation">Snap Store terms of service violation</option>
+            <option value="Copyright or trademark violation">Copyright or trademark violation</option>
+            <option value="Snap Store terms of service violation">Snap Store terms of service violation</option>
           </select>
           <label for="report-snap-comment">Please provide more detailed reason to your report</label>
-          <textarea id="report-snap-comment" type="text" name="comment" placeholder="Comment..." rows="5" required></textarea>
+          <textarea id="report-snap-comment" type="text" name="entry.1170971435" placeholder="Comment..." rows="5" required></textarea>
 
           <label for="report-snap-email">Your email (optional)</label>
-          <input id="report-snap-email" type="email" name="email" placeholder="email@example.com" />
+          <input id="report-snap-email" type="email" name="entry.1424146082" placeholder="email@example.com" />
           <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
           <div class="u-align--right">
             <button type="button" class="js-modal-close">Cancel</button>
@@ -328,7 +329,10 @@
       }
 
       try {
-        snapcraft.public.initReportSnap('{{ package_name }}','.js-modal-open', '#report-snap-modal');
+        snapcraft.public.initReportSnap(
+          '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
+          document.getElementById('report-snap-form').action
+        );
       } catch(e) {
         Raven.captureException(e);
       }
