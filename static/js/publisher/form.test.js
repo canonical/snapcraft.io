@@ -49,6 +49,7 @@ describe("initForm", () => {
   let primaryCategoryInput;
   let secondaryCategoryInput;
   let categoriesInput;
+  let csrfInput;
 
   const categoriesList = ["", "test1", "test2"];
 
@@ -130,6 +131,11 @@ describe("initForm", () => {
     contactInput.value = initialState.contact;
     contactInput.maxlength = "256";
 
+    csrfInput = document.createElement("input");
+    csrfInput.type = "hidden";
+    csrfInput.name = "csrf_token";
+    csrfInput.value = "test";
+
     form.appendChild(submitButton);
     form.appendChild(revertButton);
     form.appendChild(previewButton);
@@ -141,6 +147,7 @@ describe("initForm", () => {
     form.appendChild(descriptionInput);
     form.appendChild(websiteInput);
     form.appendChild(contactInput);
+    form.appendChild(csrfInput);
 
     document.body.appendChild(form);
 
@@ -154,6 +161,7 @@ describe("initForm", () => {
     };
 
     const initialState = {
+      snap_name: "test",
       title: "test",
       categories: [],
       summary: "Summary",
@@ -207,30 +215,143 @@ describe("initForm", () => {
     });
 
     describe("on submit", () => {
-      beforeEach(() => {
-        titleInput.click();
-        titleInput.value = "test2";
-        titleInput.dispatchEvent(new Event("change", { bubbles: true }));
+      describe("with diffs", () => {
+        beforeEach(() => {
+          titleInput.click();
+          titleInput.value = "test2";
+          titleInput.dispatchEvent(new Event("change", { bubbles: true }));
 
-        form.dispatchEvent(new Event("submit"));
-      });
+          form.dispatchEvent(new Event("submit"));
+        });
 
-      test("state and diff are updated", () => {
-        const stateInput = document.querySelector("[name='state']");
-        expect(stateInput.value).toEqual(
-          JSON.stringify(
-            Object.assign(initialState, {
+        test("state and diff are updated", () => {
+          const stateInput = document.querySelector("[name='state']");
+          expect(stateInput.value).toEqual(
+            JSON.stringify(
+              Object.assign(initialState, {
+                title: "test2"
+              })
+            )
+          );
+
+          const diffInput = document.querySelector("[name='changes']");
+          expect(diffInput.value).toEqual(
+            JSON.stringify({
               title: "test2"
             })
-          )
-        );
+          );
+        });
+      });
 
-        const diffInput = document.querySelector("[name='changes']");
-        expect(diffInput.value).toEqual(
-          JSON.stringify({
-            title: "test2"
+      describe("with no diff", () => {
+        let event;
+        let spy;
+        beforeEach(() => {
+          event = new Event("submit");
+
+          spy = jest.spyOn(event, "preventDefault");
+
+          form.dispatchEvent(event);
+        });
+        test("nothing happens", () => {
+          expect(spy.mock.calls.length).toEqual(1);
+        });
+      });
+    });
+
+    describe("on preview", () => {
+      afterEach(() => {
+        const previewForm = document.getElementById("preview-form");
+        if (previewForm) {
+          previewForm.parentNode.removeChild(previewForm);
+        }
+      });
+
+      test("a form gets created", () => {
+        previewButton.dispatchEvent(
+          new Event("click", {
+            bubbles: true
           })
         );
+
+        expect(document.getElementById("preview-form")).toBeDefined();
+      });
+
+      test("the form gets reused and submitted", () => {
+        const previewForm = document.createElement("form");
+        previewForm.id = "preview-form";
+
+        const previewCsrfInput = document.createElement("input");
+        previewCsrfInput.name = "csrf_token";
+        previewForm.appendChild(previewCsrfInput);
+
+        const previewStateInput = document.createElement("input");
+        previewStateInput.name = "state";
+        previewForm.appendChild(previewStateInput);
+
+        const submitFormCb = jest.fn();
+
+        previewForm.addEventListener("submit", submitFormCb);
+
+        document.body.appendChild(previewForm);
+        previewButton.dispatchEvent(
+          new Event("click", {
+            bubbles: true
+          })
+        );
+
+        expect(previewForm.method).toEqual("post");
+        expect(previewForm.action).toEqual("/test/preview");
+        expect(previewCsrfInput.type).toEqual("hidden");
+        expect(previewCsrfInput.value).toEqual("test");
+        expect(previewStateInput.value).toEqual(JSON.stringify(initialState));
+        expect(submitFormCb.mock.calls.length).toEqual(1);
+      });
+    });
+  });
+
+  describe("has localStorage", () => {
+    const config = {
+      form: "market-form"
+    };
+
+    const initialState = {
+      title: "test",
+      snap_name: "test",
+      categories: "",
+      summary: "Summary",
+      description: "Description",
+      website: "https://example.com",
+      contact: "mailto:test@example.com"
+    };
+
+    beforeAll(() => {
+      window.localStorage = {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn()
+      };
+    });
+
+    beforeEach(() => {
+      setupForm(config, initialState);
+    });
+
+    afterEach(() => {
+      form.parentNode.removeChild(form);
+    });
+
+    describe("updateLocalStorage init", () => {
+      test("set's the initial state", () => {
+        expect(window.localStorage.setItem.mock.calls.length).toEqual(2);
+        expect(window.localStorage.setItem.mock.calls[0]).toEqual([
+          "test-initial",
+          JSON.stringify(initialState)
+        ]);
+        expect(window.localStorage.setItem.mock.calls[1]).toEqual([
+          "test",
+          JSON.stringify(initialState)
+        ]);
       });
     });
   });
