@@ -10,8 +10,45 @@
     </ul>
   </div>
 
+  <div class='col-6'>
+    <h4>How Parity defines snapcraft.yaml:</h4>
+    <code class="p-code-yaml"><pre>
+<b>name</b>: parity
+<b>version</b>: git
+<b>summary</b>: Fast, light, robust Ethereum implementation
+<b>description</b>: |
+  Parity's goal is to be the fastest, lightest, and 
+  most secure Ethereum client. We are developing 
+  Parity using the sophisticated and cutting-edge
+  Rust programming language. Parity is licensed 
+  under the GPLv3, and can be used for all your 
+  Ethereum needs.
+
+<b>confinement</b>: devmode
+<b>base</b>: core17
+
+<b>parts</b>:
+  <b>parity</b>:
+    <b>source</b>: .
+    <b>plugin</b>: rust
+    <b>build-attributes</b>: [no-system-libraries]
+    <b>build-packages</b>:
+      - libudev-dev
+      - libssl-dev
+      - make
+      - pkg-config
+    <b>stage-packages</b>:
+      - libssl1.0.0
+      - libudev1
+      - libstdc++6
+
+<b>apps</b>:
+  <b>parity</b>:
+    <b>command</b>: parity</pre></code>
+  </div>
+
   <div class="p-flow-details__continue">
     In just a few steps, you’ll have an example Rust app in the Snap Store.
-    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/rust">Continue</a>
+    <a class="p-button--positive is-inline" href="/first-snap/rust">Continue</a>
   </div>
 </div>
