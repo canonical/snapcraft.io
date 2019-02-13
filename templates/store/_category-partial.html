@@ -3,30 +3,8 @@
     <div class="swiper-wrapper">
       {% for snap in snaps %}
         <div class="p-carousel__item--snap swiper-slide">
-          <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
-            {% if snap.icon_url %}
-              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
-            {% else %}
-              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
-            {% endif %}
-
-            <div class="p-media-object--snap__content">
-              <h4 class="p-media-object--snap__title">
-                {{ snap.title }}
-              </h4>
-              <div class="p-media-object--snap__publisher">
-                <p>
-                  <span class="u-off-screen">Publisher: </span>{{ snap.origin }}
-                  {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
-                    <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ snap.package_name }}-tooltip">
-                      <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
-                      <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ snap.package_name }}-tooltip">Verified account</span>
-                    </span>
-                  {% endif %}
-                </p>
-              </div>
-            </div>
-          </a>
+          {% set media_object_classname = "u-no-margin--bottom" %}
+          {% include 'store/_media-object-snap-partial.html' %}
         </div>
       {% endfor %}
     </div>

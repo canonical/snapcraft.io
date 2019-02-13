@@ -177,10 +177,13 @@
 
   <div class="row">
     <h4>{{ snaps|length }} published snap{% if snaps|length > 1 %}s{% endif %}</h4>
-    {% set snaps = snaps %}
-    {# TODO: has to be "featured" as this is hardcoded in JS #}
-    {% set category = "featured" %}
-    {% include "store/_category-partial.html" %}
+    <div class="col-12 p-fluid-grid">
+    {% for snap in snaps %}
+      <div class="p-fluid-grid__item">
+        {% include 'store/_media-object-snap-partial.html' %}
+      </div>
+    {% endfor %}
+    </div>
   </div>
 
   {% if api_error %}
@@ -208,12 +211,6 @@
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function () {
-      try {
-        snapcraft.public.storeCategories();
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
       try {
         snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
       } catch(e) {
