@@ -1,0 +1,20 @@
+@mixin snapcraft-p-featured-snap {
+  .p-featured-snap {
+    @extend %vf-card;
+    background-color: $color-dark;
+    color: $color-light;
+
+    // force color on visited links as well
+    a,
+    a:focus,
+    a:hover,
+    a:visited {
+      color: $color-light;
+    }
+
+    // update to lighter color in media object
+    .p-media-object--snap__publisher {
+      color: $color-mid-light;
+    }
+  }
+}
