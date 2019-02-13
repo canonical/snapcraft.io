@@ -65,7 +65,7 @@
       <div class="col-4">
         <h4>About {{ publisher }}</h4>
         <table class="p-table-key-value">
-          <tr><th>Snaps published</th><td>{{ snaps_count }}</td></tr>
+          <tr><th>Snaps published</th><td>{{ snaps|length }}</td></tr>
           <tr><th>Publisher since</th><td>{{ publisher_since }}</td></tr>
         </table>
       </div>
@@ -176,7 +176,7 @@
   {% endif %}
 
   <div class="row">
-    <h4>{{ snaps_count }} published snap{% if snaps_count > 1 %}s{% endif %}</h4>
+    <h4>{{ snaps|length }} published snap{% if snaps|length > 1 %}s{% endif %}</h4>
     {% set snaps = snaps %}
     {# TODO: has to be "featured" as this is hardcoded in JS #}
     {% set category = "featured" %}
