@@ -35,7 +35,7 @@
       }
     }
 
-    &__desc {
+    &__publisher {
       color: $color-mid-dark;
       margin-bottom: $spv-nudge-compensation;
       margin-top: - $sp-unit * 3;
@@ -53,6 +53,10 @@
       }
     }
 
+    .p-media-object--snap__description {
+      margin-top: 2 * $sp-unit;
+    }
+
     &:hover {
       text-decoration: none;
     }
@@ -66,7 +70,7 @@
       }
 
       .p-media-object--snap__title,
-      .p-media-object--snap__desc p {
+      .p-media-object--snap__publisher p {
         color: transparent;
         position: relative;
 
@@ -83,7 +87,7 @@
         content: "████████";
       }
 
-      .p-media-object--snap__desc p::before {
+      .p-media-object--snap__publisher p::before {
         content: "███████████";
       }
     }

@@ -374,6 +374,34 @@ def store_blueprint(store_query=None, testing=False):
                     ),
                 },
             ],
+            "featured_snaps": [
+                {
+                    "origin": "canonical",
+                    "package_name": "ubuntu-core",
+                    "title": "ubuntu-core",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/"
+                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
+                    ),
+                    "summary": "The ubuntu-core OS snap",
+                    "description": "no description",
+                    "background": "#2c001e",
+                },
+                {
+                    "origin": "canonical",
+                    "package_name": "docker",
+                    "title": "Docker",
+                    "icon_url": (
+                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
+                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
+                    ),
+                    "summary": "Docker container runtime",
+                    "description": (
+                        "Build and run container images with Docker."
+                    ),
+                    "background": "#0069d9",
+                },
+            ],
             "website": "https://canonical.com",
             "contact": "https://www.ubuntu.com/contact-us",
             "developer_validation": "verified",
