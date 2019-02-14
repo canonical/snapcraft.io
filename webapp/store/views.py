@@ -74,7 +74,7 @@ def store_blueprint(store_query=None, testing=False):
             featured_snaps_results = api.get_searched_snaps(
                 snap_searched="", category="featured", size=24, page=1
             )
-        except ApiError as api_error:
+        except ApiError:
             featured_snaps_results = []
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
