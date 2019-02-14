@@ -211,6 +211,7 @@ def filter_changes_data(changes):
         "license",
         "price",
         "private",
+        "unlisted",
         "blacklist_countries",
         "whitelist_countries",
         "public_metrics_enabled",

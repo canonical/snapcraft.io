@@ -222,8 +222,14 @@ function initForm(config, initialState, errors) {
     // checkboxes are tricky,
     // make sure to update state based on their 'checked' status
     if (formEl["private"]) {
+      // "private" radio sets both `private` and `unlisted` values
+      // if value is:
+      //   "public": private is false, unlisted is false
+      //   "unlisted": private is false, unlisted is true
+      //   "private": private is true, unlisted is false
       updateState(state, {
-        private: formEl["private"].value === "private"
+        private: formEl["private"].value === "private",
+        unlisted: formEl["private"].value === "unlisted"
       });
     }
 

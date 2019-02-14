@@ -8,6 +8,7 @@ const allowedKeys = [
   "website",
   "contact",
   "private",
+  "unlisted",
   "public_metrics_enabled",
   "public_metrics_blacklist",
   "whitelist_countries",

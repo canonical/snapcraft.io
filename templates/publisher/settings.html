@@ -34,7 +34,7 @@
       </div>
       <div class="row">
         <hr class="u-no-margin--bottom" />
-      </div>      
+      </div>
 
       <section class="p-strip is-shallow">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -91,11 +91,26 @@
                 type="radio"
                 name="private"
                 id="is-public"
-                {% if not private %}
+                {% if not private and not unlisted %}
                 checked="checked"
                 {% endif %}
                 value="public" />
-              <label for="is-public">Public</label>
+              <label for="is-public">Public
+                <span class="p-form-help-text">Anyone can find your snap in the Snap Store</span>
+              </label>
+            </div>
+            <div class="row">
+              <input
+                type="radio"
+                name="private"
+                id="is-unlisted"
+                {% if not private and unlisted %}
+                checked="checked"
+                {% endif %}
+                value="unlisted" />
+              <label for="is-unlisted">Unlisted
+                <span class="p-form-help-text">Does not appear in search results. Anyone can visit or install using its snap name</span>
+              </label>
             </div>
             <div class="row">
               <input
@@ -107,7 +122,7 @@
                 {% endif %}
                 value="private" />
               <label for="is-private">Private
-                <span class="p-form-help-text">Snap is hidden in stores and only accessible by the publisher and collaborators</span>
+                <span class="p-form-help-text">Hidden in the Snap Store. Only accessible by the publisher and collaborators</span>
               </label>
             </div>
           </div>
@@ -232,6 +247,7 @@
           formNotification: "settings-form-status",
         }, {
           'private': {{ private|tojson }},
+          'unlisted': {{ unlisted|tojson }},
           'whitelist_countries': {{ whitelist_country_codes|tojson }},
           'blacklist_countries': {{ blacklist_country_codes|tojson }}
         },

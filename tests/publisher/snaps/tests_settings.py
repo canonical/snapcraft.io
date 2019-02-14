@@ -47,6 +47,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "title": "test snap",
             "snap_name": snap_name,
             "private": True,
+            "unlisted": False,
             "price": 0,
             "store": "stotore",
             "keywords": [],
