@@ -1,0 +1,54 @@
+linux:
+  auto:
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
+      command: snapcraft
+    - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
+      command: unsquashfs -l *.snap
+    - action: Install the snap
+      command: sudo snap install --devmode --dangerous *.snap
+    - action: List your installed snaps to confirm
+      command: snap list
+    - action: Run the snap
+      command: test-dosbox-{name} -h
+    - warning: |
+        Make sure the name matches what has been used previously (i.e <code>test-dosbox-{name}</code>)
+  manual:
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
+      command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
+    - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
+      command: unsquashfs -l *.snap
+    - action: Install the snap
+      command: sudo snap install --devmode --dangerous *.snap
+    - action: List your installed snaps to confirm
+      command: snap list
+    - action: Run the snap
+      command: test-dosbox-{name} -h
+    - warning: |
+        Make sure the name matches what has been used previously (i.e <code>test-dosbox-{name}</code>)
+macos:
+  auto:
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
+      command: snapcraft
+    - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
+      command: |
+        brew install squashfs
+        unsquashfs -l *.snap
+  manual:
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
+      command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
+    - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
+      command: |
+        brew install squashfs
+        unsquashfs -l *.snap
+windows:
+  auto:
+    - action: Run Windows Subsystem for Linux from the Windows Start menu
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
+      command: snapcraft
+    - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
+      command: unsquashfs -l *.snap
+  manual:
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
+      command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
+    - action: You will find a .snap file in the same directory that you ran the snapcraft command. You can inspect the contents to ensure it contains all of the application's assets
+      command: unsquashfs -l *.snap
