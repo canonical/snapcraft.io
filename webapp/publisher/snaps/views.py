@@ -269,7 +269,10 @@ def get_listing_snap(snap_name):
     except ApiError:
         categories_results = []
 
-    categories = get_categories(categories_results)
+    categories = sorted(
+        get_categories(categories_results),
+        key=lambda category: category["slug"],
+    )
 
     snap_categories = logic.replace_reserved_categories_key(
         snap_details["categories"]
