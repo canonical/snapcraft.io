@@ -27,6 +27,10 @@
           </div>
           <div class="col-5">
             <div class="u-align--right u-clearfix">
+              <button class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
+                Preview
+                <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
+              </button>
               <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
                   {#
                     to force dark icon variant we need a fake --dark class name:
@@ -497,6 +501,10 @@
         </div>
       </section>
     </form>
+    <form id="preview-form" action="/{{ snap_name }}/preview" method="POST" enctype="multipart/form-data" class="u-hide" target="_blank">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="text" name="state" value="" />
+    </form>
   </div>
 {% endblock %}
 
@@ -517,12 +525,13 @@
         document.getElementById('license-custom-input')
       ]
     }, {
+      snap_name: {{ snap_name|tojson }},
       title: {{ snap_title|tojson }},
       summary: {{ summary|tojson }},
       description: {{ description|tojson }},
       website: {{ website|tojson }},
       contact: {{ contact|tojson }},
-      categories: "{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}",
+      categories: {{ snap_categories.categories|tojson }},
       images: [
         {% if icon_url %}
           { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
@@ -533,7 +542,8 @@
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
-      'license': {{ license|tojson }}
+      'license': {{ license|tojson }},
+      'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
     },
     {% if error_list %}
       {{ error_list|tojson}}

@@ -346,20 +346,11 @@ def store_blueprint(store_query=None, testing=False):
             country_devices = None
 
         # filter out banner and banner-icon images from screenshots
-        screenshots = [
-            m["url"]
-            for m in details["snap"]["media"]
-            if m["type"] == "screenshot" and "banner" not in m["url"]
-        ]
-        icons = [
-            m["url"] for m in details["snap"]["media"] if m["type"] == "icon"
-        ]
+        screenshots = logic.filter_screenshots(details["snap"]["media"])
 
-        videos = [
-            logic.get_video_embed_code(m["url"])
-            for m in details["snap"]["media"]
-            if m["type"] == "video"
-        ]
+        icons = logic.get_icon(details["snap"]["media"])
+
+        videos = logic.get_videos(details["snap"]["media"])
 
         # until default tracks are supported by the API we special case node
         # to use 10, rather then latest

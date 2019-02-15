@@ -69,6 +69,7 @@
     "husky": "^1.0.0-rc.13",
     "jest": "^22.4.2",
     "lint-staged": "^8.1.0",
+    "markdown-it": "^8.4.2",
     "node-sass": "^4.5.3",
     "polylabel": "^1.0.2",
     "postcss-cli": "^4.1.0",

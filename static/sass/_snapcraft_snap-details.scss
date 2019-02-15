@@ -88,4 +88,27 @@
       }
     }
   }
+
+  .snapcraft-details-preview {
+    [data-live="public_metrics_live"] {
+      position: relative;
+
+      &::after {
+        align-items: center;
+        bottom: 0;
+        content: "This content is being displayed for preview purposes";
+        display: flex;
+        justify-content: center;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    .snapcraft-territories,
+    .snapcraft-distro-chart {
+      opacity: .3;
+    }
+  }
 }

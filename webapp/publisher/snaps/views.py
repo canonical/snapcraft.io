@@ -2,8 +2,10 @@ from json import loads
 
 import flask
 
+import bleach
 import pycountry
 import webapp.helpers as helpers
+from webapp.markdown import parse_markdown_description
 import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
@@ -19,10 +21,16 @@ from webapp.api.exceptions import (
     MissingUsername,
 )
 from webapp.api.store import StoreApi
-from webapp.store.logic import get_categories
+from webapp.store.logic import (
+    get_categories,
+    filter_screenshots,
+    get_icon,
+    get_videos,
+)
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
+from webapp.publisher.snaps import preview_data
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -969,3 +977,61 @@ def get_publicise(snap_name):
     }
 
     return flask.render_template("publisher/publicise.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/preview", methods=["POST"])
+@login_required
+def post_preview(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "publisher": snap_details["publisher"]["display-name"],
+        "username": snap_details["publisher"]["username"],
+        "developer_validation": snap_details["publisher"]["validation"],
+    }
+
+    state = loads(flask.request.form["state"])
+
+    for item in state:
+        if item == "description":
+            context[item] = parse_markdown_description(
+                bleach.clean(state[item])
+            )
+        else:
+            context[item] = state[item]
+
+    context["is_preview"] = True
+    context["package_name"] = context["snap_name"]
+    context["snap_title"] = context["title"]
+
+    # Images
+    icons = get_icon(context["images"])
+    context["screenshots"] = filter_screenshots(context["images"])
+    context["icon_url"] = icons[0] if icons else None
+    context["videos"] = get_videos(context["images"])
+
+    # Channel map
+    context["default_track"] = "latest"
+    context["lowest_risk_available"] = "stable"
+    context["version"] = "test"
+    context["has_stable"] = True
+
+    # metadata
+    context["last_updated"] = "Preview"
+    context["filesize"] = "1mb"
+
+    print(context)
+
+    # maps
+    context["countries"] = preview_data.get_countries()
+    context["normalized_os"] = preview_data.get_normalised_oses()
+
+    return flask.render_template("store/snap-details.html", **context)

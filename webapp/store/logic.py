@@ -333,3 +333,21 @@ def get_video_embed_code(url):
             "url": url + ".js",
             "id": url.rsplit("/", 1)[-1],
         }
+
+
+def filter_screenshots(media):
+    return [
+        m["url"]
+        for m in media
+        if m["type"] == "screenshot" and "banner" not in m["url"]
+    ]
+
+
+def get_icon(media):
+    return [m["url"] for m in media if m["type"] == "icon"]
+
+
+def get_videos(media):
+    return [
+        get_video_embed_code(m["url"]) for m in media if m["type"] == "video"
+    ]

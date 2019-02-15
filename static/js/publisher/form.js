@@ -4,6 +4,7 @@ import { publicMetrics } from "./market/publicMetrics";
 import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
 import { categories } from "./market/categories";
+import { storageCommands } from "./market/storageCommands";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -33,7 +34,8 @@ function initSnapIconEdit(iconElId, iconInputId, state) {
       url: URL.createObjectURL(iconFile),
       file: iconFile,
       name: iconFile.name,
-      status: "new"
+      status: "new",
+      type: "icon"
     });
 
     updateState(state, { images });
@@ -86,6 +88,7 @@ function initForm(config, initialState, errors) {
   const formEl = document.getElementById(config.form);
   const submitButton = formEl.querySelector(".js-form-submit");
   const revertButton = formEl.querySelector(".js-form-revert");
+  const previewButton = formEl.querySelector(".js-listing-preview");
   const revertURL = revertButton.getAttribute("href");
   const disabledRevertClass = "is-disabled";
 
@@ -164,6 +167,7 @@ function initForm(config, initialState, errors) {
         "Changes that you made will not be saved if you leave the page.";
 
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+
       return confirmationMessage; // Gecko, WebKit, Chrome <34
     }
 
@@ -230,6 +234,27 @@ function initForm(config, initialState, errors) {
     }
 
     checkForm();
+    updateLocalStorage();
+  }
+
+  function receiveCommands() {
+    if (window.localStorage) {
+      window.addEventListener("storage", e => {
+        storageCommands(e, formEl, state["snap_name"], () => {
+          ignoreChangesOnUnload = true;
+        });
+      });
+    }
+  }
+
+  function updateLocalStorage() {
+    if (!window.localStorage) {
+      previewButton.classList.add("u-hide");
+      return;
+    }
+    const key = state["snap_name"];
+    window.localStorage.setItem(`${key}-initial`, JSON.stringify(initialState));
+    window.localStorage.setItem(key, JSON.stringify(state));
   }
 
   // when anything is changed update the state
@@ -263,6 +288,7 @@ function initForm(config, initialState, errors) {
         submitButton.classList.add("has-spinner");
       }, 2000);
     } else {
+      updateLocalStorage();
       event.preventDefault();
     }
   });
@@ -381,6 +407,14 @@ function initForm(config, initialState, errors) {
     updateFormState();
   });
 
+  const previewForm = document.getElementById("preview-form");
+  const openPreview = () => {
+    const stateInput = previewForm.elements.state;
+    stateInput.value = JSON.stringify(state);
+  };
+
+  previewForm.addEventListener("submit", openPreview);
+
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
   function prefixInput(input) {
     if (["website", "contact"].includes(input.name)) {
@@ -413,6 +447,9 @@ function initForm(config, initialState, errors) {
       });
     }
   });
+
+  receiveCommands();
+  updateLocalStorage();
 }
 
 export { initSnapIconEdit, initForm };

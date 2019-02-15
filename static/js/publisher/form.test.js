@@ -40,6 +40,7 @@ describe("initForm", () => {
   let form;
   let submitButton;
   let revertButton;
+  let previewButton;
   let titleInput;
   let summaryInput;
   let descriptionInput;
@@ -48,6 +49,9 @@ describe("initForm", () => {
   let primaryCategoryInput;
   let secondaryCategoryInput;
   let categoriesInput;
+  let csrfInput;
+  let previewForm;
+  let previewStateInput;
 
   const categoriesList = ["", "test1", "test2"];
 
@@ -61,6 +65,10 @@ describe("initForm", () => {
     revertButton = document.createElement("a");
     revertButton.classList.add("js-form-revert");
     revertButton.href = "/test";
+
+    previewButton = document.createElement("button");
+    previewButton.classList.add("js-listing-preview");
+    previewButton.setAttribute("form", "preview-form");
 
     titleInput = document.createElement("input");
     titleInput.type = "text";
@@ -125,8 +133,14 @@ describe("initForm", () => {
     contactInput.value = initialState.contact;
     contactInput.maxlength = "256";
 
+    csrfInput = document.createElement("input");
+    csrfInput.type = "hidden";
+    csrfInput.name = "csrf_token";
+    csrfInput.value = "test";
+
     form.appendChild(submitButton);
     form.appendChild(revertButton);
+    form.appendChild(previewButton);
     form.appendChild(titleInput);
     form.appendChild(categoriesInput);
     form.appendChild(primaryCategoryInput);
@@ -135,35 +149,46 @@ describe("initForm", () => {
     form.appendChild(descriptionInput);
     form.appendChild(websiteInput);
     form.appendChild(contactInput);
+    form.appendChild(csrfInput);
 
     document.body.appendChild(form);
 
     categories.categories = jest.fn();
+
+    previewForm = document.createElement("form");
+    previewForm.id = "preview-form";
+    previewStateInput = document.createElement("input");
+    previewStateInput.name = "state";
+    previewStateInput.value = JSON.stringify(initialState);
+    previewForm.appendChild(previewStateInput);
+    document.body.appendChild(previewForm);
+
     market.initForm(config, initialState, undefined);
   }
 
-  describe("simple", () => {
-    const config = {
-      form: "market-form"
-    };
+  const config = {
+    form: "market-form"
+  };
 
-    const initialState = {
-      title: "test",
-      categories: [],
-      summary: "Summary",
-      description: "Description",
-      website: "https://example.com",
-      contact: "mailto:test@example.com"
-    };
+  const initialState = {
+    snap_name: "test",
+    title: "test",
+    categories: [],
+    summary: "Summary",
+    description: "Description",
+    website: "https://example.com",
+    contact: "mailto:test@example.com"
+  };
 
-    beforeEach(() => {
-      setupForm(config, initialState);
-    });
+  beforeEach(() => {
+    setupForm(config, initialState);
+  });
 
-    afterEach(() => {
-      form.parentNode.removeChild(form);
-    });
+  afterEach(() => {
+    form.parentNode.removeChild(form);
+  });
 
+  describe("form", () => {
     test("creates state input", () => {
       const stateInput = document.querySelector("[name='state']");
       expect(stateInput.value).toEqual("");
@@ -201,56 +226,82 @@ describe("initForm", () => {
     });
 
     describe("on submit", () => {
-      beforeEach(() => {
-        titleInput.click();
-        titleInput.value = "test2";
-        titleInput.dispatchEvent(new Event("change", { bubbles: true }));
+      describe("with diffs", () => {
+        test("state and diff are updated", () => {
+          titleInput.click();
+          titleInput.value = "test3";
+          titleInput.dispatchEvent(new Event("change", { bubbles: true }));
 
-        form.dispatchEvent(new Event("submit"));
+          form.dispatchEvent(new Event("submit"));
+
+          const stateInput = document.querySelector("[name='state']");
+          expect(stateInput.value).toEqual(
+            JSON.stringify(
+              Object.assign(initialState, {
+                title: "test"
+              })
+            )
+          );
+
+          const diffInput = document.querySelector("[name='changes']");
+          expect(diffInput.value).toEqual(
+            JSON.stringify({
+              title: "test3"
+            })
+          );
+        });
       });
 
-      test("state and diff are updated", () => {
-        const stateInput = document.querySelector("[name='state']");
-        expect(stateInput.value).toEqual(
-          JSON.stringify(
-            Object.assign(initialState, {
-              title: "test2"
-            })
-          )
-        );
+      describe("with no diff", () => {
+        test("nothing happens", () => {
+          const event = new Event("submit");
+          const spy = jest.spyOn(event, "preventDefault");
 
-        const diffInput = document.querySelector("[name='changes']");
-        expect(diffInput.value).toEqual(
-          JSON.stringify({
-            title: "test2"
+          form.dispatchEvent(event);
+
+          expect(spy.mock.calls.length).toEqual(1);
+        });
+      });
+    });
+
+    describe("on preview", () => {
+      test("the state gets updated", () => {
+        previewButton.dispatchEvent(
+          new Event("click", {
+            bubbles: true
           })
         );
+
+        expect(JSON.parse(previewStateInput.value)).toEqual(initialState);
+      });
+    });
+  });
+
+  describe("has localStorage", () => {
+    beforeAll(() => {
+      window.localStorage = {
+        getItem: jest.fn(),
+        setItem: jest.fn(),
+        removeItem: jest.fn()
+      };
+    });
+
+    describe("updateLocalStorage init", () => {
+      test("set's the initial state", () => {
+        expect(window.localStorage.setItem.mock.calls.length).toEqual(2);
+        expect(window.localStorage.setItem.mock.calls[0]).toEqual([
+          "test-initial",
+          JSON.stringify(initialState)
+        ]);
+        expect(window.localStorage.setItem.mock.calls[1]).toEqual([
+          "test",
+          JSON.stringify(initialState)
+        ]);
       });
     });
   });
 
   describe("categories", () => {
-    const config = {
-      form: "market-form"
-    };
-
-    const initialState = {
-      title: "test",
-      categories: "",
-      summary: "Summary",
-      description: "Description",
-      website: "https://example.com",
-      contact: "mailto:test@example.com"
-    };
-
-    beforeEach(() => {
-      setupForm(config, initialState);
-    });
-
-    afterEach(() => {
-      form.parentNode.removeChild(form);
-    });
-
     describe("on submit", () => {
       beforeEach(() => {
         primaryCategoryInput.click();
