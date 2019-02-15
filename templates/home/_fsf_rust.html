@@ -15,36 +15,32 @@
     <code class="p-code-yaml"><pre>
 <b>name</b>: parity
 <b>version</b>: git
-<b>summary</b>: Fast, light, robust Ethereum implementation
+<b>summary</b>: A fast CSV command line toolkit written in Rust
 <b>description</b>: |
-  Parity's goal is to be the fastest, lightest, and 
-  most secure Ethereum client. We are developing 
-  Parity using the sophisticated and cutting-edge
-  Rust programming language. Parity is licensed 
-  under the GPLv3, and can be used for all your 
-  Ethereum needs.
+  xsv is a command line program for indexing, 
+  slicing, analyzing, splitting and joining CSV 
+  files. Commands should be simple, fast and 
+  composable:
+  - Simple tasks should be easy.
+  - Performance trade offs should be exposed 
+    in the CLI interface.
+  - Composition should not come at the 
+    expense of performance.
 
 <b>confinement</b>: devmode
-<b>base</b>: core17
+<b>base</b>: core18
 
 <b>parts</b>:
-  <b>parity</b>:
-    <b>source</b>: .
+  <b>xsv</b>:
     <b>plugin</b>: rust
-    <b>build-attributes</b>: [no-system-libraries]
-    <b>build-packages</b>:
-      - libudev-dev
-      - libssl-dev
-      - make
-      - pkg-config
-    <b>stage-packages</b>:
-      - libssl1.0.0
-      - libudev1
-      - libstdc++6
+    <b>source</b>: .
 
 <b>apps</b>:
-  <b>parity</b>:
-    <b>command</b>: parity</pre></code>
+  <b>xsv</b>:
+    <b>command</b>: bin/xsv
+    <b>plugs</b>:
+      - home
+      - removable-media</pre></code>
   </div>
 
   <div class="p-flow-details__continue">
