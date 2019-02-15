@@ -407,42 +407,10 @@ function initForm(config, initialState, errors) {
     updateFormState();
   });
 
-  const openPreview = e => {
-    e.preventDefault();
-    let form = document.getElementById("preview-form");
-    let csrf;
-    let input;
-    if (!form) {
-      form = document.createElement("form");
-
-      csrf = document.createElement("input");
-      form.appendChild(csrf);
-
-      input = document.createElement("input");
-      form.appendChild(input);
-
-      document.body.appendChild(form);
-    } else {
-      csrf = form.elements.csrf_token;
-      input = form.elements.state;
-    }
-
-    form.method = "post";
-    form.action = `/${state["snap_name"]}/preview`;
-    form.enctype = "multipart/form-data";
-    form.className = "u-hide";
-    form.target = "_blank";
-    form.id = "preview-form";
-
-    csrf.type = "hidden";
-    csrf.name = "csrf_token";
-    csrf.value = formEl.elements.csrf_token.value;
-
-    input.name = "state";
-    input.type = "text";
-    input.value = JSON.stringify(state);
-
-    form.dispatchEvent(new Event("submit"));
+  const openPreview = () => {
+    const previewForm = document.getElementById("preview-form");
+    const stateInput = previewForm.elements.state;
+    stateInput.value = JSON.stringify(state);
   };
 
   previewButton.addEventListener("click", openPreview);

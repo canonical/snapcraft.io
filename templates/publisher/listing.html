@@ -27,10 +27,10 @@
           </div>
           <div class="col-5">
             <div class="u-align--right u-clearfix">
-              <a href="/{{ snap_name }}?preview=true" target="_blank" class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" area-describedby="preview-tooltip">
+              <button class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
                 Preview
                 <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
-              </a>
+              </button>
               <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
                   {#
                     to force dark icon variant we need a fake --dark class name:
@@ -500,6 +500,10 @@
           </div>
         </div>
       </section>
+    </form>
+    <form id="preview-form" action="/{{ snap_name }}/preview" method="POST" enctype="multipart/form-data" class="u-hide" target="_blank">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="text" name="state" value="" />
     </form>
   </div>
 {% endblock %}
