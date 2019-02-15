@@ -355,11 +355,13 @@
   {% endif %}
   <script>
     Raven.context(function () {
+      {% if not is_preview %}
       try {
         snapcraft.public.screenshots('#js-snap-screenshots');
       } catch(e) {
         Raven.captureException(e);
       }
+      {% endif %}
 
       try {
         snapcraft.public.videos('.js-video-slide');

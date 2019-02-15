@@ -19,8 +19,12 @@ const lightboxTpl = `
 `;
 
 const initLightboxEl = () => {
-  const lightboxEl = document.createElement("div");
-  lightboxEl.className = "vbox-overlay";
+  let lightboxEl = document.querySelector(".vbox-overlay");
+  if (!lightboxEl) {
+    lightboxEl = document.createElement("div");
+    lightboxEl.className = "vbox-overlay";
+  }
+
   lightboxEl.style.display = "none";
   lightboxEl.style.display = "0";
   lightboxEl.innerHTML = lightboxTpl;

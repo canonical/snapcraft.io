@@ -1,5 +1,8 @@
 import * as MarkdownIt from "markdown-it";
-import { default as initScreenshots } from "../public/snap-details/screenshots";
+import {
+  default as initScreenshots,
+  terminateScreenshots
+} from "../public/snap-details/screenshots";
 import { diffState } from "./state";
 
 // Ensure markdown is set to be the same as `webapp/markdown.py` config
@@ -298,6 +301,7 @@ function render(packageName) {
       )
     );
     hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
+    terminateScreenshots("#js-snap-screenshots");
     initScreenshots("#js-snap-screenshots");
   } else {
     hideMap.screenshots(screenshotsEl).classList.add("u-hide");

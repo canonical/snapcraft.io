@@ -6,31 +6,38 @@ import iframeSize from "../../libs/iframeSize";
 
 Swiper.use([Navigation]);
 
-export default function initScreenshots(screenshotsId) {
-  const screenshotsEl = document.querySelector(screenshotsId);
+let screenshotsEl;
+
+function clickCallback(event) {
+  const url = event.target.dataset.original;
+  const images = filterImages();
+
+  if (url) {
+    if (isMobile()) {
+      window.open(url, "_blank");
+      window.focus();
+    } else {
+      lightbox.openLightbox(url, images);
+    }
+  }
+}
+
+function filterImages() {
+  return Array.from(
+    screenshotsEl.querySelectorAll("img, video, .js-video-slide")
+  )
+    .filter(image => image.dataset.original)
+    .map(image => image.dataset.original);
+}
+
+function initScreenshots(screenshotsId) {
+  screenshotsEl = document.querySelector(screenshotsId);
 
   if (!screenshotsEl) {
     return;
   }
 
-  const images = Array.from(
-    screenshotsEl.querySelectorAll("img, video, .js-video-slide")
-  )
-    .filter(image => image.dataset.original)
-    .map(image => image.dataset.original);
-
-  screenshotsEl.addEventListener("click", event => {
-    const url = event.target.dataset.original;
-
-    if (url) {
-      if (isMobile()) {
-        window.open(url, "_blank");
-        window.focus();
-      } else {
-        lightbox.openLightbox(url, images);
-      }
-    }
-  });
+  screenshotsEl.addEventListener("click", clickCallback);
 
   const config = Object.assign(SCREENSHOTS_CONFIG, {
     // This hack is to fix a reported Swiper issue in firefox
@@ -51,3 +58,15 @@ export default function initScreenshots(screenshotsId) {
 
   new Swiper(screenshotsEl.querySelector(".swiper-container"), config);
 }
+
+function terminateScreenshots(screenshotsId) {
+  screenshotsEl = document.querySelector(screenshotsId);
+
+  if (!screenshotsEl) {
+    return;
+  }
+
+  screenshotsEl.removeEventListener("click", clickCallback);
+}
+
+export { initScreenshots as default, terminateScreenshots };
