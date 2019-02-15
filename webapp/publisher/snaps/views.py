@@ -2,8 +2,10 @@ from json import loads
 
 import flask
 
+import bleach
 import pycountry
 import webapp.helpers as helpers
+from webapp.markdown import parse_markdown_description
 import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
@@ -28,6 +30,7 @@ from webapp.store.logic import (
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
+from webapp.publisher.snaps import preview_data
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -992,20 +995,40 @@ def post_preview(snap_name):
     context = {
         "publisher": snap_details["publisher"]["display-name"],
         "username": snap_details["publisher"]["username"],
+        "developer_validation": snap_details["publisher"]["validation"],
     }
 
     state = loads(flask.request.form["state"])
 
     for item in state:
-        context[item] = state[item]
+        if item == "description":
+            context[item] = parse_markdown_description(
+                bleach.clean(state[item])
+            )
+        else:
+            context[item] = state[item]
 
     context["is_preview"] = True
+    context["package_name"] = context["snap_name"]
 
+    # Images
     icons = get_icon(context["images"])
-
     context["screenshots"] = filter_screenshots(context["images"])
     context["icon_url"] = icons[0] if icons else None
     context["videos"] = get_videos(context["images"])
-    context["package_name"] = context["snap_name"]
+
+    # Channel map
+    context["default_track"] = "latest"
+    context["lowest_risk_available"] = "stable"
+    context["version"] = "test"
+    context["has_stable"] = True
+
+    # metadata
+    context["last_updated"] = "Preview"
+    context["filesize"] = "1mb"
+
+    # maps
+    context["countries"] = preview_data.get_countries()
+    context["normalized_os"] = preview_data.get_normalised_oses()
 
     return flask.render_template("store/snap-details.html", **context)

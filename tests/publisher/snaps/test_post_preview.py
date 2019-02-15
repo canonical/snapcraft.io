@@ -39,7 +39,13 @@ class PostPreviewPage(BaseTestCases.EndpointLoggedIn):
         responses.add(
             responses.GET,
             self.api_url,
-            json={"publisher": {"display-name": "Test", "username": "test"}},
+            json={
+                "publisher": {
+                    "display-name": "Test",
+                    "username": "test",
+                    "validation": "verified",
+                }
+            },
             status=200,
         )
 
