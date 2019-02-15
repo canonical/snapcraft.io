@@ -45,7 +45,9 @@ const functionMap = {
 // For some elements we want to hide/ show a different element to the one
 // being targeted.
 const hideMap = {
-  screenshots: el => el.parentNode
+  screenshots: el => el.parentNode,
+  website: el => el.parentNode,
+  contact: el => el.parentNode
 };
 
 // For some fields we need to transform the data.
@@ -122,6 +124,7 @@ function screenshot(image) {
   slide.className = "p-carousel__item--screenshot swiper-slide";
   const img = new Image();
   img.src = image;
+  img.dataset.original = image;
 
   slide.appendChild(img);
   return slide;
@@ -295,9 +298,7 @@ function render(packageName) {
       )
     );
     hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
-    if (transformedState.video_urls === "") {
-      initScreenshots("#js-snap-screenshots");
-    }
+    initScreenshots("#js-snap-screenshots");
   } else {
     hideMap.screenshots(screenshotsEl).classList.add("u-hide");
   }

@@ -56,21 +56,29 @@ const loadLightboxImage = (lightboxEl, url, images) => {
   let media;
   // load media
   if (url.includes(".gif")) {
-    media = document.createElement("video");
-    media.autoplay = true;
-    media.loop = true;
-    media.classList.add("figlio");
-    contentEl.appendChild(media);
-    contentEl.style.opacity = "1";
+    try {
+      media = document.createElement("video");
+      media.autoplay = true;
+      media.loop = true;
+      media.classList.add("figlio");
+      contentEl.appendChild(media);
+      contentEl.style.opacity = "1";
 
-    const originalEl = document.body.querySelector(`[data-original="${url}"]`);
+      const originalEl = document.body.querySelector(
+        `[data-original="${url}"]`
+      );
 
-    if (media.canPlayType("video/webm")) {
-      media.src = originalEl.querySelector("[type='video/webm']").src;
-    } else if (media.canPlayType("video/mp4")) {
-      media.src = originalEl.querySelector("[type='video/mp4']").src;
+      if (media.canPlayType("video/webm")) {
+        media.src = originalEl.querySelector("[type='video/webm']").src;
+      } else if (media.canPlayType("video/mp4")) {
+        media.src = originalEl.querySelector("[type='video/mp4']").src;
+      }
+    } catch (e) {
+      media.parentNode.removeChild(media);
+      media = false;
     }
-  } else {
+  }
+  if (!media) {
     media = new Image();
     media.classList.add("figlio");
     contentEl.appendChild(media);

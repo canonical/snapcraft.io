@@ -89,19 +89,33 @@
       {% if not webapp_config['STORE_QUERY'] %}
         <div class="p-snap-install-buttons">
           <button
-            class="p-button--neutral p-snap-install-buttons__versions"
+            class="p-button--neutral p-snap-install-buttons__versions{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
+            {% if is_preview %}
+              aria-describedby="{{ package_name }}-preview-channel-map"
+              disabled
+            {% endif %}
             data-js="open-channel-map"
             data-controls="channel-map-versions"
             aria-controls="channel-map-versions">
             {{ default_track }}/{{ lowest_risk_available }} {{ version }}&nbsp;&nbsp;<i class="p-icon--chevron"></i>
+            {% if is_preview %}
+            <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
+            {% endif %}
           </button>
           {% if has_stable %}
             <button
-              class="p-button--positive p-snap-install-buttons__install"
+              class="p-button--positive p-snap-install-buttons__install{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
+              {% if is_preview %}
+                aria-describedby="{{ package_name }}-preview-channel-map"
+                disabled
+              {% endif %}
               data-js="open-channel-map"
               data-controls="channel-map-install"
               aria-controls="channel-map-install">
                 Install
+                {% if is_preview %}
+                  <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
+                {% endif %}
             </button>
           {% endif %}
         </div>
@@ -184,44 +198,47 @@
   </div>
 
   {% if countries or normalized_os %}
-    <div class="row">
-      <div class="col-12">
-        <hr />
+    <div data-live="public_metrics_live">
+      <div class="row">
+        <div class="col-12">
+          <hr />
+        </div>
       </div>
-    </div>
 
-    <div class="p-strip is-shallow">
-      <div class="row u-equal-height" data-live="public_metrics_live">
-        {% if countries %}
-          <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
-            <h4>Where people are using {{ snap_title }}</h4>
-            <div id="js-snap-map" class="snapcraft-territories"></div>
-          </div>
-        {% endif %}
-        {% if normalized_os %}
-          <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
-            <h4>Users by distribution (log)</h4>
-            <div class="snapcraft-distro-chart">
-              <div class="snapcraft-distro-chart__names">
-                {% for distro in normalized_os %}
-                <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
-                {% endfor %}
-              </div>
-              <div class="snapcraft-distro-chart__bars">
-                {% for distro in normalized_os %}
-                  <div
-                    class="snapcraft-distro-chart__bar"
-                    style="width: {{ distro.value * 100 }}%"
-                  ></div>
-                {% endfor %}
+      <div class="p-strip is-shallow">
+        <div class="row u-equal-height">
+          {% if countries %}
+            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
+              <h4>Where people are using {{ snap_title }}</h4>
+              <div id="js-snap-map" class="snapcraft-territories"></div>
+            </div>
+          {% endif %}
+          {% if normalized_os %}
+            <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
+              <h4>Users by distribution (log)</h4>
+              <div class="snapcraft-distro-chart">
+                <div class="snapcraft-distro-chart__names">
+                  {% for distro in normalized_os %}
+                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+                  {% endfor %}
+                </div>
+                <div class="snapcraft-distro-chart__bars">
+                  {% for distro in normalized_os %}
+                    <div
+                      class="snapcraft-distro-chart__bar"
+                      style="width: {{ distro.value * 100 }}%"
+                    ></div>
+                  {% endfor %}
+                </div>
               </div>
             </div>
-          </div>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     </div>
   {% endif %}
 
+  {% if not is_preview %}
   <div class="row">
     <div class="col-12">
       <hr />
@@ -289,6 +306,7 @@
       </div>
     </div>
   </div>
+  {% endif %}
   {% if is_preview %}
     </div>
   {% endif %}
