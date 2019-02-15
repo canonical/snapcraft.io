@@ -49,7 +49,13 @@ class PostPreviewPage(BaseTestCases.EndpointLoggedIn):
             status=200,
         )
 
-        state = json.dumps({"snap_name": self.snap_name, "images": []})
+        state = json.dumps(
+            {
+                "snap_name": self.snap_name,
+                "images": [],
+                "title": self.snap_name,
+            }
+        )
 
         response = self.client.post(self.endpoint_url, data={"state": state})
 

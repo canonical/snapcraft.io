@@ -1010,6 +1010,7 @@ def post_preview(snap_name):
 
     context["is_preview"] = True
     context["package_name"] = context["snap_name"]
+    context["snap_title"] = context["title"]
 
     # Images
     icons = get_icon(context["images"])
@@ -1026,6 +1027,8 @@ def post_preview(snap_name):
     # metadata
     context["last_updated"] = "Preview"
     context["filesize"] = "1mb"
+
+    print(context)
 
     # maps
     context["countries"] = preview_data.get_countries()
