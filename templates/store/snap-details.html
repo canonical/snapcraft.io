@@ -62,6 +62,9 @@
       </div>
     </div>
   {% endif %}
+  {% if is_preview %}
+    <div class="snapcraft-details-preview">
+  {% endif %}
   <div class="p-strip--light is-shallow snapcraft-banner-background">
     <div class="row">
       <div class="p-snap-heading">
@@ -188,7 +191,7 @@
     </div>
 
     <div class="p-strip is-shallow">
-      <div class="row" data-live="public_metrics_live">
+      <div class="row u-equal-height" data-live="public_metrics_live">
         {% if countries %}
           <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
             <h4>Where people are using {{ snap_title }}</h4>
@@ -196,7 +199,7 @@
           </div>
         {% endif %}
         {% if normalized_os %}
-          <div class="col-4" data-live="weekly_installed_base_by_operating_system_normalized">
+          <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
             <h4>Users by distribution (log)</h4>
             <div class="snapcraft-distro-chart">
               <div class="snapcraft-distro-chart__names">
@@ -286,6 +289,9 @@
       </div>
     </div>
   </div>
+  {% if is_preview %}
+    </div>
+  {% endif %}
 
   {% if api_error %}
     <div class="row">

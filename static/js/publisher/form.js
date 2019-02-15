@@ -407,13 +407,13 @@ function initForm(config, initialState, errors) {
     updateFormState();
   });
 
+  const previewForm = document.getElementById("preview-form");
   const openPreview = () => {
-    const previewForm = document.getElementById("preview-form");
     const stateInput = previewForm.elements.state;
     stateInput.value = JSON.stringify(state);
   };
 
-  previewButton.addEventListener("click", openPreview);
+  previewForm.addEventListener("submit", openPreview);
 
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
   function prefixInput(input) {

@@ -154,7 +154,6 @@ describe("initForm", () => {
     document.body.appendChild(form);
 
     categories.categories = jest.fn();
-    market.initForm(config, initialState, undefined);
 
     previewForm = document.createElement("form");
     previewForm.id = "preview-form";
@@ -163,6 +162,8 @@ describe("initForm", () => {
     previewStateInput.value = JSON.stringify(initialState);
     previewForm.appendChild(previewStateInput);
     document.body.appendChild(previewForm);
+
+    market.initForm(config, initialState, undefined);
   }
 
   const config = {
