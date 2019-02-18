@@ -1028,8 +1028,6 @@ def post_preview(snap_name):
     context["last_updated"] = "Preview"
     context["filesize"] = "1mb"
 
-    print(context)
-
     # maps
     context["countries"] = preview_data.get_countries()
     context["normalized_os"] = preview_data.get_normalised_oses()
