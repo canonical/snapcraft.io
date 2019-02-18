@@ -432,6 +432,126 @@ def store_blueprint(store_query=None, testing=False):
             flask.url_for(".snap_details", snap_name=snap_name.lower())
         )
 
+    @store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>/embedded')
+    def snap_details_embedded(snap_name):
+        """
+        A view to display the snap embedded card for specific snaps.
+
+        This queries the snapcraft API (api.snapcraft.io) and passes
+        some of the data through to the template,
+        with appropriate sanitation.
+        """
+
+        # based havily on snap_details endpoint
+        # (only removed unnecessary data)
+
+        error_info = {}
+        status_code = 200
+
+        try:
+            details = api.get_snap_details(snap_name)
+        except ApiTimeoutError as api_timeout_error:
+            flask.abort(504, str(api_timeout_error))
+        except ApiResponseDecodeError as api_response_decode_error:
+            flask.abort(502, str(api_response_decode_error))
+        except ApiResponseErrorList as api_response_error_list:
+            if api_response_error_list.status_code == 404:
+                flask.abort(404, "No snap named {}".format(snap_name))
+            else:
+                if api_response_error_list.errors:
+                    error_messages = ", ".join(
+                        api_response_error_list.errors.key()
+                    )
+                else:
+                    error_messages = "An error occurred."
+                flask.abort(502, error_messages)
+        except ApiResponseError as api_response_error:
+            flask.abort(502, str(api_response_error))
+        except ApiCircuitBreaker:
+            flask.abort(503)
+        except ApiError as api_error:
+            flask.abort(502, str(api_error))
+
+        # When removing all the channel maps of an exsting snap the API,
+        # responds that the snaps still exists with data.
+        # Return a 404 if not channel maps, to avoid having a error.
+        # For example: mir-kiosk-browser
+        if not details.get("channel-map"):
+            flask.abort(404, "No snap named {}".format(snap_name))
+
+        channel_maps_list = logic.convert_channel_maps(
+            details.get("channel-map")
+        )
+
+        latest_channel = logic.get_last_updated_version(
+            details.get("channel-map")
+        )
+
+        last_updated = latest_channel["created-at"]
+        last_version = latest_channel["version"]
+        binary_filesize = latest_channel["download"]["size"]
+
+        # filter out banner and banner-icon images from screenshots
+        screenshots = [
+            m["url"]
+            for m in details["snap"]["media"]
+            if m["type"] == "screenshot" and "banner" not in m["url"]
+        ]
+        icons = [
+            m["url"] for m in details["snap"]["media"] if m["type"] == "icon"
+        ]
+
+        # until default tracks are supported by the API we special case node
+        # to use 10, rather then latest
+        default_track = helpers.get_default_track(details["name"])
+
+        lowest_risk_available = logic.get_lowest_available_risk(
+            channel_maps_list, default_track
+        )
+
+        confinement = logic.get_confinement(
+            channel_maps_list, default_track, lowest_risk_available
+        )
+
+        last_version = logic.get_version(
+            channel_maps_list, default_track, lowest_risk_available
+        )
+
+        context = {
+            # Data direct from details API
+            "snap_title": details["snap"]["title"],
+            "package_name": details["name"],
+            "icon_url": icons[0] if icons else None,
+            "version": last_version,
+            "license": details["snap"]["license"],
+            "publisher": details["snap"]["publisher"]["display-name"],
+            "username": details["snap"]["publisher"]["username"],
+            "screenshots": screenshots,
+            "summary": details["snap"]["summary"],
+            "channel_map": channel_maps_list,
+            "has_stable": logic.has_stable(channel_maps_list),
+            "developer_validation": details["snap"]["publisher"]["validation"],
+            "default_track": default_track,
+            "lowest_risk_available": lowest_risk_available,
+            "confinement": confinement,
+            # Transformed API data
+            "filesize": humanize.naturalsize(binary_filesize),
+            "last_updated": logic.convert_date(last_updated),
+            "last_updated_raw": last_updated,
+            # Context info
+            "is_linux": (
+                "Linux" in flask.request.headers.get("User-Agent", "")
+                and "Android"
+                not in flask.request.headers.get("User-Agent", "")
+            ),
+            "error_info": error_info,
+        }
+
+        return (
+            flask.render_template("store/snap-embedded-card.html", **context),
+            status_code,
+        )
+
     @store.route("/store/categories/<category>")
     def store_category(category):
         status_code = 200
