@@ -1,12 +1,20 @@
-function categories(form) {
+function categories(form, state) {
   let categoriesList = [];
-  if (form.elements["primary_category"]) {
+  if (
+    form.elements["primary_category"] &&
+    form.elements["primary_category"].value !== ""
+  ) {
     categoriesList.push(form.elements["primary_category"].value);
+
+    if (
+      form.elements["secondary_category"] &&
+      form.elements["secondary_category"].value !== ""
+    ) {
+      categoriesList.push(form.elements["secondary_category"].value);
+    }
   }
-  if (form.elements["secondary_category"]) {
-    categoriesList.push(form.elements["secondary_category"].value);
-  }
-  form.elements["categories"].value = categoriesList.join(", ");
+
+  state.categories = categoriesList;
 }
 
 function initCategories() {

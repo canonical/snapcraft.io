@@ -35,7 +35,6 @@ function commaSeperatedStringToArray(str) {
 const transform = {
   whitelist_countries: commaSeperatedStringToArray,
   blacklist_countries: commaSeperatedStringToArray,
-  categories: commaSeperatedStringToArray,
   private: value => value === "private",
   public_metrics_enabled: value => value === "on"
 };

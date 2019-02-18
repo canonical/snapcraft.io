@@ -262,6 +262,24 @@ def replace_reserved_categories_key(categories):
     return snap_categories
 
 
+def filter_categories(categories):
+    """Filter featured category out of the list of categories on a snap
+
+    :param categories: Dict of categories
+
+    :return: Dict of categories"""
+    snap_categories = categories
+
+    snap_categories["categories"] = list(
+        filter(
+            lambda category: category["name"] != "featured",
+            snap_categories["categories"],
+        )
+    )
+
+    return snap_categories
+
+
 def filter_available_stores(stores):
     """Available stores that aren't publicly available
 

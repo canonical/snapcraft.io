@@ -149,8 +149,6 @@
             <label>Category:</label>
           </div>
           <div class="col-4">
-            <input type="hidden" name="categories"
-                   value="{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}" />
             <select
               name="primary_category"
               {% if snap_categories.categories[0] %}
