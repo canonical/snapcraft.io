@@ -4,7 +4,7 @@ describe("categories", () => {
   let form;
   let cat1Input;
   let cat2Input;
-  let catsInput;
+  let state;
 
   beforeEach(() => {
     form = document.createElement("form");
@@ -19,14 +19,10 @@ describe("categories", () => {
     cat2Input.type = "text";
     cat2Input.value = "";
 
-    catsInput = document.createElement("input");
-    catsInput.name = "categories";
-    catsInput.type = "text";
-    catsInput.value = "";
+    state = {};
 
     form.appendChild(cat1Input);
     form.appendChild(cat2Input);
-    form.appendChild(catsInput);
 
     document.body.appendChild(form);
   });
@@ -37,15 +33,15 @@ describe("categories", () => {
 
   test("given a primary category, return that value", () => {
     cat1Input.value = "test";
-    categories.categories(form);
-    expect(catsInput.value).toEqual("test, ");
+    categories.categories(form, state);
+    expect(state).toEqual({ categories: ["test"] });
   });
 
   test("given a primary and secondary category, return those values", () => {
     cat1Input.value = "test";
     cat2Input.value = "test2";
-    categories.categories(form);
-    expect(catsInput.value).toEqual("test, test2");
+    categories.categories(form, state);
+    expect(state).toEqual({ categories: ["test", "test2"] });
   });
 });
 

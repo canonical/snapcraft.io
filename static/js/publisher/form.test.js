@@ -246,7 +246,8 @@ describe("initForm", () => {
           const diffInput = document.querySelector("[name='changes']");
           expect(diffInput.value).toEqual(
             JSON.stringify({
-              title: "test3"
+              title: "test3",
+              categories: ""
             })
           );
         });

@@ -286,6 +286,8 @@ def get_listing_snap(snap_name):
         snap_details["categories"]
     )
 
+    snap_categories = logic.filter_categories(snap_categories)
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -448,6 +450,8 @@ def post_listing_snap(snap_name):
             snap_categories = logic.replace_reserved_categories_key(
                 snap_details["categories"]
             )
+
+            snap_categories = logic.filter_categories(snap_categories)
 
             context = {
                 # read-only values from details API

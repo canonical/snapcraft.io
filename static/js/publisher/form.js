@@ -211,7 +211,7 @@ function initForm(config, initialState, errors) {
       license(formEl);
     }
     if (formEl.elements["primary_category"]) {
-      categories(formEl);
+      categories(formEl, state);
     }
 
     let formData = new FormData(formEl);
