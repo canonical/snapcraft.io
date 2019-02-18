@@ -3,7 +3,7 @@ from flask_testing import TestCase
 from webapp.app import create_app
 
 
-class GetDetailsPageTest(TestCase):
+class GetEmbeddedCardTest(TestCase):
     render_templates = False
 
     def setUp(self):
@@ -18,7 +18,7 @@ class GetDetailsPageTest(TestCase):
                 "confinement,categories",
             ]
         )
-        self.endpoint_url = "/" + self.snap_name
+        self.endpoint_url = "/" + self.snap_name + "/embedded"
 
     def create_app(self):
         app = create_app(testing=True)
@@ -107,7 +107,7 @@ class GetDetailsPageTest(TestCase):
         assert response.status_code == 404
 
     @responses.activate
-    def test_user_connected(self):
+    def test_get_card(self):
         payload = {
             "snap-id": "id",
             "name": "snapName",
@@ -147,126 +147,7 @@ class GetDetailsPageTest(TestCase):
             )
         )
 
-        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        responses.add(
-            responses.Response(
-                method="POST", url=metrics_url, json={}, status=200
-            )
-        )
-
-        with self.client.session_transaction() as s:
-            s["openid"] = {"nickname": "toto"}
-
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_context("is_users_snap", True)
-
-    @responses.activate
-    def test_user_not_connected(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "prices": 0,
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
-
-        responses.add(
-            responses.Response(
-                method="GET", url=self.api_url, json=payload, status=200
-            )
-        )
-
-        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        responses.add(
-            responses.Response(
-                method="POST", url=metrics_url, json={}, status=200
-            )
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 200
-        self.assert_context("is_users_snap", False)
-
-    @responses.activate
-    def test_user_connected_on_not_own_snap(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "prices": 0,
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
-
-        responses.add(
-            responses.Response(
-                method="GET", url=self.api_url, json=payload, status=200
-            )
-        )
-
-        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        responses.add(
-            responses.Response(
-                method="POST", url=metrics_url, json={}, status=200
-            )
-        )
-
-        with self.client.session_transaction() as s:
-            s["openid"] = {"nickname": "greg"}
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 200
-        self.assert_context("is_users_snap", False)
+        self.assert_context("snap_title", "Snap Title")
