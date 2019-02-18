@@ -1,0 +1,23 @@
+// colour definitions
+$color-brand: #00302f;
+$color-accent: $color-brand;
+$color-navigation-background: #252525;
+
+// vanilla patterns
+@import 'vanilla-framework/scss/vanilla';
+
+@include vf-base;;
+
+@include vf-p-grid;
+@include vf-p-grid-modifications;
+@include vf-p-strip;
+
+// make max-width of the layout smaller for embedded view
+.row {
+  max-width: 40rem;
+}
+
+html,
+body {
+  background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
+}
