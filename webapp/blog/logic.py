@@ -108,7 +108,7 @@ def change_url(feed, host):
     :returns: A string with converted urls
     """
     url_regex = re.compile(
-        r"https:\/\/admin.insights.ubuntu.com(\/\d{4}\/\d{2}\/\d{2})?"
+        r"https://admin.insights.ubuntu.com(\/\d{4}\/\d{2}\/\d{2})?"
     )
     updated_feed = re.sub(url_regex, host, feed)
 
