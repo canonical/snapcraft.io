@@ -237,81 +237,64 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
     .on("mousemove", mouseMove)
     .on("mouseout", cancelTooltip);
 
-  // Add annotations
-  const annotationsLayer = g
-    .selectAll(".annotationsLayer")
-    .data(annotationsData)
-    .enter()
-    .append("g")
-    .attr("class", "annotationsLayer");
-
   annotationsData = annotationsData.map(annotation => {
     let x = xScale(annotation.date);
-    let y = 0;
-    let y0 = 0;
-    let y1 = yScale(1);
-    let visible = true;
 
     if (x < 0 + padding.left) {
       return false;
     }
     return {
       x,
-      y,
-      y0,
-      y1,
-      visible,
+      y1: yScale(1),
       data: annotation
     };
   });
 
-  annotationsData
-    .filter(item => item !== false)
-    .forEach((annotation, index) => {
-      const previousAnnotation = index > 0 ? annotationsData[index - 1] : null;
-      const lineLayer = annotationsLayer.append("g");
-      const textLayer = annotationsLayer.append("g");
+  annotationsData.filter(item => item !== false).forEach(annotation => {
+    const annotationKey = Object.keys(annotation.data)
+      .filter(key => key !== "date")
+      .filter(key => annotation.data[key] !== 0)[0];
 
-      if (previousAnnotation && previousAnnotation) {
-        if (
-          previousAnnotation.x + previousAnnotation.textBBox.width >
-          annotation.x
-        ) {
-          annotation.y0 = previousAnnotation.y0 + 16;
-          annotation.y1 = previousAnnotation.y1 - 16;
-          annotation.y = previousAnnotation.y + 16;
-        }
-      }
+    // Add annotations
+    const annotationsLayer = g
+      .append("g")
+      .attr("class", "annotationsLayer")
+      .attr("id", `category-${annotationKey}`)
+      .style("visibility", "hidden");
 
-      lineLayer
-        .append("line")
-        .attr("class", "annotation-line")
-        .attr("transform", `translate(${annotation.x},${annotation.y})`)
-        .attr("y0", annotation.y0)
-        .attr("y1", annotation.y1)
-        .attr("stroke", "#000")
-        .attr("style", "pointer-events: none;");
+    const lineLayer = annotationsLayer.append("g");
+    const textLayer = annotationsLayer.append("g");
 
-      const key = Object.keys(annotation.data)
-        .filter(key => key !== "date")
-        .filter(key => annotation.data[key] !== 0)[0];
+    lineLayer
+      .append("line")
+      .attr("class", "annotation-line")
+      .attr("transform", `translate(${annotation.x},0)`)
+      .attr("y0", 0)
+      .attr("y1", annotation.y1)
+      .attr("stroke", "#000")
+      .attr("style", "pointer-events: none;");
 
-      const style = ["font-size: 12px"];
-      if (!annotation.visible) {
-        style.push("font-style: italic");
-      }
+    let display_name = annotationKey.split("-").join(" ");
+    display_name =
+      display_name.substr(0, 1).toUpperCase() + display_name.substring(1);
 
-      const text = textLayer
-        .append("text")
-        .attr("class", "annotation-text")
-        .attr("transform", `translate(${annotation.x},${annotation.y0 + 10})`)
-        .attr("x", 2)
-        .attr("style", style.join(";"))
-        .text(`${key}`);
+    const text = textLayer
+      .append("text")
+      .attr("class", "annotation-text")
+      .attr("transform", `translate(${annotation.x},10)`)
+      .attr("x", 2)
+      .style("font-size", "12px")
+      .text(`${display_name}`);
 
-      const textBBox = text._groups[0][0].getBBox();
-      annotation.textBBox = textBBox;
-    });
+    const textBox = text._groups[0][0].getBBox();
+    const gBox = g._groups[0][0].getBBox();
+    const textBoxRightEdge = annotation.x + textBox.x + textBox.width;
+    if (textBoxRightEdge > gBox.width) {
+      text
+        .attr("transform", `translate(${annotation.x - textBox.width},10)`)
+        .attr("x", 0);
+    }
+  });
 
   // Add the x axix
   let tickValues = [];
@@ -389,6 +372,23 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
   function cancelTooltip() {
     tooltip.style("display", "none");
   }
+
+  const categories = document.querySelector(`[data-js="annotations-hover"]`);
+  categories.addEventListener("mouseover", e => {
+    const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
+    if (annotationHover) {
+      const category = annotationHover.dataset.id;
+      g.selectAll(`#${category}`).style("visibility", "visible");
+    }
+  });
+
+  categories.addEventListener("mouseout", e => {
+    const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
+    if (annotationHover) {
+      const category = annotationHover.dataset.id;
+      g.selectAll(`#${category}`).style("visibility", "hidden");
+    }
+  });
 
   showGraph(holder);
 }
