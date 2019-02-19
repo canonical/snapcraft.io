@@ -253,8 +253,7 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
     let visible = true;
 
     if (x < 0 + padding.left) {
-      x = 0 + padding.left;
-      visible = false;
+      return false;
     }
     return {
       x,
@@ -266,24 +265,24 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
     };
   });
 
-  annotationsData.forEach((annotation, index) => {
-    const previousAnnotation = index > 0 ? annotationsData[index - 1] : null;
-    const lineLayer = annotationsLayer.append("g");
-    const textLayer = annotationsLayer.append("g");
-    let prefix = "";
+  annotationsData
+    .filter(item => item !== false)
+    .forEach((annotation, index) => {
+      const previousAnnotation = index > 0 ? annotationsData[index - 1] : null;
+      const lineLayer = annotationsLayer.append("g");
+      const textLayer = annotationsLayer.append("g");
 
-    if (previousAnnotation) {
-      if (
-        previousAnnotation.x + previousAnnotation.textBBox.width >
-        annotation.x
-      ) {
-        annotation.y0 = previousAnnotation.y0 + 16;
-        annotation.y1 = previousAnnotation.y1 - 16;
-        annotation.y = previousAnnotation.y + 16;
+      if (previousAnnotation && previousAnnotation) {
+        if (
+          previousAnnotation.x + previousAnnotation.textBBox.width >
+          annotation.x
+        ) {
+          annotation.y0 = previousAnnotation.y0 + 16;
+          annotation.y1 = previousAnnotation.y1 - 16;
+          annotation.y = previousAnnotation.y + 16;
+        }
       }
-    }
 
-    if (annotation.visible) {
       lineLayer
         .append("line")
         .attr("class", "annotation-line")
@@ -292,34 +291,27 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
         .attr("y1", annotation.y1)
         .attr("stroke", "#000")
         .attr("style", "pointer-events: none;");
-    } else {
-      prefix = "‹...";
-    }
 
-    const key = Object.keys(annotation.data)
-      .filter(key => key !== "date")
-      .filter(key => annotation.data[key] !== 0)[0];
+      const key = Object.keys(annotation.data)
+        .filter(key => key !== "date")
+        .filter(key => annotation.data[key] !== 0)[0];
 
-    if (key === "featured") {
-      prefix = prefix + "⭐ ";
-    }
+      const style = ["font-size: 12px"];
+      if (!annotation.visible) {
+        style.push("font-style: italic");
+      }
 
-    const style = ["font-size: 12px"];
-    if (!annotation.visible) {
-      style.push("font-style: italic");
-    }
+      const text = textLayer
+        .append("text")
+        .attr("class", "annotation-text")
+        .attr("transform", `translate(${annotation.x},${annotation.y0 + 10})`)
+        .attr("x", 2)
+        .attr("style", style.join(";"))
+        .text(`${key}`);
 
-    const text = textLayer
-      .append("text")
-      .attr("class", "annotation-text")
-      .attr("transform", `translate(${annotation.x},${annotation.y0 + 10})`)
-      .attr("x", 2)
-      .attr("style", style.join(";"))
-      .text(`${prefix}${key}`);
-
-    const textBBox = text._groups[0][0].getBBox();
-    annotation.textBBox = textBBox;
-  });
+      const textBBox = text._groups[0][0].getBBox();
+      annotation.textBBox = textBBox;
+    });
 
   // Add the x axix
   let tickValues = [];
