@@ -50,6 +50,16 @@ Publisher metrics for {{ snap_title }}
               <option value="channel"{% if active_device_metric == 'channel' %} selected="selected"{% endif %}>By channel</option>
             </select>
           </div>
+          {% if featured %}
+            <div class="col-6 u-align-text--right">
+              <p>
+                <span class="p-tooltip p-tooltip--btm-right" aria-describedby="featured-info">
+                  ⭐ Featured
+                  <span class="p-tooltip__message" role="tooltip" id="featured-info">Your snap was featured on {{ featured }}</span>
+                </span>
+              </p>
+            </div>
+          {% endif %}
         </div>
         <div id="activeDevices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices">
           <div class="row">
