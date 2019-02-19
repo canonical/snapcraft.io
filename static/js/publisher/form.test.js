@@ -153,8 +153,6 @@ describe("initForm", () => {
 
     document.body.appendChild(form);
 
-    categories.categories = jest.fn();
-
     previewForm = document.createElement("form");
     previewForm.id = "preview-form";
     previewStateInput = document.createElement("input");
@@ -188,93 +186,91 @@ describe("initForm", () => {
     form.parentNode.removeChild(form);
   });
 
-  describe("form", () => {
-    test("creates state input", () => {
-      const stateInput = document.querySelector("[name='state']");
-      expect(stateInput.value).toEqual("");
+  test("should create state input", () => {
+    const stateInput = document.querySelector("[name='state']");
+    expect(stateInput.value).toEqual("");
+  });
+
+  test("should create diff input", () => {
+    const diffInput = document.querySelector("[name='changes']");
+    expect(diffInput.value).toEqual("");
+  });
+
+  test("should disable the submit button", () => {
+    expect(submitButton.getAttribute("disabled")).toEqual("");
+  });
+
+  test("should disable the revert button", () => {
+    expect(revertButton.classList.contains("is-disabled")).toEqual(true);
+    expect(revertButton.href).toEqual("javascript:void(0);");
+  });
+
+  describe("on title change", () => {
+    beforeEach(() => {
+      titleInput.click();
+      titleInput.value = "test2";
+      titleInput.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
-    test("creates diff input", () => {
-      const diffInput = document.querySelector("[name='changes']");
-      expect(diffInput.value).toEqual("");
+    test("should enable save button", () => {
+      expect(submitButton.getAttribute("disabled")).toBeNull();
     });
 
-    test("disables the submit button", () => {
-      expect(submitButton.getAttribute("disabled")).toEqual("");
+    test("should enable revert button", () => {
+      expect(revertButton.classList.contains("is-disabled")).toEqual(false);
+      expect(revertButton.href).toEqual("/test");
     });
+  });
 
-    test("disables the revert button", () => {
-      expect(revertButton.classList.contains("is-disabled")).toEqual(true);
-      expect(revertButton.href).toEqual("javascript:void(0);");
-    });
-
-    describe("on title change", () => {
-      beforeEach(() => {
+  describe("on submit", () => {
+    describe("with diffs", () => {
+      test("should update state and diff", () => {
         titleInput.click();
-        titleInput.value = "test2";
+        titleInput.value = "test3";
         titleInput.dispatchEvent(new Event("change", { bubbles: true }));
-      });
 
-      test("save is enabled", () => {
-        expect(submitButton.getAttribute("disabled")).toBeNull();
-      });
+        form.dispatchEvent(new Event("submit"));
 
-      test("revert is enabled", () => {
-        expect(revertButton.classList.contains("is-disabled")).toEqual(false);
-        expect(revertButton.href).toEqual("/test");
-      });
-    });
-
-    describe("on submit", () => {
-      describe("with diffs", () => {
-        test("state and diff are updated", () => {
-          titleInput.click();
-          titleInput.value = "test3";
-          titleInput.dispatchEvent(new Event("change", { bubbles: true }));
-
-          form.dispatchEvent(new Event("submit"));
-
-          const stateInput = document.querySelector("[name='state']");
-          expect(stateInput.value).toEqual(
-            JSON.stringify(
-              Object.assign(initialState, {
-                title: "test"
-              })
-            )
-          );
-
-          const diffInput = document.querySelector("[name='changes']");
-          expect(diffInput.value).toEqual(
-            JSON.stringify({
-              title: "test3",
-              categories: ""
+        const stateInput = document.querySelector("[name='state']");
+        expect(stateInput.value).toEqual(
+          JSON.stringify(
+            Object.assign(initialState, {
+              title: "test"
             })
-          );
-        });
-      });
-
-      describe("with no diff", () => {
-        test("nothing happens", () => {
-          const event = new Event("submit");
-          const spy = jest.spyOn(event, "preventDefault");
-
-          form.dispatchEvent(event);
-
-          expect(spy.mock.calls.length).toEqual(1);
-        });
-      });
-    });
-
-    describe("on preview", () => {
-      test("the state gets updated", () => {
-        previewButton.dispatchEvent(
-          new Event("click", {
-            bubbles: true
-          })
+          )
         );
 
-        expect(JSON.parse(previewStateInput.value)).toEqual(initialState);
+        const diffInput = document.querySelector("[name='changes']");
+        expect(diffInput.value).toEqual(
+          JSON.stringify({
+            title: "test3",
+            categories: ""
+          })
+        );
       });
+    });
+
+    describe("with no diff", () => {
+      test("should not submit", () => {
+        const event = new Event("submit");
+        const spy = jest.spyOn(event, "preventDefault");
+
+        form.dispatchEvent(event);
+
+        expect(spy.mock.calls.length).toEqual(1);
+      });
+    });
+  });
+
+  describe("on preview", () => {
+    test("should update the state", () => {
+      previewButton.dispatchEvent(
+        new Event("click", {
+          bubbles: true
+        })
+      );
+
+      expect(JSON.parse(previewStateInput.value)).toEqual(initialState);
     });
   });
 
@@ -288,7 +284,7 @@ describe("initForm", () => {
     });
 
     describe("updateLocalStorage init", () => {
-      test("set's the initial state", () => {
+      test("should set the initial state", () => {
         expect(window.localStorage.setItem.mock.calls.length).toEqual(2);
         expect(window.localStorage.setItem.mock.calls[0]).toEqual([
           "test-initial",
@@ -305,6 +301,7 @@ describe("initForm", () => {
   describe("categories", () => {
     describe("on submit", () => {
       beforeEach(() => {
+        jest.spyOn(categories, "categories");
         primaryCategoryInput.click();
         primaryCategoryInput.options[0].removeAttribute("selected");
         primaryCategoryInput.options[1].selected = "selected";
@@ -314,7 +311,7 @@ describe("initForm", () => {
 
         form.dispatchEvent(new Event("submit"));
       });
-      test("categories is called", () => {
+      test("should call categories function", () => {
         expect(categories.categories.mock.calls.length).toEqual(1);
       });
     });
