@@ -182,7 +182,7 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
     }
   });
 
-  const annotationsData = [];
+  let annotationsData = [];
   annotations.buckets.forEach((bucket, i) => {
     let obj = {
       date: utcParse("%Y-%m-%d")(bucket)
@@ -196,6 +196,12 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
     });
 
     annotationsData.push(obj);
+  });
+
+  annotationsData.sort((a, b) => {
+    const aTime = a.date.getTime();
+    const bTime = b.date.getTime();
+    return aTime - bTime;
   });
 
   // Colours
@@ -239,19 +245,80 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
     .append("g")
     .attr("class", "annotationsLayer");
 
-  annotationsData.forEach(annotation => {
-    annotationsLayer
-      .append("line")
-      .attr("class", "annotation")
-      .attr("transform", `translate(${xScale(annotation.date)},0)`)
-      .attr("y0", 0)
-      .attr("y1", yScale(1))
-      .attr("stroke", "#000");
-    annotationsLayer
+  annotationsData = annotationsData.map(annotation => {
+    let x = xScale(annotation.date);
+    let y = 0;
+    let y0 = 0;
+    let y1 = yScale(1);
+    let visible = true;
+
+    if (x < 0 + padding.left) {
+      x = 0 + padding.left;
+      visible = false;
+    }
+    return {
+      x,
+      y,
+      y0,
+      y1,
+      visible,
+      data: annotation
+    };
+  });
+
+  annotationsData.forEach((annotation, index) => {
+    const previousAnnotation = index > 0 ? annotationsData[index - 1] : null;
+    const lineLayer = annotationsLayer.append("g");
+    const textLayer = annotationsLayer.append("g");
+    let prefix = "";
+
+    if (previousAnnotation) {
+      if (
+        previousAnnotation.x + previousAnnotation.textBBox.width >
+        annotation.x
+      ) {
+        annotation.y0 = previousAnnotation.y0 + 16;
+        annotation.y1 = previousAnnotation.y1 - 16;
+        annotation.y = previousAnnotation.y + 16;
+      }
+    }
+
+    if (annotation.visible) {
+      lineLayer
+        .append("line")
+        .attr("class", "annotation-line")
+        .attr("transform", `translate(${annotation.x},${annotation.y})`)
+        .attr("y0", annotation.y0)
+        .attr("y1", annotation.y1)
+        .attr("stroke", "#000")
+        .attr("style", "pointer-events: none;");
+    } else {
+      prefix = "‹...";
+    }
+
+    const key = Object.keys(annotation.data)
+      .filter(key => key !== "date")
+      .filter(key => annotation.data[key] !== 0)[0];
+
+    if (key === "featured") {
+      prefix = prefix + "⭐ ";
+    }
+
+    const style = ["font-size: 12px"];
+    if (!annotation.visible) {
+      style.push("font-style: italic");
+    }
+
+    const text = textLayer
       .append("text")
       .attr("class", "annotation-text")
-      .attr("transform", `translate(${xScale(annotation.date)},0)`)
-      .text(Object.keys(annotation).filter(key => key !== "date")[0]);
+      .attr("transform", `translate(${annotation.x},${annotation.y0 + 10})`)
+      .attr("x", 2)
+      .attr("style", style.join(";"))
+      .text(`${prefix}${key}`);
+
+    const textBBox = text._groups[0][0].getBBox();
+    annotation.textBBox = textBBox;
   });
 
   // Add the x axix
@@ -334,7 +401,7 @@ function drawGraph(holderSelector, holder, activeDevices, annotations) {
   showGraph(holder);
 }
 
-export default function activeDevices(
+function activeDevices(
   holderSelector,
   activeDevices,
   type,
@@ -357,3 +424,5 @@ export default function activeDevices(
 
   select(window).on("resize", resize);
 }
+
+export { activeDevices as default };
