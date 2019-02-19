@@ -3,8 +3,6 @@ from json import loads
 import flask
 
 import bleach
-import calendar
-import datetime
 import pycountry
 import webapp.helpers as helpers
 from webapp.markdown import parse_markdown_description
@@ -204,32 +202,32 @@ def publisher_snap_metrics(snap_name):
     # to use 10, rather then latest
     default_track = helpers.get_default_track(snap_name)
 
-    featured = False
     annotations = {"name": "annotations", "series": [], "buckets": []}
 
     for category in details["categories"]["items"]:
         date = category["since"].split("T")[0]
-        if category["name"] != "featured":
-            if date not in annotations["buckets"]:
-                annotations["buckets"].append(date)
+        new_date = logic.convert_date(category["since"])
 
-            index_of_date = annotations["buckets"].index(date)
+        if date not in annotations["buckets"]:
+            annotations["buckets"].append(date)
 
-            single_series = {
-                "values": [0] * (len(annotations)),
-                "name": category["name"],
-            }
+        index_of_date = annotations["buckets"].index(date)
 
-            single_series["values"][index_of_date] = 1
+        single_series = {
+            "values": [0] * (len(annotations)),
+            "name": category["name"],
+            "display_name": category["name"].capitalize().replace("-", " "),
+            "display_date": new_date,
+            "date": date,
+        }
 
-            annotations["series"].append(single_series)
-        else:
-            new_date = datetime.datetime.strptime(date, "%Y-%m-%d")
-            featured = "{} {} {}".format(
-                calendar.month_name[new_date.month],
-                new_date.day,
-                new_date.year,
-            )
+        single_series["values"][index_of_date] = 1
+
+        annotations["series"].append(single_series)
+
+    annotations["series"] = sorted(
+        annotations["series"], key=lambda k: k["date"]
+    )
 
     context = {
         # Data direct from details API
@@ -246,7 +244,6 @@ def publisher_snap_metrics(snap_name):
         "territories_total": territories_total,
         "territories": country_devices.country_data,
         "active_devices_annotations": annotations,
-        "featured": featured,
         # Context info
         "is_linux": "Linux" in flask.request.headers["User-Agent"],
     }

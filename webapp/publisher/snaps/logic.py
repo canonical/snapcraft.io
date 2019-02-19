@@ -1,5 +1,6 @@
 import hashlib
 import datetime
+from dateutil import parser
 from json import dumps
 
 
@@ -296,3 +297,16 @@ def filter_available_stores(stores):
             available_stores.append(store)
 
     return available_stores
+
+
+def convert_date(date_to_convert):
+    """Convert date to human readable format: Month Year
+
+    Format of date to convert: 2019-01-12T16:48:41.821037+00:00
+    Output: January 2019
+
+    :param date_to_convert: Date to convert
+    :returns: Readable date
+    """
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
+    return date_parsed.strftime("%B %Y")
