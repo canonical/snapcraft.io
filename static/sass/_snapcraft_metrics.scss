@@ -1,4 +1,7 @@
 @mixin snapcraft-metrics {
+  $opaque-white: rgba(255, 255, 255, 1);
+  $transparent-white: rgba(255, 255, 255, 0);
+
   .snapcraft-metrics__graph {
     opacity: 0;
     position: relative;
@@ -41,6 +44,19 @@
     svg {
       opacity: .4;
       pointer-events: none;
+    }
+  }
+
+  .snapcraft-metrics__active-devices {
+    &::after {
+      background: linear-gradient(90deg, $transparent-white, $opaque-white);
+      bottom: 0;
+      content: " ";
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 1.5rem;
     }
   }
 }

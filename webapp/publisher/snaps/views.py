@@ -205,8 +205,20 @@ def publisher_snap_metrics(snap_name):
     annotations = {"name": "annotations", "series": [], "buckets": []}
 
     for category in details["categories"]["items"]:
-        annotations["series"].append({"values": [1], "name": category["name"]})
-        annotations["buckets"].append(category["since"].split("T")[0])
+        date = category["since"].split("T")[0]
+        if date not in annotations["buckets"]:
+            annotations["buckets"].append(date)
+
+        index_of_date = annotations["buckets"].index(date)
+
+        single_series = {
+            "values": [0] * (len(annotations)),
+            "name": category["name"],
+        }
+
+        single_series["values"][index_of_date] = 1
+
+        annotations["series"].append(single_series)
 
     context = {
         # Data direct from details API
@@ -222,7 +234,7 @@ def publisher_snap_metrics(snap_name):
         "active_devices": dict(active_devices),
         "territories_total": territories_total,
         "territories": country_devices.country_data,
-        "active_devices_annotations": dict(annotations),
+        "active_devices_annotations": annotations,
         # Context info
         "is_linux": "Linux" in flask.request.headers["User-Agent"],
     }
