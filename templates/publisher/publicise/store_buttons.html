@@ -139,7 +139,8 @@
   <script src="{{ static_url('js/dist/publisher.js') }}"></script>
   <script>
     Raven.context(function () {
-      snapcraft.publisher.publicise();
+      snapcraft.publisher.publicise.initSnapButtonsPicker();
+
       if (typeof ClipboardJS !== 'undefined') {
         new ClipboardJS('.js-clipboard-copy');
       }

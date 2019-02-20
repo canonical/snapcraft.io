@@ -1,4 +1,4 @@
-function publicise() {
+function initSnapButtonsPicker() {
   const languagePicker = document.querySelector(".js-language-select");
 
   function showLanguage(language) {
@@ -33,4 +33,4 @@ function publicise() {
   }
 }
 
-export { publicise };
+export { initSnapButtonsPicker };
