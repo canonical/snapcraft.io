@@ -1,0 +1,7 @@
+by {{ display_name(publisher, username) }}
+{% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
+<span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ package_name }}-tooltip">
+  <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
+  <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-tooltip">Verified account</span>
+</span>
+{% endif %}

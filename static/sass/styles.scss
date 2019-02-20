@@ -45,6 +45,7 @@ $color-navigation-background: #252525;
 @include vf-u-image-position;
 @include vf-u-equal-height;
 @include vf-u-hide;
+@include vf-u-show;
 
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;
