@@ -46,17 +46,4 @@
       pointer-events: none;
     }
   }
-
-  .snapcraft-metrics__active-devices {
-    &::after {
-      background: linear-gradient(90deg, $transparent-white, $opaque-white);
-      bottom: 0;
-      content: " ";
-      display: block;
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 1.5rem;
-    }
-  }
 }
