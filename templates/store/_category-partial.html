@@ -3,8 +3,8 @@
     <div class="swiper-wrapper">
       {% for snap in snaps %}
         <div class="p-carousel__item--snap swiper-slide">
-          {% set snap_no_margin = True %}
-          {% include "store/_single_snap.html" %}
+          {% set media_object_classname = "u-no-margin--bottom" %}
+          {% include 'store/_media-object-snap-partial.html' %}
         </div>
       {% endfor %}
     </div>
