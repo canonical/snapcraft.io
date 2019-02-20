@@ -155,6 +155,8 @@ def store_blueprint(store_query=None, testing=False):
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
+        total_results_count = searched_results["total"]
+
         snaps_results = logic.get_searched_snaps(searched_results)
         links = logic.get_pages_details(
             flask.request.base_url,
@@ -171,6 +173,7 @@ def store_blueprint(store_query=None, testing=False):
             "category_display": snap_category_display,
             "categories": categories,
             "snaps": snaps_results,
+            "total": total_results_count,
             "links": links,
             "error_info": error_info,
         }

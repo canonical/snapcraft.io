@@ -32,6 +32,7 @@ $color-navigation-background: #252525;
 @include vf-p-form-validation;
 @include vf-p-contextual-menu;
 @include vf-p-breadcrumbs;
+@include vf-p-pagination;
 
 // vanilla utilities
 @include vf-u-floats;
