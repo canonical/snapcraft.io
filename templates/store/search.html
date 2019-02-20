@@ -51,38 +51,14 @@
           <a href="/store">&lsaquo; Categories</a>
           <h2>{{ category_display }} snaps</h2>
         {% else %}
-          <h2>We’ve found some snaps</h2>
+          <h2>We’ve found {{ total }} snaps</h2>
         {% endif %}
       </div>
       <div class="row">
-        <div class="col-8">
+        <div class="p-fluid-grid--condensed">
           {% for snap in snaps %}
-            <div class="p-media-object">
-                <a href="/{{ snap.package_name }}" class="p-media-object__image">
-                {% if snap.icon_url %}
-                  <img src="{{ snap.icon_url }}"  alt="">
-                {% else %}
-                  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"  alt="">
-                {% endif %}
-                </a>
-                <div class="p-media-object__details">
-                  {# FIXME u-no-margin is a workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1879 #}
-                  <h3 class="p-media-object__title u-no-margin">
-                    <a href="/{{ snap.package_name }}">{{ snap.title }}</a>
-                  </h3>
-                  <ul class="p-media-object__meta-list u-no-margin">
-                    <li class="p-media-object__meta-list-item">
-                      <span class="u-off-screen">Publisher: </span>{{ display_name(snap.publisher, snap.origin) }}
-                      {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
-                        <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ snap.package_name }}-tooltip">
-                          <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
-                          <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ snap.package_name }}-tooltip">Verified account</span>
-                        </span>
-                      {% endif %}
-                    </li>
-                  </ul>
-                  <p class="p-media-object__content">{{ snap.summary }}</p>
-                </div>
+            <div class="p-fluid-grid__item">
+              {% include "store/_single_snap.html" %}
             </div>
           {% endfor %}
         </div>
@@ -97,11 +73,11 @@
   {% if links %}
   <section class="p-strip is-shallow">
     <nav class="row">
-      <div class="col-6 prefix-1 u-align--left">
+      <div class="col-6 u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
         {% if links.prev %}<a href="{{ links.prev }}">&#8249;&nbsp;Previous</a>{% endif %}
       </div>
-      <div class="col-6 suffix-1 u-align--right">
+      <div class="col-6 u-align--right">
         {% if links.next %}<a href="{{ links.next }}">Next&nbsp;&#8250;</a>{% endif %}
         {% if links.last %}&nbsp;<a href="{{ links.last }}">Last&nbsp;&#187;</a>{% endif %}
       </div>

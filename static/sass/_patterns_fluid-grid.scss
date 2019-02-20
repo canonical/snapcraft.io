@@ -11,6 +11,17 @@
     @extend %fluid-grid;
   }
 
+  .p-fluid-grid--condensed {
+    @extend %fluid-grid;
+    justify-content: start;
+
+    .p-fluid-grid__item {
+      @media screen and (min-width: $breakpoint-navigation-threshold) {
+        width: 25%; // 4 items per row = col-3
+      }
+    }
+  }
+
   .p-fluid-grid--centered {
     @extend %fluid-grid;
     justify-content: space-around;
