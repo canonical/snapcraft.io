@@ -125,7 +125,7 @@ def store_blueprint(store_query=None, testing=False):
         if not snap_searched and not snap_category:
             return flask.redirect(flask.url_for(".homepage"))
 
-        size = flask.request.args.get("limit", default=25, type=int)
+        size = flask.request.args.get("limit", default=24, type=int)
         offset = flask.request.args.get("offset", default=0, type=int)
 
         try:
