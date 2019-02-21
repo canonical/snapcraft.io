@@ -16,6 +16,8 @@
     justify-content: start;
 
     .p-fluid-grid__item {
+      width: 50%;
+
       @media screen and (min-width: $breakpoint-navigation-threshold) {
         width: 25%; // 4 items per row = col-3
       }

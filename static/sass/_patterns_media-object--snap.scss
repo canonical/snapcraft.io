@@ -5,7 +5,7 @@
 
   .p-media-object--snap {
     display: block;
-    margin-bottom: $spv-inter--regular;
+    margin-bottom: $spv-inter--regular * 2;
 
     &__img {
       align-self: flex-start;
