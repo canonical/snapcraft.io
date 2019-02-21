@@ -19,23 +19,23 @@ class TestsBadgePrometheusCounter(TestCase):
         return app
 
     def tests_increment_counter(self):
-        self.client.get(self.endpoint_url)
+        self.client.get(self.endpoint_url, buffered=True)
         assert badge_counter._value.get() == 1.0
 
     def tests_no_increment(self):
         with self.client.session_transaction() as s:
             s["session"] = "content"
 
-        self.client.get(self.endpoint_url)
+        self.client.get(self.endpoint_url, buffered=True)
         assert badge_counter._value.get() == 0.0
 
     def tests_increment_counter_logged_in(self):
-        self.client.get(self.endpoint_url)
+        self.client.get(self.endpoint_url, buffered=True)
         assert badge_logged_in_counter._value.get() == 0.0
 
     def tests_no_increment_logged_in(self):
         with self.client.session_transaction() as s:
             s["session"] = "content"
 
-        self.client.get(self.endpoint_url)
+        self.client.get(self.endpoint_url, buffered=True)
         assert badge_logged_in_counter._value.get() == 1.0
