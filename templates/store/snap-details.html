@@ -208,7 +208,7 @@
       </div>
 
       <div class="p-strip is-shallow">
-        <div class="row u-equal-height">
+        <div class="row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
             <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
               <h4>Where people are using {{ snap_title }}</h4>
