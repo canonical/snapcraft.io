@@ -250,11 +250,7 @@ def snap_details_views(store, api, handle_errors):
         if button not in button_variants:
             button = "black"
 
-        context.update(
-            {
-                "button": button
-            }
-        )
+        context.update({"button": button})
 
         return (
             flask.render_template("store/snap-embedded-card.html", **context),
