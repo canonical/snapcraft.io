@@ -27,8 +27,6 @@ def store_blueprint(store_query=None, testing=False):
         static_folder="/static",
     )
 
-    snap_details_views(store, api)
-
     def _handle_errors(api_error: ApiError):
         status_code = 502
         error = {"message": str(api_error)}
@@ -50,6 +48,8 @@ def store_blueprint(store_query=None, testing=False):
             return flask.abort(503)
 
         return status_code, error
+
+    snap_details_views(store, api, _handle_errors)
 
     @store.route("/discover")
     def discover():

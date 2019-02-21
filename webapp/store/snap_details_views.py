@@ -8,7 +8,6 @@ import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
-    ApiConnectionError,
     ApiError,
     ApiResponseDecodeError,
     ApiResponseError,
@@ -18,32 +17,10 @@ from webapp.api.exceptions import (
 from webapp.markdown import parse_markdown_description
 
 
-def snap_details_views(store, api):
+def snap_details_views(store, api, handle_errors):
 
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
-
-    def _handle_errors(api_error: ApiError):
-        status_code = 502
-        error = {"message": str(api_error)}
-
-        if type(api_error) is ApiTimeoutError:
-            status_code = 504
-        elif type(api_error) is ApiResponseDecodeError:
-            status_code = 502
-        elif type(api_error) is ApiResponseErrorList:
-            error["errors"] = api_error.errors
-            status_code = 502
-        elif type(api_error) is ApiResponseError:
-            status_code = 502
-        elif type(api_error) is ApiConnectionError:
-            status_code = 502
-        elif type(api_error) is ApiCircuitBreaker:
-            # Special case for this one, because it is the only case where we
-            # don't want the user to be able to access the page.
-            return flask.abort(503)
-
-        return status_code, error
 
     def _get_context_snap_details(snap_name):
         try:
@@ -204,7 +181,7 @@ def snap_details_views(store, api):
                     snap_name, metrics_query_json
                 )
             except ApiError as api_error:
-                status_code, error_info = _handle_errors(api_error)
+                status_code, error_info = handle_errors(api_error)
                 metrics_response = None
 
             os_metrics = None
