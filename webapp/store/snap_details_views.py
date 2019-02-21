@@ -19,6 +19,10 @@ from webapp.markdown import parse_markdown_description
 
 
 def snap_details_views(store, api):
+
+    snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
+    snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
+
     def _handle_errors(api_error: ApiError):
         status_code = 502
         error = {"message": str(api_error)}
@@ -155,7 +159,7 @@ def snap_details_views(store, api):
 
         return context
 
-    @store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
+    @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
         """
         A view to display the snap details page for specific snaps.
@@ -251,7 +255,7 @@ def snap_details_views(store, api):
             status_code,
         )
 
-    @store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>/embedded')
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/embedded')
     def snap_details_embedded(snap_name):
         """
         A view to display the snap embedded card for specific snaps.
@@ -279,7 +283,7 @@ def snap_details_views(store, api):
             status_code,
         )
 
-    @store.route('/<regex("[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"):snap_name>')
+    @store.route('/<regex("' + snap_regex_upercase + '"):snap_name>')
     def snap_details_case_sensitive(snap_name):
         return flask.redirect(
             flask.url_for(".snap_details", snap_name=snap_name.lower())
