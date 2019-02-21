@@ -5,12 +5,34 @@
   <div class="row">
     <h4>Promote your snap using embeddable responsive card</h4>
   </div>
+  <div class="p-strip is-shallow u-no-padding--top">
+    <div class="row">
+      <div class="col-2">
+        <label>
+          Snap Store button:
+        </label>
+      </div>
+      <div class="col-7">
+          <input type="radio" name="store-button" id="store-button-dark" checked="checked" value="black">
+          <label for="store-button-dark">Dark</label>
+          <input type="radio" name="store-button" id="store-button-light" value="white">
+          <label for="store-button-light">Light</label>
+          <input type="radio" name="store-button" id="store-button-hide" value="none">
+          <label for="store-button-hide">Hide button</label>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-2">
       <label>Preview:</label>
     </div>
     <div class="col-7">
-      <iframe src="/{{snap_name}}/embedded" width="100%" height="320px" frameborder="0" style="border: 1px solid"></iframe>
+      <iframe id="embedded-card-frame"
+        src="/{{snap_name}}/embedded?button=black"
+        width="100%" height="320px"
+        frameborder="0" style="border: 1px solid">
+      </iframe>
     </div>
   </div>
 
@@ -20,7 +42,7 @@
     </div>
     <div class="col-7">
       <div class="p-code-copyable">
-        <code class="p-code-copyable__input" id="snippet-card-html">&lt;iframe src="https://snapcraft.io/{{ snap_name }}/embedded" frameborder="0" width="100%" height="320px" style="border: 1px solid" &gt;&lt;/iframe&gt;</code>
+        <code class="p-code-copyable__input" id="snippet-card-html">&lt;iframe src="https://snapcraft.io/{{ snap_name }}/embedded?button=black" frameborder="0" width="100%" height="320px" style="border: 1px solid" &gt;&lt;/iframe&gt;</code>
         <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-card-html">Copy to clipboard</button>
       </div>
     </div>
@@ -32,11 +54,19 @@
 {% endblock %}
 
 {% block scripts %}
-  <script>
-    Raven.context(function () {
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script>
+  Raven.context(function () {
+    snapcraft.publisher.publicise.initEmbeddedCardPicker({
+      snapName: "{{ snap_name }}",
+      previewFrame: document.getElementById('embedded-card-frame'),
+      codeElement: document.getElementById('snippet-card-html'),
+      buttonRadios: document.querySelectorAll("input[name=store-button]")
     });
-  </script>
+
+    if (typeof ClipboardJS !== 'undefined') {
+      new ClipboardJS('.js-clipboard-copy');
+    }
+  });
+</script>
 {% endblock %}
