@@ -6,6 +6,39 @@ from webapp.app import create_app
 class GetEmbeddedCardTest(TestCase):
     render_templates = False
 
+    snap_payload = {
+        "snap-id": "id",
+        "name": "snapName",
+        "snap": {
+            "title": "Snap Title",
+            "summary": "This is a summary",
+            "description": "this is a description",
+            "media": [],
+            "license": "license",
+            "prices": 0,
+            "publisher": {
+                "display-name": "Toto",
+                "username": "toto",
+                "validation": True,
+            },
+            "categories": [{"name": "test"}],
+        },
+        "channel-map": [
+            {
+                "channel": {
+                    "architecture": "amd64",
+                    "name": "stable",
+                    "risk": "stable",
+                    "track": "latest",
+                },
+                "created-at": "2018-09-18T14:45:28.064633+00:00",
+                "version": "1.0",
+                "confinement": "conf",
+                "download": {"size": 100000},
+            }
+        ],
+    }
+
     def setUp(self):
         self.snap_name = "toto"
         self.api_url = "".join(
@@ -77,24 +110,8 @@ class GetEmbeddedCardTest(TestCase):
 
     @responses.activate
     def test_no_channel_map(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "prices": 0,
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-            },
-        }
+        payload = self.snap_payload
+        payload["channel_map"] = None
 
         responses.add(
             responses.Response(
@@ -104,42 +121,11 @@ class GetEmbeddedCardTest(TestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert response.status_code == 404
+        self.assertEqual(response.status_code, 200)
 
     @responses.activate
     def test_get_card(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "prices": 0,
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = self.snap_payload
 
         responses.add(
             responses.Response(
@@ -149,5 +135,21 @@ class GetEmbeddedCardTest(TestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         self.assert_context("snap_title", "Snap Title")
+        self.assert_context("button", "black")
+
+    @responses.activate
+    def test_get_card_white_button(self):
+        payload = self.snap_payload
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url + "?button=white")
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_context("button", "white")

@@ -245,13 +245,14 @@ def snap_details_views(store, api, handle_errors):
 
         context = _get_context_snap_details(snap_name)
 
+        button_variants = ["black", "white", "none"]
+        button = flask.request.args.get("button")
+        if button not in button_variants:
+            button = "black"
+
         context.update(
             {
-                "is_linux": (
-                    "Linux" in flask.request.headers.get("User-Agent", "")
-                    and "Android"
-                    not in flask.request.headers.get("User-Agent", "")
-                )
+                "button": button
             }
         )
 
