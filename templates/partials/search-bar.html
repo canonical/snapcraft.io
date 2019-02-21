@@ -3,6 +3,9 @@
     {% if not webapp_config['STORE_QUERY'] %}
       <h1 class="p-heading--two">Search thousands of snaps used by millions of people across 41 Linux distributions</h1>
     {% endif %}
+    {% if webapp_config['STORE_SEARCH_INTRO'] %}
+      {{ webapp_config['STORE_SEARCH_INTRO']|safe }}
+    {% endif %}
     <form action="/search" class="p-form p-form--inline p-form--search">
       {% if categories %}
         <div class="p-form__group p-form__group--no-grow">

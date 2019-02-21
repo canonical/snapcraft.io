@@ -8,6 +8,9 @@
         <a class="p-navigation__link" href="/">
           {% if webapp_config['STORE_BRAND'] and webapp_config['STORE_BRAND']['LOGO'] %}
             <img class="p-navigation__image" src="{{ webapp_config['STORE_BRAND']['LOGO'] }}" alt="{{ webapp_config['STORE_NAME'] }}" />
+            {% if webapp_config['STORE_BRAND'] and webapp_config['STORE_BRAND']['LOGO_TEXT'] %}
+              &nbsp;<h3 style="margin-top: 5px">{{ webapp_config['STORE_BRAND']['LOGO_TEXT'] }}</h3>
+            {% endif %}
           {% else %}
             {{ webapp_config['STORE_NAME'] }}
           {% endif %}

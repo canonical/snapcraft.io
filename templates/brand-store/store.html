@@ -36,6 +36,14 @@ sudo service snapd restart</code></pre>
         <hr />
       </div>
     {% endif %}
+    {% if webapp_config['STORE_INTRO'] %}
+      <div class="row">
+        {{ webapp_config['STORE_INTRO']|safe }}
+      </div>
+      <div class="row">
+        <hr />
+      </div>
+    {% endif %}
 
     <div class="row">
       <div class="col-12 p-fluid-grid">
