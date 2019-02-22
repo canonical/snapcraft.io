@@ -16,6 +16,7 @@ $color-navigation-background: #252525;
 @include vf-p-tooltips;
 
 @include vf-u-align;
+@include vf-u-floats;
 @include vf-u-margin-collapse;
 
 @import 'snapcraft_banner';
@@ -23,6 +24,8 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_details_heading';
 @include snapcraft-details-heading;
+
+// CUSTOM STYLES FOR EMBEDDED CARD
 
 // make max-width of the layout smaller for embedded view
 .row {
