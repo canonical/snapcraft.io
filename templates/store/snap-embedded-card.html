@@ -27,16 +27,30 @@
   </div>
 </div>
 
+{% if button != "none" or show_summary %}
 <div class="p-strip is-shallow">
   <div class="row">
     {% if button != "none" %}
-    <p>
+    <div class="{%if show_summary %}u-float--right{% endif %}">
       <a href="https://snapcraft.io/{{ package_name }}">
         <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-{{ button }}.svg" />
       </a>
-    </p>
-    <hr/>
+    </div>
     {% endif %}
+
+    {% if show_summary %}
+      <h4>{{ summary }}</h4>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row">
+  <hr class="u-no-margin--bottom"/>
+</div>
+{% endif %}
+
+<div class="p-strip is-shallow">
+  <div class="row">
     <p>{{ default_track }}/{{ lowest_risk_available }} {{ version }}</p>
     <p><small>Published {{ last_updated }}</small></p>
   </div>
