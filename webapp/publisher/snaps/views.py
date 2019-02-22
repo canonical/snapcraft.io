@@ -806,6 +806,45 @@ def post_register_name():
     return flask.redirect(flask.url_for("account.get_account"))
 
 
+@publisher_snaps.route("/register-name-dispute")
+@login_required
+def get_register_name_dispute():
+    snap_name = flask.request.args.get("snap-name")
+    if not snap_name:
+        return flask.redirect(
+            flask.url_for(".get_register_name", snap_name=snap_name)
+        )
+    return flask.render_template(
+        "publisher/register-name-dispute.html", snap_name=snap_name
+    )
+
+
+@publisher_snaps.route("/register-name-dispute", methods=["POST"])
+@login_required
+def post_register_name_dispute():
+    try:
+        snap_name = flask.request.form.get("snap-name")
+        claim_comment = flask.request.form.get("claim-comment")
+        api.post_register_name_dispute(
+            flask.session, bleach.clean(snap_name), bleach.clean(claim_comment)
+        )
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code in [400, 409]:
+            return flask.render_template(
+                "publisher/register-name-dispute.html",
+                snap_name=snap_name,
+                errors=api_response_error_list.errors,
+            )
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    return flask.render_template(
+        "publisher/register-name-dispute-success.html", snap_name=snap_name
+    )
+
+
 @publisher_snaps.route("/<snap_name>/settings")
 @login_required
 def get_settings(snap_name):

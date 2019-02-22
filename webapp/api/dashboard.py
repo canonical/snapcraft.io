@@ -51,6 +51,8 @@ SNAP_INFO_URL = "".join([DASHBOARD_API, "snaps/info/{snap_name}"])
 
 REGISTER_NAME_URL = "".join([DASHBOARD_API, "register-name/"])
 
+REGISTER_NAME_DISPUTE_URL = "".join([DASHBOARD_API, "register-name-dispute/"])
+
 REVISION_HISTORY_URL = "".join([DASHBOARD_API, "snaps/{snap_id}/history"])
 
 SNAP_RELEASE_HISTORY_URL = "".join(
@@ -186,6 +188,21 @@ def post_register_name(
 
     response = api_session.post(
         url=REGISTER_NAME_URL,
+        headers=get_authorization_header(session),
+        json=json,
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def post_register_name_dispute(session, snap_name, claim_comment):
+    json = {"snap_name": snap_name, "comment": claim_comment}
+
+    response = api_session.post(
+        url=REGISTER_NAME_DISPUTE_URL,
         headers=get_authorization_header(session),
         json=json,
     )
