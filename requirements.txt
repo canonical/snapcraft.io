@@ -17,7 +17,7 @@ requests==2.21.0
 requests-cache==0.4.13
 responses==0.9.0
 ruamel.yaml==0.15.72
-talisker==0.11.0
+talisker[gunicorn]==0.14.2
 
 # Temporary fix to SSO redirect issue
 Werkzeug==0.14.1
