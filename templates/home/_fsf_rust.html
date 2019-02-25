@@ -4,16 +4,16 @@
     <ul>
       <li>Bundle all the runtime requirements, with support for multiple architectures.</li>
       <li>Simplify installation instructions, regardless of distribution, to snap install myrustapp.</li>
-      <li>Directly control the delivery of automatic application updates.</li>
       <li>Extremely simple creation of services.</li>
       <li>No complex installation shell scripts to maintain.</li>
     </ul>
+	<p>Programming in Rust can sometimes be difficult, especially when one of the crates in your project changes. Snaps let you bundle all the necessary dependencies without having to worry about breakages.</p>
   </div>
 
   <div class='col-6'>
-    <h4>How Parity defines snapcraft.yaml:</h4>
+    <h4>How xsv defines snapcraft.yaml:</h4>
     <code class="p-code-yaml"><pre>
-<b>name</b>: parity
+<b>name</b>: xsv
 <b>version</b>: git
 <b>summary</b>: A fast CSV command line toolkit written in Rust
 <b>description</b>: |
@@ -37,10 +37,7 @@
 
 <b>apps</b>:
   <b>xsv</b>:
-    <b>command</b>: bin/xsv
-    <b>plugs</b>:
-      - home
-      - removable-media</pre></code>
+    <b>command</b>: bin/xsv</pre></code>
   </div>
 
   <div class="p-flow-details__continue">

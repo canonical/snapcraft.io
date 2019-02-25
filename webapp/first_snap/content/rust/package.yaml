@@ -51,8 +51,7 @@ explain:
     - text: |
         Parts define how to build your app. Parts can be anything: programs, libraries, or other assets needed to create and run your application. In this case we have one: the xsv source code. In other cases these can point to local directories, remote git repositories, or tarballs.
     - text: |
-        This example will also bundle the current stable release of Rust in the snap using <code>Rustup</code>. You can define the exact version of Rust with the optional <code>rust-revision</code> keyword.
-    - text: Dependencies from your <code>Cargo.toml</code> will also be bundled.
+        You can define the exact version of Rust with the optional <code>rust-revision</code> keyword. Dependencies from your <code>Cargo.toml</code> will also be bundled in the snap.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
