@@ -11,13 +11,13 @@
     "build": "yarn run get-licenses && yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output-style compressed --output static/css && postcss --use autoprefixer --no-map --replace 'static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-bundle",
-    "copy-3rd-party-js": "cp node_modules/global-nav/dist/index.js static/js/modules/global-nav.js && cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
+    "copy-3rd-party-js": "mkdir -p static/js/modules && cp node_modules/global-nav/dist/index.js static/js/modules/global-nav.js && cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
     "build-js-bundle": "webpack",
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "webpack --watch",
-    "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp webapp/licenses.json"
+    "clean": "rm -rf node_modules yarn-error.log css static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp webapp/licenses.json"
   },
   "husky": {
     "hooks": {
