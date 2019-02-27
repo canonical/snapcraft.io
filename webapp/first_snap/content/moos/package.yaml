@@ -1,0 +1,64 @@
+name: test-moos-ping-{name}
+download: git clone https://github.com/snapcraft-docs/moos-ping
+createDir: |
+  cd moos-ping
+  $EDITOR snapcraft.yaml
+metadata: |
+  name: moos-ping
+  version: '0.1'
+  summary: MOOS Ping Example
+  description: |
+    The main communication mechanism for all MOOS apps.
+explain:
+  metadata:
+    - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
+    - code: |
+        name: moos-ping
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>moos-ping</code> to <code>test-moos-ping-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official moos-ping snap.
+    - text: Versions carry no semantic meaning in snaps. Use text that best identifies that release, it won't be used to compare against the preceding or following one.
+    - code: |
+        version: '0.1'
+    - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
+    - code: |
+        description: |
+  security:
+    - text: The next section describes the level of confinement applied to your app.
+    - code: |
+        confinement: devmode
+    - text: Snaps are containerised to ensure more predictable application behaviour and greater security.
+    - text: It’s best to start a snap with the confinement in warning mode, rather than strictly applied. This is indicated through the <code>devmode</code> keyword.
+    - text: Once an app is working well in devmode, you can review confinement violations, add appropriate interfaces, and switch to strict confinement.
+  base:
+    - text: In general, snaps cannot see the root filesystem on end user systems. This prevents conflict with other applications and increases security. However, applications still need some location to act as the root filesystem. They would also benefit from common libraries (e.g. libc) being in this root filesystem rather than bundled into each application.
+    - text: The base keyword specifies a special kind of snap that provides a minimal set of libraries common to most applications. It will be mounted as the root filesystem for your application.
+    - code: |
+        base: core18
+    - text: The <code>core18</code> base is recommended.
+  parts:
+    - text: |
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. The <code>cmake</code> plugin builds CMake-based parts. You can pass flags using the common cmake semantics through the optional <code>configflags</code> keyword.
+    - code: |
+        parts:
+          moos:
+            source: https://github.com/themoos/core-moos/archive/ \
+            10.0.2.a-release.tar.gz
+            build-packages:
+              - gcc
+              - g++
+              - make
+            plugin: cmake
+            configflags:
+              - -DCMAKE_INSTALL_PREFIX=/
+    - text: |
+        The <code>build-packages</code> section lists the library dependencies that will be used by snapcraft to build the part.
+  apps:
+    - text: Apps are the commands you want to expose to users and any background services your application provides.
+    - code: |
+        apps:
+          MOOSDB:
+            command: MOOSDB
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>moos-ping</code> to <code>test-moos-ping-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official moos-ping snap.
+    - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
+    - text: If your command name matches the snap name, users will be able run the command directly.
