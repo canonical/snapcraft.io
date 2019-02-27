@@ -1,0 +1,16 @@
+macos:
+  - action: Create a Linux virtual machine for testing snaps
+    command: multipass launch -n testvm
+  - action: Return to the directory containing the .snap file and copy it into the virtual machine
+    command: 'multipass copy-files ros2-talker-listener*.snap testvm:'
+  - action: Connect to the virtual machine
+    command: multipass shell testvm
+  - action: Install the snap inside the virtual machine
+    command: sudo snap install --dangerous ros2-talker-listener*.snap
+  - action: Confirm the snap is installed by listing your installed snaps
+    command: snap list
+  - action: Run the snap inside the virtual machine
+    warning: You should change <code>ros2-talker-listener</code> to <code>test-ros2-talker-listener-{name}</code> (where <code>{name}</code> is your name), as written into the snapcraft.yaml file earlier.
+    command: test-ros2-talker-listener-{name}.run -h
+  - action: Exit the virtual machine
+    command: exit
