@@ -42,14 +42,12 @@ explain:
     - text: The <code>core18</code> base is recommended.
   parts:
     - text: |
-        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. In this case we have one: the xsv source code. In other cases these can point to local directories, remote git repositories, or tarballs.
     - code: |
         parts:
           xsv:
             plugin: rust
             source: .
-    - text: |
-        Parts define how to build your app. Parts can be anything: programs, libraries, or other assets needed to create and run your application. In this case we have one: the xsv source code. In other cases these can point to local directories, remote git repositories, or tarballs.
     - text: |
         You can define the exact version of Rust with the optional <code>rust-revision</code> keyword. Dependencies from your <code>Cargo.toml</code> will also be bundled in the snap.
   apps:
