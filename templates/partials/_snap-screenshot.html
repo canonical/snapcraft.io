@@ -1,16 +1,16 @@
 <div class="p-carousel__item--screenshot swiper-slide">
   {% if screenshot.endswith('.gif') %}
-  <video autoplay loop muted playsinline data-original="{{ screenshot }}">
-    <source src="https://res.cloudinary.com/canonical/image/fetch/f_webm/{{ screenshot }}" type="video/webm">
-    <source src="https://res.cloudinary.com/canonical/image/fetch/f_mp4/{{ screenshot }}" type="video/mp4">
-    <img src="https://res.cloudinary.com/canonical/image/fetch/f_jpg,q_auto,f_auto,w_430/{{ screenshot }}" />
-  </video>
+    <video autoplay loop muted playsinline data-original="{{ screenshot }}">
+      <source src="https://res.cloudinary.com/canonical/image/fetch/f_webm/{{ screenshot }}" type="video/webm">
+      <source src="https://res.cloudinary.com/canonical/image/fetch/f_mp4/{{ screenshot }}" type="video/mp4">
+      <img src="https://res.cloudinary.com/canonical/image/fetch/f_jpg,q_auto,f_auto,w_430/{{ screenshot }}" />
+    </video>
   {% else %}
-  <img src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }}"
+    <img src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }}"
        srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }} 215w,
-                          https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/{{ screenshot }} 430w"
+                https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/{{ screenshot }} 430w"
        sizes="(min-width: 1031px) 430px,
-                          (max-width: 1030px) and (min-width: 876px) 430px,
-                          (max-width: 760px) 215px" data-original="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_1170/{{ screenshot }}" alt="">
+              (max-width: 1030px) and (min-width: 876px) 430px,
+              (max-width: 760px) 215px" data-original="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_1170/{{ screenshot }}" alt="">
   {% endif %}
 </div>

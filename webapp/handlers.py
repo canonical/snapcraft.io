@@ -5,6 +5,8 @@ import webapp.template_utils as template_utils
 from urllib.parse import unquote, urlparse, urlunparse
 from webapp import authentication
 
+from canonicalwebteam import image_template
+
 
 badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
@@ -50,6 +52,7 @@ def set_handlers(app):
             "static_url": template_utils.static_url,
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
+            "image": image_template,
         }
 
     # Error handlers
