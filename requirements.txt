@@ -1,5 +1,5 @@
 # App dependencies
-canonicalwebteam.image-template==0.2.0
+canonicalwebteam.image-template==0.2.1
 bleach==2.0.0
 Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
