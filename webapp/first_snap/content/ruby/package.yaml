@@ -37,19 +37,30 @@ explain:
     - text: The <code>core18</code> base is recommended.
   parts:
     - text: |
-        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. The <code>gem</code> package manager will install the <code>rake</code> and <code>bundler</code> programs to satisfy the dependencies and make the part.
     - code: |
         parts:
           mdl:
+            source: .
             plugin: ruby
             gems:
-              - mdl
+              - rake
+              - bundler
+            override-build: |
+              snapcraftctl build
+              rake install
+            stage-packages:
+              - git
+    - text: |
+        The <code>override-build</code> keyword changes the behavior of the plugin as it builds the part. Here, the part will be made with <code>rake</code>.
+    - text: |
+        The <code>stage-packages</code> section specifies the list of libraries required by the ros2-talker-listener snap at runtime.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
         apps:
           mdl:
-            command: mdl
+            command: bin/mdl
     - warning: |
         <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>mdl</code> to <code>test-mdl-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official mdl snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
