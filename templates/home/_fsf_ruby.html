@@ -23,14 +23,19 @@
 
 <b>parts</b>:
   <b>mdl</b>:
-    <b>source:</b>: .
-    <b>plugin</b>: ruby
-    <b>gems</b>:
-      - mdl
-
+    <b>source</b>: .
+	<b>plugin</b>: ruby
+	<b>gems</b>:
+	  - rake
+	  - bundler
+	<b>override-build</b>: |
+	  snapcraftctl build
+	  rake install
+	<b>stage-packages</b>:
+	  - git
 <b>apps</b>:
   <b>mdl</b>:
-    <b>command</b>: mdl</pre></code>
+    <b>command</b>: bin/mdl</pre></code>
   </div>
 
   <div class="p-flow-details__continue">
