@@ -41,8 +41,7 @@ explain:
     - code: |
         parts:
           moos:
-            source: https://github.com/themoos/core-moos/archive/ \
-            10.0.2.a-release.tar.gz
+            source: https://github.com/themoos/core-moos/archive/10.0.2.a-release.tar.gz
             build-packages:
               - gcc
               - g++
