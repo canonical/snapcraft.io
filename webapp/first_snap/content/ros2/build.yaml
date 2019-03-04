@@ -9,7 +9,7 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-ros2-talker-listener-{name}.run -h
+      command: test-ros2-talker-listener-{name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-ros2-talker-listener-{name}</code>)
   manual:
@@ -22,7 +22,7 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-ros2-talker-listener-{name}.run -h
+      command: test-ros2-talker-listener-{name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-ros2-talker-listener-{name}</code>)
 macos:

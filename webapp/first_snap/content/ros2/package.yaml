@@ -59,7 +59,7 @@ explain:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
         apps:
-          run:
+          ros2-talker-listener:
             command: opt/ros/crystal/bin/ros2 launch demo_nodes_cpp \
             talker_listener.launch.py
     - warning: |

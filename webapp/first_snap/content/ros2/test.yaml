@@ -11,6 +11,6 @@ macos:
     command: snap list
   - action: Run the snap inside the virtual machine
     warning: You should change <code>ros2-talker-listener</code> to <code>test-ros2-talker-listener-{name}</code> (where <code>{name}</code> is your name), as written into the snapcraft.yaml file earlier.
-    command: test-ros2-talker-listener-{name}.run -h
+    command: test-ros2-talker-listener-{name} -h
   - action: Exit the virtual machine
     command: exit
