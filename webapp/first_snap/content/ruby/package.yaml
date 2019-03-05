@@ -37,7 +37,7 @@ explain:
     - text: The <code>core18</code> base is recommended.
   parts:
     - text: |
-        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. The <code>gem</code> package manager will install the <code>rake</code> and <code>bundler</code> programs to satisfy the dependencies and make the part.
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. The <code>gem</code> package manager will install the <code>rake</code> and <code>bundler</code> programs to satisfy the dependencies.
     - code: |
         parts:
           mdl:
@@ -49,12 +49,12 @@ explain:
             override-build: |
               snapcraftctl build
               rake install
-            stage-packages:
+            build-packages:
               - git
     - text: |
         The <code>override-build</code> keyword changes the behavior of the plugin as it builds the part. Here, the part will be made with <code>rake</code>.
     - text: |
-        The <code>stage-packages</code> section specifies the list of libraries required by the ros2-talker-listener snap at runtime.
+        The <code>build-packages</code> section lists the dependencies that will be used by snapcraft to build the parts.
   apps:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
