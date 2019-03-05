@@ -71,7 +71,11 @@
         "url": "https://snapcraft.io{{ self.meta_path() }}"
       }
     </script>
-
+    <script>
+      if (navigator.appVersion.indexOf("Chrome/") != -1) {
+        document.body.classList.add("is-chrome");
+      }
+    </script>
     {% block meta_schema %}{% endblock %}
   </body>
 </html>
