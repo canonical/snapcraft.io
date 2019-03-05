@@ -22,6 +22,17 @@
       </div>
     </div>
   </div>
+  <div class="p-strip is-shallow u-no-padding--top">
+    <div class="row">
+      <div class="col-2">
+        Options:
+      </div>
+      <div class="col-7" id="js-options">
+          <input type="checkbox" name="show-summary" id="option-show-summary">
+          <label for="option-show-summary">Show summary</label>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-2">
@@ -61,7 +72,8 @@
       snapName: "{{ snap_name }}",
       previewFrame: document.getElementById('embedded-card-frame'),
       codeElement: document.getElementById('snippet-card-html'),
-      buttonRadios: document.querySelectorAll("input[name=store-button]")
+      buttonRadios: document.querySelectorAll("input[name=store-button]"),
+      optionButtons: document.querySelectorAll("#js-options input[type=checkbox]")
     });
 
     if (typeof ClipboardJS !== 'undefined') {
