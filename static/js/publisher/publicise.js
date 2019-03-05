@@ -64,7 +64,7 @@ const getCardEmbedHTML = (snapName, options) => {
   return `&lt;iframe src="https://snapcraft.io${getCardPath(
     snapName,
     options
-  )}" frameborder="0" width="100%" height="320px" style="border: 1px solid" &gt;&lt;/iframe&gt;`;
+  )}" frameborder="0" width="100%" height="320px" style="border: 1px solid #CCC; border-radius: 2px;"&gt;&lt;/iframe&gt;`;
 };
 
 // get form state from inputs
