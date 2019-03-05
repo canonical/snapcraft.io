@@ -38,7 +38,18 @@ function initSnapButtonsPicker() {
 // EMBEDDABLE CARDS
 
 const getCardPath = (snapName, button) => {
-  return `/${snapName}/embedded?button=${button}`;
+  const path = `/${snapName}/embedded`;
+  let params = "";
+
+  if (button) {
+    params = `button=${button}`;
+  }
+
+  if (params) {
+    params = `?${params}`;
+  }
+
+  return `${path}${params}`;
 };
 
 const getCardEmbedHTML = (snapName, button) => {
