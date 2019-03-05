@@ -137,6 +137,21 @@ class GetEmbeddedCardTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assert_context("snap_title", "Snap Title")
+        self.assert_context("button", None)
+
+    @responses.activate
+    def test_get_card_default_button(self):
+        payload = self.snap_payload
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url + "?button=test")
+
+        self.assertEqual(response.status_code, 200)
         self.assert_context("button", "black")
 
     @responses.activate
