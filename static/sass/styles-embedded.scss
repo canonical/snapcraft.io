@@ -32,7 +32,12 @@ $color-navigation-background: #252525;
   max-width: 40rem;
 }
 
-html,
 body {
   background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
+
+  &.is-chrome {
+    // workaround for Chrome background overflowing iframe border
+    background: none;
+    width: calc(100% - 1px);
+  }
 }
