@@ -40,7 +40,7 @@ explain:
         Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
     - text: The <code>colcon</code> plugin is useful when building ROS application parts.
     - text: |
-        You can also use the <code>colcon-rosdistro</code> keyword to change the ROS distro required by the system. The command <code>snapcraft help colcon</code> gives more information on how this plugin works.
+        The plugin points to the ROS2 demos GitHub repository and uses <code>Crystal</code>, the latest ROS2 release available. You can use the <code>colcon-rosdistro</code> keyword to change the ROS distro required by the system. The <code>colcon-source-space</code> points to the source space containing the colcon C++ demo nodes packages. The command <code>snapcraft help colcon</code> gives more information on how this plugin works.
     - code: |
         parts:
           ros-demos:
@@ -52,16 +52,15 @@ explain:
             build-packages: [make, gcc, g++]
             stage-packages: [ros-crystal-ros2launch]
     - text: |
-        The <code>build-packages</code> sections lists the library dependencies that will be used by snapcraft to build the parts.
+        The <code>build-packages</code> section lists the dependencies that will be used by snapcraft to build the parts.
     - text: |
-        The <code>stage-packages</code> section specifies the list of libraries required by the ros2-talker-listener snap at runtime.
+        The <code>stage-packages</code> section specifies the list of components required by the ros2-talker-listener snap at runtime.
   apps:
-    - text: Apps are the commands you want to expose to users and any background services your application provides.
+    - text: Apps are the commands you want to expose to users and any background services your application provides. The command that runs within the snap uses the staged <code>ros-crystal-ros2launch</code> package to start the demo nodes talker/listener launch file.
     - code: |
         apps:
           ros2-talker-listener:
-            command: opt/ros/crystal/bin/ros2 launch demo_nodes_cpp \
-            talker_listener.launch.py
+            command: opt/ros/crystal/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py
     - warning: |
         <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>ros2-talker-listener</code> to <code>test-ros2-talker-listener-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official ros2-talker-listener snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
