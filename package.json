@@ -46,7 +46,6 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "clipboard": "^2.0.0",
-    "cssnano": "^3.10.0",
     "d3": "^4.10.2",
     "d3-array": "^1.2.4",
     "d3-axis": "^1.0.12",
