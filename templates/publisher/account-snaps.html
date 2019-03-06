@@ -169,18 +169,28 @@ My published snaps — Linux software in the Snap Store
   {% if registered_snaps %}
     <section class="p-strip is-shallow u-no-padding--top">
       <div class="row">
-        <div class="col-12">
-          <hr />
-          <h4>My registered snap names</h4>
-        </div>
+        <h4 class="p-heading--five">Registered names ({{ registered_snaps|count }})</h4>
       </div>
       <div class="row">
-        <p>
-          Names you own but have not pushed a snap to:
-        </p>
-        <p>
-          {% for registered_snap in registered_snaps|sort %}{% if loop.index > 1 %}, {% endif %}{{ registered_snap }}{% endfor %}
-        </p>
+        <table class="p-snapcraft-dispute-list">
+          <tbody>
+            {% for snap in registered_snaps|sort %}
+              <tr class="p-snapcraft-dispute-list__item{% if registered_snaps[snap].status != "Approved" %} p-snapcraft-dispute-list__item--warning{% endif %}">
+                <td width="25%">
+                  <i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>
+                  {{ snap }}
+                </td>
+                <td>
+                  {% if registered_snaps[snap].status == "DisputePending" %}
+                    Snap name disputed
+                  {% else %}
+                    <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </section>
   {% endif %}
