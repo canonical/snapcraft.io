@@ -254,6 +254,7 @@ def snap_details_views(store, api, handle_errors):
             {
                 "button": button,
                 "show_summary": flask.request.args.get("summary"),
+                "show_screenshot": flask.request.args.get("screenshot"),
             }
         )
 

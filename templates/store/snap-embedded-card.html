@@ -27,6 +27,15 @@
   </div>
 </div>
 
+{% if show_screenshot and screenshots[0] %}
+<div class="p-strip is-shallow">
+  <div class="row">
+  {% set screenshot = screenshots[0] %}
+  {% include "partials/_snap-screenshot.html" %}
+  </div>
+</div>
+{% endif %}
+
 {% if button or show_summary %}
 <div class="p-strip is-shallow">
   <div class="row">
