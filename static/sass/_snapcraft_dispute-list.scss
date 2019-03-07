@@ -1,17 +1,16 @@
 @mixin snapcraft-p-dispute-list {
-  .p-snapcraft-dispute-list__icon,
-  .p-snapcraft-dispute-list__link {
-    display: none;
-  }
-
   .p-snapcraft-dispute-list__item {
-    &--warning {
-      color: $color-negative;
+    .p-snapcraft-dispute-list__link {
+      display: none;
+    }
 
-      .p-snapcraft-dispute-list__icon {
-        display: inline-block;
-        margin-right: $sph-intra;
-      }
+    .p-snapcraft-dispute-list__muted {
+      color: $color-mid;
+    }
+
+    .p-snapcraft-dispute-list__icon {
+      display: inline-block;
+      margin-right: $sph-intra;
     }
 
     &:hover {
