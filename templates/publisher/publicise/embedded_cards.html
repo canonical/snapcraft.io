@@ -30,7 +30,7 @@
       <div class="col-7" id="js-options">
           <input type="checkbox" name="show-summary" id="option-show-summary">
           <label for="option-show-summary">Show summary</label>
-          <input type="checkbox" name="show-screenshot" id="option-show-screenshot">
+          <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not has_screenshot %}disabled{%endif%}>
           <label for="option-show-screenshot">Show screenshot</label>
       </div>
     </div>
