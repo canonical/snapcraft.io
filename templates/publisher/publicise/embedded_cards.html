@@ -30,6 +30,8 @@
       <div class="col-7" id="js-options">
           <input type="checkbox" name="show-summary" id="option-show-summary">
           <label for="option-show-summary">Show summary</label>
+          <input type="checkbox" name="show-screenshot" id="option-show-screenshot">
+          <label for="option-show-screenshot">Show screenshot</label>
       </div>
     </div>
   </div>
@@ -54,7 +56,7 @@
     </div>
     <div class="col-7">
       <div class="p-code-copyable">
-        <code class="p-code-copyable__input" id="snippet-card-html">&lt;iframe src="https://snapcraft.io/{{ snap_name }}/embedded?button=black" frameborder="0" width="100%" height="320px" style="border: 1px solid" &gt;&lt;/iframe&gt;</code>
+        <code class="p-code-copyable__input" id="snippet-card-html">&lt;iframe src="https://snapcraft.io/{{ snap_name }}/embedded?button=black" frameborder="0" width="100%" height="320px" style="border: 1px solid #CCC; border-radius: 2px;" &gt;&lt;/iframe&gt;</code>
         <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-card-html">Copy to clipboard</button>
       </div>
     </div>

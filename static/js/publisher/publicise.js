@@ -53,6 +53,14 @@ const getCardPath = (snapName, options = {}) => {
     params += `summary=true`;
   }
 
+  if (options["show-screenshot"]) {
+    if (params) {
+      params = `${params}&`;
+    }
+
+    params += `screenshot=true`;
+  }
+
   if (params) {
     params = `?${params}`;
   }
@@ -64,25 +72,22 @@ const getCardEmbedHTML = (snapName, options) => {
   return `&lt;iframe src="https://snapcraft.io${getCardPath(
     snapName,
     options
-  )}" frameborder="0" width="100%" height="320px" style="border: 1px solid #CCC; border-radius: 2px;"&gt;&lt;/iframe&gt;`;
+  )}" frameborder="0" width="100%" height="${
+    options.frameHeight
+  }px" style="border: 1px solid #CCC; border-radius: 2px;"&gt;&lt;/iframe&gt;`;
 };
 
 // get form state from inputs
-const getCurrentState = (buttonRadios, optionButtons) => {
+const getCurrentFormState = (buttonRadios, optionButtons) => {
   var state = {};
 
   // get state of store button radio
   var checked = buttonRadios.filter(b => b.checked);
-
-  if (checked[0].value) {
-    state.button = checked[0].value;
-  }
+  state.button = checked[0].value;
 
   // get state of options checkboxes
   optionButtons.forEach(checkbox => {
-    if (checkbox.checked) {
-      state[checkbox.name] = true;
-    }
+    state[checkbox.name] = checkbox.checked;
   });
 
   return state;
@@ -92,36 +97,68 @@ function initEmbeddedCardPicker(options) {
   const { snapName, previewFrame, codeElement } = options;
   const buttonRadios = [].slice.call(options.buttonRadios);
   const optionButtons = [].slice.call(options.optionButtons);
+  let state = {
+    ...getCurrentFormState(buttonRadios, optionButtons),
+    frameHeight: 320
+  };
 
-  const render = () => {
-    const state = getCurrentState(buttonRadios, optionButtons);
-    previewFrame.src = getCardPath(snapName, state);
+  const renderCode = state => {
     codeElement.innerHTML = getCardEmbedHTML(snapName, state);
+  };
+
+  const render = state => {
+    previewFrame.src = getCardPath(snapName, state);
+    renderCode(state);
   };
 
   buttonRadios.forEach(radio => {
     radio.addEventListener("change", e => {
       if (e.target.checked) {
-        render();
+        state = {
+          ...state,
+          ...getCurrentFormState(buttonRadios, optionButtons)
+        };
+        render(state);
       }
     });
   });
 
   optionButtons.forEach(checkbox => {
     checkbox.addEventListener("change", () => {
-      render();
+      state = {
+        ...state,
+        ...getCurrentFormState(buttonRadios, optionButtons)
+      };
+      render(state);
     });
   });
 
   buttonRadios.filter(r => r.value === "black")[0].checked = true;
   previewFrame.src = getCardPath(
     snapName,
-    getCurrentState(buttonRadios, optionButtons)
+    getCurrentFormState(buttonRadios, optionButtons)
   );
   codeElement.innerHTML = getCardEmbedHTML(
     snapName,
-    getCurrentState(buttonRadios, optionButtons)
+    getCurrentFormState(buttonRadios, optionButtons)
   );
+
+  previewFrame.addEventListener("load", function() {
+    // calulate frame height to be a bit bigger then content itself
+    // to have some spare room for responsiveness
+    const height =
+      Math.floor(
+        (previewFrame.contentWindow.document.body.scrollHeight + 20) / 10
+      ) * 10;
+
+    state = {
+      ...state,
+      frameHeight: height
+    };
+    // don't re-render the iframe not to trigger load again
+    previewFrame.style.height = height + "px";
+    renderCode(state);
+  });
 }
 
 export { initSnapButtonsPicker, initEmbeddedCardPicker };
