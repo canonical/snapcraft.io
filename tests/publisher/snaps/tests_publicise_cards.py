@@ -35,7 +35,7 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         self.check_call_by_api_url(responses.calls)
 
-        assert response.status_code == 404
+        self.assertEqual(response.status_code, 404)
         self.assert_template_used("404.html")
 
     @responses.activate
@@ -48,6 +48,7 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "private": False,
             "snap_name": snap_name,
             "keywords": [],
+            "media": [],
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -56,12 +57,37 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         self.check_call_by_api_url(responses.calls)
 
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
         self.assert_template_used("publisher/publicise/embedded_cards.html")
 
         self.assert_context("snap_id", "id")
         self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", snap_name)
+        self.assert_context("has_screenshot", False)
+
+    @responses.activate
+    def test_publicise_snap_with_screenshot(self):
+        snap_name = "test-snap"
+
+        payload = {
+            "snap_id": "id",
+            "title": "test snap",
+            "private": False,
+            "snap_name": snap_name,
+            "keywords": [],
+            "media": [{"url": "this is a url", "type": "screenshot"}],
+        }
+
+        responses.add(responses.GET, self.api_url, json=payload, status=200)
+
+        response = self.client.get(self.endpoint_url)
+
+        self.check_call_by_api_url(responses.calls)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("publisher/publicise/embedded_cards.html")
+
+        self.assert_context("has_screenshot", True)
 
     @responses.activate
     def test_publicise_private_snap(self):
@@ -73,6 +99,7 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "private": True,
             "snap_name": snap_name,
             "keywords": [],
+            "media": [],
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -81,5 +108,5 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         self.check_call_by_api_url(responses.calls)
 
-        assert response.status_code == 404
+        self.assertEqual(response.status_code, 404)
         self.assert_template_used("404.html")
