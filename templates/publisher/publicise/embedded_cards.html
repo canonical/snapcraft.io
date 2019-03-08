@@ -28,9 +28,11 @@
         Options:
       </div>
       <div class="col-7" id="js-options">
-          <input type="checkbox" name="show-summary" id="option-show-summary">
+          <input type="checkbox" name="show-channels" id="option-show-channels" checked>
+          <label for="option-show-channels">Show all channels</label>
+          <input type="checkbox" name="show-summary" id="option-show-summary" checked>
           <label for="option-show-summary">Show summary</label>
-          <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not has_screenshot %}disabled{%endif%}>
+          <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not has_screenshot %}disabled{% else %}checked{% endif %}>
           <label for="option-show-screenshot">Show screenshot</label>
       </div>
     </div>
@@ -43,7 +45,7 @@
     <div class="col-7">
       <iframe id="embedded-card-frame"
         class="snapcraft-publicise__embedded-frame"
-        src="/{{snap_name}}/embedded?button=black"
+        src="/{{snap_name}}/embedded?button=black&channels=true&summary=true&screenshot=true"
         width="100%" height="320px"
         frameborder="0" style="border: 1px solid #CCC; border-radius: 2px;">
       </iframe>
@@ -56,7 +58,7 @@
     </div>
     <div class="col-7">
       <div class="p-code-copyable">
-        <code class="p-code-copyable__input" id="snippet-card-html">&lt;iframe src="https://snapcraft.io/{{ snap_name }}/embedded?button=black" frameborder="0" width="100%" height="320px" style="border: 1px solid #CCC; border-radius: 2px;" &gt;&lt;/iframe&gt;</code>
+        <code class="p-code-copyable__input" id="snippet-card-html">&lt;iframe src="https://snapcraft.io/{{ snap_name }}/embedded?button=black&channels=true&summary=true&screenshot=true" frameborder="0" width="100%" height="320px" style="border: 1px solid #CCC; border-radius: 2px;" &gt;&lt;/iframe&gt;</code>
         <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-card-html">Copy to clipboard</button>
       </div>
     </div>

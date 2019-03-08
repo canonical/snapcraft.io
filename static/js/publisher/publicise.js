@@ -39,30 +39,26 @@ function initSnapButtonsPicker() {
 
 const getCardPath = (snapName, options = {}) => {
   const path = `/${snapName}/embedded`;
-  let params = "";
+  let params = [];
 
   if (options.button) {
-    params = `button=${options.button}`;
+    params.push(`button=${options.button}`);
+  }
+
+  if (options["show-channels"]) {
+    params.push(`channels=true`);
   }
 
   if (options["show-summary"]) {
-    if (params) {
-      params = `${params}&`;
-    }
-
-    params += `summary=true`;
+    params.push(`summary=true`);
   }
 
   if (options["show-screenshot"]) {
-    if (params) {
-      params = `${params}&`;
-    }
-
-    params += `screenshot=true`;
+    params.push(`screenshot=true`);
   }
 
-  if (params) {
-    params = `?${params}`;
+  if (params.length) {
+    params = `?${params.join("&")}`;
   }
 
   return `${path}${params}`;
@@ -79,10 +75,10 @@ const getCardEmbedHTML = (snapName, options) => {
 
 // get form state from inputs
 const getCurrentFormState = (buttonRadios, optionButtons) => {
-  var state = {};
+  const state = {};
 
   // get state of store button radio
-  var checked = buttonRadios.filter(b => b.checked);
+  let checked = buttonRadios.filter(b => b.checked);
   state.button = checked[0].value;
 
   // get state of options checkboxes
@@ -97,6 +93,7 @@ function initEmbeddedCardPicker(options) {
   const { snapName, previewFrame, codeElement } = options;
   const buttonRadios = [].slice.call(options.buttonRadios);
   const optionButtons = [].slice.call(options.optionButtons);
+
   let state = {
     ...getCurrentFormState(buttonRadios, optionButtons),
     frameHeight: 320
@@ -111,37 +108,35 @@ function initEmbeddedCardPicker(options) {
     renderCode(state);
   };
 
+  const getFormState = () => {
+    return getCurrentFormState(buttonRadios, optionButtons);
+  };
+
+  const updateState = () => {
+    state = {
+      ...state,
+      ...getFormState()
+    };
+    render(state);
+  };
+
   buttonRadios.forEach(radio => {
     radio.addEventListener("change", e => {
       if (e.target.checked) {
-        state = {
-          ...state,
-          ...getCurrentFormState(buttonRadios, optionButtons)
-        };
-        render(state);
+        updateState();
       }
     });
   });
 
   optionButtons.forEach(checkbox => {
     checkbox.addEventListener("change", () => {
-      state = {
-        ...state,
-        ...getCurrentFormState(buttonRadios, optionButtons)
-      };
-      render(state);
+      updateState();
     });
   });
 
   buttonRadios.filter(r => r.value === "black")[0].checked = true;
-  previewFrame.src = getCardPath(
-    snapName,
-    getCurrentFormState(buttonRadios, optionButtons)
-  );
-  codeElement.innerHTML = getCardEmbedHTML(
-    snapName,
-    getCurrentFormState(buttonRadios, optionButtons)
-  );
+  previewFrame.src = getCardPath(snapName, getFormState());
+  codeElement.innerHTML = getCardEmbedHTML(snapName, getFormState());
 
   previewFrame.addEventListener("load", function() {
     // calulate frame height to be a bit bigger then content itself
