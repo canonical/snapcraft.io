@@ -1,4 +1,5 @@
 {
+
   "scripts": {
     "lint-js": "eslint static/js",
     "lint-scss": "sass-lint 'static/**/*.scss' --verbose --no-exit",
