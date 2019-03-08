@@ -60,8 +60,29 @@
 
 <div class="p-strip is-shallow">
   <div class="row">
-    <p>{{ default_track }}/{{ lowest_risk_available }} {{ version }}</p>
-    <p><small>Published {{ last_updated }}</small></p>
+    {% if show_channels %}
+      <table>
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Version</th>
+            <th width="25%">Published</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for release in channel_map[default_architecture][default_track] %}
+          <tr>
+            <td>{% if default_track == "latest"%}{{ default_track }}/{% endif %}{{ release.channel }}</td>
+            <td>{{ release.version }}</td>
+            <td>{{ release["created-at"] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>{{ default_track }}/{{ lowest_risk_available }} {{ version }}</p>
+      <p><small>Published {{ last_updated }}</small></p>
+    {% endif %}
   </div>
 </div>
 {% endblock content %}

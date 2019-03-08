@@ -250,9 +250,15 @@ def snap_details_views(store, api, handle_errors):
         if button and button not in button_variants:
             button = "black"
 
+        architectures = context["channel_map"].keys()
+
         context.update(
             {
+                "default_architecture": (
+                    "amd64" if "amd64" in architectures else architectures[0]
+                ),
                 "button": button,
+                "show_channels": flask.request.args.get("channels"),
                 "show_summary": flask.request.args.get("summary"),
                 "show_screenshot": flask.request.args.get("screenshot"),
             }
