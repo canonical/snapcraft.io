@@ -41,3 +41,8 @@ body {
     width: calc(100% - 1px);
   }
 }
+
+.p-store-badge--right {
+  float: right;
+  margin-left: $sph-intra;
+}
