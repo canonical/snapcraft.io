@@ -42,7 +42,18 @@ body {
   }
 }
 
-.p-store-badge--right {
-  float: right;
-  margin-left: $sph-intra;
+// responsive styles for summary + badge
+@media screen and (min-width: $breakpoint-x-small) {
+  .p-embedded-description {
+    display: flex;
+  }
+
+  .p-embedded-description__summary {
+    flex-grow: 1;
+    margin-right: $sph-intra;
+  }
+
+  .p-embedded-description__badge {
+    flex-shrink: 0;
+  }
 }

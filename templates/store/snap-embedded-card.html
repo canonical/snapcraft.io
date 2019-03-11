@@ -39,17 +39,18 @@
 {% if button or show_summary %}
 <div class="p-strip is-shallow">
   <div class="row">
-    {% if button %}
-    <div class="{%if show_summary %}p-store-badge--right{% endif %}">
-      <a href="https://snapcraft.io/{{ package_name }}">
-        <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-{{ button }}.svg" />
-      </a>
+    <div class="p-embedded-description">
+      {% if show_summary %}
+        <h4 class="p-embedded-description__summary">{{ summary }}</h4>
+      {% endif %}
+      {% if button %}
+      <div class="p-embedded-description__badge">
+        <a href="https://snapcraft.io/{{ package_name }}">
+          <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-{{ button }}.svg" />
+        </a>
+      </div>
+      {% endif %}
     </div>
-    {% endif %}
-
-    {% if show_summary %}
-      <h4 class="u-no-margin--bottom">{{ summary }}</h4>
-    {% endif %}
   </div>
 </div>
 
