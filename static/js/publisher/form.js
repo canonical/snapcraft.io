@@ -1,10 +1,10 @@
-import { initSnapScreenshotsEdit } from "./market/screenshots";
 import { updateState, diffState } from "./state";
 import { publicMetrics } from "./market/publicMetrics";
 import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
 import { categories } from "./market/categories";
 import { storageCommands } from "./market/storageCommands";
+import { initMedia } from "./form/media";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -136,16 +136,19 @@ function initForm(config, initialState, errors) {
 
   initFormNotification(config.form, config.formNotification);
 
-  if (config.screenshotsToolbar && config.screenshotsWrapper) {
-    initSnapScreenshotsEdit(
-      config.screenshotsToolbar,
-      config.screenshotsWrapper,
-      state,
-      nextState => {
-        updateState(state, nextState);
-        updateFormState();
-      }
+  if (config.mediaHolder) {
+    const screenshots = state.images.filter(
+      image => image.type === "screenshot"
     );
+    initMedia(config.mediaHolder, screenshots, nextState => {
+      const noneScreenshots = state.images.filter(
+        item => item.type !== "screenshot"
+      );
+      const newState = Object.assign({}, state);
+      newState.images = noneScreenshots.concat(nextState);
+      updateState(state, newState);
+      updateFormState();
+    });
   }
 
   if (config.licenseRadioContent) {

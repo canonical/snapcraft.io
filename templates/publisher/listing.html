@@ -303,27 +303,47 @@
               <div class="col-12">
                 <div class="p-notification--negative">
                   <p class="p-notification__response">
-                      <strong>Screenshots:</strong> {{ field_errors['screenshots'] }}
+                      <strong>Media:</strong> {{ field_errors['screenshots'] }}
                   </p>
                 </div>
               </div>
             </div>
           {% endif %}
           <div class="row" data-validation-name="screenshots">
-            <div class="col-12">
+            <div class="col-2">
+              <label>Images:</label>
+            </div>
+            <div class="col-8">
+              <div class="p-notification--caution js-media-limit-warning{% if screenshot_urls|length < 5 %} u-hide{% endif %}">
+                <p class="p-notification__response">You have over 5 images uploaded. Not all image will be visible to users.</p>
+              </div>
+              <div class="p-listing-images p-fluid-grid js-media-holder">
+                {% set remainder = 5 - screenshot_urls|length %}
+                {% for image in screenshot_urls %}
+                  <div class="p-listing-images__image p-fluid-grid__item--small js-media-item-holder{% if loop.index > 5 %} p-listing-images__image--no-show{% endif %}">
+                    <img src="{{ image }}" />
+                  </div>
+                {% endfor %}
+                {% for empty in range(0, remainder) %}
+                  <div class="p-listing-images__image is-empty p-fluid-grid__item--small js-media-item-holder">
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            {#<div class="col-12">
               <div class="p-screenshots-toolbar" id="screenshots-toolbar">
-                <label>Screenshots (up to 5):</label>
+                <label>Images (up to 5):</label>
                 <div class="p-screenshots-toolbar__buttons">
                   <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
                   <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
                   <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
                 </div>
               </div>
-            </div>
+            </div>#}
           </div>
 
-          <div class="row" id="snap-screenshots">
-          </div>
+          {#<div class="row" id="snap-screenshots">
+          </div>#}
         </div>
 
         <div class="p-strip is-shallow">
@@ -516,12 +536,13 @@
       snapIconInput: "snap_icon",
       form: "market-form",
       formNotification: "market-form-status",
-      screenshotsToolbar: "screenshots-toolbar",
-      screenshotsWrapper: "snap-screenshots",
+      // screenshotsToolbar: "screenshots-toolbar",
+      // screenshotsWrapper: "snap-screenshots",
       licenseRadioContent: [
         document.getElementById('license-simple-input'),
         document.getElementById('license-custom-input')
-      ]
+      ],
+      mediaHolder: ".js-media-holder",
     }, {
       snap_name: {{ snap_name|tojson }},
       title: {{ snap_title|tojson }},
