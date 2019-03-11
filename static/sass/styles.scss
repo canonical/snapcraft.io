@@ -210,6 +210,9 @@ $color-navigation-background: #252525;
 @import 'patterns_modal';
 @include vf-p-modal-snapcraft;
 
+@import 'patterns_strip_slanted';
+@include p-strip-slanted;
+
 html,
 body {
   background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129

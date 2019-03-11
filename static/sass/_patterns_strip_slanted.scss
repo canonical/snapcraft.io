@@ -1,0 +1,55 @@
+// based on https://github.com/vanilla-framework/vanilla-framework/pull/2051
+
+@mixin p-strip-slanted {
+  $horizontal-edge-padding: $spv-inter--regular-scaleable;
+  $slanted-edge-padding: $horizontal-edge-padding * 2; // coloured area takes half the rectangle surface area; to visually compensate, we multiply it by 2
+  $bleed: -3px; // stretch outside to compensate for aliasing; otherwise edge of image underneath becomes visible as you resize
+
+  %vf-strip-slanted {
+    background-position: 50% 50%;
+    margin-top: $bleed;
+    overflow: hidden;
+    position: relative;
+
+    @media (max-width: $breakpoint-large) {
+      background-size: cover;
+      padding: $spv-inter--regular-scaleable 0 $slanted-edge-padding;
+    }
+    @media (min-width: $breakpoint-large) {
+      background-size: 5000px 667px; // actual svg size
+      padding: $spv-inter--regular-scaleable 0 $slanted-edge-padding;
+    }
+
+    &::after {
+      background-position: 100% 100%;
+      background-repeat: no-repeat;
+      bottom: $bleed;
+      content: '';
+      left: $bleed;
+      pointer-events: none; // keep the content underneath it interactive
+      position: absolute;
+      right: $bleed;
+      top: $bleed;
+      z-index: 1;
+
+      @media only screen and (max-width: $breakpoint-large) {
+        background-size: auto $slanted-edge-padding;
+      }
+
+      @media only screen and (min-width: $breakpoint-large) {
+        background-size: 100%;
+      }
+    }
+  }
+
+  .p-strip-slanted--snapcraft {
+    @extend %vf-strip;
+    @extend %vf-strip-slanted;
+    background-image: url('#{$assets-path}a3c29307-hero-bg-snapcraft-1--nowhite.svg');
+    color: $color-light;
+
+    &::after {
+      background-image: url('#{$assets-path}077b5e59-hero-bg-mask-snapcraft--white-orange--bigger-accent.svg');
+    }
+  }
+}
