@@ -7,7 +7,7 @@ function install(language) {
   const osWrappers = document.querySelectorAll(".js-os-wrapper");
 
   if (osPickers) {
-    osPickers.forEach(function(os) {
+    Array.prototype.slice.call(osPickers).forEach(function(os) {
       os.addEventListener("click", function(e) {
         const osSelect = e.target.closest(".js-os-select");
         if (!osSelect) {
@@ -22,7 +22,7 @@ function install(language) {
         osSelect.classList.add("is-selected");
 
         if (osWrappers) {
-          osWrappers.forEach(function(wrapper) {
+          Array.prototype.slice.call(osWrappers).forEach(function(wrapper) {
             wrapper.classList.add("u-hide");
           });
         }
