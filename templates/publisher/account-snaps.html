@@ -122,50 +122,54 @@ My published snaps — Linux software in the Snap Store
         </thead>
         <tbody>
           {% for snap in snaps|sort %}
-            <tr>
-              <td>
-                <a href="/account/snaps/{{snap}}/listing" class="u-vertically-center">
-                  {% if snaps[snap].icon_url %}
-                    <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
-                  {% else %}
-                    <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-snap-list__image" />
-                  {% endif %}
-                  <span class="p-snap-list__name">
-                    {{snap}}
-                    {% if snaps[snap].status == "DisputePending" %}
-                      &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
-                        <i class="p-icon--warning"></i>
-                        <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name being disputed</span>
-                      </span>
+            {% with %}
+              {% set dispute_pending = snaps[snap].status == "DisputePending" %}
+              {% set published = snaps[snap].status == "Published" %}
+              <tr>
+                <td>
+                  <a href="/account/snaps/{{snap}}/listing" class="u-vertically-center">
+                    {% if snaps[snap].icon_url %}
+                      <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
+                    {% else %}
+                      <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-snap-list__image" />
                     {% endif %}
-                  </span>
-                </a>
-              </td>
-              <td>
-                {% if snaps[snap].private %}
-                  Private
+                    <span class="p-snap-list__name">
+                      {{snap}}
+                      {% if dispute_pending %}
+                        &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
+                          <i class="p-icon--warning"></i>
+                          <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name being disputed</span>
+                        </span>
+                      {% endif %}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  {% if snaps[snap].private %}
+                    Private
+                  {% else %}
+                    Public
+                  {% endif %}
+                </td>
+                <td>
+                  {% if snaps[snap].publisher.username == current_user %}
+                    You
+                  {% else %}
+                    {{ snaps[snap].publisher['display-name'] }}
+                  {% endif %}
+                </td>
+                {% if published %}
+                  <td>{{ snaps[snap].latest_revisions[0].channels[0] }}</td>
                 {% else %}
-                  Public
+                  <td>Not released</td>
                 {% endif %}
-              </td>
-              <td>
-                {% if snaps[snap].publisher.username == current_user %}
-                  You
-                {% else %}
-                  {{ snaps[snap].publisher['display-name'] }}
-                {% endif %}
-              </td>
-              {% if snaps[snap].latest_revisions[0].status == 'Published' %}
-                <td>{{ snaps[snap].latest_revisions[0].channels[0] }}</td>
-              {% else %}
-                <td>Not released</td>
-              {% endif %}
-              <td>
-                <a href="/{{snap}}/releases">
-                  {{ snaps[snap].latest_revisions[0].version }}
-                </a>
-              </td>
-            </tr>
+                <td>
+                  <a href="/{{snap}}/releases">
+                    {{ snaps[snap].latest_revisions[0].version }}
+                  </a>
+                </td>
+              </tr>
+            {% endwith %}
           {% endfor %}
         </tbody>
       </table>
@@ -181,21 +185,23 @@ My published snaps — Linux software in the Snap Store
         <table>
           <tbody>
             {% for snap in registered_snaps|sort %}
-              <tr class="p-snapcraft-dispute-list__item">
-                <td width="25%">
-                  {% if registered_snaps[snap].status == "DisputePending" %}
-                    <i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>&nbsp;
-                  {% endif %}
-                  {{ snap }}
-                </td>
-                <td>
-                  {% if registered_snaps[snap].status == "DisputePending" %}
-                    <span class="p-snapcraft-dispute-list__muted">(Snap name disputed)</span>
-                  {% else %}
-                    <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
-                  {% endif %}
-                </td>
-              </tr>
+              {% with dispute_pending = registered_snaps[snap].status == "DisputePending" %}
+                <tr class="p-snapcraft-dispute-list__item">
+                  <td width="25%">
+                    {{ snap }}
+                    {% if dispute_pending %}
+                      &nbsp;<i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if dispute_pending %}
+                      <span class="p-snapcraft-dispute-list__muted">(Snap name disputed)</span>
+                    {% else %}
+                      <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endwith %}
             {% endfor %}
           </tbody>
         </table>
