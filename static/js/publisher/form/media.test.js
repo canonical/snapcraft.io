@@ -105,7 +105,6 @@ describe("Media", () => {
   });
 
   describe("add image", () => {
-    let form;
     let cont;
     let updateState;
 
@@ -123,20 +122,13 @@ describe("Media", () => {
         />
       );
 
-      form = document.createElement("form");
-      document.body.appendChild(form);
-
-      container.children[0].closest = () => {
-        return form;
-      };
-
       const addButton = container.querySelector(addImageSelector);
       addButton.click();
 
       cont = container;
     });
     it("should add an file input to the dom when adding an image", () => {
-      expect(form.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
+      expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
     });
 
     it("should add a new image on file input change", () => {
@@ -148,7 +140,7 @@ describe("Media", () => {
       const fileContents = "testymctestface";
       const file = new File([fileContents], "test", { type: "image/png" });
 
-      const input = form.querySelector(`[name="screenshots"]`);
+      const input = cont.querySelector(`[name="screenshots"]`);
 
       Object.defineProperty(input, "files", {
         value: [file]
@@ -295,7 +287,6 @@ describe("Media", () => {
 
   describe("keyboard", () => {
     let cont;
-    let form;
 
     beforeEach(() => {
       const { container } = render(
@@ -310,13 +301,6 @@ describe("Media", () => {
         />
       );
 
-      form = document.createElement("form");
-      document.body.appendChild(form);
-
-      container.children[0].closest = () => {
-        return form;
-      };
-
       cont = container;
     });
 
@@ -324,7 +308,7 @@ describe("Media", () => {
       const addButton = cont.querySelector(addImageSelector);
       fireEvent.keyDown(addButton, { key: "Enter", code: 13, charCode: 13 });
 
-      expect(form.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
+      expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
     });
   });
 });

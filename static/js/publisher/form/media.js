@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import ReactDOM from "react-dom";
 
 import { PropTypes } from "prop-types";
 
@@ -88,8 +87,7 @@ class Media extends React.Component {
       this.mediaChange(input);
     });
 
-    const form = ReactDOM.findDOMNode(this).closest("form"); // eslint-disable-line react/no-find-dom-node
-    form.appendChild(input);
+    this.holder.appendChild(input);
     input.click();
   }
 
@@ -232,7 +230,10 @@ class Media extends React.Component {
     return (
       <Fragment>
         {this.renderOverLimit()}
-        <div className="p-listing-images p-fluid-grid">
+        <div
+          className="p-listing-images p-fluid-grid"
+          ref={item => (this.holder = item)}
+        >
           {mediaList.map((item, i) => (
             <MediaItem
               key={item.url}
