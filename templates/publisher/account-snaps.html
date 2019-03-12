@@ -24,7 +24,7 @@ My published snaps — Linux software in the Snap Store
   <div class="row">
     <div class="col-12">
       <h1 class="p-heading--four u-float--left">My published snaps</h1>
-      <a href="/account/register-snap" class="p-button--neutral u-float--right p-snap-list__register">Register a snap name</a>
+      <a href="/account/register-snap" class="p-button--neutral u-float--right p-snap-list__register u-no-margin--top">Register a snap name</a>
     </div>
   </div>
   {% if not snaps %}
@@ -122,44 +122,54 @@ My published snaps — Linux software in the Snap Store
         </thead>
         <tbody>
           {% for snap in snaps|sort %}
-            <tr>
-              <td>
-                <a href="/account/snaps/{{snap}}/listing" class="u-vertically-center">
-                  {% if snaps[snap].icon_url %}
-                    <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
+            {% with %}
+              {% set dispute_pending = snaps[snap].status == "DisputePending" %}
+              {% set published = snaps[snap].status == "Published" %}
+              <tr>
+                <td>
+                  <a href="/account/snaps/{{snap}}/listing" class="u-vertically-center">
+                    {% if snaps[snap].icon_url %}
+                      <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
+                    {% else %}
+                      <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-snap-list__image" />
+                    {% endif %}
+                    <span class="p-snap-list__name">
+                      {{snap}}
+                      {% if dispute_pending %}
+                        &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
+                          <i class="p-icon--warning"></i>
+                          <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name dispute in progress</span>
+                        </span>
+                      {% endif %}
+                    </span>
+                  </a>
+                </td>
+                <td>
+                  {% if snaps[snap].private %}
+                    Private
                   {% else %}
-                    <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-snap-list__image" />
+                    Public
                   {% endif %}
-                  <span class="p-snap-list__name">
-                    {{snap}}
-                  </span>
-                </a>
-              </td>
-              <td>
-                {% if snaps[snap].private %}
-                  Private
+                </td>
+                <td>
+                  {% if snaps[snap].publisher.username == current_user %}
+                    You
+                  {% else %}
+                    {{ snaps[snap].publisher['display-name'] }}
+                  {% endif %}
+                </td>
+                {% if published %}
+                  <td>{{ snaps[snap].latest_revisions[0].channels[0] }}</td>
                 {% else %}
-                  Public
+                  <td>Not released</td>
                 {% endif %}
-              </td>
-              <td>
-                {% if snaps[snap].publisher.username == current_user %}
-                  You
-                {% else %}
-                  {{ snaps[snap].publisher['display-name'] }}
-                {% endif %}
-              </td>
-              {% if snaps[snap].latest_revisions[0].status == 'Published' %}
-                <td>{{ snaps[snap].latest_revisions[0].channels[0] }}</td>
-              {% else %}
-                <td>Not released</td>
-              {% endif %}
-              <td>
-                <a href="/{{snap}}/releases">
-                  {{ snaps[snap].latest_revisions[0].version }}
-                </a>
-              </td>
-            </tr>
+                <td>
+                  <a href="/{{snap}}/releases">
+                    {{ snaps[snap].latest_revisions[0].version }}
+                  </a>
+                </td>
+              </tr>
+            {% endwith %}
           {% endfor %}
         </tbody>
       </table>
@@ -169,18 +179,32 @@ My published snaps — Linux software in the Snap Store
   {% if registered_snaps %}
     <section class="p-strip is-shallow u-no-padding--top">
       <div class="row">
-        <div class="col-12">
-          <hr />
-          <h4>My registered snap names</h4>
-        </div>
+        <h4 class="p-heading--five">Registered names ({{ registered_snaps|count }})</h4>
       </div>
       <div class="row">
-        <p>
-          Names you own but have not pushed a snap to:
-        </p>
-        <p>
-          {% for registered_snap in registered_snaps|sort %}{% if loop.index > 1 %}, {% endif %}{{ registered_snap }}{% endfor %}
-        </p>
+        <table>
+          <tbody>
+            {% for snap in registered_snaps|sort %}
+              {% with dispute_pending = registered_snaps[snap].status == "DisputePending" %}
+                <tr class="p-snapcraft-dispute-list__item">
+                  <td width="25%">
+                    {{ snap }}
+                    {% if dispute_pending %}
+                      &nbsp;<i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if dispute_pending %}
+                      <span class="p-snapcraft-dispute-list__muted">(Name dispute in progress)</span>
+                    {% else %}
+                      <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endwith %}
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </section>
   {% endif %}
