@@ -138,7 +138,7 @@ My published snaps — Linux software in the Snap Store
                       {% if dispute_pending %}
                         &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
                           <i class="p-icon--warning"></i>
-                          <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name being disputed</span>
+                          <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name dispute in progress</span>
                         </span>
                       {% endif %}
                     </span>
@@ -195,7 +195,7 @@ My published snaps — Linux software in the Snap Store
                   </td>
                   <td>
                     {% if dispute_pending %}
-                      <span class="p-snapcraft-dispute-list__muted">(Snap name disputed)</span>
+                      <span class="p-snapcraft-dispute-list__muted">(Name dispute in progress)</span>
                     {% else %}
                       <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
                     {% endif %}
