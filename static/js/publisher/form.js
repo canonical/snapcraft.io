@@ -4,7 +4,7 @@ import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
 import { categories } from "./market/categories";
 import { storageCommands } from "./market/storageCommands";
-import { initMedia } from "./form/media";
+import { initMedia } from "./market/initMedia";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional

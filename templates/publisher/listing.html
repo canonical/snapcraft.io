@@ -314,36 +314,11 @@
               <label>Images:</label>
             </div>
             <div class="col-8">
-              <div class="p-notification--caution js-media-limit-warning{% if screenshot_urls|length < 5 %} u-hide{% endif %}">
-                <p class="p-notification__response">You have over 5 images uploaded. Not all image will be visible to users.</p>
-              </div>
-              <div class="p-listing-images p-fluid-grid js-media-holder">
-                {% set remainder = 5 - screenshot_urls|length %}
-                {% for image in screenshot_urls %}
-                  <div class="p-listing-images__image p-fluid-grid__item--small js-media-item-holder{% if loop.index > 5 %} p-listing-images__image--no-show{% endif %}">
-                    <img src="{{ image }}" />
-                  </div>
-                {% endfor %}
-                {% for empty in range(0, remainder) %}
-                  <div class="p-listing-images__image is-empty p-fluid-grid__item--small js-media-item-holder">
-                  </div>
-                {% endfor %}
+              <div class="js-media-holder">
+                <i class="p-icon--spinner u-animation--spin"></i>
               </div>
             </div>
-            {#<div class="col-12">
-              <div class="p-screenshots-toolbar" id="screenshots-toolbar">
-                <label>Images (up to 5):</label>
-                <div class="p-screenshots-toolbar__buttons">
-                  <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
-                  <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
-                  <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
-                </div>
-              </div>
-            </div>#}
           </div>
-
-          {#<div class="row" id="snap-screenshots">
-          </div>#}
         </div>
 
         <div class="p-strip is-shallow">

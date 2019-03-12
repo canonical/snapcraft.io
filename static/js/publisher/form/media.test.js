@@ -1,26 +1,6 @@
-import Media, { initMedia } from "./media";
+import Media from "./media";
 import React from "react";
 import { render, fireEvent } from "react-testing-library";
-
-describe("initMedia", () => {
-  it("should throw if there is no media holder", () => {
-    expect(function() {
-      initMedia();
-    }).toThrow();
-  });
-
-  it("should render to the holder, without images", () => {
-    const holder = document.createElement("div");
-    holder.id = "media-holder";
-    document.body.appendChild(holder);
-
-    initMedia("#media-holder", [], () => {});
-
-    expect(
-      holder.querySelectorAll(".p-listing-images__add-image").length
-    ).toEqual(1);
-  });
-});
 
 describe("Media", () => {
   const imageSelector = ".js-media-item-holder:not(.is-empty)";
@@ -108,10 +88,6 @@ describe("Media", () => {
   });
 
   it("should show an warning element if too many items are passed", () => {
-    const warning = document.createElement("div");
-    warning.className = "js-media-limit-warning u-hide";
-    document.body.appendChild(warning);
-
     const { container } = render(
       <Media
         mediaData={[
@@ -123,9 +99,9 @@ describe("Media", () => {
       />
     );
 
-    container.querySelector(imageSelector).focus();
-
-    expect(warning.classList.contains("u-hide")).toEqual(false);
+    expect(
+      container.querySelectorAll(".p-notification--caution").length
+    ).toEqual(1);
   });
 
   describe("add image", () => {
@@ -159,7 +135,6 @@ describe("Media", () => {
 
       cont = container;
     });
-
     it("should add an file input to the dom when adding an image", () => {
       expect(form.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
     });
@@ -182,7 +157,17 @@ describe("Media", () => {
       input.dispatchEvent(new Event("change"));
 
       expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
-      expect(cont.querySelectorAll(`[src="test-upload"]`).length).toEqual(1);
+      expect(
+        cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
+          .length
+      ).toEqual(1);
+
+      // The tooltip
+      expect(
+        cont.querySelectorAll(
+          `.p-listing-images__tooltip-image[src="test-upload"]`
+        ).length
+      ).toEqual(1);
       expect(updateState.mock.calls.length).toEqual(1);
       expect(updateState.mock.calls[0]).toEqual([
         [
@@ -260,6 +245,10 @@ describe("Media", () => {
       );
 
       expect(newDeleteImages.length).toEqual(2);
+      expect(
+        cont.querySelectorAll(`.p-listing-images__tooltip-image[src="test"]`)
+          .length
+      ).toEqual(1);
     });
 
     it("should move focus to the next item if the deleted item is focused", () => {

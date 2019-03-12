@@ -1,82 +1,4 @@
 @mixin snapcraft-market-screenshots {
-  .p-screenshots-toolbar {
-    align-items: baseline;
-    display: flex;
-    justify-content: space-between;
-
-    .p-screenshots-toolbar__buttons {
-      margin: 0;
-    }
-
-    .p-icon--fullscreen {
-      @extend %icon;
-      background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
-    }
-  }
-
-  .p-empty-add-screenshots {
-    background: $color-light;
-    display: block;
-    padding: $sp-x-large;
-    text-align: center;
-  }
-
-  .p-screenshot {
-    padding: 0;
-    position: relative;
-
-    &.is-selected {
-      outline: 1px solid $color-mid-light;
-      outline-offset: 2px;
-    }
-
-
-    &:focus {
-      outline: 1px solid $color-focus;
-      outline-offset: 2px;
-    }
-
-    &:focus,
-    &:hover,
-    &.is-selected {
-      .p-screenshot__checkbox {
-        opacity: 1;
-      }
-    }
-
-    &__checkbox {
-      left: $sp-x-small;
-      opacity: 0; // only display when selected or focused
-      pointer-events: none;
-      position: absolute;
-      top: $sp-x-small;
-    }
-
-    &__image {
-      display: block;
-      margin: 0;
-    }
-
-    &:hover {
-      .p-screenshot__delete {
-        opacity: 1;
-      }
-    }
-
-    &.is-deleted {
-      cursor: default;
-
-      .p-screenshot__checkbox {
-        display: none;
-      }
-
-      .p-screenshot__image {
-        filter: grayscale(100%);
-        opacity: .6;
-      }
-    }
-  }
-
   .p-listing-images {
     align-items: flex-start;
 
@@ -142,6 +64,15 @@
       background: $color-x-light;
       border: 1px solid $color-mid-light;
       cursor: pointer;
+    }
+  }
+
+  .p-listing-images__tooltip-image {
+    display: block;
+    margin-top: $spv-inter--condensed;
+
+    &:first-child {
+      margin-top: 0;
     }
   }
 }

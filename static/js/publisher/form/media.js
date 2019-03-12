@@ -24,22 +24,6 @@ class Media extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     this.props.updateState(prevState.mediaData);
-    if (
-      prevState.mediaData.filter(item => item.status !== "delete").length >
-      this.props.mediaLimit
-    ) {
-      // Do the query lookup only when we need it - otherwise every state
-      // update will trigger a DOM lookup
-      const warning = document.querySelector(".js-media-limit-warning");
-      if (warning) {
-        warning.classList.remove("u-hide");
-      }
-    } else {
-      const warning = document.querySelector(".js-media-limit-warning");
-      if (warning) {
-        warning.classList.add("u-hide");
-      }
-    }
 
     if (
       this.state.focused === "new" &&
@@ -129,6 +113,23 @@ class Media extends React.Component {
     }
   }
 
+  renderOverLimit() {
+    if (
+      this.state.mediaData.filter(item => item.status !== "delete").length >
+      this.props.mediaLimit
+    ) {
+      return (
+        <div className="p-notification--caution">
+          <p className="p-notification__response">
+            You have over 5 images uploaded. Not all image will be visible to
+            users.
+          </p>
+        </div>
+      );
+    }
+    return false;
+  }
+
   renderBlankMedia(numberOfBlank) {
     const blankMedia = [];
     for (let i = 0; i < numberOfBlank; i++) {
@@ -166,6 +167,57 @@ class Media extends React.Component {
     return blankMedia;
   }
 
+  renderDeleteState(toDelete) {
+    return (
+      <span className="p-tooltip p-tooltip--btm-center" key="toDelete">
+        {toDelete.length} images to delete.&nbsp;
+        <span className="p-tooltip__message">
+          {toDelete.map(item => (
+            <img
+              className="p-listing-images__tooltip-image"
+              src={item.url}
+              key={`delete-${item.url}`}
+            />
+          ))}
+        </span>
+      </span>
+    );
+  }
+
+  renderUploadState(toUpload) {
+    return (
+      <span className="p-tooltip p-tooltip--btm-center" key="toUpload">
+        {toUpload.length} images to upload.&nbsp;
+        <span className="p-tooltip__message">
+          {toUpload.map(item => (
+            <img
+              className="p-listing-images__tooltip-image"
+              src={item.url}
+              key={`delete-${item.url}`}
+            />
+          ))}
+        </span>
+      </span>
+    );
+  }
+
+  renderStatus() {
+    const toDelete = this.state.mediaData.filter(
+      item => item.status === "delete"
+    );
+    const toUpload = this.state.mediaData.filter(item => item.status === "new");
+
+    const content = [];
+
+    if (toDelete.length > 0) {
+      content.push(this.renderDeleteState(toDelete));
+    }
+    if (toUpload.length > 0) {
+      content.push(this.renderUploadState(toUpload));
+    }
+    return <p>{content}</p>;
+  }
+
   render() {
     const mediaList = this.state.mediaData.filter(
       item => item.status !== "delete"
@@ -179,20 +231,24 @@ class Media extends React.Component {
 
     return (
       <Fragment>
-        {mediaList.map((item, i) => (
-          <MediaItem
-            key={item.url}
-            url={item.url}
-            type={item.type}
-            status={item.status}
-            remove={this.markForDeletion}
-            overflow={i > 4}
-            focused={this.focused}
-            blurred={this.blurred}
-            focus={this.state.focused}
-          />
-        ))}
-        {this.renderBlankMedia(blankMedia)}
+        {this.renderOverLimit()}
+        <div className="p-listing-images p-fluid-grid">
+          {mediaList.map((item, i) => (
+            <MediaItem
+              key={item.url}
+              url={item.url}
+              type={item.type}
+              status={item.status}
+              remove={this.markForDeletion}
+              overflow={i > 4}
+              focused={this.focused}
+              blurred={this.blurred}
+              focus={this.state.focused}
+            />
+          ))}
+          {this.renderBlankMedia(blankMedia)}
+        </div>
+        {this.renderStatus()}
       </Fragment>
     );
   }
@@ -210,16 +266,4 @@ Media.propTypes = {
   updateState: PropTypes.func
 };
 
-function initMedia(mediaHolder, images, updateState) {
-  const mediaHolderEl = document.querySelector(mediaHolder);
-  if (!mediaHolderEl) {
-    throw new Error("No media holder El");
-  }
-
-  ReactDOM.render(
-    <Media mediaData={images} updateState={updateState} />,
-    mediaHolderEl
-  );
-}
-
-export { Media as default, MediaItem, initMedia };
+export { Media as default };
