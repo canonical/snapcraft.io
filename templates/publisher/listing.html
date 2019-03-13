@@ -255,6 +255,15 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <label>Featured banner:</label>
+          </div>
+          <div class="col-8">
+            <div class="p-market-banner js-banner">
+              <i class="p-icon--spinner u-animation--spin"></i>
+            </div>
+          </div>
         </div>
 
         <div class="row">
@@ -330,7 +339,7 @@
         <div class="row">
           <div class="col-2">
             <label for="developer-website">Developer website:</label>
-          </div>
+        </div>
           <div class="col-8">
             <div class="p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
               <div class="p-form-validation__field">
@@ -484,11 +493,8 @@
   Raven.context(function () {
     snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
     snapcraft.publisher.market.initForm({
-      snapIconChange: ".js-change-icon",
-      snapIconRemove: ".js-remove-icon",
-      snapIcon: "snap_icon_image",
-      snapIconInput: "snap_icon",
       snapIconHolder: ".js-icon-holder",
+      bannerHolder: ".js-banner",
       form: "market-form",
       formNotification: "market-form-status",
       licenseRadioContent: [
@@ -510,6 +516,9 @@
         {% endif %}
         {% for screenshot_url in screenshot_urls %}
           { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+        {% endfor %}
+        {% for banner_url in banner_urls %}
+          { url: {{ banner_url|tojson }}, type: "screenshot", status: "uploaded", isBanner: true },
         {% endfor %}
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},

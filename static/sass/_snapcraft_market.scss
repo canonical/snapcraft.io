@@ -1,3 +1,5 @@
+@import 'snapcraft_patterns_icons';
+
 @mixin snapcraft-market {
   $white-overlay-color: rgba(255, 255, 255, .5);
   $black-overlay-color: rgba(0, 0, 0, .5);
@@ -114,6 +116,113 @@
 
     .p-inline-list__item {
       line-height: 2.3rem;
+    }
+  }
+
+  .p-market-banner {
+
+    .p-market-banner__images {
+      position: relative;
+    }
+
+    .p-market-banner__image {
+      background-color: $color-x-light;
+      background-position: center;
+      background-size: cover;
+      height: 128px;
+      margin-bottom: $spv-inter--regular;
+      outline: 1px solid $color-mid-light;
+      position: relative;
+    }
+
+    .p-market-banner__icon {
+      height: 128px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 128px;
+
+      &.is-empty {
+        background-color: $color-x-light;
+        border: 1px solid transparent;
+        border-right: 1px solid $color-mid-light;
+      }
+
+      img {
+        max-height: 100%;
+      }
+    }
+
+    .p-market-banner__image:not(.is-empty) + .p-market-banner__icon {
+      &.is-empty {
+        opacity: .8;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .p-market-banner__image,
+    .p-market-banner__icon {
+      color: $color-link;
+      text-align: center;
+
+      &.is-empty {
+        cursor: pointer;
+      }
+    }
+
+    .p-market-banner__image:hover,
+    .p-market-banner__icon:hover {
+      border: 0;
+      outline: 1px solid $color-link;
+
+      & > .p-market-banner__remove {
+        opacity: 1;
+      }
+
+      & > .p-market-banner__remove:hover {
+        .p-icon--delete {
+          @include snapcraft-icon-delete($color-negative);
+        }
+      }
+
+      & > .p-market-banner__change {
+        opacity: 1;
+      }
+    }
+
+    .p-market-banner__remove {
+      background: $color-x-light;
+      cursor: pointer;
+      opacity: 0;
+      padding: .25rem;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 1;
+
+      .p-icon--delete {
+        @include snapcraft-icon-delete($color-mid-dark);
+        display: block;
+        top: 0;
+      }
+    }
+
+    .p-market-banner__change {
+      align-items: center;
+      background-color: $white-overlay-strong-color;
+      bottom: 0;
+      color: $color-link;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   }
 }
