@@ -51,7 +51,11 @@
           <a href="/store">&lsaquo; Categories</a>
           <h2>{{ category_display }} snaps</h2>
         {% else %}
-          <h2>We’ve found {{ total }} snaps</h2>
+          {% if total %}
+            <h2>We’ve found {{ total }} snaps</h2>
+          {% else %}
+            <h2>We’ve found some snaps</h2>
+          {% endif %}
         {% endif %}
       </div>
       <div class="row">

@@ -165,3 +165,64 @@ class GetSearchViewTest(TestCase):
         )
 
         self.assert_context("error_info", {})
+
+    @responses.activate
+    def test_search_q_with_results_but_no_total(self):
+        responses.add(
+            responses.Response(
+                method="GET", url=self.categories_api_url, json={}, status=200
+            )
+        )
+
+        payload = {
+            "_embedded": {
+                "clickindex:package": [
+                    {"package_name": "toto"},
+                    {"package_name": "tata"},
+                    {"package_name": "tutu"},
+                ]
+            },
+            "_links": {
+                "last": {"href": "http://url.c?q=snap&size=1&page=1"},
+                "next": {"href": "http://url.c?q=snap&size=1&page=1"},
+                "self": {"href": "http://url.c?q=snap&size=1&page=1"},
+            },
+        }
+
+        search_api_formated = self.search_snap_api_url.format(
+            snap_name="snap", page="1", size="25"
+        )
+        responses.add(
+            responses.Response(
+                method="GET", url=search_api_formated, json=payload, status=200
+            )
+        )
+
+        endpoint = self.endpoint_url.format(q="snap", category="")
+        response = self.client.get(endpoint)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assert_context("query", "snap")
+        self.assert_context("category", "")
+        self.assert_context("category_display", None)
+        self.assert_context("categories", [])
+        self.assert_context(
+            "snaps",
+            [
+                {"package_name": "toto"},
+                {"package_name": "tata"},
+                {"package_name": "tutu"},
+            ],
+        )
+        self.assert_context("total", None)
+        self.assert_context(
+            "links",
+            {
+                "last": "http://localhost/search?q=snap&limit=1&offset=0",
+                "next": "http://localhost/search?q=snap&limit=1&offset=0",
+                "self": "http://localhost/search?q=snap&limit=1&offset=0",
+            },
+        )
+
+        self.assert_context("error_info", {})
