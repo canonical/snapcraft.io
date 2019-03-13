@@ -4,26 +4,59 @@ import * as categories from "./market/categories";
 describe("initSnapIconEdit", () => {
   let input;
   let icon;
+  let changeBtn;
+  let removeBtn;
   let state;
+  let formUpdate;
 
   beforeEach(() => {
+    const form = document.createElement("form");
+    document.body.appendChild(form);
+
     icon = document.createElement("a");
     icon.id = "test-icon-id";
-    document.body.appendChild(icon);
+    form.appendChild(icon);
+
+    changeBtn = document.createElement("button");
+    changeBtn.className = "js-change-icon";
+    changeBtn.type = "button";
+    form.appendChild(changeBtn);
+
+    removeBtn = document.createElement("button");
+    removeBtn.className = "js-remove-icon";
+    removeBtn.type = "button";
+    removeBtn.setAttribute("disabled", "disabled");
+    form.appendChild(removeBtn);
 
     input = document.createElement("input");
     input.id = "test-id";
-    document.body.appendChild(input);
+    input.closest = () => form;
+    form.appendChild(input);
 
     URL.createObjectURL = jest.fn().mockReturnValue("test-url");
+
+    formUpdate = jest.fn();
+
+    form.addEventListener("change", formUpdate);
 
     state = {
       images: []
     };
   });
 
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   test("should set icon src on input change", () => {
-    market.initSnapIconEdit("test-icon-id", "test-id", state);
+    expect(removeBtn.classList.contains("u-hide")).toEqual(false);
+    market.initSnapIconEdit(
+      ".js-change-icon",
+      ".js-remove-icon",
+      "test-icon-id",
+      "test-id",
+      state
+    );
 
     let event = new Event("change");
     // mock list of files on input
@@ -31,8 +64,50 @@ describe("initSnapIconEdit", () => {
       value: [{ name: "test.png" }]
     });
     input.dispatchEvent(event);
+    changeBtn.dispatchEvent(new Event("click"));
 
     expect(icon.src).toBe("test-url");
+    expect(removeBtn.classList.contains("u-hide")).toEqual(false);
+  });
+
+  test("should remove icon when clicked", () => {
+    market.initSnapIconEdit(
+      ".js-change-icon",
+      ".js-remove-icon",
+      "test-icon-id",
+      "test-id",
+      state
+    );
+
+    let event = new Event("change");
+    // mock list of files on input
+    Object.defineProperty(input, "files", {
+      value: [{ name: "test.png" }]
+    });
+    input.dispatchEvent(event);
+    changeBtn.dispatchEvent(new Event("click"));
+
+    removeBtn.dispatchEvent(new Event("click"));
+
+    expect(icon.src).toBe("");
+    expect(removeBtn.classList.contains("u-hide")).toEqual(true);
+  });
+
+  test("should show the remove icon when icon is set", () => {
+    state.images.push({
+      url: "test.png",
+      status: "uploaded",
+      type: "icon"
+    });
+    market.initSnapIconEdit(
+      ".js-change-icon",
+      ".js-remove-icon",
+      "test-icon-id",
+      "test-id",
+      state
+    );
+
+    expect(removeBtn.classList.contains("u-hide")).toEqual(false);
   });
 });
 
@@ -52,6 +127,10 @@ describe("initForm", () => {
   let csrfInput;
   let previewForm;
   let previewStateInput;
+  let snapIconChangeButton;
+  let snapIconRemoveButton;
+  let snapIconElement;
+  let snapIconInput;
 
   const categoriesList = ["", "test1", "test2"];
 
@@ -138,6 +217,21 @@ describe("initForm", () => {
     csrfInput.name = "csrf_token";
     csrfInput.value = "test";
 
+    snapIconChangeButton = document.createElement("button");
+    snapIconChangeButton.type = "button";
+    snapIconChangeButton.className = "snap-icon-change-button";
+
+    snapIconRemoveButton = document.createElement("button");
+    snapIconRemoveButton.type = "button";
+    snapIconRemoveButton.className = "snap-icon-remove-button";
+
+    snapIconElement = document.createElement("img");
+    snapIconElement.id = "snap-icon-element";
+
+    snapIconInput = document.createElement("input");
+    snapIconInput.type = "file";
+    snapIconInput.id = "snap-icon-input";
+
     form.appendChild(submitButton);
     form.appendChild(revertButton);
     form.appendChild(previewButton);
@@ -150,6 +244,10 @@ describe("initForm", () => {
     form.appendChild(websiteInput);
     form.appendChild(contactInput);
     form.appendChild(csrfInput);
+    form.appendChild(snapIconChangeButton);
+    form.appendChild(snapIconRemoveButton);
+    form.appendChild(snapIconElement);
+    form.appendChild(snapIconInput);
 
     document.body.appendChild(form);
 
@@ -165,7 +263,11 @@ describe("initForm", () => {
   }
 
   const config = {
-    form: "market-form"
+    form: "market-form",
+    snapIconChange: ".snap-icon-change-button",
+    snapIconRemove: ".snap-icon-remove-button",
+    snapIcon: "snap-icon-element",
+    snapIconInput: "snap-icon-input"
   };
 
   const initialState = {
@@ -175,7 +277,8 @@ describe("initForm", () => {
     summary: "Summary",
     description: "Description",
     website: "https://example.com",
-    contact: "mailto:test@example.com"
+    contact: "mailto:test@example.com",
+    images: []
   };
 
   beforeEach(() => {
