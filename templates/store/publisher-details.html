@@ -103,9 +103,9 @@
       <h4>Featured snaps</h4>
     </div>
     <div class="row">
-      {% set snap = featured_snaps[0] %}
-      <div class="col-6">
-        <div class="p-featured-snap" style="background-color:{{ snap.background }}">
+      <div class="u-equal-height">
+        {% set snap = featured_snaps[0] %}
+        <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
           <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
             {% if snap.icon_url %}
               <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
@@ -136,11 +136,9 @@
             </div>
           </a>
         </div>
-      </div>
-      {% if featured_snaps[1] %}
-      {% set snap = featured_snaps[1] %}
-      <div class="col-6">
-        <div class="p-featured-snap" style="background-color:{{ snap.background }}">
+        {% if featured_snaps[1] %}
+        {% set snap = featured_snaps[1] %}
+        <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
           <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
             {% if snap.icon_url %}
               <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
@@ -171,8 +169,8 @@
             </div>
           </a>
         </div>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
   {% endif %}
