@@ -237,187 +237,6 @@ def store_blueprint(store_query=None, testing=False):
     # @store.route(
     #     '/publisher/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):publisher_name>'
     # )
-    @store.route("/publisher/bartaz")
-    def publisher_details_bartaz():
-        """
-        A view to display the publisher details page for specific publisher.
-        """
-
-        context = {
-            "icon_url": (
-                "https://www.gravatar.com/avatar/"
-                + "3143c7995b1f1283f9b73c186f707f96"
-            ),
-            "publisher": "Bartek Szopka",
-            "username": "bartaz",
-            "summary": "He's awesome!",
-            "description": "<p>He really is!</p>",
-            "publisher_since": "March 2016",
-            "snaps_count": 1,
-            "snaps": [
-                {
-                    "origin": "bartaz",
-                    "package_name": "speed-test",
-                    "title": "Speed Test",
-                }
-            ],
-            "website": "https://webteam.space",
-        }
-
-        return (
-            flask.render_template("store/publisher-details.html", **context),
-            200,
-        )
-
-    @store.route("/publisher/canonical")
-    def publisher_details_canonical():
-        """
-        A view to display the publisher details page for specific publisher.
-        """
-
-        context = {
-            "icon_url": (
-                "https://assets.ubuntu.com/v1/b3b72cb2-canonical-logo-166.png"
-            ),
-            "banner_url": (
-                "https://assets.ubuntu.com/v1/f43b5e66-mwc17-partners-hero.jpg"
-            ),
-            "publisher": "Canonical",
-            "username": "canonical",
-            "summary": "We are Canonical",
-            "description": (
-                "<p>It is our mission to make open source software available"
-                + " to people everywhere.</p>"
-                + "<p>We believe the best way to fuel innovation is to give"
-                + " the innovators the technology they need.</p>"
-                + "<p>Leading organisations all over the world turn to us for"
-                + " our services and expertise – from systems management to"
-                + " the deployment of Ubuntu on their own clouds, servers"
-                + " and desktops.</p>"
-            ),
-            "publisher_since": "March 2016",
-            "snaps_count": 10,
-            "snaps": [
-                {
-                    "origin": "canonical",
-                    "package_name": "canonical-livepatch",
-                    "title": "canonical-livepatch",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2016/08/pictogram-upgrade-orange-hex.svg.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "ubuntu-core",
-                    "title": "ubuntu-core",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "docker",
-                    "title": "Docker",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
-                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "canonical-livepatch",
-                    "title": "canonical-livepatch",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2016/08/pictogram-upgrade-orange-hex.svg.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "ubuntu-core",
-                    "title": "ubuntu-core",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "docker",
-                    "title": "Docker",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
-                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "canonical-livepatch",
-                    "title": "canonical-livepatch",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2016/08/pictogram-upgrade-orange-hex.svg.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "ubuntu-core",
-                    "title": "ubuntu-core",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
-                    ),
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "docker",
-                    "title": "Docker",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
-                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
-                    ),
-                },
-            ],
-            "featured_snaps": [
-                {
-                    "origin": "canonical",
-                    "package_name": "ubuntu-core",
-                    "title": "ubuntu-core",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/"
-                        + "2015/12/logo-ubuntu_cof-orange-hex_2.png"
-                    ),
-                    "summary": "The ubuntu-core OS snap",
-                    "description": "no description",
-                    "background": "#2c001e",
-                },
-                {
-                    "origin": "canonical",
-                    "package_name": "docker",
-                    "title": "Docker",
-                    "icon_url": (
-                        "https://dashboard.snapcraft.io/site_media/appmedia/2"
-                        + "018/12/6fbb3483-snapcraft-default-snap-icon.svg.png"
-                    ),
-                    "summary": "Docker container runtime",
-                    "description": (
-                        "Build and run container images with Docker."
-                    ),
-                    "background": "#0069d9",
-                },
-            ],
-            "website": "https://canonical.com",
-            "contact": "https://www.ubuntu.com/contact-us",
-            "developer_validation": "verified",
-            "blog_slug": "skype",
-        }
-
-        return (
-            flask.render_template("store/publisher-details.html", **context),
-            200,
-        )
 
     def get_file(file):
 
@@ -433,13 +252,13 @@ def store_blueprint(store_query=None, testing=False):
 
         return data
 
-    @store.route("/publisher/kde")
+    @store.route("/publisher/jetbrains")
     def publisher_details_kde():
         """
         A view to display the publisher details page for specific publisher.
         """
 
-        context = get_file("store/content/publisher-kde.yaml")
+        context = get_file("store/content/publisher-jetbrains.yaml")
 
         return (
             flask.render_template("store/publisher-details.html", **context),
