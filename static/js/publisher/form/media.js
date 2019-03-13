@@ -26,6 +26,7 @@ class Media extends React.Component {
 
     if (
       this.state.focused === "new" &&
+      this.blankItem &&
       document.activeElement !== this.blankItem
     ) {
       this.blankItem.focus();

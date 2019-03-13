@@ -43,16 +43,6 @@
         }
       }
 
-      &:first-of-type:not(.is-empty) {
-        height: 162px;
-        width: 162px;
-
-        & ~ .p-listing-images__image {
-          height: 110px;
-          width: 110px;
-        }
-      }
-
       &:not(.is-empty):hover,
       &:not(.is-empty):focus {
         border: 1px solid $color-link;
