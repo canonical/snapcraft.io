@@ -1,5 +1,6 @@
 from math import floor
 from urllib.parse import quote_plus
+from ruamel.yaml import YAML
 
 import flask
 
@@ -419,7 +420,10 @@ def store_blueprint(store_query=None, testing=False):
         )
 
     def get_file(file):
+
         try:
+            import os
+
             with open(
                 os.path.join(flask.current_app.root_path, file), "r"
             ) as stream:
