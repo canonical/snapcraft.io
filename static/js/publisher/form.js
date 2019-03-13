@@ -140,12 +140,14 @@ function initForm(config, initialState, errors) {
     const screenshots = state.images.filter(
       image => image.type === "screenshot"
     );
-    initMedia(config.mediaHolder, screenshots, nextState => {
+    initMedia(config.mediaHolder, screenshots, newImages => {
       const noneScreenshots = state.images.filter(
         item => item.type !== "screenshot"
       );
-      const newState = Object.assign({}, state);
-      newState.images = noneScreenshots.concat(nextState);
+      const newState = {
+        ...state,
+        images: noneScreenshots.concat(newImages)
+      };
       updateState(state, newState);
       updateFormState();
     });

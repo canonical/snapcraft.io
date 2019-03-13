@@ -12,22 +12,22 @@ class MediaItem extends React.Component {
     super(props);
 
     this.keyboardEvent = this.keyboardEvent.bind(this);
-    this.focused = this.focused.bind(this);
-    this.blurred = this.blurred.bind(this);
+    this.focusHandler = this.focusHandler.bind(this);
+    this.blurHandler = this.blurHandler.bind(this);
   }
 
   keyboardEvent(e) {
     if (e.key === "Delete" || e.key === "Backspace") {
-      this.props.remove(this.props.url);
+      this.props.markForDeletion(this.props.url);
     }
   }
 
-  blurred() {
-    this.props.blurred(this.props.url);
+  blurHandler() {
+    this.props.blurHandler(this.props.url);
   }
 
-  focused() {
-    this.props.focused(this.props.url);
+  focusHandler() {
+    this.props.focusHandler(this.props.url);
   }
 
   componentDidUpdate() {
@@ -49,14 +49,14 @@ class MediaItem extends React.Component {
         className={classes.join(" ")}
         tabIndex="0"
         onKeyDown={this.keyboardEvent}
-        onFocus={this.focused}
-        onBlur={this.blurred}
+        onFocus={this.focusHandler}
+        onBlur={this.blurHandler}
         ref={item => (this.mediaItem = item)}
       >
         <span
           role="button"
           className="p-listing-images__delete-image"
-          onClick={this.props.remove.bind(this, this.props.url)}
+          onClick={this.props.markForDeletion.bind(this, this.props.url)}
         >
           <i className="p-icon--delete" />
         </span>
@@ -70,9 +70,9 @@ MediaItem.propTypes = {
   url: PropTypes.string,
   status: PropTypes.string,
   overflow: PropTypes.bool,
-  remove: PropTypes.func,
-  focused: PropTypes.func,
-  blurred: PropTypes.func,
+  markForDeletion: PropTypes.func,
+  focusHandler: PropTypes.func,
+  blurHandler: PropTypes.func,
   focus: PropTypes.string
 };
 

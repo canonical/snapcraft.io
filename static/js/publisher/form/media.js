@@ -12,8 +12,8 @@ class Media extends React.Component {
     this.addImage = this.addImage.bind(this);
     this.mediaChange = this.mediaChange.bind(this);
     this.keyboardEvent = this.keyboardEvent.bind(this);
-    this.focused = this.focused.bind(this);
-    this.blurred = this.blurred.bind(this);
+    this.focusHandler = this.focusHandler.bind(this);
+    this.blurHandler = this.blurHandler.bind(this);
 
     this.state = {
       mediaData: props.mediaData,
@@ -98,13 +98,13 @@ class Media extends React.Component {
     }
   }
 
-  focused(url) {
+  focusHandler(url) {
     this.setState({
       focused: url
     });
   }
 
-  blurred(url) {
+  blurHandler(url) {
     if (this.state.focused === url) {
       this.setState({
         focused: null
@@ -144,8 +144,8 @@ class Media extends React.Component {
             key={`blank-${i}`}
             onClick={this.addImage}
             onKeyDown={this.keyboardEvent}
-            onFocus={this.focused.bind(this, "new")}
-            onBlur={this.blurred.bind(this, "new")}
+            onFocus={this.focusHandler.bind(this, "new")}
+            onBlur={this.blurHandler.bind(this, "new")}
             tabIndex="0"
             ref={item => (this.blankItem = item)}
           >
@@ -241,10 +241,10 @@ class Media extends React.Component {
               url={item.url}
               type={item.type}
               status={item.status}
-              remove={this.markForDeletion}
+              markForDeletion={this.markForDeletion}
               overflow={i > 4}
-              focused={this.focused}
-              blurred={this.blurred}
+              focusHandler={this.focusHandler}
+              blurHandler={this.blurHandler}
               focus={this.state.focused}
             />
           ))}

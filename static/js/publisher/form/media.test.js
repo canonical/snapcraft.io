@@ -7,9 +7,7 @@ describe("Media", () => {
   const addImageSelector = ".p-listing-images__add-image";
 
   it("should render without an image", () => {
-    const { container } = render(
-      <Media mediaData={[]} updateState={() => {}} />
-    );
+    const { container } = render(<Media />);
     expect(container.querySelectorAll(addImageSelector).length).toEqual(1);
   });
 
@@ -22,7 +20,6 @@ describe("Media", () => {
             status: "uploaded"
           }
         ]}
-        updateState={() => {}}
       />
     );
     expect(container.querySelectorAll(imageSelector).length).toEqual(1);
@@ -38,7 +35,6 @@ describe("Media", () => {
             status: "delete"
           }
         ]}
-        updateState={() => {}}
       />
     );
 
@@ -54,7 +50,6 @@ describe("Media", () => {
             status: "uploaded"
           }
         ]}
-        updateState={() => {}}
       />
     );
 
@@ -73,7 +68,6 @@ describe("Media", () => {
             status: "uploaded"
           }
         ]}
-        updateState={() => {}}
       />
     );
 
@@ -95,7 +89,6 @@ describe("Media", () => {
           { url: "test-2", status: "uploaded" }
         ]}
         mediaLimit={1}
-        updateState={() => {}}
       />
     );
 
@@ -243,7 +236,7 @@ describe("Media", () => {
       ).toEqual(1);
     });
 
-    it("should move focus to the next item if the deleted item is focused", () => {
+    it("should move focus to the next item if the deleted item is focusHandler", () => {
       const images = cont.querySelectorAll(imageSelector);
       images[0].focus();
 
@@ -255,7 +248,7 @@ describe("Media", () => {
       expect(document.activeElement).toEqual(images[1]);
     });
 
-    it("should move focus to the add item if the deleted item is focused", () => {
+    it("should move focus to the add item if the deleted item is focusHandler", () => {
       let images = cont.querySelectorAll(imageSelector);
 
       const deleteImage1 = images[0].querySelector(
@@ -297,7 +290,6 @@ describe("Media", () => {
               status: "uploaded"
             }
           ]}
-          updateState={() => {}}
         />
       );
 
