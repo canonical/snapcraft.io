@@ -1,6 +1,7 @@
 from mistune import (
     BlockGrammar,
     BlockLexer,
+    InlineGrammar,
     Renderer,
     Markdown,
     _pure_pattern,
@@ -9,7 +10,7 @@ from mistune import (
 import re
 
 
-class DescriptionGrammar(BlockGrammar):
+class DescriptionBlockGrammar(BlockGrammar):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -44,10 +45,9 @@ class DescriptionGrammar(BlockGrammar):
 
 
 class DescriptionBlock(BlockLexer):
-    grammar_class = DescriptionGrammar
+    grammar_class = DescriptionBlockGrammar
 
     default_rules = [
-        "fences",
         "block_code",
         "list_block",
         "paragraph",
@@ -55,14 +55,49 @@ class DescriptionBlock(BlockLexer):
         "newline",
     ]
 
-    list_rules = ("fences", "block_code", "list_block", "text", "newline")
+    list_rules = ("block_code", "list_block", "text", "newline")
+
+
+class DescriptionInlineGrammar(InlineGrammar):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Rewrite to respect this convention:
+        # https://github.com/CanonicalLtd/snap-squad/issues/936
+        self.code = re.compile(r"^(`)([\S ]+)\1")
 
 
 class DescriptionInline(InlineLexer):
-    def _process_link(self, m, link, title=None):
-        line = m.group(0)
-        if line[0] != "!":
-            return super()._process_link(m, link, title)
+    grammar_class = DescriptionInlineGrammar
+
+    # Removed rules: link, reflink
+    default_rules = [
+        "escape",
+        "inline_html",
+        "autolink",
+        "url",
+        "footnote",
+        "nolink",
+        "double_emphasis",
+        "emphasis",
+        "code",
+        "linebreak",
+        "strikethrough",
+        "text",
+    ]
+    inline_html_rules = [
+        "escape",
+        "inline_html",
+        "autolink",
+        "url",
+        "nolink",
+        "double_emphasis",
+        "emphasis",
+        "code",
+        "linebreak",
+        "strikethrough",
+        "text",
+    ]
 
 
 renderer = Renderer()
