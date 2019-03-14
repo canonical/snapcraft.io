@@ -234,10 +234,6 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
-    # @store.route(
-    #     '/publisher/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):publisher_name>'
-    # )
-
     def get_file(file):
 
         try:
@@ -253,7 +249,7 @@ def store_blueprint(store_query=None, testing=False):
         return data
 
     @store.route("/publisher/jetbrains")
-    def publisher_details_kde():
+    def publisher_details_jetbrains():
         """
         A view to display the publisher details page for specific publisher.
         """
