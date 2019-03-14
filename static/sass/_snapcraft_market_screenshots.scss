@@ -64,13 +64,4 @@
       cursor: pointer;
     }
   }
-
-  .p-listing-images__tooltip-image {
-    display: block;
-    margin-top: $spv-inter--condensed;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
 }

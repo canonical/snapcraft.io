@@ -166,57 +166,6 @@ class Media extends React.Component {
     return blankMedia;
   }
 
-  renderDeleteState(toDelete) {
-    return (
-      <span className="p-tooltip p-tooltip--btm-center" key="toDelete">
-        {toDelete.length} images to delete.&nbsp;
-        <span className="p-tooltip__message">
-          {toDelete.map(item => (
-            <img
-              className="p-listing-images__tooltip-image"
-              src={item.url}
-              key={`delete-${item.url}`}
-            />
-          ))}
-        </span>
-      </span>
-    );
-  }
-
-  renderUploadState(toUpload) {
-    return (
-      <span className="p-tooltip p-tooltip--btm-center" key="toUpload">
-        {toUpload.length} images to upload.&nbsp;
-        <span className="p-tooltip__message">
-          {toUpload.map(item => (
-            <img
-              className="p-listing-images__tooltip-image"
-              src={item.url}
-              key={`delete-${item.url}`}
-            />
-          ))}
-        </span>
-      </span>
-    );
-  }
-
-  renderStatus() {
-    const toDelete = this.state.mediaData.filter(
-      item => item.status === "delete"
-    );
-    const toUpload = this.state.mediaData.filter(item => item.status === "new");
-
-    const content = [];
-
-    if (toDelete.length > 0) {
-      content.push(this.renderDeleteState(toDelete));
-    }
-    if (toUpload.length > 0) {
-      content.push(this.renderUploadState(toUpload));
-    }
-    return <p>{content}</p>;
-  }
-
   render() {
     const mediaList = this.state.mediaData.filter(
       item => item.status !== "delete"
@@ -250,7 +199,6 @@ class Media extends React.Component {
           ))}
           {this.renderBlankMedia(blankMedia)}
         </div>
-        {this.renderStatus()}
       </Fragment>
     );
   }

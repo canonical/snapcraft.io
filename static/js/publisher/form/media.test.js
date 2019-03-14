@@ -147,12 +147,6 @@ describe("Media", () => {
           .length
       ).toEqual(1);
 
-      // The tooltip
-      expect(
-        cont.querySelectorAll(
-          `.p-listing-images__tooltip-image[src="test-upload"]`
-        ).length
-      ).toEqual(1);
       expect(updateState.mock.calls.length).toEqual(1);
       expect(updateState.mock.calls[0]).toEqual([
         [
@@ -230,10 +224,6 @@ describe("Media", () => {
       );
 
       expect(newDeleteImages.length).toEqual(2);
-      expect(
-        cont.querySelectorAll(`.p-listing-images__tooltip-image[src="test"]`)
-          .length
-      ).toEqual(1);
     });
 
     it("should move focus to the next item if the deleted item is focusHandler", () => {
