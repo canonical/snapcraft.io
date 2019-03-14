@@ -1,10 +1,11 @@
+import os
 from math import floor
 from urllib.parse import quote_plus
-from ruamel.yaml import YAML
 
 import flask
 
 import webapp.store.logic as logic
+from ruamel.yaml import YAML
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiConnectionError,
@@ -234,11 +235,8 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
-    def get_file(file):
-
+    def _get_file(file):
         try:
-            import os
-
             with open(
                 os.path.join(flask.current_app.root_path, file), "r"
             ) as stream:
@@ -248,18 +246,18 @@ def store_blueprint(store_query=None, testing=False):
 
         return data
 
-    @store.route("/publisher/jetbrains")
-    def publisher_details_jetbrains():
+    @store.route("/publisher/<publisher>")
+    def publisher_details_jetbrains(publisher):
         """
         A view to display the publisher details page for specific publisher.
         """
 
-        context = get_file("store/content/publisher-jetbrains.yaml")
+        context = _get_file("store/content/publishers/" + publisher + ".yaml")
 
-        return (
-            flask.render_template("store/publisher-details.html", **context),
-            200,
-        )
+        if not context:
+            flask.abort(404)
+
+        return flask.render_template("store/publisher-details.html", **context)
 
     @store.route("/store/categories/<category>")
     def store_category(category):
