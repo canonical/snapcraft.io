@@ -303,26 +303,21 @@
               <div class="col-12">
                 <div class="p-notification--negative">
                   <p class="p-notification__response">
-                      <strong>Screenshots:</strong> {{ field_errors['screenshots'] }}
+                      <strong>Images:</strong> {{ field_errors['screenshots'] }}
                   </p>
                 </div>
               </div>
             </div>
           {% endif %}
           <div class="row" data-validation-name="screenshots">
-            <div class="col-12">
-              <div class="p-screenshots-toolbar" id="screenshots-toolbar">
-                <label>Screenshots (up to 5):</label>
-                <div class="p-screenshots-toolbar__buttons">
-                  <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
-                  <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
-                  <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
-                </div>
+            <div class="col-2">
+              <label>Images:</label>
+            </div>
+            <div class="col-8">
+              <div class="js-media-holder">
+                <i class="p-icon--spinner u-animation--spin"></i>
               </div>
             </div>
-          </div>
-
-          <div class="row" id="snap-screenshots">
           </div>
         </div>
 
@@ -516,12 +511,11 @@
       snapIconInput: "snap_icon",
       form: "market-form",
       formNotification: "market-form-status",
-      screenshotsToolbar: "screenshots-toolbar",
-      screenshotsWrapper: "snap-screenshots",
       licenseRadioContent: [
         document.getElementById('license-simple-input'),
         document.getElementById('license-custom-input')
-      ]
+      ],
+      mediaHolder: ".js-media-holder",
     }, {
       snap_name: {{ snap_name|tojson }},
       title: {{ snap_title|tojson }},
