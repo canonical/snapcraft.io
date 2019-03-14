@@ -1,0 +1,25 @@
+@mixin snapcraft-p-overlay {
+  .p-overlay {
+    align-items: center;
+    background: rgba(0, 0, 0, .2);
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1;
+  }
+
+  .p-overlay__content {
+    position: relative;
+  }
+
+  .p-overlay__close {
+    cursor: pointer;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
+}

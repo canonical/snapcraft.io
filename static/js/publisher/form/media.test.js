@@ -252,4 +252,23 @@ describe("Media", () => {
       expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
     });
   });
+
+  describe("restrictions", () => {
+    it("should open when the element is clicked", () => {
+      const { container } = render(<Media />);
+
+      expect(
+        container.querySelector(".p-overlay").classList.contains("u-hide")
+      ).toEqual(true);
+
+      const restrictionsButton = container.querySelector(
+        `.p-form-help-text a[role="button"]`
+      );
+      fireEvent.click(restrictionsButton);
+
+      expect(
+        container.querySelector(".p-overlay").classList.contains("u-hide")
+      ).toEqual(false);
+    });
+  });
 });

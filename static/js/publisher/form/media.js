@@ -13,13 +13,12 @@ class Media extends React.Component {
     this.mediaChange = this.mediaChange.bind(this);
     this.keyboardEvent = this.keyboardEvent.bind(this);
 
-    this.state = {
-      mediaData: props.mediaData
-    };
-  }
+    this.toggleRestrictions = this.toggleRestrictions.bind(this);
 
-  componentDidUpdate(prevProps, prevState) {
-    this.props.updateState(prevState.mediaData);
+    this.state = {
+      mediaData: props.mediaData,
+      restrictionsVisible: false
+    };
   }
 
   markForDeletion(key) {
@@ -30,9 +29,14 @@ class Media extends React.Component {
       return item;
     });
 
-    this.setState({
-      mediaData: newMediaData
-    });
+    this.setState(
+      {
+        mediaData: newMediaData
+      },
+      () => {
+        this.props.updateState(this.state.mediaData);
+      }
+    );
   }
 
   mediaChange(input) {
@@ -48,9 +52,14 @@ class Media extends React.Component {
       });
     }
 
-    this.setState({
-      mediaData: newMediaData
-    });
+    this.setState(
+      {
+        mediaData: newMediaData
+      },
+      () => {
+        this.props.updateState(this.state.mediaData);
+      }
+    );
   }
 
   addImage() {
@@ -124,6 +133,60 @@ class Media extends React.Component {
     return blankMedia;
   }
 
+  toggleRestrictions() {
+    this.setState({
+      restrictionsVisible: !this.state.restrictionsVisible
+    });
+  }
+
+  renderRescrictions() {
+    const overlayClasses = ["p-overlay"];
+    if (!this.state.restrictionsVisible) {
+      overlayClasses.push("u-hide");
+    }
+    return (
+      <Fragment>
+        <p className="p-form-help-text">
+          <a role="button" onClick={this.toggleRestrictions}>
+            See image restrictions
+          </a>
+        </p>
+        <div className={overlayClasses.join(" ")}>
+          <div className="p-overlay__content">
+            <div className="p-card">
+              <h4>Image restrictions</h4>
+              <p>
+                Accepted image formats include: <b>GIF, JPEG & PNG files.</b>
+                <br />
+                Min resolution: <b>480 x 480 pixels</b>
+                <br />
+                Max resolution: <b>3840 x 2160 pixels</b>
+                <br />
+                Aspect ratio: <b>Between 1:2 and 2:1</b>
+                <br />
+                File size limit: <b>2MB</b>
+                <br />
+                Animation min fps: <b>1</b>
+                <br />
+                Animation max fps: <b>30</b>
+                <br />
+                Animation max length: <b>40 seconds</b>
+                <br />
+              </p>
+            </div>
+            <span
+              className="p-overlay__close"
+              role="button"
+              onClick={this.toggleRestrictions}
+            >
+              <i className="p-icon--close" />
+            </span>
+          </div>
+        </div>
+      </Fragment>
+    );
+  }
+
   render() {
     const mediaList = this.state.mediaData.filter(
       item => item.status !== "delete"
@@ -154,6 +217,7 @@ class Media extends React.Component {
           ))}
           {this.renderBlankMedia(blankMedia)}
         </div>
+        {this.renderRescrictions()}
       </Fragment>
     );
   }
