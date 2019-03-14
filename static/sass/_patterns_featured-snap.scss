@@ -3,6 +3,7 @@
     @extend %vf-card;
     background-color: $color-dark;
     color: $color-light;
+    margin-bottom: 0;
 
     // force color on visited links as well
     a,

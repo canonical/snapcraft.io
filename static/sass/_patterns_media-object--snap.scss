@@ -36,7 +36,7 @@
       }
     }
 
-    &__publisher {
+    &__desc {
       color: $color-mid-dark;
       margin-bottom: $spv-nudge-compensation;
       margin-top: - $sp-unit * 3;
@@ -54,8 +54,22 @@
       }
     }
 
-    .p-media-object--snap__description {
-      margin-top: 2 * $sp-unit;
+    &__publisher {
+      color: $color-mid-dark;
+      margin-bottom: $spv-nudge-compensation;
+      margin-top: - $sp-unit * 3;
+
+      > p:last-child {
+        margin-bottom: 0;
+      }
+
+      & + & {
+        margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
+      }
+
+      @media (max-width: $breakpoint-heading-threshold) {
+        margin-top: - $sp-unit;
+      }
     }
 
     &:hover {
