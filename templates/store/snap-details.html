@@ -178,6 +178,9 @@
           <tr><th>License</th><td data-live="license">{{ license }}</td></tr>
           <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
         </table>
+        <h4>Share this snap</h4>
+        <p>Generate an embeddable card to be shared on external websites.</p>
+        <p><button class="p-button--neutral js-embedded-card-toggle">Create embeddable card</button></p>
       </div>
     </div>
   </div>
@@ -308,6 +311,8 @@
       </div>
     </div>
   </div>
+
+  {% include "store/snap-details/_embedded_card_modal.html" %}
   {% endif %}
   {% if is_preview %}
     </div>
@@ -385,6 +390,13 @@
       } catch(e) {
         Raven.captureException(e);
       }
+
+      try {
+        snapcraft.public.initEmbeddedCardModal('{{ package_name }}');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
 
       {% if countries %}
         try {

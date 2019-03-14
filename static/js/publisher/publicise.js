@@ -79,7 +79,9 @@ const getCurrentFormState = (buttonRadios, optionButtons) => {
 
   // get state of store button radio
   let checked = buttonRadios.filter(b => b.checked);
-  state.button = checked[0].value;
+  if (checked.length > 0) {
+    state.button = checked[0].value;
+  }
 
   // get state of options checkboxes
   optionButtons.forEach(checkbox => {
@@ -134,26 +136,40 @@ function initEmbeddedCardPicker(options) {
     });
   });
 
-  buttonRadios.filter(r => r.value === "black")[0].checked = true;
-  previewFrame.src = getCardPath(snapName, getFormState());
-  codeElement.innerHTML = getCardEmbedHTML(snapName, getFormState());
+  if (buttonRadios.length > 0) {
+    buttonRadios.filter(r => r.value === "black")[0].checked = true;
+  }
+
+  // update the frame (but only if it's visible)
+  if (previewFrame.offsetParent !== null) {
+    previewFrame.src = getCardPath(snapName, getFormState());
+    codeElement.innerHTML = getCardEmbedHTML(snapName, getFormState());
+  }
 
   previewFrame.addEventListener("load", function() {
     // calulate frame height to be a bit bigger then content itself
     // to have some spare room for responsiveness
-    const height =
-      Math.floor(
-        (previewFrame.contentWindow.document.body.scrollHeight + 20) / 10
-      ) * 10;
+    if (previewFrame.offsetParent) {
+      const height =
+        Math.floor(
+          (previewFrame.contentWindow.document.body.scrollHeight + 20) / 10
+        ) * 10;
 
-    state = {
-      ...state,
-      frameHeight: height
-    };
-    // don't re-render the iframe not to trigger load again
-    previewFrame.style.height = height + "px";
+      state = {
+        ...state,
+        frameHeight: height
+      };
+      // don't re-render the iframe not to trigger load again
+      previewFrame.style.height = height + "px";
+
+      if (options.updateHeightCallback) {
+        options.updateHeightCallback(height);
+      }
+    }
     renderCode(state);
   });
+
+  return () => render(state);
 }
 
 export { initSnapButtonsPicker, initEmbeddedCardPicker };

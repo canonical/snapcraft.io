@@ -1,0 +1,12 @@
+@mixin snapcraft-embedded-card-modal {
+  .p-embedded-card-modal-dialog {
+    @media screen and (min-width: $breakpoint-medium) {
+      width: 80%;
+    }
+  }
+
+  .p-heading-label {
+    margin-bottom: $spv-intra;
+    margin-top: $spv-intra--expanded;
+  }
+}
