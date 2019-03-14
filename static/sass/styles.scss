@@ -216,6 +216,9 @@ $color-navigation-background: #252525;
 @import 'snapcraft_dispute-list';
 @include snapcraft-p-dispute-list;
 
+@import 'snapcraft_embedded_card_modal';
+@include snapcraft-embedded-card-modal;
+
 html,
 body {
   background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
