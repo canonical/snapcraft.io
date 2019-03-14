@@ -250,7 +250,7 @@ def snap_details_views(store, api, handle_errors):
         if button and button not in button_variants:
             button = "black"
 
-        architectures = context["channel_map"].keys()
+        architectures = list(context["channel_map"].keys())
 
         context.update(
             {
