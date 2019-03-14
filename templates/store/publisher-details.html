@@ -184,6 +184,10 @@
           {% include 'store/_media-object-snap-partial.html' %}
         </div>
       {% endfor %}
+      {% for index in range((snaps|length) % 4) %}
+
+        <div class="p-fluid-grid__item"></div>
+      {% endfor %}
       </div>
     </div>
   </div>
