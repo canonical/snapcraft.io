@@ -225,47 +225,6 @@ describe("Media", () => {
 
       expect(newDeleteImages.length).toEqual(2);
     });
-
-    it("should move focus to the next item if the deleted item is focusHandler", () => {
-      const images = cont.querySelectorAll(imageSelector);
-      images[0].focus();
-
-      const deleteImage = images[0].querySelector(
-        ".p-listing-images__delete-image"
-      );
-      fireEvent.click(deleteImage);
-
-      expect(document.activeElement).toEqual(images[1]);
-    });
-
-    it("should move focus to the add item if the deleted item is focusHandler", () => {
-      let images = cont.querySelectorAll(imageSelector);
-
-      const deleteImage1 = images[0].querySelector(
-        ".p-listing-images__delete-image"
-      );
-      fireEvent.click(deleteImage1);
-
-      images = cont.querySelectorAll(imageSelector);
-
-      const deleteImage2 = images[0].querySelector(
-        ".p-listing-images__delete-image"
-      );
-      fireEvent.click(deleteImage2);
-
-      images = cont.querySelectorAll(imageSelector);
-
-      images[0].focus();
-
-      const deleteImage3 = images[0].querySelector(
-        ".p-listing-images__delete-image"
-      );
-      fireEvent.click(deleteImage3);
-
-      expect(document.activeElement).toEqual(
-        cont.querySelector(addImageSelector)
-      );
-    });
   });
 
   describe("keyboard", () => {

@@ -12,30 +12,11 @@ class MediaItem extends React.Component {
     super(props);
 
     this.keyboardEvent = this.keyboardEvent.bind(this);
-    this.focusHandler = this.focusHandler.bind(this);
-    this.blurHandler = this.blurHandler.bind(this);
   }
 
   keyboardEvent(e) {
     if (e.key === "Delete" || e.key === "Backspace") {
       this.props.markForDeletion(this.props.url);
-    }
-  }
-
-  blurHandler() {
-    this.props.blurHandler(this.props.url);
-  }
-
-  focusHandler() {
-    this.props.focusHandler(this.props.url);
-  }
-
-  componentDidUpdate() {
-    if (
-      this.props.focus === this.props.url &&
-      document.activeElement !== this.mediaItem
-    ) {
-      this.mediaItem.focus();
     }
   }
 
@@ -49,8 +30,6 @@ class MediaItem extends React.Component {
         className={classes.join(" ")}
         tabIndex="0"
         onKeyDown={this.keyboardEvent}
-        onFocus={this.focusHandler}
-        onBlur={this.blurHandler}
         ref={item => (this.mediaItem = item)}
       >
         <span
@@ -70,10 +49,7 @@ MediaItem.propTypes = {
   url: PropTypes.string,
   status: PropTypes.string,
   overflow: PropTypes.bool,
-  markForDeletion: PropTypes.func,
-  focusHandler: PropTypes.func,
-  blurHandler: PropTypes.func,
-  focus: PropTypes.string
+  markForDeletion: PropTypes.func
 };
 
 export { MediaItem as default, mediaClasses };

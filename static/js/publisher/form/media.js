@@ -12,51 +12,26 @@ class Media extends React.Component {
     this.addImage = this.addImage.bind(this);
     this.mediaChange = this.mediaChange.bind(this);
     this.keyboardEvent = this.keyboardEvent.bind(this);
-    this.focusHandler = this.focusHandler.bind(this);
-    this.blurHandler = this.blurHandler.bind(this);
 
     this.state = {
-      mediaData: props.mediaData,
-      focused: null
+      mediaData: props.mediaData
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     this.props.updateState(prevState.mediaData);
-
-    if (
-      this.state.focused === "new" &&
-      this.blankItem &&
-      document.activeElement !== this.blankItem
-    ) {
-      this.blankItem.focus();
-    }
   }
 
   markForDeletion(key) {
-    let index = -1;
-    let newFocus = this.state.focused;
-
-    const newMediaData = this.state.mediaData.map((item, i) => {
+    const newMediaData = this.state.mediaData.map(item => {
       if (item.url === key) {
         item.status = "delete";
-        index = i;
       }
       return item;
     });
 
-    if (this.state.focused && index > -1) {
-      const available = newMediaData.filter(item => item.status !== "delete");
-      if (available[0]) {
-        newFocus = available[0].url;
-      } else {
-        newFocus = "new";
-      }
-    }
-
     this.setState({
-      mediaData: newMediaData,
-      focused: newFocus
+      mediaData: newMediaData
     });
   }
 
@@ -98,20 +73,6 @@ class Media extends React.Component {
     }
   }
 
-  focusHandler(url) {
-    this.setState({
-      focused: url
-    });
-  }
-
-  blurHandler(url) {
-    if (this.state.focused === url) {
-      this.setState({
-        focused: null
-      });
-    }
-  }
-
   renderOverLimit() {
     if (
       this.state.mediaData.filter(item => item.status !== "delete").length >
@@ -144,10 +105,7 @@ class Media extends React.Component {
             key={`blank-${i}`}
             onClick={this.addImage}
             onKeyDown={this.keyboardEvent}
-            onFocus={this.focusHandler.bind(this, "new")}
-            onBlur={this.blurHandler.bind(this, "new")}
             tabIndex="0"
-            ref={item => (this.blankItem = item)}
           >
             <span role="button" className="u-align-text--center">
               <i className="p-icon--plus" />
@@ -192,9 +150,6 @@ class Media extends React.Component {
               status={item.status}
               markForDeletion={this.markForDeletion}
               overflow={i > 4}
-              focusHandler={this.focusHandler}
-              blurHandler={this.blurHandler}
-              focus={this.state.focused}
             />
           ))}
           {this.renderBlankMedia(blankMedia)}
