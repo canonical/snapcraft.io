@@ -186,7 +186,7 @@ class Media extends React.Component {
         >
           {mediaList.map((item, i) => (
             <MediaItem
-              key={item.url}
+              key={`${i}-${item.url}`}
               url={item.url}
               type={item.type}
               status={item.status}
