@@ -55,7 +55,8 @@ describe("initSnapIconEdit", () => {
       ".js-remove-icon",
       "test-icon-id",
       "test-id",
-      state
+      state,
+      () => {}
     );
 
     let event = new Event("change");
@@ -71,12 +72,14 @@ describe("initSnapIconEdit", () => {
   });
 
   test("should remove icon when clicked", () => {
+    const cb = jest.fn();
     market.initSnapIconEdit(
       ".js-change-icon",
       ".js-remove-icon",
       "test-icon-id",
       "test-id",
-      state
+      state,
+      cb
     );
 
     let event = new Event("change");
@@ -91,6 +94,7 @@ describe("initSnapIconEdit", () => {
 
     expect(icon.src).toBe("");
     expect(removeBtn.classList.contains("u-hide")).toEqual(true);
+    expect(cb.mock.calls.length).toEqual(1);
   });
 
   test("should show the remove icon when icon is set", () => {
@@ -104,7 +108,8 @@ describe("initSnapIconEdit", () => {
       ".js-remove-icon",
       "test-icon-id",
       "test-id",
-      state
+      state,
+      () => {}
     );
 
     expect(removeBtn.classList.contains("u-hide")).toEqual(false);

@@ -100,12 +100,8 @@
           <div class="col-8 u-vertically-center">
             <div class="p-editable-icon">
               <div class="p-editable-icon__icon js-change-icon">
-                <img id="snap_icon_image"
-                     {% if icon_url %}
+                <img id="snap_icon_image"{% if not icon_url %} class="u-hide"{% endif %}
                      src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                     {% else %}
-                     src="" alt=""
-                     {% endif %}
                 />
                 <span class="p-editable-icon__change">Edit</span>
               </div>

@@ -19,7 +19,14 @@ const IS_CHROMIUM =
   typeof window.chrome !== "undefined" &&
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
-function initSnapIconEdit(changeIcon, removeIcon, iconId, iconInputId, state) {
+function initSnapIconEdit(
+  changeIcon,
+  removeIcon,
+  iconId,
+  iconInputId,
+  state,
+  updateFormState
+) {
   const snapIconEl = document.getElementById(iconId);
   const snapIconInput = document.getElementById(iconInputId);
   const changeIconEl = document.querySelector(changeIcon);
@@ -41,6 +48,7 @@ function initSnapIconEdit(changeIcon, removeIcon, iconId, iconInputId, state) {
     });
 
     updateState(state, { images });
+    snapIconEl.classList.remove("u-hide");
     removeIconEl.classList.remove("u-hide");
   });
 
@@ -56,9 +64,10 @@ function initSnapIconEdit(changeIcon, removeIcon, iconId, iconInputId, state) {
 
     const images = state.images.filter(image => image.type !== "icon");
 
-    updateState(state, { images });
-
     snapIconInput.value = "";
+    updateState(state, { images });
+    updateFormState();
+    snapIconEl.classList.add("u-hide");
     removeIconEl.classList.add("u-hide");
   });
 
@@ -157,7 +166,8 @@ function initForm(config, initialState, errors) {
       config.snapIconRemove,
       config.snapIcon,
       config.snapIconInput,
-      state
+      state,
+      updateFormState
     );
   }
 
