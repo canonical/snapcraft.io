@@ -2,42 +2,15 @@
   <div class='col-6'>
     <h4>Why are snaps good for ROS2 projects?</h4>
     <ul>
-      <li>Bundle all the runtime requirements, including the exact version of ROS and system libraries you need.</li>
+      <li>Bundle all the runtime requirements, including the exact version of ROS, system libraries, etc.</li>
       <li>Expand the distributions supported beyond just Ubuntu.</li>
-      <li>Directly and reliably control the delivery of application updates using existing infrastructure.</li>
+      <li>Directly control the delivery of application updates.</li>
       <li>Extremely simple creation of daemons.</li>
     </ul>
   </div>
 
-  <div class='col-6'>
-    <h4>How ros2-talker-listener defines snapcraft.yaml:</h4>
-    <code class="p-code-yaml"><pre><b>name</b>: ros2-talker-listener
-<b>version</b>: '0.1'
-<b>summary</b>: ROS2 Talker/Listener Example
-<b>description</b>: |
-  This example launches a ROS2 talker and listener.
-
-<b>confinement</b>: devmode
-<b>base</b>: core18
-
-<b>parts</b>:
-  <b>ros-demos</b>:
-    <b>plugin</b>: colcon
-    <b>source</b>: https://github.com/ros2/demos.git
-    <b>source-branch</b>: crystal
-    <b>colcon-rosdistro</b>: crystal
-    <b>colcon-source-space</b>: demo_nodes_cpp
-    <b>build-packages</b>: [make, gcc, g++]
-    <b>stage-packages</b>: [ros-crystal-ros2launch]
-
-<b>apps</b>:
-  <b>ros2-talker-listener</b>:
-    <b>command</b>: opt/ros/crystal/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py
-</pre></code>
-  </div>
-  
   <div class="p-flow-details__continue">
     In just a few steps, you’ll have an example ROS2 app in the Snap Store.
-    <a class="p-button--positive is-inline" href="/first-snap/ros2">Continue</a>
+    <a class="p-button--positive is-inline" href="https://docs.snapcraft.io/build-snaps/ros2">Continue</a>
   </div>
 </div>
