@@ -13,8 +13,10 @@ function toggleModal(modal, show, initCallback) {
       initCallback();
     }
     showEl(modal);
+    document.body.style.overflow = "hidden";
   } else {
     hideEl(modal);
+    document.body.style.overflow = "";
   }
 }
 
