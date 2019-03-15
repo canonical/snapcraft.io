@@ -26,14 +26,6 @@ export default function initEmbeddedCardModal(snapName) {
   const codeElement = modal.querySelector("#snippet-card-html");
   const buttonRadios = modal.querySelectorAll("input[name=store-button]");
   const optionButtons = modal.querySelectorAll("input[type=checkbox]");
-  const previewTab = modal.querySelector(
-    "[aria-controls='embedded-card-modal-preview']"
-  );
-  const previewTabContent = modal.querySelector("#embedded-card-modal-preview");
-  const htmlTab = modal.querySelector(
-    "[aria-controls='embedded-card-modal-html']"
-  );
-  const htmlTabContent = modal.querySelector("#embedded-card-modal-html");
 
   function updateHeightCallback() {
     // adjust the height of the modal to size of the frame
@@ -44,24 +36,8 @@ export default function initEmbeddedCardModal(snapName) {
     }, 1);
   }
 
-  function showPreviewTab() {
-    hideEl(htmlTabContent);
-    showEl(previewTabContent);
-    htmlTab.setAttribute("aria-selected", "false");
-    previewTab.setAttribute("aria-selected", "true");
-    // re-render preview to make sure height is updated
-    renderCard();
-  }
-
-  function showHtmlTab() {
-    hideEl(previewTabContent);
-    showEl(htmlTabContent);
-    previewTab.setAttribute("aria-selected", "false");
-    htmlTab.setAttribute("aria-selected", "true");
-  }
-
   function initFrame() {
-    showPreviewTab();
+    renderCard();
   }
 
   const renderCard = initEmbeddedCardPicker({
@@ -84,15 +60,5 @@ export default function initEmbeddedCardModal(snapName) {
     if (target.closest(".js-modal-close") || target === modal) {
       toggleModal(modal);
     }
-  });
-
-  previewTab.addEventListener("click", e => {
-    e.preventDefault();
-    showPreviewTab();
-  });
-
-  htmlTab.addEventListener("click", e => {
-    e.preventDefault();
-    showHtmlTab();
   });
 }
