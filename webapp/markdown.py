@@ -70,13 +70,11 @@ class DescriptionInlineGrammar(InlineGrammar):
 class DescriptionInline(InlineLexer):
     grammar_class = DescriptionInlineGrammar
 
-    # Removed rules: link, reflink
+    # Removed rules: inline_html, link, reflink
     default_rules = [
         "escape",
-        "inline_html",
         "autolink",
         "url",
-        "footnote",
         "nolink",
         "double_emphasis",
         "emphasis",
@@ -87,7 +85,6 @@ class DescriptionInline(InlineLexer):
     ]
     inline_html_rules = [
         "escape",
-        "inline_html",
         "autolink",
         "url",
         "nolink",
