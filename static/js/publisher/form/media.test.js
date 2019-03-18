@@ -258,7 +258,9 @@ describe("Media", () => {
       const { container } = render(<Media />);
 
       expect(
-        container.querySelector(".p-overlay").classList.contains("u-hide")
+        container
+          .querySelector(".p-form-help-text + .row")
+          .classList.contains("u-hide")
       ).toEqual(true);
 
       const restrictionsButton = container.querySelector(
@@ -267,7 +269,9 @@ describe("Media", () => {
       fireEvent.click(restrictionsButton);
 
       expect(
-        container.querySelector(".p-overlay").classList.contains("u-hide")
+        container
+          .querySelector(".p-form-help-text + .row")
+          .classList.contains("u-hide")
       ).toEqual(false);
     });
   });

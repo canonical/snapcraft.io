@@ -21,6 +21,12 @@ class Media extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.mediaData !== this.state.mediaData) {
+      this.props.updateState(this.state.mediaData);
+    }
+  }
+
   markForDeletion(key) {
     const newMediaData = this.state.mediaData.map(item => {
       if (item.url === key) {
@@ -29,18 +35,13 @@ class Media extends React.Component {
       return item;
     });
 
-    this.setState(
-      {
-        mediaData: newMediaData
-      },
-      () => {
-        this.props.updateState(this.state.mediaData);
-      }
-    );
+    this.setState({
+      mediaData: newMediaData
+    });
   }
 
   mediaChange(input) {
-    const newMediaData = this.state.mediaData;
+    const newMediaData = [...this.state.mediaData];
     for (let i = 0; i < input.files.length; i++) {
       const file = input.files[i];
       newMediaData.push({
@@ -52,14 +53,9 @@ class Media extends React.Component {
       });
     }
 
-    this.setState(
-      {
-        mediaData: newMediaData
-      },
-      () => {
-        this.props.updateState(this.state.mediaData);
-      }
-    );
+    this.setState({
+      mediaData: newMediaData
+    });
   }
 
   addImage() {
@@ -140,22 +136,23 @@ class Media extends React.Component {
   }
 
   renderRescrictions() {
-    const overlayClasses = ["p-overlay"];
+    const overlayClasses = ["row"];
+    let verb = "Hide";
     if (!this.state.restrictionsVisible) {
       overlayClasses.push("u-hide");
+      verb = "Show";
     }
     return (
       <Fragment>
         <p className="p-form-help-text">
           <a role="button" onClick={this.toggleRestrictions}>
-            See image restrictions
+            {verb} image restrictions
           </a>
         </p>
         <div className={overlayClasses.join(" ")}>
-          <div className="p-overlay__content">
-            <div className="p-card">
-              <h4>Image restrictions</h4>
-              <p>
+          <div className="col-8">
+            <p>
+              <small>
                 Accepted image formats include: <b>GIF, JPEG & PNG files.</b>
                 <br />
                 Min resolution: <b>480 x 480 pixels</b>
@@ -171,16 +168,8 @@ class Media extends React.Component {
                 Animation max fps: <b>30</b>
                 <br />
                 Animation max length: <b>40 seconds</b>
-                <br />
-              </p>
-            </div>
-            <span
-              className="p-overlay__close"
-              role="button"
-              onClick={this.toggleRestrictions}
-            >
-              <i className="p-icon--close" />
-            </span>
+              </small>
+            </p>
           </div>
         </div>
       </Fragment>
