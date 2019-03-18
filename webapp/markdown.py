@@ -42,6 +42,7 @@ class DescriptionBlockGrammar(BlockGrammar):
             flags=re.M,
         )
         self.list_bullet = re.compile(r"^ *(?:[•*+-]|\d+\.) +")
+        self.block_code = re.compile(r"^( {3}[^\n]+\n*)+")
 
 
 class DescriptionBlock(BlockLexer):
@@ -56,6 +57,14 @@ class DescriptionBlock(BlockLexer):
     ]
 
     list_rules = ("block_code", "list_block", "text", "newline")
+
+    # Need to extend this function since I need to modify this
+    # https://github.com/lepture/mistune/blob/v0.8.4/mistune.py#L29
+    def parse_block_code(self, m):
+        # clean leading whitespace
+        block_code_leading_pattern = re.compile(r"^ {3}", re.M)
+        code = block_code_leading_pattern.sub("", m.group(0))
+        self.tokens.append({"type": "code", "lang": None, "text": code})
 
 
 class DescriptionInlineGrammar(InlineGrammar):

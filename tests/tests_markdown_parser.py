@@ -124,6 +124,15 @@ class TestMarkdownParser(unittest.TestCase):
 
         self.assertEqual(result, expected_result)
 
+    def test_parse_code_block_multiple_line_tree_spaces(self):
+        """Code with three space indentation
+        """
+        markdown = "   code\n   code line 2"
+        result = parse_markdown_description(markdown)
+        expected_result = "<pre><code>code\ncode line 2\n</code></pre>\n"
+
+        self.assertEqual(result, expected_result)
+
     def test_parse_code_line(self):
         """Code (text blocks inside ` or ``` pairs)
         """
