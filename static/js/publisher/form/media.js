@@ -13,13 +13,18 @@ class Media extends React.Component {
     this.mediaChange = this.mediaChange.bind(this);
     this.keyboardEvent = this.keyboardEvent.bind(this);
 
+    this.toggleRestrictions = this.toggleRestrictions.bind(this);
+
     this.state = {
-      mediaData: props.mediaData
+      mediaData: props.mediaData,
+      restrictionsVisible: false
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.props.updateState(prevState.mediaData);
+    if (prevState.mediaData !== this.state.mediaData) {
+      this.props.updateState(this.state.mediaData);
+    }
   }
 
   markForDeletion(key) {
@@ -36,7 +41,7 @@ class Media extends React.Component {
   }
 
   mediaChange(input) {
-    const newMediaData = this.state.mediaData;
+    const newMediaData = [...this.state.mediaData];
     for (let i = 0; i < input.files.length; i++) {
       const file = input.files[i];
       newMediaData.push({
@@ -124,6 +129,53 @@ class Media extends React.Component {
     return blankMedia;
   }
 
+  toggleRestrictions() {
+    this.setState({
+      restrictionsVisible: !this.state.restrictionsVisible
+    });
+  }
+
+  renderRescrictions() {
+    const overlayClasses = ["row"];
+    let verb = "Hide";
+    if (!this.state.restrictionsVisible) {
+      overlayClasses.push("u-hide");
+      verb = "Show";
+    }
+    return (
+      <Fragment>
+        <p className="p-form-help-text">
+          <a role="button" onClick={this.toggleRestrictions}>
+            {verb} image restrictions
+          </a>
+        </p>
+        <div className={overlayClasses.join(" ")}>
+          <div className="col-8">
+            <p>
+              <small>
+                Accepted image formats include: <b>GIF, JPEG & PNG files.</b>
+                <br />
+                Min resolution: <b>480 x 480 pixels</b>
+                <br />
+                Max resolution: <b>3840 x 2160 pixels</b>
+                <br />
+                Aspect ratio: <b>Between 1:2 and 2:1</b>
+                <br />
+                File size limit: <b>2MB</b>
+                <br />
+                Animation min fps: <b>1</b>
+                <br />
+                Animation max fps: <b>30</b>
+                <br />
+                Animation max length: <b>40 seconds</b>
+              </small>
+            </p>
+          </div>
+        </div>
+      </Fragment>
+    );
+  }
+
   render() {
     const mediaList = this.state.mediaData.filter(
       item => item.status !== "delete"
@@ -154,6 +206,7 @@ class Media extends React.Component {
           ))}
           {this.renderBlankMedia(blankMedia)}
         </div>
+        {this.renderRescrictions()}
       </Fragment>
     );
   }
