@@ -19,9 +19,18 @@ const IS_CHROMIUM =
   typeof window.chrome !== "undefined" &&
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
-function initSnapIconEdit(iconElId, iconInputId, state) {
+function initSnapIconEdit(
+  changeIcon,
+  removeIcon,
+  iconId,
+  iconInputId,
+  state,
+  updateFormState
+) {
+  const snapIconEl = document.getElementById(iconId);
   const snapIconInput = document.getElementById(iconInputId);
-  const snapIconEl = document.getElementById(iconElId);
+  const changeIconEl = document.querySelector(changeIcon);
+  const removeIconEl = document.querySelector(removeIcon);
 
   snapIconInput.addEventListener("change", function() {
     const iconFile = this.files[0];
@@ -39,11 +48,32 @@ function initSnapIconEdit(iconElId, iconInputId, state) {
     });
 
     updateState(state, { images });
+    snapIconEl.classList.remove("u-hide");
+    removeIconEl.classList.remove("u-hide");
   });
 
-  snapIconEl.addEventListener("click", function() {
+  changeIconEl.addEventListener("click", function(e) {
+    e.preventDefault();
     snapIconInput.click();
   });
+
+  removeIconEl.addEventListener("click", function(e) {
+    e.preventDefault();
+    snapIconEl.src = "";
+    snapIconEl.alt = "";
+
+    const images = state.images.filter(image => image.type !== "icon");
+
+    snapIconInput.value = "";
+    updateState(state, { images });
+    updateFormState();
+    snapIconEl.classList.add("u-hide");
+    removeIconEl.classList.add("u-hide");
+  });
+
+  if (state.images.filter(image => image.type === "icon").length > 0) {
+    removeIconEl.classList.remove("u-hide");
+  }
 }
 
 function initFormNotification(formElId, notificationElId) {
@@ -130,8 +160,15 @@ function initForm(config, initialState, errors) {
 
   formEl.appendChild(diffInput);
 
-  if (config.snapIconImage && config.snapIconInput) {
-    initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
+  if (config.snapIconRemove && config.snapIcon && config.snapIconInput) {
+    initSnapIconEdit(
+      config.snapIconChange,
+      config.snapIconRemove,
+      config.snapIcon,
+      config.snapIconInput,
+      state,
+      updateFormState
+    );
   }
 
   initFormNotification(config.form, config.formNotification);

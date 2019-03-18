@@ -95,19 +95,29 @@
 
         <div class="row" data-validation-name="icon">
           <div class="col-2">
-            <div class="p-media-object__image--large p-editable-icon">
-              <img id="snap_icon_image"
-                {% if icon_url %}
-                  src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                {% else %}
-                  src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt=""
-                {% endif %}
-              />
+            <label class="p-editable-icon__label" for="snap_icon">Snap icon:</label>
+          </div>
+          <div class="col-8 u-vertically-center">
+            <div class="p-editable-icon">
+              <div class="p-editable-icon__icon js-change-icon">
+                <img id="snap_icon_image"{% if not icon_url %} class="u-hide"{% endif %}
+                     src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
+                />
+                <span class="p-editable-icon__change">Edit</span>
+              </div>
             </div>
+            <div class="p-editable-icon__actions">
+              <a class="p-editable-icon__delete js-remove-icon u-hide"><i class="p-icon--delete"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="snap-title">Title:</label>
           </div>
           <div class="col-8">
             <div class="p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}">
-              <label for="snap-title">Title:</label>
               <div class="p-form-validation__field">
                 <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
               </div>
@@ -507,7 +517,9 @@
   Raven.context(function () {
     snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
     snapcraft.publisher.market.initForm({
-      snapIconImage: "snap_icon_image",
+      snapIconChange: ".js-change-icon",
+      snapIconRemove: ".js-remove-icon",
+      snapIcon: "snap_icon_image",
       snapIconInput: "snap_icon",
       form: "market-form",
       formNotification: "market-form-status",
