@@ -252,7 +252,10 @@ def store_blueprint(store_query=None, testing=False):
         A view to display the publisher details page for specific publisher.
         """
 
-        context = _get_file("store/content/publishers/" + publisher + ".yaml")
+        publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
+            "PUBLISHER_PAGES"
+        ]
+        context = _get_file(publisher_content_path + publisher + ".yaml")
 
         if not context:
             flask.abort(404)
