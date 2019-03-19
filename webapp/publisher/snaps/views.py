@@ -1112,7 +1112,7 @@ def post_preview(snap_name):
     for item in state:
         if item == "description":
             context[item] = parse_markdown_description(
-                bleach.clean(state[item])
+                bleach.clean(state[item], tags=[])
             )
         else:
             context[item] = state[item]

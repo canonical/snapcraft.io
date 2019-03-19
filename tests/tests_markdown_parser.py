@@ -107,9 +107,9 @@ class TestMarkdownParser(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_parse_code_block_single_line(self):
-        """Code with four space indentation
+        """Code with three space indentation
         """
-        markdown = "    code"
+        markdown = "   code"
         result = parse_markdown_description(markdown)
         expected_result = "<pre><code>code\n</code></pre>\n"
 
@@ -120,7 +120,7 @@ class TestMarkdownParser(unittest.TestCase):
         """
         markdown = "    code\n    code line 2"
         result = parse_markdown_description(markdown)
-        expected_result = "<pre><code>code\ncode line 2\n</code></pre>\n"
+        expected_result = "<pre><code> code\n code line 2\n</code></pre>\n"
 
         self.assertEqual(result, expected_result)
 
