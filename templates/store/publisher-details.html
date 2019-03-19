@@ -149,7 +149,7 @@
       <div class="col-12 p-fluid-grid__publisher-snaps">
       {% for snap in snaps %}
         <div class="p-fluid-grid__item">
-          <a class="p-media-object--snap{% if snap_no_margin %}u-no-margin--bottom{% endif %}" href="/{{ snap.package_name }}">
+          <a class="p-media-object--snap" href="/{{ snap.package_name }}">
             {% if snap.icon_url %}
             <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
             {% else %}
