@@ -54,7 +54,9 @@ def snap_details_views(store, api, handle_errors):
         if not details.get("channel-map"):
             flask.abort(404, "No snap named {}".format(snap_name))
 
-        clean_description = bleach.clean(details["snap"]["description"])
+        clean_description = bleach.clean(
+            details["snap"]["description"], tags=[]
+        )
         formatted_description = parse_markdown_description(clean_description)
 
         channel_maps_list = logic.convert_channel_maps(
