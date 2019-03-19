@@ -124,7 +124,7 @@ describe("Media", () => {
       expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
     });
 
-    it("should add a new image on file input change", () => {
+    it("should add a new image when mediaChanged called", done => {
       window.URL = {
         createObjectURL: () => {
           return "test-upload";
@@ -141,28 +141,32 @@ describe("Media", () => {
 
       input.dispatchEvent(new Event("change"));
 
-      expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
-      expect(
-        cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
-          .length
-      ).toEqual(1);
+      // timeout to wait for the promises to resolve
+      setTimeout(() => {
+        expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
+        expect(
+          cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
+            .length
+        ).toEqual(1);
 
-      expect(updateState.mock.calls.length).toEqual(1);
-      expect(updateState.mock.calls[0]).toEqual([
-        [
-          {
-            status: "uploaded",
-            url: "test"
-          },
-          {
-            file,
-            name: "test",
-            status: "new",
-            type: "screenshot",
-            url: "test-upload"
-          }
-        ]
-      ]);
+        expect(updateState.mock.calls.length).toEqual(1);
+        expect(updateState.mock.calls[0]).toEqual([
+          [
+            {
+              status: "uploaded",
+              url: "test"
+            },
+            {
+              file,
+              name: "test",
+              status: "new",
+              type: "screenshot",
+              url: "test-upload"
+            }
+          ]
+        ]);
+        done();
+      }, 500);
     });
   });
 
@@ -225,6 +229,46 @@ describe("Media", () => {
 
       expect(newDeleteImages.length).toEqual(2);
     });
+  });
+
+  it("should error when restrictions aren't met", done => {
+    const { container } = render(
+      <Media
+        mediaData={[]}
+        restrictions={{
+          size: { max: 0.00001 }
+        }}
+      />
+    );
+
+    const addImageButton = container.querySelector(
+      ".p-listing-images__add-image"
+    );
+    fireEvent.click(addImageButton);
+
+    window.URL = {
+      createObjectURL: () => {
+        return "test-upload";
+      }
+    };
+    const fileContents = "testymctestface";
+    const file = new File([fileContents], "test", { type: "image/png" });
+
+    const input = container.querySelector(`[name="screenshots"]`);
+
+    Object.defineProperty(input, "files", {
+      value: [file]
+    });
+
+    input.dispatchEvent(new Event("change", { bubbles: false }));
+
+    // timeout to wait for the promises to resolve
+    setTimeout(() => {
+      expect(
+        container.querySelectorAll(".p-notification--negative").length
+      ).toEqual(1);
+      done();
+    }, 500);
   });
 
   describe("keyboard", () => {
