@@ -9,6 +9,14 @@
 
   .p-fluid-grid {
     @extend %fluid-grid;
+
+    &__publisher-snaps {
+      @extend %fluid-grid;
+
+      .p-fluid-grid__item {
+        min-height: 12rem;
+      }
+    }
   }
 
   .p-fluid-grid--condensed {

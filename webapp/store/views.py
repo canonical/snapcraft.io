@@ -1,9 +1,11 @@
+import os
 from math import floor
 from urllib.parse import quote_plus
 
 import flask
 
 import webapp.store.logic as logic
+from ruamel.yaml import YAML
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiConnectionError,
@@ -15,6 +17,8 @@ from webapp.api.exceptions import (
 )
 from webapp.api.store import StoreApi
 from webapp.store.snap_details_views import snap_details_views
+
+yaml = YAML(typ="safe")
 
 
 def store_blueprint(store_query=None, testing=False):
@@ -230,6 +234,33 @@ def store_blueprint(store_query=None, testing=False):
             flask.render_template("brand-store/search.html", **context),
             status_code,
         )
+
+    def _get_file(file):
+        try:
+            with open(
+                os.path.join(flask.current_app.root_path, file), "r"
+            ) as stream:
+                data = yaml.load(stream)
+        except Exception:
+            data = None
+
+        return data
+
+    @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
+    def publisher_details_jetbrains(publisher):
+        """
+        A view to display the publisher details page for specific publisher.
+        """
+
+        publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
+            "PUBLISHER_PAGES"
+        ]
+        context = _get_file(publisher_content_path + publisher + ".yaml")
+
+        if not context:
+            flask.abort(404)
+
+        return flask.render_template("store/publisher-details.html", **context)
 
     @store.route("/store/categories/<category>")
     def store_category(category):

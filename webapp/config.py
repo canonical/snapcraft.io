@@ -27,3 +27,5 @@ WEBAPP_EXTRA_HEADERS = {}
 
 # Ten years default cache time on static files
 SEND_FILE_MAX_AGE_DEFAULT = 10 * 365 * 24 * 60 * 60
+
+CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}

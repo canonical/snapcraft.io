@@ -1,0 +1,212 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block meta_copydoc %}{% endblock %}
+
+{# TODO: title, meta, etc #}
+{% block meta_title %}{{ publisher }} in the Snap Store{% endblock %}
+{% block meta_description %}Install {{ publisher }} software for Linux in the Snap Store{% endblock %}
+
+{% if icon_url %}
+  {% block meta_image %}
+    {{ icon_url }}
+  {% endblock %}
+{% endif %}
+
+
+{% block content %}
+  <div class="p-strip--dark is-shallow" style="background: #262626">
+    <div class="row">
+      <div class="p-snap-heading">
+        {% if icon_url %}
+          <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ publisher }} snap" />
+        {% else %}
+          <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
+        {% endif %}
+        <div class="p-snap-heading__title">
+          <h1 class="p-heading--two p-snap-heading__name">{{ publisher }}</h1>
+          <p class="p-snap-heading__publisher">
+            ({{ username }})
+            {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
+            <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ username }}-tooltip">
+              <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
+              <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ username }}-tooltip">Verified account</span>
+            </span>
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="p-snap-install-buttons">
+          {% if website %}
+            <a href="{{ website }}" class="p-button--positive p-link--external">Visit publisher website</a>
+          {% endif %}
+          {% if contact %}
+            <a href="{{ contact }}" class="p-button--neutral p-link--external">Contact publisher</a>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% if banner_url %}
+  <section
+    class="p-strip--image is-deep"
+    style="min-height: 400px; background-image:url('{{ banner_url }}'); background-position: center;">
+  </section>
+  {% endif %}
+
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-8">
+        {% if summary %}<h4>{{ summary }}</h4>{% endif %}
+        {{ description | safe }}
+      </div>
+      <div class="col-4">
+        <h4>About {{ publisher }}</h4>
+        <table class="p-table-key-value">
+          <tr><th>Snaps published</th><td>{{ snaps|length + featured_snaps|length }}</td></tr>
+          <tr><th>Publisher since</th><td>{{ publisher_since }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {% if blog_slug %}
+  <div data-js="blog-articles" style="display: none;">
+    <div class="row">
+      <div class="col-12">
+        <hr />
+      </div>
+    </div>
+    <div class="p-strip is-shallow">
+      <div class="row">
+        <div class="col-3">
+          <h3 class="p-heading--four">Related blog posts</h3>
+        </div>
+      </div>
+      <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ blog_slug }}">
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if featured_snaps %}
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="u-equal-height">
+        {% set snap = featured_snaps[0] %}
+        <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
+          <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
+            {% if snap.icon_url %}
+              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
+            {% else %}
+              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+            {% endif %}
+
+            <div class="p-media-object--snap__content">
+              <h4 class="p-media-object--snap__title">
+                {{ snap.title }}
+              </h4>
+            </div>
+            <div class="p-media-object--snap__description">
+              <hr />
+              <h5>{{ snap.summary }}</h5>
+              <p>{{ snap.description }}</p>
+            </div>
+          </a>
+        </div>
+        {% if featured_snaps[1] %}
+        {% set snap = featured_snaps[1] %}
+        <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
+          <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
+            {% if snap.icon_url %}
+              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
+            {% else %}
+              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+            {% endif %}
+
+            <div class="p-media-object--snap__content">
+              <h4 class="p-media-object--snap__title">
+                {{ snap.title }}
+              </h4>
+            </div>
+            <div class="p-media-object--snap__description">
+              <hr />
+              <h5>{{ snap.summary }}</h5>
+              <p>{{ snap.description }}</p>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-12 p-fluid-grid__publisher-snaps">
+      {% for snap in snaps %}
+        <div class="p-fluid-grid__item">
+          <a class="p-media-object--snap" href="/{{ snap.package_name }}">
+            {% if snap.icon_url %}
+            <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
+            {% else %}
+            <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object--snap__img" alt="">
+            {% endif %}
+
+            <div class="p-media-object--snap__content">
+              <h4 class="p-media-object--snap__title">
+                {{ snap.title }}
+              </h4>
+              <div class="p-media-object--snap__desc">
+                <p>{{ snap.summary }}</p>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+      {% for index in range((snaps|length) % 4) %}
+        <div class="p-fluid-grid__item"></div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if api_error %}
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# templates #}
+  {% set article_title = {'rendered': '${title}'} %}
+  {% set article = {'slug': '${slug}', 'title': article_title} %}
+  <script type="text/template" id="blog-article-template">
+    {% include 'partials/blog-card--minimal.html' %}
+  </script>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script>
+    Raven.context(function () {
+      try {
+        snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+    });
+
+
+  </script>
+{% endblock %}
