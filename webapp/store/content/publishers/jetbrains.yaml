@@ -118,7 +118,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/product_256.png",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/12/PyCharmEdu256.png",
         "origin": "jetbrains",
         "package_name": "pycharm-educational",
         "publisher": "JetBrains",
