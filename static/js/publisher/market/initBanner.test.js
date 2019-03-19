@@ -46,7 +46,7 @@ describe("initBanner", () => {
             url: "/banner_123123.png",
             type: "screenshot",
             status: "uploaded",
-            is_banner: true
+            isBanner: true
           }
         ]
       },
@@ -74,7 +74,7 @@ describe("initBanner", () => {
             url: "/banner-icon_123123.png",
             type: "screenshot",
             status: "uploaded",
-            is_banner: true
+            isBanner: true
           }
         ]
       },
@@ -102,13 +102,13 @@ describe("initBanner", () => {
             url: "/banner_123123.png",
             type: "screenshot",
             status: "uploaded",
-            is_banner: true
+            isBanner: true
           },
           {
             url: "/banner-icon_123123.png",
             type: "screenshot",
             status: "uploaded",
-            is_banner: true
+            isBanner: true
           }
         ]
       },

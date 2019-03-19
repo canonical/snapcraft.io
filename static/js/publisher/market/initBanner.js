@@ -13,7 +13,7 @@ function initBanner(holder, state, nextState) {
   let bannerIcon = {};
 
   if (state.images) {
-    const bannerImages = state.images.filter(image => image.is_banner);
+    const bannerImages = state.images.filter(image => image.isBanner);
 
     if (bannerImages.length > 0) {
       const bannerBackgrounds = bannerImages.filter(
@@ -32,7 +32,7 @@ function initBanner(holder, state, nextState) {
   }
 
   const updateImageState = images => {
-    const normalImages = state.images.filter(image => !image.is_banner);
+    const normalImages = state.images.filter(image => !image.isBanner);
     nextState({
       ...state,
       images: normalImages.concat(images)
