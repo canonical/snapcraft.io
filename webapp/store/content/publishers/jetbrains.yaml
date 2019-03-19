@@ -122,7 +122,7 @@ snaps: [
         "origin": "jetbrains",
         "package_name": "pycharm-educational",
         "publisher": "JetBrains",
-        "summary": "Easy and Professional Tool to Learn & Teach Programming with Python",
+        "summary": "Easy & Professional Tool to Learn & Teach Programming with Python",
         "title": "PyCharm EDU",
     },
     {
