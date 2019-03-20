@@ -74,7 +74,7 @@ class StoreApi:
         if testing or not cache:
             self.session = api.requests.Session()
         else:
-            self.session = api.requests.CachedSession()
+            self.session = api.requests.CachedSession(timeout=(1, 6))
         self.session.headers.update(self.headers)
         self.session.headers.update(self.headers_v2)
 
