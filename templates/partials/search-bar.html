@@ -1,4 +1,4 @@
-<section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
+<section id="main-content" class="p-strip--image p-strip-slanted--snapcraft">
   <div class="row">
     {% if not webapp_config['STORE_QUERY'] %}
       <h1 class="p-heading--two">Search thousands of snaps used by millions of people across 41 Linux distributions</h1>
@@ -7,23 +7,10 @@
       {{ webapp_config['STORE_SEARCH_INTRO']|safe }}
     {% endif %}
     <form action="/search" class="p-form p-form--inline p-form--search">
-      {% if categories %}
-        <div class="p-form__group p-form__group--no-grow">
-          <label for="category-input" class="u-off-screen">Category</label>
-          <div class="p-form__control u-clearfix">
-            <select id="category-input" name="category" class="u-no-margin--bottom">
-              <option value="">All snaps</option>
-              {% for category in categories %}
-                <option value="{{ category.slug }}">{{ category.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-      {% endif %}
       <div class="p-form__group">
         <label for="search-input" class="u-off-screen">Search</label>
         <div class="p-form__control u-clearfix">
-          <input class="u-no-margin--bottom" id="search-input" type="search" name="q" value="{{ query }}" />
+          <input class="u-no-margin--bottom" id="search-input" type="search" name="q" placeholder="Search thousand of snaps" value="{{ query }}" />
         </div>
       </div>
       <button type="submit" alt="search" class="p-button--positive">Search</button>
