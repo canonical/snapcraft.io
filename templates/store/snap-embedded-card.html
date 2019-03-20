@@ -45,9 +45,7 @@
       {% endif %}
       {% if button %}
       <div class="p-embedded-description__badge">
-        <a href="https://snapcraft.io/{{ package_name }}">
-          <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-{{ button }}.svg" />
-        </a>
+        <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-{{ button }}.svg" />
       </div>
       {% endif %}
     </div>
@@ -86,4 +84,6 @@
     {% endif %}
   </div>
 </div>
+
+<a class="p-embedded-card-link" href="https://snapcraft.io/{{ package_name }}"></a>
 {% endblock content %}
