@@ -8,18 +8,28 @@ class FileUpload extends React.Component {
   constructor(props) {
     super(props);
 
-    this.fileChangeHandler = this.fileChangeHandler.bind(this);
+    this.fileClickHandler = this.fileClickHandler.bind(this);
     this.fileChangedHandler = this.fileChangedHandler.bind(this);
     this.keyboardEventHandler = this.keyboardEventHandler.bind(this);
   }
 
-  fileChangeHandler() {
-    this.input.dispatchEvent(new Event("click", { bubbles: false }));
+  componentDidUpdate() {
+    const { active, clear } = this.props;
+    if (active && clear && this.input) {
+      this.input.value = "";
+    }
   }
 
-  fileChangedHandler(input) {
+  fileClickHandler() {
+    const { active } = this.props;
+    if (active) {
+      this.input.click();
+    }
+  }
+
+  fileChangedHandler() {
     const { fileChangedCallback, restrictions } = this.props;
-    const files = Array.from(input.files).map(file =>
+    const files = Array.from(this.input.files).map(file =>
       validateRestrictions(file, restrictions)
     );
 
@@ -30,7 +40,7 @@ class FileUpload extends React.Component {
 
   keyboardEventHandler(e) {
     if (e.key === "Enter") {
-      this.fileChangeHandler();
+      this.fileClickHandler();
     }
   }
 
@@ -43,7 +53,7 @@ class FileUpload extends React.Component {
         accept={restrictions && restrictions.accept}
         name={inputName}
         hidden={true}
-        onChange={this.fileChangeHandler}
+        onChange={this.fileChangedHandler}
         ref={el => (this.input = el)}
       />
     );
@@ -55,7 +65,7 @@ class FileUpload extends React.Component {
       <div
         ref={el => (this.holder = el)}
         className={className}
-        onClick={this.fileChangeHandler}
+        onClick={this.fileClickHandler}
         onKeyDown={this.keyboardEventHandler}
         tabIndex={0}
       >
@@ -66,6 +76,17 @@ class FileUpload extends React.Component {
   }
 }
 
+FileUpload.defaultProps = {
+  className: "",
+  inputName: "file-upload",
+  fileChangedCallback: () => {},
+  restrictions: {
+    accept: []
+  },
+  active: true,
+  clear: false
+};
+
 FileUpload.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
@@ -74,7 +95,8 @@ FileUpload.propTypes = {
   restrictions: PropTypes.shape({
     accept: PropTypes.arrayOf(PropTypes.string)
   }),
-  active: PropTypes.bool
+  active: PropTypes.bool,
+  clear: PropTypes.bool
 };
 
 export { FileUpload as default };

@@ -120,11 +120,9 @@ describe("Media", () => {
 
       cont = container;
     });
-    it("should add an file input to the dom when adding an image", () => {
-      expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
-    });
 
     it("should add a new image when mediaChanged called", done => {
+      // Setup
       window.URL = {
         createObjectURL: () => {
           return "test-upload";
@@ -139,7 +137,8 @@ describe("Media", () => {
         value: [file]
       });
 
-      input.dispatchEvent(new Event("change"));
+      // Start functional bit
+      fireEvent.change(input);
 
       // timeout to wait for the promises to resolve
       setTimeout(() => {
@@ -260,7 +259,7 @@ describe("Media", () => {
       value: [file]
     });
 
-    input.dispatchEvent(new Event("change", { bubbles: false }));
+    fireEvent.change(input);
 
     // timeout to wait for the promises to resolve
     setTimeout(() => {
@@ -275,25 +274,22 @@ describe("Media", () => {
     let cont;
 
     beforeEach(() => {
-      const { container } = render(
-        <Media
-          mediaData={[
-            {
-              url: "test",
-              status: "uploaded"
-            }
-          ]}
-        />
-      );
+      const { container } = render(<Media />);
 
       cont = container;
     });
 
     it("should create a new image if return is pressed on add image", () => {
+      const input = cont.querySelector(`[name="screenshots"]`);
+
+      const clickCb = jest.fn();
+
+      input.addEventListener("click", clickCb);
+
       const addButton = cont.querySelector(addImageSelector);
       fireEvent.keyDown(addButton, { key: "Enter", code: 13, charCode: 13 });
 
-      expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
+      expect(clickCb.mock.calls.length).toEqual(1);
     });
   });
 

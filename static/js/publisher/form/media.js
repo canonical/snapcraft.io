@@ -165,12 +165,13 @@ class Media extends React.Component {
       classes.push("is-empty");
 
       let isActive = false;
-      if (i > currentMedia - 1) {
+
+      if (i === currentMedia) {
         classes.push("p-listing-images__add-image");
         isActive = true;
+      } else if (i < currentMedia) {
+        classes.push("u-hide");
       }
-
-      // if ()
 
       inputs.push(
         <Fragment key={`add-screenshot-${i}`}>
@@ -180,6 +181,7 @@ class Media extends React.Component {
             inputName="screenshots"
             fileChangedCallback={this.mediaChanged}
             active={isActive}
+            clear={true}
           >
             {isActive && (
               <span role="button" className="u-align-text--center">
