@@ -23,6 +23,16 @@
       flex-grow: 1;
       flex-shrink: 0;
       margin: 0;
+      margin-bottom: $sp-large;
+
+      .p-inline-list--middot {
+        margin-bottom: 0;
+      }
+
+      @media screen and (min-width: $breakpoint-medium) {
+        margin-bottom: 0;
+      }
+
     }
 
     &__name {
@@ -33,9 +43,11 @@
 
     &__publisher {
       margin-top: -.5rem;
+      margin-bottom: 0;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
+
       &__title {
         margin-top: -2 * $sp-x-small;
       }
