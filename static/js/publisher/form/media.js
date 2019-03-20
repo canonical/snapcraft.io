@@ -106,43 +106,6 @@ class Media extends React.Component {
     return false;
   }
 
-  renderBlankMedia(numberOfBlank) {
-    const { restrictions } = this.props;
-    const blankMedia = [];
-    for (let i = 0; i < numberOfBlank; i++) {
-      const classes = mediaClasses.slice(0);
-      classes.push("is-empty");
-
-      if (i === 0) {
-        classes.push("p-listing-images__add-image");
-
-        blankMedia.push(
-          <Fragment key={`add-screenshot-${i}`}>
-            <FileUpload
-              restrictions={restrictions}
-              classes={classes}
-              inputName="screenshots"
-              parent={this}
-              fileChangedCallback={this.mediaChanged}
-            >
-              <span role="button" className="u-align-text--center">
-                <i className="p-icon--plus" />
-                <br />
-                Add image
-              </span>
-            </FileUpload>
-          </Fragment>
-        );
-      } else {
-        blankMedia.push(
-          <div className={classes.join(" ")} key={`blank-${i}`} />
-        );
-      }
-    }
-
-    return blankMedia;
-  }
-
   toggleRestrictions() {
     this.setState({
       restrictionsVisible: !this.state.restrictionsVisible
@@ -190,16 +153,53 @@ class Media extends React.Component {
     );
   }
 
+  renderInputs() {
+    const { mediaLimit, restrictions } = this.props;
+    const currentMedia = this.state.mediaData.filter(
+      media => media.status !== "delete"
+    ).length;
+    const inputs = [];
+
+    for (let i = 0; i < mediaLimit; i++) {
+      const classes = [...mediaClasses];
+      classes.push("is-empty");
+
+      let isActive = false;
+      if (i > currentMedia - 1) {
+        classes.push("p-listing-images__add-image");
+        isActive = true;
+      }
+
+      // if ()
+
+      inputs.push(
+        <Fragment key={`add-screenshot-${i}`}>
+          <FileUpload
+            restrictions={restrictions}
+            className={classes.join(" ")}
+            inputName="screenshots"
+            fileChangedCallback={this.mediaChanged}
+            active={isActive}
+          >
+            {isActive && (
+              <span role="button" className="u-align-text--center">
+                <i className="p-icon--plus" />
+                <br />
+                Add image
+              </span>
+            )}
+          </FileUpload>
+        </Fragment>
+      );
+    }
+
+    return inputs;
+  }
+
   render() {
     const mediaList = this.state.mediaData.filter(
       item => item.status !== "delete"
     );
-
-    let blankMedia = 0;
-
-    if (mediaList.length < this.props.mediaLimit) {
-      blankMedia = this.props.mediaLimit - mediaList.length;
-    }
 
     return (
       <Fragment>
@@ -221,7 +221,7 @@ class Media extends React.Component {
               />
             );
           })}
-          {this.renderBlankMedia(blankMedia)}
+          {this.renderInputs()}
         </div>
         {this.renderRescrictions()}
       </Fragment>
@@ -240,7 +240,7 @@ Media.propTypes = {
   mediaLimit: PropTypes.number,
   mediaData: PropTypes.array,
   updateState: PropTypes.func,
-  restrictions: PropTypes.shape({})
+  restrictions: PropTypes.object
 };
 
 export { Media as default };

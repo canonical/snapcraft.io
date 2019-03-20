@@ -6,6 +6,17 @@ function generateFile(options) {
 }
 
 describe("validateRestrictions", () => {
+  let _windowImage;
+
+  beforeEach(() => {
+    _windowImage = Object.create(window.Image);
+  });
+
+  afterEach(() => {
+    window.Image = Object.create(_windowImage);
+    window.URL = undefined;
+  });
+
   describe("baseRestrictions", () => {
     it("should return an error if the file is of the wrong type", async () => {
       const file = generateFile({
@@ -26,7 +37,7 @@ describe("validateRestrictions", () => {
         type: "text/html"
       });
 
-      const max = 0.000014; // 14 bytes
+      const max = 14; // 14 bytes
 
       const validation = await validateRestrictions(file, {
         size: {
@@ -42,7 +53,7 @@ describe("validateRestrictions", () => {
         type: "text/html"
       });
 
-      const min = 0.000016; // 16 bytes
+      const min = 16; // 16 bytes
 
       const validation = await validateRestrictions(file, {
         size: {
@@ -61,8 +72,8 @@ describe("validateRestrictions", () => {
       const restrictions = {
         accept: ["text/html"],
         size: {
-          min: 0.000014,
-          max: 0.000016
+          min: 14,
+          max: 16
         }
       };
 

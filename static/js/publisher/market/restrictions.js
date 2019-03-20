@@ -12,10 +12,10 @@ const MEDIA_RESTRICTIONS = {
     min: [1, 2],
     max: [2, 1]
   },
-  // MB
+  // bytes
   size: {
     min: 0,
-    max: 2
+    max: 2000000
   },
   animation: {
     fps: {

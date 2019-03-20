@@ -6,7 +6,7 @@ describe("FileUpload", () => {
   it("should append an input when holder is clicked", () => {
     const { container } = render(
       <FileUpload
-        classes={["test"]}
+        className="test"
         inputName="test-input"
         restrictions={{
           accept: ["image/jpeg"]
@@ -28,7 +28,7 @@ describe("FileUpload", () => {
     const cb = jest.fn();
     const { container } = render(
       <FileUpload
-        classes={["test"]}
+        className="test"
         inputName="test-input"
         fileChangedCallback={cb}
         restrictions={{

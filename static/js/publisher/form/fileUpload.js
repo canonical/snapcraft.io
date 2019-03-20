@@ -8,31 +8,13 @@ class FileUpload extends React.Component {
   constructor(props) {
     super(props);
 
-    this.addFileHandler = this.addFileHandler.bind(this);
+    this.fileChangeHandler = this.fileChangeHandler.bind(this);
     this.fileChangedHandler = this.fileChangedHandler.bind(this);
     this.keyboardEventHandler = this.keyboardEventHandler.bind(this);
   }
 
-  addFileHandler() {
-    const { restrictions, inputName, parent } = this.props;
-    const input = document.createElement("input");
-    input.type = "file";
-    if (restrictions.accept) {
-      input.accept = restrictions.accept.join(",");
-    }
-    input.name = inputName;
-    input.hidden = "hidden";
-    input.addEventListener("change", () => {
-      this.fileChangedHandler(input);
-    });
-
-    if (parent && parent.holder) {
-      parent.holder.appendChild(input);
-    } else {
-      this.holder.appendChild(input);
-    }
-
-    input.dispatchEvent(new Event("click", { bubbles: false }));
+  fileChangeHandler() {
+    this.input.dispatchEvent(new Event("click", { bubbles: false }));
   }
 
   fileChangedHandler(input) {
@@ -48,35 +30,51 @@ class FileUpload extends React.Component {
 
   keyboardEventHandler(e) {
     if (e.key === "Enter") {
-      this.addFileHandler();
+      this.fileChangeHandler();
     }
   }
 
+  renderFile() {
+    const { restrictions, inputName } = this.props;
+
+    return (
+      <input
+        type="file"
+        accept={restrictions && restrictions.accept}
+        name={inputName}
+        hidden={true}
+        onChange={this.fileChangeHandler}
+        ref={el => (this.input = el)}
+      />
+    );
+  }
+
   render() {
-    const { classes, children } = this.props;
+    const { className, children } = this.props;
     return (
       <div
         ref={el => (this.holder = el)}
-        className={classes.join(" ")}
-        onClick={this.addFileHandler}
+        className={className}
+        onClick={this.fileChangeHandler}
         onKeyDown={this.keyboardEventHandler}
         tabIndex={0}
       >
         {children}
+        {this.renderFile()}
       </div>
     );
   }
 }
 
 FileUpload.propTypes = {
-  classes: PropTypes.arrayOf(PropTypes.string),
-  children: PropTypes.shape({}),
+  className: PropTypes.string,
+  children: PropTypes.node,
   inputName: PropTypes.string,
-  parent: PropTypes.shape({}),
   fileChangedCallback: PropTypes.func,
   restrictions: PropTypes.shape({
     accept: PropTypes.arrayOf(PropTypes.string)
-  })
+  }),
+  active: PropTypes.bool
 };
 
 export { FileUpload as default };

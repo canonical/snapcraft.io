@@ -12,7 +12,7 @@ responses.mock.assert_all_requests_are_fired = True
 
 class BaseTestCases:
     """
-    This class has a set of test classes that should be inherited by endpoint
+    This class has a set of test className that should be inherited by endpoint
     that have authentication.
 
     It is also used to avoid unittest to run this tests file.

@@ -8,11 +8,10 @@ function baseRestrictions(file, restrictions) {
     }
 
     if (restrictions.size) {
-      const fileSize = file.size / 1000000;
-      if (restrictions.size.max && fileSize > restrictions.size.max) {
+      if (restrictions.size.max && file.size > restrictions.size.max) {
         errors.push(`File size is over ${restrictions.size.max}MB`);
       }
-      if (restrictions.size.min && fileSize < restrictions.size.min) {
+      if (restrictions.size.min && file.size < restrictions.size.min) {
         errors.push(`File size is below ${restrictions.size.min}MB`);
       }
     }
@@ -26,11 +25,12 @@ function baseRestrictions(file, restrictions) {
 }
 
 function imageRestrictions(file, restrictions) {
-  if (!restrictions.accept || restrictions.accept[0].indexOf("image") < 0) {
-    return file;
-  }
-
   return new Promise((resolve, reject) => {
+    if (!restrictions.accept || restrictions.accept[0].indexOf("image") < 0) {
+      resolve(file);
+      return;
+    }
+
     const errors = [];
     const url = URL.createObjectURL(file);
     const image = new Image();
