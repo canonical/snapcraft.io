@@ -7,9 +7,11 @@
 
   %vf-strip-slanted {
     background-position: 50% 50%;
+    background-color: #106363;
     margin-top: $bleed;
     overflow: hidden;
     position: relative;
+    min-height: 30vh;
 
     @media (max-width: $breakpoint-large) {
       background-size: cover;
