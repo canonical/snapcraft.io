@@ -220,6 +220,9 @@ $color-navigation-background: #252525;
 @import 'patterns_strip_slanted';
 @include p-strip-slanted;
 
+@import 'snapcraft_store';
+@include snapcraft-store;
+
 @import 'snapcraft_dispute-list';
 @include snapcraft-p-dispute-list;
 
