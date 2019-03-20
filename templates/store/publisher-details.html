@@ -190,23 +190,25 @@
   {# templates #}
   {% set article_title = {'rendered': '${title}'} %}
   {% set article = {'slug': '${slug}', 'title': article_title} %}
-  <script type="text/template" id="blog-article-template">
-    {% include 'partials/blog-card--minimal.html' %}
-  </script>
+  {% if blog_slug %}
+    <script type="text/template" id="blog-article-template">
+      {% include 'partials/blog-card--minimal.html' %}
+    </script>
+  {% endif %}
 
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
-  <script>
-    Raven.context(function () {
-      try {
-        snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-    });
-
-
-  </script>
+  {% if blog_slug %}
+    <script src="{{ static_url('js/dist/public.js') }}"></script>
+    <script>
+      Raven.context(function () {
+        try {
+          snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+        } catch(e) {
+          Raven.captureException(e);
+        }
+      });
+    </script>
+  {% endif %}
 {% endblock %}
