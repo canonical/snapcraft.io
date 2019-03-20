@@ -1,6 +1,19 @@
 @mixin search-form {
-  .p-form--search {
+
+  .snapcraft-banner-background .p-form--search {
     width: 100%;
+  }
+
+  .p-form--search {
+    width: 60%;
+
+    @media screen and (max-width: $breakpoint-navigation-threshold) {
+      width: 100%;
+
+      .p-button--positive {
+        width: 100%;
+      }
+    }
 
     .p-form__group {
       flex-grow: 1;
