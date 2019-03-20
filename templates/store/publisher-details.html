@@ -33,14 +33,15 @@
             </span>
             {% endif %}
           </p>
+          <ul class="p-inline-list--middot u-float-left"></ul>
         </div>
 
         <div class="p-snap-install-buttons">
           {% if website %}
-            <a href="{{ website }}" class="p-button--positive p-link--external">Visit publisher website</a>
+            <a href="{{ website }}" class="p-button--positive p-link--external p-snap-install-buttons__versions">Visit publisher website</a>
           {% endif %}
           {% if contact %}
-            <a href="{{ contact }}" class="p-button--neutral p-link--external">Contact publisher</a>
+            <a href="{{ contact }}" class="p-button--neutral p-link--external p-snap-install-buttons__install">Contact publisher</a>
           {% endif %}
         </div>
 
