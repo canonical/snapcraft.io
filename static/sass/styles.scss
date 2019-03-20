@@ -211,6 +211,9 @@ $color-navigation-background: #252525;
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
 
+@import 'snapcraft-publisher';
+@include snapcraft-publisher;
+
 @import 'patterns_modal';
 @include vf-p-modal-snapcraft;
 
