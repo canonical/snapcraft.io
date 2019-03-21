@@ -18,7 +18,7 @@ explain:
         <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>ros2-talker-listener</code> to <code>test-ros2-talker-listener-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official ros2-talker-listener snap.
     - text: Versions carry no semantic meaning in snaps. Use text that best identifies that release, it won't be used to compare against the preceding or following one.
     - code: |
-        version: git
+        version: '0.1'
     - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
     - code: |
         description: |
@@ -38,7 +38,7 @@ explain:
   parts:
     - text: |
         Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
-    - text: The <code>colcon</code> plugin is useful when building ROS application parts.
+    - text: The <code>colcon</code> plugin is useful when building ROS2 application parts.
     - text: |
         The plugin points to the ROS2 demos GitHub repository and uses <code>Crystal</code>, the latest ROS2 release available. You can use the <code>colcon-rosdistro</code> keyword to change the ROS distro required by the system. The <code>colcon-source-space</code> points to the source space containing the colcon C++ demo nodes packages. The command <code>snapcraft help colcon</code> gives more information on how this plugin works.
     - code: |
