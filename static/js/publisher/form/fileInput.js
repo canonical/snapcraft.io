@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { validateRestrictions } from "../../libs/fileValidation";
 
-class FileUpload extends React.Component {
+class FileInput extends React.Component {
   constructor(props) {
     super(props);
 
@@ -76,7 +76,7 @@ class FileUpload extends React.Component {
   }
 }
 
-FileUpload.defaultProps = {
+FileInput.defaultProps = {
   className: "",
   inputName: "file-upload",
   fileChangedCallback: () => {},
@@ -87,7 +87,7 @@ FileUpload.defaultProps = {
   clear: false
 };
 
-FileUpload.propTypes = {
+FileInput.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   inputName: PropTypes.string,
@@ -99,4 +99,4 @@ FileUpload.propTypes = {
   clear: PropTypes.bool
 };
 
-export { FileUpload as default };
+export { FileInput as default };

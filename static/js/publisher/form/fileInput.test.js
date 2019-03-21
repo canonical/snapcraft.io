@@ -1,11 +1,11 @@
-import FileUpload from "./fileUpload";
+import FileInput from "./fileInput";
 import React from "react";
 import { render, fireEvent } from "react-testing-library";
 
-describe("FileUpload", () => {
+describe("FileInput", () => {
   it("should append an input when holder is clicked", () => {
     const { container } = render(
-      <FileUpload
+      <FileInput
         className="test"
         inputName="test-input"
         restrictions={{
@@ -13,7 +13,7 @@ describe("FileUpload", () => {
         }}
       >
         <span>bewton</span>
-      </FileUpload>
+      </FileInput>
     );
 
     const clickElement = container.querySelector(".test");
@@ -27,7 +27,7 @@ describe("FileUpload", () => {
   it("should run restrictions when a file changes", done => {
     const cb = jest.fn();
     const { container } = render(
-      <FileUpload
+      <FileInput
         className="test"
         inputName="test-input"
         fileChangedCallback={cb}
@@ -36,7 +36,7 @@ describe("FileUpload", () => {
         }}
       >
         <span>bewton</span>
-      </FileUpload>
+      </FileInput>
     );
 
     const clickElement = container.querySelector(".test");

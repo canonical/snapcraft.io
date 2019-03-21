@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 import { PropTypes } from "prop-types";
 
 import MediaItem, { mediaClasses } from "./mediaItem";
-import FileUpload from "./fileUpload";
+import FileInput from "./fileInput";
 
 class Media extends React.Component {
   constructor(props) {
@@ -175,7 +175,7 @@ class Media extends React.Component {
 
       inputs.push(
         <Fragment key={`add-screenshot-${i}`}>
-          <FileUpload
+          <FileInput
             restrictions={restrictions}
             className={classes.join(" ")}
             inputName="screenshots"
@@ -190,7 +190,7 @@ class Media extends React.Component {
                 Add image
               </span>
             )}
-          </FileUpload>
+          </FileInput>
         </Fragment>
       );
     }
