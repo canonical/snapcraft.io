@@ -6,7 +6,7 @@ macos:
   - action: Connect to the virtual machine
     command: multipass shell testvm
   - action: Install the snap inside the virtual machine
-    command: sudo snap install --dangerous mdl*.snap
+    command: sudo snap install --devmode --dangerous mdl*.snap
   - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine
