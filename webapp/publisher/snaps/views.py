@@ -1054,6 +1054,33 @@ def get_publicise(snap_name):
     )
 
 
+@publisher_snaps.route("/<snap_name>/publicise/badges")
+@login_required
+def get_publicise_badges(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    if snap_details["private"]:
+        return flask.abort(404, "No snap named {}".format(snap_name))
+
+    context = {
+        "snap_name": snap_details["snap_name"],
+        "snap_title": snap_details["title"],
+        "snap_id": snap_details["snap_id"],
+    }
+
+    return flask.render_template(
+        "publisher/publicise/github_badges.html", **context
+    )
+
+
 @publisher_snaps.route("/<snap_name>/publicise/cards")
 @login_required
 def get_publicise_cards(snap_name):
@@ -1074,13 +1101,10 @@ def get_publicise_cards(snap_name):
     has_screenshot = True if screenshots else False
 
     context = {
-        "details": snap_details,
         "has_screenshot": has_screenshot,
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
-        "available": {},
-        "download_version": "v1.2",
     }
 
     return flask.render_template(
