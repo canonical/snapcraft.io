@@ -1,0 +1,57 @@
+{% set publicise_page="badges" %}
+{% extends "publisher/publicise/_publisher_publicise_layout.html" %}
+
+{% block publicise_content %}
+  <div class="row">
+    <h4>Promote your snap using embeddable GitHub badge</h4>
+  </div>
+
+  <div class="row">
+    <div class="col-2">
+      Preview:
+    </div>
+    <div class="col-7">
+      <p class="snapcraft-publicise__images">
+        <img src="/{{snap_name}}/badge" />
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-2">
+      <label>HTML:</label>
+    </div>
+    <div class="col-7">
+      <div class="p-code-copyable">
+        <code class="p-code-copyable__input" id="snippet-card-html">&lt;img src="https://snapcraft.io/{{ snap_name }}/badge" /&gt;</code>
+        <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-card-html">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-2">
+      <label>Markdown:</label>
+    </div>
+    <div class="col-7">
+      <div class="p-code-copyable">
+        <code class="p-code-copyable__input" id="snippet-card-html">![](https://snapcraft.io/{{ snap_name }}/badge)</code>
+        <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-card-html">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts_modules %}
+<script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  Raven.context(function () {
+    if (typeof ClipboardJS !== 'undefined') {
+      new ClipboardJS('.js-clipboard-copy');
+    }
+  });
+</script>
+{% endblock %}
