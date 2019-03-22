@@ -6,7 +6,7 @@ macos:
   - action: Connect to the virtual machine
     command: multipass shell testvm
   - action: Install the snap inside the virtual machine
-    command: sudo snap install --dangerous ros-talker-listener*.snap
+    command: sudo snap install --devmode --dangerous ros-talker-listener*.snap
   - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine
