@@ -7,12 +7,13 @@ humanize==0.5.1
 Markdown==3.0.1
 prometheus_client==0.3.1
 mistune==0.8.4
+pybadges==1.1.0
 pybreaker==0.4.4
 pycountry==17.9.23
 pymacaroons==0.12.0
 python-dateutil==2.6.1
 raven[flask]==6.5.0
-requests==2.20.0
+requests==2.21.0
 requests-cache==0.4.13
 responses==0.9.0
 ruamel.yaml==0.15.72
