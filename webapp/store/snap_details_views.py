@@ -2,6 +2,7 @@ import flask
 
 import bleach
 import humanize
+from pybadges import badge
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
@@ -276,3 +277,27 @@ def snap_details_views(store, api, handle_errors):
         return flask.redirect(
             flask.url_for(".snap_details", snap_name=snap_name.lower())
         )
+
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge')
+    def snap_details_badge(snap_name):
+        context = _get_context_snap_details(snap_name)
+
+        snap_link = flask.request.url_root + context["package_name"]
+
+        svg = badge(
+            left_text=context["snap_title"],
+            right_text="v" + context["version"],
+            right_color="#0e8420",  # Vanilla $color-positive
+            left_link=snap_link,
+            right_link=snap_link,
+            logo=(
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' "
+                "viewBox='0 0 32 32'%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill:%23f"
+                "ff%7D%3C/style%3E%3C/defs%3E%3Cpath class='cls-1' d='M18.03 1"
+                "8.03l5.95-5.95-5.95-2.65v8.6zM6.66 29.4l10.51-10.51-3.21-3.18"
+                "-7.3 13.69zM2.5 3.6l15.02 14.94V9.03L2.5 3.6zM27.03 9.03h-8.6"
+                "5l11.12 4.95-2.47-4.95z'/%3E%3C/svg%3E"
+            ),
+        )
+
+        return svg, 200, {"Content-Type": "image/svg+xml"}
