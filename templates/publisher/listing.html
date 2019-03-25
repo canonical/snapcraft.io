@@ -81,6 +81,12 @@
             </div>
         {% endif %}
 
+        <div class="row">
+          <h2 class="p-heading--five">
+            Listing details
+          </h2>
+        </div>
+
         {% if field_errors and field_errors['icon'] %}
           <div class="row">
             <div class="col-12">
@@ -132,48 +138,24 @@
 
         <div class="row">
           <div class="col-2">
-            <label>Snap name: </label>
-          </div>
-          <div class="col-4">
-              <p>{{ snap_name }}</p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-2">
-            <label>Publisher: </label>
-          </div>
-          <div class="col-8">
-              <p>{{ display_name(publisher_name, username) }}</p>
-          </div>
-        </div>
-
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-2">
             <label>Category:</label>
           </div>
           <div class="col-4">
             <select
               name="primary_category"
               {% if snap_categories.categories[0] %}
-                value="{{ snap_categories.categories[0].name }}"
+              value="{{ snap_categories.categories[0].name }}"
               {% endif %}
               {% if snap_categories.locked %} disabled="disabled"{% endif %}
             >
               <option value="">Select category</option>
               {% for category in categories %}
-                <option
-                  value="{{ category.slug }}"
-                  {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
-                    selected="selected"
-                  {% endif %}
-                >{{ category.name }}</option>
+              <option
+                value="{{ category.slug }}"
+                {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
+                selected="selected"
+                {% endif %}
+              >{{ category.name }}</option>
               {% endfor %}
               <option value="">None</option>
             </select>
@@ -212,15 +194,15 @@
             >
               <option value="">Select category</option>
               {% for category in categories %}
-                <option
-                  value="{{ category.slug }}"
-                  {% if snap_categories.categories[1] and (snap_categories.categories[1].name == category.slug) %}
-                  selected="selected"
-                  {% endif %}
-                  {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0].name %}
-                  disabled="disabled"
-                  {% endif %}
-                >{{ category.name }}</option>
+              <option
+                value="{{ category.slug }}"
+                {% if snap_categories.categories[1] and (snap_categories.categories[1].name == category.slug) %}
+                selected="selected"
+                {% endif %}
+                {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0].name %}
+                disabled="disabled"
+                {% endif %}
+              >{{ category.name }}</option>
               {% endfor %}
             </select>
           </div>
@@ -233,9 +215,54 @@
           </div>
         </div>
 
-        <div class="p-strip is-shallow">
+        <div class="row">
+          <div class="col-2">
+            <label for="video">Video:</label>
+          </div>
+          <div class="col-8">
+            <div class="p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}">
+              <div class="p-form-validation__field">
+                <input
+                  class="p-form-validation__input"
+                  type="text"
+                  name="video_urls"
+                  value="{{ video_urls[0] }}"
+                  id="video"
+                />
+                {% if field_errors and field_errors['video_urls'] %}
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['video_urls'] }}
+                </p>
+                {% endif %}
+                <p class="p-form-help-text">
+                  Vimeo, YouTube or asciinema URL
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          {% if field_errors and field_errors['screenshots'] %}
           <div class="row">
-            <hr class="u-no-margin--bottom" />
+            <div class="col-12">
+              <div class="p-notification--negative">
+                <p class="p-notification__response">
+                  <strong>Images:</strong> {{ field_errors['screenshots'] }}
+                </p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          <div class="row" data-validation-name="screenshots">
+            <div class="col-2">
+              <label>Images:</label>
+            </div>
+            <div class="col-8">
+              <div class="js-media-holder">
+                <i class="p-icon--spinner u-animation--spin"></i>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -249,13 +276,14 @@
                 <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
               </div>
               {% if field_errors and field_errors['summary'] %}
-                <p class="p-form-validation__message">
-                  <strong>Error:</strong> {{ field_errors['summary'] }}
-                </p>
+              <p class="p-form-validation__message">
+                <strong>Error:</strong> {{ field_errors['summary'] }}
+              </p>
               {% endif %}
             </div>
           </div>
         </div>
+
         <div class="row">
           <div class="col-2">
             <label>Description: </label>
@@ -264,9 +292,9 @@
             <div class="p-form-validation u-no-margin {% if field_errors and field_errors['description'] %}is-error{% endif %}">
               <textarea class="p-form-validation__input u-no-margin" name="description" rows="10" required>{{ description }}</textarea>
               {% if field_errors and field_errors['description'] %}
-                <p class="p-form-validation__message">
-                  <strong>Error:</strong> {{ field_errors['description'] }}
-                </p>
+              <p class="p-form-validation__message">
+                <strong>Error:</strong> {{ field_errors['description'] }}
+              </p>
               {% endif %}
             </div>
             <p class="u-no-margin--bottom">
@@ -305,81 +333,28 @@
         </div>
 
         <div class="row">
-          {% if field_errors and field_errors['screenshots'] %}
-            <div class="row">
-              <div class="col-12">
-                <div class="p-notification--negative">
-                  <p class="p-notification__response">
-                      <strong>Images:</strong> {{ field_errors['screenshots'] }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          {% endif %}
-          <div class="row" data-validation-name="screenshots">
-            <div class="col-2">
-              <label>Images:</label>
-            </div>
-            <div class="col-8">
-              <div class="js-media-holder">
-                <i class="p-icon--spinner u-animation--spin"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
+          <h2 class="p-heading--five">Contact information</h2>
         </div>
 
         <div class="row">
-          <div class="col-8">
-            <div class="p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}">
-              <label>Video: </label>
-              <div class="p-form-validation__field">
-                <input
-                  class="p-form-validation__input"
-                  type="text"
-                  name="video_urls"
-                  value="{{ video_urls[0] }}"
-                />
-                {% if field_errors and field_errors['video_urls'] %}
-                <p class="p-form-validation__message">
-                  <strong>Error:</strong> {{ field_errors['video_urls'] }}
-                </p>
-                {% endif %}
-                <p class="p-form-help-text">
-                  Vimeo, YouTube or asciinema URL
-                </p>
-              </div>
-            </div>
+          <div class="col-2">
+            <label for="developer-website">Developer website:</label>
           </div>
-        </div>
-
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
-        </div>
-
-        <div class="row">
           <div class="col-8">
             <div class="p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-              <label>Developer website: </label>
               <div class="p-form-validation__field">
                 <input
                   class="p-form-validation__input"
+                  id="developer-website"
                   type="url"
                   name="website"
                   value="{{ website }}"
                   maxlength="256"
                   placeholder="https://snapcraft.io" />
                 {% if field_errors and field_errors['website'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['website'] }}
-                  </p>
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['website'] }}
+                </p>
                 {% endif %}
                 <p class="p-form-help-text">
                   Please include a valid http:// or https:// link
@@ -390,11 +365,14 @@
         </div>
 
         <div class="row">
+          <div class="col-2">
+            <label for="contact">Contact {{ publisher_name }}:</label>
+          </div>
           <div class="col-8">
             <div class="p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-              <label>Contact {{ publisher_name }}: </label>
               <div class="p-form-validation__field">
                 <input
+                  id="contact"
                   class="p-form-validation__input"
                   type="url"
                   name="contact"
@@ -402,9 +380,9 @@
                   maxlength="256"
                   placeholder="mailto:example@example.com" />
                 {% if field_errors and field_errors['contact'] %}
-                  <p class="p-form-validation__message">
-                    <strong>Error:</strong> {{ field_errors['contact'] }}
-                  </p>
+                <p class="p-form-validation__message">
+                  <strong>Error:</strong> {{ field_errors['contact'] }}
+                </p>
                 {% endif %}
                 <p class="p-form-help-text">
                   An http: or https: link, or an e-mail address
@@ -421,6 +399,38 @@
         </div>
 
         <div class="row">
+          <h2 class="p-heading--five">Additional information</h2>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>License:</label>
+          </div>
+          <div class="col-8">
+            <input type="hidden" name="license" value="{{ license }}" />
+            <input type="radio" name="license-type" value="simple" id="license-simple-option" {% if license_type == 'simple' %}checked="checked"{% endif %} />
+            <label for="license-simple-option">Simple</label>
+            <div class="js-license p-multiselect__wrapper" {% if license_type != 'simple' %}style="display: none;"{% endif %} id="license-simple-input">
+              <input type="text" class="js-multiselect-input" name="license-simple" value="{% if license_type == 'simple' %}{{ license }}{% endif %}" />
+              <div class="js-multiselect-holder"></div>
+              <p class="p-form-help-text u-no-margin--bottom">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
+            </div>
+            <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
+            <label for="license-custom-option">Custom SPDX expression</label>
+            <textarea
+              type="text"
+              id="license-custom-input"
+              name="license-custom"
+              {% if license_type != 'custom' %}style="display: none;"{% endif %}
+            >{{ license }}</textarea>
+            <p class="p-form-help-text">Visit <a class="p-link--external" href="https://spdx.org/spdx-specification-21-web-version#h.jxpfx0ykyb60" target="_blank">SPDX Specification 21</a> for more information.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label>Metrics:</label>
+          </div>
           <div class="col-8">
             <input
               type="checkbox"
@@ -439,11 +449,11 @@
                 name="public_metrics_territories"
                 id="public-metrics-territories"
                 {% if not contains(public_metrics_blacklist, 'installed_base_by_country_percent') %}
-                checked="checked"
-                {% endif %}
-                {% if not public_metrics_enabled %}
-                disabled="disabled"
-                {% endif %}
+              checked="checked"
+              {% endif %}
+              {% if not public_metrics_enabled %}
+              disabled="disabled"
+              {% endif %}
               />
               <label for="public-metrics-territories">World map <span class="p-form-help-text">Displays where your snap is being used by country</span></label>
               <input
@@ -451,52 +461,21 @@
                 name="public_metrics_distros"
                 id="public-metrics-distros"
                 {% if not contains(public_metrics_blacklist, 'weekly_installed_base_by_operating_system_normalized') %}
-                checked="checked"
-                {% endif %}
-                {% if not public_metrics_enabled %}
-                disabled="disabled"
-                {% endif %}
+              checked="checked"
+              {% endif %}
+              {% if not public_metrics_enabled %}
+              disabled="disabled"
+              {% endif %}
               />
               <label for="public-metrics-distros">Linux distributions <span class="p-form-help-text">Displays where your snap is being used by distro</span></label>
               <input
                 type="hidden"
                 name="public_metrics_blacklist"
                 {% if public_metrics_blacklist|length > 0 %}
-                value="{{ join(public_metrics_blacklist, ',')}}"
-                {% endif %}
+              value="{{ join(public_metrics_blacklist, ',')}}"
+              {% endif %}
               />
             </div>
-          </div>
-        </div>
-
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-2">
-            <label>License</label>
-          </div>
-          <div class="col-8">
-            <input type="hidden" name="license" value="{{ license }}" />
-            <input type="radio" name="license-type" value="simple" id="license-simple-option" {% if license_type == 'simple' %}checked="checked"{% endif %} />
-            <label for="license-simple-option">Simple</label>
-            <div class="js-license p-multiselect__wrapper" {% if license_type != 'simple' %}style="display: none;"{% endif %} id="license-simple-input">
-              <input type="text" class="js-multiselect-input" name="license-simple" value="{% if license_type == 'simple' %}{{ license }}{% endif %}" />
-              <div class="js-multiselect-holder"></div>
-              <p class="p-form-help-text">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
-            </div>
-            <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
-            <label for="license-custom-option">Custom SPDX expression</label>
-            <textarea
-              type="text"
-              id="license-custom-input"
-              name="license-custom"
-              {% if license_type != 'custom' %}style="display: none;"{% endif %}
-            >{{ license }}</textarea>
-            <p class="p-form-help-text">Visit <a class="p-link--external" href="https://spdx.org/spdx-specification-21-web-version#h.jxpfx0ykyb60" target="_blank">SPDX Specification 21</a> for more information.</p>
           </div>
         </div>
       </section>
