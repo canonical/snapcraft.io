@@ -1,4 +1,5 @@
 import datetime
+import re
 from urllib.parse import parse_qs, urlparse
 
 import humanize
@@ -360,11 +361,12 @@ def get_video_embed_code(url):
 
 
 def filter_screenshots(media):
+    banner_regex = r"/banner(\-icon)?(_.*)\.(png|jpg)"
     return [
         m["url"]
         for m in media
-        if m["type"] == "screenshot" and "banner" not in m["url"]
-    ]
+        if m["type"] == "screenshot" and not re.search(banner_regex, m["url"])
+    ][:5]
 
 
 def get_icon(media):
