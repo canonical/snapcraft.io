@@ -51,7 +51,7 @@ class GetGitHubBadgeTest(TestCase):
                 "confinement,categories",
             ]
         )
-        self.endpoint_url = "/" + self.snap_name + "/badge"
+        self.endpoint_url = "/" + self.snap_name + "/badge.svg"
 
     def create_app(self):
         app = create_app(testing=True)

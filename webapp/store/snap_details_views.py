@@ -278,7 +278,7 @@ def snap_details_views(store, api, handle_errors):
             flask.url_for(".snap_details", snap_name=snap_name.lower())
         )
 
-    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge')
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge.svg')
     def snap_details_badge(snap_name):
         context = _get_context_snap_details(snap_name)
 
