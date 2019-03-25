@@ -66,5 +66,5 @@ explain:
             freeplane:
                 command: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>freeplane</code> to <code>freeplane-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official freeplane snap.
+        <span class="p-notification__status"></span>As before, remember to change this instance of <code>freeplane</code> to <code>freeplane-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official freeplane snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
