@@ -120,7 +120,7 @@ function initForm(config, initialState, errors) {
   const revertButton = formEl.querySelector(".js-form-revert");
   const previewButton = formEl.querySelector(".js-listing-preview");
   const revertURL = revertButton.getAttribute("href");
-  const disabledRevertClass = "is-disabled";
+  const disabledRevertClass = "is--disabled";
 
   function disableSubmit() {
     submitButton.disabled = "disabled";
