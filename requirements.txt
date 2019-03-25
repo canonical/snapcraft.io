@@ -17,6 +17,7 @@ requests-cache==0.4.13
 responses==0.9.0
 ruamel.yaml==0.15.72
 talisker==0.11.0
+Werkzeug==0.14.1
 
 # Development dependencies
 black==18.6b4
