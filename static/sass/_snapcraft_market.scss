@@ -1,5 +1,10 @@
 @mixin snapcraft-market {
 
+  // Add extra space between groups of related items
+  .snapcraft-p-market__section {
+    margin-bottom: $spv-inter--scaleable;
+  }
+
   // hack to make anchor link behave like a button
   .js-market-revert.is-disabled {
 
@@ -19,7 +24,7 @@
     cursor: pointer;
     display: inline-block;
     margin-bottom: $sph-inter;
-    margin-right: $sph-inter;
+    margin-right: 3.2877%;
     position: relative;
 
     .p-editable-icon__icon {
@@ -79,7 +84,6 @@
     height: 2rem;
     justify-content: center;
     margin-bottom: .5rem;
-    margin-left: -1rem;
     width: 2rem;
   }
 
