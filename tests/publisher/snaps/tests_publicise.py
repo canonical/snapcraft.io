@@ -57,7 +57,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/publicise.html")
+        self.assert_template_used("publisher/publicise/store_buttons.html")
 
         self.assert_context("snap_id", "id")
         self.assert_context("snap_title", "test snap")

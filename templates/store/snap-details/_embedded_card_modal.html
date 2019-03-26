@@ -1,0 +1,44 @@
+<div class="p-modal u-hide" id="embedded-card-modal">
+  <div class="p-modal__dialog p-embedded-card-modal-dialog" id="embedded-card-modal-dialog" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
+    <header class="p-modal__header">
+      <h2 class="p-modal__title">Share embeddable card</h2>
+      <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
+    </header>
+    <p>Customise your embeddable card using the options below.</p>
+    <div class="row u-no-padding">
+      <div class="col-4">
+        <label class="p-heading-label">Snap Store button:</label>
+
+        <input type="radio" name="store-button" id="store-button-dark" checked="checked" value="black">
+        <label for="store-button-dark">Dark</label>
+        <input type="radio" name="store-button" id="store-button-light" value="white">
+        <label for="store-button-light">Light</label>
+        <input type="radio" name="store-button" id="store-button-hide" value="">
+        <label for="store-button-hide">Hide button</label>
+
+        <label class="p-heading-label">Options:</label>
+
+        <input type="checkbox" name="show-channels" id="option-show-channels">
+        <label for="option-show-channels">Show all channels</label>
+        <input type="checkbox" name="show-summary" id="option-show-summary">
+        <label for="option-show-summary">Show summary</label>
+        <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not screenshots %}disabled{% endif %}>
+        <label for="option-show-screenshot">Show screenshot</label>
+
+      </div>
+      <div class="col-8">
+        <label class="p-heading-label">Preview:</label>
+        <iframe id="embedded-card-frame"
+          class="snapcraft-publicise__embedded-frame"
+          width="100%" height="320px"
+          frameborder="0" style="border: 1px solid #CCC; border-radius: 2px;">
+        </iframe>
+        <label class="p-heading-label">HTML:</label>
+        <div class="p-code-copyable">
+          <code class="p-code-copyable__input" id="snippet-card-html"></code>
+          <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-card-html">Copy to clipboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

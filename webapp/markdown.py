@@ -1,6 +1,7 @@
 from mistune import (
     BlockGrammar,
     BlockLexer,
+    InlineGrammar,
     Renderer,
     Markdown,
     _pure_pattern,
@@ -9,7 +10,7 @@ from mistune import (
 import re
 
 
-class DescriptionGrammar(BlockGrammar):
+class DescriptionBlockGrammar(BlockGrammar):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -41,13 +42,13 @@ class DescriptionGrammar(BlockGrammar):
             flags=re.M,
         )
         self.list_bullet = re.compile(r"^ *(?:[•*+-]|\d+\.) +")
+        self.block_code = re.compile(r"^( {3}[^\n]+\n*)+")
 
 
 class DescriptionBlock(BlockLexer):
-    grammar_class = DescriptionGrammar
+    grammar_class = DescriptionBlockGrammar
 
     default_rules = [
-        "fences",
         "block_code",
         "list_block",
         "paragraph",
@@ -55,14 +56,54 @@ class DescriptionBlock(BlockLexer):
         "newline",
     ]
 
-    list_rules = ("fences", "block_code", "list_block", "text", "newline")
+    list_rules = ("block_code", "list_block", "text", "newline")
+
+    # Need to extend this function since I need to modify this
+    # https://github.com/lepture/mistune/blob/v0.8.4/mistune.py#L29
+    def parse_block_code(self, m):
+        # clean leading whitespace
+        block_code_leading_pattern = re.compile(r"^ {3}", re.M)
+        code = block_code_leading_pattern.sub("", m.group(0))
+        self.tokens.append({"type": "code", "lang": None, "text": code})
+
+
+class DescriptionInlineGrammar(InlineGrammar):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Rewrite to respect this convention:
+        # https://github.com/CanonicalLtd/snap-squad/issues/936
+        self.code = re.compile(r"^(`)([\S ]+)\1")
 
 
 class DescriptionInline(InlineLexer):
-    def _process_link(self, m, link, title=None):
-        line = m.group(0)
-        if line[0] != "!":
-            return super()._process_link(m, link, title)
+    grammar_class = DescriptionInlineGrammar
+
+    # Removed rules: inline_html, link, reflink
+    default_rules = [
+        "escape",
+        "autolink",
+        "url",
+        "nolink",
+        "double_emphasis",
+        "emphasis",
+        "code",
+        "linebreak",
+        "strikethrough",
+        "text",
+    ]
+    inline_html_rules = [
+        "escape",
+        "autolink",
+        "url",
+        "nolink",
+        "double_emphasis",
+        "emphasis",
+        "code",
+        "linebreak",
+        "strikethrough",
+        "text",
+    ]
 
 
 renderer = Renderer()

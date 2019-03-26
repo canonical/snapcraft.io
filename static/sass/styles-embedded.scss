@@ -1,0 +1,59 @@
+// colour definitions
+$color-brand: #00302f;
+$color-accent: $color-brand;
+$color-navigation-background: #252525;
+
+// vanilla patterns
+@import 'vanilla-framework/scss/vanilla';
+
+@include vf-base;;
+
+@include vf-p-grid;
+@include vf-p-grid-modifications;
+@include vf-p-headings;
+@include vf-p-lists;
+@include vf-p-strip;
+@include vf-p-tooltips;
+
+@include vf-u-align;
+@include vf-u-floats;
+@include vf-u-margin-collapse;
+
+@import 'snapcraft_banner';
+@include snapcraft-banner;
+
+@import 'snapcraft_details_heading';
+@include snapcraft-details-heading;
+
+// CUSTOM STYLES FOR EMBEDDED CARD
+
+// make max-width of the layout smaller for embedded view
+.row {
+  max-width: 40rem;
+}
+
+body {
+  background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
+
+  &.is-chrome {
+    // workaround for Chrome background overflowing iframe border
+    background: none;
+    width: calc(100% - 1px);
+  }
+}
+
+// responsive styles for summary + badge
+@media screen and (min-width: $breakpoint-x-small) {
+  .p-embedded-description {
+    display: flex;
+  }
+
+  .p-embedded-description__summary {
+    flex-grow: 1;
+    margin-right: $sph-intra;
+  }
+
+  .p-embedded-description__badge {
+    flex-shrink: 0;
+  }
+}

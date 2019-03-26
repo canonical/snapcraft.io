@@ -59,6 +59,18 @@ Publisher metrics for {{ snap_title }}
               </div>
             </div>
           </div>
+          <div class="row" data-js="annotations-hover">
+            {% for category in active_devices_annotations.series %}
+              <div class="col-4">
+                <p data-js="annotation-hover" data-id="category-{{ category.name }}">
+                  {% if category.name == "featured" %}
+                  ⭐ <small><b>Featured</b> snap since
+                  {% else %}
+                  🗂 <small>Added to <b>{{ category.display_name }}</b> in {% endif %}<b>{{ category.display_date }}</b>
+                  </small>
+              </div>
+            {% endfor %}
+          </div>
         </div>
       </div>
     </section>
@@ -85,9 +97,11 @@ Publisher metrics for {{ snap_title }}
       snapcraft.publisher.selector('.metrics-period', 'period');
       snapcraft.publisher.selector('.active-devices', 'active-devices');
       snapcraft.publisher.metrics({
+        defaultTrack: {{ default_track|tojson }},
         activeDevices: {
           selector: '#activeDevices',
           metrics: {{ active_devices|safe }},
+          annotations: {{ active_devices_annotations|safe }},
           type: '{{ active_device_metric }}'
         },
         territories: {

@@ -6,7 +6,11 @@ macos:
   - action: Connect to the virtual machine
     command: multipass shell testvm
   - action: Install the snap inside the virtual machine
+<<<<<<< HEAD
     command: sudo snap install --dangerous freeplane*.snap
+=======
+    command: sudo snap install --devmode --dangerous freeplane*.snap
+>>>>>>> master
   - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine

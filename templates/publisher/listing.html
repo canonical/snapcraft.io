@@ -27,6 +27,10 @@
           </div>
           <div class="col-5">
             <div class="u-align--right u-clearfix">
+              <button class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
+                Preview
+                <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
+              </button>
               <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
                   {#
                     to force dark icon variant we need a fake --dark class name:
@@ -91,19 +95,29 @@
 
         <div class="row" data-validation-name="icon">
           <div class="col-2">
-            <div class="p-media-object__image--large p-editable-icon">
-              <img id="snap_icon_image"
-                {% if icon_url %}
-                  src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                {% else %}
-                  src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt=""
-                {% endif %}
-              />
+            <label class="p-editable-icon__label" for="snap_icon">Snap icon:</label>
+          </div>
+          <div class="col-8 u-vertically-center">
+            <div class="p-editable-icon">
+              <div class="p-editable-icon__icon js-change-icon">
+                <img id="snap_icon_image"{% if not icon_url %} class="u-hide"{% endif %}
+                     src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
+                />
+                <span class="p-editable-icon__change">Edit</span>
+              </div>
             </div>
+            <div class="p-editable-icon__actions">
+              <a class="p-editable-icon__delete js-remove-icon u-hide"><i class="p-icon--delete"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <label for="snap-title">Title:</label>
           </div>
           <div class="col-8">
             <div class="p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}">
-              <label for="snap-title">Title:</label>
               <div class="p-form-validation__field">
                 <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
               </div>
@@ -145,8 +159,6 @@
             <label>Category:</label>
           </div>
           <div class="col-4">
-            <input type="hidden" name="categories"
-                   value="{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}" />
             <select
               name="primary_category"
               {% if snap_categories.categories[0] %}
@@ -279,10 +291,7 @@
                   <b>Italics:</b> <code>__Foo__</code>
                 </small></p>
                 <p><small>
-                  <b>Links:</b> <code>[foo bar](https://foo.bar)</code>
-                </small></p>
-                <p><small>
-                  <b>Code:</b> Text blocks inside <code>`</code> or <code>```</code> pairs
+                  <b>Code:</b> Text indented with 3 spaces or inside <code>`</code>
                 </small></p>
               </div>
             </div>
@@ -301,26 +310,21 @@
               <div class="col-12">
                 <div class="p-notification--negative">
                   <p class="p-notification__response">
-                      <strong>Screenshots:</strong> {{ field_errors['screenshots'] }}
+                      <strong>Images:</strong> {{ field_errors['screenshots'] }}
                   </p>
                 </div>
               </div>
             </div>
           {% endif %}
           <div class="row" data-validation-name="screenshots">
-            <div class="col-12">
-              <div class="p-screenshots-toolbar" id="screenshots-toolbar">
-                <label>Screenshots (up to 5):</label>
-                <div class="p-screenshots-toolbar__buttons">
-                  <button class="p-button-neutral js-add-screenshots"><i class="p-icon--plus"></i></button>
-                  <button class="p-button-neutral js-delete-screenshot"><i class="p-icon--delete"></i></button>
-                  <button class="p-button-neutral js-fullscreen-screenshot  u-no-margin--top"><i class="p-icon--fullscreen"></i></button>
-                </div>
+            <div class="col-2">
+              <label>Images:</label>
+            </div>
+            <div class="col-8">
+              <div class="js-media-holder">
+                <i class="p-icon--spinner u-animation--spin"></i>
               </div>
             </div>
-          </div>
-
-          <div class="row" id="snap-screenshots">
           </div>
         </div>
 
@@ -497,6 +501,10 @@
         </div>
       </section>
     </form>
+    <form id="preview-form" action="/{{ snap_name }}/preview" method="POST" enctype="multipart/form-data" class="u-hide" target="_blank">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="text" name="state" value="" />
+    </form>
   </div>
 {% endblock %}
 
@@ -506,23 +514,25 @@
   Raven.context(function () {
     snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
     snapcraft.publisher.market.initForm({
-      snapIconImage: "snap_icon_image",
+      snapIconChange: ".js-change-icon",
+      snapIconRemove: ".js-remove-icon",
+      snapIcon: "snap_icon_image",
       snapIconInput: "snap_icon",
       form: "market-form",
       formNotification: "market-form-status",
-      screenshotsToolbar: "screenshots-toolbar",
-      screenshotsWrapper: "snap-screenshots",
       licenseRadioContent: [
         document.getElementById('license-simple-input'),
         document.getElementById('license-custom-input')
-      ]
+      ],
+      mediaHolder: ".js-media-holder",
     }, {
+      snap_name: {{ snap_name|tojson }},
       title: {{ snap_title|tojson }},
       summary: {{ summary|tojson }},
       description: {{ description|tojson }},
       website: {{ website|tojson }},
       contact: {{ contact|tojson }},
-      categories: "{% if snap_categories.categories[0] %}{% for category in snap_categories.categories %}{% if loop.index > 1 %}, {% endif %}{{ category.name }}{% endfor %}{% endif %}",
+      categories: {{ snap_categories.categories|tojson }},
       images: [
         {% if icon_url %}
           { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
@@ -533,7 +543,8 @@
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
-      'license': {{ license|tojson }}
+      'license': {{ license|tojson }},
+      'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
     },
     {% if error_list %}
       {{ error_list|tojson}}

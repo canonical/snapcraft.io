@@ -1,0 +1,81 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+
+    <!-- Preconnect to establish early connections to important third-party origins -->
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://assets.ubuntu.com">
+    <link rel="preconnect" href="https://munchkin.marketo.net">
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
+
+    <title>{% block meta_title %}Snapcraft - Snaps are universal Linux packages{% endblock %}</title>
+
+    {% block meta %}
+      <meta property="og:title" content="{{ self.meta_title() }}"/>
+      <meta property="og:site_name" content="Snapcraft"/>
+      <meta property="og:type" content="{% block meta_type %}website{% endblock %}"/>
+      <meta property="og:description" content="{{ self.meta_description() }}"/>
+      <meta property="og:image" content="{% block meta_image %}https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png{% endblock %}" />
+      <meta property="og:url" content="https://snapcraft.io{% block meta_path %}{{ path }}{% endblock %}" />
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:site" content="@snapcraftio" />
+      <meta property="twitter:creator" content="@snapcraftio" />
+      <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
+    {% endblock %}
+
+    {% block extra_meta %}{% endblock %}
+
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
+
+    <link rel="stylesheet" href="{{ static_url('css/styles-embedded.css') }}" />
+    <base target="_blank">
+  </head>
+
+  <body>
+    {% block content %}{% endblock %}
+
+    {% block scripts_modules %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@id": "https://snapcraft.io/#organization",
+        "@type": "Organization",
+        "name": "Snapcraft",
+        "logo": "https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png",
+        "url": "https://snapcraft.io",
+        "sameAs": [
+          "https://developer.ubuntu.com/snapcraft",
+          "https://github.com/snapcore/snapcraft",
+          "https://en.wikipedia.org/wiki/Snappy_(package_manager)",
+          "https://twitter.com/snapcraftio",
+          "https://www.facebook.com/snapcraftio/",
+          "https://www.youtube.com/snapcraftio"
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@id": "https://snapcraft.io/#website",
+        "@type": "WebPage",
+        "name": "Snapcraft",
+        "url": "https://snapcraft.io{{ self.meta_path() }}"
+      }
+    </script>
+    <script>
+      if (navigator.appVersion.indexOf("Chrome/") != -1) {
+        document.body.classList.add("is-chrome");
+      }
+    </script>
+    {% block meta_schema %}{% endblock %}
+  </body>
+</html>

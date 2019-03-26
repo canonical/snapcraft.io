@@ -6,5 +6,14 @@
     background-image: url('#{$assets-path}9689339a-snapcraft-hero-background--light.png');
     background-position: 50% 0;
     background-size: 1440px 1440px;
+
+    @media screen and (max-width: $breakpoint-small) {
+      background-size: 640px 640px;
+    }
+
+    @media screen and (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
+      background-size: 820px 820px;
+    }
+
   }
 }

@@ -8,6 +8,7 @@ const allowedKeys = [
   "website",
   "contact",
   "private",
+  "unlisted",
   "public_metrics_enabled",
   "public_metrics_blacklist",
   "whitelist_countries",
@@ -25,8 +26,8 @@ function commaSeperatedStringToArray(str) {
       .join("")
       .trim() !== ""
   ) {
-    const split = str.split(", ");
-    return split.filter(item => item !== "");
+    const split = str.split(",");
+    return split.map(item => item.trim()).filter(item => item !== "");
   } else {
     return [];
   }
@@ -35,7 +36,6 @@ function commaSeperatedStringToArray(str) {
 const transform = {
   whitelist_countries: commaSeperatedStringToArray,
   blacklist_countries: commaSeperatedStringToArray,
-  categories: commaSeperatedStringToArray,
   private: value => value === "private",
   public_metrics_enabled: value => value === "on"
 };

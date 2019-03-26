@@ -1,0 +1,61 @@
+name: test-wethr-{name}
+download: git clone https://github.com/snapcraft-docs/wethr
+createDir: |
+  cd wethr
+  $EDITOR snapcraft.yaml
+metadata: |
+    name: wethr
+    version: git
+    summary: Command line weather tool.
+    description: >
+      Get current weather:-
+        $ wethr
+      Get current weather in metric units
+        $ wethr --metric
+      Get current weather in imperial units
+        $ wethr --imperial
+explain:
+  metadata:
+    - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
+    - code: |
+        name: wethr
+    - warning: |
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>wethr</code> to <code>test-wethr-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official wethr snap.
+    - text: By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps.
+    - code: |
+        version: git
+    - text: The summary can not exceed 79 characters. You can use a pipe ‘|’ in the description key to declare a multi-line description.
+    - code: |
+        description: |
+  security:
+    - text: The next section describes the level of confinement applied to your app.
+    - code: |
+        confinement: devmode
+    - text: Snaps are containerised to ensure more predictable application behaviour and greater security.
+    - text: It’s best to start a snap with the confinement in warning mode, rather than strictly applied. This is indicated through the <code>devmode</code> keyword.
+    - text: Once an app is working well in devmode, you can review confinement violations, add appropriate interfaces, and switch to strict confinement.
+  base:
+    - text: In general, snaps cannot see the root filesystem on end user systems. This prevents conflict with other applications and increases security. However, applications still need some location to act as the root filesystem. They would also benefit from common libraries (e.g. libc) being in this root filesystem rather than bundled into each application.
+    - text: The base keyword specifies a special kind of snap that provides a minimal set of libraries common to most applications. It will be mounted as the root filesystem for your application.
+    - code: |
+        base: core18
+    - text: The <code>core18</code> base is recommended.
+  parts:
+    - text: |
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets.
+    - code: |
+        parts:
+          wethr:
+            plugin: nodejs
+            source: .
+    - text: The <code>nodejs</code> plugin builds upon the work you’ve already done to describe your app’s dependencies in your <code>package.json</code>. It will automatically include these in your snap, including the LTS version of Node. This can be changed with the <code>nodejs-version</code> keyword.
+  apps:
+    - text: Apps are the commands you want to expose to users and any background services your application provides.
+    - code: |
+        apps:
+          test-wethr-{name}:
+            command: bin/wethr
+    - warning: |
+        <span class="p-notification__status"></span>As before, remember to change this instance of <code>wethr</code> to <code>test-wethr-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official wethr snap.
+    - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
+    - text: If your command name matches the snap name, users will be able run the command directly.

@@ -31,7 +31,7 @@ def set_handlers(app):
             user_name = None
 
         page_slug = template_utils.generate_slug(flask.request.path)
-        is_stream_live = template_utils.time_live_stream()
+
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
@@ -50,7 +50,6 @@ def set_handlers(app):
             "static_url": template_utils.static_url,
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
-            "is_stream_live": is_stream_live,
         }
 
     # Error handlers
@@ -123,13 +122,14 @@ def set_handlers(app):
                 response.headers["Cache-Control"] = "private"
             else:
                 # Only add caching headers to successful responses
-                response.headers["Cache-Control"] = ", ".join(
-                    {
-                        "public",
-                        "max-age=61",
-                        "stale-while-revalidate=300",
-                        "stale-if-error=86400",
-                    }
-                )
+                if not response.headers.get("Cache-Control"):
+                    response.headers["Cache-Control"] = ", ".join(
+                        {
+                            "public",
+                            "max-age=61",
+                            "stale-while-revalidate=300",
+                            "stale-if-error=86400",
+                        }
+                    )
 
         return response

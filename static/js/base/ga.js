@@ -32,7 +32,7 @@ function triggerEvent(category, from, to, label) {
   }
 }
 
-if (dataLayer) {
+if (typeof dataLayer !== "undefined") {
   window.addEventListener("click", function(e) {
     let target = e.target;
     if (!target || !e.target.closest) {

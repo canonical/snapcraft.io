@@ -1,5 +1,6 @@
 import hashlib
 import datetime
+from dateutil import parser
 from json import dumps
 
 
@@ -138,24 +139,6 @@ def build_image_info(image, image_type):
     }
 
 
-def convert_metrics_blacklist(metrics_blacklist):
-    """Convert the blacklisted metrics to an array
-
-    Input:
-      "metric1,metric2"
-    Output:
-      ["metric1", "metric2"]
-
-    :param metrics_blacklist: The metrics blacklisted
-
-    :return: Array of metrics"""
-    converted_metrics_blacklist = []
-    if len(metrics_blacklist) > 0:
-        converted_metrics_blacklist = metrics_blacklist.split(",")
-
-    return converted_metrics_blacklist
-
-
 def remove_invalid_characters(description):
     """Remove invalid charcters from description
 
@@ -229,6 +212,7 @@ def filter_changes_data(changes):
         "license",
         "price",
         "private",
+        "unlisted",
         "blacklist_countries",
         "whitelist_countries",
         "public_metrics_enabled",
@@ -280,6 +264,24 @@ def replace_reserved_categories_key(categories):
     return snap_categories
 
 
+def filter_categories(categories):
+    """Filter featured category out of the list of categories on a snap
+
+    :param categories: Dict of categories
+
+    :return: Dict of categories"""
+    snap_categories = categories
+
+    snap_categories["categories"] = list(
+        filter(
+            lambda category: category["name"] != "featured",
+            snap_categories["categories"],
+        )
+    )
+
+    return snap_categories
+
+
 def filter_available_stores(stores):
     """Available stores that aren't publicly available
 
@@ -295,3 +297,16 @@ def filter_available_stores(stores):
             available_stores.append(store)
 
     return available_stores
+
+
+def convert_date(date_to_convert):
+    """Convert date to human readable format: Month Year
+
+    Format of date to convert: 2019-01-12T16:48:41.821037+00:00
+    Output: January 2019
+
+    :param date_to_convert: Date to convert
+    :returns: Readable date
+    """
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
+    return date_parsed.strftime("%B %Y")

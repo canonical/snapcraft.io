@@ -1,4 +1,5 @@
 import datetime
+import re
 from urllib.parse import parse_qs, urlparse
 
 import humanize
@@ -165,27 +166,31 @@ def convert_date(date_to_convert):
         return date_parsed.strftime("%-d %B %Y")
 
 
+categories_list = [
+    "development",
+    "games",
+    "social",
+    "productivity",
+    "utilities",
+    "photo-and-video",
+    "server-and-cloud",
+    "security",
+    "devices-and-iot",
+    "music-and-audio",
+    "entertainment",
+    "art-and-design",
+]
+
+blacklist = ["featured"]
+
+
 def get_categories(categories_json):
     """Retrieve and flatten the nested array from the legacy API response.
 
     :param categories_json: The returned json
     :returns: A list of categories
     """
-    categories_list = [
-        "development",
-        "games",
-        "social",
-        "productivity",
-        "utilities",
-        "photo-and-video",
-        "server-and-cloud",
-        "security",
-        "devices-and-iot",
-        "music-and-audio",
-        "entertainment",
-        "art-and-design",
-    ]
-    blacklist = ["featured"]
+
     categories = []
 
     if "_embedded" in categories_json:
@@ -201,6 +206,26 @@ def get_categories(categories_json):
                 {
                     "slug": category,
                     "name": category.capitalize().replace("-", " "),
+                }
+            )
+
+    return categories
+
+
+def get_snap_categories(snap_categories):
+    """Retrieve list of categories with names for a snap.
+
+    :param snap_categories: List of snap categories from snap info API
+    :returns: A list of categories with names
+    """
+    categories = []
+
+    for cat in snap_categories:
+        if cat["name"] not in blacklist:
+            categories.append(
+                {
+                    "slug": cat["name"],
+                    "name": cat["name"].capitalize().replace("-", " "),
                 }
             )
 
@@ -333,3 +358,22 @@ def get_video_embed_code(url):
             "url": url + ".js",
             "id": url.rsplit("/", 1)[-1],
         }
+
+
+def filter_screenshots(media):
+    banner_regex = r"/banner(\-icon)?(_.*)\.(png|jpg)"
+    return [
+        m["url"]
+        for m in media
+        if m["type"] == "screenshot" and not re.search(banner_regex, m["url"])
+    ][:5]
+
+
+def get_icon(media):
+    return [m["url"] for m in media if m["type"] == "icon"]
+
+
+def get_videos(media):
+    return [
+        get_video_embed_code(m["url"]) for m in media if m["type"] == "video"
+    ]

@@ -2,7 +2,10 @@ from json import loads
 
 import flask
 
+import bleach
 import pycountry
+import webapp.helpers as helpers
+from webapp.markdown import parse_markdown_description
 import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
@@ -18,10 +21,16 @@ from webapp.api.exceptions import (
     MissingUsername,
 )
 from webapp.api.store import StoreApi
-from webapp.store.logic import get_categories
+from webapp.store.logic import (
+    get_categories,
+    filter_screenshots,
+    get_icon,
+    get_videos,
+)
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
+from webapp.publisher.snaps import preview_data
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -189,12 +198,44 @@ def publisher_snap_metrics(snap_name):
 
     nodata = not any([country_devices, active_devices])
 
+    # until default tracks are supported by the API we special case node
+    # to use 10, rather then latest
+    default_track = helpers.get_default_track(snap_name)
+
+    annotations = {"name": "annotations", "series": [], "buckets": []}
+
+    for category in details["categories"]["items"]:
+        date = category["since"].split("T")[0]
+        new_date = logic.convert_date(category["since"])
+
+        if date not in annotations["buckets"]:
+            annotations["buckets"].append(date)
+
+        index_of_date = annotations["buckets"].index(date)
+
+        single_series = {
+            "values": [0] * (len(annotations)),
+            "name": category["name"],
+            "display_name": category["name"].capitalize().replace("-", " "),
+            "display_date": new_date,
+            "date": date,
+        }
+
+        single_series["values"][index_of_date] = 1
+
+        annotations["series"].append(single_series)
+
+    annotations["series"] = sorted(
+        annotations["series"], key=lambda k: k["date"]
+    )
+
     context = {
         # Data direct from details API
         "snap_name": snap_name,
         "snap_title": details["title"],
         "metric_period": metric_requested["period"],
         "active_device_metric": installed_base_metric,
+        "default_track": default_track,
         "private": details["private"],
         # Metrics data
         "nodata": nodata,
@@ -202,6 +243,7 @@ def publisher_snap_metrics(snap_name):
         "active_devices": dict(active_devices),
         "territories_total": territories_total,
         "territories": country_devices.country_data,
+        "active_devices_annotations": annotations,
         # Context info
         "is_linux": "Linux" in flask.request.headers["User-Agent"],
     }
@@ -263,11 +305,16 @@ def get_listing_snap(snap_name):
     except ApiError:
         categories_results = []
 
-    categories = get_categories(categories_results)
+    categories = sorted(
+        get_categories(categories_results),
+        key=lambda category: category["slug"],
+    )
 
     snap_categories = logic.replace_reserved_categories_key(
         snap_details["categories"]
     )
+
+    snap_categories = logic.filter_categories(snap_categories)
 
     context = {
         "snap_id": snap_details["snap_id"],
@@ -431,6 +478,8 @@ def post_listing_snap(snap_name):
             snap_categories = logic.replace_reserved_categories_key(
                 snap_details["categories"]
             )
+
+            snap_categories = logic.filter_categories(snap_categories)
 
             context = {
                 # read-only values from details API
@@ -757,6 +806,45 @@ def post_register_name():
     return flask.redirect(flask.url_for("account.get_account"))
 
 
+@publisher_snaps.route("/register-name-dispute")
+@login_required
+def get_register_name_dispute():
+    snap_name = flask.request.args.get("snap-name")
+    if not snap_name:
+        return flask.redirect(
+            flask.url_for(".get_register_name", snap_name=snap_name)
+        )
+    return flask.render_template(
+        "publisher/register-name-dispute.html", snap_name=snap_name
+    )
+
+
+@publisher_snaps.route("/register-name-dispute", methods=["POST"])
+@login_required
+def post_register_name_dispute():
+    try:
+        snap_name = flask.request.form.get("snap-name")
+        claim_comment = flask.request.form.get("claim-comment")
+        api.post_register_name_dispute(
+            flask.session, bleach.clean(snap_name), bleach.clean(claim_comment)
+        )
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code in [400, 409]:
+            return flask.render_template(
+                "publisher/register-name-dispute.html",
+                snap_name=snap_name,
+                errors=api_response_error_list.errors,
+            )
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    return flask.render_template(
+        "publisher/register-name-dispute-success.html", snap_name=snap_name
+    )
+
+
 @publisher_snaps.route("/<snap_name>/settings")
 @login_required
 def get_settings(snap_name):
@@ -798,6 +886,7 @@ def get_settings(snap_name):
         "snap_id": snap_details["snap_id"],
         "license": license,
         "private": snap_details["private"],
+        "unlisted": snap_details["unlisted"],
         "countries": countries,
         "whitelist_country_codes": whitelist_country_codes,
         "blacklist_country_codes": blacklist_country_codes,
@@ -826,12 +915,6 @@ def post_settings(snap_name):
         body_json = logic.filter_changes_data(changes)
 
         if body_json:
-            if "public_metrics_blacklist" in body_json:
-                converted_metrics = logic.convert_metrics_blacklist(
-                    body_json["public_metrics_blacklist"]
-                )
-                body_json["public_metrics_blacklist"] = converted_metrics
-
             try:
                 api.snap_metadata(snap_id, flask.session, body_json)
             except ApiResponseErrorList as api_response_error_list:
@@ -889,6 +972,7 @@ def post_settings(snap_name):
                 "snap_title": snap_details["title"],
                 "snap_id": snap_details["snap_id"],
                 "private": snap_details["private"],
+                "unlisted": snap_details["unlisted"],
                 "countries": countries,
                 "whitelist_country_codes": whitelist_country_codes,
                 "blacklist_country_codes": blacklist_country_codes,
@@ -965,4 +1049,120 @@ def get_publicise(snap_name):
         "download_version": "v1.2",
     }
 
-    return flask.render_template("publisher/publicise.html", **context)
+    return flask.render_template(
+        "publisher/publicise/store_buttons.html", **context
+    )
+
+
+@publisher_snaps.route("/<snap_name>/publicise/badges")
+@login_required
+def get_publicise_badges(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    if snap_details["private"]:
+        return flask.abort(404, "No snap named {}".format(snap_name))
+
+    context = {
+        "snap_name": snap_details["snap_name"],
+        "snap_title": snap_details["title"],
+        "snap_id": snap_details["snap_id"],
+    }
+
+    return flask.render_template(
+        "publisher/publicise/github_badges.html", **context
+    )
+
+
+@publisher_snaps.route("/<snap_name>/publicise/cards")
+@login_required
+def get_publicise_cards(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    if snap_details["private"]:
+        return flask.abort(404, "No snap named {}".format(snap_name))
+
+    screenshots = filter_screenshots(snap_details["media"])
+    has_screenshot = True if screenshots else False
+
+    context = {
+        "has_screenshot": has_screenshot,
+        "snap_name": snap_details["snap_name"],
+        "snap_title": snap_details["title"],
+        "snap_id": snap_details["snap_id"],
+    }
+
+    return flask.render_template(
+        "publisher/publicise/embedded_cards.html", **context
+    )
+
+
+@publisher_snaps.route("/<snap_name>/preview", methods=["POST"])
+@login_required
+def post_preview(snap_name):
+    try:
+        snap_details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "publisher": snap_details["publisher"]["display-name"],
+        "username": snap_details["publisher"]["username"],
+        "developer_validation": snap_details["publisher"]["validation"],
+    }
+
+    state = loads(flask.request.form["state"])
+
+    for item in state:
+        if item == "description":
+            context[item] = parse_markdown_description(
+                bleach.clean(state[item], tags=[])
+            )
+        else:
+            context[item] = state[item]
+
+    context["is_preview"] = True
+    context["package_name"] = context["snap_name"]
+    context["snap_title"] = context["title"]
+
+    # Images
+    icons = get_icon(context["images"])
+    context["screenshots"] = filter_screenshots(context["images"])
+    context["icon_url"] = icons[0] if icons else None
+    context["videos"] = get_videos(context["images"])
+
+    # Channel map
+    context["default_track"] = "latest"
+    context["lowest_risk_available"] = "stable"
+    context["version"] = "test"
+    context["has_stable"] = True
+
+    # metadata
+    context["last_updated"] = "Preview"
+    context["filesize"] = "1mb"
+
+    # maps
+    context["countries"] = preview_data.get_countries()
+    context["normalized_os"] = preview_data.get_normalised_oses()
+
+    return flask.render_template("store/snap-details.html", **context)

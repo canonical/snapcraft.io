@@ -15,7 +15,7 @@ class GetDetailsPageTest(TestCase):
                 self.snap_name,
                 "?fields=title,summary,description,license,contact,website,",
                 "publisher,prices,media,download,version,created-at,"
-                "confinement",
+                "confinement,categories",
             ]
         )
         self.endpoint_url = "/" + self.snap_name
@@ -26,6 +26,23 @@ class GetDetailsPageTest(TestCase):
         app.config["WTF_CSRF_METHODS"] = []
 
         return app
+
+    @responses.activate
+    def test_api_404(self):
+        payload = {"error-list": []}
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=404
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert len(responses.calls) == 1
+        called = responses.calls[0]
+        assert called.request.url == self.api_url
+
+        assert response.status_code == 404
 
     @responses.activate
     def test_api_500(self):
@@ -59,6 +76,37 @@ class GetDetailsPageTest(TestCase):
         assert response.status_code == 502
 
     @responses.activate
+    def test_no_channel_map(self):
+        payload = {
+            "snap-id": "id",
+            "name": "snapName",
+            "snap": {
+                "title": "Snap Title",
+                "summary": "This is a summary",
+                "description": "this is a description",
+                "media": [],
+                "license": "license",
+                "prices": 0,
+                "publisher": {
+                    "display-name": "Toto",
+                    "username": "toto",
+                    "validation": True,
+                },
+                "categories": [{"name": "test"}],
+            },
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 404
+
+    @responses.activate
     def test_user_connected(self):
         payload = {
             "snap-id": "id",
@@ -75,6 +123,7 @@ class GetDetailsPageTest(TestCase):
                     "username": "toto",
                     "validation": True,
                 },
+                "categories": [{"name": "test"}],
             },
             "channel-map": [
                 {
@@ -130,6 +179,7 @@ class GetDetailsPageTest(TestCase):
                     "username": "toto",
                     "validation": True,
                 },
+                "categories": [{"name": "test"}],
             },
             "channel-map": [
                 {
@@ -182,6 +232,7 @@ class GetDetailsPageTest(TestCase):
                     "username": "toto",
                     "validation": True,
                 },
+                "categories": [{"name": "test"}],
             },
             "channel-map": [
                 {

@@ -2,6 +2,12 @@
 
 <html lang="en">
   <head>
+
+    <!-- Preconnect to establish early connections to important third-party origins -->
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://assets.ubuntu.com">
+    <link rel="preconnect" href="https://munchkin.marketo.net">
+
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,7 +52,7 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- JS that is needed right away -->
-    <script src="/static/js/modules/global-nav.js"></script>
+    <script src="{{ static_url('js/modules/global-nav.js') }}"></script>
     <script>canonicalGlobalNav.createNav({maxWidth: '64.875rem', showLogins: false});</script>
 
     {% include "_header.html" %}

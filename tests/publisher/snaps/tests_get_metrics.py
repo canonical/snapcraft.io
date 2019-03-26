@@ -38,7 +38,14 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         self.info_url = info_url.format(snap_name)
 
-        payload = {"snap_id": "id", "title": "Test Snap", "private": False}
+        payload = {
+            "snap_id": "id",
+            "title": "Test Snap",
+            "private": False,
+            "categories": {
+                "items": [{"name": "test", "since": "2018-01-01T00:00:00"}]
+            },
+        }
 
         responses.add(responses.GET, self.info_url, json=payload, status=200)
 
@@ -102,7 +109,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -116,7 +123,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -152,7 +159,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -166,7 +173,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -202,7 +209,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 7)
         ]
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -216,7 +223,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -256,7 +263,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 for day in range(1, 30)
             ]
 
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -270,7 +277,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -306,7 +313,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 7)
         ]
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -320,7 +327,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -358,7 +365,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -372,7 +379,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -410,7 +417,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -424,7 +431,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
@@ -466,7 +473,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 for day in range(1, 30)
             ]
 
-        coutries = [
+        countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
@@ -480,7 +487,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
                 },
                 {
                     "status": "OK",
-                    "series": coutries,
+                    "series": countries,
                     "buckets": ["2018-03-18"],
                     "metric_name": "weekly_installed_base_by_country",
                 },
