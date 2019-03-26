@@ -122,9 +122,9 @@ $color-modal-controls: rgba($color-x-dark, .2);
     width: 3rem;
   }
 
-  .vbox-next:disabled:hover,
-  .vbox-prev:disabled:hover {
-    background-color: $color-x-light;
+  .vbox-next:disabled,
+  .vbox-prev:disabled {
+    display: none;
   }
 
   .vbox-prev {

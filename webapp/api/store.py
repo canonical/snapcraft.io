@@ -19,7 +19,7 @@ SNAP_INFO_URL = "".join(
         SNAPCRAFT_IO_API_V2,
         "snaps/info/{snap_name}",
         "?fields=title,summary,description,license,contact,website,publisher,",
-        "prices,media,download,version,created-at,confinement",
+        "prices,media,download,version,created-at,confinement,categories",
     ]
 )
 
@@ -74,7 +74,7 @@ class StoreApi:
         if testing or not cache:
             self.session = api.requests.Session()
         else:
-            self.session = api.requests.CachedSession()
+            self.session = api.requests.CachedSession(timeout=(1, 6))
         self.session.headers.update(self.headers)
         self.session.headers.update(self.headers_v2)
 

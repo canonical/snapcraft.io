@@ -1,0 +1,155 @@
+publisher: JetBrains
+username: jetbrains
+icon_url: https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg
+banner_url: https://assets.ubuntu.com/v1/b3a74fa1-jb_3840x1920.jpg
+summary: We make professional software development a more productive and enjoyable experience.
+description: <p>JetBrains creates professional software development tools for coding in Java, Kotlin, C#, C++, Ruby, Python, PHP, JavaScript and more languages, as well as advanced team collaboration tools.</p><p>At JetBrains, code is our passion. For over 16 years we have strived to make the strongest, most effective developer tools on Earth. By automating routine checks and corrections, our products speed up production, freeing developers to grow, discover and create. Today, more than 700 JetBrains colleagues work out of Prague, Munich, St. Petersburg, Moscow, Boston, and Novosibirsk. Five million customers in 225 countries trust our tools daily. Kotlin, our own programming language, became an official language for Android development in 2017.</p>
+publisher_since: March 2017
+website: https://www.jetbrains.com/
+contact: https://www.jetbrains.com/company/contacts/
+developer_validation: verified
+
+featured_snaps: [
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/PyCharmCore256.png",
+        "origin": "jetbrains",
+        "package_name": "pycharm-community",
+        "publisher": "JetBrains",
+        "summary": "Python IDE for Professional Developers",
+        "description": "PyCharm Community Edition is a free and open-source IDE which is perfect for pure Python coding. For professional Web and Scientific development see PyCharm Professional Edition.",
+        "title": "PyCharm CE",
+        "background": "#3d3532"
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/05/pycharm_logo_256.png",
+        "origin": "jetbrains",
+        "package_name": "pycharm-professional",
+        "publisher": "JetBrains",
+        "summary": "Python IDE for Professional Developers",
+        "description": "PyCharm Professional Edition is an IDE for professional Python development. It is designed by programmers, for programmers, to provide all the tools you need for productive Python, Web and Scientific development.PyCharm Professional Edition is available for a free 30-day evaluation. Monthly and yearly subscription options are available for companies and individual users. Find out more on https://www.jetbrains.com/pycharm/buy/.",
+        "title": "PyCharm Pro",
+        "background": "#134732"
+    },
+]
+
+snaps: [
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/12/clion.ico.png",
+        "origin": "jetbrains",
+        "package_name": "clion",
+        "publisher": "JetBrains",
+        "summary": "A cross-platform IDE for C and C++",
+        "title": "CLion",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/product_256.png",
+        "origin": "jetbrains",
+        "package_name": "datagrip",
+        "publisher": "JetBrains",
+        "summary": "IntelliJ-based IDE for databases and SQL",
+        "title": "DataGrip",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/go_1282x.png",
+        "origin": "jetbrains",
+        "package_name": "goland",
+        "publisher": "JetBrains",
+        "summary": "A Clever IDE to Go",
+        "title": "GoLand",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/02/256px-kotlin-logo-svg.png",
+        "origin": "jetbrains",
+        "package_name": "kotlin",
+        "publisher": "JetBrains",
+        "summary": "Command line Kotlin compiler",
+        "title": "Kotlin",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/04/256px-kotlin-logo-svg.png",
+        "origin": "jetbrains",
+        "package_name": "kotlin-native",
+        "publisher": "JetBrains",
+        "summary": "Kotlin/Native compiler",
+        "title": "Kotlin Native",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/icon_CE_256_2Qe5uEl.png",
+        "origin": "jetbrains",
+        "package_name": "intellij-idea-community",
+        "publisher": "JetBrains",
+        "summary": "Capable & Ergonomic Java IDE",
+        "title": "IDEA Community",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/icon_CE_256_2Qe5uEl.png",
+        "origin": "jetbrains",
+        "package_name": "intellij-idea-educational",
+        "publisher": "JetBrains",
+        "summary": "IntelliJ IDEA Educational Edition",
+        "title": "IDEA Educational",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/10/logo_zjwX5FR.png",
+        "origin": "jetbrains",
+        "package_name": "intellij-idea-ultimate",
+        "publisher": "JetBrains",
+        "summary": "Capable & Ergonomic Java IDE for Enterprise, Web & Mobile Development",
+        "title": "IDEA Ultimate",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/webide.ico_HA9tBL0.png",
+        "origin": "jetbrains",
+        "package_name": "phpstorm",
+        "publisher": "JetBrains",
+        "summary": "PHP IDE for Professional Development",
+        "title": "PhpStorm",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/12/PyCharmEdu256.png",
+        "origin": "jetbrains",
+        "package_name": "pycharm-educational",
+        "publisher": "JetBrains",
+        "summary": "Easy & Professional Tool to Learn & Teach Programming with Python",
+        "title": "PyCharm EDU",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/11/snap-icon.png",
+        "origin": "jetbrains",
+        "package_name": "rider",
+        "publisher": "JetBrains",
+        "summary": "A fast & powerful cross-platform .NET IDE",
+        "title": "Rider",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/rubymine.ico.png",
+        "origin": "jetbrains",
+        "package_name": "rubymine",
+        "publisher": "JetBrains",
+        "summary": "The Most Intelligent Ruby and Rails IDE",
+        "title": "RubyMine",
+    },
+    {
+        "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/WebStorm_1282x.png",
+        "origin": "jetbrains",
+        "package_name": "webstorm",
+        "publisher": "JetBrains",
+        "summary": "Powerful IDE for modern JavaScript development",
+        "title": "WebStorm",
+    }
+]

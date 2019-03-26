@@ -17,7 +17,7 @@ from webapp.api.exceptions import (
 # is solved in the Store we will relax the requests `read` timeout according
 # to what the frontend (k8s ingress) permits.
 # See https://bugs.launchpad.net/snapstore/+bug/1785094 for more information.
-api_session = api.requests.Session(timeout=(.5, 6))
+api_session = api.requests.Session(timeout=(1, 6))
 
 
 DASHBOARD_API = os.getenv(
@@ -50,6 +50,8 @@ SCREENSHOTS_QUERY_URL = "".join(
 SNAP_INFO_URL = "".join([DASHBOARD_API, "snaps/info/{snap_name}"])
 
 REGISTER_NAME_URL = "".join([DASHBOARD_API, "register-name/"])
+
+REGISTER_NAME_DISPUTE_URL = "".join([DASHBOARD_API, "register-name-dispute/"])
 
 REVISION_HISTORY_URL = "".join([DASHBOARD_API, "snaps/{snap_id}/history"])
 
@@ -186,6 +188,21 @@ def post_register_name(
 
     response = api_session.post(
         url=REGISTER_NAME_URL,
+        headers=get_authorization_header(session),
+        json=json,
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def post_register_name_dispute(session, snap_name, claim_comment):
+    json = {"snap_name": snap_name, "comment": claim_comment}
+
+    response = api_session.post(
+        url=REGISTER_NAME_DISPUTE_URL,
         headers=get_authorization_header(session),
         json=json,
     )

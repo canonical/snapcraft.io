@@ -1,0 +1,6 @@
+@mixin snapcraft-publisher {
+  .p-strip--image.is-deep {
+    min-height: 35vh;
+    background-position: center;
+  }
+}

@@ -9,6 +9,27 @@
 
   .p-fluid-grid {
     @extend %fluid-grid;
+
+    &__publisher-snaps {
+      @extend %fluid-grid;
+
+      .p-fluid-grid__item {
+        min-height: 12rem;
+      }
+    }
+  }
+
+  .p-fluid-grid--condensed {
+    @extend %fluid-grid;
+    justify-content: start;
+
+    .p-fluid-grid__item {
+      width: 50%;
+
+      @media screen and (min-width: $breakpoint-navigation-threshold) {
+        width: 25%; // 4 items per row = col-3
+      }
+    }
   }
 
   .p-fluid-grid--centered {

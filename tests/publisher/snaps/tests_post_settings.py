@@ -80,79 +80,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         assert response.location == self._get_location()
 
     @responses.activate
-    def test_update_no_metric_blacklist(self):
-        responses.add(responses.PUT, self.api_url, json={}, status=200)
-
-        changes = {"public_metrics_blacklist": ""}
-
-        response = self.client.post(
-            self.endpoint_url,
-            data={"changes": json.dumps(changes), "snap_id": self.snap_id},
-        )
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        self.assertEqual(
-            b'{"public_metrics_blacklist": []}', called.request.body
-        )
-
-        assert response.status_code == 302
-        assert response.location == self._get_location()
-
-    @responses.activate
-    def test_update_one_metric_blacklist(self):
-        responses.add(responses.PUT, self.api_url, json={}, status=200)
-
-        changes = {"public_metrics_blacklist": "metric"}
-
-        response = self.client.post(
-            self.endpoint_url,
-            data={"changes": json.dumps(changes), "snap_id": self.snap_id},
-        )
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        self.assertEqual(
-            b'{"public_metrics_blacklist": ["metric"]}', called.request.body
-        )
-
-        assert response.status_code == 302
-        assert response.location == self._get_location()
-
-    @responses.activate
-    def test_update_multiple_metrics_blacklist(self):
-        responses.add(responses.PUT, self.api_url, json={}, status=200)
-
-        changes = {"public_metrics_blacklist": "metric1,metric2"}
-
-        response = self.client.post(
-            self.endpoint_url,
-            data={"changes": json.dumps(changes), "snap_id": self.snap_id},
-        )
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        self.assertEqual(
-            b'{"public_metrics_blacklist": ["metric1", "metric2"]}',
-            called.request.body,
-        )
-
-        assert response.status_code == 302
-        assert response.location == self._get_location()
-
-    @responses.activate
     def test_return_error_update_one_field(self):
         metadata_payload = {
             "error_list": [{"code": "code", "message": "message"}]
@@ -170,6 +97,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "title": "test snap",
             "snap_name": self.snap_name,
             "private": True,
+            "unlisted": False,
             "price": 0,
             "store": "stotore",
             "keywords": [],
@@ -228,6 +156,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "title": "test snap",
             "snap_name": self.snap_name,
             "private": True,
+            "unlisted": False,
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
             "price": 0,
@@ -299,6 +228,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "media": [],
             "publisher": {"display-name": "The publisher"},
             "private": True,
+            "unlisted": False,
             "contact": "contact adress",
             "website": "website_url",
             "price": 0,

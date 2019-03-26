@@ -25,7 +25,7 @@ function arraysEqual(oldArray, newArray) {
   _newArray.sort();
 
   for (let i = 0; i < _oldArray.length; i++) {
-    if (_oldArray[i] !== _newArray[i]) {
+    if (JSON.stringify(_oldArray[i]) !== JSON.stringify(_newArray[i])) {
       return false;
     }
   }

@@ -3,7 +3,7 @@
 {% block meta_copydoc %}https://docs.google.com/document/d/1_uwPkHmAgV6_uE9ISqIgXjZGJxXPBD90vdeO95h7ikE/edit{% endblock %}
 
 {% block content %}
-<div id="main-content" class="p-strip--image snapcraft-banner-background">
+<div id="main-content" class="p-strip-slanted--snapcraft">
   <h1 class="u-off-screen">Snapcraft</h1>
   <div class="row">
     {% if nps %}
@@ -35,10 +35,9 @@
         <button arial-label="Close notification" class="p-icon--close js-notification-close">Close</button>
       </div>
     {% endif %}
-    {% include 'partials/livestream-notification.html' %}
     <div class="col-12">
-      <h2>A universal app store for Linux</h2>
-      <p>Deliver and update your app on any Linux distribution &mdash;<br class="u-hide--small" /> for desktop, cloud,  and Internet of Things.</p>
+      <h2>The app store for Linux</h2>
+      <p class="u-no-padding--top p-heading--four">Publish your app for Linux users &mdash;<br class="u-hide--small" /> for desktop, cloud, and Internet of Things.</p>
       <a href="/first-snap" class="p-button--positive">Package & publish your app</a>
     </div>
   </div>
@@ -54,7 +53,7 @@
         <img src="https://assets.ubuntu.com/v1/aae93857-logo-mozilla--snapcraft-homepage.svg" alt="Mozilla" />
       </span>
       <span class="p-logo-image p-fluid-grid__item--small u-align--center">
-        <img src="https://assets.ubuntu.com/v1/2c9fa6c0-logo-amazon--snapcraft-homepage.svg" alt="Amazon" />
+        <a href="/publisher/jetbrains"><img src="https://assets.ubuntu.com/v1/55f6dae7-logo-jetbrains--snapcraft-homepage.svg" alt="JetBrains" /></a>
       </span>
       <span class="p-logo-image p-fluid-grid__item--small u-align--center">
         <img src="https://assets.ubuntu.com/v1/63d5fd3f-logo-spotify--snapcraft-homepage.svg" alt="Spotify" />
@@ -104,7 +103,7 @@
     <div class="col-4">
       <blockquote class="p-testimonial">
         <div class="p-testimonial__logo">
-          <img src="https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg" alt="JetBrains logo" />
+          <a href="https://www.jetbrains.com/"><img src="https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg" alt="JetBrains logo" /></a>
         </div>
         <h4 class="p-testimonial__title">“A major software discovery tool”</h4>
         <p class="p-testimonial__content">The Snap store provides additional exposure to our tools for many of our existing and potential users. The decision to use it came quite naturally. We believe the store will be a major software discovery tool on Linux, so the more people find out about our tools naturally and install them more easily, the better for everyone.</p>
@@ -123,10 +122,10 @@
 <div class="p-strip">
   <div class="row">
     <div class="col-6">
-      <h3 class="p-heading--two">One build <br>for all Linux and IoT</h3>
+      <h3 class="p-heading--two"> One build <br>for all Linux and IoT</h3>
     </div>
     <div class="col-6">
-      <p>Snaps work across many distributions and versions of Linux. Bundle your dependencies and config, simplifying installs to a single standard command.</p>
+      <p>Snaps work across Linux on any distribution or version. Bundle your dependencies and assets, simplifying installs to a single standard command.</p>
       <p><a href="https://docs.snapcraft.io/core/install">See all supported distributions</a></p>
     </div>
   </div>
@@ -162,7 +161,7 @@
   <div class="row">
     <div class="col-6">
       <h3 class="p-heading--two">Showcase to millions</h3>
-      <p>Reach beyond your website with a listing on the Snap Store, the front page for app discovery on Ubuntu and other popular distros.</p>
+      <p>Reach beyond your existing audience with a listing on the Snap Store, the front page for app discovery on Ubuntu and other popular distros.</p>
       <p><a class="p-button--neutral" href="/store">Browse the Snap Store</a></p>
     </div>
     <div class="col-6">
@@ -179,7 +178,7 @@
   <div class="row">
     <div class="col-6">
       <h3 class="p-heading--two">Measure user growth</h3>
-      <p>Make data-driven decisions with active install metrics. Watch as automatic updates migrate users to your latest release. Understand your audience with demographic breakdowns.</p>
+      <p>Make data-driven decisions with active install metrics. Watch as automatic updates migrate users to your latest release. Understand your audience with geographic and version breakdowns.</p>
     </div>
     <div class="col-6">
       <img src="https://assets.ubuntu.com/v1/6a7a7b93-analytics.png" alt="" />
@@ -194,7 +193,7 @@
 <div class="p-strip">
   <div class="row">
     <div class="col-12">
-      <h3 class="p-heading--two">Take 15 minutes <br class="u-hide--large" /> to publish your first snap</h3>
+      <h3 class="p-heading--two">Learn how to snap an app <br class="u-hide--large" /> in 20 minutes</h3>
       <p>What language or framework does your app use?</p>
     </div>
   </div>

@@ -11,13 +11,13 @@
     "build": "yarn run get-licenses && yarn run build-js && yarn run build-css",
     "build-css": "node-sass --include-path node_modules static/sass --output-style compressed --output static/css && postcss --use autoprefixer --no-map --replace 'static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-bundle",
-    "copy-3rd-party-js": "cp node_modules/global-nav/dist/index.js static/js/modules/global-nav.js && cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
+    "copy-3rd-party-js": "mkdir -p static/js/modules && cp node_modules/global-nav/dist/index.js static/js/modules/global-nav.js && cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
     "build-js-bundle": "webpack",
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "webpack --watch",
-    "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp webapp/licenses.json"
+    "clean": "rm -rf node_modules yarn-error.log css static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp webapp/licenses.json"
   },
   "husky": {
     "hooks": {
@@ -46,7 +46,6 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "clipboard": "^2.0.0",
-    "cssnano": "^3.10.0",
     "d3": "^4.10.2",
     "d3-array": "^1.2.4",
     "d3-axis": "^1.0.12",
@@ -69,6 +68,7 @@
     "husky": "^1.0.0-rc.13",
     "jest": "^22.4.2",
     "lint-staged": "^8.1.0",
+    "markdown-it": "^8.4.2",
     "node-sass": "^4.5.3",
     "polylabel": "^1.0.2",
     "postcss-cli": "^4.1.0",
@@ -78,6 +78,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.1.1",
+    "react-testing-library": "^6.0.0",
     "redux": "^4.0.1",
     "redux-mock-store": "^1.5.3",
     "redux-thunk": "^2.3.0",

@@ -169,4 +169,18 @@ describe("commaSeperatedStringToArray", () => {
     expect(commaSeperatedStringToArray("test, ")).toEqual(["test"]);
     expect(commaSeperatedStringToArray(", test")).toEqual(["test"]);
   });
+
+  test("should return multiple elements with comma and space", () => {
+    expect(commaSeperatedStringToArray("test, test2")).toEqual([
+      "test",
+      "test2"
+    ]);
+  });
+
+  test("should return multuple elements with comma and no space", () => {
+    expect(commaSeperatedStringToArray("test,test2")).toEqual([
+      "test",
+      "test2"
+    ]);
+  });
 });
