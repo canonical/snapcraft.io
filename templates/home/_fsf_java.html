@@ -9,7 +9,7 @@
   </div>
 
   <div class='col-6'>
-    <h4>How freeplane defines snapcraft.yaml:</h4>
+    <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
     <code class="p-code-yaml"><pre><b>name</b>: freeplane
 <b>version</b>: '1.6.10'
 <b>summary</b>: Application for Mind Mapping, Knowledge and Project 
@@ -31,20 +31,17 @@ Management
     <b>plugin:</b> gradle
     <b>source:</b> .
     <b>build:</b> |
-      export JAVA_HOME="/usr/lib/jvm/
-	  java-8-openjdk-amd64"
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
       gradle release -x test -x createGitTag
     <b>install:</b> |
-      unzip DIST/freeplane_bin-*.zip -d \
-	  $SNAPCRAFT_PART_INSTALL/
+      unzip DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
     <b>build-packages:</b>
       - unzip
       - openjdk-8-jdk
 
 <b>apps</b>:
   <b>freeplane</b>:
-    <b>command</b>: desktop-launch \ 
-	$SNAP/freeplane-1.6.10/freeplane.sh</pre></code>
+    <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh</pre></code>
   </div>
 
   <div class="p-flow-details__continue">
