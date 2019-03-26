@@ -5,21 +5,37 @@
   $slanted-edge-padding: $horizontal-edge-padding * 2; // coloured area takes half the rectangle surface area; to visually compensate, we multiply it by 2
   $bleed: -3px; // stretch outside to compensate for aliasing; otherwise edge of image underneath becomes visible as you resize
 
+  $color-slanted-background: #106363;
+
   %vf-strip-slanted {
+    background-color: $color-slanted-background;
     background-position: 50% 50%;
-    background-color: #106363;
     margin-top: $bleed;
+    min-height: 30vh;
     overflow: hidden;
     position: relative;
-    min-height: 30vh;
 
     @media (max-width: $breakpoint-large) {
       background-size: cover;
       padding: $spv-inter--regular-scaleable 0 $slanted-edge-padding;
     }
+
     @media (min-width: $breakpoint-large) {
       background-size: 5000px 667px; // actual svg size
       padding: $spv-inter--regular-scaleable 0 $slanted-edge-padding;
+    }
+
+    // custom styles for extra large screens
+    @media (min-width: 2300px) {
+      padding-bottom: $slanted-edge-padding + 2rem;
+    }
+
+    @media (min-width: 3000px) {
+      padding-bottom: $slanted-edge-padding + 4rem;
+    }
+
+    @media (min-width: 3500px) {
+      padding-bottom: $slanted-edge-padding + 6rem;
     }
 
     &::after {
