@@ -3,16 +3,20 @@ function baseRestrictions(file, restrictions) {
     const errors = [];
     if (restrictions.accept) {
       if (restrictions.accept.indexOf(file.type) === -1) {
-        errors.push("File type is incorrect");
+        errors.push("file type is incorrect");
       }
     }
 
     if (restrictions.size) {
       if (restrictions.size.max && file.size > restrictions.size.max) {
-        errors.push(`File size is over ${restrictions.size.max}MB`);
+        errors.push(
+          `file size is over ${(restrictions.size.max / 1000000).toFixed(2)}MB`
+        );
       }
       if (restrictions.size.min && file.size < restrictions.size.min) {
-        errors.push(`File size is below ${restrictions.size.min}MB`);
+        errors.push(
+          `file size is below ${(restrictions.size.min / 1000000).toFixed(2)}MB`
+        );
       }
     }
 
@@ -31,7 +35,6 @@ function imageRestrictions(file, restrictions) {
       return;
     }
 
-    const errors = [];
     const url = URL.createObjectURL(file);
     const image = new Image();
 
@@ -39,52 +42,60 @@ function imageRestrictions(file, restrictions) {
       const width = image.naturalWidth;
       const height = image.naturalHeight;
       const aspectRatio = width / height;
+      let hasDimensionError = false;
       if (restrictions.width) {
-        if (restrictions.width.max && width > restrictions.width.max) {
-          errors.push(`Image width above ${restrictions.width.max} pixels`);
-        }
-        if (restrictions.width.min && width < restrictions.width.min) {
-          errors.push(`Image width below ${restrictions.width.min} pixels`);
+        if (
+          (restrictions.width.max && width > restrictions.width.max) ||
+          (restrictions.width.min && width < restrictions.width.min)
+        ) {
+          hasDimensionError = true;
         }
       }
       if (restrictions.height) {
-        if (restrictions.height.max && height > restrictions.height.max) {
-          errors.push(`Image height above ${restrictions.height.max} pixels`);
-        }
-        if (restrictions.height.min && height < restrictions.height.min) {
-          errors.push(`Image height below ${restrictions.height.min} pixels`);
+        if (
+          (restrictions.height.max && height > restrictions.height.max) ||
+          (restrictions.height.min && height < restrictions.height.min)
+        ) {
+          hasDimensionError = true;
         }
       }
+
+      if (hasDimensionError) {
+        reject([
+          `has dimensions ${width} x ${height} pixels. It needs to be at least ${
+            restrictions.width.min
+          } x ${restrictions.height.min} and at most ${
+            restrictions.width.max
+          } x ${restrictions.height.max} pixels.`
+        ]);
+        return;
+      }
+
+      let hasAspectError = false;
       if (restrictions.aspectRatio) {
         const aspectRatioMax = restrictions.aspectRatio.max;
         const aspectRatioMin = restrictions.aspectRatio.min;
         if (
-          aspectRatioMax &&
-          aspectRatio > aspectRatioMax[0] / aspectRatioMax[1]
+          (aspectRatioMax &&
+            aspectRatio > aspectRatioMax[0] / aspectRatioMax[1]) ||
+          (aspectRatioMin &&
+            aspectRatio < aspectRatioMin[0] / aspectRatioMin[1])
         ) {
-          errors.push(
-            `Image aspect ratio is above ${aspectRatioMax[0]}:${
-              aspectRatioMax[1]
-            }`
-          );
+          hasAspectError = true;
         }
-        if (
-          aspectRatioMin &&
-          aspectRatio < aspectRatioMin[0] / aspectRatioMin[1]
-        ) {
-          errors.push(
-            `Image aspect ratio is below ${aspectRatioMin[0]}:${
-              aspectRatioMin[1]
-            }`
-          );
-        }
-      }
 
-      if (errors.length > 0) {
-        reject(errors);
-      } else {
-        resolve(file);
+        if (hasAspectError) {
+          reject([
+            `has a width (${width} pixels) that is ${aspectRatio.toFixed(
+              2
+            )}x its height (${height}). Its width needs to be between ${aspectRatioMin[0] /
+              aspectRatioMin[1]}x and ${aspectRatioMax[0] /
+              aspectRatioMax[1]}x the height.`
+          ]);
+          return;
+        }
       }
+      resolve(file);
     });
 
     image.src = url;

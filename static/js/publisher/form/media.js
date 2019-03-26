@@ -90,7 +90,7 @@ class Media extends React.Component {
             {Object.keys(errors).map(fileName => (
               <Fragment key={`errors-${fileName}`}>
                 {fileName}
-                <br />
+                &nbsp;
                 {errors[fileName].map((error, index) => (
                   <Fragment key={`errors-${fileName}-${index}`}>
                     {error}

@@ -29,7 +29,7 @@ describe("validateRestrictions", () => {
         accept: accept
       });
 
-      expect(validation.errors).toEqual([`File type is incorrect`]);
+      expect(validation.errors).toEqual([`file type is incorrect`]);
     });
 
     it("should return an error if a file is too big", async () => {
@@ -45,7 +45,9 @@ describe("validateRestrictions", () => {
         }
       });
 
-      expect(validation.errors).toEqual([`File size is over ${max}MB`]);
+      expect(validation.errors).toEqual([
+        `file size is over ${(max / 1000000).toFixed(2)}MB`
+      ]);
     });
 
     it("should return an error if a file is too small", async () => {
@@ -61,7 +63,9 @@ describe("validateRestrictions", () => {
         }
       });
 
-      expect(validation.errors).toEqual([`File size is below ${min}MB`]);
+      expect(validation.errors).toEqual([
+        `file size is below ${(min / 1000000).toFixed(2)}MB`
+      ]);
     });
 
     it("should return no errors if the file passes all restrictions", async () => {
@@ -134,15 +138,23 @@ describe("validateRestrictions", () => {
         });
 
         const width = {
+          min: 0,
+          max: 5
+        };
+        const height = {
+          min: 0,
           max: 5
         };
 
         const validation = await validateRestrictions(file, {
           ...restrictions,
-          width
+          width,
+          height
         });
 
-        expect(validation.errors).toEqual(["Image width above 5 pixels"]);
+        expect(validation.errors).toEqual([
+          "has dimensions 10 x 10 pixels. It needs to be at least 0 x 0 and at most 5 x 5 pixels."
+        ]);
       });
 
       it("should return an error if the width is too narrow", async () => {
@@ -156,15 +168,24 @@ describe("validateRestrictions", () => {
         });
 
         const width = {
-          min: 15
+          min: 15,
+          max: 30
+        };
+
+        const height = {
+          min: 15,
+          max: 30
         };
 
         const validation = await validateRestrictions(file, {
           ...restrictions,
-          width
+          width,
+          height
         });
 
-        expect(validation.errors).toEqual(["Image width below 15 pixels"]);
+        expect(validation.errors).toEqual([
+          "has dimensions 10 x 10 pixels. It needs to be at least 15 x 15 and at most 30 x 30 pixels."
+        ]);
       });
 
       it("should return no error if the width correct", async () => {
@@ -202,16 +223,25 @@ describe("validateRestrictions", () => {
           naturalHeight: 10
         });
 
+        const width = {
+          min: 0,
+          max: 5
+        };
+
         const height = {
+          min: 0,
           max: 5
         };
 
         const validation = await validateRestrictions(file, {
           ...restrictions,
-          height
+          height,
+          width
         });
 
-        expect(validation.errors).toEqual(["Image height above 5 pixels"]);
+        expect(validation.errors).toEqual([
+          "has dimensions 10 x 10 pixels. It needs to be at least 0 x 0 and at most 5 x 5 pixels."
+        ]);
       });
 
       it("should return an error if the height is too low", async () => {
@@ -225,15 +255,24 @@ describe("validateRestrictions", () => {
         });
 
         const height = {
-          min: 15
+          min: 15,
+          max: 30
+        };
+
+        const width = {
+          min: 15,
+          max: 30
         };
 
         const validation = await validateRestrictions(file, {
           ...restrictions,
-          height
+          height,
+          width
         });
 
-        expect(validation.errors).toEqual(["Image height below 15 pixels"]);
+        expect(validation.errors).toEqual([
+          "has dimensions 10 x 10 pixels. It needs to be at least 15 x 15 and at most 30 x 30 pixels."
+        ]);
       });
 
       it("should return no error if the height is correct", async () => {
@@ -272,6 +311,7 @@ describe("validateRestrictions", () => {
         });
 
         const aspectRatio = {
+          min: [1, 1],
           max: [2, 1]
         };
 
@@ -280,7 +320,9 @@ describe("validateRestrictions", () => {
           aspectRatio
         });
 
-        expect(validation.errors).toEqual(["Image aspect ratio is above 2:1"]);
+        expect(validation.errors).toEqual([
+          "has a width (30 pixels) that is 3.00x its height (10). Its width needs to be between 1x and 2x the height."
+        ]);
       });
 
       it("should return an error if the aspectRatio is too low", async () => {
@@ -294,7 +336,8 @@ describe("validateRestrictions", () => {
         });
 
         const aspectRatio = {
-          min: [1, 2]
+          min: [1, 2],
+          max: [1, 3]
         };
 
         const validation = await validateRestrictions(file, {
@@ -302,7 +345,9 @@ describe("validateRestrictions", () => {
           aspectRatio
         });
 
-        expect(validation.errors).toEqual(["Image aspect ratio is below 1:2"]);
+        expect(validation.errors).toEqual([
+          "has a width (10 pixels) that is 0.33x its height (30). Its width needs to be between 0.5x and 0.3333333333333333x the height."
+        ]);
       });
 
       it("should return no error if the aspectRatio is correct", async () => {
