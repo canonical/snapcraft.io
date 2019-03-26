@@ -1,0 +1,10 @@
+@mixin snapcraft-store {
+  .p-strip--snap-store {
+    background-image: linear-gradient(44deg, #171717 0%, #181818 9%, #262626 34%, #2d2d2d 67%, #383838 88%, #2e2e2e 100%, #393939 100%);
+  }
+
+  .p-icon--snap-store {
+    height: 10rem;
+    width: 10rem;
+  }
+}

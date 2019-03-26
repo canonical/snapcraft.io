@@ -1,9 +1,10 @@
-import { initSnapScreenshotsEdit } from "./market/screenshots";
 import { updateState, diffState } from "./state";
 import { publicMetrics } from "./market/publicMetrics";
 import { whitelistBlacklist } from "./market/whitelistBlacklist";
 import { initLicenses, license } from "./market/license";
 import { categories } from "./market/categories";
+import { storageCommands } from "./market/storageCommands";
+import { initMedia } from "./market/initMedia";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -18,9 +19,18 @@ const IS_CHROMIUM =
   typeof window.chrome !== "undefined" &&
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
-function initSnapIconEdit(iconElId, iconInputId, state) {
+function initSnapIconEdit(
+  changeIcon,
+  removeIcon,
+  iconId,
+  iconInputId,
+  state,
+  updateFormState
+) {
+  const snapIconEl = document.getElementById(iconId);
   const snapIconInput = document.getElementById(iconInputId);
-  const snapIconEl = document.getElementById(iconElId);
+  const changeIconEl = document.querySelector(changeIcon);
+  const removeIconEl = document.querySelector(removeIcon);
 
   snapIconInput.addEventListener("change", function() {
     const iconFile = this.files[0];
@@ -33,15 +43,37 @@ function initSnapIconEdit(iconElId, iconInputId, state) {
       url: URL.createObjectURL(iconFile),
       file: iconFile,
       name: iconFile.name,
-      status: "new"
+      status: "new",
+      type: "icon"
     });
 
     updateState(state, { images });
+    snapIconEl.classList.remove("u-hide");
+    removeIconEl.classList.remove("u-hide");
   });
 
-  snapIconEl.addEventListener("click", function() {
+  changeIconEl.addEventListener("click", function(e) {
+    e.preventDefault();
     snapIconInput.click();
   });
+
+  removeIconEl.addEventListener("click", function(e) {
+    e.preventDefault();
+    snapIconEl.src = "";
+    snapIconEl.alt = "";
+
+    const images = state.images.filter(image => image.type !== "icon");
+
+    snapIconInput.value = "";
+    updateState(state, { images });
+    updateFormState();
+    snapIconEl.classList.add("u-hide");
+    removeIconEl.classList.add("u-hide");
+  });
+
+  if (state.images.filter(image => image.type === "icon").length > 0) {
+    removeIconEl.classList.remove("u-hide");
+  }
 }
 
 function initFormNotification(formElId, notificationElId) {
@@ -86,8 +118,9 @@ function initForm(config, initialState, errors) {
   const formEl = document.getElementById(config.form);
   const submitButton = formEl.querySelector(".js-form-submit");
   const revertButton = formEl.querySelector(".js-form-revert");
+  const previewButton = formEl.querySelector(".js-listing-preview");
   const revertURL = revertButton.getAttribute("href");
-  const disabledRevertClass = "is-disabled";
+  const disabledRevertClass = "is--disabled";
 
   function disableSubmit() {
     submitButton.disabled = "disabled";
@@ -127,22 +160,34 @@ function initForm(config, initialState, errors) {
 
   formEl.appendChild(diffInput);
 
-  if (config.snapIconImage && config.snapIconInput) {
-    initSnapIconEdit(config.snapIconImage, config.snapIconInput, state);
+  if (config.snapIconRemove && config.snapIcon && config.snapIconInput) {
+    initSnapIconEdit(
+      config.snapIconChange,
+      config.snapIconRemove,
+      config.snapIcon,
+      config.snapIconInput,
+      state,
+      updateFormState
+    );
   }
 
   initFormNotification(config.form, config.formNotification);
 
-  if (config.screenshotsToolbar && config.screenshotsWrapper) {
-    initSnapScreenshotsEdit(
-      config.screenshotsToolbar,
-      config.screenshotsWrapper,
-      state,
-      nextState => {
-        updateState(state, nextState);
-        updateFormState();
-      }
+  if (config.mediaHolder) {
+    const screenshots = state.images.filter(
+      image => image.type === "screenshot"
     );
+    initMedia(config.mediaHolder, screenshots, newImages => {
+      const noneScreenshots = state.images.filter(
+        item => item.type !== "screenshot"
+      );
+      const newState = {
+        ...state,
+        images: noneScreenshots.concat(newImages)
+      };
+      updateState(state, newState);
+      updateFormState();
+    });
   }
 
   if (config.licenseRadioContent) {
@@ -164,6 +209,7 @@ function initForm(config, initialState, errors) {
         "Changes that you made will not be saved if you leave the page.";
 
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+
       return confirmationMessage; // Gecko, WebKit, Chrome <34
     }
 
@@ -207,7 +253,7 @@ function initForm(config, initialState, errors) {
       license(formEl);
     }
     if (formEl.elements["primary_category"]) {
-      categories(formEl);
+      categories(formEl, state);
     }
 
     let formData = new FormData(formEl);
@@ -218,8 +264,14 @@ function initForm(config, initialState, errors) {
     // checkboxes are tricky,
     // make sure to update state based on their 'checked' status
     if (formEl["private"]) {
+      // "private" radio sets both `private` and `unlisted` values
+      // if value is:
+      //   "public": private is false, unlisted is false
+      //   "unlisted": private is false, unlisted is true
+      //   "private": private is true, unlisted is false
       updateState(state, {
-        private: formEl["private"].value === "private"
+        private: formEl["private"].value === "private",
+        unlisted: formEl["private"].value === "unlisted"
       });
     }
 
@@ -230,6 +282,27 @@ function initForm(config, initialState, errors) {
     }
 
     checkForm();
+    updateLocalStorage();
+  }
+
+  function receiveCommands() {
+    if (window.localStorage) {
+      window.addEventListener("storage", e => {
+        storageCommands(e, formEl, state["snap_name"], () => {
+          ignoreChangesOnUnload = true;
+        });
+      });
+    }
+  }
+
+  function updateLocalStorage() {
+    if (!window.localStorage) {
+      previewButton.classList.add("u-hide");
+      return;
+    }
+    const key = state["snap_name"];
+    window.localStorage.setItem(`${key}-initial`, JSON.stringify(initialState));
+    window.localStorage.setItem(key, JSON.stringify(state));
   }
 
   // when anything is changed update the state
@@ -263,6 +336,7 @@ function initForm(config, initialState, errors) {
         submitButton.classList.add("has-spinner");
       }, 2000);
     } else {
+      updateLocalStorage();
       event.preventDefault();
     }
   });
@@ -381,6 +455,16 @@ function initForm(config, initialState, errors) {
     updateFormState();
   });
 
+  const previewForm = document.getElementById("preview-form");
+  const openPreview = () => {
+    const stateInput = previewForm.elements.state;
+    stateInput.value = JSON.stringify(state);
+  };
+
+  if (previewForm) {
+    previewForm.addEventListener("submit", openPreview);
+  }
+
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
   function prefixInput(input) {
     if (["website", "contact"].includes(input.name)) {
@@ -413,6 +497,9 @@ function initForm(config, initialState, errors) {
       });
     }
   });
+
+  receiveCommands();
+  updateLocalStorage();
 }
 
 export { initSnapIconEdit, initForm };

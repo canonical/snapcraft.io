@@ -16,6 +16,7 @@ $color-navigation-background: #252525;
 @include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
+@include vf-p-modal;
 @include vf-p-muted-heading;
 @include vf-p-navigation;
 @include vf-p-notification;
@@ -31,6 +32,7 @@ $color-navigation-background: #252525;
 @include vf-p-form-validation;
 @include vf-p-contextual-menu;
 @include vf-p-breadcrumbs;
+@include vf-p-pagination;
 
 // vanilla utilities
 @include vf-u-floats;
@@ -44,6 +46,7 @@ $color-navigation-background: #252525;
 @include vf-u-image-position;
 @include vf-u-equal-height;
 @include vf-u-hide;
+@include vf-u-show;
 
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;
@@ -165,6 +168,10 @@ $color-navigation-background: #252525;
 @import 'patterns_media-object--snap';
 @include snapcraft-p-media-object--snap;
 
+
+@import 'patterns_featured-snap';
+@include snapcraft-p-featured-snap;
+
 @import 'snapcraft_release';
 @include snapcraft-release;
 
@@ -203,6 +210,24 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
+
+@import 'snapcraft-publisher';
+@include snapcraft-publisher;
+
+@import 'patterns_modal';
+@include vf-p-modal-snapcraft;
+
+@import 'patterns_strip_slanted';
+@include p-strip-slanted;
+
+@import 'snapcraft_store';
+@include snapcraft-store;
+
+@import 'snapcraft_dispute-list';
+@include snapcraft-p-dispute-list;
+
+@import 'snapcraft_embedded_card_modal';
+@include snapcraft-embedded-card-modal;
 
 html,
 body {

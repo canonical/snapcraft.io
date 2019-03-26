@@ -8,16 +8,6 @@ class TestMarkdownParser(unittest.TestCase):
     parser allows only a limited amount of tags. We want a lot of tests for
     it to make sure on upgrades we don't lose the custom tags that we want
     to keep.
-
-    List of approved markdown tag allowed:
-
-    * Code (text blocks inside ` or ``` pairs)
-    * Lists (* Foo)
-    * Italics (_foo_)
-    * Bold (**foo**)
-    * Paragraph merging (consecutive lines are joined)
-    * Literal URLs auto-link https://foo.bar
-    * URLs with title [title for the link](https://foo.bar)
     """
 
     def test_parse_title(self):
@@ -27,7 +17,7 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p># title</p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_urls(self):
         """Literal URLs auto-link https://foo.bar
@@ -38,16 +28,20 @@ class TestMarkdownParser(unittest.TestCase):
             '<p><a href="https://toto.space">https://toto.space</a></p>\n'
         )
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_urls_title(self):
         """URLs with title [title for the link](https://foo.bar)
         """
         markdown = "[toto](https://toto.space)"
         result = parse_markdown_description(markdown)
-        expected_result = '<p><a href="https://toto.space">toto</a></p>\n'
+        expected_result = (
+            "<p>"
+            '[toto](<a href="https://toto.space">https://toto.space</a>)'
+            "</p>\n"
+        )
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_italics(self):
         """Italics (_foo_)
@@ -56,7 +50,7 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p><em>text</em></p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_bold(self):
         """Bold (**foo**)
@@ -65,7 +59,7 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p><strong>text</strong></p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_paragraph_merging(self):
         """Paragraph merging (consecutive lines are joined)
@@ -74,7 +68,7 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p>this is\n a paragraph</p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_paragraph(self):
         """Paragraphs
@@ -83,7 +77,7 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p>paragraph 1</p>\n<p>paragraph 2</p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_text(self):
         """Text conversion works
@@ -92,16 +86,52 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p>text</p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
-    def test_parse_code_block(self):
-        """Code (text blocks inside ` or ``` pairs)
+    def test_parse_triple_fences(self):
+        """Code (text blocks inside  ``` pairs)
         """
         markdown = "```code block```"
         result = parse_markdown_description(markdown)
+        expected_result = "<p><code>``code block``</code></p>\n"
+
+        self.assertEqual(result, expected_result)
+
+    def test_parse_single_fences(self):
+        """Code (text blocks inside  ` pairs)
+        """
+        markdown = "`code block`"
+        result = parse_markdown_description(markdown)
         expected_result = "<p><code>code block</code></p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
+
+    def test_parse_code_block_single_line(self):
+        """Code with three space indentation
+        """
+        markdown = "   code"
+        result = parse_markdown_description(markdown)
+        expected_result = "<pre><code>code\n</code></pre>\n"
+
+        self.assertEqual(result, expected_result)
+
+    def test_parse_code_block_multiple_line(self):
+        """Code with four space indentation
+        """
+        markdown = "    code\n    code line 2"
+        result = parse_markdown_description(markdown)
+        expected_result = "<pre><code> code\n code line 2\n</code></pre>\n"
+
+        self.assertEqual(result, expected_result)
+
+    def test_parse_code_block_multiple_line_tree_spaces(self):
+        """Code with three space indentation
+        """
+        markdown = "   code\n   code line 2"
+        result = parse_markdown_description(markdown)
+        expected_result = "<pre><code>code\ncode line 2\n</code></pre>\n"
+
+        self.assertEqual(result, expected_result)
 
     def test_parse_code_line(self):
         """Code (text blocks inside ` or ``` pairs)
@@ -110,7 +140,7 @@ class TestMarkdownParser(unittest.TestCase):
         result = parse_markdown_description(markdown)
         expected_result = "<p><code>code line</code></p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_list(self):
         """Lists (* Foo)
@@ -121,7 +151,7 @@ class TestMarkdownParser(unittest.TestCase):
             "<ul>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ul>\n"
         )
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_list_special_char(self):
         """Lists (• Foo)
@@ -132,7 +162,7 @@ class TestMarkdownParser(unittest.TestCase):
             "<ul>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ul>\n"
         )
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_list_ordered(self):
         """Lists (* Foo)
@@ -143,13 +173,13 @@ class TestMarkdownParser(unittest.TestCase):
             "<ol>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ol>\n"
         )
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)
 
     def test_parse_image_link(self):
         """Image link is converted into a simple link
         """
         markdown = "![image](link.png)"
         result = parse_markdown_description(markdown)
-        expected_result = '<p>!<a href="link.png">image</a></p>\n'
+        expected_result = "<p>" + markdown + "</p>\n"
 
-        assert result == expected_result
+        self.assertEqual(result, expected_result)

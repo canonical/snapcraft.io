@@ -1,0 +1,41 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="main-content">
+  {% set selected_tab='publicise' %}
+  {% include "publisher/_header.html" %}
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-3">
+        <div class="p-navigation--sidebar">
+
+          <div class="sidebar__content js-sidebar-toggle u-hide" aria-hidden="true">
+            <ul class="p-list sidebar__first-level" data-js="sidebar-first-level">
+              <li>
+                <a class="sidebar__link {% if publicise_page == 'buttons' %}is-selected{% endif %}" href="/{{ snap_name }}/publicise/">Snap Store buttons</a>
+              </li>
+              <li>
+                <a class="sidebar__link {% if publicise_page == 'badges' %}is-selected{% endif %}" href="/{{ snap_name }}/publicise/badges">GitHub badges</a>
+              </li>
+              <li>
+                <a class="sidebar__link {% if publicise_page == 'cards' %}is-selected{% endif %}" href="/{{ snap_name }}/publicise/cards">Embeddable cards</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-9">
+        {% block publicise_content %}
+        {% endblock %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

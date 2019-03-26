@@ -5,6 +5,7 @@
 
   .p-media-object--snap {
     display: block;
+    margin-bottom: $spv-inter--regular * 2;
 
     &__img {
       align-self: flex-start;
@@ -53,6 +54,24 @@
       }
     }
 
+    &__publisher {
+      color: $color-mid-dark;
+      margin-bottom: $spv-nudge-compensation;
+      margin-top: - $sp-unit * 3;
+
+      > p:last-child {
+        margin-bottom: 0;
+      }
+
+      & + & {
+        margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
+      }
+
+      @media (max-width: $breakpoint-heading-threshold) {
+        margin-top: - $sp-unit;
+      }
+    }
+
     &:hover {
       text-decoration: none;
     }
@@ -66,7 +85,7 @@
       }
 
       .p-media-object--snap__title,
-      .p-media-object--snap__desc p {
+      .p-media-object--snap__publisher p {
         color: transparent;
         position: relative;
 
@@ -83,7 +102,7 @@
         content: "████████";
       }
 
-      .p-media-object--snap__desc p::before {
+      .p-media-object--snap__publisher p::before {
         content: "███████████";
       }
     }

@@ -1,79 +1,67 @@
 @mixin snapcraft-market-screenshots {
-  .p-screenshots-toolbar {
-    align-items: baseline;
-    display: flex;
-    justify-content: space-between;
+  .p-listing-images {
 
-    .p-screenshots-toolbar__buttons {
-      margin: 0;
-    }
+    .p-listing-images__image {
+      align-items: center;
+      background: $color-light;
+      border: 1px solid $color-light;
+      color: $color-link;
+      display: flex;
+      flex-grow: 0;
+      height: 120px;
+      justify-content: center;
+      margin-bottom: $spv-intra;
+      position: relative;
+      width: 120px;
+      min-width: auto;
 
-    .p-icon--fullscreen {
-      @extend %icon;
-      background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
-    }
-  }
+      .p-listing-images__delete-image {
+        background: $color-x-light;
+        box-sizing: content-box;
+        cursor: pointer;
+        height: 1rem;
+        opacity: .5;
+        padding: .25rem;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 1rem;
+        z-index: 1;
+      }
 
-  .p-empty-add-screenshots {
-    background: $color-light;
-    display: block;
-    padding: $sp-x-large;
-    text-align: center;
-  }
+      .p-listing-images__delete-image .p-icon--delete {
+        display: block;
+        top: 0;
+      }
 
-  .p-screenshot {
-    padding: 0;
-    position: relative;
+      &--no-show {
+        justify-self: flex-start;
 
-    &.is-selected {
-      outline: 1px solid $color-mid-light;
-      outline-offset: 2px;
-    }
+        img {
+          filter: sepia(100%) hue-rotate(300deg);
+        }
+      }
 
+      &:not(.is-empty):hover,
+      &:not(.is-empty):focus {
+        border: 1px solid $color-link;
 
-    &:focus {
-      outline: 1px solid $color-focus;
-      outline-offset: 2px;
-    }
+        .p-listing-images__delete-image {
+          opacity: 1;
+        }
+      }
 
-    &:focus,
-    &:hover,
-    &.is-selected {
-      .p-screenshot__checkbox {
-        opacity: 1;
+      img {
+        align-self: center;
+        max-height: 100%;
+        max-width: 100%;
       }
     }
 
-    &__checkbox {
-      left: $sp-x-small;
-      opacity: 0; // only display when selected or focused
-      pointer-events: none;
-      position: absolute;
-      top: $sp-x-small;
-    }
-
-    &__image {
-      display: block;
-      margin: 0;
-    }
-
-    &:hover {
-      .p-screenshot__delete {
-        opacity: 1;
-      }
-    }
-
-    &.is-deleted {
-      cursor: default;
-
-      .p-screenshot__checkbox {
-        display: none;
-      }
-
-      .p-screenshot__image {
-        filter: grayscale(100%);
-        opacity: .6;
-      }
+    .p-listing-images__add-image {
+      background: $color-x-light;
+      border: 1px solid $color-mid-light;
+      cursor: pointer;
     }
   }
 }

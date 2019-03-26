@@ -1,13 +1,11 @@
+import os
 from math import floor
 from urllib.parse import quote_plus
 
 import flask
 
-import bleach
-import humanize
-import webapp.metrics.helper as metrics_helper
-import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
+from ruamel.yaml import YAML
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiConnectionError,
@@ -18,7 +16,9 @@ from webapp.api.exceptions import (
     ApiTimeoutError,
 )
 from webapp.api.store import StoreApi
-from webapp.markdown import parse_markdown_description
+from webapp.store.snap_details_views import snap_details_views
+
+yaml = YAML(typ="safe")
 
 
 def store_blueprint(store_query=None, testing=False):
@@ -53,6 +53,8 @@ def store_blueprint(store_query=None, testing=False):
 
         return status_code, error
 
+    snap_details_views(store, api, _handle_errors)
+
     @store.route("/discover")
     def discover():
         return flask.redirect(flask.url_for(".homepage"))
@@ -73,7 +75,7 @@ def store_blueprint(store_query=None, testing=False):
             featured_snaps_results = api.get_searched_snaps(
                 snap_searched="", category="featured", size=24, page=1
             )
-        except ApiError as api_error:
+        except ApiError:
             featured_snaps_results = []
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
@@ -124,7 +126,7 @@ def store_blueprint(store_query=None, testing=False):
         if not snap_searched and not snap_category:
             return flask.redirect(flask.url_for(".homepage"))
 
-        size = flask.request.args.get("limit", default=25, type=int)
+        size = flask.request.args.get("limit", default=24, type=int)
         offset = flask.request.args.get("offset", default=0, type=int)
 
         try:
@@ -154,6 +156,11 @@ def store_blueprint(store_query=None, testing=False):
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
+        if "total" in searched_results:
+            total_results_count = searched_results["total"]
+        else:
+            total_results_count = None
+
         snaps_results = logic.get_searched_snaps(searched_results)
         links = logic.get_pages_details(
             flask.request.base_url,
@@ -170,6 +177,7 @@ def store_blueprint(store_query=None, testing=False):
             "category_display": snap_category_display,
             "categories": categories,
             "snaps": snaps_results,
+            "total": total_results_count,
             "links": links,
             "error_info": error_info,
         }
@@ -227,214 +235,32 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
-    @store.route('/<regex("[a-z0-9-]*[a-z][a-z0-9-]*"):snap_name>')
-    def snap_details(snap_name):
-        """
-        A view to display the snap details page for specific snaps.
-
-        This queries the snapcraft API (api.snapcraft.io) and passes
-        some of the data through to the snap-details.html template,
-        with appropriate sanitation.
-        """
-
-        error_info = {}
-        status_code = 200
-
+    def _get_file(file):
         try:
-            details = api.get_snap_details(snap_name)
-        except ApiTimeoutError as api_timeout_error:
-            flask.abort(504, str(api_timeout_error))
-        except ApiResponseDecodeError as api_response_decode_error:
-            flask.abort(502, str(api_response_decode_error))
-        except ApiResponseErrorList as api_response_error_list:
-            if api_response_error_list.status_code == 404:
-                flask.abort(404, "No snap named {}".format(snap_name))
-            else:
-                if api_response_error_list.errors:
-                    error_messages = ", ".join(
-                        api_response_error_list.errors.key()
-                    )
-                else:
-                    error_messages = "An error occurred."
-                flask.abort(502, error_messages)
-        except ApiResponseError as api_response_error:
-            flask.abort(502, str(api_response_error))
-        except ApiCircuitBreaker:
-            flask.abort(503)
-        except ApiError as api_error:
-            flask.abort(502, str(api_error))
+            with open(
+                os.path.join(flask.current_app.root_path, file), "r"
+            ) as stream:
+                data = yaml.load(stream)
+        except Exception:
+            data = None
 
-        # When removing all the channel maps of an exsting snap the API,
-        # responds that the snaps still exists with data.
-        # Return a 404 if not channel maps, to avoid having a error.
-        # For example: mir-kiosk-browser
-        if not details.get("channel-map"):
-            flask.abort(404, "No snap named {}".format(snap_name))
+        return data
 
-        clean_description = bleach.clean(details["snap"]["description"])
-        formatted_description = parse_markdown_description(clean_description)
+    @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
+    def publisher_details_jetbrains(publisher):
+        """
+        A view to display the publisher details page for specific publisher.
+        """
 
-        channel_maps_list = logic.convert_channel_maps(
-            details.get("channel-map")
-        )
-
-        latest_channel = logic.get_last_updated_version(
-            details.get("channel-map")
-        )
-
-        last_updated = latest_channel["created-at"]
-        last_version = latest_channel["version"]
-        binary_filesize = latest_channel["download"]["size"]
-
-        country_metric_name = "weekly_installed_base_by_country_percent"
-        os_metric_name = "weekly_installed_base_by_operating_system_normalized"
-
-        webapp_config = flask.current_app.config.get("WEBAPP_CONFIG")
-
-        if "STORE_QUERY" not in webapp_config:
-            end = metrics_helper.get_last_metrics_processed_date()
-
-            metrics_query_json = [
-                metrics_helper.get_filter(
-                    metric_name=country_metric_name,
-                    snap_id=details["snap-id"],
-                    start=end,
-                    end=end,
-                ),
-                metrics_helper.get_filter(
-                    metric_name=os_metric_name,
-                    snap_id=details["snap-id"],
-                    start=end,
-                    end=end,
-                ),
-            ]
-
-            try:
-                metrics_response = api.get_public_metrics(
-                    snap_name, metrics_query_json
-                )
-            except ApiError as api_error:
-                status_code, error_info = _handle_errors(api_error)
-                metrics_response = None
-
-            os_metrics = None
-            country_devices = None
-            if metrics_response:
-                oses = metrics_helper.find_metric(
-                    metrics_response, os_metric_name
-                )
-                os_metrics = metrics.OsMetric(
-                    name=oses["metric_name"],
-                    series=oses["series"],
-                    buckets=oses["buckets"],
-                    status=oses["status"],
-                )
-
-                territories = metrics_helper.find_metric(
-                    metrics_response, country_metric_name
-                )
-                country_devices = metrics.CountryDevices(
-                    name=territories["metric_name"],
-                    series=territories["series"],
-                    buckets=territories["buckets"],
-                    status=territories["status"],
-                    private=False,
-                )
-        else:
-            os_metrics = None
-            country_devices = None
-
-        # filter out banner and banner-icon images from screenshots
-        screenshots = [
-            m["url"]
-            for m in details["snap"]["media"]
-            if m["type"] == "screenshot" and "banner" not in m["url"]
+        publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
+            "PUBLISHER_PAGES"
         ]
-        icons = [
-            m["url"] for m in details["snap"]["media"] if m["type"] == "icon"
-        ]
+        context = _get_file(publisher_content_path + publisher + ".yaml")
 
-        videos = [
-            logic.get_video_embed_code(m["url"])
-            for m in details["snap"]["media"]
-            if m["type"] == "video"
-        ]
+        if not context:
+            flask.abort(404)
 
-        # until default tracks are supported by the API we special case node
-        # to use 10, rather then latest
-        default_track = "10" if details["name"] == "node" else "latest"
-
-        lowest_risk_available = logic.get_lowest_available_risk(
-            channel_maps_list, default_track
-        )
-
-        confinement = logic.get_confinement(
-            channel_maps_list, default_track, lowest_risk_available
-        )
-
-        last_version = logic.get_version(
-            channel_maps_list, default_track, lowest_risk_available
-        )
-
-        is_users_snap = False
-        if flask.session and "openid" in flask.session:
-            if (
-                flask.session.get("openid").get("nickname")
-                == details["snap"]["publisher"]["username"]
-            ):
-                is_users_snap = True
-
-        context = {
-            # Data direct from details API
-            "snap_title": details["snap"]["title"],
-            "package_name": details["name"],
-            "icon_url": icons[0] if icons else None,
-            "version": last_version,
-            "license": details["snap"]["license"],
-            "publisher": details["snap"]["publisher"]["display-name"],
-            "username": details["snap"]["publisher"]["username"],
-            "screenshots": screenshots,
-            "videos": videos,
-            "prices": details["snap"]["prices"],
-            "contact": details["snap"].get("contact"),
-            "website": details["snap"].get("website"),
-            "summary": details["snap"]["summary"],
-            "description": formatted_description,
-            "channel_map": channel_maps_list,
-            "has_stable": logic.has_stable(channel_maps_list),
-            "developer_validation": details["snap"]["publisher"]["validation"],
-            "default_track": default_track,
-            "lowest_risk_available": lowest_risk_available,
-            "confinement": confinement,
-            # Transformed API data
-            "filesize": humanize.naturalsize(binary_filesize),
-            "last_updated": logic.convert_date(last_updated),
-            "last_updated_raw": last_updated,
-            # Data from metrics API
-            "countries": (
-                country_devices.country_data if country_devices else None
-            ),
-            "normalized_os": os_metrics.os if os_metrics else None,
-            "is_users_snap": is_users_snap,
-            # Context info
-            "is_linux": (
-                "Linux" in flask.request.headers.get("User-Agent", "")
-                and "Android"
-                not in flask.request.headers.get("User-Agent", "")
-            ),
-            "error_info": error_info,
-        }
-
-        return (
-            flask.render_template("store/snap-details.html", **context),
-            status_code,
-        )
-
-    @store.route('/<regex("[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"):snap_name>')
-    def snap_details_case_sensitive(snap_name):
-        return flask.redirect(
-            flask.url_for(".snap_details", snap_name=snap_name.lower())
-        )
+        return flask.render_template("store/publisher-details.html", **context)
 
     @store.route("/store/categories/<category>")
     def store_category(category):

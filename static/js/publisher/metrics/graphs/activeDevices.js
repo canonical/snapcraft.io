@@ -9,6 +9,7 @@ import { axisBottom, axisLeft } from "d3-axis";
 import { cullXAxis, cullYAxis } from "./helpers";
 import { isMobile } from "../../../libs/mobile";
 import debounce from "../../../libs/debounce";
+import { sortChannels } from "../../../libs/channels";
 
 function showGraph(el) {
   el.style.opacity = 1;
@@ -17,6 +18,9 @@ function showGraph(el) {
 const shortValue = number => (number < 1000 ? number : format(".2s")(number));
 const commaValue = number => format(",")(number);
 const tooltipTimeFormat = utcFormat("%Y-%m-%d");
+
+let graphType;
+let metricsDefaultTrack;
 
 const xScaleFunc = (padding, width, data) => {
   return scaleLinear()
@@ -47,31 +51,34 @@ const bisectDate = bisector(d => d.date).left;
 
 const tooltipRows = (data, currentHoverKey, colorScale) => {
   let dataArr = [];
-  let total = 0;
   let other = {
     key: "other",
     value: 0,
     count: 0
   };
 
-  Object.keys(data)
-    .filter(key => key !== "date")
-    .forEach(key => {
-      total += data[key];
+  let keys = Object.keys(data).filter(key => key !== "date");
 
-      dataArr.push({
-        key: key,
-        value: data[key]
-      });
+  if (graphType === "channel") {
+    keys = sortChannels(keys, {
+      defaultTrack: metricsDefaultTrack
+    }).list;
+  }
+
+  keys.forEach(key => {
+    dataArr.push({
+      key: key,
+      value: data[key]
     });
+  });
 
-  dataArr.sort((a, b) => b.value - a.value);
+  if (graphType !== "channel") {
+    dataArr.sort((a, b) => b.value - a.value);
+  }
 
-  // Filter out anything below 0.1% of the total users
-  // If there are more than 10 series
-  if (dataArr.length > 10) {
-    dataArr.forEach(item => {
-      if (item.value / total < 0.001) {
+  if (dataArr.length > 15) {
+    dataArr.forEach((item, index) => {
+      if (index >= 15) {
         other.value += item.value;
         other.count += 1;
         other.key = `${other.count} other`;
@@ -122,7 +129,7 @@ const tooltipTemplate = (data, currentHoverKey, colorScale) => {
   ].join("");
 };
 
-function drawGraph(holderSelector, holder, activeDevices) {
+function drawGraph(holderSelector, holder, activeDevices, annotations) {
   // Basic svg setup
   const svg = select(`${holderSelector} svg`);
   svg.attr("width", holder.clientWidth);
@@ -175,6 +182,28 @@ function drawGraph(holderSelector, holder, activeDevices) {
     }
   });
 
+  let annotationsData = [];
+  annotations.buckets.forEach((bucket, i) => {
+    let obj = {
+      date: utcParse("%Y-%m-%d")(bucket)
+    };
+
+    annotations.series.forEach(series => {
+      obj[series.name] = series.values[i];
+      if (_keys.indexOf(series.name) < 0) {
+        _keys.push(series.name);
+      }
+    });
+
+    annotationsData.push(obj);
+  });
+
+  annotationsData.sort((a, b) => {
+    const aTime = a.date.getTime();
+    const bTime = b.date.getTime();
+    return aTime - bTime;
+  });
+
   // Colours
   const colorScale = colourScaleFunc(_keys);
 
@@ -207,6 +236,65 @@ function drawGraph(holderSelector, holder, activeDevices) {
     .attr("d", areas)
     .on("mousemove", mouseMove)
     .on("mouseout", cancelTooltip);
+
+  annotationsData = annotationsData.map(annotation => {
+    let x = xScale(annotation.date);
+
+    if (x < 0 + padding.left) {
+      return false;
+    }
+    return {
+      x,
+      y1: yScale(1),
+      data: annotation
+    };
+  });
+
+  annotationsData.filter(item => item !== false).forEach(annotation => {
+    const annotationKey = Object.keys(annotation.data)
+      .filter(key => key !== "date")
+      .filter(key => annotation.data[key] !== 0)[0];
+
+    // Add annotations
+    const annotationsLayer = g
+      .append("g")
+      .attr("class", "annotationsLayer")
+      .attr("id", `category-${annotationKey}`)
+      .style("visibility", "hidden");
+
+    const lineLayer = annotationsLayer.append("g");
+    const textLayer = annotationsLayer.append("g");
+
+    lineLayer
+      .append("line")
+      .attr("class", "annotation-line")
+      .attr("transform", `translate(${annotation.x},0)`)
+      .attr("y0", 0)
+      .attr("y1", annotation.y1)
+      .attr("stroke", "#000")
+      .attr("style", "pointer-events: none;");
+
+    let display_name = annotationKey.split("-").join(" ");
+    display_name =
+      display_name.substr(0, 1).toUpperCase() + display_name.substring(1);
+
+    const text = textLayer
+      .append("text")
+      .attr("class", "annotation-text")
+      .attr("transform", `translate(${annotation.x},10)`)
+      .attr("x", 2)
+      .style("font-size", "12px")
+      .text(`${display_name}`);
+
+    const textBox = text._groups[0][0].getBBox();
+    const gBox = g._groups[0][0].getBBox();
+    const textBoxRightEdge = annotation.x + textBox.x + textBox.width;
+    if (textBoxRightEdge > gBox.width) {
+      text
+        .attr("transform", `translate(${annotation.x - textBox.width},10)`)
+        .attr("x", 0);
+    }
+  });
 
   // Add the x axix
   let tickValues = [];
@@ -285,21 +373,48 @@ function drawGraph(holderSelector, holder, activeDevices) {
     tooltip.style("display", "none");
   }
 
+  const categories = document.querySelector(`[data-js="annotations-hover"]`);
+  categories.addEventListener("mouseover", e => {
+    const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
+    if (annotationHover) {
+      const category = annotationHover.dataset.id;
+      g.selectAll(`#${category}`).style("visibility", "visible");
+    }
+  });
+
+  categories.addEventListener("mouseout", e => {
+    const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
+    if (annotationHover) {
+      const category = annotationHover.dataset.id;
+      g.selectAll(`#${category}`).style("visibility", "hidden");
+    }
+  });
+
   showGraph(holder);
 }
 
-export default function activeDevices(holderSelector, activeDevices) {
+function activeDevices(
+  holderSelector,
+  activeDevices,
+  type,
+  defaultTrack,
+  annotations
+) {
   const holder = document.querySelector(holderSelector);
+  graphType = type;
+  metricsDefaultTrack = defaultTrack;
 
   if (!holder) {
     return;
   }
 
-  drawGraph(holderSelector, holder, activeDevices);
+  drawGraph(holderSelector, holder, activeDevices, annotations);
 
   const resize = debounce(function() {
-    drawGraph(holderSelector, holder, activeDevices);
+    drawGraph(holderSelector, holder, activeDevices, annotations);
   }, 100);
 
   select(window).on("resize", resize);
 }
+
+export { activeDevices as default };
