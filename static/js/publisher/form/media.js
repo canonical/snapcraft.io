@@ -3,21 +3,21 @@ import React, { Fragment } from "react";
 import { PropTypes } from "prop-types";
 
 import MediaItem, { mediaClasses } from "./mediaItem";
+import FileInput from "./fileInput";
 
 class Media extends React.Component {
   constructor(props) {
     super(props);
 
     this.markForDeletion = this.markForDeletion.bind(this);
-    this.addImage = this.addImage.bind(this);
-    this.mediaChange = this.mediaChange.bind(this);
-    this.keyboardEvent = this.keyboardEvent.bind(this);
+    this.mediaChanged = this.mediaChanged.bind(this);
 
     this.toggleRestrictions = this.toggleRestrictions.bind(this);
 
     this.state = {
       mediaData: props.mediaData,
-      restrictionsVisible: false
+      restrictionsVisible: false,
+      errors: {}
     };
   }
 
@@ -40,42 +40,28 @@ class Media extends React.Component {
     });
   }
 
-  mediaChange(input) {
+  mediaChanged(files) {
     const newMediaData = [...this.state.mediaData];
-    for (let i = 0; i < input.files.length; i++) {
-      const file = input.files[i];
-      newMediaData.push({
-        file,
-        url: URL.createObjectURL(file),
-        name: file.name,
-        type: "screenshot",
-        status: "new"
-      });
+    const errors = {};
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.errors) {
+        errors[file.name] = file.errors;
+      } else {
+        newMediaData.push({
+          file,
+          url: URL.createObjectURL(file),
+          name: file.name,
+          type: "screenshot",
+          status: "new"
+        });
+      }
     }
 
     this.setState({
-      mediaData: newMediaData
+      mediaData: newMediaData,
+      errors: errors
     });
-  }
-
-  addImage() {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/x-png,image/gif,image/jpeg";
-    input.name = "screenshots";
-    input.hidden = "hidden";
-    input.addEventListener("change", () => {
-      this.mediaChange(input);
-    });
-
-    this.holder.appendChild(input);
-    input.click();
-  }
-
-  keyboardEvent(e) {
-    if (e.key === "Enter") {
-      this.addImage();
-    }
   }
 
   renderOverLimit() {
@@ -95,38 +81,29 @@ class Media extends React.Component {
     return false;
   }
 
-  renderBlankMedia(numberOfBlank) {
-    const blankMedia = [];
-    for (let i = 0; i < numberOfBlank; i++) {
-      const classes = mediaClasses.slice(0);
-      classes.push("is-empty");
-
-      if (i === 0) {
-        classes.push("p-listing-images__add-image");
-
-        blankMedia.push(
-          <div
-            className={classes.join(" ")}
-            key={`blank-${i}`}
-            onClick={this.addImage}
-            onKeyDown={this.keyboardEvent}
-            tabIndex="0"
-          >
-            <span role="button" className="u-align-text--center">
-              <i className="p-icon--plus" />
-              <br />
-              Add image
-            </span>
-          </div>
-        );
-      } else {
-        blankMedia.push(
-          <div className={classes.join(" ")} key={`blank-${i}`} />
-        );
-      }
+  renderErrors() {
+    const { errors } = this.state;
+    if (Object.keys(errors).length > 0) {
+      return (
+        <div className="p-notification--negative">
+          <p className="p-notification__response">
+            {Object.keys(errors).map(fileName => (
+              <Fragment key={`errors-${fileName}`}>
+                {fileName}
+                &nbsp;
+                {errors[fileName].map((error, index) => (
+                  <Fragment key={`errors-${fileName}-${index}`}>
+                    {error}
+                    <br />
+                  </Fragment>
+                ))}
+              </Fragment>
+            ))}
+          </p>
+        </div>
+      );
     }
-
-    return blankMedia;
+    return false;
   }
 
   toggleRestrictions() {
@@ -176,35 +153,77 @@ class Media extends React.Component {
     );
   }
 
+  renderInputs() {
+    const { mediaLimit, restrictions } = this.props;
+    const currentMedia = this.state.mediaData.filter(
+      media => media.status !== "delete"
+    ).length;
+    const inputs = [];
+
+    for (let i = 0; i < mediaLimit; i++) {
+      const classes = [...mediaClasses];
+      classes.push("is-empty");
+
+      let isActive = false;
+
+      if (i === currentMedia) {
+        classes.push("p-listing-images__add-image");
+        isActive = true;
+      } else if (i < currentMedia) {
+        classes.push("u-hide");
+      }
+
+      inputs.push(
+        <Fragment key={`add-screenshot-${i}`}>
+          <FileInput
+            restrictions={restrictions}
+            className={classes.join(" ")}
+            inputName="screenshots"
+            fileChangedCallback={this.mediaChanged}
+            active={isActive}
+            clear={true}
+          >
+            {isActive && (
+              <span role="button" className="u-align-text--center">
+                <i className="p-icon--plus" />
+                <br />
+                Add image
+              </span>
+            )}
+          </FileInput>
+        </Fragment>
+      );
+    }
+
+    return inputs;
+  }
+
   render() {
     const mediaList = this.state.mediaData.filter(
       item => item.status !== "delete"
     );
 
-    let blankMedia = 0;
-
-    if (mediaList.length < this.props.mediaLimit) {
-      blankMedia = this.props.mediaLimit - mediaList.length;
-    }
-
     return (
       <Fragment>
         {this.renderOverLimit()}
+        {this.renderErrors()}
         <div
           className="p-listing-images p-fluid-grid"
           ref={item => (this.holder = item)}
         >
-          {mediaList.map((item, i) => (
-            <MediaItem
-              key={`${i}-${item.url}`}
-              url={item.url}
-              type={item.type}
-              status={item.status}
-              markForDeletion={this.markForDeletion}
-              overflow={i > 4}
-            />
-          ))}
-          {this.renderBlankMedia(blankMedia)}
+          {mediaList.map((item, i) => {
+            return (
+              <MediaItem
+                key={`${item.url}-${i}`}
+                url={item.url}
+                type={item.type}
+                status={item.status}
+                markForDeletion={this.markForDeletion}
+                overflow={i > 4}
+              />
+            );
+          })}
+          {this.renderInputs()}
         </div>
         {this.renderRescrictions()}
       </Fragment>
@@ -215,13 +234,15 @@ class Media extends React.Component {
 Media.defaultProps = {
   mediaLimit: 5,
   mediaData: [],
-  updateState: () => {}
+  updateState: () => {},
+  restrictions: {}
 };
 
 Media.propTypes = {
   mediaLimit: PropTypes.number,
   mediaData: PropTypes.array,
-  updateState: PropTypes.func
+  updateState: PropTypes.func,
+  restrictions: PropTypes.object
 };
 
 export { Media as default };

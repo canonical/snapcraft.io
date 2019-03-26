@@ -120,11 +120,9 @@ describe("Media", () => {
 
       cont = container;
     });
-    it("should add an file input to the dom when adding an image", () => {
-      expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
-    });
 
-    it("should add a new image on file input change", () => {
+    it("should add a new image when mediaChanged called", done => {
+      // Setup
       window.URL = {
         createObjectURL: () => {
           return "test-upload";
@@ -139,30 +137,35 @@ describe("Media", () => {
         value: [file]
       });
 
-      input.dispatchEvent(new Event("change"));
+      // Start functional bit
+      fireEvent.change(input);
 
-      expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
-      expect(
-        cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
-          .length
-      ).toEqual(1);
+      // timeout to wait for the promises to resolve
+      setTimeout(() => {
+        expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
+        expect(
+          cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
+            .length
+        ).toEqual(1);
 
-      expect(updateState.mock.calls.length).toEqual(1);
-      expect(updateState.mock.calls[0]).toEqual([
-        [
-          {
-            status: "uploaded",
-            url: "test"
-          },
-          {
-            file,
-            name: "test",
-            status: "new",
-            type: "screenshot",
-            url: "test-upload"
-          }
-        ]
-      ]);
+        expect(updateState.mock.calls.length).toEqual(1);
+        expect(updateState.mock.calls[0]).toEqual([
+          [
+            {
+              status: "uploaded",
+              url: "test"
+            },
+            {
+              file,
+              name: "test",
+              status: "new",
+              type: "screenshot",
+              url: "test-upload"
+            }
+          ]
+        ]);
+        done();
+      }, 500);
     });
   });
 
@@ -227,29 +230,66 @@ describe("Media", () => {
     });
   });
 
+  it("should error when restrictions aren't met", done => {
+    const { container } = render(
+      <Media
+        mediaData={[]}
+        restrictions={{
+          size: { max: 0.00001 }
+        }}
+      />
+    );
+
+    const addImageButton = container.querySelector(
+      ".p-listing-images__add-image"
+    );
+    fireEvent.click(addImageButton);
+
+    window.URL = {
+      createObjectURL: () => {
+        return "test-upload";
+      }
+    };
+    const fileContents = "testymctestface";
+    const file = new File([fileContents], "test", { type: "image/png" });
+
+    const input = container.querySelector(`[name="screenshots"]`);
+
+    Object.defineProperty(input, "files", {
+      value: [file]
+    });
+
+    fireEvent.change(input);
+
+    // timeout to wait for the promises to resolve
+    setTimeout(() => {
+      expect(
+        container.querySelectorAll(".p-notification--negative").length
+      ).toEqual(1);
+      done();
+    }, 500);
+  });
+
   describe("keyboard", () => {
     let cont;
 
     beforeEach(() => {
-      const { container } = render(
-        <Media
-          mediaData={[
-            {
-              url: "test",
-              status: "uploaded"
-            }
-          ]}
-        />
-      );
+      const { container } = render(<Media />);
 
       cont = container;
     });
 
     it("should create a new image if return is pressed on add image", () => {
+      const input = cont.querySelector(`[name="screenshots"]`);
+
+      const clickCb = jest.fn();
+
+      input.addEventListener("click", clickCb);
+
       const addButton = cont.querySelector(addImageSelector);
       fireEvent.keyDown(addButton, { key: "Enter", code: 13, charCode: 13 });
 
-      expect(cont.querySelectorAll(`[name="screenshots"]`).length).toEqual(1);
+      expect(clickCb.mock.calls.length).toEqual(1);
     });
   });
 
