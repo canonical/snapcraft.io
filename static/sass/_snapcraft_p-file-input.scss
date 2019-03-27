@@ -1,0 +1,69 @@
+@mixin snapcraft-p-file-input {
+  .p-file-input * {
+    pointer-events: none;
+  }
+
+  .p-file-input.is-dragging {
+
+    &::after {
+      align-items: center;
+      background: $color-x-light;
+      border-color: $color-mid-light;
+      border-radius: $border-radius;
+      border-style: dashed;
+      border-width: 2px;
+      bottom: 0;
+      content: "Drop to upload";
+      display: flex;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .p-file-input.can-drop {
+    border-color: transparent;
+
+    &::after {
+      align-items: center;
+      background: $color-light;
+      border-color: transparent;
+      border-radius: $border-radius;
+      bottom: 0;
+      content: "Aaaand... Drop";
+      display: flex;
+      justify-content: center;
+      left: 0;
+      outline-color: $color-link;
+      outline-offset: -1rem;
+      outline-style: dashed;
+      outline-width: 2px;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .p-file-input.over-limit {
+    border-color: transparent;
+
+    &::after {
+      align-items: center;
+      background: $color-x-light;
+      border-color: $color-warning;
+      border-radius: $border-radius;
+      bottom: 0;
+      color: $color-x-dark;
+      content: "Only one image allowed at a time";
+      cursor: no-drop;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+}
