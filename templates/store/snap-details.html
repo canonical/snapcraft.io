@@ -178,9 +178,15 @@
           <tr><th>License</th><td data-live="license">{{ license }}</td></tr>
           <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
         </table>
-        <h4>Share this snap</h4>
-        <p>Generate an embeddable card to be shared on external websites.</p>
-        <p><button class="p-button--neutral js-embedded-card-toggle">Create embeddable card</button></p>
+
+        {# EMBEDDABLE CARD SECTION - hidden in preview #}
+        {% if not is_preview %}
+          <h4>Share this snap</h4>
+          <p>Generate an embeddable card to be shared on external websites.</p>
+          <p><button class="p-button--neutral js-embedded-card-toggle">Create embeddable card</button></p>
+
+          {% include "store/snap-details/_embedded_card_modal.html" %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -243,77 +249,23 @@
     </div>
   {% endif %}
 
+  {# REPORT SNAP SECTION - hidden in preview #}
   {% if not is_preview %}
-  <div class="row">
-    <div class="col-12">
-      <hr />
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-12">
-      <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
-    </div>
-  </div>
-
-  <div class="p-modal u-hide" id="report-snap-modal">
-    <div class="p-modal__dialog" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
-      <div class="js-report-snap-form">
-        <header class="p-modal__header">
-          <h2 class="p-modal__title" id="modal-title">Report {{snap_title}}</h2>
-          <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
-        </header>
-
-        {# report snap form submits to a Google Forms #}
-        {# names of the inputs need to be consistend with the original form #}
-        <form id="report-snap-form" action="https://docs.google.com/forms/d/e/1FAIpQLSelELZwXzvnDkx52GL7cpnQyWdc_Te6APDs843gIKRBHbh6jA/formResponse" method="POST">
-          <input type="hidden" name="entry.1703677219" value="{{package_name}}" />
-          <label for="report-snap-reason">Choose a reason for reporting this snap</label>
-          <select id="report-snap-reason" name="entry.1193754313" required>
-            <option value="" selected>Select an option</option>
-            <option value="Copyright or trademark violation">Copyright or trademark violation</option>
-            <option value="Snap Store terms of service violation">Snap Store terms of service violation</option>
-          </select>
-          <label for="report-snap-comment">Please provide more detailed reason to your report</label>
-          <textarea id="report-snap-comment" type="text" name="entry.1170971435" placeholder="Comment..." rows="5" maxlength="1000" required></textarea>
-
-          <label for="report-snap-email">Your email (optional)</label>
-          <input id="report-snap-email" type="email" name="entry.1424146082" placeholder="email@example.com" />
-          <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
-          <div class="u-align--right">
-            <button type="button" class="js-modal-close">Cancel</button>
-            {# use --dark fake class for spinner icon to be rendered correctly... #}
-            <button type="submit" type="submit" class="--dark">Submit report</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="js-report-snap-success u-hide">
-        <header class="p-modal__header">
-          <h2 class="p-modal__title" id="modal-title">Report submitted successfully</h2>
-          <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
-        </header>
-        <p>Thanks for bringing this to our attention. Information you provided will help us investigate further.</p>
-        <div class="u-align--right">
-          <button type="button" class="p-button--positive js-modal-close">Close</button>
-        </div>
-      </div>
-
-      <div class="js-report-snap-error u-hide">
-        <header class="p-modal__header">
-          <h2 class="p-modal__title" id="modal-title">Error submitting report</h2>
-          <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
-        </header>
-        <p>There was an error while sending your report. Please try again later.</p>
-        <div class="u-align--right">
-          <button type="button" class="p-button--positive js-modal-close">Close</button>
-        </div>
+    <div class="row">
+      <div class="col-12">
+        <hr />
       </div>
     </div>
-  </div>
 
-  {% include "store/snap-details/_embedded_card_modal.html" %}
+    <div class="row">
+      <div class="col-12">
+        <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
+      </div>
+    </div>
+
+    {% include "store/snap-details/_report_snap_modal.html" %}
   {% endif %}
+
   {% if is_preview %}
     </div>
   {% endif %}
@@ -382,6 +334,7 @@
         Raven.captureException(e);
       }
 
+      {% if not is_preview %}
       try {
         snapcraft.public.initReportSnap(
           '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
@@ -396,7 +349,7 @@
       } catch(e) {
         Raven.captureException(e);
       }
-
+      {% endif %}
 
       {% if countries %}
         try {
