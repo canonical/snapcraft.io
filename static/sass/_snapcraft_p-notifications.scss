@@ -30,3 +30,9 @@
     max-width: 100%;
   }
 }
+
+@mixin snapcraft-p-owner-notification {
+  .p-owner-notification {
+    margin-top: $spv-inter--regular;
+  }
+}
