@@ -66,6 +66,15 @@
     <div class="snapcraft-details-preview">
   {% endif %}
   <div class="p-strip--light is-shallow snapcraft-banner-background">
+    {% if is_users_snap and not is_preview %}
+      <div class="row js-snap-owner-notification">
+        <div class="p-notification--information">
+          <p class="p-notification__response">
+            Ensure your snap always stays relevant and compelling. <a href="/{{ package_name }}/listing">Update its listing information here</a>.
+          </p>
+        </div>
+      </div>
+    {% endif %}
     <div class="row">
       <div class="p-snap-heading">
         {% if icon_url %}
@@ -133,15 +142,6 @@
       {% endif %}
         </div>
     </div>
-    {% if is_users_snap and not is_preview %}
-      <div class="row js-snap-owner-notification">
-        <div class="p-notification--information">
-          <p class="p-notification__response">
-            Ensure your snap always stays relevant and compelling. <a href="/{{ package_name }}/listing">Update its listing information here</a>.
-          </p>
-        </div>
-      </div>
-    {% endif %}
   </div>
 
   {% if not webapp_config['STORE_QUERY'] %}
