@@ -146,13 +146,6 @@ function initForm(config, initialState, errors) {
 
   let state = JSON.parse(JSON.stringify(initialState));
 
-  const stateInput = document.createElement("input");
-  stateInput.type = "hidden";
-  stateInput.name = "state";
-  stateInput.value = "";
-
-  formEl.appendChild(stateInput);
-
   const diffInput = document.createElement("input");
   diffInput.type = "hidden";
   diffInput.name = "changes";
@@ -315,16 +308,6 @@ function initForm(config, initialState, errors) {
 
     // if anything was changed, update state inputs and submit
     if (diff) {
-      // TODO: temporary soluton - save clean state in state input,
-      // so save still works until backend is update to understand diff
-      const cleanState = JSON.parse(JSON.stringify(state));
-      if (cleanState.images) {
-        cleanState.images = cleanState.images.filter(
-          image => image.status !== "delete"
-        );
-      }
-
-      stateInput.value = JSON.stringify(cleanState);
       diffInput.value = JSON.stringify(diff);
 
       // make sure we don't warn user about leaving the page when submitting

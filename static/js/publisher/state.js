@@ -76,8 +76,6 @@ function diffState(initialState, state) {
     // images is an array of objects so compare stringified version
     if (key === "images" && state[key]) {
       const images = state[key]
-        // remove images to delete from the diff
-        .filter(image => image.status !== "delete")
         // ignore selected status when comparing
         .map(image => {
           delete image.selected;
