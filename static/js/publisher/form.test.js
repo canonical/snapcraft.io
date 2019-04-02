@@ -294,11 +294,6 @@ describe("initForm", () => {
     form.parentNode.removeChild(form);
   });
 
-  test("should create state input", () => {
-    const stateInput = document.querySelector("[name='state']");
-    expect(stateInput.value).toEqual("");
-  });
-
   test("should create diff input", () => {
     const diffInput = document.querySelector("[name='changes']");
     expect(diffInput.value).toEqual("");

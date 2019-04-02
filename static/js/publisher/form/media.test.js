@@ -26,21 +26,6 @@ describe("Media", () => {
     expect(container.querySelector(`[src="test"]`).length).toBeUndefined();
   });
 
-  it("should render without image, if the only image defined has status of `delete`", () => {
-    const { container } = render(
-      <Media
-        mediaData={[
-          {
-            url: "test",
-            status: "delete"
-          }
-        ]}
-      />
-    );
-
-    expect(container.querySelectorAll(imageSelector).length).toEqual(0);
-  });
-
   it("should set the focus state to an item", () => {
     const { container } = render(
       <Media
@@ -198,7 +183,7 @@ describe("Media", () => {
       cont = container;
     });
 
-    it("should set an item to be removed", () => {
+    it("should remove an item from images list", () => {
       const deleteImages = cont.querySelectorAll(
         ".p-listing-images__delete-image"
       );
@@ -208,10 +193,6 @@ describe("Media", () => {
 
       expect(updateState.mock.calls.length).toEqual(1);
       expect(updateState.mock.calls[0][0]).toEqual([
-        {
-          status: "delete",
-          url: "test"
-        },
         {
           status: "uploaded",
           url: "test-2"
