@@ -181,7 +181,6 @@ class Media extends React.Component {
             inputName="screenshots"
             fileChangedCallback={this.mediaChanged}
             active={isActive}
-            clear={true}
           >
             {isActive && (
               <span role="button" className="u-align-text--center">

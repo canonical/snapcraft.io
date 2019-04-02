@@ -13,11 +13,22 @@ class FileInput extends React.Component {
     this.keyboardEventHandler = this.keyboardEventHandler.bind(this);
   }
 
-  componentDidUpdate() {
-    const { active, clear } = this.props;
-    if (active && clear && this.input) {
-      this.input.value = "";
+  componentDidMount() {
+    const { restrictions, inputName } = this.props;
+
+    // Handle input creation outside of the react lifecycle so as to avoid
+    // rerendering and side-effects. We need the input to maintain a consistent
+    // DOM state throughout the component lifecycle.
+    this.input = document.createElement("input");
+    this.input.type = "file";
+    this.input.name = inputName;
+    if (restrictions && restrictions.accept) {
+      this.input.accept = restrictions.accept;
     }
+    this.input.hidden = true;
+    this.input.addEventListener("change", this.fileChangedHandler);
+
+    this.holder.appendChild(this.input);
   }
 
   fileClickHandler() {
@@ -44,21 +55,6 @@ class FileInput extends React.Component {
     }
   }
 
-  renderFile() {
-    const { restrictions, inputName } = this.props;
-
-    return (
-      <input
-        type="file"
-        accept={restrictions && restrictions.accept}
-        name={inputName}
-        hidden={true}
-        onChange={this.fileChangedHandler}
-        ref={el => (this.input = el)}
-      />
-    );
-  }
-
   render() {
     const { className, children } = this.props;
     return (
@@ -70,7 +66,6 @@ class FileInput extends React.Component {
         tabIndex={0}
       >
         {children}
-        {this.renderFile()}
       </div>
     );
   }
@@ -83,8 +78,7 @@ FileInput.defaultProps = {
   restrictions: {
     accept: []
   },
-  active: true,
-  clear: false
+  active: true
 };
 
 FileInput.propTypes = {
@@ -95,8 +89,7 @@ FileInput.propTypes = {
   restrictions: PropTypes.shape({
     accept: PropTypes.arrayOf(PropTypes.string)
   }),
-  active: PropTypes.bool,
-  clear: PropTypes.bool
+  active: PropTypes.bool
 };
 
 export { FileInput as default };
