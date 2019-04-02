@@ -73,7 +73,7 @@ class DescriptionInlineGrammar(InlineGrammar):
 
         # Rewrite to respect this convention:
         # https://github.com/CanonicalLtd/snap-squad/issues/936
-        self.code = re.compile(r"^(`)([\S ]+)\1")
+        self.code = re.compile(r"^(`)([ \S]*?[^`])\1(?!`)")
 
 
 class DescriptionInline(InlineLexer):
