@@ -73,7 +73,7 @@ function transformStateImages(state) {
     state.images.forEach(image => {
       if (image.type === "icon") {
         newState.icon = image.url;
-      } else if (image.type === "screenshot" && image.status !== "delete") {
+      } else if (image.type === "screenshot") {
         newState.screenshots.push(image.url);
       }
     });

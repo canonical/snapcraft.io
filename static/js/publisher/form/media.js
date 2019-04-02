@@ -28,15 +28,8 @@ class Media extends React.Component {
   }
 
   markForDeletion(key) {
-    const newMediaData = this.state.mediaData.map(item => {
-      if (item.url === key) {
-        item.status = "delete";
-      }
-      return item;
-    });
-
     this.setState({
-      mediaData: newMediaData
+      mediaData: this.state.mediaData.filter(item => item.url !== key)
     });
   }
 
@@ -65,10 +58,7 @@ class Media extends React.Component {
   }
 
   renderOverLimit() {
-    if (
-      this.state.mediaData.filter(item => item.status !== "delete").length >
-      this.props.mediaLimit
-    ) {
+    if (this.state.mediaData.length > this.props.mediaLimit) {
       return (
         <div className="p-notification--caution">
           <p className="p-notification__response">
@@ -155,9 +145,7 @@ class Media extends React.Component {
 
   renderInputs() {
     const { mediaLimit, restrictions } = this.props;
-    const currentMedia = this.state.mediaData.filter(
-      media => media.status !== "delete"
-    ).length;
+    const currentMedia = this.state.mediaData.length;
     const inputs = [];
 
     for (let i = 0; i < mediaLimit; i++) {
@@ -198,9 +186,7 @@ class Media extends React.Component {
   }
 
   render() {
-    const mediaList = this.state.mediaData.filter(
-      item => item.status !== "delete"
-    );
+    const mediaList = this.state.mediaData;
 
     return (
       <Fragment>
