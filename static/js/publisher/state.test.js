@@ -99,31 +99,6 @@ describe("diffState", () => {
 
   // when comparing images
   describe("when comparing images in state", () => {
-    test("should remove images marked for deletion", () => {
-      expect(
-        diffState(
-          {
-            images: [
-              { url: "test1.png", status: "uploaded" },
-              { url: "test2.png", status: "uploaded" }
-            ]
-          },
-          {
-            images: [
-              { url: "test1.png", status: "uploaded" },
-              { url: "test2.png", status: "delete" },
-              { url: "test3.png", status: "new" }
-            ]
-          }
-        )
-      ).toEqual({
-        images: [
-          { url: "test1.png", status: "uploaded" },
-          { url: "test3.png", status: "new" }
-        ]
-      });
-    });
-
     test("should ignore selected status", () => {
       expect(
         diffState(
