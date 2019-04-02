@@ -124,7 +124,7 @@ My published snaps — Linux software in the Snap Store
           {% for snap in snaps|sort %}
             {% with %}
               {% set dispute_pending = snaps[snap].status == "DisputePending" %}
-              {% set published = snaps[snap].status == "Published" %}
+              {% set published = snaps[snap].latest_revisions[0].status == "Published" %}
               <tr>
                 <td>
                   <a href="/account/snaps/{{snap}}/listing" class="u-vertically-center">
