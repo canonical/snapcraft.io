@@ -16,6 +16,9 @@ class FileInput extends React.Component {
   componentDidMount() {
     const { restrictions, inputName } = this.props;
 
+    // Handle input creation outside of the react lifecycle so as to avoid
+    // rerendering and side-effects. We need the input to maintain a consistent
+    // DOM state throughout the component lifecycle.
     this.input = document.createElement("input");
     this.input.type = "file";
     this.input.name = inputName;
