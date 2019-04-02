@@ -93,7 +93,7 @@ class TestMarkdownParser(unittest.TestCase):
         """
         markdown = "```code block```"
         result = parse_markdown_description(markdown)
-        expected_result = "<p><code>``code block``</code></p>\n"
+        expected_result = "<p>```code block```</p>\n"
 
         self.assertEqual(result, expected_result)
 
@@ -134,11 +134,22 @@ class TestMarkdownParser(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
     def test_parse_code_line(self):
-        """Code (text blocks inside ` or ``` pairs)
+        """Code (text blocks inside `)
         """
         markdown = "`code line`"
         result = parse_markdown_description(markdown)
         expected_result = "<p><code>code line</code></p>\n"
+
+        self.assertEqual(result, expected_result)
+
+    def test_parse_multiple_code_line(self):
+        """Code (text blocks inside `)
+        """
+        markdown = "`code line` and `code line`"
+        result = parse_markdown_description(markdown)
+        expected_result = (
+            "<p><code>code line</code> and <code>code line</code></p>\n"
+        )
 
         self.assertEqual(result, expected_result)
 
