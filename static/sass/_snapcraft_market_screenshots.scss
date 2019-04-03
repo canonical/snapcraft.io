@@ -1,10 +1,14 @@
 @mixin snapcraft-market-screenshots {
   .p-listing-images {
+    justify-content: flex-start;
+    margin-right: -$spv-intra;
     min-height: 120px;
     position: relative;
   }
 
   .p-listing-images__image {
+    $screenshot-thumb-size: 123px; // make it fit exactly on full screen width
+
     align-items: center;
     background: $color-light;
     border: 1px solid $color-light;
@@ -12,12 +16,13 @@
     cursor: grab;
     display: flex;
     flex-grow: 0;
-    height: 120px;
+    height: $screenshot-thumb-size;
     justify-content: center;
     margin-bottom: $spv-intra;
+    margin-right: $spv-intra;
     min-width: auto;
     position: relative;
-    width: 120px;
+    width: $screenshot-thumb-size;
 
     .p-listing-images__delete-image {
       background: $color-x-light;
