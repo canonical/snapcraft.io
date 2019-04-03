@@ -1,19 +1,22 @@
 @mixin snapcraft-market-screenshots {
   .p-listing-images {
+    min-height: 120px;
+    position: relative;
 
     .p-listing-images__image {
       align-items: center;
       background: $color-light;
       border: 1px solid $color-light;
+      border-radius: $border-radius;
       color: $color-link;
       display: flex;
       flex-grow: 0;
       height: 120px;
       justify-content: center;
       margin-bottom: $spv-intra;
+      min-width: auto;
       position: relative;
       width: 120px;
-      min-width: auto;
 
       .p-listing-images__delete-image {
         background: $color-x-light;
@@ -62,6 +65,8 @@
       background: $color-x-light;
       border: 1px solid $color-mid-light;
       cursor: pointer;
+      position: static;
+      z-index: 1;
     }
   }
 }

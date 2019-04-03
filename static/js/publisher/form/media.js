@@ -22,8 +22,11 @@ class Media extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.mediaData !== this.state.mediaData) {
-      this.props.updateState(this.state.mediaData);
+    const { mediaData } = this.state;
+    const { mediaLimit } = this.props;
+
+    if (prevState.mediaData !== mediaData && mediaData.length <= mediaLimit) {
+      this.props.updateState(mediaData);
     }
   }
 

@@ -1,4 +1,8 @@
 @mixin snapcraft-market {
+  $white-overlay-color: rgba(255, 255, 255, .5);
+  $black-overlay-color: rgba(0, 0, 0, .5);
+  $black-overlay-light-color: rgba(0, 0, 0, .2);
+  $white-overlay-strong-color: rgba(255, 255, 255, .9);
 
   // Add extra space between groups of related items
   .snapcraft-p-market__section {
@@ -17,10 +21,8 @@
   }
 
   .p-editable-icon {
-    $white-overlay-color: rgba(255, 255, 255, .5);
-    $black-overlay-color: rgba(0, 0, 0, .5);
-    $white-overlay-strong-color: rgba(255, 255, 255, .9);
     border: 1px solid $color-mid-light;
+    border-radius: $border-radius;
     cursor: pointer;
     display: inline-block;
     margin-bottom: $sph-inter;
@@ -100,7 +102,7 @@
     }
 
     &.sticky-shadow {
-      box-shadow: 1px 1px 10px rgba(0, 0, 0, .2);
+      box-shadow: 1px 1px 10px $black-overlay-light-color;
     }
 
     @media screen and (max-width: $breakpoint-x-small) {

@@ -251,29 +251,6 @@ describe("Media", () => {
     }, 500);
   });
 
-  describe("keyboard", () => {
-    let cont;
-
-    beforeEach(() => {
-      const { container } = render(<Media />);
-
-      cont = container;
-    });
-
-    it("should create a new image if return is pressed on add image", () => {
-      const input = cont.querySelector(`[name="screenshots"]`);
-
-      const clickCb = jest.fn();
-
-      input.addEventListener("click", clickCb);
-
-      const addButton = cont.querySelector(addImageSelector);
-      fireEvent.keyDown(addButton, { key: "Enter", code: 13, charCode: 13 });
-
-      expect(clickCb.mock.calls.length).toEqual(1);
-    });
-  });
-
   describe("restrictions", () => {
     it("should open when the element is clicked", () => {
       const { container } = render(<Media />);
