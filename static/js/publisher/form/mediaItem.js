@@ -7,6 +7,8 @@ const mediaClasses = [
   "js-media-item-holder"
 ];
 
+import { SortableElement } from "react-sortable-hoc";
+
 class MediaItem extends React.Component {
   constructor(props) {
     super(props);
@@ -52,4 +54,7 @@ MediaItem.propTypes = {
   markForDeletion: PropTypes.func
 };
 
-export { MediaItem as default, mediaClasses };
+MediaItem.displayName = "MediaItem";
+
+const SortableMediaItem = SortableElement(MediaItem);
+export { SortableMediaItem as default, mediaClasses };

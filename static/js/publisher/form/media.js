@@ -2,8 +2,7 @@ import React, { Fragment } from "react";
 
 import { PropTypes } from "prop-types";
 
-import MediaItem, { mediaClasses } from "./mediaItem";
-import FileInput from "./fileInput";
+import SortableMediaList from "./mediaList";
 
 class Media extends React.Component {
   constructor(props) {
@@ -146,46 +145,15 @@ class Media extends React.Component {
     );
   }
 
-  renderInputs() {
-    const { mediaLimit, restrictions } = this.props;
-    const currentMedia = this.state.mediaData.length;
-    const inputs = [];
+  onSortEnd(params) {
+    const { oldIndex, newIndex } = params;
+    const newMediaData = [...this.state.mediaData];
+    const moved = newMediaData.splice(oldIndex, 1);
+    newMediaData.splice(newIndex, 0, moved[0]);
 
-    for (let i = 0; i < mediaLimit; i++) {
-      const classes = [...mediaClasses];
-      classes.push("is-empty");
-
-      let isActive = false;
-
-      if (i === currentMedia) {
-        classes.push("p-listing-images__add-image");
-        isActive = true;
-      } else if (i < currentMedia) {
-        classes.push("u-hide");
-      }
-
-      inputs.push(
-        <Fragment key={`add-screenshot-${i}`}>
-          <FileInput
-            restrictions={restrictions}
-            className={classes.join(" ")}
-            inputName="screenshots"
-            fileChangedCallback={this.mediaChanged}
-            active={isActive}
-          >
-            {isActive && (
-              <span role="button" className="u-align-text--center">
-                <i className="p-icon--plus" />
-                <br />
-                Add image
-              </span>
-            )}
-          </FileInput>
-        </Fragment>
-      );
-    }
-
-    return inputs;
+    this.setState({
+      mediaData: newMediaData
+    });
   }
 
   render() {
@@ -195,24 +163,16 @@ class Media extends React.Component {
       <Fragment>
         {this.renderOverLimit()}
         {this.renderErrors()}
-        <div
-          className="p-listing-images p-fluid-grid"
-          ref={item => (this.holder = item)}
-        >
-          {mediaList.map((item, i) => {
-            return (
-              <MediaItem
-                key={`${item.url}-${i}`}
-                url={item.url}
-                type={item.type}
-                status={item.status}
-                markForDeletion={this.markForDeletion}
-                overflow={i > 4}
-              />
-            );
-          })}
-          {this.renderInputs()}
-        </div>
+        <SortableMediaList
+          distance={10}
+          onSortEnd={this.onSortEnd.bind(this)}
+          axis="xy"
+          mediaData={mediaList}
+          mediaLimit={this.props.mediaLimit}
+          restrictions={this.props.restrictions}
+          markForDeletion={this.markForDeletion}
+          mediaChanged={this.mediaChanged}
+        />
         {this.renderRescrictions()}
       </Fragment>
     );
