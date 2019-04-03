@@ -10,10 +10,7 @@ WEBAPP_CONFIG = {
             "title": "Documentation",
             "href": "https://wiki.myriadrf.org/SDR_Satcom_App_Store",
         },
-        {
-            "title": "SDR Satcom",
-            "href": "https://wiki.myriadrf.org/SDR_Satcom",
-        },
+        {"title": "SDR Satcom", "href": "https://sdrsat.com"},
     ],
     "CUSTOM_STYLES": ".p-navigation__link a,.p-navigation__link a:visited,\
      .p-navigation__link a:focus {color: #000;}\
