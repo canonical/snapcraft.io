@@ -1,4 +1,9 @@
-<section id="main-content" class="p-strip--image p-strip-slanted--snapcraft">
+<section id="main-content" class="
+{% if webapp_config['STORE_QUERY'] %}
+  p-strip--image is-shallow snapcraft-banner-background
+{% else %}
+  p-strip--image p-strip-slanted--snapcraft
+{% endif %}">
   <div class="row">
     {% if not webapp_config['STORE_QUERY'] %}
       <h1 class="p-heading--two">Search thousands of snaps used by millions of people across 41 Linux distributions</h1>
