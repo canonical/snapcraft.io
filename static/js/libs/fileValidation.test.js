@@ -1,8 +1,8 @@
 import { validateRestrictions } from "./fileValidation";
 
-function generateFile(options) {
+function generateFile(options, name = "test") {
   const fileContents = "testymctestface";
-  return new File([fileContents], "test", options);
+  return new File([fileContents], name, options);
 }
 
 describe("validateRestrictions", () => {
@@ -372,6 +372,36 @@ describe("validateRestrictions", () => {
 
         expect(validation.errors).toBeUndefined();
       });
+    });
+
+    it("should allow through banner image", async () => {
+      const file = generateFile({ type: "image/png" }, "banner.jpg");
+
+      generateImage({
+        naturalWidth: 1218,
+        naturalHeight: 240
+      });
+
+      const validation = await validateRestrictions(file, {
+        ...restrictions
+      });
+
+      expect(validation.errors).toBeUndefined();
+    });
+
+    it("should allow through banner-icon image", async () => {
+      const file = generateFile({ type: "image/png" }, "banner-icon.png");
+
+      generateImage({
+        naturalWidth: 240,
+        naturalHeight: 240
+      });
+
+      const validation = await validateRestrictions(file, {
+        ...restrictions
+      });
+
+      expect(validation.errors).toBeUndefined();
     });
   });
 });
