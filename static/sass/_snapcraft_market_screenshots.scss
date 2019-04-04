@@ -29,13 +29,19 @@
       box-sizing: content-box;
       cursor: pointer;
       height: 1rem;
-      opacity: .5;
+      opacity: 0;
       padding: .25rem;
       position: absolute;
       right: 0;
       top: 0;
       width: 1rem;
       z-index: 1;
+    }
+
+    &:hover {
+      .p-listing-images__delete-image {
+        opacity: 1;
+      }
     }
 
     .p-listing-images__delete-image .p-icon--delete {

@@ -29,4 +29,24 @@ const MEDIA_RESTRICTIONS = {
   }
 };
 
-export { MEDIA_RESTRICTIONS };
+const ICON_RESTRICTIONS = {
+  accept: ["image/png", "image/jpeg", "image/svg"],
+  width: {
+    min: 40,
+    max: 512
+  },
+  height: {
+    min: 40,
+    max: 512
+  },
+  aspectRatio: {
+    min: [1, 1],
+    max: [1, 1]
+  },
+  size: {
+    min: 0,
+    max: 256000
+  }
+};
+
+export { MEDIA_RESTRICTIONS, ICON_RESTRICTIONS };

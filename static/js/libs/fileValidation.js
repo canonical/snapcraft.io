@@ -1,4 +1,6 @@
 function baseRestrictions(file, restrictions) {
+  const MB = 1000000;
+  const KB = 1000;
   return new Promise((resolve, reject) => {
     const errors = [];
     if (restrictions.accept) {
@@ -9,14 +11,26 @@ function baseRestrictions(file, restrictions) {
 
     if (restrictions.size) {
       if (restrictions.size.max && file.size > restrictions.size.max) {
-        errors.push(
-          `file size is over ${(restrictions.size.max / 1000000).toFixed(2)}MB`
-        );
+        const sizeInMB = restrictions.size.max / MB;
+        const sizeInKB = restrictions.size.max / KB;
+        let errorStr;
+        if (sizeInMB >= 1) {
+          errorStr = `${sizeInMB.toFixed(2)}MB`;
+        } else {
+          errorStr = `${sizeInKB.toFixed(0)}KB`;
+        }
+        errors.push(`file size is over ${errorStr}`);
       }
       if (restrictions.size.min && file.size < restrictions.size.min) {
-        errors.push(
-          `file size is below ${(restrictions.size.min / 1000000).toFixed(2)}MB`
-        );
+        const sizeInMB = restrictions.size.min / MB;
+        const sizeInKB = restrictions.size.min / KB;
+        let errorStr;
+        if (sizeInMB >= 1) {
+          errorStr = `${sizeInMB.toFixed(2)}MB`;
+        } else {
+          errorStr = `${sizeInKB.toFixed(0)}KB`;
+        }
+        errors.push(`file size is below ${errorStr}`);
       }
     }
 

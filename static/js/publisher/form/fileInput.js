@@ -160,7 +160,7 @@ class FileInput extends React.Component {
   }
 
   render() {
-    const { className, children } = this.props;
+    const { className, children, isSmall } = this.props;
     const { isDragging, canDrop, overLimit } = this.state;
     const localClassName = [className, "p-file-input"];
 
@@ -174,6 +174,10 @@ class FileInput extends React.Component {
 
     if (overLimit) {
       localClassName.push("over-limit");
+    }
+
+    if (isSmall) {
+      localClassName.push("p-file-input--is-small");
     }
 
     return (
@@ -197,7 +201,8 @@ FileInput.defaultProps = {
   restrictions: {
     accept: []
   },
-  active: true
+  active: true,
+  isSmall: false
 };
 
 FileInput.propTypes = {
@@ -208,7 +213,8 @@ FileInput.propTypes = {
   restrictions: PropTypes.shape({
     accept: PropTypes.arrayOf(PropTypes.string)
   }),
-  active: PropTypes.bool
+  active: PropTypes.bool,
+  isSmall: PropTypes.bool
 };
 
 export { FileInput as default };

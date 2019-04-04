@@ -12,7 +12,6 @@
     <form id="market-form" method="POST" enctype='multipart/form-data'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="hidden" name="snap_id" value="{{ snap_id }}" />
-      <input type="file" name="icon" id="snap_icon" hidden class="hidden" accept="image/*"/>
 
       <div class="snapcraft-p-sticky" id="store-listing-notification">
         <div class="row">
@@ -104,19 +103,7 @@
             <div class="col-2">
               <label class="p-editable-icon__label" for="snap_icon">Snap icon:</label>
             </div>
-            <div class="col-8 u-vertically-center">
-              <div class="p-editable-icon">
-                <div class="p-editable-icon__icon js-change-icon">
-                  <img id="snap_icon_image"{% if not icon_url %} class="u-hide"{% endif %}
-                       src="{{ icon_url }}" alt="{% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %} snap"
-                  />
-                  <span class="p-editable-icon__change">Edit</span>
-                </div>
-              </div>
-              <div class="p-editable-icon__actions">
-                <a class="p-editable-icon__delete js-remove-icon u-hide"><i class="p-icon--delete"></i></a>
-              </div>
-            </div>
+            <div class="col-8 js-icon-holder"></div>
           </div>
 
           <div class="row">
@@ -501,6 +488,7 @@
       snapIconRemove: ".js-remove-icon",
       snapIcon: "snap_icon_image",
       snapIconInput: "snap_icon",
+      snapIconHolder: ".js-icon-holder",
       form: "market-form",
       formNotification: "market-form-status",
       licenseRadioContent: [
