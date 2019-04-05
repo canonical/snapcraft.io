@@ -21,8 +21,6 @@
   }
 
   .p-editable-icon {
-    border: 1px solid $color-mid-light;
-    border-radius: $border-radius;
     cursor: pointer;
     display: inline-block;
     margin-bottom: $sph-inter;
@@ -34,6 +32,8 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: 1rem;
+      border: 1px solid $color-mid-light;
+      border-radius: $border-radius;
       height: 60px;
       overflow: hidden;
       position: relative;
@@ -82,6 +82,7 @@
 
   .p-editable-icon__delete {
     align-items: center;
+    cursor: pointer;
     display: flex;
     height: 2rem;
     justify-content: center;

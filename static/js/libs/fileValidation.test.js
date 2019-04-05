@@ -1,7 +1,10 @@
 import { validateRestrictions } from "./fileValidation";
 
-function generateFile(options, name = "test") {
-  const fileContents = "testymctestface";
+function generateFile(
+  options,
+  name = "test",
+  fileContents = "testymctestface"
+) {
   return new File([fileContents], name, options);
 }
 
@@ -32,40 +35,70 @@ describe("validateRestrictions", () => {
       expect(validation.errors).toEqual([`file type is incorrect`]);
     });
 
-    it("should return an error if a file is too big", async () => {
-      const file = generateFile({
-        type: "text/html"
-      });
+    it("should return an error if a small file is too big", async () => {
+      const smallFile = generateFile({}, "test", "a".repeat(2000));
+      const largeFile = generateFile({}, "test", "a".repeat(2000000));
 
-      const max = 14; // 14 bytes
-
-      const validation = await validateRestrictions(file, {
+      const smallRestrictions = {
         size: {
-          max: max
+          min: 1,
+          max: 1000
         }
-      });
+      };
 
-      expect(validation.errors).toEqual([
-        `file size is over ${(max / 1000000).toFixed(2)}MB`
-      ]);
+      const validationSmall = await validateRestrictions(
+        smallFile,
+        smallRestrictions
+      );
+
+      expect(validationSmall.errors).toEqual([`file size is over 1KB`]);
+
+      const largeRestrictions = {
+        size: {
+          min: 1,
+          max: 1000000
+        }
+      };
+
+      const validationLarge = await validateRestrictions(
+        largeFile,
+        largeRestrictions
+      );
+
+      expect(validationLarge.errors).toEqual([`file size is over 1.00MB`]);
     });
 
     it("should return an error if a file is too small", async () => {
-      const file = generateFile({
-        type: "text/html"
-      });
+      const smallFile = generateFile({}, "test", "a".repeat(1000));
+      const largeFile = generateFile({}, "test", "a".repeat(1000000));
 
-      const min = 16; // 16 bytes
-
-      const validation = await validateRestrictions(file, {
+      const smallRestrictions = {
         size: {
-          min: min
+          min: 2000,
+          max: 5000
         }
-      });
+      };
 
-      expect(validation.errors).toEqual([
-        `file size is below ${(min / 1000000).toFixed(2)}MB`
-      ]);
+      const validationSmall = await validateRestrictions(
+        smallFile,
+        smallRestrictions
+      );
+
+      expect(validationSmall.errors).toEqual([`file size is below 2KB`]);
+
+      const largeRestrictions = {
+        size: {
+          min: 2000000,
+          max: 5000000
+        }
+      };
+
+      const validationLarge = await validateRestrictions(
+        largeFile,
+        largeRestrictions
+      );
+
+      expect(validationLarge.errors).toEqual([`file size is below 2.00MB`]);
     });
 
     it("should return no errors if the file passes all restrictions", async () => {

@@ -168,7 +168,8 @@ def build_changed_images(
     for changed_screenshot in changed_screenshots:
         for current_screenshot in current_screenshots:
             if (
-                changed_screenshot["url"] == current_screenshot["url"]
+                changed_screenshot
+                and changed_screenshot["url"] == current_screenshot["url"]
                 and current_screenshot not in info
             ):
                 info.append(current_screenshot)
