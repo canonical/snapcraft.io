@@ -6,40 +6,61 @@ function install(language) {
   const osPickers = document.querySelectorAll(".js-os-select");
   const osWrappers = document.querySelectorAll(".js-os-wrapper");
 
+  function select(selectedOs) {
+    if (osWrappers) {
+      Array.prototype.slice.call(osWrappers).forEach(function(wrapper) {
+        wrapper.classList.add("u-hide");
+      });
+    }
+    const selectedEl = document.querySelector(".js-" + selectedOs);
+    if (selectedEl) {
+      selectedEl.classList.remove("u-hide");
+    }
+
+    if (!document.querySelector(".js-linux-manual")) {
+      const continueBtn = document.querySelector(".js-continue");
+      if (continueBtn) {
+        continueBtn.classList.remove("is--disabled");
+        continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
+      }
+    }
+  }
+
   if (osPickers) {
+    const userAgent = window.navigator.userAgent;
+    const isMac = !!userAgent.match(/Mac/);
+    const isLinux = !!userAgent.match(/(Linux)|(X11)/);
+    const isWin = !!userAgent.match(/Windows/);
+    const userOS = isMac
+      ? "macos"
+      : isLinux
+        ? "linux"
+        : isWin
+          ? "windows"
+          : null;
+
     Array.prototype.slice.call(osPickers).forEach(function(os) {
+      if (os.dataset.os === userOS) {
+        os.classList.add("is-selected");
+      }
+
       os.addEventListener("click", function(e) {
         const osSelect = e.target.closest(".js-os-select");
         if (!osSelect) {
           return;
         }
 
-        const selectedOs = osSelect.dataset.os;
-
         osPickers.forEach(function(picker) {
           picker.classList.remove("is-selected");
         });
         osSelect.classList.add("is-selected");
-
-        if (osWrappers) {
-          Array.prototype.slice.call(osWrappers).forEach(function(wrapper) {
-            wrapper.classList.add("u-hide");
-          });
-        }
-        const selectedEl = document.querySelector(".js-" + selectedOs);
-        if (selectedEl) {
-          selectedEl.classList.remove("u-hide");
-        }
-
-        if (!document.querySelector(".js-linux-manual")) {
-          const continueBtn = document.querySelector(".js-continue");
-          if (continueBtn) {
-            continueBtn.classList.remove("is--disabled");
-            continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
-          }
-        }
+        select(osSelect.dataset.os);
       });
     });
+
+    if (userOS) {
+      select(userOS);
+    }
   }
 
   function onChange(e) {
