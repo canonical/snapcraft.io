@@ -5,22 +5,26 @@
       <li>Simplify installation instructions, regardless of distribution, to snap install myjavaapp.</li>
       <li>Directly control the delivery of automatic application updates.</li>
     </ul>
-	<p>Distributing a Java application for Linux and reaching the widest possible audience is complicated. Typically, the user has to make sure the JRE/SDK version and their environment are configured correctly. When a Linux distribution changes the delivered JRE, this can be problematic for applications. Snapcraft ensures the correct JRE is shipped alongside the application at all times.</p>
+	   <p>Distributing a Java application for Linux and reaching the widest possible audience is complicated. Typically, the user has to make sure the JRE/SDK version and their environment are configured correctly. When a Linux distribution changes the delivered JRE, this can be problematic for applications. Snapcraft ensures the correct JRE is shipped alongside the application at all times.</p>
+
+     <div class="p-flow-details__continue">
+       <p>In just a few steps, you’ll have an example Java app in the Snap Store.</p>
+       <a class="p-button--positive" href="/first-snap/java">Continue</a>
+     </div>
   </div>
 
   <div class='col-6'>
     <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
     <code class="p-code-yaml"><pre><b>name</b>: freeplane
 <b>version</b>: '1.6.10'
-<b>summary</b>: Application for Mind Mapping, Knowledge and Project 
-Management
+<b>summary</b>: Application for Mind Mapping, Knowledge and Project Management
 <b>description</b>: |
-  Freeplane is a free and open source software 
-  application that supports thinking, sharing 
-  information and getting things done at work, 
-  in school and at home. The core of the 
-  software is tools for mind mapping (also known 
-  as concept mapping or information mapping) 
+  Freeplane is a free and open source software
+  application that supports thinking, sharing
+  information and getting things done at work,
+  in school and at home. The core of the
+  software is tools for mind mapping (also known
+  as concept mapping or information mapping)
   and using mapped information.
 
 <b>confinement</b>: devmode
@@ -42,10 +46,5 @@ Management
 <b>apps</b>:
   <b>freeplane</b>:
     <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh</pre></code>
-  </div>
-
-  <div class="p-flow-details__continue">
-    In just a few steps, you’ll have an example Java app in the Snap Store.
-    <a class="p-button--positive is-inline" href="/first-snap/java">Continue</a>
   </div>
 </div>
