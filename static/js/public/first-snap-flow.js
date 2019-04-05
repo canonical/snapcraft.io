@@ -30,14 +30,7 @@ function install(language) {
     const userAgent = window.navigator.userAgent;
     const isMac = !!userAgent.match(/Mac/);
     const isLinux = !!userAgent.match(/(Linux)|(X11)/);
-    const isWin = !!userAgent.match(/Windows/);
-    const userOS = isMac
-      ? "macos"
-      : isLinux
-        ? "linux"
-        : isWin
-          ? "windows"
-          : null;
+    const userOS = isMac ? "macos" : isLinux ? "linux" : null;
 
     Array.prototype.slice.call(osPickers).forEach(function(os) {
       if (os.dataset.os === userOS) {
