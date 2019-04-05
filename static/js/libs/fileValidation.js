@@ -41,6 +41,19 @@ function imageRestrictions(file, restrictions) {
     image.addEventListener("load", () => {
       const width = image.naturalWidth;
       const height = image.naturalHeight;
+
+      if (
+        (file.name.indexOf("banner.") === 0 &&
+          width === 1218 &&
+          height === 240) ||
+        (file.name.indexOf("banner-icon.") === 0 &&
+          width === 240 &&
+          height === 240)
+      ) {
+        resolve(file);
+        return;
+      }
+
       const aspectRatio = width / height;
       let hasDimensionError = false;
       if (restrictions.width) {
