@@ -195,22 +195,24 @@ def snap_posts(snap):
     articles = []
 
     if blog_tags:
-        blog_tags_ids = logic.get_tag_id_list(blog_tags)
-        try:
-            blog_articles, total_pages = api.get_articles(blog_tags_ids, 3)
-        except ApiError:
-            blog_articles = []
+        blog_tags_ids = logic.get_tag_id_list(blog_tags, snap)
 
-        for article in blog_articles:
-            transformed_article = logic.transform_article(
-                article, featured_image=None, author=None
-            )
-            articles.append(
-                {
-                    "slug": transformed_article["slug"],
-                    "title": transformed_article["title"]["rendered"],
-                }
-            )
+        if blog_tags_ids:
+            try:
+                blog_articles, total_pages = api.get_articles(blog_tags_ids, 3)
+            except ApiError:
+                blog_articles = []
+
+            for article in blog_articles:
+                transformed_article = logic.transform_article(
+                    article, featured_image=None, author=None
+                )
+                articles.append(
+                    {
+                        "slug": transformed_article["slug"],
+                        "title": transformed_article["title"]["rendered"],
+                    }
+                )
 
     return flask.jsonify(articles)
 

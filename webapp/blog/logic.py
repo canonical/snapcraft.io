@@ -115,18 +115,21 @@ def change_url(feed, host):
     return updated_feed
 
 
-def get_tag_id_list(tags):
+def get_tag_id_list(tags, snap_name):
     """Get a list of tag ids from a list of tag dicts
 
     :param tags: Tag dict
+    :param snap_name: Name of the snap
 
     :returns: A list of ids
     """
 
+    tag_name = ":".join(["sc:snap", snap_name])
+
     def get_id(tag):
         return tag["id"]
 
-    return [get_id(tag) for tag in tags]
+    return [get_id(tag) for tag in tags if tag["name"] == tag_name]
 
 
 def is_in_series(tags):
