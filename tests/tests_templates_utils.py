@@ -11,7 +11,16 @@ class TemplateUtilsTest(unittest.TestCase):
         result = template_utils.generate_slug("/listing")
         self.assertEqual(result, "account")
 
-        result = template_utils.generate_slug("/release")
+        result = template_utils.generate_slug("/releases")
+        self.assertEqual(result, "account")
+
+        result = template_utils.generate_slug("/publicise")
+        self.assertEqual(result, "account")
+
+        result = template_utils.generate_slug("/publicise/badges")
+        self.assertEqual(result, "account")
+
+        result = template_utils.generate_slug("/publicise/cards")
         self.assertEqual(result, "account")
 
         result = template_utils.generate_slug("/settings")
@@ -21,6 +30,9 @@ class TemplateUtilsTest(unittest.TestCase):
         self.assertEqual(result, "account")
 
         result = template_utils.generate_slug("/")
+        self.assertEqual(result, "home")
+
+        result = template_utils.generate_slug("/first-snap")
         self.assertEqual(result, "home")
 
         result = template_utils.generate_slug("/build")

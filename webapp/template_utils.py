@@ -12,15 +12,18 @@ def generate_slug(path):
         (
             "/snaps",
             "/listing",
-            "/release",
+            "/releases",
             "/metrics",
+            "/publicise",
+            "/publicise/badges",
+            "/publicise/cards",
             "/settings",
             "/account/details",
         )
     ):
         return "account"
 
-    if path == "/":
+    if path == "/" or path.startswith("/first-snap"):
         return "home"
 
     if path.startswith("/build"):
