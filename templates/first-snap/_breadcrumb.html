@@ -1,40 +1,42 @@
-<div class="row">
-  <ul class="p-breadcrumbs p-heading--four" style="max-width: 100%;">
-    <li class="p-breadcrumbs__item">
-      <a href="/first-snap/">Language</a>
-    </li>
-    <li class="p-breadcrumbs__item">
-      {% if fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
-        <a href="/first-snap/{{ language }}">Install Snapcraft</a>
-      {% else %}
-        Install Snapcraft
-      {% endif %}
-    </li>
-    <li class="p-breadcrumbs__item{% if fsf_step == 'install' %} is-disabled{% endif %}">
-      {% if fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
-        <a href="/first-snap/{{ language }}/{{ os }}/package">Package</a>
-      {% else %}
-        Package
-      {% endif %}
-    </li>
-    <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' %} is-disabled{% endif %}">
-      {% if fsf_step == 'test' or fsf_step == 'push' %}
-        <a href="/first-snap/{{ language }}/{{ os }}/build">Build</a>
-      {% else %}
-        Build
-      {% endif %}
-    </li>
-    {% if os and os.startswith('macos') %}
-      <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' %} is-disabled{% endif %}">
-        {% if fsf_step == 'push' %}
-          <a href="/first-snap/{{ language }}/{{ os }}/test">Test</a>
+<div class="p-strip is-shallow snapcraft-banner-background">
+  <div class="row">
+    <ul class="p-breadcrumbs p-heading--four" style="max-width: 100%;">
+      <li class="p-breadcrumbs__item">
+        <a href="/first-snap/">Language</a>
+      </li>
+      <li class="p-breadcrumbs__item">
+        {% if fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
+          <a href="/first-snap/{{ language }}">Install Snapcraft</a>
         {% else %}
-          Test
+          Install Snapcraft
         {% endif %}
       </li>
-    {% endif %}
-    <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' %} is-disabled{% endif %}">
-      Push
-    </li>
-  </ul>
+      <li class="p-breadcrumbs__item{% if fsf_step == 'install' %} is-disabled{% endif %}">
+        {% if fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
+          <a href="/first-snap/{{ language }}/{{ os }}/package">Package</a>
+        {% else %}
+          Package
+        {% endif %}
+      </li>
+      <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' %} is-disabled{% endif %}">
+        {% if fsf_step == 'test' or fsf_step == 'push' %}
+          <a href="/first-snap/{{ language }}/{{ os }}/build">Build</a>
+        {% else %}
+          Build
+        {% endif %}
+      </li>
+      {% if os and os.startswith('macos') %}
+        <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' %} is-disabled{% endif %}">
+          {% if fsf_step == 'push' %}
+            <a href="/first-snap/{{ language }}/{{ os }}/test">Test</a>
+          {% else %}
+            Test
+          {% endif %}
+        </li>
+      {% endif %}
+      <li class="p-breadcrumbs__item{% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' %} is-disabled{% endif %}">
+        Push
+      </li>
+    </ul>
+  </div>
 </div>
