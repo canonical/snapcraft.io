@@ -121,7 +121,8 @@
 
   .p-market-banner {
 
-    .p-market-banner__images {
+    .p-market-banner__image-holder {
+      cursor: pointer;
       position: relative;
     }
 
@@ -129,66 +130,29 @@
       background-color: $color-x-light;
       background-position: center;
       background-size: cover;
+      border: 1px solid $color-mid-light;
+      border-radius: $border-radius;
+      color: $color-link;
+      cursor: pointer;
       height: 128px;
       margin-bottom: $spv-inter--regular;
-      outline: 1px solid $color-mid-light;
       position: relative;
-    }
-
-    .p-market-banner__icon {
-      height: 128px;
-      left: 0;
-      position: absolute;
-      top: 0;
-      width: 128px;
-
-      &.is-empty {
-        background-color: $color-x-light;
-        border: 1px solid transparent;
-        border-right: 1px solid $color-mid-light;
-      }
-
-      img {
-        max-height: 100%;
-      }
-    }
-
-    .p-market-banner__image:not(.is-empty) + .p-market-banner__icon {
-      &.is-empty {
-        opacity: .8;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
-    }
-
-    .p-market-banner__image,
-    .p-market-banner__icon {
-      color: $color-link;
       text-align: center;
-
-      &.is-empty {
-        cursor: pointer;
-      }
     }
 
-    .p-market-banner__image:hover,
-    .p-market-banner__icon:hover {
-      border: 0;
-      outline: 1px solid $color-link;
+    .p-market-banner__image-holder:hover,
+    .p-market-banner__image-holder.is-focused {
+      .p-market-banner__image {
+        border: 1px solid $color-link;
+      }
 
-      & > .p-market-banner__remove {
+      .p-market-banner__remove {
         opacity: 1;
       }
 
-      & > .p-market-banner__remove:hover {
-        .p-icon--delete {
-          @include snapcraft-icon-delete($color-negative);
-        }
-      }
-
-      & > .p-market-banner__change {
+      .p-market-banner__change {
+        border: 1px solid $color-link;
+        border-radius: $border-radius;
         opacity: 1;
       }
     }
@@ -199,12 +163,11 @@
       opacity: 0;
       padding: .25rem;
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 1px;
+      top: 1px;
       z-index: 1;
 
       .p-icon--delete {
-        @include snapcraft-icon-delete($color-mid-dark);
         display: block;
         top: 0;
       }
@@ -215,14 +178,22 @@
       background-color: $white-overlay-strong-color;
       bottom: 0;
       color: $color-link;
-      cursor: pointer;
       display: flex;
       justify-content: center;
       left: 0;
       opacity: 0;
+      pointer-events: none;
       position: absolute;
       right: 0;
       top: 0;
+    }
+  }
+
+  .p-icon--delete {
+    @include snapcraft-icon-delete($color-mid-dark);
+
+    &:hover {
+      @include snapcraft-icon-delete($color-negative);
     }
   }
 }

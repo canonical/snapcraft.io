@@ -121,11 +121,11 @@ function initForm(config, initialState, errors) {
 
   if (config.mediaHolder) {
     const screenshots = state.images.filter(
-      image => image.type === "screenshot" && !image.isBanner
+      image => image.type === "screenshot"
     );
     initMedia(config.mediaHolder, screenshots, newImages => {
       const noneScreenshots = state.images.filter(
-        item => item.type !== "screenshot" || item.isBanner
+        item => item.type !== "screenshot"
       );
       const newState = {
         ...state,
@@ -137,8 +137,19 @@ function initForm(config, initialState, errors) {
   }
 
   if (config.bannerHolder) {
-    initBanner(config.bannerHolder, state, nextState => {
-      updateState(state, nextState);
+    let banners = state.images.filter(image => image.type === "banner");
+    initBanner(config.bannerHolder, banners, image => {
+      let newImages = state.images.filter(image => image.type !== "banner");
+
+      if (image) {
+        newImages = newImages.concat([image]);
+      }
+
+      const newState = {
+        ...state,
+        images: newImages
+      };
+      updateState(state, newState);
       updateFormState();
     });
   }

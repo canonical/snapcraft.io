@@ -56,16 +56,14 @@ function imageRestrictions(file, restrictions) {
       const width = image.naturalWidth;
       const height = image.naturalHeight;
 
-      if (
-        (file.name.indexOf("banner.") === 0 &&
-          width === 1218 &&
-          height === 240) ||
-        (file.name.indexOf("banner-icon.") === 0 &&
-          width === 240 &&
-          height === 240)
-      ) {
-        resolve(file);
-        return;
+      if (restrictions.whitelist && restrictions.whitelist.dimensions) {
+        if (
+          width === restrictions.whitelist.dimensions[0] &&
+          height === restrictions.whitelist.dimensions[1]
+        ) {
+          resolve(file);
+          return;
+        }
       }
 
       const aspectRatio = width / height;
@@ -112,13 +110,25 @@ function imageRestrictions(file, restrictions) {
         }
 
         if (hasAspectError) {
-          reject([
-            `has a width (${width} pixels) that is ${aspectRatio.toFixed(
-              2
-            )}x its height (${height}). Its width needs to be between ${aspectRatioMin[0] /
-              aspectRatioMin[1]}x and ${aspectRatioMax[0] /
-              aspectRatioMax[1]}x the height.`
-          ]);
+          const min =
+            Math.round((aspectRatioMin[0] / aspectRatioMin[1]) * 100) / 100;
+          const max =
+            Math.round((aspectRatioMax[0] / aspectRatioMax[1]) * 100) / 100;
+          const actual = Math.round(aspectRatio * 100) / 100;
+
+          const message = [
+            `has a width (${width} pixels) that is ${actual}x its height (${height} pixels).`
+          ];
+
+          if (min === max) {
+            message.push(`Its width needs to be ${min}x the height.`);
+          } else {
+            message.push(
+              `Its width needs to be between ${min}x and ${max}x the height.`
+            );
+          }
+
+          reject([message.join(" ")]);
           return;
         }
       }

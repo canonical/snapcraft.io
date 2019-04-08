@@ -12,6 +12,7 @@
     align-items: center;
     background: $color-light;
     border: 1px solid $color-light;
+    border-radius: $border-radius;
     color: $color-link;
     cursor: grab;
     display: flex;
@@ -26,6 +27,7 @@
 
     .p-listing-images__delete-image {
       background: $color-x-light;
+      border-radius: 0 .125rem 0 0;
       box-sizing: content-box;
       cursor: pointer;
       height: 1rem;

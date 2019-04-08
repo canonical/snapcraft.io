@@ -181,7 +181,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "summary": "This is a summary",
             "description": "This is a description",
             "media": [
-                {"url": "/banner_1234.png", "type": "screenshot"},
+                {"url": "/banner_1234.png", "type": "banner"},
                 {"url": "/test.jpg", "type": "screenshot"},
                 {"url": "/banner-icon_4321.jpg", "type": "screenshot"},
                 {"url": "/banner-test.png", "type": "screenshot"},
@@ -214,9 +214,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         assert response.status_code == 200
         self.assert_template_used("publisher/listing.html")
 
-        self.assert_context(
-            "banner_urls", ["/banner_1234.png", "/banner-icon_4321.jpg"]
-        )
+        self.assert_context("banner_urls", ["/banner_1234.png"])
 
     @responses.activate
     def test_videos(self):

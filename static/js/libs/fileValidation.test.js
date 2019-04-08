@@ -354,7 +354,7 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toEqual([
-          "has a width (30 pixels) that is 3.00x its height (10). Its width needs to be between 1x and 2x the height."
+          "has a width (30 pixels) that is 3x its height (10 pixels). Its width needs to be between 1x and 2x the height."
         ]);
       });
 
@@ -379,7 +379,7 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toEqual([
-          "has a width (10 pixels) that is 0.33x its height (30). Its width needs to be between 0.5x and 0.3333333333333333x the height."
+          "has a width (10 pixels) that is 0.33x its height (30 pixels). Its width needs to be between 0.5x and 0.33x the height."
         ]);
       });
 
@@ -407,34 +407,83 @@ describe("validateRestrictions", () => {
       });
     });
 
-    it("should allow through banner image", async () => {
-      const file = generateFile({ type: "image/png" }, "banner.jpg");
+    describe("whitelist", () => {
+      it("should return errors if the image size isn't in the whitelist and doesn't pass validation", async () => {
+        const file = generateFile({
+          type: "image/png"
+        });
 
-      generateImage({
-        naturalWidth: 1218,
-        naturalHeight: 240
+        generateImage({
+          naturalWidth: 1218,
+          naturalHeight: 240
+        });
+
+        const width = {
+          min: 720,
+          max: 3840
+        };
+
+        const height = {
+          min: 240,
+          max: 1440
+        };
+
+        const aspectRatio = {
+          min: [1, 3],
+          max: [1, 3]
+        };
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          width,
+          height,
+          aspectRatio
+        });
+
+        expect(validation.errors).toEqual([
+          "has a width (1218 pixels) that is 5.08x its height (240 pixels). Its width needs to be 0.33x the height."
+        ]);
       });
 
-      const validation = await validateRestrictions(file, {
-        ...restrictions
+      it("should return no errors if the image size is in the whitelist", async () => {
+        const file = generateFile({
+          type: "image/png"
+        });
+
+        generateImage({
+          naturalWidth: 1218,
+          naturalHeight: 240
+        });
+
+        const width = {
+          min: 720,
+          max: 3840
+        };
+
+        const height = {
+          min: 240,
+          max: 1440
+        };
+
+        const aspectRatio = {
+          min: [1, 3],
+          max: [1, 3]
+        };
+
+        const whitelist = {
+          dimensions: [1218, 240]
+        };
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          width,
+          height,
+          aspectRatio,
+          whitelist
+        });
+
+        expect(validation.errors).toBeUndefined();
       });
-
-      expect(validation.errors).toBeUndefined();
-    });
-
-    it("should allow through banner-icon image", async () => {
-      const file = generateFile({ type: "image/png" }, "banner-icon.png");
-
-      generateImage({
-        naturalWidth: 240,
-        naturalHeight: 240
-      });
-
-      const validation = await validateRestrictions(file, {
-        ...restrictions
-      });
-
-      expect(validation.errors).toBeUndefined();
     });
   });
 });

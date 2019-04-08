@@ -408,7 +408,6 @@ def post_listing_snap(snap_name):
                 flask.request.files.get("icon"),
                 flask.request.files.getlist("screenshots"),
                 flask.request.files.get("banner-image"),
-                flask.request.files.get("banner-icon"),
             )
 
             try:

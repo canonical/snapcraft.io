@@ -1,49 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Banner from "../form/banner";
+import { BANNER_RESTRICTIONS } from "./restrictions";
 
-function initBanner(holder, state, nextState) {
+function initBanner(holder, banners, nextState) {
   const bannerHolderEl = document.querySelector(holder);
 
   if (!bannerHolderEl) {
     throw new Error("No banner holder defined");
   }
 
-  let bannerBackground = {};
-  let bannerIcon = {};
+  let banner = {};
 
-  if (state.images) {
-    const bannerImages = state.images.filter(image => image.isBanner);
-
-    if (bannerImages.length > 0) {
-      const bannerBackgrounds = bannerImages.filter(
-        image => image.url.indexOf("icon") === -1
-      );
-      if (bannerBackgrounds.length > 0) {
-        bannerBackground = bannerBackgrounds[0];
-      }
-      const bannerIcons = bannerImages.filter(
-        image => image.url.indexOf("icon") > -1
-      );
-      if (bannerIcons.length > 0) {
-        bannerIcon = bannerIcons[0];
-      }
-    }
+  if (banners[0]) {
+    banner = banners[0];
   }
-
-  const updateImageState = images => {
-    const normalImages = state.images.filter(image => !image.isBanner);
-    nextState({
-      ...state,
-      images: normalImages.concat(images)
-    });
-  };
 
   ReactDOM.render(
     <Banner
-      bannerImage={bannerBackground}
-      bannerIcon={bannerIcon}
-      updateImageState={updateImageState}
+      bannerImage={banner}
+      updateImageState={nextState}
+      restrictions={BANNER_RESTRICTIONS}
     />,
     bannerHolderEl
   );

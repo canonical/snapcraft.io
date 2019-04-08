@@ -101,7 +101,7 @@
 
           <div class="row" data-validation-name="icon">
             <div class="col-2">
-              <label class="p-editable-icon__label" for="snap_icon">Snap icon:</label>
+              <label class="p-editable-icon__label">Snap icon:</label>
             </div>
             <div class="col-8 js-icon-holder"></div>
           </div>
@@ -257,14 +257,15 @@
           </div>
 
           <div class="row">
-            <label>Featured banner:</label>
-          </div>
-          <div class="col-8">
-            <div class="p-market-banner js-banner">
-              <i class="p-icon--spinner u-animation--spin"></i>
+            <div class="col-2">
+              <label>Featured banner:</label>
+            </div>
+            <div class="col-8">
+              <div class="p-market-banner js-banner">
+                <i class="p-icon--spinner u-animation--spin"></i>
+              </div>
             </div>
           </div>
-        </div>
 
         <div class="row">
           <div class="col-2">
@@ -518,7 +519,7 @@
           { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
         {% endfor %}
         {% for banner_url in banner_urls %}
-          { url: {{ banner_url|tojson }}, type: "screenshot", status: "uploaded", isBanner: true },
+          { url: {{ banner_url|tojson }}, type: "banner", status: "uploaded" },
         {% endfor %}
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},

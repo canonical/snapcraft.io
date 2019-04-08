@@ -2,7 +2,6 @@ import hashlib
 import datetime
 from dateutil import parser
 from json import dumps
-import re
 
 
 def get_snaps_account_info(account_info):
@@ -162,7 +161,6 @@ def build_changed_images(
     icon,
     new_screenshots,
     banner_background,
-    banner_icon,
 ):
     """Filter and build images to upload.
 
@@ -209,13 +207,8 @@ def build_changed_images(
 
     # Add new banner background
     if banner_background is not None:
-        info.append(build_image_info(banner_background, "screenshot"))
+        info.append(build_image_info(banner_background, "banner"))
         images_files.append(banner_background)
-
-    # Add new banner icon
-    if banner_icon is not None:
-        info.append(build_image_info(banner_icon, "screenshot"))
-        images_files.append(banner_icon)
 
     images_json = {"info": dumps(info)}
 
@@ -345,14 +338,12 @@ def categorise_media(media):
     :param media: a list of media dicts
     :returns: Separate lists for the media types"""
 
-    banner_regex = r"/banner(\-icon)?(_.*)\.(png|jpg)"
-
     banner_urls = []
     icon_urls = []
     screenshot_urls = []
 
     for m in media:
-        if re.search(banner_regex, m["url"]):
+        if m["type"] == "banner":
             banner_urls.append(m["url"])
         elif m["type"] == "icon":
             icon_urls.append(m["url"])

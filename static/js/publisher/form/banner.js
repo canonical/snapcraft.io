@@ -1,144 +1,146 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
+import FileInput from "../form/fileInput";
+import AccordionHelp from "./AccordionHelp";
+
 class Banner extends React.Component {
   constructor(props) {
     super(props);
 
     this.bannerImageChangeHandler = this.bannerImageChangeHandler.bind(this);
-    this.bannerIconChangeHandler = this.bannerIconChangeHandler.bind(this);
-    this.handleChangeImageClick = this.handleChangeImageClick.bind(this);
-    this.handleChangeIconClick = this.handleChangeIconClick.bind(this);
     this.handleRemoveImageClick = this.handleRemoveImageClick.bind(this);
-    this.handleRemoveIconClick = this.handleRemoveIconClick.bind(this);
+
+    this.keyboardEvent = this.keyboardEvent.bind(this);
+    this.toggleFocus = this.toggleFocus.bind(this);
 
     this.state = {
       bannerImage: this.props.bannerImage,
-      bannerIcon: this.props.bannerIcon
+      focused: false,
+      errors: {}
     };
   }
 
-  componentDidUpdate() {
-    const images = [];
-    if (this.state.bannerImage.url) {
-      images.push(this.state.bannerImage);
-    }
-    if (this.state.bannerIcon.url) {
-      images.push(this.state.bannerIcon);
-    }
+  bannerImageChangeHandler(files) {
+    const { updateImageState } = this.props;
+    const file = files[0];
 
-    this.props.updateImageState(images);
-  }
-
-  bannerImageChangeHandler() {
-    const file = this.bannerImageInput.files[0];
-    if (file.name !== "banner.jpg" && file.name !== "banner.png") {
+    if (file.errors) {
       this.setState({
-        error: (
-          <Fragment>
-            Background filename must be <code>banner.jpg</code> or{" "}
-            <code>banner.png</code>
-          </Fragment>
-        )
+        errors: {
+          [file.name]: file.errors
+        }
       });
-      this.bannerImageInput.value = "";
-      return;
-    }
-    const url = URL.createObjectURL(file);
+    } else {
+      const url = URL.createObjectURL(file);
 
-    this.setState({
-      error: undefined,
-      bannerImage: {
-        file,
-        url: url,
-        name: file.name,
-        type: "screenshot",
-        status: "new",
-        isBanner: true
-      }
-    });
-  }
-
-  bannerIconChangeHandler() {
-    const file = this.bannerIconInput.files[0];
-    if (file.name !== "banner-icon.jpg" && file.name !== "banner-icon.png") {
       this.setState({
-        error: (
-          <Fragment>
-            Icon filename must be <code>banner-icon.jpg</code> or{" "}
-            <code>banner-icon.png</code>
-          </Fragment>
-        )
+        errors: {},
+        bannerImage: {
+          url: url
+        }
       });
-      this.bannerIconInput.value = "";
-      return;
-    }
-    const url = URL.createObjectURL(file);
 
-    this.setState({
-      error: undefined,
-      bannerIcon: {
-        file,
+      updateImageState({
         url: url,
+        file,
         name: file.name,
-        type: "screenshot",
         status: "new",
-        isBanner: true
-      }
-    });
+        type: "banner"
+      });
+    }
   }
 
   handleRemoveImageClick(e) {
     e.stopPropagation();
+    const { updateImageState } = this.props;
+
     this.setState({
       bannerImage: {}
     });
-    this.bannerImageInput.value = "";
+
+    updateImageState(null);
   }
 
-  handleRemoveIconClick(e) {
-    e.stopPropagation();
+  keyboardEvent(e) {
+    if (e.key === "Delete" || e.key === "Backspace") {
+      this.handleRemoveImageClick(e);
+    }
+  }
+
+  toggleFocus() {
+    const { focused } = this.state;
     this.setState({
-      bannerIcon: {}
+      focused: !focused
     });
-    this.bannerIconInput.value = "";
   }
 
-  handleChangeImageClick() {
-    this.bannerImageInput.click();
-  }
-
-  handleChangeIconClick() {
-    this.bannerIconInput.click();
-  }
-
-  renderError() {
-    return (
-      <div className="p-notification p-notification--negative">
-        <p className="p-notification__response">{this.state.error}</p>
-      </div>
-    );
+  renderErrors() {
+    const { errors } = this.state;
+    if (Object.keys(errors).length > 0) {
+      return (
+        <div className="p-notification--negative">
+          <p className="p-notification__response">
+            {Object.keys(errors).map(fileName => (
+              <Fragment key={`errors-${fileName}`}>
+                {fileName}
+                &nbsp;
+                {errors[fileName].map((error, index) => (
+                  <Fragment key={`errors-${fileName}-${index}`}>
+                    {error}
+                    <br />
+                  </Fragment>
+                ))}
+              </Fragment>
+            ))}
+          </p>
+        </div>
+      );
+    }
+    return false;
   }
 
   renderBackground() {
-    const background = this.state.bannerImage.url;
+    const { bannerImage } = this.state;
+    const { restrictions } = this.props;
+    const background = bannerImage.url;
 
     let style;
     let backgroundClasses = ["p-market-banner__image", "u-vertically-center"];
     if (background) {
       style = {
-        backgroundImage: `url(${this.state.bannerImage.url})`
+        backgroundImage: `url(${background})`
       };
     } else {
       backgroundClasses.push("is-empty");
     }
 
     return (
-      <div
-        className={backgroundClasses.join(" ")}
-        style={style}
-        onClick={this.handleChangeImageClick}
-      >
+      <Fragment>
+        <FileInput
+          inputName="banner-image"
+          active={true}
+          fileChangedCallback={this.bannerImageChangeHandler}
+          noFocus={true}
+          restrictions={restrictions}
+        >
+          <div
+            className={backgroundClasses.join(" ")}
+            style={style}
+            tabIndex="0"
+            onKeyDown={this.keyboardEvent}
+            onFocus={this.toggleFocus}
+            onBlur={this.toggleFocus}
+          >
+            {!background && (
+              <div className="u-align-text--center">
+                <i className="p-icon--plus" />
+                <br />
+                Add background
+              </div>
+            )}
+          </div>
+        </FileInput>
         {background && (
           <Fragment>
             <span
@@ -151,93 +153,50 @@ class Banner extends React.Component {
             <div className="p-market-banner__change">Edit background</div>
           </Fragment>
         )}
-        {!background && (
-          <div className="u-align-text--center">
-            <i className="p-icon--plus" />
-            <br />
-            Add background
-          </div>
-        )}
-      </div>
+      </Fragment>
     );
   }
 
-  renderIcon() {
-    const icon = this.state.bannerIcon.url;
-
-    let iconClasses = ["p-market-banner__icon", "u-vertically-center"];
-    if (!icon) {
-      iconClasses.push("is-empty");
-    }
-
-    return (
-      <div
-        className={iconClasses.join(" ")}
-        onClick={this.handleChangeIconClick}
-      >
-        {icon && (
-          <Fragment>
-            <span
-              className="p-market-banner__remove"
-              role="button"
-              onClick={this.handleRemoveIconClick}
-            >
-              <i className="p-icon--delete" />
-            </span>
-            <img alt="banner icon" src={icon} />
-            <div className="p-market-banner__change">Edit icon</div>
-          </Fragment>
-        )}
-        {!icon && (
-          <div className="u-align-text--center">
-            <i className="p-icon--plus" />
-            <br />
-            Add icon
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  render() {
+  renderHelp() {
     return (
       <Fragment>
-        {this.state.error && this.renderError()}
-        <div className="p-market-banner__images">
-          {this.renderBackground()}
-          {this.renderIcon()}
-        </div>
-        <input
-          name="banner-image"
-          type="file"
-          hidden="hidden"
-          onChange={this.bannerImageChangeHandler}
-          ref={item => (this.bannerImageInput = item)}
-        />
-        <input
-          name="banner-icon"
-          type="file"
-          hidden="hidden"
-          onChange={this.bannerIconChangeHandler}
-          ref={item => (this.bannerIconInput = item)}
-        />
         <p className="p-form-help-text">
           Adding a featured banner will increase your chances of being featured
           on snapcraft.io and in GNOME software but does not immediately make
           you eligible to be featured.
         </p>
-        <ul className="p-form-help-text">
-          <li>
-            Both background and icon must have the file extension{" "}
-            <code>.jpg</code> or <code>.png</code>.
-          </li>
-          <li>
-            The background filename must be <code>banner</code>.
-          </li>
-          <li>
-            The icon filename must be <code>banner-icon</code>.
-          </li>
-        </ul>
+        <AccordionHelp name="banner restrictions">
+          <p>
+            <small>
+              Accepted image formats include: <b>JPEG & PNG files</b>
+              <br />
+              Min resolution: <b>720 x 240 pixels</b>
+              <br />
+              Max resolution: <b>3840 x 1440 pixels</b>
+              <br />
+              Recommended (legacy) size: <b>1218 x 240 pixels</b>
+              <br />
+              Aspect ratio: <b>1:3</b>
+              <br />
+              File size limit: <b>2MB</b>
+            </small>
+          </p>
+        </AccordionHelp>
+      </Fragment>
+    );
+  }
+
+  render() {
+    const { focused } = this.state;
+    const classNames = ["p-market-banner__image-holder"];
+    if (focused) {
+      classNames.push("is-focused");
+    }
+    return (
+      <Fragment>
+        {this.renderErrors()}
+        <div className={classNames.join(" ")}>{this.renderBackground()}</div>
+        {this.renderHelp()}
       </Fragment>
     );
   }
@@ -245,7 +204,7 @@ class Banner extends React.Component {
 
 Banner.defaultProps = {
   bannerImage: {},
-  bannerIcon: {},
+  restrictions: {},
   updateImageState: () => {}
 };
 
@@ -253,9 +212,7 @@ Banner.propTypes = {
   bannerImage: PropTypes.shape({
     url: PropTypes.string
   }),
-  bannerIcon: PropTypes.shape({
-    url: PropTypes.string
-  }),
+  restrictions: PropTypes.object,
   updateImageState: PropTypes.func
 };
 

@@ -49,4 +49,27 @@ const ICON_RESTRICTIONS = {
   }
 };
 
-export { MEDIA_RESTRICTIONS, ICON_RESTRICTIONS };
+const BANNER_RESTRICTIONS = {
+  accept: ["image/png", "image/jpeg"],
+  width: {
+    min: 720,
+    max: 3840
+  },
+  height: {
+    min: 240,
+    max: 1440
+  },
+  aspectRatio: {
+    min: [1, 3],
+    max: [1, 3]
+  },
+  size: {
+    min: 0,
+    max: 2000000
+  },
+  whitelist: {
+    dimensions: [1218, 240]
+  }
+};
+
+export { MEDIA_RESTRICTIONS, ICON_RESTRICTIONS, BANNER_RESTRICTIONS };

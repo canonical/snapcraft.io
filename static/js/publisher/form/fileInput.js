@@ -160,7 +160,7 @@ class FileInput extends React.Component {
   }
 
   render() {
-    const { className, children, isSmall } = this.props;
+    const { className, children, isSmall, noFocus } = this.props;
     const { isDragging, canDrop, overLimit } = this.state;
     const localClassName = [className, "p-file-input"];
 
@@ -186,7 +186,7 @@ class FileInput extends React.Component {
         className={localClassName.join(" ")}
         onClick={this.fileClickHandler}
         onKeyDown={this.keyboardEventHandler}
-        tabIndex={0}
+        tabIndex={noFocus ? null : 0}
       >
         {children}
       </div>
@@ -202,7 +202,8 @@ FileInput.defaultProps = {
     accept: []
   },
   active: true,
-  isSmall: false
+  isSmall: false,
+  noFocus: false
 };
 
 FileInput.propTypes = {
@@ -214,7 +215,8 @@ FileInput.propTypes = {
     accept: PropTypes.arrayOf(PropTypes.string)
   }),
   active: PropTypes.bool,
-  isSmall: PropTypes.bool
+  isSmall: PropTypes.bool,
+  noFocus: PropTypes.bool
 };
 
 export { FileInput as default };
