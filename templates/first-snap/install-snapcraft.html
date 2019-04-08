@@ -1,67 +1,48 @@
-{% extends webapp_config['LAYOUT'] %}
+{% set fsf_step = "install" %}
+{% extends "first-snap/_layout_fsf.html" %}
 
-{% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
-
-{% block content %}
-  {% set fsf_step = "install" %}
-  {% include "first-snap/_breadcrumb.html" %}
-
-  <div id="main-content" class="p-strip is-shallow">
-    <div class="row">
-      <p>Now we'll set up Snapcraft, the tool for building snaps.</p>
-      <h4>What operating system are you developing on?</h4>
-    </div>
-    <div class="row">
-      <div class="col-6 p-fluid-grid">
-        <a class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="linux">
-          <header class="p-card__header">
-            <img src="https://assets.ubuntu.com/v1/e95bac0c-tux.svg" alt="">
-          </header>
-          <span>Linux</span>
-        </a>
-        <span class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="macos">
-          <header class="p-card__header">
-            <img src="https://assets.ubuntu.com/v1/236f314d-macos.svg" alt="">
-          </header>
-          <span>macOS</span>
-        </span>
-        <span class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center is-disabled" data-os="windows">
-          <header class="p-card__header">
-            <img src="https://assets.ubuntu.com/v1/a9bfe4c5-win.svg" alt="">
-          </header>
-          <span>Windows</span>
-        </span>
-      </div>
-    </div>
-
-    {% include "first-snap/_install-linux.html" %}
-
-    {% include "first-snap/_install-macos.html" %}
-
-    {% include "first-snap/_install-windows.html" %}
-
-    <div class="row">
-      <hr />
-    </div>
-
-    <div class="row">
-      <p class="u-float--left">Next, we'll package an example snap.</p>
-      <a class="p-button--positive u-float--right js-continue is--disabled">Continue</a>
-    </div>
-
+{% block fsf_content %}
+  <div class="row">
+    <p>Now we'll set up Snapcraft, the tool for building snaps.</p>
+    <h4>What operating system are you developing on?</h4>
   </div>
-{% endblock %}
+  <div class="row">
+    <div class="col-6 p-fluid-grid">
+      <a class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="linux">
+        <header class="p-card__header">
+          <img src="https://assets.ubuntu.com/v1/e95bac0c-tux.svg" alt="">
+        </header>
+        <span>Linux</span>
+      </a>
+      <span class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center js-os-select" data-os="macos">
+        <header class="p-card__header">
+          <img src="https://assets.ubuntu.com/v1/236f314d-macos.svg" alt="">
+        </header>
+        <span>macOS</span>
+      </span>
+      <span class="p-logo-link p-fluid-grid__item--small p-card u-align-text--center is-disabled" data-os="windows">
+        <header class="p-card__header">
+          <img src="https://assets.ubuntu.com/v1/a9bfe4c5-win.svg" alt="">
+        </header>
+        <span>Windows</span>
+      </span>
+    </div>
+  </div>
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
-  <!-- begin intercom live embed code -->
-  <script>
-    window.intercomSettings = {
-      app_id: "s1rasgdr"
-    };
-  </script>
-  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/s1rasgdr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
-  <!-- end intercom live embed code -->
+  {% include "first-snap/_install-linux.html" %}
+
+  {% include "first-snap/_install-macos.html" %}
+
+  {% include "first-snap/_install-windows.html" %}
+
+  <div class="row">
+    <hr />
+  </div>
+
+  <div class="row">
+    <p class="u-float--left">Next, we'll package an example snap.</p>
+    <a class="p-button--positive u-float--right js-continue is--disabled">Continue</a>
+  </div>
 {% endblock %}
 
 {% block scripts %}
@@ -71,4 +52,5 @@
       snapcraft.public.firstSnapFlow.install({{ language|tojson }});
     });
   </script>
+  {{ super() }}
 {% endblock %}

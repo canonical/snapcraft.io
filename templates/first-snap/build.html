@@ -1,80 +1,51 @@
-{% extends webapp_config['LAYOUT'] %}
+{% set fsf_step = "build" %}
+{% extends "first-snap/_layout_fsf.html" %}
 
-{% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
-
-{% block content %}
-  {% set fsf_step = "build" %}
-  {% include "first-snap/_breadcrumb.html" %}
-
-  <div id="main-content" class="p-strip is-shallow">
-    <div class="row">
-      <div class="col-8">
-        <ol class="p-list-step has-margin">
-          {% for step in steps %}
-              <li class="p-list-step__item">
-                <h4 class="p-list-step__title">
-                  <span class="p-list-step__bullet">{{ loop.index }}</span>
-                  {{ step.action }}
-                </h4>
-                {% if step.command %}
-                  {% set snippet_value = step.command %}
-                  {% set snippet_id = loop.index %}
-                  {% if snippet_value.count('\n') == 0 %}
-                    {% include "/partials/_code-snippet.html" %}
-                  {% else %}
-                    {% include "/partials/_code-snippet-multi.html" %}
-                  {% endif %}
+{% block fsf_content %}
+  <div class="row">
+    <div class="col-8">
+      <ol class="p-list-step has-margin">
+        {% for step in steps %}
+            <li class="p-list-step__item">
+              <h4 class="p-list-step__title">
+                <span class="p-list-step__bullet">{{ loop.index }}</span>
+                {{ step.action }}
+              </h4>
+              {% if step.command %}
+                {% set snippet_value = step.command %}
+                {% set snippet_id = loop.index %}
+                {% if snippet_value.count('\n') == 0 %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% else %}
+                  {% include "/partials/_code-snippet-multi.html" %}
                 {% endif %}
-              </li>
-          {% endfor %}
-          {% for step in steps %}
-            {% if loop.last and step.warning %}
-              <div class="p-notification--caution">
-                <p class="p-notification__response">
-                  {{ step.warning|safe }}
-                </p>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </ol>
-      </div>
+              {% endif %}
+            </li>
+        {% endfor %}
+        {% for step in steps %}
+          {% if loop.last and step.warning %}
+            <div class="p-notification--caution">
+              <p class="p-notification__response">
+                {{ step.warning|safe }}
+              </p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </ol>
     </div>
-
-    <div class="row">
-      <hr />
-    </div>
-
-    <div class="row">
-      {% if os.startswith('macos') %}
-        Once built, it's time to test the snap.
-        <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/test">Continue</a>
-      {% else %}
-        If it's working, the next step is to push it to the Snap Store.
-        <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/push">Continue</a>
-      {% endif %}
-    </div>
-
   </div>
-{% endblock %}
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
-  <!-- begin intercom live embed code -->
-  <script>
-    window.intercomSettings = {
-      app_id: "s1rasgdr"
-    };
-  </script>
-  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/s1rasgdr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
-  <!-- end intercom live embed code -->
-{% endblock %}
+  <div class="row">
+    <hr />
+  </div>
 
-{% block scripts %}
-  <script>
-    Raven.context(function() {
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
-    });
-  </script>
+  <div class="row">
+    {% if os.startswith('macos') %}
+      Once built, it's time to test the snap.
+      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/test">Continue</a>
+    {% else %}
+      If it's working, the next step is to push it to the Snap Store.
+      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/push">Continue</a>
+    {% endif %}
+  </div>
 {% endblock %}
