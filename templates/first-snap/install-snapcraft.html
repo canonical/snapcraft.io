@@ -3,9 +3,10 @@
 {% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
 
 {% block content %}
-  <div id="main-content" class="p-strip">
-    {% set fsf_step = "install" %}
-    {% include "first-snap/_breadcrumb.html" %}
+  {% set fsf_step = "install" %}
+  {% include "first-snap/_breadcrumb.html" %}
+
+  <div id="main-content" class="p-strip is-shallow">
     <div class="row">
       <p>Now we'll set up Snapcraft, the tool for building snaps.</p>
       <h4>What operating system are you developing on?</h4>
