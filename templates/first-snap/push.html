@@ -1,121 +1,101 @@
-{% extends webapp_config['LAYOUT'] %}
+{% set fsf_step = "push" %}
+{% extends "first-snap/_layout_fsf.html" %}
 
-{% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
-
-{% block content %}
-  {% set fsf_step = "push" %}
-  {% include "first-snap/_breadcrumb.html" %}
-  <div id="main-content" class="p-strip is-shallow">
-
-    <div class="row">
-      <ol class="p-list-step has-margin">
-        {% if not user %}
-          <li class="p-list-step__item col-8">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">1</span>
-              Create an Ubuntu One account
-            </h4>
-            <div class="p-list-step__content">
-              <p>This lets you make releases, alter your store listing and see usage metrics.</p>
-              <div class="row">
-                <p class="col-5">
-                  <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
-                </p>
-              </div>
-              <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
-            </div>
-          </li>
-        {% else %}
-          <li class="p-list-step__item col-8 u-no-margin--left">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">1</span>
-              Create an Ubuntu One account <i class="p-icon--success"></i>
-            </h4>
-            <div class="p-list-step__content">
-              <p>This lets you make releases, alter your store listing and see usage metrics.</p>
-              <div class="row">
-                <p class="col-5">
-                  <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="p-list-step__item col-8 u-no-margin--left">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">2</span>
-              Okay {{ user.display_name }}, now log in with the same account at the terminal
-            </h4>
-            {% set snippet_value = "snapcraft login" %}
-            {% set snippet_id = "snapcraft-login" %}
-            {% include "/partials/_code-snippet.html" %}
-          </li>
-          <li class="p-list-step__item col-8 u-no-margin--left">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">3</span>
-              Register the snap name from the snapcraft.yaml
-            </h4>
-            {% set snippet_value = "snapcraft register " + snap_name %}
-            {% set snippet_id = "snapcraft-login" %}
-            {% set snippet_id = "snapcraft-register" %}
-            {% include "/partials/_code-snippet.html" %}
-            <div class="p-notification--caution">
-              <p class="p-notification__response">
-                <span class="p-notification__status"></span>
-                Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
+{% block fsf_content %}
+  <div class="row">
+    <ol class="p-list-step has-margin">
+      {% if not user %}
+        <li class="p-list-step__item col-8">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">1</span>
+            Create an Ubuntu One account
+          </h4>
+          <div class="p-list-step__content">
+            <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+            <div class="row">
+              <p class="col-5">
+                <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
               </p>
             </div>
-          </li>
+            <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
+          </div>
+        </li>
+      {% else %}
+        <li class="p-list-step__item col-8 u-no-margin--left">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">1</span>
+            Create an Ubuntu One account <i class="p-icon--success"></i>
+          </h4>
+          <div class="p-list-step__content">
+            <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+            <div class="row">
+              <p class="col-5">
+                <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
+              </p>
+            </div>
+          </div>
+        </li>
+        <li class="p-list-step__item col-8 u-no-margin--left">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">2</span>
+            Okay {{ user.display_name }}, now log in with the same account at the terminal
+          </h4>
+          {% set snippet_value = "snapcraft login" %}
+          {% set snippet_id = "snapcraft-login" %}
+          {% include "/partials/_code-snippet.html" %}
+        </li>
+        <li class="p-list-step__item col-8 u-no-margin--left">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">3</span>
+            Register the snap name from the snapcraft.yaml
+          </h4>
+          {% set snippet_value = "snapcraft register " + snap_name %}
+          {% set snippet_id = "snapcraft-login" %}
+          {% set snippet_id = "snapcraft-register" %}
+          {% include "/partials/_code-snippet.html" %}
+          <div class="p-notification--caution">
+            <p class="p-notification__response">
+              <span class="p-notification__status"></span>
+              Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
+            </p>
+          </div>
+        </li>
 
-          <li class="p-list-step__item col-8 u-no-margin--left">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">4</span>
-              Push to the Snap store
-            </h4>
-            {% set snippet_value = "snapcraft push --release edge *.snap" %}
-            {% set snippet_id = "snapcraft-push" %}
-            {% include "/partials/_code-snippet.html" %}
-          </li>
-        {% endif %}
-      </ol>
-    </div>
-
-    <div class="row">
-      <hr />
-    </div>
-
-    <div class="row">
-      <p class="u-float--left">
-        Once you've pushed to the Snap store, edit your snap public presentation.
-      </p>
-      <a class="p-button--neutral u-float--right js-continue is--disabled">
-        <i class="p-icon--spinner u-animation--spin"></i>
-        &nbsp;Waiting for push...</a>
-    </div>
+        <li class="p-list-step__item col-8 u-no-margin--left">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">4</span>
+            Push to the Snap store
+          </h4>
+          {% set snippet_value = "snapcraft push --release edge *.snap" %}
+          {% set snippet_id = "snapcraft-push" %}
+          {% include "/partials/_code-snippet.html" %}
+        </li>
+      {% endif %}
+    </ol>
   </div>
-{% endblock %}
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
-  <!-- begin intercom live embed code -->
-  <script>
-    window.intercomSettings = {
-      app_id: "s1rasgdr"
-    };
-  </script>
-  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/s1rasgdr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
-  <!-- end intercom live embed code -->
+  <div class="row">
+    <hr />
+  </div>
+
+  <div class="row">
+    <p class="u-float--left">
+      Once you've pushed to the Snap store, edit your snap public presentation.
+    </p>
+    <a class="p-button--neutral u-float--right js-continue is--disabled">
+      <i class="p-icon--spinner u-animation--spin"></i>
+      &nbsp;Waiting for push...</a>
+  </div>
 {% endblock %}
 
 {% block scripts %}
   <script src="{{ static_url('js/dist/public.js') }}"></script>
+  {% if user %}
   <script>
     Raven.context(function() {
-      {% if user %}
-        snapcraft.public.firstSnapFlow.push({{ language|tojson }});
-      {% endif %}
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+      snapcraft.public.firstSnapFlow.push({{ language|tojson }});
     });
   </script>
+  {% endif %}
+  {{ super() }}
 {% endblock %}

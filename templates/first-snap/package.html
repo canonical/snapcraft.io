@@ -1,180 +1,152 @@
-{% extends webapp_config['LAYOUT'] %}
+{% set fsf_step = "package" %}
+{% extends "first-snap/_layout_fsf.html" %}
 
-{% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
-
-{% block content %}
-  {% set fsf_step = "package" %}
-  {% include "first-snap/_breadcrumb.html" %}
-  <div id="main-content" class="p-strip is-shallow">
-    <div class="row">
-      <p>Now we'll take a real world app, and package it as a snap</p>
-    </div>
-
-    <div class="row">
-      <div class="col-8">
-        <ol class="p-list-step has-margin">
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">1</span>
-              Download a copy of the app
-            </h4>
-            {% set snippet_value = steps.download %}
-            {% set snippet_id = "download" %}
-            {% include "/partials/_code-snippet.html" %}
-          </li>
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">2</span>
-              Open the snapcraft.yaml file in the root of the project
-            </h4>
-            {% set snippet_value = steps.createDir %}
-            {% set snippet_id = "createdir" %}
-            {% include "/partials/_code-snippet-multi.html" %}
-          </li>
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">3</span>
-              The snapcraft.yaml file starts with a small amount of human-readable metadata.
-            </h4>
-            <div class="p-list-step__content">
-              {% set snippet_value = steps.metadata %}
-              {% set snippet_id = "metadata" %}
-              {% include "/partials/_code.html" %}
-              {% for item in steps.explain.metadata %}
-                {% if item.text %}
-                  <p>{{ item.text|safe }}</p>
-                {% elif item.code %}
-                  <pre><code>{{ item.code }}</code></pre>
-                {% elif item.warning %}
-                  <div class="p-notification--caution">
-                    <p class="p-notification__response">
-                      {{ item.warning|safe }}
-                    </p>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </li>
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">4</span>
-              Security model
-            </h4>
-            <div class="p-list-step__content">
-              {% for item in steps.explain.security %}
-                {% if item.text %}
-                  <p>{{ item.text|safe }}</p>
-                {% elif item.code %}
-                  <pre><code>{{ item.code }}</code></pre>
-                {% elif item.warning %}
-                  <div class="p-notification--caution">
-                    <p class="p-notification__response">
-                      {{ item.warning|safe }}
-                    </p>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </li>
-          {% if steps.explain.base %}
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">5</span>
-              Base
-            </h4>
-            <div class="p-list-step__content">
-              {% for item in steps.explain.base %}
-                {% if item.text %}
-                  <p>{{ item.text|safe }}</p>
-                {% elif item.code %}
-                  <pre><code>{{ item.code }}</code></pre>
-                {% elif item.warning %}
-                  <div class="p-notification--caution">
-                    <p class="p-notification__response">
-                      {{ item.warning|safe }}
-                    </p>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </li>
-          {% endif %}
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">6</span>
-              Parts
-            </h4>
-            <div class="p-list-step__content">
-              {% for item in steps.explain.parts %}
-                {% if item.text %}
-                  <p>{{ item.text|safe }}</p>
-                {% elif item.code %}
-                  <pre><code>{{ item.code }}</code></pre>
-                {% elif item.warning %}
-                  <div class="p-notification--caution">
-                    <p class="p-notification__response">
-                      {{ item.warning|safe }}
-                    </p>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          </li>
-          <li class="p-list-step__item">
-            <h4 class="p-list-step__title">
-              <span class="p-list-step__bullet">7</span>
-              Apps
-            </h4>
-            <div class="p-list-step__content">
-              {% for item in steps.explain.apps %}
-              {% if item.text %}
-              <p>{{ item.text|safe }}</p>
-              {% elif item.code %}
-              <pre><code>{{ item.code }}</code></pre>
-              {% elif item.warning %}
-              <div class="p-notification--caution">
-                <p class="p-notification__response">
-                  {{ item.warning|safe }}
-                </p>
-              </div>
-              {% endif %}
-              {% endfor %}
-            </div>
-          </li>
-        </ol>
-      </div>
-    </div>
-
-    <div class="row">
-      <hr />
-    </div>
-
-    <div class="row">
-      <p class="u-float--left">Next, we'll build and test the snap.</p>
-      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/build">Continue</a>
-    </div>
-
+{% block fsf_content %}
+  <div class="row">
+    <p>Now we'll take a real world app, and package it as a snap</p>
   </div>
-{% endblock %}
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
-  <!-- begin intercom live embed code -->
-  <script>
-    window.intercomSettings = {
-      app_id: "s1rasgdr"
-    };
-  </script>
-  <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/s1rasgdr';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();</script>
-  <!-- end intercom live embed code -->
-{% endblock %}
+  <div class="row">
+    <div class="col-8">
+      <ol class="p-list-step has-margin">
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">1</span>
+            Download a copy of the app
+          </h4>
+          {% set snippet_value = steps.download %}
+          {% set snippet_id = "download" %}
+          {% include "/partials/_code-snippet.html" %}
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">2</span>
+            Open the snapcraft.yaml file in the root of the project
+          </h4>
+          {% set snippet_value = steps.createDir %}
+          {% set snippet_id = "createdir" %}
+          {% include "/partials/_code-snippet-multi.html" %}
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">3</span>
+            The snapcraft.yaml file starts with a small amount of human-readable metadata.
+          </h4>
+          <div class="p-list-step__content">
+            {% set snippet_value = steps.metadata %}
+            {% set snippet_id = "metadata" %}
+            {% include "/partials/_code.html" %}
+            {% for item in steps.explain.metadata %}
+              {% if item.text %}
+                <p>{{ item.text|safe }}</p>
+              {% elif item.code %}
+                <pre><code>{{ item.code }}</code></pre>
+              {% elif item.warning %}
+                <div class="p-notification--caution">
+                  <p class="p-notification__response">
+                    {{ item.warning|safe }}
+                  </p>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">4</span>
+            Security model
+          </h4>
+          <div class="p-list-step__content">
+            {% for item in steps.explain.security %}
+              {% if item.text %}
+                <p>{{ item.text|safe }}</p>
+              {% elif item.code %}
+                <pre><code>{{ item.code }}</code></pre>
+              {% elif item.warning %}
+                <div class="p-notification--caution">
+                  <p class="p-notification__response">
+                    {{ item.warning|safe }}
+                  </p>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+        {% if steps.explain.base %}
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">5</span>
+            Base
+          </h4>
+          <div class="p-list-step__content">
+            {% for item in steps.explain.base %}
+              {% if item.text %}
+                <p>{{ item.text|safe }}</p>
+              {% elif item.code %}
+                <pre><code>{{ item.code }}</code></pre>
+              {% elif item.warning %}
+                <div class="p-notification--caution">
+                  <p class="p-notification__response">
+                    {{ item.warning|safe }}
+                  </p>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+        {% endif %}
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">6</span>
+            Parts
+          </h4>
+          <div class="p-list-step__content">
+            {% for item in steps.explain.parts %}
+              {% if item.text %}
+                <p>{{ item.text|safe }}</p>
+              {% elif item.code %}
+                <pre><code>{{ item.code }}</code></pre>
+              {% elif item.warning %}
+                <div class="p-notification--caution">
+                  <p class="p-notification__response">
+                    {{ item.warning|safe }}
+                  </p>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+        <li class="p-list-step__item">
+          <h4 class="p-list-step__title">
+            <span class="p-list-step__bullet">7</span>
+            Apps
+          </h4>
+          <div class="p-list-step__content">
+            {% for item in steps.explain.apps %}
+            {% if item.text %}
+            <p>{{ item.text|safe }}</p>
+            {% elif item.code %}
+            <pre><code>{{ item.code }}</code></pre>
+            {% elif item.warning %}
+            <div class="p-notification--caution">
+              <p class="p-notification__response">
+                {{ item.warning|safe }}
+              </p>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
 
-{% block scripts %}
-  <script>
-    Raven.context(function() {
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
-    });
-  </script>
+  <div class="row">
+    <hr />
+  </div>
+
+  <div class="row">
+    <p class="u-float--left">Next, we'll build and test the snap.</p>
+    <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/build">Continue</a>
+  </div>
 {% endblock %}
