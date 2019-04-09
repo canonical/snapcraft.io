@@ -34,20 +34,6 @@
       </ol>
     </div>
   </div>
-
-  <div class="row">
-    <hr />
-  </div>
-
-  <div class="row">
-    {% if os.startswith('macos') %}
-      Once built, it's time to test the snap.
-      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/test">Continue</a>
-    {% else %}
-      If it's working, the next step is to push it to the Snap Store.
-      <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/push">Continue</a>
-    {% endif %}
-  </div>
 {% endblock %}
 
 {% block fsf_pagination %}
