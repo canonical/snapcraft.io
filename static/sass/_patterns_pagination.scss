@@ -1,6 +1,12 @@
 @mixin snapcraft-p-pagination {
   .p-pagination__link--previous,
   .p-pagination__link--next {
+    $color-darken-transparent: rgba(0, 0, 0, .1);
+
+    &:hover {
+      background-color: $color-darken-transparent;
+    }
+
     &.is-disabled {
       cursor: default;
       opacity: .5;
