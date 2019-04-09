@@ -18,21 +18,10 @@ function install(language) {
     }
 
     if (!document.querySelector(".js-linux-manual")) {
-      const continueBtn = document.querySelector(".js-continue");
-      if (continueBtn) {
-        continueBtn.classList.remove("is--disabled");
-        continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
-      }
-      const paginationBtn = document.querySelector(
-        `#js-pagination-${selectedOs}`
-      );
+      const paginationBtn = document.querySelector(`#js-pagination-next`);
       if (paginationBtn) {
-        Array.prototype.slice
-          .call(document.querySelectorAll(`.p-pagination__link--next`))
-          .forEach(function(wrapper) {
-            wrapper.classList.add("u-hide");
-          });
-        paginationBtn.classList.remove("u-hide");
+        paginationBtn.classList.remove("is-disabled");
+        paginationBtn.href = `/first-snap/${language}/${selectedOs}/package`;
       }
     }
   }
@@ -93,9 +82,10 @@ function install(language) {
     selected.classList.remove("u-hide");
     unselected.classList.add("u-hide");
 
-    const continueBtn = document.querySelector(".js-continue");
-    if (continueBtn) {
-      continueBtn.href = `/first-snap/${language}/${type}/package`;
+    const paginationBtn = document.querySelector(`#js-pagination-next`);
+    if (paginationBtn) {
+      paginationBtn.classList.remove("is-disabled");
+      paginationBtn.href = `/first-snap/${language}/${type}/package`;
     }
   }
 
@@ -188,7 +178,7 @@ function push() {
     const paginationBtn = document.querySelector("#js-pagination-next");
     if (paginationBtn) {
       paginationBtn.href = `/${snapName}/listing?from=first-snap`;
-      paginationBtn.classList.remove("u-hide");
+      paginationBtn.classList.remove("is-disabled");
     }
   });
 }

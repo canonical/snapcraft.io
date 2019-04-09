@@ -232,6 +232,10 @@ $color-navigation-background: #252525;
 @import 'snapcraft_p-file-input';
 @include snapcraft-p-file-input;
 
+@import 'patterns_pagination';
+@include snapcraft-p-pagination;
+
+
 html,
 body {
   background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
