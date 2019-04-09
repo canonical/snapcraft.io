@@ -3,9 +3,9 @@
     <ul class="p-breadcrumbs p-heading--four" style="max-width: 100%;">
       <li class="p-breadcrumbs__item">
         {% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
-          <a href="/first-snap/">Language</a>
+          <a href="/first-snap/">Select language</a>
         {% else %}
-          Language
+          Select language
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' %} is-disabled{% endif %}">
@@ -17,29 +17,29 @@
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' %} is-disabled{% endif %}">
         {% if fsf_step == 'build' or fsf_step == 'test' or fsf_step == 'push' %}
-          <a href="/first-snap/{{ language }}/{{ os }}/package">Package</a>
+          <a href="/first-snap/{{ language }}/{{ os }}/package">Package snap</a>
         {% else %}
-          Package
+          Package snap
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'package' %} is-disabled{% endif %}">
         {% if fsf_step == 'test' or fsf_step == 'push' %}
-          <a href="/first-snap/{{ language }}/{{ os }}/build">Build</a>
+          <a href="/first-snap/{{ language }}/{{ os }}/build">Build snap</a>
         {% else %}
-          Build
+          Build snap
         {% endif %}
       </li>
       {% if os and os.startswith('macos') %}
         <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' %} is-disabled{% endif %}">
           {% if fsf_step == 'push' %}
-            <a href="/first-snap/{{ language }}/{{ os }}/test">Test</a>
+            <a href="/first-snap/{{ language }}/{{ os }}/test">Test snap</a>
           {% else %}
-            Test
+            Test snap
           {% endif %}
         </li>
       {% endif %}
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' %} is-disabled{% endif %}">
-        Push
+        Publish to store
       </li>
     </ul>
   </div>
