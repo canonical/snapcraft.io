@@ -3,11 +3,21 @@
 {% block meta_copydoc %}https://docs.google.com/spreadsheets/d/1gN_xcaAFFP_ckDvWeNDpD9ogbRXFgcXN0w0ITZQB0e4/edit#gid=779498506{% endblock %}
 
 {% block content %}
-{% include "first-snap/_breadcrumb.html" %}
-<div id="main-content" class="p-strip is-shallow">
-  {% block fsf_content %}
-  {% endblock %}
-</div>
+  {% include "first-snap/_breadcrumb.html" %}
+  <div id="main-content" class="p-strip is-shallow">
+    {% block fsf_content %}
+    {% endblock %}
+  </div>
+
+  {% if self.fsf_pagination() %}
+  <div class="p-strip u-no-padding snapcraft-banner-background">
+    <div class="row">
+      <div class="p-pagination">
+        {% block fsf_pagination %}{% endblock %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
 {% endblock %}
 
 {% block scripts_modules %}

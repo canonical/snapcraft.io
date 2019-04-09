@@ -42,3 +42,14 @@
     <a class="p-button--positive u-float--right js-continue" href="/first-snap/{{ language }}/{{ os }}/push">Continue</a>
   </div>
 {% endblock %}
+
+{% block fsf_pagination %}
+  <a class="p-pagination__link--previous" href="/first-snap/{{ language }}/{{ os }}/build">
+    <span class="p-pagination__label">Previous</span>
+    <span class="p-pagination__title">Build</span>
+  </a>
+  <a class="p-pagination__link--next" href="/first-snap/{{ language }}/{{ os }}/push">
+    <span class="p-pagination__label">Next</span>
+    <span class="p-pagination__title">Push</span>
+  </a>
+{% endblock %}
