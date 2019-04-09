@@ -55,7 +55,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Approved",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     }
                 }
@@ -87,7 +91,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Approved",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     },
                     "test2": {
@@ -124,7 +132,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Approved",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     },
                     "test2": {
@@ -136,7 +148,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Revoked",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     },
                     "test4": {
