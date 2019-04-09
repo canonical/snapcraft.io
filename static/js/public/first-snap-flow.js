@@ -23,6 +23,17 @@ function install(language) {
         continueBtn.classList.remove("is--disabled");
         continueBtn.href = `/first-snap/${language}/${selectedOs}/package`;
       }
+      const paginationBtn = document.querySelector(
+        `#js-pagination-${selectedOs}`
+      );
+      if (paginationBtn) {
+        Array.prototype.slice
+          .call(document.querySelectorAll(`.p-pagination__link--next`))
+          .forEach(function(wrapper) {
+            wrapper.classList.add("u-hide");
+          });
+        paginationBtn.classList.remove("u-hide");
+      }
     }
   }
 
@@ -172,6 +183,12 @@ function push() {
       continueBtn.classList.remove("p-button--neutral");
       continueBtn.classList.remove("is--disabled");
       continueBtn.innerHTML = "Continue";
+    }
+
+    const paginationBtn = document.querySelector("#js-pagination-next");
+    if (paginationBtn) {
+      paginationBtn.href = `/${snapName}/listing?from=first-snap`;
+      paginationBtn.classList.remove("u-hide");
     }
   });
 }
