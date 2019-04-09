@@ -69,22 +69,16 @@
           {% set snippet_value = "snapcraft push --release edge *.snap" %}
           {% set snippet_id = "snapcraft-push" %}
           {% include "/partials/_code-snippet.html" %}
+
+          <p>
+            Once you've pushed to the Snap store, edit your snap public presentation.
+          </p>
+          <a class="p-button--neutral js-continue is--disabled">
+            <i class="p-icon--spinner u-animation--spin"></i>
+            &nbsp;Waiting for push...</a>
         </li>
       {% endif %}
     </ol>
-  </div>
-
-  <div class="row">
-    <hr />
-  </div>
-
-  <div class="row">
-    <p class="u-float--left">
-      Once you've pushed to the Snap store, edit your snap public presentation.
-    </p>
-    <a class="p-button--neutral u-float--right js-continue is--disabled">
-      <i class="p-icon--spinner u-animation--spin"></i>
-      &nbsp;Waiting for push...</a>
   </div>
 {% endblock %}
 
