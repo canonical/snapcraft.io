@@ -429,8 +429,8 @@ describe("validateRestrictions", () => {
         };
 
         const aspectRatio = {
-          min: [1, 3],
-          max: [1, 3]
+          min: [3, 1],
+          max: [3, 1]
         };
 
         const validation = await validateRestrictions(file, {
@@ -441,7 +441,7 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toEqual([
-          "has a width (1218 pixels) that is 5.08x its height (240 pixels). Its width needs to be 0.33x the height."
+          "has a width (1218 pixels) that is 5.08x its height (240 pixels). Its width needs to be 3x the height."
         ]);
       });
 
@@ -466,8 +466,8 @@ describe("validateRestrictions", () => {
         };
 
         const aspectRatio = {
-          min: [1, 3],
-          max: [1, 3]
+          min: [3, 1],
+          max: [3, 1]
         };
 
         const whitelist = {

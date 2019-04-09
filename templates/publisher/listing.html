@@ -101,7 +101,7 @@
 
           <div class="row" data-validation-name="icon">
             <div class="col-2">
-              <label class="p-editable-icon__label">Snap icon:</label>
+              <label class="p-editable-icon__label" for="snap-icon">Snap icon:</label>
             </div>
             <div class="col-8 js-icon-holder"></div>
           </div>
@@ -256,9 +256,15 @@
             </div>
           </div>
 
+          {% for screenshot in screenshot_urls %}
+            {% if screenshot.contains("banner") %}
+
+            {% endif %}
+          {% endfor %}
+
           <div class="row">
             <div class="col-2">
-              <label>Featured banner:</label>
+              <label for="banner-image">Featured banner:</label>
             </div>
             <div class="col-8">
               <div class="p-market-banner js-banner">

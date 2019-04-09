@@ -26,7 +26,7 @@ class FileInput extends React.Component {
   }
 
   componentDidMount() {
-    const { restrictions, inputName } = this.props;
+    const { restrictions, inputName, inputId } = this.props;
 
     // Handle input creation outside of the react lifecycle to avoid
     // re-rendering and side-effects. We need the input to maintain a consistent
@@ -34,6 +34,7 @@ class FileInput extends React.Component {
     this.input = document.createElement("input");
     this.input.type = "file";
     this.input.name = inputName;
+    this.input.id = inputId;
     if (restrictions && restrictions.accept) {
       this.input.accept = restrictions.accept;
     }
@@ -197,6 +198,7 @@ class FileInput extends React.Component {
 FileInput.defaultProps = {
   className: "",
   inputName: "file-upload",
+  inputId: "file-upload",
   fileChangedCallback: () => {},
   restrictions: {
     accept: []
@@ -210,6 +212,7 @@ FileInput.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   inputName: PropTypes.string,
+  inputId: PropTypes.string,
   fileChangedCallback: PropTypes.func,
   restrictions: PropTypes.shape({
     accept: PropTypes.arrayOf(PropTypes.string)

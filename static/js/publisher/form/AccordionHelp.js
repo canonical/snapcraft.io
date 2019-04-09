@@ -38,9 +38,7 @@ class AccordionHelp extends React.Component {
             {verb} {name.toLowerCase()}
           </a>
         </p>
-        <div className={classNames.join(" ")}>
-          <div className="col-8">{children}</div>
-        </div>
+        <div className={classNames.join(" ")}>{children}</div>
       </Fragment>
     );
   }

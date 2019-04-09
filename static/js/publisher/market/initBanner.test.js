@@ -1,6 +1,6 @@
 import { initBanner } from "./initBanner";
 
-const bannerBackgroundSelector = ".p-market-banner__image";
+const bannerBackgroundSelector = ".p-market-banner__image img";
 
 describe("initBanner", () => {
   let holder;
@@ -24,12 +24,8 @@ describe("initBanner", () => {
   it("should render to the holder, without images", () => {
     initBanner(".test", [], () => {});
 
-    expect(holder.querySelectorAll(bannerBackgroundSelector).length).toEqual(1);
+    expect(holder.querySelectorAll(bannerBackgroundSelector).length).toEqual(0);
     expect(holder.querySelectorAll(`[name="banner-image"]`).length).toEqual(1);
-
-    expect(
-      holder.querySelector(bannerBackgroundSelector).style.backgroundImage
-    ).toEqual("");
   });
 
   it("should render to the holder with a background", () => {
@@ -48,8 +44,8 @@ describe("initBanner", () => {
     expect(holder.querySelectorAll(bannerBackgroundSelector).length).toEqual(1);
     expect(holder.querySelectorAll(`[name="banner-image"]`).length).toEqual(1);
 
-    expect(
-      holder.querySelector(bannerBackgroundSelector).style.backgroundImage
-    ).toEqual("url(/banner_123123.png)");
+    expect(holder.querySelector(bannerBackgroundSelector).src).toEqual(
+      "/banner_123123.png"
+    );
   });
 });

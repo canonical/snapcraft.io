@@ -105,13 +105,8 @@ class Banner extends React.Component {
     const { restrictions } = this.props;
     const background = bannerImage.url;
 
-    let style;
     let backgroundClasses = ["p-market-banner__image", "u-vertically-center"];
-    if (background) {
-      style = {
-        backgroundImage: `url(${background})`
-      };
-    } else {
+    if (!background) {
       backgroundClasses.push("is-empty");
     }
 
@@ -119,6 +114,7 @@ class Banner extends React.Component {
       <Fragment>
         <FileInput
           inputName="banner-image"
+          inputId="banner-image"
           active={true}
           fileChangedCallback={this.bannerImageChangeHandler}
           noFocus={true}
@@ -126,12 +122,12 @@ class Banner extends React.Component {
         >
           <div
             className={backgroundClasses.join(" ")}
-            style={style}
             tabIndex="0"
             onKeyDown={this.keyboardEvent}
             onFocus={this.toggleFocus}
             onBlur={this.toggleFocus}
           >
+            {background && <img src={background} />}
             {!background && (
               <div className="u-align-text--center">
                 <i className="p-icon--plus" />
@@ -144,7 +140,7 @@ class Banner extends React.Component {
         {background && (
           <Fragment>
             <span
-              className="p-market-banner__remove"
+              className="p-market-banner__remove p-market-remove"
               role="button"
               onClick={this.handleRemoveImageClick}
             >
@@ -166,21 +162,23 @@ class Banner extends React.Component {
           you eligible to be featured.
         </p>
         <AccordionHelp name="banner restrictions">
-          <p>
-            <small>
-              Accepted image formats include: <b>JPEG & PNG files</b>
-              <br />
-              Min resolution: <b>720 x 240 pixels</b>
-              <br />
-              Max resolution: <b>3840 x 1440 pixels</b>
-              <br />
-              Recommended (legacy) size: <b>1218 x 240 pixels</b>
-              <br />
-              Aspect ratio: <b>1:3</b>
-              <br />
-              File size limit: <b>2MB</b>
-            </small>
-          </p>
+          <div className="col-8">
+            <p>
+              <small>
+                Accepted image formats include: <b>JPEG & PNG files</b>
+                <br />
+                Min resolution: <b>720 x 240 pixels</b>
+                <br />
+                Max resolution: <b>3840 x 1280 pixels</b>
+                <br />
+                Recommended (legacy) size: <b>1218 x 240 pixels</b>
+                <br />
+                Aspect ratio: <b>3:1</b>
+                <br />
+                File size limit: <b>2MB</b>
+              </small>
+            </p>
+          </div>
         </AccordionHelp>
       </Fragment>
     );

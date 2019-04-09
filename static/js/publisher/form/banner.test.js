@@ -3,7 +3,7 @@ import { render, fireEvent } from "react-testing-library";
 
 import Banner from "./banner";
 
-const backgroundSelector = ".p-market-banner__image";
+const backgroundSelector = ".p-market-banner__image img";
 
 function renderBanner(bannerImage, updateState, restrictions) {
   if (bannerImage && updateState) {
@@ -49,9 +49,9 @@ describe("Banner", () => {
     it("should show the background image if set at render", () => {
       const { container } = renderBanner({ url: "banner.png" });
 
-      expect(
-        container.querySelector(backgroundSelector).style.backgroundImage
-      ).toEqual("url(banner.png)");
+      expect(container.querySelector(backgroundSelector).src).toEqual(
+        "banner.png"
+      );
     });
 
     it("should set the background if image added", done => {
@@ -80,9 +80,9 @@ describe("Banner", () => {
         expect(
           container.querySelectorAll(".p-notification--negative").length
         ).toEqual(0);
-        expect(
-          container.querySelector(backgroundSelector).style.backgroundImage
-        ).toEqual("url(banner.png)");
+        expect(container.querySelector(backgroundSelector).src).toEqual(
+          "banner.png"
+        );
         done();
       }, 500);
     });

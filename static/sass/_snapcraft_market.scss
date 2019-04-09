@@ -128,16 +128,18 @@
 
     .p-market-banner__image {
       background-color: $color-x-light;
-      background-position: center;
-      background-size: cover;
       border: 1px solid $color-mid-light;
       border-radius: $border-radius;
       color: $color-link;
       cursor: pointer;
-      height: 128px;
       margin-bottom: $spv-inter--regular;
+      min-height: 129px;
       position: relative;
       text-align: center;
+
+      img {
+        width: 100%;
+      }
     }
 
     .p-market-banner__image-holder:hover,
@@ -158,14 +160,8 @@
     }
 
     .p-market-banner__remove {
-      background: $color-x-light;
-      cursor: pointer;
-      opacity: 0;
-      padding: .25rem;
-      position: absolute;
       right: 1px;
       top: 1px;
-      z-index: 1;
 
       .p-icon--delete {
         display: block;
@@ -194,6 +190,25 @@
 
     &:hover {
       @include snapcraft-icon-delete($color-negative);
+    }
+  }
+
+  .p-market-remove {
+    background: $color-x-light;
+    box-sizing: content-box;
+    cursor: pointer;
+    opacity: 0;
+    padding: .25rem;
+    position: absolute;
+    width: 1rem;
+    z-index: 1;
+
+    &:hover {
+      opacity: 1;
+
+      .p-icon--delete {
+        @include snapcraft-icon-delete($color-negative);
+      }
     }
   }
 }

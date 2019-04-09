@@ -57,11 +57,11 @@ const BANNER_RESTRICTIONS = {
   },
   height: {
     min: 240,
-    max: 1440
+    max: 1280
   },
   aspectRatio: {
-    min: [1, 3],
-    max: [1, 3]
+    min: [3, 1],
+    max: [3, 1]
   },
   size: {
     min: 0,
