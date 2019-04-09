@@ -45,6 +45,18 @@
   </div>
 {% endblock %}
 
+{% block fsf_pagination %}
+  <a class="p-pagination__link--previous" href="/first-snap/">
+    <span class="p-pagination__label">Previous</span>
+    <span class="p-pagination__title">Language</span>
+  </a>
+  {# TODO: disable when not selected, update on selection #}
+  <a class="p-pagination__link--next" href="/first-snap/{{ language }}/macos/package">
+    <span class="p-pagination__label">Next</span>
+    <span class="p-pagination__title">Package</span>
+  </a>
+{% endblock %}
+
 {% block scripts %}
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
