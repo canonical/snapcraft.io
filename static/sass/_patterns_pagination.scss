@@ -1,0 +1,14 @@
+@mixin snapcraft-p-pagination {
+  .p-pagination__link--previous,
+  .p-pagination__link--next {
+    &.is-disabled {
+      cursor: default;
+      opacity: .5;
+      pointer-events: none;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}
