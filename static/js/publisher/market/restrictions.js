@@ -53,11 +53,11 @@ const BANNER_RESTRICTIONS = {
   accept: ["image/png", "image/jpeg"],
   width: {
     min: 720,
-    max: 3840
+    max: 4320
   },
   height: {
     min: 240,
-    max: 1280
+    max: 1440
   },
   aspectRatio: {
     min: [3, 1],

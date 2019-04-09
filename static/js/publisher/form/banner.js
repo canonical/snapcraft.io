@@ -169,7 +169,7 @@ class Banner extends React.Component {
                 <br />
                 Min resolution: <b>720 x 240 pixels</b>
                 <br />
-                Max resolution: <b>3840 x 1280 pixels</b>
+                Max resolution: <b>4320 x 1440 pixels</b>
                 <br />
                 Recommended (legacy) size: <b>1218 x 240 pixels</b>
                 <br />
