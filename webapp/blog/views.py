@@ -14,6 +14,7 @@ def homepage():
     BLOG_CATEGORIES_ENABLED = (
         flask.current_app.config["BLOG_CATEGORIES_ENABLED"] == "true"
     )
+
     page_param = flask.request.args.get("page", default=1, type=int)
 
     # Feature flag
@@ -44,8 +45,15 @@ def homepage():
         filter = None
 
     try:
+        get_page = 1
+        page_offset = 0
+
+        if page_param > 1:
+            get_page = 1
+            page_offset = (12 * (page_param - 1)) - 1
+
         articles, total_pages = api.get_articles(
-            page=page_param, category=filter_category
+            page=get_page, category=filter_category, offset=page_offset
         )
     except ApiCircuitBreaker:
         return flask.abort(503)
@@ -86,6 +94,10 @@ def homepage():
                 resolved_category = None
 
             category_cache[key] = resolved_category
+
+    if page_param == 1:
+        articles.insert(2, "newsletter")
+        articles.pop(12)
 
     context = {
         "current_page": page_param,
