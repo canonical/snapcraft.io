@@ -9,6 +9,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
 import talisker.flask
+import webapp.api
 import webapp.helpers as helpers
 from webapp.blog.views import blog
 from webapp.extensions import csrf
@@ -37,8 +38,12 @@ def create_app(testing=False):
     app.url_map.converters["regex"] = helpers.RegexConverter
 
     if not testing:
-        talisker.flask.register(app)
         init_extensions(app)
+
+        talisker.flask.register(app)
+        talisker.requests.configure(webapp.api.blog.api_session)
+        talisker.requests.configure(webapp.api.dashboard.api_session)
+        talisker.requests.configure(webapp.api.sso.api_session)
 
     app.config.from_object("webapp.configs." + app.config["WEBAPP"])
 

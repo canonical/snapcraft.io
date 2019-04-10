@@ -1,4 +1,5 @@
 import os
+import talisker.requests
 from webapp import api
 from webapp.api.exceptions import (
     ApiResponseDecodeError,
@@ -75,8 +76,11 @@ class StoreApi:
             self.session = api.requests.Session()
         else:
             self.session = api.requests.CachedSession(timeout=(1, 6))
+
         self.session.headers.update(self.headers)
         self.session.headers.update(self.headers_v2)
+
+        talisker.requests.configure(self.session)
 
     def process_response(self, response):
         try:
