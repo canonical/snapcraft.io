@@ -82,9 +82,9 @@ My published snaps — Linux software in the Snap Store
           <section class="p-strip--light is-shallow p-snapcraft-first-snap__notification">
             <div class="row">
               <div class="col-9">
-                {% if snaps[snap].latest_revisions[0].channels[0] %}
+                {% if snaps[snap].latest_release %}
                   <p>
-                    You've released {{ snap }} to the "{{ snaps[snap].latest_revisions[0].channels[0] }}" channel!
+                    You've released {{ snap }} to the "{{ snaps[snap].latest_release.channels[0] }}" channel!
                   </p>
                 {% else %}
                   <p>
@@ -93,8 +93,8 @@ My published snaps — Linux software in the Snap Store
                 {% endif %}
                 <p>
                   Want to improve the listing in stores?
-                  <a href="/account/snaps/{{ snap }}/listing">Edit Store listing</a>
-                  {% if not snaps[snap].latest_revisions[0].channels[0] %}
+                  <a href="/{{ snap }}/listing">Edit Store listing</a>
+                  {% if not snaps[snap].latest_release %}
                     <br />
                     Is your snap ready to release?
                     <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>
@@ -124,10 +124,14 @@ My published snaps — Linux software in the Snap Store
           {% for snap in snaps|sort %}
             {% with %}
               {% set dispute_pending = snaps[snap].status == "DisputePending" %}
-              {% set published = snaps[snap].latest_revisions[0].status == "Published" %}
+              {% if snaps[snap].latest_release %}
+                {% set published = snaps[snap].latest_release.status == "Published" %}
+              {% else %}
+                {% set published = False %}
+              {% endif %}
               <tr>
                 <td>
-                  <a href="/account/snaps/{{snap}}/listing" class="u-vertically-center">
+                  <a href="/{{snap}}/listing" class="u-vertically-center">
                     {% if snaps[snap].icon_url %}
                       <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
                     {% else %}
@@ -159,15 +163,16 @@ My published snaps — Linux software in the Snap Store
                   {% endif %}
                 </td>
                 {% if published %}
-                  <td>{{ snaps[snap].latest_revisions[0].channels[0] }}</td>
+                  <td>{{ snaps[snap].latest_release.channels[0] }}</td>
+                  <td>
+                    <a href="/{{snap}}/releases">
+                      {{ snaps[snap].latest_release.version }}
+                    </a>
+                  </td>
                 {% else %}
-                  <td>Not released</td>
+                  <td><a href="/{{snap}}/releases">Not released</a></td>
+                  <td></td>
                 {% endif %}
-                <td>
-                  <a href="/{{snap}}/releases">
-                    {{ snaps[snap].latest_revisions[0].version }}
-                  </a>
-                </td>
               </tr>
             {% endwith %}
           {% endfor %}

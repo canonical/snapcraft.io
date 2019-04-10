@@ -25,6 +25,13 @@ def get_snaps_account_info(account_info):
 
     now = datetime.datetime.utcnow()
 
+    for snap in user_snaps:
+        snap_info = user_snaps[snap]
+        for revision in snap_info["latest_revisions"]:
+            if len(revision["channels"]) > 0:
+                snap_info["latest_release"] = revision
+                break
+
     if len(user_snaps) == 1:
         for snap in user_snaps:
             snap_info = user_snaps[snap]

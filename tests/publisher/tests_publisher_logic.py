@@ -23,7 +23,7 @@ class PublisherLogicTest(unittest.TestCase):
                     "snap1": {
                         "status": "Approved",
                         "latest_revisions": [
-                            {"since": "2018-01-01T00:00:00Z"}
+                            {"since": "2018-01-01T00:00:00Z", "channels": []}
                         ],
                     }
                 }
@@ -36,7 +36,9 @@ class PublisherLogicTest(unittest.TestCase):
         expected_user_snaps = {
             "snap1": {
                 "status": "Approved",
-                "latest_revisions": [{"since": "2018-01-01T00:00:00Z"}],
+                "latest_revisions": [
+                    {"since": "2018-01-01T00:00:00Z", "channels": []}
+                ],
             }
         }
 
@@ -69,7 +71,7 @@ class PublisherLogicTest(unittest.TestCase):
                     "snap1": {
                         "status": "Approved",
                         "latest_revisions": [
-                            {"since": "2018-01-01T00:00:00Z"}
+                            {"since": "2018-01-01T00:00:00Z", "channels": []}
                         ],
                     },
                     "snap2": {"status": "Approved", "latest_revisions": None},
@@ -83,7 +85,9 @@ class PublisherLogicTest(unittest.TestCase):
         expected_user_snaps = {
             "snap1": {
                 "status": "Approved",
-                "latest_revisions": [{"since": "2018-01-01T00:00:00Z"}],
+                "latest_revisions": [
+                    {"since": "2018-01-01T00:00:00Z", "channels": []}
+                ],
             }
         }
         expected_registered_snaps = {

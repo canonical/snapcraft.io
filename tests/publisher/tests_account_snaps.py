@@ -88,7 +88,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Approved",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     }
                 }
@@ -114,6 +118,49 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("registered_snaps", {})
 
     @responses.activate
+    def test_uploaded_snaps_with_latest_release(self):
+        payload = {
+            "snaps": {
+                "16": {
+                    "test": {
+                        "status": "Approved",
+                        "snap-name": "test",
+                        "latest_revisions": [
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": ["edge"],
+                            }
+                        ],
+                    }
+                }
+            }
+        }
+        responses.add(responses.GET, self.api_url, json=payload, status=200)
+
+        response = self.client.get(self.endpoint_url)
+        self.assertEqual(200, response.status_code)
+        # Add pyQuery basic context checks
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        result_snaps = payload["snaps"]["16"]
+        result_snaps["test"]["latest_release"] = result_snaps["test"][
+            "latest_revisions"
+        ][0]
+
+        assert response.status_code == 200
+        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_context("current_user", "Toto")
+        self.assert_context("snaps", result_snaps)
+        self.assert_context("registered_snaps", {})
+
+    @responses.activate
     def test_uploaded_snaps_registered_snaps(self):
         payload = {
             "snaps": {
@@ -122,7 +169,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Approved",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     },
                     "test2": {
@@ -159,7 +210,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "status": "Approved",
                 "snap-name": "test",
                 "latest_revisions": [
-                    {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                    {
+                        "test": "test",
+                        "since": "2018-01-01T00:00:00Z",
+                        "channels": [],
+                    }
                 ],
             }
         }
@@ -179,7 +234,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Approved",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     },
                     "test2": {
@@ -191,7 +250,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "status": "Revoked",
                         "snap-name": "test",
                         "latest_revisions": [
-                            {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                            {
+                                "test": "test",
+                                "since": "2018-01-01T00:00:00Z",
+                                "channels": [],
+                            }
                         ],
                     },
                     "test4": {
@@ -228,7 +291,11 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "status": "Approved",
                 "snap-name": "test",
                 "latest_revisions": [
-                    {"test": "test", "since": "2018-01-01T00:00:00Z"}
+                    {
+                        "test": "test",
+                        "since": "2018-01-01T00:00:00Z",
+                        "channels": [],
+                    }
                 ],
             }
         }
