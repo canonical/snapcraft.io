@@ -2,6 +2,28 @@
 {% extends "first-snap/_layout_fsf.html" %}
 
 {% block fsf_content %}
+  <div class="p-strip is-shallow u-no-padding--top">
+    <div class="row">
+      <h4>Before you publish your snap, you'll need an Ubuntu One account</h4>
+      <p>Gain access to a host of great features within snapcraft.io such as your very own store listing page, publisher dashboard and snap usage metrics.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-4 mobile-col-1 tablet-col-2">
+        <img height="193" width="308" src="https://assets.ubuntu.com/v1/e3eacb56-fsf-publisher-listing.png" />
+      </div>
+      <div class="col-4 mobile-col-1 tablet-col-2">
+        <img height="193" width="308" src="https://assets.ubuntu.com/v1/3220411b-fsf-publisher-dashboard.png" />
+      </div>
+      <div class="col-4 mobile-col-1 tablet-col-2">
+        <img height="193" width="308" src="https://assets.ubuntu.com/v1/55c5070e-fsf-publisher-metrics.png" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <hr />
+  </div>
+
   <div class="row">
     <ol class="p-list-step has-margin">
       {% if not user %}
