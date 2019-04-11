@@ -26,7 +26,14 @@ const MEDIA_RESTRICTIONS = {
       min: 0,
       max: 40
     }
-  }
+  },
+  whitelist: [
+    {
+      dimensions: [1218, 240],
+      fileName: "banner",
+      accept: ["image/png", "image/jpeg"]
+    }
+  ]
 };
 
 const ICON_RESTRICTIONS = {
@@ -66,9 +73,6 @@ const BANNER_RESTRICTIONS = {
   size: {
     min: 0,
     max: 2000000
-  },
-  whitelist: {
-    dimensions: [1218, 240]
   }
 };
 

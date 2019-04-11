@@ -445,10 +445,13 @@ describe("validateRestrictions", () => {
         ]);
       });
 
-      it("should return no errors if the image size is in the whitelist", async () => {
-        const file = generateFile({
-          type: "image/png"
-        });
+      it("should return no errors if the image attributes are in the whitelist", async () => {
+        const file = generateFile(
+          {
+            type: "image/png"
+          },
+          "test.png"
+        );
 
         generateImage({
           naturalWidth: 1218,
@@ -470,9 +473,13 @@ describe("validateRestrictions", () => {
           max: [3, 1]
         };
 
-        const whitelist = {
-          dimensions: [1218, 240]
-        };
+        const whitelist = [
+          {
+            dimensions: [1218, 240],
+            fileName: "test",
+            accept: ["image/png"]
+          }
+        ];
 
         const validation = await validateRestrictions(file, {
           ...restrictions,
@@ -483,6 +490,147 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toBeUndefined();
+      });
+
+      it("should return errors if the image dimensions aren't in the whitelist", async () => {
+        const file = generateFile(
+          {
+            type: "image/png"
+          },
+          "test.png"
+        );
+
+        generateImage({
+          naturalWidth: 1219,
+          naturalHeight: 241
+        });
+
+        const width = {
+          min: 720,
+          max: 3840
+        };
+
+        const height = {
+          min: 240,
+          max: 1440
+        };
+
+        const aspectRatio = {
+          min: [3, 1],
+          max: [3, 1]
+        };
+
+        const whitelist = [
+          {
+            dimensions: [1218, 240],
+            fileName: "test",
+            accept: ["image/png"]
+          }
+        ];
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          width,
+          height,
+          aspectRatio,
+          whitelist
+        });
+
+        expect(validation.errors).toBeDefined();
+      });
+
+      it("should return errors if the image name isn't in the whitelist", async () => {
+        const file = generateFile(
+          {
+            type: "image/png"
+          },
+          "green.png"
+        );
+
+        generateImage({
+          naturalWidth: 1218,
+          naturalHeight: 240
+        });
+
+        const width = {
+          min: 720,
+          max: 3840
+        };
+
+        const height = {
+          min: 240,
+          max: 1440
+        };
+
+        const aspectRatio = {
+          min: [3, 1],
+          max: [3, 1]
+        };
+
+        const whitelist = [
+          {
+            dimensions: [1218, 240],
+            fileName: "test",
+            accept: ["image/png"]
+          }
+        ];
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          width,
+          height,
+          aspectRatio,
+          whitelist
+        });
+
+        expect(validation.errors).toBeDefined();
+      });
+
+      it("should return errors if the image type isn't in the whitelist", async () => {
+        const file = generateFile(
+          {
+            type: "image/png"
+          },
+          "test.png"
+        );
+
+        generateImage({
+          naturalWidth: 1218,
+          naturalHeight: 240
+        });
+
+        const width = {
+          min: 720,
+          max: 3840
+        };
+
+        const height = {
+          min: 240,
+          max: 1440
+        };
+
+        const aspectRatio = {
+          min: [3, 1],
+          max: [3, 1]
+        };
+
+        const whitelist = [
+          {
+            dimensions: [1218, 240],
+            fileName: "test",
+            accept: ["text/html"]
+          }
+        ];
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          width,
+          height,
+          aspectRatio,
+          whitelist
+        });
+
+        expect(validation.errors).toBeDefined();
       });
     });
   });

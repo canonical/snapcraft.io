@@ -132,7 +132,7 @@ class Banner extends React.Component {
               <div className="u-align-text--center">
                 <i className="p-icon--plus" />
                 <br />
-                Add background
+                Add banner
               </div>
             )}
           </div>
@@ -146,7 +146,7 @@ class Banner extends React.Component {
             >
               <i className="p-icon--delete" />
             </span>
-            <div className="p-market-banner__change">Edit background</div>
+            <div className="p-market-banner__change">Edit banner</div>
           </Fragment>
         )}
       </Fragment>

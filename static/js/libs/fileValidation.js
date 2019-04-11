@@ -42,6 +42,34 @@ function baseRestrictions(file, restrictions) {
   });
 }
 
+function imageWhitelistHandler(file, image, whitelist) {
+  const errors = whitelist.filter(whitelistItem => {
+    if (whitelistItem.fileName) {
+      let fileName = file.name.split(".");
+      fileName = fileName.slice(0, fileName.length - 1).join(".");
+      if (fileName !== whitelistItem.fileName) {
+        return false;
+      }
+    }
+    if (whitelistItem.accept) {
+      if (!whitelistItem.accept.includes(file.type)) {
+        return false;
+      }
+    }
+    if (whitelistItem.dimensions) {
+      if (
+        image.naturalWidth !== whitelistItem.dimensions[0] ||
+        image.naturalHeight !== whitelistItem.dimensions[1]
+      ) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return errors.length > 0;
+}
+
 function imageRestrictions(file, restrictions) {
   return new Promise((resolve, reject) => {
     if (!restrictions.accept || restrictions.accept[0].indexOf("image") < 0) {
@@ -61,14 +89,12 @@ function imageRestrictions(file, restrictions) {
         height: height
       };
 
-      if (restrictions.whitelist && restrictions.whitelist.dimensions) {
-        if (
-          width === restrictions.whitelist.dimensions[0] &&
-          height === restrictions.whitelist.dimensions[1]
-        ) {
-          resolve(file);
-          return;
-        }
+      if (
+        restrictions.whitelist &&
+        imageWhitelistHandler(file, image, restrictions.whitelist)
+      ) {
+        resolve(file);
+        return;
       }
 
       const aspectRatio = width / height;
