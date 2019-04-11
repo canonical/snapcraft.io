@@ -40,6 +40,13 @@
 
 {% block content %}
 <section id="main-content" class="p-strip">
+  {% if newsletter_subscribed %}
+    <div class="row">
+      <div class="p-notification--positive">
+        <div class="p-notification__response"><b>Success:</b> Thanks for subscribing!</div>
+      </div>
+    </div>
+  {% endif %}
   <div class="row">
     <div class="col-8 p-blog-post">
       <h1 class="p-heading--two">{{ article.title.rendered|safe }}</h1>

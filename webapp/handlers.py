@@ -38,6 +38,7 @@ def set_handlers(app):
             "SENTRY_PUBLIC_DSN": app.config["SENTRY_PUBLIC_DSN"],
             "COMMIT_ID": app.config["COMMIT_ID"],
             "ENVIRONMENT": app.config["ENVIRONMENT"],
+            "host_url": flask.request.host_url,
             "path": flask.request.path,
             "page_slug": page_slug,
             "user_name": user_name,

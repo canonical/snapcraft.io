@@ -14,6 +14,13 @@
 </section>
 
 <section class="p-strip is-shallow">
+  {% if newsletter_subscribed %}
+    <div class="row">
+      <div class="p-notification--positive">
+        <div class="p-notification__response"><b>Success:</b> Thanks for subscribing!</div>
+      </div>
+    </div>
+  {% endif %}
   {% if categories %}
     <div class="row u-align--right">
       <form class="p-form p-form--inline" data-js="filterForm" method="get">
