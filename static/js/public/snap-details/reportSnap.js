@@ -1,4 +1,5 @@
 import "whatwg-fetch";
+import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
 
 const showEl = el => el.classList.remove("u-hide");
 const hideEl = el => el.classList.add("u-hide");
@@ -17,7 +18,7 @@ function toggleModal(modal, show) {
 }
 
 function initForm(modal) {
-  buttonEnabled(modal.querySelector("button[type=submit]"));
+  buttonEnabled(modal.querySelector("button[type=submit]"), "Submit report");
 
   showEl(modal.querySelector(".js-report-snap-form"));
   hideEl(modal.querySelector(".js-report-snap-success"));
@@ -34,17 +35,6 @@ function showError(modal) {
   hideEl(modal.querySelector(".js-report-snap-form"));
   hideEl(modal.querySelector(".js-report-snap-success"));
   showEl(modal.querySelector(".js-report-snap-error"));
-}
-
-function buttonLoading(button) {
-  button.disabled = true;
-  button.innerHTML =
-    "<i class='p-icon--spinner u-animation--spin'></i> Submitting…";
-}
-
-function buttonEnabled(button) {
-  button.disabled = false;
-  button.innerHTML = "Submit report";
 }
 
 export default function initReportSnap(
@@ -72,7 +62,10 @@ export default function initReportSnap(
 
   reportForm.addEventListener("submit", e => {
     e.preventDefault();
-    buttonLoading(reportForm.querySelector("button[type=submit]"));
+    buttonLoading(
+      reportForm.querySelector("button[type=submit]"),
+      "Submitting…"
+    );
 
     fetch(formURL, {
       method: "POST",

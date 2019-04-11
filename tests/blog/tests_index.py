@@ -79,6 +79,261 @@ class BlogPage(TestCase):
         )
 
     @responses.activate
+    def test_index_with_newsletter(self):
+        posts_url = "".join([self.api_url, "/posts?tag=2065"])
+
+        payload = [
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:11",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:12",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:13",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:14",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:15",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:16",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:17",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:18",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:19",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:20",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:21",
+                "author": 321,
+                "categories": [123],
+            },
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:22",
+                "author": 321,
+                "categories": [123],
+            },
+        ]
+
+        posts_headers = {"X-WP-TotalPages": "1"}
+
+        responses.add(
+            responses.GET,
+            posts_url,
+            json=payload,
+            status=200,
+            headers=posts_headers,
+        )
+
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
+
+        categories_payload = [{"name": "Articles"}]
+
+        responses.add(
+            responses.GET, categories_url, json=categories_payload, status=200
+        )
+
+        # See webapp/blog/views.py:22
+        # media_url = "".join([self.api_url, "/media/123"])
+        #
+        # responses.add(responses.GET, media_url, json={}, status=200)
+
+        response = self.client.get("/blog")
+
+        assert response.status_code == 200
+        self.assert_template_used("blog/index.html")
+        self.assert_context(
+            "articles",
+            [
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:11",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:12",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                "newsletter",
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:13",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:14",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:15",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:16",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:17",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:18",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:19",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:20",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:21",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                },
+            ],
+        )
+
+    @responses.activate
+    def test_index_with_newsletter_page_2(self):
+        posts_url = "".join([self.api_url, "/posts?tag=2065"])
+
+        payload = [
+            {
+                "featured_media": 123,
+                "date_gmt": "2018-06-11T11:11:11",
+                "author": 321,
+                "categories": [123],
+            }
+        ]
+
+        posts_headers = {"X-WP-TotalPages": "1"}
+
+        responses.add(
+            responses.GET,
+            posts_url,
+            json=payload,
+            status=200,
+            headers=posts_headers,
+        )
+
+        categories_url = "".join([self.api_url, "/categories?per_page=100"])
+
+        categories_payload = [{"name": "Articles"}]
+
+        responses.add(
+            responses.GET, categories_url, json=categories_payload, status=200
+        )
+
+        # See webapp/blog/views.py:22
+        # media_url = "".join([self.api_url, "/media/123"])
+        #
+        # responses.add(responses.GET, media_url, json={}, status=200)
+
+        response = self.client.get("/blog?page=2")
+
+        assert response.status_code == 200
+        self.assert_template_used("blog/index.html")
+        self.assert_context(
+            "articles",
+            [
+                {
+                    "date": "11 June 2018",
+                    "date_gmt": "2018-06-11T11:11:11",
+                    "featured_media": 123,
+                    "image": None,
+                    "author": None,
+                    "categories": [123],
+                }
+            ],
+        )
+
+    @responses.activate
     def test_posts_timeout(self):
         url = "".join([self.api_url, "/posts?tag=2065"])
 

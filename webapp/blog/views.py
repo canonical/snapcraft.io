@@ -14,6 +14,7 @@ def homepage():
     BLOG_CATEGORIES_ENABLED = (
         flask.current_app.config["BLOG_CATEGORIES_ENABLED"] == "true"
     )
+
     page_param = flask.request.args.get("page", default=1, type=int)
 
     # Feature flag
@@ -44,8 +45,19 @@ def homepage():
         filter = None
 
     try:
+        # Anything after page 1 needs to be offset by the page -11
+        # because the newsletter takes a spot on the first page
+        # The only way to do this with wordpress is to set a specific
+        # item offset `offset` from the start of the collection
+        get_page = 1
+        page_offset = 0
+
+        if page_param > 1:
+            get_page = 1
+            page_offset = (12 * (page_param - 1)) - 1
+
         articles, total_pages = api.get_articles(
-            page=page_param, category=filter_category
+            page=get_page, category=filter_category, offset=page_offset
         )
     except ApiCircuitBreaker:
         return flask.abort(503)
@@ -87,6 +99,15 @@ def homepage():
 
             category_cache[key] = resolved_category
 
+    if page_param == 1 and len(articles) > 2:
+        articles.insert(2, "newsletter")
+        if len(articles) == 13:
+            articles.pop(12)
+
+    newsletter_subscribed = flask.request.args.get(
+        "newsletter", default=False, type=bool
+    )
+
     context = {
         "current_page": page_param,
         "total_pages": int(total_pages),
@@ -94,6 +115,7 @@ def homepage():
         "categories": categories,
         "used_categories": category_cache,
         "filter": filter,
+        "newsletter_subscribed": newsletter_subscribed,
     }
 
     return flask.render_template("blog/index.html", **context)
@@ -174,11 +196,16 @@ def article(slug):
         for related_article in related_articles:
             related_article = logic.transform_article(related_article)
 
+    newsletter_subscribed = flask.request.args.get(
+        "newsletter", default=False, type=bool
+    )
+
     context = {
         "article": transformed_article,
         "related_articles": related_articles,
         "tags": tag_names,
         "is_in_series": is_in_series,
+        "newsletter_subscribed": newsletter_subscribed,
     }
 
     return flask.render_template("blog/article.html", **context)

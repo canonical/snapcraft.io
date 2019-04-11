@@ -27,7 +27,9 @@ def process_response(response):
     return body
 
 
-def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
+def get_articles(
+    tags=TAGS, per_page=12, page=1, offset=0, exclude=None, category=None
+):
     url_parts = [
         API_URL,
         "/posts?tags=",
@@ -36,6 +38,8 @@ def get_articles(tags=TAGS, per_page=12, page=1, exclude=None, category=None):
         str(per_page),
         "&page=",
         str(page),
+        "&offset=",
+        str(offset),
     ]
 
     if exclude:

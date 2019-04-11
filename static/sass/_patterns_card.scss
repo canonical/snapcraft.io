@@ -45,6 +45,10 @@
     flex-direction: column;
     padding: 0;
 
+    .p-card__header {
+      padding: $sp-medium;
+    }
+
     .p-strip--featured & {
       background-color: $white-90-percent;
       position: relative;
