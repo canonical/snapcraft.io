@@ -32,6 +32,11 @@ const MEDIA_RESTRICTIONS = {
       dimensions: [1218, 240],
       fileName: "banner",
       accept: ["image/png", "image/jpeg"]
+    },
+    {
+      dimensions: [240, 240],
+      fileName: "banner-icon",
+      accept: ["image/png", "image/jpeg"]
     }
   ]
 };
