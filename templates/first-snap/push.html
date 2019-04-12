@@ -20,87 +20,86 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <hr />
-  </div>
 
   <div class="row">
-    <ol class="p-list-step has-margin">
-      {% if not user %}
-        <li class="p-list-step__item col-8">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">1</span>
-            Create an Ubuntu One account
-          </h4>
-          <div class="p-list-step__content">
-            <p>This lets you make releases, alter your store listing and see usage metrics.</p>
-            <div class="row">
-              <p class="col-5">
-                <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
-              </p>
+    <div class="p-accordion" role="tablist" aria-multiselect="true">
+      <ol class="p-accordion__list">
+        <li class="p-accordion__group">
+          <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
+            <h4 class="u-no-margin--bottom">
+              <span class="p-accordion__step">1.</span>
+              Create an Ubuntu One account
+              {% if user %}<i class="p-icon--success"></i>{% endif %}
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab1-section" role="tabpanel" {% if user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1-section">
+            <div class="col-8">
+              <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+              <div class="row">
+                <p class="col-5">
+                  <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
+                </p>
+              </div>
+              <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
             </div>
-            <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
-          </div>
+          </section>
         </li>
-      {% else %}
-        <li class="p-list-step__item col-8 u-no-margin--left">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">1</span>
-            Create an Ubuntu One account <i class="p-icon--success"></i>
-          </h4>
-          <div class="p-list-step__content">
-            <p>This lets you make releases, alter your store listing and see usage metrics.</p>
-            <div class="row">
-              <p class="col-5">
-                <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
-              </p>
+        <li class="p-accordion__group">
+          <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
+            <h4 class="u-no-margin--bottom">
+              <span class="p-accordion__step">2.</span>
+              Register your snap name
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2-section">
+            <div class="col-8">
+              <p>Okay {{ user.display_name }}, now log in with the same account at the terminal</p>
+
+              {% set snippet_value = "snapcraft login" %}
+              {% set snippet_id = "snapcraft-login" %}
+              {% include "/partials/_code-snippet.html" %}
+
+              <p>And register your snap name</p>
+              {% set snippet_value = "snapcraft register " + snap_name %}
+              {% set snippet_id = "snapcraft-login" %}
+              {% set snippet_id = "snapcraft-register" %}
+              {% include "/partials/_code-snippet.html" %}
+              <div class="p-notification--caution">
+                <p class="p-notification__response">
+                  <span class="p-notification__status"></span>
+                  Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
+                </p>
+              </div>
             </div>
-          </div>
+          </section>
         </li>
-        <li class="p-list-step__item col-8 u-no-margin--left">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">2</span>
-            Okay {{ user.display_name }}, now log in with the same account at the terminal
-          </h4>
-          {% set snippet_value = "snapcraft login" %}
-          {% set snippet_id = "snapcraft-login" %}
-          {% include "/partials/_code-snippet.html" %}
-        </li>
-        <li class="p-list-step__item col-8 u-no-margin--left">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">3</span>
-            Register the snap name from the snapcraft.yaml
-          </h4>
-          {% set snippet_value = "snapcraft register " + snap_name %}
-          {% set snippet_id = "snapcraft-login" %}
-          {% set snippet_id = "snapcraft-register" %}
-          {% include "/partials/_code-snippet.html" %}
-          <div class="p-notification--caution">
-            <p class="p-notification__response">
-              <span class="p-notification__status"></span>
-              Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
-            </p>
-          </div>
-        </li>
+        <li class="p-accordion__group">
+          <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
+            <h4 class="p-list-step__title u-no-margin--bottom">
+              <span class="p-accordion__step">3.</span>
+              Push to the Snap store
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
+            <div class="col-8">
+              <p>
+                You can push your snap to the store with following command:
+              </p>
+              {% set snippet_value = "snapcraft push --release edge *.snap" %}
+              {% set snippet_id = "snapcraft-push" %}
+              {% include "/partials/_code-snippet.html" %}
 
-        <li class="p-list-step__item col-8 u-no-margin--left">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">4</span>
-            Push to the Snap store
-          </h4>
-          {% set snippet_value = "snapcraft push --release edge *.snap" %}
-          {% set snippet_id = "snapcraft-push" %}
-          {% include "/partials/_code-snippet.html" %}
-
-          <p>
-            Once you've pushed to the Snap store, edit your snap public presentation.
-          </p>
-          <a class="p-button--neutral js-continue is--disabled">
-            <i class="p-icon--spinner u-animation--spin"></i>
-            &nbsp;Waiting for push...</a>
+              <p>
+                Once you've pushed to the Snap store, edit your snap public presentation.
+              </p>
+              <a class="p-button--neutral js-continue is--disabled">
+                <i class="p-icon--spinner u-animation--spin"></i>
+                &nbsp;Waiting for push...</a>
+            </div>
+          </section>
         </li>
-      {% endif %}
-    </ol>
+      </ol>
+    </div>
   </div>
 {% endblock %}
 
@@ -125,12 +124,13 @@
 
 {% block scripts %}
   <script src="{{ static_url('js/dist/public.js') }}"></script>
-  {% if user %}
   <script>
     Raven.context(function() {
-      snapcraft.public.firstSnapFlow.push({{ language|tojson }});
+      {% if user %}
+        snapcraft.public.firstSnapFlow.push({{ language|tojson }});
+      {% endif %}
+      snapcraft.public.initAccordion('.p-accordion__list');
     });
   </script>
-  {% endif %}
   {{ super() }}
 {% endblock %}
