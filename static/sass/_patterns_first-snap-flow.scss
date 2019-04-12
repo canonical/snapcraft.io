@@ -15,4 +15,14 @@
       color: $color-positive;
     }
   }
+
+  .p-accordion__step {
+    display: block;
+    float: left;
+    width: 3rem;
+  }
+
+  .p-accordion__panel {
+    padding-left: 4rem;
+  }
 }

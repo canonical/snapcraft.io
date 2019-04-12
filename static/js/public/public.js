@@ -2,6 +2,7 @@ import map from "./snap-details/map";
 import screenshots from "./snap-details/screenshots";
 import channelMap from "./snap-details/channelMap";
 import videos from "./snap-details/videos";
+import initAccordion from "./accordion";
 import initReportSnap from "./snap-details/reportSnap";
 import initEmbeddedCardModal from "./snap-details/embeddedCard";
 import { snapDetailsPosts, seriesPosts } from "./snap-details/blog-posts";
@@ -18,6 +19,7 @@ export {
   storeCategories,
   snapDetailsPosts,
   seriesPosts,
+  initAccordion,
   initEmbeddedCardModal,
   initFSFLanguageSelect,
   initReportSnap,
