@@ -1,10 +1,11 @@
-import flask
 import socket
+from urllib.parse import unquote, urlparse, urlunparse
+
+import flask
+
 import prometheus_client
 import webapp.template_utils as template_utils
-from urllib.parse import unquote, urlparse, urlunparse
 from webapp import authentication
-
 
 badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
@@ -72,6 +73,9 @@ def set_handlers(app):
     def internal_error(error):
         error_name = getattr(error, "name", type(error).__name__)
         return_code = getattr(error, "code", 500)
+
+        if not app.testing:
+            app.extensions["sentry"].captureException()
 
         return (
             flask.render_template("50X.html", error_name=error_name),
