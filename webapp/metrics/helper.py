@@ -76,3 +76,50 @@ def find_metric(full_response, name):
     for metric in full_response:
         if metric["metric_name"] == name:
             return metric
+
+
+def build_snap_installs_metrics_query(snaps, get_filter=get_filter):
+    """Transforms an API response from the publisher metrics
+
+    :param snaps: dict containing snaps we want metrics for
+    :param get_filter: function that builds a single filter payload
+
+    :returns: A dict containing a filter for each snap in snaps
+    or empty if there are no snaps
+    """
+    if not snaps:
+        return {}
+
+    end = get_last_metrics_processed_date()
+    start = end + relativedelta.relativedelta(years=-1, days=-1)
+
+    metrics_query = {"filters": []}
+    for snap_id in snaps:
+        metrics_query["filters"].append(
+            get_filter(
+                metric_name="weekly_device_change",
+                snap_id=snap_id,
+                start=start,
+                end=end,
+            )
+        )
+    return metrics_query
+
+
+def transform_metrics(metrics, metrics_response):
+    """Transforms an API response from the publisher metrics
+
+    :param metrics_response: The JSON response from the metrics API
+
+    :returns: A dictionary with the metric information
+    """
+    for metric in metrics_response["metrics"]:
+        if metric["status"] == "OK":
+            snap_id = metric["snap_id"]
+
+            metrics["snaps"].append(
+                {"id": snap_id, "series": metric["series"]}
+            )
+            metrics["buckets"] = metric["buckets"]
+
+    return metrics

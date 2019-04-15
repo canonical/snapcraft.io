@@ -110,6 +110,30 @@ def get_account_snaps():
     return flask.render_template("publisher/account-snaps.html", **context)
 
 
+@publisher_snaps.route("/snaps/metrics/json", methods=["POST"])
+@login_required
+def get_account_snaps_metrics():
+    if not flask.request.data:
+        error = {"error": "Please provide a list of snap ID's"}
+        return flask.jsonify(error), 500
+
+    try:
+        metrics = {"buckets": [], "snaps": []}
+
+        snaps = loads(flask.request.data)
+        metrics_query = metrics_helper.build_snap_installs_metrics_query(snaps)
+
+        if metrics_query:
+            snap_metrics = api.get_publisher_metrics(
+                flask.session, json=metrics_query
+            )
+            metrics = metrics_helper.transform_metrics(metrics, snap_metrics)
+        return flask.jsonify(metrics), 200
+    except Exception:
+        error = {"error": "An error occured while fetching metrics"}
+        return flask.jsonify(error), 500
+
+
 @publisher_snaps.route("/account/snaps/<snap_name>/measure")
 @publisher_snaps.route("/account/snaps/<snap_name>/metrics")
 @login_required
