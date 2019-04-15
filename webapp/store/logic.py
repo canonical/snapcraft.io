@@ -361,7 +361,8 @@ def get_video_embed_code(url):
 
 
 def filter_screenshots(media):
-    banner_regex = r"/banner(\-icon)?(_.*)\.(png|jpg)"
+    banner_regex = r"/banner(\-icon)?(_.*)?\.(png|jpg)"
+
     return [
         m["url"]
         for m in media
