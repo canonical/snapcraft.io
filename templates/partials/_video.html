@@ -1,6 +1,6 @@
 {% if video.type == "youtube" %}
   <iframe id="ytplayer" type="text/html" width="818" height="460"
-          src="{{ video.url }}?autoplay=1&mute=1&loop=1&modestbranding=1&playlist={{ video.id }}" frameborder="0"></iframe>
+          src="{{ video.url }}?autoplay=1&mute=1&modestbranding=1&playlist={{ video.id }}" frameborder="0"></iframe>
 {% elif video.type == "vimeo" %}
   <iframe id="vimeoplayer" width="818" height="460" frameborder="0"
           webkitallowfullscreen mozallowfullscreen allowfullscreen
