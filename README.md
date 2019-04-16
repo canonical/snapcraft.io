@@ -1,6 +1,6 @@
 # snapcraft.io
 
-[![CircleCI build status](https://circleci.com/gh/canonical-websites/snapcraft.io.svg?style=shield)](https://circleci.com/gh/canonical-websites/snapcraft.io) [![Code coverage](https://codecov.io/gh/canonical-websites/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-websites/snapcraft.io)
+[![CircleCI build status](https://circleci.com/gh/canonical-web-and-design/snapcraft.io.svg?style=shield)](https://circleci.com/gh/canonical-web-and-design/snapcraft.io) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
 
 This is the application for [snapcraft.io](https://snapcraft.io) website.
 

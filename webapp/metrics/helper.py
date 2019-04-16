@@ -14,7 +14,7 @@ def get_filter(metric_name, snap_id, start, end):
 def get_last_metrics_processed_date():
     # We want to give time to the store to proccess all the metrics,
     # since the metrics are processed during the night
-    # https://github.com/canonical-websites/snapcraft.io/pull/616
+    # https://github.com/canonical-web-and-design/snapcraft.io/pull/616
     three_hours = relativedelta.relativedelta(hours=3)
     last_metrics_processed = datetime.datetime.utcnow() - three_hours
 
