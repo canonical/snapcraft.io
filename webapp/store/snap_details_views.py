@@ -284,9 +284,14 @@ def snap_details_views(store, api, handle_errors):
 
         snap_link = flask.request.url_root + context["package_name"]
 
+        # channel with safest risk available in default track
+        snap_channel = "".join(
+            [context["default_track"], "/", context["lowest_risk_available"]]
+        )
+
         svg = badge(
             left_text=context["snap_title"],
-            right_text="v" + context["version"],
+            right_text=snap_channel + " " + context["version"],
             right_color="#0e8420",  # Vanilla $color-positive
             left_link=snap_link,
             right_link=snap_link,
