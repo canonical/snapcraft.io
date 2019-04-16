@@ -830,6 +830,33 @@ def post_register_name():
     return flask.redirect(flask.url_for("account.get_account"))
 
 
+@publisher_snaps.route("/register-snap/json", methods=["POST"])
+@login_required
+def post_register_name_json():
+    snap_name = flask.request.form.get("snap-name")
+
+    if not snap_name:
+        return flask.jsonify({"success": False})
+
+    try:
+        response = api.post_register_name(
+            session=flask.session, snap_name=snap_name
+        )
+    except ApiResponseErrorList as api_response_error_list:
+        return (
+            flask.jsonify(
+                {"success": False, "errors": api_response_error_list.errors}
+            ),
+            api_response_error_list.status_code,
+        )
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    response["success"] = True
+
+    return flask.jsonify(response)
+
+
 @publisher_snaps.route("/register-name-dispute")
 @login_required
 def get_register_name_dispute():
