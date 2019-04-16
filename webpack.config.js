@@ -20,7 +20,7 @@ module.exports = {
     public: "./static/js/public/public.js",
     // TODO:
     // publisher bundle is big (webpack warning) - try to chunk it down
-    // https://github.com/canonical-websites/snapcraft.io/issues/1246
+    // https://github.com/canonical-web-and-design/snapcraft.io/issues/1246
     publisher: "./static/js/publisher/publisher.js"
   },
   output: {
@@ -41,7 +41,7 @@ module.exports = {
       },
       // TODO:
       // we should get rid of using globals making expose-loader unnecessary
-      // https://github.com/canonical-websites/snapcraft.io/issues/1245
+      // https://github.com/canonical-web-and-design/snapcraft.io/issues/1245
 
       // loaders are evaluated from bottom to top (right to left)
       // so first transpile via babel, then expose as global
