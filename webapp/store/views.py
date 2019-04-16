@@ -95,7 +95,7 @@ def store_blueprint(store_query=None, testing=False):
         status_code = 200
 
         try:
-            snaps_results = api.get_all_snaps(size=12)
+            snaps_results = api.get_all_snaps(size=16)
         except ApiError as api_error:
             snaps_results = []
             status_code, error_info = _handle_errors(api_error)

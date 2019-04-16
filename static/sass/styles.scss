@@ -237,6 +237,9 @@ $color-navigation-background: #252525;
 @import 'patterns_pagination';
 @include snapcraft-p-pagination;
 
+@import 'snapcraft-p_grid';
+@include snapcraft-p-grid;
+
 
 html,
 body {
