@@ -1,0 +1,8 @@
+@mixin snapcraft-p-grid {
+  .snapcraft-p-grid {
+    column-gap: $sph-inter;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    row-gap: $spv-inter--regular;
+  }
+}
