@@ -241,7 +241,7 @@ def store_blueprint(store_query=None, testing=False):
                 os.path.join(flask.current_app.root_path, file), "r"
             ) as stream:
                 data = yaml.load(stream)
-        except Exception as e:
+        except Exception:
             data = None
 
         return data
