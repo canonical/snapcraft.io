@@ -247,7 +247,7 @@ def store_blueprint(store_query=None, testing=False):
         return data
 
     @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
-    def publisher_details_jetbrains(publisher):
+    def publisher_details(publisher):
         """
         A view to display the publisher details page for specific publisher.
         """
