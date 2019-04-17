@@ -32,6 +32,7 @@ def set_handlers(app):
             user_name = None
 
         page_slug = template_utils.generate_slug(flask.request.path)
+        is_stream_live = template_utils.time_live_stream()
 
         return {
             # Variables
@@ -42,6 +43,7 @@ def set_handlers(app):
             "host_url": flask.request.host_url,
             "path": flask.request.path,
             "page_slug": page_slug,
+            "is_stream_live": is_stream_live,
             "user_name": user_name,
             "VERIFIED_PUBLISHER": "verified",
             "webapp_config": app.config["WEBAPP_CONFIG"],
