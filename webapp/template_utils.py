@@ -101,7 +101,7 @@ def time_live_stream():
     """Temporary function
     returns: 0 if stream is before the time
     returns: 1 if stream is now
-    returns: 2 uf stream is close
+    returns: 2 if stream is close
     """
 
     import datetime
