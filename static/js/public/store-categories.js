@@ -1,6 +1,7 @@
 import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
 import "whatwg-fetch";
 import { CATEGORY_CONFIG } from "../config/swiper.config";
+import * as Fac from "fast-average-color";
 
 Swiper.use([Navigation]);
 
@@ -15,6 +16,19 @@ function getCategory(holder) {
   // Write the html and init the carousel
   const writeCategory = function(response) {
     holder.innerHTML = response;
+
+    const srcs = holder.querySelectorAll(".p-media-object--snap__img");
+    if (srcs.length > 0) {
+      for (let i = 0, ii = srcs.length; i < ii; i += 1) {
+        const image = srcs[i];
+        image.addEventListener("load", () => {
+          const fac = new Fac();
+          const colour = fac.getColor(image);
+          image.parentNode.style.backgroundColor = colour.rgb;
+        });
+      }
+    }
+
     new Swiper(
       holder.querySelector(".swiper-container"),
       Object.assign(

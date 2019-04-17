@@ -277,9 +277,17 @@ def store_blueprint(store_query=None, testing=False):
 
         snaps_results = logic.get_searched_snaps(category_results)
 
+        snaps = []
+
+        for snap in snaps_results:
+            if snap["icon_url"] != "":
+                snap["icon_url"] = "/p/i/" + snap["icon_url"]
+
+            snaps.append(snap)
+
         context = {
             "category": category,
-            "snaps": snaps_results,
+            "snaps": snaps,
             "error_info": error_info,
         }
 
