@@ -4,13 +4,13 @@ icon_url: https://assets.ubuntu.com/v1/98a86926-logo-white-blue-source.svg
 banner_url: https://assets.ubuntu.com/v1/90d703ca-1920x1080.png
 summary: KDE's vision is a world in which everyone has control over their digital life and enjoys freedom and privacy.
 description: |
-    <p>Each part of the vision has been carefully chosen to convey our intent and scope:<p>
+    <p>Each part of the vision has been carefully chosen to convey our intent & scope:<p>
     <p><strong>A world:</strong> We are not doing this only for ourselves, our friends and family, our employer or customers, and we recognize no geographical barriers to our work. We want to change no less than the world we live in.</p>
     <p><strong>Everyone:</strong> The work should not just be for a small group of people. The fruits of our work should be available to all, without being restricted to materially, educationally or socially privileged people.</p>
     <p><strong>Control:</strong> KDE has always aimed to put people in control. We don't want to hand over control to anybody else. Not to some service providers, not to some hardware vendors, not to governments, not even to KDE. KDE wants to put you in the driver's seat.</p>
     <p><strong>Digital life:</strong> We want to allow people to control every aspect of their digital lives: Hardware, software, data, communication, everything. Of course, there is much more to life than the 'digital' part. While we all want freedom and control in the other parts too, influencing that is beyond KDE's scope, so we limit our vision to 'digital life'.</p>
     <p><strong>Freedom:</strong> We believe that freedom is a prerequisite to true control. Some may feel in control of a proprietary application as long as it obeys their commands, but without the freedom to make changes and share them, they are entirely reliant on the vendor's benevolence for this apparent 'control'.</p>
-    <p><strong>Privacy:</strong> In a world where our privacy is increasingly threatened, we wanted to emphasize its importance. Freedom without the right to privacy is no freedom at all.</p>"
+    <p><strong>Privacy:</strong> In a world where our privacy is increasingly threatened, we wanted to emphasize its importance. Freedom without the right to privacy is no freedom at all.</p>
 publisher_since: March 2017
 website: https://kde.org/
 contact: https://forum.kde.org/
