@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { sortAlphaNum } from "../../../libs/channels";
 
 class ReleasesHeading extends Component {
   onTrackChange(event) {
@@ -7,6 +8,8 @@ class ReleasesHeading extends Component {
   }
 
   renderTrackDropdown(tracks) {
+    tracks = sortAlphaNum(tracks, "latest");
+
     return (
       <form className="p-form p-form--inline u-float--right">
         <div className="p-form__group">
