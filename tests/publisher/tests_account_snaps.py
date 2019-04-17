@@ -54,6 +54,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "16": {
                     "test": {
                         "status": "Approved",
+                        "snap-id": "1",
                         "snap-name": "test",
                         "latest_revisions": [],
                     }
@@ -86,6 +87,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "16": {
                     "test": {
                         "status": "Approved",
+                        "snap-id": "1",
                         "snap-name": "test",
                         "latest_revisions": [
                             {
@@ -124,6 +126,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "16": {
                     "test": {
                         "status": "Approved",
+                        "snap-id": "1",
                         "snap-name": "test",
                         "latest_revisions": [
                             {
@@ -167,6 +170,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "16": {
                     "test": {
                         "status": "Approved",
+                        "snap-id": "1",
                         "snap-name": "test",
                         "latest_revisions": [
                             {
@@ -178,6 +182,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                     },
                     "test2": {
                         "status": "Approved",
+                        "snap-id": "2",
                         "snap-name": "test2",
                         "latest_revisions": [],
                     },
@@ -200,6 +205,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         registered_snaps = {
             "test2": {
                 "status": "Approved",
+                "snap-id": "2",
                 "snap-name": "test2",
                 "latest_revisions": [],
             }
@@ -208,6 +214,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         uploaded_snaps = {
             "test": {
                 "status": "Approved",
+                "snap-id": "1",
                 "snap-name": "test",
                 "latest_revisions": [
                     {
@@ -232,6 +239,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "16": {
                     "test": {
                         "status": "Approved",
+                        "snap-id": "1",
                         "snap-name": "test",
                         "latest_revisions": [
                             {
@@ -243,11 +251,13 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                     },
                     "test2": {
                         "status": "Approved",
+                        "snap-id": "2",
                         "snap-name": "test2",
                         "latest_revisions": [],
                     },
                     "test3": {
                         "status": "Revoked",
+                        "snap-id": "3",
                         "snap-name": "test",
                         "latest_revisions": [
                             {
@@ -259,6 +269,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                     },
                     "test4": {
                         "status": "Revoked",
+                        "snap-id": "4",
                         "snap-name": "test2",
                         "latest_revisions": [],
                     },
@@ -281,6 +292,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         registered_snaps = {
             "test2": {
                 "status": "Approved",
+                "snap-id": "2",
                 "snap-name": "test2",
                 "latest_revisions": [],
             }
@@ -289,6 +301,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         uploaded_snaps = {
             "test": {
                 "status": "Approved",
+                "snap-id": "1",
                 "snap-name": "test",
                 "latest_revisions": [
                     {
