@@ -53,23 +53,18 @@
           </button>
           <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2-section">
             <div class="col-8">
-              <p>Okay {{ user.display_name }}, now log in with the same account at the terminal</p>
-
-              {% set snippet_value = "snapcraft login" %}
-              {% set snippet_id = "snapcraft-login" %}
-              {% include "/partials/_code-snippet.html" %}
-
-              <p>And register your snap name</p>
-              {% set snippet_value = "snapcraft register " + snap_name %}
-              {% set snippet_id = "snapcraft-login" %}
-              {% set snippet_id = "snapcraft-register" %}
-              {% include "/partials/_code-snippet.html" %}
-              <div class="p-notification--caution">
-                <p class="p-notification__response">
-                  <span class="p-notification__status"></span>
-                  Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
-                </p>
-              </div>
+              <form id="register-name-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <label>You must register snap name to be able to push your snap to the store.</label>
+                <input type="text" name="snap-name" value="{{ snap_name }}" />
+                <div id="register-name-notification" class="p-notification--caution">
+                  <p class="p-notification__response">
+                    <span class="p-notification__status"></span>
+                    Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
+                  </p>
+                </div>
+                <button class="p-button--positive">Register snap name</button>
+              </form>
             </div>
           </section>
         </li>
@@ -82,8 +77,13 @@
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
             <div class="col-8">
+              <p>Log in to snapcraft using your Ubuntu One account credentials:</p>
+              {% set snippet_value = "snapcraft login" %}
+              {% set snippet_id = "snapcraft-login" %}
+              {% include "/partials/_code-snippet.html" %}
+
               <p>
-                You can push your snap to the store with following command:
+                Once logged, you can push your snap to the store with following command:
               </p>
               {% set snippet_value = "snapcraft push --release edge *.snap" %}
               {% set snippet_id = "snapcraft-push" %}
@@ -127,6 +127,10 @@
   <script>
     Raven.context(function() {
       {% if user %}
+        snapcraft.public.firstSnapFlow.initRegisterName(
+          document.getElementById("register-name-form"),
+          document.getElementById("register-name-notification"),
+        );
         snapcraft.public.firstSnapFlow.push({{ language|tojson }});
       {% endif %}
       snapcraft.public.initAccordion('.p-accordion__list');

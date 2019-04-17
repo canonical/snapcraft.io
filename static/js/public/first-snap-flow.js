@@ -183,7 +183,67 @@ function push() {
   });
 }
 
+function updateNotification(notificationEl, className, message) {
+  notificationEl.className = className;
+  notificationEl.querySelector(".p-notification__response").innerHTML = message;
+}
+
+function successNotification(notificationEl, message) {
+  updateNotification(notificationEl, "p-notification--positive", message);
+}
+
+function errorNotification(notificationEl, message) {
+  updateNotification(notificationEl, "p-notification--negative", message);
+}
+
+function initRegisterName(formEl, notificationEl) {
+  const initialNotificationClassName = notificationEl.className;
+  const initialNotificationHtml = notificationEl.querySelector(
+    ".p-notification__response"
+  ).innerHTML;
+
+  const snapNameInput = formEl.querySelector("[name=snap-name]");
+
+  snapNameInput.addEventListener("keyup", () => {
+    updateNotification(
+      notificationEl,
+      initialNotificationClassName,
+      initialNotificationHtml
+    );
+  });
+
+  formEl.addEventListener("submit", event => {
+    event.preventDefault();
+    let formData = new FormData(formEl);
+
+    fetch("/register-snap/json", {
+      method: "POST",
+      body: formData
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.errors) {
+          const error = json.errors[0];
+          if (error.code == "already_owned") {
+            successNotification(notificationEl, error.message);
+          } else {
+            errorNotification(notificationEl, error.message);
+          }
+        } else if (json.success) {
+          successNotification(notificationEl, "Name registered successfully.");
+        }
+      })
+      .catch(() => {
+        errorNotification(
+          notificationEl,
+          "There was some problem registering name. Please try again."
+        );
+      });
+  });
+}
+
 export default {
+  initRegisterName,
   install,
   push
 };
