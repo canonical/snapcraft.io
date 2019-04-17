@@ -131,6 +131,17 @@ snaps: [
   },
   {
     "developer_validation": "verified",
+    "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/10/kbreakout.svg.png",
+    "origin": "kde",
+    "package_name": "kbreakout",
+    "publisher": "KDE",
+    "summary": "ball and paddle game",
+    "description": "kbreakout is a game similar to the classics breakout and xboing, featuring a number of added graphical enhancements and effects. You control a paddle at the bottom of the playing-field, and must destroy bricks at the top by bouncing balls against them.",
+    "title": "kbreakout",
+    "background": ""
+  },
+  {
+    "developer_validation": "verified",
     "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/01/icon_21.png",
     "origin": "kde",
     "package_name": "KBruch",
