@@ -241,8 +241,9 @@ def store_blueprint(store_query=None, testing=False):
                 os.path.join(flask.current_app.root_path, file), "r"
             ) as stream:
                 data = yaml.load(stream)
-        except Exception:
+        except Exception as e:
             data = None
+            print(e)
 
         return data
 
@@ -255,6 +256,7 @@ def store_blueprint(store_query=None, testing=False):
         publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
             "PUBLISHER_PAGES"
         ]
+        print(publisher_content_path + publisher + ".yaml")
         context = _get_file(publisher_content_path + publisher + ".yaml")
 
         if not context:
