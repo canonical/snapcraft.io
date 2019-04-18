@@ -32,7 +32,8 @@ class PostRegisterNameJson(BaseTestCases.EndpointLoggedIn):
     def test_post_no_data(self):
         response = self.client.post(self.endpoint_url)
 
-        self.assertEqual(response.json["success"], False)
+        self.assert400(response)
+        self.assertEqual(len(response.json["errors"]), 1)
 
     @responses.activate
     def test_post_snap_name(self):
@@ -48,8 +49,8 @@ class PostRegisterNameJson(BaseTestCases.EndpointLoggedIn):
         )
         self.assertEqual(b'{"snap_name": "test-snap"}', called.request.body)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json["success"], True)
+        self.assert200(response)
+        self.assertEqual(response.json["code"], "created")
 
     @responses.activate
     def test_name_already_registered(self):
@@ -57,6 +58,17 @@ class PostRegisterNameJson(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.POST, self.api_url, json=payload, status=409)
 
         response = self.client.post(self.endpoint_url, data=self.data)
+        errors = response.json["errors"]
+        self.assertStatus(response, 409)
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors[0]["code"], "already_registered")
 
-        self.assertEqual(response.status_code, 409)
-        self.assertEqual(response.json["success"], False)
+    @responses.activate
+    def test_name_already_owned(self):
+        payload = {"error_list": [{"code": "already_owned"}]}
+        responses.add(responses.POST, self.api_url, json=payload, status=409)
+
+        response = self.client.post(self.endpoint_url, data=self.data)
+
+        self.assert200(response)
+        self.assertEqual(response.json["code"], "already_owned")

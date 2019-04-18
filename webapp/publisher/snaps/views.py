@@ -836,23 +836,30 @@ def post_register_name_json():
     snap_name = flask.request.form.get("snap-name")
 
     if not snap_name:
-        return flask.jsonify({"success": False})
+        return (
+            flask.jsonify({"errors": [{"message": "Snap name is required"}]}),
+            400,
+        )
 
     try:
         response = api.post_register_name(
             session=flask.session, snap_name=snap_name
         )
     except ApiResponseErrorList as api_response_error_list:
+        for error in api_response_error_list.errors:
+            # if snap name is already owned treat it as success
+            if error["code"] == "already_owned":
+                return flask.jsonify(
+                    {"code": error["code"], "snap_name": snap_name}
+                )
         return (
-            flask.jsonify(
-                {"success": False, "errors": api_response_error_list.errors}
-            ),
+            flask.jsonify({"errors": api_response_error_list.errors}),
             api_response_error_list.status_code,
         )
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    response["success"] = True
+    response["code"] = "created"
 
     return flask.jsonify(response)
 
