@@ -196,6 +196,10 @@ function errorNotification(notificationEl, message) {
   updateNotification(notificationEl, "p-notification--negative", message);
 }
 
+function validateSnapName(name) {
+  return /^[a-z0-9-]*[a-z][a-z0-9-]*$/.test(name) && !/^-|-$/.test(name);
+}
+
 function initRegisterName(formEl, notificationEl) {
   const initialNotificationClassName = notificationEl.className;
   const initialNotificationHtml = notificationEl.querySelector(
@@ -205,6 +209,16 @@ function initRegisterName(formEl, notificationEl) {
   const snapNameInput = formEl.querySelector("[name=snap-name]");
 
   snapNameInput.addEventListener("keyup", () => {
+    const isValid = validateSnapName(snapNameInput.value);
+
+    if (!isValid) {
+      snapNameInput.parentNode.classList.add("is-error");
+      formEl.querySelector("button").disabled = true;
+    } else {
+      snapNameInput.parentNode.classList.remove("is-error");
+      formEl.querySelector("button").disabled = false;
+    }
+
     updateNotification(
       notificationEl,
       initialNotificationClassName,
@@ -224,13 +238,17 @@ function initRegisterName(formEl, notificationEl) {
       .then(json => {
         if (json.errors) {
           const error = json.errors[0];
-          if (error.code == "already_owned") {
-            successNotification(notificationEl, error.message);
-          } else {
-            errorNotification(notificationEl, error.message);
-          }
-        } else if (json.success) {
-          successNotification(notificationEl, "Name registered successfully.");
+          errorNotification(notificationEl, error.message);
+        } else if (json.code == "created") {
+          successNotification(
+            notificationEl,
+            `Name "${json.snap_name}" registered successfully.`
+          );
+        } else if (json.code == "already_owned") {
+          successNotification(
+            notificationEl,
+            `You already own "${json.snap_name}"".`
+          );
         }
       })
       .catch(() => {
