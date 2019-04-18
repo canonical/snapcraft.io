@@ -25,4 +25,13 @@
   .p-accordion__panel {
     padding-left: 4rem;
   }
+
+  .p-form-validation__message {
+    display: none;
+
+    .is-error & {
+      color: $color-negative;
+      display: block;
+    }
+  }
 }

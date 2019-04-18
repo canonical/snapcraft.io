@@ -56,14 +56,19 @@
               <form id="register-name-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <label>You must register snap name to be able to push your snap to the store.</label>
-                <input type="text" name="snap-name" value="{{ snap_name }}" />
+                <div class="p-form-validation">
+                  <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
+                  <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
+                    Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
+                  </p>
+                </div>
                 <div id="register-name-notification" class="p-notification--caution">
                   <p class="p-notification__response">
                     <span class="p-notification__status"></span>
                     Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
                   </p>
                 </div>
-                <button class="p-button--positive">Register snap name</button>
+                <button class="p-button--positive" disabled>Register snap name</button>
               </form>
             </div>
           </section>
