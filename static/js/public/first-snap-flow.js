@@ -200,7 +200,7 @@ function validateSnapName(name) {
   return /^[a-z0-9-]*[a-z][a-z0-9-]*$/.test(name) && !/^-|-$/.test(name);
 }
 
-function initRegisterName(formEl, notificationEl) {
+function initRegisterName(formEl, notificationEl, successEl) {
   const initialNotificationClassName = notificationEl.className;
   const initialNotificationHtml = notificationEl.querySelector(
     ".p-notification__response"
@@ -226,6 +226,15 @@ function initRegisterName(formEl, notificationEl) {
     );
   });
 
+  function showSuccess(message) {
+    successEl.classList.remove("u-hide");
+    successNotification(notificationEl, message);
+  }
+
+  function showError(message) {
+    errorNotification(notificationEl, message);
+  }
+
   formEl.addEventListener("submit", event => {
     event.preventDefault();
     let formData = new FormData(formEl);
@@ -237,18 +246,11 @@ function initRegisterName(formEl, notificationEl) {
       .then(response => response.json())
       .then(json => {
         if (json.errors) {
-          const error = json.errors[0];
-          errorNotification(notificationEl, error.message);
+          showError(json.errors[0].message);
         } else if (json.code == "created") {
-          successNotification(
-            notificationEl,
-            `Name "${json.snap_name}" registered successfully.`
-          );
+          showSuccess(`Name "${json.snap_name}" registered successfully.`);
         } else if (json.code == "already_owned") {
-          successNotification(
-            notificationEl,
-            `You already own "${json.snap_name}"".`
-          );
+          showSuccess(`You already own "${json.snap_name}"".`);
         }
       })
       .catch(() => {
