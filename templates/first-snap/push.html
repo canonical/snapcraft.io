@@ -49,6 +49,7 @@
             <h4 class="u-no-margin--bottom">
               <span class="p-accordion__step">2.</span>
               Register your snap name
+              <i id="register-name-success" class="p-icon--success u-hide"></i>
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2-section">
@@ -135,6 +136,7 @@
         snapcraft.public.firstSnapFlow.initRegisterName(
           document.getElementById("register-name-form"),
           document.getElementById("register-name-notification"),
+          document.getElementById("register-name-success")
         );
         snapcraft.public.firstSnapFlow.push({{ language|tojson }});
       {% endif %}
