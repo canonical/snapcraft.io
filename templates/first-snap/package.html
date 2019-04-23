@@ -63,7 +63,7 @@
               {% elif item.warning %}
                 <div class="p-notification--caution">
                   <p class="p-notification__response">
-                    {{ item.warning|safe }}
+                    {{ item.warning|replace("${name}", snap_name)|safe }}
                   </p>
                 </div>
               {% endif %}
@@ -84,7 +84,7 @@
               {% elif item.warning %}
                 <div class="p-notification--caution">
                   <p class="p-notification__response">
-                    {{ item.warning|safe }}
+                    {{ item.warning|replace("${name}", snap_name)|safe }}
                   </p>
                 </div>
               {% endif %}
@@ -106,7 +106,7 @@
               {% elif item.warning %}
                 <div class="p-notification--caution">
                   <p class="p-notification__response">
-                    {{ item.warning|safe }}
+                    {{ item.warning|replace("${name}", snap_name)|safe }}
                   </p>
                 </div>
               {% endif %}
@@ -128,7 +128,7 @@
               {% elif item.warning %}
                 <div class="p-notification--caution">
                   <p class="p-notification__response">
-                    {{ item.warning|safe }}
+                    {{ item.warning|replace("${name}", snap_name)|safe }}
                   </p>
                 </div>
               {% endif %}
@@ -149,7 +149,7 @@
             {% elif item.warning %}
             <div class="p-notification--caution">
               <p class="p-notification__response">
-                {{ item.warning|safe }}
+                {{ item.warning|replace("${name}", snap_name)|safe }}
               </p>
             </div>
             {% endif %}
