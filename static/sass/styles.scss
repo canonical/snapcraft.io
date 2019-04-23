@@ -240,6 +240,9 @@ $color-navigation-background: #252525;
 @import 'snapcraft-p_grid';
 @include snapcraft-p-grid;
 
+@import 'snapcraft_p-featured-snap';
+@include snapcraft-p-featured-snaps;
+
 
 html,
 body {

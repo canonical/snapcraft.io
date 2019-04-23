@@ -28,28 +28,37 @@
 
   <section class="p-strip is-shallow">
     <div class="row">
-      <h3 class="p-heading--four"><a href="/search?category=featured">Featured&nbsp;&rsaquo;</a></h3>
+      <div class="col-10">
+        <h3>Featured</h3>
+      </div>
+      <div class="col-2">
+        <a href="/search?category=featured" class="p-button--neutral u-float--right">See more...</a>
+      </div>
     </div>
     <div class="row">
       {% set snaps = featured_snaps %}
       {% set category = "featured" %}
       {% include "store/_category-partial.html" %}
     </div>
+  </section>
 
-    {% for category in categories %}
+  {% for category in categories %}
+    <section class="p-strip is-shallow">
       <div class="row">
-        <hr />
-      </div>
-
-      <div class="row">
-        <h3 class="p-heading--four"><a href="/search?category={{ category.slug }}">{{ category.name }}&nbsp;&rsaquo;</a></h3>
+        <div class="col-10">
+          <h3>{{ category.name }}</h3>
+        </div>
+        <div class="col-2">
+          <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float--right">See more...</a>
+        </div>
       </div>
       <div data-category="{{ category.slug }}" class="row js-store-category">
         {% include "store/_empty-category-partial.html" %}
         {# _category-partial.html loaded via JS #}
       </div>
-    {% endfor %}
-  </section>
+    </section>
+  {% endfor %}
+
   <section class="p-strip--image is-deep is-dark p-strip--snap-store">
     <div class="row u-vertically-center">
       <div class="col-7 u-fade-left--medium">

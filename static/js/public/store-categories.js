@@ -1,9 +1,22 @@
-import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
 import "whatwg-fetch";
-import { CATEGORY_CONFIG } from "../config/swiper.config";
 import * as Fac from "fast-average-color";
 
-Swiper.use([Navigation]);
+function getColour(holder) {
+  const srcs = holder.querySelectorAll(".p-generated-featured-snap__icon");
+  if (srcs.length > 0) {
+    for (let i = 0, ii = srcs.length; i < ii; i += 1) {
+      const parent = srcs[i].closest(".p-generated-featured-snap");
+      const image = srcs[i];
+      image.addEventListener("load", () => {
+        const fac = new Fac();
+        const colour = fac.getColor(image);
+        parent.style.backgroundColor = colour.rgb;
+        parent.classList.add(colour.isDark ? "is--dark" : "is--light");
+      });
+      image.src = image.dataset.src;
+    }
+  }
+}
 
 /**
  *
@@ -17,30 +30,7 @@ function getCategory(holder) {
   const writeCategory = function(response) {
     holder.innerHTML = response;
 
-    const srcs = holder.querySelectorAll(".p-media-object--snap__img");
-    if (srcs.length > 0) {
-      for (let i = 0, ii = srcs.length; i < ii; i += 1) {
-        const image = srcs[i];
-        image.addEventListener("load", () => {
-          const fac = new Fac();
-          const colour = fac.getColor(image);
-          image.parentNode.style.backgroundColor = colour.rgb;
-        });
-      }
-    }
-
-    new Swiper(
-      holder.querySelector(".swiper-container"),
-      Object.assign(
-        {
-          navigation: {
-            nextEl: `.swiper-button__next--${category}`,
-            prevEl: `.swiper-button__prev--${category}`
-          }
-        },
-        CATEGORY_CONFIG
-      )
-    );
+    getColour(holder);
   };
 
   const url = `/store/categories/${category}`;
@@ -61,24 +51,14 @@ function getCategory(holder) {
  * Find all .js-store-category elements and fetch the category via js
  */
 function storeCategories() {
+  const featured = document.querySelector("#js-snap-featured");
+  getColour(featured);
+
   const holders = document.querySelectorAll(".js-store-category");
 
   for (let i = 0; i < holders.length; i++) {
     getCategory(holders[i]);
   }
-
-  new Swiper(
-    document.querySelector("#js-snap-carousel-featured"),
-    Object.assign(
-      {
-        navigation: {
-          nextEl: `.swiper-button__next--featured`,
-          prevEl: `.swiper-button__prev--featured`
-        }
-      },
-      CATEGORY_CONFIG
-    )
-  );
 }
 
 export { storeCategories };

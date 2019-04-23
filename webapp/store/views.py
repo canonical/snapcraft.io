@@ -73,17 +73,28 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             featured_snaps_results = api.get_searched_snaps(
-                snap_searched="", category="featured", size=24, page=1
+                snap_searched="", category="featured", size=10, page=1
             )
         except ApiError:
             featured_snaps_results = []
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
 
+        if featured_snaps[0]["icon_url"] != "":
+            featured_snaps[0]["icon_url"] = (
+                "/p/i/" + featured_snaps[0]["icon_url"]
+            )
+        else:
+            featured_snaps = featured_snaps[:-1]
+
+        for snap in featured_snaps:
+            snap["show_summary"] = True
+
         return (
             flask.render_template(
                 "store/store.html",
                 categories=categories,
+                has_featured=True,
                 featured_snaps=featured_snaps,
                 error_info=error_info,
             ),
@@ -270,24 +281,27 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             category_results = api.get_searched_snaps(
-                snap_searched="", category=category, size=24, page=1
+                snap_searched="", category=category, size=10, page=1
             )
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
         snaps_results = logic.get_searched_snaps(category_results)
 
-        snaps = []
+        if snaps_results[0]["icon_url"] != "":
+            snaps_results[0]["icon_url"] = (
+                "/p/i/" + snaps_results[0]["icon_url"]
+            )
+        else:
+            snaps_results = snaps_results[:-1]
 
         for snap in snaps_results:
-            if snap["icon_url"] != "":
-                snap["icon_url"] = "/p/i/" + snap["icon_url"]
-
-            snaps.append(snap)
+            snap["show_summary"] = True
 
         context = {
             "category": category,
-            "snaps": snaps,
+            "has_featured": True,
+            "snaps": snaps_results,
             "error_info": error_info,
         }
 

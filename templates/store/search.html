@@ -59,11 +59,9 @@
         {% endif %}
       </div>
       <div class="row">
-        <div class="p-fluid-grid--condensed">
+        <div class="snapcraft-p-grid">
           {% for snap in snaps %}
-            <div class="p-fluid-grid__item">
-              {% include 'store/_media-object-snap-partial.html' %}
-            </div>
+            {% include 'store/_media-object-snap-partial.html' %}
           {% endfor %}
         </div>
       </div>

@@ -1,0 +1,43 @@
+@mixin snapcraft-p-featured-snaps {
+  $light-transparent: rgba(255, 255, 255, 0);
+  $light-opaque: rgba(255, 255, 255, .65);
+  $dark-transparent: rgba(0, 0, 0, 0);
+  $dark-opaque: rgba(0, 0, 0, .65);
+
+  .p-generated-featured-snap {
+    background-color: $color-light;
+    border-radius: $border-radius;
+    display: block;
+    margin-bottom: $spv-inter--scaleable;
+    padding: $spv-inter--scaleable ($sph-inter--expanded * 3);
+    text-decoration: none;
+    width: 100%;
+
+    .p-generated-featured-snap__summary {
+      align-items: center;
+      display: flex;
+    }
+
+    &.is--dark {
+      background: linear-gradient(to right, $dark-transparent 0%, $dark-opaque 70%, $dark-opaque 100%);
+
+      .p-generated-featured-snap__summary {
+        color: $color-x-light;
+      }
+    }
+
+    &.is--light {
+      background: linear-gradient(to right, $light-transparent 0%, $light-opaque 70%, $light-opaque 100%);
+
+      .p-generated-featured-snap__summary {
+        color: $color-x-dark;
+      }
+    }
+
+    .p-generated-featured-snap__icon {
+      display: block;
+      min-height: 160px;
+      min-width: 160px;
+    }
+  }
+}

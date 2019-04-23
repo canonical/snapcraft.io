@@ -1,110 +1,92 @@
 // Based on the matrix component https://github.com/vanilla-framework/vanilla-framework/blob/develop/scss/_patterns_matrix.scss
 @mixin snapcraft-p-media-object--snap {
-  $matrix-img-width: map-get($icon-sizes, thumb--small);
-  $matrix-img-gutter: $sph-inter;
-
-  .p-media-object--snap {
-    display: block;
-    margin-bottom: $spv-inter--regular * 2;
-
-    &__img {
-      align-self: flex-start;
-      height: $matrix-img-width;
-      margin-bottom: $spv-inter--condensed;
-      margin-right: $matrix-img-gutter;
-      max-height: $matrix-img-width;
-      max-width: $matrix-img-width;
-      width: auto;
+  %media-object {
+    .p-media-object__details {
+      overflow: hidden;
     }
 
-    &__content {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      padding-right: $sph-intra;
-    }
-
-    &__title {
-      @extend %vf-heading-5;
-      margin-top: -$sp-unit;
+    .p-media-object__title {
+      max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
 
-    &__desc {
-      color: $color-mid-dark;
-      margin-bottom: $spv-nudge-compensation;
-      margin-top: - $sp-unit * 3;
-
-      > p:last-child {
-        margin-bottom: 0;
+    .p-media-object__content {
+      p {
+        color: $color-mid-dark;
+        text-decoration: none;
       }
 
-      & + & {
-        margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
-      }
-
-      @media (max-width: $breakpoint-heading-threshold) {
-        margin-top: - $sp-unit;
-      }
-    }
-
-    &__publisher {
-      color: $color-mid-dark;
-      margin-bottom: $spv-nudge-compensation;
-      margin-top: - $sp-unit * 3;
-
-      > p:last-child {
-        margin-bottom: 0;
-      }
-
-      & + & {
-        margin-top: 0; // Negate nudge compensation for multiple .p-matrix__desc
-      }
-
-      @media (max-width: $breakpoint-heading-threshold) {
-        margin-top: - $sp-unit;
+      p + p {
+        color: $color-dark;
       }
     }
 
     &:hover {
       text-decoration: none;
+
+      .p-media-object__title {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .p-media-object--snap {
+    @extend %media-object;
+
+    .p-media-object__image {
+      max-height: 3rem;
+      max-width: 3rem;
     }
 
-    &.is-placeholder {
-      .p-media-object--snap__img {
-        background: $color-light;
+    &.is--placeholder {
+      .p-media-object__image {
+        background: $color-mid-light;
         border-radius: 2px;
         display: block;
-        width: $matrix-img-width;
+        height: 3rem;
+        width: 3rem;
       }
 
-      .p-media-object--snap__title,
-      .p-media-object--snap__publisher p {
+      .p-media-object__title {
         color: transparent;
         position: relative;
 
         &::before {
-          border-radius: 2px;
-          color: $color-light;
+          background: $color-mid-light;
+          content: "placeholder";
+          display: block;
           left: 0;
-          overflow: hidden;
           position: absolute;
+          top: 0;
         }
       }
 
-      .p-media-object--snap__title::before {
-        content: "████████";
-      }
+      .p-media-object__content {
+        p {
+          color: transparent;
+          position: relative;
 
-      .p-media-object--snap__publisher p::before {
-        content: "███████████";
+          &::before {
+            background: $color-mid-light;
+            content: "place";
+            display: block;
+            left: 0;
+            position: absolute;
+            top: 0;
+          }
+        }
       }
+    }
+  }
+
+  .p-media-object--is-featured {
+    @extend %media-object;
+
+    .p-media-object__image {
+      max-height: 5rem;
+      max-width: 5rem;
     }
   }
 }

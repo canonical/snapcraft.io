@@ -1,15 +1,15 @@
-<a class="p-media-object--snap{% if snap_no_margin %}u-no-margin--bottom{% endif %}" href="/{{ snap.package_name }}">
+<a class="p-media-object p-media-object--snap{% if has_featured%} p-media-object--is-featured{% endif %}{% if snap_no_margin %} u-no-margin--bottom{% endif %}" href="/{{ snap.package_name }}">
   {% if snap.icon_url %}
-  <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
+  <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
   {% else %}
-  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object--snap__img" alt="">
+  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object__image" alt="">
   {% endif %}
 
-  <div class="p-media-object--snap__content">
-    <h4 class="p-media-object--snap__title">
+  <div class="p-media-object__details">
+    <h4 class="p-media-object__title p-heading--five">
       {{ snap.title }}
     </h4>
-    <div class="p-media-object--snap__desc">
+    <div class="p-media-object__content">
       <p>
         <span class="u-off-screen">Publisher: </span>{{ snap.origin }}
         {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
@@ -19,6 +19,9 @@
                     </span>
         {% endif %}
       </p>
+      {% if has_summary %}
+      <p>{{ snap.summary }}</p>
+      {% endif %}
     </div>
   </div>
 </a>
