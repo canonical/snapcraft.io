@@ -1,4 +1,4 @@
-<a class="p-media-object p-media-object--snap{% if has_featured%} p-media-object--is-featured{% endif %}{% if snap_no_margin %} u-no-margin--bottom{% endif %}" href="/{{ snap.package_name }}">
+<a class="p-media-object p-media-object--snap{% if media_object_classname %} {{ media_object_classname }}{% endif %}" href="/{{ snap.package_name }}">
   {% if snap.icon_url %}
   <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
   {% else %}
@@ -6,7 +6,7 @@
   {% endif %}
 
   <div class="p-media-object__details">
-    <h4 class="p-media-object__title p-heading--five">
+    <h4 class="p-media-object__title p-heading--five u-no-margin--bottom">
       {{ snap.title }}
     </h4>
     <div class="p-media-object__content">

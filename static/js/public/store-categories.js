@@ -2,18 +2,25 @@ import "whatwg-fetch";
 import * as Fac from "fast-average-color";
 
 function getColour(holder) {
-  const srcs = holder.querySelectorAll(".p-generated-featured-snap__icon");
+  function extractAndSet(image, parent) {
+    const fac = new Fac();
+    const colour = fac.getColor(image);
+    parent.style.backgroundColor = colour.rgb;
+    parent.classList.add(colour.isDark ? "is--dark" : "is--light");
+  }
+
+  const srcs = holder.querySelectorAll(".p-generated-featured-snap__icon img");
   if (srcs.length > 0) {
     for (let i = 0, ii = srcs.length; i < ii; i += 1) {
       const parent = srcs[i].closest(".p-generated-featured-snap");
       const image = srcs[i];
-      image.addEventListener("load", () => {
-        const fac = new Fac();
-        const colour = fac.getColor(image);
-        parent.style.backgroundColor = colour.rgb;
-        parent.classList.add(colour.isDark ? "is--dark" : "is--light");
-      });
-      image.src = image.dataset.src;
+      if (image.complete) {
+        extractAndSet(image, parent);
+      } else {
+        image.addEventListener("load", () => {
+          extractAndSet(image, parent);
+        });
+      }
     }
   }
 }

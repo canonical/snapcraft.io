@@ -80,7 +80,7 @@ def store_blueprint(store_query=None, testing=False):
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
 
-        if featured_snaps[0]["icon_url"] != "":
+        if len(featured_snaps) > 0 and featured_snaps[0]["icon_url"] != "":
             featured_snaps[0]["icon_url"] = (
                 "/p/i/" + featured_snaps[0]["icon_url"]
             )
@@ -288,7 +288,7 @@ def store_blueprint(store_query=None, testing=False):
 
         snaps_results = logic.get_searched_snaps(category_results)
 
-        if snaps_results[0]["icon_url"] != "":
+        if len(snaps_results) > 0 and snaps_results[0]["icon_url"] != "":
             snaps_results[0]["icon_url"] = (
                 "/p/i/" + snaps_results[0]["icon_url"]
             )

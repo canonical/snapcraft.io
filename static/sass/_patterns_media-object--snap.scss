@@ -13,6 +13,8 @@
     }
 
     .p-media-object__content {
+      margin-top: -.5rem;
+
       p {
         color: $color-mid-dark;
         text-decoration: none;
@@ -85,8 +87,13 @@
     @extend %media-object;
 
     .p-media-object__image {
-      max-height: 5rem;
-      max-width: 5rem;
+      max-height: 3rem;
+      max-width: 3rem;
+
+      @media screen and (min-width: $breakpoint-small) {
+        max-height: 5rem;
+        max-width: 5rem;
+      }
     }
   }
 }

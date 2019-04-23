@@ -2,11 +2,11 @@
   .snapcraft-p-grid {
     column-gap: $sph-inter;
     display: grid;
-    grid-template-columns: repeat(4, 25%);
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     row-gap: $spv-inter--regular;
 
     &--featured {
-      grid-template-columns: repeat(3, 33.333333%);
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     }
   }
 }
