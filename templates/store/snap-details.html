@@ -97,7 +97,7 @@
           </ul>
         </div>
 
-      {% if not webapp_config['STORE_QUERY'] %}
+      {% if not IS_BRAND_STORE %}
         <div class="p-snap-install-buttons">
           <button
             class="p-button--neutral p-snap-install-buttons__versions{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
@@ -144,7 +144,7 @@
     </div>
   </div>
 
-  {% if not webapp_config['STORE_QUERY'] %}
+  {% if not IS_BRAND_STORE %}
     {% include "store/snap-details/_channel_map.html" %}
   {% endif %}
 
@@ -180,7 +180,7 @@
         </table>
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
-        {% if not is_preview %}
+        {% if not is_preview and not IS_BRAND_STORE %}
           <h4>Share this snap</h4>
           <p>Generate an embeddable card to be shared on external websites.</p>
           <p><button class="p-button--neutral js-embedded-card-toggle">Create embeddable card</button></p>
@@ -191,22 +191,24 @@
     </div>
   </div>
 
-  <div data-js="blog-articles" style="display: none;">
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
-    </div>
-    <div class="p-strip is-shallow">
+  {% if not IS_BRAND_STORE %}
+    <div data-js="blog-articles" style="display: none;">
       <div class="row">
-        <div class="col-3">
-          <h3 class="p-heading--four">Related blog posts</h3>
+        <div class="col-12">
+          <hr />
         </div>
       </div>
-      <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+      <div class="p-strip is-shallow">
+        <div class="row">
+          <div class="col-3">
+            <h3 class="p-heading--four">Related blog posts</h3>
+          </div>
+        </div>
+        <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+        </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
@@ -250,7 +252,7 @@
   {% endif %}
 
   {# REPORT SNAP SECTION - hidden in preview #}
-  {% if not is_preview %}
+  {% if not is_preview and not IS_BRAND_STORE %}
     <div class="row">
       <div class="col-12">
         <hr />
@@ -334,7 +336,7 @@
         Raven.captureException(e);
       }
 
-      {% if not is_preview %}
+      {% if not is_preview and not IS_BRAND_STORE %}
       try {
         snapcraft.public.initReportSnap(
           '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
@@ -360,7 +362,7 @@
         }
       {% endif %}
 
-      {% if not webapp_config['STORE_QUERY'] and channel_map %}
+      {% if not IS_BRAND_STORE and channel_map %}
         try {
           document.addEventListener('DOMContentLoaded', function() {
             snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
