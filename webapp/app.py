@@ -9,6 +9,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
 import talisker.flask
+import talisker.logs
 import webapp.api
 import webapp.helpers as helpers
 from webapp.blog.views import blog
@@ -44,6 +45,7 @@ def create_app(testing=False):
         talisker.requests.configure(webapp.api.blog.api_session)
         talisker.requests.configure(webapp.api.dashboard.api_session)
         talisker.requests.configure(webapp.api.sso.api_session)
+        talisker.logs.set_global_extra({"service": "snapcraft.io"})
 
     app.config.from_object("webapp.configs." + app.config["WEBAPP"])
 
