@@ -90,10 +90,16 @@ def get_build(language, operating_system):
     ):
         return flask.abort(404)
 
+    snap_name = steps["name"]
+
+    if "fsf_snap_name" in flask.request.cookies:
+        snap_name = flask.request.cookies.get("fsf_snap_name")
+
     context = {
         "language": language,
         "os": operating_system,
         "steps": steps[operating_system_only][install_type],
+        "snap_name": snap_name,
     }
 
     return flask.render_template("first-snap/build.html", **context)
@@ -108,6 +114,11 @@ def get_test(language, operating_system):
 
     if not steps or operating_system_only not in steps:
         return flask.abort(404)
+
+    snap_name = steps["name"]
+
+    if "fsf_snap_name" in flask.request.cookies:
+        snap_name = flask.request.cookies.get("fsf_snap_name")
 
     converted_steps = []
 
@@ -125,6 +136,7 @@ def get_test(language, operating_system):
         "language": language,
         "os": operating_system,
         "steps": converted_steps,
+        "snap_name": snap_name,
     }
 
     return flask.render_template("first-snap/test.html", **context)
@@ -137,6 +149,11 @@ def get_push(language, operating_system):
 
     if not data:
         return flask.abort(404)
+
+    snap_name = data["name"]
+
+    if "fsf_snap_name" in flask.request.cookies:
+        snap_name = flask.request.cookies.get("fsf_snap_name")
 
     flask_user = flask.session.get("openid", {})
 
@@ -154,7 +171,7 @@ def get_push(language, operating_system):
         "language": language,
         "os": operating_system,
         "user": user,
-        "snap_name": data["name"],
+        "snap_name": snap_name,
     }
 
     return flask.render_template("first-snap/push.html", **context)
