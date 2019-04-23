@@ -12,7 +12,7 @@
                 {{ step.action }}
               </h4>
               {% if step.command %}
-                {% set snippet_value = step.command %}
+                {% set snippet_value = step.command|replace("${name}", snap_name) %}
                 {% set snippet_id = loop.index %}
                 {% if snippet_value.count('\n') == 0 %}
                   {% include "/partials/_code-snippet.html" %}
@@ -26,7 +26,7 @@
           {% if loop.last and step.warning %}
             <div class="p-notification--caution">
               <p class="p-notification__response">
-                {{ step.warning|safe }}
+                {{ step.warning|replace("${name}", snap_name)|safe }}
               </p>
             </div>
           {% endif %}
