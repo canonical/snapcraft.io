@@ -3,6 +3,25 @@
 
 {% block fsf_content %}
   <div class="row">
+    <div class="col-8">
+      <h4 class="p-list-step__title">
+        Choose snap name
+      </h4>
+      <form id="choose-name-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <label>Please pick a snap name for the purpose of this tutorial:</label>
+        <div class="p-form-validation">
+          <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
+          <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
+            Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
+          </p>
+        </div>
+        <button class="p-button--positive" disabled>Choose snap name</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
     <p>Now we'll take a real world app, and package it as a snap</p>
   </div>
 
@@ -151,4 +170,17 @@
     <span class="p-pagination__label">Next</span>
     <span class="p-pagination__title">Build snap</span>
   </a>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script>
+    Raven.context(function() {
+      snapcraft.public.firstSnapFlow.initChooseName(
+        document.getElementById("choose-name-form")
+      );
+      // snapcraft.public.initAccordion('.p-accordion__list');
+    });
+  </script>
+  {{ super() }}
 {% endblock %}

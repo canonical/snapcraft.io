@@ -51,11 +51,20 @@ def get_language(language):
 def get_package(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     steps = get_file(filename)
-
     if not steps:
         return flask.abort(404)
 
-    context = {"language": language, "os": operating_system, "steps": steps}
+    snap_name = steps["name"]
+
+    if "fsf_snap_name" in flask.request.cookies:
+        snap_name = flask.request.cookies.get("fsf_snap_name")
+
+    context = {
+        "language": language,
+        "os": operating_system,
+        "steps": steps,
+        "snap_name": snap_name,
+    }
 
     return flask.render_template("first-snap/package.html", **context)
 

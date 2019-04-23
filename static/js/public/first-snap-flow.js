@@ -200,6 +200,30 @@ function validateSnapName(name) {
   return /^[a-z0-9-]*[a-z][a-z0-9-]*$/.test(name) && !/^-|-$/.test(name);
 }
 
+function initChooseName(formEl) {
+  const snapNameInput = formEl.querySelector("[name=snap-name]");
+
+  snapNameInput.addEventListener("keyup", () => {
+    const isValid = validateSnapName(snapNameInput.value);
+
+    if (!isValid) {
+      snapNameInput.parentNode.classList.add("is-error");
+      formEl.querySelector("button").disabled = true;
+    } else {
+      snapNameInput.parentNode.classList.remove("is-error");
+      formEl.querySelector("button").disabled = false;
+    }
+  });
+
+  formEl.addEventListener("submit", event => {
+    event.preventDefault();
+
+    // set value in cookie an reload (to render with a new name)
+    document.cookie = `fsf_snap_name=${snapNameInput.value};`;
+    window.location.reload();
+  });
+}
+
 function initRegisterName(formEl, notificationEl, successEl) {
   const initialNotificationClassName = notificationEl.className;
   const initialNotificationHtml = notificationEl.querySelector(
@@ -263,6 +287,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
 }
 
 export default {
+  initChooseName,
   initRegisterName,
   install,
   push
