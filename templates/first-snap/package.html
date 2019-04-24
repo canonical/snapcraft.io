@@ -6,13 +6,14 @@
     <div class="p-accordion" role="tablist" aria-multiselect="true">
       <ol class="p-accordion__list">
         <li class="p-accordion__group">
-          <button aria-expanded="true" type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
+          <button {% if has_user_chosen_name %}aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
             <h4 class="u-no-margin--bottom">
               <span class="p-accordion__step">1.</span>
               Choose snap name
+              {% if has_user_chosen_name %}<i class="p-icon--success"></i>{% endif %}
             </h4>
           </button>
-          <section class="p-accordion__panel" id="tab1-section" role="tabpanel" aria-hidden="false" aria-labelledby="tab1-section">
+          <section class="p-accordion__panel" id="tab1-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1-section">
             <div class="col-8">
               <form id="choose-name-form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -29,13 +30,13 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <button aria-expanded="false" type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" >
+          <button {% if has_user_chosen_name %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" >
             <h4 class="u-no-margin--bottom">
               <span class="p-accordion__step">2.</span>
               Download an example app
             </h4>
           </button>
-          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab2-section">
+          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %} aria-labelledby="tab2-section">
             <div class="col-8">
               <p>Clone the following application to use for the purpose of this tutorial</p>
               {% set snippet_value = steps.download %}

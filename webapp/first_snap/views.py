@@ -56,15 +56,18 @@ def get_package(language, operating_system):
         return flask.abort(404)
 
     snap_name = steps["name"]
+    has_user_chosen_name = False
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
+        has_user_chosen_name = True
 
     context = {
         "language": language,
         "os": operating_system,
         "steps": steps,
         "snap_name": snap_name,
+        "has_user_chosen_name": has_user_chosen_name,
     }
 
     return flask.render_template("first-snap/package.html", **context)
