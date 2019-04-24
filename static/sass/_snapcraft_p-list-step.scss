@@ -7,6 +7,19 @@
       content: "." counter(li);
     }
 
+    &.is-alpha .p-list-step__item::before {
+      content: "(" counter(li, lower-alpha);
+    }
+
+    &.is-nested {
+      margin-left: 0;
+
+      .p-list-step__item::before {
+        margin-left: -3rem;
+        text-align: left;
+      }
+    }
+
     // Override max-width of 25em
     .p-list-step__title {
       max-width: 100%;

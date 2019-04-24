@@ -53,10 +53,9 @@
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
             <div class="col-8">
-              <ol class="p-list-step has-margin">
+              <ol class="p-list-step has-margin is-nested is-alpha">
                 <li class="p-list-step__item">
                   <h4 class="p-list-step__title">
-                    <span class="p-list-step__bullet">2</span>
                     Open the snapcraft.yaml file in the root of the project
                   </h4>
                   {% set snippet_value = steps.createDir %}
@@ -65,7 +64,6 @@
                 </li>
                 <li class="p-list-step__item">
                   <h4 class="p-list-step__title">
-                    <span class="p-list-step__bullet">3</span>
                     The snapcraft.yaml file starts with a small amount of human-readable metadata.
                   </h4>
                   <div class="p-list-step__content">
@@ -89,7 +87,6 @@
                 </li>
                 <li class="p-list-step__item">
                   <h4 class="p-list-step__title">
-                    <span class="p-list-step__bullet">4</span>
                     Security model
                   </h4>
                   <div class="p-list-step__content">
@@ -111,7 +108,6 @@
                 {% if steps.explain.base %}
                 <li class="p-list-step__item">
                   <h4 class="p-list-step__title">
-                    <span class="p-list-step__bullet">5</span>
                     Base
                   </h4>
                   <div class="p-list-step__content">
@@ -133,7 +129,6 @@
                 {% endif %}
                 <li class="p-list-step__item">
                   <h4 class="p-list-step__title">
-                    <span class="p-list-step__bullet">6</span>
                     Parts
                   </h4>
                   <div class="p-list-step__content">
@@ -154,7 +149,6 @@
                 </li>
                 <li class="p-list-step__item">
                   <h4 class="p-list-step__title">
-                    <span class="p-list-step__bullet">7</span>
                     Apps
                   </h4>
                   <div class="p-list-step__content">
