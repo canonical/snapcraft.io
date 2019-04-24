@@ -3,160 +3,190 @@
 
 {% block fsf_content %}
   <div class="row">
-    <div class="col-8">
-      <h4 class="p-list-step__title">
-        Choose snap name
-      </h4>
-      <form id="choose-name-form">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label>Please pick a snap name for the purpose of this tutorial:</label>
-        <div class="p-form-validation">
-          <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
-          <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
-            Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
-          </p>
-        </div>
-        <button class="p-button--positive" disabled>Choose snap name</button>
-      </form>
+    <div class="p-accordion" role="tablist" aria-multiselect="true">
+      <ol class="p-accordion__list">
+        <li class="p-accordion__group">
+          <button aria-expanded="true" type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
+            <h4 class="u-no-margin--bottom">
+              <span class="p-accordion__step">1.</span>
+              Choose snap name
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab1-section" role="tabpanel" aria-hidden="false" aria-labelledby="tab1-section">
+            <div class="col-8">
+              <form id="choose-name-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <label>Please pick a snap name for the purpose of this tutorial:</label>
+                <div class="p-form-validation">
+                  <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
+                  <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
+                    Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
+                  </p>
+                </div>
+                <button class="p-button--positive" disabled>Choose snap name</button>
+              </form>
+            </div>
+          </section>
+        </li>
+        <li class="p-accordion__group">
+          <button aria-expanded="false" type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" >
+            <h4 class="u-no-margin--bottom">
+              <span class="p-accordion__step">2.</span>
+              Download an example app
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab2-section">
+            <div class="col-8">
+              <p>Clone the following application to use for the purpose of this tutorial</p>
+              {% set snippet_value = steps.download %}
+              {% set snippet_id = "download" %}
+              {% include "/partials/_code-snippet.html" %}
+            </div>
+          </section>
+        </li>
+        <li class="p-accordion__group">
+          <button aria-expanded="false" type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" >
+            <h4 class="u-no-margin--bottom">
+              <span class="p-accordion__step">3.</span>
+              Update your snapcraft.yaml
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
+            <div class="col-8">
+              <ol class="p-list-step has-margin">
+                <li class="p-list-step__item">
+                  <h4 class="p-list-step__title">
+                    <span class="p-list-step__bullet">2</span>
+                    Open the snapcraft.yaml file in the root of the project
+                  </h4>
+                  {% set snippet_value = steps.createDir %}
+                  {% set snippet_id = "createdir" %}
+                  {% include "/partials/_code-snippet-multi.html" %}
+                </li>
+                <li class="p-list-step__item">
+                  <h4 class="p-list-step__title">
+                    <span class="p-list-step__bullet">3</span>
+                    The snapcraft.yaml file starts with a small amount of human-readable metadata.
+                  </h4>
+                  <div class="p-list-step__content">
+                    {% set snippet_value = steps.metadata %}
+                    {% set snippet_id = "metadata" %}
+                    {% include "/partials/_code.html" %}
+                    {% for item in steps.explain.metadata %}
+                      {% if item.text %}
+                        <p>{{ item.text|safe }}</p>
+                      {% elif item.code %}
+                        <pre><code>{{ item.code }}</code></pre>
+                      {% elif item.warning %}
+                        <div class="p-notification--caution">
+                          <p class="p-notification__response">
+                            {{ item.warning|replace("${name}", snap_name)|safe }}
+                          </p>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </li>
+                <li class="p-list-step__item">
+                  <h4 class="p-list-step__title">
+                    <span class="p-list-step__bullet">4</span>
+                    Security model
+                  </h4>
+                  <div class="p-list-step__content">
+                    {% for item in steps.explain.security %}
+                      {% if item.text %}
+                        <p>{{ item.text|safe }}</p>
+                      {% elif item.code %}
+                        <pre><code>{{ item.code }}</code></pre>
+                      {% elif item.warning %}
+                        <div class="p-notification--caution">
+                          <p class="p-notification__response">
+                            {{ item.warning|replace("${name}", snap_name)|safe }}
+                          </p>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </li>
+                {% if steps.explain.base %}
+                <li class="p-list-step__item">
+                  <h4 class="p-list-step__title">
+                    <span class="p-list-step__bullet">5</span>
+                    Base
+                  </h4>
+                  <div class="p-list-step__content">
+                    {% for item in steps.explain.base %}
+                      {% if item.text %}
+                        <p>{{ item.text|safe }}</p>
+                      {% elif item.code %}
+                        <pre><code>{{ item.code }}</code></pre>
+                      {% elif item.warning %}
+                        <div class="p-notification--caution">
+                          <p class="p-notification__response">
+                            {{ item.warning|replace("${name}", snap_name)|safe }}
+                          </p>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </li>
+                {% endif %}
+                <li class="p-list-step__item">
+                  <h4 class="p-list-step__title">
+                    <span class="p-list-step__bullet">6</span>
+                    Parts
+                  </h4>
+                  <div class="p-list-step__content">
+                    {% for item in steps.explain.parts %}
+                      {% if item.text %}
+                        <p>{{ item.text|safe }}</p>
+                      {% elif item.code %}
+                        <pre><code>{{ item.code }}</code></pre>
+                      {% elif item.warning %}
+                        <div class="p-notification--caution">
+                          <p class="p-notification__response">
+                            {{ item.warning|replace("${name}", snap_name)|safe }}
+                          </p>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </li>
+                <li class="p-list-step__item">
+                  <h4 class="p-list-step__title">
+                    <span class="p-list-step__bullet">7</span>
+                    Apps
+                  </h4>
+                  <div class="p-list-step__content">
+                    {% for item in steps.explain.apps %}
+                    {% if item.text %}
+                    <p>{{ item.text|safe }}</p>
+                    {% elif item.code %}
+                    <pre><code>{{ item.code }}</code></pre>
+                    {% elif item.warning %}
+                    <div class="p-notification--caution">
+                      <p class="p-notification__response">
+                        {{ item.warning|replace("${name}", snap_name)|safe }}
+                      </p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+                </li>
+              </ol>
+            </div>
+          </section>
+        </li>
+      </ol>
     </div>
   </div>
-
   <div class="row">
     <p>Now we'll take a real world app, and package it as a snap</p>
   </div>
 
   <div class="row">
     <div class="col-8">
-      <ol class="p-list-step has-margin">
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">1</span>
-            Download a copy of the app
-          </h4>
-          {% set snippet_value = steps.download %}
-          {% set snippet_id = "download" %}
-          {% include "/partials/_code-snippet.html" %}
-        </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">2</span>
-            Open the snapcraft.yaml file in the root of the project
-          </h4>
-          {% set snippet_value = steps.createDir %}
-          {% set snippet_id = "createdir" %}
-          {% include "/partials/_code-snippet-multi.html" %}
-        </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">3</span>
-            The snapcraft.yaml file starts with a small amount of human-readable metadata.
-          </h4>
-          <div class="p-list-step__content">
-            {% set snippet_value = steps.metadata %}
-            {% set snippet_id = "metadata" %}
-            {% include "/partials/_code.html" %}
-            {% for item in steps.explain.metadata %}
-              {% if item.text %}
-                <p>{{ item.text|safe }}</p>
-              {% elif item.code %}
-                <pre><code>{{ item.code }}</code></pre>
-              {% elif item.warning %}
-                <div class="p-notification--caution">
-                  <p class="p-notification__response">
-                    {{ item.warning|replace("${name}", snap_name)|safe }}
-                  </p>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">4</span>
-            Security model
-          </h4>
-          <div class="p-list-step__content">
-            {% for item in steps.explain.security %}
-              {% if item.text %}
-                <p>{{ item.text|safe }}</p>
-              {% elif item.code %}
-                <pre><code>{{ item.code }}</code></pre>
-              {% elif item.warning %}
-                <div class="p-notification--caution">
-                  <p class="p-notification__response">
-                    {{ item.warning|replace("${name}", snap_name)|safe }}
-                  </p>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </li>
-        {% if steps.explain.base %}
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">5</span>
-            Base
-          </h4>
-          <div class="p-list-step__content">
-            {% for item in steps.explain.base %}
-              {% if item.text %}
-                <p>{{ item.text|safe }}</p>
-              {% elif item.code %}
-                <pre><code>{{ item.code }}</code></pre>
-              {% elif item.warning %}
-                <div class="p-notification--caution">
-                  <p class="p-notification__response">
-                    {{ item.warning|replace("${name}", snap_name)|safe }}
-                  </p>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </li>
-        {% endif %}
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">6</span>
-            Parts
-          </h4>
-          <div class="p-list-step__content">
-            {% for item in steps.explain.parts %}
-              {% if item.text %}
-                <p>{{ item.text|safe }}</p>
-              {% elif item.code %}
-                <pre><code>{{ item.code }}</code></pre>
-              {% elif item.warning %}
-                <div class="p-notification--caution">
-                  <p class="p-notification__response">
-                    {{ item.warning|replace("${name}", snap_name)|safe }}
-                  </p>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">7</span>
-            Apps
-          </h4>
-          <div class="p-list-step__content">
-            {% for item in steps.explain.apps %}
-            {% if item.text %}
-            <p>{{ item.text|safe }}</p>
-            {% elif item.code %}
-            <pre><code>{{ item.code }}</code></pre>
-            {% elif item.warning %}
-            <div class="p-notification--caution">
-              <p class="p-notification__response">
-                {{ item.warning|replace("${name}", snap_name)|safe }}
-              </p>
-            </div>
-            {% endif %}
-            {% endfor %}
-          </div>
-        </li>
-      </ol>
+
     </div>
   </div>
 {% endblock %}
@@ -179,7 +209,7 @@
       snapcraft.public.firstSnapFlow.initChooseName(
         document.getElementById("choose-name-form")
       );
-      // snapcraft.public.initAccordion('.p-accordion__list');
+      snapcraft.public.initAccordion('.p-accordion__list');
     });
   </script>
   {{ super() }}
