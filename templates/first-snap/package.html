@@ -201,7 +201,8 @@
   <script>
     Raven.context(function() {
       snapcraft.public.firstSnapFlow.initChooseName(
-        document.getElementById("choose-name-form")
+        document.getElementById("choose-name-form"),
+         "{{language}}"
       );
       snapcraft.public.initAccordion('.p-accordion__list');
     });
