@@ -25,4 +25,3 @@ Werkzeug==0.14.1
 # Development dependencies
 black==18.6b4
 Flask-Testing==0.6.2
-pytz==2019.1
