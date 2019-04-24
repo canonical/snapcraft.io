@@ -34,6 +34,11 @@ def set_handlers(app):
         page_slug = template_utils.generate_slug(flask.request.path)
         is_stream_live = template_utils.time_live_stream()
 
+        is_brand_store = False
+
+        if "STORE_QUERY" in app.config["WEBAPP_CONFIG"]:
+            is_brand_store = True
+
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
@@ -48,6 +53,7 @@ def set_handlers(app):
             "VERIFIED_PUBLISHER": "verified",
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
+            "IS_BRAND_STORE": is_brand_store,
             # Functions
             "contains": template_utils.contains,
             "join": template_utils.join,
