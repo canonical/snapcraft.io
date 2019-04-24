@@ -200,7 +200,7 @@ function validateSnapName(name) {
   return /^[a-z0-9-]*[a-z][a-z0-9-]*$/.test(name) && !/^-|-$/.test(name);
 }
 
-function initChooseName(formEl) {
+function initChooseName(formEl, language) {
   const snapNameInput = formEl.querySelector("[name=snap-name]");
 
   snapNameInput.addEventListener("keyup", () => {
@@ -219,7 +219,7 @@ function initChooseName(formEl) {
     event.preventDefault();
 
     // set value in cookie an reload (to render with a new name)
-    document.cookie = `fsf_snap_name=${snapNameInput.value};`;
+    document.cookie = `fsf_snap_name_${language}=${snapNameInput.value};`;
     window.location.reload();
   });
 }

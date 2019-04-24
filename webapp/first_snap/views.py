@@ -50,14 +50,15 @@ def get_language(language):
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
+    snap_name_cookie = f"fsf_snap_name_{language}"
     steps = get_file(filename)
     if not steps:
         return flask.abort(404)
 
     snap_name = steps["name"]
 
-    if "fsf_snap_name" in flask.request.cookies:
-        snap_name = flask.request.cookies.get("fsf_snap_name")
+    if snap_name_cookie in flask.request.cookies:
+        snap_name = flask.request.cookies.get(snap_name_cookie)
 
     context = {
         "language": language,
@@ -72,6 +73,7 @@ def get_package(language, operating_system):
 @first_snap.route("/<language>/<operating_system>/build")
 def get_build(language, operating_system):
     filename = f"first_snap/content/{language}/build.yaml"
+    snap_name_cookie = f"fsf_snap_name_{language}"
     steps = get_file(filename)
 
     operating_system_parts = operating_system.split("-")
@@ -92,8 +94,8 @@ def get_build(language, operating_system):
 
     snap_name = steps["name"]
 
-    if "fsf_snap_name" in flask.request.cookies:
-        snap_name = flask.request.cookies.get("fsf_snap_name")
+    if snap_name_cookie in flask.request.cookies:
+        snap_name = flask.request.cookies.get(snap_name_cookie)
 
     context = {
         "language": language,
@@ -108,6 +110,7 @@ def get_build(language, operating_system):
 @first_snap.route("/<language>/<operating_system>/test")
 def get_test(language, operating_system):
     filename = f"first_snap/content/{language}/test.yaml"
+    snap_name_cookie = f"fsf_snap_name_{language}"
     steps = get_file(filename)
 
     operating_system_only = operating_system.split("-")[0]
@@ -117,8 +120,8 @@ def get_test(language, operating_system):
 
     snap_name = steps["name"]
 
-    if "fsf_snap_name" in flask.request.cookies:
-        snap_name = flask.request.cookies.get("fsf_snap_name")
+    if snap_name_cookie in flask.request.cookies:
+        snap_name = flask.request.cookies.get(snap_name_cookie)
 
     converted_steps = []
 
@@ -145,6 +148,8 @@ def get_test(language, operating_system):
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
+    snap_name_cookie = f"fsf_snap_name_{language}"
+
     data = get_file(filename)
 
     if not data:
@@ -152,8 +157,8 @@ def get_push(language, operating_system):
 
     snap_name = data["name"]
 
-    if "fsf_snap_name" in flask.request.cookies:
-        snap_name = flask.request.cookies.get("fsf_snap_name")
+    if snap_name_cookie in flask.request.cookies:
+        snap_name = flask.request.cookies.get(snap_name_cookie)
 
     flask_user = flask.session.get("openid", {})
 
