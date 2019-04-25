@@ -1,3 +1,4 @@
+name: test-freeplane-{name}
 macos:
   - action: Create a Linux virtual machine for testing snaps
     command: multipass launch -n testvm
@@ -10,7 +11,7 @@ macos:
   - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine
-    warning: You should change <code>freeplane</code> to <code>test-freeplane-{name}</code> (where <code>{name}</code> is your name), as written into the snapcraft.yaml file earlier.
+    warning: You should change <code>freeplane</code> to <code>${name}</code>, as written into the snapcraft.yaml file earlier.
     command: freeplane -h
   - action: Exit the virtual machine
     command: exit
