@@ -4,7 +4,7 @@ import * as Fac from "fast-average-color";
 function getColour(holder) {
   function extractAndSet(image, parent) {
     const fac = new Fac();
-    const colour = fac.getColor(image);
+    const colour = fac.getColor(image, { defaultColor: [238, 238, 238] });
     parent.style.backgroundColor = colour.rgb;
     parent.classList.add(colour.isDark ? "is--dark" : "is--light");
   }
