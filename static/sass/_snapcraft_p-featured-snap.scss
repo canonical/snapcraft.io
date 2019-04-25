@@ -1,23 +1,25 @@
 @mixin snapcraft-p-featured-snaps {
   $light-transparent: rgba(255, 255, 255, 0);
-  $light-opaque: rgba(255, 255, 255, .65);
+  $light-semi-opaque: rgba(255, 255, 255, .65);
+  $light-opaque: rgba(255, 255, 255, .8);
   $dark-transparent: rgba(0, 0, 0, 0);
-  $dark-opaque: rgba(0, 0, 0, .65);
+  $dark-semi-opaque: rgba(0, 0, 0, .65);
+  $dark-opaque: rgba(0, 0, 0, .8);
 
   .p-generated-featured-snap {
     background-color: $color-light;
     border-radius: $border-radius;
-    margin-bottom: $spv-inter--scaleable;
+    margin-bottom: $sp-xxx-large;
     padding: $sph-inter;
     text-decoration: none;
     width: 100%;
 
     display: grid;
     grid-template-columns: minmax(5rem, 43rem) minmax(1rem, 160px);
-    column-gap: $sph-inter;
+    column-gap: $sp-xxx-large;
 
     @media screen and (min-width: $breakpoint-navigation-threshold) {
-      padding: $spv-inter--scaleable ($sph-inter--expanded * 3);
+      padding: $sp-x-large ($sp-xxx-large);
     }
 
     .p-generated-featured-snap__details {
@@ -27,6 +29,10 @@
 
     .p-generated-featured-snap__summary {
       display: none;
+
+      .p-heading--three {
+        padding-top: $sp-large;
+      }
     }
 
     &:hover {
@@ -34,20 +40,28 @@
     }
 
     &.is--dark {
-      background: linear-gradient(to right, $dark-transparent 0%, $dark-opaque 70%, $dark-opaque 100%);
+      background: linear-gradient(45deg, $dark-transparent 0%, $dark-semi-opaque 70%, $dark-semi-opaque 100%);
 
       .p-generated-featured-snap__summary,
       .p-generated-featured-snap__title {
         color: $color-x-light;
       }
+
+      .p-muted-heading {
+        color: $light-opaque;
+      }
     }
 
     &.is--light {
-      background: linear-gradient(to right, $light-transparent 0%, $light-opaque 70%, $light-opaque 100%);
+      background: linear-gradient(45deg, $light-transparent 0%, $light-semi-opaque 70%, $light-semi-opaque 100%);
 
       .p-generated-featured-snap__summary,
       .p-generated-featured-snap__title {
         color: $color-x-dark;
+      }
+
+      .p-muted-heading {
+        color: $dark-opaque;
       }
     }
 
@@ -57,6 +71,11 @@
       }
     }
 
+    @media screen and (max-width: $breakpoint-small) {
+      padding: $sp-medium $sp-x-large;
+      column-gap: $sp-x-large;
+
+    }
     @media screen and (min-width: $breakpoint-small) {
       .p-generated-featured-snap__title {
         display: none;
