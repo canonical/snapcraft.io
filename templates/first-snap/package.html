@@ -14,18 +14,22 @@
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab1-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1-section">
-            <div class="col-8">
-              <form id="choose-name-form">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <label>Please pick a snap name for the purpose of this tutorial:</label>
-                <div class="p-form-validation">
-                  <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
-                  <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
-                    Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
-                  </p>
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <form id="choose-name-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <label>Please pick a snap name for the purpose of this tutorial:</label>
+                    <div class="p-form-validation">
+                      <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
+                      <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
+                        Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
+                      </p>
+                    </div>
+                    <button class="p-button--positive u-no-margin--bottom" disabled>Choose snap name</button>
+                  </form>
                 </div>
-                <button class="p-button--positive" disabled>Choose snap name</button>
-              </form>
+              </div>
             </div>
           </section>
         </li>
@@ -37,11 +41,15 @@
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %} aria-labelledby="tab2-section">
-            <div class="col-8">
-              <p>Clone the following application to use for the purpose of this tutorial</p>
-              {% set snippet_value = steps.download %}
-              {% set snippet_id = "download" %}
-              {% include "/partials/_code-snippet.html" %}
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <p>Clone the following application to use for the purpose of this tutorial</p>
+                  {% set snippet_value = steps.download %}
+                  {% set snippet_id = "download" %}
+                  {% include "/partials/_code-snippet.html" %}
+                </div>
+              </div>
             </div>
           </section>
         </li>
