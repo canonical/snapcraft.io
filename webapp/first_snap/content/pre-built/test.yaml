@@ -1,3 +1,4 @@
+name: test-geekbench4-{name}
 macos:
   - action: Create a Linux virtual machine for testing snaps
     command: multipass launch -n testvm
@@ -10,4 +11,4 @@ macos:
   - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine
-    command: test-geekbench4-{name}
+    command: ${name}
