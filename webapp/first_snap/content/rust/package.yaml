@@ -8,8 +8,8 @@ metadata: |
   version: git
   summary: A fast CSV command line toolkit written in Rust
   description: |
-    xsv is a command line program for indexing, slicing, analyzing, 
-    splitting and joining CSV files. Commands should be simple, 
+    xsv is a command line program for indexing, slicing, analyzing,
+    splitting and joining CSV files. Commands should be simple,
     fast and composable:
     - Simple tasks should be easy.
     - Performance trade offs should be exposed in the CLI interface.
@@ -20,7 +20,7 @@ explain:
     - code: |
         name: xsv
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>xsv</code> to <code>test-xsv-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official xsv snap.
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>xsv</code> to <code>${name}</code> before continuing to avoid conflicting with the official xsv snap.
     - text: By specifying git for the version, the current git tag or commit will be used as the version string. Versions carry no semantic meaning in snaps.
     - code: |
         version: git
@@ -55,6 +55,6 @@ explain:
           xsv:
             command: xsv
     - warning: |
-        <span class="p-notification__status"></span>As before, remember to change this instance of <code>xsv</code> to <code>test-xsv-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official xsv snap.
+        <span class="p-notification__status"></span>As before, remember to change this instance of <code>xsv</code> to <code>${name}</code> before continuing to avoid conflicting with the official xsv snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
     - text: If your command name matches the snap name, users will be able run the command directly.
