@@ -15,7 +15,7 @@ explain:
     - code: |
         name: ros2-talker-listener
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>ros2-talker-listener</code> to <code>test-ros2-talker-listener-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official ros2-talker-listener snap.
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>ros2-talker-listener</code> to <code>${name}</code> before continuing to avoid conflicting with the official ros2-talker-listener snap.
     - text: Versions carry no semantic meaning in snaps. Use text that best identifies that release, it won't be used to compare against the preceding or following one.
     - code: |
         version: '0.1'
@@ -62,6 +62,6 @@ explain:
           ros2-talker-listener:
             command: opt/ros/crystal/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py
     - warning: |
-        <span class="p-notification__status"></span>As before, remember to change this instance of <code>ros2-talker-listener</code> to <code>test-ros2-talker-listener-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official ros2-talker-listener snap.
+        <span class="p-notification__status"></span>As before, remember to change this instance of <code>ros2-talker-listener</code> to <code>${name}</code> before continuing to avoid conflicting with the official ros2-talker-listener snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
     - text: If your command name matches the snap name, users will be able run the command directly.
