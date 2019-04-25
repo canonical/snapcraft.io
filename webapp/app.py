@@ -21,7 +21,6 @@ from webapp.publisher.snaps.views import publisher_snaps
 from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
-from webapp.proxies.views import proxies_blueprint
 
 
 def create_app(testing=False):
@@ -62,12 +61,10 @@ def create_app(testing=False):
 
 def init_brandstore(app):
     store = app.config.get("WEBAPP_CONFIG").get("STORE_QUERY")
-    app.register_blueprint(proxies_blueprint())
     app.register_blueprint(store_blueprint(store))
 
 
 def init_snapcraft(app, testing=False):
-    # app.register_blueprint(proxies_blueprint())
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)

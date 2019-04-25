@@ -63,7 +63,7 @@ def snapcraft_blueprint():
             {
                 "package_name": "kura",
                 "icon_url": "/".join([icon_host, "2018/07/icon_8BAXEYq.png"]),
-                "title": "Kura&trade;",
+                "title": "Kura™",
                 "origin": "Ondrej Kubik",
             },
             {

@@ -1,33 +1,34 @@
-@mixin snapcraft-p-featured-snaps {
+@mixin snapcraft-p-featured-snap {
   $light-transparent: rgba(255, 255, 255, 0);
   $light-semi-opaque: rgba(255, 255, 255, .65);
   $light-opaque: rgba(255, 255, 255, .8);
   $dark-transparent: rgba(0, 0, 0, 0);
   $dark-semi-opaque: rgba(0, 0, 0, .65);
   $dark-opaque: rgba(0, 0, 0, .8);
+  $default-color: rgba(238, 238, 238, 1);
 
-  .p-generated-featured-snap {
-    background-color: $color-mid;
+  .p-featured-snap--generated {
+    background-color: $default-color;
     border-radius: $border-radius;
+    column-gap: $sp-xxx-large;
+    display: grid;
+    grid-template-columns: minmax(5rem, 43rem) minmax(1rem, 160px);
     margin-bottom: $sp-xxx-large;
     padding: $sph-inter;
     text-decoration: none;
+    transition: background-color 1s ease-out, background 1s ease-out;
     width: 100%;
-
-    display: grid;
-    grid-template-columns: minmax(5rem, 43rem) minmax(1rem, 160px);
-    column-gap: $sp-xxx-large;
 
     @media screen and (min-width: $breakpoint-navigation-threshold) {
       padding: $sp-x-large $sp-xxx-large;
     }
 
-    .p-generated-featured-snap__details {
+    .p-featured-snap__details {
       align-items: center;
       display: flex;
     }
 
-    .p-generated-featured-snap__summary {
+    .p-featured-snap__summary {
       display: none;
 
       .p-heading--three {
@@ -39,11 +40,11 @@
       text-decoration: none;
     }
 
-    &.is--dark {
+    &.is-dark {
       background: linear-gradient(45deg, $dark-transparent 0%, $dark-semi-opaque 70%, $dark-semi-opaque 100%);
 
-      .p-generated-featured-snap__summary,
-      .p-generated-featured-snap__title {
+      .p-featured-snap__summary,
+      .p-featured-snap__title {
         color: $color-x-light;
       }
 
@@ -52,11 +53,11 @@
       }
     }
 
-    &.is--light {
+    &.is-light {
       background: linear-gradient(45deg, $light-transparent 0%, $light-semi-opaque 70%, $light-semi-opaque 100%);
 
-      .p-generated-featured-snap__summary,
-      .p-generated-featured-snap__title {
+      .p-featured-snap__summary,
+      .p-featured-snap__title {
         color: $color-x-dark;
       }
 
@@ -65,7 +66,7 @@
       }
     }
 
-    .p-generated-featured-snap__icon {
+    .p-featured-snap__icon {
       img {
         display: block;
       }
@@ -77,11 +78,11 @@
 
     }
     @media screen and (min-width: $breakpoint-small) {
-      .p-generated-featured-snap__title {
+      .p-featured-snap__title {
         display: none;
       }
 
-      .p-generated-featured-snap__summary {
+      .p-featured-snap__summary {
         display: block;
       }
     }

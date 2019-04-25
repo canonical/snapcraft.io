@@ -6,10 +6,9 @@
         {% endif %}
     {% endif %}
     <div class="snapcraft-p-grid{% if has_featured %} snapcraft-p-grid--featured{% endif %}">
+        {% set show_summary = True %}
         {% for snap in snaps %}
             {% set media_object_classname = "u-no-margin--bottom" %}
-            {% set has_summary = snap.show_summary %}
-            {% if has_featured %}{% set media_object_classname = "p-media-object--is-featured " + media_object_classname %}{% endif %}
             {% if loop.index != 1 or snap["icon_url"] == "" %}
                 {% include "store/_media-object-snap-partial.html" %}
             {% endif %}

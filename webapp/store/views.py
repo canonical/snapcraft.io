@@ -80,11 +80,10 @@ def store_blueprint(store_query=None, testing=False):
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
 
+        # if the first snap (banner snap) doesn't have an icon, remove the last
+        # snap from the list to avoid a hanging snap (grid of 9)
         if len(featured_snaps) > 0 and featured_snaps[0]["icon_url"] == "":
             featured_snaps = featured_snaps[:-1]
-
-        for snap in featured_snaps:
-            snap["show_summary"] = True
 
         return (
             flask.render_template(
@@ -284,6 +283,8 @@ def store_blueprint(store_query=None, testing=False):
 
         snaps_results = logic.get_searched_snaps(category_results)
 
+        # if the first snap (banner snap) doesn't have an icon, remove the last
+        # snap from the list to avoid a hanging snap (grid of 9)
         if len(snaps_results) > 0 and snaps_results[0]["icon_url"] == "":
             snaps_results = snaps_results[:-1]
 

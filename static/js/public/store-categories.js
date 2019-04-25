@@ -1,19 +1,19 @@
 import "whatwg-fetch";
-import * as Fac from "fast-average-color";
+import Fac from "fast-average-color";
 
 function getColour(holder) {
   function extractAndSet(image, parent) {
     const fac = new Fac();
     const colour = fac.getColor(image, { defaultColor: [238, 238, 238] });
     parent.style.backgroundColor = colour.rgb;
-    parent.classList.add(colour.isDark ? "is--dark" : "is--light");
+    parent.classList.add(colour.isDark ? "is-dark" : "is-light");
   }
 
-  const srcs = holder.querySelectorAll(".p-generated-featured-snap__icon img");
-  if (srcs.length > 0) {
-    for (let i = 0, ii = srcs.length; i < ii; i += 1) {
-      const parent = srcs[i].closest(".p-generated-featured-snap");
-      const image = srcs[i];
+  const images = holder.querySelectorAll(".p-featured-snap__icon img");
+  if (images.length > 0) {
+    for (let i = 0, ii = images.length; i < ii; i += 1) {
+      const parent = images[i].closest(".p-featured-snap");
+      const image = images[i];
       if (image.complete) {
         extractAndSet(image, parent);
       } else {
