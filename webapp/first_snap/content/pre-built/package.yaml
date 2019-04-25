@@ -19,7 +19,7 @@ explain:
     - code: |
         name: geekbench4
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>geekbench4</code> to <code>test-geekbench4-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official geekbench4 snap.
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>geekbench4</code> to <code>${name}</code> before continuing to avoid conflicting with the official geekbench4 snap.
     - text: Versions carry no semantic meaning in snaps. You can move end user installs from 4.1.0 to 4.2.0, and back to 4.1.0 in the event of a premature release.
     - code: |
         version: 4.2.0
@@ -53,9 +53,9 @@ explain:
     - text: Apps are the commands you want to expose to users and any background services your application provides.
     - code: |
         apps:
-          test-geekbench4-{name}:
+          geekbench4:
             command: geekbench4
     - warning: |
-        <span class="p-notification__status"></span>As before, remember to change this instance of <code>geekbench4</code> to <code>test-geekbench4-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official geekbench4 snap.
+        <span class="p-notification__status"></span>As before, remember to change this instance of <code>geekbench4</code> to <code>${name}</code> before continuing to avoid conflicting with the official geekbench4 snap.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
     - text: If your command name matches the snap name, users will be able run the command directly.
