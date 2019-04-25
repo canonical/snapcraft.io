@@ -7,7 +7,7 @@
   $dark-opaque: rgba(0, 0, 0, .8);
 
   .p-generated-featured-snap {
-    background-color: $color-light;
+    background-color: $color-mid;
     border-radius: $border-radius;
     margin-bottom: $sp-xxx-large;
     padding: $sph-inter;
@@ -19,7 +19,7 @@
     column-gap: $sp-xxx-large;
 
     @media screen and (min-width: $breakpoint-navigation-threshold) {
-      padding: $sp-x-large ($sp-xxx-large);
+      padding: $sp-x-large $sp-xxx-large;
     }
 
     .p-generated-featured-snap__details {

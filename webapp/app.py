@@ -67,7 +67,7 @@ def init_brandstore(app):
 
 
 def init_snapcraft(app, testing=False):
-    app.register_blueprint(proxies_blueprint())
+    # app.register_blueprint(proxies_blueprint())
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
