@@ -3,9 +3,8 @@
     <h4>Why are snaps good for MOOS projects?</h4>
     <ul>
       <li>Bundle all the runtime requirements, including the exact version of MOOS/MOOS-IvP and system libraries you need.</li>
-      <li>Expand the distributions supported beyond just Ubuntu.</li>
       <li>Directly and reliably control the delivery of application updates using existing infrastructure.</li>
-	  <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
       <li>Extremely simple creation of daemons.</li>
     </ul>
   </div>
@@ -13,30 +12,25 @@
   <div class='col-6'>
     <h4>Here's an example snapcraft.yaml that uses MOOS:</h4>
     <code class="p-code-yaml"><pre>
-<b>name</b>: moos-ping
+<b>name</b>: moos
 <b>version</b>: '0.1'
-<b>summary</b>: MOOS Ping Example
+<b>summary</b>: MOOS Example
 <b>description</b>: |
-  The main communication mechanism for all 
-  MOOS apps.
+  This example includes MOOSDB, the main communication mechanism for all MOOS
+  apps.
 
 <b>confinement</b>: devmode
 <b>base</b>: core18
 
 <b>parts</b>:
   <b>moos</b>:
-    <b>source</b>: https://github.com/themoos/core-moos/archive/10.0.2.a-release.tar.gz
-    <b>build-packages</b>:
-      - gcc
-      - g++
-      - make
+    <b>source</b>: https://github.com/themoos/core-moos/archive/v10.4.0.tar.gz
     <b>plugin</b>: cmake
-    <b>configflags</b>:
-      - -DCMAKE_INSTALL_PREFIX=/
+    <b>build-packages</b>: [g++]
 
 <b>apps</b>:
   <b>MOOSDB</b>:
-    <b>command</b>: MOOSDB
+    <b>command</b>: bin/MOOSDB
 </pre></code>
   </div>
 
