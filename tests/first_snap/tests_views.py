@@ -49,6 +49,18 @@ class FirstSnap(TestCase):
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux-auto")
+        self.assert_context("has_user_chosen_name", False)
+        self.assert_template_used("first-snap/package.html")
+
+    def test_get_package_snap_name(self):
+        response = self.client.get(
+            "/first-snap/python/linux-auto/package",
+            headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
+        )
+        assert response.status_code == 200
+        self.assert_context("language", "python")
+        self.assert_context("snap_name", "test-snap-name-python")
+        self.assert_context("has_user_chosen_name", True)
         self.assert_template_used("first-snap/package.html")
 
     def test_get_package_404_language(self):
@@ -61,6 +73,17 @@ class FirstSnap(TestCase):
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux-auto")
+        self.assert_template_used("first-snap/build.html")
+
+    def test_get_build_snap_name(self):
+        response = self.client.get(
+            "/first-snap/python/linux-auto/build",
+            headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
+        )
+        assert response.status_code == 200
+        self.assert_context("language", "python")
+        self.assert_context("os", "linux-auto")
+        self.assert_context("snap_name", "test-snap-name-python")
         self.assert_template_used("first-snap/build.html")
 
     def test_get_build_404_language(self):
@@ -78,6 +101,17 @@ class FirstSnap(TestCase):
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "macos-auto")
+        self.assert_template_used("first-snap/test.html")
+
+    def test_get_test_snap_name(self):
+        response = self.client.get(
+            "/first-snap/python/macos-auto/test",
+            headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
+        )
+        assert response.status_code == 200
+        self.assert_context("language", "python")
+        self.assert_context("os", "macos-auto")
+        self.assert_context("snap_name", "test-snap-name-python")
         self.assert_template_used("first-snap/test.html")
 
     def test_get_test_404_language(self):
@@ -99,6 +133,19 @@ class FirstSnap(TestCase):
         self.assert_context("os", "linux")
         self.assert_context("user", None)
         self.assert_context("snap_name", "test-offlineimap-{name}")
+
+    def test_get_push_snap_name(self):
+        response = self.client.get(
+            "/first-snap/python/linux/push",
+            headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
+        )
+        assert response.status_code == 200
+        self.assert_context("language", "python")
+        self.assert_context("os", "linux")
+        self.assert_context("snap_name", "test-snap-name-python")
+        self.assert_context("has_user_chosen_name", True)
+        self.assert_context("user", None)
+        self.assert_template_used("first-snap/push.html")
 
     def test_get_push_logged_in(self):
         user_expected = {
