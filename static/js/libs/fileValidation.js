@@ -84,11 +84,6 @@ function imageRestrictions(file, restrictions) {
       const width = image.naturalWidth;
       const height = image.naturalHeight;
 
-      file.meta = {
-        width: width,
-        height: height
-      };
-
       if (
         restrictions.whitelist &&
         imageWhitelistHandler(file, image, restrictions.whitelist)
@@ -98,7 +93,6 @@ function imageRestrictions(file, restrictions) {
       }
 
       const aspectRatio = width / height;
-      file.meta = aspectRatio;
       let hasDimensionError = false;
       if (restrictions.width) {
         if (

@@ -133,12 +133,28 @@
       color: $color-link;
       cursor: pointer;
       margin-bottom: $spv-inter--regular;
-      min-height: 129px;
       position: relative;
       text-align: center;
 
       img {
+        display: block;
         width: 100%;
+      }
+
+      &.is-empty {
+        padding-top: 33.33333%;
+
+        & > div {
+          align-items: center;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          left: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
       }
     }
 

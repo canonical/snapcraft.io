@@ -5,40 +5,9 @@ import Banner from "./banner";
 
 const backgroundSelector = ".p-market-banner__image img";
 
-function renderBanner(bannerImage, updateState, restrictions) {
-  if (bannerImage && updateState) {
-    return render(
-      <Banner bannerImage={bannerImage} updateImageState={updateState} />
-    );
-  }
-  if (bannerImage && updateState) {
-    return render(
-      <Banner bannerImage={bannerImage} updateImageState={updateState} />
-    );
-  }
-  if (updateState) {
-    return render(<Banner updateImageState={updateState} />);
-  }
-  if (bannerImage) {
-    return render(<Banner bannerImage={bannerImage} />);
-  }
-
-  if (restrictions) {
-    return render(
-      <Banner
-        restrictions={{
-          accept: ["image/jpeg"]
-        }}
-      />
-    );
-  }
-
-  return render(<Banner />);
-}
-
 describe("Banner", () => {
   it("should render with no props", () => {
-    const { container } = renderBanner();
+    const { container } = render(<Banner />);
 
     expect(
       container.querySelectorAll(".p-market-banner__image-holder").length
@@ -47,7 +16,9 @@ describe("Banner", () => {
 
   describe("background image", () => {
     it("should show the background image if set at render", () => {
-      const { container } = renderBanner({ url: "banner.png" });
+      const { container } = render(
+        <Banner bannerImage={{ url: "banner.png" }} />
+      );
 
       expect(container.querySelector(backgroundSelector).src).toEqual(
         "banner.png"
@@ -55,7 +26,7 @@ describe("Banner", () => {
     });
 
     it("should set the background if image added", done => {
-      const { container } = renderBanner();
+      const { container } = render(<Banner />);
 
       window.URL = {
         createObjectURL: () => {
@@ -88,7 +59,13 @@ describe("Banner", () => {
     });
 
     it("should show an error if a restriction isn't met", done => {
-      const { container } = renderBanner(null, null, true);
+      const { container } = render(
+        <Banner
+          restrictions={{
+            accept: ["image/jpeg"]
+          }}
+        />
+      );
 
       window.URL = {
         createObjectURL: () => {
@@ -119,11 +96,13 @@ describe("Banner", () => {
 
     it("should remove the background when delete is clicked", () => {
       const cb = jest.fn();
-      const { container } = renderBanner(
-        {
-          url: "banner.png"
-        },
-        cb
+      const { container } = render(
+        <Banner
+          bannerImage={{
+            url: "banner.png"
+          }}
+          updateImageState={cb}
+        />
       );
 
       const deleteButton = container.querySelector(".p-market-banner__remove");
@@ -136,11 +115,13 @@ describe("Banner", () => {
 
     it("should remove the background when backspace is pressed", () => {
       const cb = jest.fn();
-      const { container } = renderBanner(
-        {
-          url: "banner.png"
-        },
-        cb
+      const { container } = render(
+        <Banner
+          bannerImage={{
+            url: "banner.png"
+          }}
+          updateImageState={cb}
+        />
       );
 
       const backgroundImage = container.querySelector(backgroundSelector);
@@ -154,7 +135,9 @@ describe("Banner", () => {
     });
 
     it("should set focus class when focused and remove it on blur", () => {
-      const { container } = renderBanner({ url: "banner.png" });
+      const { container } = render(
+        <Banner bannerImage={{ url: "banner.png" }} />
+      );
 
       const image = container.querySelector(backgroundSelector);
       fireEvent.focus(image);

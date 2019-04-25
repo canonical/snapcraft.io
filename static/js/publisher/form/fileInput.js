@@ -70,6 +70,7 @@ class FileInput extends React.Component {
   fileClickHandler() {
     const { active } = this.props;
     if (active) {
+      this.input.value = "";
       this.input.click();
     }
   }

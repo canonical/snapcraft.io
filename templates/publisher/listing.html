@@ -518,9 +518,9 @@
         {% for screenshot_url in screenshot_urls %}
           { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
         {% endfor %}
-        {% for banner_url in banner_urls %}
-          { url: {{ banner_url|tojson }}, type: "banner", status: "uploaded" },
-        {% endfor %}
+        {% if banner_urls[0] %}
+          { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
+        {% endif %}
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},

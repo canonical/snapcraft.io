@@ -51,8 +51,7 @@ class Banner extends React.Component {
     }
   }
 
-  handleRemoveImageClick(e) {
-    e.stopPropagation();
+  handleRemoveImageClick() {
     const { updateImageState } = this.props;
 
     this.setState({
@@ -105,7 +104,7 @@ class Banner extends React.Component {
     const { restrictions } = this.props;
     const background = bannerImage.url;
 
-    let backgroundClasses = ["p-market-banner__image", "u-vertically-center"];
+    let backgroundClasses = ["p-market-banner__image"];
     if (!background) {
       backgroundClasses.push("is-empty");
     }
@@ -127,8 +126,9 @@ class Banner extends React.Component {
             onFocus={this.toggleFocus}
             onBlur={this.toggleFocus}
           >
-            {background && <img src={background} />}
-            {!background && (
+            {background ? (
+              <img src={background} />
+            ) : (
               <div className="u-align-text--center">
                 <i className="p-icon--plus" />
                 <br />
@@ -170,8 +170,6 @@ class Banner extends React.Component {
                 Min resolution: <b>720 x 240 pixels</b>
                 <br />
                 Max resolution: <b>4320 x 1440 pixels</b>
-                <br />
-                Recommended (legacy) size: <b>1218 x 240 pixels</b>
                 <br />
                 Aspect ratio: <b>3:1</b>
                 <br />
