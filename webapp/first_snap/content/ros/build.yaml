@@ -1,3 +1,4 @@
+name: test-ros-talker-listener-{name}
 linux:
   auto:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
@@ -9,9 +10,9 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-ros-talker-listener-{name} -h
+      command: ${name} -h
     - warning: |
-        Make sure the name matches what has been used previously (i.e <code>test-ros-talker-listener-{name}</code>)
+        Make sure the name matches what has been used previously (i.e <code>${name}</code>)
   manual:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
       command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
@@ -22,9 +23,9 @@ linux:
     - action: List your installed snaps to confirm
       command: snap list
     - action: Run the snap
-      command: test-ros-talker-listener-{name} -h
+      command: ${name} -h
     - warning: |
-        Make sure the name matches what has been used previously (i.e <code>test-ros-talker-listener-{name}</code>)
+        Make sure the name matches what has been used previously (i.e <code>${name}</code>)
 macos:
   auto:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
