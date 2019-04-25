@@ -1,21 +1,22 @@
-name: test-moos-ping-{name}
-download: git clone https://github.com/snapcraft-docs/moos-ping
+name: test-moos-{name}
+download: git clone https://github.com/snapcraft-docs/moos
 createDir: |
-  cd moos-ping
+  cd moos
   $EDITOR snapcraft.yaml
 metadata: |
-  name: moos-ping
+  name: moos
   version: '0.1'
-  summary: MOOS Ping Example
+  summary: MOOS Example
   description: |
-    The main communication mechanism for all MOOS apps.
+    This example includes MOOSDB, the main communication mechanism for all MOOS
+    apps.
 explain:
   metadata:
     - text: The name must be unique in the Snap Store. Valid snap names consist of lower-case alphanumeric characters and hyphens. They cannot be all numbers. They also cannot start or end with a hyphen.
     - code: |
-        name: moos-ping
+        name: moos
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>moos-ping</code> to <code>test-moos-ping-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official moos-ping snap.
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>moos</code> to <code>test-moos-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicts.
     - text: Versions carry no semantic meaning in snaps. Use text that best identifies that release, it won't be used to compare against the preceding or following one.
     - code: |
         version: '0.1'
@@ -37,18 +38,13 @@ explain:
     - text: The <code>core18</code> base is recommended.
   parts:
     - text: |
-        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. The <code>cmake</code> plugin builds CMake-based parts. You can pass flags using the common cmake semantics through the optional <code>configflags</code> keyword.
+        Parts define what sources are needed to assemble your app. Parts can be anything: programs, libraries, or other needed assets. The <code>cmake</code> plugin builds CMake-based parts.
     - code: |
         parts:
           moos:
-            source: https://github.com/themoos/core-moos/archive/10.0.2.a-release.tar.gz  
-            build-packages:
-              - gcc
-              - g++
-              - make
+            source: https://github.com/themoos/core-moos/archive/v10.4.0.tar.gz
             plugin: cmake
-            configflags:
-              - -DCMAKE_INSTALL_PREFIX=/
+            build-packages: [g++]
     - text: |
         The <code>build-packages</code> section lists the library dependencies that will be used by snapcraft to build the part.                                                                                                                                                                        
   apps:
@@ -56,8 +52,8 @@ explain:
     - code: |
         apps:
           MOOSDB:
-            command: MOOSDB
+            command: bin/MOOSDB
     - warning: |
-        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>moos-ping</code> to <code>test-moos-ping-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicting with the official moos-ping snap.
+        <span class="p-notification__status">Snap names are globally unique.</span> You should change any instance of <code>moos</code> to <code>test-moos-{name}</code> (where <code>{name}</code> is your name) before continuing to avoid conflicts.
     - text: The <code>command</code> specifies the path to the binary to be run. This is resolved relative to the root of your snap contents and automatically searches in the usr/sbin, usr/bin, sbin, and bin subdirectories of your snap.
     - text: If your command name matches the snap name, users will be able run the command directly.
