@@ -33,14 +33,18 @@
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab1-section" role="tabpanel" {% if user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1-section">
-            <div class="col-8">
-              <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+            <div class="p-strip is-shallow">
               <div class="row">
-                <p class="col-5">
-                  <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
-                </p>
+                <div class="col-8">
+                  <p>This lets you make releases, alter your store listing and see usage metrics.</p>
+                  <div class="row">
+                    <p class="col-5">
+                      <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
+                    </p>
+                  </div>
+                  <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
+                </div>
               </div>
-              <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
             </div>
           </section>
         </li>
@@ -53,24 +57,28 @@
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2-section">
-            <div class="col-8">
-              <form id="register-name-form">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <label>You must register snap name to be able to push your snap to the store.</label>
-                <div class="p-form-validation">
-                  <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
-                  <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
-                    Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
-                  </p>
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <form id="register-name-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <label>You must register snap name to be able to push your snap to the store.</label>
+                    <div class="p-form-validation">
+                      <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
+                      <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
+                        Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
+                      </p>
+                    </div>
+                    <div id="register-name-notification" class="p-notification--caution">
+                      <p class="p-notification__response">
+                        <span class="p-notification__status"></span>
+                        Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
+                      </p>
+                    </div>
+                    <button class="p-button--positive" {% if not has_user_chosen_name %}disabled{% endif %}>Register snap name</button>
+                  </form>
                 </div>
-                <div id="register-name-notification" class="p-notification--caution">
-                  <p class="p-notification__response">
-                    <span class="p-notification__status"></span>
-                    Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
-                  </p>
-                </div>
-                <button class="p-button--positive" {% if not has_user_chosen_name %}disabled{% endif %}>Register snap name</button>
-              </form>
+              </div>
             </div>
           </section>
         </li>
@@ -82,25 +90,29 @@
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
-            <div class="col-8">
-              <p>Log in to snapcraft using your Ubuntu One account credentials:</p>
-              {% set snippet_value = "snapcraft login" %}
-              {% set snippet_id = "snapcraft-login" %}
-              {% include "/partials/_code-snippet.html" %}
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <p>Log in to snapcraft using your Ubuntu One account credentials:</p>
+                  {% set snippet_value = "snapcraft login" %}
+                  {% set snippet_id = "snapcraft-login" %}
+                  {% include "/partials/_code-snippet.html" %}
 
-              <p>
-                Once logged, you can push your snap to the store with following command:
-              </p>
-              {% set snippet_value = "snapcraft push --release edge *.snap" %}
-              {% set snippet_id = "snapcraft-push" %}
-              {% include "/partials/_code-snippet.html" %}
+                  <p>
+                    Once logged, you can push your snap to the store with following command:
+                  </p>
+                  {% set snippet_value = "snapcraft push --release edge *.snap" %}
+                  {% set snippet_id = "snapcraft-push" %}
+                  {% include "/partials/_code-snippet.html" %}
 
-              <p>
-                Once you've pushed to the Snap store, edit your snap public presentation.
-              </p>
-              <a class="p-button--neutral js-continue is--disabled">
-                <i class="p-icon--spinner u-animation--spin"></i>
-                &nbsp;Waiting for push...</a>
+                  <p>
+                    Once you've pushed to the Snap store, edit your snap public presentation.
+                  </p>
+                  <a class="p-button--neutral js-continue is--disabled">
+                    <i class="p-icon--spinner u-animation--spin"></i>
+                    &nbsp;Waiting for push...</a>
+                </div>
+              </div>
             </div>
           </section>
         </li>
