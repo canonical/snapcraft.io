@@ -2,15 +2,46 @@
   <div class='col-6'>
     <h4>Why are snaps good for MOOS projects?</h4>
     <ul>
-      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
-      <li>Snaps install and run the same across Linux. They bundle the exact version of MOOS/MOOS-IvP required and your app’s library dependencies.</li>
-      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
-      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
-      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      <li>Bundle all the runtime requirements, including the exact version of MOOS/MOOS-IvP and system libraries you need.</li>
+      <li>Expand the distributions supported beyond just Ubuntu.</li>
+      <li>Directly and reliably control the delivery of application updates using existing infrastructure.</li>
+	  <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      <li>Extremely simple creation of daemons.</li>
     </ul>
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example MOOS app in the Snap Store.</p>
-      <a class="p-button--positive" href="https://docs.snapcraft.io/build-snaps/moos">Continue</a>
-    </div>
+  </div>
+
+  <div class='col-6'>
+    <h4>Here's an example snapcraft.yaml that uses MOOS:</h4>
+    <code class="p-code-yaml"><pre>
+<b>name</b>: moos-ping
+<b>version</b>: '0.1'
+<b>summary</b>: MOOS Ping Example
+<b>description</b>: |
+  The main communication mechanism for all 
+  MOOS apps.
+
+<b>confinement</b>: devmode
+<b>base</b>: core18
+
+<b>parts</b>:
+  <b>moos</b>:
+    <b>source</b>: https://github.com/themoos/core-moos/archive/10.0.2.a-release.tar.gz
+    <b>build-packages</b>:
+      - gcc
+      - g++
+      - make
+    <b>plugin</b>: cmake
+    <b>configflags</b>:
+      - -DCMAKE_INSTALL_PREFIX=/
+
+<b>apps</b>:
+  <b>MOOSDB</b>:
+    <b>command</b>: MOOSDB
+</pre></code>
+  </div>
+
+  <div class="p-flow-details__continue">
+    In just a few steps, you’ll have an example MOOS app in the Snap Store.
+    <a class="p-button--positive is-inline" href="/first-snap/moos">Continue</a>
   </div>
 </div>
