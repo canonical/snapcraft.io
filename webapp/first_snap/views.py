@@ -159,9 +159,11 @@ def get_push(language, operating_system):
         return flask.abort(404)
 
     snap_name = data["name"]
+    has_user_chosen_name = False
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
+        has_user_chosen_name = True
 
     flask_user = flask.session.get("openid", {})
 
@@ -180,6 +182,7 @@ def get_push(language, operating_system):
         "os": operating_system,
         "user": user,
         "snap_name": snap_name,
+        "has_user_chosen_name": has_user_chosen_name,
     }
 
     return flask.render_template("first-snap/push.html", **context)
