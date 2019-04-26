@@ -33,7 +33,10 @@
     "relative": true
   },
   "jest": {
-    "collectCoverage": true
+    "collectCoverage": true,
+    "setupFiles": [
+      "<rootDir>/static/js/test/setup/polyfill.js"
+    ]
   },
   "author": "Canonical webteam",
   "dependencies": {
