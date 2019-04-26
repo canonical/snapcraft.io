@@ -8,7 +8,17 @@
 
   // Add extra space between groups of related items
   .snapcraft-p-market__section {
-    margin-bottom: $spv-inter--scaleable;
+    margin-bottom: $sp-xx-large;
+  }
+
+  .market-form {
+    .row {
+      margin-bottom: $sp-medium;
+
+      & .row {
+        margin-bottom: 0;
+      }
+    }
   }
 
   // hack to make anchor link behave like a button
@@ -25,7 +35,6 @@
   .p-editable-icon {
     cursor: pointer;
     display: inline-block;
-    margin-bottom: $sph-inter;
     margin-right: 3.2877%;
     position: relative;
 
@@ -72,7 +81,7 @@
     }
 
     &__label {
-      line-height: 60px;
+      line-height: 55px;
       padding-top: .25rem;
     }
   }
@@ -133,17 +142,21 @@
       color: $color-link;
       cursor: pointer;
       margin-bottom: $spv-inter--regular;
+      padding-top: 33.33333%;
       position: relative;
       text-align: center;
 
       img {
+        bottom: 0;
         display: block;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
         width: 100%;
       }
 
       &.is-empty {
-        padding-top: 33.33333%;
-
         & > div {
           align-items: center;
           bottom: 0;

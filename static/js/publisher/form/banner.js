@@ -131,7 +131,6 @@ class Banner extends React.Component {
             ) : (
               <div className="u-align-text--center">
                 <i className="p-icon--plus" />
-                <br />
                 Add banner
               </div>
             )}
@@ -163,7 +162,7 @@ class Banner extends React.Component {
         </p>
         <AccordionHelp name="banner restrictions">
           <div className="col-8">
-            <p>
+            <p className="u-no-margin--bottom">
               <small>
                 Accepted image formats include: <b>JPEG & PNG files</b>
                 <br />

@@ -100,7 +100,7 @@ class Media extends React.Component {
     return (
       <AccordionHelp name="image restrictions">
         <div className="col-8">
-          <p>
+          <p className="u-no-margin--bottom">
             <small>
               Accepted image formats include: <b>GIF, JPEG & PNG files</b>
               <br />
