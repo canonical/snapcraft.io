@@ -36,3 +36,24 @@ export default function initAccordion(accordionContainerSelector) {
       }
     });
 }
+
+/**
+  Attaches click event to a button to close current accordion tab and open next one.
+*/
+export function initAccordionButtons(continueButton) {
+  continueButton.addEventListener("click", event => {
+    event.preventDefault();
+
+    const currentPanel = continueButton.closest(".p-accordion__group");
+    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+    const currentSuccess = currentPanel.querySelector(".p-icon--success");
+    const nextPanel = currentPanel.nextElementSibling;
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+
+    toggleAccordion(currentToggle, false);
+    if (currentSuccess) {
+      currentSuccess.classList.remove("u-hide");
+    }
+    toggleAccordion(nextToggle, true);
+  });
+}
