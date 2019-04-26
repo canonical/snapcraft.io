@@ -2,6 +2,8 @@
 
 import "whatwg-fetch";
 
+import { toggleAccordion } from "./accordion";
+
 function install(language) {
   const osPickers = document.querySelectorAll(".js-os-select");
   const osWrappers = document.querySelectorAll(".js-os-wrapper");
@@ -224,6 +226,22 @@ function initChooseName(formEl, language) {
   });
 }
 
+function initAccordionButtons(continueButton) {
+  continueButton.addEventListener("click", event => {
+    event.preventDefault();
+
+    const currentPanel = continueButton.closest(".p-accordion__group");
+    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+    const currentSuccess = currentPanel.querySelector(".p-icon--success");
+    const nextPanel = currentPanel.nextElementSibling;
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+
+    toggleAccordion(currentToggle, false);
+    currentSuccess.classList.remove("u-hide");
+    toggleAccordion(nextToggle, true);
+  });
+}
+
 function initRegisterName(formEl, notificationEl, successEl) {
   const initialNotificationClassName = notificationEl.className;
   const initialNotificationHtml = notificationEl.querySelector(
@@ -288,6 +306,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
 
 export default {
   initChooseName,
+  initAccordionButtons,
   initRegisterName,
   install,
   push

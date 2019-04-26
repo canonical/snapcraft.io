@@ -38,6 +38,7 @@
             <h4 class="u-no-margin--bottom">
               <span class="p-accordion__step">2.</span>
               Download an example app
+              <i class="p-icon--success u-hide"></i>
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %} aria-labelledby="tab2-section">
@@ -48,6 +49,7 @@
                   {% set snippet_value = steps.download %}
                   {% set snippet_id = "download" %}
                   {% include "/partials/_code-snippet.html" %}
+                  <button id="js-clone-continue-button" class="p-button--positive">Continue</button>
                 </div>
               </div>
             </div>
@@ -214,6 +216,9 @@
          "{{language}}"
       );
       snapcraft.public.initAccordion('.p-accordion__list');
+      snapcraft.public.firstSnapFlow.initAccordionButtons(
+        document.getElementById("js-clone-continue-button")
+      );
     });
   </script>
   {{ super() }}
