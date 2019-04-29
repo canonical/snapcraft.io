@@ -26,7 +26,7 @@ class FileInput extends React.Component {
   }
 
   componentDidMount() {
-    const { restrictions, inputName } = this.props;
+    const { restrictions, inputName, inputId } = this.props;
 
     // Handle input creation outside of the react lifecycle to avoid
     // re-rendering and side-effects. We need the input to maintain a consistent
@@ -34,6 +34,7 @@ class FileInput extends React.Component {
     this.input = document.createElement("input");
     this.input.type = "file";
     this.input.name = inputName;
+    this.input.id = inputId;
     if (restrictions && restrictions.accept) {
       this.input.accept = restrictions.accept;
     }
@@ -69,6 +70,7 @@ class FileInput extends React.Component {
   fileClickHandler() {
     const { active } = this.props;
     if (active) {
+      this.input.value = "";
       this.input.click();
     }
   }
@@ -160,7 +162,7 @@ class FileInput extends React.Component {
   }
 
   render() {
-    const { className, children, isSmall } = this.props;
+    const { className, children, isSmall, noFocus } = this.props;
     const { isDragging, canDrop, overLimit } = this.state;
     const localClassName = [className, "p-file-input"];
 
@@ -186,7 +188,7 @@ class FileInput extends React.Component {
         className={localClassName.join(" ")}
         onClick={this.fileClickHandler}
         onKeyDown={this.keyboardEventHandler}
-        tabIndex={0}
+        tabIndex={noFocus ? null : 0}
       >
         {children}
       </div>
@@ -197,24 +199,28 @@ class FileInput extends React.Component {
 FileInput.defaultProps = {
   className: "",
   inputName: "file-upload",
+  inputId: "file-upload",
   fileChangedCallback: () => {},
   restrictions: {
     accept: []
   },
   active: true,
-  isSmall: false
+  isSmall: false,
+  noFocus: false
 };
 
 FileInput.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   inputName: PropTypes.string,
+  inputId: PropTypes.string,
   fileChangedCallback: PropTypes.func,
   restrictions: PropTypes.shape({
     accept: PropTypes.arrayOf(PropTypes.string)
   }),
   active: PropTypes.bool,
-  isSmall: PropTypes.bool
+  isSmall: PropTypes.bool,
+  noFocus: PropTypes.bool
 };
 
 export { FileInput as default };

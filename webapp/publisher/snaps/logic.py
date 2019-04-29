@@ -156,7 +156,11 @@ def remove_invalid_characters(description):
 
 
 def build_changed_images(
-    changed_screenshots, current_screenshots, icon, new_screenshots
+    changed_screenshots,
+    current_screenshots,
+    icon,
+    new_screenshots,
+    banner_background,
 ):
     """Filter and build images to upload.
 
@@ -164,6 +168,8 @@ def build_changed_images(
     :param current_screenshots: Ductionary of the current screenshots
     :param icon: The uploaded icon
     :param new_screenshots: The uploaded screenshots
+    :param banner_background: The uploaded banner
+    :param banner_icon: The uploaded banner icon
 
     :return: The json to send to the store and the list images to upload"""
 
@@ -198,6 +204,11 @@ def build_changed_images(
     if icon is not None:
         info.append(build_image_info(icon, "icon"))
         images_files.append(icon)
+
+    # Add new banner background
+    if banner_background is not None:
+        info.append(build_image_info(banner_background, "banner"))
+        images_files.append(banner_background)
 
     images_json = {"info": dumps(info)}
 
@@ -318,3 +329,25 @@ def convert_date(date_to_convert):
     """
     date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
     return date_parsed.strftime("%B %Y")
+
+
+def categorise_media(media):
+    """Media comes in many forms, method splits them into:
+    Icons, Screenshots and Banner images
+
+    :param media: a list of media dicts
+    :returns: Separate lists for the media types"""
+
+    banner_urls = []
+    icon_urls = []
+    screenshot_urls = []
+
+    for m in media:
+        if m["type"] == "banner":
+            banner_urls.append(m["url"])
+        elif m["type"] == "icon":
+            icon_urls.append(m["url"])
+        elif m["type"] == "screenshot":
+            screenshot_urls.append(m["url"])
+
+    return icon_urls, screenshot_urls, banner_urls

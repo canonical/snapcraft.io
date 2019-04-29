@@ -125,9 +125,9 @@
     log-update "^2.3.0"
     strip-ansi "^3.0.1"
 
-"@jest/types@^24.3.0":
-  version "24.3.0"
-  resolved "https://registry.yarnpkg.com/@jest/types/-/types-24.3.0.tgz#3f6e117e47248a9a6b5f1357ec645bd364f7ad23"
+"@jest/types@^24.5.0":
+  version "24.5.0"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-24.5.0.tgz#feee214a4d0167b0ca447284e95a57aa10b3ee95"
   dependencies:
     "@types/istanbul-lib-coverage" "^1.1.0"
     "@types/yargs" "^12.0.9"
@@ -2411,8 +2411,8 @@ doctrine@^2.1.0:
     esutils "^2.0.2"
 
 dom-testing-library@^3.13.1:
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/dom-testing-library/-/dom-testing-library-3.17.0.tgz#7b65cf13b385c5cb8b93d50f1539462fa64c0ab4"
+  version "3.17.1"
+  resolved "https://registry.yarnpkg.com/dom-testing-library/-/dom-testing-library-3.17.1.tgz#3291bc3cf68c555ba5e663697ee77d604aaa122b"
   dependencies:
     "@babel/runtime" "^7.3.4"
     "@sheerun/mutationobserver-shim" "^0.3.2"
@@ -5936,10 +5936,10 @@ pretty-format@^23.5.0:
     ansi-styles "^3.2.0"
 
 pretty-format@^24.0.0:
-  version "24.4.0"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-24.4.0.tgz#48db91969eb89f272c1bf3514bc5d5b228b3e722"
+  version "24.5.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-24.5.0.tgz#cc69a0281a62cd7242633fc135d6930cd889822d"
   dependencies:
-    "@jest/types" "^24.3.0"
+    "@jest/types" "^24.5.0"
     ansi-regex "^4.0.0"
     ansi-styles "^3.2.0"
     react-is "^16.8.4"

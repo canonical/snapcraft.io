@@ -1,3 +1,5 @@
+@import 'snapcraft_patterns_icons';
+
 @mixin snapcraft-market {
   $white-overlay-color: rgba(255, 255, 255, .5);
   $black-overlay-color: rgba(0, 0, 0, .5);
@@ -6,7 +8,17 @@
 
   // Add extra space between groups of related items
   .snapcraft-p-market__section {
-    margin-bottom: $spv-inter--scaleable;
+    margin-bottom: $sp-xx-large;
+  }
+
+  .market-form {
+    .row {
+      margin-bottom: $sp-medium;
+
+      & .row {
+        margin-bottom: 0;
+      }
+    }
   }
 
   // hack to make anchor link behave like a button
@@ -23,7 +35,6 @@
   .p-editable-icon {
     cursor: pointer;
     display: inline-block;
-    margin-bottom: $sph-inter;
     margin-right: 3.2877%;
     position: relative;
 
@@ -70,7 +81,7 @@
     }
 
     &__label {
-      line-height: 60px;
+      line-height: 55px;
       padding-top: .25rem;
     }
   }
@@ -114,6 +125,119 @@
 
     .p-inline-list__item {
       line-height: 2.3rem;
+    }
+  }
+
+  .p-market-banner {
+
+    .p-market-banner__image-holder {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .p-market-banner__image {
+      background-color: $color-x-light;
+      border: 1px solid $color-mid-light;
+      border-radius: $border-radius;
+      color: $color-link;
+      cursor: pointer;
+      margin-bottom: $spv-inter--regular;
+      padding-top: 33.33333%;
+      position: relative;
+      text-align: center;
+
+      img {
+        bottom: 0;
+        display: block;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      &.is-empty {
+        & > div {
+          align-items: center;
+          bottom: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          left: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+      }
+    }
+
+    .p-market-banner__image-holder:hover,
+    .p-market-banner__image-holder.is-focused {
+      .p-market-banner__image {
+        border: 1px solid $color-link;
+      }
+
+      .p-market-banner__remove {
+        opacity: 1;
+      }
+
+      .p-market-banner__change {
+        border: 1px solid $color-link;
+        border-radius: $border-radius;
+        opacity: 1;
+      }
+    }
+
+    .p-market-banner__remove {
+      right: 1px;
+      top: 1px;
+
+      .p-icon--delete {
+        display: block;
+        top: 0;
+      }
+    }
+
+    .p-market-banner__change {
+      align-items: center;
+      background-color: $white-overlay-strong-color;
+      bottom: 0;
+      color: $color-link;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .p-icon--delete {
+    @include snapcraft-icon-delete($color-mid-dark);
+
+    &:hover {
+      @include snapcraft-icon-delete($color-negative);
+    }
+  }
+
+  .p-market-remove {
+    background: $color-x-light;
+    box-sizing: content-box;
+    cursor: pointer;
+    opacity: 0;
+    padding: .25rem;
+    position: absolute;
+    width: 1rem;
+    z-index: 1;
+
+    &:hover {
+      opacity: 1;
+
+      .p-icon--delete {
+        @include snapcraft-icon-delete($color-negative);
+      }
     }
   }
 }

@@ -26,7 +26,19 @@ const MEDIA_RESTRICTIONS = {
       min: 0,
       max: 40
     }
-  }
+  },
+  whitelist: [
+    {
+      dimensions: [1218, 240],
+      fileName: "banner",
+      accept: ["image/png", "image/jpeg"]
+    },
+    {
+      dimensions: [240, 240],
+      fileName: "banner-icon",
+      accept: ["image/png", "image/jpeg"]
+    }
+  ]
 };
 
 const ICON_RESTRICTIONS = {
@@ -49,4 +61,24 @@ const ICON_RESTRICTIONS = {
   }
 };
 
-export { MEDIA_RESTRICTIONS, ICON_RESTRICTIONS };
+const BANNER_RESTRICTIONS = {
+  accept: ["image/png", "image/jpeg"],
+  width: {
+    min: 720,
+    max: 4320
+  },
+  height: {
+    min: 240,
+    max: 1440
+  },
+  aspectRatio: {
+    min: [3, 1],
+    max: [3, 1]
+  },
+  size: {
+    min: 0,
+    max: 2000000
+  }
+};
+
+export { MEDIA_RESTRICTIONS, ICON_RESTRICTIONS, BANNER_RESTRICTIONS };

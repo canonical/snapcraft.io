@@ -95,6 +95,7 @@ class Icon extends React.Component {
               restrictions={restrictions}
               className="p-editable-icon__icon"
               inputName="icon"
+              inputId="snap-icon"
               fileChangedCallback={this.iconChanged}
               isSmall={true}
             >

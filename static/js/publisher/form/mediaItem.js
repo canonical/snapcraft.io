@@ -36,7 +36,7 @@ class MediaItem extends React.Component {
       >
         <span
           role="button"
-          className="p-listing-images__delete-image"
+          className="p-listing-images__delete-image p-market-remove"
           onClick={this.props.markForDeletion.bind(this, this.props.url)}
         >
           <i className="p-icon--delete" />

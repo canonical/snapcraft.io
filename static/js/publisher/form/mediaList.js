@@ -32,6 +32,7 @@ class MediaList extends React.Component {
             restrictions={restrictions}
             className={classes.join(" ")}
             inputName="screenshots"
+            inputId={`screenshot-${i}`}
             fileChangedCallback={this.props.mediaChanged}
             active={isActive}
           >

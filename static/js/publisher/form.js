@@ -6,6 +6,7 @@ import { categories } from "./market/categories";
 import { storageCommands } from "./market/storageCommands";
 import { initMedia } from "./market/initMedia";
 import { initIcon } from "./market/initIcon";
+import { initBanner } from "./market/initBanner";
 
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
@@ -129,6 +130,24 @@ function initForm(config, initialState, errors) {
       const newState = {
         ...state,
         images: noneScreenshots.concat(newImages)
+      };
+      updateState(state, newState);
+      updateFormState();
+    });
+  }
+
+  if (config.bannerHolder) {
+    let banners = state.images.filter(image => image.type === "banner");
+    initBanner(config.bannerHolder, banners, image => {
+      let newImages = state.images.filter(image => image.type !== "banner");
+
+      if (image) {
+        newImages = newImages.concat([image]);
+      }
+
+      const newState = {
+        ...state,
+        images: newImages
       };
       updateState(state, newState);
       updateFormState();

@@ -302,12 +302,9 @@ def get_listing_snap(snap_name):
     is_on_stable = logic.is_snap_on_stable(snap_details["channel_maps_list"])
 
     # Filter icon & screenshot urls from the media set.
-    icon_urls = [
-        m["url"] for m in snap_details["media"] if m["type"] == "icon"
-    ]
-    screenshot_urls = [
-        m["url"] for m in snap_details["media"] if m["type"] == "screenshot"
-    ]
+    icon_urls, screenshot_urls, banner_urls = logic.categorise_media(
+        snap_details["media"]
+    )
 
     licenses = []
     for license in get_licenses():
@@ -351,6 +348,7 @@ def get_listing_snap(snap_name):
         "publisher_name": snap_details["publisher"]["display-name"],
         "username": snap_details["publisher"]["username"],
         "screenshot_urls": screenshot_urls,
+        "banner_urls": banner_urls,
         "contact": snap_details["contact"],
         "private": snap_details["private"],
         "website": snap_details["website"] or "",
@@ -409,6 +407,7 @@ def post_listing_snap(snap_name):
                 current_screenshots,
                 flask.request.files.get("icon"),
                 flask.request.files.getlist("screenshots"),
+                flask.request.files.get("banner-image"),
             )
 
             try:
@@ -468,14 +467,9 @@ def post_listing_snap(snap_name):
             )
 
             # Filter icon & screenshot urls from the media set.
-            icon_urls = [
-                m["url"] for m in snap_details["media"] if m["type"] == "icon"
-            ]
-            screenshot_urls = [
-                m["url"]
-                for m in snap_details["media"]
-                if m["type"] == "screenshot"
-            ]
+            icon_urls, screenshot_urls, banner_urls = logic.categorise_media(
+                snap_details["media"]
+            )
 
             licenses = []
             for license in get_licenses():
@@ -514,6 +508,7 @@ def post_listing_snap(snap_name):
                 "publisher_name": snap_details["publisher"]["display-name"],
                 "username": snap_details["publisher"]["username"],
                 "screenshot_urls": screenshot_urls,
+                "banner_urls": banner_urls,
                 "display_title": snap_details["title"],
                 # values posted by user
                 "snap_title": (

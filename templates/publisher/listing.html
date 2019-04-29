@@ -9,7 +9,7 @@
     {% set selected_tab='listing' %}
     {% include "publisher/_header.html" %}
 
-    <form id="market-form" method="POST" enctype='multipart/form-data'>
+    <form id="market-form" class="market-form" method="POST" enctype='multipart/form-data'>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
@@ -101,7 +101,7 @@
 
           <div class="row" data-validation-name="icon">
             <div class="col-2">
-              <label class="p-editable-icon__label" for="snap_icon">Snap icon:</label>
+              <label class="p-editable-icon__label" for="snap-icon">Snap icon:</label>
             </div>
             <div class="col-8 js-icon-holder"></div>
           </div>
@@ -113,7 +113,7 @@
             <div class="col-8">
               <div class="p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}">
                 <div class="p-form-validation__field">
-                  <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
+                  <input class="p-form-validation__input u-no-margin--bottom" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
                 </div>
                 {% if field_errors and field_errors['title'] %}
                   <p class="p-form-validation__message">
@@ -124,7 +124,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row u-no-margin--bottom">
             <div class="col-2">
               <label>Category:</label>
             </div>
@@ -142,7 +142,7 @@
                     value="{{ category.slug }}"
                     {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
                       selected="selected"
-                    {% endif %}
+                    {% endif %}O
                   >{{ category.name }}</option>
                 {% endfor %}
                 <option value="">None</option>
@@ -152,7 +152,7 @@
 
           <div class="js-categories-category1-help-text row{% if snap_categories.categories[0] %} u-hide{% endif %}">
             <div class="col-8 push-2">
-              <p class="p-form-help-text">
+              <p class="p-form-help-text u-no-margin--bottom">
                 Include a category and your snap will be better ranked within the Snap Store.
                 It will also allow users to discover your snap via browsing the available categories.
               </p>
@@ -162,7 +162,7 @@
           <div class="js-categories-category2-add row{% if not snap_categories.categories[0] or snap_categories.categories[1] %} u-hide{% endif %}">
             <div class="col-8 push-2">
               <p><a class="js-categories-category2-add-link">+ Add another category</a></p>
-              <p class="p-form-help-text">
+              <p class="p-form-help-text u-no-margin--bottom">
                 If your snap fits into multiple categories you can select another.
               </p>
             </div>
@@ -205,7 +205,7 @@
         </div>
 
         <div class="snapcraft-p-market__section">
-        <div class="row">
+          <div class="row">
             <div class="col-2">
               <label for="video">Video:</label>
             </div>
@@ -224,7 +224,7 @@
                       <strong>Error:</strong> {{ field_errors['video_urls'] }}
                     </p>
                   {% endif %}
-                  <p class="p-form-help-text">
+                  <p class="p-form-help-text u-no-margin--bottom">
                     Vimeo, YouTube or asciinema URL
                   </p>
                 </div>
@@ -255,6 +255,17 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-2">
+              <label for="banner-image">Featured banner:</label>
+            </div>
+            <div class="col-8">
+              <div class="p-market-banner js-banner">
+                <i class="p-icon--spinner u-animation--spin"></i>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="row">
@@ -264,10 +275,10 @@
           <div class="col-8">
             <div class="p-form-validation u-no-margin {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
               <div class="p-form-validation__field">
-                <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
+                <input class="p-form-validation__input u-no-margin--bottom" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
               </div>
               {% if field_errors and field_errors['summary'] %}
-                <p class="p-form-validation__message">
+                <p class="p-form-validation__message u-no-margin--bottom">
                   <strong>Error:</strong> {{ field_errors['summary'] }}
                 </p>
               {% endif %}
@@ -301,7 +312,7 @@
                 <p><small>
                   <b>URLs:</b> <code>https://foo.bar</code>
                 </small></p>
-                <p><small>
+                <p class="u-no-margin--bottom"><small>
                   <b>Lists:</b> <code>* Foo</code>
                 </small></p>
               </div>
@@ -347,7 +358,7 @@
                     <strong>Error:</strong> {{ field_errors['website'] }}
                   </p>
                 {% endif %}
-                <p class="p-form-help-text">
+                <p class="p-form-help-text u-no-margin--bottom">
                   Please include a valid http:// or https:// link
                 </p>
               </div>
@@ -375,7 +386,7 @@
                     <strong>Error:</strong> {{ field_errors['contact'] }}
                   </p>
                 {% endif %}
-                <p class="p-form-help-text">
+                <p class="p-form-help-text u-no-margin--bottom">
                   An http: or https: link, or an e-mail address
                 </p>
               </div>
@@ -484,11 +495,8 @@
   Raven.context(function () {
     snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
     snapcraft.publisher.market.initForm({
-      snapIconChange: ".js-change-icon",
-      snapIconRemove: ".js-remove-icon",
-      snapIcon: "snap_icon_image",
-      snapIconInput: "snap_icon",
       snapIconHolder: ".js-icon-holder",
+      bannerHolder: ".js-banner",
       form: "market-form",
       formNotification: "market-form-status",
       licenseRadioContent: [
@@ -511,6 +519,9 @@
         {% for screenshot_url in screenshot_urls %}
           { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
         {% endfor %}
+        {% if banner_urls[0] %}
+          { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
+        {% endif %}
       ],
       'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},

@@ -12,6 +12,7 @@
     align-items: center;
     background: $color-light;
     border: 1px solid $color-light;
+    border-radius: $border-radius;
     color: $color-link;
     cursor: grab;
     display: flex;
@@ -26,22 +27,15 @@
 
     .p-listing-images__delete-image {
       background: $color-x-light;
-      box-sizing: content-box;
+      border-radius: 0 .125rem 0 0;
       cursor: pointer;
       height: 1rem;
-      opacity: 0;
-      padding: .25rem;
-      position: absolute;
       right: 0;
       top: 0;
-      width: 1rem;
-      z-index: 1;
     }
 
-    &:hover {
-      .p-listing-images__delete-image {
-        opacity: 1;
-      }
+    &.p-file-input.is-dragging::after {
+      right: $spv-intra;
     }
 
     .p-listing-images__delete-image .p-icon--delete {
@@ -55,6 +49,10 @@
       img {
         filter: sepia(100%) hue-rotate(300deg);
       }
+    }
+
+    &.is-dragging {
+      margin-right: 0;
     }
 
     &:not(.is-empty):hover,

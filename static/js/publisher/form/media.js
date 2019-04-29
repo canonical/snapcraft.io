@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 
 import { PropTypes } from "prop-types";
 
+import AccordionHelp from "./AccordionHelp";
 import SortableMediaList from "./mediaList";
 
 class Media extends React.Component {
@@ -11,11 +12,8 @@ class Media extends React.Component {
     this.markForDeletion = this.markForDeletion.bind(this);
     this.mediaChanged = this.mediaChanged.bind(this);
 
-    this.toggleRestrictions = this.toggleRestrictions.bind(this);
-
     this.state = {
       mediaData: props.mediaData,
-      restrictionsVisible: false,
       errors: {}
     };
   }
@@ -98,50 +96,31 @@ class Media extends React.Component {
     return false;
   }
 
-  toggleRestrictions() {
-    this.setState({
-      restrictionsVisible: !this.state.restrictionsVisible
-    });
-  }
-
   renderRescrictions() {
-    const overlayClasses = ["row"];
-    let verb = "Hide";
-    if (!this.state.restrictionsVisible) {
-      overlayClasses.push("u-hide");
-      verb = "Show";
-    }
     return (
-      <Fragment>
-        <p className="p-form-help-text">
-          <a role="button" onClick={this.toggleRestrictions}>
-            {verb} image restrictions
-          </a>
-        </p>
-        <div className={overlayClasses.join(" ")}>
-          <div className="col-8">
-            <p>
-              <small>
-                Accepted image formats include: <b>GIF, JPEG & PNG files.</b>
-                <br />
-                Min resolution: <b>480 x 480 pixels</b>
-                <br />
-                Max resolution: <b>3840 x 2160 pixels</b>
-                <br />
-                Aspect ratio: <b>Between 1:2 and 2:1</b>
-                <br />
-                File size limit: <b>2MB</b>
-                <br />
-                Animation min fps: <b>1</b>
-                <br />
-                Animation max fps: <b>30</b>
-                <br />
-                Animation max length: <b>40 seconds</b>
-              </small>
-            </p>
-          </div>
+      <AccordionHelp name="image restrictions">
+        <div className="col-8">
+          <p className="u-no-margin--bottom">
+            <small>
+              Accepted image formats include: <b>GIF, JPEG & PNG files</b>
+              <br />
+              Min resolution: <b>480 x 480 pixels</b>
+              <br />
+              Max resolution: <b>3840 x 2160 pixels</b>
+              <br />
+              Aspect ratio: <b>Between 1:2 and 2:1</b>
+              <br />
+              File size limit: <b>2MB</b>
+              <br />
+              Animation min fps: <b>1</b>
+              <br />
+              Animation max fps: <b>30</b>
+              <br />
+              Animation max length: <b>40 seconds</b>
+            </small>
+          </p>
         </div>
-      </Fragment>
+      </AccordionHelp>
     );
   }
 
