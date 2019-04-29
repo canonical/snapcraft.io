@@ -88,7 +88,7 @@ def format_number(number: int):
 
 
 def display_name(display_name, username):
-    """Tempalate function that returns the displayed name if the username
+    """Template function that returns the displayed name if the username
     is the same, or the dispayed name and the username if differents
     """
     if display_name.lower() == username.lower():

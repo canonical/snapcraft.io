@@ -96,48 +96,10 @@
     <div class="row">
       <div class="u-equal-height">
         {% set snap = featured_snaps[0] %}
-        <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
-          <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
-            {% if snap.icon_url %}
-              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="" width="48" height="48">
-            {% else %}
-              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="" width="48" height="48">
-            {% endif %}
-
-            <div class="p-media-object--snap__content">
-              <h4 class="p-media-object--snap__title">
-                {{ snap.title }}
-              </h4>
-            </div>
-            <div class="p-media-object--snap__description">
-              <hr />
-              <h5>{{ snap.summary }}</h5>
-              <p>{{ snap.description }}</p>
-            </div>
-          </a>
-        </div>
+        {% include 'partials/_publisher-featured-snap.html' %}
         {% if featured_snaps[1] %}
         {% set snap = featured_snaps[1] %}
-        <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
-          <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
-            {% if snap.icon_url %}
-              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="" width="48" height="48">
-            {% else %}
-              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="" width="48" height="48">
-            {% endif %}
-
-            <div class="p-media-object--snap__content">
-              <h4 class="p-media-object--snap__title">
-                {{ snap.title }}
-              </h4>
-            </div>
-            <div class="p-media-object--snap__description">
-              <hr />
-              <h5>{{ snap.summary }}</h5>
-              <p>{{ snap.description }}</p>
-            </div>
-          </a>
-        </div>
+        {% include 'partials/_publisher-featured-snap.html' %}
         {% endif %}
       </div>
     </div>

@@ -3,7 +3,16 @@ import re
 from urllib.parse import parse_qs, urlparse
 
 import humanize
+import random
 from dateutil import parser
+
+
+def get_n_random_snaps(snaps, choice_number):
+
+    if len(snaps) > choice_number:
+        return random.sample(snaps, choice_number)
+
+    return snaps
 
 
 def get_searched_snaps(search_results):

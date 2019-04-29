@@ -1,6 +1,9 @@
 import json
-
+import flask
+from ruamel.yaml import YAML
 from werkzeug.routing import BaseConverter
+
+yaml = YAML(typ="safe")
 
 
 class RegexConverter(BaseConverter):
@@ -37,3 +40,15 @@ def get_default_track(snap_name):
     default_track = "10" if snap_name == "node" else "latest"
 
     return default_track
+
+
+def _get_file(yaml_file):
+    try:
+        with open(
+            "{}/{}".format(flask.current_app.root_path, yaml_file), "r"
+        ) as stream:
+            data = yaml.load(stream)
+    except Exception:
+        data = None
+
+    return data
