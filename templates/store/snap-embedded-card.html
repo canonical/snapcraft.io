@@ -73,7 +73,7 @@
             {% for release in channel_map[default_architecture][track] %}
             <tr>
               <td>{% if track == "latest"%}{{ track }}/{% endif %}{{ release.channel }}</td>
-              <td>{{ release.version }}</td>
+              <td class="u-ellipsis">{{ release.version }}</td>
               <td>{{ release["created-at"] }}</td>
             </tr>
             {% endfor %}

@@ -38,6 +38,13 @@ $color-navigation-background: #252525;
   z-index: 10;
 }
 
+// utility to make ellipsis
+.u-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // make max-width of the layout smaller for embedded view
 .row {
   max-width: 40rem;
