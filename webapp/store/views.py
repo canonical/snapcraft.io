@@ -1,11 +1,10 @@
-import os
 from math import floor, ceil
 from urllib.parse import quote_plus
 
 import flask
 
 import webapp.store.logic as logic
-from ruamel.yaml import YAML
+import webapp.helpers as helpers
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiConnectionError,
@@ -17,8 +16,6 @@ from webapp.api.exceptions import (
 )
 from webapp.api.store import StoreApi
 from webapp.store.snap_details_views import snap_details_views
-
-yaml = YAML(typ="safe")
 
 
 def store_blueprint(store_query=None, testing=False):
@@ -279,17 +276,6 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
-    def _get_file(file):
-        try:
-            with open(
-                os.path.join(flask.current_app.root_path, file), "r"
-            ) as stream:
-                data = yaml.load(stream)
-        except Exception:
-            data = None
-
-        return data
-
     @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
     def publisher_details(publisher):
         """
@@ -299,7 +285,10 @@ def store_blueprint(store_query=None, testing=False):
         publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
             "PUBLISHER_PAGES"
         ]
-        context = _get_file(publisher_content_path + publisher + ".yaml")
+
+        context = helpers._get_file(
+            publisher_content_path + publisher + ".yaml"
+        )
 
         if not context:
             flask.abort(404)

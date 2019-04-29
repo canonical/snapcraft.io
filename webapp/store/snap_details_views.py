@@ -1,7 +1,7 @@
 import flask
 
-import bleach
 import humanize
+import bleach
 from pybadges import badge
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
@@ -48,7 +48,7 @@ def snap_details_views(store, api, handle_errors):
         except ApiError as api_error:
             flask.abort(502, str(api_error))
 
-        # When removing all the channel maps of an exsting snap the API,
+        # When removing all the channel maps of an existing snap the API,
         # responds that the snaps still exists with data.
         # Return a 404 if not channel maps, to avoid having a error.
         # For example: mir-kiosk-browser
@@ -76,6 +76,26 @@ def snap_details_views(store, api, handle_errors):
         screenshots = logic.filter_screenshots(details["snap"]["media"])
 
         icons = logic.get_icon(details["snap"]["media"])
+
+        publisher_info_and_snaps = helpers._get_file(
+            "/{}{}.yaml".format(
+                flask.current_app.config["CONTENT_DIRECTORY"][
+                    "PUBLISHER_PAGES"
+                ],
+                details["snap"]["publisher"]["username"],
+            )
+        )
+
+        publisher_featured_snaps = None
+        publisher_snaps = None
+
+        if publisher_info_and_snaps:
+            publisher_featured_snaps = publisher_info_and_snaps.get(
+                "featured_snaps"
+            )
+            publisher_snaps = logic.get_n_random_snaps(
+                publisher_info_and_snaps["snaps"], 4
+            )
 
         videos = logic.get_videos(details["snap"]["media"])
 
@@ -119,6 +139,9 @@ def snap_details_views(store, api, handle_errors):
             "username": details["snap"]["publisher"]["username"],
             "screenshots": screenshots,
             "videos": videos,
+            "publisher_snaps": publisher_snaps,
+            "publisher_featured_snaps": publisher_featured_snaps,
+            "has_publisher_page": publisher_info_and_snaps is not None,
             "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),

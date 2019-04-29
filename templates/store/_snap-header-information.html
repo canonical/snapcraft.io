@@ -1,4 +1,8 @@
+{% if has_publisher_page %}
+<a href="/publisher/{{ username }}" title="More about {{ display_name(publisher, username) }}">{{ display_name(publisher, username) }}</a>
+{% else %}
 {{ display_name(publisher, username) }}
+{% endif %}
 {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
 <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ package_name }}-tooltip">
   <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />

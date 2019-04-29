@@ -272,6 +272,45 @@
     {% include "store/snap-details/_report_snap_modal.html" %}
   {% endif %}
 
+  {% if has_publisher_page %}
+  <div class="p-strip is-shallow">
+      <div class="row">
+          <div class="col-12">
+            <hr>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-6">
+          <h3 class="p-heading--four">More snaps from {{ username }}</h3>
+        </div>
+      </div>
+      {% if publisher_featured_snaps %}
+      <div class="row">
+        <div class="u-equal-height">
+          {% set snap = publisher_featured_snaps[0] %}
+          {% include 'partials/_publisher-featured-snap.html' %}
+          {% if publisher_featured_snaps[1] %}
+          {% set snap = publisher_featured_snaps[1] %}
+          {% include 'partials/_publisher-featured-snap.html' %}
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% if publisher_snaps %}
+      <div class="p-strip is-shallow">
+          <div class="row">
+            <div class="col-12 snapcraft-p-grid">
+            {% for snap in publisher_snaps %}
+              {% set hide_publisher = True %}
+              {% set show_summary = True %}
+                {% include "store/_media-object-snap-partial.html" %}
+            {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+    </div>
+  {% endif %}
   {% if is_preview %}
     </div>
   {% endif %}
