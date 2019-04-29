@@ -69,12 +69,14 @@
           </tr>
         </thead>
         <tbody>
-          {% for release in channel_map[default_architecture][default_track] %}
-          <tr>
-            <td>{% if default_track == "latest"%}{{ default_track }}/{% endif %}{{ release.channel }}</td>
-            <td>{{ release.version }}</td>
-            <td>{{ release["created-at"] }}</td>
-          </tr>
+          {% for track in channel_map[default_architecture] %}
+            {% for release in channel_map[default_architecture][track] %}
+            <tr>
+              <td>{% if track == "latest"%}{{ track }}/{% endif %}{{ release.channel }}</td>
+              <td>{{ release.version }}</td>
+              <td>{{ release["created-at"] }}</td>
+            </tr>
+            {% endfor %}
           {% endfor %}
         </tbody>
       </table>
