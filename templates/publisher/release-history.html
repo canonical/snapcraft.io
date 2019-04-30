@@ -10,7 +10,19 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
   {% include "publisher/_header.html" %}
 
   <section class="p-strip is-shallow">
-    <div id="release-history"></div>
+    <div id="release-history">
+      {% if release_history["error-list"] %}
+        <div class="row">
+          <div class="p-notification--negative">
+            <p class="p-notification__response">
+              {% for error in release_history["error-list"] %}
+                <b>{{ error.code }}:</b> {{ error.message }}<br />
+              {% endfor %}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
   </section>
 </div>
 
@@ -18,16 +30,18 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
 
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/release.js') }}"></script>
-  <script>
-    snapcraft.release.initReleases('#release-history',
-      {{ snap_name|tojson }},
-      {{ release_history|tojson }},
-      {{ channel_maps_list|tojson }},
-      {
-        defaultTrack: 'latest',
-        csrfToken: {{ csrf_token()|tojson }}
-      }
-    );
-  </script>
+  {% if "error-list" not in release_history %}
+    <script src="{{ static_url('js/dist/release.js') }}"></script>
+    <script>
+      snapcraft.release.initReleases('#release-history',
+        {{ snap_name|tojson }},
+        {{ release_history|tojson }},
+        {{ channel_maps_list|tojson }},
+        {
+          defaultTrack: 'latest',
+          csrfToken: {{ csrf_token()|tojson }}
+        }
+      );
+    </script>
+  {% endif %}
 {% endblock %}
