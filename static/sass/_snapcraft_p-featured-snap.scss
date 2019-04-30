@@ -7,6 +7,26 @@
   $dark-opaque: rgba(0, 0, 0, .8);
   $default-color: rgba(238, 238, 238, 1);
 
+  .p-featured-snap {
+    @extend %vf-card;
+    background-color: $color-dark;
+    color: $color-light;
+    margin-bottom: $sp-large;
+
+    // force color on visited links as well
+    a,
+    a:focus,
+    a:hover,
+    a:visited {
+      color: $color-light;
+    }
+
+    // update to lighter color in media object
+    .p-media-object--snap__publisher {
+      color: $color-mid-light;
+    }
+  }
+
   .p-featured-snap--generated {
     background-color: $default-color;
     border-radius: $border-radius;
