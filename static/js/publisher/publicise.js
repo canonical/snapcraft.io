@@ -146,7 +146,7 @@ function initEmbeddedCardPicker(options) {
     codeElement.innerHTML = getCardEmbedHTML(snapName, getFormState());
   }
 
-  previewFrame.addEventListener("load", function() {
+  function updateCardSize() {
     // calulate frame height to be a bit bigger then content itself
     // to have some spare room for responsiveness
     if (previewFrame.offsetParent) {
@@ -155,19 +155,26 @@ function initEmbeddedCardPicker(options) {
           (previewFrame.contentWindow.document.body.scrollHeight + 20) / 10
         ) * 10;
 
-      state = {
-        ...state,
-        frameHeight: height
-      };
-      // don't re-render the iframe not to trigger load again
-      previewFrame.style.height = height + "px";
+      if (height !== state.frameHeight) {
+        state = {
+          ...state,
+          frameHeight: height
+        };
+        // don't re-render the iframe not to trigger load again
+        previewFrame.style.height = height + "px";
 
-      if (options.updateHeightCallback) {
-        options.updateHeightCallback(height);
+        if (options.updateHeightCallback) {
+          options.updateHeightCallback(height);
+        }
+        renderCode(state);
       }
+    } else {
+      renderCode(state);
     }
-    renderCode(state);
-  });
+  }
+
+  previewFrame.addEventListener("load", updateCardSize);
+  setInterval(updateCardSize, 1000);
 
   return () => render(state);
 }
