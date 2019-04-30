@@ -1,5 +1,9 @@
+import React from "react";
+import { render } from "react-dom";
+
 import activeDevicesMetrics from "./graphs/activeDevices";
 import territoriesMetrics from "./graphs/territories";
+import SnapInstalls from "./graphs/snapInstalls";
 
 /**
  * Render all metrics
@@ -34,4 +38,16 @@ function renderMetrics(metrics) {
   territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
 }
 
-export default renderMetrics;
+/**
+ * Render publisher page metrics
+ * @param {Object} options An object with rendering options.
+ */
+function renderPublisherMetrics(options) {
+  const { token, selector, snaps } = options;
+  render(
+    <SnapInstalls snaps={snaps} token={token} />,
+    document.querySelector(selector)
+  );
+}
+
+export { renderMetrics, renderPublisherMetrics };

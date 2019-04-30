@@ -106,7 +106,7 @@ def build_snap_installs_metrics_query(snaps, get_filter=get_filter):
     return metrics_query
 
 
-def transform_metrics(metrics, metrics_response):
+def transform_metrics(metrics, metrics_response, snaps):
     """Transforms an API response from the publisher metrics
 
     :param metrics_response: The JSON response from the metrics API
@@ -118,7 +118,11 @@ def transform_metrics(metrics, metrics_response):
             snap_id = metric["snap_id"]
 
             metrics["snaps"].append(
-                {"id": snap_id, "series": metric["series"]}
+                {
+                    "id": snap_id,
+                    "name": snaps[snap_id],
+                    "series": metric["series"],
+                }
             )
             metrics["buckets"] = metric["buckets"]
 
