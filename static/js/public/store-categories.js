@@ -1,8 +1,29 @@
-import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
 import "whatwg-fetch";
-import { CATEGORY_CONFIG } from "../config/swiper.config";
+import Fac from "fast-average-color";
 
-Swiper.use([Navigation]);
+function getColour(holder) {
+  function extractAndSet(image, parent) {
+    const fac = new Fac();
+    const colour = fac.getColor(image, { defaultColor: [238, 238, 238] });
+    parent.style.backgroundColor = colour.rgb;
+    parent.classList.add(colour.isDark ? "is-dark" : "is-light");
+  }
+
+  const images = holder.querySelectorAll(".p-featured-snap__icon img");
+  if (images.length > 0) {
+    for (let i = 0, ii = images.length; i < ii; i += 1) {
+      const parent = images[i].closest(".p-featured-snap");
+      const image = images[i];
+      if (image.complete) {
+        extractAndSet(image, parent);
+      } else {
+        image.addEventListener("load", () => {
+          extractAndSet(image, parent);
+        });
+      }
+    }
+  }
+}
 
 /**
  *
@@ -15,18 +36,8 @@ function getCategory(holder) {
   // Write the html and init the carousel
   const writeCategory = function(response) {
     holder.innerHTML = response;
-    new Swiper(
-      holder.querySelector(".swiper-container"),
-      Object.assign(
-        {
-          navigation: {
-            nextEl: `.swiper-button__next--${category}`,
-            prevEl: `.swiper-button__prev--${category}`
-          }
-        },
-        CATEGORY_CONFIG
-      )
-    );
+
+    getColour(holder);
   };
 
   const url = `/store/categories/${category}`;
@@ -47,24 +58,14 @@ function getCategory(holder) {
  * Find all .js-store-category elements and fetch the category via js
  */
 function storeCategories() {
+  const featured = document.querySelector("#js-snap-featured");
+  getColour(featured);
+
   const holders = document.querySelectorAll(".js-store-category");
 
   for (let i = 0; i < holders.length; i++) {
     getCategory(holders[i]);
   }
-
-  new Swiper(
-    document.querySelector("#js-snap-carousel-featured"),
-    Object.assign(
-      {
-        navigation: {
-          nextEl: `.swiper-button__next--featured`,
-          prevEl: `.swiper-button__prev--featured`
-        }
-      },
-      CATEGORY_CONFIG
-    )
-  );
 }
 
 export { storeCategories };

@@ -1,14 +1,17 @@
-<div class="p-carousel">
-  <div class="swiper-container" id="js-snap-carousel-{{ category }}">
-    <div class="swiper-wrapper">
-      {% for snap in snaps %}
-        <div class="p-carousel__item--snap swiper-slide">
-          {% set media_object_classname = "u-no-margin--bottom" %}
-          {% include 'store/_media-object-snap-partial.html' %}
-        </div>
-      {% endfor %}
+<div id="js-snap-{{ category }}">
+    {% if has_featured %}
+        {% if snaps[0]["icon_url"] != "" %}
+            {% set snap = snaps[0] %}
+            {% include "store/_generated-featured-snap-partial.html" %}
+        {% endif %}
+    {% endif %}
+    <div class="snapcraft-p-grid{% if has_featured %} snapcraft-p-grid--featured{% endif %}">
+        {% set show_summary = True %}
+        {% for snap in snaps %}
+            {% set media_object_classname = "u-no-margin--bottom" %}
+            {% if loop.index != 1 or snap["icon_url"] == "" %}
+                {% include "store/_media-object-snap-partial.html" %}
+            {% endif %}
+        {% endfor %}
     </div>
-  </div>
-  <button class="p-carousel__next swiper-button__next--{{ category }}">Next</button>
-  <button class="p-carousel__prev swiper-button__prev--{{ category }}">Previous</button>
 </div>

@@ -1,0 +1,110 @@
+@mixin snapcraft-p-featured-snap {
+  $light-transparent: rgba(255, 255, 255, 0);
+  $light-semi-opaque: rgba(255, 255, 255, .65);
+  $light-opaque: rgba(255, 255, 255, .8);
+  $dark-transparent: rgba(0, 0, 0, 0);
+  $dark-semi-opaque: rgba(0, 0, 0, .65);
+  $dark-opaque: rgba(0, 0, 0, .8);
+  $default-color: rgba(238, 238, 238, 1);
+
+  .p-featured-snap {
+    @extend %vf-card;
+    background-color: $color-dark;
+    color: $color-light;
+    margin-bottom: $sp-large;
+
+    // force color on visited links as well
+    a,
+    a:focus,
+    a:hover,
+    a:visited {
+      color: $color-light;
+    }
+
+    // update to lighter color in media object
+    .p-media-object--snap__publisher {
+      color: $color-mid-light;
+    }
+  }
+
+  .p-featured-snap--generated {
+    background-color: $default-color;
+    border-radius: $border-radius;
+    column-gap: $sp-xxx-large;
+    display: grid;
+    grid-template-columns: minmax(5rem, 43rem) minmax(1rem, 160px);
+    margin-bottom: $sp-xxx-large;
+    padding: $sph-inter;
+    text-decoration: none;
+    transition: background-color 1s ease-out, background 1s ease-out;
+    width: 100%;
+
+    @media screen and (min-width: $breakpoint-navigation-threshold) {
+      padding: $sp-x-large $sp-xxx-large;
+    }
+
+    .p-featured-snap__details {
+      align-items: center;
+      display: flex;
+    }
+
+    .p-featured-snap__summary {
+      display: none;
+
+      .p-heading--three {
+        padding-top: $sp-large;
+      }
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    &.is-dark {
+      background: linear-gradient(45deg, $dark-transparent 0%, $dark-semi-opaque 70%, $dark-semi-opaque 100%);
+
+      .p-featured-snap__summary,
+      .p-featured-snap__title {
+        color: $color-x-light;
+      }
+
+      .p-muted-heading {
+        color: $light-opaque;
+      }
+    }
+
+    &.is-light {
+      background: linear-gradient(45deg, $light-transparent 0%, $light-semi-opaque 70%, $light-semi-opaque 100%);
+
+      .p-featured-snap__summary,
+      .p-featured-snap__title {
+        color: $color-x-dark;
+      }
+
+      .p-muted-heading {
+        color: $dark-opaque;
+      }
+    }
+
+    .p-featured-snap__icon {
+      img {
+        display: block;
+      }
+    }
+
+    @media screen and (max-width: $breakpoint-small) {
+      padding: $sp-medium $sp-x-large;
+      column-gap: $sp-x-large;
+
+    }
+    @media screen and (min-width: $breakpoint-small) {
+      .p-featured-snap__title {
+        display: none;
+      }
+
+      .p-featured-snap__summary {
+        display: block;
+      }
+    }
+  }
+}

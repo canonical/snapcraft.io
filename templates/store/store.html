@@ -28,28 +28,36 @@
 
   <section class="p-strip is-shallow">
     <div class="row">
-      <h3 class="p-heading--four"><a href="/search?category=featured">Featured&nbsp;&rsaquo;</a></h3>
+        <h3 class="u-float--left">Featured</h3>
+        <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small">See more...</a>
     </div>
     <div class="row">
       {% set snaps = featured_snaps %}
       {% set category = "featured" %}
+      {% set show_summary = True %}
       {% include "store/_category-partial.html" %}
     </div>
+    <div class="row u-hide--medium u-hide--large">
+      <a href="/search?category=featured" class="p-button--neutral u-float--right">See more in Featured</a>
+    </div>
+  </section>
 
-    {% for category in categories %}
+  {% for category in categories %}
+    <section class="p-strip is-shallow">
       <div class="row">
-        <hr />
-      </div>
-
-      <div class="row">
-        <h3 class="p-heading--four"><a href="/search?category={{ category.slug }}">{{ category.name }}&nbsp;&rsaquo;</a></h3>
+          <h3 class="u-float--left">{{ category.name }}</h3>
+          <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float--right u-hide--small">See more...</a>
       </div>
       <div data-category="{{ category.slug }}" class="row js-store-category">
         {% include "store/_empty-category-partial.html" %}
         {# _category-partial.html loaded via JS #}
       </div>
-    {% endfor %}
-  </section>
+      <div class="row u-hide--medium u-hide--large">
+        <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float--right">See more in {{ category.name }}</a>
+      </div>
+    </section>
+  {% endfor %}
+
   <section class="p-strip--image is-deep is-dark p-strip--snap-store">
     <div class="row u-vertically-center">
       <div class="col-7 u-fade-left--medium">

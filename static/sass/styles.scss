@@ -170,10 +170,6 @@ $color-navigation-background: #252525;
 @import 'patterns_media-object--snap';
 @include snapcraft-p-media-object--snap;
 
-
-@import 'patterns_featured-snap';
-@include snapcraft-p-featured-snap;
-
 @import 'snapcraft_release';
 @include snapcraft-release;
 
@@ -239,6 +235,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft-p_grid';
 @include snapcraft-p-grid;
+
+@import 'snapcraft_p-featured-snap';
+@include snapcraft-p-featured-snap;
 
 
 html,

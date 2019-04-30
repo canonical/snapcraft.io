@@ -99,9 +99,9 @@
         <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
           <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
             {% if snap.icon_url %}
-              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
+              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="" width="48" height="48">
             {% else %}
-              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="" width="48" height="48">
             {% endif %}
 
             <div class="p-media-object--snap__content">
@@ -121,9 +121,9 @@
         <div class="col-6 p-featured-snap" style="background-color:{{ snap.background }}">
           <a class="p-media-object--snap u-no-margin--bottom" href="/{{ snap.package_name }}">
             {% if snap.icon_url %}
-              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
+              <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="" width="48" height="48">
             {% else %}
-              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="">
+              <img src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" class="p-media-object--snap__img" alt="" width="48" height="48">
             {% endif %}
 
             <div class="p-media-object--snap__content">
@@ -146,30 +146,11 @@
 
   <div class="p-strip is-shallow">
     <div class="row">
-      <div class="col-12 p-fluid-grid__publisher-snaps">
+      <div class="col-12 snapcraft-p-grid">
+      {% set hide_publisher = True %}
+      {% set show_summary = True %}
       {% for snap in snaps %}
-        <div class="p-fluid-grid__item">
-          <a class="p-media-object--snap" href="/{{ snap.package_name }}">
-            {% if snap.icon_url %}
-            <img src="{{ snap.icon_url }}" class="p-media-object--snap__img" alt="">
-            {% else %}
-            <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object--snap__img" alt="">
-            {% endif %}
-
-            <div class="p-media-object--snap__content">
-              <h4 class="p-media-object--snap__title">
-                {{ snap.title }}
-              </h4>
-              <div class="p-media-object--snap__desc">
-                <p>{{ snap.summary }}</p>
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-      {% endfor %}
-      {% for index in range((snaps|length) % 4) %}
-        <div class="p-fluid-grid__item u-hide--small"></div>
+        {% include "store/_media-object-snap-partial.html" %}
       {% endfor %}
       </div>
     </div>
