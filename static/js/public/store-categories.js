@@ -9,6 +9,10 @@ function getColour(holder) {
     parent.classList.add(colour.isDark ? "is-dark" : "is-light");
   }
 
+  if (!holder) {
+    return;
+  }
+
   const images = holder.querySelectorAll(".p-featured-snap__icon img");
   if (images.length > 0) {
     for (let i = 0, ii = images.length; i < ii; i += 1) {
