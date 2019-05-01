@@ -99,6 +99,21 @@ def convert_navigation_url(url, link):
     return url
 
 
+def build_pagination_link(snap_searched, snap_category, page):
+    params = []
+
+    if snap_searched != "":
+        params.append("q=" + snap_searched)
+
+    if snap_category != "":
+        params.append("category=" + snap_category)
+
+    if page:
+        params.append("page=" + str(page))
+
+    return "/search?" + "&".join(params)
+
+
 def convert_channel_maps(channel_map):
     """Converts channel maps list to format easier to manipulate
 
@@ -378,3 +393,13 @@ def get_videos(media):
     return [
         get_video_embed_code(m["url"]) for m in media if m["type"] == "video"
     ]
+
+
+def promote_snap_with_icon(snaps):
+    snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
+
+    snap_with_icon_index = snaps.index(snap_with_icon)
+
+    snaps.insert(0, snaps.pop(snap_with_icon_index))
+
+    return snaps

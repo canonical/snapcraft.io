@@ -18,21 +18,6 @@
   <section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
   <div class="row">
     <form action="/search" class="p-form p-form--inline p-form--search">
-      <div class="p-form__group p-form__group--no-grow">
-        <label for="category-input" class="u-off-screen">Category</label>
-        <div class="p-form__control u-clearfix">
-          <select id="category-input" name="category" value="{{ category }}" class="u-no-margin--bottom">
-            <option value="">All snaps</option>
-            {% for cat in categories %}
-              <option value="{{ cat.slug }}"
-              {% if category == cat.slug %}
-                selected="selected"
-              {% endif %}
-              >{{ cat.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
       <div class="p-form__group">
         <label for="search-input" class="u-off-screen">Search</label>
         <div class="p-form__control u-clearfix">
@@ -45,7 +30,7 @@
   </section>
 
   <section class="p-strip is-shallow">
-    {% if snaps %}
+    {% if searched_snaps or featured_snaps %}
       <div class="row">
         {% if not query and category_display %}
           <a href="/store">&lsaquo; Categories</a>
@@ -59,11 +44,26 @@
         {% endif %}
       </div>
       <div class="row">
-        <div class="snapcraft-p-grid">
-          {% for snap in snaps %}
-            {% include 'store/_media-object-snap-partial.html' %}
-          {% endfor %}
-        </div>
+        {% if not query and category_display and featured_snaps %}
+          {% set has_featured = True %}
+          {% set show_summary = True %}
+          {% set snaps = featured_snaps %}
+          {% include "store/_category-partial.html" %}
+
+          <h3>All {{ category_display|lower }} snaps</h3>
+          <div class="snapcraft-p-grid">
+            {% set show_summary = False %}
+            {% for snap in searched_snaps %}
+              {% include 'store/_media-object-snap-partial.html' %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="snapcraft-p-grid">
+            {% for snap in searched_snaps %}
+              {% include 'store/_media-object-snap-partial.html' %}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     {% else %}
       <div class="row">
