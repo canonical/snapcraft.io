@@ -135,9 +135,6 @@ def store_blueprint(store_query=None, testing=False):
 
         size = 48
 
-        if page == 1:
-            size = 46
-
         error_info = {}
         searched_results = []
 
@@ -185,24 +182,18 @@ def store_blueprint(store_query=None, testing=False):
                 page=total_pages,
             )
 
-        # links = logic.get_pages_details(
-        #     flask.request.base_url,
-        #     (
-        #         searched_results["_links"]
-        #         if "_links" in searched_results
-        #         else []
-        #     ),
-        # )
-
         featured_snaps = []
 
         if snap_category_display and page == 1:
             if snaps_results[0]["icon_url"] == "":
                 snaps_results = logic.promote_snap_with_icon(snaps_results)
 
-            if len(snaps_results) >= 10:
-                featured_snaps = snaps_results[:10]
-                snaps_results = snaps_results[10:]
+            if snap_category == "featured" or len(snaps_results) < 20:
+                featured_snaps = snaps_results
+                snaps_results = []
+            else:
+                featured_snaps = snaps_results[:20]
+                snaps_results = snaps_results[20:]
 
         context = {
             "query": snap_searched,

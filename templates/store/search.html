@@ -29,12 +29,12 @@
   </div>
   </section>
 
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-shallow u-no-padding--bottom">
     {% if searched_snaps or featured_snaps %}
       <div class="row">
         {% if not query and category_display %}
           <a href="/store">&lsaquo; Categories</a>
-          <h2>{{ category_display }} snaps</h2>
+          <h2>{{ category_display }} snaps{% if page > 1 %} <small>page {{ page }}</small>{% endif %}</h2>
         {% else %}
           {% if total %}
             <h2>We’ve found {{ total }} snaps</h2>
@@ -43,20 +43,26 @@
           {% endif %}
         {% endif %}
       </div>
-      <div class="row">
+      <div class="row js-store-category">
         {% if not query and category_display and featured_snaps %}
           {% set has_featured = True %}
           {% set show_summary = True %}
           {% set snaps = featured_snaps %}
           {% include "store/_category-partial.html" %}
-
-          <h3>All {{ category_display|lower }} snaps</h3>
-          <div class="snapcraft-p-grid">
-            {% set show_summary = False %}
-            {% for snap in searched_snaps %}
-              {% include 'store/_media-object-snap-partial.html' %}
-            {% endfor %}
+        </div>
+        {% if searched_snaps %}
+          <div class="p-strip is-shallow u-no-padding--bottom">
+              <div class="row">
+                <h3>All {{ category_display|lower }} snaps</h3>
+                <div class="snapcraft-p-grid">
+                  {% set show_summary = False %}
+                  {% for snap in searched_snaps %}
+                    {% include 'store/_media-object-snap-partial.html' %}
+                  {% endfor %}
+                </div>
+              </div>
           </div>
+        {% endif %}
         {% else %}
           <div class="snapcraft-p-grid">
             {% for snap in searched_snaps %}
@@ -85,5 +91,16 @@
       </div>
     </nav>
   </section>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if page == 1 %}
+    <script src="{{ static_url('js/dist/public.js') }}"></script>
+    <script>
+      Raven.context(function () {
+        snapcraft.public.getColour(document.querySelector(".js-store-category"));
+      });
+    </script>
   {% endif %}
 {% endblock %}

@@ -28,7 +28,7 @@
 
   <section class="p-strip is-shallow">
     <div class="row">
-        <h3 class="u-float--left">Featured</h3>
+        <h2 class="u-float--left">Featured</h2>
         <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small">See more...</a>
     </div>
     <div class="row">
@@ -45,7 +45,7 @@
   {% for category in categories %}
     <section class="p-strip is-shallow">
       <div class="row">
-          <h3 class="u-float--left">{{ category.name }}</h3>
+          <h2 class="u-float--left">{{ category.name }}</h2>
           <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float--right u-hide--small">See more...</a>
       </div>
       <div data-category="{{ category.slug }}" class="row js-store-category">

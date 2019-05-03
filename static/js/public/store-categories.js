@@ -63,7 +63,9 @@ function getCategory(holder) {
  */
 function storeCategories() {
   const featured = document.querySelector("#js-snap-featured");
-  getColour(featured);
+  if (featured) {
+    getColour(featured);
+  }
 
   const holders = document.querySelectorAll(".js-store-category");
 
@@ -72,4 +74,4 @@ function storeCategories() {
   }
 }
 
-export { storeCategories };
+export { storeCategories, getColour };
