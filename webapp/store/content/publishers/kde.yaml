@@ -373,7 +373,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/ksirk.png",
         "origin": "kde",
         "package_name": "ksirk",
         "publisher": "KDE",
@@ -384,7 +384,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/ksnakeduel_Tm67e6C.png",
         "origin": "kde",
         "package_name": "ksnakeduel",
         "publisher": "KDE",
@@ -406,7 +406,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/ksudoku.png",
         "origin": "kde",
         "package_name": "ksudoku",
         "publisher": "KDE",
@@ -417,7 +417,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/kteatime_e2guu9d.png",
         "origin": "kde",
         "package_name": "kteatime",
         "publisher": "KDE",
@@ -428,7 +428,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/ktimer_NfrluAs.png",
         "origin": "kde",
         "package_name": "ktimer",
         "publisher": "KDE",
@@ -472,7 +472,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/kubrick.png",
         "origin": "kde",
         "package_name": "kubrick",
         "publisher": "KDE",
@@ -483,7 +483,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/kwordquiz.png",
         "origin": "kde",
         "package_name": "kwordquiz",
         "publisher": "KDE",
@@ -494,7 +494,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/minuet.png",
         "origin": "kde",
         "package_name": "minuet",
         "publisher": "KDE",
@@ -527,7 +527,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/parley.png",
         "origin": "kde",
         "package_name": "parley",
         "publisher": "KDE",
@@ -549,7 +549,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/rocs.png",
         "origin": "kde",
         "package_name": "rocs",
         "publisher": "KDE",
