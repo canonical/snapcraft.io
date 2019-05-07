@@ -1,0 +1,29 @@
+name: |
+  The name must be unique in the Snap Store. Valid snap names consist of at
+  least two lower-case alphanumeric characters and can contain hyphens.
+  They cannot consist of only numbers and cannot start or end with a hyphen.
+version: |
+  The version is a string that is assigned to the project by its developers,
+  according to their development practices. It is a free text field that should
+  be human readable and tell the user what content to expect from a snap.
+summary: |
+  A sentence summarising the snap in short and simple terms.
+description: |
+  A multi-line description of the snap. This should be a more in-depth look at
+  what your snap does and who may find it most useful.
+confinement: |
+  Confinement determines if the snap should be restricted in access or not.
+  Possible values are <b>strict</b> (for no access outside of declared interfaces through plugs),
+  <b>devmode</b> (for unrestricted access) or <b>classic</b>.
+base: |
+  A base is a special kind of snap that provides a minimal set of libraries
+  common to most applications. A base snap mounts itself as the root filesystem
+  within your snap so that when your application runs, the base’s library paths
+  are searched directly after the paths for your specific snap.
+parts: |
+  Parts are a set of building blocks which are usually independent. These
+  building blocks consist of either code, pre-built packages or other assets.
+  At times some blocks depend on another and as such may be built in a defined
+  sequence.
+apps: |
+  A map of app-names representing entry points to run for the snap.

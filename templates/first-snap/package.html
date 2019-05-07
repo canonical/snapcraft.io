@@ -63,122 +63,19 @@
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
+            <div class="row">
             <div class="col-8">
-              <ol class="p-list-step has-margin is-nested is-alpha">
-                <li class="p-list-step__item">
-                  <h4 class="p-list-step__title">
-                    Open the snapcraft.yaml file in the root of the project
-                  </h4>
-                  {% set snippet_value = steps.createDir %}
-                  {% set snippet_id = "createdir" %}
-                  {% include "/partials/_code-snippet-multi.html" %}
-                </li>
-                <li class="p-list-step__item">
-                  <h4 class="p-list-step__title">
-                    The snapcraft.yaml file starts with a small amount of human-readable metadata.
-                  </h4>
-                  <div class="p-list-step__content">
-                    {% set snippet_value = steps.metadata %}
-                    {% set snippet_id = "metadata" %}
-                    {% include "/partials/_code.html" %}
-                    {% for item in steps.explain.metadata %}
-                      {% if item.text %}
-                        <p>{{ item.text|safe }}</p>
-                      {% elif item.code %}
-                        <pre><code>{{ item.code }}</code></pre>
-                      {% elif item.warning %}
-                        <div class="p-notification--caution">
-                          <p class="p-notification__response">
-                            {{ item.warning|replace("${name}", snap_name)|safe }}
-                          </p>
-                        </div>
-                      {% endif %}
-                    {% endfor %}
+              <p>A snapcraft.yaml file holds the basic meta data for the snap.</p>
+              <p>You can edit the meta data later on. For now we have generated an example snapcraft.yaml for you using the snap name you have chosen.</p>
+              <div class="p-annotated-code">
+                {% for key in snapcraft_yaml %}
+                  <div class="p-annotated-code__block p-tooltip p-tooltip--btm-center">
+                    <code>{{ snapcraft_yaml[key]|replace("${name}", snap_name) }}</code>
+                    <span class="p-tooltip__message">{{ annotations[key]|safe }}</span>
                   </div>
-                </li>
-                <li class="p-list-step__item">
-                  <h4 class="p-list-step__title">
-                    Security model
-                  </h4>
-                  <div class="p-list-step__content">
-                    {% for item in steps.explain.security %}
-                      {% if item.text %}
-                        <p>{{ item.text|safe }}</p>
-                      {% elif item.code %}
-                        <pre><code>{{ item.code }}</code></pre>
-                      {% elif item.warning %}
-                        <div class="p-notification--caution">
-                          <p class="p-notification__response">
-                            {{ item.warning|replace("${name}", snap_name)|safe }}
-                          </p>
-                        </div>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </li>
-                {% if steps.explain.base %}
-                <li class="p-list-step__item">
-                  <h4 class="p-list-step__title">
-                    Base
-                  </h4>
-                  <div class="p-list-step__content">
-                    {% for item in steps.explain.base %}
-                      {% if item.text %}
-                        <p>{{ item.text|safe }}</p>
-                      {% elif item.code %}
-                        <pre><code>{{ item.code }}</code></pre>
-                      {% elif item.warning %}
-                        <div class="p-notification--caution">
-                          <p class="p-notification__response">
-                            {{ item.warning|replace("${name}", snap_name)|safe }}
-                          </p>
-                        </div>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </li>
-                {% endif %}
-                <li class="p-list-step__item">
-                  <h4 class="p-list-step__title">
-                    Parts
-                  </h4>
-                  <div class="p-list-step__content">
-                    {% for item in steps.explain.parts %}
-                      {% if item.text %}
-                        <p>{{ item.text|safe }}</p>
-                      {% elif item.code %}
-                        <pre><code>{{ item.code }}</code></pre>
-                      {% elif item.warning %}
-                        <div class="p-notification--caution">
-                          <p class="p-notification__response">
-                            {{ item.warning|replace("${name}", snap_name)|safe }}
-                          </p>
-                        </div>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </li>
-                <li class="p-list-step__item">
-                  <h4 class="p-list-step__title">
-                    Apps
-                  </h4>
-                  <div class="p-list-step__content">
-                    {% for item in steps.explain.apps %}
-                    {% if item.text %}
-                    <p>{{ item.text|safe }}</p>
-                    {% elif item.code %}
-                    <pre><code>{{ item.code }}</code></pre>
-                    {% elif item.warning %}
-                    <div class="p-notification--caution">
-                      <p class="p-notification__response">
-                        {{ item.warning|replace("${name}", snap_name)|safe }}
-                      </p>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                  </div>
-                </li>
-              </ol>
+                {% endfor %}
+              </div>
+            </div>
             </div>
           </section>
         </li>
