@@ -1,9 +1,12 @@
 import os
 import flask
+import re
 from io import StringIO
 from ruamel.yaml import YAML
 
 from webapp.first_snap import logic
+
+YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
 
 yaml = YAML()
 
@@ -84,7 +87,15 @@ def get_package(language, operating_system):
             data = {}
             data[key] = snapcraft_yaml[key]
             yaml.dump(data, content)
-            snapcraft_yaml[key] = content.getvalue()
+            content = content.getvalue()
+
+            # replace ${name} placeholder with snap name
+            content = content.replace("${name}", snap_name)
+
+            # assuming content starts with yaml key name, wrap it in <b>
+            # for some code highligthing in HTML
+            content_HTML = re.sub(YAML_KEY_REGEXP, r"<b>\1</b>\2", content)
+            snapcraft_yaml[key] = content_HTML
         context["snapcraft_yaml"] = snapcraft_yaml
         context["annotations"] = annotations
         return flask.render_template("first-snap/package.html", **context)

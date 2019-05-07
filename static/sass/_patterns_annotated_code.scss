@@ -9,6 +9,19 @@
     margin-top: 0;
     text-align: left;
     text-shadow: none;
+
+    code b {
+      color: $color-positive;
+      font-weight: bold;
+    }
+
+    &:hover .p-annotated-code__block {
+      opacity: .5;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 
   .p-annotated-code__block {
