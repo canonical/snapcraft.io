@@ -29,7 +29,7 @@
   <section class="p-strip is-shallow">
     <div class="row">
         <h2 class="u-float--left">Featured</h2>
-        <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small">See more...</a>
+        <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
     <div class="row">
       {% set snaps = featured_snaps %}
@@ -46,7 +46,7 @@
     <section class="p-strip is-shallow">
       <div class="row">
           <h2 class="u-float--left">{{ category.name }}</h2>
-          <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float--right u-hide--small">See more...</a>
+          <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
       </div>
       <div data-category="{{ category.slug }}" class="row js-store-category">
         {% include "store/_empty-category-partial.html" %}

@@ -135,6 +135,9 @@ def store_blueprint(store_query=None, testing=False):
 
         size = 48
 
+        if page == 1:
+            size = 47
+
         error_info = {}
         searched_results = []
 
@@ -147,6 +150,8 @@ def store_blueprint(store_query=None, testing=False):
             )
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
+
+        total_pages = None
 
         if "total" in searched_results:
             total_results_count = searched_results["total"]
@@ -170,30 +175,37 @@ def store_blueprint(store_query=None, testing=False):
                 page=page - 1,
             )
 
-        if page < total_pages:
+        if not total_pages or page < total_pages:
             links["next"] = logic.build_pagination_link(
                 snap_searched=snap_searched,
                 snap_category=snap_category,
                 page=page + 1,
             )
-            links["last"] = logic.build_pagination_link(
-                snap_searched=snap_searched,
-                snap_category=snap_category,
-                page=total_pages,
-            )
+            if total_pages:
+                links["last"] = logic.build_pagination_link(
+                    snap_searched=snap_searched,
+                    snap_category=snap_category,
+                    page=total_pages,
+                )
 
         featured_snaps = []
 
-        if snap_category_display and page == 1:
-            if snaps_results[0]["icon_url"] == "":
-                snaps_results = logic.promote_snap_with_icon(snaps_results)
+        number_of_featured_snaps = 19
 
-            if snap_category == "featured" or len(snaps_results) < 20:
-                featured_snaps = snaps_results
-                snaps_results = []
-            else:
-                featured_snaps = snaps_results[:20]
-                snaps_results = snaps_results[20:]
+        if snap_category_display and page == 1:
+            if snaps_results[0]:
+                if snaps_results[0]["icon_url"] == "":
+                    snaps_results = logic.promote_snap_with_icon(snaps_results)
+
+                if (
+                    snap_category == "featured"
+                    or len(snaps_results) < number_of_featured_snaps
+                ):
+                    featured_snaps = snaps_results
+                    snaps_results = []
+                else:
+                    featured_snaps = snaps_results[:number_of_featured_snaps]
+                    snaps_results = snaps_results[number_of_featured_snaps:]
 
         context = {
             "query": snap_searched,

@@ -29,7 +29,7 @@
   </div>
   </section>
 
-  <section class="p-strip is-shallow u-no-padding--bottom">
+  <section class="p-strip is-shallow">
     {% if searched_snaps or featured_snaps %}
       <div class="row">
         {% if not query and category_display %}
@@ -49,20 +49,20 @@
           {% set show_summary = True %}
           {% set snaps = featured_snaps %}
           {% include "store/_category-partial.html" %}
-        </div>
-        {% if searched_snaps %}
-          <div class="p-strip is-shallow u-no-padding--bottom">
-              <div class="row">
-                <h3>All {{ category_display|lower }} snaps</h3>
-                <div class="snapcraft-p-grid">
-                  {% set show_summary = False %}
-                  {% for snap in searched_snaps %}
-                    {% include 'store/_media-object-snap-partial.html' %}
-                  {% endfor %}
-                </div>
-              </div>
           </div>
-        {% endif %}
+          {% if searched_snaps %}
+            <div class="p-strip is-shallow u-no-padding--bottom">
+                <div class="row">
+                  <h3>All {{ category_display|lower }} snaps</h3>
+                  <div class="snapcraft-p-grid">
+                    {% set show_summary = False %}
+                    {% for snap in searched_snaps %}
+                      {% include 'store/_media-object-snap-partial.html' %}
+                    {% endfor %}
+                  </div>
+                </div>
+            </div>
+          {% endif %}
         {% else %}
           <div class="snapcraft-p-grid">
             {% for snap in searched_snaps %}
@@ -70,16 +70,16 @@
             {% endfor %}
           </div>
         {% endif %}
-      </div>
     {% else %}
       <div class="row">
         <h2>We couldn't find anything for your search <div class="no-search-query">{{query}}.</div></h2>
         <h4>Try using some different, or more general keywords.</h4>
+      </div>
     {% endif %}
   </section>
 
   {% if links %}
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-shallow u-no-padding--top">
     <nav class="row">
       <div class="u-float--left u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}

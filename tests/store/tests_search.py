@@ -39,12 +39,6 @@ class GetSearchViewTest(TestCase):
 
     @responses.activate
     def test_search_q_no_results(self):
-        responses.add(
-            responses.Response(
-                method="GET", url=self.categories_api_url, json={}, status=200
-            )
-        )
-
         payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
@@ -64,20 +58,14 @@ class GetSearchViewTest(TestCase):
         self.assert_context("query", "snap")
         self.assert_context("category", "")
         self.assert_context("category_display", None)
-        self.assert_context("categories", [])
-        self.assert_context("snaps", {})
+        self.assert_context("searched_snaps", {})
+        self.assert_context("featured_snaps", [])
         self.assert_context("total", 0)
-        self.assert_context("links", {})
+        self.assert_context("links", {"next": "/search?q=snap&page=2"})
         self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_zero_as_page(self):
-        responses.add(
-            responses.Response(
-                method="GET", url=self.categories_api_url, json={}, status=200
-            )
-        )
-
         payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
@@ -98,20 +86,14 @@ class GetSearchViewTest(TestCase):
         self.assert_context("query", "snap")
         self.assert_context("category", "")
         self.assert_context("category_display", None)
-        self.assert_context("categories", [])
-        self.assert_context("snaps", {})
+        self.assert_context("featured_snaps", [])
+        self.assert_context("searched_snaps", {})
         self.assert_context("total", 0)
-        self.assert_context("links", {})
+        self.assert_context("links", {"next": "/search?q=snap&page=2"})
         self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_results(self):
-        responses.add(
-            responses.Response(
-                method="GET", url=self.categories_api_url, json={}, status=200
-            )
-        )
-
         payload = {
             "_embedded": {
                 "clickindex:package": [
@@ -145,9 +127,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context("query", "snap")
         self.assert_context("category", "")
         self.assert_context("category_display", None)
-        self.assert_context("categories", [])
+        self.assert_context("featured_snaps", [])
         self.assert_context(
-            "snaps",
+            "searched_snaps",
             [
                 {"package_name": "toto"},
                 {"package_name": "tata"},
@@ -155,25 +137,12 @@ class GetSearchViewTest(TestCase):
             ],
         )
         self.assert_context("total", 3)
-        self.assert_context(
-            "links",
-            {
-                "last": "http://localhost/search?q=snap&limit=1&offset=0",
-                "next": "http://localhost/search?q=snap&limit=1&offset=0",
-                "self": "http://localhost/search?q=snap&limit=1&offset=0",
-            },
-        )
+        self.assert_context("links", {})
 
         self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_results_but_no_total(self):
-        responses.add(
-            responses.Response(
-                method="GET", url=self.categories_api_url, json={}, status=200
-            )
-        )
-
         payload = {
             "_embedded": {
                 "clickindex:package": [
@@ -206,9 +175,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context("query", "snap")
         self.assert_context("category", "")
         self.assert_context("category_display", None)
-        self.assert_context("categories", [])
+        self.assert_context("featured_snaps", [])
         self.assert_context(
-            "snaps",
+            "searched_snaps",
             [
                 {"package_name": "toto"},
                 {"package_name": "tata"},
@@ -216,13 +185,6 @@ class GetSearchViewTest(TestCase):
             ],
         )
         self.assert_context("total", None)
-        self.assert_context(
-            "links",
-            {
-                "last": "http://localhost/search?q=snap&limit=1&offset=0",
-                "next": "http://localhost/search?q=snap&limit=1&offset=0",
-                "self": "http://localhost/search?q=snap&limit=1&offset=0",
-            },
-        )
+        self.assert_context("links", {"next": "/search?q=snap&page=2"})
 
         self.assert_context("error_info", {})
