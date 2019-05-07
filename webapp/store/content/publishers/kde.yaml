@@ -362,6 +362,17 @@ snaps: [
     },
     {
         "developer_validation": "verified",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/04/unnamed.png",
+        "origin": "krita",
+        "package_name": "krita",
+        "publisher": "Stichting Krita Foundation",
+        "summary": "Digital Painting, Creative Freedom",
+        "description": "Krita is the full-featured digital art studio.\n\nIt is perfect for sketching and painting, and presents an end\u2013to\u2013end solution for creating digital painting files from scratch by masters.\n\nKrita is a great choice for creating concept art, comics, textures for rendering and matte paintings. Krita supports many colorspaces like RGB and CMYK  at 8 and 16 bits integer channels, as well as 16 and 32 bits floating point channels.\n\nHave fun painting with the advanced brush engines, amazing filters and many handy features that make Krita enormously productive.",
+        "title": "Krita",
+        "background": ""
+    },
+    {
+        "developer_validation": "verified",
         "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/01/icon_13.png",
         "origin": "kde",
         "package_name": "kruler",
@@ -395,7 +406,7 @@ snaps: [
     },
     {
         "developer_validation": "verified",
-        "icon_url": "",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/05/kspaceduel.png",
         "origin": "kde",
         "package_name": "kspaceduel",
         "publisher": "KDE",
