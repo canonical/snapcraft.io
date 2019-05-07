@@ -1,3 +1,4 @@
+name: test-moos-{name}
 macos:
   - action: Create a Linux virtual machine for testing snaps
     command: multipass launch -n testvm
