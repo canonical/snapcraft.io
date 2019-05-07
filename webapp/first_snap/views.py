@@ -1,10 +1,11 @@
 import os
 import flask
+from io import StringIO
 from ruamel.yaml import YAML
 
 from webapp.first_snap import logic
 
-yaml = YAML(typ="safe")
+yaml = YAML()
 
 first_snap = flask.Blueprint(
     "fist_snap_flow",
@@ -50,8 +51,14 @@ def get_language(language):
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
+    snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
+    annotations_filename = "first_snap/content/snapcraft_yaml_annotations.yaml"
+
     snap_name_cookie = f"fsf_snap_name_{language}"
     steps = get_file(filename)
+    snapcraft_yaml = get_file(snapcraft_yaml_filename)
+    annotations = get_file(annotations_filename)
+
     if not steps:
         return flask.abort(404)
 
@@ -70,7 +77,21 @@ def get_package(language, operating_system):
         "has_user_chosen_name": has_user_chosen_name,
     }
 
-    return flask.render_template("first-snap/package.html", **context)
+    if snapcraft_yaml:
+        # dump each top level key individually to render as annotated code
+        for key in snapcraft_yaml:
+            content = StringIO()
+            data = {}
+            data[key] = snapcraft_yaml[key]
+            yaml.dump(data, content)
+            snapcraft_yaml[key] = content.getvalue()
+        context["snapcraft_yaml"] = snapcraft_yaml
+        context["annotations"] = annotations
+        return flask.render_template("first-snap/package.html", **context)
+    else:
+        return flask.render_template(
+            "first-snap/package-deprecated.html", **context
+        )
 
 
 @first_snap.route("/<language>/<operating_system>/build")
@@ -78,7 +99,6 @@ def get_build(language, operating_system):
     filename = f"first_snap/content/{language}/build.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
     steps = get_file(filename)
-
     operating_system_parts = operating_system.split("-")
 
     operating_system_only = operating_system_parts[0]
