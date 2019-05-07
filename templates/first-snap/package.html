@@ -70,7 +70,7 @@
               <div class="p-annotated-code">
                 {% for key in snapcraft_yaml %}
                   <div class="p-annotated-code__block p-tooltip p-tooltip--btm-center">
-                    <code>{{ snapcraft_yaml[key]|replace("${name}", snap_name) }}</code>
+                    <code>{{ snapcraft_yaml[key]|safe }}</code>
                     <span class="p-tooltip__message">{{ annotations[key]|safe }}</span>
                   </div>
                 {% endfor %}
