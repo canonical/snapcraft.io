@@ -43,8 +43,8 @@
     }
 
     .p-media-object__image {
-      max-height: 3rem;
-      max-width: 3rem;
+      height: 3rem;
+      width: 3rem;
     }
 
     &.is-placeholder {
@@ -52,8 +52,6 @@
         background: $color-mid-light;
         border-radius: 2px;
         display: block;
-        height: 3rem;
-        width: 3rem;
       }
 
       .p-media-object__title {
@@ -91,14 +89,13 @@
 
   .snapcraft-p-grid--featured {
     .p-media-object--snap {
-
       .p-media-object__image {
-        max-height: 3rem;
-        max-width: 3rem;
+        height: 3rem;
+        width: 3rem;
 
         @media screen and (min-width: $breakpoint-small) {
-          max-height: 5rem;
-          max-width: 5rem;
+          height: 5rem;
+          width: 5rem;
         }
       }
     }
