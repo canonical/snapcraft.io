@@ -71,6 +71,9 @@ $color-navigation-background: #252525;
 @import 'patterns_button_spinner';
 @include p-button-spinner;
 
+@import 'patterns_annotated_code';
+@include p-annotated-code;
+
 @import 'map';
 @include snap-details-map;
 
