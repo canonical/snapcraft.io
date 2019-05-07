@@ -6,6 +6,7 @@ function getColour(holder) {
     const fac = new Fac();
     const colour = fac.getColor(image, { defaultColor: [238, 238, 238] });
     parent.style.backgroundColor = colour.rgb;
+    parent.classList.remove("is-light");
     parent.classList.add(colour.isDark ? "is-dark" : "is-light");
   }
 
