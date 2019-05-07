@@ -44,8 +44,6 @@
 
     .p-media-object__image {
       height: 3rem;
-      max-height: 3rem;
-      max-width: 3rem;
       width: 3rem;
     }
 
@@ -93,14 +91,10 @@
     .p-media-object--snap {
       .p-media-object__image {
         height: 3rem;
-        max-height: 3rem;
-        max-width: 3rem;
         width: 3rem;
 
         @media screen and (min-width: $breakpoint-small) {
           height: 5rem;
-          max-height: 5rem;
-          max-width: 5rem;
           width: 5rem;
         }
       }
