@@ -17,6 +17,8 @@ class BlogPosts {
     this.holder = document.querySelector(holderSelector);
     this.template = document.querySelector(templateSelector);
 
+    this.limit = 3;
+
     if (!this.holder) {
       throw new Error(`${holderSelector} does not exist`);
     }
@@ -46,11 +48,17 @@ class BlogPosts {
           });
         }
 
-        posts.forEach(post => {
+        const cols = 12 / this.limit;
+
+        posts.forEach((post, index) => {
+          if (index >= this.limit) {
+            return;
+          }
           let postHTML = this.template.innerHTML;
           Object.keys(post).forEach(key => {
             postHTML = postHTML.split("${" + key + "}").join(post[key]);
           });
+          postHTML = postHTML.split("${size}").join(`col-${cols}`);
           postsHTML.push(postHTML);
         });
 
@@ -82,6 +90,8 @@ function snapDetailsPosts(
   if (!snap) {
     throw new Error("Snap not defined");
   }
+
+  this.limit = blogPosts.holder.dataset.limit;
 
   blogPosts.path = snap;
 

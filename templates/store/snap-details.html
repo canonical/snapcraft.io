@@ -192,7 +192,7 @@
   </div>
 
   {% if not IS_BRAND_STORE %}
-    <div data-js="blog-articles" style="display: none;">
+    {% if package_name == "hiri" %}
       <div class="row">
         <div class="col-12">
           <hr />
@@ -200,14 +200,40 @@
       </div>
       <div class="p-strip is-shallow">
         <div class="row">
-          <div class="col-3">
+          <div class="col-4">
+            <h3 class="p-heading--four">Case study</h3>
+          </div>
+          <div class="col-8">
             <h3 class="p-heading--four">Related blog posts</h3>
           </div>
         </div>
-        <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+        <div class="row u-equal-height" data-js="blog-articles">
+          <div class="col-4">
+            <h3 class="p-heading--four">
+              <a href="https://www.ubuntu.com/engage/hiri-case-study">Hiri successfully monetises their snap to dispel myths around proprietary Linux apps </a>
+            </h3>
+          </div>
+          <div class="col-8" data-js="blog-article-list" data-snap="{{ package_name }}" data-limit="2"></div>
         </div>
       </div>
-    </div>
+    {% else %}
+      <div data-js="blog-articles" style="display: none;">
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <div class="col-3">
+              <h3 class="p-heading--four">Related blog posts</h3>
+            </div>
+          </div>
+          <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+          </div>
+        </div>
+      </div>
+    {% endif %}
   {% endif %}
 
   {% if countries or normalized_os %}
@@ -287,6 +313,7 @@
   {# templates #}
   {% set article_title = {'rendered': '${title}'} %}
   {% set article = {'slug': '${slug}', 'title': article_title} %}
+  {% set size = "${size}" %}
   <script type="text/template" id="blog-article-template">
     {% include 'partials/blog-card--minimal.html' %}
   </script>
