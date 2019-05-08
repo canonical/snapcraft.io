@@ -1,6 +1,7 @@
 import flask
 from webapp import authentication
 import webapp.api.dashboard as api
+import webapp.api.marketo as marketo_api
 from webapp.decorators import login_required
 from webapp.api.exceptions import (
     AgreementNotSigned,
@@ -78,11 +79,21 @@ def get_account_details():
         return _handle_errors(api_error)
 
     flask_user = flask.session["openid"]
+
+    marketo = marketo_api.MarketoApi()
+    marketo_user = marketo.get_user(flask_user["email"])
+    marketo_subscribed = marketo.get_newsletter_subscription(
+        marketo_user["id"]
+    )
+
     context = {
         "image": flask_user["image"],
         "username": flask_user["nickname"],
         "displayname": flask_user["fullname"],
         "email": flask_user["email"],
+        "subscriptions": {
+            "newsletter": marketo_subscribed["snapcraftnewsletter"]
+        },
     }
 
     return flask.render_template("publisher/account-details.html", **context)
