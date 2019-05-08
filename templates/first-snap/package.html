@@ -59,13 +59,13 @@
           <button aria-expanded="false" type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" >
             <h4 class="u-no-margin--bottom">
               <span class="p-accordion__step">3.</span>
-              Update your snapcraft.yaml
+              Generate and download snapcraft.yaml
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
             <div class="row">
             <div class="col-8">
-              <p>A snapcraft.yaml file holds the basic meta data for the snap.</p>
+              <p>A <a href="https://docs.snapcraft.io/snapcraft-format">snapcraft.yaml file</a> holds the basic meta data for the snap.</p>
               <p>You can edit the meta data later on. For now we have generated an example snapcraft.yaml for you using the snap name you have chosen.</p>
               <div class="p-annotated-code">
                 {% for key in snapcraft_yaml %}
@@ -75,6 +75,7 @@
                   </div>
                 {% endfor %}
               </div>
+              <p><a class="p-button--positive" href="/first-snap/{{ language }}/snapcraft.yaml" download>Download snapcraft.yaml file</a>
             </div>
             </div>
           </section>

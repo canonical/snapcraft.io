@@ -219,7 +219,7 @@ function initChooseName(formEl, language) {
     event.preventDefault();
 
     // set value in cookie an reload (to render with a new name)
-    document.cookie = `fsf_snap_name_${language}=${snapNameInput.value};`;
+    document.cookie = `fsf_snap_name_${language}=${snapNameInput.value};path=/`;
     window.location.reload();
   });
 }
