@@ -18,16 +18,50 @@ first_snap = flask.Blueprint(
 )
 
 
-def get_file(file):
+def get_file(filename, replaces={}):
+    """
+    Reads a file, replaces occurences of all the keys in
+    `replaces` with the correspondant values and returns an
+    ordered dict with the YAML keys
+
+    Keyword arguments:
+    filename -- name if the file to load.
+    replaces -- key/values to replace in the file content (default {})
+    """
+    filepath = os.path.join(flask.current_app.root_path, filename)
     try:
-        with open(
-            os.path.join(flask.current_app.root_path, file), "r"
-        ) as stream:
-            data = yaml.load(stream)
+        with open(filepath, "r") as f:
+            raw_data = f.read()
+            for key in replaces:
+                raw_data = raw_data.replace(key, replaces[key])
+            data = yaml.load(raw_data)
     except Exception:
         data = None
 
     return data
+
+
+def transform_snapcraft_yaml(snapcraft_yaml):
+    """
+    Transforms a snapcraft.yaml dict top-level key
+    values into renderable HTML.
+
+    Keyword arguments:
+    snapcraft_yaml -- content of a snapcraft.yaml file
+    """
+    for key in snapcraft_yaml:
+        content = StringIO()
+        data = {}
+        data[key] = snapcraft_yaml[key]
+        yaml.dump(data, content)
+        content = content.getvalue()
+
+        # Assuming content starts with yaml key name, wrap it in <b>
+        # for some code highligthing in HTML
+        content_HTML = re.sub(YAML_KEY_REGEXP, r"<b>\1</b>\2", content)
+        snapcraft_yaml[key] = content_HTML
+
+    return snapcraft_yaml
 
 
 def directory_exists(file):
@@ -59,8 +93,6 @@ def get_package(language, operating_system):
 
     snap_name_cookie = f"fsf_snap_name_{language}"
     steps = get_file(filename)
-    snapcraft_yaml = get_file(snapcraft_yaml_filename)
-    annotations = get_file(annotations_filename)
 
     if not steps:
         return flask.abort(404)
@@ -80,23 +112,11 @@ def get_package(language, operating_system):
         "has_user_chosen_name": has_user_chosen_name,
     }
 
+    snapcraft_yaml = get_file(snapcraft_yaml_filename, {"${name}": snap_name})
+    annotations = get_file(annotations_filename)
+
     if snapcraft_yaml:
-        # dump each top level key individually to render as annotated code
-        for key in snapcraft_yaml:
-            content = StringIO()
-            data = {}
-            data[key] = snapcraft_yaml[key]
-            yaml.dump(data, content)
-            content = content.getvalue()
-
-            # replace ${name} placeholder with snap name
-            content = content.replace("${name}", snap_name)
-
-            # assuming content starts with yaml key name, wrap it in <b>
-            # for some code highligthing in HTML
-            content_HTML = re.sub(YAML_KEY_REGEXP, r"<b>\1</b>\2", content)
-            snapcraft_yaml[key] = content_HTML
-        context["snapcraft_yaml"] = snapcraft_yaml
+        context["snapcraft_yaml"] = transform_snapcraft_yaml(snapcraft_yaml)
         context["annotations"] = annotations
         return flask.render_template("first-snap/package.html", **context)
     else:
