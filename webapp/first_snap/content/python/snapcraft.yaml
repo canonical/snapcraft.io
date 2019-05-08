@@ -1,9 +1,3 @@
-# This file is based on contents of:
-# https://github.com/snapcraft-docs/offlineimap/blob/master/snapcraft.yaml
-#
-# Contents of this YAML template and snapcraft.yaml in GitHub repo should
-# be kept in sync to make sure tutotials work as expected.
-
 name: ${name}
 version: git
 summary: OfflineIMAP

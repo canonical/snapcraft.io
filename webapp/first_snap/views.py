@@ -85,6 +85,36 @@ def get_language(language):
     )
 
 
+@first_snap.route("/<language>/snapcraft.yaml")
+def get_language_snapcraft_yaml(language):
+    filename = f"first_snap/content/{language}/package.yaml"
+    snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
+    snap_name_cookie = f"fsf_snap_name_{language}"
+    steps = get_file(filename)
+
+    if not steps:
+        return flask.abort(404)
+
+    snap_name = steps["name"]
+
+    if snap_name_cookie in flask.request.cookies:
+        snap_name = flask.request.cookies.get(snap_name_cookie)
+
+    snapcraft_yaml = get_file(snapcraft_yaml_filename, {"${name}": snap_name})
+
+    if not snapcraft_yaml:
+        return flask.abort(404)
+
+    content = StringIO()
+    yaml.dump(snapcraft_yaml, content)
+
+    resp = flask.Response(content.getvalue(), mimetype="text/yaml")
+    resp.headers.extend(
+        {"Content-Disposition": "attachment;filename=snaprcaft.yaml"}
+    )
+    return resp
+
+
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
