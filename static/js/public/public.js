@@ -7,6 +7,7 @@ import initReportSnap from "./snap-details/reportSnap";
 import initEmbeddedCardModal from "./snap-details/embeddedCard";
 import { snapDetailsPosts, seriesPosts } from "./snap-details/blog-posts";
 import { storeCategories } from "./store-categories";
+import { getColour } from "../libs/colours";
 import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
@@ -17,6 +18,7 @@ export {
   screenshots,
   channelMap,
   storeCategories,
+  getColour,
   snapDetailsPosts,
   seriesPosts,
   initAccordion,

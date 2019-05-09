@@ -56,6 +56,11 @@
       }
     }
 
+    .p-featured-snap__icon {
+      width: 9rem;
+      height: 9rem;
+    }
+
     &:hover {
       text-decoration: none;
     }
@@ -106,5 +111,9 @@
         display: block;
       }
     }
+  }
+
+  .p-featured-snap__see-more {
+    margin-top: $sp-small;
   }
 }

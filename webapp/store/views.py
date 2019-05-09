@@ -1,5 +1,5 @@
 import os
-from math import floor
+from math import floor, ceil
 from urllib.parse import quote_plus
 
 import flask
@@ -121,6 +121,7 @@ def store_blueprint(store_query=None, testing=False):
         snap_category = flask.request.args.get(
             "category", default="", type=str
         )
+        page = flask.request.args.get("page", default=1, type=int)
 
         if snap_category:
             snap_category_display = snap_category.capitalize().replace(
@@ -132,25 +133,18 @@ def store_blueprint(store_query=None, testing=False):
         if not snap_searched and not snap_category:
             return flask.redirect(flask.url_for(".homepage"))
 
-        size = flask.request.args.get("limit", default=24, type=int)
-        offset = flask.request.args.get("offset", default=0, type=int)
+        # The default size should be 44 (rows of 4)
+        # it's important that this is smaller than the category page 1 size
+        # below otherwise snaps can be missed out of results
+        size = 44
 
-        try:
-            page = floor(offset / size) + 1
-        except ZeroDivisionError:
-            size = 10
-            page = floor(offset / size) + 1
+        # Page 1 has a snap at the top, and a few rows of 3, followed by rows
+        # of 4 - so we need to offset to ensure there's no hanging snap
+        if snap_category and page == 1:
+            size = 47
 
         error_info = {}
-        categories_results = []
         searched_results = []
-
-        try:
-            categories_results = api.get_categories()
-        except ApiError as api_error:
-            status_code, error_info = _handle_errors(api_error)
-
-        categories = logic.get_categories(categories_results)
 
         try:
             searched_results = api.get_searched_snaps(
@@ -162,29 +156,73 @@ def store_blueprint(store_query=None, testing=False):
         except ApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
+        total_pages = None
+
         if "total" in searched_results:
             total_results_count = searched_results["total"]
+            total_pages = ceil(total_results_count / size)
         else:
             total_results_count = None
 
         snaps_results = logic.get_searched_snaps(searched_results)
-        links = logic.get_pages_details(
-            flask.request.base_url,
-            (
-                searched_results["_links"]
-                if "_links" in searched_results
-                else []
-            ),
-        )
+
+        links = {}
+
+        if page > 1:
+            links["first"] = logic.build_pagination_link(
+                snap_searched=snap_searched,
+                snap_category=snap_category,
+                page=1,
+            )
+            links["prev"] = logic.build_pagination_link(
+                snap_searched=snap_searched,
+                snap_category=snap_category,
+                page=page - 1,
+            )
+
+        if not total_pages or page < total_pages:
+            links["next"] = logic.build_pagination_link(
+                snap_searched=snap_searched,
+                snap_category=snap_category,
+                page=page + 1,
+            )
+            if total_pages:
+                links["last"] = logic.build_pagination_link(
+                    snap_searched=snap_searched,
+                    snap_category=snap_category,
+                    page=total_pages,
+                )
+
+        featured_snaps = []
+
+        # These are the hand-selected "featured snaps" in each category.
+        # We don't have this information on the API, so it's hardcoded.
+        number_of_featured_snaps = 19
+
+        if snap_category_display and page == 1:
+            if snaps_results[0]:
+                if snaps_results[0]["icon_url"] == "":
+                    snaps_results = logic.promote_snap_with_icon(snaps_results)
+
+                if (
+                    snap_category == "featured"
+                    or len(snaps_results) < number_of_featured_snaps
+                ):
+                    featured_snaps = snaps_results
+                    snaps_results = []
+                else:
+                    featured_snaps = snaps_results[:number_of_featured_snaps]
+                    snaps_results = snaps_results[number_of_featured_snaps:]
 
         context = {
             "query": snap_searched,
             "category": snap_category,
             "category_display": snap_category_display,
-            "categories": categories,
-            "snaps": snaps_results,
+            "searched_snaps": snaps_results,
+            "featured_snaps": featured_snaps,
             "total": total_results_count,
             "links": links,
+            "page": page,
             "error_info": error_info,
         }
 

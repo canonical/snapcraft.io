@@ -18,21 +18,6 @@
   <section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
   <div class="row">
     <form action="/search" class="p-form p-form--inline p-form--search">
-      <div class="p-form__group p-form__group--no-grow">
-        <label for="category-input" class="u-off-screen">Category</label>
-        <div class="p-form__control u-clearfix">
-          <select id="category-input" name="category" value="{{ category }}" class="u-no-margin--bottom">
-            <option value="">All snaps</option>
-            {% for cat in categories %}
-              <option value="{{ cat.slug }}"
-              {% if category == cat.slug %}
-                selected="selected"
-              {% endif %}
-              >{{ cat.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
       <div class="p-form__group">
         <label for="search-input" class="u-off-screen">Search</label>
         <div class="p-form__control u-clearfix">
@@ -45,7 +30,7 @@
   </section>
 
   <section class="p-strip is-shallow">
-    {% if snaps %}
+    {% if searched_snaps or featured_snaps %}
       <div class="row">
         {% if not query and category_display %}
           <a href="/store">&lsaquo; Categories</a>
@@ -58,22 +43,43 @@
           {% endif %}
         {% endif %}
       </div>
-      <div class="row">
-        <div class="snapcraft-p-grid">
-          {% for snap in snaps %}
-            {% include 'store/_media-object-snap-partial.html' %}
-          {% endfor %}
-        </div>
-      </div>
+      <div class="row js-store-category">
+        {% if not query and category_display and featured_snaps %}
+          {% set has_featured = True %}
+          {% set show_summary = True %}
+          {% set snaps = featured_snaps %}
+          {% include "store/_category-partial.html" %}
+          </div>
+          {% if searched_snaps %}
+            <div class="p-strip is-shallow u-no-padding--bottom">
+                <div class="row">
+                  <h3>All {{ category_display|lower }} snaps</h3>
+                  <div class="snapcraft-p-grid">
+                    {% set show_summary = False %}
+                    {% for snap in searched_snaps %}
+                      {% include 'store/_media-object-snap-partial.html' %}
+                    {% endfor %}
+                  </div>
+                </div>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="snapcraft-p-grid">
+            {% for snap in searched_snaps %}
+              {% include 'store/_media-object-snap-partial.html' %}
+            {% endfor %}
+          </div>
+        {% endif %}
     {% else %}
       <div class="row">
         <h2>We couldn't find anything for your search <div class="no-search-query">{{query}}.</div></h2>
         <h4>Try using some different, or more general keywords.</h4>
+      </div>
     {% endif %}
   </section>
 
   {% if links %}
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-shallow u-no-padding--top">
     <nav class="row">
       <div class="u-float--left u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
@@ -85,5 +91,20 @@
       </div>
     </nav>
   </section>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if page == 1 %}
+    <script src="{{ static_url('js/dist/public.js') }}"></script>
+    <script>
+      Raven.context(function () {
+        snapcraft.public.getColour(
+          document.querySelector(".js-store-category"),
+          ".p-featured-snap__icon img",
+          ".p-featured-snap"
+        );
+      });
+    </script>
   {% endif %}
 {% endblock %}
