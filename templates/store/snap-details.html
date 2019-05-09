@@ -191,29 +191,6 @@
     </div>
   </div>
 
-  {% if not IS_BRAND_STORE %}
-    {% if package_name == "hiri" %}
-      {% include "partials/_hiri-case-study.html" %}
-    {% else %}
-      <div data-js="blog-articles" class="u-hide">
-        <div class="row">
-          <div class="col-12">
-            <hr />
-          </div>
-        </div>
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <div class="col-3">
-              <h3 class="p-heading--four">Related blog posts</h3>
-            </div>
-          </div>
-          <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
-          </div>
-        </div>
-      </div>
-    {% endif %}
-  {% endif %}
-
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
       <div class="row">
@@ -255,6 +232,29 @@
     </div>
   {% endif %}
 
+  {% if not IS_BRAND_STORE %}
+    {% if package_name == "hiri" %}
+      {% include "partials/_hiri-case-study.html" %}
+    {% else %}
+      <div data-js="blog-articles" class="u-hide">
+        <div class="row">
+          <div class="col-12">
+            <hr />
+          </div>
+        </div>
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <div class="col-3">
+              <h3 class="p-heading--four">Related blog posts</h3>
+            </div>
+          </div>
+          <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+
   {# REPORT SNAP SECTION - hidden in preview #}
   {% if not is_preview and not IS_BRAND_STORE %}
     <div class="row">
@@ -274,11 +274,6 @@
 
   {% if has_publisher_page %}
   <div class="p-strip is-shallow">
-      <div class="row">
-          <div class="col-12">
-            <hr>
-          </div>
-        </div>
       <div class="row">
         <div class="col-6">
           <h3 class="p-heading--four">More snaps from {{ username }}</h3>
