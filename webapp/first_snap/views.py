@@ -20,25 +20,40 @@ first_snap = flask.Blueprint(
 
 def get_file(filename, replaces={}):
     """
-    Reads a file, replaces occurences of all the keys in
-    `replaces` with the correspondant values and returns an
-    ordered dict with the YAML keys
+    Reads a file, replaces occurences of all the keys in `replaces` with
+    the correspondant values and returns the resulting string or None
 
     Keyword arguments:
     filename -- name if the file to load.
     replaces -- key/values to replace in the file content (default {})
     """
     filepath = os.path.join(flask.current_app.root_path, filename)
+
     try:
         with open(filepath, "r") as f:
-            raw_data = f.read()
+            data = f.read()
             for key in replaces:
-                raw_data = raw_data.replace(key, replaces[key])
-            data = yaml.load(raw_data)
+                data = data.replace(key, replaces[key])
     except Exception:
         data = None
 
     return data
+
+
+def get_yaml(filename, replaces={}):
+    """
+    Reads a file, replaces occurences of all the keys in `replaces` with the
+    correspondant values and returns an ordered dict with the YAML content
+
+    Keyword arguments:
+    filename -- name if the file to load.
+    replaces -- key/values to replace in the file content (default {})
+    """
+    try:
+        data = get_file(filename, replaces)
+        return yaml.load(data)
+    except Exception:
+        return None
 
 
 def transform_snapcraft_yaml(snapcraft_yaml):
@@ -90,7 +105,7 @@ def get_language_snapcraft_yaml(language):
     filename = f"first_snap/content/{language}/package.yaml"
     snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_file(filename)
+    steps = get_yaml(filename)
 
     if not steps:
         return flask.abort(404)
@@ -105,14 +120,11 @@ def get_language_snapcraft_yaml(language):
     if not snapcraft_yaml:
         return flask.abort(404)
 
-    content = StringIO()
-    yaml.dump(snapcraft_yaml, content)
-
-    resp = flask.Response(content.getvalue(), mimetype="text/yaml")
-    resp.headers.extend(
-        {"Content-Disposition": "attachment;filename=snaprcaft.yaml"}
+    return flask.Response(
+        snapcraft_yaml,
+        mimetype="text/yaml",
+        headers={"Content-Disposition": "attachment;filename=snaprcaft.yaml"},
     )
-    return resp
 
 
 @first_snap.route("/<language>/<operating_system>/package")
@@ -122,7 +134,7 @@ def get_package(language, operating_system):
     annotations_filename = "first_snap/content/snapcraft_yaml_annotations.yaml"
 
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_file(filename)
+    steps = get_yaml(filename)
 
     if not steps:
         return flask.abort(404)
@@ -142,8 +154,8 @@ def get_package(language, operating_system):
         "has_user_chosen_name": has_user_chosen_name,
     }
 
-    snapcraft_yaml = get_file(snapcraft_yaml_filename, {"${name}": snap_name})
-    annotations = get_file(annotations_filename)
+    snapcraft_yaml = get_yaml(snapcraft_yaml_filename, {"${name}": snap_name})
+    annotations = get_yaml(annotations_filename)
 
     if snapcraft_yaml:
         context["snapcraft_yaml"] = transform_snapcraft_yaml(snapcraft_yaml)
@@ -159,7 +171,7 @@ def get_package(language, operating_system):
 def get_build(language, operating_system):
     filename = f"first_snap/content/{language}/build.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_file(filename)
+    steps = get_yaml(filename)
     operating_system_parts = operating_system.split("-")
 
     operating_system_only = operating_system_parts[0]
@@ -195,7 +207,7 @@ def get_build(language, operating_system):
 def get_test(language, operating_system):
     filename = f"first_snap/content/{language}/test.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_file(filename)
+    steps = get_yaml(filename)
 
     operating_system_only = operating_system.split("-")[0]
 
@@ -234,7 +246,7 @@ def get_push(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
 
-    data = get_file(filename)
+    data = get_yaml(filename)
 
     if not data:
         return flask.abort(404)
