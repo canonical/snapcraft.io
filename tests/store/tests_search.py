@@ -291,7 +291,7 @@ class GetSearchViewTest(TestCase):
             "links",
             {
                 "first": "/search?category=toto&page=1",
-                "last": "/search?category=toto&page=3",
+                "last": "/search?category=toto&page=4",
                 "next": "/search?category=toto&page=3",
                 "prev": "/search?category=toto&page=1",
             },

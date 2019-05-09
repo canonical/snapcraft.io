@@ -195,6 +195,8 @@ def store_blueprint(store_query=None, testing=False):
 
         featured_snaps = []
 
+        # These are the hand-selected "featured snaps" in each category.
+        # We don't have this information on the API, so it's hardcoded.
         number_of_featured_snaps = 19
 
         if snap_category_display and page == 1:
