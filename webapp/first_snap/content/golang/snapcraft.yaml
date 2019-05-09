@@ -1,0 +1,21 @@
+name: ${name}
+version: git
+summary: An interactive web server.
+description: |
+  HTTPLab let you inspect HTTP requests and forge responses.
+
+confinement: devmode
+base: core18
+
+parts:
+  ${name}:
+    plugin: go
+    go-importpath: github.com/gchaincl/httplab
+    source: .
+    source-type: git
+    build-packages:
+      - gcc
+
+apps:
+  ${name}:
+    command: bin/httplab
