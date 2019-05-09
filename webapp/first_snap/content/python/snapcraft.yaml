@@ -17,4 +17,4 @@ parts:
 
 apps:
   ${name}:
-    command: bin/${name}
+    command: bin/offlineimap
