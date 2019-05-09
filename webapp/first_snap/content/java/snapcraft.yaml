@@ -1,0 +1,35 @@
+name: ${name}
+version: '1.6.10'
+summary: |
+  Application for Mind Mapping, Knowledge
+  and Project Management
+description: |
+  Freeplane is a free and open source software
+  application that supports thinking, sharing
+  information and getting things done at work,
+  in school and at home. The core of the
+  software is tools for mind mapping (also known
+  as concept mapping or information mapping)
+  and using mapped information.
+
+confinement: devmode
+
+parts:
+  ${name}:
+    after: [desktop-glib-only]
+    plugin: gradle
+    source: .
+    build: |
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+      gradle release -x test -x createGitTag
+    install: |
+      unzip DIST/freeplane_bin-*.zip -d \
+      $SNAPCRAFT_PART_INSTALL/
+    build-packages:
+      - unzip
+      - openjdk-8-jdk
+
+apps:
+  ${name}:
+    command: desktop-launch \
+      $SNAP/freeplane-1.6.10/freeplane.sh
