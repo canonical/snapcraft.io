@@ -34,7 +34,7 @@
       <div class="row">
         {% if not query and category_display %}
           <a href="/store">&lsaquo; Categories</a>
-          <h2>{{ category_display }} snaps{% if page > 1 %} <small>page {{ page }}</small>{% endif %}</h2>
+          <h2>{{ category_display }} snaps</h2>
         {% else %}
           {% if total %}
             <h2>We’ve found {{ total }} snaps</h2>
@@ -99,7 +99,11 @@
     <script src="{{ static_url('js/dist/public.js') }}"></script>
     <script>
       Raven.context(function () {
-        snapcraft.public.getColour(document.querySelector(".js-store-category"));
+        snapcraft.public.getColour(
+          document.querySelector(".js-store-category"),
+          ".p-featured-snap__icon img",
+          ".p-featured-snap"
+        );
       });
     </script>
   {% endif %}

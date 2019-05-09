@@ -100,12 +100,20 @@ def convert_navigation_url(url, link):
 
 
 def build_pagination_link(snap_searched, snap_category, page):
+    """Build pagination link
+
+    :param snap_searched: Name of the search query
+    :param snap_category: The category being searched in
+    :param page: The page of results
+
+    :returns: A url string
+    """
     params = []
 
-    if snap_searched != "":
+    if snap_searched:
         params.append("q=" + snap_searched)
 
-    if snap_category != "":
+    if snap_category:
         params.append("category=" + snap_category)
 
     if page:
@@ -396,10 +404,17 @@ def get_videos(media):
 
 
 def promote_snap_with_icon(snaps):
+    """Move the first snap with an icon to the front of the list
+
+    :param snaps: The list of snaps
+
+    :returns: A list of snaps
+    """
     snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
 
-    snap_with_icon_index = snaps.index(snap_with_icon)
+    if snap_with_icon:
+        snap_with_icon_index = snaps.index(snap_with_icon)
 
-    snaps.insert(0, snaps.pop(snap_with_icon_index))
+        snaps.insert(0, snaps.pop(snap_with_icon_index))
 
     return snaps

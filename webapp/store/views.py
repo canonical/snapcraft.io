@@ -133,8 +133,11 @@ def store_blueprint(store_query=None, testing=False):
         if not snap_searched and not snap_category:
             return flask.redirect(flask.url_for(".homepage"))
 
+        # The default size should be 48 (rows of 4)
         size = 48
 
+        # Page 1 has a snap at the top, and a few rows of 3, followed by rows
+        # of 4 - so we need to offset to ensure there's no hanging snap
         if page == 1:
             size = 47
 
