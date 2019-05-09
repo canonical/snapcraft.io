@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<a class="p-media-object p-media-object--snap{% if media_object_classname %} {{ media_object_classname }}{% endif %}" href="/{{ snap.package_name }}" title="{{ snap.title }}">
-=======
 <a class="p-media-object p-media-object--snap{% if media_object_classname %} {{ media_object_classname }}{% endif %}" href="/{{ snap.package_name }}" title="{{ snap.title }} – {{ snap.summary }}">
->>>>>>> Added link to publishers with yaml in project
   {% if snap.icon_url %}
   <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
   {% else %}
