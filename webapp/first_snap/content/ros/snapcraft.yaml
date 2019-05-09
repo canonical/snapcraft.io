@@ -1,0 +1,19 @@
+name: ${name}
+version: '0.1'
+summary: ROS Talker/Listener Example
+description: |
+  This example launches a ROS talker and listener.
+
+confinement: devmode
+base: core18
+
+parts:
+  ros-tutorials:
+    plugin: catkin
+    source: https://github.com/ros/ros_tutorials.git
+    source-branch: melodic-devel
+    source-space: roscpp_tutorials/
+
+apps:
+  run:
+    command: roslaunch roscpp_tutorials talker_listener.launch
