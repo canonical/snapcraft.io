@@ -59,24 +59,30 @@
           <button aria-expanded="false" type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" >
             <h4 class="u-no-margin--bottom">
               <span class="p-accordion__step">3.</span>
-              Generate and download snapcraft.yaml
+              Download your snapcraft.yaml
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
-            <div class="row">
-            <div class="col-9">
-              <p>A <a href="https://docs.snapcraft.io/snapcraft-format">snapcraft.yaml file</a> holds the basic meta data for the snap.</p>
-              <p>You can edit the meta data later on. For now we have generated an example snapcraft.yaml for you using the snap name you have chosen.</p>
-              <div class="p-annotated-code">
-                {% for key in snapcraft_yaml %}
-                  <div class="p-annotated-code__block p-tooltip p-tooltip--btm-center">
-                    <code>{{ snapcraft_yaml[key]|safe }}</code>
-                    <span class="p-tooltip__message">{{ annotations[key]|safe }}</span>
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-9">
+                  <p>A <a href="https://docs.snapcraft.io/snapcraft-format">snapcraft.yaml file</a> holds the basic meta data for the snap.</p>
+                  <p>You can edit the meta data later on. For now we have generated an example snapcraft.yaml for you using the snap name you have chosen.</p>
+                  <p>To discover more about the <code>snapcraft.yaml</code>, mouse over each piece of metadata in the interactive <code>.yaml</code> viewer below.</p>
+                  <div class="p-annotated-code">
+                    {% for key in snapcraft_yaml %}
+                      <div class="p-annotated-code__block p-tooltip p-tooltip--btm-center">
+                        <code>{{ snapcraft_yaml[key]|safe }}</code>
+                        <span class="p-tooltip__message">{{ annotations[key]|safe }}</span>
+                      </div>
+                    {% endfor %}
                   </div>
-                {% endfor %}
+                  <p>In order for your snap to build using the name you have chosen you'll need to replace the example application's <code>snapcraft.yaml</code> file.</p>
+                  <p>First download new <code>snapcraft.yaml</code> file that contains your chosen name:</p>
+                  <p><a class="p-button--positive" href="/first-snap/{{ language }}/snapcraft.yaml" download>Download snapcraft.yaml file</a>
+                  <p>Next move or copy it to project folder making sure to override the old file.</p>
+                </div>
               </div>
-              <p><a class="p-button--positive" href="/first-snap/{{ language }}/snapcraft.yaml" download>Download snapcraft.yaml file</a>
-            </div>
             </div>
           </section>
         </li>

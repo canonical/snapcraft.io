@@ -16,6 +16,13 @@
     }
   }
 
+  // workaround for bringing back default p styles in accordion
+  // before this vanilla bug is fixed:
+  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2301
+  .p-accordion p {
+    margin-bottom: map-get($sp-after, p) - map-get($nudges, nudge--p);
+  }
+
   .p-accordion__step {
     display: block;
     float: left;
