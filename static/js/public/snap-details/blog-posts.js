@@ -99,7 +99,7 @@ function snapDetailsPosts(
     if (posts.length > 0 && showOnSuccessSelector) {
       const showOnSuccess = document.querySelector(showOnSuccessSelector);
       if (showOnSuccess) {
-        showOnSuccess.style.display = "block";
+        showOnSuccess.classList.remove("u-hide");
       }
     }
   });
