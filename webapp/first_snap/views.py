@@ -162,9 +162,7 @@ def get_package(language, operating_system):
         context["annotations"] = annotations
         return flask.render_template("first-snap/package.html", **context)
     else:
-        return flask.render_template(
-            "first-snap/package-deprecated.html", **context
-        )
+        return flask.abort(404)
 
 
 @first_snap.route("/<language>/<operating_system>/build")
