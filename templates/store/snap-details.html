@@ -193,29 +193,7 @@
 
   {% if not IS_BRAND_STORE %}
     {% if package_name == "hiri" %}
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
-      </div>
-      <div class="p-strip is-shallow">
-        <div class="row">
-          <div class="col-4">
-            <h3 class="p-heading--four">Case study</h3>
-          </div>
-          <div class="col-8">
-            <h3 class="p-heading--four">Related blog posts</h3>
-          </div>
-        </div>
-        <div class="row u-equal-height" data-js="blog-articles">
-          <div class="col-4">
-            <h3 class="p-heading--four">
-              <a href="https://www.ubuntu.com/engage/hiri-case-study" class="p-link--external">Hiri successfully monetises their snap to dispel myths around proprietary Linux apps </a>
-            </h3>
-          </div>
-          <div class="col-8" data-js="blog-article-list" data-snap="{{ package_name }}" data-limit="2"></div>
-        </div>
-      </div>
+      {% include "partials/_hiri-case-study.html" %}
     {% else %}
       <div data-js="blog-articles" class="u-hide">
         <div class="row">
