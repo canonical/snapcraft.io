@@ -1,0 +1,24 @@
+name: ${name}
+version: "0.5.0"
+summary: Markdown lint tool
+description: |
+  Style checker/lint tool for markdown files
+
+confinement: devmode
+base: core18
+
+parts:
+  ${name}:
+    source: .
+    plugin: ruby
+    gems:
+      - rake
+      - bundler
+    override-build: |
+      snapcraftctl build
+      rake install
+    build-packages:
+      - git
+apps:
+  ${name}:
+    command: bin/mdl
