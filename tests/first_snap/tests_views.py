@@ -16,8 +16,8 @@ class FirstSnap(TestCase):
         return app
 
     @patch("builtins.open", new_callable=mock_open, read_data="test: test")
-    def test_get_file(self, mock_open_file):
-        yaml_read = views.get_file("filename.yaml")
+    def test_get_yaml(self, mock_open_file):
+        yaml_read = views.get_yaml("filename.yaml")
         self.assertEqual(yaml_read, {"test": "test"})
         mock_open_file.assert_called_with(
             os.path.join(self.app.root_path, "filename.yaml"), "r"
@@ -26,8 +26,8 @@ class FirstSnap(TestCase):
     @patch(
         "builtins.open", new_callable=mock_open, read_data="test: test: test"
     )
-    def test_get_file_error(self, mock_open_file):
-        yaml_read = views.get_file("filename.yaml")
+    def test_get_yaml_error(self, mock_open_file):
+        yaml_read = views.get_yaml("filename.yaml")
         self.assertEqual(yaml_read, None)
         mock_open_file.assert_called_with(
             os.path.join(self.app.root_path, "filename.yaml"), "r"
@@ -67,6 +67,16 @@ class FirstSnap(TestCase):
         response = self.client.get("/first-snap/toto-lang/linux/package")
 
         assert response.status_code == 404
+
+    @patch("builtins.open", new_callable=mock_open, read_data="name: test")
+    def test_get_snapcraft_yaml(self, mock_open_file):
+        response = self.client.get("/first-snap/python/snapcraft.yaml")
+        self.assert200(response)
+        self.assertEqual(response.get_data(as_text=True), "name: test")
+
+    def test_get_snapcraft_yaml_404(self):
+        response = self.client.get("/first-snap/toto-lang/snapcraft.yaml")
+        self.assert404(response)
 
     def test_get_build(self):
         response = self.client.get("/first-snap/python/linux-auto/build")
