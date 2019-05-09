@@ -11,10 +11,10 @@ confinement: devmode
 base: core18
 
 parts:
-   ${name}:
+  ${name}:
     plugin: dump
     source: http://cdn.geekbench.com/Geekbench-$SNAPCRAFT_PROJECT_VERSION-Linux.tar.gz
 
 apps:
-   ${name}:
+  ${name}:
     command: geekbench4
