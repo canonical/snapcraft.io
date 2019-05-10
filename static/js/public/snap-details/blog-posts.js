@@ -91,7 +91,9 @@ function snapDetailsPosts(
     throw new Error("Snap not defined");
   }
 
-  blogPosts.limit = blogPosts.holder.dataset.limit;
+  if (blogPosts.holder.dataset.limit) {
+    blogPosts.limit = blogPosts.holder.dataset.limit;
+  }
 
   blogPosts.path = snap;
 
