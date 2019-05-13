@@ -275,9 +275,8 @@
   {% if has_publisher_page %}
   <div class="p-strip is-shallow">
       <div class="row">
-        <div class="col-6">
-          <h3 class="p-heading--four">More snaps from {{ username }}</h3>
-        </div>
+        <h3 class="p-heading--four u-float--left">More snaps from {{ display_name(publisher, username) }}</h3>
+        <a class="p-button--neutral u-float--right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
       </div>
       {% if publisher_featured_snaps %}
       <div class="row">
