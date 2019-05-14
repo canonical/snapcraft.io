@@ -63,7 +63,12 @@ def snapcraft_blueprint():
                 "icon_url": "/".join(
                     [icon_host, "2019/03/new_domotz_icon.png"]
                 ),
-                "title": "Domotz Pro Agent",
+                "title": "".join(
+                    [
+                        "Domotz Pro Agent - ",
+                        "Remote Network monitoring and Management",
+                    ]
+                ),
                 "origin": "domotzpublicstore",
             },
         ]
