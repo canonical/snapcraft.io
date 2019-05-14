@@ -179,7 +179,7 @@ describe("initForm", () => {
 
     test("should enable revert button", () => {
       expect(revertButton.classList.contains("is--disabled")).toEqual(false);
-      expect(revertButton.href).toEqual("/test");
+      expect(revertButton.getAttribute("href")).toEqual("/test");
     });
   });
 
@@ -236,25 +236,14 @@ describe("initForm", () => {
   });
 
   describe("has localStorage", () => {
-    beforeAll(() => {
-      window.localStorage = {
-        getItem: jest.fn(),
-        setItem: jest.fn(),
-        removeItem: jest.fn()
-      };
-    });
-
     describe("updateLocalStorage init", () => {
       test("should set the initial state", () => {
-        expect(window.localStorage.setItem.mock.calls.length).toEqual(2);
-        expect(window.localStorage.setItem.mock.calls[0]).toEqual([
-          "test-initial",
+        expect(window.localStorage.getItem("test-initial")).toEqual(
           JSON.stringify(initialState)
-        ]);
-        expect(window.localStorage.setItem.mock.calls[1]).toEqual([
-          "test",
+        );
+        expect(window.localStorage.getItem("test")).toEqual(
           JSON.stringify(initialState)
-        ]);
+        );
       });
     });
   });

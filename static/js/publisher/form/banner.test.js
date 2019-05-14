@@ -20,9 +20,9 @@ describe("Banner", () => {
         <Banner bannerImage={{ url: "banner.png" }} />
       );
 
-      expect(container.querySelector(backgroundSelector).src).toEqual(
-        "banner.png"
-      );
+      expect(
+        container.querySelector(backgroundSelector).getAttribute("src")
+      ).toEqual("banner.png");
     });
 
     it("should set the background if image added", done => {
@@ -51,9 +51,9 @@ describe("Banner", () => {
         expect(
           container.querySelectorAll(".p-notification--negative").length
         ).toEqual(0);
-        expect(container.querySelector(backgroundSelector).src).toEqual(
-          "banner.png"
-        );
+        expect(
+          container.querySelector(backgroundSelector).getAttribute("src")
+        ).toEqual("banner.png");
         done();
       }, 500);
     });
