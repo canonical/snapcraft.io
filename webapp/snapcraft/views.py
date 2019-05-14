@@ -57,6 +57,14 @@ def snapcraft_blueprint():
                 "title": "nymea",
                 "origin": "guh GmbH developer",
             },
+            {
+                "package_name": "domotzpro-agent-publicstore",
+                "icon_url": "/".join(
+                    [icon_host, "2019/03/new_domotz_icon.png"]
+                ),
+                "title": "Domotz Pro Agent",
+                "origin": "domotzpublicstore",
+            },
         ]
 
         industrial_iot = [
