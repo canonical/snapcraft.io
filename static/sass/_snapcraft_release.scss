@@ -145,12 +145,8 @@
     padding-right: .6rem; // give it a bit more space for version ellipsis
   }
 
-  .p-release-data__icon {
-    margin-right: 4px;
-  }
-
   .p-release-data__info {
-    max-width: 100%;
+    width: 100%;
     white-space: nowrap;
 
     &.is-pending {

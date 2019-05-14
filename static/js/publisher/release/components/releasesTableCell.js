@@ -31,13 +31,13 @@ class ReleasesTableCell extends Component {
   renderRevision(revision, isPending) {
     return (
       <Fragment>
-        {isInDevmode(revision) && (
-          <span className="p-release-data__icon">
-            <DevmodeIcon revision={revision} showTooltip={false} />
-          </span>
-        )}
         <span className="p-release-data__info">
           <span className="p-release-data__title">{revision.revision}</span>
+          {isInDevmode(revision) && (
+            <span className="p-release-data__icon u-float-right">
+              <DevmodeIcon revision={revision} showTooltip={false} />
+            </span>
+          )}
           <span className="p-release-data__meta">{revision.version}</span>
         </span>
         <span className="p-tooltip__message">
