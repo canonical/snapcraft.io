@@ -68,13 +68,13 @@ def homepage():
 
     for article in articles:
         try:
-            featured_image = api.get_media(article["featured_media"])
-        except ApiError:
+            featured_image = article["_embedded"]["wp:featuredmedia"][0]
+        except (IndexError, KeyError):
             featured_image = None
 
         try:
-            author = api.get_user(article["author"])
-        except ApiError:
+            author = article["_embedded"]["author"][0]
+        except (IndexError, KeyError):
             author = None
 
         # Feature flag
@@ -164,26 +164,20 @@ def article(slug):
     article = articles[0]
 
     try:
-        author = api.get_user(article["author"])
-    except ApiError:
+        author = article["_embedded"]["author"][0]
+    except (IndexError, KeyError):
         author = None
 
     transformed_article = logic.transform_article(
         article, author=author, optimise_images=True
     )
 
-    tags = article["tags"]
-    tag_names = []
     try:
-        tag_names_response = api.get_tags_by_ids(tags)
-    except ApiError:
-        tag_names_response = None
-
-    if tag_names_response:
-        for tag in tag_names_response:
-            tag_names.append({"id": tag["id"], "name": tag["name"]})
-
-    is_in_series = logic.is_in_series(tag_names)
+        # Tags live in index 1 of wp:term
+        tags = article["_embedded"]["wp:term"][1]
+        tags = [{"id": tag["id"], "name": tag["name"]} for tag in tags]
+    except (IndexError, KeyError):
+        tags = []
 
     try:
         related_articles, total_pages = api.get_articles(
@@ -203,8 +197,8 @@ def article(slug):
     context = {
         "article": transformed_article,
         "related_articles": related_articles,
-        "tags": tag_names,
-        "is_in_series": is_in_series,
+        "tags": tags,
+        "is_in_series": logic.is_in_series(tags),
         "newsletter_subscribed": newsletter_subscribed,
     }
 

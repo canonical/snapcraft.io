@@ -9,7 +9,7 @@ API_URL = os.getenv(
 TAGS = [2996]  # 'snapcraft.io'
 
 
-api_session = api.requests.CachedSession(expire_after=3600)
+api_session = api.requests.CachedSession(expire_after=3600, timeout=(1, 5))
 
 
 def process_response(response):
@@ -40,6 +40,7 @@ def get_articles(
         str(page),
         "&offset=",
         str(offset),
+        "&_embed",
     ]
 
     if exclude:
@@ -64,6 +65,7 @@ def get_article(slug):
             slug,
             "&tags=",
             "".join(str(tag) for tag in TAGS),
+            "&_embed",
         ]
     )
 
