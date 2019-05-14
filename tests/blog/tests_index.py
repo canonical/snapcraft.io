@@ -34,6 +34,10 @@ class BlogPage(TestCase):
                 "date_gmt": "2018-06-11T11:11:11",
                 "author": 321,
                 "categories": [123],
+                "_embedded": {
+                    "author": [{"name": "Toto"}],
+                    "wp:featuredmedia": [{"url": "url"}],
+                },
             }
         ]
 
@@ -71,9 +75,13 @@ class BlogPage(TestCase):
                     "date": "11 June 2018",
                     "date_gmt": "2018-06-11T11:11:11",
                     "featured_media": 123,
-                    "image": None,
-                    "author": None,
+                    "image": {"url": "url"},
+                    "author": {"name": "Toto"},
                     "categories": [123],
+                    "_embedded": {
+                        "author": [{"name": "Toto"}],
+                        "wp:featuredmedia": [{"url": "url"}],
+                    },
                 }
             ],
         )
@@ -427,12 +435,6 @@ class BlogPage(TestCase):
             json=payload,
             status=200,
             headers=posts_headers,
-        )
-
-        url = "".join([self.api_url, "/users/321"])
-
-        responses.add(
-            responses.GET, url, body=requests.exceptions.Timeout(), status=504
         )
 
         categories_url = "".join([self.api_url, "/categories?per_page=100"])
