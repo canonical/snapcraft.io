@@ -3,22 +3,10 @@ import { storageCommands } from "./storageCommands";
 describe("storage commands", () => {
   let ignoreChangeOnUnload;
 
-  let context = {
-    localStorage: {},
-    location: {}
-  };
   beforeEach(() => {
-    context.localStorage.removeItem = jest.fn();
-    context.focus = jest.fn();
-
-    context.location.reload = jest.fn();
-    ignoreChangeOnUnload = jest.fn();
-
-    // We set these specifcally as they're undefined as part for jsdom
-    window.localStorage = {
-      removeItem: jest.fn()
-    };
     window.focus = jest.fn();
+    window.location.reload = jest.fn();
+    ignoreChangeOnUnload = jest.fn();
   });
 
   it("uses window if no context provided", () => {
@@ -31,7 +19,6 @@ describe("storage commands", () => {
       "test",
       ignoreChangeOnUnload
     );
-    expect(window.localStorage.removeItem.mock.calls.length).toEqual(1);
   });
 
   describe("key doesn't match", () => {
@@ -44,8 +31,7 @@ describe("storage commands", () => {
           },
           document.createElement("form"),
           "test",
-          ignoreChangeOnUnload,
-          context
+          ignoreChangeOnUnload
         )
       ).toEqual(undefined);
     });
@@ -61,8 +47,7 @@ describe("storage commands", () => {
           },
           document.createElement("form"),
           "test",
-          ignoreChangeOnUnload,
-          context
+          ignoreChangeOnUnload
         )
       ).toEqual(undefined);
     });
@@ -70,6 +55,8 @@ describe("storage commands", () => {
 
   describe("edit", () => {
     beforeEach(() => {
+      window.localStorage.setItem("test-command", "remove me");
+
       storageCommands(
         {
           key: "test-command",
@@ -77,24 +64,22 @@ describe("storage commands", () => {
         },
         document.createElement("form"),
         "test",
-        ignoreChangeOnUnload,
-        context
+        ignoreChangeOnUnload
       );
     });
     it("removes the %-command key from localStorage", () => {
-      expect(context.localStorage.removeItem.mock.calls.length).toBe(1);
-      expect(context.localStorage.removeItem.mock.calls[0][0]).toBe(
-        "test-command"
-      );
+      expect(window.localStorage.getItem("test-command")).toBe(null);
     });
 
     it("pulls focus to the window", () => {
-      expect(context.focus.mock.calls.length).toBe(1);
+      expect(window.focus.mock.calls.length).toBe(1);
     });
   });
 
   describe("revert", () => {
     beforeEach(() => {
+      window.localStorage.setItem("test-command", "remove me");
+
       storageCommands(
         {
           key: "test-command",
@@ -102,16 +87,12 @@ describe("storage commands", () => {
         },
         document.createElement("form"),
         "test",
-        ignoreChangeOnUnload,
-        context
+        ignoreChangeOnUnload
       );
     });
 
     it("removes the %-command key from localStorage", () => {
-      expect(context.localStorage.removeItem.mock.calls.length).toBe(1);
-      expect(context.localStorage.removeItem.mock.calls[0][0]).toBe(
-        "test-command"
-      );
+      expect(window.localStorage.getItem("test-command")).toBe(null);
     });
 
     it("calls ignoreChangesOnUnload", () => {
@@ -119,8 +100,8 @@ describe("storage commands", () => {
     });
 
     it("reloads the page", () => {
-      expect(context.location.reload.mock.calls.length).toBe(1);
-      expect(context.location.reload.mock.calls[0][0]).toBe(true);
+      expect(window.location.reload.mock.calls.length).toBe(1);
+      expect(window.location.reload.mock.calls[0][0]).toBe(true);
     });
   });
 
@@ -132,6 +113,8 @@ describe("storage commands", () => {
       formSubmitEvent = jest.fn();
       form.addEventListener("submit", formSubmitEvent);
 
+      window.localStorage.setItem("test-command", "remove me");
+
       storageCommands(
         {
           key: "test-command",
@@ -139,16 +122,12 @@ describe("storage commands", () => {
         },
         form,
         "test",
-        ignoreChangeOnUnload,
-        context
+        ignoreChangeOnUnload
       );
     });
 
     it("removes the %-command key from localStorage", () => {
-      expect(context.localStorage.removeItem.mock.calls.length).toBe(1);
-      expect(context.localStorage.removeItem.mock.calls[0][0]).toBe(
-        "test-command"
-      );
+      expect(window.localStorage.getItem("test-command")).toBe(null);
     });
 
     it("dispatches a submit event to the form", () => {

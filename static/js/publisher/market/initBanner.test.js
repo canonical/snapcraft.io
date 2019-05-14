@@ -44,8 +44,8 @@ describe("initBanner", () => {
     expect(holder.querySelectorAll(bannerBackgroundSelector).length).toEqual(1);
     expect(holder.querySelectorAll(`[name="banner-image"]`).length).toEqual(1);
 
-    expect(holder.querySelector(bannerBackgroundSelector).src).toEqual(
-      "/banner_123123.png"
-    );
+    expect(
+      holder.querySelector(bannerBackgroundSelector).getAttribute("src")
+    ).toEqual("/banner_123123.png");
   });
 });
