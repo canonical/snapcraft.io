@@ -29,25 +29,26 @@ def snapcraft_blueprint():
                     [icon_host, "2018/08/mosquitto-logo-only.svg.png"]
                 ),
                 "title": "mosquitto",
-                "origin": "Roger Light",
+                "origin": "ralight",
             },
             {
                 "package_name": "node-red",
                 "icon_url": "/".join([icon_host, "2017/01/nr-hex_1.png"]),
                 "title": "Node-RED",
-                "origin": "DaveCJ",
+                "origin": "noderedteam",
+                "developer_validation": "verified",
             },
             {
                 "package_name": "soracom-console",
                 "icon_url": "/".join([icon_host, "2017/02/logo-256_1.png"]),
                 "title": "soracom-console",
-                "origin": "SORACOM Snap Administrator",
+                "origin": "soracom",
             },
             {
                 "package_name": "thinger-maker-server",
                 "icon_url": "/".join([icon_host, "2017/03/thinger_256.png"]),
                 "title": "Thinger.io Maker Server",
-                "origin": "Alvaro Luis Bustamante",
+                "origin": "thinger",
             },
             {
                 "package_name": "nymea",
@@ -72,7 +73,7 @@ def snapcraft_blueprint():
                 "package_name": "kura",
                 "icon_url": "/".join([icon_host, "2018/07/icon_8BAXEYq.png"]),
                 "title": "Kura™",
-                "origin": "Ondrej Kubik",
+                "origin": "ondra",
             },
             {
                 "package_name": "hunt-r",
@@ -80,7 +81,7 @@ def snapcraft_blueprint():
                     [icon_host, "2018/05/logo_huntr256x256.png"]
                 ),
                 "title": "Lantern Tech - Hunt-R Series Gateway Firmware",
-                "origin": "Lantern Technologies",
+                "origin": "kmorales019",
             },
             {
                 "package_name": "ammp-edge",
@@ -88,7 +89,7 @@ def snapcraft_blueprint():
                     [icon_host, "2018/08/AMMP_Logo_-_solid_in_circle_256.png"]
                 ),
                 "title": "ammp-edge",
-                "origin": "Svet Bajlekov",
+                "origin": "ammp",
             },
             {
                 "package_name": "lantern-water-iot",
@@ -96,7 +97,7 @@ def snapcraft_blueprint():
                     [icon_host, "2018/05/smart_water_logo_256x256.png"]
                 ),
                 "title": "Lantern Tech - Smart Water Gateway Firmware",
-                "origin": "Lantern Technologies",
+                "origin": "kmorales019",
             },
             {
                 "package_name": "bl-gateway",
@@ -104,7 +105,7 @@ def snapcraft_blueprint():
                     [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
                 ),
                 "title": "bl-gateway",
-                "origin": "Jesse Grant",
+                "origin": "jessegrant",
             },
             {
                 "package_name": "ixagent",
@@ -112,7 +113,7 @@ def snapcraft_blueprint():
                     [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
                 ),
                 "title": "ixagent",
-                "origin": "Michael Hathaway",
+                "origin": "ixot",
             },
         ]
 
@@ -155,7 +156,7 @@ def snapcraft_blueprint():
                 "package_name": "openhab",
                 "icon_url": "/".join([icon_host, "2017/11/favicon.png"]),
                 "title": "openHAB",
-                "origin": "openHAB Foundation e.V.",
+                "origin": "openhab",
             },
             {
                 "package_name": "homebridge",
@@ -167,16 +168,7 @@ def snapcraft_blueprint():
                     ]
                 ),
                 "title": "HOMEbridge",
-                "origin": "Ondrej Kubik",
-            },
-            {
-                "package_name": "domotzpro-agent-publicstore",
-                "icon_url": "/".join([icon_host, "2018/05/domotz.png"]),
-                "title": (
-                    "Domotz Pro Agent – "
-                    "Remote Network Monitoring and Management"
-                ),
-                "origin": "Domotz",
+                "origin": "ondra",
             },
         ]
 
@@ -199,7 +191,8 @@ def snapcraft_blueprint():
                 "package_name": "pc",
                 "icon_url": "/".join([icon_host, "2016/07/icon_30.png"]),
                 "title": "PC",
-                "origin": "SORACOM Snap Administrator",
+                "origin": "Canonical",
+                "developer_validation": "verified",
             },
         ]
 
