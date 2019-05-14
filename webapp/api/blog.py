@@ -9,7 +9,8 @@ API_URL = os.getenv(
 TAGS = [2996]  # 'snapcraft.io'
 
 
-api_session = api.requests.CachedSession(expire_after=3600, timeout=(1, 5))
+# 10 seconds is a bit high but we have ocasional spikes in response times
+api_session = api.requests.CachedSession(expire_after=3600, timeout=(1, 10))
 
 
 def process_response(response):
