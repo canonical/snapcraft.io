@@ -15,6 +15,7 @@ from webapp.api.exceptions import (
     ApiTimeoutError,
 )
 from webapp.api.store import StoreApi
+from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 
 
@@ -82,6 +83,8 @@ def store_blueprint(store_query=None, testing=False):
         if len(featured_snaps) == 10 and featured_snaps[0]["icon_url"] == "":
             featured_snaps = featured_snaps[:-1]
 
+        livestream = snapcraft_logic.get_livestreams()
+
         return (
             flask.render_template(
                 "store/store.html",
@@ -89,6 +92,7 @@ def store_blueprint(store_query=None, testing=False):
                 has_featured=True,
                 featured_snaps=featured_snaps,
                 error_info=error_info,
+                livestream=livestream,
             ),
             status_code,
         )
