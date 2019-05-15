@@ -110,7 +110,7 @@ class GetDetailsPageTest(TestCase):
     def test_user_connected(self):
         payload = {
             "snap-id": "id",
-            "name": "snapName",
+            "name": "toto",
             "snap": {
                 "title": "Snap Title",
                 "summary": "This is a summary",
@@ -155,11 +155,16 @@ class GetDetailsPageTest(TestCase):
         )
 
         with self.client.session_transaction() as s:
-            s["openid"] = {"nickname": "toto"}
+            # make test session 'authenticated'
+            s["openid"] = {"nickname": "toto", "fullname": "Totinio"}
+            s["macaroon_root"] = "test"
+            s["macaroon_discharge"] = "test"
+            # mock test user snaps list
+            s["user_snaps"] = {"toto": {"snap-id": "test"}}
 
         response = self.client.get(self.endpoint_url)
 
-        assert response.status_code == 200
+        self.assert200(response)
         self.assert_context("is_users_snap", True)
 
     @responses.activate
