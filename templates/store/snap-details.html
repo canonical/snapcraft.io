@@ -174,10 +174,12 @@
       </div>
       <div class="col-4">
         <h4>Details for {{ snap_title }}</h4>
-        <table class="p-table-key-value">
-          <tr><th>License</th><td data-live="license">{{ license }}</td></tr>
-          <tr><th>Last updated</th><td>{{ last_updated }}</td></tr>
-        </table>
+        <dl>
+          <dt>License</dt>
+          <dd data-live="license">{{ license }}</dd>
+          <dt>Last updated</dt>
+          <dd>{{ last_updated }}</dd>
+        </dl>
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
         {% if not is_preview and not IS_BRAND_STORE %}
