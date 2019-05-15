@@ -8,6 +8,7 @@ from webapp.api import dashboard
 from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
+from webapp.publisher.snaps import logic
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -70,6 +71,9 @@ def after_login(resp):
             "image": resp.image,
             "email": account["email"],
         }
+        snaps, names = logic.get_snaps_account_info(account)
+        flask.session["user_snaps"] = snaps
+
     except ApiCircuitBreaker:
         flask.abort(503)
     except Exception:

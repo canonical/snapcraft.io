@@ -16,6 +16,7 @@ from webapp.api.exceptions import (
     ApiTimeoutError,
 )
 from webapp.markdown import parse_markdown_description
+from webapp import authentication
 
 
 def snap_details_views(store, api, handle_errors):
@@ -116,10 +117,10 @@ def snap_details_views(store, api, handle_errors):
         )
 
         is_users_snap = False
-        if flask.session and "openid" in flask.session:
+        if authentication.is_authenticated(flask.session):
             if (
-                flask.session.get("openid").get("nickname")
-                == details["snap"]["publisher"]["username"]
+                "user_snaps" in flask.session
+                and snap_name in flask.session.get("user_snaps")
             ):
                 is_users_snap = True
 
