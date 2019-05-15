@@ -1,21 +1,21 @@
-from webapp import helpers
 from datetime import datetime, timedelta
+
+from webapp import helpers
 
 
 def get_livestreams():
     """
     Get available livestreams and decide whether they should be shown
-    :return: Dictionary of livestream details
+    :returns: Dictionary of livestream details
     """
-    lead_time = 4  # 4 days
-    cooldown_time = 2  # 2 days
+    livestream_to_show = None
     livestreams = helpers.get_livestreams()
 
-    now = datetime.now()
-
-    livestream_to_show = None
-
     if livestreams:
+        now = datetime.now()
+        lead_time = 4  # 4 days
+        cooldown_time = 2  # 2 days
+
         for livestream in livestreams:
             instance_lead_time = lead_time
             if "lead_time" in livestream:

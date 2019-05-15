@@ -15,8 +15,8 @@ from webapp.api.exceptions import (
     ApiTimeoutError,
 )
 from webapp.api.store import StoreApi
-from webapp.store.snap_details_views import snap_details_views
 from webapp.snapcraft import logic as snapcraft_logic
+from webapp.store.snap_details_views import snap_details_views
 
 
 def store_blueprint(store_query=None, testing=False):
