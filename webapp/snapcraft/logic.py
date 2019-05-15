@@ -22,7 +22,7 @@ def get_livestreams():
                 instance_lead_time = livestream["lead_time"]
 
             instance_cooldown_time = cooldown_time
-            if "lead_time" in livestream:
+            if "cooldown_time" in livestream:
                 instance_cooldown_time = livestream["cooldown_time"]
 
             show_from = livestream["time"] - timedelta(days=instance_lead_time)
