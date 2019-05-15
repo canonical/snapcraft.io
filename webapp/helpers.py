@@ -42,6 +42,12 @@ def get_default_track(snap_name):
     return default_track
 
 
+def get_livestreams():
+    content = _get_file("snapcraft/content/snapcraft_live.yaml")
+
+    return content
+
+
 def _get_file(yaml_file):
     try:
         with open(
