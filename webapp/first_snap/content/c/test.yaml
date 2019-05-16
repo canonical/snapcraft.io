@@ -3,15 +3,14 @@ macos:
   - action: Create a Linux virtual machine for testing snaps
     command: multipass launch -n testvm
   - action: Return to the directory containing the .snap file and copy it into the virtual machine
-    command: 'multipass copy-files dosbox*.snap testvm:'
+    command: 'multipass copy-files ${name}*.snap testvm:'
   - action: Connect to the virtual machine
     command: multipass shell testvm
   - action: Install the snap inside the virtual machine
-    command: sudo snap install --devmode --dangerous dosbox*.snap
+    command: sudo snap install --devmode --dangerous ${name}*.snap
   - action: Confirm the snap is installed by listing your installed snaps
     command: snap list
   - action: Run the snap inside the virtual machine
-    warning: You should change <code>dosbox</code> to <code>${name}</code>, as written into the snapcraft.yaml file earlier.
-    command: dosbox -h
+    command: ${name} -h
   - action: Exit the virtual machine
     command: exit
