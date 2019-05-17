@@ -21,6 +21,17 @@ My published snaps — Linux software in the Snap Store
       {% endfor %}
     {% endif %}
   {% endwith %}
+  {% if snaps %}
+    <div class="row">
+      <div class="col-12">
+        <h1 class="p-heading--four u-float--left">Snap installs</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 snap-installs-container">
+      </div>
+    </div>
+  {% endif %}
   <div class="row">
     <div class="col-12">
       <h1 class="p-heading--four u-float--left">My published snaps</h1>
@@ -212,5 +223,21 @@ My published snaps — Linux software in the Snap Store
         </table>
       </div>
     </section>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if snaps %}
+  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+  <script>
+    Raven.context(function () {
+      var options = {
+        snaps: { {% for name, snap in snaps.items() %} "{{snap['snap-id']}}": "{{name}}",{% endfor %} },
+        selector: ".snap-installs-container",
+        token: {{ csrf_token()|tojson }},
+      };
+      snapcraft.publisher.metrics.renderPublisherMetrics(options);
+    });
+  </script>
   {% endif %}
 {% endblock %}

@@ -114,7 +114,7 @@ def get_account_snaps():
 @login_required
 def get_account_snaps_metrics():
     if not flask.request.data:
-        error = {"error": "Please provide a list of snap ID's"}
+        error = {"error": "Please provide a list of snaps"}
         return flask.jsonify(error), 500
 
     try:
@@ -127,7 +127,9 @@ def get_account_snaps_metrics():
             snap_metrics = api.get_publisher_metrics(
                 flask.session, json=metrics_query
             )
-            metrics = metrics_helper.transform_metrics(metrics, snap_metrics)
+            metrics = metrics_helper.transform_metrics(
+                metrics, snap_metrics, snaps
+            )
         return flask.jsonify(metrics), 200
     except Exception:
         error = {"error": "An error occured while fetching metrics"}
