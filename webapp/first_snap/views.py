@@ -106,13 +106,8 @@ def get_language(language):
 
 @first_snap.route("/<language>/snapcraft.yaml")
 def get_language_snapcraft_yaml(language):
-    filename = f"first_snap/content/{language}/package.yaml"
     snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_yaml(filename)
-
-    if not steps:
-        return flask.abort(404)
 
     snap_name = get_default_snap_name(language)
 
@@ -245,13 +240,11 @@ def get_test(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
-    filename = f"first_snap/content/{language}/package.yaml"
-    snap_name_cookie = f"fsf_snap_name_{language}"
-
-    data = get_yaml(filename)
-
-    if not data:
+    filename = f"first_snap/content/{language}"
+    if not directory_exists(filename):
         return flask.abort(404)
+
+    snap_name_cookie = f"fsf_snap_name_{language}"
 
     snap_name = get_default_snap_name(language)
     has_user_chosen_name = False
