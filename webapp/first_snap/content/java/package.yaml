@@ -1,2 +1,1 @@
-name: test-freeplane-{name}
 download: git clone https://github.com/snapcraft-docs/freeplane

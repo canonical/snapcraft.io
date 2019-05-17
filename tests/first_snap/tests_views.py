@@ -142,7 +142,7 @@ class FirstSnap(TestCase):
         self.assert_context("language", "python")
         self.assert_context("os", "linux")
         self.assert_context("user", None)
-        self.assert_context("snap_name", "test-offlineimap-{name}")
+        self.assert_context("snap_name", "test-python-[yourname]")
 
     def test_get_push_snap_name(self):
         response = self.client.get(
@@ -178,7 +178,7 @@ class FirstSnap(TestCase):
         self.assert_context("language", "python")
         self.assert_context("os", "linux")
         self.assert_context("user", user_expected)
-        self.assert_context("snap_name", "test-offlineimap-{name}")
+        self.assert_context("snap_name", "test-python-[yourname]")
 
     def test_get_push_404(self):
         response = self.client.get("/first-snap/toto-lang/linux/push")

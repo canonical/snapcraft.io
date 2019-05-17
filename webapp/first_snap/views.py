@@ -83,6 +83,10 @@ def directory_exists(file):
     return os.path.isdir(os.path.join(flask.current_app.root_path, file))
 
 
+def get_default_snap_name(language):
+    return f"test-{language}-[yourname]"
+
+
 @first_snap.route("/")
 def get_pick_language():
     return flask.render_template("first-snap/language.html")
@@ -110,7 +114,7 @@ def get_language_snapcraft_yaml(language):
     if not steps:
         return flask.abort(404)
 
-    snap_name = steps["name"]
+    snap_name = get_default_snap_name(language)
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
@@ -139,7 +143,7 @@ def get_package(language, operating_system):
     if not steps:
         return flask.abort(404)
 
-    snap_name = steps["name"]
+    snap_name = get_default_snap_name(language)
     has_user_chosen_name = False
 
     if snap_name_cookie in flask.request.cookies:
@@ -186,7 +190,7 @@ def get_build(language, operating_system):
     ):
         return flask.abort(404)
 
-    snap_name = steps["name"]
+    snap_name = get_default_snap_name(language)
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
@@ -212,7 +216,7 @@ def get_test(language, operating_system):
     if not steps or operating_system_only not in steps:
         return flask.abort(404)
 
-    snap_name = steps["name"]
+    snap_name = get_default_snap_name(language)
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
@@ -249,7 +253,7 @@ def get_push(language, operating_system):
     if not data:
         return flask.abort(404)
 
-    snap_name = data["name"]
+    snap_name = get_default_snap_name(language)
     has_user_chosen_name = False
 
     if snap_name_cookie in flask.request.cookies:

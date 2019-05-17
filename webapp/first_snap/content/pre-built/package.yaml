@@ -1,2 +1,1 @@
-name: test-geekbench4-{name}
 download: git clone https://github.com/snapcraft-docs/geekbench4

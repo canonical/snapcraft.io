@@ -1,4 +1,3 @@
-name: test-httplab-{name}
 linux:
   auto:
     - action: Return to the root directory of the project containing your snapcraft.yaml and run snapcraft
