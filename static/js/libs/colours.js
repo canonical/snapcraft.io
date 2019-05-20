@@ -17,13 +17,15 @@ function getColour(holder, imageSelector, imageParentSelector) {
   if (images.length > 0) {
     for (let i = 0, ii = images.length; i < ii; i += 1) {
       const parent = images[i].closest(imageParentSelector);
-      const image = images[i];
-      if (image.complete) {
-        extractAndSet(image, parent);
-      } else {
-        image.addEventListener("load", () => {
+      if (parent) {
+        const image = images[i];
+        if (image.complete) {
           extractAndSet(image, parent);
-        });
+        } else {
+          image.addEventListener("load", () => {
+            extractAndSet(image, parent);
+          });
+        }
       }
     }
   }
