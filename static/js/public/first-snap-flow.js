@@ -161,7 +161,7 @@ function push() {
     });
 
     if (!ready) {
-      timer = setTimeout(getCount.bind(this, cb), 2500);
+      timer = setTimeout(getCount.bind(this, cb), 5000);
     }
   }
 
