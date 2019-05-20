@@ -22,10 +22,11 @@
       <meta property="og:description" content="{{ self.meta_description() }}"/>
       <meta property="og:image" content="{% block meta_image %}https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png{% endblock %}" />
       <meta property="og:url" content="https://snapcraft.io{% block meta_path %}{{ path }}{% endblock %}" />
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:site" content="@snapcraftio" />
-      <meta property="twitter:creator" content="@snapcraftio" />
-      <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
+
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:site" content="@snapcraftio">
+      <meta name="twitter:creator" content="@snapcraftio">
+      <meta name="twitter:domain" content="https://snapcraft.io{{ self.meta_path() }}">
     {% endblock %}
 
     {% block extra_meta %}{% endblock %}
