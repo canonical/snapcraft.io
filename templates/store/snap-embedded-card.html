@@ -1,5 +1,13 @@
 {% extends "_layout-embedded.html" %}
 
+{% block meta_title %}Install {{ snap_title }} for Linux using the Snap Store | Snapcraft{% endblock %}
+
+{% block meta_path %}/{{ package_name }}{% endblock %}
+
+{% block extra_meta %}
+  <link rel="canonical" href="https://snapcraft.io/{{ package_name }}" />
+{% endblock %}
+
 {% block content %}
 <div class="p-strip--light is-shallow snapcraft-banner-background">
   <div class="row">
