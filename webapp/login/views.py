@@ -72,7 +72,7 @@ def after_login(resp):
             "email": account["email"],
         }
         snaps, names = logic.get_snaps_account_info(account)
-        flask.session["user_snaps"] = snaps
+        flask.session["user_snaps"] = list(snaps.keys())
 
     except ApiCircuitBreaker:
         flask.abort(503)
