@@ -1,0 +1,262 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block meta_copydoc %}{% endblock %}
+
+{% block meta_title %}Install {{ snap_title }} on {{ distro_name }} using the Snap Store | Snapcraft{% endblock %}
+
+{% block meta_description %}Get the latest version of {{ snap_title }} for on {{ distro_name }} - {{ summary }}{% endblock %}
+
+{% if icon_url %}
+  {% block meta_image %}
+    {{ icon_url }}
+  {% endblock %}
+{% endif %}
+
+{% block meta_schema %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "{{ snap_title }}",
+      "description": "{{ summary }}",
+      "datePublished": "{{ last_updated_raw }}",
+      {% if screenhots and screenshots|length > 0 %}
+      "screenshot": "{{ screenshots[0] }}",
+      {% endif %}
+      "image": "{{ icon_url }}",
+      "operatingSystem": "linux",
+      "offers": {
+        "price": {% if prices and prices['USD'] %}{{ prices['USD'] }}{% else %}0.00{% endif %},
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "{{ publisher }}"
+        {% if website %}, {# the , is within the if to avoid parsing errors #}
+        "url": "{{ website }}"
+        {% endif %}
+      },
+      "softwareVersion": "{{ version }}",
+      "fileSize": "{{ filesize }}",
+      "license": "{{ license }}"
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="p-strip--light is-shallow snapcraft-banner-background">
+    <div class="row">
+      <h1>How to install {{ snap_title }} on {{ distro_name }}</h1>
+    </div>
+  </div>
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="p-snap-heading">
+        {% if icon_url %}
+          <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" data-live="icon" />
+        {% else %}
+          <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
+        {% endif %}
+        <div class="p-snap-heading__title">
+          <h1 class="p-heading--two p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
+          <div class="u-hide u-show--small">
+            {% include 'store/_snap-header-information.html' %}
+          </div>
+          <ul class="p-inline-list--middot">
+            <li class="p-inline-list__item u-hide--small">
+              {% include 'store/_snap-header-information.html' %}
+            </li>
+            {% for category in categories %}<li class="p-inline-list__item">
+              <a href="/search?category={{category.slug}}">{{ category.name }}</a>
+            </li>{% endfor %}
+          </ul>
+        </div>
+
+        <div class="p-snap-install-buttons">
+          <button
+            class="p-button--positive p-snap-install-buttons__install"
+            data-js="open-channel-map"
+            data-controls="channel-map-install"
+            aria-controls="channel-map-install">
+              Install
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% if screenshots or videos %}
+    <div class="p-strip--light is-shallow">
+      <div class="row" id="js-snap-screenshots" data-live="screenshots">
+        {% if videos %}
+          {% include "partials/_snap-details-video-layout.html" %}
+        {% elif screenshots %}
+          {% include "partials/_snap-details-image-layout.html" %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-8">
+        {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
+        <div data-live="description">{{ description | safe }}</div>
+      </div>
+      <div class="col-4">
+        <h4>Details for {{ snap_title }}</h4>
+        <dl>
+          <dt>License</dt>
+          <dd data-live="license">{{ license }}</dd>
+          <dt>Last updated</dt>
+          <dd>{{ last_updated }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  {% if countries or normalized_os %}
+    <div data-live="public_metrics_live">
+      <div class="row">
+        <div class="col-12">
+          <hr />
+        </div>
+      </div>
+
+      <div class="p-strip is-shallow">
+        <div class="row {% if normalized_os %}u-equal-height{% endif %}">
+          {% if countries %}
+            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
+              <h4>Where people are using {{ snap_title }}</h4>
+              <div id="js-snap-map" class="snapcraft-territories"></div>
+            </div>
+          {% endif %}
+          {% if normalized_os %}
+            <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
+              <h4>Users by distribution (log)</h4>
+              <div class="snapcraft-distro-chart">
+                <div class="snapcraft-distro-chart__names">
+                  {% for distro in normalized_os %}
+                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+                  {% endfor %}
+                </div>
+                <div class="snapcraft-distro-chart__bars">
+                  {% for distro in normalized_os %}
+                    <div
+                      class="snapcraft-distro-chart__bar"
+                      style="width: {{ distro.value * 100 }}%"
+                    ></div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if api_error %}
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Error:</span> API request failed
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="p-strip is-shallow">
+    <hr />
+    <div class="row">
+      <h2>Snap install instructions for {{ distro_name }}</h2>
+    </div>
+    <div class="row">
+      <h3>Instructions to enable snapd support</h3>
+    </div>
+    <div class="row">
+      <div class="col-7">
+        <p>{{ distro_install_instruction }}</p>
+      </div>
+      <div class="col-5">
+        {% set snippet_value = distro_install_command %}
+        {% set snippet_id = "distro-install-command" %}
+        {% if distro_install_command.count('\n') == 0 %}
+          {% include "/partials/_code-snippet.html" %}
+        {% else %}
+          {% include "/partials/_code-snippet-multi.html" %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <h3>How to install a snap</h3>
+    </div>
+    <div class="row">
+      <div class="col-7">
+        <p>To install a snap, simply use the following command:</p>
+      </div>
+      <div class="col-5">
+        {% set snippet_value = "sudo snap install " + package_name %}
+        {% set snippet_id =  "snap-install-stable" %}
+        {% include "/partials/_code-snippet.html" %}
+      </div>
+    </div>
+    <div class="row">
+      <h3>Find more software in snapcraft.io</h3>
+    </div>
+    <div class="row">
+      <div class="col-7">
+        <p>Search for more snaps from the command line:</p>
+      </div>
+      <div class="col-5">
+        {% set snippet_value = 'sudo snap find "search query"' %}
+        {% set snippet_id =  "snap-search" %}
+        {% include "/partials/_code-snippet.html" %}
+      </div>
+    </div>
+  </div>
+
+  {# templates #}
+  {% set video = {'type': 'youtube', 'url': '${url}', 'id': '${id}'} %}
+  <script type="text/template" id="video-youtube-template">
+    {% include 'partials/_video.html' %}
+  </script>
+  {% set video = {'type': 'vimeo', 'url': '${url}', 'id': '${id}'} %}
+  <script type="text/template" id="video-vimeo-template">
+    {% include 'partials/_video.html' %}
+  </script>
+  {% set video = {'type': 'asciinema', 'url': '${url}', 'id': '${id}'} %}
+  <script type="text/template" id="video-asciinema-template">
+    {% include 'partials/_video.html' %}
+  </script>
+{% endblock %}
+
+{% block scripts_modules %}
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script>
+    Raven.context(function () {
+      try {
+        snapcraft.public.screenshots('#js-snap-screenshots');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
+      try {
+        snapcraft.public.videos('.js-video-slide');
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
+      if (typeof ClipboardJS !== 'undefined') {
+        new ClipboardJS('.js-clipboard-copy');
+      }
+    });
+  </script>
+{% endblock %}
