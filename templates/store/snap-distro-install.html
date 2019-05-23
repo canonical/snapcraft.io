@@ -46,7 +46,7 @@
 {% block content %}
   <div class="p-strip--light is-shallow snapcraft-banner-background">
     <div class="row">
-      <h1>How to install {{ snap_title }} on {{ distro_name }}</h1>
+      <h1 class="u-no-margin">How to install {{ snap_title }} on {{ distro_name }}</h1>
     </div>
   </div>
   <div class="p-strip is-shallow">
@@ -73,13 +73,9 @@
         </div>
 
         <div class="p-snap-install-buttons">
-          <button
-            class="p-button--positive p-snap-install-buttons__install"
-            data-js="open-channel-map"
-            data-controls="channel-map-install"
-            aria-controls="channel-map-install">
-              Install
-          </button>
+          <a class="p-button--positive p-snap-install-buttons__install" href="#install">
+            Install
+          </a>
         </div>
 
       </div>
@@ -116,47 +112,6 @@
     </div>
   </div>
 
-  {% if countries or normalized_os %}
-    <div data-live="public_metrics_live">
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
-      </div>
-
-      <div class="p-strip is-shallow">
-        <div class="row {% if normalized_os %}u-equal-height{% endif %}">
-          {% if countries %}
-            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
-              <h4>Where people are using {{ snap_title }}</h4>
-              <div id="js-snap-map" class="snapcraft-territories"></div>
-            </div>
-          {% endif %}
-          {% if normalized_os %}
-            <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
-              <h4>Users by distribution (log)</h4>
-              <div class="snapcraft-distro-chart">
-                <div class="snapcraft-distro-chart__names">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
-                  {% endfor %}
-                </div>
-                <div class="snapcraft-distro-chart__bars">
-                  {% for distro in normalized_os %}
-                    <div
-                      class="snapcraft-distro-chart__bar"
-                      style="width: {{ distro.value * 100 }}%"
-                    ></div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
   {% if api_error %}
     <div class="row">
       <div class="col-12">
@@ -169,8 +124,13 @@
     </div>
   {% endif %}
 
-  <div class="p-strip is-shallow">
-    <hr />
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <hr />
+    </div>
+  </section>
+
+  <div id="install" class="p-strip is-shallow">
     <div class="row">
       <h2>Snap install instructions for {{ distro_name }}</h2>
     </div>
@@ -218,6 +178,48 @@
       </div>
     </div>
   </div>
+
+
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <hr />
+    </div>
+  </section>
+
+  <section class="p-strip is-shallow">
+    <div class="row">
+        <h2 class="u-float--left">Find more popular snaps</h2>
+        <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
+    </div>
+    <div class="row">
+      {% set snaps = featured_snaps %}
+      {% set category = "featured" %}
+      {% set show_summary = True %}
+      {% include "store/_category-partial.html" %}
+    </div>
+    <div class="row u-hide--medium u-hide--large">
+      <a href="/search?category=featured" class="p-button--neutral u-float--right">See more in Featured</a>
+    </div>
+  </section>
+
+
+  <section class="p-strip--image is-deep is-dark p-strip--snap-store">
+    <div class="row u-vertically-center">
+      <div class="col-7 u-fade-left--medium">
+        <p class="u-hide--large u-hide--medium u-align--center">
+          <img src="https://assets.ubuntu.com/v1/08af835e-Snap+Store+shopping+icon.svg" alt="Get the Snap Store snap" class="p-icon--snap-store u-fade-up">
+        </p>
+        <h1 class="p-heading--two">Access the App Store for Linux <br class="u-hide--small u-hide--medium">from your desktop</h1>
+        <p class="u-no-padding--top p-heading--four">Easily find and install new applications or remove existing installed applications with the Snap Store snap.</p>
+        <p>
+          <a href="/snap-store" class="p-button--positive">Get the Snap Store</a>
+        </p>
+      </div>
+      <div class="col-4 u-hide--small prefix-1">
+          <img src="https://assets.ubuntu.com/v1/08af835e-Snap+Store+shopping+icon.svg" alt="Get the Snap Store snap" class="p-icon--snap-store u-fade-up">
+      </div>
+    </div>
+  </section>
 
   {# templates #}
   {% set video = {'type': 'youtube', 'url': '${url}', 'id': '${id}'} %}
