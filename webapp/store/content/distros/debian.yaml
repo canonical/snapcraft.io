@@ -1,0 +1,6 @@
+name: Debian
+instruction: |
+    On Debian 9 (Stretch), snap can be installed directly from the command line:
+command: |
+    sudo apt update
+    sudo apt install snapd
