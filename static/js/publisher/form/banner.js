@@ -170,7 +170,7 @@ class Banner extends React.Component {
                 <br />
                 Max resolution: <b>4320 x 1440 pixels</b>
                 <br />
-                Aspect ratio: <b>3:1</b>
+                Allowed aspect ratio: <b>3:1</b>
                 <br />
                 File size limit: <b>2MB</b>
               </small>

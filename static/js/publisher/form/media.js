@@ -108,7 +108,7 @@ class Media extends React.Component {
               <br />
               Max resolution: <b>3840 x 2160 pixels</b>
               <br />
-              Aspect ratio: <b>Between 1:2 and 2:1</b>
+              Allowed aspect ratio: <b>Between 1:2 and 2:1</b>
               <br />
               File size limit: <b>2MB</b>
               <br />
