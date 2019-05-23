@@ -17,6 +17,52 @@ from webapp.api.exceptions import (
 )
 from webapp.markdown import parse_markdown_description
 
+import os
+import re
+from ruamel.yaml import YAML
+
+YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
+
+yaml = YAML()
+
+
+def get_file(filename, replaces={}):
+    """
+    Reads a file, replaces occurences of all the keys in `replaces` with
+    the correspondant values and returns the resulting string or None
+
+    Keyword arguments:
+    filename -- name if the file to load.
+    replaces -- key/values to replace in the file content (default {})
+    """
+    filepath = os.path.join(flask.current_app.root_path, filename)
+
+    try:
+        with open(filepath, "r") as f:
+            data = f.read()
+            for key in replaces:
+                data = data.replace(key, replaces[key])
+    except Exception:
+        data = None
+
+    return data
+
+
+def get_yaml(filename, replaces={}):
+    """
+    Reads a file, replaces occurences of all the keys in `replaces` with the
+    correspondant values and returns an ordered dict with the YAML content
+
+    Keyword arguments:
+    filename -- name if the file to load.
+    replaces -- key/values to replace in the file content (default {})
+    """
+    try:
+        data = get_file(filename, replaces)
+        return yaml.load(data)
+    except Exception:
+        return None
+
 
 def snap_details_views(store, api, handle_errors):
 
@@ -329,3 +375,26 @@ def snap_details_views(store, api, handle_errors):
         )
 
         return svg, 200, {"Content-Type": "image/svg+xml"}
+
+    @store.route('/install/<regex("' + snap_regex + '"):snap_name>/<distro>')
+    def snap_distro_install(snap_name, distro):
+        context = _get_context_snap_details(snap_name)
+        filename = f"store/content/distros/{distro}.yaml"
+
+        distro_data = get_yaml(filename)
+
+        if not distro_data:
+            flask.abort(404)
+
+        context.update(
+            {
+                "distro": distro,
+                "distro_name": distro_data["name"],
+                "distro_install_instruction": distro_data["instruction"],
+                "distro_install_command": distro_data["command"],
+            }
+        )
+
+        return flask.render_template(
+            "store/snap-distro-install.html", **context
+        )
