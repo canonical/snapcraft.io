@@ -44,159 +44,150 @@
 {% endblock %}
 
 {% block content %}
-  <div class="p-strip--light is-shallow distro-background">
-    <style>
-      .distro-background {
-        background-image: linear-gradient(-90deg, {{ distro_color_1 }}, {{ distro_color_2 }});
-      }
-    </style>
-    <div class="row">
-      <div class="col-8">
-        <h1 class="p-heading--two" style="color: #f7f7f7">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
-      </div>
-      <div class="col-3">
-        <img src="{{ distro_logo }}" />
+  <section class="p-strip--light distro-banner u-no-padding--top">
+    <div class="distro-banner__background">
+      <svg class="distro-banner__suru" viewBox="0 0 1440 776" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="b">
+            <stop stop-color="{{ distro_color_1 }}" offset="0%"/>
+            <stop stop-color="{{ distro_color_2 }}" offset="100%"/>
+          </linearGradient>
+          <path id="a" d="M0 0h1440v776H0z"/>
+          <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="c">
+            <stop stop-color="{{ distro_color_2 }}" offset="0%"/>
+            <stop stop-color="{{ distro_color_1 }}" offset="100%"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" fill-rule="evenodd">
+          <mask id="d" fill="#fff"><use xlink:href="#a"/></mask>
+          <use fill="url(#b)" xlink:href="#a"/>
+          <path fill="url(#c)" mask="url(#d)" d="M0 169l295 607H0V169L1440 0v776H703l737-432V0z"/>
+        </g>
+      </svg>
+      <div class="row">
+        <div class="mobile-col-2 col-8"></div>
+        <div class="mobile-col-2 col-4">
+          <img src="{{ distro_logo }}" />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="p-strip is-shallow">
+    <div class="p-strip">
+      <div class="row">
+        <h1 class="p-heading--two u-no-margin">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
+      </div>
+    </div>
+
     <div class="row">
-      <div class="p-snap-heading">
-        {% if icon_url %}
-          <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" data-live="icon" />
-        {% else %}
-          <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
-        {% endif %}
-        <div class="p-snap-heading__title">
-          <h1 class="p-heading--two p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
-          <div class="u-hide u-show--small">
-            {% include 'store/_snap-header-information.html' %}
+      <div class="p-card">
+        <div class="row">
+          <div class="details-block">
+            <div class="p-snap-heading">
+              {% if icon_url %}
+                <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" data-live="icon" />
+              {% else %}
+                <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
+              {% endif %}
+              <div class="p-snap-heading__title">
+                <h2 class="p-heading--two p-snap-heading__name" data-live="title">{{ snap_title }}</h2>
+                <div class="u-hide u-show--small">
+                  {% include 'store/_snap-header-information.html' %}
+                </div>
+                <ul class="p-inline-list--middot">
+                  <li class="p-inline-list__item u-hide--small">
+                    {% include 'store/_snap-header-information.html' %}
+                  </li>
+                  {% for category in categories %}<li class="p-inline-list__item">
+                    <a href="/search?category={{category.slug}}">{{ category.name }}</a>
+                  </li>{% endfor %}
+                </ul>
+              </div>
+
+              <div class="p-snap-install-buttons">
+                <a class="p-button--positive p-snap-install-buttons__install" href="#install">
+                  Install
+                </a>
+              </div>
+
+            </div>
           </div>
-          <ul class="p-inline-list--middot">
-            <li class="p-inline-list__item u-hide--small">
-              {% include 'store/_snap-header-information.html' %}
-            </li>
-            {% for category in categories %}<li class="p-inline-list__item">
-              <a href="/search?category={{category.slug}}">{{ category.name }}</a>
-            </li>{% endfor %}
-          </ul>
         </div>
 
-        <div class="p-snap-install-buttons">
-          <a class="p-button--positive p-snap-install-buttons__install" href="#install">
-            Install
-          </a>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  {% if screenshots or videos %}
-    <div class="p-strip--light is-shallow">
-      <div class="row" id="js-snap-screenshots" data-live="screenshots">
-        {% if videos %}
-          {% include "partials/_snap-details-video-layout.html" %}
-        {% elif screenshots %}
-          {% include "partials/_snap-details-image-layout.html" %}
+        {% if screenshots or videos %}
+          <div class="row" id="js-snap-screenshots" data-live="screenshots">
+            <div class="details-block">
+              {% if videos %}
+                {% include "partials/_snap-details-video-layout.html" %}
+              {% elif screenshots %}
+                {% include "partials/_snap-details-image-layout.html" %}
+              {% endif %}
+            </div>
+          </div>
         {% endif %}
-      </div>
-    </div>
-  {% endif %}
 
-  <div class="p-strip is-shallow">
-    <div class="row">
-      <div class="col-8">
-        {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
-        <div data-live="description">{{ description | safe }}</div>
-      </div>
-      <div class="col-4">
-        <h4>Details for {{ snap_title }}</h4>
-        <dl>
-          <dt>License</dt>
-          <dd data-live="license">{{ license }}</dd>
-          <dt>Last updated</dt>
-          <dd>{{ last_updated }}</dd>
-        </dl>
-      </div>
-    </div>
-  </div>
+        <div class="row">
+          <div class="col-8">
+            {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
+            <div data-live="description">{{ description | safe }}</div>
+          </div>
+          <div class="col-4">
+            <h4>Details for {{ snap_title }}</h4>
+            <dl>
+              <dt>License</dt>
+              <dd data-live="license">{{ license }}</dd>
+              <dt>Last updated</dt>
+              <dd>{{ last_updated }}</dd>
+            </dl>
+          </div>
+        </div>
 
-  {% if api_error %}
-    <div class="row">
-      <div class="col-12">
-        <div class="p-notification--negative">
-          <p class="p-notification__response">
-            <span class="p-notification__status">Error:</span> API request failed
-          </p>
+      </div>
+
+      <div id="install" class="p-card">
+        <div class="row">
+          <div class="col-10">
+          <h2>Snap install instructions for {{ distro_name }}</h2>
+          <p>Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully.</p>
+          <p>Snaps are discoverable and installable from the <a href="/store">Snap Store</a>, an app store with an audience of millions.</p>
+          </div>
+          <div class="u-hide--mobile col-2">
+            <img src="{{ distro_logo }}" />
+          </div>
+        </div>
+        <div class="row">
+          <h3>Enable snapd</h3>
+        </div>
+        {% for step in distro_install_steps %}
+        <div class="row">
+          <div class="col-7">
+            <p>{{ step.action|safe }}</p>
+          </div>
+          {% if step.command %}
+            <div class="col-5">
+              {% set snippet_value = step.command %}
+              {% set snippet_id = "distro-install-command-" + loop.index|string %}
+              {% if step.command.count('\n') == 0 %}
+                {% include "/partials/_code-snippet.html" %}
+              {% else %}
+                {% include "/partials/_code-snippet-multi.html" %}
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <div class="row">
+          <h3>Install {{ snap_title }}</h3>
+        </div>
+        <div class="row">
+          <div class="col-7">
+            <p>To install a snap, simply use the following command:</p>
+          </div>
+          <div class="col-5">
+            {% set snippet_value = "sudo snap install " + package_name %}
+            {% set snippet_id =  "snap-install-stable" %}
+            {% include "/partials/_code-snippet.html" %}
+          </div>
         </div>
       </div>
-    </div>
-  {% endif %}
-
-  <section class="p-strip is-shallow">
-    <div class="row">
-      <hr />
-    </div>
-  </section>
-
-  <div id="install" class="p-strip is-shallow">
-    <div class="row">
-      <h2>Snap install instructions for {{ distro_name }}</h2>
-    </div>
-    <div class="row">
-      <h3>Instructions to enable snapd support</h3>
-    </div>
-    {% for step in distro_install_steps %}
-    <div class="row">
-      <div class="col-7">
-        <p>{{ step.action|safe }}</p>
-      </div>
-      {% if step.command %}
-      <div class="col-5">
-        {% set snippet_value = step.command %}
-        {% set snippet_id = "distro-install-command-" + loop.index|string %}
-        {% if step.command.count('\n') == 0 %}
-          {% include "/partials/_code-snippet.html" %}
-        {% else %}
-          {% include "/partials/_code-snippet-multi.html" %}
-        {% endif %}
-      </div>
-      {% endif %}
-    </div>
-    {% endfor %}
-    <div class="row">
-      <h3>How to install a snap</h3>
-    </div>
-    <div class="row">
-      <div class="col-7">
-        <p>To install a snap, simply use the following command:</p>
-      </div>
-      <div class="col-5">
-        {% set snippet_value = "sudo snap install " + package_name %}
-        {% set snippet_id =  "snap-install-stable" %}
-        {% include "/partials/_code-snippet.html" %}
-      </div>
-    </div>
-    <div class="row">
-      <h3>Find more software in snapcraft.io</h3>
-    </div>
-    <div class="row">
-      <div class="col-7">
-        <p>Search for more snaps from the command line:</p>
-      </div>
-      <div class="col-5">
-        {% set snippet_value = 'sudo snap find "search query"' %}
-        {% set snippet_id =  "snap-search" %}
-        {% include "/partials/_code-snippet.html" %}
-      </div>
-    </div>
-  </div>
-
-
-  <section class="p-strip is-shallow">
-    <div class="row">
-      <hr />
     </div>
   </section>
 
@@ -213,25 +204,6 @@
     </div>
     <div class="row u-hide--medium u-hide--large">
       <a href="/search?category=featured" class="p-button--neutral u-float--right">See more in Featured</a>
-    </div>
-  </section>
-
-
-  <section class="p-strip--image is-deep is-dark p-strip--snap-store">
-    <div class="row u-vertically-center">
-      <div class="col-7 u-fade-left--medium">
-        <p class="u-hide--large u-hide--medium u-align--center">
-          <img src="https://assets.ubuntu.com/v1/08af835e-Snap+Store+shopping+icon.svg" alt="Get the Snap Store snap" class="p-icon--snap-store u-fade-up">
-        </p>
-        <h1 class="p-heading--two">Access the App Store for Linux <br class="u-hide--small u-hide--medium">from your desktop</h1>
-        <p class="u-no-padding--top p-heading--four">Easily find and install new applications or remove existing installed applications with the Snap Store snap.</p>
-        <p>
-          <a href="/snap-store" class="p-button--positive">Get the Snap Store</a>
-        </p>
-      </div>
-      <div class="col-4 u-hide--small prefix-1">
-          <img src="https://assets.ubuntu.com/v1/08af835e-Snap+Store+shopping+icon.svg" alt="Get the Snap Store snap" class="p-icon--snap-store u-fade-up">
-      </div>
     </div>
   </section>
 
