@@ -395,6 +395,16 @@ def snap_details_views(store, api, handle_errors):
             }
         )
 
+        try:
+            featured_snaps_results = api.get_searched_snaps(
+                snap_searched="", category="featured", size=10, page=1
+            )
+        except ApiError:
+            featured_snaps_results = []
+
+        featured_snaps = logic.get_searched_snaps(featured_snaps_results)
+
+        context.update({"featured_snaps": featured_snaps})
         return flask.render_template(
             "store/snap-distro-install.html", **context
         )
