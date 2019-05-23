@@ -242,6 +242,8 @@ $color-navigation-background: #252525;
 @import 'snapcraft_p-featured-snap';
 @include snapcraft-p-featured-snap;
 
+@import 'patterns_distro_banner';
+@include p-distro-banner;
 
 html,
 body {

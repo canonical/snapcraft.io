@@ -1,0 +1,38 @@
+@mixin p-distro-banner {
+  .distro-banner {
+    position: relative;
+  }
+
+  .distro-banner > * {
+    // make sure child elements render on top of absolutely positioned background
+    position: relative;
+  }
+
+  .distro-banner .p-card {
+    padding: 2rem;
+  }
+
+  .distro-banner h1 {
+    color: #f7f7f7;
+  }
+
+  .distro-banner__background {
+    width: 100%;
+    top: 0;
+    position: absolute;
+    z-index: 0;
+    min-height: 700px;
+    overflow: hidden;
+  }
+
+  .distro-banner__suru {
+    position: absolute;
+    width: 100%;
+    min-width: 1440px;
+    bottom: 0;
+  }
+
+  .details-block {
+    margin-bottom: 2rem;
+  }
+}
