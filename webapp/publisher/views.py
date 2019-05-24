@@ -18,8 +18,6 @@ account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
 
-marketo = marketo_api.MarketoApi()
-
 
 def refresh_redirect(path):
     try:
@@ -81,6 +79,7 @@ def get_account_details():
 
     flask_user = flask.session["openid"]
 
+    marketo = marketo_api.MarketoApi()
     marketo_user = marketo.get_user(flask_user["email"])
     marketo_subscribed = marketo.get_newsletter_subscription(
         marketo_user["id"]
@@ -105,6 +104,7 @@ def post_account_details():
     newsletter_status = flask.request.form.get("newsletter")
     email = flask.request.form.get("email")
 
+    marketo = marketo_api.MarketoApi()
     marketo.set_newsletter_subscription(email, newsletter_status)
 
     return flask.redirect(flask.url_for("account.get_account_details"))
