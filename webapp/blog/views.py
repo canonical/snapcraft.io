@@ -1,7 +1,6 @@
 import flask
-
 import webapp.api.blog as api
-from webapp.api.exceptions import ApiError, ApiCircuitBreaker
+from webapp.api.exceptions import ApiCircuitBreaker, ApiError
 from webapp.blog import logic
 
 blog = flask.Blueprint(

@@ -1,5 +1,4 @@
 import os
-import flask
 import re
 from io import StringIO
 

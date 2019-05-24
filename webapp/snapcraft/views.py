@@ -1,5 +1,4 @@
 import flask
-
 from webapp.snapcraft import logic
 
 

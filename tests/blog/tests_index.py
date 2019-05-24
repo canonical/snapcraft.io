@@ -1,5 +1,4 @@
 import requests
-
 import responses
 from flask_testing import TestCase
 from webapp import api

@@ -28,49 +28,57 @@ Account details — Linux software in the Snap Store
       Full name:
     </div>
     <div class="col-6">
-      <p><b>{{ displayname }}</b></p>
+      <p class="u-no-padding--top"><b>{{ displayname }}</b></p>
       <p class="p-form-help-text">
         Who your users will see as the publisher of your snap.
       </p>
     </div>
   </div>
-  <div class="row u-no-margin--top">
-    <hr />
-  </div>
-  <div class="row u-no-margin--top">
+  <div class="row">
     <div class="col-2">
       Username:
     </div>
     <div class="col-6">
-      <p><b>{{ username }}</b></p>
+      <p class="u-no-padding--top"><b>{{ username }}</b></p>
       <p class="p-form-help-text">
         This is a shorthand version of your name, used when space on screen is limited.
       </p>
     </div>
   </div>
-  <div class="row u-no-margin--top">
-    <hr />
-  </div>
-  <div class="row u-no-margin--top">
+  <div class="row">
     <div class="col-2">
-      Email:
+      Email address:
     </div>
     <div class="col-6">
-      <p><b>{{ email }}</b></p>
+      <p class="u-no-padding--top"><b>{{ email }}</b></p>
       <p class="p-form-help-text">
         Your email address will not be shared publicly.
       </p>
     </div>
   </div>
-  <div class="row u-no-margin--top">
-    <hr />
-  </div>
-  <div class="row u-no-margin--top">
+  <div class="row">
     <div class="col-2">
-      Subscriptions:
+      Email preferences:
     </div>
     <div class="col-6">
-      <p><b>Newsletter</b> - {{ subscriptions.newsletter }}</p>
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="email" value="{{ email }}" />
+            <input
+                    type="checkbox"
+                    {% if subscriptions.newsletter %}checked{% endif %}
+                    name="newsletter"
+                    id="newsletter">
+            <label for="newsletter" class="u-no-margin--bottom">
+                Blog posts delivered
+            </label>
+            <p class="p-form-help-text">
+                Get our latest and greatest blog posts delivered to your inbox.
+            </p>
+
+            <p><br />Please note, you will still recieve required platform related emails such as registration of snap names, the review status of a snap or any security vulnerabilities.</p>
+            <button type="submit" class="p-button--positive">Save email preferences</button>
+        </form>
     </div>
   </div>
 </section>

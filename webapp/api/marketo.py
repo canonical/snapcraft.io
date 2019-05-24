@@ -38,9 +38,13 @@ LEAD_NEWSLETTER_SUBSCRIPTION = "".join(
     ]
 )
 
+LEADS = "".join([MARKETO_URL, "rest/v1/", "leads.json?access_token={token}"])
+
 
 class MarketoApi:
-    api_session = api.requests.Session(timeout=(1, 6))
+    # Marketo isn't fast, so give it plenty of time to make a connection,
+    # and respond
+    api_session = api.requests.Session(timeout=(2, 12))
     token = ""
 
     def __init__(self):
@@ -80,7 +84,6 @@ class MarketoApi:
             LEAD_BY_EMAIL.format(token=self.token, email=email)
         )
         response = self.process_response(lead_request)
-        print(response)
         return response["result"][0]
 
     def get_newsletter_subscription(self, lead_id):
@@ -90,4 +93,28 @@ class MarketoApi:
             )
         )
         response = self.process_response(subscription_request)
-        return response["result"][0]
+        if "result" in response:
+            return response["result"][0]
+        else:
+            return None
+
+    def set_newsletter_subscription(self, lead_email, newsletter_status):
+        if not newsletter_status:
+            newsletter_status = False
+        else:
+            newsletter_status = True
+
+        payload = {
+            "action": "updateOnly",
+            "asyncProcessing": False,
+            "input": [
+                {"email": lead_email, "snapcraftnewsletter": newsletter_status}
+            ],
+        }
+
+        change_subscription_request = self.api_session.post(
+            LEADS.format(token=self.token), json=payload
+        )
+
+        response = self.process_response(change_subscription_request)
+        return response

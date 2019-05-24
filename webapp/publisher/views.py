@@ -1,8 +1,7 @@
 import flask
-from webapp import authentication
 import webapp.api.dashboard as api
 import webapp.api.marketo as marketo_api
-from webapp.decorators import login_required
+from webapp import authentication
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiCircuitBreaker,
@@ -13,11 +12,13 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-
+from webapp.decorators import login_required
 
 account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
+
+marketo = marketo_api.MarketoApi()
 
 
 def refresh_redirect(path):
@@ -80,7 +81,6 @@ def get_account_details():
 
     flask_user = flask.session["openid"]
 
-    marketo = marketo_api.MarketoApi()
     marketo_user = marketo.get_user(flask_user["email"])
     marketo_subscribed = marketo.get_newsletter_subscription(
         marketo_user["id"]
@@ -97,6 +97,17 @@ def get_account_details():
     }
 
     return flask.render_template("publisher/account-details.html", **context)
+
+
+@account.route("/details", methods=["POST"])
+@login_required
+def post_account_details():
+    newsletter_status = flask.request.form.get("newsletter")
+    email = flask.request.form.get("email")
+
+    marketo.set_newsletter_subscription(email, newsletter_status)
+
+    return flask.redirect(flask.url_for("account.get_account_details"))
 
 
 @account.route("/agreement")
