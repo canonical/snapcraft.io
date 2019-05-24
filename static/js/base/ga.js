@@ -65,6 +65,26 @@ if (typeof dataLayer !== "undefined") {
         break;
       }
     }
+
+    // clicking on copy clipboard button
+    if (target.matches(".js-clipboard-copy")) {
+      e.stopImmediatePropagation();
+      const clipboardTarget = target.dataset.clipboardTarget;
+
+      const clipboardTargetEl = document.querySelector(clipboardTarget);
+      const copiedValue = clipboardTargetEl.value
+        ? clipboardTargetEl.value.trim()
+        : clipboardTargetEl.text
+          ? clipboardTargetEl.text.trim()
+          : clipboardTargetEl.innerText.trim();
+
+      triggerEvent(
+        "clipboard-copy",
+        origin,
+        clipboardTarget,
+        `Copied code: ${copiedValue}`
+      );
+    }
   });
 }
 
