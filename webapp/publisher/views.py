@@ -18,6 +18,8 @@ account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
 
+marketo = marketo_api.MarketoApi()
+
 
 def refresh_redirect(path):
     try:
@@ -85,7 +87,6 @@ def get_account_details():
     # if anything fails, just continue and don't show
     # this section
     try:
-        marketo = marketo_api.MarketoApi()
         marketo_user = marketo.get_user(flask_user["email"])
         marketo_subscribed = marketo.get_newsletter_subscription(
             marketo_user["id"]
@@ -116,11 +117,14 @@ def get_account_details():
 @account.route("/details", methods=["POST"])
 @login_required
 def post_account_details():
-    newsletter_status = flask.request.form.get("newsletter")
-    email = flask.request.form.get("email")
+    try:
+        newsletter_status = flask.request.form.get("newsletter")
+        email = flask.request.form.get("email")
 
-    marketo = marketo_api.MarketoApi()
-    marketo.set_newsletter_subscription(email, newsletter_status)
+        marketo.set_newsletter_subscription(email, newsletter_status)
+        flask.flash("Changes applied successfully.", "positive")
+    except Exception:
+        flask.flash("There was an error, please try again.", "negative")
 
     return flask.redirect(flask.url_for("account.get_account_details"))
 

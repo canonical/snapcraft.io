@@ -8,6 +8,7 @@ import { initCategories } from "./market/categories";
 import markdownToggle from "./market/markdown";
 import stickyListingBar from "./market/stickyListingBar";
 import { preview } from "./preview";
+import submitEnabler from "./submitEnabler";
 
 const settings = { enableInput, changeHandler };
 
@@ -21,5 +22,6 @@ export {
   selector,
   stickyListingBar,
   settings,
-  preview
+  preview,
+  submitEnabler
 };

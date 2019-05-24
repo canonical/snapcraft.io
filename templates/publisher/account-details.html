@@ -5,7 +5,23 @@ Account details — Linux software in the Snap Store
 {% endblock %}
 
 {% block content %}
+
 <section class="p-strip">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="row">
+    <div class="col-12">
+      {% for category, message in messages %}
+      <div id="market-form-status" class="p-notification--{{ category }}">
+        <p class="p-notification__response">
+          {{ message }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
   <div class="row">
     <div class="col-12">
       <h3 class="u-float--left">Publisher account details</h3>
@@ -62,7 +78,7 @@ Account details — Linux software in the Snap Store
         Email preferences:
       </div>
       <div class="col-6">
-          <form method="post">
+          <form method="post" class="js-preferences-form">
               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
               <input type="hidden" name="email" value="{{ email }}" />
               <input
@@ -84,4 +100,15 @@ Account details — Linux software in the Snap Store
     </div>
   {% endif %}
 </section>
+{% endblock %}
+
+{% block scripts %}
+{% if subscriptions %}
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script>
+  Raven.context(function () {
+    snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);
+  });
+</script>
+{% endif %}
 {% endblock %}

@@ -65,7 +65,7 @@ class MarketoApi:
             raise api_error_exception
 
         if not response.ok:
-            if "success" in body and body["success"] is False:
+            if body.get("success") is False:
                 api_error_exception = ApiResponseErrorList(
                     "The api returned a list of errors",
                     body["errors"][0]["code"],
