@@ -71,8 +71,8 @@ def after_login(resp):
             "image": resp.image,
             "email": account["email"],
         }
-        snaps, names = logic.get_snaps_account_info(account)
-        flask.session["user_snaps"] = list(snaps.keys())
+        owned, shared = logic.get_snap_names_by_ownership(account)
+        flask.session["user_shared_snaps"] = shared
 
     except ApiCircuitBreaker:
         flask.abort(503)
