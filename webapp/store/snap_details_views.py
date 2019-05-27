@@ -119,8 +119,11 @@ def snap_details_views(store, api, handle_errors):
         is_users_snap = False
         if authentication.is_authenticated(flask.session):
             if (
-                "user_snaps" in flask.session
-                and snap_name in flask.session.get("user_snaps")
+                flask.session.get("openid").get("nickname")
+                == details["snap"]["publisher"]["username"]
+            ) or (
+                "user_shared_snaps" in flask.session
+                and snap_name in flask.session.get("user_shared_snaps")
             ):
                 is_users_snap = True
 

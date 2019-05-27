@@ -37,6 +37,7 @@ def empty_session(session):
     session.pop("macaroon_root", None)
     session.pop("macaroon_discharge", None)
     session.pop("openid", None)
+    session.pop("user_shared_snaps", None)
 
 
 def get_caveat_id(root):

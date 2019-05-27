@@ -7,10 +7,10 @@ from json import dumps
 def get_snaps_account_info(account_info):
     """Get snaps from the account information of a user
 
-    :param account_info The account informations
+    :param account_info: The account informations
 
-    :return A list of snaps
-    :return A list of registred snaps
+    :return: A list of snaps
+    :return: A list of registred snaps
     """
     user_snaps = {}
     registered_snaps = {}
@@ -50,13 +50,36 @@ def get_snaps_account_info(account_info):
     return user_snaps, registered_snaps
 
 
+def get_snap_names_by_ownership(account_info):
+    """Get list of snaps names user is collaborator of
+
+    :param account_info: The account informations
+
+    :return: A list of owned snaps names
+    :return: A list of shared snaps names
+    """
+
+    snaps, registered_names = get_snaps_account_info(account_info)
+
+    owned_snaps_names = []
+    shared_snaps_names = []
+
+    for snap in snaps:
+        if snaps[snap]["publisher"]["username"] == account_info["username"]:
+            owned_snaps_names.append(snap)
+        else:
+            shared_snaps_names.append(snap)
+
+    return owned_snaps_names, shared_snaps_names
+
+
 def verify_base_metrics(active_devices):
     """Verify that the base metric exists in the list of available
     metrics
 
-    :param active_devices The base metric
+    :param active_devices: The base metric
 
-    :return The base metric if it's available, 'version' if not
+    :return: The base metric if it's available, 'version' if not
     """
     if active_devices not in ("version", "os", "channel"):
         return "version"
@@ -79,9 +102,9 @@ def extract_metrics_period(metric_period):
         'bucket': 30
       }
 
-    :param metric_period The metric period requested
+    :param metric_period: The metric period requested
 
-    :returns A dictionnary with the differents values of the period
+    :returns: A dictionnary with the differents values of the period
     """
     allowed_periods = ["d", "m", "y"]
 
