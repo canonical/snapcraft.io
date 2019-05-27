@@ -383,14 +383,13 @@ def snap_details_views(store, api, handle_errors):
 
     @store.route('/install/<regex("' + snap_regex + '"):snap_name>/<distro>')
     def snap_distro_install(snap_name, distro):
-        context = _get_context_snap_details(snap_name)
         filename = f"store/content/distros/{distro}.yaml"
-
         distro_data = get_yaml(filename)
 
         if not distro_data:
             flask.abort(404)
 
+        context = _get_context_snap_details(snap_name)
         context.update(
             {
                 "distro": distro,
