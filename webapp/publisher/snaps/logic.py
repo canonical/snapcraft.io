@@ -1,7 +1,8 @@
-import hashlib
 import datetime
-from dateutil import parser
+import hashlib
 from json import dumps
+
+from dateutil import parser
 
 
 def get_snaps_account_info(account_info):

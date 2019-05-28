@@ -7,12 +7,13 @@ from webapp.api.exceptions import (
     ApiResponseErrorList,
 )
 
-MARKETO_URL = os.getenv("MARKETO_URL", "")
-MARKETO_CLIENT_ID = os.getenv("MARKETO_CLIENT_ID", "")
-MARKETO_CLIENT_SECRET = os.getenv("MARKETO_CLIENT_SECRET", "")
+MARKETO_URL = os.getenv("MARKETO_URL", "test.com/")
+MARKETO_CLIENT_ID = os.getenv("MARKETO_CLIENT_ID", "123")
+MARKETO_CLIENT_SECRET = os.getenv("MARKETO_CLIENT_SECRET", "321")
 
 AUTH_URL = "".join(
     [
+        "https://",
         MARKETO_URL,
         "identity/oauth/token?grant_type=client_credentials&client_id=",
         MARKETO_CLIENT_ID,
@@ -23,6 +24,7 @@ AUTH_URL = "".join(
 
 LEAD_BY_EMAIL = "".join(
     [
+        "https://",
         MARKETO_URL,
         "rest/v1/leads.json?access_token={token}",
         "&filterType=email&filterValues={email}&fields=id",
@@ -31,6 +33,7 @@ LEAD_BY_EMAIL = "".join(
 
 LEAD_NEWSLETTER_SUBSCRIPTION = "".join(
     [
+        "https://",
         MARKETO_URL,
         "rest/v1/",
         "lead/{lead_id}.json?access_token={token}",
@@ -38,7 +41,9 @@ LEAD_NEWSLETTER_SUBSCRIPTION = "".join(
     ]
 )
 
-LEADS = "".join([MARKETO_URL, "rest/v1/", "leads.json?access_token={token}"])
+LEADS = "".join(
+    ["https://", MARKETO_URL, "rest/v1/", "leads.json?access_token={token}"]
+)
 
 
 class MarketoApi:

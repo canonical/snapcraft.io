@@ -6,6 +6,7 @@ import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from pybadges import badge
+from webapp import authentication
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiError,
@@ -15,7 +16,6 @@ from webapp.api.exceptions import (
     ApiTimeoutError,
 )
 from webapp.markdown import parse_markdown_description
-from webapp import authentication
 
 
 def snap_details_views(store, api, handle_errors):

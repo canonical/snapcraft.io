@@ -79,20 +79,35 @@ def get_account_details():
 
     flask_user = flask.session["openid"]
 
-    marketo = marketo_api.MarketoApi()
-    marketo_user = marketo.get_user(flask_user["email"])
-    marketo_subscribed = marketo.get_newsletter_subscription(
-        marketo_user["id"]
-    )
+    subscriptions = None
+    subscribed_to_newsletter = None
+    # don't rely on marketo to show the page,
+    # if anything fails, just continue and don't show
+    # this section
+    try:
+        marketo = marketo_api.MarketoApi()
+        marketo_user = marketo.get_user(flask_user["email"])
+        marketo_subscribed = marketo.get_newsletter_subscription(
+            marketo_user["id"]
+        )
+        subscribed_to_newsletter = False
+        if (
+            "snapcraftnewsletter" in marketo_subscribed
+            and marketo_subscribed["snapcraftnewsletter"]
+        ):
+            subscribed_to_newsletter = True
+    except Exception:
+        pass
+
+    if subscribed_to_newsletter is not None:
+        subscriptions = {"newsletter": subscribed_to_newsletter}
 
     context = {
         "image": flask_user["image"],
         "username": flask_user["nickname"],
         "displayname": flask_user["fullname"],
         "email": flask_user["email"],
-        "subscriptions": {
-            "newsletter": marketo_subscribed["snapcraftnewsletter"]
-        },
+        "subscriptions": subscriptions,
     }
 
     return flask.render_template("publisher/account-details.html", **context)
@@ -107,7 +122,7 @@ def post_account_details():
     marketo = marketo_api.MarketoApi()
     marketo.set_newsletter_subscription(email, newsletter_status)
 
-    return flask.redirect(flask.url_for("account.get_account_details"))
+    return flask.redirect(flask.url_for(".get_account"))
 
 
 @account.route("/agreement")

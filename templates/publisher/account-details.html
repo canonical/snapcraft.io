@@ -56,30 +56,32 @@ Account details — Linux software in the Snap Store
       </p>
     </div>
   </div>
-  <div class="row">
-    <div class="col-2">
-      Email preferences:
-    </div>
-    <div class="col-6">
-        <form method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-            <input type="hidden" name="email" value="{{ email }}" />
-            <input
-                    type="checkbox"
-                    {% if subscriptions.newsletter %}checked{% endif %}
-                    name="newsletter"
-                    id="newsletter">
-            <label for="newsletter" class="u-no-margin--bottom">
-                Blog posts delivered
-            </label>
-            <p class="p-form-help-text">
-                Get our latest and greatest blog posts delivered to your inbox.
-            </p>
+  {% if subscriptions %}
+    <div class="row">
+      <div class="col-2">
+        Email preferences:
+      </div>
+      <div class="col-6">
+          <form method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <input type="hidden" name="email" value="{{ email }}" />
+              <input
+                      type="checkbox"
+                      {% if subscriptions.newsletter %}checked{% endif %}
+                      name="newsletter"
+                      id="newsletter">
+              <label for="newsletter" class="u-no-margin--bottom">
+                  Blog posts delivered
+              </label>
+              <p class="p-form-help-text">
+                  Get our latest and greatest blog posts delivered to your inbox.
+              </p>
 
-            <p><br />Please note, you will still recieve required platform related emails such as registration of snap names, the review status of a snap or any security vulnerabilities.</p>
-            <button type="submit" class="p-button--positive">Save email preferences</button>
-        </form>
+              <p><br />Please note, you will still recieve required platform related emails such as registration of snap names, the review status of a snap or any security vulnerabilities.</p>
+              <button type="submit" class="p-button--positive">Save email preferences</button>
+          </form>
+      </div>
     </div>
-  </div>
+  {% endif %}
 </section>
 {% endblock %}
