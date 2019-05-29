@@ -142,18 +142,20 @@ function imageRestrictions(file, restrictions) {
             Math.round((aspectRatioMax[0] / aspectRatioMax[1]) * 100) / 100;
 
           const message = [
-            `(${width}x${height} pixels) is not the correct aspect ratio:`
+            `(${width}x${height} pixels) is not the correct aspect ratio.`
           ];
 
           if (min === max) {
             message.push(
-              `The image must be ${min}:1. (e.g.,
-                ${height * min}x${height})`
+              `The image must be ${min}:1 (e.g.,
+                ${height * min}x${height}) or a maximum of
+              ${restrictions.width.max}x${restrictions.height.max}.`
             );
           } else {
             message.push(
               `The width must be between ${min}x (${height * min} pixels) and
-              ${max}x the height (${height * max} pixels).`
+              ${max}x the height (${height * max} pixels) or a maximum of
+              ${restrictions.width.max}x${restrictions.height.max}.`
             );
           }
 
