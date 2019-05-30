@@ -1,4 +1,5 @@
-$cc-button-size: 36 * $px;
+// TODO: $px is no more, also check if this pattern is still needed
+$cc-button-size: 2rem;
 $color-mid: #999 !default;
 
 @mixin vf-p-code-copyable {

@@ -22,7 +22,7 @@ $color-navigation-background: #252525;
 @include vf-p-muted-heading;
 @include vf-p-navigation;
 @include vf-p-notification;
-@include vf-p-footer;
+// REMOVED: @include vf-p-footer;
 @include vf-p-tooltips;
 @include vf-p-forms;
 @include vf-p-form-help-text;
@@ -30,7 +30,10 @@ $color-navigation-background: #252525;
 @include vf-p-matrix;
 @include vf-p-icons;
 @include vf-p-heading-icon;
-@include vf-p-code-snippet;
+
+// RENAMED: @include vf-p-code-snippet;
+@include vf-p-code-copyable;
+
 @include vf-p-form-validation;
 @include vf-p-contextual-menu;
 @include vf-p-breadcrumbs;
@@ -49,6 +52,37 @@ $color-navigation-background: #252525;
 @include vf-u-equal-height;
 @include vf-u-hide;
 @include vf-u-show;
+
+// needed by grid (maybe fixed in vanilla already)
+@include vf-u-layout;
+
+// deprecated variable names to change:
+$color-warning: $color-caution;
+$spv-intra--condensed:	$spv-inner--x-small;
+$spv-intra--condensed--scaleable:	$spv-inner--x-small--scaleable;
+$spv-intra:	$spv-inner--small;
+$spv-intra--scaleable:	$spv-inner--scaleable;
+$spv-intra--expanded:	$spv-inner--medium;
+
+
+$spv-inter--condensed:	$spv-outer--small;
+$spv-inter--condensed-scaleable:	$spv-outer--small-scaleable;
+$spv-inter--regular:	$spv-outer--medium;
+$spv-inter--scaleable:	$spv-outer--scaleable;
+
+$spv-inter--shallow-scaleable:	$spv-outer--shallow-scaleable;
+$spv-inter--regular-scaleable:	$spv-outer--regular-scaleable;
+$spv-inter--deep-scaleable:	$spv-outer--deep-scaleable;
+
+$sph-intra--condensed:	$sph-inner--small;
+$sph-intra:	$sph-inner;
+$sph-intra--expanded:	$sph-inner--large;
+
+$sph-inter:	$sph-outer;
+$sph-inter--expanded:	$sph-outer--large;
+
+
+
 
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;

@@ -39,7 +39,8 @@
     position: relative;
 
     .p-editable-icon__icon {
-      @include vf-icon-plus(007aa6);
+      // TODO: was "007aa6" that was failing, check if it works:
+      @include vf-icon-plus(#007aa6);
       background-position: center;
       background-repeat: no-repeat;
       background-size: 1rem;

@@ -7,7 +7,8 @@
 
     @media screen and (max-width: $breakpoint-navigation-threshold) {
       .col-2 {
-        @include column-base;
+        // TODO: column-base doesn't exist, what we want to do here?
+        //@include column-base;
         width: column-width(6);
       }
 
