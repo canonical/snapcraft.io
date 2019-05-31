@@ -44,9 +44,19 @@
 {% endblock %}
 
 {% block content %}
-  <div class="p-strip--light is-shallow snapcraft-banner-background">
+  <div class="p-strip--light is-shallow distro-background">
+    <style>
+      .distro-background {
+        background-image: linear-gradient(-90deg, {{ distro_color_1 }}, {{ distro_color_2 }});
+      }
+    </style>
     <div class="row">
-      <h1 class="u-no-margin">How to install {{ snap_title }} on {{ distro_name }}</h1>
+      <div class="col-8">
+        <h1 class="p-heading--two" style="color: #f7f7f7">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
+      </div>
+      <div class="col-3">
+        <img src="{{ distro_logo }}" />
+      </div>
     </div>
   </div>
   <div class="p-strip is-shallow">
@@ -137,20 +147,24 @@
     <div class="row">
       <h3>Instructions to enable snapd support</h3>
     </div>
+    {% for step in distro_install_steps %}
     <div class="row">
       <div class="col-7">
-        <p>{{ distro_install_instruction }}</p>
+        <p>{{ step.action|safe }}</p>
       </div>
+      {% if step.command %}
       <div class="col-5">
-        {% set snippet_value = distro_install_command %}
-        {% set snippet_id = "distro-install-command" %}
-        {% if distro_install_command.count('\n') == 0 %}
+        {% set snippet_value = step.command %}
+        {% set snippet_id = "distro-install-command-" + loop.index|string %}
+        {% if step.command.count('\n') == 0 %}
           {% include "/partials/_code-snippet.html" %}
         {% else %}
           {% include "/partials/_code-snippet-multi.html" %}
         {% endif %}
       </div>
+      {% endif %}
     </div>
+    {% endfor %}
     <div class="row">
       <h3>How to install a snap</h3>
     </div>

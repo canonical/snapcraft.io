@@ -389,8 +389,10 @@ def snap_details_views(store, api, handle_errors):
             {
                 "distro": distro,
                 "distro_name": distro_data["name"],
-                "distro_install_instruction": distro_data["instruction"],
-                "distro_install_command": distro_data["command"],
+                "distro_logo": distro_data["logo"],
+                "distro_color_1": distro_data["color-1"],
+                "distro_color_2": distro_data["color-2"],
+                "distro_install_steps": distro_data["install"],
             }
         )
 
