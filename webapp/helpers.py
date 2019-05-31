@@ -1,9 +1,19 @@
 import json
 import flask
+import os
+
 from ruamel.yaml import YAML
 from werkzeug.routing import BaseConverter
 
-yaml = YAML(typ="safe")
+
+_yaml = YAML(typ="rt")
+_yaml_safe = YAML(typ="safe")
+
+
+def get_yaml_loader(typ="safe"):
+    if typ == "safe":
+        return _yaml_safe
+    return _yaml
 
 
 class RegexConverter(BaseConverter):
@@ -42,19 +52,46 @@ def get_default_track(snap_name):
     return default_track
 
 
-def get_livestreams():
-    content = _get_file("snapcraft/content/snapcraft_live.yaml")
+def get_file(filename, replaces={}):
+    """
+    Reads a file, replaces occurences of all the keys in `replaces` with
+    the correspondant values and returns the resulting string or None
 
-    return content
+    Keyword arguments:
+    filename -- name if the file to load.
+    replaces -- key/values to replace in the file content (default {})
+    """
+    filepath = os.path.join(flask.current_app.root_path, filename)
 
-
-def _get_file(yaml_file):
     try:
-        with open(
-            "{}/{}".format(flask.current_app.root_path, yaml_file), "r"
-        ) as stream:
-            data = yaml.load(stream)
+        with open(filepath, "r") as f:
+            data = f.read()
+            for key in replaces:
+                data = data.replace(key, replaces[key])
     except Exception:
         data = None
 
     return data
+
+
+def get_yaml(filename, typ="safe", replaces={}):
+    """
+    Reads a file, replaces occurences of all the keys in `replaces` with the
+    correspondant values and returns an ordered dict with the YAML content
+
+    Keyword arguments:
+    filename -- name if the file to load.
+    typ -- type of yaml loader
+    replaces -- key/values to replace in the file content (default {})
+    """
+    try:
+        yaml = get_yaml_loader(typ)
+        data = get_file(filename, replaces)
+        return yaml.load(data)
+    except Exception:
+        return None
+
+
+def dump_yaml(data, stream, typ="safe"):
+    yaml = get_yaml_loader(typ)
+    yaml.dump(data, stream)

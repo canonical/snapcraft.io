@@ -290,8 +290,8 @@ def store_blueprint(store_query=None, testing=False):
             "PUBLISHER_PAGES"
         ]
 
-        context = helpers._get_file(
-            publisher_content_path + publisher + ".yaml"
+        context = helpers.get_yaml(
+            publisher_content_path + publisher + ".yaml", typ="safe"
         )
 
         if not context:

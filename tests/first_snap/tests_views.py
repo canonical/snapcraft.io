@@ -1,8 +1,9 @@
 import os
-from unittest.mock import mock_open, patch
 
-import webapp.first_snap.views as views
+from unittest.mock import mock_open, patch
 from flask_testing import TestCase
+
+from webapp import helpers
 from webapp.app import create_app
 
 
@@ -17,7 +18,7 @@ class FirstSnap(TestCase):
 
     @patch("builtins.open", new_callable=mock_open, read_data="test: test")
     def test_get_yaml(self, mock_open_file):
-        yaml_read = views.get_yaml("filename.yaml")
+        yaml_read = helpers.get_yaml("filename.yaml", typ="rt")
         self.assertEqual(yaml_read, {"test": "test"})
         mock_open_file.assert_called_with(
             os.path.join(self.app.root_path, "filename.yaml"), "r"
@@ -27,7 +28,7 @@ class FirstSnap(TestCase):
         "builtins.open", new_callable=mock_open, read_data="test: test: test"
     )
     def test_get_yaml_error(self, mock_open_file):
-        yaml_read = views.get_yaml("filename.yaml")
+        yaml_read = helpers.get_yaml("filename.yaml", typ="rt")
         self.assertEqual(yaml_read, None)
         mock_open_file.assert_called_with(
             os.path.join(self.app.root_path, "filename.yaml"), "r"

@@ -9,7 +9,9 @@ def get_livestreams():
     :returns: Dictionary of livestream details
     """
     livestream_to_show = None
-    livestreams = helpers.get_livestreams()
+    livestreams = helpers.get_yaml(
+        "snapcraft/content/snapcraft_live.yaml", typ="safe"
+    )
 
     if livestreams:
         now = datetime.now()

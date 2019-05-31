@@ -2,13 +2,12 @@ import os
 import flask
 import re
 from io import StringIO
-from ruamel.yaml import YAML
 
+from webapp import helpers
 from webapp.first_snap import logic
 
 YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
 
-yaml = YAML()
 
 first_snap = flask.Blueprint(
     "fist_snap_flow",
@@ -16,44 +15,6 @@ first_snap = flask.Blueprint(
     template_folder="/templates",
     static_folder="/static",
 )
-
-
-def get_file(filename, replaces={}):
-    """
-    Reads a file, replaces occurences of all the keys in `replaces` with
-    the correspondant values and returns the resulting string or None
-
-    Keyword arguments:
-    filename -- name if the file to load.
-    replaces -- key/values to replace in the file content (default {})
-    """
-    filepath = os.path.join(flask.current_app.root_path, filename)
-
-    try:
-        with open(filepath, "r") as f:
-            data = f.read()
-            for key in replaces:
-                data = data.replace(key, replaces[key])
-    except Exception:
-        data = None
-
-    return data
-
-
-def get_yaml(filename, replaces={}):
-    """
-    Reads a file, replaces occurences of all the keys in `replaces` with the
-    correspondant values and returns an ordered dict with the YAML content
-
-    Keyword arguments:
-    filename -- name if the file to load.
-    replaces -- key/values to replace in the file content (default {})
-    """
-    try:
-        data = get_file(filename, replaces)
-        return yaml.load(data)
-    except Exception:
-        return None
 
 
 def transform_snapcraft_yaml(snapcraft_yaml):
@@ -65,16 +26,16 @@ def transform_snapcraft_yaml(snapcraft_yaml):
     snapcraft_yaml -- content of a snapcraft.yaml file
     """
     for key in snapcraft_yaml:
-        content = StringIO()
+        stream = StringIO()
         data = {}
         data[key] = snapcraft_yaml[key]
-        yaml.dump(data, content)
-        content = content.getvalue()
+        helpers.dump_yaml(data, stream, typ="rt")
+        stream = stream.getvalue()
 
         # Assuming content starts with yaml key name, wrap it in <b>
         # for some code highligthing in HTML
-        content_HTML = re.sub(YAML_KEY_REGEXP, r"<b>\1</b>\2", content)
-        snapcraft_yaml[key] = content_HTML
+        content = re.sub(YAML_KEY_REGEXP, r"<b>\1</b>\2", stream)
+        snapcraft_yaml[key] = content
 
     return snapcraft_yaml
 
@@ -105,7 +66,7 @@ def get_language_snapcraft_yaml(language):
     filename = f"first_snap/content/{language}/package.yaml"
     snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_yaml(filename)
+    steps = helpers.get_yaml(filename, typ="rt")
 
     if not steps:
         return flask.abort(404)
@@ -115,7 +76,9 @@ def get_language_snapcraft_yaml(language):
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
 
-    snapcraft_yaml = get_file(snapcraft_yaml_filename, {"${name}": snap_name})
+    snapcraft_yaml = helpers.get_file(
+        snapcraft_yaml_filename, {"${name}": snap_name}
+    )
 
     if not snapcraft_yaml:
         return flask.abort(404)
@@ -134,7 +97,7 @@ def get_package(language, operating_system):
     annotations_filename = "first_snap/content/snapcraft_yaml_annotations.yaml"
 
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_yaml(filename)
+    steps = helpers.get_yaml(filename, typ="rt")
 
     if not steps:
         return flask.abort(404)
@@ -154,8 +117,10 @@ def get_package(language, operating_system):
         "has_user_chosen_name": has_user_chosen_name,
     }
 
-    snapcraft_yaml = get_yaml(snapcraft_yaml_filename, {"${name}": snap_name})
-    annotations = get_yaml(annotations_filename)
+    snapcraft_yaml = helpers.get_yaml(
+        snapcraft_yaml_filename, typ="rt", replaces={"${name}": snap_name}
+    )
+    annotations = helpers.get_yaml(annotations_filename, typ="rt")
 
     if snapcraft_yaml:
         context["snapcraft_yaml"] = transform_snapcraft_yaml(snapcraft_yaml)
@@ -169,7 +134,7 @@ def get_package(language, operating_system):
 def get_build(language, operating_system):
     filename = f"first_snap/content/{language}/build.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_yaml(filename)
+    steps = helpers.get_yaml(filename, typ="rt")
     operating_system_parts = operating_system.split("-")
 
     operating_system_only = operating_system_parts[0]
@@ -205,7 +170,7 @@ def get_build(language, operating_system):
 def get_test(language, operating_system):
     filename = f"first_snap/content/{language}/test.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = get_yaml(filename)
+    steps = helpers.get_yaml(filename, typ="rt")
 
     operating_system_only = operating_system.split("-")[0]
 
@@ -244,7 +209,7 @@ def get_push(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
 
-    data = get_yaml(filename)
+    data = helpers.get_yaml(filename, typ="rt")
 
     if not data:
         return flask.abort(404)
