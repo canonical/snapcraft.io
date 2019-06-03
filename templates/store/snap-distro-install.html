@@ -24,7 +24,7 @@
       "screenshot": "{{ screenshots[0] }}",
       {% endif %}
       "image": "{{ icon_url }}",
-      "operatingSystem": "linux",
+      "operatingSystem": "Linux, {{ distro_name }} ",
       "offers": {
         "price": {% if prices and prices['USD'] %}{{ prices['USD'] }}{% else %}0.00{% endif %},
         "priceCurrency": "USD"
