@@ -18,52 +18,6 @@ from webapp.api.exceptions import (
 from webapp.markdown import parse_markdown_description
 from webapp import authentication
 
-import os
-import re
-from ruamel.yaml import YAML
-
-YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
-
-yaml = YAML()
-
-
-def get_file(filename, replaces={}):
-    """
-    Reads a file, replaces occurences of all the keys in `replaces` with
-    the correspondant values and returns the resulting string or None
-
-    Keyword arguments:
-    filename -- name if the file to load.
-    replaces -- key/values to replace in the file content (default {})
-    """
-    filepath = os.path.join(flask.current_app.root_path, filename)
-
-    try:
-        with open(filepath, "r") as f:
-            data = f.read()
-            for key in replaces:
-                data = data.replace(key, replaces[key])
-    except Exception:
-        data = None
-
-    return data
-
-
-def get_yaml(filename, replaces={}):
-    """
-    Reads a file, replaces occurences of all the keys in `replaces` with the
-    correspondant values and returns an ordered dict with the YAML content
-
-    Keyword arguments:
-    filename -- name if the file to load.
-    replaces -- key/values to replace in the file content (default {})
-    """
-    try:
-        data = get_file(filename, replaces)
-        return yaml.load(data)
-    except Exception:
-        return None
-
 
 def snap_details_views(store, api, handle_errors):
 
@@ -384,7 +338,7 @@ def snap_details_views(store, api, handle_errors):
     @store.route('/install/<regex("' + snap_regex + '"):snap_name>/<distro>')
     def snap_distro_install(snap_name, distro):
         filename = f"store/content/distros/{distro}.yaml"
-        distro_data = get_yaml(filename)
+        distro_data = helpers.get_yaml(filename)
 
         if not distro_data:
             flask.abort(404)
