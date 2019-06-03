@@ -122,7 +122,7 @@ def post_account_details():
     marketo = marketo_api.MarketoApi()
     marketo.set_newsletter_subscription(email, newsletter_status)
 
-    return flask.redirect(flask.url_for(".get_account"))
+    return flask.redirect(flask.url_for("account.get_account_details"))
 
 
 @account.route("/agreement")

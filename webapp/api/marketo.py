@@ -98,6 +98,7 @@ class MarketoApi:
             )
         )
         response = self.process_response(subscription_request)
+
         if "result" in response:
             return response["result"][0]
         else:
