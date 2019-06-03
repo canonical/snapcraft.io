@@ -78,13 +78,14 @@ def snap_details_views(store, api, handle_errors):
 
         icons = logic.get_icon(details["snap"]["media"])
 
-        publisher_info_and_snaps = helpers._get_file(
-            "/{}{}.yaml".format(
+        publisher_info_and_snaps = helpers.get_yaml(
+            "{}{}.yaml".format(
                 flask.current_app.config["CONTENT_DIRECTORY"][
                     "PUBLISHER_PAGES"
                 ],
                 details["snap"]["publisher"]["username"],
-            )
+            ),
+            typ="safe",
         )
 
         publisher_featured_snaps = None
