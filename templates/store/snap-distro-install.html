@@ -135,7 +135,7 @@
             <p>{{ step.action|safe }}</p>
           </div>
           {% if step.command %}
-            <div class="col-5">
+            <div class="col-5 distro-code-snippet">
               {% set snippet_value = step.command %}
               {% set snippet_id = "distro-install-command-" + loop.index|string %}
               {% if step.command.count('\n') == 0 %}
@@ -154,7 +154,7 @@
           <div class="col-7">
             <p>To install a snap, simply use the following command:</p>
           </div>
-          <div class="col-5">
+          <div class="col-5 distro-code-snippet">
             {% set snippet_value = "sudo snap install " + package_name %}
             {% set snippet_id =  "snap-install-stable" %}
             {% include "/partials/_code-snippet.html" %}
