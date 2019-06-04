@@ -1,0 +1,19 @@
+{% if icon_url %}
+  <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" data-live="icon" />
+{% else %}
+  <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
+{% endif %}
+<div class="p-snap-heading__title">
+  <h1 class="p-heading--two p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
+  <div class="u-hide u-show--small">
+    {% include 'store/_snap-header-information.html' %}
+  </div>
+  <ul class="p-inline-list--middot">
+    <li class="p-inline-list__item u-hide--small">
+      {% include 'store/_snap-header-information.html' %}
+    </li>
+    {% for category in categories %}<li class="p-inline-list__item">
+      <a href="/search?category={{category.slug}}">{{ category.name }}</a>
+    </li>{% endfor %}
+  </ul>
+</div>
