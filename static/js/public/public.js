@@ -12,6 +12,7 @@ import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
 import { newsletter } from "./newsletter";
+import initExpandableSnapDetails from "./expandable-details";
 
 export {
   map,
@@ -24,6 +25,7 @@ export {
   initAccordion,
   initAccordionButtons,
   initEmbeddedCardModal,
+  initExpandableSnapDetails,
   initFSFLanguageSelect,
   initReportSnap,
   firstSnapFlow,
