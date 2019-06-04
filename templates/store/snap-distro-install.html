@@ -73,7 +73,7 @@
     </div>
     <div class="p-strip">
       <div class="row">
-        <h1 class="p-heading--two u-no-margin">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
+        <h1 class="p-heading--two u-no-margin is-light">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
       </div>
     </div>
 
@@ -82,29 +82,11 @@
         <div class="row">
           <div class="details-block">
             <div class="p-snap-heading">
-              {% if icon_url %}
-                <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" data-live="icon" />
-              {% else %}
-                <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
-              {% endif %}
-              <div class="p-snap-heading__title">
-                <h2 class="p-heading--two p-snap-heading__name" data-live="title">{{ snap_title }}</h2>
-                <div class="u-hide u-show--small">
-                  {% include 'store/_snap-header-information.html' %}
-                </div>
-                <ul class="p-inline-list--middot">
-                  <li class="p-inline-list__item u-hide--small">
-                    {% include 'store/_snap-header-information.html' %}
-                  </li>
-                  {% for category in categories %}<li class="p-inline-list__item">
-                    <a href="/search?category={{category.slug}}">{{ category.name }}</a>
-                  </li>{% endfor %}
-                </ul>
-              </div>
+              {% include 'store/snap-details/_snap_heading_data.html' %}
 
               <div class="p-snap-install-buttons">
-                <a class="p-button--positive p-snap-install-buttons__install" href="#install">
-                  Install
+                <a class="p-link--external" href="/{{ package_name }}">
+                  View full snap details
                 </a>
               </div>
 
@@ -113,14 +95,8 @@
         </div>
 
         {% if screenshots or videos %}
-          <div class="row" id="js-snap-screenshots" data-live="screenshots">
-            <div class="details-block">
-              {% if videos %}
-                {% include "partials/_snap-details-video-layout.html" %}
-              {% elif screenshots %}
-                {% include "partials/_snap-details-image-layout.html" %}
-              {% endif %}
-            </div>
+          <div class="details-block">
+            {% include "store/snap-details/_screenshots.html" %}
           </div>
         {% endif %}
 
@@ -130,16 +106,9 @@
             <div data-live="description">{{ description | safe }}</div>
           </div>
           <div class="col-4">
-            <h4>Details for {{ snap_title }}</h4>
-            <dl>
-              <dt>License</dt>
-              <dd data-live="license">{{ license }}</dd>
-              <dt>Last updated</dt>
-              <dd>{{ last_updated }}</dd>
-            </dl>
+            {% include "store/snap-details/_details.html" %}
           </div>
         </div>
-
       </div>
 
       <div id="install" class="p-card">
@@ -207,19 +176,7 @@
     </div>
   </section>
 
-  {# templates #}
-  {% set video = {'type': 'youtube', 'url': '${url}', 'id': '${id}'} %}
-  <script type="text/template" id="video-youtube-template">
-    {% include 'partials/_video.html' %}
-  </script>
-  {% set video = {'type': 'vimeo', 'url': '${url}', 'id': '${id}'} %}
-  <script type="text/template" id="video-vimeo-template">
-    {% include 'partials/_video.html' %}
-  </script>
-  {% set video = {'type': 'asciinema', 'url': '${url}', 'id': '${id}'} %}
-  <script type="text/template" id="video-asciinema-template">
-    {% include 'partials/_video.html' %}
-  </script>
+  {% include "store/snap-details/_templates.html" %}
 {% endblock %}
 
 {% block scripts_modules %}
