@@ -78,7 +78,7 @@
     </div>
 
     <div class="row">
-      <div class="p-card">
+      <div class="p-card" style="position: relative;">
         <div class="row">
           <div class="details-block">
             <div class="p-snap-heading">
@@ -100,7 +100,7 @@
           </div>
         {% endif %}
 
-        <div class="row">
+        <div class="row snap-description-collapsed">
           <div class="col-8">
             {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
             <div data-live="description">{{ description | safe }}</div>
@@ -108,6 +108,10 @@
           <div class="col-4">
             {% include "store/snap-details/_details.html" %}
           </div>
+        </div>
+
+        <div class="snap-description-more">
+          <a href="/{{ package_name }}" class="js-show-more-description">Show more <i class="p-icon--chevron"></i></a>
         </div>
       </div>
 
@@ -187,6 +191,19 @@
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function () {
+      try {
+        document.querySelector(".js-show-more-description").addEventListener("click", function(event) {
+          event.preventDefault();
+
+          document.querySelector(".snap-description-more")
+            .classList.add("u-hide");
+          document.querySelector(".snap-description-collapsed")
+            .classList.remove("snap-description-collapsed");
+        });
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
       try {
         snapcraft.public.screenshots('#js-snap-screenshots');
       } catch(e) {
