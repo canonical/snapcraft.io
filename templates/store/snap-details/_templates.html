@@ -1,0 +1,20 @@
+{# templates #}
+{% set article_title = {'rendered': '${title}'} %}
+{% set article = {'slug': '${slug}', 'title': article_title} %}
+{% set size = "${size}" %}
+<script type="text/template" id="blog-article-template">
+  {% include 'partials/blog-card--minimal.html' %}
+</script>
+
+{% set video = {'type': 'youtube', 'url': '${url}', 'id': '${id}'} %}
+<script type="text/template" id="video-youtube-template">
+  {% include 'partials/_video.html' %}
+</script>
+{% set video = {'type': 'vimeo', 'url': '${url}', 'id': '${id}'} %}
+<script type="text/template" id="video-vimeo-template">
+  {% include 'partials/_video.html' %}
+</script>
+{% set video = {'type': 'asciinema', 'url': '${url}', 'id': '${id}'} %}
+<script type="text/template" id="video-asciinema-template">
+  {% include 'partials/_video.html' %}
+</script>
