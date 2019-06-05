@@ -354,7 +354,7 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toEqual([
-          "has a width (30 pixels) that is 3x its height (10 pixels). Its width needs to be between 1x and 2x the height."
+          "(30 x 10 pixels) does not have the correct aspect ratio: it needs to be between 1:1 and 2:1"
         ]);
       });
 
@@ -365,7 +365,7 @@ describe("validateRestrictions", () => {
 
         generateImage({
           naturalWidth: 10,
-          naturalHeight: 30
+          naturalHeight: 15
         });
 
         const aspectRatio = {
@@ -379,7 +379,105 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toEqual([
-          "has a width (10 pixels) that is 0.33x its height (30 pixels). Its width needs to be between 0.5x and 0.33x the height."
+          "(10 x 15 pixels) does not have the correct aspect ratio: it needs to be between 1:2 and 1:3"
+        ]);
+      });
+
+      it("should return an error if only one aspectRatio is allowed and the ratio is too high", async () => {
+        const file = generateFile({
+          type: "image/png"
+        });
+
+        generateImage({
+          naturalWidth: 30,
+          naturalHeight: 11
+        });
+
+        const aspectRatio = {
+          min: [3, 1],
+          max: [3, 1]
+        };
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          aspectRatio
+        });
+
+        expect(validation.errors).toEqual([
+          "(30 x 11 pixels) does not have the correct aspect ratio: it needs to be 3:1 (e.g., 33 x 11 pixels)"
+        ]);
+      });
+
+      it("should return an error if aspectRatio is too high and the suggested size would be larger than the size restriction", async () => {
+        const file = generateFile({
+          type: "image/png"
+        });
+
+        generateImage({
+          naturalWidth: 110,
+          naturalHeight: 50
+        });
+
+        const aspectRatio = {
+          min: [2, 1],
+          max: [2, 1]
+        };
+
+        const width = {
+          min: 50,
+          max: 200
+        };
+        const height = {
+          min: 25,
+          max: 50
+        };
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          aspectRatio,
+          width,
+          height
+        });
+
+        expect(validation.errors).toEqual([
+          "(110 x 50 pixels) does not have the correct aspect ratio: it needs to be 2:1 (e.g., 100 x 50 pixels)"
+        ]);
+      });
+
+      it("should return a cropable size if the ratio is incorrect", async () => {
+        const file = generateFile({
+          type: "image/png"
+        });
+
+        generateImage({
+          naturalWidth: 1444,
+          naturalHeight: 482
+        });
+
+        const aspectRatio = {
+          min: [3, 1],
+          max: [3, 1]
+        };
+
+        const width = {
+          min: 720,
+          max: 4320
+        };
+
+        const height = {
+          min: 240,
+          max: 1440
+        };
+
+        const validation = await validateRestrictions(file, {
+          ...restrictions,
+          aspectRatio,
+          width,
+          height
+        });
+
+        expect(validation.errors).toEqual([
+          "(1444 x 482 pixels) does not have the correct aspect ratio: it needs to be 3:1 (e.g., 1446 x 482 pixels)"
         ]);
       });
 
@@ -394,11 +492,68 @@ describe("validateRestrictions", () => {
         });
 
         const aspectRatio = {
-          max: [2, 1],
-          min: [1, 2]
+          max: [1, 1],
+          min: [1, 1]
         };
 
         const validation = await validateRestrictions(file, {
+          ...restrictions,
+          aspectRatio
+        });
+
+        expect(validation.errors).toBeUndefined();
+      });
+
+      it("should return no error if the aspectRatio is within range", async () => {
+        const file = generateFile({
+          type: "image/png"
+        });
+
+        generateImage({
+          naturalWidth: 10,
+          naturalHeight: 20
+        });
+
+        let aspectRatio = {
+          min: [1, 2],
+          max: [1, 3]
+        };
+
+        let validation = await validateRestrictions(file, {
+          ...restrictions,
+          aspectRatio
+        });
+
+        expect(validation.errors).toBeUndefined();
+
+        generateImage({
+          naturalWidth: 10,
+          naturalHeight: 25
+        });
+
+        aspectRatio = {
+          min: [1, 2],
+          max: [1, 3]
+        };
+
+        validation = await validateRestrictions(file, {
+          ...restrictions,
+          aspectRatio
+        });
+
+        expect(validation.errors).toBeUndefined();
+
+        generateImage({
+          naturalWidth: 10,
+          naturalHeight: 30
+        });
+
+        aspectRatio = {
+          min: [1, 2],
+          max: [1, 3]
+        };
+
+        validation = await validateRestrictions(file, {
           ...restrictions,
           aspectRatio
         });
@@ -441,7 +596,7 @@ describe("validateRestrictions", () => {
         });
 
         expect(validation.errors).toEqual([
-          "has a width (1218 pixels) that is 5.08x its height (240 pixels). Its width needs to be 3x the height."
+          "(1218 x 240 pixels) does not have the correct aspect ratio: it needs to be 3:1 (e.g., 720 x 240 pixels)"
         ]);
       });
 

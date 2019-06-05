@@ -126,31 +126,61 @@ function imageRestrictions(file, restrictions) {
       if (restrictions.aspectRatio) {
         const aspectRatioMax = restrictions.aspectRatio.max;
         const aspectRatioMin = restrictions.aspectRatio.min;
+
+        const allowedRatios = [];
+
+        if (aspectRatioMax) {
+          allowedRatios.push(aspectRatioMax[0] / aspectRatioMax[1]);
+        }
+        if (aspectRatioMin) {
+          allowedRatios.push(aspectRatioMin[0] / aspectRatioMin[1]);
+        }
+
+        allowedRatios.sort();
+
         if (
-          (aspectRatioMax &&
-            aspectRatio > aspectRatioMax[0] / aspectRatioMax[1]) ||
-          (aspectRatioMin &&
-            aspectRatio < aspectRatioMin[0] / aspectRatioMin[1])
+          (allowedRatios.length === 1 && aspectRatio !== allowedRatios[0]) ||
+          (aspectRatio > allowedRatios[1] || aspectRatio < allowedRatios[0])
         ) {
           hasAspectError = true;
         }
 
         if (hasAspectError) {
-          const min =
-            Math.round((aspectRatioMin[0] / aspectRatioMin[1]) * 100) / 100;
-          const max =
-            Math.round((aspectRatioMax[0] / aspectRatioMax[1]) * 100) / 100;
-          const actual = Math.round(aspectRatio * 100) / 100;
+          const min = aspectRatioMin[1] / aspectRatioMin[0];
+          const max = aspectRatioMax[1] / aspectRatioMax[0];
 
           const message = [
-            `has a width (${width} pixels) that is ${actual}x its height (${height} pixels).`
+            `(${width} x ${height} pixels) does not have the correct aspect ratio:`
           ];
 
+          // If the min and max are the same we only accept 1 aspect ratio
           if (min === max) {
-            message.push(`Its width needs to be ${min}x the height.`);
+            message.push(
+              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`
+            );
+
+            const suggestedSize = [height / max];
+
+            if (restrictions.width) {
+              if (suggestedSize[0] > restrictions.width.max) {
+                suggestedSize[0] = restrictions.width.max;
+              }
+            }
+
+            suggestedSize.push(suggestedSize[0] * max);
+
+            message.push(
+              `(e.g., ${Math.round(suggestedSize[0])} x ${Math.round(
+                suggestedSize[1]
+              )} pixels)`
+            );
+
+            // Otherwise it's a range
           } else {
             message.push(
-              `Its width needs to be between ${min}x and ${max}x the height.`
+              `it needs to be between ${aspectRatioMin[0]}:${
+                aspectRatioMin[1]
+              } and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`
             );
           }
 
