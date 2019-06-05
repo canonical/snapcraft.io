@@ -91,18 +91,19 @@ def build_snap_installs_metrics_query(snaps, get_filter=get_filter):
         return {}
 
     end = get_last_metrics_processed_date()
-    start = end + relativedelta.relativedelta(years=-1, days=-1)
+    start = end + relativedelta.relativedelta(months=-1)
 
     metrics_query = {"filters": []}
-    for snap_id in snaps:
+    for snap_name in snaps:
         metrics_query["filters"].append(
             get_filter(
                 metric_name="weekly_device_change",
-                snap_id=snap_id,
+                snap_id=snaps[snap_name],
                 start=start,
                 end=end,
             )
         )
+
     return metrics_query
 
 
@@ -117,12 +118,13 @@ def transform_metrics(metrics, metrics_response, snaps):
         if metric["status"] == "OK":
             snap_id = metric["snap_id"]
 
+            snap_name = None
+            for snaps_name, snaps_id in snaps.items():
+                if snaps_id == snap_id:
+                    snap_name = snaps_name
+
             metrics["snaps"].append(
-                {
-                    "id": snap_id,
-                    "name": snaps[snap_id],
-                    "series": metric["series"],
-                }
+                {"id": snap_id, "name": snap_name, "series": metric["series"]}
             )
             metrics["buckets"] = metric["buckets"]
 
