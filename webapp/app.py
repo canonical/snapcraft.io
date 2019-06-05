@@ -13,6 +13,7 @@ import talisker.logs
 import webapp.api
 import webapp.helpers as helpers
 from webapp.blog.views import blog
+from webapp.builder.views import builder
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
@@ -72,6 +73,7 @@ def init_snapcraft(app, testing=False):
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)
     app.register_blueprint(blog, url_prefix="/blog")
+    app.register_blueprint(builder, url_prefix="/build")
 
 
 def init_extensions(app):
