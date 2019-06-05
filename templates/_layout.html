@@ -51,11 +51,13 @@
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
+    {% block header %}
     <!-- JS that is needed right away -->
     <script src="{{ static_url('js/modules/global-nav.js') }}"></script>
     <script>canonicalGlobalNav.createNav({maxWidth: '64.875rem', showLogins: false});</script>
 
     {% include "_header.html" %}
+    {% endblock %}
 
     {% block content %}{% endblock %}
 
