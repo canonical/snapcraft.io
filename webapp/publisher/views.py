@@ -82,7 +82,7 @@ def get_account_details():
     flask_user = flask.session["openid"]
 
     subscriptions = None
-    subscribed_to_newsletter = None
+
     # don't rely on marketo to show the page,
     # if anything fails, just continue and don't show
     # this section
@@ -92,16 +92,12 @@ def get_account_details():
             marketo_user["id"]
         )
         subscribed_to_newsletter = False
-        if (
-            "snapcraftnewsletter" in marketo_subscribed
-            and marketo_subscribed["snapcraftnewsletter"]
-        ):
+        if marketo_subscribed.get("snapcraftnewsletter"):
             subscribed_to_newsletter = True
+
+        subscriptions = {"newsletter": subscribed_to_newsletter}
     except Exception:
         pass
-
-    if subscribed_to_newsletter is not None:
-        subscriptions = {"newsletter": subscribed_to_newsletter}
 
     context = {
         "image": flask_user["image"],

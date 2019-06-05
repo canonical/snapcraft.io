@@ -1,3 +1,5 @@
+import shallowDiff from "../libs/shallowDiff";
+
 function submitEnabler(formSelector, buttonSelectors) {
   if (!formSelector) {
     throw new TypeError("`formSelector` argument is required");
@@ -17,6 +19,14 @@ function submitEnabler(formSelector, buttonSelectors) {
     document.querySelector(selector)
   );
 
+  const initialState = new FormData(formEl);
+
+  const initialStateJson = {};
+
+  for (const [key, value] of initialState.entries()) {
+    initialStateJson[key] = value;
+  }
+
   buttonEls.forEach(button => {
     if (button) {
       button.setAttribute("disabled", "disabled");
@@ -25,9 +35,22 @@ function submitEnabler(formSelector, buttonSelectors) {
   });
 
   formEl.addEventListener("change", () => {
+    const newState = new FormData(formEl);
+    const newStateJson = {};
+
+    for (const [key, value] of newState.entries()) {
+      newStateJson[key] = value;
+    }
+
+    const diff = shallowDiff(initialStateJson, newStateJson);
     buttonEls.forEach(button => {
-      button.removeAttribute("disabled");
-      button.classList.remove("is--disabled");
+      if (diff) {
+        button.removeAttribute("disabled");
+        button.classList.remove("is--disabled");
+      } else {
+        button.setAttribute("disabled", "disabled");
+        button.classList.add("is--disabled");
+      }
     });
   });
 }
