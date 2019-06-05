@@ -105,6 +105,10 @@ def get_package(language, operating_system):
     snap_name = steps["name"]
     has_user_chosen_name = False
 
+    if flask.session.get("openid"):
+        user_name = flask.session["openid"]["nickname"]
+        snap_name = snap_name.replace("{name}", user_name)
+
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
         has_user_chosen_name = True
@@ -153,6 +157,10 @@ def get_build(language, operating_system):
 
     snap_name = steps["name"]
 
+    if flask.session.get("openid"):
+        user_name = flask.session["openid"]["nickname"]
+        snap_name = snap_name.replace("{name}", user_name)
+
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
 
@@ -178,6 +186,10 @@ def get_test(language, operating_system):
         return flask.abort(404)
 
     snap_name = steps["name"]
+
+    if flask.session.get("openid"):
+        user_name = flask.session["openid"]["nickname"]
+        snap_name = snap_name.replace("{name}", user_name)
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
@@ -216,6 +228,10 @@ def get_push(language, operating_system):
 
     snap_name = data["name"]
     has_user_chosen_name = False
+
+    if flask.session.get("openid"):
+        user_name = flask.session["openid"]["nickname"]
+        snap_name = snap_name.replace("{name}", user_name)
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
