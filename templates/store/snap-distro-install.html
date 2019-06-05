@@ -170,8 +170,8 @@
 
   <section class="p-strip is-shallow">
     <div class="row">
-        <h2 class="u-float--left">Find more popular snaps</h2>
-        <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
+      <h3 class="u-float--left">Other popular snaps…</h3>
+      <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
     <div class="row">
       {% set snaps = featured_snaps %}
@@ -181,6 +181,35 @@
     </div>
     <div class="row u-hide--medium u-hide--large">
       <a href="/search?category=featured" class="p-button--neutral u-float--right">See more in Featured</a>
+    </div>
+  </section>
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <h3 class="u-float--left">More things to do…</h3>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="p-card">
+          <a href="/snap-store">
+            <img src="https://assets.ubuntu.com/v1/e737ad29-Snap+Store.png" alt="" height="180" />
+          </a>
+          <h4 class="p-card__title">
+            <a href="/snap-store">Get the snap store</a>
+          </h4>
+          <p class="p-card__content">Browse and find snaps from the convenience of your desktop using the snap store snap.</p>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-card">
+          <a href="https://docs.snapcraft.io">
+            <img src="https://assets.ubuntu.com/v1/fe51ed53-Learn+about+snaps.png" alt="" height="180" />
+          </a>
+          <h4 class="p-card__title">
+            <a href="https://docs.snapcraft.io">Learn more about snaps</a>
+          </h4>
+          <p class="p-card__content">Interested to find out more about snaps? Want to publish your own application? Visit <a href="/">snapcraft.io</a> now.</p>
+        </div>
+      </div>
     </div>
   </section>
 
