@@ -13,6 +13,7 @@ import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
 import { newsletter } from "./newsletter";
 import initExpandableSnapDetails from "./expandable-details";
+import triggerEventWhenVisible from "./ga-scroll-event";
 
 export {
   map,
@@ -29,6 +30,7 @@ export {
   initFSFLanguageSelect,
   initReportSnap,
   firstSnapFlow,
+  triggerEventWhenVisible,
   videos,
   nps,
   newsletter
