@@ -45,6 +45,10 @@ if (typeof dataLayer !== "undefined") {
     }
 
     if (!target) {
+      target = e.target.closest(".p-code-snippet");
+    }
+
+    if (!target) {
       return;
     }
 
@@ -80,6 +84,27 @@ if (typeof dataLayer !== "undefined") {
 
       triggerEvent(
         "clipboard-copy",
+        origin,
+        clipboardTarget,
+        `Copied code: ${copiedValue}`
+      );
+    }
+
+    // clicking on code snippet
+    if (target.matches(".p-code-snippet")) {
+      e.stopImmediatePropagation();
+      const copyButton = target.querySelector(".js-clipboard-copy");
+      const clipboardTarget = copyButton.dataset.clipboardTarget;
+
+      const clipboardTargetEl = document.querySelector(clipboardTarget);
+      const copiedValue = clipboardTargetEl.value
+        ? clipboardTargetEl.value.trim()
+        : clipboardTargetEl.text
+          ? clipboardTargetEl.text.trim()
+          : clipboardTargetEl.innerText.trim();
+
+      triggerEvent(
+        "clipboard-copy-click",
         origin,
         clipboardTarget,
         `Copied code: ${copiedValue}`
