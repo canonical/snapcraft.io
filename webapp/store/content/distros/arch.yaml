@@ -16,9 +16,12 @@ install:
   -
     action: |
       Once installed, the <em>systemd</em> unit that manages the main snap communication socket needs to be enabled:
-    command: sudo systemctl enable --now snapd.socket
+    command: |
+      sudo systemctl enable --now snapd.socket
   -
     action: |
       To enable <em>classic</em> snap support, enter the following to create a symbolic link between <code>/var/lib/snapd/snap</code> and <code>/snap</code>:
-    command: sudo ln -s /var/lib/snapd/snap /snap
-  - action: Either log out and back in again, or restart your system, to ensure snap’s paths are updated correctly.
+    command: |
+      sudo ln -s /var/lib/snapd/snap /snap
+  - action: |
+      Either log out and back in again, or restart your system, to ensure snap’s paths are updated correctly.

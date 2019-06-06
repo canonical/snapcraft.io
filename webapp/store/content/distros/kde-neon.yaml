@@ -1,0 +1,11 @@
+name: KDE Neon
+color-1: "#666666"
+color-2: "#111111"
+logo: https://assets.ubuntu.com/v1/d0593902-Distro_Logo_KDE+Neon.svg
+install:
+  -
+    action: |
+      Snap can be installed from the command line. Open the <em>Konsole</em> terminal and enter the following:
+    command: |
+      sudo apt update
+      sudo apt install snapd
