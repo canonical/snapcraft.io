@@ -1,0 +1,18 @@
+name: Fedora
+color-1: "#666666"
+color-2: "#111111"
+logo: https://assets.ubuntu.com/v1/6c5dc09e-Distro_Logo_Fedora.svg
+install:
+  -
+    action: |
+      Snap can be installed on Fedora from the command line:
+    command: |
+      sudo dnf install snapd
+  -
+    action: |
+      Either log out and back in again, or restart your system, to ensure snap’s paths are updated correctly.
+  -
+    action: |
+      To enable <em>classic</em> snap support, enter the following to create a symbolic link between <code>/var/lib/snapd/snap</code> and <code>/snap</code>:
+    command: |
+      sudo ln -s /var/lib/snapd/snap /snap

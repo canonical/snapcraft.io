@@ -1,0 +1,13 @@
+name: ElementaryOS
+color-1: "#666666"
+color-2: "#111111"
+logo: https://assets.ubuntu.com/v1/c0c09661-Distro_Logo_Elementary.svg
+install:
+  -
+    action: |
+      Snap can be installed on Elementary OS from the command line. Open <em>Terminal</em> from the Applications launcher and type the following:
+    command: |
+      sudo apt update
+      sudo apt install snapd
+  - action: |
+      Either log out and back in again, or restart your system, to ensure snap’s paths are updated correctly.

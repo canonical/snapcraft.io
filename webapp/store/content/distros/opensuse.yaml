@@ -1,0 +1,44 @@
+name: OpenSUSE
+color-1: "#666666"
+color-2: "#111111"
+logo: https://assets.ubuntu.com/v1/610301c6-Distro_Logo_OpenSUSE.svg
+install:
+  -
+    action: |
+      Snap can be installed from the command line on openSUSE Leap 42.3, Leap 15 and Tumbleweed.
+  -
+    action: |
+      You need first add the <em>snappy</em> repository from the terminal. Leap 15 users, for example, can do this with the following command:
+    command: |
+      sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.0 snappy
+  -
+    action: |
+      Swap out <code>openSUSE_Leap_15.0</code> for either <code>openSUSE_Leap_42.3</code> or <code>openSUSE_Tumbleweed</code> if you’re using a different version of openSUSE.
+  -
+    action: |
+      With the repository added, import its GPG key:
+    command: |
+      sudo zypper --gpg-auto-import-keys refresh
+  -
+    action: |
+      Finally, upgrade the package cache to include the new <em>snappy</em> repository:
+    command: |
+      sudo zypper dup --from snappy
+  -
+    action: |
+      Snap can now be installed with the following:
+    command: |
+      sudo zypper install snapd
+  -
+    action: |
+      You then need to either reboot, logout/login or <code>source /etc/profile</code> to have /snap/bin added to PATH.
+      Additionally, enable and start both the <em>snapd</em> and the <em>snapd.apparmor</em> services with the following commands:
+    command: |
+      sudo systemctl enable snapd
+      sudo systemctl start snapd
+  -
+    action: |
+      Tumbleweed users also need to run the following:
+    command: |
+      sudo systemctl enable snapd.apparmor
+      sudo systemctl start snapd.apparmor
