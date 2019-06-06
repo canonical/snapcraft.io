@@ -1,0 +1,20 @@
+name: Ubuntu
+color-1: "#666666"
+color-2: "#111111"
+logo: https://assets.ubuntu.com/v1/100386fb-Distro_Logo_Ubuntu.svg
+install:
+  -
+    action: |
+      If you’re running <a href="https://www.ubuntu.com/">Ubuntu 16.04 LTS (Xenial Xerus)</a> or later, including <a href="https://www.ubuntu.com/desktop/features">Ubuntu 18.04 LTS (Bionic Beaver)</a>, <a href="https://wiki.ubuntu.com/CosmicCuttlefish/ReleaseNotes">Ubuntu 18.10 (Cosmic Cuttlefish)</a> and <a href="https://wiki.ubuntu.com/DiscoDingo/ReleaseNotes">Ubuntu 19.04 (Disco Dingo)</a>, you don’t need to do anything. Snap is already installed and ready to go.
+  -
+    action: |
+      For versions of Ubuntu between <a href="https://wiki.ubuntu.com/TrustyTahr/ReleaseNotes">14.04 LTS (Trusty Tahr)</a> and <a href="https://wiki.ubuntu.com/WilyWerewolf/ReleaseNotes">15.10 (Wily Werewolf)</a>, as well as Ubuntu flavours that don’t include <em>snap</em> by default, <em>snap</em> can be installed from the Ubuntu Software Centre by searching for <em>snapd</em>.
+  -
+    action: |
+      Alternatively, snapd can be installed from the command line:
+    command: |
+      sudo apt update
+      sudo apt install snapd
+  -
+    action: |
+      Either log out and back in again, or restart your system, to ensure snap’s paths are updated correctly.

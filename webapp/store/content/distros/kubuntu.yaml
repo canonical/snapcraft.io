@@ -1,0 +1,14 @@
+name: Kubuntu
+color-1: "#666666"
+color-2: "#111111"
+logo: https://assets.ubuntu.com/v1/7ab50a06-Distro_Logo_Kubuntu.svg
+install:
+  -
+    action: |
+      If you’re running <a href="https://kubuntu.org/">Kubuntu 16.04 LTS (Xenial Xerus)</a> or later, including <a href="https://wiki.ubuntu.com/BionicBeaver/ReleaseNotes/Kubuntu">Kubuntu 18.04 LTS (Bionic Beaver)</a> and <a href="https://wiki.ubuntu.com/CosmicCuttlefish/ReleaseNotes/Kubuntu">Kubuntu 18.10 (Cosmic Cuttlefish)</a>, you don’t need to do anything. Snap is already installed and ready to go.
+  -
+    action: |
+      Versions of Kubuntu between <a href="https://kubuntu.org/news/kubuntu-14-04-lts">14.04 LTS (Trusty Tahr)</a> and <a href="https://kubuntu.org/news/kubuntu-15-10">15.10 (Wily Werewolf)</a> don’t include <em>snap</em> by default, but <em>snap</em> can be installed from the command line as follows:
+    command: |
+      sudo apt update
+      sudo apt install snapd
