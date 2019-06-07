@@ -139,7 +139,7 @@
             <div class="col-5 distro-code-snippet">
               {% set snippet_value = step.command %}
               {% set snippet_id = "distro-install-command-" + loop.index|string %}
-              {% if step.command.count('\n') == 0 %}
+              {% if (step.command|trim).count('\n') == 0 %}
                 {% include "/partials/_code-snippet.html" %}
               {% else %}
                 {% include "/partials/_code-snippet-multi.html" %}
