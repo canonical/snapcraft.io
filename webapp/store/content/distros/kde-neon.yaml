@@ -1,6 +1,6 @@
 name: KDE Neon
-color-1: "#666666"
-color-2: "#111111"
+color-1: "#20A3A8"
+color-2: "#167275"
 logo: https://assets.ubuntu.com/v1/d0593902-Distro_Logo_KDE+Neon.svg
 install:
   -
