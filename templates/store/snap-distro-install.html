@@ -50,22 +50,19 @@
 {% block content %}
   <section class="p-strip--light distro-banner u-no-padding--top">
     <div class="distro-banner__background">
-      <svg class="distro-banner__suru" viewBox="0 0 1440 776" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <svg class="distro-banner__suru" viewBox="0 0 1440 700" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="b">
+          <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="a">
             <stop stop-color="{{ distro_color_1 }}" offset="0%"/>
             <stop stop-color="{{ distro_color_2 }}" offset="100%"/>
           </linearGradient>
-          <path id="a" d="M0 0h1440v776H0z"/>
-          <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="c">
-            <stop stop-color="{{ distro_color_2 }}" offset="0%"/>
-            <stop stop-color="{{ distro_color_1 }}" offset="100%"/>
-          </linearGradient>
         </defs>
-        <g fill="none" fill-rule="evenodd">
-          <mask id="d" fill="#fff"><use xlink:href="#a"/></mask>
-          <use fill="url(#b)" xlink:href="#a"/>
-          <path fill="url(#c)" mask="url(#d)" opacity="0.5" d="M0 169l295 607H0V169L1440 0v776H703l737-432V0z"/>
+        <g fill-rule="nonzero" fill="none">
+          <path fill="url(#a)" d="M0 0h1440v700H0z"/>
+          <g fill="#FFF">
+            <path d="M1440 700V198L808 700z" fill-opacity=".04"/>
+            <path d="M0 341v359h1231z" fill-opacity=".06"/>
+          </g>
         </g>
       </svg>
       <div class="row">
