@@ -59,4 +59,9 @@
       padding-top: .5rem;
     }
   }
+
+  .distro-banner__logo {
+    filter: grayscale(100%) opacity(20%);
+    mix-blend-mode: multiply;
+  }
 }

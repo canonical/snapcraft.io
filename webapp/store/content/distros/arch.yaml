@@ -1,6 +1,6 @@
 name: Arch Linux
-color-1: "#5ebeed"
-color-2: "#1271a1"
+color-1: "#1793D1"
+color-2: "#116F9E"
 logo: https://assets.ubuntu.com/v1/feca0fc0-Distro_Logo_ArchLinux.svg
 install:
   -

@@ -1,6 +1,6 @@
 name: elementary OS
-color-1: "#666666"
-color-2: "#111111"
+color-1: "#95A3AB"
+color-2: "#485A6C"
 logo: https://assets.ubuntu.com/v1/c0c09661-Distro_Logo_Elementary.svg
 install:
   -
