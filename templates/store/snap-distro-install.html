@@ -79,7 +79,7 @@
     </div>
 
     <div class="row">
-      <div class="p-card" style="position: relative;">
+      <div class="p-card--highlighted" style="position: relative;">
         <div class="row">
           <div class="details-block">
             <div class="p-snap-heading">
@@ -112,18 +112,18 @@
         </div>
 
         <div class="snap-description-more u-hide">
-          <a href="/{{ package_name }}" class="js-show-more-description">Show more <i class="p-icon--chevron"></i></a>
+          <a href="/{{ package_name }}" class="js-show-more-description">Show more</a>
         </div>
       </div>
 
-      <div id="install" class="p-card">
+      <div id="install" class="p-card--highlighted">
         <div class="row">
           <div class="col-10">
           <h2>Snap install instructions for {{ distro_name }}</h2>
           <p>Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully.</p>
           <p>Snaps are discoverable and installable from the <a href="/store">Snap Store</a>, an app store with an audience of millions.</p>
           </div>
-          <div class="u-hide--mobile col-2">
+          <div class="u-hide--small col-2">
             <img src="{{ distro_logo }}" />
           </div>
         </div>
@@ -153,7 +153,7 @@
         </div>
         <div class="row">
           <div class="col-7">
-            <p>To install a snap, simply use the following command:</p>
+            <p>To install {{ snap_title }}, simply use the following command:</p>
           </div>
           <div class="col-5 distro-code-snippet">
             {% set snippet_value = "sudo snap install " + package_name %}
@@ -186,7 +186,7 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <div class="p-card">
+        <div class="p-card--highlighted">
           <a href="/snap-store">
             <img src="https://assets.ubuntu.com/v1/e737ad29-Snap+Store.png" alt="" height="180" />
           </a>
@@ -197,7 +197,7 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="p-card">
+        <div class="p-card--highlighted">
           <a href="https://docs.snapcraft.io">
             <img src="https://assets.ubuntu.com/v1/fe51ed53-Learn+about+snaps.png" alt="" height="180" />
           </a>
