@@ -1,6 +1,6 @@
 name: CentOS
-color-1: "#161545"
-color-2: "#262577"
+color-1: "#265AA3"
+color-2: "#0E223D"
 logo: https://assets.ubuntu.com/v1/acf876d9-Distro_Logo_CentOS.svg
 install:
   -
