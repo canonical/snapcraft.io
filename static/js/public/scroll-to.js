@@ -30,7 +30,7 @@
  * Inspired by @andjosh's work
  *
  */
-export default function scrollPageTo(to, duration = 500, offset = 0) {
+export function animateScrollTo(to, duration = 500, offset = 0) {
   //t = current time
   //b = start value
   //c = change in value
@@ -70,4 +70,19 @@ export default function scrollPageTo(to, duration = 500, offset = 0) {
     };
     animateScroll();
   });
+}
+
+export function initLinkScroll(link, { duration = 500, offset = 0 }) {
+  if (link && link.href) {
+    const href = link.getAttribute("href");
+    const target = document.querySelector(href);
+    if (target) {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        animateScrollTo(target, duration, offset).then(() => {
+          window.history.pushState({}, null, href);
+        });
+      });
+    }
+  }
 }
