@@ -14,6 +14,7 @@ import nps from "./nps";
 import { newsletter } from "./newsletter";
 import initExpandableSnapDetails from "./expandable-details";
 import triggerEventWhenVisible from "./ga-scroll-event";
+import scrollTo from "./scroll-to";
 
 export {
   map,
@@ -31,6 +32,7 @@ export {
   initReportSnap,
   firstSnapFlow,
   triggerEventWhenVisible,
+  scrollTo,
   videos,
   nps,
   newsletter

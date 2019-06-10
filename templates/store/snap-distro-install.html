@@ -86,7 +86,7 @@
               {% include 'store/snap-details/_snap_heading_data.html' %}
 
               <div class="p-snap-install-buttons">
-                <a class="p-button--neutral p-snap-install-buttons__install" href="#install">
+                <a class="p-button--neutral p-snap-install-buttons__install js-install" href="#install">
                     Install snap
                 </a>
               </div>
@@ -226,6 +226,16 @@
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function () {
+      try {
+        document.querySelector(".js-install")
+          .addEventListener('click', function (event) {
+            event.preventDefault();
+            snapcraft.public.scrollTo("#install", 300, -20);
+          });
+      } catch(e) {
+        Raven.captureException(e);
+      }
+
       try {
         snapcraft.public.triggerEventWhenVisible("#snippet-snap-install-stable")
       } catch(e) {
