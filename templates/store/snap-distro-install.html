@@ -227,11 +227,7 @@
   <script>
     Raven.context(function () {
       try {
-        document.querySelector(".js-install")
-          .addEventListener('click', function (event) {
-            event.preventDefault();
-            snapcraft.public.scrollTo("#install", 300, -20);
-          });
+        snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: -20 });
       } catch(e) {
         Raven.captureException(e);
       }
