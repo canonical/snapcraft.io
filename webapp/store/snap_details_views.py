@@ -357,7 +357,7 @@ def snap_details_views(store, api, handle_errors):
 
         try:
             featured_snaps_results = api.get_searched_snaps(
-                snap_searched="", category="featured", size=10, page=1
+                snap_searched="", category="featured", size=12, page=1
             )
         except ApiError:
             featured_snaps_results = []
