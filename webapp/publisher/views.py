@@ -66,7 +66,7 @@ def get_account():
     return flask.redirect(flask.url_for("publisher_snaps.get_account_snaps"))
 
 
-@account.route("/details")
+@account.route("/details", methods=["GET"])
 @login_required
 def get_account_details():
     try:
@@ -116,7 +116,6 @@ def post_account_details():
     try:
         newsletter_status = flask.request.form.get("newsletter")
         email = flask.request.form.get("email")
-
         marketo.set_newsletter_subscription(email, newsletter_status)
         flask.flash("Changes applied successfully.", "positive")
     except Exception:

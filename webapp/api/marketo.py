@@ -49,13 +49,16 @@ LEADS = "".join(
 class MarketoApi:
     # Marketo isn't fast, so give it plenty of time to make a connection,
     # and respond
-    api_session = api.requests.Session(timeout=(2, 12))
-    token = ""
+    def __init__(self, api_session=api.requests.Session(timeout=(2, 12))):
+        self.api_session = api_session
+        self.token = None
 
-    def __init__(self):
-        self.authenticate()
+    def _authenticate(self):
+        request = self.api_session.get(AUTH_URL)
+        response = self._process_response(request)
+        self.token = response["access_token"]
 
-    def process_response(self, response):
+    def _process_response(self, response):
         try:
             body = response.json()
         except ValueError as decode_error:
@@ -78,49 +81,49 @@ class MarketoApi:
 
         return body
 
-    def authenticate(self):
-        auth_request = self.api_session.get(AUTH_URL)
-        response = self.process_response(auth_request)
+    def request(self, method, url, url_args={}, json=None):
+        if not self.token:
+            self._authenticate()
 
-        self.token = response["access_token"]
+        # Always format token here to make sure it's set
+        url = url.format(token=self.token, **url_args)
+        response = self.api_session.request(method=method, url=url, json=json)
+
+        # If there was a failure because the
+        # token expired try to authentiacte again
+        if response.status_code in [601, 602]:
+            self._authenticate()
+            response = self.api_session.request(method=method, url=url)
+
+        return self._process_response(response)
 
     def get_user(self, email):
-        lead_request = self.api_session.get(
-            LEAD_BY_EMAIL.format(token=self.token, email=email)
+        response = self.request(
+            method="GET", url=LEAD_BY_EMAIL, url_args=dict(email=email)
         )
-        response = self.process_response(lead_request)
         return response["result"][0]
 
     def get_newsletter_subscription(self, lead_id):
-        subscription_request = self.api_session.get(
-            LEAD_NEWSLETTER_SUBSCRIPTION.format(
-                token=self.token, lead_id=lead_id
-            )
+        response = self.request(
+            method="GET",
+            url=LEAD_NEWSLETTER_SUBSCRIPTION,
+            url_args=dict(lead_id=lead_id),
         )
-        response = self.process_response(subscription_request)
-
-        if "result" in response:
-            return response["result"][0]
-        else:
-            return None
+        return response["result"][0] if "result" in response else {}
 
     def set_newsletter_subscription(self, lead_email, newsletter_status):
-        if not newsletter_status:
-            newsletter_status = False
-        else:
-            newsletter_status = True
-
         payload = {
             "action": "updateOnly",
             "asyncProcessing": False,
             "input": [
-                {"email": lead_email, "snapcraftnewsletter": newsletter_status}
+                {
+                    "email": lead_email,
+                    "snapcraftnewsletter": True
+                    if newsletter_status
+                    else False,
+                }
             ],
         }
 
-        change_subscription_request = self.api_session.post(
-            LEADS.format(token=self.token), json=payload
-        )
-
-        response = self.process_response(change_subscription_request)
+        response = self.request(method="POST", url=LEADS, json=payload)
         return response

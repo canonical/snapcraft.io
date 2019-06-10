@@ -1,81 +1,65 @@
+from unittest.mock import MagicMock, patch
+
 import responses
-from flask_testing import TestCase
-from webapp import api
-from webapp.app import create_app
+from tests.publisher.endpoint_testing import BaseTestCases
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True
 
 
-class PostAccountDetailsPage(TestCase):
-    def create_app(self):
-        app = create_app(testing=True)
-        app.secret_key = "secret_key"
+class PostAccountDetailsPageNotAuth(BaseTestCases.EndpointLoggedOut):
+    def setUp(self):
+        endpoint_url = "/account/details"
 
-        return app
+        super().setUp(
+            snap_name=None, endpoint_url=endpoint_url, method_endpoint="POST"
+        )
+
+
+class PostAccountDetailsPage(BaseTestCases.BaseAppTesting):
+    def setUp(self):
+        api_url = "https://test.com/"
+        endpoint_url = "/account/details"
+
+        super().setUp(
+            snap_name=None, api_url=api_url, endpoint_url=endpoint_url
+        )
 
     @responses.activate
-    def test_post_account(self):
-        marketo = api.marketo.MarketoApi()
-        marketo.api_session = api.requests.Session()
+    @patch("webapp.publisher.views.marketo")
+    def test_post_account(self, marketo):
+        self._log_in(self.client)
 
-        marketo_auth_url = "".join(
-            [
-                "https://test.com/",
-                "identity/oauth/token?",
-                "grant_type=client_credentials&client_id=123",
-                "&client_secret=321",
-            ]
-        )
-
-        marketo_auth_payload = {"access_token": "test"}
-
-        responses.add(
-            responses.GET,
-            marketo_auth_url,
-            json=marketo_auth_payload,
-            status=200,
-        )
-
-        marketo_set_subscription_url = "".join(
-            [
-                "https://test.com/",
-                "rest/v1/leads.json?",
-                "access_token=test&filterType=email",
-                "&filterValues=testing@testing.com&fields=id",
-            ]
-        )
-
-        marketo_set_subscription_payload = {"result": [{"id": "test"}]}
-
-        responses.add(
-            responses.POST,
-            marketo_set_subscription_url,
-            json=marketo_set_subscription_payload,
-            status=200,
-        )
+        marketo.set_newsletter_subscription = MagicMock()
 
         response = self.client.post(
-            "/account/details",
-            json={
-                "action": "updateOnly",
-                "asyncProcessing": False,
-                "input": [
-                    {"email": "test@test.com", "snapcraftnewsletter": True}
-                ],
-            },
+            self.endpoint_url,
+            data={"email": "test@test.com", "newsletter": True},
         )
 
-        self.assertEqual(2, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
+        marketo.set_newsletter_subscription.assert_called_with(
+            "test@test.com", "True"
         )
 
-        self.assertEqual(200, response.status_code)
-        self.assert_template_used("publisher/account-details.html")
-        self.assert_context("username", "Toto")
-        self.assert_context("displayname", "El Toto")
-        self.assert_context("email", "testing@testing.com")
-        self.assert_context("image", None)
+        with self.client.session_transaction() as session:
+            category, flash = session["_flashes"][0]
+            self.assertEqual("positive", category)
+            self.assertEqual("Changes applied successfully.", flash)
+
+        self.assertEqual(302, response.status_code)
+
+    @patch("webapp.publisher.views.marketo")
+    def test_post_account_exception(self, marketo):
+        self._log_in(self.client)
+
+        marketo.set_newsletter_subscription = MagicMock(
+            side_effect=Exception()
+        )
+        response = self.client.post(self.endpoint_url)
+
+        with self.client.session_transaction() as session:
+            category, flash = session["_flashes"][0]
+            self.assertEqual("negative", category)
+            self.assertEqual("There was an error, please try again.", flash)
+
+        self.assertEqual(302, response.status_code)
