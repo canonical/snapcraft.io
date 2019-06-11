@@ -16,7 +16,7 @@ import {
   EDGE
 } from "../constants";
 
-import { isInDevmode } from "../devmodeIcon";
+import { isInDevmode } from "../helpers";
 import PromoteMenu from "./promoteMenu";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
