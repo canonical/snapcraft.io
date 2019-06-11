@@ -4,17 +4,18 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import DevmodeIcon, { isInDevmode } from "./devmodeIcon";
+import DevmodeIcon from "./devmodeIcon";
 import Notification from "./notification";
 import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_ALL
-} from "./constants";
+} from "../constants";
+import { isInDevmode } from "../helpers";
 
-import { closeHistory } from "./actions/history";
-import { toggleRevision, clearSelectedRevisions } from "./actions/channelMap";
+import { closeHistory } from "../actions/history";
+import { toggleRevision, clearSelectedRevisions } from "../actions/channelMap";
 import {
   getFilteredReleaseHistory,
   getSelectedRevision,
@@ -22,9 +23,9 @@ import {
   getSelectedArchitectures,
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch
-} from "./selectors";
+} from "../selectors";
 
-import { getPendingRelease } from "./releasesState";
+import { getPendingRelease } from "../releasesState";
 
 class RevisionsList extends Component {
   constructor() {

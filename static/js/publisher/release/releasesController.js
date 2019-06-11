@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "whatwg-fetch";
 
-import ReleasesTable from "./releasesTable";
-import Notification from "./notification";
+import ReleasesTable from "./components/releasesTable";
+import Notification from "./components/notification";
 import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 

@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { RISKS_WITH_AVAILABLE as RISKS } from "./constants";
-import { getArchitectures } from "./selectors";
+import { RISKS_WITH_AVAILABLE as RISKS } from "../constants";
+import { getArchitectures } from "../selectors";
 import HistoryPanel from "./historyPanel";
-import ReleasesTableRow from "./components/releasesTableRow";
+import ReleasesTableRow from "./releasesTableRow";
 
 class ReleasesTable extends Component {
   renderChannelRow(risk) {

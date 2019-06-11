@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 
 import { AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
-import DevmodeIcon, { isInDevmode } from "../devmodeIcon";
+import DevmodeIcon from "./devmodeIcon";
+import { isInDevmode } from "../helpers";
 
 import { toggleHistory } from "../actions/history";
 import { undoRelease } from "../actions/pendingReleases";

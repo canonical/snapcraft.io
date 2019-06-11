@@ -3,7 +3,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT
 } from "../constants";
-import { isInDevmode } from "../devmodeIcon";
+import { isInDevmode } from "../helpers";
 
 // returns release history filtered by history filters
 export function getFilteredReleaseHistory(state) {
