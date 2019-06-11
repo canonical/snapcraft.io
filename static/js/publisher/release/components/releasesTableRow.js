@@ -16,13 +16,9 @@ import {
   EDGE
 } from "../constants";
 
-import { isInDevmode } from "../helpers";
+import { getChannelName, isInDevmode } from "../helpers";
 import PromoteMenu from "./promoteMenu";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
-
-function getChannelName(track, risk) {
-  return risk === AVAILABLE ? risk : `${track}/${risk}`;
-}
 
 const disabledBecauseDevmode = (
   <Fragment>
