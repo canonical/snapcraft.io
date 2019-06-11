@@ -1,19 +1,5 @@
 import { RISKS } from "./constants";
 
-// getting list of tracks names from channel maps list
-function getTracksFromChannelMap(channelMapsList) {
-  const tracks = ["latest"];
-
-  channelMapsList.map(t => t.track).forEach(track => {
-    // if we haven't saved it yet
-    if (tracks.indexOf(track) === -1) {
-      tracks.push(track);
-    }
-  });
-
-  return tracks;
-}
-
 function getRevisionsMap(revisions) {
   const revisionsMap = {};
   revisions.forEach(rev => {
@@ -153,7 +139,6 @@ function getPendingRelease(pendingReleases, arch, channel) {
 export {
   getPendingRelease,
   getUnassignedRevisions,
-  getTracksFromChannelMap,
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,

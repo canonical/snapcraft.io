@@ -20,7 +20,6 @@ import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
 import { getPendingChannelMap } from "./selectors";
 
 import {
-  getTracksFromChannelMap,
   getRevisionsMap,
   initReleasesData,
   getReleaseDataFromChannelMap
@@ -46,15 +45,11 @@ class ReleasesController extends Component {
       getReleaseDataFromChannelMap(this.props.channelMapsList, revisionsMap)
     );
 
-    const tracks = getTracksFromChannelMap(this.props.channelMapsList);
-
     this.state = {
       // use "latest" if default track is not defined
       currentTrack: this.props.options.defaultTrack || "latest",
       error: null,
-      isLoading: false,
-      // list of all available tracks
-      tracks: tracks
+      isLoading: false
     };
   }
 
@@ -281,10 +276,7 @@ class ReleasesController extends Component {
               {this.state.error}
             </Notification>
           )}
-          <ReleasesHeading
-            tracks={this.state.tracks}
-            setCurrentTrack={this.setCurrentTrack.bind(this)}
-          />
+          <ReleasesHeading setCurrentTrack={this.setCurrentTrack.bind(this)} />
           <ReleasesConfirm
             isLoading={this.state.isLoading}
             // triggers posting data to API

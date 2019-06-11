@@ -4,6 +4,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT
 } from "../constants";
 import { isInDevmode } from "../helpers";
+import { sortAlphaNum } from "../../../libs/channels";
 
 // returns release history filtered by history filters
 export function getFilteredReleaseHistory(state) {
@@ -162,4 +163,17 @@ export function getArchitectures(state) {
   archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
 
   return archs.sort();
+}
+
+export function getTracks(state) {
+  let tracks = [];
+
+  state.releases.map(t => t.track).forEach(track => {
+    // if we haven't saved it yet
+    if (tracks.indexOf(track) === -1) {
+      tracks.push(track);
+    }
+  });
+
+  return sortAlphaNum(tracks, "latest");
 }
