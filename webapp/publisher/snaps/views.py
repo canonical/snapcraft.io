@@ -876,8 +876,8 @@ def get_register_name_dispute():
 @login_required
 def post_register_name_dispute():
     try:
-        snap_name = flask.request.form.get("snap-name")
-        claim_comment = flask.request.form.get("claim-comment")
+        snap_name = flask.request.form.get("snap-name", "")
+        claim_comment = flask.request.form.get("claim-comment", "")
         api.post_register_name_dispute(
             flask.session, bleach.clean(snap_name), bleach.clean(claim_comment)
         )
