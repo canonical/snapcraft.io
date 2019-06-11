@@ -1,5 +1,5 @@
 # App dependencies
-bleach==2.0.0
+bleach==3.1.0
 Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.2
