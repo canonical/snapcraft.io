@@ -13,7 +13,8 @@ import {
   hasDevmodeRevisions,
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch,
-  getArchitectures
+  getArchitectures,
+  getTracks
 } from "./index";
 
 import reducers from "../reducers";
@@ -488,5 +489,22 @@ describe("getArchitectures", () => {
       "amd42",
       "test64"
     ]);
+  });
+});
+
+describe("getTracks", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithReleases = {
+    ...initialState,
+    releases: [
+      { track: "latest" },
+      { track: "test" },
+      { track: "latest" },
+      { track: "12" }
+    ]
+  };
+
+  it("should return list of all tracks", () => {
+    expect(getTracks(stateWithReleases)).toEqual(["latest", "test", "12"]);
   });
 });
