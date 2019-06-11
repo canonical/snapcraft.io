@@ -46,8 +46,6 @@ class ReleasesController extends Component {
     );
 
     this.state = {
-      // use "latest" if default track is not defined
-      currentTrack: this.props.options.defaultTrack || "latest",
       error: null,
       isLoading: false
     };
@@ -60,10 +58,6 @@ class ReleasesController extends Component {
 
     this.props.updateRevisions(revisionsMap);
     this.props.updateReleases(releasesData.releases);
-  }
-
-  setCurrentTrack(track) {
-    this.setState({ currentTrack: track });
   }
 
   fetchReleasesHistory() {
@@ -276,7 +270,7 @@ class ReleasesController extends Component {
               {this.state.error}
             </Notification>
           )}
-          <ReleasesHeading setCurrentTrack={this.setCurrentTrack.bind(this)} />
+          <ReleasesHeading />
           <ReleasesConfirm
             isLoading={this.state.isLoading}
             // triggers posting data to API
@@ -284,10 +278,7 @@ class ReleasesController extends Component {
           />
         </div>
 
-        <ReleasesTable
-          // not moved to redux yet
-          currentTrack={this.state.currentTrack}
-        />
+        <ReleasesTable />
       </Fragment>
     );
   }

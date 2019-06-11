@@ -9,13 +9,7 @@ import ReleasesTableRow from "./releasesTableRow";
 
 class ReleasesTable extends Component {
   renderChannelRow(risk) {
-    return (
-      <ReleasesTableRow
-        key={risk}
-        risk={risk}
-        currentTrack={this.props.currentTrack}
-      />
-    );
+    return <ReleasesTableRow key={risk} risk={risk} />;
   }
 
   renderHistoryPanel() {
@@ -89,10 +83,7 @@ ReleasesTable.propTypes = {
   // state
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
-  archs: PropTypes.array.isRequired,
-
-  // state (non redux)
-  currentTrack: PropTypes.string.isRequired
+  archs: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {
