@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeIcon from "./devmodeIcon";
-import { isInDevmode } from "../helpers";
+import { getChannelName, isInDevmode } from "../helpers";
 
 import { toggleHistory } from "../actions/history";
 import { undoRelease } from "../actions/pendingReleases";
@@ -14,10 +14,6 @@ import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch
 } from "../selectors";
-
-function getChannelName(track, risk) {
-  return risk === AVAILABLE ? risk : `${track}/${risk}`;
-}
 
 class ReleasesTableCell extends Component {
   handleReleaseCellClick(arch, risk, track) {
