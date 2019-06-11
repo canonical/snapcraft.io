@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { setCurrentTrack } from "../actions/currentTrack";
 import { getTracks } from "../selectors";
 
 class ReleasesHeading extends Component {
@@ -56,4 +57,13 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ReleasesHeading);
+const mapDispatchToProps = dispatch => {
+  return {
+    setCurrentTrack: track => dispatch(setCurrentTrack(track))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesHeading);

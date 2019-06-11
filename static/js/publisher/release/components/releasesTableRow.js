@@ -206,6 +206,7 @@ ReleasesTableRow.propTypes = {
   risk: PropTypes.string.isRequired,
 
   // state
+  currentTrack: PropTypes.string.isRequired,
   filters: PropTypes.object,
   channelMap: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
@@ -215,14 +216,12 @@ ReleasesTableRow.propTypes = {
 
   // actions
   closeChannel: PropTypes.func.isRequired,
-  promoteChannel: PropTypes.func.isRequired,
-
-  // state (non redux)
-  currentTrack: PropTypes.string.isRequired
+  promoteChannel: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
   return {
+    currentTrack: state.currentTrack,
     filters: state.history.filters,
     channelMap: state.channelMap,
     pendingCloses: state.pendingCloses,
