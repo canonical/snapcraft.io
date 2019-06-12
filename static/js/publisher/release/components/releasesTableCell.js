@@ -147,7 +147,8 @@ class ReleasesTableCell extends Component {
       "p-releases-table__cell is-clickable",
       isUnassigned ? "is-unassigned" : "",
       isActive ? "is-active" : "",
-      isHighlighted ? "is-highlighted" : ""
+      isHighlighted ? "is-highlighted" : "",
+      isPending ? "is-pending" : ""
     ].join(" ");
 
     return (

@@ -33,7 +33,7 @@ class ReleasesTable extends Component {
     ) {
       const historyPanelRow = (
         <div className="p-releases-table__row" key="history-panel-row">
-          <div className="p-releases-channel u-hide--small" />
+          <div className="p-releases-channel is-placeholder u-hide--small" />
           {this.renderHistoryPanel()}
         </div>
       );
@@ -60,7 +60,7 @@ class ReleasesTable extends Component {
       <div className="row">
         <div className={className}>
           <div className="p-releases-table__row p-releases-table__row--heading">
-            <div className="p-releases-channel" />
+            <div className="p-releases-channel is-placeholder" />
             {archs.map(arch => (
               <div
                 className={`p-releases-table__cell p-releases-table__arch ${

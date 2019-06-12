@@ -25,8 +25,8 @@
   // row
 
   .p-releases-table__row {
-    border-bottom: 1px solid $color-mid-light;
     display: flex;
+    margin-bottom: 2px;
   }
 
   .p-releases-table__row--channel {
@@ -34,7 +34,7 @@
   }
 
   .p-releases-table__row--heading {
-    height: 2.5rem;
+    height: 2rem;
   }
 
   .p-releases-table__row--edge {
@@ -58,10 +58,16 @@
 
   .p-releases-channel {
     align-items: flex-start;
+    background: $color-light;
     display: flex;
     flex-shrink: 0;
-    margin-right: 5px;
+    font-size: .9rem;
+    padding-left: $sph-intra--condensed;
     width: 260px;
+
+    .p-promote-button {
+      font-size: .9rem;
+    }
 
     .has-active & {
       opacity: .5;
@@ -70,6 +76,10 @@
     &:hover,
     &.is-active {
       opacity: 1;
+    }
+
+    &.is-placeholder {
+      background: none;
     }
   }
 
@@ -87,7 +97,8 @@
     border-bottom: 3px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
-    margin-left: 1px;
+    font-size: .9rem;
+    margin-left: 2px;
     max-width: 25.2%; // fill the whole space for 3 archs
     min-width: 100px;
     position: relative;
@@ -133,8 +144,8 @@
 
   .p-release-buttons {
     position: absolute;
-    right: .5rem;
-    top: .5rem;
+    right: .4rem;
+    top: .4rem;
   }
 
   .p-release-data {
@@ -146,12 +157,18 @@
   }
 
   .p-release-data__info {
-    width: 100%;
     white-space: nowrap;
+    width: 100%;
 
     &.is-pending {
       font-weight: 400;
       padding-right: $sph-inter;
+    }
+  }
+
+  .is-pending {
+    .p-release-data__icon {
+      margin-right: 20px;
     }
   }
 
@@ -167,7 +184,7 @@
   .p-release-data__meta {
     color: $color-mid-dark;
     display: block;
-    font-size: .8em;
+    font-size: .8rem;
     overflow: hidden;
     text-overflow: ellipsis;
   }
