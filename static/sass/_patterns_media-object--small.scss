@@ -1,0 +1,15 @@
+@mixin p-media-object--small {
+  .p-media-object--small {
+    @extend .p-media-object; // sass-lint:disable-line placeholder-in-extend
+
+    .p-media-object__image {
+      flex-shrink: 0;
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+
+    .p-media-object__details {
+      margin-top: .5rem;
+    }
+  }
+}

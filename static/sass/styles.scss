@@ -65,6 +65,9 @@ $color-navigation-background: #252525;
 @import 'patterns_media-object--large';
 @include p-media-object--large;
 
+@import 'patterns_media-object--small';
+@include p-media-object--small;
+
 @import 'patterns_table-key-value';
 @include vf-p-table-key-value;
 

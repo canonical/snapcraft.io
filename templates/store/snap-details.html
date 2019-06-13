@@ -228,6 +228,10 @@
     {% endif %}
   {% endif %}
 
+  {% if not IS_BRAND_STORE %}
+    {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
+  {% endif %}
+
   {# REPORT SNAP SECTION - hidden in preview #}
   {% if not is_preview and not IS_BRAND_STORE %}
     <div class="row">
