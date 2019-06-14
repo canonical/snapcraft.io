@@ -2,6 +2,7 @@ name: Linux Mint
 color-1: "#81C53B"
 color-2: "#5F912C"
 logo: https://assets.ubuntu.com/v1/938d67b4-Distro_Logo_LinuxMint.svg
+display-logo: true
 install:
   -
     action: |
