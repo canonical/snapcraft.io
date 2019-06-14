@@ -1,5 +1,5 @@
 import { arrayChunk } from "../../libs/arrays";
-import { ActiveDevicesGraph } from "./graphs/activeDevicesGraph";
+import { ActiveDevicesGraph } from "./graphs/activeDevicesGraph/";
 import territoriesMetrics from "./graphs/territories";
 
 /**
