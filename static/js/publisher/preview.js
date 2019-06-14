@@ -99,6 +99,13 @@ function getVideoDetails(url) {
       id: url.split("v=")[1].split("&")[0]
     };
   }
+  if (url.indexOf("youtu.be") > -1) {
+    return {
+      type: "youtube",
+      url: url.replace("youtu.be/", "youtube.com/embed/"),
+      id: url.split("/")[1].split("?")[0]
+    };
+  }
   if (url.indexOf("vimeo") > -1) {
     const splitUrl = url.split("/");
     return {

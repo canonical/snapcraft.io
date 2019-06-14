@@ -266,6 +266,17 @@ class StoreLogicTest(unittest.TestCase):
             },
         )
 
+        youtu_be_url = "https://youtu.be/123"
+        embed = logic.get_video_embed_code(youtu_be_url)
+        self.assertEqual(
+            embed,
+            {
+                "type": "youtube",
+                "url": "https://youtube.com/embed/123",
+                "id": "123",
+            },
+        )
+
         vimeo_url = "https://vimeo.com/123123"
         embed = logic.get_video_embed_code(vimeo_url)
         self.assertEqual(
