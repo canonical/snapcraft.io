@@ -37,21 +37,14 @@ function arraysEqual(oldArray, newArray) {
  * Splits an array into chunks
  * @param {array} arr
  * @param {number} chunkSize
- * @param {function} fn A function that modifies each chunk
  * @returns {array}
  */
-function arrayChunk(arr, chunkSize, fn) {
+function arrayChunk(arr, chunkSize) {
   const chunks = [];
   const arrCopy = arr.slice(0);
 
   for (let i = 0, ii = arrCopy.length; i < ii; i += chunkSize) {
-    let chunk = arrCopy.splice(0, chunkSize);
-
-    if (fn) {
-      chunk = fn(chunk);
-    }
-
-    chunks.push(chunk);
+    chunks.push(arrCopy.splice(0, chunkSize));
   }
 
   return chunks;

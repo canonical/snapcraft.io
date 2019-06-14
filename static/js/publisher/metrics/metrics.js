@@ -34,7 +34,6 @@ function renderMetrics(metrics) {
       annotations: metrics.activeDevices.annotations
     }
   )
-    .prepareData()
     .render()
     .enableTooltip()
     .show();
