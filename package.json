@@ -78,6 +78,8 @@
     "prop-types": "^15.6.2",
     "raven-js": "^3.24.1",
     "react": "^16.4.1",
+    "react-dnd": "^8.0.0",
+    "react-dnd-html5-backend": "^8.0.0",
     "react-dom": "^16.4.1",
     "react-redux": "^5.1.1",
     "react-sortable-hoc": "^1.8.3",
