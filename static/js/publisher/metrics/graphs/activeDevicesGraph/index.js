@@ -88,6 +88,7 @@ class ActiveDevicesGraph {
     this.hasRendered = false;
 
     this.lines = line()
+      .curve(curveMonotoneX)
       .x(d => this.xScale(d.date))
       .y(d => this.yScale(d.value));
 
