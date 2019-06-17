@@ -27,6 +27,18 @@
   .p-releases-table__row {
     display: flex;
     margin-bottom: 2px;
+
+    &.is-dragging {
+      opacity: .5;
+    }
+
+    &.can-drop {
+      outline: 1px dashed $color-mid-light;
+    }
+
+    &.is-over {
+      background-color: $color-highlighted;
+    }
   }
 
   .p-releases-table__row--channel {
@@ -56,7 +68,7 @@
     flex-shrink: 0;
     font-size: 1rem;
     padding-left: $sph-intra--condensed;
-    width: 260px;
+    width: 280px;
 
     .p-promote-button {
       font-size: .9rem;
@@ -74,6 +86,10 @@
     &.is-placeholder {
       background: none;
     }
+
+    .is-over & {
+      background-color: $color-highlighted;
+    }
   }
 
   .p-releases-channel__name {
@@ -87,6 +103,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+
+  .p-releases-channel__handle {
+    cursor: move;
+    padding-right: $sph-intra--condensed;
+    padding-top: ($spv-intra - .1rem);
   }
 
   // release cell
@@ -131,6 +153,10 @@
 
     &.is-highlighted {
       background: $color-highlighted;
+    }
+
+    .is-over & {
+      background-color: $color-highlighted;
     }
   }
 
