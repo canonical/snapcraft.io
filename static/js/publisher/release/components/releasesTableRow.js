@@ -151,6 +151,25 @@ class ReleasesTableRow extends Component {
       this.props.filters &&
       getChannelName(this.props.filters.track, this.props.filters.risk);
 
+    let hasSameVersion = false;
+    let channelVersion = "";
+
+    if (pendingChannelMap[channel]) {
+      hasSameVersion = Object.values(pendingChannelMap[channel])
+        .map(r => r.version)
+        .every((e, i, a) => {
+          if (i) {
+            return e === a[i - 1];
+          }
+          return true;
+        });
+      if (hasSameVersion) {
+        channelVersion = Object.values(pendingChannelMap[channel])[0].version;
+      } else {
+        channelVersion = "Multiple versions";
+      }
+    }
+
     return (
       <Fragment>
         {risk === AVAILABLE && <h4>Revisions available to promote</h4>}
@@ -162,7 +181,15 @@ class ReleasesTableRow extends Component {
               filteredChannel === channel ? "is-active" : ""
             }`}
           >
-            <span className="p-releases-channel__name">{channelName}</span>
+            {channel === AVAILABLE ? (
+              <span className="p-releases-channel__name">{channelName}</span>
+            ) : (
+              <span className="p-releases-channel__name p-release-data__info">
+                <span className="p-release-data__title">{channelName}</span>
+                <span className="p-release-data__meta">{channelVersion}</span>
+              </span>
+            )}
+
             <span className="p-releases-table__menus">
               {canBePromoted && (
                 <PromoteMenu
