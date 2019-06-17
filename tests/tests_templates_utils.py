@@ -76,7 +76,7 @@ class TemplateUtilsTest(unittest.TestCase):
 
     def test_install_snippet_with_classic_and_default_track(self):
         result = template_utils.install_snippet(
-            "node", "10", "stable" "classic"
+            "node", "10", "stable", "classic"
         )
         self.assertTrue(
             result, "sudo snap install node --channel=10/stable --classic"
