@@ -5,6 +5,15 @@
 {% block content %}
   <section id="main-content" class="p-strip is-bordered">
     <div class="row">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="p-notification--{{category}} u-align-text--center">
+            <p class="p-notification__response">
+              <span class="p-notification__status">{{message}}</span>
+            </p>
+        </div>
+      {% endfor %}
+      {% endwith %}
       <h2 class="p-heading--one">
         Auto-build and publish software for any Linux system or device
       </h2>
@@ -27,7 +36,7 @@
     </div>
     <div class="row">
       <div class="col-6 push-3 u-align--center">
-        <a href="{{ BSI_URL }}/auth/authenticate" class="p-button--positive p-build__github-button">
+        <a href="/build/auth/authenticate" class="p-button--positive p-build__github-button">
           Set up in minutes <img src="https://assets.ubuntu.com/v1/cb4b9125-github-white.svg" />
         </a>
       </div>
@@ -107,7 +116,7 @@
     </div>
     <div class="row">
       <div class="col-6 push-3 u-align--center">
-        <a href="{{ BSI_URL }}/auth/authenticate" class="p-button--positive p-build__github-button">
+        <a href="/build/auth/authenticate" class="p-button--positive p-build__github-button">
           Get started now <img src="https://assets.ubuntu.com/v1/cb4b9125-github-white.svg" />
         </a>
       </div>
