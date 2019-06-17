@@ -1,7 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "whatwg-fetch";
+import { DndProvider } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 
 import ReleasesTable from "./components/releasesTable";
 import Notification from "./components/notification";
@@ -263,7 +265,7 @@ class ReleasesController extends Component {
 
   render() {
     return (
-      <Fragment>
+      <DndProvider backend={HTML5Backend}>
         <div className="row">
           {this.state.error && (
             <Notification status="error" appearance="negative">
@@ -279,7 +281,7 @@ class ReleasesController extends Component {
         </div>
 
         <ReleasesTable />
-      </Fragment>
+      </DndProvider>
     );
   }
 }
