@@ -65,19 +65,19 @@ class TemplateUtilsTest(unittest.TestCase):
         result = template_utils.install_snippet(
             "skype", "stable", "latest", "classic"
         )
-        self.assetTrue(result, "sudo snap install skype --classic")
+        self.assertTrue(result, "sudo snap install skype --classic")
 
         result = template_utils.install_snippet(
             "node", "stable", "10", "classic"
         )
-        self.assetTrue(
+        self.assertTrue(
             result, "sudo snap install node --channel=10/stable --classic"
         )
 
         result = template_utils.install_snippet(
             "spotify", "stable", "latest", ""
         )
-        self.assetTrue(result, "sudo snap install spotify")
+        self.assertTrue(result, "sudo snap install spotify")
 
     def test_diplay_name(self):
         result = template_utils.display_name("Toto", "toto")
