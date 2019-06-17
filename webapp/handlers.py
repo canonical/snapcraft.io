@@ -58,6 +58,7 @@ def set_handlers(app):
             "static_url": template_utils.static_url,
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
+            "install_snippet": template_utils.install_snippet,
         }
 
     # Error handlers

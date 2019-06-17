@@ -79,6 +79,28 @@ def static_url(filename):
     return url + "?v=" + file_hash.hexdigest()[:7]
 
 
+def install_snippet(
+    package_name, default_track, lowest_risk_available, confinement
+):
+    """
+    Template function that returns the snippet value to
+    install a snap to be used in distro pages and/or snap
+    detail pages
+    """
+
+    snippet_value = "sudo snap install " + package_name
+
+    if default_track != "latest":
+        snippet_value += f" --channel={default_track}/{lowest_risk_available}"
+    elif lowest_risk_available != "stable":
+        snippet_value += f" --{lowest_risk_available}"
+
+    if confinement == "classic":
+        snippet_value += " --classic"
+
+    return snippet_value
+
+
 def format_number(number: int):
     """
     Template function that transforms a int into a string
