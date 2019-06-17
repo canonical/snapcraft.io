@@ -922,7 +922,6 @@ def post_register_name_dispute():
 @login_required
 def get_request_reserved_name():
     snap_name = flask.request.args.get("snap_name")
-    print(snap_name)
     if not snap_name:
         return flask.redirect(
             flask.url_for(".get_register_name", snap_name=snap_name)
