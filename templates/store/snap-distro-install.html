@@ -156,7 +156,12 @@
             <p>To install {{ snap_title }}, simply use the following command:</p>
           </div>
           <div class="col-5 distro-code-snippet">
-            {% set snippet_value = "sudo snap install " + package_name %}
+            {% set snippet_value =
+                install_snippet(
+                  package_name,
+                  lowest_risk_available,
+                  default_track,
+                  confinement) %}
             {% set snippet_id =  "snap-install-stable" %}
             {% include "/partials/_code-snippet.html" %}
           </div>

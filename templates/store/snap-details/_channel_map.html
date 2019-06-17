@@ -22,12 +22,12 @@
         <p><b>Install using the command line</b></p>
         <div class="p-code-snippet p-cli-install">
           <input
+
             class="p-code-snippet__input"
             id="snap-install"
-            value="sudo snap install {{ package_name }}
-{% if default_track != 'latest' %} --channel={{ default_track }}/{{ lowest_risk_available }}
-{% elif lowest_risk_available != 'stable' %}--{{ lowest_risk_available }}{% endif %}
-{% if confinement == 'classic' %} --classic{% endif %}"
+            value="{{ install_snippet(
+                  package_name, lowest_risk_available, default_track, confinement
+                  ) }}"
             readonly="readonly"
           />
           <button
