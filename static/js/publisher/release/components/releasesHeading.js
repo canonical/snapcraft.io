@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -12,36 +12,34 @@ class ReleasesHeading extends Component {
 
   renderTrackDropdown(tracks) {
     return (
-      <form className="p-form p-form--inline u-float--right">
-        <div className="p-form__group">
-          <label htmlFor="track-dropdown" className="p-form__label">
-            Show revisions released in
-          </label>
-          <div className="p-form__control u-clearfix">
-            <select
-              id="track-dropdown"
-              onChange={this.onTrackChange.bind(this)}
-            >
-              {tracks.map(track => (
-                <option key={`${track}`} value={track}>
-                  {track}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+      <form className="p-form p-form--inline">
+        <select id="track-dropdown" onChange={this.onTrackChange.bind(this)}>
+          {tracks.map(track => (
+            <option key={`${track}`} value={track}>
+              {track}
+            </option>
+          ))}
+        </select>
       </form>
     );
   }
 
   render() {
     const tracks = this.props.tracks;
-
+    const Wrap = tracks.length > 1 ? "label" : "span";
     return (
-      <div className="u-clearfix">
-        <h4 className="u-float--left">Releases available to install</h4>
-        {tracks.length > 1 && this.renderTrackDropdown(tracks)}
-      </div>
+      <h4>
+        <Wrap htmlFor="track-dropdown">
+          Releases available to install
+          {tracks.length > 1 && (
+            <Fragment>
+              {" "}
+              in &nbsp;
+              {this.renderTrackDropdown(tracks)}
+            </Fragment>
+          )}
+        </Wrap>
+      </h4>
     );
   }
 }
