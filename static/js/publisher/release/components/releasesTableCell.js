@@ -25,7 +25,7 @@ class ReleasesTableCell extends Component {
     this.props.undoRelease(revision, `${track}/${risk}`);
   }
 
-  renderRevision(revision, isPending) {
+  renderRevision(revision, isPending, showVersion) {
     return (
       <Fragment>
         <span className="p-release-data__info">
@@ -35,7 +35,9 @@ class ReleasesTableCell extends Component {
               <DevmodeIcon revision={revision} showTooltip={false} />
             </span>
           )}
-          <span className="p-release-data__meta">{revision.version}</span>
+          {showVersion && (
+            <span className="p-release-data__meta">{revision.version}</span>
+          )}
         </span>
         <span className="p-tooltip__message">
           {isPending && "Pending release of:"}
@@ -160,7 +162,11 @@ class ReleasesTableCell extends Component {
           {isChannelPendingClose
             ? this.renderCloseChannel()
             : currentRevision
-              ? this.renderRevision(currentRevision, hasPendingRelease)
+              ? this.renderRevision(
+                  currentRevision,
+                  hasPendingRelease,
+                  this.props.showVersion
+                )
               : this.renderEmpty(isUnassigned, availableCount, trackingChannel)}
         </div>
         {hasPendingRelease && (
@@ -195,7 +201,8 @@ ReleasesTableCell.propTypes = {
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
-  arch: PropTypes.string
+  arch: PropTypes.string,
+  showVersion: PropTypes.bool
 };
 
 const mapStateToProps = state => {

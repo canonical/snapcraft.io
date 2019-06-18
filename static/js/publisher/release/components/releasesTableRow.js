@@ -32,14 +32,14 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
 class ReleasesTableRow extends Component {
-  renderRevisionCell(track, risk, arch) {
+  renderRevisionCell(track, risk, arch, showVersion) {
     return (
       <ReleasesTableCell
         key={`${track}/${risk}/${arch}`}
         track={track}
         risk={risk}
         arch={arch}
-        pendingCloses={this.props.pendingCloses}
+        showVersion={showVersion}
       />
     );
   }
@@ -74,7 +74,6 @@ class ReleasesTableRow extends Component {
   renderChannelRow(risk) {
     const track = this.props.currentTrack;
     const archs = this.props.archs;
-    const channelMap = this.props.channelMap;
     const pendingChannelMap = this.props.pendingChannelMap;
 
     const channel = getChannelName(track, risk);
@@ -170,6 +169,8 @@ class ReleasesTableRow extends Component {
       }
     }
 
+    const showVersion = risk === AVAILABLE || !hasSameVersion;
+
     return (
       <Fragment>
         {risk === AVAILABLE && <h4>Revisions available to promote</h4>}
@@ -181,7 +182,7 @@ class ReleasesTableRow extends Component {
               filteredChannel === channel ? "is-active" : ""
             }`}
           >
-            {channel === AVAILABLE ? (
+            {risk === AVAILABLE ? (
               <span className="p-releases-channel__name">{channelName}</span>
             ) : (
               <span className="p-releases-channel__name p-release-data__info">
@@ -210,13 +211,7 @@ class ReleasesTableRow extends Component {
             </span>
           </div>
           {archs.map(arch =>
-            this.renderRevisionCell(
-              track,
-              risk,
-              arch,
-              channelMap,
-              pendingChannelMap
-            )
+            this.renderRevisionCell(track, risk, arch, showVersion)
           )}
         </div>
       </Fragment>
@@ -235,7 +230,6 @@ ReleasesTableRow.propTypes = {
   // state
   currentTrack: PropTypes.string.isRequired,
   filters: PropTypes.object,
-  channelMap: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
 
   archs: PropTypes.array.isRequired,
@@ -250,7 +244,6 @@ const mapStateToProps = state => {
   return {
     currentTrack: state.currentTrack,
     filters: state.history.filters,
-    channelMap: state.channelMap,
     pendingCloses: state.pendingCloses,
     archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state)

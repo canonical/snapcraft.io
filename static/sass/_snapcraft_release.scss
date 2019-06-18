@@ -87,6 +87,10 @@
     flex-grow: 1;
     padding-right: $sph-intra--condensed;
     padding-top: ($spv-intra - .1rem);
+
+    .p-release-data__meta {
+      max-width: 115px;
+    }
   }
 
   // release cell
