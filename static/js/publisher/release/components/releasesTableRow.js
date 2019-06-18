@@ -152,16 +152,18 @@ class ReleasesTableRow extends Component {
 
     let hasSameVersion = false;
     let channelVersion = "";
-
+    let versionsMap = {};
     if (pendingChannelMap[channel]) {
-      hasSameVersion = Object.values(pendingChannelMap[channel])
-        .map(r => r.version)
-        .every((e, i, a) => {
-          if (i) {
-            return e === a[i - 1];
-          }
-          return true;
-        });
+      // calculate map of architectures for each version
+      for (const arch in pendingChannelMap[channel]) {
+        const version = pendingChannelMap[channel][arch].version;
+        if (!versionsMap[version]) {
+          versionsMap[version] = [];
+        }
+        versionsMap[version].push(arch);
+      }
+
+      hasSameVersion = Object.keys(versionsMap).length === 1;
       if (hasSameVersion) {
         channelVersion = Object.values(pendingChannelMap[channel])[0].version;
       } else {
@@ -170,6 +172,18 @@ class ReleasesTableRow extends Component {
     }
 
     const showVersion = risk === AVAILABLE || !hasSameVersion;
+    const channelVersionTooltip = (
+      <Fragment>
+        {Object.keys(versionsMap).map(version => {
+          return (
+            <span key={`tooltip-${channel}-${version}`}>
+              {version}: <b>{versionsMap[version].join(", ")}</b>
+              <br />
+            </span>
+          );
+        })}
+      </Fragment>
+    );
 
     return (
       <Fragment>
@@ -185,9 +199,14 @@ class ReleasesTableRow extends Component {
             {risk === AVAILABLE ? (
               <span className="p-releases-channel__name">{channelName}</span>
             ) : (
-              <span className="p-releases-channel__name p-release-data__info">
+              <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
                 <span className="p-release-data__title">{channelName}</span>
                 <span className="p-release-data__meta">{channelVersion}</span>
+                {channelVersion && (
+                  <span className="p-tooltip__message">
+                    {channelVersionTooltip}
+                  </span>
+                )}
               </span>
             )}
 
