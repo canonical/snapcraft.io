@@ -5,7 +5,23 @@ Account details — Linux software in the Snap Store
 {% endblock %}
 
 {% block content %}
+
 <section class="p-strip">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="row">
+    <div class="col-12">
+      {% for category, message in messages %}
+      <div id="market-form-status" class="p-notification--{{ category }}">
+        <p class="p-notification__response">
+          {{ message }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
   <div class="row">
     <div class="col-12">
       <h3 class="u-float--left">Publisher account details</h3>
@@ -28,39 +44,71 @@ Account details — Linux software in the Snap Store
       Full name:
     </div>
     <div class="col-6">
-      <p><b>{{ displayname }}</b></p>
+      <p class="u-no-padding--top"><b>{{ displayname }}</b></p>
       <p class="p-form-help-text">
         Who your users will see as the publisher of your snap.
       </p>
     </div>
   </div>
-  <div class="row u-no-margin--top">
-    <hr />
-  </div>
-  <div class="row u-no-margin--top">
+  <div class="row">
     <div class="col-2">
       Username:
     </div>
     <div class="col-6">
-      <p><b>{{ username }}</b></p>
+      <p class="u-no-padding--top"><b>{{ username }}</b></p>
       <p class="p-form-help-text">
         This is a shorthand version of your name, used when space on screen is limited.
       </p>
     </div>
   </div>
-  <div class="row u-no-margin--top">
-    <hr />
-  </div>
-  <div class="row u-no-margin--top">
+  <div class="row">
     <div class="col-2">
-      Email:
+      Email address:
     </div>
     <div class="col-6">
-      <p><b>{{ email }}</b></p>
+      <p class="u-no-padding--top"><b>{{ email }}</b></p>
       <p class="p-form-help-text">
         Your email address will not be shared publicly.
       </p>
     </div>
   </div>
+  {% if subscriptions %}
+    <div class="row">
+      <div class="col-2">
+        Email preferences:
+      </div>
+      <div class="col-6">
+          <form method="post" class="js-preferences-form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <input type="hidden" name="email" value="{{ email }}" />
+              <input
+                      type="checkbox"
+                      {% if subscriptions.newsletter %}checked{% endif %}
+                      name="newsletter"
+                      id="newsletter">
+              <label for="newsletter" class="u-no-margin--bottom">
+                  Blog posts delivered
+              </label>
+              <p class="p-form-help-text">
+                  Get our latest and greatest blog posts delivered to your inbox.
+              </p>
+
+              <p><br />Please note, you will still recieve required platform related emails such as registration of snap names, the review status of a snap or any security vulnerabilities.</p>
+              <button type="submit" class="p-button--positive">Save email preferences</button>
+          </form>
+      </div>
+    </div>
+  {% endif %}
 </section>
+{% endblock %}
+
+{% block scripts %}
+{% if subscriptions %}
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script>
+  Raven.context(function () {
+    snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);
+  });
+</script>
+{% endif %}
 {% endblock %}

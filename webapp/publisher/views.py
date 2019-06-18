@@ -1,7 +1,7 @@
 import flask
-from webapp import authentication
 import webapp.api.dashboard as api
-from webapp.decorators import login_required
+import webapp.api.marketo as marketo_api
+from webapp import authentication
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiCircuitBreaker,
@@ -12,11 +12,13 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-
+from webapp.decorators import login_required
 
 account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
+
+marketo = marketo_api.MarketoApi()
 
 
 def refresh_redirect(path):
@@ -64,7 +66,7 @@ def get_account():
     return flask.redirect(flask.url_for("publisher_snaps.get_account_snaps"))
 
 
-@account.route("/details")
+@account.route("/details", methods=["GET"])
 @login_required
 def get_account_details():
     try:
@@ -78,14 +80,48 @@ def get_account_details():
         return _handle_errors(api_error)
 
     flask_user = flask.session["openid"]
+
+    subscriptions = None
+
+    # don't rely on marketo to show the page,
+    # if anything fails, just continue and don't show
+    # this section
+    try:
+        marketo_user = marketo.get_user(flask_user["email"])
+        marketo_subscribed = marketo.get_newsletter_subscription(
+            marketo_user["id"]
+        )
+        subscribed_to_newsletter = False
+        if marketo_subscribed.get("snapcraftnewsletter"):
+            subscribed_to_newsletter = True
+
+        subscriptions = {"newsletter": subscribed_to_newsletter}
+    except Exception:
+        pass
+
     context = {
         "image": flask_user["image"],
         "username": flask_user["nickname"],
         "displayname": flask_user["fullname"],
         "email": flask_user["email"],
+        "subscriptions": subscriptions,
     }
 
     return flask.render_template("publisher/account-details.html", **context)
+
+
+@account.route("/details", methods=["POST"])
+@login_required
+def post_account_details():
+    try:
+        newsletter_status = flask.request.form.get("newsletter")
+        email = flask.request.form.get("email")
+        marketo.set_newsletter_subscription(email, newsletter_status)
+        flask.flash("Changes applied successfully.", "positive")
+    except Exception:
+        flask.flash("There was an error, please try again.", "negative")
+
+    return flask.redirect(flask.url_for("account.get_account_details"))
 
 
 @account.route("/agreement")

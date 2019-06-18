@@ -1,7 +1,8 @@
 import os
-from webapp.api import sso
-from pymacaroons import Macaroon
 from urllib.parse import urlparse
+
+from pymacaroons import Macaroon
+from webapp.api import sso
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 

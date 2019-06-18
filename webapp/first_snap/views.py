@@ -1,8 +1,8 @@
 import os
-import flask
 import re
 from io import StringIO
 
+import flask
 from webapp import helpers
 from webapp.first_snap import logic
 

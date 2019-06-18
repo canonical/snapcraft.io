@@ -1,10 +1,9 @@
-from math import floor, ceil
+from math import ceil, floor
 from urllib.parse import quote_plus
 
 import flask
-
-import webapp.store.logic as logic
 import webapp.helpers as helpers
+import webapp.store.logic as logic
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiConnectionError,

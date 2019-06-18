@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock, patch
+
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
@@ -26,17 +28,19 @@ class AccountDetailsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
     @responses.activate
-    def test_account(self):
+    @patch("webapp.publisher.views.marketo")
+    def test_account(self, marketo):
         responses.add(responses.GET, self.api_url, json={}, status=200)
+
+        marketo.get_user = MagicMock(return_value={"id": "test"})
+        marketo.get_newsletter_subscription = MagicMock(
+            return_value={"snapcraftnewsletter": True}
+        )
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
+        marketo.get_user.assert_called_with("testing@testing.com")
+        marketo.get_newsletter_subscription.assert_called_with("test")
 
         self.assertEqual(200, response.status_code)
         self.assert_template_used("publisher/account-details.html")
@@ -44,3 +48,44 @@ class AccountDetailsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("displayname", "El Toto")
         self.assert_context("email", "testing@testing.com")
         self.assert_context("image", None)
+        self.assert_context("subscriptions", {"newsletter": True})
+
+    @responses.activate
+    @patch("webapp.publisher.views.marketo")
+    def test_account_marketo_no_sub(self, marketo):
+        responses.add(responses.GET, self.api_url, json={}, status=200)
+
+        marketo.get_user = MagicMock(return_value={"id": "test"})
+        marketo.get_newsletter_subscription = MagicMock(return_value={})
+
+        response = self.client.get(self.endpoint_url)
+
+        marketo.get_user.assert_called_with("testing@testing.com")
+        marketo.get_newsletter_subscription.assert_called_with("test")
+
+        self.assertEqual(200, response.status_code)
+        self.assert_template_used("publisher/account-details.html")
+        self.assert_context("username", "Toto")
+        self.assert_context("displayname", "El Toto")
+        self.assert_context("email", "testing@testing.com")
+        self.assert_context("image", None)
+        self.assert_context("subscriptions", {"newsletter": False})
+
+    @responses.activate
+    @patch("webapp.publisher.views.marketo")
+    def test_account_marketo_exception(self, marketo):
+        responses.add(responses.GET, self.api_url, json={}, status=200)
+
+        marketo.get_user = MagicMock(side_effect=Exception())
+
+        response = self.client.get(self.endpoint_url)
+
+        marketo.get_user.assert_called_with("testing@testing.com")
+
+        self.assertEqual(200, response.status_code)
+        self.assert_template_used("publisher/account-details.html")
+        self.assert_context("username", "Toto")
+        self.assert_context("displayname", "El Toto")
+        self.assert_context("email", "testing@testing.com")
+        self.assert_context("image", None)
+        self.assert_context("subscriptions", None)

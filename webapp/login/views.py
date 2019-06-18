@@ -1,7 +1,6 @@
 import os
 
 import flask
-
 from flask_openid import OpenID
 from webapp import authentication
 from webapp.api import dashboard
