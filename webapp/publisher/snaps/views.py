@@ -715,6 +715,7 @@ def get_register_name():
     available_stores = logic.filter_available_stores(user["stores"])
 
     snap_name = flask.request.args.get("snap_name", default="", type=str)
+    store = flask.request.args.get("store", default="", type=str)
 
     conflict_str = flask.request.args.get(
         "conflict", default="False", type=str
@@ -726,6 +727,11 @@ def get_register_name():
     )
     already_owned = already_owned_str == "True"
 
+    reserved_str = flask.request.args.get(
+        "reserved", default="False", type=str
+    )
+    reserved = reserved_str == "True"
+
     is_private_str = flask.request.args.get(
         "is_private", default="False", type=str
     )
@@ -736,6 +742,8 @@ def get_register_name():
         "is_private": is_private,
         "conflict": conflict,
         "already_owned": already_owned,
+        "reserved": reserved,
+        "store": store,
         "available_stores": available_stores,
     }
     return flask.render_template("publisher/register-snap.html", **context)
@@ -786,6 +794,7 @@ def post_register_name():
                             ".get_register_name",
                             snap_name=snap_name,
                             is_private=is_private,
+                            store=store,
                             conflict=True,
                         )
                     )
@@ -795,7 +804,18 @@ def post_register_name():
                             ".get_register_name",
                             snap_name=snap_name,
                             is_private=is_private,
+                            store=store,
                             already_owned=True,
+                        )
+                    )
+                elif error["code"] == "reserved_name":
+                    return flask.redirect(
+                        flask.url_for(
+                            ".get_register_name",
+                            snap_name=snap_name,
+                            is_private=is_private,
+                            store=store,
+                            reserved=True,
                         )
                     )
 
@@ -895,6 +915,19 @@ def post_register_name_dispute():
 
     return flask.render_template(
         "publisher/register-name-dispute-success.html", snap_name=snap_name
+    )
+
+
+@publisher_snaps.route("/request-reserved-name")
+@login_required
+def get_request_reserved_name():
+    snap_name = flask.request.args.get("snap_name")
+    if not snap_name:
+        return flask.redirect(
+            flask.url_for(".get_register_name", snap_name=snap_name)
+        )
+    return flask.render_template(
+        "publisher/request-reserved-name.html", snap_name=snap_name
     )
 
 

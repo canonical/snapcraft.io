@@ -243,6 +243,23 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertIn("http://localhost/register-snap", response.location)
 
     @responses.activate
+    def test_name_reserved(self):
+        payload = {"error_list": [{"code": "reserved_name"}]}
+        responses.add(responses.POST, self.api_url, json=payload, status=409)
+
+        user_payload = {"error_list": [], "stores": []}
+        responses.add(
+            responses.GET, self.user_url, json=user_payload, status=200
+        )
+
+        response = self.client.post(self.endpoint_url, data=self.data)
+
+        assert response.status_code == 302
+        self.assertIn("snap_name=test-snap", response.location)
+        self.assertIn("is_private=False", response.location)
+        self.assertIn("http://localhost/register-snap", response.location)
+
+    @responses.activate
     def test_claim_dispute(self):
         payload = {"error_list": [{"code": "already_claimed"}]}
         responses.add(responses.POST, self.api_url, json=payload, status=409)
