@@ -55,7 +55,7 @@ function cullYAxis(ticks) {
 
 /**
  * Update graph x and y axis formatting.
- * @param {HTMLElement} el Graph wrapping element.
+ * @param {HTMLElement} el ActiveDevicesGraph wrapping element.
  */
 function formatAxis(el) {
   const xAxis = el.querySelector(".bb-axis-x");

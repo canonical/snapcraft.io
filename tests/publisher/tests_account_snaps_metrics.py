@@ -61,7 +61,7 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
             "snaps": [
                 {
                     "id": "1",
-                    "name": "test1",
+                    "name": None,
                     "series": [
                         {"name": "new", "values": [0, 3]},
                         {"name": "lost", "values": [2, 3]},
