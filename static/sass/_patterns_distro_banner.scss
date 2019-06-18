@@ -55,7 +55,6 @@
 
   .distro-banner__logo {
     float: right;
-    margin-top: 1.5rem;
     width: 7rem;
   }
 
@@ -63,13 +62,6 @@
     .distro-code-snippet {
       // to align code snippet with paragraph of text in column next to it
       padding-top: .5rem;
-    }
-  }
-
-  @media only screen and (min-width: $breakpoint-large) {
-    .distro-banner__logo {
-      width: 8rem;
-      margin-top: 3rem;
     }
   }
 

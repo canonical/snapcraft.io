@@ -1,8 +1,8 @@
 name: Fedora
 color-1: "#3C6EB4"
 color-2: "#294172"
-logo: https://assets.ubuntu.com/v1/6c5dc09e-Distro_Logo_Fedora.svg
-logo-mono: https://assets.ubuntu.com/v1/d8742cd7-Distro_Logo_Fedora_White.svg
+logo: https://assets.ubuntu.com/v1/c93d842f-fedora.png
+logo-mono: https://assets.ubuntu.com/v1/c93d842f-fedora.png
 install:
   -
     action: |
