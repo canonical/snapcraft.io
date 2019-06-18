@@ -1,33 +1,22 @@
 const shallowDiff = (firstState, secondState) => {
-  const diff = {};
-
-  Object.keys(firstState).forEach(key => {
+  let diff = Object.keys(firstState).some(key => {
     const value = firstState[key];
     if (secondState[key] === undefined) {
-      diff[key] = {
-        state: "REMOVED",
-        oldValue: value
-      };
+      return key;
     } else if (JSON.stringify(secondState[key]) !== JSON.stringify(value)) {
-      diff[key] = {
-        state: "CHANGED",
-        oldValue: value,
-        newValue: secondState[key]
-      };
+      return key;
     }
   });
 
-  Object.keys(secondState).forEach(key => {
-    const value = secondState[key];
-    if (firstState[key] === undefined) {
-      diff[key] = {
-        state: "ADDED",
-        newValue: value
-      };
-    }
-  });
+  if (!diff) {
+    diff = Object.keys(secondState).some(key => {
+      if (firstState[key] === undefined) {
+        return key;
+      }
+    });
+  }
 
-  return Object.keys(diff).length > 0 ? diff : null;
+  return diff;
 };
 
 export { shallowDiff as default };
