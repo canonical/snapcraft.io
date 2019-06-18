@@ -378,6 +378,12 @@ def get_video_embed_code(url):
             "url": url.replace("watch?v=", "embed/"),
             "id": url.rsplit("?v=", 1)[-1],
         }
+    if "youtu.be" in url:
+        return {
+            "type": "youtube",
+            "url": url.replace("youtu.be/", "youtube.com/embed/"),
+            "id": url.rsplit("/", 1)[-1],
+        }
     if "vimeo" in url:
         return {
             "type": "vimeo",
