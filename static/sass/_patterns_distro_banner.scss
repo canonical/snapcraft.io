@@ -54,10 +54,9 @@
   }
 
   .distro-banner__logo {
-    filter: brightness(40);
     float: right;
     margin-top: 1.5rem;
-    width: 5rem;
+    width: 7rem;
   }
 
   @media only screen and (min-width: $breakpoint-medium) {
@@ -69,7 +68,8 @@
 
   @media only screen and (min-width: $breakpoint-large) {
     .distro-banner__logo {
-      width: 9rem;
+      width: 8rem;
+      margin-top: 3rem;
     }
   }
 

@@ -2,7 +2,7 @@ name: elementary OS
 color-1: "#95A3AB"
 color-2: "#485A6C"
 logo: https://assets.ubuntu.com/v1/c0c09661-Distro_Logo_Elementary.svg
-logo-mono: https://assets.ubuntu.com/v1/23f8f64b-Distro_Logo_Elementary_White.svg
+logo-mono: https://assets.ubuntu.com/v1/4f36b56d-Distro_Logo_Elementary_White.svg
 install:
   -
     action: |

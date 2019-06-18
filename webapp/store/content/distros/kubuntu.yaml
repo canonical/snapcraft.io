@@ -2,7 +2,7 @@ name: Kubuntu
 color-1: "#0079C1"
 color-2: "#005A8F"
 logo: https://assets.ubuntu.com/v1/7ab50a06-Distro_Logo_Kubuntu.svg
-logo-mono: https://assets.ubuntu.com/v1/72680685-Distro_Logo_Kubuntu_White.svg
+logo-mono: https://assets.ubuntu.com/v1/e9f102e3-Distro_Logo_Kubuntu_White.svg
 install:
   -
     action: |
