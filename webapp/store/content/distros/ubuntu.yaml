@@ -2,6 +2,7 @@ name: Ubuntu
 color-1: "#E95420"
 color-2: "#B54119"
 logo: https://assets.ubuntu.com/v1/100386fb-Distro_Logo_Ubuntu.svg
+logo-mono: https://assets.ubuntu.com/v1/112dbadc-Distro_Logo_Ubuntu_White.svg
 install:
   -
     action: |

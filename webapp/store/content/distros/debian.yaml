@@ -2,6 +2,7 @@ name: Debian
 color-1: "#A80030"
 color-2: "#750022"
 logo: https://assets.ubuntu.com/v1/cfdc1144-Distro_Logo_Debian.svg
+logo-mono: https://assets.ubuntu.com/v1/496e3de6-Distro_Logo_Debian_White.svg
 install:
   -
     action: |

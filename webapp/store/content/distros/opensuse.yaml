@@ -2,6 +2,7 @@ name: openSUSE
 color-1: "#73BA25"
 color-2: "#54871B"
 logo: https://assets.ubuntu.com/v1/610301c6-Distro_Logo_OpenSUSE.svg
+logo-mono: https://assets.ubuntu.com/v1/55cfa9b9-Distro_Logo_OpenSUSE_White.svg
 install:
   -
     action: |
