@@ -53,6 +53,11 @@
     right: 2rem;
   }
 
+  .distro-banner__logo {
+    float: right;
+    width: 7rem;
+  }
+
   @media only screen and (min-width: $breakpoint-medium) {
     .distro-code-snippet {
       // to align code snippet with paragraph of text in column next to it
@@ -60,8 +65,4 @@
     }
   }
 
-  .distro-banner__logo {
-    filter: grayscale(100%) opacity(20%);
-    mix-blend-mode: multiply;
-  }
 }
