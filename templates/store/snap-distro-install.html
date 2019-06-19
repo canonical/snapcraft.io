@@ -160,8 +160,8 @@
             {% set snippet_value =
                 install_snippet(
                   package_name,
-                  lowest_risk_available,
                   default_track,
+                  lowest_risk_available,
                   confinement) %}
             {% set snippet_id =  "snap-install-stable" %}
             {% include "/partials/_code-snippet.html" %}
