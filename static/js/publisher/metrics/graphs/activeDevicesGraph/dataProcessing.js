@@ -1,6 +1,6 @@
 import { stack, stackOrderReverse } from "d3-shape";
 import { utcParse } from "d3-time-format";
-import { scaleLinear, scaleOrdinal } from "d3-scale";
+import { scaleLinear, scaleOrdinal, scaleBand } from "d3-scale";
 import { extent } from "d3-array";
 import { schemePaired } from "d3-scale-chromatic";
 import { isMobile } from "../../../../libs/mobile";
@@ -107,12 +107,21 @@ function prepareScales() {
     this.padding.top -
     this.padding.bottom;
 
+  this.xScaleBand = scaleBand()
+    .range([
+      this.padding.left,
+      this.width - this.padding.left - this.padding.right
+    ])
+    .padding(0.1)
+    .domain(this.data.map(d => d.date));
+
   this.xScale = scaleLinear()
     .rangeRound([
       this.padding.left,
       this.width - this.padding.left - this.padding.right
     ])
     .domain(extent(this.data, d => d.date));
+
   this.yScale = scaleLinear()
     .rangeRound([
       this.height - this.padding.top - this.padding.bottom,

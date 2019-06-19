@@ -9,11 +9,13 @@ import {
   prepareLineData,
   prepareScales,
   prepareAnnotationsData,
-  prepareAxis
+  prepareAxis,
+  prepareStackedBarData
 } from "./dataProcessing";
 import {
   renderXAxis,
   renderYAxis,
+  renderBars,
   renderArea,
   renderLines,
   renderAnnotations
@@ -197,7 +199,8 @@ class ActiveDevicesGraph {
     }
 
     if (this.options.area) {
-      renderArea.call(this);
+      // renderArea.call(this);
+      renderBars.call(this);
     } else {
       renderLines.call(this);
     }

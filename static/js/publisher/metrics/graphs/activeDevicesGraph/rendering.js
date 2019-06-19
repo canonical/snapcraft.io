@@ -66,6 +66,40 @@ function renderYAxis() {
   });
 }
 
+function renderBars() {
+  let barLayer = this.g.selectAll(".layer.data-layer");
+
+  if (barLayer.size() === 0) {
+    barLayer = this.g.append("g").attr("class", "layer data-layer");
+  }
+
+  console.log(this.transformedData);
+
+  barLayer
+    .selectAll(".bar")
+    .data(this.transformedData)
+    .enter()
+    .append("g")
+    .attr("class", "bar")
+    .attr("pointer-events", "none")
+    .attr("fill", d => this.colorScale(d.key));
+
+  console.log(this.xScaleBand.bandwidth());
+
+  const bars = barLayer
+    .selectAll(".bar")
+    .selectAll("rect")
+    .data(d => d, e => e.data.date)
+    .enter()
+    .append("rect")
+    .attr("width", this.xScaleBand.bandwidth())
+    .attr("x", d => {
+      return this.xScaleBand(d.data.date);
+    })
+    .attr("y", d => this.yScale(d[1]))
+    .attr("height", d => this.yScale(d[0]) - this.yScale(d[1]));
+}
+
 function renderArea() {
   let areaLayer = this.g.selectAll(".layer.data-layer");
 
@@ -157,4 +191,11 @@ function renderAnnotations() {
   }
 }
 
-export { renderXAxis, renderYAxis, renderArea, renderLines, renderAnnotations };
+export {
+  renderXAxis,
+  renderYAxis,
+  renderBars,
+  renderArea,
+  renderLines,
+  renderAnnotations
+};
