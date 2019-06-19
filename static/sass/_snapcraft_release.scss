@@ -91,6 +91,13 @@
     .p-release-data__meta {
       max-width: 115px;
     }
+
+    .p-release-data__title {
+      display: block;
+      max-width: 115px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   // release cell

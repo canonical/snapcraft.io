@@ -143,9 +143,6 @@ class ReleasesTableRow extends Component {
       }
     }
 
-    const channelName =
-      risk === AVAILABLE ? <AvailableRevisionsMenu /> : channel;
-
     const filteredChannel =
       this.props.filters &&
       getChannelName(this.props.filters.track, this.props.filters.risk);
@@ -171,13 +168,17 @@ class ReleasesTableRow extends Component {
       }
     }
 
-    const showVersion = risk === AVAILABLE || !hasSameVersion;
     const channelVersionTooltip = (
       <Fragment>
         {Object.keys(versionsMap).map(version => {
           return (
             <span key={`tooltip-${channel}-${version}`}>
-              {version}: <b>{versionsMap[version].join(", ")}</b>
+              {version}:{" "}
+              <b>
+                {versionsMap[version].length === archs.length
+                  ? "All architectures"
+                  : versionsMap[version].join(", ")}
+              </b>
               <br />
             </span>
           );
@@ -185,9 +186,18 @@ class ReleasesTableRow extends Component {
       </Fragment>
     );
 
+    const rowTitle = risk === AVAILABLE ? channelVersion : channel;
+
     return (
       <Fragment>
-        {risk === AVAILABLE && <h4>Revisions available to promote</h4>}
+        {risk === AVAILABLE && (
+          <h4>
+            Revisions available to release from &nbsp;
+            <form className="p-form p-form--inline">
+              <AvailableRevisionsMenu />
+            </form>
+          </h4>
+        )}
         <div
           className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk}`}
         >
@@ -196,19 +206,17 @@ class ReleasesTableRow extends Component {
               filteredChannel === channel ? "is-active" : ""
             }`}
           >
-            {risk === AVAILABLE ? (
-              <span className="p-releases-channel__name">{channelName}</span>
-            ) : (
-              <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
-                <span className="p-release-data__title">{channelName}</span>
+            <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
+              <span className="p-release-data__title">{rowTitle}</span>
+              {risk !== AVAILABLE && (
                 <span className="p-release-data__meta">{channelVersion}</span>
-                {channelVersion && (
-                  <span className="p-tooltip__message">
-                    {channelVersionTooltip}
-                  </span>
-                )}
-              </span>
-            )}
+              )}
+              {channelVersion && (
+                <span className="p-tooltip__message">
+                  {channelVersionTooltip}
+                </span>
+              )}
+            </span>
 
             <span className="p-releases-table__menus">
               {canBePromoted && (
@@ -230,7 +238,7 @@ class ReleasesTableRow extends Component {
             </span>
           </div>
           {archs.map(arch =>
-            this.renderRevisionCell(track, risk, arch, showVersion)
+            this.renderRevisionCell(track, risk, arch, !hasSameVersion)
           )}
         </div>
       </Fragment>
