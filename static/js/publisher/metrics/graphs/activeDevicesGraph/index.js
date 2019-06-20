@@ -9,14 +9,13 @@ import {
   prepareLineData,
   prepareScales,
   prepareAnnotationsData,
-  prepareAxis,
-  prepareStackedBarData
+  prepareAxis
 } from "./dataProcessing";
 import {
   renderXAxis,
   renderYAxis,
   renderBars,
-  renderArea,
+  // renderArea,
   renderLines,
   renderAnnotations
 } from "./rendering";

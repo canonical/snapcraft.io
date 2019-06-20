@@ -73,8 +73,6 @@ function renderBars() {
     barLayer = this.g.append("g").attr("class", "layer data-layer");
   }
 
-  console.log(this.transformedData);
-
   barLayer
     .selectAll(".bar")
     .data(this.transformedData)
@@ -84,9 +82,7 @@ function renderBars() {
     .attr("pointer-events", "none")
     .attr("fill", d => this.colorScale(d.key));
 
-  console.log(this.xScaleBand.bandwidth());
-
-  const bars = barLayer
+  barLayer
     .selectAll(".bar")
     .selectAll("rect")
     .data(d => d, e => e.data.date)
@@ -94,7 +90,7 @@ function renderBars() {
     .append("rect")
     .attr("width", this.xScaleBand.bandwidth())
     .attr("x", d => {
-      return this.xScaleBand(d.data.date);
+      return this.xScaleBand(d.data.date) - this.xScaleBand.bandwidth() / 2;
     })
     .attr("y", d => this.yScale(d[1]))
     .attr("height", d => this.yScale(d[0]) - this.yScale(d[1]));
