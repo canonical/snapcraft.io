@@ -37,19 +37,17 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-pagination__link--previous" href="/first-snap/{{ language }}/{{ os }}/package">
-    <span class="p-pagination__label">Previous</span>
-    <span class="p-pagination__title">Package snap</span>
+  <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/package">
+    &lsaquo; Previous: Package snap
   </a>
+
   {% if os and os.startswith('macos') %}
-    <a class="p-pagination__link--next" href="/first-snap/{{ language }}/{{ os }}/test">
-      <span class="p-pagination__label">Next</span>
-      <span class="p-pagination__title">Test snap</span>
+    <a class="p-button--positive u-float--right" href="/first-snap/{{ language }}/{{ os }}/test">
+      Next: Test snap &rsaquo;
     </a>
   {% else %}
-    <a class="p-pagination__link--next" href="/first-snap/{{ language }}/{{ os }}/push">
-      <span class="p-pagination__label">Next</span>
-      <span class="p-pagination__title">Publish to store</span>
+    <a class="p-button--positive u-float--right" href="/first-snap/{{ language }}/{{ os }}/push">
+      Next: Publish to store &rsaquo;
     </a>
   {% endif %}
 {% endblock %}

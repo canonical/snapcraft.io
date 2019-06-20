@@ -101,13 +101,12 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-pagination__link--previous" href="/first-snap/{{ language }}">
-    <span class="p-pagination__label">Previous</span>
-    <span class="p-pagination__title">Install Snapcraft</span>
+  <a class="p-button--neutral" href="/first-snap/{{ language }}">
+    &lsaquo; Previous: Install Snapcraft
   </a>
-  <a class="p-pagination__link--next" href="/first-snap/{{ language }}/{{ os }}/build">
-    <span class="p-pagination__label">Next</span>
-    <span class="p-pagination__title">Build snap</span>
+
+  <a class="p-button--positive u-float--right" href="/first-snap/{{ language }}/{{ os }}/build">
+    Next: Build snap &rsaquo;
   </a>
 {% endblock %}
 

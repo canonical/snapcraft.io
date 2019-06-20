@@ -20,7 +20,7 @@ function install(language) {
     if (!document.querySelector(".js-linux-manual")) {
       const paginationBtn = document.querySelector(`#js-pagination-next`);
       if (paginationBtn) {
-        paginationBtn.classList.remove("is-disabled");
+        paginationBtn.classList.remove("is--disabled");
         paginationBtn.href = `/first-snap/${language}/${selectedOs}/package`;
       }
     }
@@ -84,7 +84,7 @@ function install(language) {
 
     const paginationBtn = document.querySelector(`#js-pagination-next`);
     if (paginationBtn) {
-      paginationBtn.classList.remove("is-disabled");
+      paginationBtn.classList.remove("is--disabled");
       paginationBtn.href = `/first-snap/${language}/${type}/package`;
     }
   }

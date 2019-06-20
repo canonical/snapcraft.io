@@ -10,11 +10,9 @@
   </div>
 
   {% if self.fsf_pagination() %}
-  <div class="p-strip u-no-padding snapcraft-banner-background">
+  <div class="p-strip u-no-padding">
     <div class="row">
-      <div class="p-pagination">
         {% block fsf_pagination %}{% endblock %}
-      </div>
     </div>
   </div>
   {% endif %}

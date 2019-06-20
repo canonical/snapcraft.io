@@ -123,20 +123,17 @@
 
 {% block fsf_pagination %}
   {% if os and os.startswith('macos') %}
-    <a class="p-pagination__link--previous" href="/first-snap/{{ language }}/{{ os }}/test">
-      <span class="p-pagination__label">Previous</span>
-      <span class="p-pagination__title">Test snap</span>
+    <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/test">
+      &lsaquo; Previous: Test snap
     </a>
   {% else %}
-    <a class="p-pagination__link--previous" href="/first-snap/{{ language }}/{{ os }}/build">
-      <span class="p-pagination__label">Previous</span>
-      <span class="p-pagination__title">Build snap</span>
+    <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/build">
+      &lsaquo; Previous: Build snap
     </a>
   {% endif %}
 
-  <a id="js-pagination-next" class="p-pagination__link--next is-disabled" href="/snaps">
-    <span class="p-pagination__label">Next</span>
-    <span class="p-pagination__title">Go to listing</span>
+  <a class="p-button--positive is--disabled u-float--right" id="js-pagination-next" href="/snap">
+    Next: Go to listing &rsaquo;
   </a>
 {% endblock %}
 
