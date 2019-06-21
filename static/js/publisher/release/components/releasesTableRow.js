@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
@@ -57,6 +57,7 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
+// TODO: move to selectors or helpers?
 const compareChannels = (channelMap, channel, targetChannel) => {
   const channelArchs = channelMap[channel];
   const targetChannelArchs = channelMap[targetChannel];
@@ -74,225 +75,199 @@ const compareChannels = (channelMap, channel, targetChannel) => {
   return channelArchs === targetChannelArchs;
 };
 
-class ReleasesTableRow extends Component {
-  renderRevisionCell(track, risk, arch, showVersion) {
-    return (
-      <ReleasesTableCell
-        key={`${track}/${risk}/${arch}`}
-        track={track}
-        risk={risk}
-        arch={arch}
-        showVersion={showVersion}
-      />
-    );
+const ReleasesTableRow = props => {
+  const risk = props.risk;
+  const track = props.currentTrack;
+  const archs = props.archs;
+  const pendingChannelMap = props.pendingChannelMap;
+
+  const channel = getChannelName(track, risk);
+
+  let canBePromoted = true;
+  let canBeClosed = true;
+  let promoteTooltip;
+
+  if (risk === STABLE) {
+    canBePromoted = false;
   }
 
-  onPromoteToChannel(channel, targetChannel) {
-    this.props.promoteChannel(channel, targetChannel);
+  if (risk === AVAILABLE) {
+    canBeClosed = false;
   }
 
-  onCloseChannel(channel) {
-    this.props.closeChannel(channel);
+  if (!pendingChannelMap[channel] || props.pendingCloses.includes(channel)) {
+    canBePromoted = false;
+    canBeClosed = false;
   }
 
-  renderChannelRow(risk) {
-    const track = this.props.currentTrack;
-    const archs = this.props.archs;
-    const pendingChannelMap = this.props.pendingChannelMap;
+  if (
+    channel === AVAILABLE &&
+    (!pendingChannelMap[channel] ||
+      Object.keys(pendingChannelMap[channel]).length === 0)
+  ) {
+    promoteTooltip = disabledBecauseNotSelected;
+  }
 
-    const channel = getChannelName(track, risk);
+  let targetChannels = [];
 
-    let canBePromoted = true;
-    let canBeClosed = true;
-    let promoteTooltip;
-
-    if (risk === STABLE) {
-      canBePromoted = false;
-    }
-
-    if (risk === AVAILABLE) {
-      canBeClosed = false;
-    }
-
-    if (
-      !pendingChannelMap[channel] ||
-      this.props.pendingCloses.includes(channel)
-    ) {
-      canBePromoted = false;
-      canBeClosed = false;
-    }
-
-    if (
-      channel === AVAILABLE &&
-      (!pendingChannelMap[channel] ||
-        Object.keys(pendingChannelMap[channel]).length === 0)
-    ) {
-      promoteTooltip = disabledBecauseNotSelected;
-    }
-
-    let targetChannels = [];
-
-    if (canBePromoted) {
-      // take all risks above current one
-      targetChannels = RISKS.slice(0, RISKS.indexOf(risk)).map(risk => {
-        return { channel: getChannelName(track, risk) };
-      });
-
-      // check for devmode revisions
-      if (risk === EDGE || risk === BETA || risk === AVAILABLE) {
-        const hasDevmodeRevisions = Object.values(
-          pendingChannelMap[channel]
-        ).some(isInDevmode);
-
-        // remove stable and beta channels as targets if any revision
-        // is in devmode
-        if (hasDevmodeRevisions) {
-          targetChannels[0].isDisabled = true;
-          targetChannels[0].reason = disabledBecauseDevmode;
-          targetChannels[1].isDisabled = true;
-          targetChannels[1].reason = disabledBecauseDevmode;
-        }
-      }
-
-      // filter out channels that have the same revisions already released
-      targetChannels.forEach(targetChannel => {
-        if (
-          compareChannels(pendingChannelMap, channel, targetChannel.channel)
-        ) {
-          targetChannel.isDisabled = true;
-          targetChannel.reason = disabledBecauseReleased;
-        }
-      });
-
-      if (targetChannels.length === 0) {
-        canBePromoted = false;
-      }
-    }
-
-    const filteredChannel =
-      this.props.filters &&
-      getChannelName(this.props.filters.track, this.props.filters.risk);
-
-    let hasSameVersion = false;
-    let channelVersion = "";
-    let versionsMap = {};
-    if (pendingChannelMap[channel]) {
-      // calculate map of architectures for each version
-      for (const arch in pendingChannelMap[channel]) {
-        const version = pendingChannelMap[channel][arch].version;
-        if (!versionsMap[version]) {
-          versionsMap[version] = [];
-        }
-        versionsMap[version].push(arch);
-      }
-
-      hasSameVersion = Object.keys(versionsMap).length === 1;
-      if (hasSameVersion) {
-        channelVersion = Object.values(pendingChannelMap[channel])[0].version;
-      } else {
-        channelVersion = "Multiple versions";
-      }
-    }
-
-    const channelVersionTooltip = (
-      <Fragment>
-        {Object.keys(versionsMap).map(version => {
-          return (
-            <span key={`tooltip-${channel}-${version}`}>
-              {version}:{" "}
-              <b>
-                {versionsMap[version].length === archs.length
-                  ? "All architectures"
-                  : versionsMap[version].join(", ")}
-              </b>
-              <br />
-            </span>
-          );
-        })}
-      </Fragment>
-    );
-
-    const rowTitle = risk === AVAILABLE ? channelVersion : channel;
-
-    const isHighlighted = archs.every(arch => {
-      return this.props.hasPendingRelease(channel, arch);
+  if (canBePromoted) {
+    // take all risks above current one
+    targetChannels = RISKS.slice(0, RISKS.indexOf(risk)).map(risk => {
+      return { channel: getChannelName(track, risk) };
     });
 
-    return (
-      <Fragment>
-        {risk === AVAILABLE && (
-          <h4>
-            Revisions available to release from &nbsp;
-            <form className="p-form p-form--inline">
-              <AvailableRevisionsMenu />
-            </form>
-          </h4>
-        )}
-        {this.props.connectDropTarget(
-          <div>
-            {this.props.connectDragPreview(
-              <div
-                className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
-                  this.props.isDragging ? "is-dragging" : ""
-                } ${this.props.canDrop && this.props.isOver ? "is-over" : ""} ${
-                  this.props.canDrop ? "can-drop" : ""
-                }`}
-              >
-                <div
-                  className={`p-releases-channel ${
-                    filteredChannel === channel ? "is-active" : ""
-                  } ${isHighlighted ? "is-highlighted" : ""}`}
-                >
-                  {this.props.connectDragSource(
-                    <span className="p-releases-channel__handle">
-                      <i className="p-icon--contextual-menu" />
-                    </span>
-                  )}
-                  <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
-                    <span className="p-release-data__title">{rowTitle}</span>
-                    {risk !== AVAILABLE && (
-                      <span className="p-release-data__meta">
-                        {channelVersion}
-                      </span>
-                    )}
-                    {channelVersion && (
-                      <span className="p-tooltip__message">
-                        {channelVersionTooltip}
-                      </span>
-                    )}
-                  </span>
-                  <span className="p-releases-table__menus">
-                    {(canBePromoted || canBeClosed) && (
-                      <ChannelMenu
-                        tooltip={promoteTooltip}
-                        targetChannels={targetChannels}
-                        promoteToChannel={this.onPromoteToChannel.bind(
-                          this,
-                          channel
-                        )}
-                        channel={channel}
-                        closeChannel={
-                          canBeClosed ? this.onCloseChannel.bind(this) : null
-                        }
-                      />
-                    )}
-                  </span>
-                </div>
-                {archs.map(arch =>
-                  this.renderRevisionCell(track, risk, arch, !hasSameVersion)
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </Fragment>
-    );
+    // check for devmode revisions
+    if (risk === EDGE || risk === BETA || risk === AVAILABLE) {
+      const hasDevmodeRevisions = Object.values(
+        pendingChannelMap[channel]
+      ).some(isInDevmode);
+
+      // remove stable and beta channels as targets if any revision
+      // is in devmode
+      if (hasDevmodeRevisions) {
+        targetChannels[0].isDisabled = true;
+        targetChannels[0].reason = disabledBecauseDevmode;
+        targetChannels[1].isDisabled = true;
+        targetChannels[1].reason = disabledBecauseDevmode;
+      }
+    }
+
+    // filter out channels that have the same revisions already released
+    targetChannels.forEach(targetChannel => {
+      if (compareChannels(pendingChannelMap, channel, targetChannel.channel)) {
+        targetChannel.isDisabled = true;
+        targetChannel.reason = disabledBecauseReleased;
+      }
+    });
+
+    if (targetChannels.length === 0) {
+      canBePromoted = false;
+    }
   }
 
-  render() {
-    return this.renderChannelRow(this.props.risk);
+  const filteredChannel =
+    props.filters && getChannelName(props.filters.track, props.filters.risk);
+
+  let hasSameVersion = false;
+  let channelVersion = "";
+  let versionsMap = {};
+  if (pendingChannelMap[channel]) {
+    // calculate map of architectures for each version
+    for (const arch in pendingChannelMap[channel]) {
+      const version = pendingChannelMap[channel][arch].version;
+      if (!versionsMap[version]) {
+        versionsMap[version] = [];
+      }
+      versionsMap[version].push(arch);
+    }
+
+    hasSameVersion = Object.keys(versionsMap).length === 1;
+    if (hasSameVersion) {
+      channelVersion = Object.values(pendingChannelMap[channel])[0].version;
+    } else {
+      channelVersion = "Multiple versions";
+    }
   }
-}
+
+  const channelVersionTooltip = (
+    <Fragment>
+      {Object.keys(versionsMap).map(version => {
+        return (
+          <span key={`tooltip-${channel}-${version}`}>
+            {version}:{" "}
+            <b>
+              {versionsMap[version].length === archs.length
+                ? "All architectures"
+                : versionsMap[version].join(", ")}
+            </b>
+            <br />
+          </span>
+        );
+      })}
+    </Fragment>
+  );
+
+  const rowTitle = risk === AVAILABLE ? channelVersion : channel;
+
+  const isHighlighted = archs.every(arch => {
+    return props.hasPendingRelease(channel, arch);
+  });
+
+  return (
+    <Fragment>
+      {risk === AVAILABLE && (
+        <h4>
+          Revisions available to release from &nbsp;
+          <form className="p-form p-form--inline">
+            <AvailableRevisionsMenu />
+          </form>
+        </h4>
+      )}
+      {props.connectDropTarget(
+        <div>
+          {props.connectDragPreview(
+            <div
+              className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
+                props.isDragging ? "is-dragging" : ""
+              } ${props.canDrop && props.isOver ? "is-over" : ""} ${
+                props.canDrop ? "can-drop" : ""
+              }`}
+            >
+              <div
+                className={`p-releases-channel ${
+                  filteredChannel === channel ? "is-active" : ""
+                } ${isHighlighted ? "is-highlighted" : ""}`}
+              >
+                {props.connectDragSource(
+                  <span className="p-releases-channel__handle">
+                    <i className="p-icon--contextual-menu" />
+                  </span>
+                )}
+                <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
+                  <span className="p-release-data__title">{rowTitle}</span>
+                  {risk !== AVAILABLE && (
+                    <span className="p-release-data__meta">
+                      {channelVersion}
+                    </span>
+                  )}
+                  {channelVersion && (
+                    <span className="p-tooltip__message">
+                      {channelVersionTooltip}
+                    </span>
+                  )}
+                </span>
+
+                <span className="p-releases-table__menus">
+                  {(canBePromoted || canBeClosed) && (
+                    <ChannelMenu
+                      tooltip={promoteTooltip}
+                      targetChannels={targetChannels}
+                      promoteToChannel={props.promoteChannel.bind(
+                        null,
+                        channel
+                      )}
+                      channel={channel}
+                      closeChannel={canBeClosed ? props.closeChannel : null}
+                    />
+                  )}
+                </span>
+              </div>
+              {archs.map(arch => (
+                <ReleasesTableCell
+                  key={`${track}/${risk}/${arch}`}
+                  track={track}
+                  risk={risk}
+                  arch={arch}
+                  showVersion={!hasSameVersion}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </Fragment>
+  );
+};
 
 ReleasesTableRow.propTypes = {
   // props
