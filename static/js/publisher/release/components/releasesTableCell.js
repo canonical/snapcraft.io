@@ -12,7 +12,8 @@ import { undoRelease } from "../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
-  getFilteredAvailableRevisionsForArch
+  getFilteredAvailableRevisionsForArch,
+  hasPendingRelease
 } from "../selectors";
 
 class ReleasesTableCell extends Component {
@@ -126,16 +127,11 @@ class ReleasesTableCell extends Component {
     const channel = getChannelName(track, risk);
 
     // current revision to show (released or pending)
-    let currentRevision =
+    const currentRevision =
       pendingChannelMap[channel] && pendingChannelMap[channel][arch];
-    // already released revision
-    let releasedRevision = channelMap[channel] && channelMap[channel][arch];
 
     // check if there is a pending release in this cell
-    const hasPendingRelease =
-      currentRevision &&
-      (!releasedRevision ||
-        releasedRevision.revision !== currentRevision.revision);
+    const hasPendingRelease = this.props.hasPendingRelease(channel, arch);
 
     const isChannelPendingClose = pendingCloses.includes(channel);
     const isPending = hasPendingRelease || isChannelPendingClose;
@@ -195,6 +191,7 @@ ReleasesTableCell.propTypes = {
   pendingChannelMap: PropTypes.object,
   // compute state
   getAvailableCount: PropTypes.func,
+  hasPendingRelease: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -212,7 +209,9 @@ const mapStateToProps = state => {
     pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: arch =>
-      getFilteredAvailableRevisionsForArch(state, arch).length
+      getFilteredAvailableRevisionsForArch(state, arch).length,
+    hasPendingRelease: (channel, arch) =>
+      hasPendingRelease(state, channel, arch)
   };
 };
 

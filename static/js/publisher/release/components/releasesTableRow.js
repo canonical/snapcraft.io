@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { DragSource, DropTarget } from "react-dnd";
 
-import { getArchitectures, getPendingChannelMap } from "../selectors";
+import {
+  getArchitectures,
+  getPendingChannelMap,
+  hasPendingRelease
+} from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
 
 import { promoteChannel } from "../actions/pendingReleases";
@@ -209,6 +213,10 @@ class ReleasesTableRow extends Component {
 
     const rowTitle = risk === AVAILABLE ? channelVersion : channel;
 
+    const isHighlighted = archs.every(arch => {
+      return this.props.hasPendingRelease(channel, arch);
+    });
+
     return (
       <Fragment>
         {risk === AVAILABLE && (
@@ -232,7 +240,7 @@ class ReleasesTableRow extends Component {
                 <div
                   className={`p-releases-channel ${
                     filteredChannel === channel ? "is-active" : ""
-                  }`}
+                  } ${isHighlighted ? "is-highlighted" : ""}`}
                 >
                   {this.props.connectDragSource(
                     <span className="p-releases-channel__handle">
@@ -297,6 +305,8 @@ ReleasesTableRow.propTypes = {
   archs: PropTypes.array.isRequired,
   pendingChannelMap: PropTypes.object,
 
+  hasPendingRelease: PropTypes.func,
+
   // actions
   closeChannel: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
@@ -316,7 +326,9 @@ const mapStateToProps = state => {
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
     archs: getArchitectures(state),
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+    hasPendingRelease: (channel, arch) =>
+      hasPendingRelease(state, channel, arch)
   };
 };
 

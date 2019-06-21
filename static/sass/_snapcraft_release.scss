@@ -1,5 +1,5 @@
 @mixin snapcraft-release {
-  $color-highlighted: #ffecd4;
+  $color-highlighted: #fae6be;
 
   // RELEASES CONFIRM
 
@@ -90,6 +90,10 @@
     .is-over & {
       background-color: $color-highlighted;
     }
+
+    &.is-highlighted {
+      background-color: $color-highlighted;
+    }
   }
 
   .p-releases-channel__name {
@@ -106,7 +110,7 @@
   }
 
   .p-releases-channel__handle {
-    cursor: move;
+    cursor: grab;
     padding-right: $sph-intra--condensed;
     padding-top: ($spv-intra - .1rem);
   }
