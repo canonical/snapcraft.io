@@ -3,8 +3,10 @@ import ReactDOM from "react-dom";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import ReleasesController from "./release/releasesController";
+import { DndProvider } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
 
+import ReleasesController from "./release/releasesController";
 import releases from "./release/reducers";
 
 // setup redux store with thunk middleware and devtools extension:
@@ -22,12 +24,14 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
 
   ReactDOM.render(
     <Provider store={store}>
-      <ReleasesController
-        snapName={snapName}
-        channelMapsList={channelMapsList}
-        releasesData={releasesData}
-        options={options}
-      />
+      <DndProvider backend={HTML5Backend}>
+        <ReleasesController
+          snapName={snapName}
+          channelMapsList={channelMapsList}
+          releasesData={releasesData}
+          options={options}
+        />
+      </DndProvider>
     </Provider>,
     document.querySelector(id)
   );
