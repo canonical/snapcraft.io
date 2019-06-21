@@ -17,6 +17,7 @@ import {
   RISKS_WITH_AVAILABLE as RISKS,
   AVAILABLE,
   STABLE,
+  CANDIDATE,
   BETA,
   EDGE
 } from "../constants";
@@ -56,6 +57,23 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
+const compareChannels = (channelMap, channel, targetChannel) => {
+  const channelArchs = channelMap[channel];
+  const targetChannelArchs = channelMap[targetChannel];
+
+  if (channelArchs) {
+    return Object.keys(channelArchs).every(arch => {
+      return (
+        targetChannelArchs &&
+        targetChannelArchs[arch] &&
+        channelArchs[arch].revision === targetChannelArchs[arch].revision
+      );
+    });
+  }
+
+  return channelArchs === targetChannelArchs;
+};
+
 class ReleasesTableRow extends Component {
   renderRevisionCell(track, risk, arch, showVersion) {
     return (
@@ -75,25 +93,6 @@ class ReleasesTableRow extends Component {
 
   onCloseChannel(channel) {
     this.props.closeChannel(channel);
-  }
-
-  compareChannels(channel, targetChannel) {
-    const channelMap = this.props.pendingChannelMap;
-
-    const channelArchs = channelMap[channel];
-    const targetChannelArchs = channelMap[targetChannel];
-
-    if (channelArchs) {
-      return Object.keys(channelArchs).every(arch => {
-        return (
-          targetChannelArchs &&
-          targetChannelArchs[arch] &&
-          channelArchs[arch].revision === targetChannelArchs[arch].revision
-        );
-      });
-    }
-
-    return channelArchs === targetChannelArchs;
   }
 
   renderChannelRow(risk) {
@@ -157,7 +156,9 @@ class ReleasesTableRow extends Component {
 
       // filter out channels that have the same revisions already released
       targetChannels.forEach(targetChannel => {
-        if (this.compareChannels(channel, targetChannel.channel)) {
+        if (
+          compareChannels(pendingChannelMap, channel, targetChannel.channel)
+        ) {
           targetChannel.isDisabled = true;
           targetChannel.reason = disabledBecauseReleased;
         }
@@ -356,9 +357,41 @@ const DroppableReleasesTableRow = DropTarget(
       );
     },
     canDrop: (props, monitor) => {
-      //console.log("canDrop", props, monitor.getItem());
-      // only allow drop on other rows
-      return props.risk !== AVAILABLE && props.risk !== monitor.getItem().risk;
+      const { currentTrack, risk, pendingChannelMap } = props;
+
+      const draggedChannel = getChannelName(
+        currentTrack,
+        monitor.getItem().risk
+      );
+      const dropChannel = getChannelName(currentTrack, risk);
+
+      // can't drop on 'available revisions row'
+      if (props.risk === AVAILABLE) {
+        return false;
+      }
+
+      // can't drop on itself
+      if (draggedChannel === dropChannel) {
+        return false;
+      }
+
+      // can't drop devmode to stable/candidate
+      if (risk === STABLE || risk === CANDIDATE) {
+        const hasDevmodeRevisions = Object.values(
+          pendingChannelMap[draggedChannel]
+        ).some(isInDevmode);
+
+        if (hasDevmodeRevisions) {
+          return false;
+        }
+      }
+
+      // can't drop same revisions
+      if (compareChannels(pendingChannelMap, draggedChannel, dropChannel)) {
+        return false;
+      }
+
+      return true;
     }
   },
   (connect, monitor) => ({
