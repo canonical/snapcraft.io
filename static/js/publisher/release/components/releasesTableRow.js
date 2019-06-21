@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { DragSource, DropTarget } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 
 import {
   getArchitectures,
@@ -29,22 +29,6 @@ import AvailableRevisionsMenu from "./availableRevisionsMenu";
 export const ItemTypes = {
   RELEASE: "release"
 };
-
-const cellSource = {
-  beginDrag(props) {
-    return {
-      risk: props.risk
-    };
-  }
-};
-
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging()
-  };
-}
 
 const disabledBecauseDevmode = (
   <Fragment>
@@ -76,12 +60,64 @@ const compareChannels = (channelMap, channel, targetChannel) => {
 };
 
 const ReleasesTableRow = props => {
-  const risk = props.risk;
-  const track = props.currentTrack;
-  const archs = props.archs;
-  const pendingChannelMap = props.pendingChannelMap;
+  const { currentTrack, risk, archs, pendingChannelMap } = props;
 
-  const channel = getChannelName(track, risk);
+  const [{ isDragging }, drag] = useDrag({
+    item: { risk: props.risk, type: ItemTypes.RELEASE },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging()
+    })
+  });
+
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: ItemTypes.RELEASE,
+    drop: item => {
+      props.promoteChannel(
+        getChannelName(props.currentTrack, item.risk),
+        getChannelName(props.currentTrack, props.risk)
+      );
+    },
+    canDrop: item => {
+      const { currentTrack, risk, pendingChannelMap } = props;
+
+      const draggedChannel = getChannelName(currentTrack, item.risk);
+      const dropChannel = getChannelName(currentTrack, risk);
+
+      // can't drop on 'available revisions row'
+      if (props.risk === AVAILABLE) {
+        return false;
+      }
+
+      // can't drop on itself
+      if (draggedChannel === dropChannel) {
+        return false;
+      }
+
+      // can't drop devmode to stable/candidate
+      if (risk === STABLE || risk === CANDIDATE) {
+        const hasDevmodeRevisions = Object.values(
+          pendingChannelMap[draggedChannel]
+        ).some(isInDevmode);
+
+        if (hasDevmodeRevisions) {
+          return false;
+        }
+      }
+
+      // can't drop same revisions
+      if (compareChannels(pendingChannelMap, draggedChannel, dropChannel)) {
+        return false;
+      }
+
+      return true;
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  });
+
+  const channel = getChannelName(currentTrack, risk);
 
   let canBePromoted = true;
   let canBeClosed = true;
@@ -113,7 +149,7 @@ const ReleasesTableRow = props => {
   if (canBePromoted) {
     // take all risks above current one
     targetChannels = RISKS.slice(0, RISKS.indexOf(risk)).map(risk => {
-      return { channel: getChannelName(track, risk) };
+      return { channel: getChannelName(currentTrack, risk) };
     });
 
     // check for devmode revisions
@@ -203,68 +239,57 @@ const ReleasesTableRow = props => {
           </form>
         </h4>
       )}
-      {props.connectDropTarget(
-        <div>
-          {props.connectDragPreview(
-            <div
-              className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
-                props.isDragging ? "is-dragging" : ""
-              } ${props.canDrop && props.isOver ? "is-over" : ""} ${
-                props.canDrop ? "can-drop" : ""
-              }`}
-            >
-              <div
-                className={`p-releases-channel ${
-                  filteredChannel === channel ? "is-active" : ""
-                } ${isHighlighted ? "is-highlighted" : ""}`}
-              >
-                {props.connectDragSource(
-                  <span className="p-releases-channel__handle">
-                    <i className="p-icon--contextual-menu" />
-                  </span>
-                )}
-                <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
-                  <span className="p-release-data__title">{rowTitle}</span>
-                  {risk !== AVAILABLE && (
-                    <span className="p-release-data__meta">
-                      {channelVersion}
-                    </span>
-                  )}
-                  {channelVersion && (
-                    <span className="p-tooltip__message">
-                      {channelVersionTooltip}
-                    </span>
-                  )}
-                </span>
 
-                <span className="p-releases-table__menus">
-                  {(canBePromoted || canBeClosed) && (
-                    <ChannelMenu
-                      tooltip={promoteTooltip}
-                      targetChannels={targetChannels}
-                      promoteToChannel={props.promoteChannel.bind(
-                        null,
-                        channel
-                      )}
-                      channel={channel}
-                      closeChannel={canBeClosed ? props.closeChannel : null}
-                    />
-                  )}
+      <div ref={drop}>
+        <div
+          ref={drag}
+          className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
+            isDragging ? "is-dragging" : ""
+          } ${canDrop && isOver ? "is-over" : ""} ${canDrop ? "can-drop" : ""}`}
+        >
+          <div
+            className={`p-releases-channel ${
+              filteredChannel === channel ? "is-active" : ""
+            } ${isHighlighted ? "is-highlighted" : ""}`}
+          >
+            <span className="p-releases-channel__handle">
+              <i className="p-icon--contextual-menu" />
+            </span>
+            <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
+              <span className="p-release-data__title">{rowTitle}</span>
+              {risk !== AVAILABLE && (
+                <span className="p-release-data__meta">{channelVersion}</span>
+              )}
+              {channelVersion && (
+                <span className="p-tooltip__message">
+                  {channelVersionTooltip}
                 </span>
-              </div>
-              {archs.map(arch => (
-                <ReleasesTableCell
-                  key={`${track}/${risk}/${arch}`}
-                  track={track}
-                  risk={risk}
-                  arch={arch}
-                  showVersion={!hasSameVersion}
+              )}
+            </span>
+
+            <span className="p-releases-table__menus">
+              {(canBePromoted || canBeClosed) && (
+                <ChannelMenu
+                  tooltip={promoteTooltip}
+                  targetChannels={targetChannels}
+                  promoteToChannel={props.promoteChannel.bind(null, channel)}
+                  channel={channel}
+                  closeChannel={canBeClosed ? props.closeChannel : null}
                 />
-              ))}
-            </div>
-          )}
+              )}
+            </span>
+          </div>
+          {archs.map(arch => (
+            <ReleasesTableCell
+              key={`${currentTrack}/${risk}/${arch}`}
+              track={currentTrack}
+              risk={risk}
+              arch={arch}
+              showVersion={!hasSameVersion}
+            />
+          ))}
         </div>
-      )}
+      </div>
     </Fragment>
   );
 };
@@ -285,15 +310,7 @@ ReleasesTableRow.propTypes = {
 
   // actions
   closeChannel: PropTypes.func.isRequired,
-  promoteChannel: PropTypes.func.isRequired,
-
-  // dnd
-  connectDragSource: PropTypes.func,
-  connectDragPreview: PropTypes.func,
-  isDragging: PropTypes.bool,
-  canDrop: PropTypes.bool,
-  isOver: PropTypes.bool,
-  connectDropTarget: PropTypes.func
+  promoteChannel: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -316,67 +333,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const DraggableReleasesTableRow = DragSource(
-  ItemTypes.RELEASE,
-  cellSource,
-  collect
-)(ReleasesTableRow);
-
-const DroppableReleasesTableRow = DropTarget(
-  ItemTypes.RELEASE,
-  {
-    drop: (props, monitor) => {
-      props.promoteChannel(
-        getChannelName(props.currentTrack, monitor.getItem().risk),
-        getChannelName(props.currentTrack, props.risk)
-      );
-    },
-    canDrop: (props, monitor) => {
-      const { currentTrack, risk, pendingChannelMap } = props;
-
-      const draggedChannel = getChannelName(
-        currentTrack,
-        monitor.getItem().risk
-      );
-      const dropChannel = getChannelName(currentTrack, risk);
-
-      // can't drop on 'available revisions row'
-      if (props.risk === AVAILABLE) {
-        return false;
-      }
-
-      // can't drop on itself
-      if (draggedChannel === dropChannel) {
-        return false;
-      }
-
-      // can't drop devmode to stable/candidate
-      if (risk === STABLE || risk === CANDIDATE) {
-        const hasDevmodeRevisions = Object.values(
-          pendingChannelMap[draggedChannel]
-        ).some(isInDevmode);
-
-        if (hasDevmodeRevisions) {
-          return false;
-        }
-      }
-
-      // can't drop same revisions
-      if (compareChannels(pendingChannelMap, draggedChannel, dropChannel)) {
-        return false;
-      }
-
-      return true;
-    }
-  },
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()
-  })
-)(DraggableReleasesTableRow);
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DroppableReleasesTableRow);
+)(ReleasesTableRow);
