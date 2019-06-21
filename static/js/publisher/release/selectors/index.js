@@ -177,3 +177,22 @@ export function getTracks(state) {
 
   return sortAlphaNum(tracks, "latest");
 }
+
+// return true if there is a pending release in given channel for given arch
+export function hasPendingRelease(state, channel, arch) {
+  const { channelMap } = state;
+  const pendingChannelMap = getPendingChannelMap(state);
+
+  // current revision to show (released or pending)
+  let currentRevision =
+    pendingChannelMap[channel] && pendingChannelMap[channel][arch];
+  // already released revision
+  let releasedRevision = channelMap[channel] && channelMap[channel][arch];
+
+  // check if there is a pending release in this cell
+  return (
+    currentRevision &&
+    (!releasedRevision ||
+      releasedRevision.revision !== currentRevision.revision)
+  );
+}
