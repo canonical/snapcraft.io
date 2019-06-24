@@ -42,16 +42,9 @@
   }
 
   .p-releases-table__menus {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: ($sp-unit - .1rem);
     margin-top: ($sp-unit - .1rem);
-    width: 125px; // to fit 2 icon buttons exactly
-  }
-
-  // align first (promote) button to left
-  .p-releases-channel__promote {
-    margin-right: auto;
   }
 
   // channel cell
@@ -61,7 +54,7 @@
     background: $color-light;
     display: flex;
     flex-shrink: 0;
-    font-size: .9rem;
+    font-size: 1rem;
     padding-left: $sph-intra--condensed;
     width: 260px;
 
@@ -85,16 +78,12 @@
 
   .p-releases-channel__name {
     flex-grow: 1;
+    max-width: calc(100% - 40px); // leave space for channel menu
     padding-right: $sph-intra--condensed;
-    padding-top: ($spv-intra - .1rem);
-
-    .p-release-data__meta {
-      max-width: 115px;
-    }
+    padding-top: $spv-intra;
 
     .p-release-data__title {
       display: block;
-      max-width: 115px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -108,7 +97,7 @@
     border-bottom: 3px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
-    font-size: .9rem;
+    font-size: 1rem;
     margin-left: 2px;
     max-width: 25.2%; // fill the whole space for 3 archs
     min-width: 100px;
@@ -163,7 +152,7 @@
     display: flex;
     height: 100%;
     max-width: 100%;
-    padding: ($spv-intra - .1rem) $sph-intra; // p-releases-table__arch
+    padding: $spv-intra $sph-intra; // p-releases-table__arch
     padding-right: .6rem; // give it a bit more space for version ellipsis
   }
 
@@ -229,7 +218,7 @@
   }
 
   .p-icon-button {
-    padding: $spv-nudge - $px $sph-intra--condensed * 1.5 - ($px * 2);
+    padding: .1rem .35rem;
 
     &:not(:last-of-type):not(:only-of-type) {
       margin-right: .25rem;
@@ -330,5 +319,10 @@
     min-width: 100px; // smaller then normal
     padding-right: $sph-intra--expanded;
     text-align: left;
+  }
+
+  .p-icon--settings {
+    @extend %icon;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 0h26v26H0z'/%3E%3Cpath fill='gray' fill-rule='nonzero' d='M4.401 11.014L2 9.598l2.938-5.196 2.6 1.533a8.746 8.746 0 0 1 2.524-1.423V2h5.876v2.512c.92.332 1.772.817 2.523 1.423l2.601-1.533L24 9.598l-2.401 1.416a9.268 9.268 0 0 1 0 3.972L24 16.402l-2.938 5.196-2.6-1.533a8.746 8.746 0 0 1-2.524 1.423V24h-5.876v-2.512a8.746 8.746 0 0 1-2.523-1.423l-2.601 1.533L2 16.402l2.401-1.416A9.213 9.213 0 0 1 4.186 13c0-.683.074-1.347.215-1.986zM13 18c2.704 0 4.897-2.239 4.897-5S15.704 8 13 8s-4.897 2.239-4.897 5 2.193 5 4.897 5z'/%3E%3C/g%3E%3C/svg%3E");
   }
 }
