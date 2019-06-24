@@ -1,4 +1,5 @@
 import os
+from urllib.parse import quote
 
 import flask
 from flask_openid import OpenID
@@ -97,4 +98,7 @@ def logout():
     if no_redirect == "true":
         return flask.redirect("/")
     else:
-        return flask.redirect(BSI_URL + "/auth/logout")
+        redirect_url = quote(flask.request.url_root, safe="")
+        return flask.redirect(
+            f"{LOGIN_URL}/+logout?return_to={redirect_url}&return_now=True"
+        )
