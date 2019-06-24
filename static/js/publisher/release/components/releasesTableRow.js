@@ -17,7 +17,7 @@ import {
 } from "../constants";
 
 import { getChannelName, isInDevmode } from "../helpers";
-import PromoteMenu from "./promoteMenu";
+import ChannelMenu from "./channelMenu";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
 const disabledBecauseDevmode = (
@@ -219,21 +219,16 @@ class ReleasesTableRow extends Component {
             </span>
 
             <span className="p-releases-table__menus">
-              {canBePromoted && (
-                <PromoteMenu
+              {(canBePromoted || canBeClosed) && (
+                <ChannelMenu
                   tooltip={promoteTooltip}
                   targetChannels={targetChannels}
                   promoteToChannel={this.onPromoteToChannel.bind(this, channel)}
+                  channel={channel}
+                  closeChannel={
+                    canBeClosed ? this.onCloseChannel.bind(this) : null
+                  }
                 />
-              )}
-              {canBeClosed && (
-                <button
-                  className="p-button--base p-icon-button u-no-margin"
-                  onClick={this.onCloseChannel.bind(this, channel)}
-                  title={`Close channel ${channel}`}
-                >
-                  <i className="p-icon--delete" />
-                </button>
               )}
             </span>
           </div>
