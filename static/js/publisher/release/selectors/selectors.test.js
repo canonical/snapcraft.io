@@ -11,6 +11,7 @@ import {
   getSelectedArchitectures,
   getPendingChannelMap,
   hasDevmodeRevisions,
+  hasPendingRelease,
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch,
   getArchitectures,
@@ -506,5 +507,74 @@ describe("getTracks", () => {
 
   it("should return list of all tracks", () => {
     expect(getTracks(stateWithReleases)).toEqual(["latest", "test", "12"]);
+  });
+});
+
+describe("hasPendingRelease", () => {
+  describe("when there are no pending releases", () => {
+    const stateWithNoPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {}
+    };
+
+    it("should return false", () => {
+      expect(
+        hasPendingRelease(stateWithNoPendingReleases, "test/edge", "test64")
+      ).toBe(false);
+    });
+  });
+
+  describe("when there are pending releases to other channels", () => {
+    const stateWithPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {
+        2: {
+          revision: { revision: 2, architectures: ["test64"] },
+          channels: ["latest/stable"]
+        }
+      }
+    };
+
+    it("should return false for channel/arch without pending release", () => {
+      expect(
+        hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
+      ).toBe(false);
+    });
+
+    it("should return true for channel/arch with pending release", () => {
+      expect(
+        hasPendingRelease(stateWithPendingReleases, "latest/stable", "test64")
+      ).toBe(true);
+    });
+  });
+
+  describe("when there are pending releases overriding existing releases", () => {
+    const stateWithPendingReleases = {
+      channelMap: {
+        "test/edge": {
+          test64: { revision: 1 }
+        }
+      },
+      pendingReleases: {
+        2: {
+          revision: { revision: 2, architectures: ["test64"] },
+          channels: ["test/edge"]
+        }
+      }
+    };
+
+    it("should return true for channel/arch with pending release", () => {
+      expect(
+        hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
+      ).toBe(true);
+    });
   });
 });
