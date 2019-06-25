@@ -178,7 +178,7 @@ function push() {
     const paginationBtn = document.querySelector("#js-pagination-next");
     if (paginationBtn) {
       paginationBtn.href = `/${snapName}/listing?from=first-snap`;
-      paginationBtn.classList.remove("is-disabled");
+      paginationBtn.classList.remove("is--disabled");
     }
   });
 }
