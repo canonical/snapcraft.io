@@ -275,7 +275,7 @@ const ReleasesTableRow = props => {
             }`}
           >
             <span className="p-releases-channel__handle">
-              <i className="p-icon--contextual-menu" />
+              <i className="p-icon--drag" />
             </span>
             <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
               <span className="p-release-data__title">{rowTitle}</span>
