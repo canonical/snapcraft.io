@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
@@ -62,11 +62,23 @@ const compareChannels = (channelMap, channel, targetChannel) => {
 const ReleasesTableRow = props => {
   const { currentTrack, risk, archs, pendingChannelMap } = props;
 
-  const [{ isDragging }, drag] = useDrag({
+  const [isGrabbing, setIsGrabbing] = useState(false);
+
+  const draggedChannel = getChannelName(currentTrack, risk);
+  const canDrag = !!pendingChannelMap[draggedChannel];
+  const [{ isDragging }, drag, preview] = useDrag({
     item: { risk: props.risk, type: ItemTypes.RELEASE },
+    canDrag: () => canDrag,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
-    })
+    }),
+
+    begin: () => {
+      setIsGrabbing(true);
+    },
+    end: () => {
+      setIsGrabbing(false);
+    }
   });
 
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -90,6 +102,11 @@ const ReleasesTableRow = props => {
 
       // can't drop on itself
       if (draggedChannel === dropChannel) {
+        return false;
+      }
+
+      // can't drop if there is nothing in dragged channel
+      if (!pendingChannelMap[draggedChannel]) {
         return false;
       }
 
@@ -242,15 +259,20 @@ const ReleasesTableRow = props => {
 
       <div ref={drop}>
         <div
-          ref={drag}
+          ref={preview}
           className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
             isDragging ? "is-dragging" : ""
-          } ${canDrop && isOver ? "is-over" : ""} ${canDrop ? "can-drop" : ""}`}
+          } ${isGrabbing ? "is-grabbing" : ""} ${
+            canDrop && isOver ? "is-over" : ""
+          } ${canDrop ? "can-drop" : ""}`}
         >
           <div
+            ref={drag}
             className={`p-releases-channel ${
               filteredChannel === channel ? "is-active" : ""
-            } ${isHighlighted ? "is-highlighted" : ""}`}
+            } ${isHighlighted ? "is-highlighted" : ""} ${
+              canDrag ? "is-draggable" : ""
+            }`}
           >
             <span className="p-releases-channel__handle">
               <i className="p-icon--contextual-menu" />
