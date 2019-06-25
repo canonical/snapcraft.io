@@ -28,16 +28,21 @@
     display: flex;
     margin-bottom: 2px;
 
+    &.is-grabbing,
+    &.is-dragging {
+      opacity: .9; // little workaround for chrome
+
+      .p-tooltip__message {
+        display: none;
+      }
+    }
+
     &.is-dragging {
       opacity: .5;
     }
 
     &.can-drop {
       outline: 1px dashed $color-mid-light;
-    }
-
-    &.is-over {
-      background-color: $color-highlighted;
     }
   }
 
@@ -94,6 +99,10 @@
     &.is-highlighted {
       background-color: $color-highlighted;
     }
+
+    &.is-draggable {
+      cursor: grab;
+    }
   }
 
   .p-releases-channel__name {
@@ -110,9 +119,13 @@
   }
 
   .p-releases-channel__handle {
-    cursor: grab;
     padding-right: $sph-intra--condensed;
     padding-top: ($spv-intra - .1rem);
+    visibility: hidden;
+
+    .is-draggable & {
+      visibility: visible;
+    }
   }
 
   // release cell
