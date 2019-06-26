@@ -83,6 +83,10 @@
       opacity: .5;
     }
 
+    .can-drop & {
+      opacity: 1;
+    }
+
     &:hover,
     &.is-active {
       opacity: 1;
@@ -145,6 +149,10 @@
 
     .has-active & {
       opacity: .5;
+    }
+
+    .can-drop & {
+      opacity: 1;
     }
 
     &.is-clickable:focus,
