@@ -234,6 +234,9 @@ const ReleasesTableCell = props => {
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
       >
+        <span className="p-release-data__handle">
+          <i className="p-icon--drag" />
+        </span>
         {isChannelPendingClose ? (
           <CloseChannelInfo />
         ) : currentRevision ? (

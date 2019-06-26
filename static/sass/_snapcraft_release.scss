@@ -124,7 +124,7 @@
 
   .p-releases-channel__handle {
     padding-right: $sph-intra--condensed;
-    padding-top: ($spv-intra - .1rem);
+    padding-top: $spv-intra;
     visibility: hidden;
 
     .is-draggable & {
@@ -217,7 +217,7 @@
   .p-releases-table__arch {
     background: none;
     border: 0;
-    padding: ($spv-intra - .1rem) $sph-intra; // same as p-release-data
+    padding: ($spv-intra - .1rem) $sph-intra--condensed; // same as p-release-data
   }
 
   // cell contents (release info)
@@ -232,8 +232,17 @@
     display: flex;
     height: 100%;
     max-width: 100%;
-    padding: $spv-intra $sph-intra; // p-releases-table__arch
-    padding-right: .6rem; // give it a bit more space for version ellipsis
+    padding: $spv-intra $sph-intra--condensed; // p-releases-table__arch
+    padding-left: ($sph-intra--condensed - .1rem);
+  }
+
+  .p-release-data__handle {
+    margin-right: $sph-intra--condensed;
+    visibility: hidden;
+
+    .is-draggable & {
+      visibility: visible;
+    }
   }
 
   .p-release-data__info {
