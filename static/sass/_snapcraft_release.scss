@@ -151,8 +151,25 @@
       opacity: .5;
     }
 
+    &.is-grabbing,
+    &.is-dragging {
+      opacity: .9; // little workaround for chrome
+
+      .p-tooltip__message {
+        display: none;
+      }
+    }
+
+    &.is-dragging {
+      opacity: .5;
+    }
+
     .can-drop & {
       opacity: 1;
+    }
+
+    &.is-clickable {
+      cursor: pointer;
     }
 
     &.is-clickable:focus,
@@ -160,8 +177,11 @@
     &.is-active {
       @include vf-animation (#{background-color, border-color}, fast, in);
       background-color: $color-x-light;
-      cursor: pointer;
       opacity: 1;
+    }
+
+    &.is-draggable {
+      cursor: grab;
     }
 
     &.is-active {

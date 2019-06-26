@@ -26,9 +26,7 @@ import { getChannelName, isInDevmode } from "../helpers";
 import ChannelMenu from "./channelMenu";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
-export const ItemTypes = {
-  RELEASE: "release"
-};
+const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
 
 const disabledBecauseDevmode = (
   <Fragment>
@@ -67,7 +65,7 @@ const ReleasesTableRow = props => {
   const draggedChannel = getChannelName(currentTrack, risk);
   const canDrag = !!pendingChannelMap[draggedChannel];
   const [{ isDragging }, drag, preview] = useDrag({
-    item: { risk: props.risk, type: ItemTypes.RELEASE },
+    item: { risk: props.risk, type: DND_ITEM_CHANNEL },
     canDrag: () => canDrag,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
@@ -82,7 +80,7 @@ const ReleasesTableRow = props => {
   });
 
   const [{ isOver, canDrop }, drop] = useDrop({
-    accept: ItemTypes.RELEASE,
+    accept: DND_ITEM_CHANNEL,
     drop: item => {
       props.promoteChannel(
         getChannelName(props.currentTrack, item.risk),
