@@ -1,6 +1,7 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { useDrag } from "react-dnd";
 
 import { AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
@@ -15,6 +16,8 @@ import {
   getFilteredAvailableRevisionsForArch,
   hasPendingRelease
 } from "../selectors";
+
+const DND_ITEM_REVISION = "DND_ITEM_REVISION";
 
 const CloseChannelInfo = () => (
   <Fragment>
@@ -142,13 +145,23 @@ const ReleasesTableCell = props => {
   const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
   const availableCount = props.getAvailableCount(arch);
 
-  const className = [
-    "p-releases-table__cell is-clickable",
-    isUnassigned ? "is-unassigned" : "",
-    isActive ? "is-active" : "",
-    isHighlighted ? "is-highlighted" : "",
-    isPending ? "is-pending" : ""
-  ].join(" ");
+  const [isGrabbing, setIsGrabbing] = useState(false);
+  const canDrag = currentRevision && !isChannelPendingClose;
+
+  const [{ isDragging }, drag] = useDrag({
+    item: { revision: currentRevision, type: DND_ITEM_REVISION },
+    canDrag: () => canDrag,
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging()
+    }),
+
+    begin: () => {
+      setIsGrabbing(true);
+    },
+    end: () => {
+      setIsGrabbing(false);
+    }
+  });
 
   function handleReleaseCellClick(arch, risk, track) {
     props.toggleHistoryPanel({ arch, risk, track });
@@ -159,8 +172,20 @@ const ReleasesTableCell = props => {
     props.undoRelease(revision, `${track}/${risk}`);
   }
 
+  const className = [
+    "p-releases-table__cell is-clickable",
+    isUnassigned ? "is-unassigned" : "",
+    isActive ? "is-active" : "",
+    isHighlighted ? "is-highlighted" : "",
+    isPending ? "is-pending" : "",
+    isGrabbing ? "is-grabbing" : "",
+    isDragging ? "is-dragging" : "",
+    canDrag ? "is-draggable" : ""
+  ].join(" ");
+
   return (
     <div
+      ref={drag}
       className={className}
       onClick={handleReleaseCellClick.bind(this, arch, risk, track)}
     >
