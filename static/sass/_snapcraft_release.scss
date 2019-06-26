@@ -168,6 +168,11 @@
       opacity: 1;
     }
 
+    &.can-drop {
+      opacity: 1;
+      outline: 1px dashed $color-mid-light;
+    }
+
     &.is-clickable {
       cursor: pointer;
     }
@@ -201,6 +206,10 @@
     }
 
     .is-over & {
+      background-color: $color-highlighted;
+    }
+
+    &.is-over {
       background-color: $color-highlighted;
     }
   }

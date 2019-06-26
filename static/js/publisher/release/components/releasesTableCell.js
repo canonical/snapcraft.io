@@ -1,15 +1,15 @@
 import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { useDrag } from "react-dnd";
+import { useDrop, useDrag } from "react-dnd";
 
-import { AVAILABLE } from "../constants";
+import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeIcon from "./devmodeIcon";
 import { getChannelName, isInDevmode } from "../helpers";
 
 import { toggleHistory } from "../actions/history";
-import { undoRelease } from "../actions/pendingReleases";
+import { promoteRevision, undoRelease } from "../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
@@ -149,7 +149,7 @@ const ReleasesTableCell = props => {
   const canDrag = currentRevision && !isChannelPendingClose;
 
   const [{ isDragging }, drag] = useDrag({
-    item: { revision: currentRevision, type: DND_ITEM_REVISION },
+    item: { revision: currentRevision, arch: arch, type: DND_ITEM_REVISION },
     canDrag: () => canDrag,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
@@ -161,6 +161,45 @@ const ReleasesTableCell = props => {
     end: () => {
       setIsGrabbing(false);
     }
+  });
+
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: DND_ITEM_REVISION,
+    drop: item => {
+      props.promoteRevision(item.revision, channel);
+    },
+    canDrop: item => {
+      // can't drop on 'available revisions row'
+      if (props.risk === AVAILABLE) {
+        return false;
+      }
+
+      // can't drop on other architectures
+      if (arch !== item.arch) {
+        return false;
+      }
+
+      // can't drop devmode to stable/candidate
+      if (risk === STABLE || risk === CANDIDATE) {
+        if (isInDevmode(item.revision)) {
+          return false;
+        }
+      }
+
+      // can't drop same revisions
+      if (
+        currentRevision &&
+        item.revision.revision === currentRevision.revision
+      ) {
+        return false;
+      }
+
+      return true;
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
   });
 
   function handleReleaseCellClick(arch, risk, track) {
@@ -180,16 +219,21 @@ const ReleasesTableCell = props => {
     isPending ? "is-pending" : "",
     isGrabbing ? "is-grabbing" : "",
     isDragging ? "is-dragging" : "",
-    canDrag ? "is-draggable" : ""
+    canDrag ? "is-draggable" : "",
+    canDrop && isOver ? "is-over" : "",
+    canDrop ? "can-drop" : ""
   ].join(" ");
 
   return (
     <div
-      ref={drag}
+      ref={drop}
       className={className}
       onClick={handleReleaseCellClick.bind(this, arch, risk, track)}
     >
-      <div className="p-release-data p-tooltip p-tooltip--btm-center">
+      <div
+        ref={drag}
+        className="p-release-data p-tooltip p-tooltip--btm-center"
+      >
         {isChannelPendingClose ? (
           <CloseChannelInfo />
         ) : currentRevision ? (
@@ -235,6 +279,7 @@ ReleasesTableCell.propTypes = {
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
+  promoteRevision: PropTypes.func.isRequired,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -258,7 +303,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
+    undoRelease: (revision, channel) =>
+      dispatch(undoRelease(revision, channel)),
+    promoteRevision: (revision, channel) =>
+      dispatch(promoteRevision(revision, channel))
   };
 };
 
