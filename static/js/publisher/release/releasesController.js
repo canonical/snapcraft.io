@@ -7,6 +7,7 @@ import ReleasesTable from "./components/releasesTable";
 import Notification from "./components/notification";
 import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
+import Modal from "./components/modal";
 
 import { updateRevisions } from "./actions/revisions";
 import { updateReleases } from "./actions/releases";
@@ -17,6 +18,8 @@ import {
   closeChannelSuccess
 } from "./actions/channelMap";
 import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
+import { showNotification, hideNotification } from "./actions/notification";
+
 import { getPendingChannelMap } from "./selectors";
 
 import {
@@ -46,7 +49,7 @@ class ReleasesController extends Component {
     );
 
     this.state = {
-      error: null,
+      defaultTrack: props.options.defaultTrack,
       isLoading: false
     };
   }
@@ -58,6 +61,39 @@ class ReleasesController extends Component {
 
     this.props.updateRevisions(revisionsMap);
     this.props.updateReleases(releasesData.releases);
+  }
+
+  fetchSetDefaultTrack(track) {
+    const { options, showNotification } = this.props;
+    const { csrfToken } = options;
+
+    return fetch(`/${this.props.snapName}/releases/default-track`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "X-CSRFToken": csrfToken
+      },
+      redirect: "follow",
+      referrer: "no-referrer",
+      body: JSON.stringify({ default_track: track })
+    })
+      .then(response => response.json())
+      .then(() => {
+        this.setState({
+          defaultTrack: track || "latest"
+        });
+      })
+      .catch(() => {
+        showNotification({
+          status: "error",
+          appearance: "negative",
+          content: ERROR_MESSAGE
+        });
+        throw new Error(ERROR_MESSAGE);
+      });
   }
 
   fetchReleasesHistory() {
@@ -168,6 +204,7 @@ class ReleasesController extends Component {
   }
 
   handleReleaseError(error) {
+    const { showNotification } = this.props;
     let message = error.message || ERROR_MESSAGE;
 
     // try to find error messages in response json
@@ -186,8 +223,10 @@ class ReleasesController extends Component {
       }
     }
 
-    this.setState({
-      error: message
+    showNotification({
+      status: "error",
+      appearance: "negative",
+      content: message
     });
   }
 
@@ -243,7 +282,7 @@ class ReleasesController extends Component {
   }
 
   releaseRevisions() {
-    const { pendingReleases, pendingCloses } = this.props;
+    const { pendingReleases, pendingCloses, hideNotification } = this.props;
     const releases = Object.keys(pendingReleases).map(id => {
       return {
         id,
@@ -252,7 +291,8 @@ class ReleasesController extends Component {
       };
     });
 
-    this.setState({ isLoading: true, error: null });
+    this.setState({ isLoading: true });
+    hideNotification();
     this.fetchReleases(releases)
       .then(() => this.fetchCloses(pendingCloses))
       .then(() => this.fetchUpdatedReleasesHistory())
@@ -265,20 +305,19 @@ class ReleasesController extends Component {
     return (
       <Fragment>
         <div className="row">
-          {this.state.error && (
-            <Notification status="error" appearance="negative">
-              {this.state.error}
-            </Notification>
-          )}
-          <ReleasesHeading />
+          {this.props.notification.visible && <Notification />}
+          <ReleasesHeading
+            setDefaultTrack={this.fetchSetDefaultTrack.bind(this)}
+            defaultTrack={this.state.defaultTrack}
+          />
           <ReleasesConfirm
             isLoading={this.state.isLoading}
             // triggers posting data to API
             releaseRevisions={this.releaseRevisions.bind(this)}
           />
         </div>
-
         <ReleasesTable />
+        {this.props.showModal && <Modal />}
       </Fragment>
     );
   }
@@ -316,7 +355,9 @@ const mapStateToProps = state => {
     releasedChannels: state.channelMap,
     pendingCloses: state.pendingCloses,
     pendingReleases: state.pendingReleases,
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+    showModal: state.modal.visible,
+    notification: state.notification
   };
 };
 
@@ -331,7 +372,9 @@ const mapDispatchToProps = dispatch => {
     updateReleases: releases => dispatch(updateReleases(releases)),
     undoRelease: (revision, channel) =>
       dispatch(undoRelease(revision, channel)),
-    cancelPendingReleases: () => dispatch(cancelPendingReleases())
+    cancelPendingReleases: () => dispatch(cancelPendingReleases()),
+    showNotification: payload => dispatch(showNotification(payload)),
+    hideNotifcation: () => dispatch(hideNotification())
   };
 };
 

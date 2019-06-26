@@ -4,6 +4,8 @@ import availableRevisionsSelect from "./availableRevisionsSelect";
 import channelMap from "./channelMap";
 import currentTrack from "./currentTrack";
 import history from "./history";
+import modal from "./modal";
+import notification from "./notification";
 import pendingCloses from "./pendingCloses";
 import pendingReleases from "./pendingReleases";
 import releases from "./releases";
@@ -14,6 +16,8 @@ const releasesReducers = combineReducers({
   channelMap,
   currentTrack,
   history,
+  modal,
+  notification,
   pendingCloses,
   pendingReleases,
   revisions,

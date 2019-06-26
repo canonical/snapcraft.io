@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import { hideNotification } from "../actions/notification";
 
 const notificationStyle = (element = "", modifier = "") => {
   element = element ? "__" + element : "";
@@ -10,23 +13,22 @@ const notificationStyle = (element = "", modifier = "") => {
   return className;
 };
 
-export default class Notification extends Component {
+class Notification extends Component {
   render() {
-    const { status, appearance, onRemoveClick } = this.props;
-
+    const { status, appearance, canDismiss, hideNotification } = this.props;
     const className = notificationStyle("", appearance);
 
     return (
       <div className={className}>
         <p className={notificationStyle("response")}>
           {status && this.getStatus(this.props.status)}
-          {this.props.children}
+          {this.props.content}
         </p>
-        {onRemoveClick && (
+        {canDismiss && (
           <button
             className="p-icon--close"
             aria-label="Close notification"
-            onClick={onRemoveClick}
+            onClick={hideNotification}
           >
             Close
           </button>
@@ -43,7 +45,7 @@ export default class Notification extends Component {
 }
 
 Notification.propTypes = {
-  children: PropTypes.node,
+  content: PropTypes.node,
   appearance: PropTypes.oneOf([
     "positive",
     "caution",
@@ -51,5 +53,17 @@ Notification.propTypes = {
     "information"
   ]),
   status: PropTypes.string,
-  onRemoveClick: PropTypes.func
+  canDismiss: PropTypes.bool,
+  hideNotification: PropTypes.func
 };
+
+const mapStateToProps = ({ notification }) => notification.payload;
+
+const mapDispatchToProps = dispatch => ({
+  hideNotification: () => dispatch(hideNotification())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Notification);
