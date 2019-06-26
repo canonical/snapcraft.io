@@ -152,7 +152,7 @@ function initEmbeddedCardPicker(options) {
     if (previewFrame.offsetParent) {
       const height =
         Math.floor(
-          (previewFrame.contentWindow.document.body.scrollHeight + 20) / 10
+          (previewFrame.contentWindow.document.body.clientHeight + 10) / 10
         ) * 10;
 
       if (height !== state.frameHeight) {
