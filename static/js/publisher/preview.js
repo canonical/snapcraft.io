@@ -23,7 +23,8 @@ const md = new MarkdownIt({
   "escape",
   "strikethrough",
   "image",
-  "html_inline"
+  "html_inline",
+  "fence"
 ]);
 
 // For the different elements we might need to change different properties
