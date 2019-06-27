@@ -13,7 +13,9 @@
       <form class="p-form--inline js-language-select">
         <select name="language">
           {% for lang, data in available.items() %}
-            <option value="{{ lang }}">{{ data.title }}</option>
+            <option value="{{ lang }}" {% if lang == 'en' %}selected{% endif%}>
+              {{data.title}}
+            </option>
           {% endfor %}
         </select>
       </form>
