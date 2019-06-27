@@ -275,17 +275,19 @@ const ReleasesTableRow = props => {
             <span className="p-releases__handle">
               <i className="p-icon--drag" />
             </span>
-            <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
-              <span className="p-release-data__title">{rowTitle}</span>
-              {risk !== AVAILABLE && (
-                <span className="p-release-data__meta">{channelVersion}</span>
-              )}
-              {channelVersion && (
-                <span className="p-tooltip__message">
-                  {channelVersionTooltip}
-                </span>
-              )}
-            </span>
+            <div className="p-releases-channel__name p-tooltip p-tooltip--btm-center">
+              <span className="p-release-data__info">
+                <span className="p-release-data__title">{rowTitle}</span>
+                {risk !== AVAILABLE && (
+                  <span className="p-release-data__meta">{channelVersion}</span>
+                )}
+                {channelVersion && (
+                  <span className="p-tooltip__message">
+                    {channelVersionTooltip}
+                  </span>
+                )}
+              </span>
+            </div>
 
             <span className="p-releases-table__menus">
               {(canBePromoted || canBeClosed) && (

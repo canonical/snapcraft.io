@@ -32,7 +32,8 @@
     &.is-dragging {
       opacity: .9; // little workaround for chrome
 
-      .p-tooltip__message {
+      .p-tooltip__message,
+      .p-contextual-menu__dropdown {
         display: none;
       }
     }
@@ -111,14 +112,8 @@
 
   .p-releases-channel__name {
     flex-grow: 1;
-    max-width: calc(100% - 40px); // leave space for channel menu
+    max-width: calc(100% - 55px); // leave space handle and settings menu
     padding-right: $sph-intra--condensed;
-
-    .p-release-data__title {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
 
   .p-releases__handle {
@@ -235,8 +230,8 @@
   }
 
   .p-release-data__info {
+    overflow: hidden;
     white-space: nowrap;
-    width: 100%;
 
     &.is-pending {
       font-weight: 400;
@@ -259,12 +254,16 @@
     white-space: nowrap;
   }
 
+  .p-release-data__title,
   .p-release-data__meta {
-    color: $color-mid-dark;
     display: block;
-    font-size: .8rem;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .p-release-data__meta {
+    color: $color-mid-dark;
+    font-size: .8rem;
   }
 
   // REVISIONS LIST
