@@ -19,7 +19,7 @@ class Notification extends Component {
     const className = notificationStyle("", appearance);
 
     return (
-      <div className={className}>
+      <div className={`p-notification ${className}`}>
         <p className={notificationStyle("response")}>
           {status && this.getStatus(this.props.status)}
           {this.props.content}

@@ -1,6 +1,6 @@
 import { SHOW_NOTIFICATION, HIDE_NOTIFICATION } from "../actions/notification";
 
-export default function notification(state = {visible: false}, action) {
+export default function notification(state = { visible: false }, action) {
   switch (action.type) {
     case SHOW_NOTIFICATION:
       return {

@@ -15,7 +15,11 @@ class ReleasesHeading extends Component {
     const { currentTrack } = this.props;
     return (
       <form className="p-form p-form--inline">
-        <select id="track-dropdown" onChange={this.onTrackChange.bind(this)} value={currentTrack}>
+        <select
+          id="track-dropdown"
+          onChange={this.onTrackChange.bind(this)}
+          value={currentTrack}
+        >
           {tracks.map(track => (
             <option key={`${track}`} value={track}>
               {track}
@@ -32,20 +36,20 @@ class ReleasesHeading extends Component {
     const Wrap = tracks.length > 1 ? "label" : "span";
     return (
       <div className="row">
-      <div className="col-6">
-      <h4>
-        <Wrap htmlFor="track-dropdown">
-          Releases available to install
-          {tracks.length > 1 && (
-            <Fragment>
-              {" "}
-              in &nbsp;
-              {this.renderTrackDropdown(tracks)}
-            </Fragment>
-          )}
-        </Wrap>
-      </h4>
-      </div>
+        <div className="col-6">
+          <h4>
+            <Wrap htmlFor="track-dropdown">
+              Releases available to install
+              {tracks.length > 1 && (
+                <Fragment>
+                  {" "}
+                  in &nbsp;
+                  {this.renderTrackDropdown(tracks)}
+                </Fragment>
+              )}
+            </Wrap>
+          </h4>
+        </div>
         <div className="col-6">
           {tracks.length > 1 && (
             <DefaultTrackModifier

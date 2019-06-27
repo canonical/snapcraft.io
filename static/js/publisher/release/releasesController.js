@@ -302,10 +302,12 @@ class ReleasesController extends Component {
   }
 
   render() {
+    const { notification } = this.props;
+    const { visible } = notification;
     return (
       <Fragment>
         <div className="row">
-          {this.props.notification.visible && <Notification />}
+          {visible && <Notification />}
           <ReleasesHeading
             setDefaultTrack={this.fetchSetDefaultTrack.bind(this)}
             defaultTrack={this.state.defaultTrack}
@@ -336,6 +338,7 @@ ReleasesController.propTypes = {
   pendingCloses: PropTypes.array,
   pendingReleases: PropTypes.object,
   pendingChannelMap: PropTypes.object,
+  notification: PropTypes.object,
 
   closeChannelSuccess: PropTypes.func,
   releaseRevisionSuccess: PropTypes.func,
@@ -344,7 +347,10 @@ ReleasesController.propTypes = {
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
   undoRelease: PropTypes.func,
-  cancelPendingReleases: PropTypes.func
+  cancelPendingReleases: PropTypes.func,
+  showNotification: PropTypes.func,
+  hideNotification: PropTypes.func,
+  showModal: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -374,7 +380,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(undoRelease(revision, channel)),
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
     showNotification: payload => dispatch(showNotification(payload)),
-    hideNotifcation: () => dispatch(hideNotification())
+    hideNotification: () => dispatch(hideNotification())
   };
 };
 
