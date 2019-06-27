@@ -272,7 +272,7 @@ const ReleasesTableRow = props => {
               canDrag ? "is-draggable" : ""
             }`}
           >
-            <span className="p-releases-channel__handle">
+            <span className="p-releases__handle">
               <i className="p-icon--drag" />
             </span>
             <span className="p-releases-channel__name p-release-data__info p-tooltip p-tooltip--btm-center">
