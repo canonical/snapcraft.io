@@ -86,6 +86,10 @@
 
     .can-drop & {
       opacity: 1;
+
+      .p-tooltip__message {
+        display: none;
+      }
     }
 
     &:hover,
@@ -164,6 +168,10 @@
     &.can-drop {
       opacity: 1;
       outline: 1px dashed $color-mid-light;
+
+      .p-tooltip__message {
+        display: none;
+      }
     }
 
     &.is-clickable {
