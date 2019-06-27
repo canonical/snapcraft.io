@@ -1117,16 +1117,16 @@ def get_publicise(snap_name):
     available_languages = {
         "en": {"title": "English", "text": "Get it from the Snap Store"},
         "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
-        "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
+        "es": {"title": "Español", "text": "Instalar desde Snap Store"},
         "fr": {
             "title": "Français",
             "text": "Installer à partir du Snap Store",
         },
-        "es": {"title": "Español", "text": "Instalar desde Snap Store"},
-        "tw": {"title": "中文（台灣）", "text": "安裝軟體敬請移駕 Snap Store"},
-        "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
-        "pt": {"title": "Português", "text": "Disponível na Snap Store"},
         "it": {"title": "Italiano", "text": "Scarica dallo Snap Store"},
+        "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
+        "pt": {"title": "Português", "text": "Disponível na Snap Store"},
+        "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
+        "tw": {"title": "中文（台灣）", "text": "安裝軟體敬請移駕 Snap Store"},
     }
 
     context = {
@@ -1134,7 +1134,7 @@ def get_publicise(snap_name):
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
         "available": available_languages,
-        "download_version": "v1.2",
+        "download_version": "v1.3",
     }
 
     return flask.render_template(
