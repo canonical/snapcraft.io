@@ -1115,8 +1115,8 @@ def get_publicise(snap_name):
         return flask.abort(404, "No snap named {}".format(snap_name))
 
     available_languages = {
-        "en": {"title": "English", "text": "Get it from the Snap Store"},
         "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
+        "en": {"title": "English", "text": "Get it from the Snap Store"},
         "es": {"title": "Español", "text": "Instalar desde Snap Store"},
         "fr": {
             "title": "Français",
