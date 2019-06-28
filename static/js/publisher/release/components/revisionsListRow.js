@@ -36,9 +36,11 @@ const RevisionsListRow = props => {
   });
 
   const id = `revision-check-${revision.revision}`;
-  const className = `is-draggable ${isSelectable ? "is-clickable" : ""} ${
-    isPending || isSelected ? "is-pending" : ""
-  } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
+  const className = `p-revisions-list__revision is-draggable ${
+    isSelectable ? "is-clickable" : ""
+  } ${isPending || isSelected ? "is-pending" : ""} ${
+    isGrabbing ? "is-grabbing" : ""
+  } ${isDragging ? "is-dragging" : ""}`;
 
   return (
     <tr
