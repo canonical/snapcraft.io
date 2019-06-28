@@ -287,8 +287,17 @@
       padding-left: 2rem;
     }
 
+    .p-revisions-list__revision {
+      background: $color-light;
+      border: 0;
+      border-bottom: 2px solid $color-x-light;
+    }
+
+    .is-pending {
+      background: $color-highlighted;
+    }
+
     .is-draggable {
-      background-color: $color-x-light;
       cursor: grab;
     }
 
@@ -296,13 +305,8 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $color-light;
+        background-color: $color-x-light;
       }
-    }
-
-    .is-pending,
-    .is-pending:hover {
-      background: $color-highlighted;
     }
 
     .is-grabbing,
