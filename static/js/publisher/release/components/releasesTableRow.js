@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrop } from "react-dnd";
 
 import {
   getArchitectures,
@@ -9,6 +9,7 @@ import {
   hasPendingRelease
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
+import { useDragging, DND_ITEM_CHANNEL } from "./dnd";
 
 import { promoteChannel } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
@@ -25,8 +26,6 @@ import {
 import { getChannelName, isInDevmode } from "../helpers";
 import ChannelMenu from "./channelMenu";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
-
-const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
 
 const disabledBecauseDevmode = (
   <Fragment>
@@ -60,23 +59,11 @@ const compareChannels = (channelMap, channel, targetChannel) => {
 const ReleasesTableRow = props => {
   const { currentTrack, risk, archs, pendingChannelMap } = props;
 
-  const [isGrabbing, setIsGrabbing] = useState(false);
-
   const draggedChannel = getChannelName(currentTrack, risk);
   const canDrag = !!pendingChannelMap[draggedChannel];
-  const [{ isDragging }, drag, preview] = useDrag({
+  const [isDragging, isGrabbing, drag, preview] = useDragging({
     item: { risk: props.risk, type: DND_ITEM_CHANNEL },
-    canDrag: () => canDrag,
-    collect: monitor => ({
-      isDragging: !!monitor.isDragging()
-    }),
-
-    begin: () => {
-      setIsGrabbing(true);
-    },
-    end: () => {
-      setIsGrabbing(false);
-    }
+    canDrag
   });
 
   const [{ isOver, canDrop }, drop] = useDrop({

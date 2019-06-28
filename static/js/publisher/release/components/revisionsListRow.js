@@ -1,17 +1,15 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { useDrag } from "react-dnd";
 
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
+import { useDragging, DND_ITEM_REVISION } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 import { getSelectedRevisions } from "../selectors";
 
 import DevmodeIcon from "./devmodeIcon";
-
-const DND_ITEM_REVISION = "DND_ITEM_REVISION";
 
 const RevisionsListRow = props => {
   const { revision, isSelectable, showAllColumns, isPending } = props;
@@ -26,25 +24,7 @@ const RevisionsListRow = props => {
     props.toggleRevision(revision);
   }
 
-  const [isGrabbing, setIsGrabbing] = useState(false);
-
-  // Calling useDrag end callback after history is closed (because promoting revisions closes history panel)
-  // history panel is automatically closed after promoting revision
-  // this causes an issue with dragging revision history item, because it's
-  // unmounted at the time the `end` callback is being called.
-  // This is likely an issue with react-dnd, hopefully to be fixed at some point:
-  // https://github.com/react-dnd/react-dnd/issues/1435
-  //
-  // This isRendered effect is an attempt to workaround that:
-  let isRendered = true;
-  useEffect(() => {
-    isRendered = true;
-    return () => {
-      isRendered = false;
-    };
-  });
-
-  const [{ isDragging }, drag] = useDrag({
+  const [isDragging, isGrabbing, drag] = useDragging({
     item: {
       revision: revision,
       // TODO:
@@ -52,19 +32,6 @@ const RevisionsListRow = props => {
       // this may be trickier for revisions in multiple architectures
       arch: revision.architectures[0],
       type: DND_ITEM_REVISION
-    },
-    collect: monitor => ({
-      isDragging: !!monitor.isDragging()
-    }),
-
-    begin: () => {
-      setIsGrabbing(true);
-    },
-    end: () => {
-      // hacky way to prevent React warnings
-      if (isRendered) {
-        setIsGrabbing(false);
-      }
     }
   });
 
