@@ -287,6 +287,11 @@
       padding-left: 2rem;
     }
 
+    .is-draggable {
+      background-color: $color-x-light;
+      cursor: grab;
+    }
+
     .is-clickable {
       cursor: pointer;
 
@@ -307,6 +312,16 @@
       .p-tooltip__message {
         display: none;
       }
+    }
+
+    td:first-of-type,
+    th:first-of-type {
+      padding-left: .2rem;
+    }
+
+    td:last-of-type,
+    th:last-of-type {
+      padding-right: .5rem;
     }
   }
 
