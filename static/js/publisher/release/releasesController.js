@@ -63,39 +63,6 @@ class ReleasesController extends Component {
     this.props.updateReleases(releasesData.releases);
   }
 
-  fetchSetDefaultTrack(track) {
-    const { options, showNotification } = this.props;
-    const { csrfToken } = options;
-
-    return fetch(`/${this.props.snapName}/releases/default-track`, {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "X-CSRFToken": csrfToken
-      },
-      redirect: "follow",
-      referrer: "no-referrer",
-      body: JSON.stringify({ default_track: track })
-    })
-      .then(response => response.json())
-      .then(() => {
-        this.setState({
-          defaultTrack: track || "latest"
-        });
-      })
-      .catch(() => {
-        showNotification({
-          status: "error",
-          appearance: "negative",
-          content: ERROR_MESSAGE
-        });
-        throw new Error(ERROR_MESSAGE);
-      });
-  }
-
   fetchReleasesHistory() {
     const { csrfToken } = this.props.options;
 
@@ -308,10 +275,7 @@ class ReleasesController extends Component {
       <Fragment>
         <div className="row">
           {visible && <Notification />}
-          <ReleasesHeading
-            setDefaultTrack={this.fetchSetDefaultTrack.bind(this)}
-            defaultTrack={this.state.defaultTrack}
-          />
+          <ReleasesHeading defaultTrack={this.state.defaultTrack} />
           <ReleasesConfirm
             isLoading={this.state.isLoading}
             // triggers posting data to API
@@ -339,6 +303,7 @@ ReleasesController.propTypes = {
   pendingReleases: PropTypes.object,
   pendingChannelMap: PropTypes.object,
   notification: PropTypes.object,
+  showModal: PropTypes.bool,
 
   closeChannelSuccess: PropTypes.func,
   releaseRevisionSuccess: PropTypes.func,
@@ -349,8 +314,7 @@ ReleasesController.propTypes = {
   undoRelease: PropTypes.func,
   cancelPendingReleases: PropTypes.func,
   showNotification: PropTypes.func,
-  hideNotification: PropTypes.func,
-  showModal: PropTypes.func
+  hideNotification: PropTypes.func
 };
 
 const mapStateToProps = state => {

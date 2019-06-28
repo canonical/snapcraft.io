@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { getTracks, getTrackRevisions } from "../selectors";
 import { openModal, closeModal } from "../actions/modal";
 import { showNotification, hideNotification } from "../actions/notification";
+import { setDefaultTrack } from "../actions/defaultTrack";
 
 class DefaultTrackModifier extends Component {
   constructor(props) {
@@ -21,6 +22,36 @@ class DefaultTrackModifier extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    const {
+      defaultTrack,
+      currentTrack,
+      closeModal,
+      showNotification,
+      snapName
+    } = this.props;
+
+    if (defaultTrack.track !== prevProps.defaultTrack.track) {
+      closeModal();
+
+      if (defaultTrack.track === null) {
+        showNotification({
+          status: "success",
+          appearance: "positive",
+          content: `The default track for ${snapName} has been removed. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from latest track.`,
+          canDismiss: true
+        });
+      } else {
+        showNotification({
+          status: "success",
+          appearance: "positive",
+          content: `The default track for ${snapName} has been set to ${currentTrack}. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track ${currentTrack}.`,
+          canDismiss: true
+        });
+      }
+    }
+  }
+
   handleCloseModal() {
     const { closeModal } = this.props;
 
@@ -28,37 +59,15 @@ class DefaultTrackModifier extends Component {
   }
 
   confirmDefaultTrackHandler() {
-    const {
-      currentTrack,
-      setDefaultTrack,
-      closeModal,
-      showNotification
-    } = this.props;
+    const { currentTrack, setDefaultTrack, csrfToken, snapName } = this.props;
 
-    setDefaultTrack(currentTrack).then(() => {
-      closeModal();
-      showNotification({
-        status: "success",
-        appearance: "positive",
-        // TODO: Get the name of the snap here
-        content: `The default track has been set to ${currentTrack}. All new installations without a specified track will receive updates from the newly defined default track ${currentTrack}.`,
-        canDismiss: true
-      });
-    });
+    setDefaultTrack(snapName, csrfToken, currentTrack);
   }
 
   confirmClearDefaultTrackHandler() {
-    const { setDefaultTrack, showNotification, closeModal } = this.props;
+    const { setDefaultTrack, csrfToken, snapName } = this.props;
 
-    setDefaultTrack(null).then(() => {
-      closeModal();
-      showNotification({
-        status: "success",
-        appearance: "positive",
-        content: `The default track has been removed. All new installations with a specified track will receive updates from latest.`,
-        canDismiss: true
-      });
-    });
+    setDefaultTrack(snapName, csrfToken, null);
   }
 
   clearDefaultTrackHandler() {
@@ -66,12 +75,14 @@ class DefaultTrackModifier extends Component {
 
     openModal({
       title: "Clear default track",
-      content: `By clearing the default track, any device that installed the snap with ${defaultTrack} track specified will get updates from the latest track. Would you like to proceed?`,
+      content: `By clearing the default track, any device that installed the snap with ${
+        defaultTrack.track
+      } track specified will get updates from the latest track. Would you like to proceed?`,
       actions: [
         {
           className: "p-button--positive u-no-margin--bottom u-float--right",
           onClick: this.confirmClearDefaultTrackHandler,
-          label: `Clear ${defaultTrack} as default track`
+          label: `Clear ${defaultTrack.track} as default track`
         },
         {
           className: "p-button--neutral u-no-margin--bottom u-float--right",
@@ -84,48 +95,26 @@ class DefaultTrackModifier extends Component {
   }
 
   setDefaultTrackHandler() {
-    const {
-      defaultTrack,
-      currentTrack,
-      latestTrackRevisions,
-      openModal
-    } = this.props;
+    const { currentTrack, openModal } = this.props;
 
-    if (defaultTrack === "latest" && latestTrackRevisions.length > 0) {
-      openModal({
-        title: "You still have releases available in the latest track",
-        content:
-          "To specify a default track on your snap, you must have no releases in the latest channel. You can do this, by closing all risk levels within the latest track.",
-        actions: [
-          {
-            className: "p-button--positive u-no-margin--bottom u-float--right",
-            onClick: this.handleCloseModal,
-            label: "Continue"
-          }
-        ],
-        closeModal: this.handleCloseModal
-      });
-      return;
-    } else {
-      openModal({
-        title: `Set default track to ${currentTrack}`,
-        content:
-          "By setting a default track, any device that installed the snap with no track specified will get updates from the newly defined default track. Would you like to proceed?",
-        actions: [
-          {
-            className: "p-button--positive u-no-margin--bottom u-float--right",
-            onClick: this.confirmDefaultTrackHandler,
-            label: `Set ${currentTrack} as default track`
-          },
-          {
-            className: "p-button--neutral u-no-margin--bottom u-float--right",
-            onClick: this.handleCloseModal,
-            label: "Cancel"
-          }
-        ],
-        closeModal: this.handleCloseModal
-      });
-    }
+    openModal({
+      title: `Set default track to ${currentTrack}`,
+      content:
+        "By setting a default track, any device that installed the snap with no track specified will get updates from the newly defined default track. Would you like to proceed?",
+      actions: [
+        {
+          className: "p-button--positive u-no-margin--bottom u-float--right",
+          onClick: this.confirmDefaultTrackHandler,
+          label: `Set ${currentTrack} as default track`
+        },
+        {
+          className: "p-button--neutral u-no-margin--bottom u-float--right",
+          onClick: this.handleCloseModal,
+          label: "Cancel"
+        }
+      ],
+      closeModal: this.handleCloseModal
+    });
   }
 
   renderSetButton() {
@@ -146,8 +135,8 @@ class DefaultTrackModifier extends Component {
           <br />
           track, will point to updates coming from the
           <br />
-          same risk level in the track {currentTrack}.<br />
-          i.e. {defaultTrack}
+          same risk level in the track {currentTrack.track}.<br />
+          i.e. {defaultTrack.track}
           /stable &rarr; {currentTrack}
           /stable
         </span>
@@ -183,8 +172,8 @@ class DefaultTrackModifier extends Component {
 
   render() {
     const { defaultTrack, currentTrack } = this.props;
-    const isCurrentDefault = defaultTrack === currentTrack;
-    const defaultIsLatest = defaultTrack === "latest";
+    const isCurrentDefault = defaultTrack.track === currentTrack;
+    const defaultIsLatest = defaultTrack.track === "latest";
 
     return (
       <div className="u-float--right">
@@ -196,26 +185,33 @@ class DefaultTrackModifier extends Component {
 }
 
 DefaultTrackModifier.propTypes = {
-  defaultTrack: PropTypes.string.isRequired,
+  defaultTrack: PropTypes.object.isRequired,
   currentTrack: PropTypes.string.isRequired,
   setDefaultTrack: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
-  latestTrackRevisions: PropTypes.array.isRequired
+  latestTrackRevisions: PropTypes.array.isRequired,
+  csrfToken: PropTypes.string.isRequired,
+  snapName: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
   currentTrack: state.currentTrack,
   tracks: getTracks(state),
-  latestTrackRevisions: getTrackRevisions(state.channelMap, "latest")
+  latestTrackRevisions: getTrackRevisions(state.channelMap, "latest"),
+  csrfToken: state.options.csrfToken,
+  snapName: state.options.snapName,
+  defaultTrack: state.defaultTrack
 });
 
 const mapDispatchToProps = dispatch => ({
   openModal: payload => dispatch(openModal(payload)),
   closeModal: () => dispatch(closeModal()),
   showNotification: payload => dispatch(showNotification(payload)),
-  hideNotification: () => dispatch(hideNotification())
+  hideNotification: () => dispatch(hideNotification()),
+  setDefaultTrack: (snapName, csrfToken, track) =>
+    dispatch(setDefaultTrack(snapName, csrfToken, track))
 });
 
 export default connect(
