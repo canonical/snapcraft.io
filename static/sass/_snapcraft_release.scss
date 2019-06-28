@@ -299,6 +299,15 @@
     .is-pending:hover {
       background: $color-highlighted;
     }
+
+    .is-grabbing,
+    .is-dragging {
+      opacity: .9; // little workaround for chrome
+
+      .p-tooltip__message {
+        display: none;
+      }
+    }
   }
 
   // HELPERS
