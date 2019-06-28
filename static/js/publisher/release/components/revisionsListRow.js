@@ -69,7 +69,7 @@ const RevisionsListRow = props => {
   });
 
   const id = `revision-check-${revision.revision}`;
-  const className = `${isSelectable ? "is-clickable" : ""} ${
+  const className = `is-draggable ${isSelectable ? "is-clickable" : ""} ${
     isPending || isSelected ? "is-pending" : ""
   } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
 
@@ -80,6 +80,11 @@ const RevisionsListRow = props => {
       className={className}
       onClick={isSelectable ? revisionSelectChange : null}
     >
+      <td>
+        <span className="p-releases__handle">
+          <i className="p-icon--drag" />
+        </span>
+      </td>
       <td>
         {isSelectable ? (
           <Fragment>

@@ -252,6 +252,7 @@ class RevisionsList extends Component {
         <table className="p-revisions-list">
           <thead>
             <tr>
+              <th width="30px" />
               <th
                 className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
                 width="150px"
@@ -285,7 +286,7 @@ class RevisionsList extends Component {
               )
             ) : (
               <tr>
-                <td colSpan="4">
+                <td colSpan="5">
                   <em>No releases</em>
                 </td>
               </tr>
@@ -293,7 +294,7 @@ class RevisionsList extends Component {
             {!showAllRevisions &&
               filteredRevisions.length > 10 && (
                 <tr>
-                  <td colSpan="4">
+                  <td colSpan={5}>
                     <a onClick={this.showAllRevisions.bind(this, key)}>
                       Show all {filteredRevisions.length} revisions
                     </a>
