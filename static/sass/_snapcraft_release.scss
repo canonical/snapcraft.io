@@ -225,8 +225,8 @@
 
   .p-release-buttons {
     position: absolute;
-    right: .4rem;
-    top: .4rem;
+    right: 6px;
+    top: 10px;
   }
 
   .p-release-data {
@@ -245,6 +245,12 @@
       font-weight: 400;
       padding-right: $sph-inter;
     }
+  }
+
+  .p-release-data__icon {
+    position: absolute;
+    right: 10px;
+    top: 8px;
   }
 
   .is-pending {
