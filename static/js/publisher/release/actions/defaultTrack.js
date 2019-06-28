@@ -1,10 +1,17 @@
 import "whatwg-fetch";
 
+export const SET_DEFAULT_TRACK = "SET_DEFAULT_TRACK";
+export const CLEAR_DEFAULT_TRACK = "CLEAR_DEFAULT_TRACK";
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_ERROR = "SET_DEFAULT_TRACK_ERROR";
 
-export function setDefaultTrack(snapName, csrfToken, track) {
-  const request = fetch(`/${snapName}/releases/default-track`, {
+export const STATUS_SUCCESS = "STATUS_SUCCESS";
+export const STATUS_ERROR = "STATUS_ERROR";
+export const STATUS_SETTING = "STATUS_SETTING";
+export const STATUS_CLEARING = "STATUS_CLEARING";
+
+const fetchDefaultTrack = (snapName, csrfToken, track) => {
+  return fetch(`/${snapName}/releases/default-track`, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -17,11 +24,39 @@ export function setDefaultTrack(snapName, csrfToken, track) {
     referrer: "no-referrer",
     body: JSON.stringify({ default_track: track })
   }).then(response => response.json());
+};
 
-  return dispatch => {
-    request
+export function clearDefaultTrack() {
+  return (dispatch, getState) => {
+    const { options } = getState();
+    const { snapName, csrfToken } = options;
+
+    fetchDefaultTrack(snapName, csrfToken, null)
       .then(() => {
-        dispatch({ type: SET_DEFAULT_TRACK_SUCCESS, payload: { track } });
+        dispatch({
+          type: SET_DEFAULT_TRACK_SUCCESS,
+          payload: { track: null }
+        });
+      })
+      .catch(() => {
+        dispatch({
+          type: SET_DEFAULT_TRACK_ERROR
+        });
+      });
+  };
+}
+
+export function setDefaultTrack() {
+  return (dispatch, getState) => {
+    const { options, currentTrack } = getState();
+    const { snapName, csrfToken } = options;
+
+    fetchDefaultTrack(snapName, csrfToken, currentTrack)
+      .then(() => {
+        dispatch({
+          type: SET_DEFAULT_TRACK_SUCCESS,
+          payload: { track: currentTrack }
+        });
       })
       .catch(() => {
         dispatch({

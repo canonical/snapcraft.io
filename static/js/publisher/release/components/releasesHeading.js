@@ -31,7 +31,7 @@ class ReleasesHeading extends Component {
   }
 
   render() {
-    const { tracks, defaultTrack } = this.props;
+    const { tracks } = this.props;
 
     const Wrap = tracks.length > 1 ? "label" : "span";
     return (
@@ -51,9 +51,7 @@ class ReleasesHeading extends Component {
           </h4>
         </div>
         <div className="col-6">
-          {tracks.length > 1 && (
-            <DefaultTrackModifier defaultTrack={defaultTrack} />
-          )}
+          {tracks.length > 1 && <DefaultTrackModifier />}
         </div>
       </div>
     );
@@ -63,7 +61,6 @@ class ReleasesHeading extends Component {
 ReleasesHeading.propTypes = {
   tracks: PropTypes.array.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
-  defaultTrack: PropTypes.string.isRequired,
   currentTrack: PropTypes.string.isRequired
 };
 

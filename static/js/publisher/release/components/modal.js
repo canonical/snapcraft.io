@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 
+import { closeModal } from "../actions/modal";
+
 class ModalActionButton extends Component {
   constructor(props) {
     super(props);
@@ -12,10 +14,10 @@ class ModalActionButton extends Component {
     };
   }
 
-  onClickHandler(e) {
-    const { onClick } = this.props;
+  onClickHandler() {
+    const { onClickAction, dispatch } = this.props;
 
-    onClick(e);
+    dispatch(onClickAction);
 
     this.setState({
       loading: true
@@ -23,12 +25,19 @@ class ModalActionButton extends Component {
   }
 
   render() {
-    const { className, children } = this.props;
+    const { appearance, children } = this.props;
     const { loading } = this.state;
+
+    const className = [
+      `p-button--${appearance}`,
+      "u-no-margin--bottom",
+      "u-float--right",
+      ["positive", "negative"].indexOf(appearance) > -1 ? "is--dark" : ""
+    ];
 
     return (
       <button
-        className={`${className} is--dark`}
+        className={className.join(" ")}
         onClick={this.onClickHandler}
         disabled={loading}
       >
@@ -40,10 +49,17 @@ class ModalActionButton extends Component {
 }
 
 ModalActionButton.propTypes = {
-  onClick: PropTypes.func.isRequired,
-  className: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
+  onClickAction: PropTypes.object.isRequired,
+  appearance: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  dispatch: PropTypes.func.isRequired
 };
+
+const mapDispatchToProps = dispatch => ({
+  closeModal: () => dispatch(closeModal())
+});
+
+const ModalActionButtonWrapped = connect()(ModalActionButton);
 
 const Modal = ({ title, content, actions, closeModal }) => {
   if (!title && !content) {
@@ -72,13 +88,13 @@ const Modal = ({ title, content, actions, closeModal }) => {
         </header>
         <p id="modal-description">{content}</p>
         {actions.map((action, i) => (
-          <ModalActionButton
+          <ModalActionButtonWrapped
             key={`action-${i}`}
-            className={action.className}
-            onClick={action.onClick}
+            appearance={action.appearance}
+            onClickAction={action.onClickAction}
           >
             {action.label}
-          </ModalActionButton>
+          </ModalActionButtonWrapped>
         ))}
       </div>
     </div>
@@ -94,4 +110,7 @@ Modal.propTypes = {
 
 const mapStateToProps = ({ modal }) => modal.payload || {};
 
-export default connect(mapStateToProps)(Modal);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Modal);

@@ -18,7 +18,10 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
     releases,
     {
       currentTrack: options.defaultTrack || "latest",
-      defaultTrack: { track: options.defaultTrack },
+      defaultTrack: {
+        track: options.defaultTrack,
+        status: "waiting"
+      },
       options: {
         ...options,
         snapName
