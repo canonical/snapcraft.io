@@ -68,7 +68,7 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
       <span className="p-release-data__info">
         <span className="p-release-data__title">{revision.revision}</span>
         {isInDevmode(revision) && (
-          <span className="p-release-data__icon u-float-right">
+          <span className="p-release-data__icon">
             <DevmodeIcon revision={revision} showTooltip={false} />
           </span>
         )}
