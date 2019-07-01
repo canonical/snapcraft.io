@@ -15,7 +15,8 @@ import {
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch,
   getArchitectures,
-  getTracks
+  getTracks,
+  getTrackRevisions
 } from "./index";
 
 import reducers from "../reducers";
@@ -576,5 +577,34 @@ describe("hasPendingRelease", () => {
         hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
       ).toBe(true);
     });
+  });
+});
+
+describe("getTrackRevisions", () => {
+  it("should return revisions in a given track", () => {
+    const channelMap = {
+      "test/edge": {
+        test64: { revision: 1 }
+      },
+      stable: {
+        test64: { revision: 1 }
+      },
+      "test/stable": {
+        test64: { revision: 2 }
+      }
+    };
+
+    expect(getTrackRevisions(channelMap, "test")).toEqual([
+      {
+        test64: {
+          revision: 1
+        }
+      },
+      {
+        test64: {
+          revision: 2
+        }
+      }
+    ]);
   });
 });

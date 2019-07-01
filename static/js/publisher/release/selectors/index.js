@@ -168,14 +168,12 @@ export function getArchitectures(state) {
 export function getTracks(state) {
   let tracks = [];
 
-  state.releases
-    .map(t => t.track)
-    .forEach(track => {
-      // if we haven't saved it yet
-      if (tracks.indexOf(track) === -1) {
-        tracks.push(track);
-      }
-    });
+  state.releases.map(t => t.track).forEach(track => {
+    // if we haven't saved it yet
+    if (tracks.indexOf(track) === -1) {
+      tracks.push(track);
+    }
+  });
 
   return sortAlphaNum(tracks, "latest");
 }
@@ -199,9 +197,9 @@ export function hasPendingRelease(state, channel, arch) {
   );
 }
 
-export function getTrackRevisions(channelMap) {
+export function getTrackRevisions(channelMap, track) {
   const trackKeys = Object.keys(channelMap).filter(
-    trackName => trackName.indexOf("latest") == 0
+    trackName => trackName.indexOf(track) == 0
   );
   return trackKeys.map(trackName => channelMap[trackName]);
 }

@@ -3,9 +3,6 @@ import "whatwg-fetch";
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_ERROR = "SET_DEFAULT_TRACK_ERROR";
 
-export const STATUS_SUCCESS = "STATUS_SUCCESS";
-export const STATUS_ERROR = "STATUS_ERROR";
-
 const fetchDefaultTrack = (snapName, csrfToken, track) => {
   return fetch(`/${snapName}/releases/default-track`, {
     method: "POST",

@@ -9,7 +9,7 @@ describe("modal actions", () => {
     it("should create an action to open the modal", () => {
       const modalAction = openModal(dummyPayload);
       expect(modalAction.type).toBe(OPEN_MODAL);
-      expect(modalAction.payload).toEqual({ payload: dummyPayload });
+      expect(modalAction.payload).toEqual(dummyPayload);
     });
   });
 

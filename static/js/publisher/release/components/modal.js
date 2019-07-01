@@ -19,9 +19,15 @@ class ModalActionButton extends Component {
   onClickHandler() {
     const { onClickAction, dispatch } = this.props;
 
-    if (onClickAction.reduxAction && this.props[onClickAction.reduxAction]) {
-      // If an action is passed, perform the specific action
-      this.props[onClickAction.reduxAction]();
+    if (onClickAction.reduxAction) {
+      const { reduxAction } = onClickAction;
+      if (
+        this.props[reduxAction] &&
+        typeof this.props[reduxAction] == "function"
+      ) {
+        // If an action is passed, perform the specific action
+        this.props[onClickAction.reduxAction]();
+      }
     } else {
       // Otherwise dispatch the action object
       dispatch(onClickAction);
