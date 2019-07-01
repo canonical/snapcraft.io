@@ -27,10 +27,6 @@
   .p-releases-table__row {
     display: flex;
     margin-bottom: 2px;
-
-    &.can-drop {
-      outline: 1px dashed $color-mid-light;
-    }
   }
 
   .p-releases-table__row--channel {
@@ -70,14 +66,7 @@
       opacity: .5;
     }
 
-    .can-drop & {
-      opacity: 1;
-
-      .p-tooltip__message {
-        display: none;
-      }
-    }
-
+    .can-drop &,
     &:hover,
     &.is-active {
       opacity: 1;
@@ -87,10 +76,7 @@
       background: none;
     }
 
-    .is-over & {
-      background-color: $color-highlighted;
-    }
-
+    .is-over &,
     &.is-highlighted {
       background-color: $color-highlighted;
     }
@@ -121,17 +107,9 @@
       opacity: .5;
     }
 
-    .can-drop & {
-      opacity: 1;
-    }
-
+    .can-drop &,
     &.can-drop {
       opacity: 1;
-      outline: 1px dashed $color-mid-light;
-
-      .p-tooltip__message {
-        display: none;
-      }
     }
 
     &.is-clickable {
@@ -158,16 +136,10 @@
       }
     }
 
+    &.is-over,
+    .is-over &,
     &.is-highlighted {
       background: $color-highlighted;
-    }
-
-    .is-over & {
-      background-color: $color-highlighted;
-    }
-
-    &.is-over {
-      background-color: $color-highlighted;
     }
   }
 
@@ -297,6 +269,14 @@
 
     .is-draggable & {
       visibility: visible;
+    }
+  }
+
+  .can-drop {
+    outline: 1px dashed $color-mid-light;
+
+    .p-tooltip__message {
+      display: none !important;
     }
   }
 
