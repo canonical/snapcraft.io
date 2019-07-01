@@ -1,13 +1,12 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { useDrop } from "react-dnd";
 
 import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeIcon from "./devmodeIcon";
 import { getChannelName, isInDevmode } from "../helpers";
-import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
+import { useDragging, useDrop, DND_ITEM_REVISION, Handle } from "./dnd";
 
 import { toggleHistory } from "../actions/history";
 import { promoteRevision, undoRelease } from "../actions/pendingReleases";
