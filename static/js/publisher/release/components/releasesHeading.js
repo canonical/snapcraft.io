@@ -12,7 +12,7 @@ class ReleasesHeading extends Component {
   }
 
   renderTrackDropdown(tracks) {
-    const { currentTrack } = this.props;
+    const { currentTrack, defaultTrack } = this.props;
     return (
       <form className="p-form p-form--inline">
         <select
@@ -22,7 +22,8 @@ class ReleasesHeading extends Component {
         >
           {tracks.map(track => (
             <option key={`${track}`} value={track}>
-              {track}
+              {track}{" "}
+              {defaultTrack === track && track !== "latest" && "(default)"}
             </option>
           ))}
         </select>
@@ -61,13 +62,15 @@ class ReleasesHeading extends Component {
 ReleasesHeading.propTypes = {
   tracks: PropTypes.array.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
-  currentTrack: PropTypes.string.isRequired
+  currentTrack: PropTypes.string.isRequired,
+  defaultTrack: PropTypes.string
 };
 
 const mapStateToProps = state => {
   return {
     tracks: getTracks(state),
-    currentTrack: state.currentTrack
+    currentTrack: state.currentTrack,
+    defaultTrack: state.defaultTrack.track
   };
 };
 

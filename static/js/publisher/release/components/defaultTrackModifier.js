@@ -15,13 +15,7 @@ class DefaultTrackModifier extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      defaultTrack,
-      currentTrack,
-      closeModal,
-      showNotification,
-      snapName
-    } = this.props;
+    const { defaultTrack, closeModal, showNotification, snapName } = this.props;
     if (defaultTrack.track !== prevProps.defaultTrack.track) {
       closeModal();
 
@@ -36,7 +30,13 @@ class DefaultTrackModifier extends Component {
         showNotification({
           status: "success",
           appearance: "positive",
-          content: `The default track for ${snapName} has been set to ${currentTrack}. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track ${currentTrack}.`,
+          content: `The default track for ${snapName} has been set to ${
+            defaultTrack.track
+          }. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track ${
+            defaultTrack.track
+          }. Clients already tracking \`${
+            prevProps.defaultTrack.track
+          }\` will now be tracking ${defaultTrack.track} on next refresh.`,
           canDismiss: true
         });
       }
@@ -48,9 +48,7 @@ class DefaultTrackModifier extends Component {
 
     openModal({
       title: "Clear default track",
-      content: `By clearing the default track, any device that installed the snap with ${
-        defaultTrack.track
-      } track specified will get updates from the latest track. Would you like to proceed?`,
+      content: `By clearing the default track, any snap that installed the snap with no track specified will switch to the latest track, and new installs without an explicit track selection will follow latest. Would you like to proceed?`,
       actions: [
         {
           appearance: "positive",
@@ -75,8 +73,7 @@ class DefaultTrackModifier extends Component {
 
     openModal({
       title: `Set default track to ${currentTrack}`,
-      content:
-        "By setting a default track, any device that installed the snap with no track specified will get updates from the newly defined default track. Would you like to proceed?",
+      content: `By setting a default track, any device that installed the snap with no track specified will switch to the newly defined default track, and new installs without an explicit track selection will follow ${currentTrack}. Would you like to proceed?`,
       actions: [
         {
           appearance: "positive",
@@ -110,14 +107,13 @@ class DefaultTrackModifier extends Component {
           role="tooltip"
           id="set-default-tooltip"
         >
-          Any device pointing to a risk level from the latest
+          When setting {currentTrack} as default track, any device
           <br />
-          track, will point to updates coming from the
+          currently tracking {defaultTrack.track} will switch to tracking
           <br />
-          same risk level in the track {currentTrack.track}.<br />
-          i.e. {defaultTrack.track}
-          /stable &rarr; {currentTrack}
-          /stable
+          {currentTrack} on the next refresh, and new installs that
+          <br />
+          do not specify a track will follow {currentTrack}.
         </span>
       </button>
     );
@@ -153,6 +149,10 @@ class DefaultTrackModifier extends Component {
     const { defaultTrack, currentTrack } = this.props;
     const isCurrentDefault = defaultTrack.track === currentTrack;
     const defaultIsLatest = defaultTrack.track === "latest";
+
+    if (currentTrack === "latest") {
+      return null;
+    }
 
     return (
       <div className="u-float--right">

@@ -49,7 +49,6 @@ class ReleasesController extends Component {
     );
 
     this.state = {
-      defaultTrack: props.options.defaultTrack,
       isLoading: false
     };
   }
@@ -275,7 +274,7 @@ class ReleasesController extends Component {
       <Fragment>
         <div className="row">
           {visible && <Notification />}
-          <ReleasesHeading defaultTrack={this.state.defaultTrack} />
+          <ReleasesHeading />
           <ReleasesConfirm
             isLoading={this.state.isLoading}
             // triggers posting data to API
