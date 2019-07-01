@@ -1,14 +1,10 @@
 import "whatwg-fetch";
 
-export const SET_DEFAULT_TRACK = "SET_DEFAULT_TRACK";
-export const CLEAR_DEFAULT_TRACK = "CLEAR_DEFAULT_TRACK";
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_ERROR = "SET_DEFAULT_TRACK_ERROR";
 
 export const STATUS_SUCCESS = "STATUS_SUCCESS";
 export const STATUS_ERROR = "STATUS_ERROR";
-export const STATUS_SETTING = "STATUS_SETTING";
-export const STATUS_CLEARING = "STATUS_CLEARING";
 
 const fetchDefaultTrack = (snapName, csrfToken, track) => {
   return fetch(`/${snapName}/releases/default-track`, {

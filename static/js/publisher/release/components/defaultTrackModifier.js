@@ -5,14 +5,6 @@ import { connect } from "react-redux";
 import { getTracks, getTrackRevisions } from "../selectors";
 import { CLOSE_MODAL, openModal, closeModal } from "../actions/modal";
 import { showNotification, hideNotification } from "../actions/notification";
-import {
-  SET_DEFAULT_TRACK,
-  CLEAR_DEFAULT_TRACK,
-  STATUS_SETTING,
-  STATUS_CLEARING,
-  setDefaultTrack,
-  clearDefaultTrack
-} from "../actions/defaultTrack";
 
 class DefaultTrackModifier extends Component {
   constructor(props) {
@@ -28,21 +20,8 @@ class DefaultTrackModifier extends Component {
       currentTrack,
       closeModal,
       showNotification,
-      snapName,
-      setDefaultTrack,
-      clearDefaultTrack
+      snapName
     } = this.props;
-
-    if (defaultTrack.status === STATUS_SETTING) {
-      setDefaultTrack();
-      return;
-    }
-
-    if (defaultTrack.status === STATUS_CLEARING) {
-      clearDefaultTrack();
-      return;
-    }
-
     if (defaultTrack.track !== prevProps.defaultTrack.track) {
       closeModal();
 
@@ -76,7 +55,7 @@ class DefaultTrackModifier extends Component {
         {
           appearance: "positive",
           onClickAction: {
-            type: CLEAR_DEFAULT_TRACK
+            reduxAction: "clearDefaultTrack"
           },
           label: `Clear ${defaultTrack.track} as default track`
         },
@@ -102,7 +81,7 @@ class DefaultTrackModifier extends Component {
         {
           appearance: "positive",
           onClickAction: {
-            type: SET_DEFAULT_TRACK
+            reduxAction: "setDefaultTrack"
           },
           label: `Set ${currentTrack} as default track`
         },
@@ -192,9 +171,7 @@ DefaultTrackModifier.propTypes = {
   showNotification: PropTypes.func.isRequired,
   latestTrackRevisions: PropTypes.array.isRequired,
   csrfToken: PropTypes.string.isRequired,
-  snapName: PropTypes.string.isRequired,
-  setDefaultTrack: PropTypes.func.isRequired,
-  clearDefaultTrack: PropTypes.func.isRequired
+  snapName: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -210,9 +187,7 @@ const mapDispatchToProps = dispatch => ({
   openModal: payload => dispatch(openModal(payload)),
   closeModal: () => dispatch(closeModal()),
   showNotification: payload => dispatch(showNotification(payload)),
-  hideNotification: () => dispatch(hideNotification()),
-  setDefaultTrack: () => dispatch(setDefaultTrack()),
-  clearDefaultTrack: () => dispatch(clearDefaultTrack())
+  hideNotification: () => dispatch(hideNotification())
 });
 
 export default connect(

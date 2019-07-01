@@ -4,6 +4,8 @@ import { PropTypes } from "prop-types";
 
 import { closeModal } from "../actions/modal";
 
+import * as actions from "../actions/";
+
 class ModalActionButton extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,13 @@ class ModalActionButton extends Component {
   onClickHandler() {
     const { onClickAction, dispatch } = this.props;
 
-    dispatch(onClickAction);
+    if (onClickAction.reduxAction && this.props[onClickAction.reduxAction]) {
+      // If an action is passed, perform the specific action
+      this.props[onClickAction.reduxAction]();
+    } else {
+      // Otherwise dispatch the action object
+      dispatch(onClickAction);
+    }
 
     this.setState({
       loading: true
@@ -55,11 +63,24 @@ ModalActionButton.propTypes = {
   dispatch: PropTypes.func.isRequired
 };
 
-const mapDispatchToProps = dispatch => ({
-  closeModal: () => dispatch(closeModal())
-});
+const mapActionButtonDispatchToProps = dispatch => {
+  const dispatchObj = {
+    dispatch
+  };
 
-const ModalActionButtonWrapped = connect()(ModalActionButton);
+  Object.keys(actions).forEach(actionKey => {
+    if (typeof actions[actionKey] === "function") {
+      dispatchObj[actionKey] = () => dispatch(actions[actionKey]());
+    }
+  });
+
+  return dispatchObj;
+};
+
+const ModalActionButtonWrapped = connect(
+  null,
+  mapActionButtonDispatchToProps
+)(ModalActionButton);
 
 const Modal = ({ title, content, actions, closeModal }) => {
   if (!title && !content) {
@@ -108,9 +129,13 @@ Modal.propTypes = {
   closeModal: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ modal }) => modal.payload || {};
+const mapStateToProps = ({ modal }) => modal || {};
+
+const mapModalDispatchToProps = dispatch => ({
+  closeModal: () => dispatch(closeModal())
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapModalDispatchToProps
 )(Modal);
