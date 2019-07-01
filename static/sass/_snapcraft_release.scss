@@ -28,20 +28,6 @@
     display: flex;
     margin-bottom: 2px;
 
-    &.is-grabbing,
-    &.is-dragging {
-      opacity: .9; // little workaround for chrome
-
-      .p-tooltip__message,
-      .p-contextual-menu__dropdown {
-        display: none;
-      }
-    }
-
-    &.is-dragging {
-      opacity: .5;
-    }
-
     &.can-drop {
       outline: 1px dashed $color-mid-light;
     }
@@ -108,25 +94,12 @@
     &.is-highlighted {
       background-color: $color-highlighted;
     }
-
-    &.is-draggable {
-      cursor: grab;
-    }
   }
 
   .p-releases-channel__name {
     flex-grow: 1;
     max-width: calc(100% - 55px); // leave space handle and settings menu
     padding-right: $sph-intra--condensed;
-  }
-
-  .p-drag-handle {
-    margin-right: $sph-intra--condensed;
-    visibility: hidden;
-
-    .is-draggable & {
-      visibility: visible;
-    }
   }
 
   // release cell
@@ -145,19 +118,6 @@
     transition-duration: 0s; // vf-animation doesn't allow to do that
 
     .has-active & {
-      opacity: .5;
-    }
-
-    &.is-grabbing,
-    &.is-dragging {
-      opacity: .9; // little workaround for chrome
-
-      .p-tooltip__message {
-        display: none;
-      }
-    }
-
-    &.is-dragging {
       opacity: .5;
     }
 
@@ -184,10 +144,6 @@
       @include vf-animation (#{background-color, border-color}, fast, in);
       background-color: $color-x-light;
       opacity: 1;
-    }
-
-    &.is-draggable {
-      cursor: grab;
     }
 
     &.is-active {
@@ -297,24 +253,11 @@
       background: $color-highlighted;
     }
 
-    .is-draggable {
-      cursor: grab;
-    }
-
     .is-clickable {
       cursor: pointer;
 
       &:hover {
         background-color: $color-x-light;
-      }
-    }
-
-    .is-grabbing,
-    .is-dragging {
-      opacity: .9; // little workaround for chrome
-
-      .p-tooltip__message {
-        display: none;
       }
     }
 
@@ -326,6 +269,34 @@
     td:last-of-type,
     th:last-of-type {
       padding-right: .5rem;
+    }
+  }
+
+  // DND
+  .is-draggable {
+    cursor: grab !important;
+  }
+
+  .is-grabbing,
+  .is-dragging {
+    opacity: .9; // little workaround for chrome
+
+    .p-tooltip__message,
+    .p-contextual-menu__dropdown {
+      display: none !important; // fighting specificity
+    }
+  }
+
+  .is-dragging {
+    opacity: .5 !important; // fighting specificity
+  }
+
+  .p-drag-handle {
+    margin-right: $sph-intra--condensed;
+    visibility: hidden;
+
+    .is-draggable & {
+      visibility: visible;
     }
   }
 
