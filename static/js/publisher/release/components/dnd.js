@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDrag } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 
 export const DND_ITEM_REVISION = "DND_ITEM_REVISION";
 export const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
@@ -10,6 +10,8 @@ export const Handle = () => (
   </span>
 );
 
+// it's a wrapper around react-dnd useDrag hook
+// with some added functionality and workaround for a bug
 export const useDragging = options => {
   const [isGrabbing, setIsGrabbing] = useState(false);
 
@@ -48,3 +50,7 @@ export const useDragging = options => {
 
   return [isDragging, isGrabbing, drag, preview];
 };
+
+// we don't need to add much common functionality to useDrag hook
+// so we just export it as it is
+export { useDrop };

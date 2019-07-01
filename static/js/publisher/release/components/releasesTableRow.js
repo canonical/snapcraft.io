@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { useDrop } from "react-dnd";
 
 import {
   getArchitectures,
@@ -9,7 +8,7 @@ import {
   hasPendingRelease
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
-import { useDragging, DND_ITEM_CHANNEL, Handle } from "./dnd";
+import { useDragging, useDrop, DND_ITEM_CHANNEL, Handle } from "./dnd";
 
 import { promoteChannel } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
