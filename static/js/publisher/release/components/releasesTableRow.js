@@ -9,7 +9,7 @@ import {
   hasPendingRelease
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
-import { useDragging, DND_ITEM_CHANNEL } from "./dnd";
+import { useDragging, DND_ITEM_CHANNEL, Handle } from "./dnd";
 
 import { promoteChannel } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
@@ -259,9 +259,7 @@ const ReleasesTableRow = props => {
               canDrag ? "is-draggable" : ""
             }`}
           >
-            <span className="p-releases__handle">
-              <i className="p-icon--drag" />
-            </span>
+            <Handle />
             <div className="p-releases-channel__name p-tooltip p-tooltip--btm-center">
               <span className="p-release-data__info">
                 <span className="p-release-data__title">{rowTitle}</span>

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import { useDragging, DND_ITEM_REVISION } from "./dnd";
+import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 import { getSelectedRevisions } from "../selectors";
 
@@ -50,9 +50,7 @@ const RevisionsListRow = props => {
       onClick={isSelectable ? revisionSelectChange : null}
     >
       <td>
-        <span className="p-releases__handle">
-          <i className="p-icon--drag" />
-        </span>
+        <Handle />
       </td>
       <td>
         {isSelectable ? (

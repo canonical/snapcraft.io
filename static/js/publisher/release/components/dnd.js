@@ -1,8 +1,14 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDrag } from "react-dnd";
 
 export const DND_ITEM_REVISION = "DND_ITEM_REVISION";
 export const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
+
+export const Handle = () => (
+  <span className="p-drag-handle">
+    <i className="p-icon--drag" />
+  </span>
+);
 
 export const useDragging = options => {
   const [isGrabbing, setIsGrabbing] = useState(false);

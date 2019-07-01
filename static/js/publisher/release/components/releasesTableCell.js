@@ -7,7 +7,7 @@ import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeIcon from "./devmodeIcon";
 import { getChannelName, isInDevmode } from "../helpers";
-import { useDragging, DND_ITEM_REVISION } from "./dnd";
+import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
 
 import { toggleHistory } from "../actions/history";
 import { promoteRevision, undoRelease } from "../actions/pendingReleases";
@@ -221,9 +221,7 @@ const ReleasesTableCell = props => {
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
       >
-        <span className="p-releases__handle">
-          <i className="p-icon--drag" />
-        </span>
+        <Handle />
         {isChannelPendingClose ? (
           <CloseChannelInfo />
         ) : currentRevision ? (
