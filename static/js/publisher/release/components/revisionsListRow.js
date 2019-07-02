@@ -12,7 +12,7 @@ import { getSelectedRevisions } from "../selectors";
 import DevmodeIcon from "./devmodeIcon";
 
 const RevisionsListRow = props => {
-  const { revision, isSelectable, showAllColumns, isPending } = props;
+  const { revision, isSelectable, showAllColumns, isPending, isActive } = props;
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -36,11 +36,11 @@ const RevisionsListRow = props => {
   });
 
   const id = `revision-check-${revision.revision}`;
-  const className = `p-revisions-list__revision is-draggable ${
-    isSelectable ? "is-clickable" : ""
-  } ${isPending || isSelected ? "is-pending" : ""} ${
-    isGrabbing ? "is-grabbing" : ""
-  } ${isDragging ? "is-dragging" : ""}`;
+  const className = `p-revisions-list__row is-draggable ${
+    isActive ? "is-active" : ""
+  } ${isSelectable ? "is-clickable" : ""} ${
+    isPending || isSelected ? "is-pending" : ""
+  } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
 
   return (
     <tr
@@ -61,12 +61,17 @@ const RevisionsListRow = props => {
               id={id}
               onChange={revisionSelectChange}
             />
-            <label className="u-no-margin--bottom" htmlFor={id}>
+            <label
+              className="p-revisions-list__revision u-no-margin--bottom"
+              htmlFor={id}
+            >
               {revision.revision}
             </label>
           </Fragment>
         ) : (
-          <span>{revision.revision}</span>
+          <span className="p-revisions-list__revision">
+            {revision.revision}
+          </span>
         )}
       </td>
       <td>
@@ -103,6 +108,7 @@ RevisionsListRow.propTypes = {
   isSelectable: PropTypes.bool,
   showAllColumns: PropTypes.bool,
   isPending: PropTypes.bool,
+  isActive: PropTypes.bool,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
