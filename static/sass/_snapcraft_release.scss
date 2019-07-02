@@ -215,21 +215,30 @@
       padding-left: 2rem;
     }
 
-    .p-revisions-list__revision {
-      background: $color-light;
+    .p-revisions-list__row {
+      background-color: $color-light;
       border: 0;
       border-bottom: 2px solid $color-x-light;
-    }
 
-    .is-pending {
-      background: $color-highlighted;
-    }
-
-    .is-clickable {
-      cursor: pointer;
-
-      &:hover {
+      &.is-active {
         background-color: $color-x-light;
+
+        .p-revisions-list__revision {
+          font-weight: bold;
+        }
+      }
+
+      &.is-pending {
+        background: $color-highlighted;
+      }
+
+      &.is-clickable {
+        @include vf-animation (#{background-color}, fast, in);
+        cursor: pointer;
+
+        &:hover {
+          background-color: $color-x-light;
+        }
       }
     }
 
