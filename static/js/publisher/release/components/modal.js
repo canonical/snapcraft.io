@@ -4,13 +4,14 @@ import { PropTypes } from "prop-types";
 
 import { closeModal } from "../actions/modal";
 
-import * as actions from "../actions/";
+import { setDefaultTrack, clearDefaultTrack } from "../actions/defaultTrack";
 
 class ModalActionButton extends Component {
   constructor(props) {
     super(props);
 
     this.onClickHandler = this.onClickHandler.bind(this);
+
     this.state = {
       loading: false
     };
@@ -69,19 +70,11 @@ ModalActionButton.propTypes = {
   dispatch: PropTypes.func.isRequired
 };
 
-const mapActionButtonDispatchToProps = dispatch => {
-  const dispatchObj = {
-    dispatch
-  };
-
-  Object.keys(actions).forEach(actionKey => {
-    if (typeof actions[actionKey] === "function") {
-      dispatchObj[actionKey] = () => dispatch(actions[actionKey]());
-    }
-  });
-
-  return dispatchObj;
-};
+const mapActionButtonDispatchToProps = dispatch => ({
+  dispatch,
+  setDefaultTrack: () => dispatch(setDefaultTrack()),
+  clearDefaultTrack: () => dispatch(clearDefaultTrack())
+});
 
 const ModalActionButtonWrapped = connect(
   null,

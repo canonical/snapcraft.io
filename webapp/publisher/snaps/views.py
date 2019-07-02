@@ -641,7 +641,7 @@ def post_release(snap_name):
     data = flask.request.json
 
     if not data:
-        return flask.jsonify({})
+        return flask.jsonify({}), 400
 
     try:
         response = api.post_snap_release(flask.session, snap_name, data)
@@ -670,7 +670,7 @@ def post_close_channel(snap_name):
     data = flask.request.json
 
     if not data:
-        return flask.jsonify({})
+        return flask.jsonify({}), 400
 
     try:
         snap_id = api.get_snap_id(snap_name, flask.session)
@@ -706,7 +706,7 @@ def post_default_track(snap_name):
     data = flask.request.json
 
     if not data:
-        return flask.jsonify({})
+        return flask.jsonify({}), 400
 
     try:
         snap_id = api.get_snap_id(snap_name, flask.session)

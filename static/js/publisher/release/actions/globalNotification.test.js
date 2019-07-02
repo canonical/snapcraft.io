@@ -22,7 +22,7 @@ describe("notification actions", () => {
       const hideNotificationAction = hideNotification();
 
       expect(hideNotificationAction.type).toBe(HIDE_NOTIFICATION);
-      expect(hideNotificationAction.paylaod).toBeUndefined();
+      expect(hideNotificationAction.payload).toBeUndefined();
     });
   });
 });

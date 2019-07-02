@@ -98,7 +98,7 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
     def test_post_no_data(self):
         response = self.client.post(self.endpoint_url)
 
-        assert response.status_code == 200
+        assert response.status_code == 400
         assert response.get_json() == {}
 
     @responses.activate
