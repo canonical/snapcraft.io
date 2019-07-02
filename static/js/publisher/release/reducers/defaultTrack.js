@@ -1,24 +1,9 @@
-import {
-  SET_DEFAULT_TRACK_SUCCESS,
-  SET_DEFAULT_TRACK_ERROR
-} from "../actions/defaultTrack";
+import { SET_DEFAULT_TRACK_SUCCESS } from "../actions/defaultTrack";
 
-export default function defaultTrack(
-  state = {
-    track: "latest"
-  },
-  action
-) {
+export default function defaultTrack(state = "latest", action) {
   switch (action.type) {
     case SET_DEFAULT_TRACK_SUCCESS:
-      return {
-        ...state,
-        track: action.payload.track
-      };
-    case SET_DEFAULT_TRACK_ERROR:
-      return {
-        ...state
-      };
+      return action.payload;
     default:
       return state;
   }

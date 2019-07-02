@@ -1,6 +1,9 @@
-import notification from "./notification";
+import notification from "./globalNotification";
 
-import { SHOW_NOTIFICATION, HIDE_NOTIFICATION } from "../actions/notification";
+import {
+  SHOW_NOTIFICATION,
+  HIDE_NOTIFICATION
+} from "../actions/globalNotification";
 
 describe("notification", () => {
   it("should return the initial state", () => {
@@ -40,7 +43,6 @@ describe("notification", () => {
       const result = notification({}, hideNotificationAction);
 
       expect(result.visible).toBe(false);
-      expect(result.payload).toBeUndefined();
     });
   });
 });

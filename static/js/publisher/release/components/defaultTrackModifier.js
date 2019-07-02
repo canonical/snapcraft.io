@@ -3,8 +3,11 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { getTracks, getTrackRevisions } from "../selectors";
-import { CLOSE_MODAL, openModal, closeModal } from "../actions/modal";
-import { showNotification, hideNotification } from "../actions/notification";
+import { CLOSE_MODAL, openModal } from "../actions/modal";
+import {
+  showNotification,
+  hideNotification
+} from "../actions/globalNotification";
 
 class DefaultTrackModifier extends Component {
   constructor(props) {
@@ -12,35 +15,6 @@ class DefaultTrackModifier extends Component {
 
     this.setDefaultTrackHandler = this.setDefaultTrackHandler.bind(this);
     this.clearDefaultTrackHandler = this.clearDefaultTrackHandler.bind(this);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { defaultTrack, closeModal, showNotification, snapName } = this.props;
-    if (defaultTrack.track !== prevProps.defaultTrack.track) {
-      closeModal();
-
-      if (defaultTrack.track === null) {
-        showNotification({
-          status: "success",
-          appearance: "positive",
-          content: `The default track for ${snapName} has been removed. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from latest track.`,
-          canDismiss: true
-        });
-      } else {
-        showNotification({
-          status: "success",
-          appearance: "positive",
-          content: `The default track for ${snapName} has been set to ${
-            defaultTrack.track
-          }. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track ${
-            defaultTrack.track
-          }. Clients already tracking \`${
-            prevProps.defaultTrack.track
-          }\` will now be tracking ${defaultTrack.track} on next refresh.`,
-          canDismiss: true
-        });
-      }
-    }
   }
 
   clearDefaultTrackHandler() {
@@ -55,7 +29,7 @@ class DefaultTrackModifier extends Component {
           onClickAction: {
             reduxAction: "clearDefaultTrack"
           },
-          label: `Clear ${defaultTrack.track} as default track`
+          label: `Clear ${defaultTrack} as default track`
         },
         {
           appearance: "neutral",
@@ -109,7 +83,7 @@ class DefaultTrackModifier extends Component {
         >
           When setting {currentTrack} as default track, any device
           <br />
-          currently tracking {defaultTrack.track} will switch to tracking
+          currently tracking {defaultTrack} will switch to tracking
           <br />
           {currentTrack} on the next refresh, and new installs that
           <br />
@@ -147,8 +121,8 @@ class DefaultTrackModifier extends Component {
 
   render() {
     const { defaultTrack, currentTrack } = this.props;
-    const isCurrentDefault = defaultTrack.track === currentTrack;
-    const defaultIsLatest = defaultTrack.track === "latest";
+    const isCurrentDefault = defaultTrack === currentTrack;
+    const defaultIsLatest = defaultTrack === "latest";
 
     if (currentTrack === "latest") {
       return null;
@@ -164,9 +138,8 @@ class DefaultTrackModifier extends Component {
 }
 
 DefaultTrackModifier.propTypes = {
-  defaultTrack: PropTypes.object.isRequired,
+  defaultTrack: PropTypes.string,
   currentTrack: PropTypes.string.isRequired,
-  closeModal: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   latestTrackRevisions: PropTypes.array.isRequired,
@@ -177,7 +150,7 @@ DefaultTrackModifier.propTypes = {
 const mapStateToProps = state => ({
   currentTrack: state.currentTrack,
   tracks: getTracks(state),
-  latestTrackRevisions: getTrackRevisions(state.channelMap, "latest"),
+  latestTrackRevisions: getTrackRevisions(state, "latest"),
   csrfToken: state.options.csrfToken,
   snapName: state.options.snapName,
   defaultTrack: state.defaultTrack
@@ -185,7 +158,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   openModal: payload => dispatch(openModal(payload)),
-  closeModal: () => dispatch(closeModal()),
   showNotification: payload => dispatch(showNotification(payload)),
   hideNotification: () => dispatch(hideNotification())
 });

@@ -4,7 +4,7 @@ export * from "./currentTrack";
 export * from "./defaultTrack";
 export * from "./history";
 export * from "./modal";
-export * from "./notification";
+export * from "./globalNotification";
 export * from "./pendingCloses";
 export * from "./pendingReleases";
 export * from "./releases";

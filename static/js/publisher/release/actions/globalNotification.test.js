@@ -3,7 +3,7 @@ import {
   HIDE_NOTIFICATION,
   showNotification,
   hideNotification
-} from "./notification";
+} from "./globalNotification";
 
 describe("notification actions", () => {
   describe("showNotification", () => {
@@ -12,9 +12,7 @@ describe("notification actions", () => {
 
       expect(showNotificationAction.type).toBe(SHOW_NOTIFICATION);
       expect(showNotificationAction.payload).toEqual({
-        payload: {
-          status: "success"
-        }
+        status: "success"
       });
     });
   });

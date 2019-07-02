@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import "whatwg-fetch";
 
 import ReleasesTable from "./components/releasesTable";
-import Notification from "./components/notification";
+import Notification from "./components/globalNotification";
 import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
@@ -18,7 +18,10 @@ import {
   closeChannelSuccess
 } from "./actions/channelMap";
 import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
-import { showNotification, hideNotification } from "./actions/notification";
+import {
+  showNotification,
+  hideNotification
+} from "./actions/globalNotification";
 
 import { getPendingChannelMap } from "./selectors";
 

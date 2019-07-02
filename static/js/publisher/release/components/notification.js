@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-
-import { hideNotification } from "../actions/notification";
 
 const notificationStyle = (element = "", modifier = "") => {
   element = element ? "__" + element : "";
@@ -15,14 +12,20 @@ const notificationStyle = (element = "", modifier = "") => {
 
 class Notification extends Component {
   render() {
-    const { status, appearance, canDismiss, hideNotification } = this.props;
+    const {
+      status,
+      appearance,
+      canDismiss,
+      hideNotification,
+      children
+    } = this.props;
     const className = notificationStyle("", appearance);
 
     return (
       <div className={`p-notification ${className}`}>
         <p className={notificationStyle("response")}>
           {status && this.getStatus(this.props.status)}
-          {this.props.content}
+          {children}
         </p>
         {canDismiss && (
           <button
@@ -45,7 +48,7 @@ class Notification extends Component {
 }
 
 Notification.propTypes = {
-  content: PropTypes.node,
+  children: PropTypes.node,
   appearance: PropTypes.oneOf([
     "positive",
     "caution",
@@ -57,13 +60,4 @@ Notification.propTypes = {
   hideNotification: PropTypes.func
 };
 
-const mapStateToProps = ({ notification }) => notification.payload;
-
-const mapDispatchToProps = dispatch => ({
-  hideNotification: () => dispatch(hideNotification())
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Notification);
+export default Notification;

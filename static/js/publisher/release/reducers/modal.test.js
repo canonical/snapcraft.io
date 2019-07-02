@@ -40,7 +40,6 @@ describe("modal", () => {
       const result = modal({}, closeModalAction);
 
       expect(result.visible).toBe(false);
-      expect(result.payload).toBeUndefined();
     });
   });
 });

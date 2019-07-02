@@ -594,7 +594,7 @@ describe("getTrackRevisions", () => {
       }
     };
 
-    expect(getTrackRevisions(channelMap, "test")).toEqual([
+    expect(getTrackRevisions({ channelMap }, "test")).toEqual([
       {
         test64: {
           revision: 1

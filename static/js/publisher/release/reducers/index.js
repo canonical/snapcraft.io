@@ -6,7 +6,7 @@ import currentTrack from "./currentTrack";
 import defaultTrack from "./defaultTrack";
 import history from "./history";
 import modal from "./modal";
-import notification from "./notification";
+import notification from "./globalNotification";
 import options from "./options";
 import pendingCloses from "./pendingCloses";
 import pendingReleases from "./pendingReleases";

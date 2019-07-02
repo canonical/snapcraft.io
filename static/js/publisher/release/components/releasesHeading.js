@@ -70,7 +70,7 @@ const mapStateToProps = state => {
   return {
     tracks: getTracks(state),
     currentTrack: state.currentTrack,
-    defaultTrack: state.defaultTrack.track
+    defaultTrack: state.defaultTrack
   };
 };
 

@@ -1,4 +1,7 @@
-import { SHOW_NOTIFICATION, HIDE_NOTIFICATION } from "../actions/notification";
+import {
+  SHOW_NOTIFICATION,
+  HIDE_NOTIFICATION
+} from "../actions/globalNotification";
 
 export default function notification(state = { visible: false }, action) {
   switch (action.type) {
