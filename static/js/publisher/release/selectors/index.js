@@ -196,3 +196,10 @@ export function hasPendingRelease(state, channel, arch) {
       releasedRevision.revision !== currentRevision.revision)
   );
 }
+
+export function getTrackRevisions({ channelMap }, track) {
+  const trackKeys = Object.keys(channelMap).filter(
+    trackName => trackName.indexOf(track) == 0
+  );
+  return trackKeys.map(trackName => channelMap[trackName]);
+}

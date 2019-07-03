@@ -3,7 +3,11 @@ import { combineReducers } from "redux";
 import availableRevisionsSelect from "./availableRevisionsSelect";
 import channelMap from "./channelMap";
 import currentTrack from "./currentTrack";
+import defaultTrack from "./defaultTrack";
 import history from "./history";
+import modal from "./modal";
+import notification from "./globalNotification";
+import options from "./options";
 import pendingCloses from "./pendingCloses";
 import pendingReleases from "./pendingReleases";
 import releases from "./releases";
@@ -13,7 +17,11 @@ const releasesReducers = combineReducers({
   availableRevisionsSelect,
   channelMap,
   currentTrack,
+  defaultTrack,
   history,
+  modal,
+  notification,
+  options,
   pendingCloses,
   pendingReleases,
   revisions,

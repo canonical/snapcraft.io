@@ -2,10 +2,10 @@ import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 
-class PostCloseChannelPageNotAuth(BaseTestCases.EndpointLoggedOut):
+class PostDefaultTrackNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/{}/releases/close-channel".format(snap_name)
+        endpoint_url = "/{}/releases/default-track".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -14,11 +14,11 @@ class PostCloseChannelPageNotAuth(BaseTestCases.EndpointLoggedOut):
         )
 
 
-class PostDataCloseChannelGetSnapIdPage(BaseTestCases.EndpointLoggedIn):
+class PostDefaultTrackGetSnapId(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/{}/releases/close-channel".format(snap_name)
-        json = {"info": "json"}
+        endpoint_url = "/{}/releases/default-track".format(snap_name)
+        json = {"default-track": "test"}
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
@@ -55,16 +55,17 @@ class PostDataCloseChannelGetSnapIdPage(BaseTestCases.EndpointLoggedIn):
         assert response.get_json() == []
 
 
-class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
+class PostDefaultTrack(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         snap_name = "test-snap"
         snap_id = "test_id"
-        endpoint_url = "/{}/releases/close-channel".format(snap_name)
+        endpoint_url = "/{}/releases/default-track".format(snap_name)
         api_url = (
             "https://dashboard.snapcraft.io/dev/api/"
-            "snaps/{}/close".format(snap_id)
-        )
-        json = {"info": "json"}
+            "snaps/{}/metadata?conflict_on_update=true"
+        ).format(snap_id)
+
+        json = {"default-track": "test"}
 
         api_info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_info_url = api_info_url.format(snap_name)
@@ -79,7 +80,7 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
             snap_name=snap_name,
             api_url=api_url,
             endpoint_url=endpoint_url,
-            method_api="POST",
+            method_api="PUT",
             method_endpoint="POST",
             json=json,
         )
@@ -87,7 +88,7 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
     @responses.activate
     def test_page_not_found(self):
         payload = {"error_list": []}
-        responses.add(responses.POST, self.api_url, json=payload, status=404)
+        responses.add(responses.PUT, self.api_url, json=payload, status=404)
 
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)
@@ -105,19 +106,19 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
     def test_post_data(self):
         payload = {}
 
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
+        responses.add(responses.PUT, self.api_url, json=payload, status=200)
 
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)
 
         result = {"success": True}
-        assert response.json == result
+        self.assertEqual(response.json, result)
 
     @responses.activate
     def test_return_error(self):
         payload = {"error_list": [{"code": "code", "name": ["message"]}]}
 
-        responses.add(responses.POST, self.api_url, json=payload, status=400)
+        responses.add(responses.PUT, self.api_url, json=payload, status=400)
 
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)
@@ -126,12 +127,12 @@ class PostDataCloseChannelPage(BaseTestCases.EndpointLoggedIn):
             "errors": [{"code": "code", "name": ["message"]}],
             "success": False,
         }
-        assert response.json == expected_response
+        self.assertEqual(response.json, expected_response)
 
     @responses.activate
     def test_error_4xx(self):
         payload = {"error_list": []}
-        responses.add(responses.POST, self.api_url, json=payload, status=400)
+        responses.add(responses.PUT, self.api_url, json=payload, status=400)
 
         response = self.client.post(self.endpoint_url, json=self.json)
         self.check_call_by_api_url(responses.calls)

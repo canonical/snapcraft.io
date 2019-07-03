@@ -600,6 +600,7 @@ def get_release_history(snap_name):
         "release_history": release_history,
         "private": info.get("private"),
         "channel_maps_list": info.get("channel_maps_list"),
+        "default_track": info.get("default_track"),
     }
 
     return flask.render_template("publisher/release-history.html", **context)
@@ -640,7 +641,7 @@ def post_release(snap_name):
     data = flask.request.json
 
     if not data:
-        return flask.jsonify({})
+        return flask.jsonify({}), 400
 
     try:
         response = api.post_snap_release(flask.session, snap_name, data)
@@ -669,7 +670,7 @@ def post_close_channel(snap_name):
     data = flask.request.json
 
     if not data:
-        return flask.jsonify({})
+        return flask.jsonify({}), 400
 
     try:
         snap_id = api.get_snap_id(snap_name, flask.session)
@@ -697,6 +698,41 @@ def post_close_channel(snap_name):
 
     response["success"] = True
     return flask.jsonify(response)
+
+
+@publisher_snaps.route("/<snap_name>/releases/default-track", methods=["POST"])
+@login_required
+def post_default_track(snap_name):
+    data = flask.request.json
+
+    if not data:
+        return flask.jsonify({}), 400
+
+    try:
+        snap_id = api.get_snap_id(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return flask.jsonify(api_response_error_list.errors), 400
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    try:
+        api.snap_metadata(snap_id, flask.session, data)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            response = {
+                "errors": api_response_error_list.errors,
+                "success": False,
+            }
+            return flask.jsonify(response), 400
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    return flask.jsonify({"success": True})
 
 
 @publisher_snaps.route("/account/register-snap")

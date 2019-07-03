@@ -4,9 +4,10 @@ import { connect } from "react-redux";
 import "whatwg-fetch";
 
 import ReleasesTable from "./components/releasesTable";
-import Notification from "./components/notification";
+import Notification from "./components/globalNotification";
 import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
+import Modal from "./components/modal";
 
 import { updateRevisions } from "./actions/revisions";
 import { updateReleases } from "./actions/releases";
@@ -17,6 +18,11 @@ import {
   closeChannelSuccess
 } from "./actions/channelMap";
 import { undoRelease, cancelPendingReleases } from "./actions/pendingReleases";
+import {
+  showNotification,
+  hideNotification
+} from "./actions/globalNotification";
+
 import { getPendingChannelMap } from "./selectors";
 
 import {
@@ -46,7 +52,6 @@ class ReleasesController extends Component {
     );
 
     this.state = {
-      error: null,
       isLoading: false
     };
   }
@@ -168,6 +173,7 @@ class ReleasesController extends Component {
   }
 
   handleReleaseError(error) {
+    const { showNotification } = this.props;
     let message = error.message || ERROR_MESSAGE;
 
     // try to find error messages in response json
@@ -186,8 +192,10 @@ class ReleasesController extends Component {
       }
     }
 
-    this.setState({
-      error: message
+    showNotification({
+      status: "error",
+      appearance: "negative",
+      content: message
     });
   }
 
@@ -243,7 +251,7 @@ class ReleasesController extends Component {
   }
 
   releaseRevisions() {
-    const { pendingReleases, pendingCloses } = this.props;
+    const { pendingReleases, pendingCloses, hideNotification } = this.props;
     const releases = Object.keys(pendingReleases).map(id => {
       return {
         id,
@@ -252,7 +260,8 @@ class ReleasesController extends Component {
       };
     });
 
-    this.setState({ isLoading: true, error: null });
+    this.setState({ isLoading: true });
+    hideNotification();
     this.fetchReleases(releases)
       .then(() => this.fetchCloses(pendingCloses))
       .then(() => this.fetchUpdatedReleasesHistory())
@@ -262,14 +271,12 @@ class ReleasesController extends Component {
   }
 
   render() {
+    const { notification } = this.props;
+    const { visible } = notification;
     return (
       <Fragment>
         <div className="row">
-          {this.state.error && (
-            <Notification status="error" appearance="negative">
-              {this.state.error}
-            </Notification>
-          )}
+          {visible && <Notification />}
           <ReleasesHeading />
           <ReleasesConfirm
             isLoading={this.state.isLoading}
@@ -277,8 +284,8 @@ class ReleasesController extends Component {
             releaseRevisions={this.releaseRevisions.bind(this)}
           />
         </div>
-
         <ReleasesTable />
+        {this.props.showModal && <Modal />}
       </Fragment>
     );
   }
@@ -297,6 +304,8 @@ ReleasesController.propTypes = {
   pendingCloses: PropTypes.array,
   pendingReleases: PropTypes.object,
   pendingChannelMap: PropTypes.object,
+  notification: PropTypes.object,
+  showModal: PropTypes.bool,
 
   closeChannelSuccess: PropTypes.func,
   releaseRevisionSuccess: PropTypes.func,
@@ -305,7 +314,9 @@ ReleasesController.propTypes = {
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
   undoRelease: PropTypes.func,
-  cancelPendingReleases: PropTypes.func
+  cancelPendingReleases: PropTypes.func,
+  showNotification: PropTypes.func,
+  hideNotification: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -316,7 +327,9 @@ const mapStateToProps = state => {
     releasedChannels: state.channelMap,
     pendingCloses: state.pendingCloses,
     pendingReleases: state.pendingReleases,
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+    showModal: state.modal.visible,
+    notification: state.notification
   };
 };
 
@@ -331,7 +344,9 @@ const mapDispatchToProps = dispatch => {
     updateReleases: releases => dispatch(updateReleases(releases)),
     undoRelease: (revision, channel) =>
       dispatch(undoRelease(revision, channel)),
-    cancelPendingReleases: () => dispatch(cancelPendingReleases())
+    cancelPendingReleases: () => dispatch(cancelPendingReleases()),
+    showNotification: payload => dispatch(showNotification(payload)),
+    hideNotification: () => dispatch(hideNotification())
   };
 };
 

@@ -10,23 +10,28 @@ const notificationStyle = (element = "", modifier = "") => {
   return className;
 };
 
-export default class Notification extends Component {
+class Notification extends Component {
   render() {
-    const { status, appearance, onRemoveClick } = this.props;
-
+    const {
+      status,
+      appearance,
+      canDismiss,
+      hideNotification,
+      children
+    } = this.props;
     const className = notificationStyle("", appearance);
 
     return (
-      <div className={className}>
+      <div className={`p-notification ${className}`}>
         <p className={notificationStyle("response")}>
           {status && this.getStatus(this.props.status)}
-          {this.props.children}
+          {children}
         </p>
-        {onRemoveClick && (
+        {canDismiss && (
           <button
             className="p-icon--close"
             aria-label="Close notification"
-            onClick={onRemoveClick}
+            onClick={hideNotification}
           >
             Close
           </button>
@@ -51,5 +56,8 @@ Notification.propTypes = {
     "information"
   ]),
   status: PropTypes.string,
-  onRemoveClick: PropTypes.func
+  canDismiss: PropTypes.bool,
+  hideNotification: PropTypes.func
 };
+
+export default Notification;

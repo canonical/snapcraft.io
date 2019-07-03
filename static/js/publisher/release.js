@@ -17,7 +17,12 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
   const store = createStore(
     releases,
     {
-      currentTrack: options.defaultTrack || "latest"
+      currentTrack: options.defaultTrack || "latest",
+      defaultTrack: options.defaultTrack,
+      options: {
+        ...options,
+        snapName
+      }
     },
     composeEnhancers(applyMiddleware(thunk))
   );
