@@ -15,6 +15,7 @@ const isInViewport = el => {
 
 export default function triggerEventWhenVisible(selector) {
   const el = document.querySelector(selector);
+  const origin = window.location.href;
 
   if (isInViewport(el)) {
     triggerEvent(
