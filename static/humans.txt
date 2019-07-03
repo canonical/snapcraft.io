@@ -64,4 +64,4 @@
    Language: English
    Standards: HTML5 CSS3
    Software: Flask, React, Vanilla framework, github, zenhub
-   IDE: vscode, emacs, sketch
+   IDE: atom, vscode, emacs, sketch

@@ -3,12 +3,7 @@ from webapp.snapcraft import logic
 
 
 def snapcraft_blueprint():
-    snapcraft = flask.Blueprint(
-        "snapcraft",
-        __name__,
-        template_folder="templates",
-        static_folder="static",
-    )
+    snapcraft = flask.Blueprint("snapcraft", __name__)
 
     @snapcraft.route("/")
     def homepage():
@@ -250,12 +245,7 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/humans.txt")
     def humans():
-        resp = flask.make_response(
-            flask.render_template("snapcraft/humans.txt")
-        )
-        resp.headers["Content-Type"] = "text/plain; charset=utf-8"
-
-        return resp
+        return flask.send_file("../static/humans.txt")
 
     @snapcraft.route("/_status/check")
     def check():
