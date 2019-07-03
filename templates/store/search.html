@@ -72,8 +72,12 @@
         {% endif %}
     {% else %}
       <div class="row">
-        <h2>We couldn't find anything for your search <div class="no-search-query">{{query}}.</div></h2>
-        <h4>Try using some different, or more general keywords.</h4>
+        {% if query %}
+          <h2>We couldn't find anything for your search <div class="no-search-query">{{query}}.</div></h2>
+          <h4>Try using some different, or more general keywords.</h4>
+        {% else %}
+          <h2>We couldn't find the category <div class="no-search-query">{{category_display}}.</div></h2>
+        {% endif %}
       </div>
     {% endif %}
   </section>

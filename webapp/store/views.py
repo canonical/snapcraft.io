@@ -200,7 +200,7 @@ def store_blueprint(store_query=None, testing=False):
         number_of_featured_snaps = 19
 
         if snap_category_display and page == 1:
-            if snaps_results[0]:
+            if snaps_results and snaps_results[0]:
                 if snaps_results[0]["icon_url"] == "":
                     snaps_results = logic.promote_snap_with_icon(snaps_results)
 
