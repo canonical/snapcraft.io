@@ -1,0 +1,67 @@
+/* TEAM */
+   Web developer: Bartek Szopka
+   Location: Poznań, Poland
+
+   Web developer: João Figueiredo Martins
+   Location: London, UK
+
+   UX designer: Jordan Hughes
+   Location: London, UK
+
+   UX designer: Juan Real
+   Location: London, UK
+
+   Web developer: Luke Wesley-Holley
+   Location: Leeds, UK
+
+   Web developer: Robin Winslow
+   Location: Derby, UK
+
+   Web developer: Thomas Bille
+   Location: London, UK
+
+/* THANKS */
+   Name: Alan Pope
+   Location: Farnborough, UK
+
+   Name: Carla Berkers
+   Location: London, UK
+
+   Name: Celso Providelo
+   Location: São Carlos, Brazil
+
+   Name: Daniel Manrique
+   Location: Montréal, Canada
+
+   Name: Evan Dandrea
+   Location: London, UK
+
+   Name: Facundo Batista
+   Location: Buenos Aires, Argentina
+
+   Name: Greg Hale
+   Location: London, UK
+
+   Name: Igor Ljubuncic
+   Location: London, UK
+
+   Name: Martin Wimpress
+   Location: Basingstoke, UK
+
+   Name: Matthew Paul Thomas
+   Location: London, UK
+
+   Name: Simon Davy
+   Location: Leeds, UK
+
+   Name: Tony Simpson
+   Location: Leeds, UK
+
+   Name: Will Moggridge
+   Location: London, UK
+
+/* SITE */
+   Language: English
+   Standards: HTML5 CSS3
+   Software: Flask, React, Vanilla framework, github, zenhub
+   IDE: vscode, emacs, sketch

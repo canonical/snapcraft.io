@@ -6,8 +6,8 @@ def snapcraft_blueprint():
     snapcraft = flask.Blueprint(
         "snapcraft",
         __name__,
-        template_folder="/templates",
-        static_folder="/static",
+        template_folder="templates",
+        static_folder="static",
     )
 
     @snapcraft.route("/")
@@ -247,6 +247,15 @@ def snapcraft_blueprint():
     @snapcraft.route("/robots.txt")
     def robots():
         return flask.Response("", mimetype="text/plain")
+
+    @snapcraft.route("/humans.txt")
+    def humans():
+        resp = flask.make_response(
+            flask.render_template("snapcraft/humans.txt")
+        )
+        resp.headers["Content-Type"] = "text/plain; charset=utf-8"
+
+        return resp
 
     @snapcraft.route("/_status/check")
     def check():
