@@ -2,6 +2,7 @@ import flask
 import webapp.api.dashboard as api
 import webapp.api.marketo as marketo_api
 from webapp import authentication
+from webapp.api import github
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiCircuitBreaker,
@@ -12,7 +13,9 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
+from webapp.database import db
 from webapp.decorators import login_required
+from webapp.models.user import User
 
 account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
@@ -99,12 +102,19 @@ def get_account_details():
     except Exception:
         pass
 
+    # Get linked accounts info from database
+    user = (
+        db.query(User).filter(User.email == flask_user["email"]).one_or_none()
+    )
+
     context = {
         "image": flask_user["image"],
         "username": flask_user["nickname"],
         "displayname": flask_user["fullname"],
         "email": flask_user["email"],
         "subscriptions": subscriptions,
+        "user": user,
+        "github_app": github.GITHUB_AUTH_CLIENT_ID,
     }
 
     return flask.render_template("publisher/account-details.html", **context)

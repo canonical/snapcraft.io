@@ -4,6 +4,7 @@ import responses
 from flask_testing import TestCase
 
 from webapp.app import create_app
+from webapp.models.user import User
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True
@@ -35,8 +36,8 @@ class BuilderGithubAuth(TestCase):
 
     @responses.activate
     def test_verify_fails_bad_secret(self):
+        expected_location = "/account/details"
         response = self.client.get("/build/auth/verify")
-        expected_location = "build/"
 
         with self.client.session_transaction() as session:
             category, flash = session["_flashes"][0]
@@ -49,7 +50,7 @@ class BuilderGithubAuth(TestCase):
 
     @responses.activate
     def test_failed_exchange_bad_json(self):
-        expected_location = "build/"
+        expected_location = "/account/details"
 
         # Set a test auth secret in session
         with self.client.session_transaction() as session:
@@ -73,7 +74,7 @@ class BuilderGithubAuth(TestCase):
 
     @responses.activate
     def test_failed_exchange_not_ok(self):
-        expected_location = "build/"
+        expected_location = "/account/details"
 
         # Set a test auth secret in session
         with self.client.session_transaction() as session:
@@ -97,7 +98,7 @@ class BuilderGithubAuth(TestCase):
 
     @responses.activate
     def test_failed_exchange_no_access_token(self):
-        expected_location = "build/"
+        expected_location = "/account/details"
 
         # Set a test auth secret in session
         with self.client.session_transaction() as session:
@@ -120,8 +121,9 @@ class BuilderGithubAuth(TestCase):
         self.assertRedirects(response, expected_location)
 
     @responses.activate
-    def test_successful_exchange(self):
-        expected_location = "build/"
+    @unittest.mock.patch("webapp.builder.views.db")
+    def test_successful_exchange(self, db):
+        expected_location = "/account/details"
 
         with self.client.session_transaction() as session:
             session["github_auth_secret"] = "test"
@@ -133,14 +135,35 @@ class BuilderGithubAuth(TestCase):
             status=200,
         )
 
+        responses.add(
+            responses.GET,
+            "https://api.github.com/user",
+            json={"name": "Test", "login": "test"},
+            status=200,
+        )
+
+        with self.client.session_transaction() as session:
+            session["openid"] = {"email": "test@test.test"}
+
+        # No user in the database
+        db.query().filter().first.return_value = None
+
         response = self.client.get("/build/auth/verify?state=test")
+
+        db.query.assert_called_with(User)
+
+        db.add.assert_called_once()
+        user = db.add.call_args[0][0]
+        self.assertEqual(user.email, "test@test.test")
+        self.assertEqual(user.github_name, "Test")
+        self.assertEqual(user.github_username, "test")
+        self.assertEqual(user.github_token, "test_token")
+
+        db.commit.assert_called_once()
 
         with self.client.session_transaction() as session:
             category, flash = session["_flashes"][0]
             self.assertEqual("positive", category)
-            self.assertEqual("Authenticated with GitHub.", flash)
-
-            self.assertEqual(True, session["github_auth"])
-            self.assertEqual("test_token", session["github_token"])
+            self.assertEqual("GitHub account connected.", flash)
 
         self.assertRedirects(response, expected_location)

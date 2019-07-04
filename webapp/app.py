@@ -14,6 +14,7 @@ import webapp.api
 import webapp.helpers as helpers
 from webapp.blog.views import blog
 from webapp.builder.views import builder
+from webapp.database import init_db
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
@@ -54,6 +55,7 @@ def create_app(testing=False):
 
     if app.config["WEBAPP"] == "snapcraft":
         init_snapcraft(app, testing)
+        init_db()
     else:
         init_brandstore(app)
 

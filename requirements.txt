@@ -17,6 +17,7 @@ requests==2.21.0
 requests-cache==0.4.13
 responses==0.9.0
 ruamel.yaml==0.15.72
+sqlalchemy==1.3.5
 talisker[gunicorn]==0.14.3
 
 # Temporary fix to SSO redirect issue
