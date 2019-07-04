@@ -28,9 +28,9 @@ export default function initAccordion(accordionContainerSelector) {
       const target = e.target.closest(".p-accordion__tab");
       if (target && !target.disabled) {
         // Find any open panels within the container and close them.
-        e.currentTarget
-          .querySelectorAll("[aria-expanded=true]")
-          .forEach(element => toggleAccordion(element, false));
+        Array.from(
+          e.currentTarget.querySelectorAll("[aria-expanded=true]")
+        ).forEach(element => toggleAccordion(element, false));
         // Open the target.
         toggleAccordion(target, true);
       }
