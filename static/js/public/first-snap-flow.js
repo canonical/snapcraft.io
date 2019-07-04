@@ -3,12 +3,12 @@
 import "whatwg-fetch";
 
 function install(language) {
-  const osPickers = document.querySelectorAll(".js-os-select");
-  const osWrappers = document.querySelectorAll(".js-os-wrapper");
+  const osPickers = Array.from(document.querySelectorAll(".js-os-select"));
+  const osWrappers = Array.from(document.querySelectorAll(".js-os-wrapper"));
 
   function select(selectedOs) {
     if (osWrappers) {
-      Array.prototype.slice.call(osWrappers).forEach(function(wrapper) {
+      osWrappers.forEach(function(wrapper) {
         wrapper.classList.add("u-hide");
       });
     }
@@ -32,7 +32,7 @@ function install(language) {
     const isLinux = !!userAgent.match(/(Linux)|(X11)/);
     const userOS = isMac ? "macos" : isLinux ? "linux" : null;
 
-    Array.prototype.slice.call(osPickers).forEach(function(os) {
+    osPickers.forEach(function(os) {
       if (os.dataset.os === userOS) {
         os.classList.add("is-selected");
       }
@@ -70,7 +70,7 @@ function install(language) {
 
     if (osWrappers) {
       osWrappers.forEach(function(wrapper) {
-        const rows = wrapper.querySelectorAll(".js-os-type");
+        const rows = Array.from(wrapper.querySelectorAll(".js-os-type"));
         if (rows) {
           rows.forEach(function(row) {
             row.classList.add("u-hide");
