@@ -99,6 +99,35 @@ Account details — Linux software in the Snap Store
       </div>
     </div>
   {% endif %}
+  <div class="row">
+    <div class="col-2">
+      <p>GitHub Account:</p>
+    </div>
+    {% if user.github_name and user.github_username %}
+      <div class="col-6">
+        <p>
+          <i class="p-icon--github"></i> <b>{{ user.github_name }}</b> ({{ user.github_username }})
+        </p>
+        <p>
+          <a class="p-link--external" href="https://github.com/settings/connections/applications/{{github_app}}">
+            Review application access
+          </a>
+        </p>
+        <p>
+          <a href="{{ url_for('builder.disconnect') }}">Disconnect</a>
+        </p>
+      </div>
+    {% else %}
+      <div class="col-6">
+        <a href="{{ url_for('builder.authenticate') }}">
+          <i class="p-icon--github"></i> Connect GitHub Account
+        </a>
+        <p class="p-form-help-text">
+          Get automated builds for your snaps by connecting your GitHub account with snapcraft.io.
+        </p>
+      </div>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}
 

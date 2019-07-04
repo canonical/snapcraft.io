@@ -18,11 +18,9 @@ from canonicalwebteam.yaml_responses.flask_helpers import (
     prepare_redirects,
 )
 from webapp.blog.views import blog
-<<<<<<< HEAD
-from webapp.docs.views import init_docs
-=======
 from webapp.builder.views import builder
->>>>>>> Add builder blueprint
+from webapp.database import init_db
+from webapp.docs.views import init_docs
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
@@ -66,6 +64,7 @@ def create_app(testing=False):
 
     if app.config["WEBAPP"] == "snapcraft":
         init_snapcraft(app, testing)
+        init_db()
     else:
         init_brandstore(app)
 
