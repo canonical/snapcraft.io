@@ -32,6 +32,26 @@ function triggerEvent(category, from, to, label) {
   }
 }
 
+function triggerCopyEvent(category, clipboardTarget) {
+  const clipboardTargetEl = document.querySelector(clipboardTarget);
+
+  let copiedValue = "";
+  if (clipboardTargetEl.value) {
+    copiedValue = clipboardTargetEl.value.trim();
+  } else if (clipboardTargetEl.text) {
+    clipboardTargetEl.text.trim();
+  } else if (clipboardTargetEl.innerText) {
+    clipboardTargetEl.innerText.trim();
+  }
+
+  triggerEvent(
+    category,
+    origin,
+    clipboardTarget,
+    `Copied code: ${copiedValue}`
+  );
+}
+
 if (typeof dataLayer !== "undefined") {
   window.addEventListener("click", function(e) {
     let target = e.target;
@@ -57,7 +77,14 @@ if (typeof dataLayer !== "undefined") {
         // This prevents subsequent matches triggering
         // So the order the events are added is important!
         e.stopImmediatePropagation();
-        let label = target.text ? target.text.trim() : target.innerText.trim();
+        let label = "";
+
+        if (target.text) {
+          label = target.text.trim();
+        } else if (target.innerText) {
+          label = target.innerText.trim();
+        }
+
         if (label === "") {
           if (target.children[0] && target.children[0].alt) {
             label = `image: ${target.children[0].alt}`;
@@ -73,41 +100,17 @@ if (typeof dataLayer !== "undefined") {
     // clicking on copy clipboard button
     if (target.matches(".js-clipboard-copy")) {
       e.stopImmediatePropagation();
-      const clipboardTarget = target.dataset.clipboardTarget;
-
-      const clipboardTargetEl = document.querySelector(clipboardTarget);
-      const copiedValue = clipboardTargetEl.value
-        ? clipboardTargetEl.value.trim()
-        : clipboardTargetEl.text
-          ? clipboardTargetEl.text.trim()
-          : clipboardTargetEl.innerText.trim();
-
-      triggerEvent(
-        "clipboard-copy",
-        origin,
-        clipboardTarget,
-        `Copied code: ${copiedValue}`
-      );
+      triggerCopyEvent("clipboard-copy", target.dataset.clipboardTarget);
     }
 
     // clicking on code snippet
     if (target.matches(".p-code-snippet")) {
       e.stopImmediatePropagation();
       const copyButton = target.querySelector(".js-clipboard-copy");
-      const clipboardTarget = copyButton.dataset.clipboardTarget;
 
-      const clipboardTargetEl = document.querySelector(clipboardTarget);
-      const copiedValue = clipboardTargetEl.value
-        ? clipboardTargetEl.value.trim()
-        : clipboardTargetEl.text
-          ? clipboardTargetEl.text.trim()
-          : clipboardTargetEl.innerText.trim();
-
-      triggerEvent(
+      triggerCopyEvent(
         "clipboard-copy-click",
-        origin,
-        clipboardTarget,
-        `Copied code: ${copiedValue}`
+        copyButton.dataset.clipboardTarget
       );
     }
   });
