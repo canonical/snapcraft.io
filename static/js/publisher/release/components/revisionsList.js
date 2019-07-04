@@ -53,7 +53,8 @@ class RevisionsList extends Component {
 
   renderRows(revisions, isSelectable, showAllColumns, activeRevision) {
     return revisions.map(revision => {
-      const isActive = revision.revision === activeRevision.revision;
+      const isActive =
+        activeRevision && revision.revision === activeRevision.revision;
 
       return this.renderRow(
         revision,
