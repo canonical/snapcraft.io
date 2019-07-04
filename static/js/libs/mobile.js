@@ -5,8 +5,9 @@ function isMobile() {
   );
 
   // Use offsetWidth and offsetHeight to figure out if an element is visibile
-  return !(
-    mobileMenuButton.offsetWidth === 0 && mobileMenuButton.offsetHeight === 0
+  return (
+    mobileMenuButton &&
+    !(mobileMenuButton.offsetWidth === 0 && mobileMenuButton.offsetHeight === 0)
   );
 }
 
