@@ -73,8 +73,8 @@ export function animateScrollTo(to, duration = 500, offset = 0) {
 }
 
 export function initLinkScroll(link, { duration = 500, offset = 0 }) {
-  if (link && link.href) {
-    const href = link.getAttribute("href");
+  if (link && (link.dataset.scrollTo || link.href)) {
+    const href = link.dataset.scrollTo || link.getAttribute("href");
     const target = document.querySelector(href);
     if (target) {
       link.addEventListener("click", event => {
