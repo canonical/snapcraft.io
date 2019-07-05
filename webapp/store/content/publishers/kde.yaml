@@ -564,8 +564,8 @@ snaps: [
         "origin": "kde",
         "package_name": "rocs",
         "publisher": "KDE",
-        "summary": "ActiveDevicesGraph Theory Tool for Professors and Students.",
-        "description": "Rocs is a ActiveDevicesGraph Theory IDE for designing and analyzing graph algorithms. It provides an easy to use visual editor for creating graphs, a scripting engine to execute algorithms, and several helper tools for simulations and experiments. Algorithms are specified in JavaScript.",
+        "summary": "Graph Theory Tool for Professors and Students.",
+        "description": "Rocs is a Graph Theory IDE for designing and analyzing graph algorithms. It provides an easy to use visual editor for creating graphs, a scripting engine to execute algorithms, and several helper tools for simulations and experiments. Algorithms are specified in JavaScript.",
         "title": "rocs",
         "background": ""
     },
