@@ -13,23 +13,26 @@
         <li class="p-list-step__item">
             <h4 class="p-list-step__title">
               <span class="p-list-step__bullet">1</span>
-              <a href="https://multipass.run/install" target="_blank" class="p-link--external">Install Multipass</a>, a virtualisation product from <br/>Canonical that can set up a complete Linux environment <br/>in a couple of minutes
+              <a href="https://brew.sh" target="_blank" class="p-link--external">Install Homebrew</a>, if you don't have it already.
             </h4>
-          </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">2</span>
-            <a href="https://brew.sh" target="_blank" class="p-link--external">Install Homebrew</a>, if you don't have it already
-          </h4>
         </li>
         <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">3</span>
-            Install Snapcraft, the command-line tool for building snaps
-          </h4>
-          {% set snippet_value = "brew install snapcraft" %}
-          {% set snippet_id = "macos-install-snapcraft" %}
-          {% include "/partials/_code-snippet.html" %}
+            <h4 class="p-list-step__title">
+              <span class="p-list-step__bullet">2</span>
+              <a href="https://docs.snapcraft.io/snapcraft-overview" target="_blank" class="p-link--external">Install Snapcraft</a>, the command-line tool for building snaps:
+            </h4>
+            {% set snippet_value = "brew install snapcraft" %}
+            {% set snippet_id = "macos-install-snapcraft" %}
+            {% include "/partials/_code-snippet.html" %}
+        </li>
+        <li class="p-list-step__item"> 
+            <h4 class="p-list-step__title">
+              <span class="p-list-step__bullet">3</span>
+              <a href="https://multipass.run/install" target="_blank" class="p-link--external">Install Multipass</a>, a virtualisation product from <br/>Canonical that can set up a complete Linux environment <br/>in a couple of minutes:
+            </h4>
+            {% set snippet_value = "brew cask install multipass" %}
+            {% set snippet_id = "macos-install-multipass" %}
+            {% include "/partials/_code-snippet.html" %}
         </li>
       </ol>
     </div>
