@@ -44,7 +44,7 @@ function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
   channelMapsList.forEach(mapInfo => {
     const { track, architecture, map } = mapInfo;
     map.forEach(channelInfo => {
-      if (channelInfo.info === "released") {
+      if (channelInfo.info === "released" || channelInfo.info === "branch") {
         const channel =
           track === "latest"
             ? `${track}/${channelInfo.channel}`

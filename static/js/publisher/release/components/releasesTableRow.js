@@ -56,7 +56,7 @@ const compareChannels = (channelMap, channel, targetChannel) => {
 };
 
 const ReleasesTableRow = props => {
-  const { currentTrack, risk, archs, pendingChannelMap } = props;
+  const { currentTrack, risk, branch, archs, pendingChannelMap } = props;
 
   const draggedChannel = getChannelName(currentTrack, risk);
   const canDrag = !!pendingChannelMap[draggedChannel];
@@ -118,13 +118,13 @@ const ReleasesTableRow = props => {
     })
   });
 
-  const channel = getChannelName(currentTrack, risk);
+  const channel = getChannelName(currentTrack, risk, branch);
 
   let canBePromoted = true;
   let canBeClosed = true;
   let promoteTooltip;
 
-  if (risk === STABLE) {
+  if (risk === STABLE && (!branch || branch.revision)) {
     canBePromoted = false;
   }
 
@@ -148,8 +148,17 @@ const ReleasesTableRow = props => {
   let targetChannels = [];
 
   if (canBePromoted) {
-    // take all risks above current one
-    targetChannels = RISKS.slice(0, RISKS.indexOf(risk)).map(risk => {
+    let targetChannelRisks;
+    // if not a branch take all risks above current one
+
+    if (!branch) {
+      targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk));
+    } else {
+      // -1 to remove AVAILABLE
+      targetChannelRisks = RISKS.slice(0, RISKS.length - 1);
+    }
+
+    targetChannels = targetChannelRisks.map(risk => {
       return { channel: getChannelName(currentTrack, risk) };
     });
 
@@ -224,7 +233,11 @@ const ReleasesTableRow = props => {
     </Fragment>
   );
 
-  const rowTitle = risk === AVAILABLE ? channelVersion : channel;
+  let rowTitle = risk === AVAILABLE ? channelVersion : channel;
+
+  if (branch) {
+    rowTitle = `↳/${rowTitle.split("/").pop()}`;
+  }
 
   const isHighlighted = archs.every(arch => {
     return props.hasPendingRelease(channel, arch);
@@ -303,6 +316,7 @@ const ReleasesTableRow = props => {
 ReleasesTableRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
+  branch: PropTypes.string,
 
   // state
   currentTrack: PropTypes.string.isRequired,

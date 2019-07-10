@@ -3,13 +3,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { RISKS_WITH_AVAILABLE as RISKS } from "../constants";
-import { getArchitectures } from "../selectors";
+import { getArchitectures, getBranches } from "../selectors";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
 
 class ReleasesTable extends Component {
-  renderChannelRow(risk) {
-    return <ReleasesTableRow key={risk} risk={risk} />;
+  renderChannelRow(risk, branch) {
+    let rowKey = risk;
+    if (branch) {
+      rowKey += `-${branch}`;
+    }
+    return <ReleasesTableRow key={rowKey} risk={risk} branch={branch} />;
   }
 
   renderHistoryPanel() {
@@ -17,11 +21,15 @@ class ReleasesTable extends Component {
   }
 
   renderRows() {
+    const { branches } = this.props;
     // rows can consist of a channel row or expanded history panel
     const rows = [];
 
     RISKS.forEach(risk => {
       rows.push(this.renderChannelRow(risk));
+      branches.filter(branch => branch.risk === risk).forEach(branch => {
+        rows.push(this.renderChannelRow(risk, branch.branch));
+      });
     });
 
     // if any channel is in current filters
@@ -83,14 +91,16 @@ ReleasesTable.propTypes = {
   // state
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
-  archs: PropTypes.array.isRequired
+  archs: PropTypes.array.isRequired,
+  branches: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     filters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
-    archs: getArchitectures(state)
+    archs: getArchitectures(state),
+    branches: getBranches(state)
   };
 };
 

@@ -1,3 +1,4 @@
+import { parse, isAfter } from "date-fns";
 import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -176,6 +177,31 @@ export function getTracks(state) {
   });
 
   return sortAlphaNum(tracks, "latest");
+}
+
+export function getBranches(state) {
+  let branches = [];
+  const { currentTrack } = state;
+
+  state.releases
+    .filter(t => t.branch && t.track === currentTrack)
+    .sort((a, b) => {
+      return isAfter(parse(b.when), parse(a.when));
+    })
+    .forEach(({ track, risk, branch, when, revision }) => {
+      const exists = branches.filter(b => b.track === track && b.risk === risk && b.branch === branch).length > 0;
+      if (!exists) {
+        branches.push({
+          track,
+          risk,
+          branch,
+          revision,
+          when: parse(when)
+        });
+      }
+    });
+
+  return branches;
 }
 
 // return true if there is a pending release in given channel for given arch

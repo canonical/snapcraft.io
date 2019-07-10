@@ -14,6 +14,7 @@ import releases from "./release/reducers";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
+  console.log(channelMapsList);
   const store = createStore(
     releases,
     {
