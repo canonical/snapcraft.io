@@ -120,13 +120,16 @@ const ReleasesTableCell = props => {
     track,
     risk,
     arch,
+    branch,
     channelMap,
     pendingChannelMap,
     pendingCloses,
     filters
   } = props;
 
-  const channel = getChannelName(track, risk);
+  const branchName = branch ? branch.branch : null;
+
+  const channel = getChannelName(track, risk, branchName);
 
   // current revision to show (released or pending)
   const currentRevision =
@@ -138,7 +141,11 @@ const ReleasesTableCell = props => {
   const isChannelPendingClose = pendingCloses.includes(channel);
   const isPending = hasPendingRelease || isChannelPendingClose;
   const isUnassigned = risk === AVAILABLE;
-  const isActive = filters && filters.arch === arch && filters.risk === risk;
+  const isActive =
+    filters &&
+    filters.arch === arch &&
+    filters.risk === risk &&
+    filters.branch === branchName;
   const isHighlighted = isPending || (isUnassigned && currentRevision);
   const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
   const availableCount = props.getAvailableCount(arch);
@@ -188,13 +195,13 @@ const ReleasesTableCell = props => {
     })
   });
 
-  function handleReleaseCellClick(arch, risk, track) {
-    props.toggleHistoryPanel({ arch, risk, track });
+  function handleReleaseCellClick(arch, risk, track, branchName) {
+    props.toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
-  function undoClick(revision, track, risk, event) {
+  function undoClick(revision, channel, event) {
     event.stopPropagation();
-    props.undoRelease(revision, `${track}/${risk}`);
+    props.undoRelease(revision, channel);
   }
 
   const className = [
@@ -214,7 +221,7 @@ const ReleasesTableCell = props => {
     <div
       ref={drop}
       className={className}
-      onClick={handleReleaseCellClick.bind(this, arch, risk, track)}
+      onClick={handleReleaseCellClick.bind(this, arch, risk, track, branchName)}
     >
       <div
         ref={drag}
@@ -241,7 +248,7 @@ const ReleasesTableCell = props => {
         <div className="p-release-buttons">
           <button
             className="p-action-button p-tooltip p-tooltip--btm-center"
-            onClick={undoClick.bind(this, currentRevision, track, risk)}
+            onClick={undoClick.bind(this, currentRevision, channel)}
           >
             <i className="p-icon--close" />
             <span className="p-tooltip__message">
@@ -271,7 +278,8 @@ ReleasesTableCell.propTypes = {
   track: PropTypes.string,
   risk: PropTypes.string,
   arch: PropTypes.string,
-  showVersion: PropTypes.bool
+  showVersion: PropTypes.bool,
+  branch: PropTypes.object
 };
 
 const mapStateToProps = state => {

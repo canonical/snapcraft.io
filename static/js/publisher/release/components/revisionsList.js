@@ -137,6 +137,7 @@ class RevisionsList extends Component {
             Releases history for <b>{filters.arch}</b> in{" "}
             <b>
               {filters.track}/{filters.risk}
+              {filters.branch ? `/${filters.branch}` : ""}
             </b>
           </Fragment>
         );

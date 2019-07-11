@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { distanceInWordsToNow, addDays } from "date-fns";
 
 import {
   getArchitectures,
@@ -12,6 +13,8 @@ import { useDragging, useDrop, DND_ITEM_CHANNEL, Handle } from "./dnd";
 
 import { promoteChannel } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
+
+import { toggleBranches } from "../actions/branches";
 
 import {
   RISKS_WITH_AVAILABLE as RISKS,
@@ -56,28 +59,57 @@ const compareChannels = (channelMap, channel, targetChannel) => {
 };
 
 const ReleasesTableRow = props => {
-  const { currentTrack, risk, branch, archs, pendingChannelMap } = props;
+  const {
+    currentTrack,
+    risk,
+    branch,
+    numberOfBranches,
+    archs,
+    pendingChannelMap,
+    openBranches
+  } = props;
 
-  const draggedChannel = getChannelName(currentTrack, risk);
-  const canDrag = !!pendingChannelMap[draggedChannel];
+  const branchName = branch ? branch.branch : null;
+
+  const channel = getChannelName(currentTrack, risk, branchName);
+  if (branch) {
+    const parentChannel = getChannelName(currentTrack, risk);
+
+    if (!openBranches || !openBranches.includes(parentChannel)) {
+      return false;
+    }
+  }
+
+  const canDrag = !!pendingChannelMap[channel];
   const [isDragging, isGrabbing, drag, preview] = useDragging({
-    item: { risk: props.risk, type: DND_ITEM_CHANNEL },
+    item: {
+      risk: props.risk,
+      branch: props.branch ? props.branch.branch : null,
+      type: DND_ITEM_CHANNEL
+    },
     canDrag
   });
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: DND_ITEM_CHANNEL,
     drop: item => {
+      const branchName = props.branch ? props.branch.branch : null;
       props.promoteChannel(
-        getChannelName(props.currentTrack, item.risk),
-        getChannelName(props.currentTrack, props.risk)
+        getChannelName(props.currentTrack, item.risk, item.branch),
+        getChannelName(props.currentTrack, props.risk, branchName)
       );
     },
     canDrop: item => {
-      const { currentTrack, risk, pendingChannelMap } = props;
+      const { currentTrack, risk, branch, pendingChannelMap } = props;
 
-      const draggedChannel = getChannelName(currentTrack, item.risk);
-      const dropChannel = getChannelName(currentTrack, risk);
+      const branchName = branch ? branch.branch : null;
+
+      const draggedChannel = getChannelName(
+        currentTrack,
+        item.risk,
+        item.branch
+      );
+      const dropChannel = getChannelName(currentTrack, risk, branchName);
 
       // can't drop on 'available revisions row'
       if (props.risk === AVAILABLE) {
@@ -117,8 +149,6 @@ const ReleasesTableRow = props => {
       canDrop: monitor.canDrop()
     })
   });
-
-  const channel = getChannelName(currentTrack, risk, branch);
 
   let canBePromoted = true;
   let canBeClosed = true;
@@ -243,6 +273,12 @@ const ReleasesTableRow = props => {
     return props.hasPendingRelease(channel, arch);
   });
 
+  let timeUntilExpiration;
+  if (branch) {
+    const end = addDays(branch.when, 30);
+    timeUntilExpiration = distanceInWordsToNow(end);
+  }
+
   return (
     <Fragment>
       {risk === AVAILABLE && (
@@ -257,11 +293,11 @@ const ReleasesTableRow = props => {
       <div ref={drop}>
         <div
           ref={preview}
-          className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
-            isDragging ? "is-dragging" : ""
-          } ${isGrabbing ? "is-grabbing" : ""} ${
-            canDrop && isOver ? "is-over" : ""
-          } ${canDrop ? "can-drop" : ""}`}
+          className={`p-releases-table__row p-releases-table__row--${
+            branch ? "branch" : "channel"
+          } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
+            isGrabbing ? "is-grabbing" : ""
+          } ${canDrop && isOver ? "is-over" : ""} ${canDrop ? "can-drop" : ""}`}
         >
           <div
             ref={drag}
@@ -297,12 +333,29 @@ const ReleasesTableRow = props => {
                 />
               )}
             </span>
+
+            {numberOfBranches > 0 && (
+              <span
+                className="p-releases-table__branches"
+                onClick={props.toggleBranches.bind(this, channel)}
+              >
+                <i className="p-icon" />
+                {numberOfBranches}
+              </span>
+            )}
+
+            {timeUntilExpiration && (
+              <span className="p-releases-table__branch-timeleft">
+                {timeUntilExpiration}
+              </span>
+            )}
           </div>
           {archs.map(arch => (
             <ReleasesTableCell
               key={`${currentTrack}/${risk}/${arch}`}
               track={currentTrack}
               risk={risk}
+              branch={branch}
               arch={arch}
               showVersion={!hasSameVersion}
             />
@@ -316,7 +369,8 @@ const ReleasesTableRow = props => {
 ReleasesTableRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
-  branch: PropTypes.string,
+  branch: PropTypes.object,
+  numberOfBranches: PropTypes.number,
 
   // state
   currentTrack: PropTypes.string.isRequired,
@@ -328,9 +382,12 @@ ReleasesTableRow.propTypes = {
 
   hasPendingRelease: PropTypes.func,
 
+  openBranches: PropTypes.array,
+
   // actions
   closeChannel: PropTypes.func.isRequired,
-  promoteChannel: PropTypes.func.isRequired
+  promoteChannel: PropTypes.func.isRequired,
+  toggleBranches: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -341,7 +398,8 @@ const mapStateToProps = state => {
     archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state),
     hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch)
+      hasPendingRelease(state, channel, arch),
+    openBranches: state.branches
   };
 };
 
@@ -349,7 +407,8 @@ const mapDispatchToProps = dispatch => {
   return {
     promoteChannel: (channel, targetChannel) =>
       dispatch(promoteChannel(channel, targetChannel)),
-    closeChannel: channel => dispatch(closeChannel(channel))
+    closeChannel: channel => dispatch(closeChannel(channel)),
+    toggleBranches: channel => dispatch(toggleBranches(channel))
   };
 };
 

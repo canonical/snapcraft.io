@@ -25,7 +25,8 @@ export function toggleHistory(filters) {
           filters &&
           filters.track === history.filters.track &&
           filters.arch === history.filters.arch &&
-          filters.risk === history.filters.risk))
+          filters.risk === history.filters.risk &&
+          filters.branch === history.filters.branch))
     ) {
       dispatch(closeHistory());
     } else {

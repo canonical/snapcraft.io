@@ -4,3 +4,7 @@
 @mixin snapcraft-icon-delete($color) {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='16'%3E%3Cg fill='none'%3E%3Cpath d='M-1 0h16v16H-1z'/%3E%3Cpath fill='#{vf-url-friendly-color($color)}' d='M1.5 4.998h-1v-1.5C.5 2.678 1.178 2 2 2h2.5V0h5v2H12c.822 0 1.5.677 1.5 1.499v1.5H.5v-1h2v1h-1zm10 8.503V5.998h2V14.5c0 .822-.678 1.499-1.5 1.499H2c-.822 0-1.5-.677-1.5-1.5V5.999h2V13.5c0 .285.214.5.5.5h8c.286 0 .5-.215.5-.5zm-3-11.502V1h-3v1h3zm-5 3.999h1v5.998h-1V5.998zm3 0h1v5.998h-1V5.998zm3 0h1v5.998h-1V5.998z'/%3E%3C/g%3E%3C/svg%3E");
 }
+
+@mixin snapcraft-icon-branch($color, $width, $height) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='$width' height='$height'%3E%3Cpath fill='#{vf-url-friendly-color($color)}' fill-rule='nonzero' d='M3 6h1.268a2 2 0 1 1 0 2H3v2a1 1 0 0 1-2 0V3.732a2 2 0 1 1 2 0V6zM2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm4 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z'/%3E%3C/svg%3E");
+}

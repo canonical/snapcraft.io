@@ -8,12 +8,20 @@ import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
 
 class ReleasesTable extends Component {
-  renderChannelRow(risk, branch) {
+  renderChannelRow(risk, branch, numberOfBranches) {
     let rowKey = risk;
     if (branch) {
-      rowKey += `-${branch}`;
+      rowKey += `-${branch.branch}`;
     }
-    return <ReleasesTableRow key={rowKey} risk={risk} branch={branch} />;
+
+    return (
+      <ReleasesTableRow
+        key={rowKey}
+        risk={risk}
+        branch={branch}
+        numberOfBranches={numberOfBranches}
+      />
+    );
   }
 
   renderHistoryPanel() {
@@ -21,36 +29,53 @@ class ReleasesTable extends Component {
   }
 
   renderRows() {
-    const { branches } = this.props;
+    const { branches, isHistoryOpen, filters } = this.props;
     // rows can consist of a channel row or expanded history panel
     const rows = [];
 
     RISKS.forEach(risk => {
-      rows.push(this.renderChannelRow(risk));
-      branches.filter(branch => branch.risk === risk).forEach(branch => {
-        rows.push(this.renderChannelRow(risk, branch.branch));
+      const risksBranches = branches.filter(branch => branch.risk === risk);
+
+      rows.push({
+        data: {
+          risk
+        },
+        node: this.renderChannelRow(risk, null, risksBranches.length)
+      });
+
+      risksBranches.forEach(branch => {
+        rows.push({
+          data: {
+            risk,
+            branch: branch.branch
+          },
+          node: this.renderChannelRow(risk, branch)
+        });
       });
     });
 
     // if any channel is in current filters
     // inject history panel after that channel row
-    if (
-      this.props.isHistoryOpen &&
-      this.props.filters &&
-      this.props.filters.risk
-    ) {
-      const historyPanelRow = (
-        <div className="p-releases-table__row" key="history-panel-row">
-          <div className="p-releases-channel is-placeholder u-hide--small" />
-          {this.renderHistoryPanel()}
-        </div>
-      );
+    if (isHistoryOpen && filters && filters.risk) {
+      const historyPanelRow = {
+        node: (
+          <div className="p-releases-table__row" key="history-panel-row">
+            <div className="p-releases-channel is-placeholder u-hide--small" />
+            {this.renderHistoryPanel()}
+          </div>
+        )
+      };
 
-      rows.splice(
-        RISKS.indexOf(this.props.filters.risk) + 1,
-        0,
-        historyPanelRow
-      );
+      const rowIndex = rows.findIndex(r => {
+        if (filters.branch) {
+          return (
+            r.data.risk === filters.risk && r.data.branch === filters.branch
+          );
+        }
+        return r.data.risk === filters.risk;
+      });
+
+      rows.splice(rowIndex + 1, 0, historyPanelRow);
     }
 
     return rows;
@@ -80,7 +105,7 @@ class ReleasesTable extends Component {
               </div>
             ))}
           </div>
-          {this.renderRows()}
+          {this.renderRows().map(r => r.node)}
         </div>
       </div>
     );

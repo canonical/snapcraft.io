@@ -1,3 +1,5 @@
+@import 'snapcraft_patterns_icons';
+
 @mixin snapcraft-release {
   $color-highlighted: #fae6be;
 
@@ -33,6 +35,15 @@
     height: 4rem;
   }
 
+  .p-releases-table__row--branch {
+    height: 4rem;
+    margin-left: 2rem;
+
+    .p-releases-channel {
+      width: calc(280px - 2rem);
+    }
+  }
+
   .p-releases-table__row--heading {
     height: 2rem;
   }
@@ -47,6 +58,39 @@
     margin-top: -.1rem;
   }
 
+  .p-releases-table__branches,
+  .p-releases-table__branch-timeleft {
+    position: absolute;
+    color: $color-mid-dark;
+    font-size: .8rem;
+    line-height: .8rem;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    background: transparent;
+  }
+
+  .p-releases-table__branches {
+    padding: .2rem $sph-intra--condensed;
+    cursor: pointer;
+    right: .2rem;
+    bottom: .2rem;
+
+    &:hover {
+      background: rgba($color-x-light, .7);
+    }
+
+    .p-icon {
+      @include snapcraft-icon-branch($color-mid-dark, "8px", "11px");
+      top: 2px;
+    }
+  }
+
+  .p-releases-table__branch-timeleft {
+    bottom: $spv-intra;
+    right: $sph-intra--condensed;
+  }
+
   // channel cell
 
   .p-releases-channel {
@@ -56,6 +100,7 @@
     flex-shrink: 0;
     font-size: 1rem;
     padding: $spv-intra $sph-intra--condensed;
+    position: relative;
     width: 280px;
 
     .p-promote-button {

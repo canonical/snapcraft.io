@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 
 import availableRevisionsSelect from "./availableRevisionsSelect";
+import branches from "./branches";
 import channelMap from "./channelMap";
 import currentTrack from "./currentTrack";
 import defaultTrack from "./defaultTrack";
@@ -15,6 +16,7 @@ import revisions from "./revisions";
 
 const releasesReducers = combineReducers({
   availableRevisionsSelect,
+  branches,
   channelMap,
   currentTrack,
   defaultTrack,
