@@ -16,7 +16,8 @@ import {
   getFilteredAvailableRevisionsForArch,
   getArchitectures,
   getTracks,
-  getTrackRevisions
+  getTrackRevisions,
+  getBranches
 } from "./index";
 
 import reducers from "../reducers";
@@ -119,7 +120,7 @@ describe("getFilteredReleaseHistory", () => {
     expect(isEveryReleaseInTestRisk).toBe(true);
   });
 
-  it("should return include any releases to branches", () => {
+  it("should return releases to branches", () => {
     const state = {
       ...stateWithRevisions,
       releases: [
@@ -604,6 +605,61 @@ describe("getTrackRevisions", () => {
         test64: {
           revision: 2
         }
+      }
+    ]);
+  });
+});
+
+describe("getBranches", () => {
+  it("should return branches on the currentTrack, ordered by oldest first", () => {
+    const state = {
+      currentTrack: "latest",
+      releases: [
+        {
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "1",
+          when: "2019-07-12T10:00:00Z"
+        },
+        {
+          branch: "test",
+          track: "latest",
+          risk: "stable",
+          revision: "2",
+          when: "2019-07-12T11:00:00Z"
+        },
+        {
+          branch: "test2",
+          track: "latest",
+          risk: "stable",
+          revision: "3",
+          when: "2019-07-12T09:00:00Z"
+        },
+        {
+          branch: "test",
+          track: "test",
+          risk: "stable",
+          revision: "4",
+          when: "2019-07-12T09:30:00Z"
+        }
+      ]
+    };
+
+    expect(getBranches(state)).toEqual([
+      {
+        branch: "test2",
+        track: "latest",
+        risk: "stable",
+        revision: "3",
+        when: "2019-07-12T09:00:00Z"
+      },
+      {
+        branch: "test",
+        track: "latest",
+        risk: "stable",
+        revision: "2",
+        when: "2019-07-12T11:00:00Z"
       }
     ]);
   });

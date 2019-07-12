@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { distanceInWordsToNow, addDays } from "date-fns";
+import { parse, distanceInWordsToNow, addDays } from "date-fns";
 
 import {
   getArchitectures,
@@ -275,7 +275,7 @@ const ReleasesTableRow = props => {
 
   let timeUntilExpiration;
   if (branch) {
-    const end = addDays(branch.when, 30);
+    const end = addDays(parse(branch.when), 30);
     timeUntilExpiration = distanceInWordsToNow(end);
   }
 
@@ -345,7 +345,10 @@ const ReleasesTableRow = props => {
             )}
 
             {timeUntilExpiration && (
-              <span className="p-releases-table__branch-timeleft">
+              <span
+                className="p-releases-table__branch-timeleft"
+                title={branch.when}
+              >
                 {timeUntilExpiration}
               </span>
             )}

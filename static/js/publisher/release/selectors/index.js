@@ -203,7 +203,7 @@ export function getBranches(state) {
           risk,
           branch,
           revision,
-          when: parse(when)
+          when: when
         });
       }
     });
