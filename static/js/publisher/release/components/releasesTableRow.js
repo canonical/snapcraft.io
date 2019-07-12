@@ -212,10 +212,18 @@ const ReleasesTableRow = props => {
       }
     }
 
+    // add branches
     targetChannels = targetChannels.concat(
-      availableBranches.filter(b => b.track === currentTrack).map(b => {
-        return { channel: getChannelName(currentTrack, b.risk, b.branch) };
-      })
+      availableBranches
+        .filter(b => {
+          return (
+            b.track === currentTrack &&
+            channel !== getChannelName(currentTrack, b.risk, b.branch)
+          );
+        })
+        .map(b => {
+          return { channel: getChannelName(currentTrack, b.risk, b.branch) };
+        })
     );
 
     // filter out channels that have the same revisions already released
@@ -367,7 +375,7 @@ const ReleasesTableRow = props => {
                 className="p-releases-table__branch-timeleft"
                 title={branch.when}
               >
-                {timeUntilExpiration}
+                {timeUntilExpiration} left
               </span>
             )}
           </div>

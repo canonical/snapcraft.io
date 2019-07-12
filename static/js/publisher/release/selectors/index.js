@@ -1,4 +1,4 @@
-import { parse, isAfter } from "date-fns";
+import { parse, isAfter, differenceInDays } from "date-fns";
 import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -187,6 +187,8 @@ export function getBranches(state) {
   let branches = [];
   const { currentTrack } = state;
 
+  const now = parse(Date.now());
+
   state.releases
     .filter(t => t.branch && t.track === currentTrack)
     .sort((a, b) => {
@@ -203,12 +205,16 @@ export function getBranches(state) {
           risk,
           branch,
           revision,
-          when: when
+          when
         });
       }
     });
 
-  return branches.reverse();
+  return branches
+    .filter(b => {
+      return differenceInDays(now, parse(b.when)) <= 30;
+    })
+    .reverse();
 }
 
 // return true if there is a pending release in given channel for given arch
