@@ -119,7 +119,7 @@ describe("getFilteredReleaseHistory", () => {
     expect(isEveryReleaseInTestRisk).toBe(true);
   });
 
-  it("should return ignore any releases to branches", () => {
+  it("should return include any releases to branches", () => {
     const state = {
       ...stateWithRevisions,
       releases: [
@@ -130,7 +130,7 @@ describe("getFilteredReleaseHistory", () => {
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
-    expect(filteredHistory.some(r => r.release.branch)).toBe(false);
+    expect(filteredHistory.some(r => r.release.branch)).toBe(true);
   });
 
   it("should return only one latest release of every revision", () => {
