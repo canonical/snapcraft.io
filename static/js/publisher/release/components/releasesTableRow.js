@@ -222,7 +222,9 @@ const ReleasesTableRow = props => {
           );
         })
         .map(b => {
-          return { channel: getChannelName(currentTrack, b.risk, b.branch) };
+          return {
+            channel: getChannelName(currentTrack, b.risk, b.branch)
+          };
         })
     );
 
@@ -237,11 +239,15 @@ const ReleasesTableRow = props => {
     if (targetChannels.length === 0) {
       canBePromoted = false;
     } else {
-      targetChannels = sortChannels(
+      // order the channel names
+      const channelOrder = sortChannels(
         targetChannels.map(channel => channel.channel)
-      ).list.map(channel => ({
-        channel
-      }));
+      ).list;
+
+      // remap targetchannels to this new order
+      targetChannels = channelOrder.map(name => {
+        return targetChannels.find(t => t.channel === name);
+      });
     }
   }
 
