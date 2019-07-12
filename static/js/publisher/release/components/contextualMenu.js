@@ -23,12 +23,14 @@ export default class ContextualMenu extends Component {
   }
 
   dropdownButtonClick(event) {
-    this.closeAllDropdowns();
     const dropdownEl = event.target
       .closest(".p-promote-button")
       .querySelector(".p-contextual-menu__dropdown");
 
-    if (dropdownEl) {
+    const isClosed = dropdownEl.getAttribute("aria-hidden") === "true";
+
+    this.closeAllDropdowns();
+    if (isClosed && dropdownEl) {
       dropdownEl.setAttribute("aria-hidden", false);
     }
 

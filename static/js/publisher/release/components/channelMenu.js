@@ -102,7 +102,7 @@ export default class ChannelMenu extends Component {
       <span className={className}>
         <ContextualMenu
           className="p-icon-button"
-          appearance="neutral"
+          appearance="base"
           isDisabled={isDisabled}
           label={<i className="p-icon--settings" />}
           ref={this.setMenuRef}

@@ -3,10 +3,13 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { parse, distanceInWordsToNow, addDays } from "date-fns";
 
+import { sortChannels } from "../../../libs/channels";
+
 import {
   getArchitectures,
   getPendingChannelMap,
-  hasPendingRelease
+  hasPendingRelease,
+  getBranches
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
 import { useDragging, useDrop, DND_ITEM_CHANNEL, Handle } from "./dnd";
@@ -66,7 +69,8 @@ const ReleasesTableRow = props => {
     numberOfBranches,
     archs,
     pendingChannelMap,
-    openBranches
+    openBranches,
+    availableBranches
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -154,7 +158,7 @@ const ReleasesTableRow = props => {
   let canBeClosed = true;
   let promoteTooltip;
 
-  if (risk === STABLE && (!branch || branch.revision)) {
+  if (risk === STABLE && !branch) {
     canBePromoted = false;
   }
 
@@ -179,8 +183,8 @@ const ReleasesTableRow = props => {
 
   if (canBePromoted) {
     let targetChannelRisks;
-    // if not a branch take all risks above current one
 
+    // if not a branch take all risks above current one
     if (!branch) {
       targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk));
     } else {
@@ -208,6 +212,12 @@ const ReleasesTableRow = props => {
       }
     }
 
+    targetChannels = targetChannels.concat(
+      availableBranches.filter(b => b.track === currentTrack).map(b => {
+        return { channel: getChannelName(currentTrack, b.risk, b.branch) };
+      })
+    );
+
     // filter out channels that have the same revisions already released
     targetChannels.forEach(targetChannel => {
       if (compareChannels(pendingChannelMap, channel, targetChannel.channel)) {
@@ -218,6 +228,12 @@ const ReleasesTableRow = props => {
 
     if (targetChannels.length === 0) {
       canBePromoted = false;
+    } else {
+      targetChannels = sortChannels(
+        targetChannels.map(channel => channel.channel)
+      ).list.map(channel => ({
+        channel
+      }));
     }
   }
 
@@ -374,6 +390,7 @@ ReleasesTableRow.propTypes = {
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
   numberOfBranches: PropTypes.number,
+  availableBranches: PropTypes.array,
 
   // state
   currentTrack: PropTypes.string.isRequired,
@@ -402,7 +419,8 @@ const mapStateToProps = state => {
     pendingChannelMap: getPendingChannelMap(state),
     hasPendingRelease: (channel, arch) =>
       hasPendingRelease(state, channel, arch),
-    openBranches: state.branches
+    openBranches: state.branches,
+    availableBranches: getBranches(state)
   };
 };
 
