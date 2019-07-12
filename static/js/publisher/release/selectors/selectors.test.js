@@ -120,18 +120,26 @@ describe("getFilteredReleaseHistory", () => {
     expect(isEveryReleaseInTestRisk).toBe(true);
   });
 
-  it("should return releases to branches", () => {
+  it("should return only releases in given branch", () => {
     const state = {
       ...stateWithRevisions,
       releases: [
         { branch: "test", revision: 1 },
         { revision: 1 },
         { revision: 2 }
-      ]
+      ],
+      history: {
+        filters: {
+          branch: "test"
+        }
+      }
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
-    expect(filteredHistory.some(r => r.release.branch)).toBe(true);
+    const isEveryReleaseInTestBranch = filteredHistory.every(
+      r => r.release.branch === "test"
+    );
+    expect(isEveryReleaseInTestBranch).toBe(true);
   });
 
   it("should return only one latest release of every revision", () => {
