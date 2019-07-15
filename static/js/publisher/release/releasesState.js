@@ -17,14 +17,13 @@ function initReleasesData(revisionsMap, releases) {
     .slice()
     .reverse()
     .forEach(release => {
-      if (release.revision && !release.branch) {
+      if (release.revision) {
         const rev = revisionsMap[release.revision];
 
         if (rev) {
-          const channel =
-            release.track === "latest"
-              ? release.risk
-              : `${release.track}/${release.risk}`;
+          const channel = release.branch
+            ? `${release.track}/${release.risk}/${release.branch}`
+            : `${release.track}/${release.risk}`;
 
           if (rev.channels.indexOf(channel) === -1) {
             rev.channels.push(channel);

@@ -163,7 +163,7 @@ class ReleasesController extends Component {
                 }
 
                 let channel = map.channel;
-                if (RISKS.indexOf(channel.split("/")[0]) === 0) {
+                if (RISKS.indexOf(channel.split("/")[0]) > -1) {
                   // TODO: This should be the default track, not "latest"
                   channel = `latest/${channel}`;
                 }
