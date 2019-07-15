@@ -46,10 +46,10 @@ class ReleasesTable extends Component {
       risksBranches.forEach(branch => {
         rows.push({
           data: {
-            risk,
+            risk: branch.risk,
             branch: branch.branch
           },
-          node: this.renderChannelRow(risk, branch)
+          node: this.renderChannelRow(branch.risk, branch)
         });
       });
     });

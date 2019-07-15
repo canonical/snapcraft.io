@@ -184,12 +184,10 @@ const ReleasesTableRow = props => {
   if (canBePromoted) {
     let targetChannelRisks;
 
-    // if not a branch take all risks above current one
-    if (!branch) {
-      targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk));
+    if (branch) {
+      targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
     } else {
-      // -1 to remove AVAILABLE
-      targetChannelRisks = RISKS.slice(0, RISKS.length - 1);
+      targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk));
     }
 
     targetChannels = targetChannelRisks.map(risk => {
@@ -216,14 +214,17 @@ const ReleasesTableRow = props => {
     targetChannels = targetChannels.concat(
       availableBranches
         .filter(b => {
+          const branchRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
           return (
             b.track === currentTrack &&
-            channel !== getChannelName(currentTrack, b.risk, b.branch)
+            channel !== getChannelName(currentTrack, b.risk, b.branch) &&
+            RISKS.indexOf(b.risk) <= RISKS.indexOf(branchRisks[0])
           );
         })
         .map(b => {
           return {
-            channel: getChannelName(currentTrack, b.risk, b.branch)
+            channel: getChannelName(currentTrack, b.risk, b.branch),
+            display: ` ↳/${b.branch}`
           };
         })
     );
