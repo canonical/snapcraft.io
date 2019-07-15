@@ -4,6 +4,18 @@ function getColour(holder, imageSelector, imageParentSelector) {
   function extractAndSet(image, parent) {
     const fac = new Fac();
     const colour = fac.getColor(image, { defaultColor: [238, 238, 238] });
+
+    // If the average colour is black, the logo is probably black,
+    // se we should invert things. Same for white
+    if (colour.hex === "#000000") {
+      colour.rgb = "rgb(238,238,238)";
+      colour.isDark = false;
+      colour.isLight = true;
+    } else if (colour.hex === "#ffffff") {
+      colour.rgb = "rgb(0,0,0)";
+      colour.isDark = true;
+      colour.isLight = false;
+    }
     parent.style.backgroundColor = colour.rgb;
     parent.classList.remove("is-light");
     parent.classList.add(colour.isDark ? "is-dark" : "is-light");
