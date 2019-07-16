@@ -19,7 +19,7 @@ import {
 
 const CloseChannelInfo = () => (
   <Fragment>
-    <em>close channel</em>
+    close channel
     <span className="p-tooltip__message">Pending channel close</span>
   </Fragment>
 );
