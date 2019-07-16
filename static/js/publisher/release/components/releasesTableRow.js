@@ -211,23 +211,35 @@ const ReleasesTableRow = props => {
     }
 
     // add branches
-    targetChannels = targetChannels.concat(
-      availableBranches
-        .filter(b => {
-          const branchRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
-          return (
-            b.track === currentTrack &&
-            channel !== getChannelName(currentTrack, b.risk, b.branch) &&
-            RISKS.indexOf(b.risk) <= RISKS.indexOf(branchRisks[0])
-          );
-        })
-        .map(b => {
-          return {
-            channel: getChannelName(currentTrack, b.risk, b.branch),
-            display: ` ↳/${b.branch}`
-          };
-        })
-    );
+    const branchRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
+    let isParent = false;
+    const targetChannelBranches = availableBranches
+      .filter(b => {
+        return (
+          b.track === currentTrack &&
+          channel !== getChannelName(currentTrack, b.risk, b.branch) &&
+          RISKS.indexOf(b.risk) <=
+            RISKS.indexOf(branchRisks[branchRisks.length - 1])
+        );
+      })
+      .map(b => {
+        const channelName = getChannelName(currentTrack, b.risk, b.branch);
+        isParent = channelName.indexOf(channel) > -1;
+        return {
+          channel: channelName,
+          display: ` ↳/${b.branch}`
+        };
+      });
+
+    // If the current channel is the parent of the branches, show the channel
+    // in the menu but disable it.
+    if (isParent) {
+      targetChannels.push({
+        channel: channel,
+        isDisabled: true
+      });
+    }
+    targetChannels = targetChannels.concat(targetChannelBranches);
 
     // filter out channels that have the same revisions already released
     targetChannels.forEach(targetChannel => {
