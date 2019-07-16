@@ -1,17 +1,23 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { parse, distanceInWordsToNow, addDays } from "date-fns";
+
+import { sortChannels } from "../../../libs/channels";
 
 import {
   getArchitectures,
   getPendingChannelMap,
-  hasPendingRelease
+  hasPendingRelease,
+  getBranches
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
 import { useDragging, useDrop, DND_ITEM_CHANNEL, Handle } from "./dnd";
 
 import { promoteChannel } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
+
+import { toggleBranches } from "../actions/branches";
 
 import {
   RISKS_WITH_AVAILABLE as RISKS,
@@ -56,28 +62,58 @@ const compareChannels = (channelMap, channel, targetChannel) => {
 };
 
 const ReleasesTableRow = props => {
-  const { currentTrack, risk, archs, pendingChannelMap } = props;
+  const {
+    currentTrack,
+    risk,
+    branch,
+    numberOfBranches,
+    archs,
+    pendingChannelMap,
+    openBranches,
+    availableBranches
+  } = props;
 
-  const draggedChannel = getChannelName(currentTrack, risk);
-  const canDrag = !!pendingChannelMap[draggedChannel];
+  const branchName = branch ? branch.branch : null;
+
+  const channel = getChannelName(currentTrack, risk, branchName);
+  if (branch) {
+    const parentChannel = getChannelName(currentTrack, risk);
+
+    if (!openBranches || !openBranches.includes(parentChannel)) {
+      return false;
+    }
+  }
+
+  const canDrag = !!pendingChannelMap[channel];
   const [isDragging, isGrabbing, drag, preview] = useDragging({
-    item: { risk: props.risk, type: DND_ITEM_CHANNEL },
+    item: {
+      risk: props.risk,
+      branch: props.branch ? props.branch.branch : null,
+      type: DND_ITEM_CHANNEL
+    },
     canDrag
   });
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: DND_ITEM_CHANNEL,
     drop: item => {
+      const branchName = props.branch ? props.branch.branch : null;
       props.promoteChannel(
-        getChannelName(props.currentTrack, item.risk),
-        getChannelName(props.currentTrack, props.risk)
+        getChannelName(props.currentTrack, item.risk, item.branch),
+        getChannelName(props.currentTrack, props.risk, branchName)
       );
     },
     canDrop: item => {
-      const { currentTrack, risk, pendingChannelMap } = props;
+      const { currentTrack, risk, branch, pendingChannelMap } = props;
 
-      const draggedChannel = getChannelName(currentTrack, item.risk);
-      const dropChannel = getChannelName(currentTrack, risk);
+      const branchName = branch ? branch.branch : null;
+
+      const draggedChannel = getChannelName(
+        currentTrack,
+        item.risk,
+        item.branch
+      );
+      const dropChannel = getChannelName(currentTrack, risk, branchName);
 
       // can't drop on 'available revisions row'
       if (props.risk === AVAILABLE) {
@@ -118,13 +154,11 @@ const ReleasesTableRow = props => {
     })
   });
 
-  const channel = getChannelName(currentTrack, risk);
-
   let canBePromoted = true;
   let canBeClosed = true;
   let promoteTooltip;
 
-  if (risk === STABLE) {
+  if (risk === STABLE && !branch) {
     canBePromoted = false;
   }
 
@@ -148,8 +182,15 @@ const ReleasesTableRow = props => {
   let targetChannels = [];
 
   if (canBePromoted) {
-    // take all risks above current one
-    targetChannels = RISKS.slice(0, RISKS.indexOf(risk)).map(risk => {
+    let targetChannelRisks;
+
+    if (branch) {
+      targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
+    } else {
+      targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk));
+    }
+
+    targetChannels = targetChannelRisks.map(risk => {
       return { channel: getChannelName(currentTrack, risk) };
     });
 
@@ -169,6 +210,37 @@ const ReleasesTableRow = props => {
       }
     }
 
+    // add branches
+    const branchRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
+    let isParent = false;
+    const targetChannelBranches = availableBranches
+      .filter(b => {
+        return (
+          b.track === currentTrack &&
+          channel !== getChannelName(currentTrack, b.risk, b.branch) &&
+          RISKS.indexOf(b.risk) <=
+            RISKS.indexOf(branchRisks[branchRisks.length - 1])
+        );
+      })
+      .map(b => {
+        const channelName = getChannelName(currentTrack, b.risk, b.branch);
+        isParent = channelName.indexOf(channel) > -1;
+        return {
+          channel: channelName,
+          display: ` ↳/${b.branch}`
+        };
+      });
+
+    // If the current channel is the parent of the branches, show the channel
+    // in the menu but disable it.
+    if (isParent) {
+      targetChannels.push({
+        channel: channel,
+        isDisabled: true
+      });
+    }
+    targetChannels = targetChannels.concat(targetChannelBranches);
+
     // filter out channels that have the same revisions already released
     targetChannels.forEach(targetChannel => {
       if (compareChannels(pendingChannelMap, channel, targetChannel.channel)) {
@@ -179,6 +251,16 @@ const ReleasesTableRow = props => {
 
     if (targetChannels.length === 0) {
       canBePromoted = false;
+    } else {
+      // order the channel names
+      const channelOrder = sortChannels(
+        targetChannels.map(channel => channel.channel)
+      ).list;
+
+      // remap targetchannels to this new order
+      targetChannels = channelOrder.map(name => {
+        return targetChannels.find(t => t.channel === name);
+      });
     }
   }
 
@@ -224,11 +306,21 @@ const ReleasesTableRow = props => {
     </Fragment>
   );
 
-  const rowTitle = risk === AVAILABLE ? channelVersion : channel;
+  let rowTitle = risk === AVAILABLE ? channelVersion : channel;
+
+  if (branch) {
+    rowTitle = `↳/${rowTitle.split("/").pop()}`;
+  }
 
   const isHighlighted = archs.every(arch => {
     return props.hasPendingRelease(channel, arch);
   });
+
+  let timeUntilExpiration;
+  if (branch) {
+    const end = addDays(parse(branch.when), 30);
+    timeUntilExpiration = distanceInWordsToNow(end);
+  }
 
   return (
     <Fragment>
@@ -244,11 +336,11 @@ const ReleasesTableRow = props => {
       <div ref={drop}>
         <div
           ref={preview}
-          className={`p-releases-table__row p-releases-table__row--channel p-releases-table__row--${risk} ${
-            isDragging ? "is-dragging" : ""
-          } ${isGrabbing ? "is-grabbing" : ""} ${
-            canDrop && isOver ? "is-over" : ""
-          } ${canDrop ? "can-drop" : ""}`}
+          className={`p-releases-table__row p-releases-table__row--${
+            branch ? "branch" : "channel"
+          } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
+            isGrabbing ? "is-grabbing" : ""
+          } ${canDrop && isOver ? "is-over" : ""} ${canDrop ? "can-drop" : ""}`}
         >
           <div
             ref={drag}
@@ -261,7 +353,9 @@ const ReleasesTableRow = props => {
             <Handle />
             <div className="p-releases-channel__name p-tooltip p-tooltip--btm-center">
               <span className="p-release-data__info">
-                <span className="p-release-data__title">{rowTitle}</span>
+                <span className="p-release-data__title" title={channel}>
+                  {rowTitle}
+                </span>
                 {risk !== AVAILABLE && (
                   <span className="p-release-data__meta">{channelVersion}</span>
                 )}
@@ -284,12 +378,32 @@ const ReleasesTableRow = props => {
                 />
               )}
             </span>
+
+            {numberOfBranches > 0 && (
+              <span
+                className="p-releases-table__branches"
+                onClick={props.toggleBranches.bind(this, channel)}
+              >
+                <i className="p-icon" />
+                {numberOfBranches}
+              </span>
+            )}
+
+            {timeUntilExpiration && (
+              <span
+                className="p-releases-table__branch-timeleft"
+                title={branch.when}
+              >
+                {timeUntilExpiration} left
+              </span>
+            )}
           </div>
           {archs.map(arch => (
             <ReleasesTableCell
               key={`${currentTrack}/${risk}/${arch}`}
               track={currentTrack}
               risk={risk}
+              branch={branch}
               arch={arch}
               showVersion={!hasSameVersion}
             />
@@ -303,6 +417,9 @@ const ReleasesTableRow = props => {
 ReleasesTableRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
+  branch: PropTypes.object,
+  numberOfBranches: PropTypes.number,
+  availableBranches: PropTypes.array,
 
   // state
   currentTrack: PropTypes.string.isRequired,
@@ -314,9 +431,12 @@ ReleasesTableRow.propTypes = {
 
   hasPendingRelease: PropTypes.func,
 
+  openBranches: PropTypes.array,
+
   // actions
   closeChannel: PropTypes.func.isRequired,
-  promoteChannel: PropTypes.func.isRequired
+  promoteChannel: PropTypes.func.isRequired,
+  toggleBranches: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -327,7 +447,9 @@ const mapStateToProps = state => {
     archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state),
     hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch)
+      hasPendingRelease(state, channel, arch),
+    openBranches: state.branches,
+    availableBranches: getBranches(state)
   };
 };
 
@@ -335,7 +457,8 @@ const mapDispatchToProps = dispatch => {
   return {
     promoteChannel: (channel, targetChannel) =>
       dispatch(promoteChannel(channel, targetChannel)),
-    closeChannel: channel => dispatch(closeChannel(channel))
+    closeChannel: channel => dispatch(closeChannel(channel)),
+    toggleBranches: channel => dispatch(toggleBranches(channel))
   };
 };
 

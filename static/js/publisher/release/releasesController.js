@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "whatwg-fetch";
 
+import { RISKS_WITH_AVAILABLE as RISKS } from "./constants";
+
 import ReleasesTable from "./components/releasesTable";
 import Notification from "./components/globalNotification";
 import ReleasesHeading from "./components/releasesHeading";
@@ -135,31 +137,42 @@ class ReleasesController extends Component {
     if (json.success) {
       const { revisions } = this.props;
 
-      // update channel map based on the response
-      json.channel_map.forEach(map => {
-        if (map.revision) {
-          let revision;
+      // Update channel map based on the response
+      // We need to use channel_map_tree to get branches
+      Object.keys(json.channel_map_tree).forEach(trackKey => {
+        const track = json.channel_map_tree[trackKey];
+        Object.keys(track).forEach(seriesKey => {
+          const series = track[seriesKey];
+          Object.keys(series).forEach(archKey => {
+            const arch = series[archKey];
+            arch.forEach(map => {
+              if (map.revision) {
+                let revision;
 
-          if (map.revision === +release.id) {
-            // release.id is a string so turn it into a number for comparison
-            revision = release.revision;
-          } else if (revisions[map.revision]) {
-            revision = revisions[map.revision];
-          } else {
-            revision = {
-              revision: map.revision,
-              version: map.version,
-              architectures: release.revision.architectures
-            };
-          }
+                if (map.revision === +release.id) {
+                  // release.id is a string so turn it into a number for comparison
+                  revision = release.revision;
+                } else if (revisions[map.revision]) {
+                  revision = revisions[map.revision];
+                } else {
+                  revision = {
+                    revision: map.revision,
+                    version: map.version,
+                    architectures: release.revision.architectures
+                  };
+                }
 
-          let channel = map.channel;
-          if (channel.indexOf("/") === -1) {
-            channel = `latest/${channel}`;
-          }
+                let channel = map.channel;
+                if (RISKS.indexOf(channel.split("/")[0]) > -1) {
+                  // TODO: This should be the default track, not "latest"
+                  channel = `latest/${channel}`;
+                }
 
-          this.props.releaseRevisionSuccess(revision, channel);
-        }
+                this.props.releaseRevisionSuccess(revision, channel);
+              }
+            });
+          });
+        });
       });
     } else {
       let error = new Error(
@@ -204,7 +217,8 @@ class ReleasesController extends Component {
       if (json.closed_channels && json.closed_channels.length > 0) {
         json.closed_channels.forEach(channel => {
           // make sure channels without track name get prefixed with 'latest'
-          if (channel.indexOf("/") === -1) {
+          if (RISKS.indexOf(channel.split("/")[0]) === 0) {
+            // TODO: This should be the default track, not latest
             channel = `latest/${channel}`;
           }
 

@@ -1,3 +1,4 @@
+import { parse, isAfter, differenceInDays } from "date-fns";
 import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -32,8 +33,12 @@ export function getFilteredReleaseHistory(state) {
       .filter(release => {
         return filters && filters.risk ? release.risk === filters.risk : true;
       })
-      // before we have branches support we ignore any releases to branches
-      .filter(release => !release.branch)
+      // only releases without a branch, or a given branch
+      .filter(release => {
+        return filters && filters.branch
+          ? release.branch === filters.branch
+          : true;
+      })
       // only one latest release of every revision
       .filter((release, index, all) => {
         return all.findIndex(r => r.revision === release.revision) === index;
@@ -176,6 +181,40 @@ export function getTracks(state) {
   });
 
   return sortAlphaNum(tracks, "latest");
+}
+
+export function getBranches(state) {
+  let branches = [];
+  const { currentTrack } = state;
+
+  const now = parse(Date.now());
+
+  state.releases
+    .filter(t => t.branch && t.track === currentTrack)
+    .sort((a, b) => {
+      return isAfter(parse(b.when), parse(a.when));
+    })
+    .forEach(({ track, risk, branch, when, revision }) => {
+      const exists =
+        branches.filter(
+          b => b.track === track && b.risk === risk && b.branch === branch
+        ).length > 0;
+      if (!exists) {
+        branches.push({
+          track,
+          risk,
+          branch,
+          revision,
+          when
+        });
+      }
+    });
+
+  return branches
+    .filter(b => {
+      return differenceInDays(now, parse(b.when)) <= 30;
+    })
+    .reverse();
 }
 
 // return true if there is a pending release in given channel for given arch

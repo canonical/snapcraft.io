@@ -8,7 +8,6 @@ import {
 } from "../actions/channelMap";
 
 function selectRevision(state, revision, toggle) {
-  // TODO: support multiple archs
   const arch = revision.architectures[0];
 
   state = {
@@ -25,6 +24,7 @@ function selectRevision(state, revision, toggle) {
   } else {
     state[AVAILABLE][arch] = { ...revision };
   }
+
   return state;
 }
 

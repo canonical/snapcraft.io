@@ -18,7 +18,7 @@ export default class ChannelMenu extends Component {
   }
 
   renderItem(targetChannel) {
-    const { channel, isDisabled, reason } = targetChannel;
+    const { channel, display, isDisabled, reason } = targetChannel;
     const className = [
       "p-contextual-menu__link is-indented",
       isDisabled ? "is-disabled" : ""
@@ -35,7 +35,7 @@ export default class ChannelMenu extends Component {
             isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
           }
         >
-          {channel}
+          {display ? display : channel}
         </span>
         {reason && (
           <span
@@ -102,7 +102,7 @@ export default class ChannelMenu extends Component {
       <span className={className}>
         <ContextualMenu
           className="p-icon-button"
-          appearance="neutral"
+          appearance="base"
           isDisabled={isDisabled}
           label={<i className="p-icon--settings" />}
           ref={this.setMenuRef}
