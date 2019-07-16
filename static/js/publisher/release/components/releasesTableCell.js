@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
-import DevmodeIcon from "./devmodeIcon";
+import DevmodeRevision from "./devmodeRevision";
 import { getChannelName, isInDevmode } from "../helpers";
 import { useDragging, useDrop, DND_ITEM_REVISION, Handle } from "./dnd";
 
@@ -64,12 +64,9 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
   return (
     <Fragment>
       <span className="p-release-data__info">
-        <span className="p-release-data__title">{revision.revision}</span>
-        {isInDevmode(revision) && (
-          <span className="p-release-data__icon">
-            <DevmodeIcon revision={revision} showTooltip={false} />
-          </span>
-        )}
+        <span className="p-release-data__title">
+          <DevmodeRevision revision={revision} showTooltip={false} />
+        </span>
         {showVersion && (
           <span className="p-release-data__meta">{revision.version}</span>
         )}

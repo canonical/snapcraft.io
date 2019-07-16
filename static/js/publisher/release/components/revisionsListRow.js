@@ -9,7 +9,7 @@ import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 import { getSelectedRevisions } from "../selectors";
 
-import DevmodeIcon from "./devmodeIcon";
+import DevmodeRevision from "./devmodeRevision";
 
 const RevisionsListRow = props => {
   const { revision, isSelectable, showAllColumns, isPending, isActive } = props;
@@ -65,17 +65,14 @@ const RevisionsListRow = props => {
               className="p-revisions-list__revision u-no-margin--bottom"
               htmlFor={id}
             >
-              {revision.revision}
+              <DevmodeRevision revision={revision} showTooltip={true} />
             </label>
           </Fragment>
         ) : (
           <span className="p-revisions-list__revision">
-            {revision.revision}
+            <DevmodeRevision revision={revision} showTooltip={true} />
           </span>
         )}
-      </td>
-      <td>
-        <DevmodeIcon revision={revision} showTooltip={true} />
       </td>
       <td>{revision.version}</td>
       {showAllColumns && <td>{revision.channels.join(", ")}</td>}

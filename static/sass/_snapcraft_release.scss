@@ -271,6 +271,10 @@
         .p-revisions-list__revision {
           font-weight: bold;
         }
+
+        .p-revisions-list__revision .p-tooltip__message {
+          font-weight: normal;
+        }
       }
 
       &.is-pending {
