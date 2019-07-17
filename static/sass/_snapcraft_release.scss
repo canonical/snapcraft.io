@@ -60,28 +60,31 @@
 
   .p-releases-table__branches,
   .p-releases-table__branch-timeleft {
-    position: absolute;
-    color: $color-mid-dark;
+    align-items: center;
+    background: transparent;
+    border-radius: 3px;
+    color: $color-dark;
+    display: flex;
     font-size: .8rem;
     line-height: .8rem;
-    display: flex;
-    align-items: center;
-    border-radius: 3px;
-    background: transparent;
+    position: absolute;
   }
 
   .p-releases-table__branches {
-    padding: .2rem $sph-intra--condensed;
-    cursor: pointer;
-    right: .2rem;
     bottom: .2rem;
+    cursor: pointer;
+    opacity: .6;
+    padding: .2rem $sph-intra--condensed;
+    right: .2rem;
 
-    &:hover {
-      background: rgba($color-x-light, .7);
+    &:hover,
+    &.is-open {
+      background: $color-x-light;
+      opacity: 1;
     }
 
     .p-icon {
-      @include snapcraft-icon-branch($color-mid-dark, "8px", "11px");
+      @include snapcraft-icon-branch($color-dark, "8px", "11px");
       top: 2px;
     }
   }
@@ -221,9 +224,28 @@
   }
 
   .p-release-data__icon {
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0;
+    padding: 0 $sph-intra--condensed;
     position: absolute;
-    right: 10px;
-    top: 8px;
+    right: .5rem;
+    top: .5rem;
+  }
+
+  .p-release-data:hover {
+    .p-release-data__icon {
+      opacity: .6;
+
+      &:hover {
+        background-color: $color-x-light;
+        opacity: 1;
+      }
+    }
+  }
+
+  .p-releases-table__cell.is-active .p-release-data__icon {
+    opacity: 1;
   }
 
   .is-pending {
@@ -457,5 +479,9 @@
   .p-icon--drag {
     @extend %icon;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='12' width='12'%3E%3Cpath fill-rule='nonzero' fill='%23666' d='M4 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4-8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z'/%3E%3C/svg%3E");
+  }
+
+  .p-icon--history {
+    @include snapcraft-icon-history($color-dark);
   }
 }
