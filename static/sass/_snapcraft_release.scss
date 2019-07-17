@@ -63,7 +63,7 @@
     align-items: center;
     background: transparent;
     border-radius: 3px;
-    color: $color-mid-dark;
+    color: $color-dark;
     display: flex;
     font-size: .8rem;
     line-height: .8rem;
@@ -73,15 +73,18 @@
   .p-releases-table__branches {
     bottom: .2rem;
     cursor: pointer;
+    opacity: .6;
     padding: .2rem $sph-intra--condensed;
     right: .2rem;
 
-    &:hover {
-      background: rgba($color-x-light, .7);
+    &:hover,
+    &.is-open {
+      background: $color-x-light;
+      opacity: 1;
     }
 
     .p-icon {
-      @include snapcraft-icon-branch($color-mid-dark, "8px", "11px");
+      @include snapcraft-icon-branch($color-dark, "8px", "11px");
       top: 2px;
     }
   }
@@ -221,25 +224,34 @@
   }
 
   .p-release-data__icon {
+    border-radius: 3px;
     cursor: pointer;
     opacity: 0;
+    padding: 0 $sph-intra--condensed;
     position: absolute;
-    right: 10px;
-    top: 8px;
+    right: .5rem;
+    top: .5rem;
+  }
+
+  .p-release-data:hover {
+    .p-release-data__icon {
+      opacity: .6;
+
+      &:hover {
+        background-color: $color-x-light;
+        opacity: 1;
+      }
+    }
+  }
+
+  .p-releases-table__cell.is-active .p-release-data__icon {
+    opacity: 1;
   }
 
   .is-pending {
     .p-release-data__icon {
       margin-right: 20px;
     }
-  }
-
-  .p-release-data:hover .p-release-data__icon {
-    opacity: .6;
-  }
-
-  .p-releases-table__cell.is-active .p-release-data__icon {
-    opacity: 1;
   }
 
   .p-release-data__info--empty {

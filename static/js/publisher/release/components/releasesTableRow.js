@@ -84,6 +84,8 @@ const ReleasesTableRow = props => {
     }
   }
 
+  const hasOpenBranches = openBranches.includes(channel);
+
   const canDrag = !!pendingChannelMap[channel];
   const [isDragging, isGrabbing, drag, preview] = useDragging({
     item: {
@@ -381,7 +383,9 @@ const ReleasesTableRow = props => {
 
             {numberOfBranches > 0 && (
               <span
-                className="p-releases-table__branches"
+                className={`p-releases-table__branches ${
+                  hasOpenBranches ? "is-open" : ""
+                }`}
                 onClick={props.toggleBranches.bind(this, channel)}
               >
                 <i className="p-icon" />

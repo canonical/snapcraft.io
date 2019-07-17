@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 
 export default function HistoryIcon({ onClick }) {
   return (
-    <span className="p-release-data__icon">
-      <span className="p-icon p-icon--history" onClick={onClick}>
-        History
-      </span>
+    <span className="p-release-data__icon" onClick={onClick}>
+      <span className="p-icon p-icon--history">History</span>
     </span>
   );
 }
