@@ -1,0 +1,24 @@
+{% extends webapp_config['LAYOUT'] %}
+
+{% block meta_title %}404: Page not found{% endblock %}
+
+{% block content %}
+<div class="p-strip">
+  <div class="row">
+    <div class="col-10">
+      <h2>410: Aw, snap! The page you are looking for was deleted</h2>
+        <h4>Looking for a snap? Try searching:</h4>
+          <form action="/search" class="p-form p-form--inline p-form--search">
+     <div class="p-form__group">
+        <label for="search-input" class="u-off-screen">Search</label>
+          <div class="p-form__control u-clearfix">
+           <input class="u-no-margin--bottom" id="search-input" type="search" name="q" value="">
+          </div>
+      </div>
+       <button type="submit" alt="search" class="p-button--positive">Search</button>
+    </form>
+        <p>Or try the Snapcraft <a class="p-link--external" href="https://forum.snapcraft.io/categories">Forum</a> or <a href="https://docs.snapcraft.io">Documentation</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

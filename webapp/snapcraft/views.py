@@ -214,11 +214,6 @@ def snapcraft_blueprint():
             status_code,
         )
 
-    @snapcraft.route("/docs", defaults={"path": ""})
-    @snapcraft.route("/docs/<path:path>")
-    def docs_redirect(path):
-        return flask.redirect("https://docs.snapcraft.io/" + path)
-
     @snapcraft.route("/community")
     def community_redirect():
         return flask.redirect("/")

@@ -29,3 +29,8 @@ WEBAPP_EXTRA_HEADERS = {}
 SEND_FILE_MAX_AGE_DEFAULT = 10 * 365 * 24 * 60 * 60
 
 CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}
+
+# Docs search
+SEARCH_API_KEY = os.getenv("SEARCH_API_KEY")
+SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
+SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
