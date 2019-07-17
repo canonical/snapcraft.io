@@ -282,7 +282,6 @@ class RevisionsList extends Component {
               >
                 Revision
               </th>
-              <th width="20px" />
               <th scope="col">Version</th>
               {showAllColumns && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">

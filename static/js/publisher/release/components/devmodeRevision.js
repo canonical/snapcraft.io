@@ -3,15 +3,14 @@ import PropTypes from "prop-types";
 
 import { isInDevmode } from "../helpers";
 
-export default function DevmodeIcon({ revision, showTooltip }) {
-  return (
-    isInDevmode(revision) && (
+export default function DevmodeRevision({ revision, showTooltip }) {
+  if (isInDevmode(revision)) {
+    return (
       <span
         className="p-tooltip p-tooltip--btm-center"
         aria-describedby={`revision-devmode-${revision.revision}`}
       >
-        <i className="p-icon--information" />
-
+        {revision.revision}*
         {showTooltip && (
           <span
             className="p-tooltip__message u-align--center"
@@ -28,11 +27,13 @@ export default function DevmodeIcon({ revision, showTooltip }) {
           </span>
         )}
       </span>
-    )
-  );
+    );
+  }
+
+  return revision.revision;
 }
 
-DevmodeIcon.propTypes = {
+DevmodeRevision.propTypes = {
   revision: PropTypes.object.isRequired,
   showTooltip: PropTypes.bool
 };
