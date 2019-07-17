@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeRevision from "./devmodeRevision";
+import HistoryIcon from "./historyIcon";
 import { getChannelName, isInDevmode } from "../helpers";
 import { useDragging, useDrop, DND_ITEM_REVISION, Handle } from "./dnd";
 
@@ -192,7 +193,7 @@ const ReleasesTableCell = props => {
     })
   });
 
-  function handleReleaseCellClick(arch, risk, track, branchName) {
+  function handleHistoryIconClick(arch, risk, track, branchName) {
     props.toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
@@ -202,7 +203,7 @@ const ReleasesTableCell = props => {
   }
 
   const className = [
-    "p-releases-table__cell is-clickable",
+    "p-releases-table__cell",
     isUnassigned ? "is-unassigned" : "",
     isActive ? "is-active" : "",
     isHighlighted ? "is-highlighted" : "",
@@ -215,11 +216,7 @@ const ReleasesTableCell = props => {
   ].join(" ");
 
   return (
-    <div
-      ref={drop}
-      className={className}
-      onClick={handleReleaseCellClick.bind(this, arch, risk, track, branchName)}
-    >
+    <div ref={drop} className={className}>
       <div
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
@@ -240,6 +237,15 @@ const ReleasesTableCell = props => {
             trackingChannel={trackingChannel}
           />
         )}
+        <HistoryIcon
+          onClick={handleHistoryIconClick.bind(
+            this,
+            arch,
+            risk,
+            track,
+            branchName
+          )}
+        />
       </div>
       {hasPendingRelease && (
         <div className="p-release-buttons">
