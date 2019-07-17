@@ -1,4 +1,4 @@
-import metrics from "./metrics/metrics";
+import * as metrics from "./metrics/metrics";
 import { selector } from "./metrics/filters";
 import * as market from "./form";
 import { initMultiselect } from "./form/multiselect";

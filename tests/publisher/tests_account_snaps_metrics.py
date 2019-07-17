@@ -50,7 +50,7 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
             responses.POST, self.api_url, json=metrics_payload, status=200
         )
 
-        payload = ["1", "2"]
+        payload = {"1": "test1", "2": "test2"}
         headers = {"content-type": "application/json"}
         response = self.client.post(
             self.endpoint_url, data=json.dumps(payload), headers=headers
@@ -61,6 +61,7 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
             "snaps": [
                 {
                     "id": "1",
+                    "name": None,
                     "series": [
                         {"name": "new", "values": [0, 3]},
                         {"name": "lost", "values": [2, 3]},
@@ -84,7 +85,7 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
         headers = {"content-type": "application/json"}
         response = self.client.post(self.endpoint_url, headers=headers)
 
-        expected_response = {"error": "Please provide a list of snap ID's"}
+        expected_response = {"error": "Please provide a list of snaps"}
 
         self.assertEqual(500, response.status_code)
         self.assertEqual(expected_response, response.json)
@@ -92,7 +93,16 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
     @responses.activate
     def test_metrics_bad_id_payload(self):
         headers = {"content-type": "application/json"}
-        payload = ["badid"]
+
+        metrics_payload = {
+            "error_list": [{"message": "Error", "code": "invalid"}]
+        }
+
+        responses.add(
+            responses.POST, self.api_url, json=metrics_payload, status=400
+        )
+
+        payload = {"badid": "badname"}
         response = self.client.post(
             self.endpoint_url, data=json.dumps(payload), headers=headers
         )

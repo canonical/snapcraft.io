@@ -33,4 +33,33 @@ function arraysEqual(oldArray, newArray) {
   return true;
 }
 
-export { arraysEqual };
+/**
+ * Splits an array into chunks
+ * @param {array} arr
+ * @param {number} chunkSize
+ * @returns {array}
+ */
+function arrayChunk(arr, chunkSize) {
+  const chunks = [];
+  const arrCopy = arr.slice(0);
+
+  for (let i = 0, ii = arrCopy.length; i < ii; i += chunkSize) {
+    chunks.push(arrCopy.splice(0, chunkSize));
+  }
+
+  return chunks;
+}
+
+/**
+ * Merges 2 arrays and dedupes
+ * @param {array} arr1
+ * @param {array} arr2
+ * @returns {array}
+ */
+function arraysMerge(arr1, arr2) {
+  const arr3 = [...arr1, ...arr2];
+
+  return arr3.filter((item, i) => arr3.indexOf(item) === i);
+}
+
+export { arraysEqual, arrayChunk, arraysMerge };

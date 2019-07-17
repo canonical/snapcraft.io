@@ -96,7 +96,7 @@ Publisher metrics for {{ snap_title }}
     Raven.context(function () {
       snapcraft.publisher.selector('.metrics-period', 'period');
       snapcraft.publisher.selector('.active-devices', 'active-devices');
-      snapcraft.publisher.metrics({
+      snapcraft.publisher.metrics.renderMetrics({
         defaultTrack: {{ default_track|tojson }},
         activeDevices: {
           selector: '#activeDevices',
