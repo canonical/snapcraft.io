@@ -9,6 +9,7 @@ class GetGitHubBadgeTest(TestCase):
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
+        "default-track": "test",
         "snap": {
             "title": "Snap Title",
             "summary": "This is a summary",
@@ -35,7 +36,19 @@ class GetGitHubBadgeTest(TestCase):
                 "version": "1.0",
                 "confinement": "conf",
                 "download": {"size": 100000},
-            }
+            },
+            {
+                "channel": {
+                    "architecture": "amd64",
+                    "name": "stable",
+                    "risk": "stable",
+                    "track": "test",
+                },
+                "created-at": "2018-09-18T14:45:28.064633+00:00",
+                "version": "1.0",
+                "confinement": "conf",
+                "download": {"size": 100000},
+            },
         ],
     }
 

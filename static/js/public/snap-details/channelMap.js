@@ -7,11 +7,7 @@ class ChannelMap {
     this.packageName = packageName;
     this.currentTab = "overview";
 
-    if (!defaultTrack) {
-      this.defaultTrack = "latest";
-    } else {
-      this.defaultTrack = defaultTrack;
-    }
+    this.defaultTrack = defaultTrack;
 
     this.selectorString = selectorString;
     this.channelMapEl = document.querySelector(this.selectorString);
@@ -312,10 +308,10 @@ class ChannelMap {
     let paramString = "";
 
     // By default no params are required
-    // If you switch risk on latest you can use the shorthand --{risk} syntax
+    // If you switch risk on the default track you can use the shorthand --{risk} syntax
     // For all other tracks and risks, use the full --channel={channel} syntax
-    if (channel.indexOf("latest/") === 0) {
-      if (channel !== "latest/stable") {
+    if (channel.indexOf(`${this.defaultTrack}`) === 0) {
+      if (channel !== `${this.defaultTrack}/stable`) {
         paramString = ` --${channel.split("/")[1]}`;
       }
     } else {

@@ -6,7 +6,7 @@
         <label>Ubuntu 16.04 or later?</label>
         <button
           data-snap="{{ package_name }}
-            {% if default_track != 'latest' or lowest_risk_available != 'stable' %}
+            {% if lowest_risk_available != 'stable' %}
               ?channel={{ default_track }}/{{ lowest_risk_available }}
             {% endif %}"
           class="p-view-store-button"

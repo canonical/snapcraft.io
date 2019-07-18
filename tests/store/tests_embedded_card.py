@@ -9,6 +9,7 @@ class GetEmbeddedCardTest(TestCase):
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
+        "default-track": None,
         "snap": {
             "title": "Snap Title",
             "summary": "This is a summary",

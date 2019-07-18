@@ -90,9 +90,7 @@ def install_snippet(
 
     snippet_value = "sudo snap install " + package_name
 
-    if default_track != "latest":
-        snippet_value += f" --channel={default_track}/{lowest_risk_available}"
-    elif lowest_risk_available != "stable":
+    if lowest_risk_available != "stable":
         snippet_value += f" --{lowest_risk_available}"
 
     if confinement == "classic":
