@@ -103,6 +103,12 @@ def snap_details_views(store, api, handle_errors):
         # until default tracks are supported by the API we special case node
         # to use 10, rather then latest
         default_track = helpers.get_default_track(details["name"])
+        if not default_track:
+            default_track = (
+                details["default-track"]
+                if details["default-track"]
+                else "latest"
+            )
 
         lowest_risk_available = logic.get_lowest_available_risk(
             channel_maps_list, default_track
