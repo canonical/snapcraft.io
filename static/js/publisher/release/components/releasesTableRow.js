@@ -70,8 +70,13 @@ const ReleasesTableRow = props => {
     archs,
     pendingChannelMap,
     openBranches,
-    availableBranches
+    availableBranches,
+    isVisible
   } = props;
+
+  if (!isVisible) {
+    return null;
+  }
 
   const branchName = branch ? branch.branch : null;
 
@@ -80,7 +85,7 @@ const ReleasesTableRow = props => {
     const parentChannel = getChannelName(currentTrack, risk);
 
     if (!openBranches || !openBranches.includes(parentChannel)) {
-      return false;
+      return null;
     }
   }
 
@@ -418,12 +423,17 @@ const ReleasesTableRow = props => {
   );
 };
 
+ReleasesTableRow.defaultProps = {
+  isVisible: true
+};
+
 ReleasesTableRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
   numberOfBranches: PropTypes.number,
   availableBranches: PropTypes.array,
+  isVisible: PropTypes.bool,
 
   // state
   currentTrack: PropTypes.string.isRequired,

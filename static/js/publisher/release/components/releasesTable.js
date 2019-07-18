@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -8,7 +8,30 @@ import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
 
 class ReleasesTable extends Component {
-  renderChannelRow(risk, branch, numberOfBranches) {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showAllRisksBranches: []
+    };
+  }
+
+  handleToggleShowMoreBranches(risk) {
+    const { showAllRisksBranches } = this.state;
+    const newList = showAllRisksBranches.slice(0);
+
+    if (!newList.includes(risk)) {
+      newList.push(risk);
+    } else {
+      newList.splice(newList.indexOf(risk), 1);
+    }
+
+    this.setState({
+      showAllRisksBranches: newList
+    });
+  }
+
+  renderChannelRow(risk, branch, numberOfBranches, isVisible) {
     let rowKey = risk;
     if (branch) {
       rowKey += `-${branch.branch}`;
@@ -20,6 +43,7 @@ class ReleasesTable extends Component {
         risk={risk}
         branch={branch}
         numberOfBranches={numberOfBranches}
+        isVisible={isVisible}
       />
     );
   }
@@ -29,29 +53,71 @@ class ReleasesTable extends Component {
   }
 
   renderRows() {
-    const { branches, isHistoryOpen, filters } = this.props;
+    const {
+      branches,
+      isHistoryOpen,
+      filters,
+      openBranches,
+      currentTrack
+    } = this.props;
+    const { showAllRisksBranches } = this.state;
+
+    const maxBranches = 10;
+
     // rows can consist of a channel row or expanded history panel
     const rows = [];
 
     RISKS.forEach(risk => {
       const risksBranches = branches.filter(branch => branch.risk === risk);
+      const showAllBranches = showAllRisksBranches.includes(risk);
 
       rows.push({
         data: {
           risk
         },
-        node: this.renderChannelRow(risk, null, risksBranches.length)
+        node: this.renderChannelRow(risk, null, risksBranches.length, true)
       });
 
-      risksBranches.forEach(branch => {
+      risksBranches.forEach((branch, i) => {
+        const isVisible = showAllBranches ? true : i < maxBranches;
         rows.push({
           data: {
             risk: branch.risk,
             branch: branch.branch
           },
-          node: this.renderChannelRow(branch.risk, branch)
+          node: this.renderChannelRow(branch.risk, branch, null, isVisible)
         });
       });
+
+      const currentChannel = `${currentTrack}/${risk}`;
+
+      if (
+        risksBranches.length > maxBranches &&
+        openBranches.includes(currentChannel)
+      ) {
+        rows.push({
+          data: {
+            risk
+          },
+          node: (
+            <div
+              key={`show-all-${risk}-branches`}
+              className="p-releases-table__row--show-all"
+            >
+              <a onClick={this.handleToggleShowMoreBranches.bind(this, risk)}>
+                {!showAllBranches && (
+                  <Fragment>
+                    Show all branches ({risksBranches.length})
+                  </Fragment>
+                )}
+                {showAllBranches && (
+                  <Fragment>Show only {maxBranches} branches</Fragment>
+                )}
+              </a>
+            </div>
+          )
+        });
+      }
     });
 
     // if any channel is in current filters
@@ -117,7 +183,9 @@ ReleasesTable.propTypes = {
   isHistoryOpen: PropTypes.bool,
   filters: PropTypes.object,
   archs: PropTypes.array.isRequired,
-  branches: PropTypes.array.isRequired
+  branches: PropTypes.array.isRequired,
+  openBranches: PropTypes.array.isRequired,
+  currentTrack: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => {
@@ -125,7 +193,9 @@ const mapStateToProps = state => {
     filters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
     archs: getArchitectures(state),
-    branches: getBranches(state)
+    branches: getBranches(state),
+    openBranches: state.branches,
+    currentTrack: state.currentTrack
   };
 };
 
