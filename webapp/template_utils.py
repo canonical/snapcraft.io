@@ -80,7 +80,7 @@ def static_url(filename):
 
 
 def install_snippet(
-    package_name, track, default_track, lowest_risk_available, confinement
+    package_name, default_track, lowest_risk_available, confinement
 ):
     """
     Template function that returns the snippet value to
@@ -90,9 +90,7 @@ def install_snippet(
 
     snippet_value = "sudo snap install " + package_name
 
-    if track != default_track:
-        snippet_value += f" --channel={default_track}/{lowest_risk_available}"
-    elif lowest_risk_available != "stable":
+    if lowest_risk_available != "stable":
         snippet_value += f" --{lowest_risk_available}"
 
     if confinement == "classic":

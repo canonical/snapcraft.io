@@ -80,6 +80,7 @@ class GetDetailsPageTest(TestCase):
         payload = {
             "snap-id": "id",
             "name": "snapName",
+            "default-track": None,
             "snap": {
                 "title": "Snap Title",
                 "summary": "This is a summary",
@@ -111,6 +112,7 @@ class GetDetailsPageTest(TestCase):
         payload = {
             "snap-id": "id",
             "name": "toto",
+            "default-track": None,
             "snap": {
                 "title": "Snap Title",
                 "summary": "This is a summary",
@@ -172,6 +174,7 @@ class GetDetailsPageTest(TestCase):
         payload = {
             "snap-id": "id",
             "name": "snapName",
+            "default-track": None,
             "snap": {
                 "title": "Snap Title",
                 "summary": "This is a summary",
@@ -225,6 +228,7 @@ class GetDetailsPageTest(TestCase):
         payload = {
             "snap-id": "id",
             "name": "snapName",
+            "default-track": None,
             "snap": {
                 "title": "Snap Title",
                 "summary": "This is a summary",
