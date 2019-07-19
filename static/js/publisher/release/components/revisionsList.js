@@ -282,7 +282,9 @@ class RevisionsList extends Component {
               >
                 Revision
               </th>
-              <th scope="col">Version</th>
+              <th scope="col" width="100%">
+                Version
+              </th>
               {showAllColumns && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}

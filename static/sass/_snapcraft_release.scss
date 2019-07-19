@@ -100,6 +100,42 @@
     right: $sph-intra--condensed;
   }
 
+  // This is to have different width items depending on
+  // the number of architectures
+  // See https://www.growingwiththeweb.com/2014/06/detecting-number-of-siblings-with-css.html
+  // For more information
+  .p-releases-table__row {
+    &.p-releases-table__row--heading > div,
+    & > div:not(.is-placeholder) {
+      // 1 arch
+      &:first-child:nth-last-child(2),
+      &:first-child:nth-last-child(2) ~ div {
+        max-width: 50%;
+        width: 50%;
+      }
+
+      // 2 arch
+      &:first-child:nth-last-child(3),
+      &:first-child:nth-last-child(3) ~ div {
+        max-width: 33.3333333%;
+        width: 33.3333333%;
+      }
+    }
+  }
+
+  // Same again for branches
+  .p-releases-table__row--branch > div {
+    // 1 arch
+    &:first-child:nth-last-child(2).p-releases-channel {
+      width: calc(50% - 1rem);
+    }
+
+    // 2 arch
+    &:first-child:nth-last-child(3).p-releases-channel {
+      width: calc(33.333333% - 1rem);
+    }
+  }
+
   // channel cell
 
   .p-releases-channel {
