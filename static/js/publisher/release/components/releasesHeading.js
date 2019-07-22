@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { setCurrentTrack } from "../actions/currentTrack";
 import { getTracks } from "../selectors";
 
+import DefaultTrackModifier from "./defaultTrackModifier";
+
 class ReleasesHeading extends Component {
   onTrackChange(event) {
     this.props.setCurrentTrack(event.target.value);
@@ -50,11 +52,9 @@ class ReleasesHeading extends Component {
             </Wrap>
           </h4>
         </div>
-        {/* disabled until default tracks are +1'd
-            <div className="col-6">
-              {tracks.length > 1 && <DefaultTrackModifier />}
-            </div>
-         */}
+        <div className="col-6">
+          {tracks.length > 1 && <DefaultTrackModifier />}
+        </div>
       </div>
     );
   }

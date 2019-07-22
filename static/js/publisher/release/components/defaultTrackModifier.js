@@ -43,11 +43,11 @@ class DefaultTrackModifier extends Component {
   }
 
   setDefaultTrackHandler() {
-    const { currentTrack, openModal } = this.props;
+    const { currentTrack, defaultTrack, openModal } = this.props;
 
     openModal({
       title: `Set default track to ${currentTrack}`,
-      content: `By setting a default track, any device that installed the snap with no track specified will switch to the newly defined default track, and new installs without an explicit track selection will follow ${currentTrack}. Would you like to proceed?`,
+      content: `By setting the default track to ${currentTrack}, any device that installed the snap with no track specified will continue to track ${defaultTrack}, and new installs without an explicit track selection will follow the default track: ${currentTrack}. Would you like to proceed?`,
       actions: [
         {
           appearance: "positive",
@@ -83,11 +83,10 @@ class DefaultTrackModifier extends Component {
         >
           When setting {currentTrack} as default track, any device
           <br />
-          currently tracking {defaultTrack} will switch to tracking
+          currently tracking {defaultTrack} will continue tracking
           <br />
-          {currentTrack} on the next refresh, and new installs that
-          <br />
-          do not specify a track will follow {currentTrack}.
+          {defaultTrack}, and new installs that do not specify a<br />
+          track will follow the new default track: {currentTrack}.
         </span>
       </button>
     );
