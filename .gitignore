@@ -63,3 +63,4 @@ static/js/dist
 cache.tmp/
 webapp/licenses.json
 coverage/
+.webcache/

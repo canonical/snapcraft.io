@@ -1,6 +1,6 @@
 <section id="search-docs" class="p-strip--image is-shallow snapcraft-banner-background">
   <div class="row">
-    <form class="p-docs-search p-form u-no-margin--bottom" action="{{ url_for('discourse_docs.search') }}">
+    <form class="p-docs-search p-form u-no-margin--bottom" action="/docs/search">
       <input type="search" class="p-search-box__input u-no-margin--bottom" name="q" {% if query %}value="{{ query }}"{% endif %} placeholder="Search documentation" required/>
       <button type="reset" class="p-search-box__reset u-off-screen" alt="reset"><i class="p-icon--close"></i></button>
       <button type="submit" class="p-button--positive u-no-margin--bottom" alt="search">Search</button>
