@@ -1,7 +1,7 @@
 @mixin snapcraft-p-build {
   .p-build__github-button {
     font-size: 1.25rem;
-    margin-top: $spv-inter--regular-scaleable;
+    margin-top: $spv-outer--regular-scaleable;
 
     img {
       display: inline-block;

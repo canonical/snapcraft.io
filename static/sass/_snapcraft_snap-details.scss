@@ -20,7 +20,7 @@
         display: flex;
         flex-grow: 0;
         height: auto;
-        margin-bottom: $spv-inter--regular;
+        margin-bottom: $spv-outer--medium;
         max-height: 78px;
         overflow: hidden;
       }
@@ -35,12 +35,12 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
-        margin-bottom: -$spv-inter--regular;
+        margin-bottom: -$spv-outer--medium;
         margin-right: -$sph-inter;
-        margin-top: $spv-inter--regular;
+        margin-top: $spv-outer--medium;
 
         .p-carousel__item--screenshot {
-          margin-bottom: $spv-inter--regular;
+          margin-bottom: $spv-outer--medium;
           margin-right: $sph-inter;
           max-height: 100%;
           max-width: 129px;

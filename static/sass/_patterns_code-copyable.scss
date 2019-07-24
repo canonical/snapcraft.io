@@ -20,7 +20,7 @@ $color-mid: #999 !default;
       color: $color-mid-dark;
       font-family: unquote($font-monospace);
       line-height: map-get($line-heights, default-text);
-      padding: 0 $cc-button-size + $sp-unit 0 $sph-intra;
+      padding: 0 $cc-button-size + $sp-unit 0 $sph-inner;
       width: 100%;
     }
 

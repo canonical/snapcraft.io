@@ -107,7 +107,7 @@
         top: 1px solid $color-mid-light;
       }
       box-shadow: none;
-      margin-top: -$spv-inter--shallow-scaleable;
+      margin-top: -$spv-outer--shallow-scaleable;
       max-width: 100%;
       overflow: visible;
       position: static;
@@ -118,7 +118,7 @@
     }
 
     label {
-      margin-bottom: $spv-inter--condensed + $spv-nudge-compensation;
+      margin-bottom: $spv-outer--small + $spv-nudge-compensation;
     }
 
     &.is-closed {
