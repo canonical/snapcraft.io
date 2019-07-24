@@ -1,4 +1,3 @@
-$cc-button-size: 36 * $px;
 $color-mid: #999 !default;
 
 @mixin vf-p-code-copyable {
@@ -20,7 +19,7 @@ $color-mid: #999 !default;
       color: $color-mid-dark;
       font-family: unquote($font-monospace);
       line-height: map-get($line-heights, default-text);
-      padding: 0 $cc-button-size + $sp-unit 0 $sph-inner;
+      padding: 0 calc(36rem * 1px + #{$sp-unit}) 0 $sph-inner;
       width: 100%;
     }
 

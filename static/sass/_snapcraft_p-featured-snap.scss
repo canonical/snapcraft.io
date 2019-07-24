@@ -34,7 +34,7 @@
     display: grid;
     grid-template-columns: minmax(5rem, 43rem) minmax(1rem, 160px);
     margin-bottom: $sp-xxx-large;
-    padding: $sph-inter;
+    padding: $sph-outer;
     text-decoration: none;
     transition: background-color 1s ease-out, background 1s ease-out;
     width: 100%;

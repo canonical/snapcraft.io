@@ -36,12 +36,12 @@
         flex-wrap: wrap;
         justify-content: flex-start;
         margin-bottom: -$spv-outer--medium;
-        margin-right: -$sph-inter;
+        margin-right: -$sph-outer;
         margin-top: $spv-outer--medium;
 
         .p-carousel__item--screenshot {
           margin-bottom: $spv-outer--medium;
-          margin-right: $sph-inter;
+          margin-right: $sph-outer;
           max-height: 100%;
           max-width: 129px;
         }

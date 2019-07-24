@@ -6,7 +6,10 @@
 
     @media screen and (max-width: $breakpoint-navigation-threshold) {
       .col-2 {
-        @include column-base;
+        display: block;
+        float: left;
+        min-height: 1px;
+        position: relative;
         width: column-width(6);
       }
 
