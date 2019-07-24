@@ -48,13 +48,8 @@ export function clearDefaultTrack() {
 
 export function setDefaultTrack() {
   return (dispatch, getState) => {
-    const { options, currentTrack, defaultTrack } = getState();
+    const { options, currentTrack } = getState();
     const { snapName, csrfToken } = options;
-
-    let previousTrack = defaultTrack;
-    if (!previousTrack) {
-      previousTrack = "latest";
-    }
 
     return fetchDefaultTrack(snapName, csrfToken, currentTrack).then(() => {
       dispatch({
@@ -68,7 +63,7 @@ export function setDefaultTrack() {
         showNotification({
           status: "success",
           appearance: "positive",
-          content: `The default track for ${snapName} has been set to ${currentTrack}. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track ${currentTrack}. Clients already tracking \`${previousTrack}\` will now be tracking ${currentTrack} on next refresh.`,
+          content: `The default track for ${snapName} has been set to ${currentTrack}. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track.`,
           canDismiss: true
         })
       );
