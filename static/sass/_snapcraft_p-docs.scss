@@ -7,6 +7,12 @@
     max-width: 64.875rem;
     width: 100%;
 
+    // Discourse adds "emoji" <img>s, which are huge
+    // They need to be constrained
+    .emoji {
+      height: 1rem;
+    }
+
     .p-sidebar {
       border-right: .0625rem solid $color-mid-light;
       flex: 0 0 18rem;
