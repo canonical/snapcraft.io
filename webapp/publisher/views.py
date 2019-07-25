@@ -97,7 +97,8 @@ def get_account_details():
 
         subscriptions = {"newsletter": subscribed_to_newsletter}
     except Exception:
-        pass
+        if "sentry" in flask.current_app.extensions:
+            flask.current_app.extensions["sentry"].captureException()
 
     context = {
         "image": flask_user["image"],
