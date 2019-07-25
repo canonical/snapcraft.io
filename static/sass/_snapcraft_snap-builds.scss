@@ -1,0 +1,36 @@
+@mixin snapcraft-snap-builds {
+  .p-snap-builds {
+    table {
+      tbody {
+        background-color: $color-light;
+      }
+    }
+
+    .p-snap-build-success {
+      color:  $color-positive;
+    }
+
+    .p-snap-build-error {
+      color:  $color-negative;
+    }
+
+    .p-snap-build-state {
+      padding-left: 1rem;
+    }
+
+    .p-icon--calendar {
+      @extend %icon;
+      background-image: url('#{$assets-path}e6eb9b25-icon-calendar.svg');
+    }
+
+    .p-icon--commit {
+      @extend %icon;
+      background-image: url('#{$assets-path}95b0c093-git-commit.svg');
+    }
+
+    .p-icon--timer {
+      @extend %icon;
+      background-image: url('#{$assets-path}0fdd197b-snapcraft-icon-time.svg');
+    }
+  }
+}
