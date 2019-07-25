@@ -176,15 +176,13 @@
       <h3 class="u-float--left">Other popular snaps…</h3>
       <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
-    <div class="row">
-      <div class="col-12">
+    <div class="u-fixed-width">
         <div class="snapcraft-p-grid">
-            {% set show_summary = True %}
-            {% for snap in featured_snaps %}
-                {% set media_object_classname = "u-no-margin--bottom" %}
-                {% include "store/_media-object-snap-partial.html" %}
-            {% endfor %}
-        </div>
+          {% set show_summary = True %}
+          {% for snap in featured_snaps %}
+              {% set media_object_classname = "u-no-margin--bottom" %}
+              {% include "store/_media-object-snap-partial.html" %}
+          {% endfor %}
       </div>
     </div>
     <div class="row u-hide--medium u-hide--large">

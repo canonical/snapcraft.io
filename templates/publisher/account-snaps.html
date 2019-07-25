@@ -5,245 +5,231 @@ My published snaps — Linux software in the Snap Store
 {% endblock %}
 
 {% block content %}
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <section class="p-strip is-shallow">
-      {% for message in messages %}
-        <div class="row">
-          <div class="col-12">
-            <div class="p-notification--positive">
-              <p class="p-notification__response">
-                <span class="p-notification__status">Success:</span> {{ message|safe }}
-              </p>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-      </section>
-    {% endif %}
-  {% endwith %}
-  {% if snaps %}
-    <section class="p-strip is-shallow" data-js="dashboard-metrics">
-      <div class="row">
-        <div class="col-12">
-          <h1 class="p-heading--four u-float--left">Snap installs</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 snap-installs-container snapcraft-metrics__graph snapcraft-metrics__active-devices">
-          <svg width="100%" height="240"></svg>
-          <div class="snapcraft-metrics__loader"><i class="p-icon--spinner u-animation--spin"></i></div>
-        </div>
-      </div>
-    </section>
-  {% endif %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
 <section class="p-strip is-shallow">
-  <div class="row">
-    <div class="col-12">
-      <h1 class="p-heading--four u-float--left">My published snaps</h1>
-      <a href="/account/register-snap" class="p-button--neutral u-float--right p-snap-list__register u-no-margin--top">Register a snap name</a>
+  {% for message in messages %}
+  <div class="u-fixed-width">
+    <div class="p-notification--positive">
+      <p class="p-notification__response">
+        <span class="p-notification__status">Success:</span> {{ message|safe }}
+      </p>
     </div>
   </div>
+  {% endfor %}
+</section>
+{% endif %}
+{% endwith %}
+{% if snaps %}
+<section class="p-strip is-shallow" data-js="dashboard-metrics">
+  <div class="u-fixed-width">
+    <h1 class="p-heading--four u-float--left">Snap installs</h1>
+  </div>
+  <div class="u-fixed-width snap-installs-container snapcraft-metrics__graph snapcraft-metrics__active-devices">
+    <svg width="100%" height="240"></svg>
+    <div class="snapcraft-metrics__loader"><i class="p-icon--spinner u-animation--spin"></i></div>
+  </div>
+</section>
+{% endif %}
+<section class="p-strip is-shallow">
+  <div class="u-fixed-width">
+    <h1 class="p-heading--four u-float--left">My published snaps</h1>
+    <a href="/account/register-snap" class="p-button--neutral u-float--right p-snap-list__register u-no-margin--top">Register a snap name</a>
+  </div>
   {% if not snaps %}
-      <div class="row">
-        <div class="col-12">
-          <h2 class="p-heading--four">Get started&hellip;</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <h3 class="p-heading--five">Get to know the basics</h3>
-          <p>Setup and learn more about <code>snapcraft</code> and key concepts of the <code>snap</code> format.</p>
-          <p>
-            <a
-              href="https://docs.snapcraft.io/getting-started/3876"
-              class="p-button--neutral"
-            >
-              Getting started with snaps
-            </a>
-          </p>
-        </div>
-        <div class="col-6">
-          <h3 class="p-heading--five">Publish a snap with the tools you know</h3>
-          <p>Electron, Python, Go and many more examples of how to <code>snap</code> an application using familiar languages.</p>
-          <p><a href="https://docs.snapcraft.io/build-snaps/languages" class="p-button--neutral">Choose a language guide</a></p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <h2 class="p-heading--four">Need some help?</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <h3 class="p-heading--five">Snapcraft documentation</h3>
-          <p>All you need to know about snaps, snapcraft and everything in between.</p>
-          <p><a href="https://docs.snapcraft.io">Read the docs &rsaquo;</a></p>
-        </div>
-        <div class="col-6">
-          <h3 class="p-heading--five">Join the community</h3>
-          <p>Request features, troubleshoot and generally find all the latest talk about snaps, snapd and snapcraft.</p>
-          <p><a href="https://forum.snapcraft.io">Go to the forum &rsaquo;</a></p>
-        </div>
-      </div>
+  <div class="u-fixed-width">
+    <h2 class="p-heading--four">Get started&hellip;</h2>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <h3 class="p-heading--five">Get to know the basics</h3>
+      <p>Setup and learn more about <code>snapcraft</code> and key concepts of the <code>snap</code> format.</p>
+      <p>
+        <a
+          href="https://docs.snapcraft.io/getting-started/3876"
+          class="p-button--neutral"
+          >
+          Getting started with snaps
+        </a>
+      </p>
+    </div>
+    <div class="col-6">
+      <h3 class="p-heading--five">Publish a snap with the tools you know</h3>
+      <p>Electron, Python, Go and many more examples of how to <code>snap</code> an application using familiar languages.</p>
+      <p><a href="https://docs.snapcraft.io/build-snaps/languages" class="p-button--neutral">Choose a language guide</a></p>
+    </div>
+  </div>
+  <div class="u-fixed-width">
+    <hr />
+  </div>
+  <div class="u-fixed-width">
+    <h2 class="p-heading--four">Need some help?</h2>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <h3 class="p-heading--five">Snapcraft documentation</h3>
+      <p>All you need to know about snaps, snapcraft and everything in between.</p>
+      <p><a href="https://docs.snapcraft.io">Read the docs &rsaquo;</a></p>
+    </div>
+    <div class="col-6">
+      <h3 class="p-heading--five">Join the community</h3>
+      <p>Request features, troubleshoot and generally find all the latest talk about snaps, snapd and snapcraft.</p>
+      <p><a href="https://forum.snapcraft.io">Go to the forum &rsaquo;</a></p>
+    </div>
+  </div>
   {% endif %}
   {% if snaps %}
-    {% if snaps|length == 1 %}
-      {% for snap in snaps %}
-        {% if snaps[snap].is_new %}
-          <section class="p-strip--light is-shallow p-snapcraft-first-snap__notification">
-            <div class="row">
-              <div class="col-9">
-                {% if snaps[snap].latest_release %}
-                  <p>
-                    You've released {{ snap }} to the "{{ snaps[snap].latest_release.channels[0] }}" channel!
-                  </p>
-                {% else %}
-                  <p>
-                    You've uploaded {{ snap }}!
-                  </p>
-                {% endif %}
-                <p>
-                  Want to improve the listing in stores?
-                  <a href="/{{ snap }}/listing">Edit Store listing</a>
-                  {% if not snaps[snap].latest_release %}
-                    <br />
-                    Is your snap ready to release?
-                    <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>
-                  {% endif %}
-                </p>
-              </div>
-              <div class="col-3 p-snapcraft-first-snap__rocket">
-                <img alt="Rocket among stars" src="https://assets.ubuntu.com/v1/abd70be7-Rocket+V2.png" />
-              </div>
-            </div>
-          </section>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
+  {% if snaps|length == 1 %}
+  {% for snap in snaps %}
+  {% if snaps[snap].is_new %}
+  <section class="p-strip--light is-shallow p-snapcraft-first-snap__notification">
     <div class="row">
-      <table>
-        <thead>
-          <tr>
-            <th width="30%">Name</th>
-            <th width="10%">Visibility</th>
-            <th width="20%">Owner</th>
-            <th width="20%">Latest release</th>
-            <th width="10%">Version</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for snap in snaps|sort %}
-            {% with %}
-              {% set dispute_pending = snaps[snap].status == "DisputePending" %}
-              {% if snaps[snap].latest_release %}
-                {% set published = snaps[snap].latest_release.status == "Published" %}
-              {% else %}
-                {% set published = False %}
-              {% endif %}
-              <tr>
-                <td>
-                  <a href="/{{snap}}/listing" class="u-vertically-center">
-                    {% if snaps[snap].icon_url %}
-                      <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
-                    {% else %}
-                      <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-snap-list__image" />
-                    {% endif %}
-                    <span class="p-snap-list__name">
-                      {{snap}}
-                      {% if dispute_pending %}
-                        &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
-                          <i class="p-icon--warning"></i>
-                          <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name dispute in progress</span>
-                        </span>
-                      {% endif %}
-                    </span>
-                  </a>
-                </td>
-                <td>
-                  {% if snaps[snap].private %}
-                    Private
-                  {% else %}
-                    Public
-                  {% endif %}
-                </td>
-                <td>
-                  {% if snaps[snap].publisher.username == current_user %}
-                    You
-                  {% else %}
-                    {{ snaps[snap].publisher['display-name'] }}
-                  {% endif %}
-                </td>
-                {% if published %}
-                  <td>{{ snaps[snap].latest_release.channels[0] }}</td>
-                  <td>
-                    <a href="/{{snap}}/releases">
-                      {{ snaps[snap].latest_release.version }}
-                    </a>
-                  </td>
-                {% else %}
-                  <td><a href="/{{snap}}/releases">Not released</a></td>
-                  <td></td>
-                {% endif %}
-              </tr>
-            {% endwith %}
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="col-9">
+        {% if snaps[snap].latest_release %}
+        <p>
+          You've released {{ snap }} to the "{{ snaps[snap].latest_release.channels[0] }}" channel!
+        </p>
+        {% else %}
+        <p>
+          You've uploaded {{ snap }}!
+        </p>
+        {% endif %}
+        <p>
+          Want to improve the listing in stores?
+          <a href="/{{ snap }}/listing">Edit Store listing</a>
+          {% if not snaps[snap].latest_release %}
+          <br />
+          Is your snap ready to release?
+          <a href="https://docs.snapcraft.io/build-snaps/release" target="_blank">Release it</a>
+          {% endif %}
+        </p>
+      </div>
+      <div class="col-3 p-snapcraft-first-snap__rocket">
+        <img alt="Rocket among stars" src="https://assets.ubuntu.com/v1/abd70be7-Rocket+V2.png" />
+      </div>
     </div>
+  </section>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+  <div class="row">
+    <table>
+      <thead>
+        <tr>
+          <th width="30%">Name</th>
+          <th width="10%">Visibility</th>
+          <th width="20%">Owner</th>
+          <th width="20%">Latest release</th>
+          <th width="10%">Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for snap in snaps|sort %}
+        {% with %}
+        {% set dispute_pending = snaps[snap].status == "DisputePending" %}
+        {% if snaps[snap].latest_release %}
+        {% set published = snaps[snap].latest_release.status == "Published" %}
+        {% else %}
+        {% set published = False %}
+        {% endif %}
+        <tr>
+          <td>
+            <a href="/{{snap}}/listing" class="u-vertically-center">
+              {% if snaps[snap].icon_url %}
+              <img src="{{ snaps[snap].icon_url }}" class="p-snap-list__image" />
+              {% else %}
+              <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-snap-list__image" />
+              {% endif %}
+              <span class="p-snap-list__name">
+                {{snap}}
+                {% if dispute_pending %}
+                &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
+                  <i class="p-icon--warning"></i>
+                  <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name dispute in progress</span>
+                </span>
+                {% endif %}
+              </span>
+            </a>
+          </td>
+          <td>
+            {% if snaps[snap].private %}
+            Private
+            {% else %}
+            Public
+            {% endif %}
+          </td>
+          <td>
+            {% if snaps[snap].publisher.username == current_user %}
+            You
+            {% else %}
+            {{ snaps[snap].publisher['display-name'] }}
+            {% endif %}
+          </td>
+          {% if published %}
+          <td>{{ snaps[snap].latest_release.channels[0] }}</td>
+          <td>
+            <a href="/{{snap}}/releases">
+              {{ snaps[snap].latest_release.version }}
+            </a>
+          </td>
+          {% else %}
+          <td><a href="/{{snap}}/releases">Not released</a></td>
+          <td></td>
+          {% endif %}
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
 </section>
-  {% if registered_snaps %}
-    <section class="p-strip is-shallow u-no-padding--top">
-      <div class="row">
-        <h4 class="p-heading--five">Registered names ({{ registered_snaps|count }})</h4>
-      </div>
-      <div class="row">
-        <table>
-          <tbody>
-            {% for snap in registered_snaps|sort %}
-              {% with dispute_pending = registered_snaps[snap].status == "DisputePending" %}
-                <tr class="p-snapcraft-dispute-list__item">
-                  <td width="25%">
-                    {{ snap }}
-                    {% if dispute_pending %}
-                      &nbsp;<i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>
-                    {% endif %}
-                  </td>
-                  <td>
-                    {% if dispute_pending %}
-                      <span class="p-snapcraft-dispute-list__muted">(Name dispute in progress)</span>
-                    {% else %}
-                      <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endwith %}
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  {% endif %}
+{% if registered_snaps %}
+<section class="p-strip is-shallow u-no-padding--top">
+  <div class="row">
+    <h4 class="p-heading--five">Registered names ({{ registered_snaps|count }})</h4>
+  </div>
+  <div class="row">
+    <table>
+      <tbody>
+        {% for snap in registered_snaps|sort %}
+        {% with dispute_pending = registered_snaps[snap].status == "DisputePending" %}
+        <tr class="p-snapcraft-dispute-list__item">
+          <td width="25%">
+            {{ snap }}
+            {% if dispute_pending %}
+            &nbsp;<i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>
+            {% endif %}
+          </td>
+          <td>
+            {% if dispute_pending %}
+            <span class="p-snapcraft-dispute-list__muted">(Name dispute in progress)</span>
+            {% else %}
+            <a href="https://docs.snapcraft.io/releasing-your-app" target="_blank" class="p-link--external p-snapcraft-dispute-list__link u-float--right">Publish to this name</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
-  {% if snaps %}
-  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
-  <script>
-    Raven.context(function () {
-      var options = {
-        snaps: { {% for name, snap in snaps.items()|sort %} "{{name}}": "{{snap['snap-id']}}",{% endfor %} },
-        selector: ".snap-installs-container",
-        token: {{ csrf_token()|tojson }},
-      };
-      snapcraft.publisher.metrics.renderPublisherMetrics(options);
-    });
-  </script>
-  {% endif %}
+{% if snaps %}
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script>
+  Raven.context(function () {
+    var options = {
+      snaps: { {% for name, snap in snaps.items()|sort %} "{{name}}": "{{snap['snap-id']}}",{% endfor %} },
+      selector: ".snap-installs-container",
+      token: {{ csrf_token()|tojson }},
+    };
+    snapcraft.publisher.metrics.renderPublisherMetrics(options);
+  });
+</script>
+{% endif %}
 {% endblock %}
