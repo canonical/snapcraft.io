@@ -1,41 +1,43 @@
 <div class="col-12 p-flow-details" style="display: none" data-flow-details="moos">
-  <div class='col-6'>
-    <h4>Why are snaps good for MOOS projects?</h4>
-    <ul>
-      <li>Bundle all the runtime requirements, including the exact version of MOOS/MOOS-IvP and system libraries you need.</li>
-      <li>Directly and reliably control the delivery of application updates using existing infrastructure.</li>
-      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
-      <li>Extremely simple creation of daemons.</li>
-    </ul>
-  </div>
+  <div class="row">
+    <div class="col-6">
+      <h4>Why are snaps good for MOOS projects?</h4>
+      <ul>
+        <li>Bundle all the runtime requirements, including the exact version of MOOS/MOOS-IvP and system libraries you need.</li>
+        <li>Directly and reliably control the delivery of application updates using existing infrastructure.</li>
+        <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+        <li>Extremely simple creation of daemons.</li>
+      </ul>
+    </div>
 
-  <div class='col-6'>
-    <h4>Here's an example snapcraft.yaml that uses MOOS:</h4>
-    <code class="p-code-yaml"><pre>
-<b>name</b>: moos
-<b>version</b>: '0.1'
-<b>summary</b>: MOOS Example
-<b>description</b>: |
-  This example includes MOOSDB, the main communication mechanism for all MOOS
-  apps.
+    <div class="col-6">
+      <h4>Here's an example snapcraft.yaml that uses MOOS:</h4>
+      <code class="p-code-yaml"><pre>
+          <b>name</b>: moos
+          <b>version</b>: '0.1'
+          <b>summary</b>: MOOS Example
+          <b>description</b>: |
+          This example includes MOOSDB, the main communication mechanism for all MOOS
+          apps.
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
+          <b>confinement</b>: devmode
+          <b>base</b>: core18
 
-<b>parts</b>:
-  <b>moos</b>:
-    <b>source</b>: https://github.com/themoos/core-moos/archive/v10.4.0.tar.gz
-    <b>plugin</b>: cmake
-    <b>build-packages</b>: [g++]
+          <b>parts</b>:
+          <b>moos</b>:
+          <b>source</b>: https://github.com/themoos/core-moos/archive/v10.4.0.tar.gz
+          <b>plugin</b>: cmake
+          <b>build-packages</b>: [g++]
 
-<b>apps</b>:
-  <b>MOOSDB</b>:
-    <b>command</b>: bin/MOOSDB
-</pre></code>
-  </div>
+          <b>apps</b>:
+          <b>MOOSDB</b>:
+          <b>command</b>: bin/MOOSDB
+      </pre></code>
+    </div>
 
-  <div class="p-flow-details__continue">
-    In just a few steps, you’ll have an example MOOS app in the Snap Store.
-    <a class="p-button--positive is-inline" href="/first-snap/moos">Continue &rsaquo;</a>
+    <div class="p-flow-details__continue">
+      In just a few steps, you’ll have an example MOOS app in the Snap Store.
+      <a class="p-button--positive is-inline" href="/first-snap/moos">Continue &rsaquo;</a>
+    </div>
   </div>
 </div>

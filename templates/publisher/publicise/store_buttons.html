@@ -33,13 +33,15 @@
         <div class="col-2">
         </div>
         <div class="col-7">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              {% set url = "images/badges/" + lang + "/snap-store-black.svg" %}
-              <a href="https://snapcraft.io/{{ snap_name }}">
-                <img alt="{{ data.text }}" src="{{ static_url(url) }}" />
-              </a>
-            </p>
+          <div class="row">
+            <div class="col-5">
+              <p class="snapcraft-publicise__images">
+                {% set url = "images/badges/" + lang + "/snap-store-black.svg" %}
+                <a href="https://snapcraft.io/{{ snap_name }}">
+                  <img alt="{{ data.text }}" src="{{ static_url(url) }}" />
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -78,13 +80,15 @@
         <div class="col-2">
         </div>
         <div class="col-7">
-          <div class="col-5">
-            <p class="snapcraft-publicise__images">
-              {% set url = "images/badges/" + lang + "/snap-store-white.svg" %}
-              <a href="https://snapcraft.io/{{ snap_name }}">
-                <img alt="{{ data.text }}" src="{{ static_url(url) }}" />
-              </a>
-            </p>
+          <div class="row">
+            <div class="col-5">
+              <p class="snapcraft-publicise__images">
+                {% set url = "images/badges/" + lang + "/snap-store-white.svg" %}
+                <a href="https://snapcraft.io/{{ snap_name }}">
+                  <img alt="{{ data.text }}" src="{{ static_url(url) }}" />
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
