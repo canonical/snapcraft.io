@@ -1,19 +1,17 @@
 <section class="p-strip is-shallow u-no-padding--bottom">
   {% if from == "first-snap" %}
-    <div class="row">
-      <div class="p-notification--information">
-        <p class="p-notification__response">
-          <span class="p-notification__status">Congratulations</span>
-          {{ snap_name }} is pushed to the Store. Modify its public information, include screenshots then visit <a href="/{{ snap_name }}">your published Snap</a>.
-        </p>
-      </div>
+  <div class="row">
+    <div class="p-notification--information">
+      <p class="p-notification__response">
+        <span class="p-notification__status">Congratulations</span>
+        {{ snap_name }} is pushed to the Store. Modify its public information, include screenshots then visit <a href="/{{ snap_name }}">your published Snap</a>.
+      </p>
     </div>
+  </div>
   {% endif %}
   <nav class="p-tabs-bordered">
-    <div class="row">
-      <div class="col-12">
-        <a href="/snaps">&lsaquo; My snaps</a>
-      </div>
+    <div class="u-fixed-width">
+      <a href="/snaps">&lsaquo; My snaps</a>
     </div>
     <div class="row p-tabs__group">
       <div class="col-6">
@@ -28,10 +26,10 @@
               tabindex="0"
               role="tab"
               {% if selected_tab == 'listing' %}
-                aria-selected="true"
+              aria-selected="true"
               {% endif %}
-            >
-            Listing
+              >
+              Listing
             </a>
           </li>
           <li class="p-tabs__item" role="presentation">
@@ -41,10 +39,10 @@
               tabindex="0"
               role="tab"
               {% if selected_tab == 'release' %}
-                aria-selected="true"
+              aria-selected="true"
               {% endif %}
-            >
-            Releases
+              >
+              Releases
             </a>
           </li>
           <li class="p-tabs__item" role="presentation">
@@ -54,30 +52,30 @@
               tabindex="0"
               role="tab"
               {% if selected_tab == 'metrics' %}
-                aria-selected="true"
+              aria-selected="true"
               {% endif %}
-            >
-            Metrics
+              >
+              Metrics
             </a>
           </li>
           <li
             class="p-tabs__item {% if private %}is--disabled p-tooltip p-tooltip--btm-center{% endif %}"
             role="presentation"
             {% if private %} aria-describedby="publicise-tooltip"{% endif %}
-          >
+            >
             <a
               href="/{{ snap_name }}/publicise"
               class="p-tabs__link"
               tabindex="0"
               role="tab"
               {% if selected_tab == 'publicise' %}
-            aria-selected="true"
-            {% endif %}
-            >
+              aria-selected="true"
+              {% endif %}
+              >
               Publicise
             </a>
             {% if private %}
-              <span class="p-tooltip__message" role="tooltip" id="publicise-tooltip">Your snap needs to be public in order to publicise.</span>
+            <span class="p-tooltip__message" role="tooltip" id="publicise-tooltip">Your snap needs to be public in order to publicise.</span>
             {% endif %}
           </li>
           <li class="p-tabs__item" role="presentation">
@@ -89,7 +87,7 @@
               {% if selected_tab == 'settings' %}
               aria-selected="true"
               {% endif %}
-            >
+              >
               Settings
             </a>
           </li>

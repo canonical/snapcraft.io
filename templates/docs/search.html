@@ -12,28 +12,24 @@
 
 <div class="row">
   <div class="p-strip is-shallow u-no-padding--bottom">
-    <div class="row">
-      <div class="col-12">
-        {% if results and results.entries %}
+    <div class="u-fixed-width">
+      {% if results and results.entries %}
         <h1 class="p-heading--two u-no-margin--bottom">We've found these results for your search <strong>"{{ query }}"</strong></h1>
-        {% else %}
+      {% else %}
         <h1 class="p-heading--two u-no-margin--bottom">We haven't found any results for your search <strong>"{{ query }}"</strong>.</h1>
-        {% endif %}
-      </div>
+      {% endif %}
     </div>
   </div>
 
   {% if  results and results.entries %}
   {% for item in results.entries %}
   <div class="p-strip is-bordered is-shallow">
-    <div class="row">
-      <div class="col-12">
-        <h5><a href="{{ item.link }}" class="title-main">{{ item.htmlTitle | safe}}</a></h5>
-        <p>
-          {{ item.htmlSnippet | safe }}
-        </p>
-        <small><a href="{{ item.link }}">{{ item.htmlFormattedUrl | safe }}</a></small>
-      </div>
+    <div class="u-fixed-width">
+      <h5><a href="{{ item.link }}" class="title-main">{{ item.htmlTitle | safe}}</a></h5>
+      <p>
+        {{ item.htmlSnippet | safe }}
+      </p>
+      <small><a href="{{ item.link }}">{{ item.htmlFormattedUrl | safe }}</a></small>
     </div>
   </div>
   {% endfor %}

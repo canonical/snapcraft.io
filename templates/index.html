@@ -5,7 +5,7 @@
 {% block content %}
 <div id="main-content" class="p-strip-slanted--snapcraft">
   <h1 class="u-off-screen">Snapcraft</h1>
-  <div class="row">
+  <div class="u-fixed-width">
     {% if nps %}
       <div class="p-notification p-snapcraft-nps-banner js-notification-holder">
         <div class="p-notification__response">
@@ -38,11 +38,9 @@
 
     {% include 'partials/livestream-notification.html' %}
 
-    <div class="col-12">
-      <h2>The app store for Linux</h2>
-      <p class="u-no-padding--top p-heading--four">Publish your app for Linux users &mdash;<br class="u-hide--small" /> for desktop, cloud, and Internet of Things.</p>
-      <a href="/first-snap" class="p-button--positive">Package & publish your app</a>
-    </div>
+    <h2>The app store for Linux</h2>
+    <p class="u-no-padding--top p-heading--four">Publish your app for Linux users &mdash;<br class="u-hide--small" /> for desktop, cloud, and Internet of Things.</p>
+    <a href="/first-snap" class="p-button--positive">Package & publish your app</a>
   </div>
 </div>
 
@@ -79,11 +77,9 @@
 </div>
 
 <div class="p-strip">
-  <div class="row">
-    <div class="col-12">
-      <h3 class="p-heading--two">Learn how to snap an app <br class="u-hide--large" /> in 30 minutes</h3>
-      <p>What language or framework does your app use?</p>
-    </div>
+  <div class="u-fixed-width">
+    <h3 class="p-heading--two">Learn how to snap an app <br class="u-hide--large" /> in 30 minutes</h3>
+    <p>What language or framework does your app use?</p>
   </div>
   {% include "partials/fsf_language.html" %}
 </div>
@@ -149,8 +145,8 @@
       <p><a href="https://docs.snapcraft.io/core/install">See all supported distributions</a></p>
     </div>
   </div>
-  <div class="row">
-    <div class="col-12 p-fluid-grid--centered">
+  <div class="u-fixed-width">
+    <div class="p-fluid-grid--centered">
       <a class="p-logo-link p-fluid-grid__item--small" href="https://docs.snapcraft.io/core/install-ubuntu">
         <img src="https://assets.ubuntu.com/v1/4e18e57c-logo-ubuntu--in-card.png" alt="" />
       </a>

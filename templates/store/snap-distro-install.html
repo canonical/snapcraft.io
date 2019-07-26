@@ -88,10 +88,9 @@
 
               <div class="p-snap-install-buttons">
                 <a class="p-button--neutral p-snap-install-buttons__install js-install" href="#install" data-scroll-to="#install">
-                    Install snap
+                  Install snap
                 </a>
               </div>
-
             </div>
           </div>
         </div>
@@ -120,9 +119,9 @@
       <div id="install" class="p-card--highlighted">
         <div class="row">
           <div class="col-10">
-          <h2>Install instructions for snaps on {{ distro_name }}</h2>
-          <p>Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully.</p>
-          <p>Snaps are discoverable and installable from the <a href="/store">Snap Store</a>, an app store with an audience of millions.</p>
+            <h2>Install instructions for snaps on {{ distro_name }}</h2>
+            <p>Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully.</p>
+            <p>Snaps are discoverable and installable from the <a href="/store">Snap Store</a>, an app store with an audience of millions.</p>
           </div>
           <div class="u-hide--small col-2">
             <img src="{{ distro_logo }}" />
@@ -132,22 +131,22 @@
           <h3>Enable snapd</h3>
         </div>
         {% for step in distro_install_steps %}
-        <div class="row">
-          <div class="col-7">
-            <p>{{ step.action|safe }}</p>
-          </div>
-          {% if step.command %}
-            <div class="col-5 distro-code-snippet">
-              {% set snippet_value = step.command %}
-              {% set snippet_id = "distro-install-command-" + loop.index|string %}
-              {% if (step.command|trim).count('\n') == 0 %}
-                {% include "/partials/_code-snippet.html" %}
-              {% else %}
-                {% include "/partials/_code-snippet-multi.html" %}
-              {% endif %}
+          <div class="row">
+            <div class="col-7">
+              <p>{{ step.action|safe }}</p>
             </div>
-          {% endif %}
-        </div>
+            {% if step.command %}
+              <div class="col-5 distro-code-snippet">
+                {% set snippet_value = step.command %}
+                {% set snippet_id = "distro-install-command-" + loop.index|string %}
+                {% if (step.command|trim).count('\n') == 0 %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% else %}
+                  {% include "/partials/_code-snippet-multi.html" %}
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
         {% endfor %}
         <div class="row">
           <h3>Install {{ snap_title }}</h3>
@@ -176,15 +175,13 @@
       <h3 class="u-float--left">Other popular snaps…</h3>
       <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="snapcraft-p-grid">
-            {% set show_summary = True %}
-            {% for snap in featured_snaps %}
-                {% set media_object_classname = "u-no-margin--bottom" %}
-                {% include "store/_media-object-snap-partial.html" %}
-            {% endfor %}
-        </div>
+    <div class="u-fixed-width">
+      <div class="snapcraft-p-grid">
+        {% set show_summary = True %}
+        {% for snap in featured_snaps %}
+          {% set media_object_classname = "u-no-margin--bottom" %}
+          {% include "store/_media-object-snap-partial.html" %}
+        {% endfor %}
       </div>
     </div>
     <div class="row u-hide--medium u-hide--large">
