@@ -1,276 +1,266 @@
 {% extends "publisher/_publisher_layout.html" %}
 
 {% block meta_title %}
-  Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
 {% endblock %}
 
 {% block content %}
-  <div id="main-content">
-    {% set selected_tab='settings' %}
-    {% include "publisher/_header.html" %}
+<div id="main-content">
+  {% set selected_tab='settings' %}
+  {% include "publisher/_header.html" %}
 
-    <form id="settings-form" method="POST" enctype='multipart/form-data'>
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-      <input type="hidden" name="snap_id" value="{{ snap_id }}" />
+  <form id="settings-form" method="POST" enctype='multipart/form-data'>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
-      <div class="snapcraft-p-sticky" id="store-listing-notification">
-        <div class="row">
-          <div class="col-5 push-7">
-            <div class="u-align--right u-clearfix">
-              <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
-                {#
-                    to force dark icon variant we need a fake --dark class name:
-                    https://github.com/vanilla-framework/vanilla-framework/issues/1817
-                  #}
-                <span class="p-button__spinner vanilla-workaround--dark">
-                    <i class="p-icon--spinner u-animation--spin"></i>
-                  </span>
-                <span class="p-button__text">Save</span>
-              </button>
-              <a class="p-button--neutral js-form-revert u-no-margin--bottom u-float-right" href="/{{ snap_name }}/settings">Revert</a>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="snapcraft-p-sticky" id="store-listing-notification">
       <div class="row">
-        <hr class="u-no-margin--bottom" />
+        <div class="col-5 col-start-large-8">
+          <div class="u-align--right u-clearfix">
+            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
+              {#
+              to force dark icon variant we need a fake --dark class name:
+              https://github.com/vanilla-framework/vanilla-framework/issues/1817
+              #}
+              <span class="p-button__spinner vanilla-workaround--dark">
+                <i class="p-icon--spinner u-animation--spin"></i>
+              </span>
+              <span class="p-button__text">Save</span>
+            </button>
+            <a class="p-button--neutral js-form-revert u-no-margin--bottom u-float-right" href="/{{ snap_name }}/settings">Revert</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <hr class="u-no-margin--bottom" />
+    </div>
+
+    <section class="p-strip is-shallow">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="u-fixed-width">
+        {% for category, message in messages %}
+        <div id="settings-form-status" class="p-notification--{{ category }}">
+          <p class="p-notification__response">
+            {{ message }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      {% if other_errors %}
+      <div class="u-fixed-width">
+        {% for error in other_errors %}
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            {{ error.message }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if field_errors and field_errors['icon'] %}
+      <div class="u-fixed-width">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            <strong>Icon:</strong> {{ field_errors['icon'] }}
+          </p>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="row">
+        <div class="col-2">
+          <label>
+            Visibility:
+          </label>
+        </div>
+        <div class="col-8">
+          <div class="row">
+            <input
+              type="radio"
+              name="private"
+              id="is-public"
+              {% if not private and not unlisted %}
+              checked="checked"
+              {% endif %}
+              value="public" />
+            <label for="is-public">Public
+              <span class="p-form-help-text">Anyone can find your snap in the Snap Store</span>
+            </label>
+          </div>
+          <div class="row">
+            <input
+              type="radio"
+              name="private"
+              id="is-unlisted"
+              {% if not private and unlisted %}
+              checked="checked"
+              {% endif %}
+              value="unlisted" />
+            <label for="is-unlisted">Unlisted
+              <span class="p-form-help-text">Does not appear in search results. Anyone can visit or install using its snap name</span>
+            </label>
+          </div>
+          <div class="row">
+            <input
+              type="radio"
+              name="private"
+              id="is-private"
+              {% if private %}
+              checked="checked"
+              {% endif %}
+              value="private" />
+            <label for="is-private">Private
+              <span class="p-form-help-text">Hidden in the Snap Store. Only accessible by the publisher and collaborators</span>
+            </label>
+          </div>
+        </div>
       </div>
 
-      <section class="p-strip is-shallow">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            <div class="row">
-              <div class="col-12">
-                {% for category, message in messages %}
-                  <div id="settings-form-status" class="p-notification--{{ category }}">
-                    <p class="p-notification__response">
-                      {{ message }}
-                    </p>
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          {% endif %}
-        {% endwith %}
-
-        {% if other_errors %}
-          <div class="row">
-            <div class="col-12">
-              {% for error in other_errors %}
-                <div class="p-notification--negative">
-                  <p class="p-notification__response">
-                    {{ error.message }}
-                  </p>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-
-        {% if field_errors and field_errors['icon'] %}
-          <div class="row">
-            <div class="col-12">
-              <div class="p-notification--negative">
-                <p class="p-notification__response">
-                  <strong>Icon:</strong> {{ field_errors['icon'] }}
-                </p>
-              </div>
-            </div>
-          </div>
-        {% endif %}
-
+      <div class="p-strip is-shallow">
         <div class="row">
-          <div class="col-2">
-            <label>
-              Visibility:
-            </label>
-          </div>
-          <div class="col-8">
-            <div class="row">
-              <input
-                type="radio"
-                name="private"
-                id="is-public"
-                {% if not private and not unlisted %}
-                checked="checked"
-                {% endif %}
-                value="public" />
-              <label for="is-public">Public
-                <span class="p-form-help-text">Anyone can find your snap in the Snap Store</span>
-              </label>
-            </div>
-            <div class="row">
-              <input
-                type="radio"
-                name="private"
-                id="is-unlisted"
-                {% if not private and unlisted %}
-                checked="checked"
-                {% endif %}
-                value="unlisted" />
-              <label for="is-unlisted">Unlisted
-                <span class="p-form-help-text">Does not appear in search results. Anyone can visit or install using its snap name</span>
-              </label>
-            </div>
-            <div class="row">
-              <input
-                type="radio"
-                name="private"
-                id="is-private"
-                {% if private %}
-                checked="checked"
-                {% endif %}
-                value="private" />
-              <label for="is-private">Private
-                <span class="p-form-help-text">Hidden in the Snap Store. Only accessible by the publisher and collaborators</span>
-              </label>
-            </div>
-          </div>
+          <hr class="u-no-margin--bottom" />
         </div>
+      </div>
 
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
+      <div class="row">
+        <div class="col-2">
+          <label>
+            Distribution:
+          </label>
         </div>
-
-        <div class="row">
-          <div class="col-2">
-            <label>
-              Distribution:
-            </label>
-          </div>
-          <div class="col-8">
-            <label>This snap should be available in:</label>
-            <input type="radio" name="territories" value="all" id="territories_all"
-              {% if not whitelist_country_codes and not blacklist_country_codes %}
+        <div class="col-8">
+          <label>This snap should be available in:</label>
+          <input type="radio" name="territories" value="all" id="territories_all"
+                 {% if not whitelist_country_codes and not blacklist_country_codes %}
                    checked="checked"
-              {% endif %}/>
-            <label for="territories_all">All territories</label>
-            <input type="radio" name="territories" value="custom" id="territories_custom"
-              {% if whitelist_country_codes or blacklist_country_codes %}
+                 {% endif %} />
+          <label for="territories_all">All territories</label>
+          <input type="radio" name="territories" value="custom" id="territories_custom"
+                 {% if whitelist_country_codes or blacklist_country_codes %}
                    checked="checked"
-              {% endif %}
-            />
-            <label for="territories_custom">Selected territories</label>
-            <div class="p-nested-inputs{% if not whitelist_country_codes and not blacklist_country_codes %} is-hidden{% endif %}">
-              <div class="js-whitelist p-multiselect__wrapper">
-                <input type="radio" name="territories_custom_type" value="whitelist" id="territories_custom_whitelist"
-                  {% if whitelist_country_codes or not blacklist_country_codes %}
-                      checked="checked"
-                  {% endif %}
-                />
-                <label for="territories_custom_whitelist">Only these territories</label>
-                <input type="text" class="js-multiselect-input" name="whitelist_countries" value="
-                  {% for territory in whitelist_country_codes %}
-                    {{ territory }}{{ "," if not loop.last }}
-                  {% endfor %}
-                 " />
-                <div class="js-multiselect-holder{% if blacklist_country_codes %} is-disabled{% endif %}"></div>
-              </div>
-              <div class="js-blacklist p-multiselect__wrapper">
-                <input type="radio" name="territories_custom_type" value="blacklist" id="territories_custom_blacklist"
-                  {% if blacklist_country_codes %}
-                       checked="checked"
-                  {% endif %}
-                />
-                <label for="territories_custom_blacklist">Exclude these territories</label>
-                <input type="text" class="js-multiselect-input" name="blacklist_countries" value="
-                  {% for territory in blacklist_country_codes %}
-                    {{ territory }}{{ "," if not loop.last }}
-                  {% endfor %}
-                 " />
-                <div class="js-multiselect-holder{% if whitelist_country_codes or not blacklist_country_codes %} is-disabled{% endif %}"></div>
-              </div>
+                 {% endif %} />
+          <label for="territories_custom">Selected territories</label>
+          <div class="p-nested-inputs{% if not whitelist_country_codes and not blacklist_country_codes %} is-hidden{% endif %}">
+            <div class="js-whitelist p-multiselect__wrapper">
+              <input type="radio" name="territories_custom_type" value="whitelist" id="territories_custom_whitelist"
+                     {% if whitelist_country_codes or not blacklist_country_codes %}
+                     checked="checked"
+                     {% endif %} />
+              <label for="territories_custom_whitelist">Only these territories</label>
+              <input type="text" class="js-multiselect-input" name="whitelist_countries" value="
+                {% for territory in whitelist_country_codes %}
+                  {{ territory }}{{ "," if not loop.last }}
+                {% endfor %}" />
+              <div class="js-multiselect-holder{% if blacklist_country_codes %} is-disabled{% endif %}"></div>
+            </div>
+            <div class="js-blacklist p-multiselect__wrapper">
+              <input type="radio" name="territories_custom_type" value="blacklist" id="territories_custom_blacklist"
+                     {% if blacklist_country_codes %}
+                     checked="checked"
+                     {% endif %}
+                     />
+              <label for="territories_custom_blacklist">Exclude these territories</label>
+              <input type="text" class="js-multiselect-input" name="blacklist_countries" value="
+                {% for territory in blacklist_country_codes %}
+                  {{ territory }}{{ "," if not loop.last }}
+                {% endfor %}" />
+              <div class="js-multiselect-holder{% if whitelist_country_codes or not blacklist_country_codes %} is-disabled{% endif %}"></div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
-        </div>
-
+      <div class="p-strip is-shallow">
         <div class="row">
-          <div class="col-2">
-            Collaboration:
-          </div>
-          <div class="col-8">
-            <a class="p-link--external" href="https://dashboard.snapcraft.io/snaps/{{snap_name}}/collaboration/">Manage collaborators in dashboard.snapcraft.io</a>
-          </div>
+          <hr class="u-no-margin--bottom" />
         </div>
+      </div>
 
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
+      <div class="row">
+        <div class="col-2">
+          Collaboration:
         </div>
+        <div class="col-8">
+          <a class="p-link--external" href="https://dashboard.snapcraft.io/snaps/{{snap_name}}/collaboration/">Manage collaborators in dashboard.snapcraft.io</a>
+        </div>
+      </div>
 
+      <div class="p-strip is-shallow">
         <div class="row">
-          <div class="col-2">
-            Store:
-          </div>
-          <div class="col-8">
-            {{ store }}
-          </div>
+          <hr class="u-no-margin--bottom" />
         </div>
+      </div>
 
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <hr class="u-no-margin--bottom" />
-          </div>
+      <div class="row">
+        <div class="col-2">
+          Store:
         </div>
+        <div class="col-8">
+          {{ store }}
+        </div>
+      </div>
 
+      <div class="p-strip is-shallow">
         <div class="row">
-          <div class="col-2">
-            Status:
-          </div>
-          <div class="col-8">
-            {{ status }}
-          </div>
+          <hr class="u-no-margin--bottom" />
         </div>
-      </section>
-    </form>
-  </div>
+      </div>
+
+      <div class="row">
+        <div class="col-2">
+          Status:
+        </div>
+        <div class="col-8">
+          {{ status }}
+        </div>
+      </div>
+    </section>
+  </form>
+</div>
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
-  <script>
-    Raven.context(function () {
-      snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
-      snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script>
+  Raven.context(function () {
+    snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
+    snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
 
-      snapcraft.publisher.market.initForm({
-          form: "settings-form",
-          formNotification: "settings-form-status",
-        }, {
-          'private': {{ private|tojson }},
-          'unlisted': {{ unlisted|tojson }},
-          'whitelist_countries': {{ whitelist_country_codes|tojson }},
-          'blacklist_countries': {{ blacklist_country_codes|tojson }}
-        },
-        {% if error_list %}
-          {{ error_list|tojson}}
-        {% else %}
-          null
-        {% endif %}
+    snapcraft.publisher.market.initForm({
+      form: "settings-form",
+      formNotification: "settings-form-status",
+    }, {
+      'private': {{ private|tojson }},
+      'unlisted': {{ unlisted|tojson }},
+      'whitelist_countries': {{ whitelist_country_codes|tojson }},
+      'blacklist_countries': {{ blacklist_country_codes|tojson }}
+    },
+    {% if error_list %}
+      {{ error_list|tojson}}
+    {% else %}
+      null
+    {% endif %}
+    );
+
+    document
+      .getElementById('settings-form')
+      .addEventListener(
+        'change',
+        snapcraft.publisher.settings.changeHandler
       );
 
-      document
-        .getElementById('settings-form')
-        .addEventListener(
-          'change',
-          snapcraft.publisher.settings.changeHandler
-        );
-
-      snapcraft.publisher.stickyListingBar();
-      {% if whitelist_country_codes or not blacklist_country_codes %}
-        snapcraft.publisher.settings.enableInput('whitelist');
-      {% elif blacklist_country_codes %}
-        snapcraft.publisher.settings.enableInput('blacklist');
-      {% endif %}
-    });
-  </script>
+    snapcraft.publisher.stickyListingBar();
+    {% if whitelist_country_codes or not blacklist_country_codes %}
+      snapcraft.publisher.settings.enableInput('whitelist');
+    {% elif blacklist_country_codes %}
+      snapcraft.publisher.settings.enableInput('blacklist');
+    {% endif %}
+  });
+</script>
 {% endblock %}

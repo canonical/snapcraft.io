@@ -166,10 +166,8 @@
 
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
+      <div class="u-fixed-width">
+        <hr />
       </div>
 
       <div class="p-strip is-shallow">
@@ -210,10 +208,8 @@
       {% include "partials/_hiri-case-study.html" %}
     {% else %}
       <div data-js="blog-articles" class="u-hide">
-        <div class="row">
-          <div class="col-12">
-            <hr />
-          </div>
+        <div class="u-fixed-width">
+          <hr />
         </div>
         <div class="p-strip is-shallow">
           <div class="row">
@@ -234,16 +230,12 @@
 
   {# REPORT SNAP SECTION - hidden in preview #}
   {% if not is_preview and not IS_BRAND_STORE %}
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
+    <div class="u-fixed-width">
+      <hr />
     </div>
 
-    <div class="row">
-      <div class="col-12">
-        <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
-      </div>
+    <div class="u-fixed-width">
+      <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
     </div>
 
     {% include "store/snap-details/_report_snap_modal.html" %}
@@ -268,18 +260,16 @@
       </div>
       {% endif %}
       {% if publisher_snaps %}
-      <div class="p-strip is-shallow">
-          <div class="row">
-            <div class="col-12 snapcraft-p-grid">
+        <div class="p-strip is-shallow">
+          <div class="u-fixed-width snapcraft-p-grid">
             {% for snap in publisher_snaps %}
               {% set hide_publisher = True %}
               {% set show_summary = True %}
                 {% include "store/_media-object-snap-partial.html" %}
             {% endfor %}
-            </div>
           </div>
         </div>
-        {% endif %}
+      {% endif %}
     </div>
   {% endif %}
   {% if is_preview %}
@@ -287,13 +277,11 @@
   {% endif %}
 
   {% if api_error %}
-    <div class="row">
-      <div class="col-12">
-        <div class="p-notification--negative">
-          <p class="p-notification__response">
-            <span class="p-notification__status">Error:</span> API request failed
-          </p>
-        </div>
+    <div class="u-fixed-width">
+      <div class="p-notification--negative">
+        <p class="p-notification__response">
+          <span class="p-notification__status">Error:</span> API request failed
+        </p>
       </div>
     </div>
   {% endif %}

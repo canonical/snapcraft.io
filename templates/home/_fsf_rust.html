@@ -1,23 +1,23 @@
-<div class="col-12 p-flow-details" style="display: none" data-flow-details="rust">
-  <div class='col-6'>
-    <h4>Why are snaps good for Rust projects?</h4>
-    <ul>
-      <li>Easy to discover and install by millions using the Snap Store or command-line every day.</li>
-      <li>Automatically updated to the latest stable version of your app.</li>
-      <li>Revert to the previous version if an update fails, preserving data.</li>
-    </ul>
-    <p>You can distribute your apps across Linux using a musl-enabled version of Rust, with all the dependencies satisfied. However, end user discovery and update management remain a challenge. Snaps fill this gap, letting you distribute a Rust app in an app store experience for end users.</p>
+<div class="u-fixed-width p-flow-details" style="display: none" data-flow-details="rust">
+  <div class="row">
+    <div class="col-6">
+      <h4>Why are snaps good for Rust projects?</h4>
+      <ul>
+        <li>Easy to discover and install by millions using the Snap Store or command-line every day.</li>
+        <li>Automatically updated to the latest stable version of your app.</li>
+        <li>Revert to the previous version if an update fails, preserving data.</li>
+      </ul>
+      <p>You can distribute your apps across Linux using a musl-enabled version of Rust, with all the dependencies satisfied. However, end user discovery and update management remain a challenge. Snaps fill this gap, letting you distribute a Rust app in an app store experience for end users.</p>
 
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example Rust app in the Snap Store.</p>
-      <a class="p-button--positive" href="/first-snap/rust">Continue &rsaquo;</a>
+      <div class="p-flow-details__continue">
+        <p>In just a few steps, you’ll have an example Rust app in the Snap Store.</p>
+        <a class="p-button--positive" href="/first-snap/rust">Continue &rsaquo;</a>
+      </div>
     </div>
-  </div>
 
-  <div class='col-6'>
-    <h4>Here's how xsv defines snapcraft.yaml:</h4>
-    <code class="p-code-yaml"><pre>
-<b>name</b>: xsv
+    <div class="col-6">
+      <h4>Here's how xsv defines snapcraft.yaml:</h4>
+      <code class="p-code-yaml"><pre><b>name</b>: xsv
 <b>version</b>: git
 <b>summary</b>: A fast CSV command line toolkit written in Rust
 <b>description</b>: |
@@ -42,5 +42,6 @@
 <b>apps</b>:
   <b>xsv</b>:
     <b>command</b>: bin/xsv</pre></code>
+    </div>
   </div>
 </div>

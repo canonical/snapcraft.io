@@ -74,10 +74,8 @@
 
   {% if blog_slug %}
   <div data-js="blog-articles" style="display: none;">
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
+    <div class="u-fixed-width">
+      <hr />
     </div>
     <div class="p-strip is-shallow">
       <div class="row">
@@ -107,14 +105,12 @@
   {% endif %}
 
   <div class="p-strip is-shallow">
-    <div class="row">
-      <div class="col-12 snapcraft-p-grid">
+      <div class="u-fixed-width snapcraft-p-grid">
       {% set hide_publisher = True %}
       {% set show_summary = True %}
       {% for snap in snaps %}
         {% include "store/_media-object-snap-partial.html" %}
       {% endfor %}
-      </div>
     </div>
   </div>
 
