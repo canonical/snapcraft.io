@@ -20,9 +20,9 @@
       </div>
       <div class="row">
         <p><b>Install using the command line</b></p>
-        <div class="p-code-snippet p-cli-install">
+        <div class="p-code-copyable p-cli-install">
           <input
-            class="p-code-snippet__input"
+            class="p-code-copyable__input"
             id="snap-install"
             value="{{ install_snippet(
                   package_name, default_track, lowest_risk_available, confinement
@@ -30,7 +30,7 @@
             readonly="readonly"
           />
           <button
-            class="p-code-snippet__action js-clipboard-copy"
+            class="p-code-copyable__action js-clipboard-copy"
             data-clipboard-target="#snap-install">
             Copy to clipboard
           </button>
@@ -124,15 +124,15 @@
   </div>
   <div class="row">
     <p><b>Install using the command line</b></p>
-    <div class="p-code-snippet p-cli-install">
+    <div class="p-code-copyable p-cli-install">
       <input
-        class="p-code-snippet__input"
+        class="p-code-copyable__input"
         id="snap-install-alt"
         value="sudo snap install {{ package_name }}${paramString}"
         readonly="readonly"
       />
       <button
-        class="p-code-snippet__action js-clipboard-copy"
+        class="p-code-copyable__action js-clipboard-copy"
         data-clipboard-target="#snap-install-alt">
         Copy to clipboard
       </button>

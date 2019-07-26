@@ -115,9 +115,9 @@
         </div>
       {% else %}
         <div class="p-snap-install-buttons">
-          <div class="p-code-snippet">
-            <input class="p-code-snippet__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
-            <button class="p-code-snippet__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
+          <div class="p-code-copyable">
+            <input class="p-code-copyable__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
+            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
               Copy to clipboard
             </button>
           </div>

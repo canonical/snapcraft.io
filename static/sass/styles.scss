@@ -8,7 +8,6 @@ $color-navigation-background: #252525;
 
 @include vf-base;
 
-
 @include vf-p-accordion;
 @include vf-p-card; // required by vf-p-tooltips
 @include vf-p-divider;
@@ -30,11 +29,11 @@ $color-navigation-background: #252525;
 @include vf-p-matrix;
 @include vf-p-icons;
 @include vf-p-heading-icon;
-//@include vf-p-code-snippet;
 @include vf-p-form-validation;
 @include vf-p-contextual-menu;
 @include vf-p-breadcrumbs;
 @include vf-p-pagination;
+@include vf-p-code-copyable;
 
 // vanilla utilities
 @include vf-u-floats;
@@ -198,14 +197,11 @@ $color-navigation-background: #252525;
 @import 'snapcraft_p-breadcrumbs';
 @include snapcraft-p-breadcrumbs;
 
-@import 'patterns_code-copyable';
-@include vf-p-code-copyable;
-
 @import 'snapcraft_p-code-block';
 @include snapcraft-p-code-block;
 
-@import 'snapcraft_p-code-snippet';
-@include snapcraft-p-code-snippet;
+@import 'snapcraft_p-code-copyable';
+@include snapcraft-p-code-copyable;
 
 @import 'snapcraft-publicise';
 @include snapcraft-publicise;
@@ -248,8 +244,3 @@ $color-navigation-background: #252525;
 
 @import 'utilities_no-limit';
 @include u-no-limit;
-
-html,
-body {
-  background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
-}
