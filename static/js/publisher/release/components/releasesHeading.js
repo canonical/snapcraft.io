@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { setCurrentTrack } from "../actions/currentTrack";
 import { getTracks } from "../selectors";
 
-import DefaultTrackModifier from "./defaultTrackModifier";
+//import DefaultTrackModifier from "./defaultTrackModifier";
 
 class ReleasesHeading extends Component {
   onTrackChange(event) {
@@ -52,9 +52,9 @@ class ReleasesHeading extends Component {
             </Wrap>
           </h4>
         </div>
-        <div className="col-6">
+        {/*<div className="col-6">
           {tracks.length > 1 && <DefaultTrackModifier />}
-        </div>
+      </div>*/}
       </div>
     );
   }
