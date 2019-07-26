@@ -22,27 +22,27 @@
     <div class="col-6">
       <h4>Here’s how httplab defines snapcraft.yaml:</h4>
       <code class="p-code-yaml"><pre><b>name</b>: httplab
-          <b>version</b>: git
-          <b>summary</b>: An interactive web server.
-          <b>description</b>: |
-          HTTPLab let you inspect HTTP requests and forge
-          responses.
+<b>version</b>: git
+<b>summary</b>: An interactive web server.
+<b>description</b>: |
+  HTTPLab let you inspect HTTP requests and forge
+  responses.
 
-          <b>confinement</b>: devmode
-          <b>base</b>: core18
+<b>confinement</b>: devmode
+<b>base</b>: core18
 
-          <b>parts</b>:
-          <b>httplab</b>:
-          <b>plugin</b>: go
-          <b>go-importpath</b>: github.com/gchaincl/httplab
-          <b>source</b>: .
-          <b>source-type</b>: git
-          <b>build-packages</b>:
-	  - gcc
+<b>parts</b>:
+  <b>httplab</b>:
+    <b>plugin</b>: go
+    <b>go-importpath</b>: github.com/gchaincl/httplab
+    <b>source</b>: .
+    <b>source-type</b>: git
+    <b>build-packages</b>:
+      - gcc
 
-          <b>apps</b>:
-          <b>httplab</b>:
-          <b>command</b>: bin/httplab</pre></code>
+<b>apps</b>:
+  <b>httplab</b>:
+    <b>command</b>: bin/httplab</pre></code>
     </div>
   </div>
 </div>

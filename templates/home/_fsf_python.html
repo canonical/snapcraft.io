@@ -23,26 +23,26 @@
     <div class="col-6">
       <h4>Here's how <a href="https://snapcraft.io/offlineimap">offlineimap</a> defines snapcraft.yaml:</h4>
       <code class="p-code-yaml"><pre><b>name</b>: offlineimap
-          <b>version</b>: git
-          <b>summary</b>: OfflineIMAP
-          <b>description</b>: |
-          OfflineIMAP is software that downloads your email mailbox(es) as local
-          Maildirs. OfflineIMAP will synchronize both sides via IMAP.
+<b>version</b>: git
+<b>summary</b>: OfflineIMAP
+<b>description</b>: |
+  OfflineIMAP is software that downloads your email mailbox(es) as local
+  Maildirs. OfflineIMAP will synchronize both sides via IMAP.
 
-          <b>confinement</b>: devmode
-          <b>base</b>: core18
+<b>confinement</b>: devmode
+<b>base</b>: core18
 
-          <b>parts</b>:
-          <b>offlineimap</b>:
-          <b>plugin</b>: python
-          <b>python-version</b>: python2
-          <b>source</b>: .
-          <b>stage-packages</b>:
-          <b>- python-six</b>
+<b>parts</b>:
+  <b>offlineimap</b>:
+    <b>plugin</b>: python
+    <b>python-version</b>: python2
+    <b>source</b>: .
+    <b>stage-packages</b>:
+      - python-six
 
-          <b>apps</b>:
-          <b>offlineimap</b>:
-          <b>command</b>: bin/offlineimap</pre></code>
+<b>apps</b>:
+  <b>offlineimap</b>:
+    <b>command</b>: bin/offlineimap</pre></code>
     </div>
   </div>
 </div>

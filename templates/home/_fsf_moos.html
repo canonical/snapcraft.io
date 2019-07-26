@@ -12,27 +12,25 @@
 
     <div class="col-6">
       <h4>Here's an example snapcraft.yaml that uses MOOS:</h4>
-      <code class="p-code-yaml"><pre>
-          <b>name</b>: moos
-          <b>version</b>: '0.1'
-          <b>summary</b>: MOOS Example
-          <b>description</b>: |
-          This example includes MOOSDB, the main communication mechanism for all MOOS
-          apps.
+      <code class="p-code-yaml"><pre><b>name</b>: moos
+<b>version</b>: '0.1'
+<b>summary</b>: MOOS Example
+<b>description</b>: |
+  This example includes MOOSDB, the main communication mechanism for all MOOS
+  apps.
 
-          <b>confinement</b>: devmode
-          <b>base</b>: core18
+<b>confinement</b>: devmode
+<b>base</b>: core18
 
-          <b>parts</b>:
-          <b>moos</b>:
-          <b>source</b>: https://github.com/themoos/core-moos/archive/v10.4.0.tar.gz
-          <b>plugin</b>: cmake
-          <b>build-packages</b>: [g++]
+<b>parts</b>:
+  <b>moos</b>:
+    <b>source</b>: https://github.com/themoos/core-moos/archive/v10.4.0.tar.gz
+    <b>plugin</b>: cmake
+    <b>build-packages</b>: [g++]
 
-          <b>apps</b>:
-          <b>MOOSDB</b>:
-          <b>command</b>: bin/MOOSDB
-      </pre></code>
+<b>apps</b>:
+  <b>MOOSDB</b>:
+    <b>command</b>: bin/MOOSDB</pre></code>
     </div>
 
     <div class="p-flow-details__continue">

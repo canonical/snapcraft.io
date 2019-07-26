@@ -17,32 +17,31 @@
 
     <div class="col-6">
       <h4>Here's how xsv defines snapcraft.yaml:</h4>
-      <code class="p-code-yaml"><pre>
-          <b>name</b>: xsv
-          <b>version</b>: git
-          <b>summary</b>: A fast CSV command line toolkit written in Rust
-          <b>description</b>: |
-          xsv is a command line program for indexing,
-          slicing, analyzing, splitting and joining CSV
-          files. Commands should be simple, fast and
-          composable:
-          - Simple tasks should be easy.
-          - Performance trade offs should be exposed
-          in the CLI interface.
-          - Composition should not come at the
-          expense of performance.
+      <code class="p-code-yaml"><pre><b>name</b>: xsv
+<b>version</b>: git
+<b>summary</b>: A fast CSV command line toolkit written in Rust
+<b>description</b>: |
+  xsv is a command line program for indexing,
+  slicing, analyzing, splitting and joining CSV
+  files. Commands should be simple, fast and
+  composable:
+  - Simple tasks should be easy.
+  - Performance trade offs should be exposed
+    in the CLI interface.
+  - Composition should not come at the
+    expense of performance.
 
-          <b>confinement</b>: devmode
-          <b>base</b>: core18
+<b>confinement</b>: devmode
+<b>base</b>: core18
 
-          <b>parts</b>:
-          <b>xsv</b>:
-          <b>plugin</b>: rust
-          <b>source</b>: .
+<b>parts</b>:
+  <b>xsv</b>:
+    <b>plugin</b>: rust
+    <b>source</b>: .
 
-          <b>apps</b>:
-          <b>xsv</b>:
-          <b>command</b>: bin/xsv</pre></code>
+<b>apps</b>:
+  <b>xsv</b>:
+    <b>command</b>: bin/xsv</pre></code>
     </div>
   </div>
 </div>

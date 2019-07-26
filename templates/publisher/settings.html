@@ -138,28 +138,25 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
           <label>This snap should be available in:</label>
           <input type="radio" name="territories" value="all" id="territories_all"
                  {% if not whitelist_country_codes and not blacklist_country_codes %}
-                 checked="checked"
-                 {% endif %}/>
+                   checked="checked"
+                 {% endif %} />
           <label for="territories_all">All territories</label>
           <input type="radio" name="territories" value="custom" id="territories_custom"
                  {% if whitelist_country_codes or blacklist_country_codes %}
-                 checked="checked"
-                 {% endif %}
-                 />
+                   checked="checked"
+                 {% endif %} />
           <label for="territories_custom">Selected territories</label>
           <div class="p-nested-inputs{% if not whitelist_country_codes and not blacklist_country_codes %} is-hidden{% endif %}">
             <div class="js-whitelist p-multiselect__wrapper">
               <input type="radio" name="territories_custom_type" value="whitelist" id="territories_custom_whitelist"
                      {% if whitelist_country_codes or not blacklist_country_codes %}
                      checked="checked"
-                     {% endif %}
-                     />
+                     {% endif %} />
               <label for="territories_custom_whitelist">Only these territories</label>
               <input type="text" class="js-multiselect-input" name="whitelist_countries" value="
-                                                                                                {% for territory in whitelist_country_codes %}
-                                                                                                {{ territory }}{{ "," if not loop.last }}
-                                                                                                                     {% endfor %}
-                                                                                                                     " />
+                {% for territory in whitelist_country_codes %}
+                  {{ territory }}{{ "," if not loop.last }}
+                {% endfor %}" />
               <div class="js-multiselect-holder{% if blacklist_country_codes %} is-disabled{% endif %}"></div>
             </div>
             <div class="js-blacklist p-multiselect__wrapper">
@@ -170,10 +167,9 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
                      />
               <label for="territories_custom_blacklist">Exclude these territories</label>
               <input type="text" class="js-multiselect-input" name="blacklist_countries" value="
-                                                                                                {% for territory in blacklist_country_codes %}
-                                                                                                {{ territory }}{{ "," if not loop.last }}
-                                                                                                                     {% endfor %}
-                                                                                                                     " />
+                {% for territory in blacklist_country_codes %}
+                  {{ territory }}{{ "," if not loop.last }}
+                {% endfor %}" />
               <div class="js-multiselect-holder{% if whitelist_country_codes or not blacklist_country_codes %} is-disabled{% endif %}"></div>
             </div>
           </div>
@@ -245,12 +241,12 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
       'whitelist_countries': {{ whitelist_country_codes|tojson }},
       'blacklist_countries': {{ blacklist_country_codes|tojson }}
     },
-                                        {% if error_list %}
-                                        {{ error_list|tojson}}
-                                        {% else %}
-                                        null
-                                        {% endif %}
-                                       );
+    {% if error_list %}
+      {{ error_list|tojson}}
+    {% else %}
+      null
+    {% endif %}
+    );
 
     document
       .getElementById('settings-form')
@@ -261,9 +257,9 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
 
     snapcraft.publisher.stickyListingBar();
     {% if whitelist_country_codes or not blacklist_country_codes %}
-    snapcraft.publisher.settings.enableInput('whitelist');
+      snapcraft.publisher.settings.enableInput('whitelist');
     {% elif blacklist_country_codes %}
-    snapcraft.publisher.settings.enableInput('blacklist');
+      snapcraft.publisher.settings.enableInput('blacklist');
     {% endif %}
   });
 </script>

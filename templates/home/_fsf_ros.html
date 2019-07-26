@@ -17,25 +17,24 @@
     <div class="col-6">
       <h4>Here's an example snapcraft.yaml that uses ROS:</h4>
       <code class="p-code-yaml"><pre><b>name</b>: ros-talker-listener
-          <b>version</b>: '0.1'
-          <b>summary</b>: ROS Talker/Listener Example
-          <b>description</b>: |
-          This example launches a ROS talker and listener.
+<b>version</b>: '0.1'
+<b>summary</b>: ROS Talker/Listener Example
+<b>description</b>: |
+  This example launches a ROS talker and listener.
 
-          <b>confinement</b>: devmode
-          <b>base:</b> core18
+<b>confinement</b>: devmode
+<b>base:</b> core18
 
-          <b>parts</b>:
-          <b>ros-tutorials</b>:
-          <b>plugin</b>: catkin
-          <b>source</b>: https://github.com/ros/ros_tutorials.git
-          <b>source-branch</b>: melodic-devel
-          <b>source-space</b>: roscpp_tutorials/
+<b>parts</b>:
+  <b>ros-tutorials</b>:
+    <b>plugin</b>: catkin
+    <b>source</b>: https://github.com/ros/ros_tutorials.git
+    <b>source-branch</b>: melodic-devel
+    <b>source-space</b>: roscpp_tutorials/
 
-          <b>apps</b>:
-          <b>ros-talker-listener</b>:
-          <b>command</b>: roslaunch roscpp_tutorials talker_listener.launch
-      </pre></code>
+<b>apps</b>:
+  <b>ros-talker-listener</b>:
+    <b>command</b>: roslaunch roscpp_tutorials talker_listener.launch</pre></code>
     </div>
   </div>
 </div>

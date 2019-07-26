@@ -19,29 +19,30 @@
     <div class="col-6">
       <h4>Here’s how mdl uses it:</h4>
       <code class="p-code-yaml"><pre><b>name</b>: mdl
-          <b>version</b>: "0.5.0"
-          <b>summary</b>: Markdown lint tool
-          <b>description</b>: |
-          Style checker/lint tool for markdown files
+<b>version</b>: "0.5.0"
+<b>summary</b>: Markdown lint tool
+<b>description</b>: |
+  Style checker/lint tool for markdown files
 
-          <b>confinement</b>: devmode
-          <b>base</b>: core18
+<b>confinement</b>: devmode
+<b>base</b>: core18
 
-          <b>parts</b>:
-          <b>mdl</b>:
-          <b>source</b>: .
-	  <b>plugin</b>: ruby
-	  <b>gems</b>:
-	  - rake
-	  - bundler
-	  <b>override-build</b>: |
-	  snapcraftctl build
-	  rake install
-	  <b>build-packages</b>:
-	  - git
-          <b>apps</b>:
-          <b>mdl</b>:
-          <b>command</b>: bin/mdl</pre></code>
+<b>parts</b>:
+  <b>mdl</b>:
+    <b>source</b>: .
+    <b>plugin</b>: ruby
+    <b>gems</b>:
+      - rake
+      - bundler
+     <b>override-build</b>: |
+       snapcraftctl build
+       rake install
+     <b>build-packages</b>:
+       - git
+
+<b>apps</b>:
+  <b>mdl</b>:
+    <b>command</b>: bin/mdl</pre></code>
     </div>
   </div>
 </div>

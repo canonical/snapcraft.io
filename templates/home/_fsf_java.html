@@ -17,36 +17,36 @@
     <div class="col-6">
       <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
       <code class="p-code-yaml"><pre><b>name</b>: freeplane
-          <b>version</b>: '1.6.10'
-          <b>summary</b>: Application for Mind Mapping, Knowledge and Project Management
-          <b>description</b>: |
-          Freeplane is a free and open source software
-          application that supports thinking, sharing
-          information and getting things done at work,
-          in school and at home. The core of the
-          software is tools for mind mapping (also known
-          as concept mapping or information mapping)
-          and using mapped information.
+<b>version</b>: '1.6.10'
+<b>summary</b>: Application for Mind Mapping, Knowledge and Project Management
+<b>description</b>: |
+  Freeplane is a free and open source software
+  application that supports thinking, sharing
+  information and getting things done at work,
+  in school and at home. The core of the
+  software is tools for mind mapping (also known
+  as concept mapping or information mapping)
+  and using mapped information.
 
-          <b>confinement</b>: devmode
+<b>confinement</b>: devmode
 
-          <b>parts:</b>
-          <b>freeplane:</b>
-          <b>after:</b> [desktop-glib-only]
-          <b>plugin:</b> gradle
-          <b>source:</b> .
-          <b>build:</b> |
-          export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-          gradle release -x test -x createGitTag
-          <b>install:</b> |
-          unzip DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
-          <b>build-packages:</b>
-          - unzip
-          - openjdk-8-jdk
+<b>parts:</b>
+  <b>freeplane:</b>
+    <b>after:</b> [desktop-glib-only]
+    <b>plugin:</b> gradle
+    <b>source:</b> .
+    <b>build:</b> |
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+      gradle release -x test -x createGitTag
+    <b>install:</b> |
+      unzip DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
+    <b>build-packages:</b>
+      - unzip
+      - openjdk-8-jdk
 
-          <b>apps</b>:
-          <b>freeplane</b>:
-          <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh</pre></code>
+<b>apps</b>:
+  <b>freeplane</b>:
+    <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh</pre></code>
     </div>
   </div>
 </div>

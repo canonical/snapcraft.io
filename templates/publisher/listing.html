@@ -136,7 +136,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
                 value="{{ category.slug }}"
                 {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
                 selected="selected"
-                {% endif %}O
+                {% endif %}
                 >{{ category.name }}</option>
               {% endfor %}
               <option value="">None</option>
@@ -520,12 +520,12 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       'license': {{ license|tojson }},
       'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
     },
-                                        {% if error_list %}
-                                        {{ error_list|tojson}}
-                                        {% else %}
-                                        null
-                                        {% endif %}
-                                       );
+    {% if error_list %}
+      {{ error_list|tojson}}
+    {% else %}
+      null
+    {% endif %}
+    );
 
     snapcraft.publisher.stickyListingBar();
     snapcraft.publisher.markdownToggle();
