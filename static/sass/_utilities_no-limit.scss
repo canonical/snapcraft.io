@@ -1,0 +1,7 @@
+@mixin u-no-limit {
+  // because it's 2019 yet we still have "max-width: 25em" on headings
+  // no matter what the context.
+  .u-no-limit {
+    max-width: 100%;
+  }
+}

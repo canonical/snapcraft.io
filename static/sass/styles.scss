@@ -195,9 +195,6 @@ $color-navigation-background: #252525;
 @import 'patterns_first-snap-flow';
 @include snapcraft-p-first-snap-flow;
 
-@import 'snapcraft_p-list-step';
-@include snapcraft-p-list-step;
-
 @import 'snapcraft_p-breadcrumbs';
 @include snapcraft-p-breadcrumbs;
 
@@ -248,6 +245,9 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-docs';
 @include snapcraft-pattern-docs;
+
+@import 'utilities_no-limit';
+@include u-no-limit;
 
 html,
 body {

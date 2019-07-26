@@ -9,64 +9,66 @@
 
   <div class="row js-os-type js-linux-auto{# u-hide#}">
     <div class="col-8">
-      <ol class="p-list-step">
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">1</span>
+      <ol class="p-stepped-list">
+        <li class="p-stepped-list__item">
+          <h4 class="p-stepped-list__title u-no-limit">
             <a href="https://docs.snapcraft.io/core/install" target="_blank" class="p-link--external">Install snap support</a>, if you don't have it already
           </h4>
         </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">2</span>
+        <li class="p-stepped-list__item">
+          <h4 class="p-stepped-list__title u-no-limit">
             Install Snapcraft, the command-line tool for building snaps
           </h4>
-          {% set snippet_value = "snap install snapcraft --classic" %}
-          {% set snippet_id = "linux-install-snapcraft" %}
-          {% include "/partials/_code-snippet.html" %}
+          <span class="p-stepped-list__content">
+            {% set snippet_value = "snap install snapcraft --classic" %}
+            {% set snippet_id = "linux-install-snapcraft" %}
+            {% include "/partials/_code-snippet.html" %}
+          </span>
         </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">3</span>
+        <li class="p-stepped-list__item">
+          <h4 class="p-stepped-list__title u-no-limit">
             Refresh your path
           </h4>
-          {% set snippet_value = "hash -r" %}
-          {% set snippet_id = "linux-refresh-your-path" %}
-          {% include "/partials/_code-snippet.html" %}
+          <span class="p-stepped-list__content">
+            {% set snippet_value = "hash -r" %}
+            {% set snippet_id = "linux-refresh-your-path" %}
+            {% include "/partials/_code-snippet.html" %}
+          </span>
         </li>
       </ol>
     </div>
   </div>
   {#<div class="row js-os-type js-linux-manual u-hide">
     <div class="col-8">
-      <ol class="p-list-step has-margin">
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">1</span>
+      <ol class="p-stepped-list has-margin">
+        <li class="p-stepped-list__item">
+          <h4 class="p-stepped-list__title u-no-limit">
             <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/" target="_blank" class="p-link--external">Install Docker</a>
             , if you don't have it already
           </h4>
         </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">2</span>
+        <li class="p-stepped-list__item">
+          <h4 class="p-stepped-list__title u-no-limit">
             Check that Docker is correctly configured
           </h4>
-          {% set snippet_value = "docker run hello-world" %}
-          {% set snippet_id = "linux-docker" %}
-          {% include "/partials/_code-snippet.html" %}
-          <p class="p-list-step__content">
-            If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
-          </p>
+          <span class="p-stepped-list__content">
+            {% set snippet_value = "docker run hello-world" %}
+            {% set snippet_id = "linux-docker" %}
+            {% include "/partials/_code-snippet.html" %}
+            <p>
+              If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
+            </p>
+          </span>
         </li>
-        <li class="p-list-step__item">
-          <h4 class="p-list-step__title">
-            <span class="p-list-step__bullet">2</span>
+        <li class="p-stepped-list__item">
+          <h4 class="p-stepped-list__title u-no-limit">
             Pull the latest snapcraft image:
           </h4>
-          {% set snippet_value = "docker pull snapcore/snapcraft" %}
-          {% set snippet_id = "linux-docker-pull" %}
-          {% include "/partials/_code-snippet.html" %}
+          <span class="p-stepped-list__content">
+            {% set snippet_value = "docker pull snapcore/snapcraft" %}
+            {% set snippet_id = "linux-docker-pull" %}
+            {% include "/partials/_code-snippet.html" %}
+          </span>
         </li>
       </ol>
     </div>
