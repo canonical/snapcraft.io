@@ -245,6 +245,9 @@ $color-navigation-background: #252525;
 @import 'patterns_distro_banner';
 @include p-distro-banner;
 
+@import 'snapcraft_p-docs';
+@include snapcraft-pattern-docs;
+
 html,
 body {
   background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129

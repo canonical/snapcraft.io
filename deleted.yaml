@@ -1,0 +1,14 @@
+docs/snaps/philosophy:
+docs/core/store:
+docs/core/snapd:
+docs/core/versions:
+docs/build-snaps/get-started-snapcraft:
+docs/build-snaps/scriptlets:
+docs/build-snaps/metadata:
+docs/build-snaps/ci-integration:
+docs/build-snaps/advanced-features:
+docs/reference/:
+docs/reference/snap-command:
+docs/reference/snapcraft-command:
+docs/reference/confinement:
+docs/reference/env:

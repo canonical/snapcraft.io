@@ -10,9 +10,15 @@ from werkzeug.debug import DebuggedApplication
 
 import talisker.flask
 import talisker.logs
+
 import webapp.api
 import webapp.helpers as helpers
+from canonicalwebteam.yaml_responses.flask_helpers import (
+    prepare_deleted,
+    prepare_redirects,
+)
 from webapp.blog.views import blog
+from webapp.docs.views import init_docs
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
@@ -49,6 +55,9 @@ def create_app(testing=False):
 
     app.config.from_object("webapp.configs." + app.config["WEBAPP"])
 
+    app.before_request(prepare_redirects())
+    app.before_request(prepare_deleted())
+
     set_handlers(app)
 
     if app.config["WEBAPP"] == "snapcraft":
@@ -72,6 +81,7 @@ def init_snapcraft(app, testing=False):
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)
     app.register_blueprint(blog, url_prefix="/blog")
+    init_docs(app, "/docs")
 
 
 def init_extensions(app):

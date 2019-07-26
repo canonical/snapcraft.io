@@ -1,0 +1,114 @@
+@mixin snapcraft-pattern-docs {
+  $banner-background: #106363;
+
+  .docs-container {
+    display: flex;
+    margin: 0 auto;
+    max-width: 64.875rem;
+    width: 100%;
+
+    // Discourse adds "emoji" <img>s, which are huge
+    // They need to be constrained
+    .emoji {
+      height: 1rem;
+    }
+
+    .p-sidebar {
+      border-right: .0625rem solid $color-mid-light;
+      flex: 0 0 18rem;
+    }
+
+    .p-sidebar__content {
+      padding: 1.5rem;
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5rem;
+        margin: 0;
+        padding: 0;
+      }
+
+      ul {
+        margin-left: 0;
+        padding-left: 1rem;
+
+        li {
+          padding: .125rem 0;
+        }
+
+        li:first-of-type {
+          padding-top: .5rem;
+        }
+
+        li a {
+          color: $color-dark;
+          text-decoration: none;
+
+          &.is-active {
+            position: relative;
+
+            &::before {
+              background-color: $color-mid-light;
+              bottom: -.25rem;
+              content: '';
+              left: -1rem;
+              position: absolute;
+              top: -.25rem;
+              width: .1875rem;
+            }
+          }
+        }
+      }
+    }
+
+    .p-content {
+      flex: 5;
+
+      &__row {
+        margin-left: inherit;
+        padding: 0 5%;
+      }
+    }
+  }
+
+  #search-docs.snapcraft-banner-background { //sass-lint:disable-line no-ids
+    background: $banner-background;
+  }
+
+  .p-docs-search {
+    display: flex;
+    width: 100%;
+
+    .p-search-box__input {
+      flex-grow: 1;
+      margin-right: 2rem;
+      margin-bottom: 0;
+    }
+
+    button {
+      flex-grow: 0;
+    }
+  }
+
+  @media screen and (max-width: $breakpoint-navigation-threshold) {
+    .docs-container {
+      flex-direction: column;
+
+      .p-sidebar {
+        border-bottom: .0625rem solid $color-mid-light;
+        border-right: 0;
+        flex: auto;
+        height: inherit;
+        width: 100%;
+      }
+
+      .p-sidebar__toggle {
+        background-size: 1rem;
+        cursor: pointer;
+        float: right;
+        padding: 2rem;
+      }
+    }
+  }
+}
