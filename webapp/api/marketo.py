@@ -74,10 +74,11 @@ class MarketoApi:
                     body["errors"][0]["code"],
                     map(lambda error: error["message"], body["errors"]),
                 )
-
                 raise api_error_exception
             else:
-                raise ApiResponseError("Unknown error from api", 500)
+                status_code = response.status_code
+                message = f"{status_code} - {body}"
+                raise ApiResponseError(message, 500)
 
         return body
 
