@@ -27,6 +27,19 @@
     }
   }
 
+  .p-featured-snap--banner {
+    background-color: transparent;
+    display: block;
+    margin-bottom: $sp-xxx-large;
+    padding: 0;
+    text-align: center;
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
   .p-featured-snap--generated {
     background-color: $default-color;
     border-radius: $border-radius;

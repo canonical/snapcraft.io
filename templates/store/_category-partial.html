@@ -1,10 +1,16 @@
 <div id="js-snap-{{ category }}">
-    {% if has_featured %}
-        {% if snaps[0]["icon_url"] != "" %}
-            {% set snap = snaps[0] %}
-            {% include "store/_generated-featured-snap-partial.html" %}
-        {% endif %}
+  {% if has_featured %}
+    {% if snaps[0].banner_url %}
+      <a class="p-featured-snap p-featured-snap--banner is-light" href="/{{ snaps[0].package_name }}">
+        <img src="{{ snaps[0].banner_url}}" />
+      </a>
+    {% else %}
+      {% if snaps[0]["icon_url"] != "" %}
+        {% set snap = snaps[0] %}
+        {% include "store/_generated-featured-snap-partial.html" %}
+      {% endif %}
     {% endif %}
+  {% endif %}
     <div class="snapcraft-p-grid{% if has_featured %} snapcraft-p-grid--featured{% endif %}">
         {% set show_summary = True %}
         {% for snap in snaps %}

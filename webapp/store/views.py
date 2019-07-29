@@ -77,6 +77,9 @@ def store_blueprint(store_query=None, testing=False):
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
 
+        for featured_snap in featured_snaps:
+            featured_snap = logic.get_snap_banner_url(featured_snap)
+
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
         if len(featured_snaps) == 10 and featured_snaps[0]["icon_url"] == "":
