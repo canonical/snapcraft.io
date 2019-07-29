@@ -17,7 +17,9 @@ from canonicalwebteam.yaml_responses.flask_helpers import (
     prepare_deleted,
     prepare_redirects,
 )
-from webapp.blog.views import blog
+
+# from webapp.blog.views import blog
+from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
@@ -48,7 +50,6 @@ def create_app(testing=False):
         init_extensions(app)
 
         talisker.flask.register(app)
-        talisker.requests.configure(webapp.api.blog.api_session)
         talisker.requests.configure(webapp.api.dashboard.api_session)
         talisker.requests.configure(webapp.api.sso.api_session)
         talisker.logs.set_global_extra({"service": "snapcraft.io"})
@@ -80,8 +81,8 @@ def init_snapcraft(app, testing=False):
     app.register_blueprint(store_blueprint(testing=testing))
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)
-    app.register_blueprint(blog, url_prefix="/blog")
     init_docs(app, "/docs")
+    init_blog(app, "/blog")
 
 
 def init_extensions(app):
