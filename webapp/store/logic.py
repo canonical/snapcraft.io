@@ -35,14 +35,17 @@ def get_snap_banner_url(snap_result):
     :param snap_result: the snap dict
     :returns: the snap dict with banner key
     """
+    snap_result_with_banner = dict(snap_result)
 
     def f(x):
         return x["url"] if x["type"] == "banner" else None
 
-    banner_url = list(filter(f, snap_result["media"]))
+    banner_url = list(filter(f, snap_result_with_banner["media"]))
 
     if len(banner_url) > 0:
-        snap_result["banner_url"] = banner_url[0]["url"]
+        snap_result_with_banner["banner_url"] = banner_url[0]["url"]
+
+    return snap_result_with_banner
 
 
 def get_pages_details(url, links):
