@@ -25,6 +25,6 @@ def init_docs(app, url_prefix):
         "/docs/search",
         "docs-search",
         build_search_view(
-            site="docs.snapcraft.io", template_path="docs/search.html"
+            site="snapcraft.io/docs", template_path="docs/search.html"
         ),
     )
