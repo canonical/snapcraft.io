@@ -2,7 +2,7 @@
   {% if has_featured %}
     {% if snaps[0].banner_url %}
       <a class="p-featured-snap p-featured-snap--banner is-light" href="/{{ snaps[0].package_name }}">
-        <img src="{{ snaps[0].banner_url}}" />
+        <img src="{{ snaps[0].banner_url}}" crossorigin="anonymous" />
       </a>
     {% else %}
       {% if snaps[0]["icon_url"] != "" %}
