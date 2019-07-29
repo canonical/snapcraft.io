@@ -65,7 +65,7 @@ if (typeof dataLayer !== "undefined") {
     }
 
     if (!target) {
-      target = e.target.closest(".p-code-snippet");
+      target = e.target.closest(".p-code-copyable");
     }
 
     if (!target) {
@@ -104,7 +104,7 @@ if (typeof dataLayer !== "undefined") {
     }
 
     // clicking on code snippet
-    if (target.matches(".p-code-snippet")) {
+    if (target.matches(".p-code-copyable")) {
       e.stopImmediatePropagation();
       const copyButton = target.querySelector(".js-clipboard-copy");
 

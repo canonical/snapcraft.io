@@ -1,6 +1,6 @@
 @mixin snapcraft-details-heading {
 
-  .p-code-snippet__input {
+  .p-code-copyable__input {
     padding-right: 40px;
   }
 
@@ -141,7 +141,7 @@
 
       // hide install instructions when no release in channel
       &--closed {
-        .p-code-snippet {
+        .p-code-copyable {
           display: none;
         }
       }
