@@ -46,7 +46,7 @@ class ModalActionButton extends Component {
     const className = [
       `p-button--${appearance}`,
       "u-no-margin--bottom",
-      "u-float--right",
+      "u-float-right",
       ["positive", "negative"].indexOf(appearance) > -1 ? "is--dark" : ""
     ];
 

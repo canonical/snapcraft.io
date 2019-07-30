@@ -221,12 +221,12 @@ class RevisionsList extends Component {
     return (
       <Fragment>
         <div className="u-clearfix">
-          <h4 className="u-float--left">{title}</h4>
+          <h4 className="u-float-left">{title}</h4>
           <a
             style={{ marginTop: "0.5rem" }}
             href="#"
             onClick={this.onCloseClick.bind(this)}
-            className="p-icon--close u-float--right"
+            className="p-icon--close u-float-right"
           />
         </div>
         {hasDevmodeRevisions && (
