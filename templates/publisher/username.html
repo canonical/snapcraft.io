@@ -22,9 +22,11 @@ Choose username — Linux software in the Snap Store
 
   <div class="row">
     <form class="p-form p-form--stacked" method="POST" action="/account/username">
-      <div class="row">
-        <div class="col-7">
+      <div class="p-form__group row">
+        <div class="col-2">
           <label class="p-form__label" for="username">Username:</label>
+        </div>
+        <div class="col-6">
           <div class="p-form__control">
             <input name="username" id="username" type="text" value="{{ username }}" required pattern="^[a-z0-9]+[a-z0-9-]*[a-z0-9]+$">
             <p class="p-form-help-text">
@@ -36,12 +38,12 @@ Choose username — Linux software in the Snap Store
         </div>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       </div>
-      <hr />
-      <div class="row u-no-margin--top">
-        <div class="u-float-right u-no-margin--top u-clear">
-          <a class="p-button--neutral" href="/">Cancel</a>
-          <button class="p-button--possitive u-no-margin--top" type="submit">Continue</button>
-        </div>
+      <div class="u-fixed-width">
+        <hr />
+      </div>
+      <div class="u-fixed-width">
+        <button class="p-button--possitive u-float-right" type="submit">Continue</button>
+        <a class="p-button--neutral u-float-right" href="/">Cancel</a>
       </div>
     </form>
   </div>
