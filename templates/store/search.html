@@ -85,11 +85,11 @@
   {% if (searched_snaps or featured_snaps) and links %}
   <section class="p-strip is-shallow u-no-padding--top">
     <nav class="row">
-      <div class="u-float--left u-align--left">
+      <div class="u-float-left u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
         {% if links.prev %}<a href="{{ links.prev }}">&#8249;&nbsp;Previous</a>{% endif %}
       </div>
-      <div class="u-float--right u-align--right">
+      <div class="u-float-right u-align--right">
         {% if links.next %}<a href="{{ links.next }}">Next&nbsp;&#8250;</a>{% endif %}
         {% if links.last %}&nbsp;<a href="{{ links.last }}">Last&nbsp;&#187;</a>{% endif %}
       </div>
