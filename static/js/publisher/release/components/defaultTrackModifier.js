@@ -128,7 +128,7 @@ class DefaultTrackModifier extends Component {
     }
 
     return (
-      <div className="u-float--right">
+      <div className="u-float-right">
         {!isCurrentDefault && this.renderSetButton()}
         {isCurrentDefault && !defaultIsLatest && this.renderClearLink()}
       </div>

@@ -5,7 +5,7 @@ const categoryPrefix = "snapcraft.io-";
 const events = {
   ".global-nav a": "nav-0",
   ".p-navigation a": "nav-1",
-  ".p-footer a": "footer-0",
+  ".p-sticky-footer a": "footer-0",
   "#main-content .p-button--positive": "content-cta-0",
   ".p-strip .p-button--positive": "content-cta-0",
   "#main-content .p-button--neutral": "content-cta-1",

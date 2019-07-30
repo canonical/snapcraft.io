@@ -73,7 +73,7 @@ export class AvailableRevisionsMenu extends Component {
         onClick={!isDisabled ? this.itemClick.bind(this, item) : undefined}
       >
         {menuLabels[item].label}{" "}
-        <span className="u-float--right">({count})</span>
+        <span className="u-float-right">({count})</span>
         {menuLabels[item].description && (
           <span className="p-contextual-menu__description">
             {menuLabels[item].description}
