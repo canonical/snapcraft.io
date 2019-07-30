@@ -363,12 +363,16 @@ def snap_details_views(store, api, handle_errors):
 
         try:
             featured_snaps_results = api.get_searched_snaps(
-                snap_searched="", category="featured", size=12, page=1
+                snap_searched="", category="featured", size=13, page=1
             )
         except ApiError:
             featured_snaps_results = []
 
-        featured_snaps = logic.get_searched_snaps(featured_snaps_results)
+        featured_snaps = [
+            snap
+            for snap in logic.get_searched_snaps(featured_snaps_results)
+            if snap["package_name"] != snap_name
+        ][:12]
 
         context.update({"featured_snaps": featured_snaps})
         return flask.render_template(
