@@ -64,3 +64,4 @@ cache.tmp/
 webapp/licenses.json
 coverage/
 .webcache/
+.webcache_blog/

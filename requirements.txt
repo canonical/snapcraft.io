@@ -1,6 +1,7 @@
 # App dependencies
 bleach==3.1.0
 canonicalwebteam.discourse-docs==0.6.4
+canonicalwebteam.blog==2.0.14
 canonicalwebteam.yaml-responses==1.1.1
 canonicalwebteam.search==0.1.0
 Flask==1.0.2
