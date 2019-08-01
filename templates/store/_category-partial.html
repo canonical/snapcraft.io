@@ -5,12 +5,18 @@
             {% include "store/_generated-featured-snap-partial.html" %}
         {% endif %}
     {% endif %}
-    <div class="snapcraft-p-grid{% if has_featured %} snapcraft-p-grid--featured{% endif %}">
+    <div class="row">
         {% set show_summary = True %}
         {% for snap in snaps %}
-            {% set media_object_classname = "u-no-margin--bottom" %}
             {% if loop.index != 1 or snap["icon_url"] == "" %}
+                {% if has_featured %}
+                    {% set icon_size = "large" %}
+                    <div class="col-4 col-medium-3">
+                {% else %}
+                    <div class="col-3">
+                {% endif %}
                 {% include "store/_media-object-snap-partial.html" %}
+                </div>
             {% endif %}
         {% endfor %}
     </div>

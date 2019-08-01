@@ -129,7 +129,7 @@ $color-navigation-background: #252525;
 @include snapcraft-p-form-validation;
 
 @import 'snapcraft_p-notifications';
-@include snapcraft-p-beta-notification;
+@include snapcraft-p-notification;
 
 @import 'snapcraft_distro-chart';
 @include snapcraft-distro-chart;
@@ -158,12 +158,6 @@ $color-navigation-background: #252525;
 @import 'snapcraft_p-build';
 @include snapcraft-p-build;
 
-@import 'patterns_case-study';
-@include snapcraft-p-case-study;
-
-@import 'patterns_snap-row';
-@include snapcraft-p-snap-row;
-
 @import 'patterns_blog-list';
 @include snapcraft-p-blog-list;
 
@@ -175,9 +169,6 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-breadcrumbs';
 @include snapcraft-p-breadcrumbs;
-
-@import 'snapcraft_p-code-block';
-@include snapcraft-p-code-block;
 
 @import 'snapcraft_p-code-copyable';
 @include snapcraft-p-code-copyable;
@@ -208,9 +199,6 @@ $color-navigation-background: #252525;
 
 @import 'patterns_pagination';
 @include snapcraft-p-pagination;
-
-@import 'snapcraft-p_grid';
-@include snapcraft-p-grid;
 
 @import 'snapcraft_p-featured-snap';
 @include snapcraft-p-featured-snap;

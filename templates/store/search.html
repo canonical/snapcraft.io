@@ -54,17 +54,19 @@
             <div class="p-strip is-shallow u-no-padding--bottom">
                 <div class="u-fixed-width">
                   <h3>All {{ category_display|lower }} snaps</h3>
-                  <div class="snapcraft-p-grid">
+                  <div class="row">
                     {% set show_summary = False %}
                     {% for snap in searched_snaps %}
-                      {% include 'store/_media-object-snap-partial.html' %}
+                      <div class="col-3 col-medium-2">
+                        {% include 'store/_media-object-snap-partial.html' %}
+                      </div>
                     {% endfor %}
                   </div>
                 </div>
             </div>
           {% endif %}
         {% else %}
-          <div class="snapcraft-p-grid">
+          <div class="row">
             {% for snap in searched_snaps %}
               {% include 'store/_media-object-snap-partial.html' %}
             {% endfor %}

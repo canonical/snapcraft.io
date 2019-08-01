@@ -93,8 +93,7 @@
 
   {% if featured_snaps %}
   <div class="p-strip is-shallow">
-    <div class="row">
-      <div class="u-equal-height">
+    <div class="row u-equal-height">
         {% set snap = featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}
         {% if featured_snaps[1] %}
@@ -107,11 +106,13 @@
   {% endif %}
 
   <div class="p-strip is-shallow">
-      <div class="u-fixed-width snapcraft-p-grid">
+      <div class="row">
       {% set hide_publisher = True %}
       {% set show_summary = True %}
       {% for snap in snaps %}
-        {% include "store/_media-object-snap-partial.html" %}
+        <div class="col-3">
+          {% include "store/_media-object-snap-partial.html" %}
+        </div>
       {% endfor %}
     </div>
   </div>
