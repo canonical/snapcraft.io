@@ -34,6 +34,7 @@ $color-navigation-background: #252525;
 @include vf-p-breadcrumbs;
 @include vf-p-pagination;
 @include vf-p-code-copyable;
+@include vf-p-tabs;
 
 // vanilla utilities
 @include vf-u-floats;
@@ -55,26 +56,29 @@ $color-navigation-background: #252525;
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;
 
+// No drop-in replacement from vanilla, but perhaps we could use
+// p-button has-icon?
 @import 'patterns_button_spinner';
 @include p-button-spinner;
 
+// Needs some TLC with the new code styling
 @import 'patterns_annotated_code';
 @include p-annotated-code;
 
 @import 'map';
 @include snap-details-map;
 
+// Again the new grid doesn't work to implement what happens here
 @import 'search-form';
 @include search-form;
 
+// The footer pattern has been removed from vanilla
+// so there is little possibility this will be added
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
 
 @import 'snapcraft_p-navigation';
 @include snapcraft-p-navigation;
-
-@import 'snapcraft_p-tabs';
-@include snapcraft-p-tabs;
 
 @import 'snapcraft_custom-typography';
 @include snapcraft-custom-typography;

@@ -9,6 +9,8 @@
     z-index: 40; // appear over channel map
 
     // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1892
+    // This was closed (I assume fixed) but then vanilla 2.0 removed the footer
+    // pattern and the p-sticky-footer, so it's all internal to snapcraft now
     .p-navigation__banner {
       flex-basis: auto;
     }
@@ -61,7 +63,7 @@
         }
       }
 
-      .p-icon--chevron {
+      .p-icon--contextual-menu {
         $chevron-size: map-get($icon-sizes, accordion);
 
         height: $chevron-size;
@@ -73,7 +75,7 @@
       }
 
       [aria-expanded="true"] {
-        .p-icon--chevron {
+        .p-icon--contextual-menu {
           transform: rotate(180deg);
         }
       }

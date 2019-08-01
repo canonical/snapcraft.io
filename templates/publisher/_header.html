@@ -9,16 +9,11 @@
     </div>
   </div>
   {% endif %}
-  <nav class="p-tabs-bordered">
-    <div class="u-fixed-width">
-      <a href="/snaps">&lsaquo; My snaps</a>
-    </div>
-    <div class="row p-tabs__group">
-      <div class="col-6">
-        <h1 class="u-float-left p-heading--three u-no-margin--bottom">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
-      </div>
-      <div class="col-6">
-        <ul class="p-tabs__list u-float-right" role="tablist">
+  <div class="u-fixed-width">
+    <a href="/snaps">&lsaquo; My snaps</a>
+    <h1 class="p-heading--three">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
+    <nav class="p-tabs">
+      <ul class="p-tabs__list u-float-right" role="tablist">
           <li class="p-tabs__item" role="presentation">
             <a
               href="/{{ snap_name }}/listing"
@@ -92,7 +87,6 @@
             </a>
           </li>
         </ul>
-      </div>
-    </div>
-  </nav>
+      </nav>
+  </div>
 </section>
