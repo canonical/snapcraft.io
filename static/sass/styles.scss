@@ -17,6 +17,7 @@ $color-navigation-background: #252525;
 @include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
+@include vf-p-media-object;
 @include vf-p-modal;
 @include vf-p-muted-heading;
 @include vf-p-navigation;
@@ -49,23 +50,10 @@ $color-navigation-background: #252525;
 @include vf-u-show;
 @include vf-u-layout;
 
+// The new grid doesn't work here
+// https://github.com/canonical-web-and-design/vanilla-framework/issues/1974
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;
-
-@import 'patterns_inline-list--compact';
-@include p-inline-list--compact;
-
-@import 'patterns_social-icons';
-@include p-social-icons;
-
-@import 'patterns_media-object';
-@include p-media-object;
-
-@import 'patterns_media-object--large';
-@include p-media-object--large;
-
-@import 'patterns_table-key-value';
-@include vf-p-table-key-value;
 
 @import 'patterns_button_spinner';
 @include p-button-spinner;
