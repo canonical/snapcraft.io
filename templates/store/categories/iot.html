@@ -24,10 +24,10 @@
     </div>
   </section>
   <section class="p-strip is-shallow">
-    <div class="row">
+    <div class="u-fixed-width">
       <h3 class="p-heading--four">IoT tools and server</h3>
     </div>
-    <div class="row">
+    <div class="u-fixed-width">
       <div class="snapcraft-p-grid">
         {% for snap in iot_tools_and_server %}
           {% if not loop.last %}
@@ -38,10 +38,10 @@
       </div>
     </div>
 
-    <div class="row is-bordered">
+    <div class="u-fixed-width is-bordered">
       <h3 class="p-heading--four">Industrial IoT</h3>
     </div>
-    <div class="row">
+    <div class="u-fixed-width">
       <div class="snapcraft-p-grid">
         {% for snap in industrial_iot %}
           {% if not loop.last %}
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="u-fixed-width">
       <div class="p-card--highlighted p-case-study">
         <div class="row">
           <div class="col-6">
@@ -67,10 +67,10 @@
       </div>
     </div>
 
-    <div class="row is-bordered">
+    <div class="u-fixed-width is-bordered">
       <h3 class="p-heading--four">Networking</h3>
     </div>
-    <div class="row">
+    <div class="u-fixed-width">
       <div class="snapcraft-p-grid">
         {% for snap in networking %}
           {% if not loop.last %}
@@ -81,10 +81,10 @@
       </div>
     </div>
 
-    <div class="row is-bordered">
+    <div class="u-fixed-width is-bordered">
       <h3 class="p-heading--four">Home gateway</h3>
     </div>
-    <div class="row">
+    <div class="u-fixed-width">
       <div class="snapcraft-p-grid">
         {% for snap in home_gateway %}
           {% if not loop.last %}
@@ -95,10 +95,10 @@
       </div>
     </div>
 
-    <div class="row is-bordered">
+    <div class="u-fixed-width is-bordered">
       <h3 class="p-heading--four">Board images</h3>
     </div>
-    <div class="row">
+    <div class="u-fixed-width">
       <div class="snapcraft-p-grid">
         {% for snap in board_images %}
           {% if not loop.last %}
@@ -109,11 +109,11 @@
       </div>
     </div>
 
-    <div class="row is-bordered">
+    <div class="u-fixed-width is-bordered">
       <h3 class="p-heading--four">More on IoT & Snapcraft</h3>
     </div>
       <div class="row u-equal-height">
-        <div class="col-4 p-card--post">
+        <div class="col-4 p-card">
           <div class="p-card__content">
             <h3 class="p-heading--four">
               <a href="https://blog.ubuntu.com/2018/04/05/the-nextcloud-box-a-review-of-building-an-iot-device-with-snaps">The Nextcloud Box: a review of building an IoT device with snaps</a>
@@ -125,7 +125,7 @@
           </div>
         </div>
 
-        <div class="col-4 p-card--post">
+        <div class="col-4 p-card">
           <div class="p-card__content">
             <div class="u-crop--16-9">
               <a href="https://blog.ubuntu.com/2018/07/18/iot-security-at-scale-managing-end-to-end-security">
@@ -138,7 +138,7 @@
           </div>
         </div>
 
-        <div class="col-4 p-card--post">
+        <div class="col-4 p-card">
           <div class="p-card__content">
             <h3 class="p-heading--four">
               <a href="https://blog.ubuntu.com/2017/10/26/thinger-io-uses-ubuntu-core-snaps-for-easy-iot-deployment">Ubuntu Core and snaps for easy IoT deployment</a>

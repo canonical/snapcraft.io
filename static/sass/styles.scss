@@ -145,9 +145,6 @@ $color-navigation-background: #252525;
 @import 'utilities_crop';
 @include u-insights-crop;
 
-@import 'patterns_card';
-@include insights-p-card;
-
 @import 'patterns_blog-post';
 @include snapcraft-p-blog-post;
 
