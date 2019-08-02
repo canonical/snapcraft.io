@@ -178,8 +178,8 @@
     <div class="row">
         {% set show_summary = True %}
         {% for snap in featured_snaps %}
-          {% set icon_size = "large" %}
           <div class="col-4">
+            {% set icon_size = "large" %}
             {% include "store/_media-object-snap-partial.html" %}
           </div>
         {% endfor %}

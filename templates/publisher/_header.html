@@ -14,79 +14,79 @@
     <h1 class="p-heading--three">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
     <nav class="p-tabs">
       <ul class="p-tabs__list u-float-right" role="tablist">
-          <li class="p-tabs__item" role="presentation">
-            <a
-              href="/{{ snap_name }}/listing"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'listing' %}
-              aria-selected="true"
-              {% endif %}
-              >
-              Listing
-            </a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a
-              href="/{{ snap_name }}/releases"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'release' %}
-              aria-selected="true"
-              {% endif %}
-              >
-              Releases
-            </a>
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a
-              href="/{{ snap_name }}/metrics"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'metrics' %}
-              aria-selected="true"
-              {% endif %}
-              >
-              Metrics
-            </a>
-          </li>
-          <li
-            class="p-tabs__item {% if private %}is--disabled p-tooltip p-tooltip--btm-center{% endif %}"
-            role="presentation"
-            {% if private %} aria-describedby="publicise-tooltip"{% endif %}
-            >
-            <a
-              href="/{{ snap_name }}/publicise"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'publicise' %}
-              aria-selected="true"
-              {% endif %}
-              >
-              Publicise
-            </a>
-            {% if private %}
-            <span class="p-tooltip__message" role="tooltip" id="publicise-tooltip">Your snap needs to be public in order to publicise.</span>
+        <li class="p-tabs__item" role="presentation">
+          <a
+            href="/{{ snap_name }}/listing"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'listing' %}
+            aria-selected="true"
             {% endif %}
-          </li>
-          <li class="p-tabs__item" role="presentation">
-            <a
-              href="/{{ snap_name }}/settings"
-              class="p-tabs__link"
-              tabindex="0"
-              role="tab"
-              {% if selected_tab == 'settings' %}
-              aria-selected="true"
-              {% endif %}
-              >
-              Settings
-            </a>
-          </li>
-        </ul>
-      </nav>
+            >
+            Listing
+          </a>
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a
+            href="/{{ snap_name }}/releases"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'release' %}
+            aria-selected="true"
+            {% endif %}
+            >
+            Releases
+          </a>
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a
+            href="/{{ snap_name }}/metrics"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'metrics' %}
+            aria-selected="true"
+            {% endif %}
+            >
+            Metrics
+          </a>
+        </li>
+        <li
+          class="p-tabs__item {% if private %}is--disabled p-tooltip p-tooltip--btm-center{% endif %}"
+          role="presentation"
+          {% if private %} aria-describedby="publicise-tooltip"{% endif %}
+          >
+          <a
+            href="/{{ snap_name }}/publicise"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'publicise' %}
+            aria-selected="true"
+            {% endif %}
+            >
+            Publicise
+          </a>
+          {% if private %}
+          <span class="p-tooltip__message" role="tooltip" id="publicise-tooltip">Your snap needs to be public in order to publicise.</span>
+          {% endif %}
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a
+            href="/{{ snap_name }}/settings"
+            class="p-tabs__link"
+            tabindex="0"
+            role="tab"
+            {% if selected_tab == 'settings' %}
+            aria-selected="true"
+            {% endif %}
+            >
+            Settings
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </section>
