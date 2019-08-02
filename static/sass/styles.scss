@@ -17,6 +17,7 @@ $color-navigation-background: #252525;
 @include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
+@include vf-p-media-object;
 @include vf-p-modal;
 @include vf-p-muted-heading;
 @include vf-p-navigation;
@@ -33,6 +34,7 @@ $color-navigation-background: #252525;
 @include vf-p-breadcrumbs;
 @include vf-p-pagination;
 @include vf-p-code-copyable;
+@include vf-p-tabs;
 
 // vanilla utilities
 @include vf-u-floats;
@@ -49,44 +51,34 @@ $color-navigation-background: #252525;
 @include vf-u-show;
 @include vf-u-layout;
 
+// The new grid doesn't work here
+// https://github.com/canonical-web-and-design/vanilla-framework/issues/1974
 @import 'patterns_fluid-grid';
 @include p-fluid-grid;
 
-@import 'patterns_inline-list--compact';
-@include p-inline-list--compact;
-
-@import 'patterns_social-icons';
-@include p-social-icons;
-
-@import 'patterns_media-object';
-@include p-media-object;
-
-@import 'patterns_media-object--large';
-@include p-media-object--large;
-
-@import 'patterns_table-key-value';
-@include vf-p-table-key-value;
-
+// No drop-in replacement from vanilla, but perhaps we could use
+// p-button has-icon?
 @import 'patterns_button_spinner';
 @include p-button-spinner;
 
+// Needs some TLC with the new code styling
 @import 'patterns_annotated_code';
 @include p-annotated-code;
 
 @import 'map';
 @include snap-details-map;
 
+// Again the new grid doesn't work to implement what happens here
 @import 'search-form';
 @include search-form;
 
+// The footer pattern has been removed from vanilla
+// so there is little possibility this will be added
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
 
 @import 'snapcraft_p-navigation';
 @include snapcraft-p-navigation;
-
-@import 'snapcraft_p-tabs';
-@include snapcraft-p-tabs;
 
 @import 'snapcraft_custom-typography';
 @include snapcraft-custom-typography;
@@ -100,6 +92,8 @@ $color-navigation-background: #252525;
 @import 'snapcraft_metrics';
 @include snapcraft-metrics;
 
+// When we move the listing, formerly market page
+// to react, we should be able to remove this
 @import 'snapcraft_market';
 @include snapcraft-market;
 
@@ -112,41 +106,30 @@ $color-navigation-background: #252525;
 @import 'patterns_logo-links';
 @include p-logo-link;
 
-@import 'snapcraft_custom-typography';
-@include snapcraft-custom-typography;
-
 @import 'snapcraft_market_screenshots';
 @include snapcraft-market-screenshots;
 
 @import 'snapcraft_snap-list';
 @include snapcraft-snap-list;
 
-@import 'snapcraft_account-snaps';
-@include snapcraft-account-snaps;
-
+// This needs to be killed with fire
 @import 'patterns_maas_modal';
 @include maas-p-modal;
 
 @import 'snapcraft_details_heading';
 @include snapcraft-details-heading;
 
-@import 'snapcraft_footer';
-@include snapcraft-footer;
+@import 'snapcraft_patterns_icons';
+@include snapcraft-p-icon-top;
 
 @import 'snapcraft_snap-details';
 @include snapcraft-snap-details;
-
-@import 'snapcraft_404';
-@include snapcraft-404;
-
-@import 'snapcraft_p-form-help-text';
-@include snapcraft-p-form-help-text;
 
 @import 'snapcraft_p-form-validation';
 @include snapcraft-p-form-validation;
 
 @import 'snapcraft_p-notifications';
-@include snapcraft-p-beta-notification;
+@include snapcraft-p-notification;
 
 @import 'snapcraft_distro-chart';
 @include snapcraft-distro-chart;
@@ -156,9 +139,6 @@ $color-navigation-background: #252525;
 
 @import 'utilities_crop';
 @include u-insights-crop;
-
-@import 'patterns_card';
-@include insights-p-card;
 
 @import 'patterns_blog-post';
 @include snapcraft-p-blog-post;
@@ -178,12 +158,6 @@ $color-navigation-background: #252525;
 @import 'snapcraft_p-build';
 @include snapcraft-p-build;
 
-@import 'patterns_case-study';
-@include snapcraft-p-case-study;
-
-@import 'patterns_snap-row';
-@include snapcraft-p-snap-row;
-
 @import 'patterns_blog-list';
 @include snapcraft-p-blog-list;
 
@@ -195,9 +169,6 @@ $color-navigation-background: #252525;
 
 @import 'snapcraft_p-breadcrumbs';
 @include snapcraft-p-breadcrumbs;
-
-@import 'snapcraft_p-code-block';
-@include snapcraft-p-code-block;
 
 @import 'snapcraft_p-code-copyable';
 @include snapcraft-p-code-copyable;
@@ -228,9 +199,6 @@ $color-navigation-background: #252525;
 
 @import 'patterns_pagination';
 @include snapcraft-p-pagination;
-
-@import 'snapcraft-p_grid';
-@include snapcraft-p-grid;
 
 @import 'snapcraft_p-featured-snap';
 @include snapcraft-p-featured-snap;

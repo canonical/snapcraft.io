@@ -4,9 +4,10 @@
   title="{{ snap.title }}{% if snap.summary %} – {{ snap.summary }}{% endif %}"
 >
   {% if snap.icon_url %}
-  <img src="{{ snap.icon_url }}" class="p-media-object__image" alt="">
+  <img src="{{ snap.icon_url }}" class="p-media-object__image" alt=""
+       {% if icon_size == "large" %} style="width: 72px !important; height: 72px !important; max-width: 72px; max-height: 72px;"{% endif %}>
   {% else %}
-  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object__image" alt="">
+  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object__image" alt="" {% if icon_size == "large" %} style="width: 72px !important; height: 72px !important; max-width: 72px; max-height: 72px;"{% endif %}>
   {% endif %}
 
   <div class="p-media-object__details">

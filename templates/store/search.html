@@ -16,7 +16,7 @@
 
 {% block content %}
   <section id="main-content" class="p-strip--image is-shallow snapcraft-banner-background">
-  <div class="row">
+  <div class="u-fixed-width">
     <form action="/search" class="p-form p-form--inline p-form--search">
       <div class="p-form__group">
         <label for="search-input" class="u-off-screen">Search</label>
@@ -31,7 +31,7 @@
 
   <section class="p-strip is-shallow">
     {% if searched_snaps or featured_snaps %}
-      <div class="row">
+      <div class="u-fixed-width">
         {% if not query and category_display %}
           <a href="/store">&lsaquo; Categories</a>
           <h2>{{ category_display }} snaps</h2>
@@ -43,7 +43,7 @@
           {% endif %}
         {% endif %}
       </div>
-      <div class="row js-store-category">
+      <div class="u-fixed-width js-store-category">
         {% if not query and category_display and featured_snaps %}
           {% set has_featured = True %}
           {% set show_summary = True %}
@@ -52,19 +52,21 @@
           </div>
           {% if searched_snaps %}
             <div class="p-strip is-shallow u-no-padding--bottom">
-                <div class="row">
+                <div class="u-fixed-width">
                   <h3>All {{ category_display|lower }} snaps</h3>
-                  <div class="snapcraft-p-grid">
+                  <div class="row">
                     {% set show_summary = False %}
                     {% for snap in searched_snaps %}
-                      {% include 'store/_media-object-snap-partial.html' %}
+                      <div class="col-3 col-medium-2">
+                        {% include 'store/_media-object-snap-partial.html' %}
+                      </div>
                     {% endfor %}
                   </div>
                 </div>
             </div>
           {% endif %}
         {% else %}
-          <div class="snapcraft-p-grid">
+          <div class="row">
             {% for snap in searched_snaps %}
               {% include 'store/_media-object-snap-partial.html' %}
             {% endfor %}
@@ -84,7 +86,7 @@
 
   {% if (searched_snaps or featured_snaps) and links %}
   <section class="p-strip is-shallow u-no-padding--top">
-    <nav class="row">
+    <nav class="u-fixed-width">
       <div class="u-float-left u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
         {% if links.prev %}<a href="{{ links.prev }}">&#8249;&nbsp;Previous</a>{% endif %}

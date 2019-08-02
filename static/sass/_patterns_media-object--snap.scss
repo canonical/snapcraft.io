@@ -86,18 +86,4 @@
       }
     }
   }
-
-  .snapcraft-p-grid--featured {
-    .p-media-object--snap {
-      .p-media-object__image {
-        height: 3rem;
-        width: 3rem;
-
-        @media screen and (min-width: $breakpoint-small) {
-          height: 4.5rem;
-          width: 4.5rem;
-        }
-      }
-    }
-  }
 }

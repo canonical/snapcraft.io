@@ -1,15 +1,17 @@
 <div id="js-snap-{{ category }}">
-  <div class="snapcraft-p-grid{% if has_featured %} snapcraft-p-grid--featured{% endif %}">
+  <div class="row">
     {% set i = 0 %}
     {% for _ in range(0, 9) %}
-      <div class="p-media-object p-media-object--snap is-placeholder">
-        <div class="p-media-object__image"></div>
-        <div class="p-media-object__details">
-          <h4 class="p-media-object__title p-heading--five">
-            Placeholder
-          </h4>
-          <div class="p-media-object__content">
-            <p>Placeholder</p>
+      <div class="col-4 col-medium-3">
+        <div class="p-media-object p-media-object--snap is-placeholder">
+          <div class="p-media-object__image"></div>
+          <div class="p-media-object__details">
+            <h4 class="p-media-object__title p-heading--five">
+              Placeholder
+            </h4>
+            <div class="p-media-object__content">
+              <p>Placeholder</p>
+            </div>
           </div>
         </div>
       </div>

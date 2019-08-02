@@ -1,20 +1,4 @@
-@mixin snapcraft-p-beta-notification {
-  .p-beta-notification {
-    padding: {
-      bottom: $sp-small;
-      top: $sp-small;
-    }
-
-
-    .p-muted-heading {
-      margin-right: $sp-medium;
-    }
-
-    p {
-      max-width: 100%;
-    }
-  }
-
+@mixin snapcraft-p-notification {
   .p-snapcraft-nps-banner {
     flex-direction: row;
     flex-wrap: wrap;
