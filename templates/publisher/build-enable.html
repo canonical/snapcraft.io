@@ -1,0 +1,23 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+  Enable builds for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div id="main-content">
+    {% set selected_tab='builds' %}
+    {% include "publisher/_header.html" %}
+    <section class="p-strip is-shallow">
+        <div class="row">
+            <h4>Connect the repo you want to build from</h4>
+            <form action="{{ url_for('publisher_snaps.enable_snap_builds', snap_name=snap_title) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <label for="build_repo">Repo URL</label>
+                <input type="text" id="build_repo" name="build_repo" />
+                <input type="submit" value="Connect">
+            </form>
+        </div>
+    </section>
+  </div>
+{% endblock %}

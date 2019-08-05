@@ -137,6 +137,9 @@ $color-navigation-background: #252525;
 @import 'snapcraft_snap-details';
 @include snapcraft-snap-details;
 
+@import 'snapcraft_snap-builds';
+@include snapcraft-snap-builds;
+
 @import 'snapcraft_404';
 @include snapcraft-404;
 

@@ -20,6 +20,7 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
+from webapp.api.launchpad import launchpad
 from webapp.api.store import StoreApi
 from webapp.store.logic import (
     get_categories,
@@ -27,7 +28,9 @@ from webapp.store.logic import (
     get_icon,
     get_videos,
 )
+from webapp.database import db
 from webapp.decorators import login_required
+from webapp.models.snap import Snap
 from webapp.helpers import get_licenses
 from webapp.publisher.snaps import logic
 from webapp.publisher.snaps import preview_data
@@ -1293,3 +1296,69 @@ def post_preview(snap_name):
     context["normalized_os"] = preview_data.get_normalised_oses()
 
     return flask.render_template("store/snap-details.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/builds", methods=["GET"])
+@login_required
+def get_snap_builds(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "snap_id": details["snap_id"],
+        "snap_name": details["snap_name"],
+        "snap_title": details["title"],
+    }
+
+    snap = (
+        db.query(Snap).filter(Snap.snap_id == details["snap_id"]).one_or_none()
+    )
+
+    if not snap:
+        return flask.render_template("publisher/build-enable.html", **context)
+
+    lp_snap = launchpad.snaps.findByURL(url=snap.build_repo)
+    if lp_snap:
+        context["snap_builds"] = lp_snap[0].builds
+
+    return flask.render_template("publisher/build-list.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/builds/enable", methods=["POST"])
+@login_required
+def enable_snap_builds(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "snap_id": details["snap_id"],
+        "snap_name": details["snap_name"],
+        "snap_title": details["title"],
+    }
+
+    build_repo = flask.request.form.get("build_repo")
+    if not build_repo:
+        return flask.render_template("publisher/build-enable.html", **context)
+
+    snap = Snap(snap_id=details["snap_id"], build_repo=build_repo)
+
+    db.add(snap)
+    db.commit()
+
+    return flask.redirect(
+        flask.url_for("publisher_snaps.get_snap_builds", snap_name=snap_name)
+    )

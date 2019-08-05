@@ -1,0 +1,51 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+  Build details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div id="main-content">
+    {% set selected_tab='builds' %}
+    {% include "publisher/_header.html" %}
+    <section class="p-strip is-shallow">
+      <div class="row p-snap-builds">
+        {% if snap_builds %}
+        <h4>Latest {{snap_builds.total_size}} Builds</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Number</th>
+              <th>Trigger</th>
+              <th>Architecture</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for build in snap_builds.entries %}
+            {% set build_state_cls = "success" if build.buildstate.startswith("Successfully") else "error" %}
+            <tr>
+              <td class="p-snap-build-state">
+                <i class="p-icon--{{build_state_cls}}"></i>
+                <span class="p-snap-build-{{build_state_cls}}">{{build.buildstate}}</span>
+              </td>
+              <td><a href="{{build.web_link}}">#{{ build.web_link.split("/")[-1] }}</a></td>
+              <td>Commit <i class="p-icon--commit"></i> {{build.revision_id[:7]}}</td>
+              <td>{{build.arch_tag}}</td>
+              <td>
+                <p><i class="p-icon--timer"></i> {{build.duration[:7]}}</p>
+                <p><i class="p-icon--calendar"></i> {{build.datebuilt[:10]}}</p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <h4>No builds</h4>
+          <p>There are currently no builds of this snap.</p>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+{% endblock %}

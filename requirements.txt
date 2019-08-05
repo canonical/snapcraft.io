@@ -7,6 +7,7 @@ Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.2
 humanize==0.5.1
+launchpadlib==1.10.7
 Markdown==3.0.1
 prometheus_client==0.3.1
 mistune==0.8.4
