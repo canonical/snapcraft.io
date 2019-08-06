@@ -1,4 +1,14 @@
 @mixin snapcraft-p-code-copyable {
+  .p-code-copyable.not-cli {
+    &::before {
+      display: none;
+    }
+
+    .p-code-copyable__input {
+      padding-left: .5rem;
+    }
+  }
+
   textarea.p-code-copyable__input { // sass-lint:disable-line no-qualifying-elements
     background-position: 0 .25rem;
     box-shadow: none;
@@ -9,9 +19,15 @@
     resize: none;
   }
 
-  textarea.p-code-copyable__input + .p-code-copyable__action { // sass-lint:disable-line no-qualifying-elements
+  textarea.p-code-copyable__input + .p-code-copyable__action, // sass-lint:disable-line no-qualifying-elements
+  code.p-code-copyable__input + .p-code-copyable__action { // sass-lint:disable-line no-qualifying-elements
     border-bottom: 1px solid $color-mid-light;
     border-radius: 0 0 0 $border-radius;
     height: 2rem;
+  }
+
+  code.p-code-copyable__input { //sass-lint:disable-line no-qualifying-elements
+    background: $color-x-light;
+    box-shadow: none;
   }
 }
