@@ -43,7 +43,7 @@
           {% endif %}
         {% endif %}
       </div>
-      <div class="u-fixed-width js-store-category">
+      <div class="js-store-category">
         {% if not query and category_display and featured_snaps %}
           {% set has_featured = True %}
           {% set show_summary = True %}
@@ -52,23 +52,25 @@
           </div>
           {% if searched_snaps %}
             <div class="p-strip is-shallow u-no-padding--bottom">
-                <div class="u-fixed-width">
-                  <h3>All {{ category_display|lower }} snaps</h3>
-                  <div class="row">
-                    {% set show_summary = False %}
-                    {% for snap in searched_snaps %}
-                      <div class="col-3 col-medium-2">
-                        {% include 'store/_media-object-snap-partial.html' %}
-                      </div>
-                    {% endfor %}
+              <div class="u-fixed-width">
+                <h3>All {{ category_display|lower }} snaps</h3>
+              </div>
+              <div class="row">
+                {% set show_summary = False %}
+                {% for snap in searched_snaps %}
+                  <div class="col-3 col-medium-2">
+                    {% include 'store/_media-object-snap-partial.html' %}
                   </div>
-                </div>
+                {% endfor %}
+              </div>
             </div>
           {% endif %}
         {% else %}
           <div class="row">
             {% for snap in searched_snaps %}
-              {% include 'store/_media-object-snap-partial.html' %}
+              <div class="col-3 col-medium-2">
+                {% include 'store/_media-object-snap-partial.html' %}
+              </div>
             {% endfor %}
           </div>
         {% endif %}

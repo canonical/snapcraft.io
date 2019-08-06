@@ -32,7 +32,7 @@
     border-radius: $border-radius;
     column-gap: $sp-xxx-large;
     display: grid;
-    grid-template-columns: minmax(5rem, 43rem) minmax(1rem, 160px);
+    grid-template-columns: minmax(5rem, 50rem) minmax(1rem, 160px);
     margin-bottom: $sp-xxx-large;
     padding: $sph-outer;
     text-decoration: none;
@@ -57,8 +57,8 @@
     }
 
     .p-featured-snap__icon {
-      width: 9rem;
       height: 9rem;
+      width: 9rem;
     }
 
     &:hover {
@@ -98,10 +98,10 @@
     }
 
     @media screen and (max-width: $breakpoint-small) {
-      padding: $sp-medium $sp-x-large;
       column-gap: $sp-x-large;
-
+      padding: $sp-medium $sp-x-large;
     }
+
     @media screen and (min-width: $breakpoint-small) {
       .p-featured-snap__title {
         display: none;
