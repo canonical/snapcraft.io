@@ -106,8 +106,10 @@
             {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
             <div data-live="description">{{ description | safe }}</div>
           </div>
-          <div class="col-4 js-snap-description-details">
-            {% include "store/snap-details/_details.html" %}
+          <div class="col-4">
+            <div class="js-snap-description-details">
+              {% include "store/snap-details/_details.html" %}
+            </div>
           </div>
         </div>
 
