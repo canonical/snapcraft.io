@@ -31,31 +31,31 @@
         <h2 class="u-float-left">Featured</h2>
         <a href="/search?category=featured" class="p-button--neutral u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
-    <div class="u-fixed-width">
-      {% set snaps = featured_snaps %}
-      {% set category = "featured" %}
-      {% set show_summary = True %}
-      {% include "store/_category-partial.html" %}
-    </div>
+
+    {% set snaps = featured_snaps %}
+    {% set category = "featured" %}
+    {% set show_summary = True %}
+    {% include "store/_category-partial.html" %}
+
     <div class="u-fixed-width u-hide--medium u-hide--large">
       <a href="/search?category=featured" class="p-button--neutral u-float-right">See more in Featured</a>
     </div>
   </section>
 
   {% for category in categories %}
-    <section class="p-strip is-shallow">
-      <div class="u-fixed-width">
-          <h2 class="u-float-left">{{ category.name }}</h2>
-          <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
-      </div>
-      <div data-category="{{ category.slug }}" class="u-fixed-width js-store-category">
-        {% include "store/_empty-category-partial.html" %}
-        {# _category-partial.html loaded via JS #}
-      </div>
-      <div class="u-fixed-width u-hide--medium u-hide--large">
-        <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float-right">See more in {{ category.name }}</a>
-      </div>
-    </section>
+  <section class="p-strip is-shallow">
+    <div class="u-fixed-width u-clearfix">
+        <h2 class="u-float-left">{{ category.name }}</h2>
+        <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
+    </div>
+    <div data-category="{{ category.slug }}" class="js-store-category">
+      {% include "store/_empty-category-partial.html" %}
+      {# _category-partial.html loaded via JS #}
+    </div>
+    <div class="u-fixed-width u-hide--medium u-hide--large">
+      <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float-right">See more in {{ category.name }}</a>
+    </div>
+  </section>
   {% endfor %}
 
   <section class="p-strip--image is-deep is-dark p-strip--snap-store">
