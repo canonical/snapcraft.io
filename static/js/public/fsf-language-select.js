@@ -50,7 +50,7 @@ function initFSFLanguageSelect(rootEl) {
         window.location.hash = "";
       }
 
-      window.scrollTo(0, link.offsetTop);
+      window.scrollTo(0, link.getBoundingClientRect().top);
     }
   };
 
