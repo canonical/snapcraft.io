@@ -4,8 +4,6 @@
   .docs-container {
     display: flex;
     margin: 0 auto;
-    max-width: 64.875rem;
-    width: 100%;
 
     // Discourse adds "emoji" <img>s, which are huge
     // They need to be constrained
@@ -64,6 +62,7 @@
 
     .p-content {
       flex: 5;
+      overflow: hidden;
 
       &__row {
         margin-left: inherit;
