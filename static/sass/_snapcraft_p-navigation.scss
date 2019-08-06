@@ -15,12 +15,8 @@
       flex-basis: auto;
     }
 
-    // custom styles for dark header
+    // custom styles
     .p-navigation__link {
-      .is-selected {
-        box-shadow: 0 -3px 0 $navigation-highlight-color inset;
-      }
-
       .p-icon--user {
         margin-right: $sp-small;
       }
