@@ -23,9 +23,9 @@
         <input id="report-snap-email" type="email" name="entry.1424146082" placeholder="email@example.com" />
         <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
         <div class="u-align--right">
-          <button type="button" class="js-modal-close">Cancel</button>
+          <button type="button" class="js-modal-close u-no-margin--bottom">Cancel</button>
           {# use --dark fake class for spinner icon to be rendered correctly... #}
-          <button type="submit" type="submit" class="--dark">Submit report</button>
+          <button type="submit" type="submit" class="--dark u-no-margin--bottom">Submit report</button>
         </div>
       </form>
     </div>
@@ -37,18 +37,18 @@
       </header>
       <p>Thanks for bringing this to our attention. Information you provided will help us investigate further.</p>
       <div class="u-align--right">
-        <button type="button" class="p-button--positive js-modal-close">Close</button>
+        <button type="button" class="p-button--positive js-modal-close u-no-margin--bottom">Close</button>
       </div>
     </div>
 
     <div class="js-report-snap-error u-hide">
       <header class="p-modal__header">
         <h2 class="p-modal__title" id="modal-title">Error submitting report</h2>
-        <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
+        <button class="p-modal__close js-modal-close u-no-margin--bottom" aria-label="Close dialog">Close</button>
       </header>
       <p>There was an error while sending your report. Please try again later.</p>
       <div class="u-align--right">
-        <button type="button" class="p-button--positive js-modal-close">Close</button>
+        <button type="button" class="p-button--positive js-modal-close u-no-margin--bottom">Close</button>
       </div>
     </div>
   </div>
