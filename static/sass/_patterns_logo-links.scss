@@ -5,6 +5,13 @@
     display: block;
     margin-top: 0;
 
+    // override for Vanilla 2.0 adding border
+    // possibly we should revisit this styling at some point
+    .p-card__header {
+      border: 0;
+      padding: 0;
+    }
+
     img {
       display: block;
       margin: 0 auto;
