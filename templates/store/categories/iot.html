@@ -29,7 +29,7 @@
     </div>
     <div class="row">
       {% for snap in iot_tools_and_server %}
-        <div class="col-3">
+        <div class="col-3 col-medium-3">
           {% include "store/_media-object-snap-partial.html" %}
         </div>
       {% endfor %}
@@ -44,7 +44,7 @@
     </div>
     <div class="row">
       {% for snap in industrial_iot %}
-        <div class="col-3">
+        <div class="col-3 col-medium-3">
           {% if not loop.last %}
             {% set media_object_classname = "u-no-margin--bottom" %}
           {% endif %}
