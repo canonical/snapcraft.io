@@ -15,14 +15,9 @@
       flex-basis: auto;
     }
 
-    // custom styles for dark header with hover
+    // custom styles for dark header
     .p-navigation__link {
-      a:hover {
-        background: $navigation-hover-color;
-      }
-
       .is-selected {
-        background: $navigation-hover-color;
         box-shadow: 0 -3px 0 $navigation-highlight-color inset;
       }
 
