@@ -14,16 +14,16 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
       <div class="col-3">
         <div class="p-navigation--sidebar">
 
-          <div class="sidebar__content js-sidebar-toggle u-hide" aria-hidden="true">
-            <ul class="p-list sidebar__first-level" data-js="sidebar-first-level">
-              <li>
-                <a class="sidebar__link {% if publicise_page == 'buttons' %}is-selected{% endif %}" href="/{{ snap_name }}/publicise/">Snap Store buttons</a>
+          <div class="sidebar__content">
+            <ul class="p-list">
+              <li class="p-list__item {% if publicise_page == 'buttons' %}is-selected{% endif %}">
+                <a href="/{{ snap_name }}/publicise/">Snap Store buttons</a>
               </li>
-              <li>
-                <a class="sidebar__link {% if publicise_page == 'badges' %}is-selected{% endif %}" href="/{{ snap_name }}/publicise/badges">GitHub badges</a>
+              <li class="p-list__item {% if publicise_page == 'badges' %}is-selected{% endif %}">
+                <a href="/{{ snap_name }}/publicise/badges">GitHub badges</a>
               </li>
-              <li>
-                <a class="sidebar__link {% if publicise_page == 'cards' %}is-selected{% endif %}" href="/{{ snap_name }}/publicise/cards">Embeddable cards</a>
+              <li class="p-list__item {% if publicise_page == 'cards' %}is-selected{% endif %}">
+                <a href="/{{ snap_name }}/publicise/cards">Embeddable cards</a>
               </li>
             </ul>
           </div>
