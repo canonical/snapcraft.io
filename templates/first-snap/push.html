@@ -27,8 +27,7 @@
         <li class="p-accordion__group">
           <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">1.</span>
-              Create an Ubuntu One account
+              Step 1: Create an Ubuntu One account
               {% if user %}<i class="p-icon--success"></i>{% endif %}
             </h4>
           </button>
@@ -51,8 +50,7 @@
         <li class="p-accordion__group">
           <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">2.</span>
-              Register your snap name
+              Step 2: Register your snap name
               <i id="register-name-success" class="p-icon--success u-hide"></i>
             </h4>
           </button>
@@ -85,8 +83,7 @@
         <li class="p-accordion__group">
           <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">3.</span>
-              Push to the Snap store
+              Step 3: Push to the Snap store
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">

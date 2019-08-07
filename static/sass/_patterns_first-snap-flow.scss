@@ -23,15 +23,11 @@
     margin-bottom: map-get($sp-after, p) - map-get($nudges, nudge--p);
   }
 
-  .p-accordion__step {
-    display: block;
-    float: left;
-    width: 3rem;
-  }
-
   .p-accordion__panel {
+    $icon-size: map-get($icon-sizes, accordion);
+
     overflow: visible;
-    padding-left: 4rem;
+    padding-left: $sph-inner + $icon-size + $sph-inner; // same as accordion button
   }
 
   .p-form-validation__message {
