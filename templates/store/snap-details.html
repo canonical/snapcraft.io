@@ -243,7 +243,7 @@
 
   {% if has_publisher_page %}
   <div class="p-strip is-shallow">
-      <div class="u-fixed-width">
+      <div class="u-fixed-width u-clearfix">
         <h3 class="p-heading--four u-float-left">More snaps from {{ display_name(publisher, username) }}</h3>
         <a class="p-button--neutral u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
       </div>
@@ -251,7 +251,7 @@
         {% if publisher_featured_snaps[1]%}
           <div class="row u-equal-height">
         {% else %}
-          <div class="u-fixed-width">
+          <div class="u-fixed-width u-clearfix">
         {% endif %}  
         {% set snap = publisher_featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}

@@ -106,8 +106,10 @@
             {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
             <div data-live="description">{{ description | safe }}</div>
           </div>
-          <div class="col-4 js-snap-description-details">
-            {% include "store/snap-details/_details.html" %}
+          <div class="col-4">
+            <div class="js-snap-description-details">
+              {% include "store/snap-details/_details.html" %}
+            </div>
           </div>
         </div>
 
@@ -196,7 +198,7 @@
       <div class="col-6">
         <div class="p-card--highlighted">
           <a href="/snap-store">
-            <img src="https://assets.ubuntu.com/v1/e737ad29-Snap+Store.png" alt="" height="180" />
+            <img src="https://assets.ubuntu.com/v1/2b48f98d-distro_img_01.svg" width="100%" alt="" />
           </a>
           <h4 class="p-card__title">
             <a href="/snap-store">Get the snap store</a>
@@ -207,10 +209,10 @@
       <div class="col-6">
         <div class="p-card--highlighted">
           <a href="https://docs.snapcraft.io">
-            <img src="https://assets.ubuntu.com/v1/fe51ed53-Learn+about+snaps.png" alt="" height="180" />
+            <img src="https://assets.ubuntu.com/v1/8d00f749-distro_img_02.svg" width="100%" alt="" />
           </a>
           <h4 class="p-card__title">
-            <a href="https://docs.snapcraft.io">Learn more about snaps</a>
+            <a href="/docs">Learn more about snaps</a>
           </h4>
           <p class="p-card__content">Interested to find out more about snaps? Want to publish your own application? Visit <a href="/">snapcraft.io</a> now.</p>
         </div>
