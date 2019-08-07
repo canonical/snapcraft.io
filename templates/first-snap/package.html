@@ -8,8 +8,7 @@
         <li class="p-accordion__group">
           <button {% if has_user_chosen_name %}aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">1.</span>
-              Choose snap name
+              Step 1: Choose snap name
               {% if has_user_chosen_name %}<i class="p-icon--success"></i>{% endif %}
             </h4>
           </button>
@@ -36,8 +35,7 @@
         <li class="p-accordion__group">
           <button {% if has_user_chosen_name %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" >
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">2.</span>
-              Download an example app
+              Step 2: Download an example app
               <i class="p-icon--success u-hide"></i>
             </h4>
           </button>
@@ -58,8 +56,7 @@
         <li class="p-accordion__group">
           <button aria-expanded="false" type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" >
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">3.</span>
-              Download your snapcraft.yaml
+              Step 3: Download your snapcraft.yaml
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
