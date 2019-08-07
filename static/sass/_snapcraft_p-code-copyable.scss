@@ -1,4 +1,6 @@
 @mixin snapcraft-p-code-copyable {
+  // TODO: Remove this if and when https://github.com/canonical-web-and-design/vanilla-framework/issues/2454
+  // is implemented
   .p-code-copyable.not-cli {
     &::before {
       display: none;
@@ -9,6 +11,8 @@
     }
   }
 
+  // TODO: Remove this if and when https://github.com/canonical-web-and-design/vanilla-framework/issues/2453
+  // is implemented
   textarea.p-code-copyable__input { // sass-lint:disable-line no-qualifying-elements
     background-position: 0 .25rem;
     box-shadow: none;
