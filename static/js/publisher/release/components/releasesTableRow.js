@@ -393,7 +393,7 @@ const ReleasesTableRow = props => {
                 }`}
                 onClick={props.toggleBranches.bind(this, channel)}
               >
-                <i className="p-icon" />
+                <i className="p-icon--branch" />
                 {numberOfBranches}
               </span>
             )}
