@@ -214,3 +214,6 @@ $color-navigation-selected: #9c9c9c;
 
 @import 'utilities_no-limit';
 @include u-no-limit;
+
+@import 'utilities_flex';
+@include u-flex;
