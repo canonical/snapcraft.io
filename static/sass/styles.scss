@@ -112,9 +112,6 @@ $color-navigation-selected: #9c9c9c;
 @import 'snapcraft_market_screenshots';
 @include snapcraft-market-screenshots;
 
-@import 'snapcraft_snap-list';
-@include snapcraft-snap-list;
-
 // This needs to be killed with fire
 @import 'patterns_maas_modal';
 @include maas-p-modal;

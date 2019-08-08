@@ -116,8 +116,7 @@ My published snaps — Linux software in the Snap Store
     <table>
       <thead>
         <tr>
-          <th width="48"></th>
-          <th>Name</th>
+          <th width="30%">Name</th>
           <th width="10%">Visibility</th>
           <th width="20%">Owner</th>
           <th width="20%">Latest release</th>
@@ -135,22 +134,24 @@ My published snaps — Linux software in the Snap Store
         {% endif %}
         <tr>
           <td>
-            <a href="/{{snap}}/listing">
-              {% if snaps[snap].icon_url %}
-                <img src="{{ snaps[snap].icon_url }}" width="32" height="32" />
-              {% else %}
-                <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" width="32" height="32" />
-              {% endif %}
-            </a>
-          </td>
-          <td>
-            <a href="/{{snap}}/listing" class="u-image-position">
-              {{snap}}
-              {% if dispute_pending %}
-                &nbsp;<span class="p-tooltip p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
-                <i class="p-icon--warning"></i>
-                <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name dispute in progress</span>
-              {% endif %}
+            <a href="/{{snap}}/listing" class="p-heading-icon--small">
+              <span class="p-heading-icon__header">
+                {% if snaps[snap].icon_url %}
+                  <img src="{{ snaps[snap].icon_url }}" width="32" height="32" class="p-heading-icon__img" />
+                {% else %}
+                  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" width="32" height="32" class="p-heading-icon__img" />
+                {% endif %}
+                <p class="u-no-margin--bottom">
+                  {{snap}}
+                  {% if dispute_pending %}
+                    &nbsp;
+                    <span class="p-tooltip--btm-center" aria-describedby="{{ snap }}-dispute-pending">
+                      <i class="p-icon--warning"></i>
+                      <span class="p-tooltip__message" role="tooltip" id="{{ snap }}-dispute-pending">Name dispute in progress</span>
+                    </span>
+                  {% endif %}
+                </p>
+              </span>
             </a>
           </td>
           <td>
