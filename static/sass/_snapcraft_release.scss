@@ -206,15 +206,15 @@
       cursor: pointer;
     }
 
-    &.is-clickable:focus,
-    &.is-clickable:hover,
+    &:focus,
+    &:hover,
     &.is-active {
-      @include vf-animation (#{background-color, border-color}, fast, in);
-      background-color: $color-x-light;
       opacity: 1;
     }
 
     &.is-active {
+      @include vf-animation (#{background-color, border-color}, fast, in);
+      background-color: $color-x-light;
       border-color: $color-mid-dark;
 
       .p-release-data__title {
