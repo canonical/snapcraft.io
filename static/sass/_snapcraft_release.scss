@@ -524,6 +524,7 @@
   }
 
   .p-icon--history {
+    @extend %icon;
     @include snapcraft-icon-history($color-dark);
   }
 }
