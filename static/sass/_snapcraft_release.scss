@@ -88,11 +88,6 @@
       background: $color-x-light;
       opacity: 1;
     }
-
-    .p-icon {
-      @include snapcraft-icon-branch($color-dark, "8px", "11px");
-      top: 2px;
-    }
   }
 
   .p-releases-table__branch-timeleft {
@@ -526,5 +521,11 @@
   .p-icon--history {
     @extend %icon;
     @include snapcraft-icon-history($color-dark);
+  }
+
+  .p-icon--branch {
+    @extend %icon;
+    @include snapcraft-icon-branch($color-dark, "8px", "11px");
+    top: 2px;
   }
 }
