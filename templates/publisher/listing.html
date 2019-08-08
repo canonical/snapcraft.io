@@ -407,7 +407,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           <div class="js-license p-multiselect__wrapper" {% if license_type != 'simple' %}style="display: none;"{% endif %} id="license-simple-input">
             <input type="text" class="js-multiselect-input" name="license-simple" value="{% if license_type == 'simple' %}{{ license }}{% endif %}" />
             <div class="js-multiselect-holder"></div>
-            <p class="p-form-help-text u-no-margin--bottom">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
+            <p class="p-form-help-text u-no-margin">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
           </div>
           <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
           <label for="license-custom-option">Custom SPDX expression</label>
