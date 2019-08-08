@@ -1,0 +1,7 @@
+@mixin u-flex {
+  // There are several issues with using floats for layout in Vanilla 2.0
+  // This utility tries to give tools to overcome some of them
+  .u-flex {
+    display: flex;
+  }
+}
