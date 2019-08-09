@@ -144,10 +144,7 @@ export function tooltips() {
     this.tooltip
       .html(tooltipTemplate(dateData, currentHoverKey))
       .style("top", `${mousePosition[1]}px`)
-      .style(
-        "left",
-        `${mousePosition[0] + this.margin.left + this.padding.left}px`
-      )
+      .style("left", `${mousePosition[0] + this.margin.left}px`)
       .style("display", "block");
 
     const tooltipBounding = this.tooltip
