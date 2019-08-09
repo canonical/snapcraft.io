@@ -14,7 +14,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
     <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
     <div class="snapcraft-p-sticky" id="store-listing-notification">
-      <div class="row">
+      <div class="row u-no-margin--bottom">
         <div class="col-7">
           <p class="snapcraft-p-market-message u-no-margin--bottom">
             {% if private %}
@@ -30,7 +30,8 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               Preview
               <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
             </button>
-            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
+            <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
+            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
               {#
               to force dark icon variant we need a fake --dark class name:
               https://github.com/vanilla-framework/vanilla-framework/issues/1817
@@ -40,7 +41,6 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               </span>
               <span class="p-button__text">Save</span>
             </button>
-            <a class="p-button--neutral js-form-revert u-no-margin--bottom u-float-right" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
           </div>
         </div>
       </div>
