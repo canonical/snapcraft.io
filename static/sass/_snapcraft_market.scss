@@ -125,6 +125,14 @@
     .p-inline-list__item {
       line-height: 2.3rem;
     }
+
+    [class*="p-button"]:not([class*="p-button__"]) {
+      margin-right: $sph-inner;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 
   .p-market-banner {

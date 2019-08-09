@@ -17,7 +17,8 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
       <div class="row">
         <div class="col-5 col-start-large-8">
           <div class="u-align--right u-clearfix">
-            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom u-float-right" name="submit_apply" value="Save">
+            <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/{{ snap_name }}/settings">Revert</a>
+            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
               {#
               to force dark icon variant we need a fake --dark class name:
               https://github.com/vanilla-framework/vanilla-framework/issues/1817
@@ -27,7 +28,6 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
               </span>
               <span class="p-button__text">Save</span>
             </button>
-            <a class="p-button--neutral js-form-revert u-no-margin--bottom u-float-right" href="/{{ snap_name }}/settings">Revert</a>
           </div>
         </div>
       </div>
