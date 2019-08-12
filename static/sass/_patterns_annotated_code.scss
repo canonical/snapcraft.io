@@ -10,6 +10,12 @@
     text-align: left;
     text-shadow: none;
 
+    code {
+      background: none;
+      box-shadow: none;
+      white-space: pre;
+    }
+
     code b {
       color: $color-positive;
       font-weight: bold;

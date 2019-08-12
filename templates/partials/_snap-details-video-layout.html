@@ -1,5 +1,7 @@
-<div class="p-snap-details__media u-equal-height">
-  <div class="col-10 u-align-text--center">
+<div class="row p-snap-details__media u-equal-height">
+  {# TODO: u-align--center should be u-align-text--center
+   see https://github.com/canonical-web-and-design/vanilla-framework/issues/2448 #}
+  <div class="col-10 u-align--center">
     {% for video in videos %}
       <div class="js-video-slide" data-video-type="{{video.type}}" data-video-url="{{video.url}}" data-video-id="{{video.id}}">
         {% include "partials/_video.html" %}

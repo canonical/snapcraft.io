@@ -14,48 +14,43 @@
         <a href="#main-content">Jump to main content</a>
       </span>
       <ul class="p-navigation__links" role="menu">
-        <li class="p-navigation__link" role="menuitem">
-          <a
-            {% if page_slug == 'store' %}
-              class="is-selected"
-            {% endif %}
-            href="/store">
+        <li
+          class="p-navigation__link {% if page_slug == 'store' %}is-selected{% endif %}"
+          role="menuitem"
+        >
+          <a href="/store">
             Store
           </a>
         </li>
-        <li class="p-navigation__link" role="menuitem">
-          <a
-            {% if page_slug == 'blog' %}
-              class="is-selected"
-            {% endif %}
-              href="/blog">
+        <li
+          class="p-navigation__link {% if page_slug == 'blog' %}is-selected{% endif %}"
+          role="menuitem"
+        >
+          <a href="/blog">
             Blog
           </a>
         </li>
-        <li class="p-navigation__link" role="menuitem">
-          <a
-            {% if page_slug == 'iot' %}
-              class="is-selected"
-            {% endif %}
-              href="/iot">
+        <li
+          class="p-navigation__link {% if page_slug == 'iot' %}is-selected{% endif %}"
+          role="menuitem"
+        >
+          <a href="/iot">
             IoT
           </a>
         </li>
-        <li class="p-navigation__link" role="menuitem">
-          <a
-            {% if page_slug == 'build' %}
-              class="is-selected"
-            {% endif %}
-              href="/build">
+        <li
+          class="p-navigation__link {% if page_slug == 'build' %}is-selected{% endif %}"
+          role="menuitem"
+        >
+          <a href="/build">
             Build
           </a>
         </li>
-        <li class="p-navigation__link" role="menuitem">
-          <a
-            {% if page_slug == 'docs' %}
-              class="is-selected"
-            {% endif %}
-            href="{{ url_for('discourse_docs.document_view') }}">
+        <li
+          class="p-navigation__link {% if page_slug == 'docs' %}is-selected{% endif %}"
+          role="menuitem"
+        >
+          <a href="{{ url_for('discourse_docs.document_view') }}">
             Docs
           </a>
         </li>
@@ -64,15 +59,9 @@
 
       <ul class="p-navigation__links--right" role="menu">
         {% if user_name %}
-          <li role="menuitem" class="p-navigation__link p-dropdown">
-              <a
-                {% if page_slug == 'account' %}
-                  class="p-dropdown__toggle is-selected"
-                {% else %}
-                  class="p-dropdown__toggle"
-                {% endif %}
-                aria-controls="account-menu" aria-expanded="false">
-                {{ user_name }} <i class="p-icon--chevron"></i>
+          <li role="menuitem" class="p-navigation__link p-dropdown {% if page_slug == 'account' %}is-selected{% endif %}">
+              <a class="p-dropdown__toggle" aria-controls="account-menu" aria-expanded="false">
+                {{ user_name }} <i class="p-icon--contextual-menu"></i>
               </a>
               <ul class="p-dropdown__menu" id="account-menu" aria-hidden="true">
                   <li class="p-navigation__link" role="menuitem">

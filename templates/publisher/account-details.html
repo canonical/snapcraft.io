@@ -9,35 +9,31 @@ Account details — Linux software in the Snap Store
 <section class="p-strip">
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-  <div class="row">
-    <div class="col-12">
-      {% for category, message in messages %}
-      <div id="market-form-status" class="p-notification--{{ category }}">
-        <p class="p-notification__response">
-          {{ message }}
-        </p>
-      </div>
-      {% endfor %}
+  <div class="u-fixed-width">
+    {% for category, message in messages %}
+    <div id="market-form-status" class="p-notification--{{ category }}">
+      <p class="p-notification__response">
+        {{ message }}
+      </p>
     </div>
+    {% endfor %}
   </div>
   {% endif %}
   {% endwith %}
-  <div class="row">
-    <div class="col-12">
-      <h3 class="u-float--left">Publisher account details</h3>
-      <a href="{{ LOGIN_URL }}" class="p-link--external u-float--right">Edit details</a>
-    </div>
+  <div class="u-fixed-width">
+    <h3 class="u-float-left">Publisher account details</h3>
+    <a href="{{ LOGIN_URL }}" class="p-link--external u-float-right">Edit details</a>
   </div>
   {% if errors %}
-    <div class="row">
-      <div class="p-notification--negative">
-        <p class="p-notification__response">
-          {% for error in errors %}
-            {{ error.message }}<br />
-          {% endfor %}
-        </p>
-      </div>
+  <div class="row">
+    <div class="p-notification--negative">
+      <p class="p-notification__response">
+        {% for error in errors %}
+        {{ error.message }}<br />
+        {% endfor %}
+      </p>
     </div>
+  </div>
   {% endif %}
   <div class="row">
     <div class="col-2">
@@ -73,31 +69,31 @@ Account details — Linux software in the Snap Store
     </div>
   </div>
   {% if subscriptions %}
-    <div class="row">
-      <div class="col-2">
-        Email preferences:
-      </div>
-      <div class="col-6">
-          <form method="post" class="js-preferences-form">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-              <input type="hidden" name="email" value="{{ email }}" />
-              <input
-                      type="checkbox"
-                      {% if subscriptions.newsletter %}checked{% endif %}
-                      name="newsletter"
-                      id="newsletter">
-              <label for="newsletter" class="u-no-margin--bottom">
-                  Blog posts delivered
-              </label>
-              <p class="p-form-help-text">
-                  Get our latest and greatest blog posts delivered to your inbox.
-              </p>
-
-              <p><br />Please note, you will still recieve required platform related emails such as registration of snap names, the review status of a snap or any security vulnerabilities.</p>
-              <button type="submit" class="p-button--positive">Save email preferences</button>
-          </form>
-      </div>
+  <div class="row">
+    <div class="col-2">
+      Email preferences:
     </div>
+    <div class="col-6">
+      <form method="post" class="js-preferences-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="email" value="{{ email }}" />
+        <input
+          type="checkbox"
+          {% if subscriptions.newsletter %}checked{% endif %}
+          name="newsletter"
+          id="newsletter">
+        <label for="newsletter" class="u-no-margin--bottom">
+          Blog posts delivered
+        </label>
+        <p class="p-form-help-text">
+          Get our latest and greatest blog posts delivered to your inbox.
+        </p>
+
+        <p><br />Please note, you will still recieve required platform related emails such as registration of snap names, the review status of a snap or any security vulnerabilities.</p>
+        <button type="submit" class="p-button--positive">Save email preferences</button>
+      </form>
+    </div>
+  </div>
   {% endif %}
 </section>
 {% endblock %}

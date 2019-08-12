@@ -88,10 +88,9 @@
 
               <div class="p-snap-install-buttons">
                 <a class="p-button--neutral p-snap-install-buttons__install js-install" href="#install" data-scroll-to="#install">
-                    Install snap
+                  Install snap
                 </a>
               </div>
-
             </div>
           </div>
         </div>
@@ -107,8 +106,10 @@
             {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
             <div data-live="description">{{ description | safe }}</div>
           </div>
-          <div class="col-4 js-snap-description-details">
-            {% include "store/snap-details/_details.html" %}
+          <div class="col-4">
+            <div class="js-snap-description-details">
+              {% include "store/snap-details/_details.html" %}
+            </div>
           </div>
         </div>
 
@@ -132,22 +133,22 @@
           <h3>Enable snapd</h3>
         </div>
         {% for step in distro_install_steps %}
-        <div class="row">
-          <div class="col-7">
-            <p>{{ step.action|safe }}</p>
-          </div>
-          {% if step.command %}
-            <div class="col-5 distro-code-snippet">
-              {% set snippet_value = step.command %}
-              {% set snippet_id = "distro-install-command-" + loop.index|string %}
-              {% if (step.command|trim).count('\n') == 0 %}
-                {% include "/partials/_code-snippet.html" %}
-              {% else %}
-                {% include "/partials/_code-snippet-multi.html" %}
-              {% endif %}
+          <div class="row">
+            <div class="col-7">
+              <p>{{ step.action|safe }}</p>
             </div>
-          {% endif %}
-        </div>
+            {% if step.command %}
+              <div class="col-5 distro-code-snippet">
+                {% set snippet_value = step.command %}
+                {% set snippet_id = "distro-install-command-" + loop.index|string %}
+                {% if (step.command|trim).count('\n') == 0 %}
+                  {% include "/partials/_code-snippet.html" %}
+                {% else %}
+                  {% include "/partials/_code-snippet-multi.html" %}
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
         {% endfor %}
         <div class="row">
           <h3>Install {{ snap_title }}</h3>
@@ -172,34 +173,32 @@
   </section>
 
   <section class="p-strip is-shallow">
-    <div class="row">
-      <h3 class="u-float--left">Other popular snaps…</h3>
-      <a href="/search?category=featured" class="p-button--neutral u-float--right u-hide--small p-featured-snap__see-more">See more...</a>
+    <div class="u-fixed-width u-clearfix">
+      <h3 class="u-float-left">Other popular snaps…</h3>
+      <a href="/search?category=featured" class="p-button--neutral u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
     <div class="row">
-      <div class="col-12">
-        <div class="snapcraft-p-grid">
-            {% set show_summary = True %}
-            {% for snap in featured_snaps %}
-                {% set media_object_classname = "u-no-margin--bottom" %}
-                {% include "store/_media-object-snap-partial.html" %}
-            {% endfor %}
-        </div>
-      </div>
+        {% set show_summary = True %}
+        {% for snap in featured_snaps %}
+          <div class="col-4">
+            {% set icon_size = "large" %}
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
     </div>
     <div class="row u-hide--medium u-hide--large">
-      <a href="/search?category=featured" class="p-button--neutral u-float--right">See more in Featured</a>
+      <a href="/search?category=featured" class="p-button--neutral u-float-right">See more in Featured</a>
     </div>
   </section>
   <section class="p-strip is-shallow">
     <div class="row">
-      <h3 class="u-float--left">More things to do…</h3>
+      <h3 class="u-float-left">More things to do…</h3>
     </div>
     <div class="row">
       <div class="col-6">
         <div class="p-card--highlighted">
           <a href="/snap-store">
-            <img src="https://assets.ubuntu.com/v1/e737ad29-Snap+Store.png" alt="" height="180" />
+            <img src="https://assets.ubuntu.com/v1/2b48f98d-distro_img_01.svg" width="100%" alt="" />
           </a>
           <h4 class="p-card__title">
             <a href="/snap-store">Get the snap store</a>
@@ -210,10 +209,10 @@
       <div class="col-6">
         <div class="p-card--highlighted">
           <a href="https://docs.snapcraft.io">
-            <img src="https://assets.ubuntu.com/v1/fe51ed53-Learn+about+snaps.png" alt="" height="180" />
+            <img src="https://assets.ubuntu.com/v1/8d00f749-distro_img_02.svg" width="100%" alt="" />
           </a>
           <h4 class="p-card__title">
-            <a href="https://docs.snapcraft.io">Learn more about snaps</a>
+            <a href="/docs">Learn more about snaps</a>
           </h4>
           <p class="p-card__content">Interested to find out more about snaps? Want to publish your own application? Visit <a href="/">snapcraft.io</a> now.</p>
         </div>

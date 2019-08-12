@@ -39,7 +39,7 @@
     position: relative;
 
     .p-editable-icon__icon {
-      @include vf-icon-plus(007aa6);
+      @include vf-icon-plus($color-mid-dark);
       background-position: center;
       background-repeat: no-repeat;
       background-size: 1rem;
@@ -88,7 +88,6 @@
 
   .p-editable-icon__actions {
     display: block;
-    float: left;
   }
 
   .p-editable-icon__delete {
@@ -126,6 +125,14 @@
     .p-inline-list__item {
       line-height: 2.3rem;
     }
+
+    [class*="p-button"]:not([class*="p-button__"]) {
+      margin-right: $sph-inner;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 
   .p-market-banner {
@@ -141,7 +148,7 @@
       border-radius: $border-radius;
       color: $color-link;
       cursor: pointer;
-      margin-bottom: $spv-inter--regular;
+      margin-bottom: $spv-outer--medium;
       padding-top: 33.33333%;
       position: relative;
       text-align: center;

@@ -1,0 +1,37 @@
+@mixin snapcraft-p-code-copyable {
+  // TODO: Remove this if and when https://github.com/canonical-web-and-design/vanilla-framework/issues/2454
+  // is implemented
+  .p-code-copyable.not-cli {
+    &::before {
+      display: none;
+    }
+
+    .p-code-copyable__input {
+      padding-left: .5rem;
+    }
+  }
+
+  // TODO: Remove this if and when https://github.com/canonical-web-and-design/vanilla-framework/issues/2453
+  // is implemented
+  textarea.p-code-copyable__input { // sass-lint:disable-line no-qualifying-elements
+    background-position: 0 .25rem;
+    box-shadow: none;
+    color: $color-mid-dark;
+    margin-bottom: 0;
+    outline: none;
+    overflow: hidden;
+    resize: none;
+  }
+
+  textarea.p-code-copyable__input + .p-code-copyable__action, // sass-lint:disable-line no-qualifying-elements
+  code.p-code-copyable__input + .p-code-copyable__action { // sass-lint:disable-line no-qualifying-elements
+    border-bottom: 1px solid $color-mid-light;
+    border-radius: 0 0 0 $border-radius;
+    height: 2rem;
+  }
+
+  code.p-code-copyable__input { //sass-lint:disable-line no-qualifying-elements
+    background: $color-x-light;
+    box-shadow: none;
+  }
+}

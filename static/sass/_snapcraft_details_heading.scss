@@ -1,9 +1,4 @@
 @mixin snapcraft-details-heading {
-
-  .p-code-snippet__input {
-    padding-right: 40px;
-  }
-
   .p-snap-heading {
     display: flex;
     flex-wrap: wrap;
@@ -107,7 +102,7 @@
         top: 1px solid $color-mid-light;
       }
       box-shadow: none;
-      margin-top: -$spv-inter--shallow-scaleable;
+      margin-top: -$spv-outer--shallow-scaleable;
       max-width: 100%;
       overflow: visible;
       position: static;
@@ -118,15 +113,11 @@
     }
 
     label {
-      margin-bottom: $spv-inter--condensed + $spv-nudge-compensation;
+      margin-bottom: $spv-outer--small + $spv-nudge-compensation;
     }
 
     &.is-closed {
       display: none;
-    }
-
-    .p-channel-map-arch-select {
-      min-width: 0;
     }
 
     .p-channel-map__form {
@@ -141,7 +132,7 @@
 
       // hide install instructions when no release in channel
       &--closed {
-        .p-code-snippet {
+        .p-code-copyable {
           display: none;
         }
       }
@@ -247,6 +238,7 @@
   }
 
   .p-channel-map__version-table {
+    margin-bottom: $spv-outer--medium;
     max-height: 16rem;
     overflow: auto;
 

@@ -64,20 +64,20 @@
       </div>
       <div class="col-4">
         <h4>About {{ publisher }}</h4>
-        <table class="p-table-key-value">
-          <tr><th>Snaps published</th><td>{{ snaps|length + featured_snaps|length }}</td></tr>
-          <tr><th>Publisher since</th><td>{{ publisher_since }}</td></tr>
-        </table>
+        <dl>
+          <dt>Snaps published</dt>
+          <dd>{{ snaps|length + featured_snaps|length }}</dd>
+          <dt>Publisher since</dt>
+          <dd>{{ publisher_since }}</dd>
+        </dl>
       </div>
     </div>
   </div>
 
   {% if blog_slug %}
   <div data-js="blog-articles" style="display: none;">
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
+    <div class="u-fixed-width">
+      <hr />
     </div>
     <div class="p-strip is-shallow">
       <div class="row">
@@ -93,8 +93,7 @@
 
   {% if featured_snaps %}
   <div class="p-strip is-shallow">
-    <div class="row">
-      <div class="u-equal-height">
+    <div class="row u-equal-height">
         {% set snap = featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}
         {% if featured_snaps[1] %}
@@ -107,14 +106,14 @@
   {% endif %}
 
   <div class="p-strip is-shallow">
-    <div class="row">
-      <div class="col-12 snapcraft-p-grid">
+      <div class="row">
       {% set hide_publisher = True %}
       {% set show_summary = True %}
       {% for snap in snaps %}
-        {% include "store/_media-object-snap-partial.html" %}
+        <div class="col-3">
+          {% include "store/_media-object-snap-partial.html" %}
+        </div>
       {% endfor %}
-      </div>
     </div>
   </div>
 

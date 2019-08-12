@@ -151,7 +151,7 @@ function screenshotsAndVideos(screenshots, video) {
   if (video) {
     const videoDetails = getVideoDetails(video);
     const holder = document.createElement("div");
-    holder.className = "p-snap-details__media u-equal-height";
+    holder.className = "p-snap-details__media row u-equal-height";
     const col10 = document.createElement("div");
     col10.className = "col-10 u-align-text--center";
     holder.appendChild(col10);

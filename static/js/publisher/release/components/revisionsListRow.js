@@ -62,7 +62,7 @@ const RevisionsListRow = props => {
               onChange={revisionSelectChange}
             />
             <label
-              className="p-revisions-list__revision u-no-margin--bottom"
+              className="p-revisions-list__revision is-inline-label"
               htmlFor={id}
             >
               <DevmodeRevision revision={revision} showTooltip={true} />

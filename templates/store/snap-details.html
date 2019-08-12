@@ -91,7 +91,7 @@
             data-js="open-channel-map"
             data-controls="channel-map-versions"
             aria-controls="channel-map-versions">
-            {{ default_track }}/{{ lowest_risk_available }} {{ version }}&nbsp;&nbsp;<i class="p-icon--chevron"></i>
+            {{ default_track }}/{{ lowest_risk_available }} {{ version }}&nbsp;&nbsp;<i class="p-icon--contextual-menu"></i>
             {% if is_preview %}
             <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
             {% endif %}
@@ -115,9 +115,9 @@
         </div>
       {% else %}
         <div class="p-snap-install-buttons">
-          <div class="p-code-snippet">
-            <input class="p-code-snippet__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
-            <button class="p-code-snippet__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
+          <div class="p-code-copyable">
+            <input class="p-code-copyable__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
+            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
               Copy to clipboard
             </button>
           </div>
@@ -166,10 +166,8 @@
 
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
-      <div class="row">
-        <div class="col-12">
-          <hr />
-        </div>
+      <div class="u-fixed-width">
+        <hr />
       </div>
 
       <div class="p-strip is-shallow">
@@ -210,10 +208,8 @@
       {% include "partials/_hiri-case-study.html" %}
     {% else %}
       <div data-js="blog-articles" class="u-hide">
-        <div class="row">
-          <div class="col-12">
-            <hr />
-          </div>
+        <div class="u-fixed-width">
+          <hr />
         </div>
         <div class="p-strip is-shallow">
           <div class="row">
@@ -234,16 +230,12 @@
 
   {# REPORT SNAP SECTION - hidden in preview #}
   {% if not is_preview and not IS_BRAND_STORE %}
-    <div class="row">
-      <div class="col-12">
-        <hr />
-      </div>
+    <div class="u-fixed-width">
+      <hr />
     </div>
 
-    <div class="row">
-      <div class="col-12">
-        <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
-      </div>
+    <div class="u-fixed-width">
+      <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
     </div>
 
     {% include "store/snap-details/_report_snap_modal.html" %}
@@ -251,35 +243,38 @@
 
   {% if has_publisher_page %}
   <div class="p-strip is-shallow">
-      <div class="row">
-        <h3 class="p-heading--four u-float--left">More snaps from {{ display_name(publisher, username) }}</h3>
-        <a class="p-button--neutral u-float--right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
+      <div class="u-fixed-width u-clearfix">
+        <h3 class="p-heading--four u-float-left">More snaps from {{ display_name(publisher, username) }}</h3>
+        <a class="p-button--neutral u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
       </div>
       {% if publisher_featured_snaps %}
-      <div class="row">
-        <div class="u-equal-height">
-          {% set snap = publisher_featured_snaps[0] %}
-          {% include 'partials/_publisher-featured-snap.html' %}
-          {% if publisher_featured_snaps[1] %}
+        {% if publisher_featured_snaps[1]%}
+          <div class="row u-equal-height">
+        {% else %}
+          <div class="u-fixed-width u-clearfix">
+        {% endif %}  
+        {% set snap = publisher_featured_snaps[0] %}
+        {% include 'partials/_publisher-featured-snap.html' %}
+        {% if publisher_featured_snaps[1] %}
           {% set snap = publisher_featured_snaps[1] %}
           {% include 'partials/_publisher-featured-snap.html' %}
-          {% endif %}
+        {% endif %}
         </div>
       </div>
       {% endif %}
       {% if publisher_snaps %}
-      <div class="p-strip is-shallow">
+        <div class="p-strip is-shallow">
           <div class="row">
-            <div class="col-12 snapcraft-p-grid">
             {% for snap in publisher_snaps %}
               {% set hide_publisher = True %}
               {% set show_summary = True %}
+              <div class="col-3">
                 {% include "store/_media-object-snap-partial.html" %}
+              </div>
             {% endfor %}
-            </div>
           </div>
         </div>
-        {% endif %}
+      {% endif %}
     </div>
   {% endif %}
   {% if is_preview %}
@@ -287,13 +282,11 @@
   {% endif %}
 
   {% if api_error %}
-    <div class="row">
-      <div class="col-12">
-        <div class="p-notification--negative">
-          <p class="p-notification__response">
-            <span class="p-notification__status">Error:</span> API request failed
-          </p>
-        </div>
+    <div class="u-fixed-width">
+      <div class="p-notification--negative">
+        <p class="p-notification__response">
+          <span class="p-notification__status">Error:</span> API request failed
+        </p>
       </div>
     </div>
   {% endif %}

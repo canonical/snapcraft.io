@@ -1,6 +1,0 @@
-@mixin p-inline-list--compact {
-  .p-inline-list--compact {
-    @extend .p-inline-list; // sass-lint:disable-line placeholder-in-extend
-    margin-top: $sp-medium;
-  }
-}

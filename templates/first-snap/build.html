@@ -4,23 +4,26 @@
 {% block fsf_content %}
   <div class="row">
     <div class="col-8">
-      <ol class="p-list-step has-margin">
+      <ol class="p-stepped-list has-margin">
         {% for step in steps %}
-            <li class="p-list-step__item">
-              <h4 class="p-list-step__title">
-                <span class="p-list-step__bullet">{{ loop.index }}</span>
+          {% if not step.warning %}
+            <li class="p-stepped-list__item">
+              <h4 class="p-stepped-list__title u-no-limit">
                 {{ step.action }}
               </h4>
               {% if step.command %}
-                {% set snippet_value = step.command|replace("${name}", snap_name) %}
-                {% set snippet_id = loop.index %}
-                {% if snippet_value.count('\n') == 0 %}
-                  {% include "/partials/_code-snippet.html" %}
-                {% else %}
-                  {% include "/partials/_code-snippet-multi.html" %}
-                {% endif %}
+                <span class="p-stepped-list__content">
+                  {% set snippet_value = step.command|replace("${name}", snap_name) %}
+                  {% set snippet_id = loop.index %}
+                  {% if snippet_value.count('\n') == 0 %}
+                    {% include "/partials/_code-snippet.html" %}
+                  {% else %}
+                    {% include "/partials/_code-snippet-multi.html" %}
+                  {% endif %}
+                </span>
               {% endif %}
             </li>
+          {% endif %}
         {% endfor %}
         {% for step in steps %}
           {% if loop.last and step.warning %}
@@ -42,11 +45,11 @@
   </a>
 
   {% if os and os.startswith('macos') %}
-    <a class="p-button--positive u-float--right" href="/first-snap/{{ language }}/{{ os }}/test">
+    <a class="p-button--positive u-float-right" href="/first-snap/{{ language }}/{{ os }}/test">
       Next: Test snap &rsaquo;
     </a>
   {% else %}
-    <a class="p-button--positive u-float--right" href="/first-snap/{{ language }}/{{ os }}/push">
+    <a class="p-button--positive u-float-right" href="/first-snap/{{ language }}/{{ os }}/push">
       Next: Publish to store &rsaquo;
     </a>
   {% endif %}

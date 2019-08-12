@@ -1,7 +1,7 @@
 // based on https://github.com/vanilla-framework/vanilla-framework/pull/2051
 
 @mixin p-strip-slanted {
-  $horizontal-edge-padding: $spv-inter--regular-scaleable;
+  $horizontal-edge-padding: $spv-outer--regular-scaleable;
   $slanted-edge-padding: $horizontal-edge-padding * 2; // coloured area takes half the rectangle surface area; to visually compensate, we multiply it by 2
   $bleed: -3px; // stretch outside to compensate for aliasing; otherwise edge of image underneath becomes visible as you resize
 
@@ -17,12 +17,12 @@
 
     @media (max-width: $breakpoint-large) {
       background-size: cover;
-      padding: $spv-inter--regular-scaleable 0 $slanted-edge-padding;
+      padding: $spv-outer--regular-scaleable 0 $slanted-edge-padding;
     }
 
     @media (min-width: $breakpoint-large) {
       background-size: 5000px 667px; // actual svg size
-      padding: $spv-inter--regular-scaleable 0 $slanted-edge-padding;
+      padding: $spv-outer--regular-scaleable 0 $slanted-edge-padding;
     }
 
     // custom styles for extra large screens

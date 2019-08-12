@@ -9,13 +9,13 @@
     </div>
 
     <div class="row">
-      <div class="col-4 mobile-col-1 tablet-col-2">
+      <div class="col-4 col-small-1 col-medium-2">
         <img height="193" width="308" src="https://assets.ubuntu.com/v1/e3eacb56-fsf-publisher-listing.png" />
       </div>
-      <div class="col-4 mobile-col-1 tablet-col-2">
+      <div class="col-4 col-small-1 col-medium-2">
         <img height="193" width="308" src="https://assets.ubuntu.com/v1/3220411b-fsf-publisher-dashboard.png" />
       </div>
-      <div class="col-4 mobile-col-1 tablet-col-2">
+      <div class="col-4 col-small-1 col-medium-2">
         <img height="193" width="308" src="https://assets.ubuntu.com/v1/55c5070e-fsf-publisher-metrics.png" />
       </div>
     </div>
@@ -27,8 +27,7 @@
         <li class="p-accordion__group">
           <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">1.</span>
-              Create an Ubuntu One account
+              Step 1: Create an Ubuntu One account
               {% if user %}<i class="p-icon--success"></i>{% endif %}
             </h4>
           </button>
@@ -51,8 +50,7 @@
         <li class="p-accordion__group">
           <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
             <h4 class="u-no-margin--bottom">
-              <span class="p-accordion__step">2.</span>
-              Register your snap name
+              Step 2: Register your snap name
               <i id="register-name-success" class="p-icon--success u-hide"></i>
             </h4>
           </button>
@@ -84,9 +82,8 @@
         </li>
         <li class="p-accordion__group">
           <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
-            <h4 class="p-list-step__title u-no-margin--bottom">
-              <span class="p-accordion__step">3.</span>
-              Push to the Snap store
+            <h4 class="u-no-margin--bottom">
+              Step 3: Push to the Snap store
             </h4>
           </button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
@@ -132,7 +129,7 @@
     </a>
   {% endif %}
 
-  <a class="p-button--positive is--disabled u-float--right" id="js-pagination-next" aria-label="Next: Go to listing">
+  <a class="p-button--positive is--disabled u-float-right" id="js-pagination-next" aria-label="Next: Go to listing">
     Go to listing &rsaquo;
   </a>
 {% endblock %}

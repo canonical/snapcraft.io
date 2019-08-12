@@ -23,67 +23,69 @@ Publisher metrics for {{ snap_title }}
     {% endif %}
     <section class="p-strip is-shallow{% if nodata %} is-empty{% endif %}">
       <div class="row">
-        <div class="u-clearfix">
-          <h4 class="u-float--left">Weekly active devices</h4>
-          <div class="p-heading--four u-float--right u-no-margin--top">
+        <div class="col-12">
+          <h4 class="u-float-left">Weekly active devices</h4>
+          <div class="p-heading--four u-float-right u-no-margin--top">
             <strong>{{ format_number(latest_active_devices) }}</strong>
           </div>
         </div>
-        <hr />
-        <div class="grid u-clearfix">
-          <div class="col-3">
-            <select class="p-form__control metrics-period"
-                    {% if nodata %}disabled="disabled"{% endif %}>
-              <option value="7d"{% if metric_period == '7d' %} selected="selected"{% endif %}>Past 7 days</option>
-              <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>Past 30 days</option>
-              <option value="3m"{% if metric_period == '3m' %} selected="selected"{% endif %}>Past 3 months</option>
-              <option value="6m"{% if metric_period == '6m' %} selected="selected"{% endif %}>Past 6 months</option>
-              <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
-              <option value="2y"{% if metric_period == '2y' %} selected="selected"{% endif %}>Past 2 years</option>
-            </select>
-          </div>
-          <div class="col-3">
-            <select class="p-form__control active-devices"
-                    {% if nodata %}disabled="disabled"{% endif %}>
-              <option value="version"{% if active_device_metric == 'version' %} selected="selected"{% endif %}>By version</option>
-              <option value="os"{% if active_device_metric == 'os' %} selected="selected"{% endif %}>By OS</option>
-              <option value="channel"{% if active_device_metric == 'channel' %} selected="selected"{% endif %}>By channel</option>
-            </select>
-          </div>
+        <div class="col-12">
+          <hr />
         </div>
-        <div id="activeDevices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices">
-          <div class="row">
-            <div class="col-12">
-              <div id="area-holder">
-                <svg width="100%" height="320"></svg>
-              </div>
+        <div class="col-3">
+          <select class="p-form__control metrics-period"
+                  {% if nodata %}disabled="disabled"{% endif %}>
+            <option value="7d"{% if metric_period == '7d' %} selected="selected"{% endif %}>Past 7 days</option>
+            <option value="30d"{% if metric_period == '30d' %} selected="selected"{% endif %}>Past 30 days</option>
+            <option value="3m"{% if metric_period == '3m' %} selected="selected"{% endif %}>Past 3 months</option>
+            <option value="6m"{% if metric_period == '6m' %} selected="selected"{% endif %}>Past 6 months</option>
+            <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
+            <option value="2y"{% if metric_period == '2y' %} selected="selected"{% endif %}>Past 2 years</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <select class="p-form__control active-devices"
+                  {% if nodata %}disabled="disabled"{% endif %}>
+            <option value="version"{% if active_device_metric == 'version' %} selected="selected"{% endif %}>By version</option>
+            <option value="os"{% if active_device_metric == 'os' %} selected="selected"{% endif %}>By OS</option>
+            <option value="channel"{% if active_device_metric == 'channel' %} selected="selected"{% endif %}>By channel</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <div id="activeDevices" class="snapcraft-metrics__graph snapcraft-metrics__active-devices">
+            <div id="area-holder">
+              <svg width="100%" height="320"></svg>
             </div>
-          </div>
-          <div class="row" data-js="annotations-hover">
-            {% for category in active_devices_annotations.series %}
-              <div class="col-4">
-                <p data-js="annotation-hover" data-id="category-{{ category.name }}">
-                  {% if category.name == "featured" %}
-                  ⭐ <small><b>Featured</b> snap since
-                  {% else %}
-                  🗂 <small>Added to <b>{{ category.display_name }}</b> in {% endif %}<b>{{ category.display_date }}</b>
-                  </small>
-              </div>
-            {% endfor %}
+            <div class="row" data-js="annotations-hover">
+              {% for category in active_devices_annotations.series %}
+                <div class="col-4">
+                  <p data-js="annotation-hover" data-id="category-{{ category.name }}">
+                    {% if category.name == "featured" %}
+                    ⭐ <small><b>Featured</b> snap since
+                    {% else %}
+                    🗂 <small>Added to <b>{{ category.display_name }}</b> in {% endif %}<b>{{ category.display_date }}</b>
+                    </small>
+                </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </section>
     <section class="p-strip is-shallow{% if nodata %} is-empty{% endif %}">
       <div class="row">
-        <div class="u-clearfix">
-          <h1 class="u-float--left p-heading--four">Territories</h1>
-          <div class="p-heading--four u-float--right u-no-margin--top">
+        <div class="col-12">
+          <h1 class="u-float-left p-heading--four">Territories</h1>
+          <div class="p-heading--four u-float-right u-no-margin--top">
             <strong>{{ territories_total }}</strong>
           </div>
         </div>
-        <hr />
-        <div id="territories" class="snapcraft-territories">
+        <div class="col-12">
+          <hr />
+        </div>
+        <div class="col-12">
+          <div id="territories" class="snapcraft-territories">
+          </div>
         </div>
       </div>
     </section>

@@ -221,12 +221,12 @@ class RevisionsList extends Component {
     return (
       <Fragment>
         <div className="u-clearfix">
-          <h4 className="u-float--left">{title}</h4>
+          <h4 className="u-float-left">{title}</h4>
           <a
             style={{ marginTop: "0.5rem" }}
             href="#"
             onClick={this.onCloseClick.bind(this)}
-            className="p-icon--close u-float--right"
+            className="p-icon--close u-float-right"
           />
         </div>
         {hasDevmodeRevisions && (
@@ -282,9 +282,7 @@ class RevisionsList extends Component {
               >
                 Revision
               </th>
-              <th scope="col" width="100%">
-                Version
-              </th>
+              <th scope="col">Version</th>
               {showAllColumns && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
@@ -311,7 +309,7 @@ class RevisionsList extends Component {
               )
             ) : (
               <tr>
-                <td colSpan="5">
+                <td colSpan="4">
                   <em>No releases</em>
                 </td>
               </tr>
@@ -319,7 +317,7 @@ class RevisionsList extends Component {
             {!showAllRevisions &&
               filteredRevisions.length > 10 && (
                 <tr>
-                  <td colSpan={5}>
+                  <td colSpan={4}>
                     <a onClick={this.showAllRevisions.bind(this, key)}>
                       Show all {filteredRevisions.length} revisions
                     </a>

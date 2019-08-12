@@ -6,63 +6,65 @@ Snapcraft - Register name dispute
 
 {% block content %}
 <div class="p-strip">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="p-heading--four"><a href="/snaps">&lsaquo; My snaps</a></h1>
-            <h1 class="p-heading--two">Claim the name <strong>{{snap_name}}</strong></h1>
-            {% if errors %}
-                {% for err in errors %}
-                    <div class="p-notification--negative">
-                        <p class="p-notification__response">
-                            <span class="p-notification__status">{{err.message}}</span>
-                        </p>
-                    </div>
-                {% endfor %}
-            {% endif %}
-            <p>Request the transfer of this snap name from it's current owner</p>
-        </div>
+  <div class="u-fixed-width">
+    <h1 class="p-heading--four"><a href="/snaps">&lsaquo; My snaps</a></h1>
+    <h1 class="p-heading--two">Claim the name <strong>{{snap_name}}</strong></h1>
+    {% if errors %}
+    {% for err in errors %}
+    <div class="p-notification--negative">
+      <p class="p-notification__response">
+        <span class="p-notification__status">{{err.message}}</span>
+      </p>
     </div>
-    <form class="p-form p-form--stacked" action="" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <div class="row">
-            <div class="col-12">
-                <div class="p-form__group">
-                    <label class="p-form__label">Store</label>
-                    <div class="p-form__control u-clearfix">
-                        <span>Global</span>
-                    </div>
-                </div>
-                <div class="p-form__group">
-                    <label for="snap-name" class="p-form__label">Snap name</label>
-                    <div class="p-form__control u-clearfix">
-                        <span><strong>{{snap_name}}</strong></span>
-                        <input hidden="text" id="snap-name" name="snap-name" value="{{snap_name}}"/>
-                    </div>
-                </div>
-                <div class="p-form__group">
-                    <label for="claim-comment" class="p-form__label">Comment</label>
-                    <div class="p-form__control u-clearfix">
-                        <textarea id="claim-comment" name="claim-comment"></textarea>
-                        <p class="p-form-help-text">
-                            Why you have rights to claim this name
-                        </p>
-                    </div>
-                </div>
-            </div>
+    {% endfor %}
+    {% endif %}
+    <p>Request the transfer of this snap name from it's current owner</p>
+  </div>
+  <form class="p-form p-form--stacked" action="" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="u-fixed-width">
+      <div class="p-form__group row">
+        <div class="col-2">
+          <label class="p-form__label">Store</label>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="row u-no-margin--top">
-                    <hr />
-                </div>
-            </div>
+        <div class="col-6">
+          <div class="p-form__control u-clearfix">
+            <span>Global</span>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <button type="submit" class="p-button--positive u-float-right">Submit name claim</button>
-                <a href="/register-snap" class="p-button--neutral u-float-right">Register a new name</a>
-            </div>
+      </div>
+      <div class="p-form__group row">
+        <div class="col-2">
+          <label for="snap-name" class="p-form__label">Snap name</label>
         </div>
-    </form>
+        <div class="col-6">
+          <div class="p-form__control u-clearfix">
+            <span><strong>{{snap_name}}</strong></span>
+            <input hidden="text" id="snap-name" name="snap-name" value="{{snap_name}}"/>
+          </div>
+        </div>
+      </div>
+      <div class="p-form__group row">
+        <div class="col-2">
+          <label for="claim-comment" class="p-form__label">Comment</label>
+        </div>
+        <div class="col-6">
+          <div class="p-form__control u-clearfix">
+            <textarea id="claim-comment" name="claim-comment"></textarea>
+            <p class="p-form-help-text">
+              Why you have rights to claim this name
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="u-fixed-width">
+      <hr />
+    </div>
+    <div class="u-fixed-width">
+      <button type="submit" class="p-button--positive u-float-right">Submit name claim</button>
+      <a href="/register-snap" class="p-button--neutral u-float-right">Register a new name</a>
+    </div>
+  </form>
 </div>
 {% endblock %}

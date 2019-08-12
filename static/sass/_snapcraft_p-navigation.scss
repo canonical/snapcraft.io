@@ -8,22 +8,15 @@
     background: $nav-bg-color;
     z-index: 40; // appear over channel map
 
-    // FIXME: workaround for https://github.com/vanilla-framework/vanilla-framework/issues/1892
+    // This was a workaround for a bug in the the vanilla p-footer pattern
+    // but vanilla 2.0 removed the footer pattern and the p-sticky-footer,
+    // so it's all internal to snapcraft now
     .p-navigation__banner {
       flex-basis: auto;
     }
 
-    // custom styles for dark header with hover
+    // custom styles
     .p-navigation__link {
-      a:hover {
-        background: $navigation-hover-color;
-      }
-
-      .is-selected {
-        background: $navigation-hover-color;
-        box-shadow: 0 -3px 0 $navigation-highlight-color inset;
-      }
-
       .p-icon--user {
         margin-right: $sp-small;
       }
@@ -61,7 +54,7 @@
         }
       }
 
-      .p-icon--chevron {
+      .p-icon--contextual-menu {
         $chevron-size: map-get($icon-sizes, accordion);
 
         height: $chevron-size;
@@ -73,7 +66,7 @@
       }
 
       [aria-expanded="true"] {
-        .p-icon--chevron {
+        .p-icon--contextual-menu {
           transform: rotate(180deg);
         }
       }

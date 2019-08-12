@@ -8,4 +8,18 @@
   .snapcraft-publicise__download {
     margin-top: 1.6rem;
   }
+
+  .p-list__item {
+    padding-left: $sph-inner;
+
+    &.is-selected {
+      @include vf-highlight-bar($color-mid-light, left);
+      font-weight: 400;
+
+      // make sure to override link visited color
+      a {
+        color: $color-dark;
+      }
+    }
+  }
 }
