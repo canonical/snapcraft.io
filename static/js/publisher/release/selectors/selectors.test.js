@@ -620,6 +620,11 @@ describe("getTrackRevisions", () => {
 
 describe("getBranches", () => {
   it("should return branches on the currentTrack, ordered by oldest first", () => {
+    const today = new Date();
+    const lessThan30DaysAgo = new Date(
+      new Date().setDate(today.getDate() - 30)
+    ).toISOString();
+
     const state = {
       currentTrack: "latest",
       releases: [
@@ -635,14 +640,14 @@ describe("getBranches", () => {
           track: "latest",
           risk: "stable",
           revision: "2",
-          when: "2019-07-12T11:00:00Z"
+          when: lessThan30DaysAgo
         },
         {
           branch: "test2",
           track: "latest",
           risk: "stable",
           revision: "3",
-          when: "2019-07-12T09:00:00Z"
+          when: lessThan30DaysAgo
         },
         {
           branch: "test",
@@ -660,14 +665,14 @@ describe("getBranches", () => {
         track: "latest",
         risk: "stable",
         revision: "3",
-        when: "2019-07-12T09:00:00Z"
+        when: lessThan30DaysAgo
       },
       {
         branch: "test",
         track: "latest",
         risk: "stable",
         revision: "2",
-        when: "2019-07-12T11:00:00Z"
+        when: lessThan30DaysAgo
       }
     ]);
   });
