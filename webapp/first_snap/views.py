@@ -86,7 +86,7 @@ def get_language_snapcraft_yaml(language):
     return flask.Response(
         snapcraft_yaml,
         mimetype="text/yaml",
-        headers={"Content-Disposition": "attachment;filename=snaprcaft.yaml"},
+        headers={"Content-Disposition": "attachment;filename=snapcraft.yaml"},
     )
 
 
