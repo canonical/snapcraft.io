@@ -1,7 +1,7 @@
 // colour definitions
 $color-brand: #00302f;
 $color-accent: $color-brand;
-$color-navigation-background: #252525;
+$color-navigation-background: #333;
 $color-navigation-selected: #9c9c9c;
 
 // vanilla patterns
@@ -36,6 +36,7 @@ $color-navigation-selected: #9c9c9c;
 @include vf-p-pagination;
 @include vf-p-code-copyable;
 @include vf-p-tabs;
+@include vf-p-subnav;
 
 // vanilla utilities
 @include vf-u-floats;
