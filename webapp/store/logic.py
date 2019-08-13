@@ -29,6 +29,25 @@ def get_searched_snaps(search_results):
     )
 
 
+def get_snap_banner_url(snap_result):
+    """Get snaps banner url from media object
+
+    :param snap_result: the snap dictionnary
+    :returns: the snap dict with banner key
+    """
+    snap_result_with_banner = dict(snap_result)
+
+    def f(x):
+        return x["url"] if x["type"] == "banner" else None
+
+    banner_url = list(filter(f, snap_result_with_banner["media"]))
+
+    if len(banner_url) > 0:
+        snap_result_with_banner["banner_url"] = banner_url[0]["url"]
+
+    return snap_result_with_banner
+
+
 def get_pages_details(url, links):
     """Transform returned navigation links from search API from limit/offset
     to size/page

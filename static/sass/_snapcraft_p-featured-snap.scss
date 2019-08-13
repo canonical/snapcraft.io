@@ -27,12 +27,24 @@
     }
   }
 
+  .p-featured-snap--banner {
+    background: transparent;
+    display: block;
+    margin-bottom: $sp-xxx-large;
+    padding: 0;
+
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+
   .p-featured-snap--generated {
     background-color: $default-color;
     border-radius: $border-radius;
     column-gap: $sp-xxx-large;
     display: grid;
-    grid-template-columns: minmax(5rem, 50rem) minmax(1rem, 160px);
+    grid-template-columns: minmax(5rem, 50rem) minmax(1rem, 14rem);
     margin-bottom: $sp-xxx-large;
     padding: $sph-outer;
     text-decoration: none;
@@ -40,7 +52,7 @@
     width: 100%;
 
     @media screen and (min-width: $breakpoint-navigation-threshold) {
-      padding: $sp-x-large $sp-xxx-large;
+      padding: 4.5rem $sp-xxx-large;
     }
 
     .p-featured-snap__details {
@@ -57,8 +69,12 @@
     }
 
     .p-featured-snap__icon {
-      height: 9rem;
-      width: 9rem;
+      height: 100%;
+      max-height: 14rem;
+      max-width: 14rem;
+      min-height: 4rem;
+      min-width: 4rem;
+      width: 100%;
     }
 
     &:hover {

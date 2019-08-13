@@ -1,10 +1,16 @@
 <div id="js-snap-{{ category }}">
   <div class="u-fixed-width">
     {% if has_featured %}
+      {% if snaps[0].banner_url %}
+        <a class="p-featured-snap p-featured-snap--banner" href="/{{ snaps[0].package_name }}">
+          <img src="{{ snaps[0].banner_url }}" />
+        </a>
+      {% else %}
         {% if snaps[0]["icon_url"] != "" %}
             {% set snap = snaps[0] %}
             {% include "store/_generated-featured-snap-partial.html" %}
         {% endif %}
+      {% endif %}
     {% endif %}
   </div>
   <div class="row">
