@@ -8,6 +8,9 @@ $color-navigation-selected: #9c9c9c;
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 
+// make social icons match footer p-strip--light color
+$color-social-icon-foreground: $color-light;
+
 @include vf-base;
 
 @include vf-p-accordion;
