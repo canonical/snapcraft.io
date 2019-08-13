@@ -32,7 +32,7 @@ SNAP_SEARCH_URL = "".join(
         "snaps/search",
         "?q={snap_name}&page={page}&size={size}&scope=wide&arch=wide",
         "&confinement=strict,classic",
-        "&fields=package_name,title,summary,icon_url,publisher,",
+        "&fields=package_name,title,summary,icon_url,media,publisher,",
         "developer_validation,origin",
     ]
 )
