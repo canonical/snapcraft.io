@@ -2,6 +2,7 @@
 $color-brand: #00302f;
 $color-accent: $color-brand;
 $color-navigation-background: #333;
+$color-navigation-border: $color-navigation-background;
 $color-navigation-selected: #9c9c9c;
 
 // vanilla patterns
@@ -79,8 +80,7 @@ $color-navigation-selected: #9c9c9c;
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
 
-// We should investigate migrating fully to Vanilla nav
-// without any custom styles (now that it has dropdown support built in)
+// some bugfixes for Vanilla navigation issues
 @import 'snapcraft_p-navigation';
 @include snapcraft-p-navigation;
 
