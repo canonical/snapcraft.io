@@ -26,7 +26,14 @@ class MediaList extends React.Component {
         classes.push("u-hide");
       }
 
-      inputs.push(
+      // We always want the "add" item to be before any hidden inputs
+      // So if it's one of those unshift rather then push
+      let method = "push";
+      if (isActive) {
+        method = "unshift";
+      }
+
+      inputs[method](
         <Fragment key={`add-screenshot-${i}`}>
           <FileInput
             restrictions={restrictions}
@@ -55,7 +62,7 @@ class MediaList extends React.Component {
     const mediaList = this.props.mediaData;
 
     return (
-      <div className="p-listing-images p-fluid-grid">
+      <div className="p-listing-images">
         {mediaList.map((item, i) => {
           return (
             <MediaItem

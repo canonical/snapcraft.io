@@ -9,7 +9,11 @@ function initFSFLanguageSelect(rootEl) {
   const closeDetails = () => {
     flowDetails.forEach(e => e.classList.add("u-hide"));
     flowLinks.forEach(l => l.classList.remove("is-open"));
-    window.location.hash = "";
+    if (window.history.pushState) {
+      window.history.pushState(null, null, "#");
+    } else {
+      window.location.hash = "";
+    }
   };
 
   const openDetails = link => {
@@ -36,8 +40,10 @@ function initFSFLanguageSelect(rootEl) {
         var details = rootEl.querySelector(
           `[data-flow-details='${link.dataset.flowLink}'`
         );
+
         if (nextRow) {
-          nextRow.parentNode.insertBefore(details, nextRow);
+          const nextRowCol = nextRow.parentNode;
+          nextRowCol.parentNode.insertBefore(details, nextRowCol);
         } else {
           rootEl.appendChild(details);
         }
@@ -49,7 +55,12 @@ function initFSFLanguageSelect(rootEl) {
         window.location.hash = "";
       }
 
-      window.scrollTo(0, link.getBoundingClientRect().top);
+      const viewportOffset = link.getBoundingClientRect().top;
+
+      window.scrollTo({
+        top: viewportOffset + window.scrollY,
+        behaviour: "smooth"
+      });
     }
   };
 

@@ -1,7 +1,10 @@
 @mixin snapcraft-market-screenshots {
   .p-listing-images {
-    justify-content: flex-start;
-    margin-right: -$spv-inner--small;
+    display: grid;
+    grid-gap: 0 1.715rem;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+    justify-content: space-between;
     min-height: 120px;
     position: relative;
   }
@@ -16,14 +19,48 @@
     color: $color-link;
     cursor: grab;
     display: flex;
-    flex-grow: 0;
+    grid-column-end: span 1;
+    grid-column-start: auto;
     height: $screenshot-thumb-size;
     justify-content: center;
     margin-bottom: $spv-inner--small;
-    margin-right: $spv-inner--small;
     min-width: auto;
     position: relative;
     width: $screenshot-thumb-size;
+
+    @media screen and (min-width: 936px) and (max-width: 1152px) {
+      &:nth-child(5) {
+        grid-column-start: 1;
+      }
+    }
+
+    @media screen and (min-width: $breakpoint-medium) and (max-width: 935px) {
+      &:nth-child(4) {
+        grid-column-start: 1;
+      }
+    }
+
+    @media screen and (min-width: 641px) and (max-width: $breakpoint-medium - 1) {
+      &:nth-child(5) {
+        grid-column-start: 1;
+      }
+    }
+
+    @media screen and (min-width: 466px) and (max-width: 640px) {
+      &:nth-child(4) {
+        grid-column-start: 1;
+      }
+    }
+
+    @media screen and (min-width: 0) and (max-width: 465px) {
+      &:nth-child(3) {
+        grid-column-start: 1;
+      }
+
+      &:nth-child(5) {
+        grid-column-start: 1;
+      }
+    }
 
     .p-listing-images__delete-image {
       background: $color-x-light;

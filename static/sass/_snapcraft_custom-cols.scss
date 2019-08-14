@@ -1,0 +1,17 @@
+@mixin snapcraft-custom-cols {
+  .col-home-logo {
+    @media (min-width: 772px) and (max-width: 1083px) {
+      grid-column-end: span 3;
+
+      &.col-home-logo--pushed {
+        grid-column-start: 4;
+      }
+    }
+  }
+
+  .col-lang-select {
+    @media(min-width: 772px) and (max-width: 1152px) {
+      grid-column-end: span 3;
+    }
+  }
+}
