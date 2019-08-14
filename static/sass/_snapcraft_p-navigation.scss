@@ -13,4 +13,9 @@
   .p-subnav__items {
     border-color: $color-navigation-border;
   }
+
+  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2483
+  .p-navigation .row {
+    grid-gap: 0;
+  }
 }
