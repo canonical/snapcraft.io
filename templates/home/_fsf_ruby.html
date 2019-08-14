@@ -1,24 +1,23 @@
-<div class="u-fixed-width p-flow-details" style="display: none" data-flow-details="ruby">
-  <div class="row">
-    <div class="col-6">
-      <h4>Why are snaps good for Ruby projects?</h4>
-      <ul>
-        <li>Bundle all the runtime requirements.</li>
-        <li>Simplify installation instructions, regardless of distribution, to snap install myrubyapp.</li>
-        <li>Directly control the delivery of automatic application updates.</li>
-        <li>Extremely simple creation of services.</li>
-      </ul>
-      <p>Linux install instructions for Ruby applications often get complicated. To prevent modules from different Ruby applications clashing with each other, developer tools like rvm or rbenv must be used. With snapcraft, it’s one command to produce a bundle that works anywhere.</p>
+<div class="row u-hide u-no-padding" data-flow-details="ruby">
+  <div class="col-6">
+    <h4>Why are snaps good for Ruby projects?</h4>
+    <ul>
+      <li>Bundle all the runtime requirements.</li>
+      <li>Simplify installation instructions, regardless of distribution, to snap install myrubyapp.</li>
+      <li>Directly control the delivery of automatic application updates.</li>
+      <li>Extremely simple creation of services.</li>
+    </ul>
+    <p>Linux install instructions for Ruby applications often get complicated. To prevent modules from different Ruby applications clashing with each other, developer tools like rvm or rbenv must be used. With snapcraft, it’s one command to produce a bundle that works anywhere.</p>
 
-      <div class="p-flow-details__continue">
-        <p>In just a few steps, you’ll have an example Ruby app in the Snap Store.</p>
-        <a class="p-button--positive" href="/first-snap/ruby">Continue &rsaquo;</a>
-      </div>
+    <div class="p-flow-details__continue">
+      <p>In just a few steps, you’ll have an example Ruby app in the Snap Store.</p>
+      <a class="p-button--positive" href="/first-snap/ruby">Continue &rsaquo;</a>
     </div>
+  </div>
 
-    <div class="col-6">
-      <h4>Here’s how mdl uses it:</h4>
-      <pre class="p-code-yaml"><b>name</b>: mdl
+  <div class="col-6">
+    <h4>Here’s how mdl uses it:</h4>
+    <pre class="p-code-yaml"><b>name</b>: mdl
 <b>version</b>: "0.5.0"
 <b>summary</b>: Markdown lint tool
 <b>description</b>: |
@@ -43,6 +42,5 @@
 <b>apps</b>:
   <b>mdl</b>:
     <b>command</b>: bin/mdl</pre>
-    </div>
   </div>
 </div>
