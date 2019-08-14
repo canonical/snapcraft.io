@@ -27,7 +27,7 @@
   {% include 'partials/search-bar.html' %}
 
   <section class="p-strip is-shallow">
-    <div class="u-fixed-width">
+    <div class="u-fixed-width u-clearfix">
         <h2 class="u-float-left">Featured</h2>
         <a href="/search?category=featured" class="p-button--neutral u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
@@ -37,7 +37,7 @@
     {% set show_summary = True %}
     {% include "store/_category-partial.html" %}
 
-    <div class="u-fixed-width u-hide--medium u-hide--large">
+    <div class="u-fixed-width u-clearfix u-hide--medium u-hide--large">
       <a href="/search?category=featured" class="p-button--neutral u-float-right">See more in Featured</a>
     </div>
   </section>
@@ -52,7 +52,7 @@
       {% include "store/_empty-category-partial.html" %}
       {# _category-partial.html loaded via JS #}
     </div>
-    <div class="u-fixed-width u-hide--medium u-hide--large">
+    <div class="u-fixed-width u-clearfix u-hide--medium u-hide--large">
       <a href="/search?category={{ category.slug }}" class="p-button--neutral u-float-right">See more in {{ category.name }}</a>
     </div>
   </section>
