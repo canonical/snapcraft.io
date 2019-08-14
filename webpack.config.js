@@ -15,6 +15,7 @@ const plugins = production
 
 module.exports = {
   entry: {
+    "global-nav": "./static/js/base/global-nav.js",
     base: "./static/js/base/base.js",
     release: "./static/js/publisher/release.js",
     public: "./static/js/public/public.js",
