@@ -112,6 +112,11 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@canonical/global-nav@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.1.0.tgz#67b6a499a39ff8135e15fcc6a275cd1e29b504fa"
+  integrity sha512-/bQ5C36/9GbP29mhKqNuGHq44Xqv33H1hYTn7U5bSZQKiN2hdYN5AsM5J4Kl/88w9xMqvNOCt3vZs9XmK+j1AQ==
+
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@iamstarkov/listr-update-renderer/-/listr-update-renderer-0.4.1.tgz#d7c48092a2dcf90fd672b6c8b458649cb350c77e"
@@ -3412,10 +3417,6 @@ glob@~3.1.21:
 global-modules-path@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/global-modules-path/-/global-modules-path-2.3.0.tgz#b0e2bac6beac39745f7db5c59d26a36a0b94f7dc"
-
-global-nav@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/global-nav/-/global-nav-1.2.0.tgz#ebd6787c2c0ac49f7e53e967f0863458f9e05820"
 
 globals@^11.1.0:
   version "11.9.0"
