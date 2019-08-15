@@ -2,7 +2,7 @@
   <div class="u-fixed-width">
     {% if has_featured %}
       {% if snaps[0].banner_url %}
-        <a class="p-featured-snap p-featured-snap--banner" href="/{{ snaps[0].package_name }}">
+        <a class="p-featured-snap--banner" href="/{{ snaps[0].package_name }}">
           <img src="{{ snaps[0].banner_url }}" />
         </a>
       {% else %}
@@ -19,7 +19,7 @@
           {% if loop.index != 1 or snap["icon_url"] == "" %}
               {% if has_featured %}
                   {% set icon_size = "large" %}
-                  <div class="col-4 col-medium-3">
+                  <div class="col-4 col-medium-3 col-small-2">
               {% else %}
                   <div class="col-3">
               {% endif %}
