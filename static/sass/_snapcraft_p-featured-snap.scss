@@ -42,18 +42,11 @@
   .p-featured-snap--generated {
     background-color: $default-color;
     border-radius: $border-radius;
-    column-gap: $sp-xxx-large;
-    display: grid;
-    grid-template-columns: minmax(5rem, 50rem) minmax(1rem, 14rem);
     margin-bottom: $sp-xxx-large;
-    padding: $sph-outer;
+    padding: $spv-inner--large * 2;
     text-decoration: none;
     transition: background-color 1s ease-out, background 1s ease-out;
     width: 100%;
-
-    @media screen and (min-width: $breakpoint-navigation-threshold) {
-      padding: 4.5rem $sp-xxx-large;
-    }
 
     .p-featured-snap__details {
       align-items: center;
@@ -66,15 +59,6 @@
       .p-heading--three {
         padding-top: $sp-large;
       }
-    }
-
-    .p-featured-snap__icon {
-      height: 100%;
-      max-height: 12rem;
-      max-width: 12rem;
-      min-height: 4rem;
-      min-width: 4rem;
-      width: 100%;
     }
 
     &:hover {
@@ -114,8 +98,7 @@
     }
 
     @media screen and (max-width: $breakpoint-small) {
-      column-gap: $sp-x-large;
-      padding: $sp-medium $sp-x-large;
+      padding: $sp-medium;
     }
 
     @media screen and (min-width: $breakpoint-small) {

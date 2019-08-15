@@ -170,7 +170,10 @@ class Banner extends React.Component {
                 <br />
                 Max resolution: <b>4320 x 1440 pixels</b>
                 <br />
-                Recommended resolution: <b>1920 x 640 pixels</b>
+                <i>
+                  For best results on <a href="/store">the store</a> we
+                  recommend a resolution of <b>1920 x 640 pixels</b> or greater
+                </i>
                 <br />
                 Aspect ratio: <b>3:1</b>
                 <br />
