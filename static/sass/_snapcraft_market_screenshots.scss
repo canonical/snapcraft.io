@@ -28,6 +28,10 @@
     position: relative;
     width: $screenshot-thumb-size;
 
+    // Because we're trying to put a grid of 5 things in a col-8
+    // 8 does not divide by 5 nicely, so we need to do it manually
+    // When revisiting this page, it would be good to take this into
+    // consideration
     @media screen and (min-width: 936px) and (max-width: 1152px) {
       &:nth-child(5) {
         grid-column-start: 1;
