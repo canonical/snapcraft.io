@@ -1,11 +1,15 @@
 // colour definitions
 $color-brand: #00302f;
 $color-accent: $color-brand;
-$color-navigation-background: #252525;
+$color-navigation-background: #333;
+$color-navigation-border: $color-navigation-background;
 $color-navigation-selected: #9c9c9c;
 
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
+
+// make social icons match footer p-strip--light color
+$color-social-icon-foreground: $color-light;
 
 @include vf-base;
 
@@ -36,6 +40,7 @@ $color-navigation-selected: #9c9c9c;
 @include vf-p-pagination;
 @include vf-p-code-copyable;
 @include vf-p-tabs;
+@include vf-p-subnav;
 
 // vanilla utilities
 @include vf-u-floats;
@@ -78,8 +83,7 @@ $color-navigation-selected: #9c9c9c;
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
 
-// We should investigate migrating fully to Vanilla nav
-// without any custom styles (now that it has dropdown support built in)
+// some bugfixes for Vanilla navigation issues
 @import 'snapcraft_p-navigation';
 @include snapcraft-p-navigation;
 

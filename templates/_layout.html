@@ -55,9 +55,8 @@
 
     {% block header %}
     <!-- JS that is needed right away -->
-    <script src="{{ static_url('js/modules/global-nav.js') }}"></script>
-    <script>canonicalGlobalNav.createNav({maxWidth: '72rem', showLogins: false});</script>
-
+    <script src="{{ static_url('js/dist/global-nav.js') }}"></script>
+    
     {% include "_header.html" %}
     {% endblock %}
 

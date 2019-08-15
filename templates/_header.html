@@ -57,29 +57,29 @@
         <li class="p-navigation__link" role="menuitem"><a class="p-link--external" href="https://forum.snapcraft.io/categories">Forum</a></li>
       </ul>
 
-      <ul class="p-navigation__links--right" role="menu">
+      <ul class="p-navigation__links" role="menu">
         {% if user_name %}
-          <li role="menuitem" class="p-navigation__link p-dropdown {% if page_slug == 'account' %}is-selected{% endif %}">
-              <a class="p-dropdown__toggle" aria-controls="account-menu" aria-expanded="false">
-                {{ user_name }} <i class="p-icon--contextual-menu"></i>
-              </a>
-              <ul class="p-dropdown__menu" id="account-menu" aria-hidden="true">
-                  <li class="p-navigation__link" role="menuitem">
-                    <a href="/account/snaps">My published snaps</a>
-                  </li>
-                  <li class="p-navigation__link" role="menuitem">
-                    <a href="{{ BSI_URL }}/auth/authenticate">Build with GitHub</a>
-                  </li>
-                  <li class="p-navigation__link" role="menuitem">
-                      <a href="/account/details">Account details</a>
-                  </li>
-                  <li class="p-navigation__link" role="menuitem">
-                      <a href="/logout">Sign out</a>
-                  </li>
-              </ul>
+          <li class="p-navigation__link p-subnav" role="menuitem" id="link-1">
+            <a class="p-subnav__toggle" aria-controls="account-menu" aria-expanded="false">
+              {{ user_name }}
+            </a>
+            <ul class="p-subnav__items" id="account-menu" aria-hidden="true">
+              <li>
+                <a href="/account/snaps" class="p-subnav__item">My published snaps</a>
+              </li>
+              <li>
+                <a href="{{ BSI_URL }}/auth/authenticate" class="p-subnav__item">Build with GitHub</a>
+              </li>
+              <li>
+                <a href="/account/details" class="p-subnav__item">Account details</a>
+              </li>
+              <li>
+                <a href="/logout" class="p-subnav__item">Sign out</a>
+              </li>
+            </ul>
           </li>
         {% else %}
-          <li class="p-navigation__link" role="menuitem"><a href="/account"><i class="p-icon--user"></i>Developer account</a></li>
+          <li class="p-navigation__link" role="menuitem"><a href="/account"><i class="p-icon--user"></i> Developer account</a></li>
         {% endif %}
       </ul>
     </nav>

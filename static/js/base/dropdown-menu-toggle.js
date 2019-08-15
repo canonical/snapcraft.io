@@ -37,17 +37,24 @@
     var targetMenu = document.getElementById(
       toggle.getAttribute("aria-controls")
     );
+    var parentMenu = toggle.closest(".p-subnav");
 
     if (targetMenu) {
       if (show) {
         toggle.setAttribute("aria-expanded", true);
         targetMenu.setAttribute("aria-hidden", false);
+        if (parentMenu) {
+          parentMenu.classList.add("is-active");
+        }
       } else {
         toggle.setAttribute("aria-expanded", false);
         targetMenu.setAttribute("aria-hidden", true);
+        if (parentMenu) {
+          parentMenu.classList.remove("is-active");
+        }
       }
     }
   }
 
-  toggle(".p-dropdown__toggle");
+  toggle(".p-subnav__toggle");
 })();

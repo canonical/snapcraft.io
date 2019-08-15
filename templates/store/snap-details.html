@@ -251,8 +251,8 @@
         {% if publisher_featured_snaps[1]%}
           <div class="row u-equal-height">
         {% else %}
-          <div class="u-fixed-width u-clearfix">
-        {% endif %}  
+          <div class="row">
+        {% endif %}
         {% set snap = publisher_featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}
         {% if publisher_featured_snaps[1] %}

@@ -88,7 +88,7 @@
 
   {% if (searched_snaps or featured_snaps) and links %}
   <section class="p-strip is-shallow u-no-padding--top">
-    <nav class="u-fixed-width">
+    <nav class="u-fixed-width u-clearfix">
       <div class="u-float-left u-align--left">
         {% if links.first %}<a href="{{ links.first }}">&#171;&nbsp;First</a>&nbsp;{% endif %}
         {% if links.prev %}<a href="{{ links.prev }}">&#8249;&nbsp;Previous</a>{% endif %}

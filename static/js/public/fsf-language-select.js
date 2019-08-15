@@ -1,14 +1,13 @@
-// TODO:
-// - add details data for all languages
-// - add button to the docs
 import debounce from "../libs/debounce";
 
 function initFSFLanguageSelect(rootEl) {
   const flowLinks = [].slice.call(rootEl.querySelectorAll(".p-flow-link"));
-  const flowDetails = [].slice.call(rootEl.querySelectorAll(".p-flow-details"));
+  const flowDetails = [].slice.call(
+    rootEl.querySelectorAll("[data-flow-details]")
+  );
 
   const closeDetails = () => {
-    flowDetails.forEach(e => (e.style.display = "none"));
+    flowDetails.forEach(e => e.classList.add("u-hide"));
     flowLinks.forEach(l => l.classList.remove("is-open"));
     window.location.hash = "";
   };
@@ -42,7 +41,7 @@ function initFSFLanguageSelect(rootEl) {
         } else {
           rootEl.appendChild(details);
         }
-        details.style.display = "block";
+        details.classList.remove("u-hide");
         link.classList.add("is-open");
         window.location.hash = link.dataset.flowLink;
       } else {
