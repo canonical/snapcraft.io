@@ -162,7 +162,7 @@ class Banner extends React.Component {
         </p>
         <AccordionHelp name="banner restrictions">
           <div className="col-8">
-            <p className="u-no-margin--bottom">
+            <p>
               <small>
                 Accepted image formats include: <b>JPEG & PNG files</b>
                 <br />
