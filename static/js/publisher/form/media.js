@@ -100,25 +100,48 @@ class Media extends React.Component {
     return (
       <AccordionHelp name="image restrictions">
         <div className="col-8">
-          <p>
-            <small>
-              Accepted image formats include: <b>GIF, JPEG & PNG files</b>
-              <br />
-              Min resolution: <b>480 x 480 pixels</b>
-              <br />
-              Max resolution: <b>3840 x 2160 pixels</b>
-              <br />
-              Aspect ratio: <b>Between 1:2 and 2:1</b>
-              <br />
-              File size limit: <b>2MB</b>
-              <br />
-              Animation min fps: <b>1</b>
-              <br />
-              Animation max fps: <b>30</b>
-              <br />
-              Animation max length: <b>40 seconds</b>
-            </small>
-          </p>
+          <ul className="u-no-margin--bottom">
+            <li>
+              <small>
+                Accepted image formats include: <b>GIF, JPEG & PNG files</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                Min resolution: <b>480 x 480 pixels</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                Max resolution: <b>3840 x 2160 pixels</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                Aspect ratio: <b>Between 1:2 and 2:1</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                File size limit: <b>2MB</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                Animation min fps: <b>1</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                Animation max fps: <b>30</b>
+              </small>
+            </li>
+            <li>
+              <small>
+                Animation max length: <b>40 seconds</b>
+              </small>
+            </li>
+          </ul>
         </div>
       </AccordionHelp>
     );

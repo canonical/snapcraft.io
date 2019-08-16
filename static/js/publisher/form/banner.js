@@ -162,24 +162,44 @@ class Banner extends React.Component {
         </p>
         <AccordionHelp name="banner restrictions">
           <div className="col-8">
-            <p>
-              <small>
-                Accepted image formats include: <b>JPEG & PNG files</b>
-                <br />
-                Min resolution: <b>720 x 240 pixels</b>
-                <br />
-                Max resolution: <b>4320 x 1440 pixels</b>
-                <br />
-                <i>
-                  For best results on <a href="/store">the store</a> we
-                  recommend a resolution of <b>1920 x 640 pixels</b> or greater
-                </i>
-                <br />
-                Aspect ratio: <b>3:1</b>
-                <br />
-                File size limit: <b>2MB</b>
-              </small>
-            </p>
+            <ul className="u-no-margin--bottom">
+              <li>
+                <small>
+                  Accepted image formats include: <b>JPEG & PNG files</b>
+                </small>
+              </li>
+              <li>
+                <small>
+                  Min resolution: <b>720 x 240 pixels</b>
+                  <br />
+                  <i>
+                    For best results on <a href="/store">the store</a> we
+                    {/*
+                       wtf prettier? having 'or' on a newline removes the space
+                       having it on the same line says "add a newline" using {' '}
+                       complains even more!
+                     */}
+                    recommend a resolution of <b>1920 x 640 pixels</b>
+                    &nbsp;or greater
+                  </i>
+                </small>
+              </li>
+              <li>
+                <small>
+                  Max resolution: <b>4320 x 1440 pixels</b>
+                </small>
+              </li>
+              <li>
+                <small>
+                  Aspect ratio: <b>3:1</b>
+                </small>
+              </li>
+              <li>
+                <small>
+                  File size limit: <b>2MB</b>
+                </small>
+              </li>
+            </ul>
           </div>
         </AccordionHelp>
       </Fragment>
