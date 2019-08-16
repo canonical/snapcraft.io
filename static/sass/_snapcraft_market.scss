@@ -6,6 +6,11 @@
   $black-overlay-light-color: rgba(0, 0, 0, .2);
   $white-overlay-strong-color: rgba(255, 255, 255, .9);
 
+  // Override baseline alignment
+  .p-form--stacked .p-form__group {
+    align-items: flex-start;
+  }
+
   // hack to make anchor link behave like a button
   .js-market-revert.is-disabled {
 
@@ -20,6 +25,7 @@
   .p-editable-icon {
     cursor: pointer;
     display: inline-block;
+    margin-bottom: .7rem;
     margin-right: 3.2877%;
     position: relative;
 
