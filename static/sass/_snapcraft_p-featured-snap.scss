@@ -94,6 +94,8 @@
     .p-featured-snap__icon {
       img {
         display: block;
+        min-height: 4rem;
+        min-width: 4rem;
       }
     }
 
