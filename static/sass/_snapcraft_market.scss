@@ -7,7 +7,7 @@
   $white-overlay-strong-color: rgba(255, 255, 255, .9);
 
   // Override baseline alignment
-  .p-form--stacked .p-form__group {
+  .p-form--stacked .p-form__group--top {
     align-items: flex-start;
   }
 

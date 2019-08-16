@@ -92,7 +92,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       </div>
       {% endif %}
 
-      <div class="row p-form__group" data-validation-name="icon">
+      <div class="row p-form__group p-form__group--top" data-validation-name="icon">
         <div class="col-2">
           <label class="p-form__label" for="snap-icon">Snap icon:</label>
         </div>
@@ -145,7 +145,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           </div>
         </div>
         <div class="col-12">
-          <div class="js-categories-category1-help-text row{% if snap_categories.categories[0] %} u-hide{% endif %}">
+          <div class="js-categories-category1-help-text row {% if snap_categories.categories[0] %}u-hide{% endif %}">
             <div class="col-8 col-start-large-3">
               <p class="p-form-help-text">
                 Include a category and your snap will be better ranked within the Snap Store.
@@ -154,7 +154,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
             </div>
           </div>
 
-          <div class="js-categories-category2-add row{% if not snap_categories.categories[0] or snap_categories.categories[1] %} u-hide{% endif %}">
+          <div class="js-categories-category2-add row {% if not snap_categories.categories[0] or snap_categories.categories[1] %}u-hide{% endif %}">
             <div class="col-8 col-start-large-3">
               <p><a class="js-categories-category2-add-link">+ Add another category</a></p>
               <p class="p-form-help-text">
@@ -163,7 +163,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
             </div>
           </div>
 
-          <div class="js-categories-category2-picker row{% if not snap_categories.categories[1] %} u-hide{% endif %}">
+          <div class="js-categories-category2-picker row {% if not snap_categories.categories[1] %}u-hide{% endif %}">
             <div class="col-2">
               <label>Second category:</label>
             </div>
@@ -237,7 +237,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         {% endif %}
       </div>
         
-      <div class="row p-form__group" data-validation-name="screenshots">
+      <div class="row p-form__group p-form__group--top" data-validation-name="screenshots">
         <div class="col-2">
           <label class="p-form__label">Images:</label>
         </div>
@@ -248,7 +248,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group">
+      <div class="row p-form__group p-form__group--top">
         <div class="col-2">
           <label for="banner-image" class="p-form__label">Featured banner:</label>
         </div>
