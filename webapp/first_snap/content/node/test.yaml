@@ -1,16 +1,16 @@
 name: test-wethr-{name}
 macos:
-  - action: Create a Linux virtual machine for testing snaps
+  - action: "Create a Linux virtual machine for testing snaps:"
     command: multipass launch -n testvm
-  - action: Return to the directory containing the .snap file and copy it into the virtual machine
+  - action: "Return to the directory containing the .snap file and copy it into the virtual machine:"
     command: 'multipass copy-files ${name}*.snap testvm:'
-  - action: Connect to the virtual machine
+  - action: "Connect to the virtual machine:"
     command: multipass shell testvm
-  - action: Install the snap inside the virtual machine
+  - action: "Install the snap inside the virtual machine:"
     command: sudo snap install --devmode --dangerous ${name}*.snap
-  - action: Confirm the snap is installed by listing your installed snaps
+  - action: "Confirm the snap is installed by listing your installed snaps:"
     command: snap list
-  - action: Run the snap inside the virtual machine
+  - action: "Run the snap inside the virtual machine:"
     command: ${name} -h
-  - action: Exit the virtual machine
+  - action: "Exit the virtual machine:"
     command: exit

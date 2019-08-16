@@ -1,14 +1,14 @@
 name: test-geekbench4-{name}
 macos:
-  - action: Create a Linux virtual machine for testing snaps
+  - action: "Create a Linux virtual machine for testing snaps:"
     command: multipass launch -n testvm
-  - action: Return to the directory containing the snapcraft.yaml and map it into the virtual machine
+  - action: "Return to the directory containing the snapcraft.yaml and map it into the virtual machine:"
     command: 'multipass copy-files ${name}*.snap testvm:'
-  - action: Connect to the virtual machine using Multipass
+  - action: "Connect to the virtual machine using Multipass:"
     command: multipass shell testvm
-  - action: Install the snap inside the virtual machine
+  - action: "Install the snap inside the virtual machine:"
     command: sudo snap install --devmode --dangerous
-  - action: Confirm the snap is installed by listing your installed snaps
+  - action: "Confirm the snap is installed by listing your installed snaps:"
     command: snap list
-  - action: Run the snap inside the virtual machine
+  - action: "Run the snap inside the virtual machine:"
     command: ${name}
