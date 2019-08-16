@@ -1,15 +1,19 @@
 @mixin snapcraft-market-screenshots {
+  $screenshot-thumb-size: 132px; // make it fit exactly on full screen width
+
   .p-listing-images {
+    align-items: center;
+    background-color: $color-x-light;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: flex-start;
     margin-bottom: $spv-outer--small;
-    margin-right: -$spv-inner--small;
-    min-height: 120px;
+    margin-right: -$spv-outer--medium;
+    min-height: $screenshot-thumb-size;
     position: relative;
   }
 
   .p-listing-images__image {
-    $screenshot-thumb-size: 123px; // make it fit exactly on full screen width
-
     align-items: center;
     background: $color-light;
     border: 1px solid $color-light;
@@ -20,7 +24,8 @@
     flex-grow: 0;
     height: $screenshot-thumb-size;
     justify-content: center;
-    margin-right: $spv-inner--small;
+    margin-bottom: $spv-outer--medium;
+    margin-right: $spv-outer--medium;
     min-width: auto;
     position: relative;
     width: $screenshot-thumb-size;

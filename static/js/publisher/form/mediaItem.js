@@ -1,11 +1,7 @@
 import React from "react";
 import { PropTypes } from "prop-types";
 
-const mediaClasses = [
-  "p-listing-images__image",
-  "p-fluid-grid__item--small",
-  "js-media-item-holder"
-];
+const mediaClasses = ["p-listing-images__image", "js-media-item-holder"];
 
 import { SortableElement } from "react-sortable-hoc";
 

@@ -57,10 +57,8 @@ $color-social-icon-foreground: $color-light;
 @include vf-u-show;
 @include vf-u-layout;
 
-// The new grid doesn't work here
-// https://github.com/canonical-web-and-design/vanilla-framework/issues/1974
-@import 'patterns_fluid-grid';
-@include p-fluid-grid;
+@import 'snapcraft_custom-cols';
+@include snapcraft-custom-cols;
 
 // No drop-in replacement from vanilla, but perhaps we could use
 // p-button has-icon?
