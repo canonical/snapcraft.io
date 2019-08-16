@@ -33,7 +33,7 @@ class AccordionHelp extends React.Component {
 
     return (
       <Fragment>
-        <p className="p-form-help-text u-no-margin">
+        <p className={`p-form-help-text${open ? " u-no-margin--bottom" : ""}`}>
           <a role="button" onClick={this.toggleHelp}>
             {label}
           </a>

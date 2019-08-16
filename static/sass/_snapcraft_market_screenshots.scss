@@ -1,6 +1,7 @@
 @mixin snapcraft-market-screenshots {
   .p-listing-images {
     justify-content: flex-start;
+    margin-bottom: $spv-outer--small;
     margin-right: -$spv-inner--small;
     min-height: 120px;
     position: relative;
@@ -19,7 +20,6 @@
     flex-grow: 0;
     height: $screenshot-thumb-size;
     justify-content: center;
-    margin-bottom: $spv-inner--small;
     margin-right: $spv-inner--small;
     min-width: auto;
     position: relative;
