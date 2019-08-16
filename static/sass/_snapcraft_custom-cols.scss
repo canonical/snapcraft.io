@@ -1,9 +1,9 @@
 @mixin snapcraft-custom-cols {
-  .col-no-scale {
+  .col-logo {
     @media (min-width: 772px) and (max-width: 1083px) {
       grid-column-end: span 3;
 
-      &.col-no-scale--pushed {
+      &.col-logo--pushed {
         grid-column-start: 4;
       }
     }
