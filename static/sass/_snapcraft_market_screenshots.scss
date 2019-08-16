@@ -1,17 +1,18 @@
 @mixin snapcraft-market-screenshots {
+  $screenshot-thumb-size: 132px; // make it fit exactly on full screen width
+
   .p-listing-images {
-    display: grid;
-    grid-gap: 0 1.715rem;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: auto;
-    justify-content: space-between;
-    min-height: 120px;
+    align-items: center;
+    background-color: $color-x-light;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-right: -$spv-outer--medium;
+    min-height: $screenshot-thumb-size;
     position: relative;
   }
 
   .p-listing-images__image {
-    $screenshot-thumb-size: 123px; // make it fit exactly on full screen width
-
     align-items: center;
     background: $color-light;
     border: 1px solid $color-light;
@@ -19,52 +20,14 @@
     color: $color-link;
     cursor: grab;
     display: flex;
-    grid-column-end: span 1;
-    grid-column-start: auto;
+    flex-grow: 0;
     height: $screenshot-thumb-size;
     justify-content: center;
-    margin-bottom: $spv-inner--small;
+    margin-bottom: $spv-outer--medium;
+    margin-right: $spv-outer--medium;
     min-width: auto;
     position: relative;
     width: $screenshot-thumb-size;
-
-    // Because we're trying to put a grid of 5 things in a col-8
-    // 8 does not divide by 5 nicely, so we need to do it manually
-    // When revisiting this page, it would be good to take this into
-    // consideration
-    @media screen and (min-width: 936px) and (max-width: 1152px) {
-      &:nth-child(5) {
-        grid-column-start: 1;
-      }
-    }
-
-    @media screen and (min-width: $breakpoint-medium) and (max-width: 935px) {
-      &:nth-child(4) {
-        grid-column-start: 1;
-      }
-    }
-
-    @media screen and (min-width: 641px) and (max-width: $breakpoint-medium - 1) {
-      &:nth-child(5) {
-        grid-column-start: 1;
-      }
-    }
-
-    @media screen and (min-width: 466px) and (max-width: 640px) {
-      &:nth-child(4) {
-        grid-column-start: 1;
-      }
-    }
-
-    @media screen and (min-width: 0) and (max-width: 465px) {
-      &:nth-child(3) {
-        grid-column-start: 1;
-      }
-
-      &:nth-child(5) {
-        grid-column-start: 1;
-      }
-    }
 
     .p-listing-images__delete-image {
       background: $color-x-light;
