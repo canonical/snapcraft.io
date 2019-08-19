@@ -5,6 +5,8 @@ $color-navigation-background: #333;
 $color-navigation-border: $color-navigation-background;
 $color-navigation-selected: #9c9c9c;
 
+$breakpoint-navigation-threshold: 800px;
+
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 

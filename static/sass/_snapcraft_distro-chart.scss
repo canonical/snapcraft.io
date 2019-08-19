@@ -4,7 +4,7 @@
 
   .snapcraft-distro-chart {
 
-    @media screen and (min-width: $breakpoint-navigation-threshold) {
+    @media screen and (min-width: $breakpoint-medium) {
       max-height: 80vh;
       overflow: auto;
     }
