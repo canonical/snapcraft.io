@@ -58,6 +58,46 @@ class GetStoreViewTest(TestCase):
         self.assert_template_used("store/store.html")
 
     @responses.activate
+    def test_get_store_view_with_featured(self):
+        payload_categories = {}
+        payload_featured_snaps = {
+            "_embedded": {
+                "clickindex:package": [
+                    {
+                        "media": [{"type": "icon", "url": "test.png"}],
+                        "package_name": "featured_test",
+                    }
+                ]
+            },
+            "total": 1,
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.categories_api_url,
+                json=payload_categories,
+                status=200,
+            )
+        )
+
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.featured_snaps_api_url,
+                json=payload_featured_snaps,
+                status=200,
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert len(responses.calls) == 2
+        assert response.status_code == 200
+
+        self.assert_template_used("store/store.html")
+
+    @responses.activate
     def test_get_store_view_fail_categories(self):
         payload_categories = {}
         payload_featured_snaps = {}
