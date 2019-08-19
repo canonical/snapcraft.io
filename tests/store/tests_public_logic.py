@@ -310,3 +310,28 @@ class StoreLogicTest(unittest.TestCase):
         result = logic.convert_date(date_test)
 
         self.assertEqual(result, "Today")
+
+    def test_get_snap_banner(self):
+        snap_with_banner = {
+            "media": [
+                {"type": "icon", "url": "icon.png"},
+                {"type": "banner", "url": "banner.png"},
+                {"type": "screenshot", "url": "screenshot.png"},
+            ]
+        }
+
+        result = logic.get_snap_banner_url(snap_with_banner)
+
+        self.assertEqual(result.get("banner_url"), "banner.png")
+
+    def test_get_snap_banner_no_banner(self):
+        snap_with_banner = {
+            "media": [
+                {"type": "icon", "url": "icon.png"},
+                {"type": "screenshot", "url": "screenshot.png"},
+            ]
+        }
+
+        result = logic.get_snap_banner_url(snap_with_banner)
+
+        self.assertEqual(result.get("banner_url"), None)
