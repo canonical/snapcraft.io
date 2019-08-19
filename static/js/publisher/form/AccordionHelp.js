@@ -24,21 +24,19 @@ class AccordionHelp extends React.Component {
     const { open } = this.state;
     const { name, children } = this.props;
 
-    const classNames = ["row"];
     let label = `Hide ${name.toLowerCase()}`;
     if (!open) {
-      classNames.push("u-hide");
       label = `Show ${name.toLowerCase()}`;
     }
 
     return (
       <Fragment>
-        <p className={`p-form-help-text${open ? " u-no-margin--bottom" : ""}`}>
+        <p className="p-form-help-text">
           <a role="button" onClick={this.toggleHelp}>
             {label}
           </a>
         </p>
-        <div className={classNames.join(" ")}>{children}</div>
+        <div className={`${open ? "" : "u-hide"}`}>{children}</div>
       </Fragment>
     );
   }
