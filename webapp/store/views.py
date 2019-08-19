@@ -82,10 +82,15 @@ def store_blueprint(store_query=None, testing=False):
         if len(featured_snaps) == 10 and featured_snaps[0]["icon_url"] == "":
             featured_snaps = featured_snaps[:-1]
 
-        for index in range(len(featured_snaps)):
-            featured_snaps[index] = logic.get_snap_banner_url(
-                featured_snaps[index]
-            )
+        featured_banners_enabled = flask.current_app.config.get(
+            "FEATURED_BANNERS_ENABLED"
+        )
+
+        if featured_banners_enabled:
+            for index in range(len(featured_snaps)):
+                featured_snaps[index] = logic.get_snap_banner_url(
+                    featured_snaps[index]
+                )
 
         livestream = snapcraft_logic.get_livestreams()
 
@@ -323,10 +328,15 @@ def store_blueprint(store_query=None, testing=False):
         if len(snaps_results) == 10 and snaps_results[0]["icon_url"] == "":
             snaps_results = snaps_results[:-1]
 
-        for index in range(len(snaps_results)):
-            snaps_results[index] = logic.get_snap_banner_url(
-                snaps_results[index]
-            )
+        featured_banners_enabled = flask.current_app.config.get(
+            "FEATURED_BANNERS_ENABLED"
+        )
+
+        if featured_banners_enabled:
+            for index in range(len(snaps_results)):
+                snaps_results[index] = logic.get_snap_banner_url(
+                    snaps_results[index]
+                )
 
         context = {
             "category": category,
