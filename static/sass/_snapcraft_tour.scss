@@ -1,0 +1,247 @@
+@mixin snapcraft-tour {
+  $color-overlay: transparentize($color-dark, .15);
+  $triangle-height: $sp-unit;
+
+  // some temporary testing overlay
+  body {
+    position: relative;
+  }
+
+  .p-tour-overlay {
+    background: $color-overlay;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9999;
+  }
+
+  // triange arrow for tooltips
+  %triangle {
+    &::before,
+    &::after {
+      border: {
+        bottom: $triangle-height solid transparent;
+        left: $triangle-height solid transparent;
+        right: $triangle-height solid transparent;
+        top: $triangle-height solid transparent;
+      }
+      content: '';
+      height: 0;
+      pointer-events: none;
+      position: absolute;
+      width: 0;
+    }
+  }
+
+  // for tooltips below element
+  %triangle--pointing-up {
+    @extend %triangle;
+
+    &::before,
+    &::after {
+      border-bottom-color: $color-mid-light;
+      bottom: 100%;
+    }
+
+    &::after {
+      border-bottom-color: $color-x-light;
+      bottom: calc(100% - 1px);
+    }
+  }
+
+  // for tooltips above element
+  %triangle--pointing-down {
+    @extend %triangle;
+
+    &::before,
+    &::after {
+      border-top-color: $color-mid-light;
+      top: 100%;
+    }
+
+    &::after {
+      border-top-color: $color-x-light;
+      top: calc(100% - 1px);
+    }
+  }
+
+  // horizontal placement of up/down arrow
+  %triangle--on-left {
+    &::before,
+    &::after {
+      left: $sph-inner;
+    }
+  }
+
+  %triangle--on-right {
+    &::before,
+    &::after {
+      right: $sph-inner;
+    }
+  }
+
+  %triangle--on-center-x { // horizontally centered
+    &::before,
+    &::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  // for tooltips on the left of element
+  %triangle--pointing-right {
+    @extend %triangle;
+
+    &::before,
+    &::after {
+      border-left-color: $color-mid-light;
+      left: 100%;
+    }
+
+    &::after {
+      border-left-color: $color-x-light;
+      left: calc(100% - 1px);
+    }
+  }
+
+  // for tooltips on the right of element
+  %triangle--pointing-left {
+    @extend %triangle;
+
+    &::before,
+    &::after {
+      border-right-color: $color-mid-light;
+      right: 100%;
+    }
+
+    &::after {
+      border-right-color: $color-x-light;
+      right: calc(100% - 1px);
+    }
+  }
+
+  // vertical placement of left/right arrow
+  %triangle--on-top {
+    &::before,
+    &::after {
+      top: $spv-inner--large;
+    }
+  }
+
+  %triangle--on-bottom {
+    &::before,
+    &::after {
+      bottom: $spv-inner--large;
+    }
+  }
+
+  %triangle--on-center-y { // vertically center
+    &::before,
+    &::after {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  // NOTE: name needs to start with `p-card` because of some styles
+  // applied in Vanilla by attribute selector to p-card children
+  .p-card--tour {
+    @extend .p-card; // sass-lint:disable-line placeholder-in-extend
+
+    max-width: 27rem;
+    overflow: visible; // to make tooltip arrow visible
+    position: absolute;
+
+    &.is-tooltip--bottom-left {
+      @extend %triangle--pointing-up;
+      @extend %triangle--on-left;
+    }
+
+    &.is-tooltip--bottom-right {
+      @extend %triangle--pointing-up;
+      @extend %triangle--on-right;
+    }
+
+    &.is-tooltip--bottom,
+    &.is-tooltip--bottom-center {
+      @extend %triangle--pointing-up;
+      @extend %triangle--on-center-x;
+    }
+
+    &.is-tooltip--top-left {
+      @extend %triangle--pointing-down;
+      @extend %triangle--on-left;
+    }
+
+    &.is-tooltip--top-right {
+      @extend %triangle--pointing-down;
+      @extend %triangle--on-right;
+    }
+
+    &.is-tooltip--top,
+    &.is-tooltip--top-center {
+      @extend %triangle--pointing-down;
+      @extend %triangle--on-center-x;
+    }
+
+    &.is-tooltip--right,
+    &.is-tooltip--right-center {
+      @extend %triangle--pointing-left;
+      @extend %triangle--on-center-y;
+    }
+
+    &.is-tooltip--left,
+    &.is-tooltip--left-center {
+      @extend %triangle--pointing-right;
+      @extend %triangle--on-center-y;
+    }
+
+    &.is-tooltip--left-top {
+      @extend %triangle--pointing-right;
+      @extend %triangle--on-top;
+    }
+
+    &.is-tooltip--left-bottom {
+      @extend %triangle--pointing-right;
+      @extend %triangle--on-bottom;
+    }
+
+    &.is-tooltip--right-top {
+      @extend %triangle--pointing-left;
+      @extend %triangle--on-top;
+    }
+
+    &.is-tooltip--right-bottom {
+      @extend %triangle--pointing-left;
+      @extend %triangle--on-bottom;
+    }
+  }
+
+  .p-tour-controls {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: $spv-inner--large;
+
+    // based on pagination pattern from Vanilla this turns contextual menu
+    // chevron icon into < > arrows
+    // let's hope Vanilla doesn't change this icon to something else ;)
+    .p-icon--contextual-menu.is-next {
+      transform: rotate(-90deg);
+    }
+
+    .p-icon--contextual-menu.is-prev {
+      transform: rotate(90deg);
+    }
+  }
+
+  .p-tour-controls__buttons {
+    display: flex;
+  }
+
+  .p-tour-controls__step {
+    margin-right: $sph-inner;
+  }
+}
