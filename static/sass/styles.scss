@@ -221,3 +221,6 @@ $color-social-icon-foreground: $color-light;
 
 @import 'utilities_flex';
 @include u-flex;
+
+@import 'snapcraft_tour';
+@include snapcraft-tour;
