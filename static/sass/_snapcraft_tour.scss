@@ -8,13 +8,21 @@
   }
 
   .p-tour-overlay {
-    background: $color-overlay;
     bottom: 0;
     left: 0;
     position: absolute;
     right: 0;
     top: 0;
     z-index: 9999;
+  }
+
+  .p-tour-overlay__mask {
+    background: $color-overlay;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 
   // triange arrow for tooltips
@@ -38,6 +46,7 @@
   // for tooltips below element
   %triangle--pointing-up {
     @extend %triangle;
+    margin-top: 2 * $triangle-height;
 
     &::before,
     &::after {
@@ -54,6 +63,7 @@
   // for tooltips above element
   %triangle--pointing-down {
     @extend %triangle;
+    margin-bottom: 2 * $triangle-height;
 
     &::before,
     &::after {
@@ -93,6 +103,7 @@
   // for tooltips on the left of element
   %triangle--pointing-right {
     @extend %triangle;
+    margin-left: 2 * $triangle-height;
 
     &::before,
     &::after {
@@ -109,6 +120,7 @@
   // for tooltips on the right of element
   %triangle--pointing-left {
     @extend %triangle;
+    margin-right: 2 * $triangle-height;
 
     &::before,
     &::after {
@@ -153,6 +165,7 @@
     max-width: 27rem;
     overflow: visible; // to make tooltip arrow visible
     position: absolute;
+    transition: 200ms;
 
     &.is-tooltip--bottom-left {
       @extend %triangle--pointing-up;
