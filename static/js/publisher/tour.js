@@ -8,5 +8,5 @@ export default function initTour() {
   document.body.appendChild(tour);
 
   const target = document.querySelector("h2");
-  ReactDOM.render(<Tour targetEl={target} />, tour);
+  ReactDOM.render(<Tour target={target} />, tour);
 }
