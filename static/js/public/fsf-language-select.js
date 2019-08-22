@@ -38,7 +38,7 @@ function initFSFLanguageSelect(rootEl) {
       if (!isOpen) {
         // find the end of the row of icons to place details panel properly
         var details = rootEl.querySelector(
-          `[data-flow-details='${link.dataset.flowLink}'`
+          `[data-flow-details='${link.dataset.flowLink}']`
         );
 
         if (nextRow) {
@@ -76,7 +76,7 @@ function initFSFLanguageSelect(rootEl) {
   // if there is a hash in URL that corresponds to one of the languages
   // open given language section (for example /first-snap#python)
   const hash = window.location.hash.slice(1);
-  const link = rootEl.querySelector(`[data-flow-link='${hash}'`);
+  const link = rootEl.querySelector(`[data-flow-link='${hash}']`);
   if (link) {
     openDetails(link);
   }
