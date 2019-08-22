@@ -199,7 +199,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           </div>
         </div>
       </div>
-      
+
       <div class="row p-form__group p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}">
         <div class="col-2">
           <label for="video" class="p-form__label">Video:</label>
@@ -236,7 +236,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
         {% endif %}
       </div>
-        
+
       <div class="row p-form__group p-form__group--top" data-validation-name="screenshots">
         <div class="col-2">
           <label class="p-form__label">Images:</label>
@@ -474,6 +474,8 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
     <input type="text" name="state" value="" />
   </form>
 </div>
+
+<div id="tour-container"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -525,6 +527,11 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
     snapcraft.publisher.stickyListingBar();
     snapcraft.publisher.markdownToggle();
     snapcraft.publisher.initCategories();
+
+    snapcraft.publisher.initTour({
+      container: document.getElementById("tour-container"),
+      target: document.querySelector("[data-tour='listing-intro']")
+    });
   });
 </script>
 {% endblock %}
