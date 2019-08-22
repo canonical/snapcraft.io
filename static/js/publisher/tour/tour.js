@@ -1,5 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+
+import debounce from "../../libs/debounce";
 
 import TourStepCard from "./tourStepCard";
 import TourOverlayMask from "./tourOverlayMask";
@@ -45,33 +47,50 @@ const getMaskFromRect = rect => {
   };
 };
 
-export default function Tour({ targetEl }) {
-  const [rect, setRect] = useState(targetEl ? getRectFromEl(targetEl) : null);
+export default function Tour({ target }) {
+  // ignore elements that are not in DOM
+  if (!document.contains(target)) {
+    target = null;
+  }
+
+  const [targetEl, setTargetEl] = useState(target);
   const overlayEl = useRef(null);
 
-  const mask = rect ? getMaskFromRect(rect) : null;
+  const mask = targetEl ? getMaskFromRect(getRectFromEl(targetEl)) : null;
+
+  // rerender on resize
+  // it is an unusual use of useState to force rerender, but on resize
+  // the state of component doesn't change, it's the position of elements
+  // in DOM that changes and component needs to rerender to adapt
+  const [, forceUpdate] = useState();
+  const rerender = () => forceUpdate({});
+
+  useEffect(() => {
+    const onResize = debounce(() => rerender(), 500);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  });
 
   const onClick = event => {
     // we need to "click through" the overlay to check what is underneath it
     overlayEl.current.style.pointerEvents = "none";
-    const elementMouseIsOver = document.elementFromPoint(
-      event.clientX,
-      event.clientY
-    );
+    const targetEl = document.elementFromPoint(event.clientX, event.clientY);
     overlayEl.current.style.pointerEvents = "";
 
-    setRect(getRectFromEl(elementMouseIsOver));
+    setTargetEl(targetEl);
   };
 
   return (
     <div className="p-tour-overlay" ref={overlayEl} onClick={onClick}>
       <TourOverlayMask mask={mask} />
-
       <TourStepCard mask={mask} />
     </div>
   );
 }
 
 Tour.propTypes = {
-  targetEl: PropTypes.instanceOf(Element)
+  target: PropTypes.instanceOf(Element)
 };
