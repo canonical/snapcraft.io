@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { MASK_OFFSET } from "./tour";
+import { MASK_OFFSET } from "./tourOverlay";
 
-export default function TourStepCard({ mask }) {
+export default function TourStepCard({ mask, onHideClick }) {
   let tooltipStyle = {};
 
   if (mask) {
@@ -25,8 +25,7 @@ export default function TourStepCard({ mask }) {
 
       <p className="p-tour-controls">
         <span>
-          Done?{" "}
-          <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Skip tour</a>.
+          Done? <a onClick={onHideClick}>Skip tour</a>.
         </span>
 
         <span className="p-tour-controls__buttons">
@@ -57,5 +56,6 @@ TourStepCard.propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
     right: PropTypes.number
-  })
+  }),
+  onHideClick: PropTypes.func
 };

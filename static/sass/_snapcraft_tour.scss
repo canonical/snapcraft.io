@@ -7,6 +7,21 @@
     position: relative;
   }
 
+  .p-tour-bar {
+    position: fixed;
+    padding: $spv-inner--medium;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .p-tour-bar__button {
+    @extend %p-button--neutral;
+
+    float: right;
+    margin: 0;
+  }
+
   .p-tour-overlay {
     bottom: 0;
     left: 0;
