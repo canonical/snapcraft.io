@@ -79,21 +79,41 @@ export default function TourOverlay({ steps, onHideClick }) {
 
   const mask = getMaskFromRect(getRectFromEl(step.el));
 
-  // rerender on resize
-  // it is an unusual use of useState to force rerender, but on resize
+  // rerender on resize or scroll
+  // it is an unusual use of useState to force rerender, but on resize or scroll
   // the state of component doesn't change, it's the position of elements
   // in DOM that changes and component needs to rerender to adapt
   const [, forceUpdate] = useState();
   const rerender = () => forceUpdate({});
 
+  const [isResizing, setIsResizing] = useState(false);
+
+  // rerender after scroll (to adjust to fixed elements that might have moved)
   useEffect(() => {
-    const updateView = debounce(() => rerender(), 500);
-    window.addEventListener("resize", updateView);
-    window.addEventListener("scroll", updateView);
+    const afterScroll = debounce(() => rerender(), 500);
+    window.addEventListener("scroll", afterScroll);
+    return () => {
+      window.removeEventListener("scroll", afterScroll);
+    };
+  });
+
+  // rerender after resize (to adjust to new positions of elements)
+  // and hide mask during resize to avoid misalign of mask and tooltip
+  useEffect(() => {
+    const onResize = () => {
+      setIsResizing(true);
+    };
+    const afterResize = debounce(() => {
+      setIsResizing(false);
+      rerender();
+    }, 1000);
+
+    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", afterResize);
 
     return () => {
-      window.removeEventListener("resize", updateView);
-      window.removeEventListener("scroll", updateView);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", afterResize);
     };
   });
 
@@ -104,7 +124,7 @@ export default function TourOverlay({ steps, onHideClick }) {
 
   return (
     <div className="p-tour-overlay" ref={overlayEl}>
-      <TourOverlayMask mask={mask} />
+      <TourOverlayMask mask={isResizing ? null : mask} />
       <TourStepCard
         steps={steps}
         currentStepIndex={currentStepIndex}
