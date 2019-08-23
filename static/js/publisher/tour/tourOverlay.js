@@ -6,7 +6,8 @@ import debounce from "../../libs/debounce";
 import TourStepCard from "./tourStepCard";
 import TourOverlayMask from "./tourOverlayMask";
 
-export const MASK_OFFSET = 5;
+const REM = parseFloat(getComputedStyle(document.documentElement).fontSize);
+const MASK_OFFSET = REM / 2; // .5rem  is a default spacing unit in Vanilla
 
 // get rectangle of given DOM element
 // relative to the page, taking scroll into account
