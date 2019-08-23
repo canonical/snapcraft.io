@@ -530,7 +530,17 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
 
     snapcraft.publisher.initTour({
       container: document.getElementById("tour-container"),
-      target: document.querySelector("[data-tour='listing-intro']")
+      steps: [
+        {
+          id: "listing-intro",
+          title: "Welcome to the demo tour!",
+          content: `
+            <p>This is just a test to see how to position such information and how to mask overlay background to highlight target element.</p>
+            <p>Click around and see how overlay highlights the element.</p>
+            <p>Thank you for testing!</p>
+          `
+        }
+      ]
     });
   });
 </script>

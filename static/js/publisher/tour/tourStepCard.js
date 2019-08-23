@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 
 import { MASK_OFFSET } from "./tourOverlay";
 
-export default function TourStepCard({ mask, onHideClick }) {
+export default function TourStepCard({
+  steps,
+  currentStepIndex,
+  mask,
+  onHideClick
+}) {
+  const step = steps[currentStepIndex];
+
   let tooltipStyle = {};
 
   if (mask) {
@@ -13,15 +20,17 @@ export default function TourStepCard({ mask, onHideClick }) {
     };
   }
 
+  // step content is controlled by us and passed as data to component directly
+  // so it should be safe to set it via dangerouslySetInnerHTML
+  const content = { __html: step.content };
+
   return (
     <div className="p-card--tour is-tooltip--bottom-left" style={tooltipStyle}>
-      <h4>Welcome to the demo tour!</h4>
-      <p>
-        This is just a test to see how to position such information and how to
-        mask overlay background to highlight target element.
-      </p>
-      <p>Click around and see how overlay highlights the element.</p>
-      <p>Thank you for testing!</p>
+      <h4>{step.title}</h4>
+      <div
+        className="p-card--tour__content"
+        dangerouslySetInnerHTML={content}
+      />
 
       <p className="p-tour-controls">
         <span>
@@ -29,7 +38,9 @@ export default function TourStepCard({ mask, onHideClick }) {
         </span>
 
         <span className="p-tour-controls__buttons">
-          <small className="p-tour-controls__step">1/1</small>
+          <small className="p-tour-controls__step">
+            {currentStepIndex + 1}/{steps.length}
+          </small>
           <button
             disabled
             className="p-button--neutral is-inline has-icon u-no-margin--bottom"
@@ -57,5 +68,8 @@ TourStepCard.propTypes = {
     left: PropTypes.number,
     right: PropTypes.number
   }),
+  steps: PropTypes.array,
+  currentStepIndex: PropTypes.number,
+  allStepsCount: PropTypes.number,
   onHideClick: PropTypes.func
 };
