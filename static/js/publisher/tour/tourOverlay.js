@@ -47,13 +47,13 @@ const getMaskFromRect = rect => {
   };
 };
 
-export default function TourOverlay({ target, onHideClick }) {
-  // ignore elements that are not in DOM
-  if (!document.contains(target)) {
-    target = null;
-  }
+export default function TourOverlay({ steps, onHideClick }) {
+  const [currentStepIndex] = useState(0);
+  const step = steps[currentStepIndex];
 
-  const [targetEl, setTargetEl] = useState(target);
+  const [targetEl, setTargetEl] = useState(
+    document.querySelector(`[data-tour="${step.id}"]`)
+  );
   const overlayEl = useRef(null);
 
   const mask = targetEl ? getMaskFromRect(getRectFromEl(targetEl)) : null;
@@ -86,12 +86,18 @@ export default function TourOverlay({ target, onHideClick }) {
   return (
     <div className="p-tour-overlay" ref={overlayEl} onClick={onClick}>
       <TourOverlayMask mask={mask} />
-      <TourStepCard mask={mask} onHideClick={onHideClick} />
+      <TourStepCard
+        steps={steps}
+        currentStepIndex={currentStepIndex}
+        mask={mask}
+        onHideClick={onHideClick}
+      />
     </div>
   );
 }
 
 TourOverlay.propTypes = {
-  target: PropTypes.instanceOf(Element),
+  steps: PropTypes.array,
+  currentStepIndex: PropTypes.number,
   onHideClick: PropTypes.func
 };

@@ -3,10 +3,13 @@ import ReactDOM from "react-dom";
 
 import Tour from "./tour/tour";
 
-export default function initTour({ container, target }) {
-  if (document.contains(container) && document.contains(target)) {
-    ReactDOM.render(<Tour target={target} />, container);
-  } else {
-    throw Error("initTour container or target elements not found in document");
+export default function initTour({ container, steps }) {
+  if (!document.contains(container)) {
+    throw Error("initTour container element not found in document.");
   }
+  if (!steps || !steps.length) {
+    throw Error("initTour expects steps array as an argument.");
+  }
+
+  ReactDOM.render(<Tour steps={steps} />, container);
 }

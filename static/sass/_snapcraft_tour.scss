@@ -8,10 +8,11 @@
   }
 
   .p-tour-bar {
-    position: fixed;
-    padding: $spv-inner--medium;
     bottom: 0;
     left: 0;
+    padding: $spv-inner--medium;
+    pointer-events: none;
+    position: fixed;
     right: 0;
   }
 
@@ -20,6 +21,7 @@
 
     float: right;
     margin: 0;
+    pointer-events: all;
   }
 
   .p-tour-overlay {
@@ -245,6 +247,11 @@
       @extend %triangle--pointing-left;
       @extend %triangle--on-bottom;
     }
+  }
+
+  .p-card--tour__content {
+    // compensate spacing for content being wrapped in div instead of being directly after heading
+    @extend %sp--hp;
   }
 
   .p-tour-controls {
