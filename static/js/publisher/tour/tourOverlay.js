@@ -47,16 +47,36 @@ const getMaskFromRect = rect => {
   };
 };
 
+// find DOM element for each step, ignore steps with no element
+// set default position to "bottom-left"
+function prepareSteps(steps) {
+  return steps
+    .map(step => {
+      return {
+        ...step,
+        el: document.querySelector(`[data-tour="${step.id}"]`),
+        position: step.position || "bottom-left"
+      };
+    })
+    .filter(step => step.el);
+}
+
 export default function TourOverlay({ steps, onHideClick }) {
-  const [currentStepIndex] = useState(0);
+  steps = prepareSteps(steps);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
   const step = steps[currentStepIndex];
 
-  const [targetEl, setTargetEl] = useState(
-    document.querySelector(`[data-tour="${step.id}"]`)
+  // when current step changes, scroll step element into view
+  useEffect(
+    () => {
+      step.el.scrollIntoView({ block: "center", behavior: "smooth" });
+    },
+    [currentStepIndex]
   );
   const overlayEl = useRef(null);
 
-  const mask = targetEl ? getMaskFromRect(getRectFromEl(targetEl)) : null;
+  const mask = getMaskFromRect(getRectFromEl(step.el));
 
   // rerender on resize
   // it is an unusual use of useState to force rerender, but on resize
@@ -66,31 +86,31 @@ export default function TourOverlay({ steps, onHideClick }) {
   const rerender = () => forceUpdate({});
 
   useEffect(() => {
-    const onResize = debounce(() => rerender(), 500);
-    window.addEventListener("resize", onResize);
+    const updateView = debounce(() => rerender(), 500);
+    window.addEventListener("resize", updateView);
+    window.addEventListener("scroll", updateView);
 
     return () => {
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", updateView);
+      window.removeEventListener("scroll", updateView);
     };
   });
 
-  const onClick = event => {
-    // we need to "click through" the overlay to check what is underneath it
-    overlayEl.current.style.pointerEvents = "none";
-    const targetEl = document.elementFromPoint(event.clientX, event.clientY);
-    overlayEl.current.style.pointerEvents = "";
-
-    setTargetEl(targetEl);
-  };
+  const onNextClick = () =>
+    setCurrentStepIndex((currentStepIndex + 1) % steps.length);
+  const onPrevClick = () =>
+    setCurrentStepIndex((currentStepIndex - 1) % steps.length);
 
   return (
-    <div className="p-tour-overlay" ref={overlayEl} onClick={onClick}>
+    <div className="p-tour-overlay" ref={overlayEl}>
       <TourOverlayMask mask={mask} />
       <TourStepCard
         steps={steps}
         currentStepIndex={currentStepIndex}
         mask={mask}
         onHideClick={onHideClick}
+        onNextClick={onNextClick}
+        onPrevClick={onPrevClick}
       />
     </div>
   );
