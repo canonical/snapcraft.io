@@ -4,12 +4,7 @@ import PropTypes from "prop-types";
 import TourOverlay from "./tourOverlay";
 import TourBar from "./tourBar";
 
-export default function Tour({ target }) {
-  // ignore elements that are not in DOM
-  if (!document.contains(target)) {
-    target = null;
-  }
-
+export default function Tour({ steps }) {
   const [showTour, setShowTour] = useState(false);
 
   const onShowTour = () => setShowTour(true);
@@ -19,11 +14,11 @@ export default function Tour({ target }) {
     <Fragment>
       <TourBar onButtonClick={onShowTour} />
 
-      {showTour && <TourOverlay target={target} onHideClick={onHideTour} />}
+      {showTour && <TourOverlay steps={steps} onHideClick={onHideTour} />}
     </Fragment>
   );
 }
 
 Tour.propTypes = {
-  target: PropTypes.instanceOf(Element)
+  steps: PropTypes.array
 };
