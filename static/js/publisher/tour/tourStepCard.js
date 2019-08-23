@@ -1,23 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { MASK_OFFSET } from "./tourOverlay";
-
 export default function TourStepCard({
   steps,
   currentStepIndex,
   mask,
-  onHideClick
+  onHideClick,
+  onNextClick,
+  onPrevClick
 }) {
   const step = steps[currentStepIndex];
 
   let tooltipStyle = {};
 
-  if (mask) {
-    tooltipStyle = {
-      top: mask.bottom,
-      left: mask.left > MASK_OFFSET ? mask.left : MASK_OFFSET
-    };
+  // for positioning relative to right/bottom of the screen
+  const overlayHeight = document.body.clientHeight;
+  const overlayWidth = document.body.clientWidth;
+
+  switch (step.position) {
+    // TODO: support for all available tooltip positions
+    case "bottom-left":
+      tooltipStyle = {
+        top: mask.bottom,
+        left: mask.left
+      };
+      break;
+    case "top-right":
+      tooltipStyle = {
+        bottom: overlayHeight - mask.top,
+        right: overlayWidth - mask.right
+      };
+      break;
   }
 
   // step content is controlled by us and passed as data to component directly
@@ -25,7 +38,10 @@ export default function TourStepCard({
   const content = { __html: step.content };
 
   return (
-    <div className="p-card--tour is-tooltip--bottom-left" style={tooltipStyle}>
+    <div
+      className={`p-card--tour is-tooltip--${step.position}`}
+      style={tooltipStyle}
+    >
       <h4>{step.title}</h4>
       <div
         className="p-card--tour__content"
@@ -42,13 +58,15 @@ export default function TourStepCard({
             {currentStepIndex + 1}/{steps.length}
           </small>
           <button
-            disabled
+            disabled={currentStepIndex === 0}
+            onClick={onPrevClick}
             className="p-button--neutral is-inline has-icon u-no-margin--bottom"
           >
             <i className="p-icon--contextual-menu is-prev">Previous step</i>
           </button>
           <button
-            disabled
+            disabled={currentStepIndex === steps.length - 1}
+            onClick={onNextClick}
             className="p-button--positive is-inline has-icon u-no-margin--bottom u-no-margin--right"
           >
             <i className="p-icon--contextual-menu is-light is-next">
@@ -67,9 +85,10 @@ TourStepCard.propTypes = {
     bottom: PropTypes.number,
     left: PropTypes.number,
     right: PropTypes.number
-  }),
-  steps: PropTypes.array,
-  currentStepIndex: PropTypes.number,
-  allStepsCount: PropTypes.number,
-  onHideClick: PropTypes.func
+  }).isRequired,
+  steps: PropTypes.array.isRequired,
+  currentStepIndex: PropTypes.number.isRequired,
+  onHideClick: PropTypes.func.isRequired,
+  onNextClick: PropTypes.func.isRequired,
+  onPrevClick: PropTypes.func.isRequired
 };

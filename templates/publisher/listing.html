@@ -92,7 +92,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       </div>
       {% endif %}
 
-      <div class="row p-form__group p-form__group--top" data-validation-name="icon">
+      <div class="row p-form__group p-form__group--top" data-validation-name="icon" data-tour="listing-icon">
         <div class="col-2">
           <label class="p-form__label" for="snap-icon">Snap icon:</label>
         </div>
@@ -533,12 +533,27 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       steps: [
         {
           id: "listing-intro",
-          title: "Welcome to the demo tour!",
+          title: "Welcome to your snap listing page!",
           content: `
-            <p>This is just a test to see how to position such information and how to mask overlay background to highlight target element.</p>
-            <p>Click around and see how overlay highlights the element.</p>
-            <p>Thank you for testing!</p>
+            <p>Here you can manage the display of your snap listing within the store.</p>
+            <p>We’ll give you a quick tour to get you up to speed!</p>
           `
+        },
+        {
+          id: "listing-icon",
+          title: "Icons attract eyes…",
+          content: `
+            <p>Including an icon will help your snap to stand out making it far more attractive to users browsing graphical interfaces such as snapcraft.io/store and the Snap Store.</p>
+          `
+        },
+        {
+          id: "tour-end",
+          title: "That’s it for now!",
+          content: `
+            <p>If you ever need more help just look for the tour icon.</p>
+            <p>Still need help with something? <a href="https://www.youtube.com/watch?v=NiRj5m63oig&feature=youtu.be&t=68" target="_blank">Contact us</a>.</p>
+          `,
+          position: "top-right"
         }
       ]
     });
