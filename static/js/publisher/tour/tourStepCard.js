@@ -37,6 +37,8 @@ export default function TourStepCard({
   // so it should be safe to set it via dangerouslySetInnerHTML
   const content = { __html: step.content };
 
+  const isLastStep = currentStepIndex === steps.length - 1;
+
   return (
     <div
       className={`p-card--tour is-tooltip--${step.position}`}
@@ -65,13 +67,16 @@ export default function TourStepCard({
             <i className="p-icon--contextual-menu is-prev">Previous step</i>
           </button>
           <button
-            disabled={currentStepIndex === steps.length - 1}
-            onClick={onNextClick}
+            onClick={isLastStep ? onHideClick : onNextClick}
             className="p-button--positive is-inline has-icon u-no-margin--bottom u-no-margin--right"
           >
-            <i className="p-icon--contextual-menu is-light is-next">
-              Next step
-            </i>
+            {isLastStep ? (
+              "Finish tour"
+            ) : (
+              <i className="p-icon--contextual-menu is-light is-next">
+                Next step
+              </i>
+            )}
           </button>
         </span>
       </p>
