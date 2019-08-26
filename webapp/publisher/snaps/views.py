@@ -339,6 +339,9 @@ def get_listing_snap(snap_name):
 
     snap_categories = logic.filter_categories(snap_categories)
 
+    filename = f"publisher/content/listing_tour.yaml"
+    tour_steps = helpers.get_yaml(filename, typ="rt")
+
     context = {
         "snap_id": snap_details["snap_id"],
         "snap_name": snap_details["snap_name"],
@@ -363,6 +366,7 @@ def get_listing_snap(snap_name):
         "is_on_stable": is_on_stable,
         "from": referrer,
         "categories": categories,
+        "tour_steps": tour_steps,
     }
 
     return flask.render_template("publisher/listing.html", **context)
@@ -501,6 +505,9 @@ def post_listing_snap(snap_name):
 
             snap_categories = logic.filter_categories(snap_categories)
 
+            filename = f"publisher/content/listing_tour.yaml"
+            tour_steps = helpers.get_yaml(filename, typ="rt")
+
             context = {
                 # read-only values from details API
                 "snap_id": snap_details["snap_id"],
@@ -555,6 +562,7 @@ def post_listing_snap(snap_name):
                 "error_list": error_list,
                 "field_errors": field_errors,
                 "other_errors": other_errors,
+                "tour_steps": tour_steps,
             }
 
             return flask.render_template("publisher/listing.html", **context)
