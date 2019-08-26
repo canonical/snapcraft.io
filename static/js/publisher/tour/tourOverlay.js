@@ -48,18 +48,41 @@ const getMaskFromRect = rect => {
   };
 };
 
-// find DOM element for each step, ignore steps with no element
+// get mask that is an union of all elements' masks
+// calculates the rectangle that contains each individual element rectangles
+const getMaskFromElements = elements => {
+  return elements.map(el => getMaskFromRect(getRectFromEl(el))).reduce(
+    (unionMask, elMask) => {
+      return {
+        top: Math.min(unionMask.top, elMask.top),
+        left: Math.min(unionMask.left, elMask.left),
+        bottom: Math.max(unionMask.bottom, elMask.bottom),
+        right: Math.max(unionMask.right, elMask.right)
+      };
+    },
+    {
+      top: Infinity,
+      left: Infinity,
+      right: 0,
+      bottom: 0
+    }
+  );
+};
+
+// find DOM elements for each step, ignore steps with no elements
 // set default position to "bottom-left"
 function prepareSteps(steps) {
   return steps
     .map(step => {
       return {
         ...step,
-        el: document.querySelector(`[data-tour="${step.id}"]`),
+        elements: [].slice.apply(
+          document.querySelectorAll(`[data-tour="${step.id}"]`)
+        ),
         position: step.position || "bottom-left"
       };
     })
-    .filter(step => step.el);
+    .filter(step => step.elements.length > 0);
 }
 
 export default function TourOverlay({ steps, onHideClick }) {
@@ -71,13 +94,14 @@ export default function TourOverlay({ steps, onHideClick }) {
   // when current step changes, scroll step element into view
   useEffect(
     () => {
-      step.el.scrollIntoView({ block: "center", behavior: "smooth" });
+      // TODO: consider scrolling based on mask position instead of element
+      step.elements[0].scrollIntoView({ block: "center", behavior: "smooth" });
     },
     [currentStepIndex]
   );
   const overlayEl = useRef(null);
 
-  const mask = getMaskFromRect(getRectFromEl(step.el));
+  const mask = getMaskFromElements(step.elements);
 
   // rerender on resize or scroll
   // it is an unusual use of useState to force rerender, but on resize or scroll
