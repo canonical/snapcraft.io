@@ -102,7 +102,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}"  data-tour="listing-title">
         <div class="col-2">
           <label for="snap-title" class="p-form__label">Title:</label>
         </div>
@@ -118,7 +118,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group">
+      <div class="row p-form__group" data-tour="listing-category">
         <div class="col-2">
           <label class="p-form__label">Category:</label>
         </div>
@@ -200,7 +200,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}" data-tour="listing-video">
         <div class="col-2">
           <label for="video" class="p-form__label">Video:</label>
         </div>
@@ -237,7 +237,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         {% endif %}
       </div>
 
-      <div class="row p-form__group p-form__group--top" data-validation-name="screenshots">
+      <div class="row p-form__group p-form__group--top" data-validation-name="screenshots" data-tour="listing-images">
         <div class="col-2">
           <label class="p-form__label">Images:</label>
         </div>
@@ -248,7 +248,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form__group--top">
+      <div class="row p-form__group p-form__group--top" data-tour="listing-banner">
         <div class="col-2">
           <label for="banner-image" class="p-form__label">Featured banner:</label>
         </div>
@@ -259,7 +259,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['summary'] %}is-error{% endif %}" data-tour="listing-summary">
         <div class="col-2">
           <label class="p-form__label">Summary: </label>
         </div>
@@ -275,7 +275,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['description'] %}is-error{% endif %}">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['description'] %}is-error{% endif %}"  data-tour="listing-description">
         <div class="col-2">
           <label class="p-form__label">Description: </label>
         </div>
@@ -321,62 +321,63 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row">
-        <h2 class="p-heading--four">Contact information</h2>
-      </div>
-
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-        <div class="col-2">
-          <label for="developer-website" class="p-form__label">Developer website:</label>
+      <div class="row" data-tour="listing-contact">
+        <div class="row">
+          <h2 class="p-heading--four">Contact information</h2>
         </div>
-        <div class="col-8">
-          <div class="p-form__control">
-            <input
-              class="p-form-validation__input"
-              id="developer-website"
-              type="url"
-              name="website"
-              value="{{ website }}"
-              maxlength="256"
-              placeholder="https://snapcraft.io" />
-            {% if field_errors and field_errors['website'] %}
-            <p class="p-form-validation__message">
-              <strong>Error:</strong> {{ field_errors['website'] }}
-            </p>
-            {% endif %}
-            <p class="p-form-help-text">
-              Please include a valid http:// or https:// link
-            </p>
+
+        <div class="row p-form__group p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
+          <div class="col-2">
+            <label for="developer-website" class="p-form__label">Developer website:</label>
+          </div>
+          <div class="col-8">
+            <div class="p-form__control">
+              <input
+                class="p-form-validation__input"
+                id="developer-website"
+                type="url"
+                name="website"
+                value="{{ website }}"
+                maxlength="256"
+                placeholder="https://snapcraft.io" />
+              {% if field_errors and field_errors['website'] %}
+              <p class="p-form-validation__message">
+                <strong>Error:</strong> {{ field_errors['website'] }}
+              </p>
+              {% endif %}
+              <p class="p-form-help-text">
+                Please include a valid http:// or https:// link
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row p-form__group p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
+          <div class="col-2">
+            <label for="contact p-form__input">Contact {{ publisher_name }}:</label>
+          </div>
+          <div class="col-8">
+            <div class="p-form__control">
+              <input
+                id="contact"
+                class="p-form-validation__input"
+                type="url"
+                name="contact"
+                value="{{ contact }}"
+                maxlength="256"
+                placeholder="mailto:example@example.com" />
+              {% if field_errors and field_errors['contact'] %}
+              <p class="p-form-validation__message">
+                <strong>Error:</strong> {{ field_errors['contact'] }}
+              </p>
+              {% endif %}
+              <p class="p-form-help-text u-no-margin--bottom">
+                An http: or https: link, or an e-mail address
+              </p>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-        <div class="col-2">
-          <label for="contact p-form__input">Contact {{ publisher_name }}:</label>
-        </div>
-        <div class="col-8">
-          <div class="p-form__control">
-            <input
-              id="contact"
-              class="p-form-validation__input"
-              type="url"
-              name="contact"
-              value="{{ contact }}"
-              maxlength="256"
-              placeholder="mailto:example@example.com" />
-            {% if field_errors and field_errors['contact'] %}
-            <p class="p-form-validation__message">
-              <strong>Error:</strong> {{ field_errors['contact'] }}
-            </p>
-            {% endif %}
-            <p class="p-form-help-text u-no-margin--bottom">
-              An http: or https: link, or an e-mail address
-            </p>
-          </div>
-        </div>
-      </div>
-
       <div class="p-strip is-shallow">
         <div class="row">
           <hr class="u-no-margin--bottom" />
@@ -547,10 +548,69 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           `
         },
         {
+          id: "listing-title",
+          title: "Title your snap",
+          content: `
+            <p>Adding a meaningful title to your snap listing will help people understand what the purpose of your snap is.</p>
+            <p>It's best to use something that aligns with your brand and looks clean. This is your opportunity to replace punctuation with spaces and capitalise.</p>
+          `
+        },
+        {
+          id: "listing-category",
+          title: "Set your snap category",
+          content: `
+            <p>Categories are used to define the kind of application you have published. Categorising your snap will aid findability within the Store and increase exposure to end users.</p>
+          `
+        },
+        {
+          id: "listing-video",
+          title: "Showcase your application with a video",
+          content: `
+            <p>Allow potential users get a better understanding of features and functionality prior to installation. Snaps that utilise a video tend to have a higher number of installs and better user retention.</p>
+          `
+        },
+        {
+          id: "listing-images",
+          title: "Celebrate key features with images",
+          content: `
+            <p>Explain your application visually and allow users to see what they will get prior to installation. Data shows that snaps with images tend to have a bigger install base.</p>
+          `
+        },
+        {
+          id: "listing-banner",
+          title: "Get featured, get installed!",
+          content: `
+            <p>Adding a banner will increase your chances of being featured on snapcraft.io and in GNOME software.</p>
+          `
+        },
+        {
+          id: "listing-summary",
+          title: "Summarise your application",
+          content: `
+            <p>Having a relevant and descriptive summary will allow users to get a quick insight into what your snap does. This should mean that you have more target users clicking through to your listing page.</p>
+          `
+        },
+        {
+          id: "listing-description",
+          title: "Get into the details with your description",
+          content: `
+            <p>Providing a detailed description allows your users to understand the core functionality of your snap. It’s especially useful if it doesn’t have a user interface or if you don’t have any media assets to upload.</p>
+          `
+        },
+        {
+          id: "listing-contact",
+          title: "Feeling sociable? Add your contact information",
+          content: `
+            <p>Give users the opportunity to learn more about your application and find support when needed.</p>
+            <p>Alternatively, you can add an email address if you prefer direct contact.</p>
+          `
+        },
+        {
           id: "tour-end",
           title: "That’s it for now!",
           content: `
             <p>If you ever need more help just look for the tour icon.</p>
+            <p>For further information on how to improve your listing <a href="https://www.youtube.com/watch?v=2Q_ZzBGPdqE">check out this blog post</a>.</p>
             <p>Still need help with something? <a href="https://www.youtube.com/watch?v=NiRj5m63oig&feature=youtu.be&t=68" target="_blank">Contact us</a>.</p>
           `,
           position: "top-right"
