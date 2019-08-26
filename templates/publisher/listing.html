@@ -92,8 +92,8 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       </div>
       {% endif %}
 
-      <div class="row p-form__group p-form__group--top" data-validation-name="icon" data-tour="listing-icon">
-        <div class="col-2">
+      <div class="row p-form__group p-form__group--top" data-validation-name="icon">
+        <div class="col-2" data-tour="listing-icon">
           <label class="p-form__label" for="snap-icon">Snap icon:</label>
         </div>
         <div class="col-8">
@@ -102,13 +102,13 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}"  data-tour="listing-title">
-        <div class="col-2">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['title'] %}is-error{% endif %}">
+        <div class="col-2" data-tour="listing-title">
           <label for="snap-title" class="p-form__label">Title:</label>
         </div>
         <div class="col-8">
           <div class="p-form__control">
-            <input class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
+            <input data-tour="listing-title" class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
             {% if field_errors and field_errors['title'] %}
             <p class="p-form-validation__message">
               <strong>Error:</strong> {{ field_errors['title'] }}
@@ -118,13 +118,14 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group" data-tour="listing-category">
-        <div class="col-2">
+      <div class="row p-form__group">
+        <div class="col-2" data-tour="listing-category">
           <label class="p-form__label">Category:</label>
         </div>
         <div class="col-4">
           <div class="p-form__control">
             <select
+              data-tour="listing-category"
               name="primary_category"
               {% if snap_categories.categories[0] %}
               value="{{ snap_categories.categories[0].name }}"
@@ -200,13 +201,14 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}" data-tour="listing-video">
-        <div class="col-2">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['video_urls'] %}is-error{% endif %}">
+        <div class="col-2" data-tour="listing-video">
           <label for="video" class="p-form__label">Video:</label>
         </div>
         <div class="col-8">
           <div class="p-form__control">
             <input
+              data-tour="listing-video"
               class="p-form-validation__input"
               type="text"
               name="video_urls"
@@ -237,35 +239,35 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         {% endif %}
       </div>
 
-      <div class="row p-form__group p-form__group--top" data-validation-name="screenshots" data-tour="listing-images">
-        <div class="col-2">
+      <div class="row p-form__group p-form__group--top" data-validation-name="screenshots">
+        <div class="col-2" data-tour="listing-images">
           <label class="p-form__label">Images:</label>
         </div>
-        <div class="col-8">
+        <div class="col-8" data-tour="listing-images">
           <div class="p-form__control js-media-holder">
             <i class="p-icon--spinner u-animation--spin"></i>
           </div>
         </div>
       </div>
 
-      <div class="row p-form__group p-form__group--top" data-tour="listing-banner">
-        <div class="col-2">
+      <div class="row p-form__group p-form__group--top">
+        <div class="col-2" data-tour="listing-banner">
           <label for="banner-image" class="p-form__label">Featured banner:</label>
         </div>
-        <div class="col-8">
+        <div class="col-8" data-tour="listing-banner">
           <div class="p-form__control p-market-banner js-banner">
             <i class="p-icon--spinner u-animation--spin"></i>
           </div>
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['summary'] %}is-error{% endif %}" data-tour="listing-summary">
-        <div class="col-2">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
+        <div class="col-2" data-tour="listing-summary">
           <label class="p-form__label">Summary: </label>
         </div>
         <div class="col-8">
           <div class="p-form__control">
-            <input class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
+            <input data-tour="listing-summary" class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
             {% if field_errors and field_errors['summary'] %}
             <p class="p-form-validation__message">
               <strong>Error:</strong> {{ field_errors['summary'] }}
@@ -275,13 +277,13 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['description'] %}is-error{% endif %}"  data-tour="listing-description">
-        <div class="col-2">
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['description'] %}is-error{% endif %}">
+        <div class="col-2" data-tour="listing-description">
           <label class="p-form__label">Description: </label>
         </div>
         <div class="col-8">
           <div class="p-form__control">
-            <textarea class="p-form-validation__input" name="description" rows="10" required>{{ description }}</textarea>
+            <textarea data-tour="listing-description" class="p-form-validation__input" name="description" rows="10" required>{{ description }}</textarea>
             {% if field_errors and field_errors['description'] %}
             <p class="p-form-validation__message">
               <strong>Error:</strong> {{ field_errors['description'] }}
@@ -321,63 +323,64 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
-      <div class="row" data-tour="listing-contact">
-        <div class="row">
-          <h2 class="p-heading--four">Contact information</h2>
-        </div>
+      <div class="row">
+        <h2 class="p-heading--four">Contact information</h2>
+      </div>
 
-        <div class="row p-form__group p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
-          <div class="col-2">
-            <label for="developer-website" class="p-form__label">Developer website:</label>
-          </div>
-          <div class="col-8">
-            <div class="p-form__control">
-              <input
-                class="p-form-validation__input"
-                id="developer-website"
-                type="url"
-                name="website"
-                value="{{ website }}"
-                maxlength="256"
-                placeholder="https://snapcraft.io" />
-              {% if field_errors and field_errors['website'] %}
-              <p class="p-form-validation__message">
-                <strong>Error:</strong> {{ field_errors['website'] }}
-              </p>
-              {% endif %}
-              <p class="p-form-help-text">
-                Please include a valid http:// or https:// link
-              </p>
-            </div>
-          </div>
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
+        <div class="col-2" data-tour="listing-contact">
+          <label for="developer-website" class="p-form__label">Developer website:</label>
         </div>
-
-        <div class="row p-form__group p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
-          <div class="col-2">
-            <label for="contact p-form__input">Contact {{ publisher_name }}:</label>
-          </div>
-          <div class="col-8">
-            <div class="p-form__control">
-              <input
-                id="contact"
-                class="p-form-validation__input"
-                type="url"
-                name="contact"
-                value="{{ contact }}"
-                maxlength="256"
-                placeholder="mailto:example@example.com" />
-              {% if field_errors and field_errors['contact'] %}
-              <p class="p-form-validation__message">
-                <strong>Error:</strong> {{ field_errors['contact'] }}
-              </p>
-              {% endif %}
-              <p class="p-form-help-text u-no-margin--bottom">
-                An http: or https: link, or an e-mail address
-              </p>
-            </div>
+        <div class="col-8" >
+          <div class="p-form__control">
+            <input
+              data-tour="listing-contact"
+              class="p-form-validation__input"
+              id="developer-website"
+              type="url"
+              name="website"
+              value="{{ website }}"
+              maxlength="256"
+              placeholder="https://snapcraft.io" />
+            {% if field_errors and field_errors['website'] %}
+            <p class="p-form-validation__message">
+              <strong>Error:</strong> {{ field_errors['website'] }}
+            </p>
+            {% endif %}
+            <p class="p-form-help-text">
+              Please include a valid http:// or https:// link
+            </p>
           </div>
         </div>
       </div>
+
+      <div class="row p-form__group p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
+        <div class="col-2" data-tour="listing-contact">
+          <label for="contact p-form__input">Contact {{ publisher_name }}:</label>
+        </div>
+        <div class="col-8">
+          <div class="p-form__control">
+            <input
+              data-tour="listing-contact"
+              id="contact"
+              class="p-form-validation__input"
+              type="url"
+              name="contact"
+              value="{{ contact }}"
+              maxlength="256"
+              placeholder="mailto:example@example.com" />
+            {% if field_errors and field_errors['contact'] %}
+            <p class="p-form-validation__message">
+              <strong>Error:</strong> {{ field_errors['contact'] }}
+            </p>
+            {% endif %}
+            <p class="p-form-help-text u-no-margin--bottom">
+              An http: or https: link, or an e-mail address
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div class="p-strip is-shallow">
         <div class="row">
           <hr class="u-no-margin--bottom" />

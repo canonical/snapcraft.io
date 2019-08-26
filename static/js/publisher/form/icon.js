@@ -90,7 +90,7 @@ class Icon extends React.Component {
       <Fragment>
         {this.renderErrors()}
         <div className="u-flex u-vertically-center">
-          <div className="p-editable-icon">
+          <div className="p-editable-icon" data-tour="listing-icon">
             <FileInput
               restrictions={restrictions}
               className="p-editable-icon__icon"
