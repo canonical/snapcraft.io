@@ -25,6 +25,12 @@ export default function TourStepCard({
         left: mask.left
       };
       break;
+    case "bottom-right":
+      tooltipStyle = {
+        top: mask.bottom,
+        right: overlayWidth - mask.right
+      };
+      break;
     case "top-left":
       tooltipStyle = {
         bottom: overlayHeight - mask.top,
