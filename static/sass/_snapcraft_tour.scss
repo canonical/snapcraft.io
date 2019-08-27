@@ -276,6 +276,7 @@
 
   .p-tour-controls__buttons {
     display: flex;
+    margin-left: auto; // align right in flex parent
   }
 
   .p-tour-controls__step {
