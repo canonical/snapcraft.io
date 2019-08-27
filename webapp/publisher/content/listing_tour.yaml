@@ -50,6 +50,7 @@
   content: |
     <p>Give users the opportunity to learn more about your application and find support when needed.</p>
     <p>Alternatively, you can add an email address if you prefer direct contact.</p>
+  position: top-left
 
 - id: tour-end
   title: That’s it for now!
