@@ -51,9 +51,11 @@ export default function TourStepCard({
       />
 
       <p className="p-tour-controls">
-        <span>
-          Done? <a onClick={onHideClick}>Skip tour</a>.
-        </span>
+        {!isLastStep && (
+          <span>
+            Done? <a onClick={onHideClick}>Skip tour</a>.
+          </span>
+        )}
 
         <span className="p-tour-controls__buttons">
           <small className="p-tour-controls__step">
