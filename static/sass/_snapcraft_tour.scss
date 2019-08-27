@@ -124,7 +124,7 @@
   // for tooltips on the left of element
   %triangle--pointing-right {
     @extend %triangle;
-    margin-left: $triangle-spacing;
+    margin-right: $triangle-spacing;
 
     &::before,
     &::after {
@@ -141,7 +141,7 @@
   // for tooltips on the right of element
   %triangle--pointing-left {
     @extend %triangle;
-    margin-right: $triangle-spacing;
+    margin-left: $triangle-spacing;
 
     &::before,
     &::after {
@@ -183,6 +183,7 @@
   .p-card--tour {
     @extend .p-card; // sass-lint:disable-line placeholder-in-extend
 
+    margin: 0; // reset any margins from p-card
     max-width: 27rem;
     overflow: visible; // to make tooltip arrow visible
     pointer-events: all;
