@@ -48,10 +48,14 @@ const getMaskFromRect = rect => {
   };
 };
 
+// calculate mask for given element
+const getMaskFromEl = el => getMaskFromRect(getRectFromEl(el));
+
 // get mask that is an union of all elements' masks
 // calculates the rectangle that contains each individual element rectangles
 const getMaskFromElements = elements => {
-  return elements.map(el => getMaskFromRect(getRectFromEl(el))).reduce(
+  const masks = elements.map(el => getMaskFromEl(el));
+  return masks.reduce(
     (unionMask, elMask) => {
       return {
         top: Math.min(unionMask.top, elMask.top),
