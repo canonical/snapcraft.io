@@ -6,8 +6,14 @@ import debounce from "../../libs/debounce";
 import TourStepCard from "./tourStepCard";
 import TourOverlayMask from "./tourOverlayMask";
 
+import { animateScrollTo } from "../../public/scroll-to";
+
 const REM = parseFloat(getComputedStyle(document.documentElement).fontSize);
 const MASK_OFFSET = REM / 2; // .5rem  is a default spacing unit in Vanilla
+
+const SCROLL_MARGIN = 400; // if element highlighted element doesn't fit into this top/bottom area of the screen, we scroll it into view
+const SCROLL_OFFSET_TOP = 100; // to make sure we position elements below sticky header on listing page
+const SCROLL_OFFSET_BOTTOM = 10;
 
 // get rectangle of given DOM element
 // relative to the page, taking scroll into account
@@ -105,8 +111,33 @@ export default function TourOverlay({ steps, onHideClick }) {
   // when current step changes, scroll step element into view
   useEffect(
     () => {
-      // TODO: consider scrolling based on mask position instead of element
-      step.elements[0].scrollIntoView({ block: "center", behavior: "smooth" });
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+
+      // when tooltip is on top of the mask, scroll into view aligning to bottom
+      if (step.position.indexOf("top") === 0) {
+        // scroll element into view aligning it to bottom
+        // only if it's in the top half of the screen
+        if (mask.top < SCROLL_MARGIN + scrollTop) {
+          animateScrollTo(
+            // we scroll relative to top of the screen, but we want to stick to bottom
+            // so we need to substract the window height
+            mask.bottom - window.innerHeight,
+            -SCROLL_OFFSET_BOTTOM
+          );
+        }
+      }
+      // when tooltip is on the bottom of the mask, scroll aligning to top
+      if (step.position.indexOf("bottom") === 0) {
+        // scroll element into view, but only if it's higher on page than top offset
+        // or it is in the bottom half of screen
+        if (
+          mask.top < SCROLL_OFFSET_TOP + scrollTop ||
+          mask.bottom > SCROLL_MARGIN + scrollTop
+        ) {
+          animateScrollTo(mask.top, SCROLL_OFFSET_TOP);
+        }
+      }
     },
     [currentStepIndex]
   );
