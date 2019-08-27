@@ -232,7 +232,7 @@
   <script>
     Raven.context(function () {
       try {
-        snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: -20 });
+        snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
       } catch(e) {
         Raven.captureException(e);
       }
