@@ -123,9 +123,8 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           <label class="p-form__label">Category:</label>
         </div>
         <div class="col-4">
-          <div class="p-form__control">
+          <div class="p-form__control" data-tour="listing-category">
             <select
-              data-tour="listing-category"
               name="primary_category"
               {% if snap_categories.categories[0] %}
               value="{{ snap_categories.categories[0].name }}"
@@ -145,7 +144,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
             </select>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" data-tour="listing-category">
           <div class="js-categories-category1-help-text row {% if snap_categories.categories[0] %}u-hide{% endif %}">
             <div class="col-8 col-start-large-3">
               <p class="p-form-help-text">
