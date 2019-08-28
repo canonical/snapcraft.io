@@ -51,10 +51,17 @@ const getMaskFromRect = rect => {
 // calculate mask for given element
 const getMaskFromEl = el => getMaskFromRect(getRectFromEl(el));
 
+// check if element is part of the DOM and is visible
+const isVisibleInDocument = el =>
+  document.contains(el) && !(el.offsetWidth === 0 && el.offsetHeight === 0);
+
 // get mask that is an union of all elements' masks
 // calculates the rectangle that contains each individual element rectangles
 const getMaskFromElements = elements => {
-  const masks = elements.map(el => getMaskFromEl(el));
+  const masks = elements
+    .filter(isVisibleInDocument)
+    .map(el => getMaskFromEl(el));
+
   return masks.reduce(
     (unionMask, elMask) => {
       return {
