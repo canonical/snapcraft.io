@@ -5,6 +5,7 @@ import debounce from "../../libs/debounce";
 
 import TourStepCard from "./tourStepCard";
 import TourOverlayMask from "./tourOverlayMask";
+import { tourFinished, tourSkipped } from "./metricsEvents";
 
 import { animateScrollTo } from "../../public/scroll-to";
 
@@ -102,7 +103,7 @@ function prepareSteps(steps) {
     .filter(step => step.elements.length > 0);
 }
 
-export default function TourOverlay({ steps, onHideClick }) {
+export default function TourOverlay({ steps, hideTour }) {
   steps = prepareSteps(steps);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
@@ -188,6 +189,16 @@ export default function TourOverlay({ steps, onHideClick }) {
   const onPrevClick = () =>
     setCurrentStepIndex((currentStepIndex - 1) % steps.length);
 
+  const onFinishClick = () => {
+    tourFinished(step.id);
+    hideTour();
+  };
+
+  const onSkipClick = () => {
+    tourSkipped(step.id);
+    hideTour();
+  };
+
   return (
     <div className="p-tour-overlay" ref={overlayEl}>
       <TourOverlayMask mask={isResizing ? null : mask} />
@@ -195,7 +206,8 @@ export default function TourOverlay({ steps, onHideClick }) {
         steps={steps}
         currentStepIndex={currentStepIndex}
         mask={mask}
-        onHideClick={onHideClick}
+        onFinishClick={onFinishClick}
+        onSkipClick={onSkipClick}
         onNextClick={onNextClick}
         onPrevClick={onPrevClick}
       />
@@ -206,5 +218,5 @@ export default function TourOverlay({ steps, onHideClick }) {
 TourOverlay.propTypes = {
   steps: PropTypes.array,
   currentStepIndex: PropTypes.number,
-  onHideClick: PropTypes.func
+  hideTour: PropTypes.func
 };
