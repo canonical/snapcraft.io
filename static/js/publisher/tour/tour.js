@@ -5,20 +5,20 @@ import TourOverlay from "./tourOverlay";
 import TourBar from "./tourBar";
 
 export default function Tour({ steps }) {
-  const [showTour, setShowTour] = useState(false);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
-  const onShowTour = () => setShowTour(true);
-  const onHideTour = () => setShowTour(false);
+  const showTour = () => setIsTourOpen(true);
+  const hideTour = () => setIsTourOpen(false);
 
   return (
     <Fragment>
-      <TourBar onButtonClick={onShowTour} />
+      <TourBar showTour={showTour} />
 
-      {showTour && <TourOverlay steps={steps} onHideClick={onHideTour} />}
+      {isTourOpen && <TourOverlay steps={steps} hideTour={hideTour} />}
     </Fragment>
   );
 }
 
 Tour.propTypes = {
-  steps: PropTypes.array
+  steps: PropTypes.array.isRequired
 };
