@@ -5,7 +5,8 @@ export default function TourStepCard({
   steps,
   currentStepIndex,
   mask,
-  onHideClick,
+  onFinishClick,
+  onSkipClick,
   onNextClick,
   onPrevClick
 }) {
@@ -65,7 +66,7 @@ export default function TourStepCard({
       <p className="p-tour-controls">
         {!isLastStep && (
           <span>
-            Done? <a onClick={onHideClick}>Skip tour</a>.
+            Done? <a onClick={onSkipClick}>Skip tour</a>.
           </span>
         )}
 
@@ -81,7 +82,7 @@ export default function TourStepCard({
             <i className="p-icon--contextual-menu is-prev">Previous step</i>
           </button>
           <button
-            onClick={isLastStep ? onHideClick : onNextClick}
+            onClick={isLastStep ? onFinishClick : onNextClick}
             className="p-button--positive is-inline has-icon u-no-margin--bottom u-no-margin--right"
           >
             {isLastStep ? (
@@ -107,7 +108,8 @@ TourStepCard.propTypes = {
   }).isRequired,
   steps: PropTypes.array.isRequired,
   currentStepIndex: PropTypes.number.isRequired,
-  onHideClick: PropTypes.func.isRequired,
+  onFinishClick: PropTypes.func.isRequired,
+  onSkipClick: PropTypes.func.isRequired,
   onNextClick: PropTypes.func.isRequired,
   onPrevClick: PropTypes.func.isRequired
 };

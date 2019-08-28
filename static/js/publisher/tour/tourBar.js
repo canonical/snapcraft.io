@@ -1,7 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export default function TourBar({ onButtonClick }) {
+import { tourStartedByUser } from "./metricsEvents";
+
+export default function TourBar({ showTour }) {
+  const onButtonClick = () => {
+    tourStartedByUser();
+    showTour();
+  };
+
   return (
     <div className="p-tour-bar">
       <div className="u-fixed-width u-clearfix">
@@ -18,5 +25,5 @@ export default function TourBar({ onButtonClick }) {
 }
 
 TourBar.propTypes = {
-  onButtonClick: PropTypes.func
+  showTour: PropTypes.func
 };
