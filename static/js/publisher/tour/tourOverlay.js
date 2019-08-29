@@ -140,8 +140,9 @@ export default function TourOverlay({ steps, hideTour }) {
         }
       }
     },
-    [currentStepIndex]
+    [currentStepIndex] // refresh effect on step changes, to scroll to correct step
   );
+
   const overlayEl = useRef(null);
 
   const mask = getMaskFromElements(step.elements);
@@ -156,33 +157,42 @@ export default function TourOverlay({ steps, hideTour }) {
   const [isResizing, setIsResizing] = useState(false);
 
   // rerender after scroll (to adjust to fixed elements that might have moved)
-  useEffect(() => {
-    const afterScroll = debounce(() => rerender(), 500);
-    window.addEventListener("scroll", afterScroll);
-    return () => {
-      window.removeEventListener("scroll", afterScroll);
-    };
-  });
+  useEffect(
+    () => {
+      const afterScroll = debounce(() => rerender(), 200);
+      window.addEventListener("scroll", afterScroll);
+
+      return () => {
+        afterScroll.clear();
+        window.removeEventListener("scroll", afterScroll);
+      };
+    },
+    [] // don't refresh the effect on every render
+  );
 
   // rerender after resize (to adjust to new positions of elements)
   // and hide mask during resize to avoid misalign of mask and tooltip
-  useEffect(() => {
-    const onResize = () => {
-      setIsResizing(true);
-    };
-    const afterResize = debounce(() => {
-      setIsResizing(false);
-      rerender();
-    }, 1000);
+  useEffect(
+    () => {
+      const onResize = () => {
+        setIsResizing(true);
+      };
+      const afterResize = debounce(() => {
+        setIsResizing(false);
+        rerender();
+      }, 1000);
 
-    window.addEventListener("resize", onResize);
-    window.addEventListener("resize", afterResize);
+      window.addEventListener("resize", onResize);
+      window.addEventListener("resize", afterResize);
 
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("resize", afterResize);
-    };
-  });
+      return () => {
+        afterResize.clear();
+        window.removeEventListener("resize", onResize);
+        window.removeEventListener("resize", afterResize);
+      };
+    },
+    [] // don't refresh the effect on every render
+  );
 
   const onNextClick = () =>
     setCurrentStepIndex((currentStepIndex + 1) % steps.length);
@@ -198,6 +208,23 @@ export default function TourOverlay({ steps, hideTour }) {
     tourSkipped(step.id);
     hideTour();
   };
+
+  // skip on ESC
+  useEffect(
+    () => {
+      const escClick = event => {
+        if (event.keyCode === 27) {
+          onSkipClick();
+        }
+      };
+      window.addEventListener("keyup", escClick);
+
+      return () => {
+        window.removeEventListener("keyup", escClick);
+      };
+    },
+    [currentStepIndex] // refresh effect when step changes, to pass correct step id into skip metrics
+  );
 
   return (
     <div className="p-tour-overlay" ref={overlayEl}>
