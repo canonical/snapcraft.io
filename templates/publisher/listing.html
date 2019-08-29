@@ -483,17 +483,8 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
 <script>
   Raven.context(function () {
     snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
-    snapcraft.publisher.market.initForm({
-      snapIconHolder: ".js-icon-holder",
-      bannerHolder: ".js-banner",
-      form: "market-form",
-      formNotification: "market-form-status",
-      licenseRadioContent: [
-        document.getElementById('license-simple-input'),
-        document.getElementById('license-custom-input')
-      ],
-      mediaHolder: ".js-media-holder",
-    }, {
+
+    const formFields = {
       snap_name: {{ snap_name|tojson }},
       title: {{ snap_title|tojson }},
       summary: {{ summary|tojson }},
@@ -516,12 +507,24 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
       'license': {{ license|tojson }},
       'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
-    },
-    {% if error_list %}
-      {{ error_list|tojson}}
-    {% else %}
-      null
-    {% endif %}
+    };
+
+    const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
+
+    snapcraft.publisher.market.initForm(
+      {
+        snapIconHolder: ".js-icon-holder",
+        bannerHolder: ".js-banner",
+        form: "market-form",
+        formNotification: "market-form-status",
+        licenseRadioContent: [
+          document.getElementById('license-simple-input'),
+          document.getElementById('license-custom-input')
+        ],
+        mediaHolder: ".js-media-holder",
+      },
+      formFields,
+      formErrors
     );
 
     snapcraft.publisher.stickyListingBar();
@@ -532,25 +535,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       snapName: {{ snap_name|tojson }},
       container: document.getElementById("tour-container"),
       steps: {{ tour_steps|tojson }},
-      completedFields: [
-        // truthy value means field is considered completed
-        // icon
-        {{ icon_url|tojson }},
-        // title is completed if it is different from package name
-        {{ snap_title|tojson }} !== {{ snap_name|tojson }},
-        // category
-        {{ snap_categories.categories|tojson }}.length,
-        // video
-        {{ video_urls|tojson }}.length,
-        // images
-        {{ screenshot_urls|tojson }}.length,
-        // banner
-        {{ banner_urls|tojson }}.length,
-        // summary is completed if it is different from the title
-        {{ summary|tojson }} !== {{ snap_title|tojson }},
-        // if one of website or contact is filled we consider it completed
-        {{ website|tojson }} || {{ contact|tojson }},
-      ]
+      formFields: formFields
     });
   });
 </script>
