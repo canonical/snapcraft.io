@@ -118,8 +118,12 @@ export default function TourOverlay({ steps, hideTour }) {
       // when tooltip is on top of the mask, scroll into view aligning to bottom
       if (step.position.indexOf("top") === 0) {
         // scroll element into view aligning it to bottom
-        // only if it's in the top half of the screen
-        if (mask.top < SCROLL_MARGIN + scrollTop) {
+        // only if it's below the bottom border of the screen
+        // or it's in the top half of the screen
+        if (
+          mask.bottom > scrollTop + window.innerHeight ||
+          mask.top < SCROLL_MARGIN + scrollTop
+        ) {
           animateScrollTo(
             // we scroll relative to top of the screen, but we want to stick to bottom
             // so we need to substract the window height
