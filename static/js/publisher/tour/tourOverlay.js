@@ -213,12 +213,17 @@ export default function TourOverlay({ steps, hideTour }) {
     hideTour();
   };
 
-  // skip on ESC
+  // close tour on ESC
+  // treat as 'finished' on last step and as 'skipped' on any other step
   useEffect(
     () => {
       const escClick = event => {
         if (event.keyCode === 27) {
-          onSkipClick();
+          if (currentStepIndex === steps.length - 1) {
+            onFinishClick();
+          } else {
+            onSkipClick();
+          }
         }
       };
       window.addEventListener("keyup", escClick);
