@@ -24,13 +24,29 @@ export function initTour({ container, steps, onTourClosed, startTour }) {
   );
 }
 
-export function initListingTour({
-  snapName,
-  container,
-  steps,
-  completedFields
-}) {
+export function initListingTour({ snapName, container, steps, formFields }) {
   const storageKey = `listing-tour-finished-${snapName}`;
+
+  // check form fields completed status
+  // truthy value means field is considered completed
+  const completedFields = [
+    // title is completed if it is different from package name
+    formFields.title !== formFields.snap_name,
+    // category
+    formFields.categories.length,
+    // video
+    formFields.video_urls.length,
+    // icon
+    formFields.images.filter(i => i.type === "icon").length,
+    // images
+    formFields.images.filter(i => i.type === "screenshot").length,
+    // banner
+    formFields.images.filter(i => i.type === "banner").length,
+    // summary is completed if it is different from the title
+    formFields.summary !== formFields.title,
+    // if one of website or contact is filled we consider it completed
+    formFields.website || formFields.contact
+  ];
 
   const isFormCompleted = isCompleted(completedFields);
   const isTourFinished = !!(
