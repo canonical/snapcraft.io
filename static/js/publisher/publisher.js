@@ -9,7 +9,7 @@ import markdownToggle from "./market/markdown";
 import stickyListingBar from "./market/stickyListingBar";
 import { preview } from "./preview";
 import submitEnabler from "./submitEnabler";
-import initTour from "./tour";
+import * as tour from "./tour";
 
 const settings = { enableInput, changeHandler };
 
@@ -25,5 +25,5 @@ export {
   settings,
   preview,
   submitEnabler,
-  initTour
+  tour
 };
