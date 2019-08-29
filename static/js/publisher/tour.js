@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 
 import Tour from "./tour/tour";
 
+import { toggleShadowWhenSticky } from "./market/stickyListingBar";
+
 // returns true if % of truthy values in the array is above the threshold
 function isCompleted(fields, threshold = 0.5) {
   const completed = fields.filter(isCompleted => isCompleted);
@@ -10,7 +12,13 @@ function isCompleted(fields, threshold = 0.5) {
   return completed.length / fields.length >= threshold;
 }
 
-export function initTour({ container, steps, onTourClosed, startTour }) {
+export function initTour({
+  container,
+  steps,
+  onTourStarted,
+  onTourClosed,
+  startTour
+}) {
   if (!document.contains(container)) {
     throw Error("initTour container element not found in document.");
   }
@@ -19,7 +27,12 @@ export function initTour({ container, steps, onTourClosed, startTour }) {
   }
 
   ReactDOM.render(
-    <Tour steps={steps} onTourClosed={onTourClosed} startTour={startTour} />,
+    <Tour
+      steps={steps}
+      onTourStarted={onTourStarted}
+      onTourClosed={onTourClosed}
+      startTour={startTour}
+    />,
     container
   );
 }
@@ -52,12 +65,21 @@ export function initListingTour({ snapName, container, steps, formFields }) {
   const isTourFinished = !!(
     window.localStorage && window.localStorage.getItem(storageKey)
   );
-  const onTourClosed = () =>
-    window.localStorage && window.localStorage.setItem(storageKey, true);
 
   // start the tour automatically if form is not completed
   // (has less than 50% fields filled), and the tour wasn't closed before
   const startTour = !isFormCompleted && !isTourFinished;
 
-  initTour({ container, steps, onTourClosed, startTour });
+  const stickyHeader = document.querySelector(".snapcraft-p-sticky");
+  const onTourClosed = () => {
+    // save that tour was seen by user
+    window.localStorage && window.localStorage.setItem(storageKey, true);
+    // make header sticky again
+    stickyHeader.classList.remove("is-static");
+    toggleShadowWhenSticky(stickyHeader);
+  };
+
+  const onTourStarted = () => stickyHeader.classList.add("is-static");
+
+  initTour({ container, steps, onTourStarted, onTourClosed, startTour });
 }

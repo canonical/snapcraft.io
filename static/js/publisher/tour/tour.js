@@ -6,7 +6,12 @@ import TourBar from "./tourBar";
 
 import { tourStartedAutomatically } from "./metricsEvents";
 
-export default function Tour({ steps, onTourClosed, startTour = false }) {
+export default function Tour({
+  steps,
+  onTourStarted,
+  onTourClosed,
+  startTour = false
+}) {
   // send metrics event if tour started automatically
   useEffect(
     () => {
@@ -20,14 +25,20 @@ export default function Tour({ steps, onTourClosed, startTour = false }) {
   const [isTourOpen, setIsTourOpen] = useState(startTour);
 
   const showTour = () => setIsTourOpen(true);
-  const hideTour = () => {
-    setIsTourOpen(false);
+  const hideTour = () => setIsTourOpen(false);
 
-    // if close callback was defined call it now
-    if (onTourClosed) {
-      onTourClosed();
-    }
-  };
+  // trigger callbacks when tour is started or finished
+  useEffect(
+    () => {
+      if (isTourOpen && onTourStarted) {
+        onTourStarted();
+      }
+      if (!isTourOpen && onTourClosed) {
+        onTourClosed();
+      }
+    },
+    [isTourOpen]
+  );
 
   return (
     <Fragment>
@@ -41,5 +52,6 @@ export default function Tour({ steps, onTourClosed, startTour = false }) {
 Tour.propTypes = {
   steps: PropTypes.array.isRequired,
   startTour: PropTypes.bool,
+  onTourStarted: PropTypes.func,
   onTourClosed: PropTypes.func
 };
