@@ -6,7 +6,8 @@
  */
 export default function debounce(func, wait, immediate) {
   let timeout;
-  return function() {
+
+  const debounced = function() {
     const context = this,
       args = arguments;
     let later = function() {
@@ -18,4 +19,10 @@ export default function debounce(func, wait, immediate) {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
+
+  debounced.clear = function() {
+    clearTimeout(timeout);
+  };
+
+  return debounced;
 }
