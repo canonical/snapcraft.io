@@ -528,9 +528,29 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
     snapcraft.publisher.markdownToggle();
     snapcraft.publisher.initCategories();
 
-    snapcraft.publisher.initTour({
+    snapcraft.publisher.tour.initListingTour({
+      snapName: {{ snap_name|tojson }},
       container: document.getElementById("tour-container"),
-      steps: {{ tour_steps|tojson }}
+      steps: {{ tour_steps|tojson }},
+      completedFields: [
+        // truthy value means field is considered completed
+        // icon
+        {{ icon_url|tojson }},
+        // title is completed if it is different from package name
+        {{ snap_title|tojson }} !== {{ snap_name|tojson }},
+        // category
+        {{ snap_categories.categories|tojson }}.length,
+        // video
+        {{ video_urls|tojson }}.length,
+        // images
+        {{ screenshot_urls|tojson }}.length,
+        // banner
+        {{ banner_urls|tojson }}.length,
+        // summary is completed if it is different from the title
+        {{ summary|tojson }} !== {{ snap_title|tojson }},
+        // if one of website or contact is filled we consider it completed
+        {{ website|tojson }} || {{ contact|tojson }},
+      ]
     });
   });
 </script>
