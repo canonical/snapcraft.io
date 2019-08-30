@@ -1,7 +1,9 @@
 import throttle from "../../libs/throttle";
 
 export const toggleClassWhenStickyOnTop = (el, className) => {
-  el.classList.toggle(className, el.getBoundingClientRect().top === 0);
+  if (el) {
+    el.classList.toggle(className, el.getBoundingClientRect().top === 0);
+  }
 };
 
 export const toggleShadowWhenSticky = el => {
@@ -9,7 +11,7 @@ export const toggleShadowWhenSticky = el => {
 };
 
 export default function() {
-  const stickyBar = document.querySelector(".snapcraft-p-sticky");
+  const stickyBar = document.querySelector(".js-sticky-bar");
   toggleShadowWhenSticky(stickyBar);
   const onScroll = throttle(() => toggleShadowWhenSticky(stickyBar), 30);
   document.addEventListener("scroll", onScroll);
