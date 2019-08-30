@@ -70,16 +70,22 @@ export function initListingTour({ snapName, container, steps, formFields }) {
   // (has less than 50% fields filled), and the tour wasn't closed before
   const startTour = !isFormCompleted && !isTourFinished;
 
-  const stickyHeader = document.querySelector(".snapcraft-p-sticky");
+  const stickyHeader = document.querySelector(".js-sticky-bar");
   const onTourClosed = () => {
     // save that tour was seen by user
     window.localStorage && window.localStorage.setItem(storageKey, true);
     // make header sticky again
-    stickyHeader.classList.remove("is-static");
+    if (stickyHeader) {
+      stickyHeader.classList.remove("is-static");
+    }
     toggleShadowWhenSticky(stickyHeader);
   };
 
-  const onTourStarted = () => stickyHeader.classList.add("is-static");
+  const onTourStarted = () => {
+    if (stickyHeader) {
+      stickyHeader.classList.add("is-static");
+    }
+  };
 
   initTour({ container, steps, onTourStarted, onTourClosed, startTour });
 }
