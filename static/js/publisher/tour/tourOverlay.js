@@ -6,106 +6,20 @@ import debounce from "../../libs/debounce";
 import TourStepCard from "./tourStepCard";
 import TourOverlayMask from "./tourOverlayMask";
 import { tourFinished, tourSkipped } from "./metricsEvents";
+import { getMaskFromElements, prepareSteps } from "./helpers";
+import {
+  SCROLL_MARGIN,
+  SCROLL_OFFSET_TOP,
+  SCROLL_OFFSET_BOTTOM
+} from "./constants";
 
 import { animateScrollTo } from "../../public/scroll-to";
 
-const REM = parseFloat(getComputedStyle(document.documentElement).fontSize);
-const MASK_OFFSET = REM / 2; // .5rem  is a default spacing unit in Vanilla
-
-const SCROLL_MARGIN = 400; // if element highlighted element doesn't fit into this top/bottom area of the screen, we scroll it into view
-const SCROLL_OFFSET_TOP = 100; // to make sure we position elements below sticky header on listing page
-const SCROLL_OFFSET_BOTTOM = 10;
-
-// get rectangle of given DOM element
-// relative to the page, taking scroll into account
-const getRectFromEl = el => {
-  let clientRect = el.getBoundingClientRect();
-  return {
-    top:
-      clientRect.top +
-      (window.pageYOffset || document.documentElement.scrollTop),
-    left:
-      clientRect.left +
-      (window.pageXOffset || document.documentElement.scrollLeft),
-    width: clientRect.width,
-    height: clientRect.height
-  };
-};
-
-// get mask based on rectangle
-const getMaskFromRect = rect => {
-  let top = rect.top - MASK_OFFSET;
-  if (top < 0) {
-    top = 0;
-  }
-
-  let left = rect.left - MASK_OFFSET;
-  if (left < 0) {
-    left = 0;
-  }
-
-  let bottom = rect.top + rect.height + MASK_OFFSET;
-  let right = rect.left + rect.width + MASK_OFFSET;
-
-  return {
-    top,
-    bottom,
-    left,
-    right
-  };
-};
-
-// calculate mask for given element
-const getMaskFromEl = el => getMaskFromRect(getRectFromEl(el));
-
-// check if element is part of the DOM and is visible
-const isVisibleInDocument = el =>
-  document.contains(el) && !(el.offsetWidth === 0 && el.offsetHeight === 0);
-
-// get mask that is an union of all elements' masks
-// calculates the rectangle that contains each individual element rectangles
-const getMaskFromElements = elements => {
-  const masks = elements
-    .filter(isVisibleInDocument)
-    .map(el => getMaskFromEl(el));
-
-  return masks.reduce(
-    (unionMask, elMask) => {
-      return {
-        top: Math.min(unionMask.top, elMask.top),
-        left: Math.min(unionMask.left, elMask.left),
-        bottom: Math.max(unionMask.bottom, elMask.bottom),
-        right: Math.max(unionMask.right, elMask.right)
-      };
-    },
-    {
-      top: Infinity,
-      left: Infinity,
-      right: 0,
-      bottom: 0
-    }
-  );
-};
-
-// find DOM elements for each step, ignore steps with no elements
-// set default position to "bottom-left"
-function prepareSteps(steps) {
-  return steps
-    .map(step => {
-      return {
-        ...step,
-        elements: [].slice.apply(
-          document.querySelectorAll(`[data-tour="${step.id}"]`)
-        ),
-        position: step.position || "bottom-left"
-      };
-    })
-    .filter(step => step.elements.length > 0);
-}
-
-export default function TourOverlay({ steps, hideTour }) {
+export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
   steps = prepareSteps(steps);
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  let setCurrentStepIndex;
+  [currentStepIndex, setCurrentStepIndex] = useState(currentStepIndex);
 
   const step = steps[currentStepIndex];
 
