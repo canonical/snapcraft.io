@@ -7,12 +7,19 @@ import format from "date-fns/format";
 
 import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { getSelectedRevisions } from "../selectors";
+import { getSelectedRevisions, hasBuildRequestId } from "../selectors";
 
 import DevmodeRevision from "./devmodeRevision";
 
 const RevisionsListRow = props => {
-  const { revision, isSelectable, showAllColumns, isPending, isActive } = props;
+  const {
+    revision,
+    isSelectable,
+    showChannels,
+    showBuildRequest,
+    isPending,
+    isActive
+  } = props;
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -41,6 +48,9 @@ const RevisionsListRow = props => {
   } ${isSelectable ? "is-clickable" : ""} ${
     isPending || isSelected ? "is-pending" : ""
   } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
+
+  const buildRequestId =
+    revision.attributes && revision.attributes["build-request-id"];
 
   return (
     <tr
@@ -75,7 +85,8 @@ const RevisionsListRow = props => {
         )}
       </td>
       <td>{revision.version}</td>
-      {showAllColumns && <td>{revision.channels.join(", ")}</td>}
+      {showBuildRequest && <td>{buildRequestId}</td>}
+      {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
         {isPending ? (
           <em>pending release</em>
@@ -103,12 +114,13 @@ RevisionsListRow.propTypes = {
   // props
   revision: PropTypes.object.isRequired,
   isSelectable: PropTypes.bool,
-  showAllColumns: PropTypes.bool,
+  showChannels: PropTypes.bool,
   isPending: PropTypes.bool,
   isActive: PropTypes.bool,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
+  showBuildRequest: PropTypes.bool.isRequired,
 
   // actions
   toggleRevision: PropTypes.func.isRequired
@@ -116,7 +128,8 @@ RevisionsListRow.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    selectedRevisions: getSelectedRevisions(state)
+    selectedRevisions: getSelectedRevisions(state),
+    showBuildRequest: hasBuildRequestId(state)
   };
 };
 
