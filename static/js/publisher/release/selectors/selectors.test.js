@@ -17,7 +17,8 @@ import {
   getArchitectures,
   getTracks,
   getTrackRevisions,
-  getBranches
+  getBranches,
+  hasBuildRequestId
 } from "./index";
 
 import reducers from "../reducers";
@@ -675,5 +676,35 @@ describe("getBranches", () => {
         when: lessThan30DaysAgo
       }
     ]);
+  });
+});
+
+describe("hasBuildRequestId", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithoutBuildRequestId = {
+    ...initialState,
+    revisions: {
+      1: { revision: 1, version: "1" },
+      2: { revision: 2, version: "2" },
+      3: { revision: 3, version: "3" }
+    }
+  };
+  const stateWithBuildRequestId = {
+    ...stateWithoutBuildRequestId,
+    revisions: {
+      ...stateWithoutBuildRequestId.revisions,
+      4: {
+        revision: 4,
+        version: "4",
+        attributes: { "build-request-id": "test-1234" }
+      }
+    }
+  };
+  it("should return false if none of the revisions have build-request-id attribute", () => {
+    expect(hasBuildRequestId(stateWithoutBuildRequestId)).toBe(false);
+  });
+
+  it("should return true if any of the revisions have build-request-id attribute", () => {
+    expect(hasBuildRequestId(stateWithBuildRequestId)).toBe(true);
   });
 });
