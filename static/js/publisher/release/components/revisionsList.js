@@ -21,7 +21,8 @@ import {
   getSelectedRevisions,
   getSelectedArchitectures,
   getFilteredAvailableRevisions,
-  getFilteredAvailableRevisionsForArch
+  getFilteredAvailableRevisionsForArch,
+  hasBuildRequestId
 } from "../selectors";
 
 import { getPendingRelease } from "../releasesState";
@@ -38,20 +39,20 @@ class RevisionsList extends Component {
     revisions.forEach(revision => this.props.toggleRevision(revision));
   }
 
-  renderRow(revision, isSelectable, showAllColumns, isPending, isActive) {
+  renderRow(revision, isSelectable, showChannels, isPending, isActive) {
     return (
       <RevisionsListRow
         key={`revision-row-${revision.revision}`}
         revision={revision}
         isSelectable={isSelectable}
-        showAllColumns={showAllColumns}
+        showChannels={showChannels}
         isPending={isPending}
         isActive={isActive}
       />
     );
   }
 
-  renderRows(revisions, isSelectable, showAllColumns, activeRevision) {
+  renderRows(revisions, isSelectable, showChannels, activeRevision) {
     return revisions.map(revision => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
@@ -59,7 +60,7 @@ class RevisionsList extends Component {
       return this.renderRow(
         revision,
         isSelectable,
-        showAllColumns,
+        showChannels,
         false,
         isActive
       );
@@ -80,9 +81,10 @@ class RevisionsList extends Component {
   render() {
     let {
       availableRevisionsSelect,
-      showAllColumns,
+      showChannels,
       filteredAvailableRevisions,
-      pendingChannelMap
+      pendingChannelMap,
+      showBuildRequest
     } = this.props;
     let filteredRevisions = filteredAvailableRevisions;
     let title = "Latest revisions";
@@ -283,7 +285,8 @@ class RevisionsList extends Component {
                 Revision
               </th>
               <th scope="col">Version</th>
-              {showAllColumns && <th scope="col">Channels</th>}
+              {showBuildRequest && <th scope="col">Build Request</th>}
+              {showChannels && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
@@ -294,7 +297,7 @@ class RevisionsList extends Component {
               this.renderRow(
                 pendingRelease,
                 !isReleaseHistory,
-                showAllColumns,
+                showChannels,
                 true,
                 activeRevision.revision === pendingRelease.revision
               )}
@@ -304,7 +307,7 @@ class RevisionsList extends Component {
                   ? filteredRevisions
                   : filteredRevisions.slice(0, 10),
                 !isReleaseHistory,
-                showAllColumns,
+                showChannels,
                 activeRevision
               )
             ) : (
@@ -339,7 +342,8 @@ RevisionsList.propTypes = {
   availableRevisionsSelect: PropTypes.string.isRequired,
 
   // computed state (selectors)
-  showAllColumns: PropTypes.bool,
+  showChannels: PropTypes.bool,
+  showBuildRequest: PropTypes.bool,
   filteredReleaseHistory: PropTypes.array,
   selectedRevisions: PropTypes.array.isRequired,
   selectedArchitectures: PropTypes.array.isRequired,
@@ -357,11 +361,12 @@ RevisionsList.propTypes = {
 const mapStateToProps = state => {
   return {
     availableRevisionsSelect: state.availableRevisionsSelect,
-    showAllColumns:
+    showChannels:
       !state.history.filters ||
       (state.history.filters &&
         state.history.filters.risk === AVAILABLE &&
         state.availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL),
+    showBuildRequest: hasBuildRequestId(state),
     filters: state.history.filters,
     revisions: state.revisions,
     pendingReleases: state.pendingReleases,
