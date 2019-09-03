@@ -242,3 +242,10 @@ export function getTrackRevisions({ channelMap }, track) {
   );
   return trackKeys.map(trackName => channelMap[trackName]);
 }
+
+// return true if any revision has build-request-id attribute
+export function hasBuildRequestId(state) {
+  return getAllRevisions(state).some(
+    revision => revision.attributes && revision.attributes["build-request-id"]
+  );
+}
