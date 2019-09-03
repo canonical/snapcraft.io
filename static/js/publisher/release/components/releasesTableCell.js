@@ -79,6 +79,13 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
           Revision: <b>{revision.revision}</b>
           <br />
           Version: <b>{revision.version}</b>
+          {revision.attributes &&
+            revision.attributes["build-request-id"] && (
+              <Fragment>
+                <br />
+                Build Request: <b>{revision.attributes["build-request-id"]}</b>
+              </Fragment>
+            )}
           {isInDevmode(revision) && (
             <Fragment>
               <br />
