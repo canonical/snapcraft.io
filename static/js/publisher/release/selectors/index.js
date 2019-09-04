@@ -2,7 +2,8 @@ import { parse, isAfter, differenceInDays } from "date-fns";
 import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
-  AVAILABLE_REVISIONS_SELECT_RECENT
+  AVAILABLE_REVISIONS_SELECT_RECENT,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
 } from "../constants";
 import { isInDevmode, isRevisionBuiltOnLauchpad } from "../helpers";
 import { sortAlphaNum } from "../../../libs/channels";
@@ -137,6 +138,8 @@ export function getAvailableRevisionsBySelection(state, value) {
       return getRecentRevisions(state);
     case AVAILABLE_REVISIONS_SELECT_UNRELEASED:
       return getUnreleasedRevisions(state);
+    case AVAILABLE_REVISIONS_SELECT_LAUNCHPAD:
+      return getLaunchpadRevisions(state);
     default:
       return getAllRevisions(state);
   }
