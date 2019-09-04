@@ -8,6 +8,7 @@ import { selectAvailableRevisions } from "../actions/availableRevisionsSelect";
 import { getAvailableRevisionsBySelection } from "../selectors";
 
 import {
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_ALL
@@ -22,6 +23,10 @@ const menuLabels = {
   [AVAILABLE_REVISIONS_SELECT_UNRELEASED]: {
     label: "Unreleased",
     description: "Revisions not released to any channel"
+  },
+  [AVAILABLE_REVISIONS_SELECT_LAUNCHPAD]: {
+    label: "Launchpad",
+    description: "Revisions built on Launchpad"
   },
   [AVAILABLE_REVISIONS_SELECT_ALL]: {
     label: "All revisions"
