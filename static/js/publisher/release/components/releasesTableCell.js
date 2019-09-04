@@ -6,7 +6,11 @@ import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeRevision from "./devmodeRevision";
 import HistoryIcon from "./historyIcon";
-import { getChannelName, isInDevmode } from "../helpers";
+import {
+  getChannelName,
+  isInDevmode,
+  isRevisionBuiltOnLauchpad
+} from "../helpers";
 import { useDragging, useDrop, DND_ITEM_REVISION, Handle } from "./dnd";
 
 import { toggleHistory } from "../actions/history";
@@ -62,14 +66,22 @@ EmptyInfo.propTypes = {
 };
 
 const RevisionInfo = ({ revision, isPending, showVersion }) => {
+  let buildIcon = null;
+
+  if (isRevisionBuiltOnLauchpad(revision)) {
+    buildIcon = <i className="p-icon--lp" />;
+  }
+
   return (
     <Fragment>
       <span className="p-release-data__info">
         <span className="p-release-data__title">
           <DevmodeRevision revision={revision} showTooltip={false} />
         </span>
-        {showVersion && (
-          <span className="p-release-data__meta">{revision.version}</span>
+        {(showVersion || buildIcon) && (
+          <span className="p-release-data__meta">
+            {buildIcon} {showVersion && revision.version}
+          </span>
         )}
       </span>
       <span className="p-tooltip__message">

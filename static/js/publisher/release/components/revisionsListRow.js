@@ -85,7 +85,15 @@ const RevisionsListRow = props => {
         )}
       </td>
       <td>{revision.version}</td>
-      {showBuildRequest && <td>{buildRequestId}</td>}
+      {showBuildRequest && (
+        <td>
+          {buildRequestId && (
+            <Fragment>
+              <i className="p-icon--lp" /> {buildRequestId}
+            </Fragment>
+          )}
+        </td>
+      )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
         {isPending ? (
