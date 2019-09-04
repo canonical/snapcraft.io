@@ -11,3 +11,11 @@ export function getChannelName(track, risk, branch) {
   }
   return name;
 }
+
+export function isRevisionBuiltOnLauchpad(revision) {
+  return (
+    revision.attributes &&
+    revision.attributes["build-request-id"] &&
+    revision.attributes["build-request-id"].indexOf("lp-") === 0
+  );
+}

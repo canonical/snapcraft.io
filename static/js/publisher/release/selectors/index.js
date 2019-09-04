@@ -4,7 +4,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT
 } from "../constants";
-import { isInDevmode } from "../helpers";
+import { isInDevmode, isRevisionBuiltOnLauchpad } from "../helpers";
 import { sortAlphaNum } from "../../../libs/channels";
 
 // returns release history filtered by history filters
@@ -248,4 +248,9 @@ export function hasBuildRequestId(state) {
   return getAllRevisions(state).some(
     revision => revision.attributes && revision.attributes["build-request-id"]
   );
+}
+
+// return revisions built by launchpad
+export function getLaunchpadRevisions(state) {
+  return getAllRevisions(state).filter(isRevisionBuiltOnLauchpad);
 }
