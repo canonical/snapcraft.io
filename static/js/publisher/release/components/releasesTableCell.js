@@ -95,7 +95,11 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
             revision.attributes["build-request-id"] && (
               <Fragment>
                 <br />
-                Build Request: <b>{revision.attributes["build-request-id"]}</b>
+                Build:{" "}
+                <b>
+                  <i className="p-icon--lp" />{" "}
+                  {revision.attributes["build-request-id"]}
+                </b>
               </Fragment>
             )}
           {isInDevmode(revision) && (
