@@ -277,14 +277,30 @@ const ReleasesTableRow = props => {
   let hasSameVersion = false;
   let channelVersion = "";
   let versionsMap = {};
+
+  let isLaunchpadBuild = false;
+  let channelBuild = "";
+  let buildMap = {};
+
   if (pendingChannelMap[channel]) {
     // calculate map of architectures for each version
     for (const arch in pendingChannelMap[channel]) {
-      const version = pendingChannelMap[channel][arch].version;
+      const revision = pendingChannelMap[channel][arch];
+      const version = revision.version;
       if (!versionsMap[version]) {
         versionsMap[version] = [];
       }
       versionsMap[version].push(arch);
+
+      const buildRequestId =
+        revision.attributes && revision.attributes["build-request-id"];
+
+      if (buildRequestId) {
+        if (!buildMap[buildRequestId]) {
+          buildMap[buildRequestId] = [];
+        }
+        buildMap[buildRequestId].push(arch);
+      }
     }
 
     hasSameVersion = Object.keys(versionsMap).length === 1;
@@ -292,6 +308,11 @@ const ReleasesTableRow = props => {
       channelVersion = Object.values(pendingChannelMap[channel])[0].version;
     } else {
       channelVersion = "Multiple versions";
+    }
+
+    isLaunchpadBuild = Object.keys(buildMap).length === 1;
+    if (isLaunchpadBuild) {
+      channelBuild = Object.keys(buildMap)[0];
     }
   }
 
@@ -307,6 +328,14 @@ const ReleasesTableRow = props => {
                 : versionsMap[version].join(", ")}
             </b>
             <br />
+            {isLaunchpadBuild && (
+              <Fragment>
+                Build:{" "}
+                <b>
+                  <i className="p-icon--lp" /> {channelBuild}
+                </b>
+              </Fragment>
+            )}
           </span>
         );
       })}
@@ -363,8 +392,11 @@ const ReleasesTableRow = props => {
                 <span className="p-release-data__title" title={channel}>
                   {rowTitle}
                 </span>
-                {risk !== AVAILABLE && (
-                  <span className="p-release-data__meta">{channelVersion}</span>
+                {(risk !== AVAILABLE || isLaunchpadBuild) && (
+                  <span className="p-release-data__meta">
+                    {isLaunchpadBuild && <i className="p-icon--lp" />}{" "}
+                    {risk !== AVAILABLE && channelVersion}
+                  </span>
                 )}
                 {channelVersion && (
                   <span className="p-tooltip__message">
