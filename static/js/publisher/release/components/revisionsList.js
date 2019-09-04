@@ -235,11 +235,11 @@ class RevisionsList extends Component {
             candidate channels.
             <br />
             You can read more about{" "}
-            <a href="https://docs.snapcraft.io/t/snap-confinement/6233">
+            <a href="/docs/snap-confinement">
               <code>devmode</code> confinement
             </a>{" "}
             and{" "}
-            <a href="https://docs.snapcraft.io/t/snapcraft-yaml-reference/4276">
+            <a href="/docs/snapcraft-yaml-reference">
               <code>devel</code> grade
             </a>
             .
