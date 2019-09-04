@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Notification from "./notification";
 import {
   AVAILABLE,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_ALL
@@ -128,6 +129,14 @@ class RevisionsList extends Component {
           title = (
             <Fragment>
               Recent unreleased revisions for <b>{filters.arch}</b>
+            </Fragment>
+          );
+        } else if (
+          availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+        ) {
+          title = (
+            <Fragment>
+              Revisions built on Launchpad for <b>{filters.arch}</b>
             </Fragment>
           );
         }
