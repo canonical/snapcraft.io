@@ -13,7 +13,7 @@ export function getChannelName(track, risk, branch) {
 }
 
 export function isRevisionBuiltOnLauchpad(revision) {
-  return (
+  return !!(
     revision.attributes &&
     revision.attributes["build-request-id"] &&
     revision.attributes["build-request-id"].indexOf("lp-") === 0
