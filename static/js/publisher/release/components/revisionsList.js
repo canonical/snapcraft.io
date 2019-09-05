@@ -13,7 +13,7 @@ import { getChannelName, isInDevmode } from "../helpers";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
-import { toggleRevision, clearSelectedRevisions } from "../actions/channelMap";
+import { toggleRevision } from "../actions/channelMap";
 import {
   getFilteredReleaseHistory,
   getPendingChannelMap,
@@ -34,7 +34,6 @@ class RevisionsList extends Component {
   }
 
   selectVersionClick(revisions) {
-    this.props.clearSelectedRevisions();
     revisions.forEach(revision => this.props.toggleRevision(revision));
   }
 
@@ -261,12 +260,12 @@ class RevisionsList extends Component {
               <div className="p-releases-confirm__buttons">
                 <button
                   className="p-button--positive is-inline u-no-margin--bottom"
-                  onClick={this.selectVersionClick.bind(this, [
-                    selectedRevision,
-                    ...selectedVersionRevisions
-                  ])}
+                  onClick={this.selectVersionClick.bind(
+                    this,
+                    selectedVersionRevisions
+                  )}
                 >
-                  {"Select in all architectures"}
+                  {"Select in available architectures"}
                 </button>
               </div>
             </div>
@@ -350,7 +349,6 @@ RevisionsList.propTypes = {
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
-  clearSelectedRevisions: PropTypes.func.isRequired,
   toggleRevision: PropTypes.func.isRequired
 };
 
@@ -379,7 +377,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
-    clearSelectedRevisions: () => dispatch(clearSelectedRevisions()),
     toggleRevision: revision => dispatch(toggleRevision(revision))
   };
 };
