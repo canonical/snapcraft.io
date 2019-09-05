@@ -2,7 +2,8 @@ import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_ALL,
   AVAILABLE_REVISIONS_SELECT_RECENT,
-  AVAILABLE_REVISIONS_SELECT_UNRELEASED
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
 } from "../constants";
 import {
   getFilteredReleaseHistory,
@@ -18,7 +19,8 @@ import {
   getTracks,
   getTrackRevisions,
   getBranches,
-  hasBuildRequestId
+  hasBuildRequestId,
+  getLaunchpadRevisions
 } from "./index";
 
 import reducers from "../reducers";
@@ -385,6 +387,13 @@ describe("getFilteredAvailableRevisions", () => {
         version: "3",
         channels: ["test/edge"],
         created_at: dayAgo
+      },
+      4: {
+        revision: 4,
+        version: "4",
+        channels: ["test/edge"],
+        created_at: moreThenWeekAgo,
+        attributes: { "build-request-id": "lp-1234" }
       }
     }
   };
@@ -404,6 +413,7 @@ describe("getFilteredAvailableRevisions", () => {
 
       it("should return all revisions by default", () => {
         expect(getFilteredAvailableRevisions(stateWithAllSelected)).toEqual([
+          stateWithAllSelected.revisions[4],
           stateWithAllSelected.revisions[3],
           stateWithAllSelected.revisions[2],
           stateWithAllSelected.revisions[1]
@@ -437,6 +447,19 @@ describe("getFilteredAvailableRevisions", () => {
         expect(getFilteredAvailableRevisions(stateWithRecentSelected)).toEqual([
           stateWithRecentSelected.revisions[1]
         ]);
+      });
+    });
+
+    describe("when 'Lauchpad' is selected in available revisions select", () => {
+      const stateWithLaunchpadSelected = {
+        ...stateWithRevisions,
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+      };
+
+      it("should return unreleased revisions not older then a week", () => {
+        expect(
+          getFilteredAvailableRevisions(stateWithLaunchpadSelected)
+        ).toEqual([stateWithLaunchpadSelected.revisions[4]]);
       });
     });
   });
@@ -706,5 +729,38 @@ describe("hasBuildRequestId", () => {
 
   it("should return true if any of the revisions have build-request-id attribute", () => {
     expect(hasBuildRequestId(stateWithBuildRequestId)).toBe(true);
+  });
+});
+
+describe("getLaunchpadRevisions", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithLauchpadBuilds = {
+    ...initialState,
+    revisions: {
+      1: { revision: 1, version: "1" },
+      2: { revision: 2, version: "2" },
+      3: {
+        revision: 3,
+        version: "3",
+        attributes: { "build-request-id": "lp-1234" }
+      },
+      4: {
+        revision: 4,
+        version: "4",
+        attributes: { "build-request-id": "lp-1234" }
+      }
+    }
+  };
+
+  it("should return only revisions with Lauchpad builds", () => {
+    expect(getLaunchpadRevisions(stateWithLauchpadBuilds).length).toEqual(2);
+    expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).not.toContain(
+      stateWithLauchpadBuilds.revisions[1],
+      stateWithLauchpadBuilds.revisions[2]
+    );
+    expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).toContain(
+      stateWithLauchpadBuilds.revisions[3],
+      stateWithLauchpadBuilds.revisions[4]
+    );
   });
 });
