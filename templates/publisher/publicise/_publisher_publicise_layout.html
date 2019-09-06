@@ -9,7 +9,20 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
   {% set selected_tab='publicise' %}
   {% include "publisher/_header.html" %}
 
-  <div class="p-strip is-shallow">
+  {% if private %}
+    <section class="p-strip--light is-shallow">
+      <div class="row">
+        <div class="col-6">
+          <h2 class="p-heading--four">Share and promote your snap</h2>
+        </div>
+        <div class="col-6">
+          <p>When your snap is public, you'll be able to share it using Store buttons, badges and embeddable cards.</p>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <div class="p-strip is-shallow {% if private %}u-disabled{% endif %}">
     <div class="row">
       <div class="col-3">
         <div class="p-navigation--sidebar">

@@ -1157,9 +1157,6 @@ def get_publicise(snap_name):
     except ApiError as api_error:
         return _handle_errors(api_error)
 
-    if snap_details["private"]:
-        return flask.abort(404, "No snap named {}".format(snap_name))
-
     available_languages = {
         "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
         "en": {"title": "English", "text": "Get it from the Snap Store"},
@@ -1177,6 +1174,7 @@ def get_publicise(snap_name):
     }
 
     context = {
+        "private": snap_details["private"],
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
