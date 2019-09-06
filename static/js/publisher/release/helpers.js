@@ -12,10 +12,27 @@ export function getChannelName(track, risk, branch) {
   return name;
 }
 
-export function isRevisionBuiltOnLauchpad(revision) {
-  return !!(
-    revision.attributes &&
-    revision.attributes["build-request-id"] &&
-    revision.attributes["build-request-id"].indexOf("lp-") === 0
+export function getBuildId(revision) {
+  return (
+    revision && revision.attributes && revision.attributes["build-request-id"]
   );
+}
+
+export function isRevisionBuiltOnLauchpad(revision) {
+  const buildId = getBuildId(revision);
+  return !!(buildId && buildId.indexOf("lp-") === 0);
+}
+
+export function getRevisionsArchitectures(revisions) {
+  let archs = [];
+
+  // get all architectures from all revisions
+  revisions.forEach(revision => {
+    archs = archs.concat(revision.architectures);
+  });
+
+  // make archs unique and sorted
+  archs = archs.filter((item, i, ar) => ar.indexOf(item) === i).sort();
+
+  return archs;
 }
