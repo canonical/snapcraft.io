@@ -9,9 +9,17 @@ import HistoryIcon from "./historyIcon";
 import {
   getChannelName,
   isInDevmode,
-  isRevisionBuiltOnLauchpad
+  isRevisionBuiltOnLauchpad,
+  getBuildId,
+  getRevisionsArchitectures
 } from "../helpers";
-import { useDragging, useDrop, DND_ITEM_REVISION, Handle } from "./dnd";
+import {
+  useDragging,
+  useDrop,
+  DND_ITEM_REVISION,
+  DND_ITEM_BUILDSET,
+  Handle
+} from "./dnd";
 
 import { toggleHistory } from "../actions/history";
 import { promoteRevision, undoRelease } from "../actions/pendingReleases";
@@ -19,7 +27,8 @@ import { promoteRevision, undoRelease } from "../actions/pendingReleases";
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
-  hasPendingRelease
+  hasPendingRelease,
+  getRevisionsFromBuild
 } from "../selectors";
 
 const CloseChannelInfo = () => (
@@ -167,16 +176,38 @@ const ReleasesTableCell = props => {
   const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
   const availableCount = props.getAvailableCount(arch);
 
+  const buildId = getBuildId(currentRevision);
+  let buildSet = [];
+
+  if (buildId) {
+    buildSet = props.getRevisionsFromBuild(buildId);
+  }
   const canDrag = currentRevision && !isChannelPendingClose;
+
+  const item = buildSet.length
+    ? {
+        revisions: buildSet,
+        architectures: getRevisionsArchitectures(buildSet),
+        type: DND_ITEM_BUILDSET
+      }
+    : {
+        revision: currentRevision,
+        arch: arch,
+        type: DND_ITEM_REVISION
+      };
   const [isDragging, isGrabbing, drag] = useDragging({
-    item: { revision: currentRevision, arch: arch, type: DND_ITEM_REVISION },
+    item,
     canDrag
   });
 
   const [{ isOver, canDrop }, drop] = useDrop({
-    accept: DND_ITEM_REVISION,
+    accept: [DND_ITEM_REVISION, DND_ITEM_BUILDSET],
     drop: item => {
-      props.promoteRevision(item.revision, channel);
+      if (item.type === DND_ITEM_BUILDSET) {
+        item.revisions.forEach(r => props.promoteRevision(r, channel));
+      } else {
+        props.promoteRevision(item.revision, channel);
+      }
     },
     canDrop: item => {
       // can't drop on 'available revisions row'
@@ -184,24 +215,45 @@ const ReleasesTableCell = props => {
         return false;
       }
 
-      // can't drop on other architectures
-      if (arch !== item.arch) {
-        return false;
-      }
+      if (item.type === DND_ITEM_BUILDSET) {
+        // can't drop if arch is not part of build set
+        if (!item.architectures.includes(arch)) {
+          return false;
+        }
 
-      // can't drop devmode to stable/candidate
-      if (risk === STABLE || risk === CANDIDATE) {
-        if (isInDevmode(item.revision)) {
+        // TODO: can't drop if devmode
+
+        // can't drop if same revision is part of build set
+        if (
+          currentRevision &&
+          item.revisions
+            .map(revision => revision.revision)
+            .includes(currentRevision.revision)
+        ) {
           return false;
         }
       }
 
-      // can't drop same revisions
-      if (
-        currentRevision &&
-        item.revision.revision === currentRevision.revision
-      ) {
-        return false;
+      if (item.type === DND_ITEM_REVISION) {
+        // can't drop on other architectures
+        if (arch !== item.arch) {
+          return false;
+        }
+
+        // can't drop devmode to stable/candidate
+        if (risk === STABLE || risk === CANDIDATE) {
+          if (isInDevmode(item.revision)) {
+            return false;
+          }
+        }
+
+        // can't drop same revisions
+        if (
+          currentRevision &&
+          item.revision.revision === currentRevision.revision
+        ) {
+          return false;
+        }
       }
 
       return true;
@@ -292,6 +344,7 @@ ReleasesTableCell.propTypes = {
   // compute state
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
+  getRevisionsFromBuild: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -313,7 +366,8 @@ const mapStateToProps = state => {
     getAvailableCount: arch =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
     hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch)
+      hasPendingRelease(state, channel, arch),
+    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId)
   };
 };
 
