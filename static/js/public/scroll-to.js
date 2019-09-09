@@ -1,5 +1,5 @@
 export function animateScrollTo(to, offset = 0) {
-  const element = document.scrollingElement;
+  const element = document.scrollingElement || window;
 
   if (typeof to === "string") {
     to = document.querySelector(to);
@@ -12,7 +12,11 @@ export function animateScrollTo(to, offset = 0) {
   }
   to = to - offset;
 
-  element.scrollTo({ top: to, behavior: "smooth" });
+  if (element.scrollTo) {
+    element.scrollTo({ top: to, left: 0, behavior: "smooth" });
+  } else {
+    element.scrollTop = to;
+  }
 }
 
 export function initLinkScroll(link, { offset = 0 }) {
