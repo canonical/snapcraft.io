@@ -80,7 +80,7 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
         </span>
         {(showVersion || buildIcon) && (
           <span className="p-release-data__meta">
-            {buildIcon} {showVersion && revision.version}
+            {showVersion && revision.version} {buildIcon}
           </span>
         )}
       </span>
@@ -95,11 +95,7 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
             revision.attributes["build-request-id"] && (
               <Fragment>
                 <br />
-                Build:{" "}
-                <b>
-                  <i className="p-icon--lp" />{" "}
-                  {revision.attributes["build-request-id"]}
-                </b>
+                Build: <b>{revision.attributes["build-request-id"]}</b>
               </Fragment>
             )}
           {isInDevmode(revision) && (
