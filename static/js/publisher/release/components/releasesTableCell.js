@@ -150,7 +150,8 @@ const ReleasesTableCell = props => {
     channelMap,
     pendingChannelMap,
     pendingCloses,
-    filters
+    filters,
+    isOverParent
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -188,11 +189,15 @@ const ReleasesTableCell = props => {
     ? {
         revisions: buildSet,
         architectures: getRevisionsArchitectures(buildSet),
+        risk,
+        branch,
         type: DND_ITEM_BUILDSET
       }
     : {
         revision: currentRevision,
-        arch: arch,
+        arch,
+        risk,
+        branch,
         type: DND_ITEM_REVISION
       };
   const [isDragging, isGrabbing, drag] = useDragging({
@@ -221,7 +226,12 @@ const ReleasesTableCell = props => {
           return false;
         }
 
-        // TODO: can't drop if devmode
+        // can't drop devmode to stable/candidate
+        if (risk === STABLE || risk === CANDIDATE) {
+          if (item.revisions.some(isInDevmode)) {
+            return false;
+          }
+        }
 
         // can't drop if same revision is part of build set
         if (
@@ -282,7 +292,7 @@ const ReleasesTableCell = props => {
     isGrabbing ? "is-grabbing" : "",
     isDragging ? "is-dragging" : "",
     canDrag ? "is-draggable" : "",
-    canDrop && isOver ? "is-over" : "",
+    (canDrop && isOver) || (canDrop && isOverParent) ? "is-over" : "",
     canDrop ? "can-drop" : ""
   ].join(" ");
 
@@ -354,7 +364,8 @@ ReleasesTableCell.propTypes = {
   risk: PropTypes.string,
   arch: PropTypes.string,
   showVersion: PropTypes.bool,
-  branch: PropTypes.object
+  branch: PropTypes.object,
+  isOverParent: PropTypes.bool
 };
 
 const mapStateToProps = state => {
