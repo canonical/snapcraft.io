@@ -12,9 +12,16 @@ import {
   getBranches
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
-import { useDragging, useDrop, DND_ITEM_CHANNEL, Handle } from "./dnd";
+import {
+  useDragging,
+  useDrop,
+  DND_ITEM_CHANNEL,
+  DND_ITEM_BUILDSET,
+  DND_ITEM_REVISION,
+  Handle
+} from "./dnd";
 
-import { promoteChannel } from "../actions/pendingReleases";
+import { promoteChannel, promoteRevision } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
 
 import { toggleBranches } from "../actions/branches";
@@ -101,16 +108,39 @@ const ReleasesTableRow = props => {
     canDrag
   });
 
-  const [{ isOver, canDrop }, drop] = useDrop({
-    accept: DND_ITEM_CHANNEL,
+  const [{ isOver, canDrop, item }, drop] = useDrop({
+    // accept all the types to trigger isOver when hovering
+    // but for some reason DND_ITEM_BUILDSET only works if DND_ITEM_REVISION is on the list as well...
+    accept: [DND_ITEM_CHANNEL, DND_ITEM_REVISION, DND_ITEM_BUILDSET],
     drop: item => {
-      const branchName = props.branch ? props.branch.branch : null;
-      props.promoteChannel(
-        getChannelName(props.currentTrack, item.risk, item.branch),
-        getChannelName(props.currentTrack, props.risk, branchName)
-      );
+      if (item.type === DND_ITEM_CHANNEL) {
+        props.promoteChannel(
+          getChannelName(props.currentTrack, item.risk, item.branch),
+          channel
+        );
+      }
+      if (item.type === DND_ITEM_BUILDSET) {
+        item.revisions.forEach(r => props.promoteRevision(r, channel));
+      }
+      if (item.type === DND_ITEM_REVISION) {
+        props.promoteRevision(item.revision, channel);
+      }
     },
     canDrop: item => {
+      if (item.type === DND_ITEM_REVISION) {
+        return false;
+        // TODO: allow and drop on channel and release to correct arch
+        // check devmode
+        // check if same revision is in the architecture
+      }
+
+      if (item.type === DND_ITEM_BUILDSET) {
+        return false;
+        // TODO: allow and drop on channel and release to correct archs
+        // check if any revision is in devmode
+        // check if same revisions are in channel (all of them)
+      }
+
       const { currentTrack, risk, branch, pendingChannelMap } = props;
 
       const branchName = branch ? branch.branch : null;
@@ -157,9 +187,15 @@ const ReleasesTableRow = props => {
     },
     collect: monitor => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
+      canDrop: monitor.canDrop(),
+      item: monitor.getItem()
     })
   });
+
+  let draggedArchs = [];
+  if (isOver && item.type === DND_ITEM_BUILDSET) {
+    draggedArchs = item.architectures;
+  }
 
   let canBePromoted = true;
   let canBeClosed = true;
@@ -444,6 +480,7 @@ const ReleasesTableRow = props => {
               branch={branch}
               arch={arch}
               showVersion={!hasSameVersion}
+              isOverParent={draggedArchs.indexOf(arch) !== -1}
             />
           ))}
         </div>
@@ -479,6 +516,7 @@ ReleasesTableRow.propTypes = {
   // actions
   closeChannel: PropTypes.func.isRequired,
   promoteChannel: PropTypes.func.isRequired,
+  promoteRevision: PropTypes.func.isRequired,
   toggleBranches: PropTypes.func.isRequired
 };
 
@@ -500,6 +538,8 @@ const mapDispatchToProps = dispatch => {
   return {
     promoteChannel: (channel, targetChannel) =>
       dispatch(promoteChannel(channel, targetChannel)),
+    promoteRevision: (revision, targetChannel) =>
+      dispatch(promoteRevision(revision, targetChannel)),
     closeChannel: channel => dispatch(closeChannel(channel)),
     toggleBranches: channel => dispatch(toggleBranches(channel))
   };
