@@ -89,7 +89,19 @@ export class AvailableRevisionsMenu extends Component {
   }
 
   renderItems() {
-    const items = Object.keys(menuLabels);
+    let items = Object.keys(menuLabels);
+
+    items = items.filter(item => {
+      // remove Launchpad menu option if there are no LP builds
+      if (
+        item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD &&
+        this.props.getFilteredCount(AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) === 0
+      ) {
+        return false;
+      }
+
+      return true;
+    });
 
     return (
       <span className="p-contextual-menu__group">
