@@ -15,7 +15,8 @@ import {
 } from "./channelMap";
 import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
-  AVAILABLE_REVISIONS_SELECT_UNRELEASED
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
 } from "../constants";
 
 describe("availableRevisionsSelect actions", () => {
@@ -143,7 +144,84 @@ describe("availableRevisionsSelect actions", () => {
           );
         });
 
-        it("should dispatch SELECT_REVISION action for latest revisions with other versions", () => {
+        it("should not dispatch SELECT_REVISION action for latest revisions with other versions", () => {
+          expect(store.getActions()).not.toContainEqual(
+            selectRevision(revisions[2])
+          );
+        });
+      });
+    });
+
+    describe("when 'Launchpad' is selected", () => {
+      const value = AVAILABLE_REVISIONS_SELECT_LAUNCHPAD;
+
+      describe("when there are no revisions", () => {
+        const revisions = {};
+
+        it("should not dispatch any SELECT_REVISION actions", () => {
+          store = mockStore({
+            // mock store state is not modified by actions
+            // so this is the value we expect after the actions are dispatched
+            availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
+            revisions
+          });
+          store.dispatch(selectAvailableRevisions(value));
+
+          const actions = store.getActions();
+
+          expect(actions).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                type: SELECT_REVISION
+              })
+            ])
+          );
+        });
+      });
+
+      describe("when there are revisions in the state", () => {
+        const revisions = {
+          1: {
+            revision: 1,
+            architectures: ["arch1"],
+            attributes: { "build-request-id": "lp-1" },
+            created_at: new Date()
+          },
+          2: {
+            revision: 2,
+            architectures: ["arch2"],
+            attributes: { "build-request-id": "lp-2" },
+            created_at: new Date()
+          },
+          3: {
+            revision: 3,
+            architectures: ["arch3"],
+            attributes: { "build-request-id": "lp-1" },
+            created_at: new Date()
+          }
+        };
+
+        beforeEach(() => {
+          store = mockStore({
+            // mock store state is not modified by actions
+            // so this is the value we expect after the actions are dispatched
+            availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
+            revisions
+          });
+
+          store.dispatch(selectAvailableRevisions(value));
+        });
+
+        it("should dispatch SELECT_REVISION action for latest revisions with most recent build id", () => {
+          expect(store.getActions()).toContainEqual(
+            selectRevision(revisions[1])
+          );
+          expect(store.getActions()).toContainEqual(
+            selectRevision(revisions[3])
+          );
+        });
+
+        it("should not dispatch SELECT_REVISION action for latest revisions with other versions", () => {
           expect(store.getActions()).not.toContainEqual(
             selectRevision(revisions[2])
           );
