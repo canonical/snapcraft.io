@@ -1,10 +1,14 @@
-import { AVAILABLE_REVISIONS_SELECT_RECENT } from "../constants";
+import {
+  AVAILABLE_REVISIONS_SELECT_RECENT,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+} from "../constants";
 import { selectRevision, clearSelectedRevisions } from "./channelMap";
 import {
   getArchitectures,
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch
 } from "../selectors";
+import { getBuildId } from "../helpers";
 
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 
@@ -35,6 +39,16 @@ export function selectAvailableRevisions(value) {
         const recentVersion = recentRevisions[0].version;
         // filter most recent revision with given version
         revisionsFilter = revision => revision.version === recentVersion;
+      }
+    }
+
+    if (value === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) {
+      const lpRevisions = getFilteredAvailableRevisions(state);
+
+      if (lpRevisions.length > 0) {
+        const recentBuild = getBuildId(lpRevisions[0]);
+
+        revisionsFilter = revision => getBuildId(revision) === recentBuild;
       }
     }
 
