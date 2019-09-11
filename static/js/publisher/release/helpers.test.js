@@ -1,5 +1,9 @@
 import { AVAILABLE } from "./constants";
-import { getChannelName, isRevisionBuiltOnLauchpad } from "./helpers";
+import {
+  getChannelName,
+  isRevisionBuiltOnLauchpad,
+  getRevisionsArchitectures
+} from "./helpers";
 
 describe("getChannelName", () => {
   it("should return track/risk pair as a name", () => {
@@ -39,5 +43,22 @@ describe("isRevisionBuiltOnLauchpad", () => {
         attributes: { "build-request-id": "lp-123" }
       })
     ).toBe(true);
+  });
+});
+
+describe("getRevisionsArchitectures", () => {
+  it("should return unique and sorted list of architectures from all revisoins", () => {
+    const revisions = [
+      { architectures: ["test4"] },
+      { architectures: ["test2"] },
+      { architectures: ["test3", "test2", "test1"] },
+      { architectures: ["test3", "test4"] }
+    ];
+    expect(getRevisionsArchitectures(revisions)).toEqual([
+      "test1",
+      "test2",
+      "test3",
+      "test4"
+    ]);
   });
 });
