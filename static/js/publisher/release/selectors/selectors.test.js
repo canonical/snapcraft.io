@@ -20,7 +20,8 @@ import {
   getTrackRevisions,
   getBranches,
   hasBuildRequestId,
-  getLaunchpadRevisions
+  getLaunchpadRevisions,
+  getRevisionsFromBuild
 } from "./index";
 
 import reducers from "../reducers";
@@ -759,6 +760,46 @@ describe("getLaunchpadRevisions", () => {
       stateWithLauchpadBuilds.revisions[2]
     );
     expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).toContain(
+      stateWithLauchpadBuilds.revisions[3],
+      stateWithLauchpadBuilds.revisions[4]
+    );
+  });
+});
+
+describe("getRevisionsFromBuild", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithLauchpadBuilds = {
+    ...initialState,
+    revisions: {
+      1: { revision: 1, version: "1" },
+      2: { revision: 2, version: "2" },
+      3: {
+        revision: 3,
+        version: "3",
+        attributes: { "build-request-id": "lp-1234" }
+      },
+      4: {
+        revision: 4,
+        version: "4",
+        attributes: { "build-request-id": "lp-1234" }
+      },
+      5: {
+        revision: 5,
+        version: "5",
+        attributes: { "build-request-id": "lp-5432" }
+      }
+    }
+  };
+
+  it("should return only revisions with given build id", () => {
+    const revisions = getRevisionsFromBuild(stateWithLauchpadBuilds, "lp-1234");
+    expect(revisions.length).toEqual(2);
+    expect(revisions).not.toContain(
+      stateWithLauchpadBuilds.revisions[1],
+      stateWithLauchpadBuilds.revisions[2],
+      stateWithLauchpadBuilds.revisions[5]
+    );
+    expect(revisions).toContain(
       stateWithLauchpadBuilds.revisions[3],
       stateWithLauchpadBuilds.revisions[4]
     );
