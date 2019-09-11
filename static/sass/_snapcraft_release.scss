@@ -226,6 +226,11 @@
     &.is-highlighted {
       background: $color-highlighted;
     }
+
+    &.is-hovered {
+      outline: 1px solid $color-mid-light;
+      outline-offset: -1px;
+    }
   }
 
   .p-releases-table__arch {
