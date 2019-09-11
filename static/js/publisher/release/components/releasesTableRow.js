@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { parse, distanceInWordsToNow, addDays } from "date-fns";
@@ -391,6 +391,8 @@ const ReleasesTableRow = props => {
     timeUntilExpiration = distanceInWordsToNow(end);
   }
 
+  const [hoveredBuild, setHoveredBuild] = useState(null);
+
   return (
     <Fragment>
       {risk === AVAILABLE && (
@@ -481,6 +483,8 @@ const ReleasesTableRow = props => {
               arch={arch}
               showVersion={!hasSameVersion}
               isOverParent={draggedArchs.indexOf(arch) !== -1}
+              setHoveredBuild={setHoveredBuild}
+              hoveredBuild={hoveredBuild}
             />
           ))}
         </div>

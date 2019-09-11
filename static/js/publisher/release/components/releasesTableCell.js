@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -151,7 +151,9 @@ const ReleasesTableCell = props => {
     pendingChannelMap,
     pendingCloses,
     filters,
-    isOverParent
+    isOverParent,
+    setHoveredBuild,
+    hoveredBuild
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -283,10 +285,24 @@ const ReleasesTableCell = props => {
     props.undoRelease(revision, channel);
   }
 
+  const [isHovered, setIsHovered] = useState(false);
+  const onMouseEnter = () => {
+    setIsHovered(true);
+    if (buildId) {
+      setHoveredBuild(buildId);
+    }
+  };
+
+  const onMouseLeave = () => {
+    setIsHovered(false);
+    setHoveredBuild(null);
+  };
+
   const className = [
     "p-releases-table__cell",
     isUnassigned ? "is-unassigned" : "",
     isActive ? "is-active" : "",
+    isHovered || (buildId && buildId === hoveredBuild) ? "is-hovered" : "",
     isHighlighted ? "is-highlighted" : "",
     isPending ? "is-pending" : "",
     isGrabbing ? "is-grabbing" : "",
@@ -297,7 +313,12 @@ const ReleasesTableCell = props => {
   ].join(" ");
 
   return (
-    <div ref={drop} className={className}>
+    <div
+      ref={drop}
+      className={className}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
@@ -365,7 +386,9 @@ ReleasesTableCell.propTypes = {
   arch: PropTypes.string,
   showVersion: PropTypes.bool,
   branch: PropTypes.object,
-  isOverParent: PropTypes.bool
+  isOverParent: PropTypes.bool,
+  setHoveredBuild: PropTypes.func,
+  hoveredBuild: PropTypes.string
 };
 
 const mapStateToProps = state => {
