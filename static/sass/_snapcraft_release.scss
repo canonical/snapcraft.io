@@ -228,8 +228,20 @@
     }
 
     &.is-hovered {
-      outline: 1px solid $color-mid-light;
-      outline-offset: -1px;
+      background: darken($color-light, 10%);
+    }
+
+    // if one hovered cell is followed by another,
+    // cover the spacing between them with hover color
+    // so they look joined
+    &.is-hovered + &.is-hovered::before {
+      background: darken($color-light, 10%);
+      bottom: -3px; // compensate for bottom border
+      content: "";
+      left: -2px;
+      position: absolute;
+      top: 0;
+      width: 2px;
     }
   }
 
