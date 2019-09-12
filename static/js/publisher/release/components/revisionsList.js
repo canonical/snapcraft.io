@@ -10,7 +10,12 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_ALL
 } from "../constants";
-import { getChannelName, isInDevmode } from "../helpers";
+import {
+  getChannelName,
+  isInDevmode,
+  getRevisionsArchitectures,
+  getBuildId
+} from "../helpers";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
@@ -98,6 +103,11 @@ class RevisionsList extends Component {
     let selectedVersionRevisions = [];
     // list of architectures with revisions in selected version
     let selectedVersionRevisionsArchs = [];
+
+    // list of revisions from other architectures that have same build id (and are not selected yet)
+    let selectedBuildRevisions = [];
+    // list of architectures with revisions in selected version
+    let selectedBuildRevisionsArchs = [];
 
     let key;
     let showAllRevisions = false;
@@ -195,18 +205,43 @@ class RevisionsList extends Component {
         );
 
         // recalculate list of architectures from current list of revisions
-        selectedVersionRevisionsArchs = [];
+        selectedVersionRevisionsArchs = getRevisionsArchitectures(
+          selectedVersionRevisions
+        );
+      }
 
-        selectedVersionRevisions.forEach(revision => {
-          selectedVersionRevisionsArchs = selectedVersionRevisionsArchs.concat(
-            revision.architectures
-          );
+      if (selectedRevision && getBuildId(selectedRevision)) {
+        // find all revisions with same build id as selected revision
+        // but only one (latest) per architecture
+        filteredAvailableRevisions.forEach(revision => {
+          if (
+            getBuildId(revision) === getBuildId(selectedRevision) &&
+            revision.architectures.some(
+              arch => selectedBuildRevisionsArchs.indexOf(arch) === -1
+            )
+          ) {
+            selectedBuildRevisions.push(revision);
+            selectedBuildRevisionsArchs = selectedVersionRevisionsArchs.concat(
+              revision.architectures
+            );
+          }
         });
 
-        // make archs unique and sorted
-        selectedVersionRevisionsArchs = selectedVersionRevisionsArchs
-          .filter((item, i, ar) => ar.indexOf(item) === i)
-          .sort();
+        // filter out revisions that are already selected
+        selectedBuildRevisions = selectedBuildRevisions.filter(
+          revision =>
+            this.props.selectedRevisions.indexOf(revision.revision) === -1
+        );
+
+        // filter out current architecture
+        selectedBuildRevisions = selectedBuildRevisions.filter(
+          revision => revision.architectures.indexOf(filters.arch) === -1
+        );
+
+        // recalculate list of architectures from current list of revisions
+        selectedBuildRevisionsArchs = getRevisionsArchitectures(
+          selectedBuildRevisions
+        );
       }
 
       key = `${filters.track}/${filters.risk}/${filters.arch}`;
@@ -274,6 +309,36 @@ class RevisionsList extends Component {
                   onClick={this.selectVersionClick.bind(
                     this,
                     selectedVersionRevisions
+                  )}
+                >
+                  {"Select in available architectures"}
+                </button>
+              </div>
+            </div>
+          )}
+        {!isReleaseHistory &&
+          selectedBuildRevisions.length > 0 && (
+            <div className="p-releases-confirm">
+              <b>{selectedRevision.version}</b> build{" "}
+              <b>
+                <i className="p-icon--lp" /> {getBuildId(selectedRevision)}
+              </b>{" "}
+              is available in{" "}
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {selectedBuildRevisionsArchs.length} other architecture
+                  {selectedBuildRevisionsArchs.length > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  {selectedBuildRevisionsArchs.join(", ")}
+                </span>
+              </span>
+              <div className="p-releases-confirm__buttons">
+                <button
+                  className="p-button--positive is-inline u-no-margin--bottom"
+                  onClick={this.selectVersionClick.bind(
+                    this,
+                    selectedBuildRevisions
                   )}
                 >
                   {"Select in available architectures"}
