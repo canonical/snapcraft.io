@@ -156,7 +156,12 @@ function renderPublisherMetrics(options) {
 
   function getChunk(chunks) {
     if (chunks.length === 0) {
-      if (_graph.rawData.buckets.length === 0) {
+      if (
+        !_graph ||
+        !_graph.rawData ||
+        !_graph.rawData.buckets ||
+        _graph.rawData.buckets.length === 0
+      ) {
         document
           .querySelector(`[data-js="dashboard-metrics"]`)
           .classList.add("u-hide");
