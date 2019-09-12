@@ -277,18 +277,24 @@ class ReleasesController extends Component {
     const releases = Object.keys(pendingReleases).map(id => {
       const pendingRelease = pendingReleases[id];
 
-      return {
+      const release = {
         id,
         revision: pendingRelease.revision,
         channels: pendingRelease.channels,
-        phasing: {
+        phasing: null
+      };
+
+      if (phasingPercentage) {
+        release.phasing = {
           phasing_percentage: phasingPercentage,
           phasing_key: `${id}-${pendingRelease.channels.join(
             "_"
           )}-${new Date().getTime()}`,
           phasing_paused: false
-        }
-      };
+        };
+      }
+
+      return release;
     });
 
     this.setState({ isLoading: true });

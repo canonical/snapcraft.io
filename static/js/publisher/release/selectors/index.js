@@ -259,12 +259,7 @@ export function getPhasedState(state, channel, arch) {
 
   let phasing = null;
 
-  if (
-    release.length > 1 &&
-    release[0] &&
-    release[0].phasing.key &&
-    release[0].phasing.percentage < 100
-  ) {
+  if (release.length > 1 && release[0] && release[0].phasing.key) {
     phasing = release[0].phasing;
     phasing.from = release[1].revision;
   }
