@@ -17,7 +17,8 @@ import {
   getArchitectures,
   getTracks,
   getTrackRevisions,
-  getBranches
+  getBranches,
+  getPhasedState
 } from "./index";
 
 import reducers from "../reducers";
@@ -675,5 +676,53 @@ describe("getBranches", () => {
         when: lessThan30DaysAgo
       }
     ]);
+  });
+});
+
+describe("getPhasedState", () => {
+  it("should return the phasing of a channel and architecture", () => {
+    const state = {
+      releases: [
+        {
+          architecture: "arch1",
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "1",
+          phasing: null
+        },
+        {
+          architecture: "arch2",
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "3",
+          phasing: {
+            key: "phasingkey",
+            percentage: 60,
+            paused: false
+          }
+        },
+        {
+          architecture: "arch2",
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "2",
+          phasing: {
+            key: "phasingkey",
+            percentage: 50,
+            paused: false
+          }
+        }
+      ]
+    };
+
+    expect(getPhasedState(state, "latest/stable", "arch2")).toEqual({
+      from: "2",
+      key: "phasingkey",
+      paused: false,
+      percentage: 60
+    });
   });
 });
