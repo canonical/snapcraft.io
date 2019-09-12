@@ -254,11 +254,17 @@ export function getPhasedState(state, channel, arch) {
     ) {
       return item;
     }
+    return false;
   });
 
   let phasing = null;
 
-  if (release.length > 1 && release[0] && release[0].phasing.key) {
+  if (
+    release.length > 1 &&
+    release[0] &&
+    release[0].phasing.key &&
+    release[0].phasing.percentage < 100
+  ) {
     phasing = release[0].phasing;
     phasing.from = release[1].revision;
   }

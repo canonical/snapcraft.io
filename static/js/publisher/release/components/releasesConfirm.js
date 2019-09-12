@@ -21,7 +21,7 @@ class ReleasesConfirm extends Component {
   onApplyClick() {
     const { rolloutType, rolloutPercentage } = this.state;
     this.props.releaseRevisions(
-      rolloutType === "percentage" ? rolloutPercentage : undefined
+      rolloutType === "percentage" ? rolloutPercentage : 100
     );
   }
 
