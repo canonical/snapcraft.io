@@ -15,7 +15,8 @@ import { promoteRevision, undoRelease } from "../actions/pendingReleases";
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
-  hasPendingRelease
+  hasPendingRelease,
+  getPhasedState
 } from "../selectors";
 
 const CloseChannelInfo = () => (
@@ -61,12 +62,21 @@ EmptyInfo.propTypes = {
   trackingChannel: PropTypes.string
 };
 
-const RevisionInfo = ({ revision, isPending, showVersion }) => {
+const RevisionInfo = ({ revision, isPending, showVersion, phasedState }) => {
+  let from = null;
+  if (phasedState && phasedState.from) {
+    from = phasedState.from;
+  }
+
   return (
     <Fragment>
       <span className="p-release-data__info">
         <span className="p-release-data__title">
-          <DevmodeRevision revision={revision} showTooltip={false} />
+          <DevmodeRevision
+            revision={revision}
+            showTooltip={false}
+            from={from}
+          />
         </span>
         {showVersion && (
           <span className="p-release-data__meta">{revision.version}</span>
@@ -76,8 +86,6 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
         {isPending && "Pending release of:"}
 
         <div className="p-tooltip__group">
-          Revision: <b>{revision.revision}</b>
-          <br />
           Version: <b>{revision.version}</b>
           {isInDevmode(revision) && (
             <Fragment>
@@ -91,6 +99,18 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
                   Grade: <b>devel</b>
                 </Fragment>
               )}
+            </Fragment>
+          )}
+          <br />
+          Revision:{" "}
+          <b>
+            {from ? `${from} → ` : ""}
+            {revision.revision}
+          </b>
+          {from && (
+            <Fragment>
+              <br />
+              Rolled out to <b>{phasedState.percentage}%</b> of devices
             </Fragment>
           )}
         </div>
@@ -110,7 +130,8 @@ const RevisionInfo = ({ revision, isPending, showVersion }) => {
 RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
-  showVersion: PropTypes.bool
+  showVersion: PropTypes.bool,
+  phasedState: PropTypes.object
 };
 
 const ReleasesTableCell = props => {
@@ -135,6 +156,9 @@ const ReleasesTableCell = props => {
 
   // check if there is a pending release in this cell
   const hasPendingRelease = props.hasPendingRelease(channel, arch);
+
+  // check if it's being phased
+  const phasedState = props.getPhasedState(channel, arch);
 
   const isChannelPendingClose = pendingCloses.includes(channel);
   const isPending = hasPendingRelease || isChannelPendingClose;
@@ -229,6 +253,7 @@ const ReleasesTableCell = props => {
             revision={currentRevision}
             isPending={hasPendingRelease}
             showVersion={props.showVersion}
+            phasedState={phasedState}
           />
         ) : (
           <EmptyInfo
@@ -273,6 +298,7 @@ ReleasesTableCell.propTypes = {
   // compute state
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
+  getPhasedState: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -294,7 +320,8 @@ const mapStateToProps = state => {
     getAvailableCount: arch =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
     hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch)
+      hasPendingRelease(state, channel, arch),
+    getPhasedState: (channel, arch) => getPhasedState(state, channel, arch)
   };
 };
 

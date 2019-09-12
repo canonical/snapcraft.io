@@ -7,15 +7,37 @@
 
   .p-releases-confirm {
     background: $color-light;
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 1em;
     padding: 1em;
     position: relative;
   }
 
   .p-releases-confirm__buttons {
-    position: absolute;
-    right: 1em;
-    top: 10px;
+    justify-self: end;
+  }
+
+  .p-releases-confirm__rollout {
+    display: flex;
+    flex-grow: 1;
+    justify-content: end;
+    margin-right: 1rem;
+
+    label {
+      align-items: center;
+      display: flex;
+      padding-left: 1.5rem;
+      padding-top: 0;
+      margin-bottom: 0;
+      margin-left: 1rem;
+    }
+
+    &-percentage {
+      margin-bottom: 0;
+      min-width: 3rem;
+      width: 3rem;
+    }
   }
 
   // RELEASES TABLE

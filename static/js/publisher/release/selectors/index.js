@@ -242,3 +242,26 @@ export function getTrackRevisions({ channelMap }, track) {
   );
   return trackKeys.map(trackName => channelMap[trackName]);
 }
+
+export function getPhasedState(state, channel, arch) {
+  const { releases } = state;
+  const release = releases.filter(item => {
+    if (
+      channel ===
+        `${item.track}/${item.risk}${item.branch ? `/${item.branch}` : ""}` &&
+      arch === item.architecture &&
+      item.revision
+    ) {
+      return item;
+    }
+  });
+
+  let phasing = null;
+
+  if (release.length > 1 && release[0] && release[0].phasing.key) {
+    phasing = release[0].phasing;
+    phasing.from = release[1].revision;
+  }
+
+  return phasing;
+}

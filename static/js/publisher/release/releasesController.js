@@ -88,8 +88,14 @@ class ReleasesController extends Component {
       });
   }
 
-  fetchRelease(revision, channels) {
+  fetchRelease(revision, channels, phasing) {
     const { csrfToken } = this.props.options;
+
+    const body = {
+      revision,
+      channels,
+      name: this.props.snapName
+    };
 
     return fetch(`/${this.props.snapName}/releases`, {
       method: "POST",
@@ -102,7 +108,7 @@ class ReleasesController extends Component {
       },
       redirect: "follow",
       referrer: "no-referrer",
-      body: JSON.stringify({ revision, channels, name: this.props.snapName })
+      body: JSON.stringify(phasing ? Object.assign(body, phasing) : body)
     })
       .then(response => response.json())
       .catch(() => {
@@ -240,9 +246,11 @@ class ReleasesController extends Component {
     // handle releases as a queue
     releases.forEach(release => {
       return (queue = queue.then(() => {
-        return this.fetchRelease(release.id, release.channels).then(json =>
-          this.handleReleaseResponse(json, release)
-        );
+        return this.fetchRelease(
+          release.id,
+          release.channels,
+          release.phasing
+        ).then(json => this.handleReleaseResponse(json, release));
       }));
     });
     return queue;
@@ -264,13 +272,22 @@ class ReleasesController extends Component {
     );
   }
 
-  releaseRevisions() {
+  releaseRevisions(phasingPercentage) {
     const { pendingReleases, pendingCloses, hideNotification } = this.props;
     const releases = Object.keys(pendingReleases).map(id => {
+      const pendingRelease = pendingReleases[id];
+
       return {
         id,
-        revision: pendingReleases[id].revision,
-        channels: pendingReleases[id].channels
+        revision: pendingRelease.revision,
+        channels: pendingRelease.channels,
+        phasing: {
+          phasing_percentage: phasingPercentage,
+          phasing_key: `${id}-${pendingRelease.channels.join(
+            "_"
+          )}-${new Date().getTime()}`,
+          phasing_paused: false
+        }
       };
     });
 
