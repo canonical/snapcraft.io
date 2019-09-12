@@ -291,6 +291,7 @@ class RevisionsList extends Component {
           </Notification>
         )}
         {!isReleaseHistory &&
+          availableRevisionsSelect !== AVAILABLE_REVISIONS_SELECT_LAUNCHPAD &&
           selectedVersionRevisions.length > 0 && (
             <div className="p-releases-confirm">
               <b>{selectedRevision.version}</b> is available in{" "}
@@ -317,6 +318,7 @@ class RevisionsList extends Component {
             </div>
           )}
         {!isReleaseHistory &&
+          availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD &&
           selectedBuildRevisions.length > 0 && (
             <div className="p-releases-confirm">
               <b>{selectedRevision.version}</b> build{" "}
