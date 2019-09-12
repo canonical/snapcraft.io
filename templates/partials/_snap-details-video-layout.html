@@ -1,3 +1,4 @@
+
 <div class="row p-snap-details__media u-equal-height">
   {# TODO: u-align--center should be u-align-text--center
    see https://github.com/canonical-web-and-design/vanilla-framework/issues/2448 #}
@@ -9,7 +10,7 @@
     {% endfor %}
   </div>
   {% if screenshots %}
-    <div class="col-2 p-snap-details__media-items{% if screenshots|length > 3 %} p-snap-details__media-items--distributed{% endif %}">
+    <div class="col-2 p-snap-details__media-items {% if screenshots|length < 5 %}is-small{% endif %}">
       {% for screenshot in screenshots %}
         {% include "partials/_snap-screenshot.html" %}
       {% endfor %}

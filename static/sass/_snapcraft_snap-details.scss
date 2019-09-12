@@ -21,12 +21,18 @@
         flex-grow: 0;
         height: auto;
         margin-bottom: $spv-outer--medium;
-        max-height: 78px;
+        max-height: 90px;
         overflow: hidden;
       }
 
-      .p-carousel__item-screenshot img,
-      .p-carousel__item-screenshot video {
+      &.is-small {
+        .p-carousel__item--screenshot {
+          max-height: 128px;
+        }
+      }
+
+      .p-carousel__item--screenshot img,
+      .p-carousel__item--screenshot video {
         align-self: center;
         width: 100%;
       }
@@ -34,7 +40,6 @@
       @media screen and (max-width: $breakpoint-medium) {
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-start;
         margin-bottom: -$spv-outer--medium;
         margin-right: -$sph-outer;
         margin-top: $spv-outer--medium;
@@ -50,16 +55,6 @@
       @media screen and (max-width: $breakpoint-x-small) {
         .p-carousel__item--screenshot {
           max-width: calc(50% - 1rem);
-        }
-      }
-    }
-
-    .p-snap-details__media-items--distributed {
-      @media screen and (min-width: $breakpoint-medium) {
-        justify-content: space-between;
-
-        .p-carousel__item--screenshot {
-          margin-bottom: 0;
         }
       }
     }
