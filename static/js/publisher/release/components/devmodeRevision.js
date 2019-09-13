@@ -1,12 +1,25 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
 import { isInDevmode } from "../helpers";
 
-export default function DevmodeRevision({ revision, showTooltip, from }) {
-  const revisionString = from
-    ? `${from} → ${revision.revision}`
-    : revision.revision;
+export default function DevmodeRevision({
+  revision,
+  showTooltip,
+  phasedState
+}) {
+  const revisionString =
+    phasedState && phasedState.from ? (
+      <Fragment>
+        {phasedState.from} → {revision.revision}{" "}
+        <small>
+          ({phasedState.percentage}
+          %)
+        </small>
+      </Fragment>
+    ) : (
+      revision.revision
+    );
 
   if (isInDevmode(revision)) {
     return (
@@ -39,5 +52,6 @@ export default function DevmodeRevision({ revision, showTooltip, from }) {
 
 DevmodeRevision.propTypes = {
   revision: PropTypes.object.isRequired,
-  showTooltip: PropTypes.bool
+  showTooltip: PropTypes.bool,
+  phasedState: PropTypes.object
 };

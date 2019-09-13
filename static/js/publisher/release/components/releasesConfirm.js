@@ -38,10 +38,34 @@ class ReleasesConfirm extends Component {
   }
 
   render() {
-    const { pendingReleases, pendingCloses, isLoading } = this.props;
+    const {
+      pendingReleases,
+      pendingCloses,
+      channelMap,
+      isLoading
+    } = this.props;
     const { rolloutType, rolloutPercentage } = this.state;
     const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
+
+    const phasableReleases = {};
+    Object.keys(pendingReleases).forEach(revision => {
+      const release = pendingReleases[revision];
+      const channel = release.channels[0];
+      const architecture = release.revision.architectures[0];
+
+      const hasRelease =
+        channelMap[channel] && channelMap[channel][architecture];
+
+      const isInChannelMap =
+        hasRelease && channelMap[channel][architecture].revision === revision;
+
+      if (hasRelease && !isInChannelMap) {
+        phasableReleases[revision] = release;
+      }
+    });
+
+    const phasableReleasesCount = Object.keys(phasableReleases).length;
 
     return (
       (releasesCount > 0 || closesCount > 0) && (
@@ -90,11 +114,34 @@ class ReleasesConfirm extends Component {
               </Fragment>
             )}{" "}
           </p>
-          {releasesCount > 0 && (
+          {phasableReleasesCount > 0 && (
             <div className="p-releases-confirm__rollout">
               <p className="u-no-margin--bottom">
-                Release {releasesCount} revision
-                {releasesCount > 1 ? "s" : ""} to:
+                Release{" "}
+                <span className="p-tooltip">
+                  <span className="p-help">
+                    {phasableReleasesCount} revision
+                    {phasableReleasesCount > 1 ? "s" : ""}
+                  </span>
+                  <span className="p-tooltip__message" role="tooltip">
+                    Revisions that can be phased:
+                    <br />
+                    {Object.keys(phasableReleases).map(revision => {
+                      const release = phasableReleases[revision];
+
+                      return (
+                        <span key={revision}>
+                          <b>{release.revision.revision}</b> (
+                          {release.revision.version}){" "}
+                          {release.revision.architectures[0]} to{" "}
+                          {release.channels[0]}
+                          {"\n"}
+                        </span>
+                      );
+                    })}
+                  </span>
+                </span>{" "}
+                to:
               </p>
               <input
                 type="radio"
@@ -156,13 +203,15 @@ ReleasesConfirm.propTypes = {
   isLoading: PropTypes.bool.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
-  cancelPendingReleases: PropTypes.func.isRequired
+  cancelPendingReleases: PropTypes.func.isRequired,
+  channelMap: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => {
   return {
     pendingCloses: state.pendingCloses,
-    pendingReleases: state.pendingReleases
+    pendingReleases: state.pendingReleases,
+    channelMap: state.channelMap
   };
 };
 

@@ -75,7 +75,7 @@ const RevisionInfo = ({ revision, isPending, showVersion, phasedState }) => {
           <DevmodeRevision
             revision={revision}
             showTooltip={false}
-            from={from}
+            phasedState={phasedState}
           />
         </span>
         {showVersion && (
@@ -102,15 +102,22 @@ const RevisionInfo = ({ revision, isPending, showVersion, phasedState }) => {
             </Fragment>
           )}
           <br />
-          Revision:{" "}
-          <b>
-            {from ? `${from} → ` : ""}
-            {revision.revision}
-          </b>
           {from && (
             <Fragment>
+              <b>Rollout of revision {revision.revision} in progress</b>
               <br />
-              Rolled out to <b>{phasedState.percentage}%</b> of devices
+              Revision: <b>{from}</b>
+              {phasedState
+                ? ` (${100 - phasedState.percentage}% of devices)`
+                : ""}
+              <br />
+              Revision: <b>{revision.revision}</b> ({phasedState.percentage}% of
+              devices)
+            </Fragment>
+          )}
+          {!from && (
+            <Fragment>
+              Revision: <b>{revision.revision}</b>
             </Fragment>
           )}
         </div>
