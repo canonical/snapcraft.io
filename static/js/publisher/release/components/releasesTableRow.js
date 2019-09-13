@@ -35,7 +35,11 @@ import {
   EDGE
 } from "../constants";
 
-import { getChannelName, isInDevmode } from "../helpers";
+import {
+  getChannelName,
+  isInDevmode,
+  getRevisionsArchitectures
+} from "../helpers";
 import ChannelMenu from "./channelMenu";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
@@ -168,7 +172,9 @@ const ReleasesTableRow = props => {
       const dropChannel = getChannelName(currentTrack, risk, branchName);
 
       if (item.type === DND_ITEM_CHANNEL) {
-        draggedRevisions = Object.values(pendingChannelMap[draggedChannel]);
+        if (pendingChannelMap[draggedChannel]) {
+          draggedRevisions = Object.values(pendingChannelMap[draggedChannel]);
+        }
       }
 
       // can't drop on 'available revisions row'
@@ -181,8 +187,8 @@ const ReleasesTableRow = props => {
         return false;
       }
 
-      // can't drop if there is nothing in dragged channel
-      if (!pendingChannelMap[draggedChannel]) {
+      // can't drop if there is nothing in dragged revisions
+      if (!draggedRevisions.length) {
         return false;
       }
 
@@ -213,8 +219,23 @@ const ReleasesTableRow = props => {
   });
 
   let draggedArchs = [];
-  if (isOver && item.type === DND_ITEM_BUILDSET) {
-    draggedArchs = item.architectures;
+  if (item && isOver) {
+    const draggedChannel = getChannelName(currentTrack, item.risk, item.branch);
+    switch (item.type) {
+      case DND_ITEM_BUILDSET:
+        draggedArchs = item.architectures;
+        break;
+      case DND_ITEM_CHANNEL:
+        if (pendingChannelMap[draggedChannel]) {
+          draggedArchs = getRevisionsArchitectures(
+            Object.values(pendingChannelMap[draggedChannel])
+          );
+        }
+        break;
+      case DND_ITEM_REVISION:
+        draggedArchs = getRevisionsArchitectures([item.revision]);
+        break;
+    }
   }
 
   let canBePromoted = true;
@@ -431,7 +452,7 @@ const ReleasesTableRow = props => {
             branch ? "branch" : "channel"
           } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
             isGrabbing ? "is-grabbing" : ""
-          } ${canDrop && isOver ? "is-over" : ""} ${canDrop ? "can-drop" : ""}`}
+          } ${canDrop ? "can-drop" : ""}`}
         >
           <div
             ref={drag}
