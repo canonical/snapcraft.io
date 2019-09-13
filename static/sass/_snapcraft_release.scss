@@ -21,7 +21,7 @@
   .p-releases-confirm__rollout {
     display: flex;
     flex-grow: 1;
-    justify-content: end;
+    justify-content: flex-end;
     margin-right: 1rem;
 
     label {
@@ -35,8 +35,9 @@
 
     &-percentage {
       margin-bottom: 0;
-      min-width: 3rem;
-      width: 3rem;
+      margin-right: .5rem;
+      min-width: 3.5rem;
+      width: 3.5rem;
     }
   }
 

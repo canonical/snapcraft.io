@@ -117,6 +117,8 @@ class ReleasesConfirm extends Component {
                 <input
                   className="p-releases-confirm__rollout-percentage"
                   type="number"
+                  max="100"
+                  min="1"
                   name="rollout-percentage"
                   value={rolloutPercentage}
                   onChange={this.onRolloutPercentageChange.bind(this)}
