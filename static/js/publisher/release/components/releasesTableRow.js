@@ -9,7 +9,8 @@ import {
   getArchitectures,
   getPendingChannelMap,
   hasPendingRelease,
-  getBranches
+  getBranches,
+  getPhasedState
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
 import { useDragging, useDrop, DND_ITEM_CHANNEL, Handle } from "./dnd";
@@ -43,6 +44,9 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
+const disabledBecauseOfPhasing =
+  "An architecture in this channel is being phased.";
+
 // TODO: move to selectors or helpers?
 const compareChannels = (channelMap, channel, targetChannel) => {
   const channelArchs = channelMap[channel];
@@ -71,7 +75,8 @@ const ReleasesTableRow = props => {
     pendingChannelMap,
     openBranches,
     availableBranches,
-    isVisible
+    isVisible,
+    getPhasedState
   } = props;
 
   if (!isVisible) {
@@ -146,6 +151,16 @@ const ReleasesTableRow = props => {
         if (hasDevmodeRevisions) {
           return false;
         }
+      }
+
+      // can't drop on phased channel
+      const isPhasing =
+        props.archs
+          .filter(arch => getPhasedState(dropChannel, arch))
+          .filter(state => state !== null).length > 0;
+
+      if (isPhasing) {
+        return false;
       }
 
       // can't drop same revisions
@@ -253,6 +268,18 @@ const ReleasesTableRow = props => {
       if (compareChannels(pendingChannelMap, channel, targetChannel.channel)) {
         targetChannel.isDisabled = true;
         targetChannel.reason = disabledBecauseReleased;
+      }
+    });
+
+    // remove any channel that has a phased release
+    targetChannels.forEach(targetChannel => {
+      const isDisabled =
+        archs
+          .map(arch => getPhasedState(targetChannel.channel, arch))
+          .filter(state => state !== null).length > 0;
+      if (isDisabled) {
+        targetChannel.isDisabled = true;
+        targetChannel.reason = disabledBecauseOfPhasing;
       }
     });
 
@@ -444,6 +471,7 @@ ReleasesTableRow.propTypes = {
   pendingChannelMap: PropTypes.object,
 
   hasPendingRelease: PropTypes.func,
+  getPhasedState: PropTypes.func,
 
   openBranches: PropTypes.array,
 
@@ -463,7 +491,8 @@ const mapStateToProps = state => {
     hasPendingRelease: (channel, arch) =>
       hasPendingRelease(state, channel, arch),
     openBranches: state.branches,
-    availableBranches: getBranches(state)
+    availableBranches: getBranches(state),
+    getPhasedState: (channel, arch) => getPhasedState(state, channel, arch)
   };
 };
 
