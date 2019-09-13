@@ -68,6 +68,25 @@ const compareChannels = (channelMap, channel, targetChannel) => {
   return channelArchs === targetChannelArchs;
 };
 
+const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
+  const targetChannelArchs = channelMap[targetChannel];
+
+  return revisions.filter(revision => {
+    return revision.architectures.some(arch => {
+      // if nothing released to target channel in this arch
+      if (!targetChannelArchs || !targetChannelArchs[arch]) {
+        return true;
+      } else {
+        // if different revision released to an arch
+        if (revision.revision !== targetChannelArchs[arch].revision) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+};
+
 const ReleasesTableRow = props => {
   const {
     currentTrack,
@@ -127,18 +146,14 @@ const ReleasesTableRow = props => {
       }
     },
     canDrop: item => {
+      let draggedRevisions = [];
+
       if (item.type === DND_ITEM_REVISION) {
-        return false;
-        // TODO: allow and drop on channel and release to correct arch
-        // check devmode
-        // check if same revision is in the architecture
+        draggedRevisions = [item.revision];
       }
 
       if (item.type === DND_ITEM_BUILDSET) {
-        return false;
-        // TODO: allow and drop on channel and release to correct archs
-        // check if any revision is in devmode
-        // check if same revisions are in channel (all of them)
+        draggedRevisions = [...item.revisions];
       }
 
       const { currentTrack, risk, branch, pendingChannelMap } = props;
@@ -151,6 +166,10 @@ const ReleasesTableRow = props => {
         item.branch
       );
       const dropChannel = getChannelName(currentTrack, risk, branchName);
+
+      if (item.type === DND_ITEM_CHANNEL) {
+        draggedRevisions = Object.values(pendingChannelMap[draggedChannel]);
+      }
 
       // can't drop on 'available revisions row'
       if (props.risk === AVAILABLE) {
@@ -169,9 +188,7 @@ const ReleasesTableRow = props => {
 
       // can't drop devmode to stable/candidate
       if (risk === STABLE || risk === CANDIDATE) {
-        const hasDevmodeRevisions = Object.values(
-          pendingChannelMap[draggedChannel]
-        ).some(isInDevmode);
+        const hasDevmodeRevisions = draggedRevisions.some(isInDevmode);
 
         if (hasDevmodeRevisions) {
           return false;
@@ -179,7 +196,10 @@ const ReleasesTableRow = props => {
       }
 
       // can't drop same revisions
-      if (compareChannels(pendingChannelMap, draggedChannel, dropChannel)) {
+      if (
+        !getRevisionsToDrop(draggedRevisions, dropChannel, pendingChannelMap)
+          .length
+      ) {
         return false;
       }
 
