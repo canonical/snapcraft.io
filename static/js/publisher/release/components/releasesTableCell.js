@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { STABLE, CANDIDATE, AVAILABLE } from "../constants";
+import { AVAILABLE } from "../constants";
 import { getTrackingChannel } from "../releasesState";
 import DevmodeRevision from "./devmodeRevision";
 import HistoryIcon from "./historyIcon";
@@ -15,7 +15,6 @@ import {
 } from "../helpers";
 import {
   useDragging,
-  useDrop,
   DND_ITEM_REVISION,
   DND_ITEM_BUILDSET,
   Handle
@@ -207,75 +206,6 @@ const ReleasesTableCell = props => {
     canDrag
   });
 
-  const [{ isOver, canDrop }, drop] = useDrop({
-    accept: [DND_ITEM_REVISION, DND_ITEM_BUILDSET],
-    drop: item => {
-      if (item.type === DND_ITEM_BUILDSET) {
-        item.revisions.forEach(r => props.promoteRevision(r, channel));
-      } else {
-        props.promoteRevision(item.revision, channel);
-      }
-    },
-    canDrop: item => {
-      // can't drop on 'available revisions row'
-      if (props.risk === AVAILABLE) {
-        return false;
-      }
-
-      if (item.type === DND_ITEM_BUILDSET) {
-        // can't drop if arch is not part of build set
-        if (!item.architectures.includes(arch)) {
-          return false;
-        }
-
-        // can't drop devmode to stable/candidate
-        if (risk === STABLE || risk === CANDIDATE) {
-          if (item.revisions.some(isInDevmode)) {
-            return false;
-          }
-        }
-
-        // can't drop if same revision is part of build set
-        if (
-          currentRevision &&
-          item.revisions
-            .map(revision => revision.revision)
-            .includes(currentRevision.revision)
-        ) {
-          return false;
-        }
-      }
-
-      if (item.type === DND_ITEM_REVISION) {
-        // can't drop on other architectures
-        if (arch !== item.arch) {
-          return false;
-        }
-
-        // can't drop devmode to stable/candidate
-        if (risk === STABLE || risk === CANDIDATE) {
-          if (isInDevmode(item.revision)) {
-            return false;
-          }
-        }
-
-        // can't drop same revisions
-        if (
-          currentRevision &&
-          item.revision.revision === currentRevision.revision
-        ) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
-  });
-
   function handleHistoryIconClick(arch, risk, track, branchName) {
     props.toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
@@ -285,6 +215,7 @@ const ReleasesTableCell = props => {
     props.undoRelease(revision, channel);
   }
 
+  // TODO: still needed?
   const [isHovered, setIsHovered] = useState(false);
   const onMouseEnter = () => {
     setIsHovered(true);
@@ -308,13 +239,11 @@ const ReleasesTableCell = props => {
     isGrabbing ? "is-grabbing" : "",
     isDragging ? "is-dragging" : "",
     canDrag ? "is-draggable" : "",
-    (canDrop && isOver) || (canDrop && isOverParent) ? "is-over" : "",
-    canDrop ? "can-drop" : ""
+    isOverParent ? "is-over" : ""
   ].join(" ");
 
   return (
     <div
-      ref={drop}
       className={className}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
