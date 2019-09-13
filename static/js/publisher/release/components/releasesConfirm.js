@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { RISKS, parseChannel } from "../../../libs/channels.js";
+
 import { cancelPendingReleases } from "../actions/pendingReleases";
 
 class ReleasesConfirm extends Component {
@@ -49,23 +51,48 @@ class ReleasesConfirm extends Component {
     const closesCount = pendingCloses.length;
 
     const phasableReleases = {};
+    let phasableReleasesCount = 0;
     Object.keys(pendingReleases).forEach(revision => {
       const release = pendingReleases[revision];
-      const channel = release.channels[0];
+      const channels = release.channels;
       const architecture = release.revision.architectures[0];
 
-      const hasRelease =
-        channelMap[channel] && channelMap[channel][architecture];
+      channels.forEach(channel => {
+        const hasRelease =
+          channelMap[channel] && channelMap[channel][architecture];
 
-      const isInChannelMap =
-        hasRelease && channelMap[channel][architecture].revision === revision;
+        const isInChannelMap =
+          hasRelease && channelMap[channel][architecture].revision === revision;
 
-      if (hasRelease && !isInChannelMap) {
-        phasableReleases[revision] = release;
-      }
+        let isTrackingLowerRisk = false;
+
+        if (!hasRelease) {
+          const parsedChannel = parseChannel(channel);
+          let currentRisk = RISKS.indexOf(parsedChannel.risk) - 1;
+
+          for (; currentRisk >= 0; currentRisk -= 1) {
+            const tempChannel = `${parsedChannel.track}/${RISKS[currentRisk]}${
+              parsedChannel.format.branch ? `/${parsedChannel.branch}` : ""
+            }`;
+
+            isTrackingLowerRisk =
+              channelMap[tempChannel] && channelMap[tempChannel][architecture];
+
+            if (isTrackingLowerRisk) {
+              break;
+            }
+          }
+        }
+
+        if (hasRelease && !isInChannelMap && !isTrackingLowerRisk) {
+          if (!phasableReleases[revision]) {
+            phasableReleases[revision] = {};
+          }
+          phasableReleases[revision][channel] = release;
+          phasableReleasesCount += 1;
+        }
+      });
     });
-
-    const phasableReleasesCount = Object.keys(phasableReleases).length;
 
     return (
       (releasesCount > 0 || closesCount > 0) && (
@@ -129,16 +156,26 @@ class ReleasesConfirm extends Component {
                     {Object.keys(phasableReleases).map(revision => {
                       const release = phasableReleases[revision];
 
-                      return (
-                        <span key={revision}>
-                          <b>{release.revision.revision}</b> (
-                          {release.revision.version}){" "}
-                          {release.revision.architectures[0]} to{" "}
-                          {release.channels[0]}
-                          {"\n"}
-                        </span>
-                      );
+                      const channels = Object.keys(release);
+                      return channels.map(channel => {
+                        const revision = release[channel];
+
+                        return (
+                          <span key={revision}>
+                            <b>{revision.revision.revision}</b> (
+                            {revision.revision.version}){" "}
+                            {revision.revision.architectures[0]} to{" "}
+                            {channels.join(", ")}
+                            {"\n"}
+                          </span>
+                        );
+                      });
                     })}
+                    <br />
+                    <em>
+                      Revisions to be released that are not listed will be
+                      released to all devices.
+                    </em>
                   </span>
                 </span>{" "}
                 to:

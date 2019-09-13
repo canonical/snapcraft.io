@@ -258,4 +258,4 @@ function sortChannels(channels, options) {
   };
 }
 
-export { sortChannels, parseChannel, createChannelTree, sortAlphaNum };
+export { RISKS, sortChannels, parseChannel, createChannelTree, sortAlphaNum };
