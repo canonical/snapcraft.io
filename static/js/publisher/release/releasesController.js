@@ -217,7 +217,7 @@ class ReleasesController extends Component {
       if (json.closed_channels && json.closed_channels.length > 0) {
         json.closed_channels.forEach(channel => {
           // make sure channels without track name get prefixed with 'latest'
-          if (RISKS.indexOf(channel.split("/")[0]) === 0) {
+          if (RISKS.indexOf(channel.split("/")[0]) !== -1) {
             // TODO: This should be the default track, not latest
             channel = `latest/${channel}`;
           }
