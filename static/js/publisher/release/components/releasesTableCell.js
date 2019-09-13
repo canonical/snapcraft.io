@@ -216,6 +216,16 @@ const ReleasesTableCell = props => {
         return false;
       }
 
+      // can't drop is phasing
+      const targetIsPhasing = props.getPhasedState(
+        `${props.branch ? `${props.branch}/` : ""}${props.track}/${props.risk}`,
+        props.arch
+      );
+
+      if (targetIsPhasing) {
+        return false;
+      }
+
       return true;
     },
     collect: monitor => ({
