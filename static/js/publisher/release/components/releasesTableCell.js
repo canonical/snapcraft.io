@@ -13,12 +13,7 @@ import {
   getBuildId,
   getRevisionsArchitectures
 } from "../helpers";
-import {
-  useDragging,
-  DND_ITEM_REVISION,
-  DND_ITEM_BUILDSET,
-  Handle
-} from "./dnd";
+import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 
 import { toggleHistory } from "../actions/history";
 import { promoteRevision, undoRelease } from "../actions/pendingReleases";
@@ -183,24 +178,20 @@ const ReleasesTableCell = props => {
 
   if (buildId) {
     buildSet = props.getRevisionsFromBuild(buildId);
+  } else if (currentRevision) {
+    buildSet = [currentRevision];
   }
+
   const canDrag = currentRevision && !isChannelPendingClose;
 
-  const item = buildSet.length
-    ? {
-        revisions: buildSet,
-        architectures: getRevisionsArchitectures(buildSet),
-        risk,
-        branch,
-        type: DND_ITEM_BUILDSET
-      }
-    : {
-        revision: currentRevision,
-        arch,
-        risk,
-        branch,
-        type: DND_ITEM_REVISION
-      };
+  const item = {
+    revisions: buildSet,
+    architectures: getRevisionsArchitectures(buildSet),
+    risk,
+    branch,
+    type: DND_ITEM_REVISIONS
+  };
+
   const [isDragging, isGrabbing, drag] = useDragging({
     item,
     canDrag
@@ -215,7 +206,6 @@ const ReleasesTableCell = props => {
     props.undoRelease(revision, channel);
   }
 
-  // TODO: still needed?
   const [isHovered, setIsHovered] = useState(false);
   const onMouseEnter = () => {
     setIsHovered(true);
