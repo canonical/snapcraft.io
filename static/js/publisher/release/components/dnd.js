@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-export const DND_ITEM_REVISION = "DND_ITEM_REVISION";
 export const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
-export const DND_ITEM_BUILDSET = "DND_ITEM_BUILDSET";
+export const DND_ITEM_REVISIONS = "DND_ITEM_REVISIONS";
 
 export const Handle = () => (
   <span className="p-drag-handle">

@@ -16,8 +16,7 @@ import {
   useDragging,
   useDrop,
   DND_ITEM_CHANNEL,
-  DND_ITEM_BUILDSET,
-  DND_ITEM_REVISION,
+  DND_ITEM_REVISIONS,
   Handle
 } from "./dnd";
 
@@ -133,8 +132,7 @@ const ReleasesTableRow = props => {
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     // accept all the types to trigger isOver when hovering
-    // but for some reason DND_ITEM_BUILDSET only works if DND_ITEM_REVISION is on the list as well...
-    accept: [DND_ITEM_CHANNEL, DND_ITEM_REVISION, DND_ITEM_BUILDSET],
+    accept: [DND_ITEM_CHANNEL, DND_ITEM_REVISIONS],
     drop: item => {
       if (item.type === DND_ITEM_CHANNEL) {
         props.promoteChannel(
@@ -142,21 +140,14 @@ const ReleasesTableRow = props => {
           channel
         );
       }
-      if (item.type === DND_ITEM_BUILDSET) {
+      if (item.type === DND_ITEM_REVISIONS) {
         item.revisions.forEach(r => props.promoteRevision(r, channel));
-      }
-      if (item.type === DND_ITEM_REVISION) {
-        props.promoteRevision(item.revision, channel);
       }
     },
     canDrop: item => {
       let draggedRevisions = [];
 
-      if (item.type === DND_ITEM_REVISION) {
-        draggedRevisions = [item.revision];
-      }
-
-      if (item.type === DND_ITEM_BUILDSET) {
+      if (item.type === DND_ITEM_REVISIONS) {
         draggedRevisions = [...item.revisions];
       }
 
@@ -222,7 +213,7 @@ const ReleasesTableRow = props => {
   if (item && isOver) {
     const draggedChannel = getChannelName(currentTrack, item.risk, item.branch);
     switch (item.type) {
-      case DND_ITEM_BUILDSET:
+      case DND_ITEM_REVISIONS:
         draggedArchs = item.architectures;
         break;
       case DND_ITEM_CHANNEL:
@@ -231,9 +222,6 @@ const ReleasesTableRow = props => {
             Object.values(pendingChannelMap[draggedChannel])
           );
         }
-        break;
-      case DND_ITEM_REVISION:
-        draggedArchs = getRevisionsArchitectures([item.revision]);
         break;
     }
   }
