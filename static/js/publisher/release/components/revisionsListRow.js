@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
+import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 import { getSelectedRevisions, hasBuildRequestId } from "../selectors";
 
@@ -33,12 +33,10 @@ const RevisionsListRow = props => {
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item: {
-      revision: revision,
-      // TODO:
-      // we are assuming single arcitecture here,
-      // this may be trickier for revisions in multiple architectures
-      arch: revision.architectures[0],
-      type: DND_ITEM_REVISION
+      // TODO: get all revisions from build set
+      revisions: [revision],
+      architectures: revision.architectures,
+      type: DND_ITEM_REVISIONS
     }
   });
 
