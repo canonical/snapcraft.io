@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-export const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
 export const DND_ITEM_REVISIONS = "DND_ITEM_REVISIONS";
 
 export const Handle = () => (
