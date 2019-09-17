@@ -12,13 +12,7 @@ import {
   getBranches
 } from "../selectors";
 import ReleasesTableCell from "./releasesTableCell";
-import {
-  useDragging,
-  useDrop,
-  DND_ITEM_CHANNEL,
-  DND_ITEM_REVISIONS,
-  Handle
-} from "./dnd";
+import { useDragging, useDrop, DND_ITEM_REVISIONS, Handle } from "./dnd";
 
 import { promoteChannel, promoteRevision } from "../actions/pendingReleases";
 import { closeChannel } from "../actions/pendingCloses";
@@ -121,35 +115,29 @@ const ReleasesTableRow = props => {
   const hasOpenBranches = openBranches.includes(channel);
 
   const canDrag = !!pendingChannelMap[channel];
+
+  const draggedRevisions = canDrag
+    ? Object.values(pendingChannelMap[channel])
+    : [];
+
   const [isDragging, isGrabbing, drag, preview] = useDragging({
     item: {
+      revisions: draggedRevisions,
+      architectures: getRevisionsArchitectures(draggedRevisions),
       risk: props.risk,
       branch: props.branch ? props.branch.branch : null,
-      type: DND_ITEM_CHANNEL
+      type: DND_ITEM_REVISIONS
     },
     canDrag
   });
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
-    // accept all the types to trigger isOver when hovering
-    accept: [DND_ITEM_CHANNEL, DND_ITEM_REVISIONS],
+    accept: DND_ITEM_REVISIONS,
     drop: item => {
-      if (item.type === DND_ITEM_CHANNEL) {
-        props.promoteChannel(
-          getChannelName(props.currentTrack, item.risk, item.branch),
-          channel
-        );
-      }
-      if (item.type === DND_ITEM_REVISIONS) {
-        item.revisions.forEach(r => props.promoteRevision(r, channel));
-      }
+      item.revisions.forEach(r => props.promoteRevision(r, channel));
     },
     canDrop: item => {
-      let draggedRevisions = [];
-
-      if (item.type === DND_ITEM_REVISIONS) {
-        draggedRevisions = [...item.revisions];
-      }
+      const draggedRevisions = item.revisions;
 
       const { currentTrack, risk, branch, pendingChannelMap } = props;
 
@@ -161,12 +149,6 @@ const ReleasesTableRow = props => {
         item.branch
       );
       const dropChannel = getChannelName(currentTrack, risk, branchName);
-
-      if (item.type === DND_ITEM_CHANNEL) {
-        if (pendingChannelMap[draggedChannel]) {
-          draggedRevisions = Object.values(pendingChannelMap[draggedChannel]);
-        }
-      }
 
       // can't drop on 'available revisions row'
       if (props.risk === AVAILABLE) {
@@ -208,23 +190,6 @@ const ReleasesTableRow = props => {
       item: monitor.getItem()
     })
   });
-
-  let draggedArchs = [];
-  if (item && isOver) {
-    const draggedChannel = getChannelName(currentTrack, item.risk, item.branch);
-    switch (item.type) {
-      case DND_ITEM_REVISIONS:
-        draggedArchs = item.architectures;
-        break;
-      case DND_ITEM_CHANNEL:
-        if (pendingChannelMap[draggedChannel]) {
-          draggedArchs = getRevisionsArchitectures(
-            Object.values(pendingChannelMap[draggedChannel])
-          );
-        }
-        break;
-    }
-  }
 
   let canBePromoted = true;
   let canBeClosed = true;
@@ -511,7 +476,9 @@ const ReleasesTableRow = props => {
               branch={branch}
               arch={arch}
               showVersion={!hasSameVersion}
-              isOverParent={draggedArchs.indexOf(arch) !== -1}
+              isOverParent={
+                isOver && canDrop && item.architectures.indexOf(arch) !== -1
+              }
               setHoveredBuild={setHoveredBuild}
               hoveredBuild={hoveredBuild}
             />
