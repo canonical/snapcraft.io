@@ -13,7 +13,7 @@ export default function TourBar({ showTour }) {
     <div className="p-tour-bar">
       <div className="u-fixed-width u-clearfix">
         <button
-          className="p-tour-bar__button"
+          className="p-button has-icon p-tour-bar__button"
           data-tour="tour-end"
           onClick={onButtonClick}
         >
