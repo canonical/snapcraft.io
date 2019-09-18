@@ -38,6 +38,7 @@
   },
   "author": "Canonical webteam",
   "dependencies": {
+    "@canonical/global-nav": "2.1.0",
     "autoprefixer": "^6.3.1",
     "babel-core": "^6.26.0",
     "babel-eslint": "^10.0.1",
@@ -66,7 +67,6 @@
     "eslint-plugin-react": "^7.10.0",
     "expose-loader": "^0.7.5",
     "fast-average-color": "^4.3.0",
-    "@canonical/global-nav": "2.1.0",
     "husky": "^1.0.0-rc.13",
     "jest": "^22.4.2",
     "lint-staged": "^8.1.0",

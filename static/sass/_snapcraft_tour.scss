@@ -257,7 +257,7 @@
 
   .p-card--tour__content {
     // compensate spacing for content being wrapped in div instead of being directly after heading
-    @extend %sp--hp;
+    margin-top: 0;
   }
 
   .p-tour-controls {
