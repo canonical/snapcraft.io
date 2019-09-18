@@ -13,6 +13,9 @@ $breakpoint-navigation-threshold: 800px;
 // make social icons match footer p-strip--light color
 $color-social-icon-foreground: $color-light;
 
+// snapcraft dark navigation
+$colors--dark-theme: map-merge($colors--dark-theme, (background: #333));
+
 @include vf-base;
 
 @include vf-p-accordion;
@@ -82,10 +85,6 @@ $color-social-icon-foreground: $color-light;
 // so there is little possibility this will be added
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
-
-// some bugfixes for Vanilla navigation issues
-@import 'snapcraft_p-navigation';
-@include snapcraft-p-navigation;
 
 @import 'snapcraft_banner';
 @include snapcraft-banner;
