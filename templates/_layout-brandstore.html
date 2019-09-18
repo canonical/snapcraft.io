@@ -64,7 +64,7 @@
     {% block scripts_modules %}{% endblock %}
     <script src="{{ static_url('js/modules/raven.min.js') }}"></script>
     <script>
-      Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
+      Raven.config('{{ SENTRY_DSN }}', {
         whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
         release: '{{ COMMIT_ID }}',
         environment: '{{ ENVIRONMENT }}'

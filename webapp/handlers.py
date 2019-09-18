@@ -41,7 +41,7 @@ def set_handlers(app):
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
-            "SENTRY_PUBLIC_DSN": app.config["SENTRY_PUBLIC_DSN"],
+            "SENTRY_DSN": app.config["SENTRY_DSN"],
             "COMMIT_ID": app.config["COMMIT_ID"],
             "ENVIRONMENT": app.config["ENVIRONMENT"],
             "host_url": flask.request.host_url,
