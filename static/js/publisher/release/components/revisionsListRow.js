@@ -33,7 +33,6 @@ const RevisionsListRow = props => {
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item: {
-      // TODO: get all revisions from build set
       revisions: [revision],
       architectures: revision.architectures,
       type: DND_ITEM_REVISIONS
