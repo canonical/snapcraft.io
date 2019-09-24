@@ -9,9 +9,7 @@ import HistoryIcon from "./historyIcon";
 import {
   getChannelName,
   isInDevmode,
-  isRevisionBuiltOnLauchpad,
-  getBuildId,
-  getRevisionsArchitectures
+  isRevisionBuiltOnLauchpad
 } from "../helpers";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 
@@ -170,20 +168,11 @@ const ReleasesTableCell = props => {
   const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
   const availableCount = props.getAvailableCount(arch);
 
-  const buildId = getBuildId(currentRevision);
-  let buildSet = [];
-
-  if (buildId) {
-    buildSet = props.getRevisionsFromBuild(buildId);
-  } else if (currentRevision) {
-    buildSet = [currentRevision];
-  }
-
   const canDrag = currentRevision && !isChannelPendingClose;
 
   const item = {
-    revisions: buildSet,
-    architectures: getRevisionsArchitectures(buildSet),
+    revisions: [currentRevision],
+    architectures: currentRevision ? currentRevision.architectures : [],
     risk,
     branch,
     type: DND_ITEM_REVISIONS
