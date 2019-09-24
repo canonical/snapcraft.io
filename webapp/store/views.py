@@ -18,8 +18,8 @@ from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 
 
-def store_blueprint(store_query=None, testing=False):
-    api = StoreApi(store=store_query, testing=testing)
+def store_blueprint(store_query=None):
+    api = StoreApi(store=store_query)
 
     store = flask.Blueprint(
         "store",

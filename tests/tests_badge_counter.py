@@ -1,5 +1,5 @@
 from flask_testing import TestCase
-from webapp.app import create_app
+from webapp.app import app
 from webapp.handlers import badge_counter, badge_logged_in_counter
 
 
@@ -12,7 +12,7 @@ class TestsBadgePrometheusCounter(TestCase):
         badge_logged_in_counter._value.set(0.0)
 
     def create_app(self):
-        app = create_app(testing=True)
+        app.config["TESTING"] = True
         app.secret_key = "secret_key"
         app.config["WTF_CSRF_METHODS"] = []
 

@@ -4,7 +4,7 @@ import pymacaroons
 import responses
 from flask_testing import TestCase
 from tests.publisher.endpoint_testing import BaseTestCases
-from webapp.app import create_app
+from webapp.app import app
 from webapp.authentication import get_authorization_header
 
 # Make sure tests fail on stray responses.
@@ -41,7 +41,7 @@ class PublisherPage(TestCase):
     render_templates = False
 
     def create_app(self):
-        app = create_app(testing=True)
+        app.config["TESTING"] = True
         app.secret_key = "secret_key"
         app.config["WTF_CSRF_METHODS"] = []
 

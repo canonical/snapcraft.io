@@ -65,3 +65,4 @@ webapp/licenses.json
 coverage/
 .webcache/
 .webcache_blog/
+.coverage

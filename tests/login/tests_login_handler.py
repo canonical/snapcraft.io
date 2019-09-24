@@ -4,7 +4,7 @@ import responses
 from flask_testing import TestCase
 from pybreaker import CircuitBreakerError
 from pymacaroons import Macaroon
-from webapp.app import create_app
+from webapp.app import app
 
 
 class LoginHandlerTest(TestCase):
@@ -15,7 +15,7 @@ class LoginHandlerTest(TestCase):
         self.endpoint_url = "/login"
 
     def create_app(self):
-        app = create_app(testing=True)
+        app.config["TESTING"] = True
         app.secret_key = "secret_key"
         app.config["WTF_CSRF_METHODS"] = []
 

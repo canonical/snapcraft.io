@@ -1,6 +1,6 @@
 import responses
 from flask_testing import TestCase
-from webapp.app import create_app
+from webapp.app import app
 
 
 class GetEmbeddedCardTest(TestCase):
@@ -55,7 +55,7 @@ class GetEmbeddedCardTest(TestCase):
         self.endpoint_url = "/" + self.snap_name + "/embedded"
 
     def create_app(self):
-        app = create_app(testing=True)
+        app.config["TESTING"] = True
         app.secret_key = "secret_key"
         app.config["WTF_CSRF_METHODS"] = []
 

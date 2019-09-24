@@ -4,14 +4,14 @@ from unittest.mock import mock_open, patch
 from flask_testing import TestCase
 
 from webapp import helpers
-from webapp.app import create_app
+from webapp.app import app
 
 
 class FirstSnap(TestCase):
     render_templates = False
 
     def create_app(self):
-        app = create_app(testing=True)
+        app.config["TESTING"] = True
         app.secret_key = "secret_key"
 
         return app
