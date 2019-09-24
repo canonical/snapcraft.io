@@ -11,7 +11,14 @@ export const Handle = () => (
 
 // it's a wrapper around react-dnd useDrag hook
 // with some added functionality and workaround for a bug
-export const useDragging = options => {
+export const useDragging = ({ item, canDrag }) => {
+  // default canDrag to true, make sure it's boolean
+  if (typeof canDrag === "undefined") {
+    canDrag = true;
+  } else {
+    canDrag = !!canDrag;
+  }
+
   const [isGrabbing, setIsGrabbing] = useState(false);
 
   // Calling useDrag end callback after history is closed (because promoting revisions closes history panel)
@@ -31,8 +38,8 @@ export const useDragging = options => {
   });
 
   const [{ isDragging }, drag, preview] = useDrag({
-    item: options.item,
-    canDrag: () => options.canDrag || true,
+    item: item,
+    canDrag: () => canDrag,
     collect: monitor => ({
       isDragging: !!monitor.isDragging()
     }),
