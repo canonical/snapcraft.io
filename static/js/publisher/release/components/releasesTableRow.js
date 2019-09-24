@@ -114,7 +114,9 @@ const ReleasesTableRow = props => {
 
   const hasOpenBranches = openBranches.includes(channel);
 
-  const canDrag = !!pendingChannelMap[channel];
+  const canDrag = !(
+    !pendingChannelMap[channel] || props.pendingCloses.includes(channel)
+  );
 
   const draggedRevisions = canDrag
     ? Object.values(pendingChannelMap[channel])
