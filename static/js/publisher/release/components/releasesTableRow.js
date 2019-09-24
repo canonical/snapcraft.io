@@ -360,7 +360,7 @@ const ReleasesTableRow = props => {
             <br />
             {isLaunchpadBuild && (
               <Fragment>
-                Build: <b>{channelBuild}</b>
+                Build: <i className="p-icon--lp" /> <b>{channelBuild}</b>
               </Fragment>
             )}
           </span>
@@ -421,11 +421,8 @@ const ReleasesTableRow = props => {
                 <span className="p-release-data__title" title={channel}>
                   {rowTitle}
                 </span>
-                {(risk !== AVAILABLE || isLaunchpadBuild) && (
-                  <span className="p-release-data__meta">
-                    {risk !== AVAILABLE && channelVersion}{" "}
-                    {isLaunchpadBuild && <i className="p-icon--lp" />}
-                  </span>
+                {risk !== AVAILABLE && (
+                  <span className="p-release-data__meta">{channelVersion}</span>
                 )}
                 {channelVersion && (
                   <span className="p-tooltip__message">
