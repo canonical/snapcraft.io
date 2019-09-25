@@ -12,7 +12,6 @@ import {
 import { getChannelName, isInDevmode } from "../helpers";
 
 import RevisionsListRow from "./revisionsListRow";
-import { closeHistory } from "../actions/history";
 import { toggleRevision } from "../actions/channelMap";
 import {
   getFilteredReleaseHistory,
@@ -63,11 +62,6 @@ class RevisionsList extends Component {
         isActive
       );
     });
-  }
-
-  onCloseClick(event) {
-    event.preventDefault();
-    this.props.closeHistoryPanel();
   }
 
   showAllRevisions(key) {
@@ -221,12 +215,6 @@ class RevisionsList extends Component {
       <Fragment>
         <div className="u-clearfix">
           <h4 className="u-float-left">{title}</h4>
-          <a
-            style={{ marginTop: "0.5rem" }}
-            href="#"
-            onClick={this.onCloseClick.bind(this)}
-            className="p-icon--close u-float-right"
-          />
         </div>
         {hasDevmodeRevisions && (
           <Notification>
@@ -348,7 +336,6 @@ RevisionsList.propTypes = {
   pendingChannelMap: PropTypes.object,
 
   // actions
-  closeHistoryPanel: PropTypes.func.isRequired,
   toggleRevision: PropTypes.func.isRequired
 };
 
@@ -376,7 +363,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    closeHistoryPanel: () => dispatch(closeHistory()),
     toggleRevision: revision => dispatch(toggleRevision(revision))
   };
 };
