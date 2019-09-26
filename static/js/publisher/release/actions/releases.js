@@ -1,91 +1,32 @@
-import "whatwg-fetch";
-
-export const UPDATE_RELEASES = "UPDATE_RELEASES";
-
-import { RISKS_WITH_AVAILABLE as RISKS } from "../constants";
+import {
+  RISKS_WITH_AVAILABLE as RISKS,
+  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE
+} from "../constants";
 
 import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
 import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
 import { updateRevisions } from "./revisions";
 
+import {
+  fetchReleasesHistory,
+  fetchRelease,
+  fetchClose
+} from "../api/releases";
+
 import { getRevisionsMap, initReleasesData } from "../releasesState";
 
-const ERROR_MESSAGE =
-  "There was an error while processing your request, please try again later.";
+export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
 function updateReleasesData(dispatch, releasesData) {
   // init channel data in revisions list
   const revisionsMap = getRevisionsMap(releasesData.revisions);
   initReleasesData(revisionsMap, releasesData.releases);
 
-  dispatch(updateRevisions(revisionsMap));
-  dispatch(updateReleases(releasesData.releases));
-}
-
-function fetchReleasesHistory(csrfToken, snapName) {
-  return fetch(`/${snapName}/releases/json`, {
-    method: "GET",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken
-    },
-    redirect: "follow",
-    referrer: "no-referrer"
-  })
-    .then(response => response.json())
-    .catch(() => {
-      throw new Error(ERROR_MESSAGE);
-    });
-}
-
-function fetchUpdatedReleasesHistory(dispatch, csrfToken, snapName) {
-  return fetchReleasesHistory(csrfToken, snapName).then(json =>
-    updateReleasesData(dispatch, json)
-  );
-}
-
-function fetchRelease(csrfToken, snapName, revision, channels) {
-  return fetch(`/${snapName}/releases`, {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken
-    },
-    redirect: "follow",
-    referrer: "no-referrer",
-    body: JSON.stringify({ revision, channels, name: snapName })
-  })
-    .then(response => response.json())
-    .catch(() => {
-      throw new Error(ERROR_MESSAGE);
-    });
-}
-
-function fetchClose(csrfToken, snapName, channels) {
-  return fetch(`/${snapName}/releases/close-channel`, {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken
-    },
-    redirect: "follow",
-    referrer: "no-referrer",
-    body: JSON.stringify({ channels })
-  })
-    .then(response => response.json())
-    .catch(() => {
-      throw new Error(ERROR_MESSAGE);
-    });
+  return {
+    revisionsMap,
+    releasesData
+  };
 }
 
 function handleCloseResponse(json, channels) {
@@ -216,10 +157,16 @@ export function releaseRevisions() {
       };
     });
 
-    hideNotification();
+    dispatch(hideNotification());
     return fetchReleases(dispatch, csrfToken, snapName, releases, revisions)
       .then(() => fetchCloses(csrfToken, snapName, pendingCloses))
-      .then(() => fetchUpdatedReleasesHistory(dispatch, csrfToken, snapName))
+      .then(() => fetchReleasesHistory(csrfToken, snapName))
+      .then(json => updateReleasesData(dispatch, json))
+      .then(data => {
+        dispatch(updateRevisions(data.revisionsMap));
+        dispatch(updateReleases(data.releasesData.releases));
+        return;
+      })
       .catch(error => handleReleaseError(error))
       .then(() => dispatch(cancelPendingReleases()));
   };
