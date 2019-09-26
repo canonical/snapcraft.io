@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { cancelPendingReleases } from "../actions/pendingReleases";
+import { releaseRevisions } from "../actions/releases";
 
 class ReleasesConfirm extends Component {
   onRevertClick() {
@@ -102,6 +103,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    releaseRevisions: () => dispatch(releaseRevisions()),
     cancelPendingReleases: () => dispatch(cancelPendingReleases())
   };
 };
