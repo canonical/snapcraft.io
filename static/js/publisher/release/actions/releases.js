@@ -14,13 +14,13 @@ import { getRevisionsMap, initReleasesData } from "../releasesState";
 const ERROR_MESSAGE =
   "There was an error while processing your request, please try again later.";
 
-function updateReleasesData(releasesData) {
+function updateReleasesData(dispatch, releasesData) {
   // init channel data in revisions list
   const revisionsMap = getRevisionsMap(releasesData.revisions);
   initReleasesData(revisionsMap, releasesData.releases);
 
-  updateRevisions(revisionsMap);
-  updateReleases(releasesData.releases);
+  dispatch(updateRevisions(revisionsMap));
+  dispatch(updateReleases(releasesData.releases));
 }
 
 function fetchReleasesHistory(csrfToken, snapName) {
@@ -42,9 +42,9 @@ function fetchReleasesHistory(csrfToken, snapName) {
     });
 }
 
-function fetchUpdatedReleasesHistory(csrfToken, snapName) {
+function fetchUpdatedReleasesHistory(dispatch, csrfToken, snapName) {
   return fetchReleasesHistory(csrfToken, snapName).then(json =>
-    updateReleasesData(json)
+    updateReleasesData(dispatch, json)
   );
 }
 
@@ -144,7 +144,7 @@ function handleReleaseError(error) {
 }
 
 // TODO: move inside of this function out
-function handleReleaseResponse(json, release, revisions) {
+function handleReleaseResponse(dispatch, json, release, revisions) {
   if (json.success) {
     // Update channel map based on the response
     // We need to use channel_map_tree to get branches
@@ -177,7 +177,7 @@ function handleReleaseResponse(json, release, revisions) {
                 channel = `latest/${channel}`;
               }
 
-              releaseRevisionSuccess(revision, channel);
+              dispatch(releaseRevisionSuccess(revision, channel));
             }
           });
         });
@@ -186,7 +186,7 @@ function handleReleaseResponse(json, release, revisions) {
   }
 }
 
-function fetchReleases(csrfToken, snapName, releases, revisions) {
+function fetchReleases(dispatch, csrfToken, snapName, releases, revisions) {
   let queue = Promise.resolve(); // Q() in q
 
   // handle releases as a queue
@@ -197,7 +197,7 @@ function fetchReleases(csrfToken, snapName, releases, revisions) {
         snapName,
         release.id,
         release.channels
-      ).then(json => handleReleaseResponse(json, release, revisions));
+      ).then(json => handleReleaseResponse(dispatch, json, release, revisions));
     }));
   });
 
@@ -216,13 +216,11 @@ export function releaseRevisions() {
       };
     });
 
-    //setState({ isLoading: true }};
     hideNotification();
-    fetchReleases(csrfToken, snapName, releases, revisions)
+    return fetchReleases(dispatch, csrfToken, snapName, releases, revisions)
       .then(() => fetchCloses(csrfToken, snapName, pendingCloses))
-      .then(() => fetchUpdatedReleasesHistory(csrfToken, snapName))
+      .then(() => fetchUpdatedReleasesHistory(dispatch, csrfToken, snapName))
       .catch(error => handleReleaseError(error))
-      //.then(() => setState({ isLoading: false })
       .then(() => dispatch(cancelPendingReleases()));
   };
 }

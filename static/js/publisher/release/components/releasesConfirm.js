@@ -6,16 +6,32 @@ import { cancelPendingReleases } from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
 
 class ReleasesConfirm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: false
+    };
+  }
+
   onRevertClick() {
     this.props.cancelPendingReleases();
   }
 
   onApplyClick() {
-    this.props.releaseRevisions();
+    this.setState({
+      isLoading: true
+    });
+    this.props.releaseRevisions().then(() => {
+      this.setState({
+        isLoading: false
+      });
+    });
   }
 
   render() {
-    const { pendingReleases, pendingCloses, isLoading } = this.props;
+    const { isLoading } = this.state;
+    const { pendingReleases, pendingCloses } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
 
@@ -74,6 +90,7 @@ class ReleasesConfirm extends Component {
             </button>
             <button
               className="p-button--neutral u-no-margin--bottom u-no-margin--right"
+              disabled={isLoading}
               onClick={this.onRevertClick.bind(this)}
             >
               Cancel
@@ -88,7 +105,6 @@ class ReleasesConfirm extends Component {
 ReleasesConfirm.propTypes = {
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
-  isLoading: PropTypes.bool.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired

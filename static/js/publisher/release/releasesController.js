@@ -37,14 +37,9 @@ class ReleasesController extends Component {
     this.props.initChannelMap(
       getReleaseDataFromChannelMap(channelMapsList, revisionsMap)
     );
-
-    this.state = {
-      isLoading: false
-    };
   }
 
   render() {
-    const { isLoading } = this.state;
     const { notification, showModal } = this.props;
     const { visible } = notification;
     return (
@@ -52,7 +47,7 @@ class ReleasesController extends Component {
         <div className="row">
           {visible && <Notification />}
           <ReleasesHeading />
-          <ReleasesConfirm isLoading={isLoading} />
+          <ReleasesConfirm />
         </div>
         <ReleasesTable />
         {showModal && <Modal />}
