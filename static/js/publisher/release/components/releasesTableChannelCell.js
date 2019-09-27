@@ -100,7 +100,7 @@ const ReleasesTableChannelCell = props => {
     canBePromoted = false;
   }
 
-  if ([STABLE, CANDIDATE, BETA, EDGE].indexOf(risk) !== -1) {
+  if ([STABLE, CANDIDATE, BETA, EDGE].indexOf(risk) === -1) {
     canBeClosed = false;
   }
 
