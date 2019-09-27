@@ -2,6 +2,24 @@ import "whatwg-fetch";
 
 import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../constants";
 
+export function fetchReleases(onComplete, releases, csrfToken, snapName) {
+  let queue = Promise.resolve(); // Q() in q
+
+  // handle releases as a queue
+  releases.forEach(release => {
+    return (queue = queue.then(() => {
+      return fetchRelease(
+        csrfToken,
+        snapName,
+        release.id,
+        release.channels
+      ).then(json => onComplete(json, release));
+    }));
+  });
+
+  return queue;
+}
+
 export function fetchReleasesHistory(csrfToken, snapName) {
   return fetch(`/${snapName}/releases/json`, {
     method: "GET",

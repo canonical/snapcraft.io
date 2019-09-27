@@ -10,7 +10,7 @@ import { updateRevisions } from "./revisions";
 
 import {
   fetchReleasesHistory,
-  fetchRelease,
+  fetchReleases,
   fetchClose
 } from "../api/releases";
 
@@ -18,18 +18,17 @@ import { getRevisionsMap, initReleasesData } from "../releasesState";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
-function updateReleasesData(dispatch, releasesData) {
-  // init channel data in revisions list
-  const revisionsMap = getRevisionsMap(releasesData.revisions);
-  initReleasesData(revisionsMap, releasesData.releases);
-
-  return {
-    revisionsMap,
-    releasesData
+function updateReleasesData(releasesData) {
+  return dispatch => {
+    // init channel data in revisions list
+    const revisionsMap = getRevisionsMap(releasesData.revisions);
+    initReleasesData(revisionsMap, releasesData.releases);
+    dispatch(updateRevisions(revisionsMap));
+    dispatch(updateReleases(releasesData.releases));
   };
 }
 
-function handleCloseResponse(json, channels) {
+function handleCloseResponse(dispatch, json, channels) {
   if (json.success) {
     if (json.closed_channels && json.closed_channels.length > 0) {
       json.closed_channels.forEach(channel => {
@@ -39,7 +38,7 @@ function handleCloseResponse(json, channels) {
           channel = `latest/${channel}`;
         }
 
-        closeChannelSuccess(channel);
+        dispatch(closeChannelSuccess(channel));
       });
     }
   } else {
@@ -51,10 +50,10 @@ function handleCloseResponse(json, channels) {
   }
 }
 
-function fetchCloses(csrfToken, snapName, channels) {
+function fetchCloses(dispatch, csrfToken, snapName, channels) {
   if (channels.length) {
     return fetchClose(channels).then(json => {
-      handleCloseResponse(json, channels);
+      handleCloseResponse(dispatch, json, channels);
     });
   } else {
     return Promise.resolve();
@@ -127,24 +126,6 @@ function handleReleaseResponse(dispatch, json, release, revisions) {
   }
 }
 
-function fetchReleases(dispatch, csrfToken, snapName, releases, revisions) {
-  let queue = Promise.resolve(); // Q() in q
-
-  // handle releases as a queue
-  releases.forEach(release => {
-    return (queue = queue.then(() => {
-      return fetchRelease(
-        csrfToken,
-        snapName,
-        release.id,
-        release.channels
-      ).then(json => handleReleaseResponse(dispatch, json, release, revisions));
-    }));
-  });
-
-  return queue;
-}
-
 export function releaseRevisions() {
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
@@ -157,16 +138,15 @@ export function releaseRevisions() {
       };
     });
 
+    const _handleReleaseResponse = (json, release) => {
+      return handleReleaseResponse(dispatch, json, release, revisions);
+    };
+
     dispatch(hideNotification());
-    return fetchReleases(dispatch, csrfToken, snapName, releases, revisions)
-      .then(() => fetchCloses(csrfToken, snapName, pendingCloses))
+    return fetchReleases(_handleReleaseResponse, releases, csrfToken, snapName)
+      .then(() => fetchCloses(dispatch, csrfToken, snapName, pendingCloses))
       .then(() => fetchReleasesHistory(csrfToken, snapName))
-      .then(json => updateReleasesData(dispatch, json))
-      .then(data => {
-        dispatch(updateRevisions(data.revisionsMap));
-        dispatch(updateReleases(data.releasesData.releases));
-        return;
-      })
+      .then(json => dispatch(updateReleasesData(json)))
       .catch(error => handleReleaseError(error))
       .then(() => dispatch(cancelPendingReleases()));
   };
