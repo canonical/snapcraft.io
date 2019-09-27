@@ -74,7 +74,13 @@ function handleReleaseError(error) {
 }
 
 // TODO: move inside of this function out
-function handleReleaseResponse(dispatch, json, release, revisions) {
+function handleReleaseResponse(
+  dispatch,
+  json,
+  release,
+  revisions,
+  defaultTrack
+) {
   if (json.success) {
     // Update channel map based on the response
     // We need to use channel_map_tree to get branches
@@ -103,8 +109,7 @@ function handleReleaseResponse(dispatch, json, release, revisions) {
 
               let channel = map.channel;
               if (RISKS.indexOf(channel.split("/")[0]) > -1) {
-                // TODO: this should be the default track, not "latest"
-                channel = `latest/${channel}`;
+                channel = `${defaultTrack}/${channel}`;
               }
 
               dispatch(releaseRevisionSuccess(revision, channel));
@@ -119,7 +124,7 @@ function handleReleaseResponse(dispatch, json, release, revisions) {
 export function releaseRevisions() {
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
-    const { csrfToken, snapName } = options;
+    const { csrfToken, snapName, defaultTrack } = options;
     const releases = Object.keys(pendingReleases).map(id => {
       return {
         id,
@@ -129,7 +134,13 @@ export function releaseRevisions() {
     });
 
     const _handleReleaseResponse = (json, release) => {
-      return handleReleaseResponse(dispatch, json, release, revisions);
+      return handleReleaseResponse(
+        dispatch,
+        json,
+        release,
+        revisions,
+        defaultTrack
+      );
     };
 
     const _handleCloseResponse = json => {
