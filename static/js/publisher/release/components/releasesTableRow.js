@@ -8,7 +8,9 @@ import {
   hasPendingRelease,
   getBranches
 } from "../selectors";
-import ReleasesTableCell from "./releasesTableCell";
+import ReleasesTableCell, {
+  ReleasesTableRevisionCell
+} from "./releasesTableCell";
 import { useDragging, useDrop, DND_ITEM_REVISIONS } from "./dnd";
 
 import { promoteChannel, promoteRevision } from "../actions/pendingReleases";
@@ -197,20 +199,28 @@ const ReleasesTableRow = props => {
             availableBranches={availableBranches}
           />
 
-          {archs.map(arch => (
-            <ReleasesTableCell
-              key={`${currentTrack}/${risk}/${arch}`}
-              track={currentTrack}
-              risk={risk}
-              revision={revisions ? revisions[arch] : null}
-              branch={branch}
-              arch={arch}
-              showVersion={!hasSameVersion}
-              isOverParent={
-                isOver && canDrop && item.architectures.indexOf(arch) !== -1
-              }
-            />
-          ))}
+          {archs.map(
+            arch =>
+              revisions ? (
+                <ReleasesTableRevisionCell
+                  key={`${currentTrack}/${risk}/${arch}`}
+                  revision={rowRevisions[arch]}
+                  showVersion={!hasSameVersion}
+                />
+              ) : (
+                <ReleasesTableCell
+                  key={`${currentTrack}/${risk}/${arch}`}
+                  track={currentTrack}
+                  risk={risk}
+                  branch={branch}
+                  arch={arch}
+                  showVersion={!hasSameVersion}
+                  isOverParent={
+                    isOver && canDrop && item.architectures.indexOf(arch) !== -1
+                  }
+                />
+              )
+          )}
         </div>
       </div>
     </Fragment>
