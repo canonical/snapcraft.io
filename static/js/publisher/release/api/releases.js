@@ -61,7 +61,7 @@ export function fetchRelease(csrfToken, snapName, revision, channels) {
 
 export function fetchCloses(onComplete, csrfToken, snapName, channels) {
   if (channels.length) {
-    return fetchClose(channels).then(json => {
+    return fetchClose(csrfToken, snapName, channels).then(json => {
       onComplete(json, channels);
     });
   } else {

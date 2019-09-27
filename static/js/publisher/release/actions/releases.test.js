@@ -79,7 +79,7 @@ describe("releases actions", () => {
             channels: ["latest/edge"]
           }
         },
-        pendingCloses: [],
+        pendingCloses: ["latest/edge"],
         revisions: {
           "3": revision
         }
@@ -108,6 +108,12 @@ describe("releases actions", () => {
         })
         .mockResolvedValueOnce({
           json: () => ({
+            success: true,
+            closed_channels: ["edge"]
+          })
+        })
+        .mockResolvedValueOnce({
+          json: () => ({
             releases: [release],
             revisions: [revision]
           })
@@ -129,6 +135,13 @@ describe("releases actions", () => {
 
         expect(actions[2]).toEqual({
           payload: {
+            channel: "latest/edge"
+          },
+          type: "CLOSE_CHANNEL_SUCCESS"
+        });
+
+        expect(actions[3]).toEqual({
+          payload: {
             revisions: {
               3: revision
             }
@@ -136,14 +149,14 @@ describe("releases actions", () => {
           type: "UPDATE_REVISIONS"
         });
 
-        expect(actions[3]).toEqual({
+        expect(actions[4]).toEqual({
           payload: {
             releases: [release]
           },
           type: "UPDATE_RELEASES"
         });
 
-        expect(actions[4]).toEqual({
+        expect(actions[5]).toEqual({
           type: "CANCEL_PENDING_RELEASES"
         });
       });
