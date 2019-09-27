@@ -2,8 +2,14 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { RISKS_WITH_AVAILABLE as RISKS } from "../constants";
-import { getArchitectures, getBranches } from "../selectors";
+import { BUILD, RISKS_WITH_AVAILABLE as RISKS } from "../constants";
+import {
+  getArchitectures,
+  getBranches,
+  getLaunchpadRevisions,
+  getRevisionsFromBuild
+} from "../selectors";
+import { getBuildId } from "../helpers";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
 
@@ -31,10 +37,14 @@ class ReleasesTable extends Component {
     });
   }
 
-  renderChannelRow(risk, branch, numberOfBranches, isVisible) {
+  renderChannelRow(risk, branch, numberOfBranches, isVisible, revisions) {
     let rowKey = risk;
     if (branch) {
       rowKey += `-${branch.branch}`;
+    }
+
+    if (risk === BUILD) {
+      rowKey += `-${getBuildId(Object.values(revisions)[0])}`;
     }
 
     return (
@@ -44,8 +54,13 @@ class ReleasesTable extends Component {
         branch={branch}
         numberOfBranches={numberOfBranches}
         isVisible={isVisible}
+        revisions={revisions}
       />
     );
+  }
+
+  renderBuildRow(revisions) {
+    return this.renderChannelRow(BUILD, null, 0, true, revisions);
   }
 
   renderHistoryPanel() {
@@ -144,7 +159,7 @@ class ReleasesTable extends Component {
       rows.splice(rowIndex + 1, 0, historyPanelRow);
     }
 
-    return rows;
+    return rows.map(r => r.node);
   }
 
   render() {
@@ -154,6 +169,25 @@ class ReleasesTable extends Component {
     const className = `p-releases-table ${
       this.props.isHistoryOpen && this.props.filters ? "has-active" : ""
     }`;
+
+    const lpRevisions = this.props.launchpadRevisions;
+
+    const builds = lpRevisions
+      .map(getBuildId)
+      .filter((item, i, ar) => ar.indexOf(item) === i)
+      .map(buildId => {
+        const revs = this.props.getRevisionsFromBuild(buildId);
+
+        const revsMap = {};
+
+        revs.forEach(r => {
+          r.architectures.forEach(arch => {
+            revsMap[arch] = r;
+          });
+        });
+
+        return revsMap;
+      });
 
     return (
       <div className="row">
@@ -171,7 +205,10 @@ class ReleasesTable extends Component {
               </div>
             ))}
           </div>
-          {this.renderRows().map(r => r.node)}
+          {this.renderRows()}
+
+          {!!builds.length && <h4>Revisions built on Launchpad</h4>}
+          {builds.map(revisions => this.renderBuildRow(revisions))}
         </div>
       </div>
     );
@@ -185,7 +222,10 @@ ReleasesTable.propTypes = {
   archs: PropTypes.array.isRequired,
   branches: PropTypes.array.isRequired,
   openBranches: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired
+  currentTrack: PropTypes.string.isRequired,
+
+  launchpadRevisions: PropTypes.array,
+  getRevisionsFromBuild: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -195,7 +235,9 @@ const mapStateToProps = state => {
     archs: getArchitectures(state),
     branches: getBranches(state),
     openBranches: state.branches,
-    currentTrack: state.currentTrack
+    currentTrack: state.currentTrack,
+    launchpadRevisions: getLaunchpadRevisions(state),
+    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId)
   };
 };
 

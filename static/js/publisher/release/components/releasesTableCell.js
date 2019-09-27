@@ -142,16 +142,19 @@ const ReleasesTableCell = props => {
     pendingChannelMap,
     pendingCloses,
     filters,
-    isOverParent
+    isOverParent,
+    revision
   } = props;
 
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(track, risk, branchName);
 
-  // current revision to show (released or pending)
+  // current revision to show
+  // use one given in props or get one from channel map (released or pending)
   const currentRevision =
-    pendingChannelMap[channel] && pendingChannelMap[channel][arch];
+    revision ||
+    (pendingChannelMap[channel] && pendingChannelMap[channel][arch]);
 
   // check if there is a pending release in this cell
   const hasPendingRelease = props.hasPendingRelease(channel, arch);
@@ -226,15 +229,17 @@ const ReleasesTableCell = props => {
             trackingChannel={trackingChannel}
           />
         )}
-        <HistoryIcon
-          onClick={handleHistoryIconClick.bind(
-            this,
-            arch,
-            risk,
-            track,
-            branchName
-          )}
-        />
+        {!revision && (
+          <HistoryIcon
+            onClick={handleHistoryIconClick.bind(
+              this,
+              arch,
+              risk,
+              track,
+              branchName
+            )}
+          />
+        )}
       </div>
       {hasPendingRelease && (
         <div className="p-release-buttons">
@@ -273,7 +278,9 @@ ReleasesTableCell.propTypes = {
   arch: PropTypes.string,
   showVersion: PropTypes.bool,
   branch: PropTypes.object,
-  isOverParent: PropTypes.bool
+  isOverParent: PropTypes.bool,
+
+  revision: PropTypes.object
 };
 
 const mapStateToProps = state => {
