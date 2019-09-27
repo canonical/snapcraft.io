@@ -30,39 +30,34 @@ const CloseChannelInfo = () => (
   </Fragment>
 );
 
-const EmptyInfo = ({ isUnassigned, availableCount, trackingChannel }) => {
+const UnassignedInfo = ({ availableCount }) => (
+  <span className="p-release-data__info">
+    <span className="p-release-data__title">Add revision</span>
+    <span className="p-release-data__meta">{availableCount} available</span>
+  </span>
+);
+
+UnassignedInfo.propTypes = {
+  availableCount: PropTypes.number
+};
+
+const EmptyInfo = ({ trackingChannel }) => {
   return (
     <Fragment>
-      {isUnassigned ? (
-        <Fragment>
-          <span className="p-release-data__info">
-            <span className="p-release-data__title">Add revision</span>
-            <span className="p-release-data__meta">
-              {availableCount} available
-            </span>
-          </span>
-        </Fragment>
-      ) : (
-        <Fragment>
-          <span className="p-release-data__info--empty">
-            {trackingChannel ? "↑" : "–"}
-          </span>
-        </Fragment>
-      )}
-      {!isUnassigned && (
-        <span className="p-tooltip__message">
-          {trackingChannel
-            ? `Tracking channel ${trackingChannel}`
-            : "Nothing currently released"}
-        </span>
-      )}
+      <span className="p-release-data__info--empty">
+        {trackingChannel ? "↑" : "–"}
+      </span>
+
+      <span className="p-tooltip__message">
+        {trackingChannel
+          ? `Tracking channel ${trackingChannel}`
+          : "Nothing currently released"}
+      </span>
     </Fragment>
   );
 };
 
 EmptyInfo.propTypes = {
-  isUnassigned: PropTypes.bool,
-  availableCount: PropTypes.number,
   trackingChannel: PropTypes.string
 };
 
@@ -132,6 +127,71 @@ RevisionInfo.propTypes = {
   showVersion: PropTypes.bool
 };
 
+const ReleasesTableCellView = props => {
+  const { item, canDrag, children, actions } = props;
+
+  const [isDragging, isGrabbing, drag] = useDragging({
+    item,
+    canDrag
+  });
+
+  const classNames = [
+    "p-releases-table__cell",
+    isGrabbing ? "is-grabbing" : "",
+    isDragging ? "is-dragging" : "",
+    canDrag ? "is-draggable" : ""
+  ].join(" ");
+
+  const className = `${classNames} ${props.className}`;
+
+  return (
+    <div className={className}>
+      <div
+        ref={drag}
+        className="p-release-data p-tooltip p-tooltip--btm-center"
+      >
+        <Handle />
+
+        {children}
+      </div>
+      {actions}
+    </div>
+  );
+};
+
+ReleasesTableCellView.propTypes = {
+  item: PropTypes.object,
+  canDrag: PropTypes.bool,
+  className: PropTypes.string,
+  children: PropTypes.node,
+  actions: PropTypes.node
+};
+
+export const ReleasesTableRevisionCell = props => {
+  const { revision, showVersion } = props;
+
+  const item = {
+    revisions: [revision],
+    architectures: revision ? revision.architectures : [],
+    type: DND_ITEM_REVISIONS
+  };
+
+  return (
+    <ReleasesTableCellView item={item} canDrag={!!revision}>
+      {revision ? (
+        <RevisionInfo revision={revision} showVersion={showVersion} />
+      ) : (
+        <EmptyInfo />
+      )}
+    </ReleasesTableCellView>
+  );
+};
+
+ReleasesTableRevisionCell.propTypes = {
+  revision: PropTypes.object,
+  showVersion: PropTypes.bool
+};
+
 const ReleasesTableCell = props => {
   const {
     track,
@@ -143,24 +203,26 @@ const ReleasesTableCell = props => {
     pendingCloses,
     filters,
     isOverParent,
-    revision
+    showVersion,
+    getAvailableCount,
+    hasPendingRelease,
+    undoRelease,
+    toggleHistoryPanel
   } = props;
 
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(track, risk, branchName);
 
-  // current revision to show
-  // use one given in props or get one from channel map (released or pending)
+  // current revision to show from channel map (released or pending)
   const currentRevision =
-    revision ||
-    (pendingChannelMap[channel] && pendingChannelMap[channel][arch]);
+    pendingChannelMap[channel] && pendingChannelMap[channel][arch];
 
   // check if there is a pending release in this cell
-  const hasPendingRelease = props.hasPendingRelease(channel, arch);
+  const isPendingRelease = hasPendingRelease(channel, arch);
 
   const isChannelPendingClose = pendingCloses.includes(channel);
-  const isPending = hasPendingRelease || isChannelPendingClose;
+  const isPending = isPendingRelease || isChannelPendingClose;
   const isUnassigned = risk === AVAILABLE;
   const isActive =
     filters &&
@@ -168,8 +230,6 @@ const ReleasesTableCell = props => {
     filters.risk === risk &&
     filters.branch === branchName;
   const isHighlighted = isPending || (isUnassigned && currentRevision);
-  const trackingChannel = getTrackingChannel(channelMap, track, risk, arch);
-  const availableCount = props.getAvailableCount(arch);
 
   const canDrag = currentRevision && !isChannelPendingClose;
 
@@ -181,80 +241,77 @@ const ReleasesTableCell = props => {
     type: DND_ITEM_REVISIONS
   };
 
-  const [isDragging, isGrabbing, drag] = useDragging({
-    item,
-    canDrag
-  });
-
   function handleHistoryIconClick(arch, risk, track, branchName) {
-    props.toggleHistoryPanel({ arch, risk, track, branch: branchName });
+    toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
   function undoClick(revision, channel, event) {
     event.stopPropagation();
-    props.undoRelease(revision, channel);
+    undoRelease(revision, channel);
   }
 
   const className = [
-    "p-releases-table__cell",
     isUnassigned ? "is-unassigned" : "",
     isActive ? "is-active" : "",
     isHighlighted ? "is-highlighted" : "",
     isPending ? "is-pending" : "",
-    isGrabbing ? "is-grabbing" : "",
-    isDragging ? "is-dragging" : "",
-    canDrag ? "is-draggable" : "",
     isOverParent ? "is-over" : ""
   ].join(" ");
 
-  return (
-    <div className={className}>
-      <div
-        ref={drag}
-        className="p-release-data p-tooltip p-tooltip--btm-center"
+  const actionsNode = isPendingRelease ? (
+    <div className="p-release-buttons">
+      <button
+        className="p-action-button p-tooltip p-tooltip--btm-center"
+        onClick={undoClick.bind(this, currentRevision, channel)}
       >
-        <Handle />
-        {isChannelPendingClose ? (
-          <CloseChannelInfo />
-        ) : currentRevision ? (
-          <RevisionInfo
-            revision={currentRevision}
-            isPending={hasPendingRelease}
-            showVersion={props.showVersion}
-          />
-        ) : (
-          <EmptyInfo
-            isUnassigned={isUnassigned}
-            availableCount={availableCount}
-            trackingChannel={trackingChannel}
-          />
-        )}
-        {!revision && (
-          <HistoryIcon
-            onClick={handleHistoryIconClick.bind(
-              this,
-              arch,
-              risk,
-              track,
-              branchName
-            )}
-          />
-        )}
-      </div>
-      {hasPendingRelease && (
-        <div className="p-release-buttons">
-          <button
-            className="p-action-button p-tooltip p-tooltip--btm-center"
-            onClick={undoClick.bind(this, currentRevision, channel)}
-          >
-            <i className="p-icon--close" />
-            <span className="p-tooltip__message">
-              Cancel promoting this revision
-            </span>
-          </button>
-        </div>
-      )}
+        <i className="p-icon--close" />
+        <span className="p-tooltip__message">
+          Cancel promoting this revision
+        </span>
+      </button>
     </div>
+  ) : null;
+
+  let cellInfoNode = null;
+
+  if (isChannelPendingClose) {
+    cellInfoNode = <CloseChannelInfo />;
+  } else if (currentRevision) {
+    cellInfoNode = (
+      <RevisionInfo
+        revision={currentRevision}
+        isPending={isPendingRelease}
+        showVersion={showVersion}
+      />
+    );
+  } else if (isUnassigned) {
+    cellInfoNode = <UnassignedInfo availableCount={getAvailableCount(arch)} />;
+  } else {
+    cellInfoNode = (
+      <EmptyInfo
+        trackingChannel={getTrackingChannel(channelMap, track, risk, arch)}
+      />
+    );
+  }
+
+  return (
+    <ReleasesTableCellView
+      actions={actionsNode}
+      item={item}
+      canDrag={canDrag}
+      className={className}
+    >
+      {cellInfoNode}
+      <HistoryIcon
+        onClick={handleHistoryIconClick.bind(
+          this,
+          arch,
+          risk,
+          track,
+          branchName
+        )}
+      />
+    </ReleasesTableCellView>
   );
 };
 
