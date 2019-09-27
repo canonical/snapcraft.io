@@ -3,6 +3,7 @@ const CANDIDATE = "candidate";
 const BETA = "beta";
 const EDGE = "edge";
 const AVAILABLE = "AVAILABLE"; // fake 'risk' with all available revisions
+const BUILD = "BUILD"; // fake 'risk' for build sets
 
 const RISKS = [STABLE, CANDIDATE, BETA, EDGE];
 const RISKS_WITH_AVAILABLE = [STABLE, CANDIDATE, BETA, EDGE, AVAILABLE];
@@ -25,6 +26,7 @@ export {
   BETA,
   EDGE,
   AVAILABLE,
+  BUILD,
   RISKS,
   RISKS_WITH_AVAILABLE
 };

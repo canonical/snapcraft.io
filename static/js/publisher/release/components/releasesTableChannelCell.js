@@ -21,12 +21,14 @@ import { toggleBranches } from "../actions/branches";
 import {
   RISKS_WITH_AVAILABLE as RISKS,
   AVAILABLE,
+  BUILD,
   STABLE,
+  CANDIDATE,
   BETA,
   EDGE
 } from "../constants";
 
-import { getChannelName, isInDevmode } from "../helpers";
+import { getChannelName, isInDevmode, getBuildId } from "../helpers";
 import ChannelMenu from "./channelMenu";
 
 const disabledBecauseDevmode = (
@@ -41,21 +43,22 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
 // TODO: move to selectors or helpers?
-const compareChannels = (channelMap, channel, targetChannel) => {
-  const channelArchs = channelMap[channel];
-  const targetChannelArchs = channelMap[targetChannel];
-
-  if (channelArchs) {
-    return Object.keys(channelArchs).every(arch => {
+const compareRevisionsPerArch = (
+  currentRevisionsByArch,
+  targetRevisionsByArch
+) => {
+  if (currentRevisionsByArch) {
+    return Object.keys(currentRevisionsByArch).every(arch => {
       return (
-        targetChannelArchs &&
-        targetChannelArchs[arch] &&
-        channelArchs[arch].revision === targetChannelArchs[arch].revision
+        targetRevisionsByArch &&
+        targetRevisionsByArch[arch] &&
+        currentRevisionsByArch[arch].revision ===
+          targetRevisionsByArch[arch].revision
       );
     });
   }
 
-  return channelArchs === targetChannelArchs;
+  return currentRevisionsByArch === targetRevisionsByArch;
 };
 
 const ReleasesTableChannelCell = props => {
@@ -68,7 +71,8 @@ const ReleasesTableChannelCell = props => {
     pendingChannelMap,
     openBranches,
     availableBranches,
-    drag
+    drag,
+    revisions
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -82,11 +86,11 @@ const ReleasesTableChannelCell = props => {
     }
   }
 
+  const rowRevisions = revisions || pendingChannelMap[channel];
+
   const hasOpenBranches = openBranches.includes(channel);
 
-  const canDrag = !(
-    !pendingChannelMap[channel] || props.pendingCloses.includes(channel)
-  );
+  const canDrag = !(!rowRevisions || props.pendingCloses.includes(channel));
 
   let canBePromoted = true;
   let canBeClosed = true;
@@ -96,19 +100,18 @@ const ReleasesTableChannelCell = props => {
     canBePromoted = false;
   }
 
-  if (risk === AVAILABLE) {
+  if ([STABLE, CANDIDATE, BETA, EDGE].indexOf(risk) !== -1) {
     canBeClosed = false;
   }
 
-  if (!pendingChannelMap[channel] || props.pendingCloses.includes(channel)) {
+  if (!rowRevisions || props.pendingCloses.includes(channel)) {
     canBePromoted = false;
     canBeClosed = false;
   }
 
   if (
     channel === AVAILABLE &&
-    (!pendingChannelMap[channel] ||
-      Object.keys(pendingChannelMap[channel]).length === 0)
+    (!rowRevisions || Object.keys(rowRevisions).length === 0)
   ) {
     promoteTooltip = disabledBecauseNotSelected;
   }
@@ -129,10 +132,8 @@ const ReleasesTableChannelCell = props => {
     });
 
     // check for devmode revisions
-    if (risk === EDGE || risk === BETA || risk === AVAILABLE) {
-      const hasDevmodeRevisions = Object.values(
-        pendingChannelMap[channel]
-      ).some(isInDevmode);
+    if (risk !== STABLE && risk !== CANDIDATE) {
+      const hasDevmodeRevisions = Object.values(rowRevisions).some(isInDevmode);
 
       // remove stable and beta channels as targets if any revision
       // is in devmode
@@ -177,7 +178,12 @@ const ReleasesTableChannelCell = props => {
 
     // filter out channels that have the same revisions already released
     targetChannels.forEach(targetChannel => {
-      if (compareChannels(pendingChannelMap, channel, targetChannel.channel)) {
+      if (
+        compareRevisionsPerArch(
+          rowRevisions,
+          pendingChannelMap[targetChannel.channel]
+        )
+      ) {
         targetChannel.isDisabled = true;
         targetChannel.reason = disabledBecauseReleased;
       }
@@ -209,10 +215,10 @@ const ReleasesTableChannelCell = props => {
   let channelBuild = "";
   let buildMap = {};
 
-  if (pendingChannelMap[channel]) {
+  if (rowRevisions) {
     // calculate map of architectures for each version
-    for (const arch in pendingChannelMap[channel]) {
-      const revision = pendingChannelMap[channel][arch];
+    for (const arch in rowRevisions) {
+      const revision = rowRevisions[arch];
       const version = revision.version;
       if (!versionsMap[version]) {
         versionsMap[version] = [];
@@ -232,7 +238,7 @@ const ReleasesTableChannelCell = props => {
 
     hasSameVersion = Object.keys(versionsMap).length === 1;
     if (hasSameVersion) {
-      channelVersion = Object.values(pendingChannelMap[channel])[0].version;
+      channelVersion = Object.values(rowRevisions)[0].version;
     } else {
       channelVersion = "Multiple versions";
     }
@@ -267,6 +273,14 @@ const ReleasesTableChannelCell = props => {
   );
 
   let rowTitle = risk === AVAILABLE ? channelVersion : channel;
+
+  if (risk === BUILD) {
+    rowTitle = (
+      <Fragment>
+        <i className="p-icon--lp" /> {getBuildId(Object.values(revisions)[0])}
+      </Fragment>
+    );
+  }
 
   if (branch) {
     rowTitle = `↳/${rowTitle.split("/").pop()}`;
@@ -340,6 +354,8 @@ ReleasesTableChannelCell.propTypes = {
   branch: PropTypes.object,
   numberOfBranches: PropTypes.number,
   availableBranches: PropTypes.array,
+
+  revisions: PropTypes.object,
 
   // state
   currentTrack: PropTypes.string.isRequired,

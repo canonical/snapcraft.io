@@ -55,7 +55,8 @@ const ReleasesTableRow = props => {
     pendingChannelMap,
     openBranches,
     availableBranches,
-    isVisible
+    isVisible,
+    revisions
   } = props;
 
   if (!isVisible) {
@@ -73,13 +74,11 @@ const ReleasesTableRow = props => {
     }
   }
 
-  const canDrag = !(
-    !pendingChannelMap[channel] || props.pendingCloses.includes(channel)
-  );
+  const rowRevisions = revisions || pendingChannelMap[channel];
 
-  const draggedRevisions = canDrag
-    ? Object.values(pendingChannelMap[channel])
-    : [];
+  const canDrag = !(!rowRevisions || props.pendingCloses.includes(channel));
+
+  const draggedRevisions = canDrag ? Object.values(rowRevisions) : [];
 
   const [isDragging, isGrabbing, drag, preview] = useDragging({
     item: {
@@ -155,10 +154,10 @@ const ReleasesTableRow = props => {
   let hasSameVersion = false;
   let versionsMap = {};
 
-  if (pendingChannelMap[channel]) {
+  if (rowRevisions) {
     // calculate map of architectures for each version
-    for (const arch in pendingChannelMap[channel]) {
-      const revision = pendingChannelMap[channel][arch];
+    for (const arch in rowRevisions) {
+      const revision = rowRevisions[arch];
       const version = revision.version;
       if (!versionsMap[version]) {
         versionsMap[version] = [];
@@ -193,6 +192,7 @@ const ReleasesTableRow = props => {
             drag={drag}
             risk={risk}
             branch={branch}
+            revisions={revisions}
             numberOfBranches={numberOfBranches}
             availableBranches={availableBranches}
           />
@@ -202,6 +202,7 @@ const ReleasesTableRow = props => {
               key={`${currentTrack}/${risk}/${arch}`}
               track={currentTrack}
               risk={risk}
+              revision={revisions ? revisions[arch] : null}
               branch={branch}
               arch={arch}
               showVersion={!hasSameVersion}
@@ -227,6 +228,8 @@ ReleasesTableRow.propTypes = {
   numberOfBranches: PropTypes.number,
   availableBranches: PropTypes.array,
   isVisible: PropTypes.bool,
+
+  revisions: PropTypes.object,
 
   // state
   currentTrack: PropTypes.string.isRequired,
