@@ -59,6 +59,16 @@ export function fetchRelease(csrfToken, snapName, revision, channels) {
     });
 }
 
+export function fetchCloses(onComplete, csrfToken, snapName, channels) {
+  if (channels.length) {
+    return fetchClose(channels).then(json => {
+      onComplete(json, channels);
+    });
+  } else {
+    return Promise.resolve();
+  }
+}
+
 export function fetchClose(csrfToken, snapName, channels) {
   return fetch(`/${snapName}/releases/close-channel`, {
     method: "POST",

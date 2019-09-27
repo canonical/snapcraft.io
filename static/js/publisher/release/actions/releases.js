@@ -11,7 +11,7 @@ import { updateRevisions } from "./revisions";
 import {
   fetchReleasesHistory,
   fetchReleases,
-  fetchClose
+  fetchCloses
 } from "../api/releases";
 
 import { getRevisionsMap, initReleasesData } from "../releasesState";
@@ -50,16 +50,6 @@ function handleCloseResponse(dispatch, json, channels) {
   }
 }
 
-function fetchCloses(dispatch, csrfToken, snapName, channels) {
-  if (channels.length) {
-    return fetchClose(channels).then(json => {
-      handleCloseResponse(dispatch, json, channels);
-    });
-  } else {
-    return Promise.resolve();
-  }
-}
-
 function handleReleaseError(error) {
   let message = error.message || ERROR_MESSAGE;
 
@@ -76,7 +66,7 @@ function handleReleaseError(error) {
     }
   }
 
-  showNotification({
+  return showNotification({
     status: "error",
     appearance: "negative",
     content: message
@@ -142,12 +132,18 @@ export function releaseRevisions() {
       return handleReleaseResponse(dispatch, json, release, revisions);
     };
 
+    const _handleCloseResponse = json => {
+      return handleCloseResponse(dispatch, json, pendingCloses);
+    };
+
     dispatch(hideNotification());
     return fetchReleases(_handleReleaseResponse, releases, csrfToken, snapName)
-      .then(() => fetchCloses(dispatch, csrfToken, snapName, pendingCloses))
+      .then(() =>
+        fetchCloses(_handleCloseResponse, csrfToken, snapName, pendingCloses)
+      )
       .then(() => fetchReleasesHistory(csrfToken, snapName))
       .then(json => dispatch(updateReleasesData(json)))
-      .catch(error => handleReleaseError(error))
+      .catch(error => dispatch(handleReleaseError(error)))
       .then(() => dispatch(cancelPendingReleases()));
   };
 }
