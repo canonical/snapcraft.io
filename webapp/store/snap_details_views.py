@@ -172,6 +172,15 @@ def snap_details_views(store, api, handle_errors):
 
         return context
 
+    @store.route('/api/snaps/info/<regex("' + snap_regex + '"):snap_name>')
+    def api_snap_info(snap_name):
+        try:
+            response = flask.jsonify(api.get_snap_details(snap_name))
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            return response
+        except ApiError as error:
+            flask.abort(502, str(error))
+
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
         """
