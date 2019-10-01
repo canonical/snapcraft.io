@@ -181,6 +181,22 @@ def snap_details_views(store, api, handle_errors):
         except ApiError as error:
             flask.abort(502, str(error))
 
+    @store.route("/api/snaps/search")
+    def api_snap_search():
+        query = flask.request.args.get("q", default="")
+        size = flask.request.args.get("size", default=10, type=int)
+        page = flask.request.args.get("page", default=1, type=int)
+        section = flask.request.args.get("section")
+
+        try:
+            response = flask.jsonify(
+                api.get_searched_snaps(query, size, page, section)
+            )
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            return response
+        except ApiError as error:
+            flask.abort(502, str(error))
+
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
         """
