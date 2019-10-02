@@ -17,7 +17,7 @@ If you have found a bug on the site or have an idea for a new feature, feel free
 
 If you have found a bug elsewhere in the snap world:
 
-- For **snaps** - you can run `snap info`'s contact information to find where you can get help.
+- For issues with an individual **snap** - you can run `snap info` and use the *contact information* to find where you can get help.
 - In the **snapcraft tool** - that builds and publishes snaps, [file it here](https://bugs.launchpad.net/snapcraft)
 - In **Snapd**, the daemon that manages snaps on the client, [file it here](https://bugs.launchpad.net/snapd)
 
