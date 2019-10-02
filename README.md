@@ -1,4 +1,4 @@
-# ![snapcraft.io](https://assets.ubuntu.com/v1/afebce19-snapcraft_green-red_su_hex.svg "Snapcraft").io codebase
+# ![snapcraft.io](https://assets.ubuntu.com/v1/f46fbbb9-snapcraft-logo--web.png "Snapcraft").io codebase
 
 [![CircleCI build status](https://circleci.com/gh/canonical-web-and-design/snapcraft.io.svg?style=shield)](https://circleci.com/gh/canonical-web-and-design/snapcraft.io) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
 
