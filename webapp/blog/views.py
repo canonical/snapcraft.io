@@ -1,15 +1,15 @@
 import flask
 
-from canonicalwebteam.blog import wordpress_api
-from canonicalwebteam.blog import logic
-from canonicalwebteam.blog.app import BlogExtension
+from canonicalwebteam.blog import BlogViews, logic, wordpress_api
+from canonicalwebteam.blog.flask import build_blueprint
 
 
 def init_blog(app, url_prefix):
-    blog = BlogExtension()
-    blog.init_app(app, "Snapcraft Blog", [2996], "", url_prefix)
+    blog = build_blueprint(
+        BlogViews(blog_title="Snapcraft Blog", tag_ids=[2996])
+    )
 
-    @app.route(url_prefix + "/api/snap-posts/<snap>")
+    @blog.route("/api/snap-posts/<snap>")
     def snap_posts(snap):
         try:
             blog_tags = wordpress_api.get_tag_by_name(f"sc:snap:{snap}")
@@ -40,7 +40,7 @@ def init_blog(app, url_prefix):
 
         return flask.jsonify(articles)
 
-    @app.route(url_prefix + "/api/series/<series>")
+    @blog.route("/api/series/<series>")
     def snap_series(series):
         blog_articles = None
         articles = []
@@ -63,10 +63,12 @@ def init_blog(app, url_prefix):
 
         return flask.jsonify(articles)
 
-    @app.context_processor
+    @blog.context_processor
     def add_newsletter():
         newsletter_subscribed = flask.request.args.get(
             "newsletter", default=False, type=bool
         )
 
         return {"newsletter_subscribed": newsletter_subscribed}
+
+    app.register_blueprint(blog, url_prefix=url_prefix)
