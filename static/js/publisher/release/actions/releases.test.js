@@ -7,7 +7,6 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 import { UPDATE_RELEASES, updateReleases, releaseRevisions } from "./releases";
-import { DEFAULT_ERROR_MESSAGE } from "../constants";
 
 describe("releases actions", () => {
   describe("updateReleases", () => {
@@ -30,31 +29,6 @@ describe("releases actions", () => {
       global.fetch.mockRestore();
     });
 
-    it("should handle release error", () => {
-      const store = mockStore({
-        options: {
-          snapName: "test",
-          csrfToken: "test",
-          defaultTrack: "test"
-        },
-        pendingReleases: {},
-        pendingCloses: [],
-        revisions: {}
-      });
-
-      return store.dispatch(releaseRevisions()).then(() => {
-        const actions = store.getActions();
-        expect(actions[1]).toEqual({
-          payload: {
-            appearance: "negative",
-            content: DEFAULT_ERROR_MESSAGE,
-            status: "error"
-          },
-          type: "SHOW_NOTIFICATION"
-        });
-      });
-    });
-
     it("should dispatch RELEASE_REVISION_SUCCESS", () => {
       const revision = {
         architectures: ["amd64"],
@@ -71,7 +45,7 @@ describe("releases actions", () => {
         options: {
           snapName: "test",
           csrfToken: "test",
-          defaultTrack: "test"
+          defaultTrack: "latest"
         },
         pendingReleases: {
           "3": {
@@ -91,7 +65,7 @@ describe("releases actions", () => {
           json: () => ({
             success: true,
             channel_map_tree: {
-              test: {
+              latest: {
                 16: {
                   amd64: [
                     {
@@ -127,7 +101,7 @@ describe("releases actions", () => {
 
         expect(actions[1]).toEqual({
           payload: {
-            channel: "test/edge",
+            channel: "latest/edge",
             revision: revision
           },
           type: "RELEASE_REVISION_SUCCESS"

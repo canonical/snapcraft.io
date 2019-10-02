@@ -28,7 +28,7 @@ function updateReleasesData(releasesData) {
   };
 }
 
-function handleCloseResponse(dispatch, json, channels) {
+export function handleCloseResponse(dispatch, json, channels) {
   if (json.success) {
     if (json.closed_channels && json.closed_channels.length > 0) {
       json.closed_channels.forEach(channel => {
@@ -50,7 +50,7 @@ function handleCloseResponse(dispatch, json, channels) {
   }
 }
 
-function handleReleaseError(error) {
+export function getErrorMessage(error) {
   let message = error.message || ERROR_MESSAGE;
 
   // try to find error messages in response json
@@ -66,15 +66,10 @@ function handleReleaseError(error) {
     }
   }
 
-  return showNotification({
-    status: "error",
-    appearance: "negative",
-    content: message
-  });
+  return message;
 }
 
-// TODO: move inside of this function out
-function handleReleaseResponse(
+export function handleReleaseResponse(
   dispatch,
   json,
   release,
@@ -154,7 +149,15 @@ export function releaseRevisions() {
       )
       .then(() => fetchReleasesHistory(csrfToken, snapName))
       .then(json => dispatch(updateReleasesData(json)))
-      .catch(error => dispatch(handleReleaseError(error)))
+      .catch(error =>
+        dispatch(
+          showNotification({
+            status: "error",
+            appearance: "negative",
+            content: getErrorMessage(error)
+          })
+        )
+      )
       .then(() => dispatch(cancelPendingReleases()));
   };
 }
