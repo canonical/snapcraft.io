@@ -1,6 +1,7 @@
 import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
+from canonicalwebteam import image_template
 import flask
 
 import prometheus_client
@@ -59,6 +60,7 @@ def set_handlers(app):
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
             "install_snippet": template_utils.install_snippet,
+            "image": image_template,
         }
 
     # Error handlers

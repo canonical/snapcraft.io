@@ -12,7 +12,17 @@
             <p class="p-heading--three u-no-margin--bottom u-no-padding--top">{{ snap.title }}</p>
         </div>
     </div>
-    <div class="col-2 col-medium-2 col-small-1 p-featured-snap__icon">
-        <img src="{{ snap.icon_url }}" crossOrigin="anonymous" />
+    <div class="col-2 col-medium-2 col-small-1 p-featured-snap__icon">     
+      {{
+      image(
+        url=snap.icon_url,
+        alt=snap.title,
+        width="147",
+        height="147",
+        hi_def=False,
+        lazy=False,
+        crossOrigin="anonymous"
+      ) | safe
+      }}
     </div>
 </a>

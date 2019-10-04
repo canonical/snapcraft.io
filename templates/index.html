@@ -50,22 +50,88 @@
   </div>
   <div class="row">
     <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/firefox"><img src="https://assets.ubuntu.com/v1/aae93857-logo-mozilla--snapcraft-homepage.svg" alt="Mozilla" /></a>
+      <a href="/firefox">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/aae93857-logo-mozilla--snapcraft-homepage.svg",
+            alt="Mozilla",
+            width="146",
+            height="145",
+            hi_def=True,
+            lazy=False
+          ) | safe
+        }}
+      </a>
       </div>
       <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-        <a href="/publisher/kde"><img src="https://assets.ubuntu.com/v1/6958a93e-kde-logo-snapcraft-homepage.svg" alt="KDE" /></a>
+        <a href="/publisher/kde">
+          {{
+            image(
+              url="https://assets.ubuntu.com/v1/6958a93e-kde-logo-snapcraft-homepage.svg",
+              alt="KDE",
+              width="146",
+              height="145",
+              hi_def=True,
+              lazy=False
+            ) | safe
+          }}
+         </a>
       </div>
       <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-        <a href="/publisher/jetbrains"><img src="https://assets.ubuntu.com/v1/55f6dae7-logo-jetbrains--snapcraft-homepage.svg" alt="JetBrains" /></a>
+        <a href="/publisher/jetbrains">
+          {{
+            image(
+              url="https://assets.ubuntu.com/v1/55f6dae7-logo-jetbrains--snapcraft-homepage.svg",
+              alt="JetBrains",
+              width="146",
+              height="145",
+              hi_def=True,
+              lazy=False
+            ) | safe
+          }}
+        </a>
       </div>
       <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-          <a href="/spotify"><img src="https://assets.ubuntu.com/v1/63d5fd3f-logo-spotify--snapcraft-homepage.svg" alt="Spotify" /></a>
+        <a href="/spotify">
+          {{
+            image(
+              url="https://assets.ubuntu.com/v1/63d5fd3f-logo-spotify--snapcraft-homepage.svg",
+              alt="Spotify",
+              width="146",
+              height="145",
+              hi_def=True,
+              lazy=False
+            ) | safe
+          }}
+        </a>
       </div>
       <div class="col-small-2 col-medium-3 col-2 col-logo col-logo--pushed u-align--center">
-          <a href="/google-cloud-sdk"><img src="https://assets.ubuntu.com/v1/2d54fa27-logo-google--snapcraft-homepage.svg" alt="Google" /></a>
+        <a href="/google-cloud-sdk">
+          {{
+            image(
+              url="https://assets.ubuntu.com/v1/2d54fa27-logo-google--snapcraft-homepage.svg",
+              alt="Google",
+              width="146",
+              height="145",
+              hi_def=True,
+              lazy=False
+            ) | safe
+          }}
+        </a>
       </div>
       <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-          <a href="/code"><img src="https://assets.ubuntu.com/v1/7b03d4b8-logo-microsoft--snapcraft-homepage.svg" alt="Microsoft" /></a>
+        <a href="/code">
+          {{
+            image(
+              url="https://assets.ubuntu.com/v1/7b03d4b8-logo-microsoft--snapcraft-homepage.svg",
+              alt="Microsoft",
+              width="146",
+              height="145",
+              hi_def=True,
+              lazy=False
+            ) | safe
+          }}
+        </a>
       </div>
     </div>
   </div>
@@ -92,7 +158,17 @@
     <div class="col-4">
       <blockquote class="p-testimonial">
         <div class="p-testimonial__logo">
-            <a href="/heroku"><img src="https://assets.ubuntu.com/v1/53b1b835-logo-heroku.svg" alt="Heroku logo" /></a>
+          <a href="/heroku">
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/53b1b835-logo-heroku.svg",
+                alt="Heroku",
+                width="95",
+                height="48",
+                hi_def=True
+              ) | safe
+            }}
+           </a>
         </div>
         <h4 class="p-testimonial__title">“The auto-updating feature is huge”</h4>
         <p class="p-testimonial__content">Due to the nature of our platform, we release updates more than daily which admittedly can be annoying for our users to constantly update.</p>
@@ -105,7 +181,17 @@
     <div class="col-4">
       <blockquote class="p-testimonial">
         <div class="p-testimonial__logo">
-            <a href="/code"><img src="https://assets.ubuntu.com/v1/e4c220b3-logo-microsoft.svg" alt="Microsoft logo" /></a>
+          <a href="/code">
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/e4c220b3-logo-microsoft.svg",
+                alt="Microsoft",
+                width="95",
+                height="48",
+                hi_def=True
+              ) | safe
+            }}
+          </a>
         </div>
         <h4 class="p-testimonial__title">“Starting with snaps is easy”</h4>
         <p class="p-testimonial__content">We definitely find Snapcraft easier as it is yaml based and provides details of what artifacts are needed. Debian packaging has things that need to be followed which can be distribution specific, which creates complication.
@@ -118,7 +204,17 @@
     <div class="col-4">
       <blockquote class="p-testimonial">
         <div class="p-testimonial__logo">
-          <a href="/publisher/jetbrains"><img src="https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg" alt="JetBrains logo" /></a>
+          <a href="/publisher/jetbrains">
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg",
+                alt="JetBrains",
+                width="44",
+                height="48",
+                hi_def=True
+              ) | safe
+            }}
+          </a>
         </div>
         <h4 class="p-testimonial__title">“A major software discovery tool”</h4>
         <p class="p-testimonial__content">The Snap store provides additional exposure to our tools for many of our existing and potential users. The decision to use it came quite naturally. We believe the store will be a major software discovery tool on Linux, so the more people find out about our tools naturally and install them more easily, the better for everyone.</p>
@@ -147,32 +243,80 @@
   <div class="row">
     <div class="col-small-2 col-medium-2 col-2 col-logo">
       <a class="p-logo-link" href="/docs/installing-snap-on-ubuntu">
-        <img src="https://assets.ubuntu.com/v1/4e18e57c-logo-ubuntu--in-card.png" alt="" />
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/4e18e57c-logo-ubuntu--in-card.png",
+            alt="Ubuntu",
+            width="155",
+            height="155",
+            hi_def=True
+          ) | safe
+        }}
       </a>
     </div>
     <div class="col-small-2 col-medium-2 col-2 col-logo">
       <a class="p-logo-link" href="/docs/installing-snap-on-debian">
-        <img src="https://assets.ubuntu.com/v1/f7f680fb-debian.png" alt="" />
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/f7f680fb-debian.png",
+            alt="Debian",
+            width="155",
+            height="155",
+            hi_def=True
+          ) | safe
+        }}
       </a>
     </div>
     <div class="col-small-2 col-medium-2 col-2 col-logo">
       <a class="p-logo-link" href="/docs/installing-snap-on-linux-mint">
-        <img src="https://assets.ubuntu.com/v1/2ce868d9-mint.png" alt="" />
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/2ce868d9-mint.png",
+            alt="Mint",
+            width="155",
+            height="155",
+            hi_def=True
+          ) | safe
+        }}
       </a>
     </div>
     <div class="col-small-2 col-medium-2 col-2 col-logo">
       <a class="p-logo-link" href="/docs/installing-snap-on-raspbian">
-        <img src="https://assets.ubuntu.com/v1/eccf1818-raspberrypi.png" alt="" />
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/eccf1818-raspberrypi.png",
+            alt="RaspberryPi",
+            width="155",
+            height="155",
+            hi_def=True
+          ) | safe
+        }}
       </a>
     </div>
     <div class="col-small-2 col-medium-2 col-2 col-logo col-logo--pushed">
       <a class="p-logo-link" href="/docs/installing-snap-on-arch-linux">
-        <img src="https://assets.ubuntu.com/v1/44789cf1-arch.png" alt="" />
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/44789cf1-arch.png",
+            alt="arch",
+            width="155",
+            height="155",
+            hi_def=True
+          ) | safe
+        }}
       </a>
     </div>
     <div class="col-small-2 col-medium-2 col-2 col-logo">
       <a class="p-logo-link" href="/docs/installing-snap-on-fedora">
-        <img src="https://assets.ubuntu.com/v1/f24733d2-fedora.png" alt="" />
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/f24733d2-fedora.png",
+            alt="fedora",
+            width="155",
+            height="155",
+            hi_def=True
+          ) | safe
+        }}
       </a>
     </div>
   </div>
@@ -190,7 +334,15 @@
       <p><a class="p-button--neutral" href="/store">Browse the Snap Store</a></p>
     </div>
     <div class="col-6">
-      <img src="https://assets.ubuntu.com/v1/c87dc31d-showcase-to-millions.png" alt="" />
+      {{
+        image(
+          url="https://assets.ubuntu.com/v1/c87dc31d-showcase-to-millions.png",
+          alt="Snap details page",
+          width="536",
+          height="302",
+          hi_def=True
+        ) | safe
+      }}
     </div>
   </div>
 </section>
@@ -206,7 +358,15 @@
       <p>Make data-driven decisions with active install metrics. Watch as automatic updates migrate users to your latest release. Understand your audience with geographic and version breakdowns.</p>
     </div>
     <div class="col-6">
-      <img src="https://assets.ubuntu.com/v1/6a7a7b93-analytics.png" alt="" />
+      {{
+        image(
+          url="https://assets.ubuntu.com/v1/6a7a7b93-analytics.png",
+          alt="Snap metrics",
+          width="536",
+          height="302",
+          hi_def=True
+        ) | safe
+      }}
     </div>
   </div>
 </section>
