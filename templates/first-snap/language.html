@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ static_url('js/dist/public.js') }}"></script>
 <script>
   Raven.context(function () {
     snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));

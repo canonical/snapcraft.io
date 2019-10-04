@@ -223,9 +223,12 @@ My published snaps — Linux software in the Snap Store
 {% endif %}
 {% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+{% endblock %}
+
 {% block scripts %}
 {% if snaps %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
   Raven.context(function () {
     var options = {

@@ -137,9 +137,11 @@
 
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+{% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function () {
       {% if categories %}

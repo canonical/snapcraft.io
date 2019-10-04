@@ -298,11 +298,14 @@
   <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
 {% endblock %}
 
-{% block scripts %}
+{% block scripts_includes %}
   <script src="{{ static_url('js/dist/public.js') }}"></script>
   {% if is_preview %}
     <script src="{{ static_url('js/dist/publisher.js') }}"></script>
   {% endif %}
+{% endblock %}
+
+{% block scripts %}
   <script>
     Raven.context(function () {
       {% if not is_preview %}

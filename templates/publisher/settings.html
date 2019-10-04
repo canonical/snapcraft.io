@@ -221,8 +221,11 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block scripts_includes %}
 <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+{% endblock %}
+
+{% block scripts %}
 <script>
   Raven.context(function () {
     snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
