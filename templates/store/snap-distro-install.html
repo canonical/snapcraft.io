@@ -73,7 +73,17 @@
         </div>
         {% if distro_logo_mono %}
         <div class="col-4 u-hide--small">
-          <img class="distro-banner__logo u-vertically-center" src="{{ distro_logo_mono }}" />
+          {{
+            image(
+              url=distro_logo_mono,
+              alt="",
+              width="112",
+              height="112",
+              hi_def=False,
+              lazy=False,
+              extra_classes="distro-banner__logo u-vertically-center"
+            ) | safe
+          }}
        </div>
        {% endif %}
       </div>
@@ -126,7 +136,15 @@
           <p>Snaps are discoverable and installable from the <a href="/store">Snap Store</a>, an app store with an audience of millions.</p>
           </div>
           <div class="u-hide--small col-2">
-            <img src="{{ distro_logo }}" />
+            {{
+              image(
+                url=distro_logo,
+                alt="",
+                width="141",
+                height="141",
+                hi_def=False,
+              ) | safe
+            }}
           </div>
         </div>
         <div class="row">
@@ -197,8 +215,16 @@
     <div class="row">
       <div class="col-6">
         <div class="p-card--highlighted">
-          <a href="/snap-store">
-            <img src="https://assets.ubuntu.com/v1/2b48f98d-distro_img_01.svg" width="100%" alt="" />
+          <a href="/snap-store">            
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/2b48f98d-distro_img_01.svg",
+                alt="",
+                width="504",
+                height="203",
+                hi_def=True,
+              ) | safe
+            }}
           </a>
           <h4 class="p-card__title">
             <a href="/snap-store">Get the snap store</a>
@@ -209,7 +235,15 @@
       <div class="col-6">
         <div class="p-card--highlighted">
           <a href="/docs">
-            <img src="https://assets.ubuntu.com/v1/8d00f749-distro_img_02.svg" width="100%" alt="" />
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/8d00f749-distro_img_02.svg",
+                alt="",
+                width="504",
+                height="203",
+                hi_def=True,
+              ) | safe
+            }}
           </a>
           <h4 class="p-card__title">
             <a href="/docs">Learn more about snaps</a>
