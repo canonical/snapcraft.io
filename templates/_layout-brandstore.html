@@ -26,6 +26,19 @@
       </style>
     {% endif %}
 
+    {% block scripts_modules %}{% endblock %}
+    <script src="{{ static_url('js/modules/raven.min.js') }}"></script>
+    <script>
+      Raven.config('{{ SENTRY_DSN }}', {
+        whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
+        release: '{{ COMMIT_ID }}',
+        environment: '{{ ENVIRONMENT }}'
+      }).install();
+    </script>
+
+    <script src="{{ static_url('js/dist/base.js') }}"></script>
+    {% block scripts_includes %}{% endblock %}
+
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
     <meta name="robots" content="noindex">
 
@@ -58,17 +71,6 @@
 
     {% include "_footer-brandstore.html" %}
 
-    {% block scripts_modules %}{% endblock %}
-    <script src="{{ static_url('js/modules/raven.min.js') }}"></script>
-    <script>
-      Raven.config('{{ SENTRY_DSN }}', {
-        whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
-        release: '{{ COMMIT_ID }}',
-        environment: '{{ ENVIRONMENT }}'
-      }).install();
-    </script>
-
-    <script src="{{ static_url('js/dist/base.js') }}"></script>
     {% block scripts %}{% endblock %}
 
     <script type="application/ld+json">

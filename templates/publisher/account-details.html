@@ -97,9 +97,12 @@ Account details — Linux software in the Snap Store
 </section>
 {% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+{% endblock %}
+
 {% block scripts %}
 {% if subscriptions %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
   Raven.context(function () {
     snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);

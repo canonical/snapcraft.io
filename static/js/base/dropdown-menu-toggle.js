@@ -56,5 +56,7 @@
     }
   }
 
-  toggle(".p-subnav__toggle");
+  window.addEventListener("DOMContentLoaded", () => {
+    toggle(".p-subnav__toggle");
+  });
 })();

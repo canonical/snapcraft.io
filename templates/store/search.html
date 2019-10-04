@@ -102,9 +102,12 @@
   {% endif %}
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/public.js') }}"></script>
+{% endblock %}
+
 {% block scripts %}
   {% if page == 1 %}
-    <script src="{{ static_url('js/dist/public.js') }}"></script>
     <script>
       Raven.context(function () {
         snapcraft.public.getColour(

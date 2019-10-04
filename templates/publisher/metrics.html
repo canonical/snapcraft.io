@@ -92,8 +92,11 @@ Publisher metrics for {{ snap_title }}
   </div>
 {% endblock %}
 
-{% block scripts %}
+{% block scripts_includes %}
   <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+{% endblock %}
+
+{% block scripts %}
   <script>
     Raven.context(function () {
       snapcraft.publisher.selector('.metrics-period', 'period');

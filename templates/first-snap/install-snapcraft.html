@@ -15,7 +15,7 @@
         <span>Linux</span>
       </span>
     </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">  
+    <div class="col-small-2 col-medium-2 col-2 col-logo">
       <span class="p-logo-link p-card u-align-text--center js-os-select" data-os="macos">
         <header class="p-card__header">
           <img src="https://assets.ubuntu.com/v1/236f314d-macos.svg" alt="">
@@ -49,7 +49,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
     Raven.context(function() {
       snapcraft.public.firstSnapFlow.install({{ language|tojson }});

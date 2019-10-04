@@ -227,8 +227,10 @@
   <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
 {% endblock %}
 
-{% block scripts %}
+{% block scripts_includes %}
   <script src="{{ static_url('js/dist/public.js') }}"></script>
+{% endblock %}
+{% block scripts %}
   <script>
     Raven.context(function () {
       try {

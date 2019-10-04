@@ -140,9 +140,14 @@
 
 {% endblock %}
 
-{% block scripts %}
+{% block scripts_includes %}
   {% if blog_slug %}
     <script src="{{ static_url('js/dist/public.js') }}"></script>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if blog_slug %}
     <script>
       Raven.context(function () {
         try {

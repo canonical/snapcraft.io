@@ -28,10 +28,12 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
 
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/release.js') }}"></script>
+{% endblock %}
 
 {% block scripts %}
   {% if "error-list" not in release_history %}
-    <script src="{{ static_url('js/dist/release.js') }}"></script>
     <script>
       snapcraft.release.initReleases('#release-history',
         {{ snap_name|tojson }},
