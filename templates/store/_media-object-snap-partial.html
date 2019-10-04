@@ -2,14 +2,28 @@
   class="p-media-object p-media-object--snap{% if media_object_classname %} {{ media_object_classname }}{% endif %}"
   href="/{{ snap.package_name }}"
   title="{{ snap.title }}{% if snap.summary %} – {{ snap.summary }}{% endif %}"
->
+  >
+  {% set icon_url = "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" %}
+  {% set size = 48 %}
   {% if snap.icon_url %}
-  <img src="{{ snap.icon_url }}" class="p-media-object__image" alt=""
-       {% if icon_size == "large" %} style="width: 72px !important; height: 72px !important; max-width: 72px; max-height: 72px;"{% endif %}>
-  {% else %}
-  <img src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" class="p-media-object__image" alt="" {% if icon_size == "large" %} style="width: 72px !important; height: 72px !important; max-width: 72px; max-height: 72px;"{% endif %}>
+    {% set icon_url = snap.icon_url %}
+    {% set style = "" %}
+    {% if icon_size == "large" %}
+      {% set size = 72 %}
+      {% set style = "width: 72px !important; height: 72px !important; max-width: 72px; max-height: 72px;" %}
+    {% endif %}
   {% endif %}
-
+  {{
+    image(
+      url=icon_url,
+      alt=snap.title,
+      width=size,
+      height=size,
+      hi_def=True,
+      extra_classes="p-media-object__image",
+      style=style
+    ) | safe
+  }}
   <div class="p-media-object__details">
     <h4 class="p-media-object__title p-heading--five u-no-margin--bottom">
       {{ snap.title }}
