@@ -295,84 +295,83 @@
 {% endblock %}
 
 {% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
   {% if is_preview %}
-    <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+    <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
   {% endif %}
 {% endblock %}
 
 {% block scripts %}
   <script>
-    Raven.context(function () {
-      {% if not is_preview %}
-      try {
-        snapcraft.public.screenshots('#js-snap-screenshots');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-      {% endif %}
-
-      try {
-        snapcraft.public.videos('.js-video-slide');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      try {
-        snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      {% if not is_preview and not IS_BRAND_STORE %}
-      try {
-        snapcraft.public.initReportSnap(
-          '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
-          document.getElementById('report-snap-form').action
-        );
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      try {
-        snapcraft.public.initEmbeddedCardModal('{{ package_name }}');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-      {% endif %}
-
-      {% if countries %}
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        {% if not is_preview %}
         try {
-          snapcraft.public.map('#js-snap-map', {{ countries | tojson }});
+          snapcraft.public.screenshots('#js-snap-screenshots');
         } catch(e) {
           Raven.captureException(e);
-          document.querySelector('.js-snap-map-holder').style.display = 'none';
         }
-      {% endif %}
+        {% endif %}
 
-      {% if not IS_BRAND_STORE and channel_map %}
         try {
-          document.addEventListener('DOMContentLoaded', function() {
-            snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
-          });
+          snapcraft.public.videos('.js-video-slide');
         } catch(e) {
-          console.log(e);
           Raven.captureException(e);
-          document.querySelector('.js-open-channel-map').style.display = 'none';
         }
-      {% endif %}
 
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+        try {
+          snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      {% if is_preview %}
-        snapcraft.publisher.preview({{ package_name|tojson }});
-      {% endif %}
+        {% if not is_preview and not IS_BRAND_STORE %}
+        try {
+          snapcraft.public.initReportSnap(
+            '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
+            document.getElementById('report-snap-form').action
+          );
+        } catch(e) {
+          Raven.captureException(e);
+        }
+
+        try {
+          snapcraft.public.initEmbeddedCardModal('{{ package_name }}');
+        } catch(e) {
+          Raven.captureException(e);
+        }
+        {% endif %}
+
+        {% if countries %}
+          try {
+            snapcraft.public.map('#js-snap-map', {{ countries | tojson }});
+          } catch(e) {
+            Raven.captureException(e);
+            document.querySelector('.js-snap-map-holder').style.display = 'none';
+          }
+        {% endif %}
+
+        {% if not IS_BRAND_STORE and channel_map %}
+          try {
+              snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          } catch(e) {
+            Raven.captureException(e);
+            document.querySelector('.js-open-channel-map').style.display = 'none';
+          }
+        {% endif %}
+
+        if (typeof ClipboardJS !== 'undefined') {
+          new ClipboardJS('.js-clipboard-copy');
+        }
+
+        {% if is_preview %}
+          snapcraft.publisher.preview({{ package_name|tojson }});
+        {% endif %}
+      });
     });
   </script>
 {% endblock %}

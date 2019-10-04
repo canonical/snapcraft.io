@@ -213,21 +213,23 @@
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/public.js') }}"></script>
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script src="{{ static_url('js/dist/public.js') }}" defer></script>
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% if nps %}
-  <script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js"></script>
+  <script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer></script>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
 <script>
-  Raven.context(function () {
-    snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
 
-    {% if nps %}
-      snapcraft.public.nps();
-    {% endif %}
+      {% if nps %}
+        snapcraft.public.nps();
+      {% endif %}
+    });
   });
 </script>
 {% endblock %}

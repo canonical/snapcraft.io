@@ -222,44 +222,46 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
-    snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
+      snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
 
-    snapcraft.publisher.market.initForm({
-      form: "settings-form",
-      formNotification: "settings-form-status",
-    }, {
-      'private': {{ private|tojson }},
-      'unlisted': {{ unlisted|tojson }},
-      'whitelist_countries': {{ whitelist_country_codes|tojson }},
-      'blacklist_countries': {{ blacklist_country_codes|tojson }}
-    },
-    {% if error_list %}
-      {{ error_list|tojson}}
-    {% else %}
-      null
-    {% endif %}
-    );
-
-    document
-      .getElementById('settings-form')
-      .addEventListener(
-        'change',
-        snapcraft.publisher.settings.changeHandler
+      snapcraft.publisher.market.initForm({
+        form: "settings-form",
+        formNotification: "settings-form-status",
+      }, {
+        'private': {{ private|tojson }},
+        'unlisted': {{ unlisted|tojson }},
+        'whitelist_countries': {{ whitelist_country_codes|tojson }},
+        'blacklist_countries': {{ blacklist_country_codes|tojson }}
+      },
+      {% if error_list %}
+        {{ error_list|tojson}}
+      {% else %}
+        null
+      {% endif %}
       );
 
-    snapcraft.publisher.stickyListingBar();
-    {% if whitelist_country_codes or not blacklist_country_codes %}
-      snapcraft.publisher.settings.enableInput('whitelist');
-    {% elif blacklist_country_codes %}
-      snapcraft.publisher.settings.enableInput('blacklist');
-    {% endif %}
+      document
+        .getElementById('settings-form')
+        .addEventListener(
+          'change',
+          snapcraft.publisher.settings.changeHandler
+        );
+
+      snapcraft.publisher.stickyListingBar();
+      {% if whitelist_country_codes or not blacklist_country_codes %}
+        snapcraft.publisher.settings.enableInput('whitelist');
+      {% elif blacklist_country_codes %}
+        snapcraft.publisher.settings.enableInput('blacklist');
+      {% endif %}
+    });
   });
 </script>
 {% endblock %}

@@ -107,17 +107,19 @@
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
   <script>
-    Raven.context(function () {
-      {% if is_in_series %}
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        {% if is_in_series %}
         snapcraft.public.seriesPosts('[data-js="blog-series"]', '#blog-series-item-template');
-      {% endif %}
+        {% endif %}
 
-      snapcraft.public.newsletter();
+        snapcraft.public.newsletter();
+      });
     });
   </script>
 {% endblock %}

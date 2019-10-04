@@ -66,27 +66,29 @@
 {% endblock %}
 
 {% block scripts_modules %}
-<script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+<script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.publicise.initEmbeddedCardPicker({
-      snapName: "{{ snap_name }}",
-      previewFrame: document.getElementById('embedded-card-frame'),
-      codeElement: document.getElementById('snippet-card-html'),
-      buttonRadios: document.querySelectorAll("input[name=store-button]"),
-      optionButtons: document.querySelectorAll("#js-options input[type=checkbox]")
-    });
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.publicise.initEmbeddedCardPicker({
+        snapName: "{{ snap_name }}",
+        previewFrame: document.getElementById('embedded-card-frame'),
+        codeElement: document.getElementById('snippet-card-html'),
+        buttonRadios: document.querySelectorAll("input[name=store-button]"),
+        optionButtons: document.querySelectorAll("#js-options input[type=checkbox]")
+      });
 
-    if (typeof ClipboardJS !== 'undefined') {
-      new ClipboardJS('.js-clipboard-copy');
-    }
+      if (typeof ClipboardJS !== 'undefined') {
+        new ClipboardJS('.js-clipboard-copy');
+      }
+    });
   });
 </script>
 {% endblock %}

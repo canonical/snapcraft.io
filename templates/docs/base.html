@@ -22,22 +22,24 @@
 
 {% block scripts %}
 <script>
-  Raven.context(function() {
-    const path = window.location.pathname;
-    const active = document.querySelector(`.p-sidebar a[href="${path}"]`);
-    if (active) {
-      active.classList.add("is-active");
-    }
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function() {
+      const path = window.location.pathname;
+      const active = document.querySelector(`.p-sidebar a[href="${path}"]`);
+      if (active) {
+        active.classList.add("is-active");
+      }
 
-    const toggleSidebar = document.querySelector(".p-sidebar__toggle");
-    const sidebar = document.querySelector(".p-sidebar__content");
-    if (toggleSidebar) {
-      toggleSidebar.addEventListener("click", function(e) {
-        sidebar.classList.toggle("u-hide--small");
-        toggleSidebar.classList.toggle("p-icon--close");
-        toggleSidebar.classList.toggle("p-icon--menu");
-      });
-    }
+      const toggleSidebar = document.querySelector(".p-sidebar__toggle");
+      const sidebar = document.querySelector(".p-sidebar__content");
+      if (toggleSidebar) {
+        toggleSidebar.addEventListener("click", function(e) {
+          sidebar.classList.toggle("u-hide--small");
+          toggleSidebar.classList.toggle("p-icon--close");
+          toggleSidebar.classList.toggle("p-icon--menu");
+        });
+      }
+    });
   });
 </script>
 {% endblock %}

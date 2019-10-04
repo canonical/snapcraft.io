@@ -138,21 +138,23 @@
 {% endblock %}
 
 {% block scripts_modules %}
-<script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+<script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+  <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
   <script>
-    Raven.context(function () {
-      snapcraft.publisher.publicise.initSnapButtonsPicker();
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        snapcraft.publisher.publicise.initSnapButtonsPicker();
 
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+        if (typeof ClipboardJS !== 'undefined') {
+          new ClipboardJS('.js-clipboard-copy');
+        }
+      });
     });
   </script>
 {% endblock %}
