@@ -55,11 +55,10 @@
     </div>
     <div class="col-4">
       {% include 'partials/_newsletter-signup.html' %}
-    </div>
     {% if is_in_series %}
       {% for tag in tags %}
         {% if tag.name.startswith('sc:series') %}
-          <div class="col-4 p-blog-aside">
+          <div class="p-blog-aside">
             <h4>In this series</h4>
             <ul class="p-list p-blog-list" data-js="blog-series" data-series="{{ tag.id }}" data-currentslug="{{ article.slug }}">
               <li class="p-list__item u-align--center">
@@ -70,6 +69,7 @@
         {% endif %}
       {% endfor %}
     {% endif %}
+    </div>
   </div>
 </section>
 
