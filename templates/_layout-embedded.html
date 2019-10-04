@@ -1,21 +1,21 @@
 <!doctype html>
-
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block meta_title %}Snapcraft - Snaps are universal Linux packages{% endblock %}</title>
 
     <!-- Preconnect to establish early connections to important third-party origins -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://assets.ubuntu.com">
     <link rel="preconnect" href="https://munchkin.marketo.net">
 
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ static_url('css/styles-embedded.css') }}" />
+
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
     <meta name="google-site-verification" content="Y1JayrP2iS6jS6Rd7uGX3Kzgm0oD8rV5R6TkzteLbQg" />
     <meta name="robots" content="noindex">
-
-    <title>{% block meta_title %}Snapcraft - Snaps are universal Linux packages{% endblock %}</title>
 
     {% block meta %}
       <meta property="og:title" content="{{ self.meta_title() }}"/>
@@ -34,8 +34,6 @@
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
-
-    <link rel="stylesheet" href="{{ static_url('css/styles-embedded.css') }}" />
     <base target="_blank">
   </head>
 

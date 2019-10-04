@@ -1,21 +1,29 @@
 <!doctype html>
-
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block meta_title %}Snapcraft - Snaps are universal Linux packages{% endblock %}</title>
 
     <!-- Preconnect to establish early connections to important third-party origins -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://assets.ubuntu.com">
     <link rel="preconnect" href="https://munchkin.marketo.net">
 
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-K92JCQ');</script>
+    <!-- End Google Tag Manager -->
+
+    <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
+
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
     <meta name="copydoc" content="{% block meta_copydoc %}https://drive.google.com/drive/folders/1q9ia7iDuWQlCaJ7nfKVeQ5G-FPyJbP-H{% endblock %}">
     <meta name="google-site-verification" content="Y1JayrP2iS6jS6Rd7uGX3Kzgm0oD8rV5R6TkzteLbQg" />
-
-    <title>{% block meta_title %}Snapcraft - Snaps are universal Linux packages{% endblock %}</title>
 
     {% block meta %}
       <meta property="og:title" content="{{ self.meta_title() }}"/>
@@ -34,17 +42,7 @@
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
-
-    <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
     <link rel="author" href="/humans.txt" />
-
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-K92JCQ');</script>
-    <!-- End Google Tag Manager -->
   </head>
 
   <body class="has-sticky-footer">
@@ -56,7 +54,7 @@
     {% block header %}
     <!-- JS that is needed right away -->
     <script src="{{ static_url('js/dist/global-nav.js') }}"></script>
-    
+
     {% include "_header.html" %}
     {% endblock %}
 
