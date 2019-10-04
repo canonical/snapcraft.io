@@ -228,6 +228,8 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_tour';
 @include snapcraft-tour;
 
+// See https://pypi.org/project/canonicalwebteam.image-template/
+// for more info
 .lazyload {
   height: 0;
   margin: 0;
