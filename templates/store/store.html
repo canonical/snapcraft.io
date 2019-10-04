@@ -83,7 +83,7 @@
 
 {% block scripts %}
   <script>
-    window.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener("load", function() {
       Raven.context(function () {
         snapcraft.public.storeCategories();
       });
