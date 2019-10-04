@@ -224,48 +224,50 @@
 {% endblock %}
 
 {% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
 {% endblock %}
 {% block scripts %}
   <script>
-    Raven.context(function () {
-      try {
-        snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
-      } catch(e) {
-        Raven.captureException(e);
-      }
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        try {
+          snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.triggerEventWhenVisible("#snippet-snap-install-stable")
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.triggerEventWhenVisible("#snippet-snap-install-stable")
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.initExpandableSnapDetails();
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.initExpandableSnapDetails();
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.screenshots('#js-snap-screenshots');
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.screenshots('#js-snap-screenshots');
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.videos('.js-video-slide');
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.videos('.js-video-slide');
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+        if (typeof ClipboardJS !== 'undefined') {
+          new ClipboardJS('.js-clipboard-copy');
+        }
+      });
     });
   </script>
 {% endblock %}

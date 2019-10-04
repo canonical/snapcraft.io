@@ -50,8 +50,10 @@
 
 {% block scripts %}
   <script>
-    Raven.context(function() {
-      snapcraft.public.firstSnapFlow.install({{ language|tojson }});
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function() {
+        snapcraft.public.firstSnapFlow.install({{ language|tojson }});
+      });
     });
   </script>
   {{ super() }}

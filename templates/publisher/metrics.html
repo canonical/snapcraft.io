@@ -93,26 +93,28 @@ Publisher metrics for {{ snap_title }}
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
+  <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
   <script>
-    Raven.context(function () {
-      snapcraft.publisher.selector('.metrics-period', 'period');
-      snapcraft.publisher.selector('.active-devices', 'active-devices');
-      snapcraft.publisher.metrics.renderMetrics({
-        defaultTrack: {{ default_track|tojson }},
-        activeDevices: {
-          selector: '#activeDevices',
-          metrics: {{ active_devices|safe }},
-          annotations: {{ active_devices_annotations|safe }},
-          type: '{{ active_device_metric }}'
-        },
-        territories: {
-          selector: '#territories',
-          metrics: {{ territories|safe }}
-        }
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        snapcraft.publisher.selector('.metrics-period', 'period');
+        snapcraft.publisher.selector('.active-devices', 'active-devices');
+        snapcraft.publisher.metrics.renderMetrics({
+          defaultTrack: {{ default_track|tojson }},
+          activeDevices: {
+            selector: '#activeDevices',
+            metrics: {{ active_devices|safe }},
+            annotations: {{ active_devices_annotations|safe }},
+            type: '{{ active_device_metric }}'
+          },
+          territories: {
+            selector: '#territories',
+            metrics: {{ territories|safe }}
+          }
+        });
       });
     });
   </script>

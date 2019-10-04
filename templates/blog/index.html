@@ -138,21 +138,23 @@
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
+  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
   <script>
-    Raven.context(function () {
-      {% if categories %}
-        var filter = document.getElementById('filter');
-        var filterForm = document.querySelector('[data-js="filterForm"]');
-        filter.addEventListener('change', function(e) {
-          filterForm.submit();
-        });
-      {% endif %}
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        {% if categories %}
+          var filter = document.getElementById('filter');
+          var filterForm = document.querySelector('[data-js="filterForm"]');
+          filter.addEventListener('change', function(e) {
+            filterForm.submit();
+          });
+        {% endif %}
 
-      snapcraft.public.newsletter();
+        snapcraft.public.newsletter();
+      });
     });
   </script>
 {% endblock %}

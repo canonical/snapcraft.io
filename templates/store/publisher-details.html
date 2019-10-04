@@ -142,19 +142,21 @@
 
 {% block scripts_includes %}
   {% if blog_slug %}
-    <script src="{{ static_url('js/dist/public.js') }}"></script>
+    <script src="{{ static_url('js/dist/public.js') }}" defer></script>
   {% endif %}
 {% endblock %}
 
 {% block scripts %}
   {% if blog_slug %}
     <script>
-      Raven.context(function () {
-        try {
-          snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
-        } catch(e) {
-          Raven.captureException(e);
-        }
+      window.addEventListener("DOMContentLoaded", function() {
+        Raven.context(function () {
+          try {
+            snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+          } catch(e) {
+            Raven.captureException(e);
+          }
+        });
       });
     </script>
   {% endif %}

@@ -479,66 +479,68 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
 
-    const formFields = {
-      snap_name: {{ snap_name|tojson }},
-      title: {{ snap_title|tojson }},
-      summary: {{ summary|tojson }},
-      description: {{ description|tojson }},
-      website: {{ website|tojson }},
-      contact: {{ contact|tojson }},
-      categories: {{ snap_categories.categories|tojson }},
-      images: [
-        {% if icon_url %}
-        { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
-        {% endif %}
-        {% for screenshot_url in screenshot_urls %}
-        { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
-        {% endfor %}
-        {% if banner_urls[0] %}
-        { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
-        {% endif %}
-      ],
-      'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
-      'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
-      'license': {{ license|tojson }},
-      'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
-    };
-
-    const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
-
-    snapcraft.publisher.market.initForm(
-      {
-        snapIconHolder: ".js-icon-holder",
-        bannerHolder: ".js-banner",
-        form: "market-form",
-        formNotification: "market-form-status",
-        licenseRadioContent: [
-          document.getElementById('license-simple-input'),
-          document.getElementById('license-custom-input')
+      const formFields = {
+        snap_name: {{ snap_name|tojson }},
+        title: {{ snap_title|tojson }},
+        summary: {{ summary|tojson }},
+        description: {{ description|tojson }},
+        website: {{ website|tojson }},
+        contact: {{ contact|tojson }},
+        categories: {{ snap_categories.categories|tojson }},
+        images: [
+          {% if icon_url %}
+          { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
+          {% endif %}
+          {% for screenshot_url in screenshot_urls %}
+          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+          {% endfor %}
+          {% if banner_urls[0] %}
+          { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
+          {% endif %}
         ],
-        mediaHolder: ".js-media-holder",
-      },
-      formFields,
-      formErrors
-    );
+        'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
+        'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
+        'license': {{ license|tojson }},
+        'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
+      };
 
-    snapcraft.publisher.stickyListingBar();
-    snapcraft.publisher.markdownToggle();
-    snapcraft.publisher.initCategories();
+      const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
 
-    snapcraft.publisher.tour.initListingTour({
-      snapName: {{ snap_name|tojson }},
-      container: document.getElementById("tour-container"),
-      steps: {{ tour_steps|tojson }},
-      formFields: formFields
+      snapcraft.publisher.market.initForm(
+        {
+          snapIconHolder: ".js-icon-holder",
+          bannerHolder: ".js-banner",
+          form: "market-form",
+          formNotification: "market-form-status",
+          licenseRadioContent: [
+            document.getElementById('license-simple-input'),
+            document.getElementById('license-custom-input')
+          ],
+          mediaHolder: ".js-media-holder",
+        },
+        formFields,
+        formErrors
+      );
+
+      snapcraft.publisher.stickyListingBar();
+      snapcraft.publisher.markdownToggle();
+      snapcraft.publisher.initCategories();
+
+      snapcraft.publisher.tour.initListingTour({
+        snapName: {{ snap_name|tojson }},
+        container: document.getElementById("tour-container"),
+        steps: {{ tour_steps|tojson }},
+        formFields: formFields
+      });
     });
   });
 </script>

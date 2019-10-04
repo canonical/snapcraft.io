@@ -98,14 +98,16 @@ Account details — Linux software in the Snap Store
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 {% if subscriptions %}
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);
+    });
   });
 </script>
 {% endif %}

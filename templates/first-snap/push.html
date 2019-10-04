@@ -136,16 +136,18 @@
 
 {% block scripts %}
   <script>
-    Raven.context(function() {
-      {% if user %}
-        snapcraft.public.firstSnapFlow.initRegisterName(
-          document.getElementById("register-name-form"),
-          document.getElementById("register-name-notification"),
-          document.getElementById("register-name-success")
-        );
-        snapcraft.public.firstSnapFlow.push({{ language|tojson }});
-      {% endif %}
-      snapcraft.public.initAccordion('.p-accordion__list');
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function() {
+        {% if user %}
+          snapcraft.public.firstSnapFlow.initRegisterName(
+            document.getElementById("register-name-form"),
+            document.getElementById("register-name-notification"),
+            document.getElementById("register-name-success")
+          );
+          snapcraft.public.firstSnapFlow.push({{ language|tojson }});
+        {% endif %}
+        snapcraft.public.initAccordion('.p-accordion__list');
+      });
     });
   </script>
   {{ super() }}

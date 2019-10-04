@@ -224,19 +224,21 @@ My published snaps — Linux software in the Snap Store
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 {% if snaps %}
 <script>
-  Raven.context(function () {
-    var options = {
-      snaps: { {% for name, snap in snaps.items()|sort %} "{{name}}": "{{snap['snap-id']}}",{% endfor %} },
-      selector: ".snap-installs-container",
-      token: {{ csrf_token()|tojson }},
-    };
-    snapcraft.publisher.metrics.renderPublisherMetrics(options);
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      var options = {
+        snaps: { {% for name, snap in snaps.items()|sort %} "{{name}}": "{{snap['snap-id']}}",{% endfor %} },
+        selector: ".snap-installs-container",
+        token: {{ csrf_token()|tojson }},
+      };
+      snapcraft.publisher.metrics.renderPublisherMetrics(options);
+    });
   });
 </script>
 {% endif %}
