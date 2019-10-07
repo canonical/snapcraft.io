@@ -209,6 +209,8 @@ def store_blueprint(store_query=None, testing=False):
                 if snaps_results[0]["icon_url"] == "":
                     snaps_results = logic.promote_snap_with_icon(snaps_results)
 
+                snaps_results[0] = logic.get_snap_banner_url(snaps_results[0])
+
                 if (
                     snap_category == "featured"
                     or len(snaps_results) < number_of_featured_snaps
