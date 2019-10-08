@@ -75,7 +75,10 @@ def _handle_errors(api_error: ApiError):
 
 
 def _handle_error_list(errors):
-    codes = [error["code"] for error in errors]
+    codes = [
+        f"{error['code']}: {error.get('message', 'No message')}"
+        for error in errors
+    ]
 
     error_messages = ", ".join(codes)
     return flask.abort(502, error_messages)
