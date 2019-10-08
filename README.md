@@ -1,8 +1,26 @@
-# snapcraft.io
+# ![snapcraft.io](https://assets.ubuntu.com/v1/944b8760-snapcraft-logo-bird.svg?fmt=png&w=50 "Snapcraft") snapcraft.io codebase
 
 [![CircleCI build status](https://circleci.com/gh/canonical-web-and-design/snapcraft.io.svg?style=shield)](https://circleci.com/gh/canonical-web-and-design/snapcraft.io) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
 
-This is the application for [snapcraft.io](https://snapcraft.io) website.
+Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully. This repo is the application for the [snapcraft.io](https://snapcraft.io) website.
+
+If you are interested in Snaps, Snapping and Snapcraft, there is an active [discourse forum](https://forum.snapcraft.io/) that we encourage developers to join.
+
+The site is largely maintained by the [Web and Design team](https://ubuntu.com/blog/topics/design) at [Canonical](https://www.canonical.com). It is a stateless website project based on [Flask](https://flask.palletsprojects.com/en/1.1.x/) and hosted on a [Charmed Kubernetes](https://ubuntu.com/kubernetes) cluster.
+
+
+## Bugs and issues
+
+If you have found a bug on the site or have an idea for a new feature, feel free to [create a new issue](https://github.com/canonical-web-and-design/snapcraft.io/issues/new), or suggest a fix by [creating a pull request](https://help.github.com/articles/creating-a-pull-request/). You can also find a link to create issues in the footer of every page of the site itself.
+
+### Bugs in snaps and tools
+
+If you have found a bug elsewhere in the snap world:
+
+- For issues with an individual **snap** - you can run `snap info` and use the *contact information* to find where you can get help.
+- In the **snapcraft tool** - that builds and publishes snaps, [file it here](https://bugs.launchpad.net/snapcraft)
+- In **Snapd**, the daemon that manages snaps on the client, [file it here](https://bugs.launchpad.net/snapd)
+
 
 ## Local development
 
@@ -14,84 +32,20 @@ The simplest way to run the site locally is to first [install Docker](https://do
 
 Once the containers are setup, you can visit <http://127.0.0.1:8004> in your browser.
 
-### Use staging APIs
+For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
-To use staging APIs locally you can add the following lines to an `.env.local` file:
+## Brand stores
 
-```bash
-SNAPCRAFT_IO_API=https://api.staging.snapcraft.io/api/v1/
-SNAPCRAFT_IO_API_V2=https://api.staging.snapcraft.io/v2/
-DASHBOARD_API=https://dashboard.staging.snapcraft.io/dev/api/
-DASHBOARD_API_V2=https://dashboard.staging.snapcraft.io/api/v2/
-LOGIN_URL=https://login.staging.ubuntu.com
-```
+This codebase can be modified to setup branded stores that represent specific brand or devices, giving the brand full control over the store content, reviewing process and identity.
 
-### Using Sentry error tracker
-
-For development purposes, visit https://sentry.io/signup/, signup and setup a project. By then you will have a sentry DSN string like:
-
-```
-https://<user>:<secret>@sentry.io/<project_id>
-```
-
-Create or update you `.env.local` file:
-
-```
-SENTRY_DSN=<DSN_FROM_ABOVE>
-```
-
-The application will be reporting errors to your `sentry.io` project from now on.
+- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://docs.ubuntu.com/core/en/build-store/create.html
+)
+- For developers to learn more about developomg a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
 
 
-### Building CSS
+## License
 
-For working on [Sass files](static/css), you may want to dynamically watch for changes to rebuild the CSS whenever something changes.
+The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](http://opensource.org/licenses/lgpl-3.0.html) by [Canonical Ltd](http://www.canonical.com/).
 
-To setup the watcher, open a new terminal window and run:
 
-``` bash
-./run watch
-```
-
-### Testing
-
-``` bash
-./run test
-```
-
-### Status checks and prometheus metrics
-
-[Talisker](https://talisker.readthedocs.io/en/latest/) provides a bunch of useful status checks and metrics about the running application. Some of this information is sensitive and so to access it you need to run the site with your IP address mentioned in the `TALISKER_NETWORKS` variable:
-
-``` bash
-./run --env TALISKER_NETWORKS=172.16.0.0/12
-```
-
-Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Talisker. Useful ones include:
-
-- http://127.0.0.1:8004/_status/check - A basic check that the site is running
-- http://127.0.0.1:8004/_status/metrics - The prometheus metrics for the application
-
-# Brand stores
-
-To create a brand store, create a file with the name of the store in the folder `webapp/configs`. Then run the project with the environment variable WEBAPP set with the name of the store.
-
-## Example
-
-Let's create the brand store storePlus. First create the file `webapp/configs/storePlus.py`
-
-```python
-# webapp/configs/storePlus.py
-
-WEBAPP_CONFIG = {
-    'LAYOUT': '_layout-brandstore.html', # custom layout for brandstores
-    'STORE_NAME': 'Store Plus',         # Store name displayed in the header
-    'STORE_QUERY': 'storePlus',              # Store to query to the snap store
-}
-```
-
-Then run the project with this command, make sure the WEBAPP has the same name as the brand config file:
-
-```bash
-./run --env WEBAPP=storePlus
-```
+With ♥ from Canonical
