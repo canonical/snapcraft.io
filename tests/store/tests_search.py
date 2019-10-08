@@ -192,10 +192,10 @@ class GetSearchViewTest(TestCase):
     @responses.activate
     def test_search_q_with_category(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "icon_url": "", "media": []},
+            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
+            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 144):
@@ -302,10 +302,10 @@ class GetSearchViewTest(TestCase):
     @responses.activate
     def test_search_q_with_category_featured(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "icon_url": "", "media": []},
+            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
+            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 44):
