@@ -369,7 +369,10 @@ class BaseTestCases:
         def test_account_no_username_logged_in(self):
             payload = {
                 "error_list": [
-                    {"code": "user-not-ready", "message": "missing namespace"}
+                    {
+                        "code": "user-not-ready",
+                        "message": "missing store username",
+                    }
                 ]
             }
             responses.add(

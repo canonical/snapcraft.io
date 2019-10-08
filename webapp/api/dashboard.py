@@ -80,7 +80,7 @@ def process_response(response):
                 if error["code"] == "user-not-ready":
                     if "has not signed agreement" in error["message"]:
                         raise AgreementNotSigned
-                    elif "missing namespace" in error["message"]:
+                    elif "missing store username" in error["message"]:
                         raise MissingUsername
 
             raise ApiResponseErrorList(
