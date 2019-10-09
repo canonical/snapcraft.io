@@ -18,13 +18,13 @@ import { getRevisionsMap, initReleasesData } from "../releasesState";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
-function updateReleasesData(releasesData) {
+export function updateReleasesData(releasesData) {
   return dispatch => {
     // init channel data in revisions list
     const revisionsMap = getRevisionsMap(releasesData.revisions);
     initReleasesData(revisionsMap, releasesData.releases);
     dispatch(updateRevisions(revisionsMap));
-    dispatch(updateReleases(releasesData.releases));
+    return dispatch(updateReleases(releasesData.releases));
   };
 }
 
