@@ -34,14 +34,14 @@ describe("releases actions", () => {
     it("should dispatch CLOSE_CHANNEL_SUCCESS when successfull", () => {
       const store = mockStore({});
 
-      handleCloseResponse(
-        store.dispatch,
-        {
-          success: true,
-          closed_channels: ["edge"]
-        },
-        ["latest/edge"]
-      );
+      const dispatch = store.dispatch;
+
+      const apiResponse = {
+        success: true,
+        closed_channels: ["edge"]
+      };
+
+      handleCloseResponse(dispatch, apiResponse, ["latest/edge"]);
 
       const actions = store.getActions();
 
@@ -91,7 +91,7 @@ describe("releases actions", () => {
   });
 
   describe("handleReleaseResponse", () => {
-    it("should dispatch all the actions", () => {
+    it("should dispatch RELEASE_REVISION_SUCCESS", () => {
       const store = mockStore({});
 
       const dispatch = store.dispatch;
@@ -145,14 +145,11 @@ describe("releases actions", () => {
   });
 
   describe("releaseRevisions", () => {
-    beforeEach(() => {
-      global.fetch = jest.fn().mockResolvedValue();
-    });
     afterEach(() => {
       global.fetch.mockRestore();
     });
 
-    it("should dispatch RELEASE_REVISION_SUCCESS", () => {
+    it("should dispatch all the actions", () => {
       const revision = {
         architectures: ["amd64"],
         revision: 3
@@ -184,6 +181,7 @@ describe("releases actions", () => {
 
       global.fetch = jest
         .fn()
+        // fetchReleases API Response
         .mockResolvedValueOnce({
           json: () => ({
             success: true,
@@ -203,12 +201,14 @@ describe("releases actions", () => {
             }
           })
         })
+        // fetchCloses API Response
         .mockResolvedValueOnce({
           json: () => ({
             success: true,
             closed_channels: ["edge"]
           })
         })
+        // fetchReleasesHistory API Response
         .mockResolvedValueOnce({
           json: () => ({
             releases: [release],
@@ -218,44 +218,41 @@ describe("releases actions", () => {
 
       return store.dispatch(releaseRevisions()).then(() => {
         const actions = store.getActions();
-        expect(actions[0]).toEqual({
-          type: "HIDE_NOTIFICATION"
-        });
-
-        expect(actions[1]).toEqual({
-          payload: {
-            channel: "latest/edge",
-            revision: revision
+        expect(actions).toEqual([
+          {
+            type: "HIDE_NOTIFICATION"
           },
-          type: "RELEASE_REVISION_SUCCESS"
-        });
-
-        expect(actions[2]).toEqual({
-          payload: {
-            channel: "latest/edge"
+          {
+            payload: {
+              channel: "latest/edge",
+              revision: revision
+            },
+            type: "RELEASE_REVISION_SUCCESS"
           },
-          type: "CLOSE_CHANNEL_SUCCESS"
-        });
-
-        expect(actions[3]).toEqual({
-          payload: {
-            revisions: {
-              3: revision
-            }
+          {
+            payload: {
+              channel: "latest/edge"
+            },
+            type: "CLOSE_CHANNEL_SUCCESS"
           },
-          type: "UPDATE_REVISIONS"
-        });
-
-        expect(actions[4]).toEqual({
-          payload: {
-            releases: [release]
+          {
+            payload: {
+              revisions: {
+                3: revision
+              }
+            },
+            type: "UPDATE_REVISIONS"
           },
-          type: "UPDATE_RELEASES"
-        });
-
-        expect(actions[5]).toEqual({
-          type: "CANCEL_PENDING_RELEASES"
-        });
+          {
+            payload: {
+              releases: [release]
+            },
+            type: "UPDATE_RELEASES"
+          },
+          {
+            type: "CANCEL_PENDING_RELEASES"
+          }
+        ]);
       });
     });
   });
