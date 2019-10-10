@@ -352,12 +352,12 @@ ReleasesTableChannelCell.propTypes = {
   drag: PropTypes.func,
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
-  numberOfBranches: PropTypes.number,
   availableBranches: PropTypes.array,
 
   revisions: PropTypes.object,
 
   // state
+  numberOfBranches: PropTypes.number,
   currentTrack: PropTypes.string.isRequired,
   filters: PropTypes.object,
   pendingCloses: PropTypes.array.isRequired,
@@ -376,8 +376,16 @@ ReleasesTableChannelCell.propTypes = {
   toggleBranches: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
+  const availableBranches = getBranches(state);
+
+  const numberOfBranches = availableBranches.filter(
+    branch => branch.risk === props.risk
+  ).length;
+
   return {
+    availableBranches,
+    numberOfBranches,
     currentTrack: state.currentTrack,
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
@@ -385,8 +393,7 @@ const mapStateToProps = state => {
     pendingChannelMap: getPendingChannelMap(state),
     hasPendingRelease: (channel, arch) =>
       hasPendingRelease(state, channel, arch),
-    openBranches: state.branches,
-    availableBranches: getBranches(state)
+    openBranches: state.branches
   };
 };
 
