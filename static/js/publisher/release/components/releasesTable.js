@@ -38,7 +38,7 @@ class ReleasesTable extends Component {
     });
   }
 
-  renderChannelRow(risk, branch, numberOfBranches, isVisible, revisions) {
+  renderChannelRow(risk, branch, numberOfBranches, revisions) {
     let rowKey = risk;
     if (branch) {
       rowKey += `-${branch.branch}`;
@@ -54,14 +54,13 @@ class ReleasesTable extends Component {
         risk={risk}
         branch={branch}
         numberOfBranches={numberOfBranches}
-        isVisible={isVisible}
         revisions={revisions}
       />
     );
   }
 
   renderBuildRow(revisions) {
-    return this.renderChannelRow(BUILD, null, 0, true, revisions);
+    return this.renderChannelRow(BUILD, null, 0, revisions);
   }
 
   renderHistoryPanel() {
@@ -91,18 +90,21 @@ class ReleasesTable extends Component {
         data: {
           risk
         },
-        node: this.renderChannelRow(risk, null, risksBranches.length, true)
+        node: this.renderChannelRow(risk, null, risksBranches.length)
       });
 
       risksBranches.forEach((branch, i) => {
         const isVisible = showAllBranches ? true : i < maxBranches;
-        rows.push({
-          data: {
-            risk: branch.risk,
-            branch: branch.branch
-          },
-          node: this.renderChannelRow(branch.risk, branch, null, isVisible)
-        });
+
+        if (isVisible) {
+          rows.push({
+            data: {
+              risk: branch.risk,
+              branch: branch.branch
+            },
+            node: this.renderChannelRow(branch.risk, branch, null)
+          });
+        }
       });
 
       const currentChannel = `${currentTrack}/${risk}`;

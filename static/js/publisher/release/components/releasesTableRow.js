@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -56,13 +56,8 @@ const ReleasesTableRow = props => {
     pendingChannelMap,
     openBranches,
     availableBranches,
-    isVisible,
     revisions
   } = props;
-
-  if (!isVisible) {
-    return null;
-  }
 
   const branchName = branch ? branch.branch : null;
 
@@ -170,55 +165,49 @@ const ReleasesTableRow = props => {
   }
 
   return (
-    <Fragment>
-      <div ref={drop}>
-        <div
-          ref={preview}
-          className={`p-releases-table__row p-releases-table__row--${
-            branch ? "branch" : "channel"
-          } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
-            isGrabbing ? "is-grabbing" : ""
-          } ${canDrop ? "can-drop" : ""}`}
-        >
-          <ReleasesTableChannelCell
-            drag={drag}
-            risk={risk}
-            branch={branch}
-            revisions={revisions}
-            numberOfBranches={numberOfBranches}
-            availableBranches={availableBranches}
-          />
+    <div ref={drop}>
+      <div
+        ref={preview}
+        className={`p-releases-table__row p-releases-table__row--${
+          branch ? "branch" : "channel"
+        } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
+          isGrabbing ? "is-grabbing" : ""
+        } ${canDrop ? "can-drop" : ""}`}
+      >
+        <ReleasesTableChannelCell
+          drag={drag}
+          risk={risk}
+          branch={branch}
+          revisions={revisions}
+          numberOfBranches={numberOfBranches}
+          availableBranches={availableBranches}
+        />
 
-          {archs.map(
-            arch =>
-              revisions ? (
-                <ReleasesTableRevisionCell
-                  key={`${currentTrack}/${risk}/${arch}`}
-                  revision={rowRevisions[arch]}
-                  showVersion={!hasSameVersion}
-                />
-              ) : (
-                <ReleasesTableCell
-                  key={`${currentTrack}/${risk}/${arch}`}
-                  track={currentTrack}
-                  risk={risk}
-                  branch={branch}
-                  arch={arch}
-                  showVersion={!hasSameVersion}
-                  isOverParent={
-                    isOver && canDrop && item.architectures.indexOf(arch) !== -1
-                  }
-                />
-              )
-          )}
-        </div>
+        {archs.map(
+          arch =>
+            revisions ? (
+              <ReleasesTableRevisionCell
+                key={`${currentTrack}/${risk}/${arch}`}
+                revision={rowRevisions[arch]}
+                showVersion={!hasSameVersion}
+              />
+            ) : (
+              <ReleasesTableCell
+                key={`${currentTrack}/${risk}/${arch}`}
+                track={currentTrack}
+                risk={risk}
+                branch={branch}
+                arch={arch}
+                showVersion={!hasSameVersion}
+                isOverParent={
+                  isOver && canDrop && item.architectures.indexOf(arch) !== -1
+                }
+              />
+            )
+        )}
       </div>
-    </Fragment>
+    </div>
   );
-};
-
-ReleasesTableRow.defaultProps = {
-  isVisible: true
 };
 
 ReleasesTableRow.propTypes = {
@@ -227,7 +216,6 @@ ReleasesTableRow.propTypes = {
   branch: PropTypes.object,
   numberOfBranches: PropTypes.number,
   availableBranches: PropTypes.array,
-  isVisible: PropTypes.bool,
 
   revisions: PropTypes.object,
 
