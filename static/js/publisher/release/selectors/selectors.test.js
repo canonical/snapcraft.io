@@ -817,7 +817,7 @@ describe("getProgressiveState", () => {
           track: "latest",
           risk: "stable",
           revision: "1",
-          phasing: null
+          progressive: null
         },
         {
           architecture: "arch2",
@@ -825,7 +825,7 @@ describe("getProgressiveState", () => {
           track: "latest",
           risk: "stable",
           revision: "3",
-          phasing: {
+          progressive: {
             key: "test",
             percentage: 60,
             paused: false
@@ -837,7 +837,7 @@ describe("getProgressiveState", () => {
           track: "latest",
           risk: "stable",
           revision: "2",
-          phasing: {
+          progressive: {
             key: "test",
             percentage: 50,
             paused: false

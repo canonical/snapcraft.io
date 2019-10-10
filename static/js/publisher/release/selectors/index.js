@@ -278,12 +278,18 @@ export function getProgressiveState(state, channel, arch) {
     return false;
   });
 
-  let phasing = null;
+  let progressive = null;
 
-  if (release.length > 1 && release[0] && release[0].phasing.key) {
-    phasing = release[0].phasing;
-    phasing.from = release[1].revision;
+  if (
+    release.length > 1 &&
+    release[0] &&
+    release[0] &&
+    release[0].progressive &&
+    release[0].progressive.key
+  ) {
+    progressive = release[0].progressive;
+    progressive.from = release[1].revision;
   }
 
-  return phasing;
+  return progressive;
 }
