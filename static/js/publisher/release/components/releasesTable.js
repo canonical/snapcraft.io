@@ -12,6 +12,7 @@ import {
 import { getBuildId } from "../helpers";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
+import ReleasesTableChannelRow from "./releasesTableChannelRow";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
 class ReleasesTable extends Component {
@@ -60,7 +61,15 @@ class ReleasesTable extends Component {
   }
 
   renderBuildRow(revisions) {
-    return this.renderChannelRow(BUILD, null, 0, revisions);
+    const rowKey = `${BUILD}-${getBuildId(Object.values(revisions)[0])}`;
+
+    return (
+      <ReleasesTableChannelRow
+        key={rowKey}
+        risk={BUILD}
+        revisions={revisions}
+      />
+    );
   }
 
   renderHistoryPanel() {
