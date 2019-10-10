@@ -39,25 +39,13 @@ class ReleasesTable extends Component {
     });
   }
 
-  renderChannelRow(risk, branch, numberOfBranches, revisions) {
+  renderChannelRow(risk, branch) {
     let rowKey = risk;
     if (branch) {
       rowKey += `-${branch.branch}`;
     }
 
-    if (risk === BUILD) {
-      rowKey += `-${getBuildId(Object.values(revisions)[0])}`;
-    }
-
-    return (
-      <ReleasesTableRow
-        key={rowKey}
-        risk={risk}
-        branch={branch}
-        numberOfBranches={numberOfBranches}
-        revisions={revisions}
-      />
-    );
+    return <ReleasesTableRow key={rowKey} risk={risk} branch={branch} />;
   }
 
   renderBuildRow(revisions) {
@@ -99,7 +87,7 @@ class ReleasesTable extends Component {
         data: {
           risk
         },
-        node: this.renderChannelRow(risk, null, risksBranches.length)
+        node: this.renderChannelRow(risk)
       });
 
       risksBranches.forEach((branch, i) => {
@@ -111,7 +99,7 @@ class ReleasesTable extends Component {
               risk: branch.risk,
               branch: branch.branch
             },
-            node: this.renderChannelRow(branch.risk, branch, null)
+            node: this.renderChannelRow(branch.risk, branch)
           });
         }
       });
