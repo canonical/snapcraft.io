@@ -171,7 +171,9 @@ class ReleasesTable extends Component {
       )
     };
 
-    const availableRowIndex = rows.findIndex(r => r.data.risk === AVAILABLE);
+    const availableRowIndex = rows.findIndex(
+      r => r.data && r.data.risk === AVAILABLE
+    );
     rows.splice(availableRowIndex, 0, availableHeading);
 
     return rows.map(r => r.node);
