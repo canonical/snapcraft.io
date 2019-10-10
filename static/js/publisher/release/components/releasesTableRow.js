@@ -37,7 +37,6 @@ const ReleasesTableRow = props => {
     currentTrack,
     risk,
     branch,
-    openBranches,
     revisions,
     promoteRevision,
     pendingChannelMap
@@ -46,13 +45,6 @@ const ReleasesTableRow = props => {
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(currentTrack, risk, branchName);
-  if (branch) {
-    const parentChannel = getChannelName(currentTrack, risk);
-
-    if (!openBranches || !openBranches.includes(parentChannel)) {
-      return null;
-    }
-  }
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
@@ -140,7 +132,6 @@ ReleasesTableRow.propTypes = {
   // state
   currentTrack: PropTypes.string.isRequired,
   pendingChannelMap: PropTypes.object,
-  openBranches: PropTypes.array,
 
   // actions
   promoteRevision: PropTypes.func.isRequired
@@ -149,8 +140,7 @@ ReleasesTableRow.propTypes = {
 const mapStateToProps = state => {
   return {
     currentTrack: state.currentTrack,
-    pendingChannelMap: getPendingChannelMap(state),
-    openBranches: state.branches
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 

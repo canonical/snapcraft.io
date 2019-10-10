@@ -9,7 +9,7 @@ import {
   getLaunchpadRevisions,
   getRevisionsFromBuild
 } from "../selectors";
-import { getBuildId } from "../helpers";
+import { getChannelName, getBuildId } from "../helpers";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
 import ReleasesTableChannelRow from "./releasesTableChannelRow";
@@ -74,7 +74,7 @@ class ReleasesTable extends Component {
     } = this.props;
     const { showAllRisksBranches } = this.state;
 
-    const maxBranches = 10;
+    const maxBranches = 3;
 
     // rows can consist of a channel row or expanded history panel
     const rows = [];
@@ -82,6 +82,8 @@ class ReleasesTable extends Component {
     RISKS.forEach(risk => {
       const risksBranches = branches.filter(branch => branch.risk === risk);
       const showAllBranches = showAllRisksBranches.includes(risk);
+      const currentChannel = getChannelName(currentTrack, risk);
+      const isBranchesPanelOpen = openBranches.includes(currentChannel);
 
       rows.push({
         data: {
@@ -91,7 +93,8 @@ class ReleasesTable extends Component {
       });
 
       risksBranches.forEach((branch, i) => {
-        const isVisible = showAllBranches ? true : i < maxBranches;
+        const isVisible =
+          isBranchesPanelOpen && (showAllBranches ? true : i < maxBranches);
 
         if (isVisible) {
           rows.push({
@@ -104,12 +107,7 @@ class ReleasesTable extends Component {
         }
       });
 
-      const currentChannel = `${currentTrack}/${risk}`;
-
-      if (
-        risksBranches.length > maxBranches &&
-        openBranches.includes(currentChannel)
-      ) {
+      if (risksBranches.length > maxBranches && isBranchesPanelOpen) {
         rows.push({
           data: {
             risk
