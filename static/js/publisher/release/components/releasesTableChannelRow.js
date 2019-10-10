@@ -18,7 +18,6 @@ const ReleasesTableChannelRow = props => {
     branch,
     archs,
     pendingChannelMap,
-    openBranches,
     revisions,
     pendingCloses
   } = props;
@@ -26,13 +25,6 @@ const ReleasesTableChannelRow = props => {
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(currentTrack, risk, branchName);
-  if (branch) {
-    const parentChannel = getChannelName(currentTrack, risk);
-
-    if (!openBranches || !openBranches.includes(parentChannel)) {
-      return null;
-    }
-  }
 
   const rowRevisions = revisions || pendingChannelMap[channel];
 
@@ -129,8 +121,7 @@ ReleasesTableChannelRow.propTypes = {
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   archs: PropTypes.array.isRequired,
-  pendingChannelMap: PropTypes.object,
-  openBranches: PropTypes.array
+  pendingChannelMap: PropTypes.object
 };
 
 const mapStateToProps = state => {
@@ -138,8 +129,7 @@ const mapStateToProps = state => {
     currentTrack: state.currentTrack,
     pendingCloses: state.pendingCloses,
     archs: getArchitectures(state),
-    pendingChannelMap: getPendingChannelMap(state),
-    openBranches: state.branches
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 
