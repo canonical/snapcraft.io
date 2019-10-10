@@ -2,11 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  getArchitectures,
-  getPendingChannelMap,
-  getBranches
-} from "../selectors";
+import { getArchitectures, getPendingChannelMap } from "../selectors";
 import ReleasesTableCell, {
   ReleasesTableRevisionCell
 } from "./releasesTableCell";
@@ -23,7 +19,6 @@ const ReleasesTableChannelRow = props => {
     archs,
     pendingChannelMap,
     openBranches,
-    availableBranches,
     revisions,
     pendingCloses
   } = props;
@@ -90,7 +85,6 @@ const ReleasesTableChannelRow = props => {
         risk={risk}
         branch={branch}
         revisions={revisions}
-        availableBranches={availableBranches}
       />
 
       {archs.map(
@@ -132,7 +126,6 @@ ReleasesTableChannelRow.propTypes = {
   canDrop: PropTypes.bool,
 
   // state
-  availableBranches: PropTypes.array,
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   archs: PropTypes.array.isRequired,
@@ -146,8 +139,7 @@ const mapStateToProps = state => {
     pendingCloses: state.pendingCloses,
     archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state),
-    openBranches: state.branches,
-    availableBranches: getBranches(state)
+    openBranches: state.branches
   };
 };
 

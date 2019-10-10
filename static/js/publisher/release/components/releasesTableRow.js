@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getPendingChannelMap, getBranches } from "../selectors";
+import { getPendingChannelMap } from "../selectors";
 import { useDrop, DND_ITEM_REVISIONS } from "./dnd";
 
 import { promoteRevision } from "../actions/pendingReleases";
@@ -38,7 +38,6 @@ const ReleasesTableRow = props => {
     risk,
     branch,
     openBranches,
-    availableBranches,
     revisions,
     promoteRevision,
     pendingChannelMap
@@ -62,8 +61,6 @@ const ReleasesTableRow = props => {
     },
     canDrop: item => {
       const draggedRevisions = item.revisions;
-
-      //const { currentTrack, risk, branch, pendingChannelMap } = props;
 
       const branchName = branch ? branch.branch : null;
 
@@ -125,7 +122,6 @@ const ReleasesTableRow = props => {
       <ReleasesTableChannelRow
         risk={risk}
         branch={branch}
-        availableBranches={availableBranches}
         revisions={revisions}
         isOverParent={isOver}
         item={item}
@@ -142,7 +138,6 @@ ReleasesTableRow.propTypes = {
   revisions: PropTypes.object,
 
   // state
-  availableBranches: PropTypes.array,
   currentTrack: PropTypes.string.isRequired,
   pendingChannelMap: PropTypes.object,
   openBranches: PropTypes.array,
@@ -155,8 +150,7 @@ const mapStateToProps = state => {
   return {
     currentTrack: state.currentTrack,
     pendingChannelMap: getPendingChannelMap(state),
-    openBranches: state.branches,
-    availableBranches: getBranches(state)
+    openBranches: state.branches
   };
 };
 
