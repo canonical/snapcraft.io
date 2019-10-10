@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import { getPendingChannelMap } from "../selectors";
 import { getChannelName } from "../helpers";
 
-import ReleasesTableRevisionsRow from "./releasesTableRevisionsRow";
+import ReleasesTableCell from "./releasesTableCell";
+import ReleasesTableRow from "./releasesTableRow";
 
 const ReleasesTableChannelRow = props => {
   const {
@@ -26,7 +27,7 @@ const ReleasesTableChannelRow = props => {
   const { canDrop, draggedItem, isOverParent } = props;
 
   return (
-    <ReleasesTableRevisionsRow
+    <ReleasesTableRow
       risk={risk}
       branch={branch}
       revisions={revisions}
@@ -34,8 +35,25 @@ const ReleasesTableChannelRow = props => {
       isOverParent={isOverParent}
       draggedItem={draggedItem}
       canDrop={canDrop}
-      isChannel={true}
-    />
+    >
+      {({ arch, hasSameVersion }) => {
+        return (
+          <ReleasesTableCell
+            key={`${currentTrack}/${risk}/${arch}`}
+            track={currentTrack}
+            risk={risk}
+            branch={branch}
+            arch={arch}
+            showVersion={!hasSameVersion}
+            isOverParent={
+              isOverParent &&
+              canDrop &&
+              draggedItem.architectures.indexOf(arch) !== -1
+            }
+          />
+        );
+      }}
+    </ReleasesTableRow>
   );
 };
 
