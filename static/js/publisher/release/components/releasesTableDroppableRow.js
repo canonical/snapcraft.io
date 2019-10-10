@@ -32,7 +32,7 @@ const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
   });
 };
 
-const ReleasesTableRow = props => {
+const ReleasesTableDroppableRow = props => {
   const {
     currentTrack,
     risk,
@@ -116,14 +116,14 @@ const ReleasesTableRow = props => {
         branch={branch}
         revisions={revisions}
         isOverParent={isOver}
-        item={item}
+        draggedItem={item}
         canDrop={canDrop}
       />
     </div>
   );
 };
 
-ReleasesTableRow.propTypes = {
+ReleasesTableDroppableRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
@@ -154,4 +154,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ReleasesTableRow);
+)(ReleasesTableDroppableRow);
