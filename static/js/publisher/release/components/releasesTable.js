@@ -11,8 +11,8 @@ import {
 } from "../selectors";
 import { getChannelName, getBuildId } from "../helpers";
 import HistoryPanel from "./historyPanel";
-import ReleasesTableRow from "./releasesTableRow";
-import ReleasesTableChannelRow from "./releasesTableChannelRow";
+import ReleasesTableDroppableRow from "./releasesTableDroppableRow";
+import ReleasesTableRevisionsRow from "./releasesTableRevisionsRow";
 import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
 class ReleasesTable extends Component {
@@ -45,14 +45,16 @@ class ReleasesTable extends Component {
       rowKey += `-${branch.branch}`;
     }
 
-    return <ReleasesTableRow key={rowKey} risk={risk} branch={branch} />;
+    return (
+      <ReleasesTableDroppableRow key={rowKey} risk={risk} branch={branch} />
+    );
   }
 
   renderBuildRow(revisions) {
     const rowKey = `${BUILD}-${getBuildId(Object.values(revisions)[0])}`;
 
     return (
-      <ReleasesTableChannelRow
+      <ReleasesTableRevisionsRow
         key={rowKey}
         risk={BUILD}
         revisions={revisions}

@@ -2,108 +2,40 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getArchitectures, getPendingChannelMap } from "../selectors";
-import ReleasesTableCell, {
-  ReleasesTableRevisionCell
-} from "./releasesTableCell";
-import { useDragging, DND_ITEM_REVISIONS } from "./dnd";
+import { getPendingChannelMap } from "../selectors";
+import { getChannelName } from "../helpers";
 
-import { getChannelName, getRevisionsArchitectures } from "../helpers";
-import ReleasesTableChannelCell from "./releasesTableChannelCell";
+import ReleasesTableRevisionsRow from "./releasesTableRevisionsRow";
 
 const ReleasesTableChannelRow = props => {
   const {
     currentTrack,
     risk,
     branch,
-    archs,
     pendingChannelMap,
-    revisions,
     pendingCloses
   } = props;
 
   const branchName = branch ? branch.branch : null;
-
   const channel = getChannelName(currentTrack, risk, branchName);
 
-  const rowRevisions = revisions || pendingChannelMap[channel];
+  const revisions = pendingChannelMap[channel];
 
-  const canDrag = !(!rowRevisions || pendingCloses.includes(channel));
+  const canDrag = !(!revisions || pendingCloses.includes(channel));
 
-  const draggedRevisions = canDrag ? Object.values(rowRevisions) : [];
-
-  const [isDragging, isGrabbing, drag, preview] = useDragging({
-    item: {
-      revisions: draggedRevisions,
-      architectures: getRevisionsArchitectures(draggedRevisions),
-      risk: props.risk,
-      branch: branch ? branch.branch : null,
-      type: DND_ITEM_REVISIONS
-    },
-    canDrag
-  });
-
-  let hasSameVersion = false;
-  let versionsMap = {};
-
-  if (rowRevisions) {
-    // calculate map of architectures for each version
-    for (const arch in rowRevisions) {
-      const revision = rowRevisions[arch];
-      const version = revision.version;
-      if (!versionsMap[version]) {
-        versionsMap[version] = [];
-      }
-      versionsMap[version].push(arch);
-    }
-
-    hasSameVersion = Object.keys(versionsMap).length === 1;
-  }
-
-  // TODO:
-  const { canDrop, item, isOverParent } = props;
+  const { canDrop, draggedItem, isOverParent } = props;
 
   return (
-    <div
-      ref={preview}
-      className={`p-releases-table__row p-releases-table__row--${
-        branch ? "branch" : "channel"
-      } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
-        isGrabbing ? "is-grabbing" : ""
-      } ${canDrop ? "can-drop" : ""}`}
-    >
-      <ReleasesTableChannelCell
-        drag={drag}
-        risk={risk}
-        branch={branch}
-        revisions={revisions}
-      />
-
-      {archs.map(
-        arch =>
-          revisions ? (
-            <ReleasesTableRevisionCell
-              key={`${currentTrack}/${risk}/${arch}`}
-              revision={rowRevisions[arch]}
-              showVersion={!hasSameVersion}
-            />
-          ) : (
-            <ReleasesTableCell
-              key={`${currentTrack}/${risk}/${arch}`}
-              track={currentTrack}
-              risk={risk}
-              branch={branch}
-              arch={arch}
-              showVersion={!hasSameVersion}
-              isOverParent={
-                isOverParent &&
-                canDrop &&
-                item.architectures.indexOf(arch) !== -1
-              }
-            />
-          )
-      )}
-    </div>
+    <ReleasesTableRevisionsRow
+      risk={risk}
+      branch={branch}
+      revisions={revisions}
+      canDrag={canDrag}
+      isOverParent={isOverParent}
+      draggedItem={draggedItem}
+      canDrop={canDrop}
+      isChannel={true}
+    />
   );
 };
 
@@ -111,16 +43,14 @@ ReleasesTableChannelRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
-  revisions: PropTypes.object,
   // props dnd
   isOverParent: PropTypes.bool,
-  item: PropTypes.object,
+  draggedItem: PropTypes.object,
   canDrop: PropTypes.bool,
 
   // state
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
-  archs: PropTypes.array.isRequired,
   pendingChannelMap: PropTypes.object
 };
 
@@ -128,7 +58,6 @@ const mapStateToProps = state => {
   return {
     currentTrack: state.currentTrack,
     pendingCloses: state.pendingCloses,
-    archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state)
   };
 };
