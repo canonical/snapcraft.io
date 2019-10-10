@@ -26,7 +26,6 @@ import {
   getRevisionsArchitectures
 } from "../helpers";
 import ReleasesTableChannelCell from "./releasesTableChannelCell";
-import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
 const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
   const targetChannelArchs = channelMap[targetChannel];
@@ -172,15 +171,6 @@ const ReleasesTableRow = props => {
 
   return (
     <Fragment>
-      {risk === AVAILABLE && (
-        <h4>
-          Revisions available to release from &nbsp;
-          <form className="p-form p-form--inline">
-            <AvailableRevisionsMenu />
-          </form>
-        </h4>
-      )}
-
       <div ref={drop}>
         <div
           ref={preview}

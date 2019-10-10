@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { BUILD, RISKS_WITH_AVAILABLE as RISKS } from "../constants";
+import { BUILD, AVAILABLE, RISKS_WITH_AVAILABLE as RISKS } from "../constants";
 import {
   getArchitectures,
   getBranches,
@@ -12,6 +12,7 @@ import {
 import { getBuildId } from "../helpers";
 import HistoryPanel from "./historyPanel";
 import ReleasesTableRow from "./releasesTableRow";
+import AvailableRevisionsMenu from "./availableRevisionsMenu";
 
 class ReleasesTable extends Component {
   constructor(props) {
@@ -158,6 +159,21 @@ class ReleasesTable extends Component {
 
       rows.splice(rowIndex + 1, 0, historyPanelRow);
     }
+
+    // inject heading before 'Available' channel
+    const availableHeading = {
+      node: (
+        <h4 key="available-revisions-heading">
+          Revisions available to release from &nbsp;
+          <form className="p-form p-form--inline">
+            <AvailableRevisionsMenu />
+          </form>
+        </h4>
+      )
+    };
+
+    const availableRowIndex = rows.findIndex(r => r.data.risk === AVAILABLE);
+    rows.splice(availableRowIndex, 0, availableHeading);
 
     return rows.map(r => r.node);
   }
