@@ -20,7 +20,6 @@ const ReleasesTableChannelRow = props => {
     currentTrack,
     risk,
     branch,
-    numberOfBranches,
     archs,
     pendingChannelMap,
     openBranches,
@@ -91,7 +90,6 @@ const ReleasesTableChannelRow = props => {
         risk={risk}
         branch={branch}
         revisions={revisions}
-        numberOfBranches={numberOfBranches}
         availableBranches={availableBranches}
       />
 
@@ -127,7 +125,6 @@ ReleasesTableChannelRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
-  numberOfBranches: PropTypes.number,
   revisions: PropTypes.object,
   // props dnd
   isOverParent: PropTypes.bool,
