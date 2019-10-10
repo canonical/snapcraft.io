@@ -372,9 +372,9 @@ ReleasesTableChannelCell.propTypes = {
 const mapStateToProps = (state, props) => {
   const availableBranches = getBranches(state);
 
-  const numberOfBranches = availableBranches.filter(
-    branch => branch.risk === props.risk
-  ).length;
+  const numberOfBranches = props.branch
+    ? null
+    : availableBranches.filter(branch => branch.risk === props.risk).length;
 
   return {
     availableBranches,
