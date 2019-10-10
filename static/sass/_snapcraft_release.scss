@@ -312,6 +312,22 @@
     font-size: .8rem;
   }
 
+  .p-release__progressive-percentage {
+    @include vf-animation (#{transform}, fast, in);
+    background: $snapcraft-green;
+    border-radius: 0 4px 4px 0;
+    bottom: -2px;
+    height: 4px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .p-releases-table__cell.is-active .p-release__progressive-percentage {
+    transform: scaleX(0);
+  }
+
   // REVISIONS LIST
 
   .p-revisions-list {

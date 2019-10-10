@@ -176,12 +176,14 @@ export function getArchitectures(state) {
 export function getTracks(state) {
   let tracks = [];
 
-  state.releases.map(t => t.track).forEach(track => {
-    // if we haven't saved it yet
-    if (tracks.indexOf(track) === -1) {
-      tracks.push(track);
-    }
-  });
+  state.releases
+    .map(t => t.track)
+    .forEach(track => {
+      // if we haven't saved it yet
+      if (tracks.indexOf(track) === -1) {
+        tracks.push(track);
+      }
+    });
 
   return sortAlphaNum(tracks, "latest");
 }
@@ -260,4 +262,28 @@ export function getRevisionsFromBuild(state, buildId) {
   return getAllRevisions(state).filter(
     revision => getBuildId(revision) === buildId
   );
+}
+
+export function getProgressiveState(state, channel, arch) {
+  const { releases } = state;
+  const release = releases.filter(item => {
+    if (
+      channel ===
+        `${item.track}/${item.risk}${item.branch ? `/${item.branch}` : ""}` &&
+      arch === item.architecture &&
+      item.revision
+    ) {
+      return item;
+    }
+    return false;
+  });
+
+  let phasing = null;
+
+  if (release.length > 1 && release[0] && release[0].phasing.key) {
+    phasing = release[0].phasing;
+    phasing.from = release[1].revision;
+  }
+
+  return phasing;
 }
