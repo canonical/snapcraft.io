@@ -78,13 +78,6 @@ const ReleasesTableChannelCell = props => {
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(currentTrack, risk, branchName);
-  if (branch) {
-    const parentChannel = getChannelName(currentTrack, risk);
-
-    if (!openBranches || !openBranches.includes(parentChannel)) {
-      return null;
-    }
-  }
 
   const rowRevisions = revisions || pendingChannelMap[channel];
 
