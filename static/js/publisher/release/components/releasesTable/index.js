@@ -191,25 +191,6 @@ class ReleasesTable extends Component {
       this.props.isHistoryOpen && this.props.filters ? "has-active" : ""
     }`;
 
-    const lpRevisions = this.props.launchpadRevisions;
-
-    const builds = lpRevisions
-      .map(getBuildId)
-      .filter((item, i, ar) => ar.indexOf(item) === i)
-      .map(buildId => {
-        const revs = this.props.getRevisionsFromBuild(buildId);
-
-        const revsMap = {};
-
-        revs.forEach(r => {
-          r.architectures.forEach(arch => {
-            revsMap[arch] = r;
-          });
-        });
-
-        return revsMap;
-      });
-
     return (
       <div className="row">
         <div className={className}>
@@ -227,9 +208,6 @@ class ReleasesTable extends Component {
             ))}
           </div>
           {this.renderRows()}
-
-          {!!builds.length && <h4>Revisions built on Launchpad</h4>}
-          {builds.map(revisions => this.renderBuildRow(revisions))}
         </div>
       </div>
     );

@@ -8,7 +8,6 @@ import { selectAvailableRevisions } from "../actions/availableRevisionsSelect";
 import { getAvailableRevisionsBySelection } from "../selectors";
 
 import {
-  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_ALL
@@ -23,10 +22,6 @@ const menuLabels = {
   [AVAILABLE_REVISIONS_SELECT_UNRELEASED]: {
     label: "Unreleased",
     description: "Revisions not released to any channel"
-  },
-  [AVAILABLE_REVISIONS_SELECT_LAUNCHPAD]: {
-    label: "Launchpad",
-    description: "Revisions built on Launchpad"
   },
   [AVAILABLE_REVISIONS_SELECT_ALL]: {
     label: "All revisions"
@@ -90,18 +85,6 @@ export class AvailableRevisionsMenu extends Component {
 
   renderItems() {
     let items = Object.keys(menuLabels);
-
-    items = items.filter(item => {
-      // remove Launchpad menu option if there are no LP builds
-      if (
-        item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD &&
-        this.props.getFilteredCount(AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) === 0
-      ) {
-        return false;
-      }
-
-      return true;
-    });
 
     return (
       <span className="p-contextual-menu__group">
