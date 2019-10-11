@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 import { getArchitectures, getPendingChannelMap } from "../../selectors";
 import { isSameVersion, getChannelName } from "../../helpers";
 
-import ReleasesTableReleaseCell from "./releasesTableReleaseCell";
-import ReleasesTableRow from "./releasesTableRow";
+import ReleasesTableReleaseCell from "./releaseCell";
+import ReleasesTableRow from "./row";
 
+// releases table row based on channel data
 const ReleasesTableChannelRow = props => {
   const {
     currentTrack,

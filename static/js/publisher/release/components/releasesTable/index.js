@@ -15,8 +15,8 @@ import {
 } from "../../selectors";
 import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
-import ReleasesTableDroppableRow from "./releasesTableDroppableRow";
-import ReleasesTableRevisionsRow from "./releasesTableRevisionsRow";
+import ReleasesTableDroppableRow from "./droppableRow";
+import ReleasesTableRevisionsRow from "./revisionsRow";
 import AvailableRevisionsMenu from "../availableRevisionsMenu";
 
 class ReleasesTable extends Component {

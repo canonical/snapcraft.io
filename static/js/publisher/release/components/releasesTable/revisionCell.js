@@ -3,12 +3,9 @@ import PropTypes from "prop-types";
 
 import { DND_ITEM_REVISIONS } from "../dnd";
 
-import {
-  ReleasesTableCellView,
-  RevisionInfo,
-  EmptyInfo
-} from "./releasesTableCellViews";
+import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
 
+// releases table cell with data for a specific revision (unrelated to channel map)
 const ReleasesTableRevisionCell = props => {
   const { revision, showVersion } = props;
 

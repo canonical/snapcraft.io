@@ -11,7 +11,7 @@ import { STABLE, CANDIDATE, BETA, EDGE } from "../../constants";
 
 import { getChannelName, isInDevmode } from "../../helpers";
 
-import ReleasesTableChannelRow from "./releasesTableChannelRow";
+import ReleasesTableChannelRow from "./channelRow";
 
 const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
   const targetChannelArchs = channelMap[targetChannel];
@@ -32,6 +32,7 @@ const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
   });
 };
 
+// releases table row with channel data that can be a drop target for revisions
 const ReleasesTableDroppableRow = props => {
   const {
     currentTrack,
