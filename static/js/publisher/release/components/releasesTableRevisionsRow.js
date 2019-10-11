@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { getArchitectures } from "../selectors";
 import { isSameVersion } from "../helpers";
-import { ReleasesTableRevisionCell } from "./releasesTableCell";
+import ReleasesTableRevisionCell from "./releasesTableRevisionCell";
 import ReleasesTableRow from "./releasesTableRow";
 
 const ReleasesTableRevisionsRow = props => {

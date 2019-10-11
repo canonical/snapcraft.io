@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { getArchitectures, getPendingChannelMap } from "../selectors";
 import { isSameVersion, getChannelName } from "../helpers";
 
-import ReleasesTableCell from "./releasesTableCell";
+import ReleasesTableReleaseCell from "./releasesTableReleaseCell";
 import ReleasesTableRow from "./releasesTableRow";
 
 const ReleasesTableChannelRow = props => {
@@ -41,7 +41,7 @@ const ReleasesTableChannelRow = props => {
     >
       {archs.map(arch => {
         return (
-          <ReleasesTableCell
+          <ReleasesTableReleaseCell
             key={`${currentTrack}/${risk}/${arch}`}
             track={currentTrack}
             risk={risk}
