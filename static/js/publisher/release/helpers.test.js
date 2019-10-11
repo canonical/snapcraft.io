@@ -2,7 +2,8 @@ import { AVAILABLE } from "./constants";
 import {
   getChannelName,
   isRevisionBuiltOnLauchpad,
-  getRevisionsArchitectures
+  getRevisionsArchitectures,
+  isSameVersion
 } from "./helpers";
 
 describe("getChannelName", () => {
@@ -60,5 +61,27 @@ describe("getRevisionsArchitectures", () => {
       "test3",
       "test4"
     ]);
+  });
+});
+
+describe("isSameVersion", () => {
+  it("should return true if all revisions have same version", () => {
+    const revisions = [
+      { version: "test" },
+      { version: "test" },
+      { version: "test" },
+      { version: "test" }
+    ];
+    expect(isSameVersion(revisions)).toBe(true);
+  });
+
+  it("should return false if revisions don't have same version", () => {
+    const revisions = [
+      { version: "test" },
+      { version: "test2" },
+      { version: "test" },
+      { version: "test2" }
+    ];
+    expect(isSameVersion(revisions)).toBe(false);
   });
 });
