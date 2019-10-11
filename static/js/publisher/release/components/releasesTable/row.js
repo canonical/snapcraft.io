@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
 
 import { getRevisionsArchitectures } from "../../helpers";
-import ReleasesTableChannelCell from "./releasesTableChannelCell";
+import ReleasesTableChannelHeading from "./channelHeading";
 
+// generic releases table row component
 const ReleasesTableRow = props => {
   const { risk, branch, revisions, canDrop, children } = props;
 
@@ -33,7 +34,7 @@ const ReleasesTableRow = props => {
         isGrabbing ? "is-grabbing" : ""
       } ${canDrop ? "can-drop" : ""}`}
     >
-      <ReleasesTableChannelCell
+      <ReleasesTableChannelHeading
         drag={drag}
         risk={risk}
         branch={branch}
