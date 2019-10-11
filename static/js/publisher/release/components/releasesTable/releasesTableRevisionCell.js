@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { DND_ITEM_REVISIONS } from "./dnd";
+import { DND_ITEM_REVISIONS } from "../dnd";
 
 import {
   ReleasesTableCellView,
