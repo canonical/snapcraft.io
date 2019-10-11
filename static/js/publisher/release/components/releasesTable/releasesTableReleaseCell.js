@@ -2,22 +2,22 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { AVAILABLE } from "../constants";
-import { getTrackingChannel } from "../releasesState";
+import { AVAILABLE } from "../../constants";
+import { getTrackingChannel } from "../../releasesState";
 
-import HistoryIcon from "./historyIcon";
-import { getChannelName } from "../helpers";
-import { DND_ITEM_REVISIONS } from "./dnd";
+import HistoryIcon from "../historyIcon";
+import { getChannelName } from "../../helpers";
+import { DND_ITEM_REVISIONS } from "../dnd";
 
-import { toggleHistory } from "../actions/history";
-import { promoteRevision, undoRelease } from "../actions/pendingReleases";
+import { toggleHistory } from "../../actions/history";
+import { promoteRevision, undoRelease } from "../../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
   hasPendingRelease,
   getRevisionsFromBuild
-} from "../selectors";
+} from "../../selectors";
 
 import {
   ReleasesTableCellView,

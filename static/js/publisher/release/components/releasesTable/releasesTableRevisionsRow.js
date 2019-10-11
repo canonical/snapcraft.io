@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getArchitectures } from "../selectors";
-import { isSameVersion } from "../helpers";
+import { getArchitectures } from "../../selectors";
+import { isSameVersion } from "../../helpers";
 import ReleasesTableRevisionCell from "./releasesTableRevisionCell";
 import ReleasesTableRow from "./releasesTableRow";
 

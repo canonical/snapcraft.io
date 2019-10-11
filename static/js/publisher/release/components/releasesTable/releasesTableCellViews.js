@@ -1,10 +1,10 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-import DevmodeRevision from "./devmodeRevision";
+import DevmodeRevision from "../devmodeRevision";
 
-import { isInDevmode, isRevisionBuiltOnLauchpad } from "../helpers";
-import { useDragging, Handle } from "./dnd";
+import { isInDevmode, isRevisionBuiltOnLauchpad } from "../../helpers";
+import { useDragging, Handle } from "../dnd";
 
 export const CloseChannelInfo = () => (
   <Fragment>
