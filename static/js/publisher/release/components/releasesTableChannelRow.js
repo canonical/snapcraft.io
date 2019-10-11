@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getPendingChannelMap } from "../selectors";
-import { getChannelName } from "../helpers";
+import { getArchitectures, getPendingChannelMap } from "../selectors";
+import { isSameVersion, getChannelName } from "../helpers";
 
 import ReleasesTableCell from "./releasesTableCell";
 import ReleasesTableRow from "./releasesTableRow";
@@ -14,7 +14,8 @@ const ReleasesTableChannelRow = props => {
     risk,
     branch,
     pendingChannelMap,
-    pendingCloses
+    pendingCloses,
+    archs
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -26,6 +27,8 @@ const ReleasesTableChannelRow = props => {
 
   const { canDrop, draggedItem, isOverParent } = props;
 
+  const showVersion = !isSameVersion(revisions);
+
   return (
     <ReleasesTableRow
       risk={risk}
@@ -36,7 +39,7 @@ const ReleasesTableChannelRow = props => {
       draggedItem={draggedItem}
       canDrop={canDrop}
     >
-      {({ arch, hasSameVersion }) => {
+      {archs.map(arch => {
         return (
           <ReleasesTableCell
             key={`${currentTrack}/${risk}/${arch}`}
@@ -44,7 +47,7 @@ const ReleasesTableChannelRow = props => {
             risk={risk}
             branch={branch}
             arch={arch}
-            showVersion={!hasSameVersion}
+            showVersion={showVersion}
             isOverParent={
               isOverParent &&
               canDrop &&
@@ -52,7 +55,7 @@ const ReleasesTableChannelRow = props => {
             }
           />
         );
-      }}
+      })}
     </ReleasesTableRow>
   );
 };
@@ -69,14 +72,16 @@ ReleasesTableChannelRow.propTypes = {
   // state
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
-  pendingChannelMap: PropTypes.object
+  pendingChannelMap: PropTypes.object,
+  archs: PropTypes.array
 };
 
 const mapStateToProps = state => {
   return {
     currentTrack: state.currentTrack,
     pendingCloses: state.pendingCloses,
-    pendingChannelMap: getPendingChannelMap(state)
+    pendingChannelMap: getPendingChannelMap(state),
+    archs: getArchitectures(state)
   };
 };
 

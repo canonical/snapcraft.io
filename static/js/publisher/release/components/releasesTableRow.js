@@ -1,24 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 
-import { getArchitectures, getPendingChannelMap } from "../selectors";
-import { ReleasesTableRevisionCell } from "./releasesTableCell";
 import { useDragging, DND_ITEM_REVISIONS } from "./dnd";
 
 import { getRevisionsArchitectures } from "../helpers";
 import ReleasesTableChannelCell from "./releasesTableChannelCell";
 
 const ReleasesTableRow = props => {
-  const {
-    currentTrack,
-    risk,
-    branch,
-    archs,
-    revisions,
-    canDrop,
-    children
-  } = props;
+  const { risk, branch, revisions, canDrop, children } = props;
 
   const canDrag = !!revisions && props.canDrag;
 
@@ -35,37 +24,6 @@ const ReleasesTableRow = props => {
     canDrag
   });
 
-  let hasSameVersion = false;
-  let versionsMap = {};
-
-  if (revisions) {
-    // calculate map of architectures for each version
-    for (const arch in revisions) {
-      const revision = revisions[arch];
-      const version = revision.version;
-      if (!versionsMap[version]) {
-        versionsMap[version] = [];
-      }
-      versionsMap[version].push(arch);
-    }
-
-    hasSameVersion = Object.keys(versionsMap).length === 1;
-  }
-
-  function renderArch(arch) {
-    if (children) {
-      return children({ arch, hasSameVersion });
-    } else {
-      return (
-        <ReleasesTableRevisionCell
-          key={`${currentTrack}/${risk}/${arch}`}
-          revision={revisions ? revisions[arch] : null}
-          showVersion={!hasSameVersion}
-        />
-      );
-    }
-  }
-
   return (
     <div
       ref={preview}
@@ -81,8 +39,7 @@ const ReleasesTableRow = props => {
         branch={branch}
         revisions={revisions}
       />
-
-      {archs.map(renderArch)}
+      {children}
     </div>
   );
 };
@@ -92,32 +49,13 @@ ReleasesTableRow.defaultProps = {
 };
 
 ReleasesTableRow.propTypes = {
-  // props
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
   revisions: PropTypes.object,
-  children: PropTypes.func,
+  children: PropTypes.node,
 
-  // props dnd
   canDrag: PropTypes.bool,
-  isOverParent: PropTypes.bool,
-  draggedItem: PropTypes.object,
-  canDrop: PropTypes.bool,
-
-  // state
-  currentTrack: PropTypes.string.isRequired,
-  pendingCloses: PropTypes.array.isRequired,
-  archs: PropTypes.array.isRequired,
-  pendingChannelMap: PropTypes.object
+  canDrop: PropTypes.bool
 };
 
-const mapStateToProps = state => {
-  return {
-    currentTrack: state.currentTrack,
-    pendingCloses: state.pendingCloses,
-    archs: getArchitectures(state),
-    pendingChannelMap: getPendingChannelMap(state)
-  };
-};
-
-export default connect(mapStateToProps)(ReleasesTableRow);
+export default ReleasesTableRow;
