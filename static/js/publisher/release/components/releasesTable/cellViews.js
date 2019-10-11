@@ -6,6 +6,7 @@ import DevmodeRevision from "../devmodeRevision";
 import { isInDevmode, isRevisionBuiltOnLauchpad } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
 
+// content of a cell when channel is closed
 export const CloseChannelInfo = () => (
   <Fragment>
     close channel
@@ -13,6 +14,7 @@ export const CloseChannelInfo = () => (
   </Fragment>
 );
 
+// content of an empty cell in 'Available' row (when nothing was assigned)
 export const UnassignedInfo = ({ availableCount }) => (
   <span className="p-release-data__info">
     <span className="p-release-data__title">Add revision</span>
@@ -24,6 +26,7 @@ UnassignedInfo.propTypes = {
   availableCount: PropTypes.number
 };
 
+// content of empty cell in channel row (nothing released or tracking channel)
 export const EmptyInfo = ({ trackingChannel }) => {
   return (
     <Fragment>
@@ -44,6 +47,7 @@ EmptyInfo.propTypes = {
   trackingChannel: PropTypes.string
 };
 
+// contents of a cell with a revision
 export const RevisionInfo = ({ revision, isPending, showVersion }) => {
   let buildIcon = null;
 
@@ -110,6 +114,7 @@ RevisionInfo.propTypes = {
   showVersion: PropTypes.bool
 };
 
+// generic draggable view of releases table cell
 export const ReleasesTableCellView = props => {
   const { item, canDrag, children, actions } = props;
 

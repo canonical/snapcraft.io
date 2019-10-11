@@ -4,9 +4,10 @@ import { connect } from "react-redux";
 
 import { getArchitectures } from "../../selectors";
 import { isSameVersion } from "../../helpers";
-import ReleasesTableRevisionCell from "./releasesTableRevisionCell";
-import ReleasesTableRow from "./releasesTableRow";
+import ReleasesTableRevisionCell from "./revisionCell";
+import ReleasesTableRow from "./row";
 
+// releases table row based on list of revisions (unrelated to channel map)
 const ReleasesTableRevisionsRow = props => {
   const { currentTrack, risk, revisions, archs } = props;
   const showVersion = !isSameVersion(revisions);

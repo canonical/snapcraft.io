@@ -25,8 +25,9 @@ import {
   EmptyInfo,
   CloseChannelInfo,
   UnassignedInfo
-} from "./releasesTableCellViews";
+} from "./cellViews";
 
+// releases table cell with data from channel map release
 const ReleasesTableReleaseCell = props => {
   const {
     track,

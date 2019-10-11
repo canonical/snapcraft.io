@@ -61,7 +61,8 @@ const compareRevisionsPerArch = (
   return currentRevisionsByArch === targetRevisionsByArch;
 };
 
-const ReleasesTableChannelCell = props => {
+// heading cell of releases table rows
+const ReleasesTableChannelHeading = props => {
   const {
     currentTrack,
     risk,
@@ -340,7 +341,7 @@ const ReleasesTableChannelCell = props => {
   );
 };
 
-ReleasesTableChannelCell.propTypes = {
+ReleasesTableChannelHeading.propTypes = {
   // props
   drag: PropTypes.func,
   risk: PropTypes.string.isRequired,
@@ -404,4 +405,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ReleasesTableChannelCell);
+)(ReleasesTableChannelHeading);
