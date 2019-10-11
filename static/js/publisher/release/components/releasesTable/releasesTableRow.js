@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { useDragging, DND_ITEM_REVISIONS } from "./dnd";
+import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
 
-import { getRevisionsArchitectures } from "../helpers";
+import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelCell from "./releasesTableChannelCell";
 
 const ReleasesTableRow = props => {

@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getArchitectures, getPendingChannelMap } from "../selectors";
-import { isSameVersion, getChannelName } from "../helpers";
+import { getArchitectures, getPendingChannelMap } from "../../selectors";
+import { isSameVersion, getChannelName } from "../../helpers";
 
 import ReleasesTableReleaseCell from "./releasesTableReleaseCell";
 import ReleasesTableRow from "./releasesTableRow";

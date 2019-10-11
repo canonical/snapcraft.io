@@ -2,18 +2,22 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { BUILD, AVAILABLE, RISKS_WITH_AVAILABLE as RISKS } from "../constants";
+import {
+  BUILD,
+  AVAILABLE,
+  RISKS_WITH_AVAILABLE as RISKS
+} from "../../constants";
 import {
   getArchitectures,
   getBranches,
   getLaunchpadRevisions,
   getRevisionsFromBuild
-} from "../selectors";
-import { getChannelName, getBuildId } from "../helpers";
-import HistoryPanel from "./historyPanel";
+} from "../../selectors";
+import { getChannelName, getBuildId } from "../../helpers";
+import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./releasesTableDroppableRow";
 import ReleasesTableRevisionsRow from "./releasesTableRevisionsRow";
-import AvailableRevisionsMenu from "./availableRevisionsMenu";
+import AvailableRevisionsMenu from "../availableRevisionsMenu";
 
 class ReleasesTable extends Component {
   constructor(props) {

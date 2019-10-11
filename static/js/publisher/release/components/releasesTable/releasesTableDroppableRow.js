@@ -2,14 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getPendingChannelMap } from "../selectors";
-import { useDrop, DND_ITEM_REVISIONS } from "./dnd";
+import { getPendingChannelMap } from "../../selectors";
+import { useDrop, DND_ITEM_REVISIONS } from "../dnd";
 
-import { promoteRevision } from "../actions/pendingReleases";
+import { promoteRevision } from "../../actions/pendingReleases";
 
-import { STABLE, CANDIDATE, BETA, EDGE } from "../constants";
+import { STABLE, CANDIDATE, BETA, EDGE } from "../../constants";
 
-import { getChannelName, isInDevmode } from "../helpers";
+import { getChannelName, isInDevmode } from "../../helpers";
 
 import ReleasesTableChannelRow from "./releasesTableChannelRow";
 

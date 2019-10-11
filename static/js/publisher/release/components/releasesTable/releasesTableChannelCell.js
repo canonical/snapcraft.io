@@ -3,20 +3,20 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { parse, distanceInWordsToNow, addDays } from "date-fns";
 
-import { sortChannels } from "../../../libs/channels";
+import { sortChannels } from "../../../../libs/channels";
 
 import {
   getArchitectures,
   getPendingChannelMap,
   hasPendingRelease,
   getBranches
-} from "../selectors";
-import { Handle } from "./dnd";
+} from "../../selectors";
+import { Handle } from "../dnd";
 
-import { promoteChannel, promoteRevision } from "../actions/pendingReleases";
-import { closeChannel } from "../actions/pendingCloses";
+import { promoteChannel, promoteRevision } from "../../actions/pendingReleases";
+import { closeChannel } from "../../actions/pendingCloses";
 
-import { toggleBranches } from "../actions/branches";
+import { toggleBranches } from "../../actions/branches";
 
 import {
   RISKS_WITH_AVAILABLE as RISKS,
@@ -26,10 +26,10 @@ import {
   CANDIDATE,
   BETA,
   EDGE
-} from "../constants";
+} from "../../constants";
 
-import { getChannelName, isInDevmode, getBuildId } from "../helpers";
-import ChannelMenu from "./channelMenu";
+import { getChannelName, isInDevmode, getBuildId } from "../../helpers";
+import ChannelMenu from "../channelMenu";
 
 const disabledBecauseDevmode = (
   <Fragment>
