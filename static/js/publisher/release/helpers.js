@@ -36,3 +36,24 @@ export function getRevisionsArchitectures(revisions) {
 
   return archs;
 }
+
+export function isSameVersion(revisions) {
+  let hasSameVersion = false;
+  let versionsMap = {};
+
+  if (revisions) {
+    // calculate map of architectures for each version
+    for (const arch in revisions) {
+      const revision = revisions[arch];
+      const version = revision.version;
+      if (!versionsMap[version]) {
+        versionsMap[version] = [];
+      }
+      versionsMap[version].push(arch);
+    }
+
+    hasSameVersion = Object.keys(versionsMap).length === 1;
+  }
+
+  return hasSameVersion;
+}
