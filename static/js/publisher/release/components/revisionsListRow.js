@@ -7,7 +7,7 @@ import format from "date-fns/format";
 
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { getSelectedRevisions, hasBuildRequestId } from "../selectors";
+import { getSelectedRevisions } from "../selectors";
 
 import DevmodeRevision from "./devmodeRevision";
 
@@ -122,10 +122,10 @@ RevisionsListRow.propTypes = {
   showChannels: PropTypes.bool,
   isPending: PropTypes.bool,
   isActive: PropTypes.bool,
+  showBuildRequest: PropTypes.bool.isRequired,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
-  showBuildRequest: PropTypes.bool.isRequired,
 
   // actions
   toggleRevision: PropTypes.func.isRequired
@@ -133,8 +133,7 @@ RevisionsListRow.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    selectedRevisions: getSelectedRevisions(state),
-    showBuildRequest: hasBuildRequestId(state)
+    selectedRevisions: getSelectedRevisions(state)
   };
 };
 

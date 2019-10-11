@@ -10,7 +10,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_ALL
 } from "../constants";
-import { getChannelName, isInDevmode } from "../helpers";
+import { getBuildId, getChannelName, isInDevmode } from "../helpers";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
@@ -22,8 +22,7 @@ import {
   getSelectedRevisions,
   getSelectedArchitectures,
   getFilteredAvailableRevisions,
-  getFilteredAvailableRevisionsForArch,
-  hasBuildRequestId
+  getFilteredAvailableRevisionsForArch
 } from "../selectors";
 
 import { getPendingRelease } from "../releasesState";
@@ -39,7 +38,14 @@ class RevisionsList extends Component {
     revisions.forEach(revision => this.props.toggleRevision(revision));
   }
 
-  renderRow(revision, isSelectable, showChannels, isPending, isActive) {
+  renderRow(
+    revision,
+    isSelectable,
+    showChannels,
+    isPending,
+    isActive,
+    showBuildRequest
+  ) {
     return (
       <RevisionsListRow
         key={`revision-row-${revision.revision}`}
@@ -48,11 +54,18 @@ class RevisionsList extends Component {
         showChannels={showChannels}
         isPending={isPending}
         isActive={isActive}
+        showBuildRequest={showBuildRequest}
       />
     );
   }
 
-  renderRows(revisions, isSelectable, showChannels, activeRevision) {
+  renderRows(
+    revisions,
+    isSelectable,
+    showChannels,
+    activeRevision,
+    showBuildRequest
+  ) {
     return revisions.map(revision => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
@@ -62,7 +75,8 @@ class RevisionsList extends Component {
         isSelectable,
         showChannels,
         false,
-        isActive
+        isActive,
+        showBuildRequest
       );
     });
   }
@@ -83,8 +97,7 @@ class RevisionsList extends Component {
       availableRevisionsSelect,
       showChannels,
       filteredAvailableRevisions,
-      pendingChannelMap,
-      showBuildRequest
+      pendingChannelMap
     } = this.props;
     let filteredRevisions = filteredAvailableRevisions;
     let title = "Latest revisions";
@@ -228,6 +241,9 @@ class RevisionsList extends Component {
         : null;
     }
 
+    const showBuildRequest = filteredRevisions.some(revision =>
+      getBuildId(revision)
+    );
     return (
       <Fragment>
         <div className="u-clearfix">
@@ -307,7 +323,8 @@ class RevisionsList extends Component {
                 !isReleaseHistory,
                 showChannels,
                 true,
-                activeRevision.revision === pendingRelease.revision
+                activeRevision.revision === pendingRelease.revision,
+                showBuildRequest
               )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
@@ -316,7 +333,8 @@ class RevisionsList extends Component {
                   : filteredRevisions.slice(0, 10),
                 !isReleaseHistory,
                 showChannels,
-                activeRevision
+                activeRevision,
+                showBuildRequest
               )
             ) : (
               <tr>
@@ -351,7 +369,6 @@ RevisionsList.propTypes = {
 
   // computed state (selectors)
   showChannels: PropTypes.bool,
-  showBuildRequest: PropTypes.bool,
   filteredReleaseHistory: PropTypes.array,
   selectedRevisions: PropTypes.array.isRequired,
   selectedArchitectures: PropTypes.array.isRequired,
@@ -373,7 +390,6 @@ const mapStateToProps = state => {
       (state.history.filters &&
         state.history.filters.risk === AVAILABLE &&
         state.availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL),
-    showBuildRequest: hasBuildRequestId(state),
     filters: state.history.filters,
     revisions: state.revisions,
     pendingReleases: state.pendingReleases,
