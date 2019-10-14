@@ -2,7 +2,13 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { BUILD, AVAILABLE, RISKS } from "../../constants";
+import {
+  BUILD,
+  AVAILABLE,
+  RISKS,
+  AVAILABLE_REVISIONS_SELECT_ALL,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+} from "../../constants";
 import {
   getArchitectures,
   getBranches,
@@ -14,6 +20,7 @@ import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
 import AvailableRevisionsMenu from "../availableRevisionsMenu";
+import AvailableRevisionsTabs from "./availableRevisionsTabs";
 
 class ReleasesTable extends Component {
   constructor(props) {
@@ -76,12 +83,13 @@ class ReleasesTable extends Component {
 
     return (
       <Fragment>
-        <h4 key="available-revisions-heading">
-          Revisions available to release from &nbsp;
+        <div>
+          Select revisions from{" "}
           <form className="p-form p-form--inline">
             <AvailableRevisionsMenu />
           </form>
-        </h4>
+        </div>
+
         {this.renderChannelRow(AVAILABLE)}
         {isHistoryOpen &&
           filters.risk === AVAILABLE &&
@@ -90,6 +98,51 @@ class ReleasesTable extends Component {
     );
   }
 
+  renderLaunchpadBuilds() {
+    const lpRevisions = this.props.launchpadRevisions;
+
+    const builds = lpRevisions
+      .map(getBuildId)
+      .filter((item, i, ar) => ar.indexOf(item) === i)
+      .map(buildId => {
+        const revs = this.props.getRevisionsFromBuild(buildId);
+
+        const revsMap = {};
+
+        revs.forEach(r => {
+          r.architectures.forEach(arch => {
+            revsMap[arch] = r;
+          });
+        });
+
+        return revsMap;
+      });
+
+    if (builds.length) {
+      return builds.map(revisions => this.renderBuildRow(revisions));
+    }
+
+    return null;
+  }
+
+  renderTabs() {
+    return (
+      <Fragment>
+        <h4>Revisions available to release</h4>
+        <AvailableRevisionsTabs>
+          {item => {
+            if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
+              return this.renderAvailableRevisions();
+            }
+            if (item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) {
+              return this.renderLaunchpadBuilds();
+            }
+            return null;
+          }}
+        </AvailableRevisionsTabs>
+      </Fragment>
+    );
+  }
   renderRows() {
     const {
       branches,
@@ -208,7 +261,7 @@ class ReleasesTable extends Component {
             ))}
           </div>
           {this.renderRows()}
-          {this.renderAvailableRevisions()}
+          {this.renderTabs()}
         </div>
       </div>
     );
