@@ -2,11 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  BUILD,
-  AVAILABLE,
-  RISKS_WITH_AVAILABLE as RISKS
-} from "../../constants";
+import { BUILD, AVAILABLE, RISKS } from "../../constants";
 import {
   getArchitectures,
   getBranches,
@@ -67,7 +63,31 @@ class ReleasesTable extends Component {
   }
 
   renderHistoryPanel() {
-    return <HistoryPanel key="history-panel" />;
+    return (
+      <div className="p-releases-table__row" key="history-panel-row">
+        <div className="p-releases-channel is-placeholder u-hide--small" />
+        <HistoryPanel key="history-panel" />;
+      </div>
+    );
+  }
+
+  renderAvailableRevisions() {
+    const { isHistoryOpen, filters } = this.props;
+
+    return (
+      <Fragment>
+        <h4 key="available-revisions-heading">
+          Revisions available to release from &nbsp;
+          <form className="p-form p-form--inline">
+            <AvailableRevisionsMenu />
+          </form>
+        </h4>
+        {this.renderChannelRow(AVAILABLE)}
+        {isHistoryOpen &&
+          filters.risk === AVAILABLE &&
+          this.renderHistoryPanel()}
+      </Fragment>
+    );
   }
 
   renderRows() {
@@ -143,12 +163,7 @@ class ReleasesTable extends Component {
     // inject history panel after that channel row
     if (isHistoryOpen && filters && filters.risk) {
       const historyPanelRow = {
-        node: (
-          <div className="p-releases-table__row" key="history-panel-row">
-            <div className="p-releases-channel is-placeholder u-hide--small" />
-            {this.renderHistoryPanel()}
-          </div>
-        )
+        node: this.renderHistoryPanel()
       };
 
       const rowIndex = rows.findIndex(r => {
@@ -160,25 +175,10 @@ class ReleasesTable extends Component {
         return r.data.risk === filters.risk;
       });
 
-      rows.splice(rowIndex + 1, 0, historyPanelRow);
+      if (rowIndex > -1) {
+        rows.splice(rowIndex + 1, 0, historyPanelRow);
+      }
     }
-
-    // inject heading before 'Available' channel
-    const availableHeading = {
-      node: (
-        <h4 key="available-revisions-heading">
-          Revisions available to release from &nbsp;
-          <form className="p-form p-form--inline">
-            <AvailableRevisionsMenu />
-          </form>
-        </h4>
-      )
-    };
-
-    const availableRowIndex = rows.findIndex(
-      r => r.data && r.data.risk === AVAILABLE
-    );
-    rows.splice(availableRowIndex, 0, availableHeading);
 
     return rows.map(r => r.node);
   }
@@ -208,6 +208,7 @@ class ReleasesTable extends Component {
             ))}
           </div>
           {this.renderRows()}
+          {this.renderAvailableRevisions()}
         </div>
       </div>
     );
