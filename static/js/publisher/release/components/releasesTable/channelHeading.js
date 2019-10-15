@@ -13,7 +13,7 @@ import {
 } from "../../selectors";
 import { Handle } from "../dnd";
 
-import { promoteChannel, promoteRevision } from "../../actions/pendingReleases";
+import { promoteRevision } from "../../actions/pendingReleases";
 import { closeChannel } from "../../actions/pendingCloses";
 
 import { toggleBranches } from "../../actions/branches";
@@ -293,6 +293,12 @@ const ReleasesTableChannelHeading = props => {
     timeUntilExpiration = distanceInWordsToNow(end);
   }
 
+  const promoteRevisions = targetChannel => {
+    Object.values(rowRevisions).forEach(revision =>
+      props.promoteRevision(revision, targetChannel)
+    );
+  };
+
   return (
     <div
       ref={drag}
@@ -320,7 +326,7 @@ const ReleasesTableChannelHeading = props => {
           <ChannelMenu
             tooltip={promoteTooltip}
             targetChannels={targetChannels}
-            promoteToChannel={props.promoteChannel.bind(null, channel)}
+            promoteToChannel={promoteRevisions}
             channel={channel}
             closeChannel={canBeClosed ? props.closeChannel : null}
           />
@@ -372,7 +378,6 @@ ReleasesTableChannelHeading.propTypes = {
 
   // actions
   closeChannel: PropTypes.func.isRequired,
-  promoteChannel: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   toggleBranches: PropTypes.func.isRequired
 };
@@ -400,8 +405,6 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    promoteChannel: (channel, targetChannel) =>
-      dispatch(promoteChannel(channel, targetChannel)),
     promoteRevision: (revision, targetChannel) =>
       dispatch(promoteRevision(revision, targetChannel)),
     closeChannel: channel => dispatch(closeChannel(channel)),
