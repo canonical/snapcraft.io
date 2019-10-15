@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { parse, distanceInWordsToNow, addDays } from "date-fns";
+import { format, parse, distanceInWordsToNow, addDays } from "date-fns";
 
 import { sortChannels } from "../../../../libs/channels";
 
@@ -28,7 +28,7 @@ import {
   EDGE
 } from "../../constants";
 
-import { getChannelName, isInDevmode, getBuildId } from "../../helpers";
+import { getChannelName, isInDevmode } from "../../helpers";
 import ChannelMenu from "../channelMenu";
 
 const disabledBecauseDevmode = (
@@ -207,6 +207,7 @@ const ReleasesTableChannelHeading = props => {
 
   let isLaunchpadBuild = false;
   let channelBuild = "";
+  let channelBuildDate = null;
   let buildMap = {};
 
   if (rowRevisions) {
@@ -226,7 +227,7 @@ const ReleasesTableChannelHeading = props => {
         if (!buildMap[buildRequestId]) {
           buildMap[buildRequestId] = [];
         }
-        buildMap[buildRequestId].push(arch);
+        buildMap[buildRequestId].push(revision);
       }
     }
 
@@ -240,6 +241,9 @@ const ReleasesTableChannelHeading = props => {
     isLaunchpadBuild = Object.keys(buildMap).length === 1;
     if (isLaunchpadBuild) {
       channelBuild = Object.keys(buildMap)[0];
+      channelBuildDate = new Date(
+        Object.values(revisions)[0].attributes["build-request-timestamp"]
+      );
     }
   }
 
@@ -258,6 +262,8 @@ const ReleasesTableChannelHeading = props => {
             {isLaunchpadBuild && (
               <Fragment>
                 Build: <i className="p-icon--lp" /> <b>{channelBuild}</b>
+                <br />
+                Built at: <b>{format(channelBuildDate, "YYYY-MM-DD HH:mm")}</b>
               </Fragment>
             )}
           </span>
@@ -271,7 +277,8 @@ const ReleasesTableChannelHeading = props => {
   if (risk === BUILD) {
     rowTitle = (
       <Fragment>
-        <i className="p-icon--lp" /> {getBuildId(Object.values(revisions)[0])}
+        <i className="p-icon--lp" />{" "}
+        {distanceInWordsToNow(channelBuildDate, { addSuffix: true })}
       </Fragment>
     );
   }
