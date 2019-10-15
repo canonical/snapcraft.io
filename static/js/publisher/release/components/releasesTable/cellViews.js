@@ -72,7 +72,7 @@ export const RevisionInfo = ({
           <DevmodeRevision
             revision={revision}
             showTooltip={false}
-            isProgressive={from}
+            isProgressive={from ? true : false}
           />
         </span>
         {showVersion && (

@@ -45,5 +45,6 @@ export default function DevmodeRevision({
 
 DevmodeRevision.propTypes = {
   revision: PropTypes.object.isRequired,
-  showTooltip: PropTypes.bool
+  showTooltip: PropTypes.bool,
+  isProgressive: PropTypes.bool
 };
