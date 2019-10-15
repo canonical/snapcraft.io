@@ -78,22 +78,30 @@ class ReleasesTable extends Component {
     );
   }
 
-  renderAvailableRevisions() {
+  renderAvailableRevisionsRow() {
     const { isHistoryOpen, filters } = this.props;
 
     return (
       <Fragment>
-        <div>
-          Select revisions from{" "}
-          <form className="p-form p-form--inline">
-            <AvailableRevisionsMenu />
-          </form>
-        </div>
-
         {this.renderChannelRow(AVAILABLE)}
         {isHistoryOpen &&
           filters.risk === AVAILABLE &&
           this.renderHistoryPanel()}
+      </Fragment>
+    );
+  }
+
+  renderAvailableRevisions() {
+    return (
+      <Fragment>
+        <h5>
+          Select revisions from{" "}
+          <form className="p-form p-form--inline">
+            <AvailableRevisionsMenu />
+          </form>
+        </h5>
+
+        {this.renderAvailableRevisionsRow()}
       </Fragment>
     );
   }
@@ -119,30 +127,52 @@ class ReleasesTable extends Component {
       });
 
     if (builds.length) {
-      return builds.map(revisions => this.renderBuildRow(revisions));
+      return (
+        <Fragment>
+          <h5>Recent builds</h5>
+          {builds.map(revisions => this.renderBuildRow(revisions))}
+        </Fragment>
+      );
     }
 
     return null;
   }
 
   renderTabs() {
-    return (
-      <Fragment>
-        <h4>Revisions available to release</h4>
-        <AvailableRevisionsTabs>
-          {item => {
-            if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
-              return this.renderAvailableRevisions();
-            }
-            if (item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) {
-              return this.renderLaunchpadBuilds();
-            }
-            return null;
-          }}
-        </AvailableRevisionsTabs>
-      </Fragment>
-    );
+    const { launchpadRevisions } = this.props;
+
+    if (launchpadRevisions.length) {
+      return (
+        <Fragment>
+          <h4>Revisions available to release</h4>
+          <AvailableRevisionsTabs>
+            {item => {
+              if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
+                return this.renderAvailableRevisions();
+              }
+              if (item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) {
+                return this.renderLaunchpadBuilds();
+              }
+              return null;
+            }}
+          </AvailableRevisionsTabs>
+        </Fragment>
+      );
+    } else {
+      return (
+        <Fragment>
+          <h4>
+            Revisions available to release from{" "}
+            <form className="p-form p-form--inline">
+              <AvailableRevisionsMenu />
+            </form>
+          </h4>
+          {this.renderAvailableRevisionsRow()}
+        </Fragment>
+      );
+    }
   }
+
   renderRows() {
     const {
       branches,
