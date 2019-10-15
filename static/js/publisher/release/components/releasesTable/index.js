@@ -15,11 +15,12 @@ import {
   getLaunchpadRevisions,
   getRevisionsFromBuild
 } from "../../selectors";
+import { selectAvailableRevisions } from "../../actions";
+
 import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
-import AvailableRevisionsMenu from "../availableRevisionsMenu";
 import AvailableRevisionsTabs from "./availableRevisionsTabs";
 
 const MAX_BRANCHES = 5;
@@ -33,6 +34,10 @@ class ReleasesTable extends Component {
       showAllRisksBranches: [],
       showAllBuilds: false
     };
+  }
+
+  componentDidMount() {
+    this.props.selectAvailableRevisions(AVAILABLE_REVISIONS_SELECT_ALL);
   }
 
   handleToggleShowMoreBranches(risk) {
@@ -106,12 +111,7 @@ class ReleasesTable extends Component {
   renderAvailableRevisions() {
     return (
       <Fragment>
-        <h5>
-          Select revisions from{" "}
-          <form className="p-form p-form--inline">
-            <AvailableRevisionsMenu />
-          </form>
-        </h5>
+        <h5>Select revisions</h5>
 
         {this.renderAvailableRevisionsRow()}
       </Fragment>
@@ -193,12 +193,7 @@ class ReleasesTable extends Component {
     } else {
       return (
         <Fragment>
-          <h4>
-            Revisions available to release from{" "}
-            <form className="p-form p-form--inline">
-              <AvailableRevisionsMenu />
-            </form>
-          </h4>
+          <h4>Revisions available to release</h4>
           {this.renderAvailableRevisionsRow()}
         </Fragment>
       );
@@ -340,7 +335,8 @@ ReleasesTable.propTypes = {
   currentTrack: PropTypes.string.isRequired,
 
   launchpadRevisions: PropTypes.array,
-  getRevisionsFromBuild: PropTypes.func
+  getRevisionsFromBuild: PropTypes.func,
+  selectAvailableRevisions: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -356,4 +352,13 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ReleasesTable);
+const mapDispatchToProps = dispatch => {
+  return {
+    selectAvailableRevisions: value => dispatch(selectAvailableRevisions(value))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesTable);
