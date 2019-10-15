@@ -11,6 +11,7 @@ import { toggleRevision } from "../actions/channelMap";
 import { getSelectedRevisions, getProgressiveState } from "../selectors";
 
 import DevmodeRevision from "./devmodeRevision";
+import ProgressiveBar from "./progressiveBar";
 
 const RevisionsListRow = props => {
   const {
@@ -93,16 +94,23 @@ const RevisionsListRow = props => {
           </span>
         )}
       </td>
-      <td>
-        {revision.version}
-        {progressiveState && <span>{progressiveState.percentage}%</span>}
-      </td>
+      <td>{revision.version}</td>
       {showBuildRequest && (
         <td>
           {buildRequestId && (
             <Fragment>
               <i className="p-icon--lp" /> {buildRequestId}
             </Fragment>
+          )}
+        </td>
+      )}
+      {!showChannels && (
+        <td>
+          {progressiveState && (
+            <ProgressiveBar
+              percentage={progressiveState.percentage}
+              readonly={true}
+            />
           )}
         </td>
       )}

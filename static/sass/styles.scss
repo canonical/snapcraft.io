@@ -229,3 +229,6 @@ $color-social-icon-foreground: $color-light;
 
 @import 'snapcraft_tour';
 @include snapcraft-tour;
+
+@import 'snapcraft_p-progressive-bar';
+@include snapcraft-p-progressive-bar;

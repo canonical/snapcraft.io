@@ -48,18 +48,32 @@ EmptyInfo.propTypes = {
 };
 
 // contents of a cell with a revision
-export const RevisionInfo = ({ revision, isPending, showVersion }) => {
+export const RevisionInfo = ({
+  revision,
+  isPending,
+  showVersion,
+  progressiveState
+}) => {
+  let from = null;
   let buildIcon = null;
 
   if (isRevisionBuiltOnLauchpad(revision)) {
     buildIcon = <i className="p-icon--lp" />;
   }
 
+  if (progressiveState && progressiveState.from) {
+    from = progressiveState.from;
+  }
+
   return (
     <Fragment>
       <span className="p-release-data__info">
         <span className="p-release-data__title">
-          <DevmodeRevision revision={revision} showTooltip={false} />
+          <DevmodeRevision
+            revision={revision}
+            showTooltip={false}
+            isProgressive={from}
+          />
         </span>
         {showVersion && (
           <span className="p-release-data__meta">{revision.version}</span>
@@ -94,6 +108,22 @@ export const RevisionInfo = ({ revision, isPending, showVersion }) => {
               )}
             </Fragment>
           )}
+          <br />
+          {from && (
+            <Fragment>
+              <b>
+                Progressive release of revision {revision.revision} in progress
+              </b>
+              <br />
+              Revision: <b>{from}</b>
+              {progressiveState
+                ? ` (${100 - progressiveState.percentage}& of devices)`
+                : ""}
+              <br />
+              Revision: <b>{revision.revision}</b> (
+              {progressiveState.percentage}% of devices)
+            </Fragment>
+          )}
         </div>
 
         {isInDevmode(revision) && (
@@ -111,7 +141,8 @@ export const RevisionInfo = ({ revision, isPending, showVersion }) => {
 RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
-  showVersion: PropTypes.bool
+  showVersion: PropTypes.bool,
+  progressiveState: PropTypes.object
 };
 
 // generic draggable view of releases table cell
