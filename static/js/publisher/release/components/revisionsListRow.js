@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
+import { getChannelString } from "../../../libs/channels.js";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { getSelectedRevisions } from "../selectors";
+import { getSelectedRevisions, getProgressiveState } from "../selectors";
 
 import DevmodeRevision from "./devmodeRevision";
 
@@ -18,7 +19,8 @@ const RevisionsListRow = props => {
     showChannels,
     showBuildRequest,
     isPending,
-    isActive
+    isActive,
+    getProgressiveState
   } = props;
 
   const revisionDate = revision.release
@@ -29,6 +31,16 @@ const RevisionsListRow = props => {
 
   function revisionSelectChange() {
     props.toggleRevision(revision);
+  }
+
+  let progressiveState;
+
+  if (revision.release) {
+    progressiveState = getProgressiveState(
+      getChannelString(revision.release),
+      revision.release.architecture,
+      revision.revision
+    );
   }
 
   const [isDragging, isGrabbing, drag] = useDragging({
@@ -81,7 +93,10 @@ const RevisionsListRow = props => {
           </span>
         )}
       </td>
-      <td>{revision.version}</td>
+      <td>
+        {revision.version}
+        {progressiveState && <span>{progressiveState.percentage}%</span>}
+      </td>
       {showBuildRequest && (
         <td>
           {buildRequestId && (
@@ -126,6 +141,7 @@ RevisionsListRow.propTypes = {
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
+  getProgressiveState: PropTypes.func,
 
   // actions
   toggleRevision: PropTypes.func.isRequired
@@ -133,7 +149,9 @@ RevisionsListRow.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    selectedRevisions: getSelectedRevisions(state)
+    selectedRevisions: getSelectedRevisions(state),
+    getProgressiveState: (channel, arch, revision) =>
+      getProgressiveState(state, channel, arch, revision)
   };
 };
 

@@ -258,4 +258,22 @@ function sortChannels(channels, options) {
   };
 }
 
-export { sortChannels, parseChannel, createChannelTree, sortAlphaNum };
+/**
+ * Get a channel string based on an object containing track, risk and branch
+ *
+ * @param {track: string, risk: string, branch: string} channelObj
+ * @returns string
+ */
+function getChannelString(channelObj) {
+  return `${channelObj.track}/${channelObj.risk}${
+    channelObj.branch ? `/${channelObj.branch}` : ""
+  }`;
+}
+
+export {
+  sortChannels,
+  parseChannel,
+  createChannelTree,
+  sortAlphaNum,
+  getChannelString
+};

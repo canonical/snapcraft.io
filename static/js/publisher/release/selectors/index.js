@@ -6,7 +6,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
 } from "../constants";
 import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
-import { sortAlphaNum } from "../../../libs/channels";
+import { sortAlphaNum, getChannelString } from "../../../libs/channels";
 
 // returns release history filtered by history filters
 export function getFilteredReleaseHistory(state) {
@@ -264,14 +264,14 @@ export function getRevisionsFromBuild(state, buildId) {
   );
 }
 
-export function getProgressiveState(state, channel, arch) {
+export function getProgressiveState(state, channel, arch, revision) {
   const { releases } = state;
   const release = releases.filter(item => {
     if (
-      channel ===
-        `${item.track}/${item.risk}${item.branch ? `/${item.branch}` : ""}` &&
+      channel === getChannelString(item) &&
       arch === item.architecture &&
-      item.revision
+      item.revision &&
+      (!revision || item.revision === revision)
     ) {
       return item;
     }
