@@ -22,12 +22,16 @@ import ReleasesTableRevisionsRow from "./revisionsRow";
 import AvailableRevisionsMenu from "../availableRevisionsMenu";
 import AvailableRevisionsTabs from "./availableRevisionsTabs";
 
+const MAX_BRANCHES = 5;
+const MAX_BUILDS = 5;
+
 class ReleasesTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      showAllRisksBranches: []
+      showAllRisksBranches: [],
+      showAllBuilds: false
     };
   }
 
@@ -43,6 +47,14 @@ class ReleasesTable extends Component {
 
     this.setState({
       showAllRisksBranches: newList
+    });
+  }
+
+  handleToggleShowMoreBuilds() {
+    const { showAllBuilds } = this.state;
+
+    this.setState({
+      showAllBuilds: !showAllBuilds
     });
   }
 
@@ -108,6 +120,7 @@ class ReleasesTable extends Component {
 
   renderLaunchpadBuilds() {
     const lpRevisions = this.props.launchpadRevisions;
+    const { showAllBuilds } = this.state;
 
     const builds = lpRevisions
       .map(getBuildId)
@@ -126,11 +139,30 @@ class ReleasesTable extends Component {
         return revsMap;
       });
 
+    let buildsToShow = builds;
+
+    if (!showAllBuilds) {
+      buildsToShow = builds.slice(0, MAX_BUILDS);
+    }
+
     if (builds.length) {
       return (
         <Fragment>
           <h5>Recent builds</h5>
-          {builds.map(revisions => this.renderBuildRow(revisions))}
+          {buildsToShow.map(revisions => this.renderBuildRow(revisions))}
+
+          {builds.length > MAX_BUILDS && (
+            <div className="p-releases-table__row--show-all">
+              <a onClick={this.handleToggleShowMoreBuilds.bind(this)}>
+                {!showAllBuilds && (
+                  <Fragment>Show all builds ({builds.length})</Fragment>
+                )}
+                {showAllBuilds && (
+                  <Fragment>Show only {MAX_BUILDS} builds</Fragment>
+                )}
+              </a>
+            </div>
+          )}
         </Fragment>
       );
     }
@@ -183,8 +215,6 @@ class ReleasesTable extends Component {
     } = this.props;
     const { showAllRisksBranches } = this.state;
 
-    const maxBranches = 3;
-
     // rows can consist of a channel row or expanded history panel
     const rows = [];
 
@@ -203,7 +233,7 @@ class ReleasesTable extends Component {
 
       risksBranches.forEach((branch, i) => {
         const isVisible =
-          isBranchesPanelOpen && (showAllBranches ? true : i < maxBranches);
+          isBranchesPanelOpen && (showAllBranches ? true : i < MAX_BRANCHES);
 
         if (isVisible) {
           rows.push({
@@ -216,7 +246,7 @@ class ReleasesTable extends Component {
         }
       });
 
-      if (risksBranches.length > maxBranches && isBranchesPanelOpen) {
+      if (risksBranches.length > MAX_BRANCHES && isBranchesPanelOpen) {
         rows.push({
           data: {
             risk
@@ -224,18 +254,20 @@ class ReleasesTable extends Component {
           node: (
             <div
               key={`show-all-${risk}-branches`}
-              className="p-releases-table__row--show-all"
+              className="p-releases-table__row--branch"
             >
-              <a onClick={this.handleToggleShowMoreBranches.bind(this, risk)}>
-                {!showAllBranches && (
-                  <Fragment>
-                    Show all branches ({risksBranches.length})
-                  </Fragment>
-                )}
-                {showAllBranches && (
-                  <Fragment>Show only {maxBranches} branches</Fragment>
-                )}
-              </a>
+              <div className="p-releases-table__row--show-all">
+                <a onClick={this.handleToggleShowMoreBranches.bind(this, risk)}>
+                  {!showAllBranches && (
+                    <Fragment>
+                      Show all branches ({risksBranches.length})
+                    </Fragment>
+                  )}
+                  {showAllBranches && (
+                    <Fragment>Show only {MAX_BRANCHES} branches</Fragment>
+                  )}
+                </a>
+              </div>
             </div>
           )
         });
