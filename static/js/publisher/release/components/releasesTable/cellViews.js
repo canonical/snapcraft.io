@@ -117,7 +117,7 @@ export const RevisionInfo = ({
               <br />
               Revision: <b>{from}</b>
               {progressiveState
-                ? ` (${100 - progressiveState.percentage}& of devices)`
+                ? ` (${100 - progressiveState.percentage}% of devices)`
                 : ""}
               <br />
               Revision: <b>{revision.revision}</b> (
