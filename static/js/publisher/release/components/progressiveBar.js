@@ -108,7 +108,7 @@ class ProgressiveBar extends React.Component {
   render() {
     const { readonly, inputName } = this.props;
     const { current, target, scrubTarget, scrubbing } = this.state;
-    const classes = ["progressive-bar"];
+    const classes = ["progressive-bar p-tooltip--btm-center"];
     if (scrubbing) {
       classes.push("is-scrubbing");
     }
@@ -119,8 +119,8 @@ class ProgressiveBar extends React.Component {
       <div
         className={classes.join(" ")}
         ref={this.barHolder}
-        onMouseDown={this.onMouseDownHandler}
-        onWheel={this.onWheelHandler}
+        onMouseDown={!readonly && this.onMouseDownHandler}
+        onWheel={!readonly && this.onWheelHandler}
       >
         {!readonly && (
           <div
@@ -136,7 +136,9 @@ class ProgressiveBar extends React.Component {
             left: `${scrubTarget}%`
           }}
         >
-          {scrubTarget}%
+          <span className="p-tooltip__message" role="tooltip">
+            {scrubTarget}%
+          </span>
         </div>
         <div
           className="progressive-bar__current"
