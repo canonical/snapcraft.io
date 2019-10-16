@@ -15,7 +15,7 @@ import {
   getLaunchpadRevisions,
   getRevisionsFromBuild
 } from "../../selectors";
-import { selectAvailableRevisions } from "../../actions";
+import { selectAvailableRevisions, closeHistory } from "../../actions";
 
 import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
@@ -171,13 +171,13 @@ class ReleasesTable extends Component {
   }
 
   renderTabs() {
-    const { launchpadRevisions } = this.props;
+    const { launchpadRevisions, closeHistory } = this.props;
 
     if (launchpadRevisions.length) {
       return (
         <Fragment>
           <h4>Revisions available to release</h4>
-          <AvailableRevisionsTabs>
+          <AvailableRevisionsTabs onChange={closeHistory}>
             {item => {
               if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
                 return this.renderAvailableRevisions();
@@ -336,7 +336,10 @@ ReleasesTable.propTypes = {
 
   launchpadRevisions: PropTypes.array,
   getRevisionsFromBuild: PropTypes.func,
-  selectAvailableRevisions: PropTypes.func
+
+  // actions
+  selectAvailableRevisions: PropTypes.func,
+  closeHistory: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -354,7 +357,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    selectAvailableRevisions: value => dispatch(selectAvailableRevisions(value))
+    selectAvailableRevisions: value =>
+      dispatch(selectAvailableRevisions(value)),
+    closeHistory: () => dispatch(closeHistory())
   };
 };
 
