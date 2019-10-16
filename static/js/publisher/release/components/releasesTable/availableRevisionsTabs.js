@@ -16,9 +16,17 @@ const menuLabels = {
   }
 };
 
-const AvailableRevisionsTabs = ({ children }) => {
+const AvailableRevisionsTabs = ({ children, onChange }) => {
   const [currentTab, setCurrentTab] = useState(AVAILABLE_REVISIONS_SELECT_ALL);
 
+  const onTabClick = tab => {
+    if (tab !== currentTab) {
+      setCurrentTab(tab);
+      if (onChange) {
+        onChange(tab);
+      }
+    }
+  };
   const renderItem = item => {
     return (
       <li
@@ -31,7 +39,7 @@ const AvailableRevisionsTabs = ({ children }) => {
           tabIndex="0"
           role="tab"
           aria-selected={currentTab === item}
-          onClick={() => setCurrentTab(item)}
+          onClick={() => onTabClick(item)}
         >
           {menuLabels[item].label}
         </a>
@@ -56,7 +64,8 @@ const AvailableRevisionsTabs = ({ children }) => {
 };
 
 AvailableRevisionsTabs.propTypes = {
-  children: PropTypes.func
+  children: PropTypes.func,
+  onChange: PropTypes.func
 };
 
 export default AvailableRevisionsTabs;
