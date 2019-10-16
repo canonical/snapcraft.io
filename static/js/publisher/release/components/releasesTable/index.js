@@ -111,7 +111,7 @@ class ReleasesTable extends Component {
   renderAvailableRevisions() {
     return (
       <Fragment>
-        <h5>Select revisions</h5>
+        <h5>Promote from uploaded revisions</h5>
 
         {this.renderAvailableRevisionsRow()}
       </Fragment>
@@ -148,7 +148,7 @@ class ReleasesTable extends Component {
     if (builds.length) {
       return (
         <Fragment>
-          <h5>Recent builds</h5>
+          <h5>Promote from recent Launchpad builds</h5>
           {buildsToShow.map(revisions => this.renderBuildRow(revisions))}
 
           {builds.length > MAX_BUILDS && (
