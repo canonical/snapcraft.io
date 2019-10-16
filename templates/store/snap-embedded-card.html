@@ -38,7 +38,8 @@
 {% if show_screenshot and screenshots[0] %}
 <div class="p-strip is-shallow">
   <div class="row">
-  {% set screenshot = screenshots[0] %}
+    {% set screenshot = screenshots[0] %}
+    {% set disable_lazy = True %}
   {% include "partials/_snap-screenshot.html" %}
   </div>
 </div>
