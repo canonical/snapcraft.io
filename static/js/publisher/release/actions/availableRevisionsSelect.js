@@ -1,6 +1,7 @@
 import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
-  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
+  AVAILABLE_REVISIONS_SELECT_ALL
 } from "../constants";
 import { selectRevision, clearSelectedRevisions } from "./channelMap";
 import {
@@ -31,7 +32,10 @@ export function selectAvailableRevisions(value) {
     let revisionsFilter = () => true;
 
     // for Recent select only revisions from most recent uploaded version
-    if (value === AVAILABLE_REVISIONS_SELECT_RECENT) {
+    if (
+      value === AVAILABLE_REVISIONS_SELECT_RECENT ||
+      value === AVAILABLE_REVISIONS_SELECT_ALL
+    ) {
       const recentRevisions = getFilteredAvailableRevisions(state);
 
       if (recentRevisions.length > 0) {
