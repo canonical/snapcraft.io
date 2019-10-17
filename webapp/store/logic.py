@@ -416,7 +416,7 @@ def filter_screenshots(media):
     banner_regex = r"/banner(\-icon)?(_.*)?\.(png|jpg)"
 
     return [
-        m["url"]
+        m
         for m in media
         if m["type"] == "screenshot" and not re.search(banner_regex, m["url"])
     ][:5]

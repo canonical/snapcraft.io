@@ -1,16 +1,36 @@
 <div class="p-carousel__item--screenshot swiper-slide">
-  {% if screenshot.endswith('.gif') %}
-  <video autoplay loop muted playsinline data-original="{{ screenshot }}">
-    <source src="https://res.cloudinary.com/canonical/image/fetch/f_webm/{{ screenshot }}" type="video/webm">
-    <source src="https://res.cloudinary.com/canonical/image/fetch/f_mp4/{{ screenshot }}" type="video/mp4">
-    <img src="https://res.cloudinary.com/canonical/image/fetch/f_jpg,q_auto,f_auto,w_430/{{ screenshot }}" />
-  </video>
+  {% if screenshot.url.endswith('.gif') %}
+    <video autoplay loop muted playsinline data-original="{{ screenshot.url }}">
+      <source src="https://res.cloudinary.com/canonical/image/fetch/f_webm/{{ screenshot.url }}" type="video/webm">
+      <source src="https://res.cloudinary.com/canonical/image/fetch/f_mp4/{{ screenshot.url }}" type="video/mp4">
+      <img src="https://res.cloudinary.com/canonical/image/fetch/f_jpg,q_auto,f_auto,w_430/{{ screenshot.url }}" />
+    </video>
   {% else %}
-  <img src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }}"
-       srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot }} 215w,
-                          https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/{{ screenshot }} 430w"
-       sizes="(min-width: 1031px) 430px,
+    {# if the screenshot was uploaded recently - we can use the information provided #}
+    {% if screenshot.width and screenshot.height and not disable_lazy %}
+      {% set ratio = screenshot.width / screenshot.height %}
+      {% set is_hidef = screenshot.width > 819 %}
+      {% set width = "819" if is_hidef else screenshot.width %}
+      {% set height = screenshot.width / ratio %}
+      {{
+        image(
+          url=screenshot.url,
+          alt="",
+          width=width|int,
+          height=height|int,
+          hi_def=is_hidef,
+          loading="eager",
+          attrs={"data-original": screenshot.url}
+        ) | safe
+      }}
+    {# otherwise fall back to the faithful #}
+    {% else %}
+      <img src="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot.url }}"
+           srcset="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_430/{{ screenshot.url }} 215w,
+                          https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_860/{{ screenshot.url }} 430w"
+           sizes="(min-width: 1031px) 430px,
                           (max-width: 1030px) and (min-width: 876px) 430px,
-                          (max-width: 760px) 215px" data-original="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_1170/{{ screenshot }}" alt="">
+                          (max-width: 760px) 215px" data-original="https://res.cloudinary.com/canonical/image/fetch/q_auto,f_auto,w_1170/{{ screenshot.url }}" alt="">
+    {% endif %}
   {% endif %}
 </div>
