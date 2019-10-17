@@ -1,0 +1,33 @@
+name: Red Hat Enterprise Linux
+color-1: "#ee0000"
+color-2: "#820000"
+logo: https://assets.ubuntu.com/v1/eb20b7c6-red-hat-mono.svg # TODO
+logo-mono: https://assets.ubuntu.com/v1/eb20b7c6-red-hat-mono.svg
+install:
+  - action: |
+      Snap is available for <a href="https://www.redhat.com/" class="p-link--external">Red Hat Enterprise Linux (RHEL) 7</a>, from the 7.6 release onward, from the <a href="https://fedoraproject.org/wiki/EPEL" class="p-link--external">Extra Packages for Enterprise Linux (EPEL)</a> repository.
+  - action: |
+      It is not yet available in the EPEL 8 repository, and consequently, not yet available for <a href="https://www.redhat.com/en/enterprise-linux-8" class="p-link--external">RHEL 8</a> unless you <a href="https://snapcraft.io/docs/building-snap-rpms-on-rhel">build the RPM yourself</a>.
+  - action: |
+      The EPEL repository can be added to your system with the following command:
+    command: |
+      sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  - action: |
+      Adding the <i>optional</i> and <i>extras</i> repositories is also recommended:
+    command: |
+      sudo subscription-manager repos --enable "rhel-*-optional-rpms" --enable "rhel-*-extras-rpms"
+      sudo yum update
+  - action: |
+      Snap can now be installed as follows:
+    command: |
+      sudo yum install snapd
+  - action: |
+      Once installed, the <i>systemd</i> unit that manages the main snap communication socket needs to be enabled:
+    command: |
+      sudo systemctl enable --now snapd.socket
+  - action: |
+      To enable <i>classic</i> snap support, enter the following to create a symbolic link between <code>/var/lib/snapd/snap</code> and <code>/snap</code>:
+    command: |
+      sudo ln -s /var/lib/snapd/snap /snap
+  - action: |
+      Either log out and back in again or restart your system to ensure snap’s paths are updated correctly.
