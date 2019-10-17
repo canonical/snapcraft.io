@@ -1,4 +1,4 @@
 <div class="p-code-copyable">
-  <textarea class="p-code-copyable__input" id="snippet-{{ snippet_id }}" readonly="readonly" rows="{{ snippet_value.count('\n') }}">{{ snippet_value }}</textarea>
+  <code class="p-code-copyable__input" id="snippet-{{ snippet_id }}">{{ snippet_value }}</code>
   <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-{{ snippet_id }}">Copy to clipboard</button>
 </div>
