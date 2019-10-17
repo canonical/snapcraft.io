@@ -1,7 +1,7 @@
 name: Red Hat Enterprise Linux
 color-1: "#ee0000"
 color-2: "#820000"
-logo: https://assets.ubuntu.com/v1/eb20b7c6-red-hat-mono.svg # TODO
+logo: https://assets.ubuntu.com/v1/be89e41a-red-hat-2019-primary-stacked.svg
 logo-mono: https://assets.ubuntu.com/v1/eb20b7c6-red-hat-mono.svg
 install:
   - action: |
