@@ -496,21 +496,6 @@
     margin-top: $sp-x-small;
   }
 
-  .p-select-button {
-    @extend %vf-input-elements;
-    // based on vanilla select styles from  _base_forms.scss
-    @include vf-icon-chevron;
-    background-color: $color-x-light;
-    background-position: right $sph-inner--small center;
-    background-repeat: no-repeat;
-    background-size: map-get($icon-sizes, default);
-    color: $color-dark;
-    min-height: map-get($line-heights, default-text);
-    min-width: 100px; // smaller then normal
-    padding-right: $sph-inner--large;
-    text-align: left;
-  }
-
   .p-icon--lp {
     @extend %icon;
     background-image: url("#{$assets-path}ddb379a6-launchpad-logo.svg");
