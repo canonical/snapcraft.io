@@ -87,9 +87,6 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_p-navigation';
 @include snapcraft-p-navigation;
 
-@import 'snapcraft_custom-typography';
-@include snapcraft-custom-typography;
-
 @import 'snapcraft_banner';
 @include snapcraft-banner;
 
