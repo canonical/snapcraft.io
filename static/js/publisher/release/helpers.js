@@ -6,17 +6,15 @@ export function isInDevmode(revision) {
 }
 
 export function getChannelName(track, risk, branch) {
-  const obj = {
+  if (risk === AVAILABLE) {
+    return AVAILABLE;
+  }
+
+  return getChannelString({
     track,
     risk,
     branch
-  };
-
-  if (risk === AVAILABLE) {
-    delete obj.track;
-  }
-
-  return getChannelString(obj);
+  });
 }
 
 export function getBuildId(revision) {

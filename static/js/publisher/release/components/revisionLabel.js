@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { isInDevmode } from "../helpers";
 
-export default function DevmodeRevision({
+export default function RevisionLabel({
   revision,
   showTooltip,
   isProgressive
@@ -43,7 +43,7 @@ export default function DevmodeRevision({
   return revisionLabel;
 }
 
-DevmodeRevision.propTypes = {
+RevisionLabel.propTypes = {
   revision: PropTypes.object.isRequired,
   showTooltip: PropTypes.bool,
   isProgressive: PropTypes.bool

@@ -1,7 +1,40 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-class ProgressiveBar extends React.Component {
+const ProgressiveBar = ({ percentage, targetPercentage, readonly }) => (
+  <div className="progressive-bar p-tooltip--btm-center">
+    {!readonly && (
+      <div
+        className="progressive-bar__target"
+        style={{ width: `${targetPercentage}%` }}
+      >
+        <div className="progressive-bar__target-adjust" />
+      </div>
+    )}
+    <div
+      className="progressive-bar__target-value"
+      style={{
+        left: `${targetPercentage ? targetPercentage : percentage}%`
+      }}
+    >
+      <span className="p-tooltip__message" role="tooltip">
+        {targetPercentage ? targetPercentage : percentage}%
+      </span>
+    </div>
+    <div
+      className="progressive-bar__current"
+      style={{ width: `${percentage}%` }}
+    />
+  </div>
+);
+
+ProgressiveBar.propTypes = {
+  percentage: PropTypes.number,
+  targetPercentage: PropTypes.number,
+  readonly: PropTypes.bool
+};
+
+class InteractiveProgressiveBar extends React.Component {
   constructor(props) {
     super(props);
 
@@ -108,7 +141,7 @@ class ProgressiveBar extends React.Component {
   render() {
     const { readonly, inputName } = this.props;
     const { current, target, scrubTarget, scrubbing } = this.state;
-    const classes = ["progressive-bar p-tooltip--btm-center"];
+    const classes = ["progressive-bar_interactive-wrapper"];
     if (scrubbing) {
       classes.push("is-scrubbing");
     }
@@ -122,27 +155,10 @@ class ProgressiveBar extends React.Component {
         onMouseDown={!readonly && this.onMouseDownHandler}
         onWheel={!readonly && this.onWheelHandler}
       >
-        {!readonly && (
-          <div
-            className="progressive-bar__target"
-            style={{ width: `${scrubTarget}%` }}
-          >
-            <div className="progressive-bar__target-adjust" />
-          </div>
-        )}
-        <div
-          className="progressive-bar__target-value"
-          style={{
-            left: `${scrubTarget}%`
-          }}
-        >
-          <span className="p-tooltip__message" role="tooltip">
-            {scrubTarget}%
-          </span>
-        </div>
-        <div
-          className="progressive-bar__current"
-          style={{ width: `${current}%` }}
+        <ProgressiveBar
+          percentage={current}
+          targetPercentage={scrubTarget}
+          readonly={readonly}
         />
         <input type="hidden" name={inputName} value={target} />
       </div>
@@ -150,11 +166,11 @@ class ProgressiveBar extends React.Component {
   }
 }
 
-ProgressiveBar.propTypes = {
+InteractiveProgressiveBar.propTypes = {
   inputName: PropTypes.string,
   percentage: PropTypes.number,
   readonly: PropTypes.bool,
   singleDirection: PropTypes.number
 };
 
-export default ProgressiveBar;
+export { ProgressiveBar, InteractiveProgressiveBar };

@@ -10,8 +10,8 @@ import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 import { getSelectedRevisions, getProgressiveState } from "../selectors";
 
-import DevmodeRevision from "./devmodeRevision";
-import ProgressiveBar from "./progressiveBar";
+import RevisionLabel from "./revisionLabel";
+import { ProgressiveBar } from "./progressiveBar";
 
 const RevisionsListRow = props => {
   const {
@@ -85,12 +85,12 @@ const RevisionsListRow = props => {
               className="p-revisions-list__revision is-inline-label"
               htmlFor={id}
             >
-              <DevmodeRevision revision={revision} showTooltip={true} />
+              <RevisionLabel revision={revision} showTooltip={true} />
             </label>
           </Fragment>
         ) : (
           <span className="p-revisions-list__revision">
-            <DevmodeRevision revision={revision} showTooltip={true} />
+            <RevisionLabel revision={revision} showTooltip={true} />
           </span>
         )}
       </td>

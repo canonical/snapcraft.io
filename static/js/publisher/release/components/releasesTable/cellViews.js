@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-import DevmodeRevision from "../devmodeRevision";
+import RevisionLabel from "../revisionLabel";
 
 import { isInDevmode, isRevisionBuiltOnLauchpad } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
@@ -69,7 +69,7 @@ export const RevisionInfo = ({
     <Fragment>
       <span className="p-release-data__info">
         <span className="p-release-data__title">
-          <DevmodeRevision
+          <RevisionLabel
             revision={revision}
             showTooltip={false}
             isProgressive={from ? true : false}
