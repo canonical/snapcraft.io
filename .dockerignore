@@ -1,11 +1,22 @@
 # Don't include caches, logs and documentation
-cache.sqlite
 *.log
+.circleci
+.codecov
+.git
+.github
+.gitignore
+.vscode
+cache.sqlite
 README.md
 HACKING.md
 
 # The run script isn't needed
 run
+.docker-project
+
+# Environemnt
+.env
+.env.local
 
 # Node is only needed for building, not running
 package.json
