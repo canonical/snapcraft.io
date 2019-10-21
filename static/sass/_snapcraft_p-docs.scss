@@ -5,6 +5,12 @@
     display: flex;
     margin: 0 auto;
 
+    // override for full width text
+    // https://github.com/canonical-web-and-design/vanilla-framework/issues/1794
+    p {
+      max-width: 100%;
+    }
+
     // Discourse adds "emoji" <img>s, which are huge
     // They need to be constrained
     .emoji {
