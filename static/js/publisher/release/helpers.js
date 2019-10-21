@@ -1,15 +1,22 @@
 import { AVAILABLE } from "./constants";
+import { getChannelString } from "../../libs/channels";
 
 export function isInDevmode(revision) {
   return revision.confinement === "devmode" || revision.grade === "devel";
 }
 
 export function getChannelName(track, risk, branch) {
-  let name = risk === AVAILABLE ? risk : `${track}/${risk}`;
-  if (branch) {
-    name = `${name}/${branch}`;
+  const obj = {
+    track,
+    risk,
+    branch
+  };
+
+  if (risk === AVAILABLE) {
+    delete obj.track;
   }
-  return name;
+
+  return getChannelString(obj);
 }
 
 export function getBuildId(revision) {

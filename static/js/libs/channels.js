@@ -265,7 +265,7 @@ function sortChannels(channels, options) {
  * @returns string
  */
 function getChannelString(channelObj) {
-  return `${channelObj.track}/${channelObj.risk}${
+  return `${channelObj.track ? `${channelObj.track}/` : ""}${channelObj.risk}${
     channelObj.branch ? `/${channelObj.branch}` : ""
   }`;
 }
