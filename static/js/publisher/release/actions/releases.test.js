@@ -154,6 +154,7 @@ describe("releases actions", () => {
         architectures: ["amd64"],
         revision: 3
       };
+
       const release = {
         architecture: "amd64",
         branch: null,
@@ -170,7 +171,12 @@ describe("releases actions", () => {
         pendingReleases: {
           "3": {
             revision: revision,
-            channels: ["latest/edge"]
+            channels: ["latest/edge"],
+            progressive: {
+              key: "test",
+              percentage: 50,
+              paused: false
+            }
           }
         },
         pendingCloses: ["latest/edge"],
