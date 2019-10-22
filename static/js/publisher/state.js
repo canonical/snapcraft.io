@@ -60,7 +60,8 @@ function updateState(state, values) {
       });
       // else if it's just a plain object
     } else {
-      for (let key in values) {
+      let key;
+      for (key in values) {
         if (allowedKeys.includes(key)) {
           state[key] = values[key];
         }
@@ -72,7 +73,8 @@ function updateState(state, values) {
 function diffState(initialState, state) {
   const diff = {};
 
-  for (let key of allowedKeys) {
+  let key;
+  for (key of allowedKeys) {
     // images is an array of objects so compare stringified version
     if (key === "images" && state[key]) {
       const images = state[key]
