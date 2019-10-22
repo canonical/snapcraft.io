@@ -262,32 +262,27 @@ export function getRevisionsFromBuild(state, buildId) {
   );
 }
 
-// return the progressive release status based on channel, arch and optional revision
+// return the progressive release status based on channel, arch
 export function getProgressiveState(state, channel, arch, revision) {
   const { releases } = state;
-  const release = releases.filter(item => {
-    if (
-      channel === getChannelString(item) &&
-      arch === item.architecture &&
-      item.revision &&
-      (!revision || item.revision === revision)
-    ) {
-      return item;
-    }
-    return false;
-  });
+  const allReleases = releases.filter(
+    item => channel === getChannelString(item) && arch === item.architecture
+  );
+
+  const releaseIndex = allReleases.findIndex(
+    item => revision === item.revision
+  );
 
   let progressive = null;
 
-  if (
-    release.length > 1 &&
-    release[0] &&
-    release[0] &&
-    release[0].progressive &&
-    release[0].progressive.key
-  ) {
-    progressive = release[0].progressive;
-    progressive.from = release[1].revision;
+  const release = allReleases[releaseIndex];
+
+  if (release && release.progressive && release.progressive.key) {
+    progressive = release.progressive;
+
+    if (allReleases[releaseIndex + 1]) {
+      progressive.from = allReleases[releaseIndex + 1].revision;
+    }
   }
 
   return progressive;

@@ -846,11 +846,17 @@ describe("getProgressiveState", () => {
       ]
     };
 
-    expect(getProgressiveState(state, "latest/stable", "arch2")).toEqual({
+    expect(getProgressiveState(state, "latest/stable", "arch2", "3")).toEqual({
       from: "2",
       key: "test",
       paused: false,
       percentage: 60
+    });
+
+    expect(getProgressiveState(state, "latest/stable", "arch2", "2")).toEqual({
+      key: "test",
+      paused: false,
+      percentage: 50
     });
   });
 });
