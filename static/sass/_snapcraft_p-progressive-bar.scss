@@ -1,0 +1,74 @@
+@mixin snapcraft-p-progressive-bar {
+  $inactive: scale-color($color-link, $lightness: 90%);
+  $active: $color-link;
+  $target: scale-color($color-link, $lightness: -20%);
+
+  .progressive-bar {
+    background: $inactive;
+    border-radius: 9px;
+    height: 9px;
+    margin-top: 7px;
+    position: relative;
+  }
+
+  .progressive-bar.is-interactive {
+    cursor: col-resize;
+    user-select: none;
+  }
+
+  .progressive-bar__current {
+    background: $active;
+    border-radius: 9px 0 0 9px;
+    border-right: 1px solid $color-x-light;
+    height: 9px;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+  }
+
+  .progressive-bar__target-value {
+    @include vf-animation(opacity, snap, in);
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: translate(-50%, 1rem);
+  }
+
+  .progressive-bar:hover .progressive-bar__target-value,
+  .progressive-bar.is-scrubbing .progressive-bar__target-value {
+    opacity: 1;
+  }
+
+  .progressive-bar__target {
+    background: $target;
+    border-radius: 9px 0 0 9px;
+    border-right: 1px solid $color-x-light;
+    height: 9px;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+  }
+
+  .progressive-bar__target-adjust {
+    @include vf-animation(all, snap, in);
+    background: $color-x-dark;
+    border-radius: 3px;
+    bottom: 0;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    z-index: 1;
+  }
+
+  .progressive-bar:hover .progressive-bar__target-adjust,
+  .progressive-bar.is-scrubbing .progressive-bar__target-adjust {
+    bottom: -4px;
+    top: -4px;
+    transform: translateX(1px);
+    width: 3px;
+  }
+}

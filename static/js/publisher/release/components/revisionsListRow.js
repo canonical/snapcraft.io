@@ -5,11 +5,13 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
+import { getChannelString } from "../../../libs/channels.js";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { getSelectedRevisions } from "../selectors";
+import { getSelectedRevisions, getProgressiveState } from "../selectors";
 
-import DevmodeRevision from "./devmodeRevision";
+import RevisionLabel from "./revisionLabel";
+import { ProgressiveBar } from "./progressiveBar";
 
 const RevisionsListRow = props => {
   const {
@@ -18,7 +20,8 @@ const RevisionsListRow = props => {
     showChannels,
     showBuildRequest,
     isPending,
-    isActive
+    isActive,
+    getProgressiveState
   } = props;
 
   const revisionDate = revision.release
@@ -29,6 +32,16 @@ const RevisionsListRow = props => {
 
   function revisionSelectChange() {
     props.toggleRevision(revision);
+  }
+
+  let progressiveState;
+
+  if (revision.release) {
+    progressiveState = getProgressiveState(
+      getChannelString(revision.release),
+      revision.release.architecture,
+      revision.revision
+    );
   }
 
   const [isDragging, isGrabbing, drag] = useDragging({
@@ -72,12 +85,12 @@ const RevisionsListRow = props => {
               className="p-revisions-list__revision is-inline-label"
               htmlFor={id}
             >
-              <DevmodeRevision revision={revision} showTooltip={true} />
+              <RevisionLabel revision={revision} showTooltip={true} />
             </label>
           </Fragment>
         ) : (
           <span className="p-revisions-list__revision">
-            <DevmodeRevision revision={revision} showTooltip={true} />
+            <RevisionLabel revision={revision} showTooltip={true} />
           </span>
         )}
       </td>
@@ -88,6 +101,16 @@ const RevisionsListRow = props => {
             <Fragment>
               <i className="p-icon--lp" /> {buildRequestId}
             </Fragment>
+          )}
+        </td>
+      )}
+      {!showChannels && (
+        <td>
+          {progressiveState && (
+            <ProgressiveBar
+              percentage={progressiveState.percentage}
+              readonly={true}
+            />
           )}
         </td>
       )}
@@ -126,6 +149,7 @@ RevisionsListRow.propTypes = {
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
+  getProgressiveState: PropTypes.func,
 
   // actions
   toggleRevision: PropTypes.func.isRequired
@@ -133,7 +157,9 @@ RevisionsListRow.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    selectedRevisions: getSelectedRevisions(state)
+    selectedRevisions: getSelectedRevisions(state),
+    getProgressiveState: (channel, arch, revision) =>
+      getProgressiveState(state, channel, arch, revision)
   };
 };
 
