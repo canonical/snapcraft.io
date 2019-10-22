@@ -280,6 +280,8 @@ export function getProgressiveState(state, channel, arch, revision) {
   if (release && release.progressive && release.progressive.key) {
     progressive = release.progressive;
 
+    // TODO: Confirm that this is true when multiple progressive
+    // releases have occured.
     if (allReleases[releaseIndex + 1]) {
       progressive.from = allReleases[releaseIndex + 1].revision;
     }
