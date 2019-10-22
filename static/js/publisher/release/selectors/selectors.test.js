@@ -21,7 +21,8 @@ import {
   getBranches,
   hasBuildRequestId,
   getLaunchpadRevisions,
-  getRevisionsFromBuild
+  getRevisionsFromBuild,
+  getProgressiveState
 } from "./index";
 
 import reducers from "../reducers";
@@ -803,5 +804,59 @@ describe("getRevisionsFromBuild", () => {
       stateWithLauchpadBuilds.revisions[3],
       stateWithLauchpadBuilds.revisions[4]
     );
+  });
+});
+
+describe("getProgressiveState", () => {
+  it("should return the progressive release state of a channel and arch", () => {
+    const state = {
+      releases: [
+        {
+          architecture: "arch1",
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "1",
+          progressive: null
+        },
+        {
+          architecture: "arch2",
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "3",
+          progressive: {
+            key: "test",
+            percentage: 60,
+            paused: false
+          }
+        },
+        {
+          architecture: "arch2",
+          branch: null,
+          track: "latest",
+          risk: "stable",
+          revision: "2",
+          progressive: {
+            key: "test",
+            percentage: 50,
+            paused: false
+          }
+        }
+      ]
+    };
+
+    expect(getProgressiveState(state, "latest/stable", "arch2", "3")).toEqual({
+      from: "2",
+      key: "test",
+      paused: false,
+      percentage: 60
+    });
+
+    expect(getProgressiveState(state, "latest/stable", "arch2", "2")).toEqual({
+      key: "test",
+      paused: false,
+      percentage: 50
+    });
   });
 });

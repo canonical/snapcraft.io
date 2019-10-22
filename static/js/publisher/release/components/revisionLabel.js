@@ -3,14 +3,24 @@ import PropTypes from "prop-types";
 
 import { isInDevmode } from "../helpers";
 
-export default function DevmodeRevision({ revision, showTooltip }) {
+export default function RevisionLabel({
+  revision,
+  showTooltip,
+  isProgressive
+}) {
+  let revisionLabel = revision.revision;
+
+  if (isProgressive) {
+    revisionLabel = `→ ${revisionLabel}`;
+  }
+
   if (isInDevmode(revision)) {
     return (
       <span
         className="p-tooltip p-tooltip--btm-center"
         aria-describedby={`revision-devmode-${revision.revision}`}
       >
-        {revision.revision}*
+        {revisionLabel}*
         {showTooltip && (
           <span
             className="p-tooltip__message u-align--center"
@@ -30,10 +40,11 @@ export default function DevmodeRevision({ revision, showTooltip }) {
     );
   }
 
-  return revision.revision;
+  return revisionLabel;
 }
 
-DevmodeRevision.propTypes = {
+RevisionLabel.propTypes = {
   revision: PropTypes.object.isRequired,
-  showTooltip: PropTypes.bool
+  showTooltip: PropTypes.bool,
+  isProgressive: PropTypes.bool
 };
