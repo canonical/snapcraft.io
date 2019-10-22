@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-import DevmodeRevision from "../devmodeRevision";
+import RevisionLabel from "../revisionLabel";
 
 import { isInDevmode, isRevisionBuiltOnLauchpad } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
@@ -48,18 +48,32 @@ EmptyInfo.propTypes = {
 };
 
 // contents of a cell with a revision
-export const RevisionInfo = ({ revision, isPending, showVersion }) => {
+export const RevisionInfo = ({
+  revision,
+  isPending,
+  showVersion,
+  progressiveState
+}) => {
+  let from = null;
   let buildIcon = null;
 
   if (isRevisionBuiltOnLauchpad(revision)) {
     buildIcon = <i className="p-icon--lp" />;
   }
 
+  if (progressiveState && progressiveState.from) {
+    from = progressiveState.from;
+  }
+
   return (
     <Fragment>
       <span className="p-release-data__info">
         <span className="p-release-data__title">
-          <DevmodeRevision revision={revision} showTooltip={false} />
+          <RevisionLabel
+            revision={revision}
+            showTooltip={false}
+            isProgressive={from ? true : false}
+          />
         </span>
         {showVersion && (
           <span className="p-release-data__meta">{revision.version}</span>
@@ -94,6 +108,22 @@ export const RevisionInfo = ({ revision, isPending, showVersion }) => {
               )}
             </Fragment>
           )}
+          <br />
+          {from && (
+            <Fragment>
+              <b>
+                Progressive release of revision {revision.revision} in progress
+              </b>
+              <br />
+              Revision: <b>{from}</b>
+              {progressiveState
+                ? ` (${100 - progressiveState.percentage}% of devices)`
+                : ""}
+              <br />
+              Revision: <b>{revision.revision}</b> (
+              {progressiveState.percentage}% of devices)
+            </Fragment>
+          )}
         </div>
 
         {isInDevmode(revision) && (
@@ -111,7 +141,8 @@ export const RevisionInfo = ({ revision, isPending, showVersion }) => {
 RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
-  showVersion: PropTypes.bool
+  showVersion: PropTypes.bool,
+  progressiveState: PropTypes.object
 };
 
 // generic draggable view of releases table cell

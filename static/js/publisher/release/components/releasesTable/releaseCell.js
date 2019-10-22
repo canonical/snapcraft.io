@@ -16,7 +16,8 @@ import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
   hasPendingRelease,
-  getRevisionsFromBuild
+  getRevisionsFromBuild,
+  getProgressiveState
 } from "../../selectors";
 
 import {
@@ -43,7 +44,8 @@ const ReleasesTableReleaseCell = props => {
     getAvailableCount,
     hasPendingRelease,
     undoRelease,
-    toggleHistoryPanel
+    toggleHistoryPanel,
+    getProgressiveState
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -56,6 +58,16 @@ const ReleasesTableReleaseCell = props => {
 
   // check if there is a pending release in this cell
   const isPendingRelease = hasPendingRelease(channel, arch);
+
+  let progressiveState = null;
+
+  if (currentRevision) {
+    progressiveState = getProgressiveState(
+      channel,
+      arch,
+      currentRevision.revision
+    );
+  }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
   const isPending = isPendingRelease || isChannelPendingClose;
@@ -118,6 +130,7 @@ const ReleasesTableReleaseCell = props => {
         revision={currentRevision}
         isPending={isPendingRelease}
         showVersion={showVersion}
+        progressiveState={progressiveState}
       />
     );
   } else if (isUnassigned) {
@@ -147,6 +160,13 @@ const ReleasesTableReleaseCell = props => {
           branchName
         )}
       />
+      {progressiveState &&
+        progressiveState.percentage && (
+          <span
+            className="p-release__progressive-percentage"
+            style={{ width: `${progressiveState.percentage}%` }}
+          />
+        )}
     </ReleasesTableCellView>
   );
 };
@@ -161,6 +181,7 @@ ReleasesTableReleaseCell.propTypes = {
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
   getRevisionsFromBuild: PropTypes.func,
+  getProgressiveState: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
@@ -186,7 +207,9 @@ const mapStateToProps = state => {
       getFilteredAvailableRevisionsForArch(state, arch).length,
     hasPendingRelease: (channel, arch) =>
       hasPendingRelease(state, channel, arch),
-    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId)
+    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId),
+    getProgressiveState: (channel, arch, revision) =>
+      getProgressiveState(state, channel, arch, revision)
   };
 };
 
