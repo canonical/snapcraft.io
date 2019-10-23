@@ -42,9 +42,8 @@ export function isSameVersion(revisions) {
   let versionsMap = {};
 
   if (revisions) {
-    let arch;
     // calculate map of architectures for each version
-    for (arch in revisions) {
+    for (const arch in revisions) {
       const revision = revisions[arch];
       const version = revision.version;
       if (!versionsMap[version]) {

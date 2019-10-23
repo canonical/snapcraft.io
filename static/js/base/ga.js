@@ -72,9 +72,7 @@ if (typeof dataLayer !== "undefined") {
       return;
     }
 
-    let key;
-
-    for (key in events) {
+    for (let key in events) {
       if (target.matches(key)) {
         // This prevents subsequent matches triggering
         // So the order the events are added is important!

@@ -23,8 +23,7 @@ function submitEnabler(formSelector, buttonSelectors) {
 
   const initialStateJson = {};
 
-  let key, value;
-  for ([key, value] of initialState.entries()) {
+  for (const [key, value] of initialState.entries()) {
     initialStateJson[key] = value;
   }
 
@@ -39,8 +38,7 @@ function submitEnabler(formSelector, buttonSelectors) {
     const newState = new FormData(formEl);
     const newStateJson = {};
 
-    let key, value;
-    for ([key, value] of newState.entries()) {
+    for (const [key, value] of newState.entries()) {
       newStateJson[key] = value;
     }
 

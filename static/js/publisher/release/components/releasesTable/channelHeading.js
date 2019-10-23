@@ -212,8 +212,7 @@ const ReleasesTableChannelHeading = props => {
 
   if (rowRevisions) {
     // calculate map of architectures for each version
-    let arch;
-    for (arch in rowRevisions) {
+    for (const arch in rowRevisions) {
       const revision = rowRevisions[arch];
       const version = revision.version;
       if (!versionsMap[version]) {
