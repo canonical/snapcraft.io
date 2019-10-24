@@ -1,12 +1,17 @@
 <div id="js-snap-{{ category }}">
   <div class="u-fixed-width">
-    {% if has_featured %}
-      {% if snaps[0].banner_url %}
-        <a class="p-featured-snap--banner" href="/{{ snaps[0].package_name }}">     
+    {% if snaps %}
+      {% set snap = snaps[0] %}
+    {% else %}
+      {% set snap = None %}
+    {% endif %}
+    {% if snap and has_featured %}
+      {% if snap and snap.banner_url %}
+        <a class="p-featured-snap--banner" href="/{{ snap.package_name }}">
           {{
             image(
-              url=snaps[0].banner_url,
-              alt=snaps[0].title,
+              url=snap.banner_url,
+              alt=snap.title,
               width="1104",
               height="368",
               hi_def=True,
@@ -14,26 +19,29 @@
           }}
         </a>
       {% else %}
-        {% if snaps[0]["icon_url"] != "" %}
-            {% set snap = snaps[0] %}
-            {% include "store/_generated-featured-snap-partial.html" %}
+        {% if snap["icon_url"] != "" %}
+          {% include "store/_generated-featured-snap-partial.html" %}
         {% endif %}
       {% endif %}
     {% endif %}
   </div>
   <div class="row">
-      {% set show_summary = True %}
-      {% for snap in snaps %}
-          {% if loop.index != 1 or snap["icon_url"] == "" %}
-              {% if has_featured %}
-                  {% set icon_size = "large" %}
-                  <div class="col-4 col-medium-3">
-              {% else %}
-                  <div class="col-3">
-              {% endif %}
-              {% include "store/_media-object-snap-partial.html" %}
-              </div>
+     {% set show_summary = True %}
+     {% if snaps %}
+       {% for snap in snaps %}
+         {% if loop.index != 1 or snap["icon_url"] == "" %}
+           {% if has_featured %}
+             {% set icon_size = "large" %}
+             <div class="col-4 col-medium-3">
+            {% else %}
+              <div class="col-3">
+            {% endif %}
+            {% include "store/_media-object-snap-partial.html" %}
+            </div>
           {% endif %}
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        <p>Sorry we're having difficulty getting a list of snaps. Please try again later.</p>
+      {% endif %}
   </div>
 </div>
