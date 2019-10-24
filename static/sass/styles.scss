@@ -13,9 +13,6 @@ $breakpoint-navigation-threshold: 800px;
 // make social icons match footer p-strip--light color
 $color-social-icon-foreground: $color-light;
 
-// snapcraft dark navigation
-$colors--dark-theme: map-merge($colors--dark-theme, (background: #333));
-
 @include vf-base;
 
 @include vf-p-accordion;
