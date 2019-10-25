@@ -1,6 +1,8 @@
 export const RELEASE_REVISION = "RELEASE_REVISION";
 export const UNDO_RELEASE = "UNDO_RELEASE";
 export const CANCEL_PENDING_RELEASES = "CANCEL_PENDING_RELEASES";
+export const SET_PROGRESSIVE_RELEASE_PERCENTAGE =
+  "SET_PROGRESSIVE_RELEASE_PERCENTAGE";
 
 export function releaseRevision(revision, channel) {
   return {
@@ -10,6 +12,16 @@ export function releaseRevision(revision, channel) {
 }
 
 import { getPendingChannelMap } from "../selectors";
+
+export function setProgressiveReleasePercentage(key, percentage) {
+  return {
+    type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
+    payload: {
+      key,
+      percentage
+    }
+  };
+}
 
 export function promoteRevision(revision, channel) {
   return (dispatch, getState) => {

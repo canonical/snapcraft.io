@@ -2,7 +2,8 @@ import pendingReleases from "./pendingReleases";
 import {
   RELEASE_REVISION,
   UNDO_RELEASE,
-  CANCEL_PENDING_RELEASES
+  CANCEL_PENDING_RELEASES,
+  SET_PROGRESSIVE_RELEASE_PERCENTAGE
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
@@ -317,6 +318,92 @@ describe("pendingReleases", () => {
         );
 
         expect(result[3]).toBeUndefined();
+      });
+    });
+  });
+
+  describe("on SET_PROGRESSIVE_RELEASE_PERCENTAGE action", () => {
+    let setProgressiveAction = {
+      type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
+      payload: {
+        key: "progressive-test",
+        percentage: 50
+      }
+    };
+
+    describe("when state is empty", () => {
+      const emptyState = {};
+
+      it("should not affect empty state", () => {
+        const result = pendingReleases(emptyState, setProgressiveAction);
+
+        expect(result).toEqual(emptyState);
+      });
+    });
+
+    describe("when there are non-progressive pending revisions", () => {
+      const stateWithPendingRevision = {
+        1: {
+          revision: { revision: 1, architectures: ["abc42", "test64"] },
+          channels: ["test/edge"]
+        }
+      };
+
+      it("should add progressive state to pending revision", () => {
+        const result = pendingReleases(
+          stateWithPendingRevision,
+          setProgressiveAction
+        );
+
+        expect(result).toEqual({
+          ...stateWithPendingRevision,
+          1: {
+            ...stateWithPendingRevision[1],
+            progressive: setProgressiveAction.payload
+          }
+        });
+      });
+    });
+
+    describe("when there are progressive pending revisions", () => {
+      const stateWithProgressiveReleases = {
+        1: {
+          revision: { revision: 1, architectures: ["abc42", "test64"] },
+          channels: ["test/edge"],
+          progressive: {
+            key: "progressive-test",
+            percentage: 20
+          }
+        },
+        2: {
+          revision: { revision: 2, architectures: ["abc42", "test64"] },
+          channels: ["test/edge"],
+          progressive: {
+            key: "progressive-other",
+            percentage: 20
+          }
+        }
+      };
+
+      it("should update progressive releases with same key", () => {
+        const result = pendingReleases(
+          stateWithProgressiveReleases,
+          setProgressiveAction
+        );
+
+        expect(result[1]).toEqual({
+          ...stateWithProgressiveReleases[1],
+          progressive: setProgressiveAction.payload
+        });
+      });
+
+      it("should not update progressive releases with different key", () => {
+        const result = pendingReleases(
+          stateWithProgressiveReleases,
+          setProgressiveAction
+        );
+
+        expect(result[2]).toEqual(stateWithProgressiveReleases[2]);
       });
     });
   });
