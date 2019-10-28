@@ -22,7 +22,8 @@ import {
   getSelectedRevisions,
   getSelectedArchitectures,
   getFilteredAvailableRevisions,
-  getFilteredAvailableRevisionsForArch
+  getFilteredAvailableRevisionsForArch,
+  isProgressiveReleaseEnabled
 } from "../selectors";
 
 import { getPendingRelease } from "../releasesState";
@@ -97,7 +98,8 @@ class RevisionsList extends Component {
       availableRevisionsSelect,
       showChannels,
       filteredAvailableRevisions,
-      pendingChannelMap
+      pendingChannelMap,
+      isProgressiveReleaseEnabled
     } = this.props;
     let filteredRevisions = filteredAvailableRevisions;
     let title = "Latest revisions";
@@ -244,6 +246,10 @@ class RevisionsList extends Component {
     const showBuildRequest = filteredRevisions.some(revision =>
       getBuildId(revision)
     );
+
+    const showProgressiveReleases =
+      isProgressiveReleaseEnabled && !showChannels;
+
     return (
       <Fragment>
         <div className="u-clearfix">
@@ -310,7 +316,9 @@ class RevisionsList extends Component {
               </th>
               <th scope="col">Version</th>
               {showBuildRequest && <th scope="col">Build Request</th>}
-              {!showChannels && <th scope="col">Progressive release status</th>}
+              {showProgressiveReleases && (
+                <th scope="col">Progressive release status</th>
+              )}
               {showChannels && <th scope="col">Channels</th>}
               <th scope="col" width="130px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
@@ -377,6 +385,7 @@ RevisionsList.propTypes = {
   getSelectedRevision: PropTypes.func.isRequired,
   getFilteredAvailableRevisionsForArch: PropTypes.func.isRequired,
   pendingChannelMap: PropTypes.object,
+  isProgressiveReleaseEnabled: PropTypes.bool,
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
@@ -401,7 +410,8 @@ const mapStateToProps = state => {
     selectedArchitectures: getSelectedArchitectures(state),
     filteredAvailableRevisions: getFilteredAvailableRevisions(state),
     getFilteredAvailableRevisionsForArch: arch =>
-      getFilteredAvailableRevisionsForArch(state, arch)
+      getFilteredAvailableRevisionsForArch(state, arch),
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
   };
 };
 
