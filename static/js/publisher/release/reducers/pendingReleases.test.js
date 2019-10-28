@@ -359,7 +359,10 @@ describe("pendingReleases", () => {
           ...stateWithPendingRevision,
           1: {
             ...stateWithPendingRevision[1],
-            progressive: setProgressiveAction.payload
+            progressive: {
+              ...setProgressiveAction.payload,
+              paused: false
+            }
           }
         });
       });
@@ -372,7 +375,8 @@ describe("pendingReleases", () => {
           channels: ["test/edge"],
           progressive: {
             key: "progressive-test",
-            percentage: 20
+            percentage: 20,
+            paused: false
           }
         },
         2: {
@@ -380,7 +384,8 @@ describe("pendingReleases", () => {
           channels: ["test/edge"],
           progressive: {
             key: "progressive-other",
-            percentage: 20
+            percentage: 20,
+            paused: true
           }
         }
       };
@@ -393,7 +398,10 @@ describe("pendingReleases", () => {
 
         expect(result[1]).toEqual({
           ...stateWithProgressiveReleases[1],
-          progressive: setProgressiveAction.payload
+          progressive: {
+            ...stateWithProgressiveReleases[1].progressive,
+            ...setProgressiveAction.payload
+          }
         });
       });
 
