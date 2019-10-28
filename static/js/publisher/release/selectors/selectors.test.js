@@ -22,7 +22,8 @@ import {
   hasBuildRequestId,
   getLaunchpadRevisions,
   getRevisionsFromBuild,
-  getProgressiveState
+  getProgressiveState,
+  isProgressiveReleaseEnabled
 } from "./index";
 
 import reducers from "../reducers";
@@ -808,55 +809,131 @@ describe("getRevisionsFromBuild", () => {
 });
 
 describe("getProgressiveState", () => {
-  it("should return the progressive release state of a channel and arch", () => {
-    const state = {
-      releases: [
-        {
-          architecture: "arch1",
-          branch: null,
-          track: "latest",
-          risk: "stable",
-          revision: "1",
-          progressive: null
-        },
-        {
-          architecture: "arch2",
-          branch: null,
-          track: "latest",
-          risk: "stable",
-          revision: "3",
-          progressive: {
-            key: "test",
-            percentage: 60,
-            paused: false
-          }
-        },
-        {
-          architecture: "arch2",
-          branch: null,
-          track: "latest",
-          risk: "stable",
-          revision: "2",
-          progressive: {
-            key: "test",
-            percentage: 50,
-            paused: false
-          }
+  const initialState = reducers(undefined, {});
+  const stateWithProgressiveEnabled = {
+    ...initialState,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: true
+      }
+    },
+    releases: [
+      {
+        architecture: "arch1",
+        branch: null,
+        track: "latest",
+        risk: "stable",
+        revision: "1",
+        progressive: null
+      },
+      {
+        architecture: "arch2",
+        branch: null,
+        track: "latest",
+        risk: "stable",
+        revision: "3",
+        progressive: {
+          key: "test",
+          percentage: 60,
+          paused: false
         }
-      ]
-    };
+      },
+      {
+        architecture: "arch2",
+        branch: null,
+        track: "latest",
+        risk: "stable",
+        revision: "2",
+        progressive: {
+          key: "test",
+          percentage: 50,
+          paused: false
+        }
+      }
+    ]
+  };
 
-    expect(getProgressiveState(state, "latest/stable", "arch2", "3")).toEqual({
+  const stateWithProgressiveDisabled = {
+    ...stateWithProgressiveEnabled,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: false
+      }
+    }
+  };
+
+  it("should return the progressive release state of a channel and arch", () => {
+    expect(
+      getProgressiveState(
+        stateWithProgressiveEnabled,
+        "latest/stable",
+        "arch2",
+        "3"
+      )
+    ).toEqual({
       from: "2",
       key: "test",
       paused: false,
       percentage: 60
     });
 
-    expect(getProgressiveState(state, "latest/stable", "arch2", "2")).toEqual({
+    expect(
+      getProgressiveState(
+        stateWithProgressiveEnabled,
+        "latest/stable",
+        "arch2",
+        "2"
+      )
+    ).toEqual({
       key: "test",
       paused: false,
       percentage: 50
     });
+  });
+
+  it("should return null if progressive release flag is disabled", () => {
+    expect(
+      getProgressiveState(
+        stateWithProgressiveDisabled,
+        "latest/stable",
+        "arch2",
+        "2"
+      )
+    ).toBe(null);
+  });
+});
+
+describe("isProgressiveReleaseEnabled", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithProgressiveEnabled = {
+    ...initialState,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: true
+      }
+    }
+  };
+
+  const stateWithProgressiveDisabled = {
+    ...initialState,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: false
+      }
+    }
+  };
+
+  it("should be true with isProgressiveReleaseEnabled flag turned on", () => {
+    expect(isProgressiveReleaseEnabled(stateWithProgressiveEnabled)).toBe(true);
+  });
+
+  it("should be false with isProgressiveReleaseEnabled flag turned off", () => {
+    expect(isProgressiveReleaseEnabled(stateWithProgressiveDisabled)).toBe(
+      false
+    );
   });
 });
