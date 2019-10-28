@@ -10,7 +10,7 @@ import { getChannelName } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
-import { promoteRevision, undoRelease } from "../../actions/pendingReleases";
+import { undoRelease } from "../../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
@@ -61,7 +61,7 @@ const ReleasesTableReleaseCell = props => {
 
   let progressiveState = null;
 
-  if (currentRevision) {
+  if (!isPendingRelease && currentRevision) {
     progressiveState = getProgressiveState(
       channel,
       arch,
@@ -185,7 +185,6 @@ ReleasesTableReleaseCell.propTypes = {
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
-  promoteRevision: PropTypes.func.isRequired,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -216,10 +215,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) =>
-      dispatch(undoRelease(revision, channel)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel))
+    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
   };
 };
 

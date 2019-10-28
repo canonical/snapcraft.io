@@ -11,9 +11,11 @@
     position: relative;
   }
 
-  .progressive-bar.is-interactive {
-    cursor: col-resize;
-    user-select: none;
+  .progressive-bar__interactive-wrapper.is-interactive {
+    .progressive-bar {
+      cursor: col-resize;
+      user-select: none;
+    }
   }
 
   .progressive-bar__current {
@@ -29,15 +31,14 @@
 
   .progressive-bar__target-value {
     @include vf-animation(opacity, snap, in);
-    opacity: 0;
     pointer-events: none;
     position: absolute;
     transform: translate(-50%, 1rem);
   }
 
-  .progressive-bar:hover .progressive-bar__target-value,
-  .progressive-bar.is-scrubbing .progressive-bar__target-value {
-    opacity: 1;
+  .progressive-bar:hover .p-tooltip__message,
+  .progressive-bar__interactive-wrapper.is-scrubbing .p-tooltip__message {
+    display: inline;
   }
 
   .progressive-bar__target {

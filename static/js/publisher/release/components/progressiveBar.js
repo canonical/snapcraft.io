@@ -28,6 +28,10 @@ const ProgressiveBar = ({ percentage, targetPercentage, readonly }) => (
   </div>
 );
 
+ProgressiveBar.defaultProps = {
+  readonly: true
+};
+
 ProgressiveBar.propTypes = {
   percentage: PropTypes.number,
   targetPercentage: PropTypes.number,
@@ -133,6 +137,7 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   onWheelHandler(e) {
+    e.preventDefault();
     const { scrubTarget } = this.state;
     const direction = e.nativeEvent.deltaY > 0 ? -1 : 1;
     this.scrubTo(Math.round(scrubTarget + direction), true);
@@ -141,7 +146,7 @@ class InteractiveProgressiveBar extends React.Component {
   render() {
     const { readonly, inputName } = this.props;
     const { current, target, scrubTarget, scrubbing } = this.state;
-    const classes = ["progressive-bar_interactive-wrapper"];
+    const classes = ["progressive-bar__interactive-wrapper"];
     if (scrubbing) {
       classes.push("is-scrubbing");
     }
@@ -158,7 +163,7 @@ class InteractiveProgressiveBar extends React.Component {
         <ProgressiveBar
           percentage={current}
           targetPercentage={scrubTarget}
-          readonly={readonly}
+          readonly={false}
         />
         <input type="hidden" name={inputName} value={target} />
       </div>

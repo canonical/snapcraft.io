@@ -40,12 +40,14 @@ class RevisionsList extends Component {
   }
 
   renderRow(
+    index,
     revision,
     isSelectable,
     showChannels,
     isPending,
     isActive,
-    showBuildRequest
+    showBuildRequest,
+    activeChannel
   ) {
     return (
       <RevisionsListRow
@@ -56,6 +58,7 @@ class RevisionsList extends Component {
         isPending={isPending}
         isActive={isActive}
         showBuildRequest={showBuildRequest}
+        channel={activeChannel}
       />
     );
   }
@@ -65,19 +68,22 @@ class RevisionsList extends Component {
     isSelectable,
     showChannels,
     activeRevision,
-    showBuildRequest
+    showBuildRequest,
+    activeChannel
   ) {
-    return revisions.map(revision => {
+    return revisions.map((revision, index) => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
 
       return this.renderRow(
+        index,
         revision,
         isSelectable,
         showChannels,
         false,
         isActive,
-        showBuildRequest
+        showBuildRequest,
+        activeChannel
       );
     });
   }
@@ -236,8 +242,9 @@ class RevisionsList extends Component {
 
     let activeRevision = null;
 
+    let activeChannel;
     if (this.props.filters) {
-      const activeChannel = getChannelName(filters.track, filters.risk);
+      activeChannel = getChannelName(filters.track, filters.risk);
       activeRevision = pendingChannelMap[activeChannel]
         ? pendingChannelMap[activeChannel][filters.arch]
         : null;
@@ -328,12 +335,14 @@ class RevisionsList extends Component {
           <tbody>
             {pendingRelease &&
               this.renderRow(
+                -1,
                 pendingRelease,
                 !isReleaseHistory,
                 showChannels,
                 true,
                 activeRevision.revision === pendingRelease.revision,
-                showBuildRequest
+                showBuildRequest,
+                activeChannel
               )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
@@ -343,7 +352,8 @@ class RevisionsList extends Component {
                 !isReleaseHistory,
                 showChannels,
                 activeRevision,
-                showBuildRequest
+                showBuildRequest,
+                activeChannel
               )
             ) : (
               <tr>
