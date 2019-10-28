@@ -68,7 +68,7 @@ export function fetchRelease(
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body
+    body: JSON.stringify(body)
   })
     .then(response => response.json())
     .catch(() => {
