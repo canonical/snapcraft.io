@@ -77,7 +77,7 @@ function updateProgressiveRelease(state, progressive) {
 
   Object.values(nextState).forEach(pendingRelease => {
     if (!pendingRelease.progressive) {
-      pendingRelease.progressive = { ...progressive };
+      pendingRelease.progressive = { paused: false, ...progressive };
     } else if (pendingRelease.progressive.key === progressive.key) {
       pendingRelease.progressive.percentage = progressive.percentage;
     }

@@ -2,7 +2,10 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { cancelPendingReleases } from "../actions/pendingReleases";
+import {
+  cancelPendingReleases,
+  setProgressiveReleasePercentage
+} from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
 
 import ProgressiveConfirm from "./progressiveConfirm";
@@ -11,9 +14,12 @@ class ReleasesConfirm extends Component {
   constructor(props) {
     super(props);
 
+    const timestamp = new Date().getTime();
+
     this.state = {
       isLoading: false,
-      percentage: 100
+      percentage: 100,
+      progressiveKey: `progressive-release-${timestamp}`
     };
   }
 
@@ -33,10 +39,22 @@ class ReleasesConfirm extends Component {
   }
 
   onPercentageChange(event) {
-    this.setState({
-      percentage: +event.target.value
-    });
+    this.setState(
+      {
+        percentage: +event.target.value
+      },
+      () => {
+        this.props.setProgressiveReleasePercentage(
+          this.state.progressiveKey,
+          this.state.percentage
+        );
+      }
+    );
   }
+
+  // TODO:
+  // - only affects revisions that are released over something else
+  // - show which revisions will be affected by %
 
   render() {
     const { isLoading } = this.state;
@@ -122,7 +140,8 @@ ReleasesConfirm.propTypes = {
   pendingCloses: PropTypes.array.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
-  cancelPendingReleases: PropTypes.func.isRequired
+  cancelPendingReleases: PropTypes.func.isRequired,
+  setProgressiveReleasePercentage: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -135,7 +154,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     releaseRevisions: () => dispatch(releaseRevisions()),
-    cancelPendingReleases: () => dispatch(cancelPendingReleases())
+    cancelPendingReleases: () => dispatch(cancelPendingReleases()),
+    setProgressiveReleasePercentage: (key, percentage) =>
+      dispatch(setProgressiveReleasePercentage(key, percentage))
   };
 };
 
