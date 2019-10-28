@@ -8,6 +8,11 @@ import {
 import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../libs/channels";
 
+// returns true if isProgressiveReleaseEnabled feature flag is enabled
+export function isProgressiveReleaseEnabled(state) {
+  return !!state.options.flags.isProgressiveReleaseEnabled;
+}
+
 // returns release history filtered by history filters
 export function getFilteredReleaseHistory(state) {
   const releases = state.releases;
@@ -264,6 +269,10 @@ export function getRevisionsFromBuild(state, buildId) {
 
 // return the progressive release status based on channel, arch
 export function getProgressiveState(state, channel, arch, revision) {
+  if (!isProgressiveReleaseEnabled(state)) {
+    return null;
+  }
+
   const { releases } = state;
   const allReleases = releases.filter(
     item => channel === getChannelString(item) && arch === item.architecture

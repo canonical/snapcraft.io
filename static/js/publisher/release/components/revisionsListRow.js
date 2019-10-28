@@ -8,7 +8,11 @@ import format from "date-fns/format";
 import { getChannelString } from "../../../libs/channels.js";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { getSelectedRevisions, getProgressiveState } from "../selectors";
+import {
+  getSelectedRevisions,
+  getProgressiveState,
+  isProgressiveReleaseEnabled
+} from "../selectors";
 
 import RevisionLabel from "./revisionLabel";
 import { ProgressiveBar } from "./progressiveBar";
@@ -21,7 +25,8 @@ const RevisionsListRow = props => {
     showBuildRequest,
     isPending,
     isActive,
-    getProgressiveState
+    getProgressiveState,
+    isProgressiveReleaseEnabled
   } = props;
 
   const revisionDate = revision.release
@@ -61,6 +66,8 @@ const RevisionsListRow = props => {
 
   const buildRequestId =
     revision.attributes && revision.attributes["build-request-id"];
+
+  const showProgressiveReleases = isProgressiveReleaseEnabled && !showChannels;
 
   return (
     <tr
@@ -104,7 +111,7 @@ const RevisionsListRow = props => {
           )}
         </td>
       )}
-      {!showChannels && (
+      {showProgressiveReleases && (
         <td>
           {progressiveState && (
             <ProgressiveBar
@@ -150,6 +157,7 @@ RevisionsListRow.propTypes = {
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
   getProgressiveState: PropTypes.func,
+  isProgressiveReleaseEnabled: PropTypes.bool,
 
   // actions
   toggleRevision: PropTypes.func.isRequired
@@ -159,7 +167,8 @@ const mapStateToProps = state => {
   return {
     selectedRevisions: getSelectedRevisions(state),
     getProgressiveState: (channel, arch, revision) =>
-      getProgressiveState(state, channel, arch, revision)
+      getProgressiveState(state, channel, arch, revision),
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
   };
 };
 
