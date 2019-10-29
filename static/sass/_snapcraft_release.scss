@@ -6,11 +6,11 @@
   // RELEASES CONFIRM
 
   .p-releases-confirm {
-    background: $color-light;
+    border-bottom: 1px solid $color-mid-light;
     display: flex;
     justify-content: space-between;
     margin-bottom: 1em;
-    padding: 1em;
+    padding: 1em 0;
     position: relative;
   }
 
