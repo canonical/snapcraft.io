@@ -9,11 +9,13 @@ import {
   RELEASE_REVISION,
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES,
+  SET_PROGRESSIVE_RELEASE_PERCENTAGE,
   releaseRevision,
   promoteRevision,
   promoteChannel,
   undoRelease,
-  cancelPendingReleases
+  cancelPendingReleases,
+  setProgressiveReleasePercentage
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
@@ -143,6 +145,29 @@ describe("pendingReleases actions", () => {
       expect(cancelPendingReleases(revision, channel).type).toBe(
         CANCEL_PENDING_RELEASES
       );
+    });
+  });
+
+  describe("setProgressiveReleasePercentage", () => {
+    const key = "progressive-test";
+    const percentage = 42;
+
+    it("should create an action to set release progressive percentage", () => {
+      expect(setProgressiveReleasePercentage(key, percentage).type).toBe(
+        SET_PROGRESSIVE_RELEASE_PERCENTAGE
+      );
+    });
+
+    it("should supply a payload with key", () => {
+      expect(
+        setProgressiveReleasePercentage(key, percentage).payload.key
+      ).toEqual(key);
+    });
+
+    it("should supply a payload with percentage", () => {
+      expect(
+        setProgressiveReleasePercentage(key, percentage).payload.percentage
+      ).toEqual(percentage);
     });
   });
 });
