@@ -1,7 +1,8 @@
 import {
   RELEASE_REVISION,
   UNDO_RELEASE,
-  CANCEL_PENDING_RELEASES
+  CANCEL_PENDING_RELEASES,
+  SET_PROGRESSIVE_RELEASE_PERCENTAGE
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
@@ -70,6 +71,21 @@ function closeChannel(state, channel) {
 
   return state;
 }
+
+function updateProgressiveRelease(state, progressive) {
+  const nextState = JSON.parse(JSON.stringify(state));
+
+  Object.values(nextState).forEach(pendingRelease => {
+    if (!pendingRelease.progressive) {
+      pendingRelease.progressive = { paused: false, ...progressive };
+    } else if (pendingRelease.progressive.key === progressive.key) {
+      pendingRelease.progressive.percentage = progressive.percentage;
+    }
+  });
+
+  return nextState;
+}
+
 // revisions to be released:
 // key is the id of revision to release
 // value is object containing release object and channels to release to
@@ -99,6 +115,8 @@ export default function pendingReleases(state = {}, action) {
       return {};
     case CLOSE_CHANNEL:
       return closeChannel(state, action.payload.channel);
+    case SET_PROGRESSIVE_RELEASE_PERCENTAGE:
+      return updateProgressiveRelease(state, action.payload);
     default:
       return state;
   }
