@@ -7,6 +7,7 @@ import {
   setProgressiveReleasePercentage
 } from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
+import { isProgressiveReleaseEnabled } from "../selectors";
 
 import ProgressiveConfirm from "./progressiveConfirm";
 
@@ -58,7 +59,11 @@ class ReleasesConfirm extends Component {
 
   render() {
     const { isLoading } = this.state;
-    const { pendingReleases, pendingCloses } = this.props;
+    const {
+      pendingReleases,
+      pendingCloses,
+      isProgressiveReleaseEnabled
+    } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
 
@@ -109,10 +114,12 @@ class ReleasesConfirm extends Component {
               </Fragment>
             )}
           </div>
-          <ProgressiveConfirm
-            percentage={this.state.percentage}
-            onChange={this.onPercentageChange.bind(this)}
-          />
+          {isProgressiveReleaseEnabled && (
+            <ProgressiveConfirm
+              percentage={this.state.percentage}
+              onChange={this.onPercentageChange.bind(this)}
+            />
+          )}
           <div className="p-releases-confirm__buttons">
             <button
               className="p-button--positive is-inline u-no-margin--bottom"
@@ -138,6 +145,7 @@ class ReleasesConfirm extends Component {
 ReleasesConfirm.propTypes = {
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
+  isProgressiveReleaseEnabled: PropTypes.bool.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired,
@@ -147,7 +155,8 @@ ReleasesConfirm.propTypes = {
 const mapStateToProps = state => {
   return {
     pendingCloses: state.pendingCloses,
-    pendingReleases: state.pendingReleases
+    pendingReleases: state.pendingReleases,
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
   };
 };
 
