@@ -152,10 +152,10 @@ const RevisionsListRow = props => {
               />
               <span
                 className="p-tooltip--btm-center"
-                aria-describedby={`${revision.revision}-revert`}
+                aria-describedby={`${revision.revision}-cancel`}
               >
                 <i
-                  className="p-icon--revert"
+                  className="p-icon--close"
                   onClick={() => {
                     promoteRevision(revision, "latest/edge");
                   }}
@@ -163,25 +163,10 @@ const RevisionsListRow = props => {
                 <span
                   className="p-tooltip__message"
                   role="tooltip"
-                  id={`${revision.revision}-revert`}
+                  id={`${revision.revision}-cancel`}
                 >
-                  Revert all devices to <b>{progressiveState.from}</b>
-                </span>
-              </span>
-              <span
-                className="p-tooltip--btm-center"
-                aria-describedby={`${revision.revision}-progress`}
-              >
-                <i
-                  className="p-icon--progress"
-                  onClick={() => promoteRevision(revision, "latest/edge")}
-                />
-                <span
-                  className="p-tooltip__message"
-                  role="tooltip"
-                  id={`${revision.revision}-progress`}
-                >
-                  Progress all devices to <b>{revision.revision}</b>
+                  Cancel progressive release and revert all devices to{" "}
+                  <b>{progressiveState.from}</b>
                 </span>
               </span>
             </div>

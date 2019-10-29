@@ -392,19 +392,14 @@
         display: flex;
         flex-direction: row;
 
-        :nth-child(1),
-        :nth-child(3),
-        :nth-child(4) {
+        > :nth-child(1),
+        > :nth-child(3) {
           cursor: pointer;
         }
 
-        :nth-child(2) {
+        > :nth-child(2) {
           flex-grow: 1;
           margin: 0 1rem;
-        }
-
-        :nth-child(3) {
-          margin-right: 1rem;
         }
       }
     }
@@ -585,17 +580,5 @@
     @extend %icon;
     background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Crect width='4' height='16' fill='%23666'/%3E %3Crect x='8' width='4' height='16' fill='%23666'/%3E %3C/svg%3E ");
     width: 12px;
-  }
-
-  .p-icon--revert {
-    @extend %icon;
-    background-image: url("data:image/svg+xml,%3Csvg width='23' height='10' viewBox='0 0 23 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath d='M12.6464 5.35355C12.4512 5.15829 12.4512 4.84171 12.6464 4.64645L15.8284 1.46447C16.0237 1.2692 16.3403 1.2692 16.5355 1.46447C16.7308 1.65973 16.7308 1.97631 16.5355 2.17157L13.7071 5L16.5355 7.82843C16.7308 8.02369 16.7308 8.34027 16.5355 8.53553C16.3403 8.7308 16.0237 8.7308 15.8284 8.53553L12.6464 5.35355ZM23 5.5H13V4.5H23V5.5Z' fill='%23666'/%3E %3Ccircle r='5' transform='matrix(-1 0 0 1 5.5 5)' fill='%23666'/%3E %3C/svg%3E");
-    width: 22px;
-  }
-
-  .p-icon--progress {
-    @extend %icon;
-    background-image: url("data:image/svg+xml,%3Csvg width='23' height='10' viewBox='0 0 23 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cpath d='M10.3536 5.35355C10.5488 5.15829 10.5488 4.84171 10.3536 4.64645L7.17157 1.46447C6.97631 1.2692 6.65973 1.2692 6.46447 1.46447C6.2692 1.65973 6.2692 1.97631 6.46447 2.17157L9.29289 5L6.46447 7.82843C6.2692 8.02369 6.2692 8.34027 6.46447 8.53553C6.65973 8.7308 6.97631 8.7308 7.17157 8.53553L10.3536 5.35355ZM0 5.5H10V4.5H0V5.5Z' fill='%23666'/%3E %3Ccircle cx='17.5' cy='5' r='5' fill='%23666'/%3E %3C/svg%3E ");
-    width: 22px;
   }
 }

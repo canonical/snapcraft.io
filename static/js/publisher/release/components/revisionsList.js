@@ -52,6 +52,7 @@ class RevisionsList extends Component {
     return (
       <RevisionsListRow
         key={`revision-row-${revision.revision}`}
+        index={index}
         revision={revision}
         isSelectable={isSelectable}
         showChannels={showChannels}
