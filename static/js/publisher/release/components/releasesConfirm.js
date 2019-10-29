@@ -64,81 +64,84 @@ class ReleasesConfirm extends Component {
     const closesCount = pendingCloses.length;
 
     const isPercentageValid = +percentage > 0 && +percentage <= 100;
-    const isApplyEnabled = !isLoading && isPercentageValid;
+
+    const isApplyEnabled =
+      (releasesCount > 0 || closesCount > 0) && !isLoading && isPercentageValid;
+
+    const isCancelEnabled =
+      (releasesCount > 0 || closesCount > 0) && !isLoading;
 
     const showProgressive = isProgressiveReleaseEnabled && releasesCount > 0;
 
     return (
-      (releasesCount > 0 || closesCount > 0) && (
-        <div className="p-releases-confirm">
-          <div>
-            {releasesCount > 0 && (
-              <Fragment>
-                <span className="p-tooltip">
-                  <span className="p-help">
-                    {releasesCount} revision
-                    {releasesCount > 1 ? "s" : ""}
-                  </span>
-                  <span className="p-tooltip__message" role="tooltip">
-                    Release revisions:
-                    <br />
-                    {Object.keys(pendingReleases).map(revId => {
-                      const release = pendingReleases[revId];
+      <div className="p-releases-confirm u-vertically-center">
+        <div>
+          {releasesCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {releasesCount} revision
+                  {releasesCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  Release revisions:
+                  <br />
+                  {Object.keys(pendingReleases).map(revId => {
+                    const release = pendingReleases[revId];
 
-                      return (
-                        <span key={revId}>
-                          <b>{release.revision.revision}</b> (
-                          {release.revision.version}){" "}
-                          {release.revision.architectures.join(", ")} to{" "}
-                          {release.channels.join(", ")}
-                          {"\n"}
-                        </span>
-                      );
-                    })}
-                  </span>
-                </span>{" "}
-                to release.
-              </Fragment>
-            )}{" "}
-            {closesCount > 0 && (
-              <Fragment>
-                <span className="p-tooltip">
-                  <span className="p-help">
-                    {closesCount} channel
-                    {closesCount > 1 ? "s" : ""}
-                  </span>
-                  <span className="p-tooltip__message" role="tooltip">
-                    Close channels: {pendingCloses.join(", ")}
-                  </span>
-                </span>{" "}
-                to close.
-              </Fragment>
-            )}
-          </div>
-          {showProgressive && (
-            <ProgressiveConfirm
-              percentage={this.state.percentage}
-              onChange={this.onPercentageChange.bind(this)}
-            />
+                    return (
+                      <span key={revId}>
+                        <b>{release.revision.revision}</b> (
+                        {release.revision.version}){" "}
+                        {release.revision.architectures.join(", ")} to{" "}
+                        {release.channels.join(", ")}
+                        {"\n"}
+                      </span>
+                    );
+                  })}
+                </span>
+              </span>{" "}
+              to release.
+            </Fragment>
+          )}{" "}
+          {closesCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {closesCount} channel
+                  {closesCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  Close channels: {pendingCloses.join(", ")}
+                </span>
+              </span>{" "}
+              to close.
+            </Fragment>
           )}
-          <div className="p-releases-confirm__buttons">
-            <button
-              className="p-button--positive is-inline u-no-margin--bottom"
-              disabled={!isApplyEnabled}
-              onClick={this.onApplyClick.bind(this)}
-            >
-              {isLoading ? "Loading..." : "Apply"}
-            </button>
-            <button
-              className="p-button--neutral u-no-margin--bottom u-no-margin--right"
-              disabled={isLoading}
-              onClick={this.onRevertClick.bind(this)}
-            >
-              Cancel
-            </button>
-          </div>
         </div>
-      )
+        {showProgressive && (
+          <ProgressiveConfirm
+            percentage={this.state.percentage}
+            onChange={this.onPercentageChange.bind(this)}
+          />
+        )}
+        <div className="p-releases-confirm__buttons">
+          <button
+            className="p-button--neutral u-no-margin--bottom"
+            disabled={!isCancelEnabled}
+            onClick={this.onRevertClick.bind(this)}
+          >
+            Revert
+          </button>
+          <button
+            className="p-button--positive is-inline u-no-margin--bottom u-no-margin--right"
+            disabled={!isApplyEnabled}
+            onClick={this.onApplyClick.bind(this)}
+          >
+            {isLoading ? "Loading..." : "Save"}
+          </button>
+        </div>
+      </div>
     );
   }
 }
