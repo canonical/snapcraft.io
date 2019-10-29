@@ -22,7 +22,7 @@ const ProgressiveConfirm = ({ percentage, onChange }) => {
 };
 
 ProgressiveConfirm.propTypes = {
-  percentage: PropTypes.number,
+  percentage: PropTypes.string,
   onChange: PropTypes.func
 };
 

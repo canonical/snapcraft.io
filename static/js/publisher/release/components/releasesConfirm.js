@@ -15,12 +15,9 @@ class ReleasesConfirm extends Component {
   constructor(props) {
     super(props);
 
-    const timestamp = new Date().getTime();
-
     this.state = {
       isLoading: false,
-      percentage: 100,
-      progressiveKey: `progressive-release-${timestamp}`
+      percentage: "100"
     };
   }
 
@@ -32,33 +29,32 @@ class ReleasesConfirm extends Component {
     this.setState({
       isLoading: true
     });
+
+    if (this.state.percentage && +this.state.percentage !== 100) {
+      const timestamp = new Date().getTime();
+
+      this.props.setProgressiveReleasePercentage(
+        `progressive-release-${timestamp}`,
+        +this.state.percentage
+      );
+    }
+
     this.props.releaseRevisions().then(() => {
       this.setState({
-        isLoading: false
+        isLoading: false,
+        percentage: "100"
       });
     });
   }
 
   onPercentageChange(event) {
-    this.setState(
-      {
-        percentage: +event.target.value
-      },
-      () => {
-        this.props.setProgressiveReleasePercentage(
-          this.state.progressiveKey,
-          this.state.percentage
-        );
-      }
-    );
+    this.setState({
+      percentage: event.target.value
+    });
   }
 
-  // TODO:
-  // - only affects revisions that are released over something else
-  // - show which revisions will be affected by %
-
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, percentage } = this.state;
     const {
       pendingReleases,
       pendingCloses,
@@ -66,6 +62,11 @@ class ReleasesConfirm extends Component {
     } = this.props;
     const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
+
+    const isPercentageValid = +percentage > 0 && +percentage <= 100;
+    const isApplyEnabled = !isLoading && isPercentageValid;
+
+    const showProgressive = isProgressiveReleaseEnabled && releasesCount > 0;
 
     return (
       (releasesCount > 0 || closesCount > 0) && (
@@ -114,7 +115,7 @@ class ReleasesConfirm extends Component {
               </Fragment>
             )}
           </div>
-          {isProgressiveReleaseEnabled && (
+          {showProgressive && (
             <ProgressiveConfirm
               percentage={this.state.percentage}
               onChange={this.onPercentageChange.bind(this)}
@@ -123,7 +124,7 @@ class ReleasesConfirm extends Component {
           <div className="p-releases-confirm__buttons">
             <button
               className="p-button--positive is-inline u-no-margin--bottom"
-              disabled={isLoading}
+              disabled={!isApplyEnabled}
               onClick={this.onApplyClick.bind(this)}
             >
               {isLoading ? "Loading..." : "Apply"}
