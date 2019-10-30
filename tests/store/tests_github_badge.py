@@ -23,6 +23,7 @@ class GetGitHubBadgeTest(TestCase):
                 "validation": True,
             },
             "categories": [{"name": "test"}],
+            "trending": False,
         },
         "channel-map": [
             {
@@ -61,7 +62,7 @@ class GetGitHubBadgeTest(TestCase):
                 self.snap_name,
                 "?fields=title,summary,description,license,contact,website,",
                 "publisher,prices,media,download,version,created-at,"
-                "confinement,categories",
+                "confinement,categories,trending",
             ]
         )
         self.endpoint_url = "/" + self.snap_name + "/badge.svg"
