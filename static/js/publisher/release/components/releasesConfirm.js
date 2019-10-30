@@ -74,8 +74,8 @@ class ReleasesConfirm extends Component {
     const showProgressive = isProgressiveReleaseEnabled && releasesCount > 0;
 
     return (
-      <div className="p-releases-confirm u-vertically-center">
-        <div>
+      <div className="p-releases-confirm u-vertically-center row">
+        <div className="col-5">
           {releasesCount > 0 && (
             <Fragment>
               <span className="p-tooltip">
@@ -119,27 +119,29 @@ class ReleasesConfirm extends Component {
             </Fragment>
           )}
         </div>
-        {showProgressive && (
-          <ProgressiveConfirm
-            percentage={this.state.percentage}
-            onChange={this.onPercentageChange.bind(this)}
-          />
-        )}
-        <div className="p-releases-confirm__buttons">
-          <button
-            className="p-button--neutral u-no-margin--bottom"
-            disabled={!isCancelEnabled}
-            onClick={this.onRevertClick.bind(this)}
-          >
-            Revert
-          </button>
-          <button
-            className="p-button--positive is-inline u-no-margin--bottom u-no-margin--right"
-            disabled={!isApplyEnabled}
-            onClick={this.onApplyClick.bind(this)}
-          >
-            {isLoading ? "Loading..." : "Save"}
-          </button>
+        <div className="col-7 p-releasses-confirm__actions">
+          {showProgressive && (
+            <ProgressiveConfirm
+              percentage={this.state.percentage}
+              onChange={this.onPercentageChange.bind(this)}
+            />
+          )}
+          <div className="p-releases-confirm__buttons">
+            <button
+              className="p-button--neutral u-no-margin--bottom"
+              disabled={!isCancelEnabled}
+              onClick={this.onRevertClick.bind(this)}
+            >
+              Revert
+            </button>
+            <button
+              className="p-button--positive is-inline u-no-margin--bottom u-no-margin--right"
+              disabled={!isApplyEnabled}
+              onClick={this.onApplyClick.bind(this)}
+            >
+              {isLoading ? "Loading..." : "Save"}
+            </button>
+          </div>
         </div>
       </div>
     );

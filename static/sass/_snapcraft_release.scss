@@ -7,8 +7,6 @@
 
   .p-releases-confirm {
     border-bottom: 1px solid $color-mid-light;
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 1em;
     padding: 1em 0;
     position: relative;
@@ -16,6 +14,7 @@
 
   .p-releases-confirm__buttons {
     justify-self: end;
+    margin-left: auto;
   }
 
   .p-releases-confirm__rollout {
@@ -35,6 +34,11 @@
       min-width: 4rem;
       width: 4rem;
     }
+  }
+
+  .p-releasses-confirm__actions {
+    display: flex;
+    justify-content: space-between;
   }
 
   // RELEASES TABLE
