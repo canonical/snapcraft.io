@@ -8,7 +8,10 @@ import format from "date-fns/format";
 import { getChannelString } from "../../../libs/channels.js";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { promoteRevision } from "../actions/pendingReleases";
+import {
+  releaseRevision,
+  updateProgressiveReleasePercentage
+} from "../actions/pendingReleases";
 import {
   getSelectedRevisions,
   getProgressiveState,
@@ -29,7 +32,8 @@ const RevisionsListRow = props => {
     isActive,
     getProgressiveState,
     isProgressiveReleaseEnabled,
-    promoteRevision
+    updateProgressiveReleasePercentage,
+    releaseRevision
   } = props;
 
   const [canDrag, setDraggable] = useState(true);
@@ -40,6 +44,11 @@ const RevisionsListRow = props => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
+  let channel;
+  if (revision.release) {
+    channel = getChannelString(revision.release);
+  }
+
   function revisionSelectChange() {
     props.toggleRevision(revision);
   }
@@ -49,7 +58,7 @@ const RevisionsListRow = props => {
   // Only show the progressive release status if it's the latest revision
   if (index === 0 && revision.release) {
     progressiveState = getProgressiveState(
-      getChannelString(revision.release),
+      channel,
       revision.release.architecture,
       revision.revision
     );
@@ -75,8 +84,10 @@ const RevisionsListRow = props => {
     revision.attributes && revision.attributes["build-request-id"];
 
   const showProgressiveReleases = isProgressiveReleaseEnabled && !showChannels;
-  const pauseRelease = revision => {
-    promoteRevision(revision);
+
+  const handleProgressiveChange = percentage => {
+    releaseRevision(revision, channel, progressiveState);
+    updateProgressiveReleasePercentage(progressiveState.key, percentage);
   };
 
   return (
@@ -133,10 +144,7 @@ const RevisionsListRow = props => {
                 className="p-tooltip--btm-center"
                 aria-describedby={`${revision.revision}-pause`}
               >
-                <i
-                  className="p-icon--pause"
-                  onClick={() => pauseRelease(revision)}
-                />
+                <i className="p-icon--pause" />
                 <span
                   className="p-tooltip__message"
                   role="tooltip"
@@ -147,19 +155,14 @@ const RevisionsListRow = props => {
               </span>
               <InteractiveProgressiveBar
                 percentage={progressiveState.percentage}
-                inputName="test"
                 singleDirection={1}
+                onChange={handleProgressiveChange}
               />
               <span
                 className="p-tooltip--btm-center"
                 aria-describedby={`${revision.revision}-cancel`}
               >
-                <i
-                  className="p-icon--close"
-                  onClick={() => {
-                    promoteRevision(revision, "latest/edge");
-                  }}
-                />
+                <i className="p-icon--close" onClick={() => {}} />
                 <span
                   className="p-tooltip__message"
                   role="tooltip"
@@ -214,7 +217,8 @@ RevisionsListRow.propTypes = {
 
   // actions
   toggleRevision: PropTypes.func.isRequired,
-  promoteRevision: PropTypes.func.isRequired
+  updateProgressiveReleasePercentage: PropTypes.func.isRequired,
+  releaseRevision: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -229,8 +233,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleRevision: revision => dispatch(toggleRevision(revision)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel))
+    updateProgressiveReleasePercentage: (key, percentage) =>
+      dispatch(updateProgressiveReleasePercentage(key, percentage)),
+    releaseRevision: (revision, channel, progressive) =>
+      dispatch(releaseRevision(revision, channel, progressive))
   };
 };
 

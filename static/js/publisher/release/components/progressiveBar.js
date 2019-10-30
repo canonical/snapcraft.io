@@ -69,7 +69,7 @@ class InteractiveProgressiveBar extends React.Component {
 
   scrubTo(target, setTarget) {
     const { current } = this.state;
-    const { singleDirection } = this.props;
+    const { singleDirection, onChange } = this.props;
 
     if (singleDirection && singleDirection > 0) {
       if (target < current) {
@@ -106,6 +106,7 @@ class InteractiveProgressiveBar extends React.Component {
     }
 
     this.setState(newState);
+    onChange(target);
   }
 
   onMouseDownHandler(e) {
@@ -144,8 +145,8 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   render() {
-    const { readonly, inputName } = this.props;
-    const { current, target, scrubTarget, scrubbing } = this.state;
+    const { readonly } = this.props;
+    const { current, scrubTarget, scrubbing } = this.state;
     const classes = ["progressive-bar__interactive-wrapper"];
     if (scrubbing) {
       classes.push("is-scrubbing");
@@ -165,17 +166,16 @@ class InteractiveProgressiveBar extends React.Component {
           targetPercentage={scrubTarget}
           readonly={false}
         />
-        <input type="hidden" name={inputName} value={target} />
       </div>
     );
   }
 }
 
 InteractiveProgressiveBar.propTypes = {
-  inputName: PropTypes.string,
   percentage: PropTypes.number,
   readonly: PropTypes.bool,
-  singleDirection: PropTypes.number
+  singleDirection: PropTypes.number,
+  onChange: PropTypes.func
 };
 
 export { ProgressiveBar, InteractiveProgressiveBar };

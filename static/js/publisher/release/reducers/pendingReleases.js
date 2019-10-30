@@ -2,8 +2,10 @@ import {
   RELEASE_REVISION,
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES,
-  SET_PROGRESSIVE_RELEASE_PERCENTAGE
+  SET_PROGRESSIVE_RELEASE_PERCENTAGE,
+  UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE
 } from "../actions/pendingReleases";
+
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 function removePendingRelease(state, revision, channel) {
@@ -28,7 +30,7 @@ function removePendingRelease(state, revision, channel) {
   return state;
 }
 
-function releaseRevision(state, revision, channel) {
+function releaseRevision(state, revision, channel, progressive) {
   state = { ...state };
 
   // cancel any other pending release for the same channel in same architectures
@@ -56,6 +58,7 @@ function releaseRevision(state, revision, channel) {
 
   state[revision.revision] = {
     revision,
+    progressive,
     channels
   };
 
@@ -72,13 +75,26 @@ function closeChannel(state, channel) {
   return state;
 }
 
-function updateProgressiveRelease(state, progressive) {
+function setProgressiveRelease(state, progressive) {
   const nextState = JSON.parse(JSON.stringify(state));
 
   Object.values(nextState).forEach(pendingRelease => {
     if (!pendingRelease.progressive) {
       pendingRelease.progressive = { paused: false, ...progressive };
-    } else if (pendingRelease.progressive.key === progressive.key) {
+    }
+  });
+
+  return nextState;
+}
+
+function updateProgressiveRelease(state, progressive) {
+  const nextState = JSON.parse(JSON.stringify(state));
+
+  Object.values(nextState).forEach(pendingRelease => {
+    if (
+      pendingRelease.progressive &&
+      pendingRelease.progressive.key === progressive.key
+    ) {
       pendingRelease.progressive.percentage = progressive.percentage;
     }
   });
@@ -103,7 +119,8 @@ export default function pendingReleases(state = {}, action) {
       return releaseRevision(
         state,
         action.payload.revision,
-        action.payload.channel
+        action.payload.channel,
+        action.payload.progressive
       );
     case UNDO_RELEASE:
       return removePendingRelease(
@@ -116,6 +133,8 @@ export default function pendingReleases(state = {}, action) {
     case CLOSE_CHANNEL:
       return closeChannel(state, action.payload.channel);
     case SET_PROGRESSIVE_RELEASE_PERCENTAGE:
+      return setProgressiveRelease(state, action.payload);
+    case UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE:
       return updateProgressiveRelease(state, action.payload);
     default:
       return state;

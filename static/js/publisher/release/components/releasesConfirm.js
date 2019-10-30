@@ -60,7 +60,6 @@ class ReleasesConfirm extends Component {
       pendingCloses,
       isProgressiveReleaseEnabled
     } = this.props;
-    const releasesCount = Object.keys(pendingReleases).length;
     const closesCount = pendingCloses.length;
 
     const isPercentageValid = +percentage > 0 && +percentage <= 100;
@@ -71,39 +70,54 @@ class ReleasesConfirm extends Component {
     const isCancelEnabled =
       (releasesCount > 0 || closesCount > 0) && !isLoading;
 
+    const progressiveUpdates = {};
+    const newReleases = {};
+
+    Object.keys(pendingReleases).forEach(key => {
+      if (pendingReleases[key].progressive) {
+        progressiveUpdates[key] = pendingReleases[key];
+      } else {
+        newReleases[key] = pendingReleases[key];
+      }
+    });
+
+    const progressiveUpdatesCount = Object.keys(progressiveUpdates).length;
+    const releasesCount = Object.keys(newReleases).length;
+
     const showProgressive = isProgressiveReleaseEnabled && releasesCount > 0;
 
     return (
       <div className="p-releases-confirm u-vertically-center row">
         <div className="col-5">
-          {releasesCount > 0 && (
-            <Fragment>
-              <span className="p-tooltip">
-                <span className="p-help">
-                  {releasesCount} revision
-                  {releasesCount > 1 ? "s" : ""}
-                </span>
-                <span className="p-tooltip__message" role="tooltip">
-                  Release revisions:
-                  <br />
-                  {Object.keys(pendingReleases).map(revId => {
-                    const release = pendingReleases[revId];
+          {releasesCount > 0 &&
+            !showProgressive && (
+              <Fragment>
+                <span className="p-tooltip">
+                  <span className="p-help">
+                    {releasesCount} revision
+                    {releasesCount > 1 ? "s" : ""}
+                  </span>
+                  <span className="p-tooltip__message" role="tooltip">
+                    Release revisions:
+                    <br />
+                    {Object.keys(newReleases).map(revId => {
+                      const release = newReleases[revId];
 
-                    return (
-                      <span key={revId}>
-                        <b>{release.revision.revision}</b> (
-                        {release.revision.version}){" "}
-                        {release.revision.architectures.join(", ")} to{" "}
-                        {release.channels.join(", ")}
-                        {"\n"}
-                      </span>
-                    );
-                  })}
-                </span>
-              </span>{" "}
-              to release.
-            </Fragment>
-          )}{" "}
+                      return (
+                        <span key={revId}>
+                          <b>{release.revision.revision}</b> (
+                          {release.revision.version}){" "}
+                          {release.revision.architectures.join(", ")} to{" "}
+                          {release.channels.join(", ")}
+                          {"\n"}
+                        </span>
+                      );
+                    })}
+                  </span>
+                </span>{" "}
+                to release.
+              </Fragment>
+            )}{" "}
           {closesCount > 0 && (
             <Fragment>
               <span className="p-tooltip">
@@ -117,12 +131,41 @@ class ReleasesConfirm extends Component {
               </span>{" "}
               to close.
             </Fragment>
+          )}{" "}
+          {progressiveUpdatesCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {progressiveUpdatesCount} release
+                  {progressiveUpdatesCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  Progressive release update
+                  {progressiveUpdatesCount > 1 ? "s" : ""}:<br />
+                  {Object.keys(progressiveUpdates).map(revId => {
+                    const release = progressiveUpdates[revId];
+
+                    return (
+                      <span key={revId}>
+                        Revision <b>{release.revision.revision}</b> on{" "}
+                        {release.revision.architectures[0]} -{" "}
+                        {release.channels[0]} to{" "}
+                        <b>{release.progressive.percentage}%</b>
+                        {"\n"}
+                      </span>
+                    );
+                  })}
+                </span>
+              </span>{" "}
+              to update
+            </Fragment>
           )}
         </div>
         <div className="col-7 p-releasses-confirm__actions">
           {showProgressive && (
             <ProgressiveConfirm
               percentage={this.state.percentage}
+              newReleases={newReleases}
               onChange={this.onPercentageChange.bind(this)}
             />
           )}

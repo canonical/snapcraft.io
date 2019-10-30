@@ -3,11 +3,13 @@ export const UNDO_RELEASE = "UNDO_RELEASE";
 export const CANCEL_PENDING_RELEASES = "CANCEL_PENDING_RELEASES";
 export const SET_PROGRESSIVE_RELEASE_PERCENTAGE =
   "SET_PROGRESSIVE_RELEASE_PERCENTAGE";
+export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
+  "UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE";
 
-export function releaseRevision(revision, channel) {
+export function releaseRevision(revision, channel, progressive) {
   return {
     type: RELEASE_REVISION,
-    payload: { revision, channel }
+    payload: { revision, channel, progressive }
   };
 }
 
@@ -16,6 +18,16 @@ import { getPendingChannelMap } from "../selectors";
 export function setProgressiveReleasePercentage(key, percentage) {
   return {
     type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
+    payload: {
+      key,
+      percentage
+    }
+  };
+}
+
+export function updateProgressiveReleasePercentage(key, percentage) {
+  return {
+    type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
       key,
       percentage

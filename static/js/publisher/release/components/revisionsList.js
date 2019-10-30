@@ -335,6 +335,7 @@ class RevisionsList extends Component {
           </thead>
           <tbody>
             {pendingRelease &&
+              pendingRelease.revision !== filteredRevisions[0].revision &&
               this.renderRow(
                 -1,
                 pendingRelease,
