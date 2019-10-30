@@ -163,6 +163,7 @@ def snap_details_views(store, api, handle_errors):
             "default_track": default_track,
             "lowest_risk_available": lowest_risk_available,
             "confinement": confinement,
+            "trending": details["snap"]["trending"],
             # Transformed API data
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
@@ -311,21 +312,14 @@ def snap_details_views(store, api, handle_errors):
             flask.url_for(".snap_details", snap_name=snap_name.lower())
         )
 
-    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge.svg')
-    def snap_details_badge(snap_name):
-        context = _get_context_snap_details(snap_name)
-
-        snap_link = flask.request.url_root + context["package_name"]
-
-        # channel with safest risk available in default track
-        snap_channel = "".join(
-            [context["default_track"], "/", context["lowest_risk_available"]]
-        )
+    def get_badge_svg(snap_name, left_text, right_text, color="#0e8420"):
+        show_name = flask.request.args.get("name", default=1, type=int)
+        snap_link = flask.request.url_root + snap_name
 
         svg = badge(
-            left_text=context["snap_title"],
-            right_text=snap_channel + " " + context["version"],
-            right_color="#0e8420",  # Vanilla $color-positive
+            left_text=left_text if show_name else "",
+            right_text=right_text,
+            right_color=color,
             left_link=snap_link,
             right_link=snap_link,
             logo=(
@@ -337,6 +331,42 @@ def snap_details_views(store, api, handle_errors):
                 "5l11.12 4.95-2.47-4.95z'/%3E%3C/svg%3E"
             ),
         )
+        return svg
+
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge.svg')
+    def snap_details_badge(snap_name):
+        context = _get_context_snap_details(snap_name)
+
+        # channel with safest risk available in default track
+        snap_channel = "".join(
+            [context["default_track"], "/", context["lowest_risk_available"]]
+        )
+
+        svg = get_badge_svg(
+            snap_name=snap_name,
+            left_text=context["snap_title"],
+            right_text=snap_channel + " " + context["version"],
+        )
+
+        return svg, 200, {"Content-Type": "image/svg+xml"}
+
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/trending.svg')
+    def snap_details_badge_trending(snap_name):
+        context = _get_context_snap_details(snap_name)
+
+        # default to empty SVG
+        svg = (
+            '<svg height="20" width="1" xmlns="http://www.w3.org/2000/svg" '
+            'xmlns:xlink="http://www.w3.org/1999/xlink"></svg>'
+        )
+
+        if context["trending"]:
+            svg = get_badge_svg(
+                snap_name=snap_name,
+                left_text=context["snap_title"],
+                right_text="Trending this week",
+                color="#FA7041",
+            )
 
         return svg, 200, {"Content-Type": "image/svg+xml"}
 

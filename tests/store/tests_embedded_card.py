@@ -23,6 +23,7 @@ class GetEmbeddedCardTest(TestCase):
                 "validation": True,
             },
             "categories": [{"name": "test"}],
+            "trending": False,
         },
         "channel-map": [
             {
@@ -49,7 +50,7 @@ class GetEmbeddedCardTest(TestCase):
                 self.snap_name,
                 "?fields=title,summary,description,license,contact,website,",
                 "publisher,prices,media,download,version,created-at,"
-                "confinement,categories",
+                "confinement,categories,trending",
             ]
         )
         self.endpoint_url = "/" + self.snap_name + "/embedded"
