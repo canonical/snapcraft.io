@@ -33,6 +33,7 @@
   code.p-code-copyable__input { //sass-lint:disable-line no-qualifying-elements
     background: $color-x-light;
     box-shadow: none;
+    min-height: 1.5rem;
     white-space: pre-line;
   }
 }

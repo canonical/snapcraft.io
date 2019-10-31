@@ -225,7 +225,9 @@ const getBadgesHTML = (snapName, options) => {
 };
 
 const getBadgesPreviewHTML = (snapName, options) => {
-  return getBadgesCode(snapName, options, getBadgePreview);
+  const code = getBadgesCode(snapName, options, getBadgePreview);
+
+  return code || "<em>select a badge to display</em>";
 };
 
 const getBadgesMarkdown = (snapName, options) => {
