@@ -65,7 +65,8 @@ class GetGitHubBadgeTest(TestCase):
                 "confinement,categories,trending",
             ]
         )
-        self.endpoint_url = "/" + self.snap_name + "/badge.svg"
+        self.badge_url = "/" + self.snap_name + "/badge.svg"
+        self.trending_url = "/" + self.snap_name + "/trending.svg"
 
     def create_app(self):
         app = create_app(testing=True)
@@ -83,7 +84,7 @@ class GetGitHubBadgeTest(TestCase):
             )
         )
 
-        response = self.client.get(self.endpoint_url)
+        response = self.client.get(self.badge_url)
 
         assert len(responses.calls) == 1
         called = responses.calls[0]
@@ -100,7 +101,7 @@ class GetGitHubBadgeTest(TestCase):
             )
         )
 
-        response = self.client.get(self.endpoint_url)
+        response = self.client.get(self.badge_url)
 
         assert len(responses.calls) == 1
         called = responses.calls[0]
@@ -114,7 +115,7 @@ class GetGitHubBadgeTest(TestCase):
             responses.Response(method="GET", url=self.api_url, status=500)
         )
 
-        response = self.client.get(self.endpoint_url)
+        response = self.client.get(self.badge_url)
 
         assert len(responses.calls) == 1
         called = responses.calls[0]
@@ -132,7 +133,39 @@ class GetGitHubBadgeTest(TestCase):
             )
         )
 
-        response = self.client.get(self.endpoint_url)
+        response = self.client.get(self.badge_url)
 
         self.assertEqual(response.status_code, 200)
-        # self.assert_context("snap_title", "Snap Title")
+
+    @responses.activate
+    def test_get_trending_empty(self):
+        payload = self.snap_payload
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        response = self.client.get(self.trending_url)
+        svg = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("Trending" not in svg)
+
+    @responses.activate
+    def test_get_trending_is_trending(self):
+        payload = self.snap_payload
+        payload["snap"]["trending"] = True
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        response = self.client.get(self.trending_url)
+        svg = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("Trending" in svg)
