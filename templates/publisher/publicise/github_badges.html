@@ -8,10 +8,27 @@
 
   <div class="row">
     <div class="col-2">
+      Display:
+    </div>
+    <div class="col-7" id="js-options">
+        <input type="checkbox" name="show-channel" id="option-show-channel" checked>
+        <label for="option-show-channel">
+          Stable channel from default track
+        </label>
+        <input type="checkbox" name="show-trending" id="option-show-trending" {% if trending %}checked{% endif %}>
+        <label for="option-show-trending">
+          Trending status
+          <span class="p-form-help-text">Badge will only display when your snap is flaged as trending</span>
+        </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-2">
       Preview:
     </div>
     <div class="col-7">
-      <p class="snapcraft-publicise__images">
+      <p class="snapcraft-publicise__images" id="snippet-badge-preview">
         <a href="https://snapcraft.io/{{ snap_name }}">
           <img alt="{{ snap_title }}" src="/{{ snap_name }}/badge.svg" />
         </a>
@@ -50,10 +67,22 @@
 <script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function() {
     Raven.context(function () {
+      snapcraft.publisher.publicise.initGitHubBadgePicker({
+        snapName: "{{ snap_name }}",
+        previewElement: document.getElementById("snippet-badge-preview"),
+        htmlElement: document.getElementById("snippet-badge-html"),
+        markdownElement: document.getElementById("snippet-badge-markdown"),
+        optionButtons: document.querySelectorAll("#js-options input[type=checkbox]")
+      });
+
       if (typeof ClipboardJS !== 'undefined') {
         new ClipboardJS('.js-clipboard-copy');
       }

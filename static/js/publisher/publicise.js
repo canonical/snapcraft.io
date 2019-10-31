@@ -179,4 +179,92 @@ function initEmbeddedCardPicker(options) {
   return () => render(state);
 }
 
-export { initSnapButtonsPicker, initEmbeddedCardPicker };
+// GITHUB BADGES
+
+const getBadgePath = (snapName, badgeName = "badge", showName = true) => {
+  return `/${snapName}/${badgeName}.svg${showName ? "" : "?name=0"}`;
+};
+
+const getBadgePreview = (snapName, badgeName, showName) => {
+  return `<a href="/${snapName}">
+  <img alt="${snapName}" src="${getBadgePath(snapName, badgeName, showName)}" />
+  </a>`;
+};
+
+const getBadgeHTML = (snapName, badgeName, showName) => {
+  return `&lt;a href="https://snapcraft.io/${snapName}"&gt;
+  &lt;img alt="${snapName}" src="https://snapcraft.io${getBadgePath(
+    snapName,
+    badgeName,
+    showName
+  )}" /&gt;
+  &lt;/a&gt;`;
+};
+
+const getBadgeMarkdown = (snapName, badgeName, showName) => {
+  return `[![${snapName}](https://snapcraft.io/${getBadgePath(
+    snapName,
+    badgeName,
+    showName
+  )})](https://snapcraft.io/${snapName})`;
+};
+
+const getBadgesCode = (snapName, options, badgeGenerator) => {
+  const badges = [];
+  if (options["show-channel"]) {
+    badges.push(badgeGenerator(snapName));
+  }
+  if (options["show-trending"]) {
+    badges.push(badgeGenerator(snapName, "trending", badges.length === 0));
+  }
+  return badges.join("\n");
+};
+
+const getBadgesHTML = (snapName, options) => {
+  return getBadgesCode(snapName, options, getBadgeHTML);
+};
+
+const getBadgesPreviewHTML = (snapName, options) => {
+  return getBadgesCode(snapName, options, getBadgePreview);
+};
+
+const getBadgesMarkdown = (snapName, options) => {
+  return getBadgesCode(snapName, options, getBadgeMarkdown);
+};
+
+function initGitHubBadgePicker(options) {
+  const { snapName, htmlElement, previewElement, markdownElement } = options;
+  const optionButtons = [].slice.call(options.optionButtons);
+
+  let state = {
+    ...getCurrentFormState([], optionButtons)
+  };
+
+  const render = state => {
+    previewElement.innerHTML = getBadgesPreviewHTML(snapName, state);
+    htmlElement.innerHTML = getBadgesHTML(snapName, state);
+    markdownElement.innerHTML = getBadgesMarkdown(snapName, state);
+  };
+
+  const getFormState = () => {
+    return getCurrentFormState([], optionButtons);
+  };
+
+  const updateState = () => {
+    state = {
+      ...state,
+      ...getFormState()
+    };
+    render(state);
+  };
+
+  optionButtons.forEach(checkbox => {
+    checkbox.addEventListener("change", () => {
+      updateState();
+    });
+  });
+
+  render(state);
+}
+
+export { initSnapButtonsPicker, initEmbeddedCardPicker, initGitHubBadgePicker };
