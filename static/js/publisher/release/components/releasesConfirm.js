@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { getChannelString } from "../../../libs/channels";
 import {
   cancelPendingReleases,
   setProgressiveReleasePercentage
@@ -56,6 +57,7 @@ class ReleasesConfirm extends Component {
   render() {
     const { isLoading, percentage } = this.state;
     const {
+      releases,
       pendingReleases,
       pendingCloses,
       isProgressiveReleaseEnabled
@@ -64,60 +66,86 @@ class ReleasesConfirm extends Component {
 
     const isPercentageValid = +percentage > 0 && +percentage <= 100;
 
-    const isApplyEnabled =
-      (releasesCount > 0 || closesCount > 0) && !isLoading && isPercentageValid;
-
-    const isCancelEnabled =
-      (releasesCount > 0 || closesCount > 0) && !isLoading;
-
     const progressiveUpdates = {};
     const newReleases = {};
+    const newReleasesToProgress = {};
 
     Object.keys(pendingReleases).forEach(key => {
       if (pendingReleases[key].progressive) {
-        progressiveUpdates[key] = pendingReleases[key];
+        // Ensure we make a copy, otherwise the "changes" key will polute the
+        // pendingRelease state
+        const releaseCopy = JSON.parse(JSON.stringify(pendingReleases[key]));
+        // What are the differences?
+        const previousState = releaseCopy.revision.release
+          ? releaseCopy.revision.release.progressive
+          : {};
+        const newState = releaseCopy.progressive;
+
+        const changes = [];
+        if (newState.paused !== previousState.paused) {
+          changes.push({
+            key: "paused",
+            value: newState.paused
+          });
+        }
+
+        if (
+          !newState.paused &&
+          newState.percentage !== previousState.percentage
+        ) {
+          changes.push({
+            key: "percentage",
+            value: newState.percentage
+          });
+        }
+
+        if (changes.length > 0) {
+          // Add this to the copy of the pendingRelease state
+          releaseCopy.progressive.changes = changes;
+          progressiveUpdates[key] = releaseCopy;
+        }
       } else {
-        newReleases[key] = pendingReleases[key];
+        const releaseCopy = JSON.parse(JSON.stringify(pendingReleases[key]));
+        const currentRelease = releases.filter(
+          release =>
+            release.architecture === releaseCopy.revision.architectures[0] &&
+            getChannelString(release) === releaseCopy.channels[0]
+        );
+
+        if (currentRelease[0] && currentRelease[0].revision) {
+          pendingReleases[key].canBeProgressive = true;
+          newReleasesToProgress[key] = releaseCopy;
+        } else {
+          newReleases[key] = releaseCopy;
+        }
       }
     });
 
     const progressiveUpdatesCount = Object.keys(progressiveUpdates).length;
     const releasesCount = Object.keys(newReleases).length;
+    const releasesToProgressCount = Object.keys(newReleasesToProgress).length;
 
-    const showProgressive = isProgressiveReleaseEnabled && releasesCount > 0;
+    const showProgressive =
+      isProgressiveReleaseEnabled && releasesToProgressCount > 0;
+
+    const isApplyEnabled =
+      (releasesCount > 0 ||
+        releasesToProgressCount > 0 ||
+        closesCount > 0 ||
+        progressiveUpdatesCount > 0) &&
+      !isLoading &&
+      isPercentageValid;
+
+    const isCancelEnabled =
+      (releasesCount > 0 ||
+        releasesToProgressCount > 0 ||
+        closesCount > 0 ||
+        progressiveUpdatesCount > 0) &&
+      !isLoading;
 
     return (
       <div className="p-releases-confirm u-vertically-center row">
         <div className="col-5">
-          {releasesCount > 0 &&
-            !showProgressive && (
-              <Fragment>
-                <span className="p-tooltip">
-                  <span className="p-help">
-                    {releasesCount} revision
-                    {releasesCount > 1 ? "s" : ""}
-                  </span>
-                  <span className="p-tooltip__message" role="tooltip">
-                    Release revisions:
-                    <br />
-                    {Object.keys(newReleases).map(revId => {
-                      const release = newReleases[revId];
-
-                      return (
-                        <span key={revId}>
-                          <b>{release.revision.revision}</b> (
-                          {release.revision.version}){" "}
-                          {release.revision.architectures.join(", ")} to{" "}
-                          {release.channels.join(", ")}
-                          {"\n"}
-                        </span>
-                      );
-                    })}
-                  </span>
-                </span>{" "}
-                to release.
-              </Fragment>
-            )}{" "}
           {closesCount > 0 && (
             <Fragment>
               <span className="p-tooltip">
@@ -130,6 +158,34 @@ class ReleasesConfirm extends Component {
                 </span>
               </span>{" "}
               to close.
+            </Fragment>
+          )}{" "}
+          {releasesCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {releasesCount} revision
+                  {releasesCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  Release revisions:
+                  <br />
+                  {Object.keys(newReleases).map(revId => {
+                    const release = newReleases[revId];
+
+                    return (
+                      <span key={revId}>
+                        <b>{release.revision.revision}</b> (
+                        {release.revision.version}){" "}
+                        {release.revision.architectures.join(", ")} to{" "}
+                        {release.channels.join(", ")}
+                        {"\n"}
+                      </span>
+                    );
+                  })}
+                </span>
+              </span>{" "}
+              to release.
             </Fragment>
           )}{" "}
           {progressiveUpdatesCount > 0 && (
@@ -147,10 +203,22 @@ class ReleasesConfirm extends Component {
 
                     return (
                       <span key={revId}>
-                        Revision <b>{release.revision.revision}</b> on{" "}
-                        {release.revision.architectures[0]} -{" "}
+                        <b>{release.revision.revision}</b> (
+                        {release.revision.version}) on{" "}
+                        {release.revision.architectures.join(", ")}{" "}
                         {release.channels[0]} to{" "}
-                        <b>{release.progressive.percentage}%</b>
+                        <b>
+                          {release.progressive.changes
+                            .map(change => {
+                              if (change.key === "paused") {
+                                return change.value === true
+                                  ? "paused"
+                                  : "resumed";
+                              }
+                              return `${change.value}%`;
+                            })
+                            .join(" at ")}
+                        </b>
                         {"\n"}
                       </span>
                     );
@@ -165,7 +233,7 @@ class ReleasesConfirm extends Component {
           {showProgressive && (
             <ProgressiveConfirm
               percentage={this.state.percentage}
-              newReleases={newReleases}
+              newReleases={newReleasesToProgress}
               onChange={this.onPercentageChange.bind(this)}
             />
           )}
@@ -192,6 +260,7 @@ class ReleasesConfirm extends Component {
 }
 
 ReleasesConfirm.propTypes = {
+  releases: PropTypes.array.isRequired,
   pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isProgressiveReleaseEnabled: PropTypes.bool.isRequired,
@@ -203,6 +272,7 @@ ReleasesConfirm.propTypes = {
 
 const mapStateToProps = state => {
   return {
+    releases: state.releases,
     pendingCloses: state.pendingCloses,
     pendingReleases: state.pendingReleases,
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)

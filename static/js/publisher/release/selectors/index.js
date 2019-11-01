@@ -273,7 +273,12 @@ export function getProgressiveState(state, channel, arch, revision) {
     return null;
   }
 
-  const { releases } = state;
+  const { releases, pendingReleases, revisions } = state;
+
+  let progressiveStatus = null;
+  let previousRevision = null;
+  let pendingProgressiveStatus = null;
+
   const allReleases = releases.filter(
     item => channel === getChannelString(item) && arch === item.architecture
   );
@@ -282,19 +287,37 @@ export function getProgressiveState(state, channel, arch, revision) {
     item => revision === item.revision
   );
 
-  let progressive = null;
-
   const release = allReleases[releaseIndex];
 
-  if (release && release.progressive && release.progressive.key) {
-    progressive = release.progressive;
+  if (
+    release &&
+    release.progressive &&
+    release.progressive &&
+    release.progressive.key
+  ) {
+    progressiveStatus = JSON.parse(JSON.stringify(release.progressive));
 
-    // TODO: Confirm that this is true when multiple progressive
-    // releases have occured.
-    if (allReleases[releaseIndex + 1]) {
-      progressive.from = allReleases[releaseIndex + 1].revision;
+    previousRevision = allReleases
+      .slice(releaseIndex)
+      .filter(item => item.revision !== release.revision);
+
+    if (previousRevision[0]) {
+      previousRevision = revisions[previousRevision[0].revision];
     }
   }
 
-  return progressive;
+  const pendingMatch = pendingReleases[`${revision}-${channel}`];
+
+  if (pendingMatch) {
+    const release = pendingMatch.revision.release;
+    if (
+      release &&
+      channel === getChannelString(release) &&
+      arch === release.architecture
+    ) {
+      pendingProgressiveStatus = Object.assign({}, pendingMatch.progressive);
+    }
+  }
+
+  return [progressiveStatus, previousRevision, pendingProgressiveStatus];
 }

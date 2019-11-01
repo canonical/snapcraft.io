@@ -52,7 +52,8 @@ export const RevisionInfo = ({
   revision,
   isPending,
   showVersion,
-  progressiveState
+  progressiveState,
+  previousRevision
 }) => {
   let from = null;
   let buildIcon = null;
@@ -61,8 +62,8 @@ export const RevisionInfo = ({
     buildIcon = <i className="p-icon--lp" />;
   }
 
-  if (progressiveState && progressiveState.from) {
-    from = progressiveState.from;
+  if (previousRevision && previousRevision.revision) {
+    from = previousRevision.revision;
   }
 
   return (
@@ -142,7 +143,8 @@ RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
   showVersion: PropTypes.bool,
-  progressiveState: PropTypes.object
+  progressiveState: PropTypes.object,
+  previousRevision: PropTypes.object
 };
 
 // generic draggable view of releases table cell

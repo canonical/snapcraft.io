@@ -59,10 +59,11 @@ const ReleasesTableReleaseCell = props => {
   // check if there is a pending release in this cell
   const isPendingRelease = hasPendingRelease(channel, arch);
 
-  let progressiveState = null;
+  let progressiveState;
+  let previousRevision;
 
   if (!isPendingRelease && currentRevision) {
-    progressiveState = getProgressiveState(
+    [progressiveState, previousRevision] = getProgressiveState(
       channel,
       arch,
       currentRevision.revision
@@ -131,6 +132,7 @@ const ReleasesTableReleaseCell = props => {
         isPending={isPendingRelease}
         showVersion={showVersion}
         progressiveState={progressiveState}
+        previousRevision={previousRevision}
       />
     );
   } else if (isUnassigned) {

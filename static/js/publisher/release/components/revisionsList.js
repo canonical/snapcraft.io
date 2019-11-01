@@ -70,14 +70,16 @@ class RevisionsList extends Component {
     showChannels,
     activeRevision,
     showBuildRequest,
-    activeChannel
+    activeChannel,
+    hasPendingRelease
   ) {
     return revisions.map((revision, index) => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
 
       return this.renderRow(
-        index,
+        // bump index by 1 if there's a pending release
+        hasPendingRelease ? index + 1 : index,
         revision,
         isSelectable,
         showChannels,
@@ -258,6 +260,11 @@ class RevisionsList extends Component {
     const showProgressiveReleases =
       isProgressiveReleaseEnabled && !showChannels;
 
+    const showPendingRelease =
+      pendingRelease &&
+      filteredRevisions[0] &&
+      pendingRelease.revision !== filteredRevisions[0].revision;
+
     return (
       <Fragment>
         <div className="u-clearfix">
@@ -334,8 +341,7 @@ class RevisionsList extends Component {
             </tr>
           </thead>
           <tbody>
-            {pendingRelease &&
-              pendingRelease.revision !== filteredRevisions[0].revision &&
+            {showPendingRelease &&
               this.renderRow(
                 -1,
                 pendingRelease,
@@ -355,7 +361,8 @@ class RevisionsList extends Component {
                 showChannels,
                 activeRevision,
                 showBuildRequest,
-                activeChannel
+                activeChannel,
+                showPendingRelease
               )
             ) : (
               <tr>

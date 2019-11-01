@@ -3,27 +3,30 @@ import {
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES,
   SET_PROGRESSIVE_RELEASE_PERCENTAGE,
-  UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE
+  UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
+  PAUSE_PROGRESSIVE_RELEASE,
+  RESUME_PROGRESSIVE_RELEASE
 } from "../actions/pendingReleases";
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 function removePendingRelease(state, revision, channel) {
-  if (state[revision.revision]) {
-    const channels = [...state[revision.revision].channels];
+  const releaseKey = `${revision.revision}-${channel}`;
+  if (state[releaseKey]) {
+    const channels = [...state[releaseKey].channels];
 
     if (channels.includes(channel)) {
       state = { ...state };
       channels.splice(channels.indexOf(channel), 1);
-      state[revision.revision] = {
-        ...state[revision.revision],
+      state[releaseKey] = {
+        ...state[releaseKey],
         channels
       };
     }
 
     if (channels.length === 0) {
       state = { ...state };
-      delete state[revision.revision];
+      delete state[releaseKey];
     }
   }
 
@@ -35,8 +38,8 @@ function releaseRevision(state, revision, channel, progressive) {
 
   // cancel any other pending release for the same channel in same architectures
   revision.architectures.forEach(arch => {
-    Object.keys(state).forEach(revisionId => {
-      const pendingRelease = state[revisionId];
+    Object.keys(state).forEach(releaseKey => {
+      const pendingRelease = state[releaseKey];
 
       if (
         pendingRelease.channels.includes(channel) &&
@@ -47,18 +50,19 @@ function releaseRevision(state, revision, channel, progressive) {
     });
   });
 
+  const releaseKey = `${revision.revision}-${channel}`;
   // promote revision to channel
   let channels =
-    state[revision.revision] && state[revision.revision].channels
-      ? [...state[revision.revision].channels, channel]
+    state[releaseKey] && state[releaseKey].channels
+      ? [...state[releaseKey].channels, channel]
       : [channel];
 
   // make sure channels are unique
   channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
 
-  state[revision.revision] = {
+  state[releaseKey] = {
     revision,
-    progressive,
+    progressive: progressive,
     channels
   };
 
@@ -79,7 +83,11 @@ function setProgressiveRelease(state, progressive) {
   const nextState = JSON.parse(JSON.stringify(state));
 
   Object.values(nextState).forEach(pendingRelease => {
-    if (!pendingRelease.progressive) {
+    if (
+      pendingRelease.canBeProgressive &&
+      !pendingRelease.progressive &&
+      progressive.percentage < 100
+    ) {
       pendingRelease.progressive = { paused: false, ...progressive };
     }
   });
@@ -95,7 +103,35 @@ function updateProgressiveRelease(state, progressive) {
       pendingRelease.progressive &&
       pendingRelease.progressive.key === progressive.key
     ) {
-      pendingRelease.progressive.percentage = progressive.percentage;
+      if (progressive.percentage < 100) {
+        pendingRelease.progressive.percentage = progressive.percentage;
+      } else {
+        delete pendingRelease.progressive; // At 100% we just want to do a regular release
+      }
+    }
+  });
+
+  return nextState;
+}
+
+function pauseProgressiveRelease(state, key) {
+  const nextState = JSON.parse(JSON.stringify(state));
+
+  Object.values(nextState).forEach(pendingRelease => {
+    if (pendingRelease.progressive && pendingRelease.progressive.key === key) {
+      pendingRelease.progressive.paused = true;
+    }
+  });
+
+  return nextState;
+}
+
+function resumeProgressiveRelease(state, key) {
+  const nextState = JSON.parse(JSON.stringify(state));
+
+  Object.values(nextState).forEach(pendingRelease => {
+    if (pendingRelease.progressive && pendingRelease.progressive.key === key) {
+      pendingRelease.progressive.paused = false;
     }
   });
 
@@ -136,6 +172,10 @@ export default function pendingReleases(state = {}, action) {
       return setProgressiveRelease(state, action.payload);
     case UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE:
       return updateProgressiveRelease(state, action.payload);
+    case PAUSE_PROGRESSIVE_RELEASE:
+      return pauseProgressiveRelease(state, action.payload);
+    case RESUME_PROGRESSIVE_RELEASE:
+      return resumeProgressiveRelease(state, action.payload);
     default:
       return state;
   }

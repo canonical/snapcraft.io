@@ -18,6 +18,12 @@
     }
   }
 
+  .progressive-bar.is-disabled {
+    cursor: not-allowed;
+    opacity: .8;
+    pointer-events: none;
+  }
+
   .progressive-bar__current {
     background: $active;
     border-radius: 9px 0 0 9px;

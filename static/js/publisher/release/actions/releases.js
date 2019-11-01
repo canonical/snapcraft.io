@@ -7,6 +7,7 @@ import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
 import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
 import { updateRevisions } from "./revisions";
+import { closeHistory } from "./history";
 
 import {
   fetchReleasesHistory,
@@ -120,11 +121,11 @@ export function releaseRevisions() {
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName, defaultTrack } = options;
-    const releases = Object.keys(pendingReleases).map(id => {
-      const pendingRelease = pendingReleases[id];
+    const releases = Object.keys(pendingReleases).map(key => {
+      const pendingRelease = pendingReleases[key];
 
       const release = {
-        id,
+        id: pendingRelease.revision.revision,
         revision: pendingRelease.revision,
         channels: pendingRelease.channels,
         progressive: pendingRelease.progressive
@@ -163,7 +164,8 @@ export function releaseRevisions() {
           })
         )
       )
-      .then(() => dispatch(cancelPendingReleases()));
+      .then(() => dispatch(cancelPendingReleases()))
+      .then(() => dispatch(closeHistory()));
   };
 }
 

@@ -5,6 +5,8 @@ export const SET_PROGRESSIVE_RELEASE_PERCENTAGE =
   "SET_PROGRESSIVE_RELEASE_PERCENTAGE";
 export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
   "UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE";
+export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
+export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 
 export function releaseRevision(revision, channel, progressive) {
   return {
@@ -32,6 +34,20 @@ export function updateProgressiveReleasePercentage(key, percentage) {
       key,
       percentage
     }
+  };
+}
+
+export function pauseProgressiveRelease(key) {
+  return {
+    type: PAUSE_PROGRESSIVE_RELEASE,
+    payload: key
+  };
+}
+
+export function resumeProgressiveRelease(key) {
+  return {
+    type: RESUME_PROGRESSIVE_RELEASE,
+    payload: key
   };
 }
 

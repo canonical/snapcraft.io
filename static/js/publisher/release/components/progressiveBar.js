@@ -1,8 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const ProgressiveBar = ({ percentage, targetPercentage, readonly }) => (
-  <div className="progressive-bar p-tooltip--btm-center">
+const ProgressiveBar = ({
+  percentage,
+  targetPercentage,
+  readonly,
+  disabled
+}) => (
+  <div
+    className={`progressive-bar p-tooltip--btm-center ${
+      disabled ? "is-disabled" : ""
+    }`}
+  >
     {!readonly && (
       <div
         className="progressive-bar__target"
@@ -35,7 +44,8 @@ ProgressiveBar.defaultProps = {
 ProgressiveBar.propTypes = {
   percentage: PropTypes.number,
   targetPercentage: PropTypes.number,
-  readonly: PropTypes.bool
+  readonly: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
 class InteractiveProgressiveBar extends React.Component {
@@ -47,7 +57,7 @@ class InteractiveProgressiveBar extends React.Component {
     this.state = {
       current: props.percentage,
       target: props.percentage,
-      scrubTarget: props.percentage,
+      scrubTarget: props.targetPercentage || props.percentage,
       scrubbing: false,
       mousePosition: 0
     };
@@ -58,13 +68,27 @@ class InteractiveProgressiveBar extends React.Component {
 
     this.onWheelHandler = this.onWheelHandler.bind(this);
 
-    window.addEventListener("mouseup", this.onMouseUpHandler);
-    window.addEventListener("mousemove", this.onMouseMoveHandler);
+    // If the element isn't disabled, add event liteners
+    if (!props.disabled) {
+      window.addEventListener("mouseup", this.onMouseUpHandler);
+      window.addEventListener("mousemove", this.onMouseMoveHandler);
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener("mouseup", this.onMouseUpHandler);
     window.removeEventListener("mousemove", this.onMouseMoveHandler);
+  }
+
+  componentDidUpdate(prevProps) {
+    // We really don't want to flood the browser with event listeners
+    if (prevProps.disabled && !this.props.disabled) {
+      window.addEventListener("mouseup", this.onMouseUpHandler);
+      window.addEventListener("mousemove", this.onMouseMoveHandler);
+    } else if (!prevProps.disabled && this.props.disabled) {
+      window.removeEventListener("mouseup", this.onMouseUpHandler);
+      window.removeEventListener("mousemove", this.onMouseMoveHandler);
+    }
   }
 
   scrubTo(target, setTarget) {
@@ -145,7 +169,7 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   render() {
-    const { readonly } = this.props;
+    const { readonly, disabled } = this.props;
     const { current, scrubTarget, scrubbing } = this.state;
     const classes = ["progressive-bar__interactive-wrapper"];
     if (scrubbing) {
@@ -158,13 +182,16 @@ class InteractiveProgressiveBar extends React.Component {
       <div
         className={classes.join(" ")}
         ref={this.barHolder}
-        onMouseDown={!readonly && this.onMouseDownHandler}
-        onWheel={!readonly && this.onWheelHandler}
+        onMouseDown={
+          !readonly && !disabled ? this.onMouseDownHandler : undefined
+        }
+        onWheel={!readonly && !disabled ? this.onWheelHandler : undefined}
       >
         <ProgressiveBar
           percentage={current}
           targetPercentage={scrubTarget}
           readonly={false}
+          disabled={disabled}
         />
       </div>
     );
@@ -175,7 +202,9 @@ InteractiveProgressiveBar.propTypes = {
   percentage: PropTypes.number,
   readonly: PropTypes.bool,
   singleDirection: PropTypes.number,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  targetPercentage: PropTypes.number,
+  disabled: PropTypes.bool
 };
 
 export { ProgressiveBar, InteractiveProgressiveBar };

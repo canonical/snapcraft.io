@@ -5,12 +5,14 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import { getChannelString } from "../../../libs/channels.js";
+import { getChannelString } from "../../../libs/channels";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 import {
   releaseRevision,
-  updateProgressiveReleasePercentage
+  updateProgressiveReleasePercentage,
+  pauseProgressiveRelease,
+  resumeProgressiveRelease
 } from "../actions/pendingReleases";
 import {
   getSelectedRevisions,
@@ -33,7 +35,9 @@ const RevisionsListRow = props => {
     getProgressiveState,
     isProgressiveReleaseEnabled,
     updateProgressiveReleasePercentage,
-    releaseRevision
+    releaseRevision,
+    pauseProgressiveRelease,
+    resumeProgressiveRelease
   } = props;
 
   const [canDrag, setDraggable] = useState(true);
@@ -54,10 +58,16 @@ const RevisionsListRow = props => {
   }
 
   let progressiveState;
+  let previousRevision;
+  let pendingProgressiveState;
 
   // Only show the progressive release status if it's the latest revision
   if (index === 0 && revision.release) {
-    progressiveState = getProgressiveState(
+    [
+      progressiveState,
+      previousRevision,
+      pendingProgressiveState
+    ] = getProgressiveState(
       channel,
       revision.release.architecture,
       revision.revision
@@ -85,10 +95,49 @@ const RevisionsListRow = props => {
 
   const showProgressiveReleases = isProgressiveReleaseEnabled && !showChannels;
 
-  const handleProgressiveChange = percentage => {
+  const handlePauseProgressiveRelease = () => {
     releaseRevision(revision, channel, progressiveState);
+    pauseProgressiveRelease(progressiveState.key);
+  };
+
+  const handleResumeProgressiveRelease = () => {
+    if (!pendingProgressiveState) {
+      releaseRevision(revision, channel, progressiveState);
+    }
+    resumeProgressiveRelease(progressiveState.key);
+  };
+
+  const handleCancelProgressiveRelease = () => {
+    releaseRevision(previousRevision, channel, null);
+  };
+
+  const handleProgressiveChange = percentage => {
+    if (!pendingProgressiveState) {
+      releaseRevision(revision, channel, progressiveState);
+    }
     updateProgressiveReleasePercentage(progressiveState.key, percentage);
   };
+
+  let showProgressivePause = false;
+  let showProgressiveResume = false;
+
+  if (progressiveState) {
+    if (progressiveState.paused) {
+      showProgressiveResume = true;
+    } else {
+      showProgressivePause = true;
+    }
+  }
+
+  if (pendingProgressiveState) {
+    if (pendingProgressiveState.paused) {
+      showProgressivePause = false;
+      showProgressiveResume = true;
+    } else {
+      showProgressivePause = true;
+      showProgressiveResume = false;
+    }
+  }
 
   return (
     <tr
@@ -140,38 +189,68 @@ const RevisionsListRow = props => {
               onMouseOver={() => setDraggable(false)}
               onMouseOut={() => setDraggable(true)}
             >
-              <span
-                className="p-tooltip--btm-center"
-                aria-describedby={`${revision.revision}-pause`}
-              >
-                <i className="p-icon--pause" />
+              {showProgressivePause && (
                 <span
-                  className="p-tooltip__message"
-                  role="tooltip"
-                  id={`${revision.revision}-pause`}
+                  className="p-tooltip--btm-center"
+                  aria-describedby={`${revision.revision}-pause`}
+                  onClick={handlePauseProgressiveRelease}
                 >
-                  Pause progressive release of <b>{revision.revision}</b>
+                  <i className="p-icon--pause" />
+                  <span
+                    className="p-tooltip__message"
+                    role="tooltip"
+                    id={`${revision.revision}-pause`}
+                  >
+                    Pause progressive release of <b>{revision.revision}</b>
+                  </span>
                 </span>
-              </span>
+              )}
+              {showProgressiveResume && (
+                <span
+                  className="p-tooltip--btm-center"
+                  aria-describedby={`${revision.revision}-resume`}
+                  onClick={handleResumeProgressiveRelease}
+                >
+                  <i className="p-icon--resume" />
+                  <span
+                    className="p-tooltip__message"
+                    role="tooltip"
+                    id={`${revision.revision}-resume`}
+                  >
+                    Resume progressive release of <b>{revision.revision}</b>
+                  </span>
+                </span>
+              )}
               <InteractiveProgressiveBar
                 percentage={progressiveState.percentage}
+                targetPercentage={
+                  pendingProgressiveState
+                    ? pendingProgressiveState.percentage
+                    : null
+                }
                 singleDirection={1}
                 onChange={handleProgressiveChange}
+                disabled={showProgressiveResume}
               />
-              <span
-                className="p-tooltip--btm-center"
-                aria-describedby={`${revision.revision}-cancel`}
-              >
-                <i className="p-icon--close" onClick={() => {}} />
+              {previousRevision && (
                 <span
-                  className="p-tooltip__message"
-                  role="tooltip"
-                  id={`${revision.revision}-cancel`}
+                  className="p-tooltip--btm-center"
+                  aria-describedby={`${revision.revision}-cancel`}
                 >
-                  Cancel progressive release and revert all devices to{" "}
-                  <b>{progressiveState.from}</b>
+                  <i
+                    className="p-icon--close"
+                    onClick={handleCancelProgressiveRelease}
+                  />
+                  <span
+                    className="p-tooltip__message"
+                    role="tooltip"
+                    id={`${revision.revision}-cancel`}
+                  >
+                    Cancel progressive release and revert all devices to{" "}
+                    <b>{previousRevision.revision}</b>
+                  </span>
                 </span>
-              </span>
+              )}
             </div>
           )}
         </td>
@@ -218,7 +297,9 @@ RevisionsListRow.propTypes = {
   // actions
   toggleRevision: PropTypes.func.isRequired,
   updateProgressiveReleasePercentage: PropTypes.func.isRequired,
-  releaseRevision: PropTypes.func.isRequired
+  releaseRevision: PropTypes.func.isRequired,
+  pauseProgressiveRelease: PropTypes.func.isRequired,
+  resumeProgressiveRelease: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -236,7 +317,9 @@ const mapDispatchToProps = dispatch => {
     updateProgressiveReleasePercentage: (key, percentage) =>
       dispatch(updateProgressiveReleasePercentage(key, percentage)),
     releaseRevision: (revision, channel, progressive) =>
-      dispatch(releaseRevision(revision, channel, progressive))
+      dispatch(releaseRevision(revision, channel, progressive)),
+    pauseProgressiveRelease: key => dispatch(pauseProgressiveRelease(key)),
+    resumeProgressiveRelease: key => dispatch(resumeProgressiveRelease(key))
   };
 };
 
