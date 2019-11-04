@@ -246,9 +246,7 @@ const getBadgesHTML = (snapName, options) => {
 };
 
 const getBadgesPreviewHTML = (snapName, options) => {
-  const code = getBadgesCode(snapName, options, getBadgePreview);
-
-  return code || "<em>select a badge to display</em>";
+  return getBadgesCode(snapName, options, getBadgePreview);
 };
 
 const getBadgesMarkdown = (snapName, options) => {
@@ -262,6 +260,8 @@ function initGitHubBadgePicker(options) {
     previewElement,
     markdownElement,
     notificationElement,
+    badgeCodeElement,
+    optionsUncheckedElement,
     isTrending
   } = options;
   const optionButtons = [].slice.call(options.optionButtons);
@@ -275,6 +275,14 @@ function initGitHubBadgePicker(options) {
       notificationElement.classList.remove("u-hide");
     } else {
       notificationElement.classList.add("u-hide");
+    }
+
+    if (state["show-channel"] || state["show-trending"]) {
+      optionsUncheckedElement.classList.add("u-hide");
+      badgeCodeElement.classList.remove("u-hide");
+    } else {
+      optionsUncheckedElement.classList.remove("u-hide");
+      badgeCodeElement.classList.add("u-hide");
     }
 
     previewElement.innerHTML = getBadgesPreviewHTML(snapName, state);
