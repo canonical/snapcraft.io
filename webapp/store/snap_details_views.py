@@ -352,6 +352,7 @@ def snap_details_views(store, api, handle_errors):
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>/trending.svg')
     def snap_details_badge_trending(snap_name):
+        is_preview = flask.request.args.get("preview", default=0, type=int)
         context = _get_context_snap_details(snap_name)
 
         # default to empty SVG
@@ -360,7 +361,20 @@ def snap_details_views(store, api, handle_errors):
             'xmlns:xlink="http://www.w3.org/1999/xlink"></svg>'
         )
 
-        if context["trending"]:
+        # publishers can see preview of trending badge of their own snaps
+        # on Publicise page
+        show_as_preview = False
+        if is_preview and authentication.is_authenticated(flask.session):
+            if (
+                flask.session.get("openid").get("nickname")
+                == context["username"]
+            ) or (
+                "user_shared_snaps" in flask.session
+                and snap_name in flask.session.get("user_shared_snaps")
+            ):
+                show_as_preview = True
+
+        if context["trending"] or show_as_preview:
             svg = get_badge_svg(
                 snap_name=snap_name,
                 left_text=context["snap_title"],

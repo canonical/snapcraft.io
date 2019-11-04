@@ -181,13 +181,34 @@ function initEmbeddedCardPicker(options) {
 
 // GITHUB BADGES
 
-const getBadgePath = (snapName, badgeName = "badge", showName = true) => {
-  return `/${snapName}/${badgeName}.svg${showName ? "" : "?name=0"}`;
+const getBadgePath = (
+  snapName,
+  badgeName = "badge",
+  showName = true,
+  isPreview = false
+) => {
+  const params = [];
+  if (!showName) {
+    params.push("name=0");
+  }
+
+  if (isPreview) {
+    params.push("preview=1");
+  }
+
+  return `/${snapName}/${badgeName}.svg${
+    params.length ? `?${params.join("&")}` : ""
+  }`;
 };
 
 const getBadgePreview = (snapName, badgeName, showName) => {
   return `<a href="/${snapName}">
-  <img alt="${snapName}" src="${getBadgePath(snapName, badgeName, showName)}" />
+  <img alt="${snapName}" src="${getBadgePath(
+    snapName,
+    badgeName,
+    showName,
+    badgeName === "trending"
+  )}" />
   </a>`;
 };
 
@@ -235,7 +256,14 @@ const getBadgesMarkdown = (snapName, options) => {
 };
 
 function initGitHubBadgePicker(options) {
-  const { snapName, htmlElement, previewElement, markdownElement } = options;
+  const {
+    snapName,
+    htmlElement,
+    previewElement,
+    markdownElement,
+    notificationElement,
+    isTrending
+  } = options;
   const optionButtons = [].slice.call(options.optionButtons);
 
   let state = {
@@ -243,6 +271,12 @@ function initGitHubBadgePicker(options) {
   };
 
   const render = state => {
+    if (state["show-trending"] && !isTrending) {
+      notificationElement.classList.remove("u-hide");
+    } else {
+      notificationElement.classList.add("u-hide");
+    }
+
     previewElement.innerHTML = getBadgesPreviewHTML(snapName, state);
     htmlElement.innerHTML = getBadgesHTML(snapName, state);
     markdownElement.innerHTML = getBadgesMarkdown(snapName, state);

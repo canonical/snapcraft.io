@@ -18,7 +18,7 @@
         <input type="checkbox" name="show-trending" id="option-show-trending" {% if trending %}checked{% endif %}>
         <label for="option-show-trending">
           Trending status
-          <span class="p-form-help-text">Badge will only display when your snap is flaged as trending</span>
+          <span class="p-form-help-text">Badge will only display when your snap is flagged as trending</span>
         </label>
     </div>
   </div>
@@ -33,6 +33,12 @@
           <img alt="{{ snap_title }}" src="/{{ snap_name }}/badge.svg" />
         </a>
       </p>
+
+      <div class="p-notification--information u-hide" id="notification-trending">
+        <p class="p-notification__response">
+          <span class="p-notification__status">Trending badge:</span>Your snap is not currently flagged as trending. Only when your snap becomes trending will the trending badge appear on external sites.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -77,10 +83,12 @@
     Raven.context(function () {
       snapcraft.publisher.publicise.initGitHubBadgePicker({
         snapName: "{{ snap_name }}",
+        isTrending: {{ trending|tojson }},
         previewElement: document.getElementById("snippet-badge-preview"),
         htmlElement: document.getElementById("snippet-badge-html"),
         markdownElement: document.getElementById("snippet-badge-markdown"),
-        optionButtons: document.querySelectorAll("#js-options input[type=checkbox]")
+        optionButtons: document.querySelectorAll("#js-options input[type=checkbox]"),
+        notificationElement: document.getElementById("notification-trending")
       });
 
       if (typeof ClipboardJS !== 'undefined') {
