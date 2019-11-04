@@ -62,9 +62,8 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             categories_results = api.get_categories()
-        except ApiError as api_error:
+        except ApiError:
             categories_results = []
-            status_code, error_info = _handle_errors(api_error)
 
         categories = logic.get_categories(categories_results)
 
@@ -72,10 +71,14 @@ def store_blueprint(store_query=None, testing=False):
             featured_snaps_results = api.get_searched_snaps(
                 snap_searched="", category="featured", size=10, page=1
             )
-        except ApiError:
-            featured_snaps_results = []
+        except ApiError as api_error:
+            status_code, error_info = _handle_errors(api_error)
+            return flask.abort(status_code)
 
         featured_snaps = logic.get_searched_snaps(featured_snaps_results)
+
+        if not featured_snaps:
+            return flask.abort(503)
 
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
