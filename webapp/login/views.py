@@ -2,6 +2,7 @@ import os
 from urllib.parse import quote
 
 import flask
+from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 from webapp import authentication
 from webapp.api import dashboard
@@ -18,8 +19,12 @@ LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
 BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
 
+LP_CANONICAL_TEAM = "canonical"
+
 open_id = OpenID(
-    stateless=True, safe_roots=[], extension_responses=[MacaroonResponse]
+    stateless=True,
+    safe_roots=[],
+    extension_responses=[MacaroonResponse, TeamsResponse],
 )
 
 
@@ -47,18 +52,19 @@ def login_handler():
     )
     flask.session["macaroon_root"] = root
 
+    lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
+
     return open_id.try_login(
         LOGIN_URL,
         ask_for=["email", "nickname", "image"],
         ask_for_optional=["fullname"],
-        extensions=[openid_macaroon],
+        extensions=[openid_macaroon, lp_teams],
     )
 
 
 @open_id.after_login
 def after_login(resp):
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
-
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
@@ -70,6 +76,8 @@ def after_login(resp):
             "fullname": account["displayname"],
             "image": resp.image,
             "email": account["email"],
+            "is_canonical": LP_CANONICAL_TEAM
+            in resp.extensions["lp"].is_member,
         }
         owned, shared = logic.get_snap_names_by_ownership(account)
         flask.session["user_shared_snaps"] = shared
