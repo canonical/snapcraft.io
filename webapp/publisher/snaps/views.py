@@ -1206,10 +1206,16 @@ def get_publicise_badges(snap_name):
     if snap_details["private"]:
         return flask.abort(404, "No snap named {}".format(snap_name))
 
+    try:
+        snap_public_details = store_api.get_snap_details(snap_name)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
     context = {
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
+        "trending": snap_public_details["snap"]["trending"],
     }
 
     return flask.render_template(
