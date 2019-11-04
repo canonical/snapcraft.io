@@ -20,50 +20,53 @@
           Trending status
           <span class="p-form-help-text">Badge will only display when your snap is flagged as trending</span>
         </label>
+        <p class="u-hide" id="options-unchecked-warning"><em>Please select at least one badge to display from the list above</em></p>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-2">
-      Preview:
-    </div>
-    <div class="col-7">
-      <p class="snapcraft-publicise__images" id="snippet-badge-preview">
-        <a href="https://snapcraft.io/{{ snap_name }}">
-          <img alt="{{ snap_title }}" src="/{{ snap_name }}/badge.svg" />
-        </a>
-      </p>
-
-      <div class="p-notification--information u-hide" id="notification-trending">
-        <p class="p-notification__response">
-          <span class="p-notification__status">Trending badge:</span>Your snap is not currently flagged as trending. Only when your snap becomes trending will the trending badge appear on external sites.
+  <div id="badge-code-wrapper">
+    <div class="row">
+      <div class="col-2">
+        Preview:
+      </div>
+      <div class="col-7">
+        <p class="snapcraft-publicise__images" id="snippet-badge-preview">
+          <a href="https://snapcraft.io/{{ snap_name }}">
+            <img alt="{{ snap_title }}" src="/{{ snap_name }}/badge.svg" />
+          </a>
         </p>
+
+        <div class="p-notification--information u-hide" id="notification-trending">
+          <p class="p-notification__response">
+            <span class="p-notification__status">Trending badge:</span>Your snap is not currently flagged as trending. Only when your snap becomes trending will the trending badge appear on external sites.
+          </p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-2">
-      <label>HTML:</label>
-    </div>
-    <div class="col-7">
-      <div class="p-code-copyable not-cli">
-        <code class="p-code-copyable__input" id="snippet-badge-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
-  &lt;img alt="{{ snap_title }}" src="https://snapcraft.io/{{ snap_name }}/badge.svg" /&gt;
-&lt;/a&gt;</code>
-        <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-badge-html">Copy to clipboard</button>
+    <div class="row">
+      <div class="col-2">
+        <label>HTML:</label>
+      </div>
+      <div class="col-7">
+        <div class="p-code-copyable not-cli">
+          <code class="p-code-copyable__input" id="snippet-badge-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
+    &lt;img alt="{{ snap_title }}" src="https://snapcraft.io/{{ snap_name }}/badge.svg" /&gt;
+  &lt;/a&gt;</code>
+          <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-badge-html">Copy to clipboard</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-2">
-      <label>Markdown:</label>
-    </div>
-    <div class="col-7">
-      <div class="p-code-copyable not-cli">
-        <code class="p-code-copyable__input" id="snippet-badge-markdown">[![{{ snap_title }}](https://snapcraft.io/{{ snap_name }}/badge.svg)](https://snapcraft.io/{{ snap_name }})</code>
-        <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-badge-markdown">Copy to clipboard</button>
+    <div class="row">
+      <div class="col-2">
+        <label>Markdown:</label>
+      </div>
+      <div class="col-7">
+        <div class="p-code-copyable not-cli">
+          <code class="p-code-copyable__input" id="snippet-badge-markdown">[![{{ snap_title }}](https://snapcraft.io/{{ snap_name }}/badge.svg)](https://snapcraft.io/{{ snap_name }})</code>
+          <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-badge-markdown">Copy to clipboard</button>
+        </div>
       </div>
     </div>
   </div>
@@ -88,7 +91,9 @@
         htmlElement: document.getElementById("snippet-badge-html"),
         markdownElement: document.getElementById("snippet-badge-markdown"),
         optionButtons: document.querySelectorAll("#js-options input[type=checkbox]"),
-        notificationElement: document.getElementById("notification-trending")
+        notificationElement: document.getElementById("notification-trending"),
+        badgeCodeElement: document.getElementById("badge-code-wrapper"),
+        optionsUncheckedElement: document.getElementById("options-unchecked-warning")
       });
 
       if (typeof ClipboardJS !== 'undefined') {
