@@ -10,8 +10,8 @@
     {% if screenshot.width and screenshot.height and not disable_lazy %}
       {% set ratio = screenshot.width / screenshot.height %}
       {% set is_hidef = screenshot.width > 819 %}
-      {% set width = "819" if is_hidef else screenshot.width %}
-      {% set height = screenshot.width / ratio %}
+      {% set width = 819 if is_hidef else screenshot.width %}
+      {% set height = width / ratio %}
       {{
         image(
           url=screenshot.url,
