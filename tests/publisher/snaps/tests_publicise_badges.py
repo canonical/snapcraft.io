@@ -11,11 +11,44 @@ class PublicisePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 
 class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
+    snap_payload = {
+        "snap-id": "id",
+        "name": "snapName",
+        "default-track": "test",
+        "snap": {
+            "title": "Snap Title",
+            "summary": "This is a summary",
+            "description": "this is a description",
+            "media": [],
+            "license": "license",
+            "prices": 0,
+            "publisher": {
+                "display-name": "Toto",
+                "username": "toto",
+                "validation": True,
+            },
+            "categories": [],
+            "trending": False,
+        },
+        "channel-map": [],
+    }
+
     def setUp(self):
         snap_name = "test-snap"
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
+        self.public_api_url = "".join(
+            [
+                "https://api.snapcraft.io/v2/",
+                "snaps/info/",
+                snap_name,
+                "?fields=title,summary,description,license,contact,website,",
+                "publisher,prices,media,download,version,created-at,"
+                "confinement,categories,trending",
+            ]
+        )
+
         endpoint_url = "/{}/publicise/badges".format(snap_name)
 
         super().setUp(
@@ -52,6 +85,12 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            self.public_api_url,
+            json=self.snap_payload,
+            status=200,
+        )
 
         response = self.client.get(self.endpoint_url)
 
