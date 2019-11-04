@@ -169,3 +169,49 @@ class GetGitHubBadgeTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue("Trending" in svg)
+
+    # external access to trending preview should show empty SVG
+    @responses.activate
+    def test_get_trending_preview_external(self):
+        payload = self.snap_payload
+        payload["snap"]["trending"] = False
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        preview_url = self.trending_url + "?preview=1"
+        response = self.client.get(preview_url)
+        svg = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("Trending" not in svg)
+
+    # internal publisher access to trending preview should show badge SVG
+    @responses.activate
+    def test_get_trending_preview_publisher(self):
+        payload = self.snap_payload
+        payload["snap"]["trending"] = False
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+
+        with self.client.session_transaction() as s:
+            # make test session 'authenticated'
+            s["openid"] = {"nickname": "toto", "fullname": "Totinio"}
+            s["macaroon_root"] = "test"
+            s["macaroon_discharge"] = "test"
+            # mock test user snaps list
+            s["user_snaps"] = {"toto": {"snap-id": "test"}}
+
+        preview_url = self.trending_url + "?preview=1"
+        response = self.client.get(preview_url)
+        svg = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("Trending" in svg)
