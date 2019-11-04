@@ -257,6 +257,9 @@ describe("releases actions", () => {
           },
           {
             type: "CANCEL_PENDING_RELEASES"
+          },
+          {
+            type: "CLOSE_HISTORY"
           }
         ]);
       });

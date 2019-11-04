@@ -851,7 +851,11 @@ describe("getProgressiveState", () => {
           paused: false
         }
       }
-    ]
+    ],
+    revisions: {
+      "3": "revision3",
+      "2": "revision2"
+    }
   };
 
   const stateWithProgressiveDisabled = {
@@ -872,12 +876,15 @@ describe("getProgressiveState", () => {
         "arch2",
         "3"
       )
-    ).toEqual({
-      from: "2",
-      key: "test",
-      paused: false,
-      percentage: 60
-    });
+    ).toEqual([
+      {
+        key: "test",
+        paused: false,
+        percentage: 60
+      },
+      "revision2",
+      null
+    ]);
 
     expect(
       getProgressiveState(
@@ -886,11 +893,15 @@ describe("getProgressiveState", () => {
         "arch2",
         "2"
       )
-    ).toEqual({
-      key: "test",
-      paused: false,
-      percentage: 50
-    });
+    ).toEqual([
+      {
+        key: "test",
+        paused: false,
+        percentage: 50
+      },
+      [],
+      null
+    ]);
   });
 
   it("should return null if progressive release flag is disabled", () => {
