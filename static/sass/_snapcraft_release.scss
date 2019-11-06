@@ -392,12 +392,12 @@
         display: flex;
         flex-direction: row;
 
-        > :nth-child(1),
-        > :nth-child(3) {
+        .p-progressive__pause,
+        .p-progressive__cancel {
           cursor: pointer;
         }
 
-        > :nth-child(2) {
+        .progressive-bar__interactive-wrapper {
           flex-grow: 1;
           margin: 0 1rem;
         }

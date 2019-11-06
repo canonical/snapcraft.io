@@ -191,7 +191,7 @@ const RevisionsListRow = props => {
             >
               {showProgressivePause && (
                 <span
-                  className="p-tooltip--btm-center"
+                  className="p-progressive__pause p-tooltip--btm-center"
                   aria-describedby={`${revision.revision}-pause`}
                   onClick={handlePauseProgressiveRelease}
                 >
@@ -207,7 +207,7 @@ const RevisionsListRow = props => {
               )}
               {showProgressiveResume && (
                 <span
-                  className="p-tooltip--btm-center"
+                  className="p-progressive__pause p-tooltip--btm-center"
                   aria-describedby={`${revision.revision}-resume`}
                   onClick={handleResumeProgressiveRelease}
                 >
@@ -234,7 +234,7 @@ const RevisionsListRow = props => {
               />
               {previousRevision && (
                 <span
-                  className="p-tooltip--btm-center"
+                  className="p-progressive__cancel p-tooltip--btm-center"
                   aria-describedby={`${revision.revision}-cancel`}
                 >
                   <i
