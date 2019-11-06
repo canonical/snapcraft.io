@@ -11,26 +11,18 @@ import {
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 function removePendingRelease(state, revision, channel) {
-  const releaseKey = `${revision.revision}-${channel}`;
-  if (state[releaseKey]) {
-    const channels = [...state[releaseKey].channels];
-
-    if (channels.includes(channel)) {
-      state = { ...state };
-      channels.splice(channels.indexOf(channel), 1);
-      state[releaseKey] = {
-        ...state[releaseKey],
-        channels
-      };
+  const newState = { ...state };
+  if (newState[revision.revision]) {
+    if (newState[revision.revision][channel]) {
+      delete newState[revision.revision][channel];
     }
 
-    if (channels.length === 0) {
-      state = { ...state };
-      delete state[releaseKey];
+    if (Object.keys(newState[revision.revision]).length === 0) {
+      delete newState[revision.revision];
     }
   }
 
-  return state;
+  return newState;
 }
 
 function releaseRevision(state, revision, channel, progressive) {
@@ -38,41 +30,46 @@ function releaseRevision(state, revision, channel, progressive) {
 
   // cancel any other pending release for the same channel in same architectures
   revision.architectures.forEach(arch => {
-    Object.keys(state).forEach(releaseKey => {
-      const pendingRelease = state[releaseKey];
+    Object.keys(state).forEach(revId => {
+      const pendingRelease = state[revId];
 
       if (
-        pendingRelease.channels.includes(channel) &&
-        pendingRelease.revision.architectures.includes(arch)
+        pendingRelease[channel] &&
+        pendingRelease[channel].revision.architectures.includes(arch)
       ) {
-        state = removePendingRelease(state, pendingRelease.revision, channel);
+        state = removePendingRelease(
+          state,
+          pendingRelease[channel].revision,
+          channel
+        );
       }
     });
   });
 
-  const releaseKey = `${revision.revision}-${channel}`;
-  // promote revision to channel
-  let channels =
-    state[releaseKey] && state[releaseKey].channels
-      ? [...state[releaseKey].channels, channel]
-      : [channel];
+  if (!state[revision.revision]) {
+    state[revision.revision] = {};
+  }
 
-  // make sure channels are unique
-  channels = channels.filter((item, i, ar) => ar.indexOf(item) === i);
-
-  state[releaseKey] = {
+  state[revision.revision][channel] = {
     revision,
-    progressive: progressive,
-    channels
+    channel
   };
+
+  if (progressive) {
+    state[revision.revision][channel].progressive = progressive;
+  }
 
   return state;
 }
 
 function closeChannel(state, channel) {
   Object.values(state).forEach(pendingRelease => {
-    if (pendingRelease.channels.includes(channel)) {
-      state = removePendingRelease(state, pendingRelease.revision, channel);
+    if (pendingRelease[channel]) {
+      state = removePendingRelease(
+        state,
+        pendingRelease[channel].revision,
+        channel
+      );
     }
   });
 
@@ -83,13 +80,15 @@ function setProgressiveRelease(state, progressive) {
   const nextState = JSON.parse(JSON.stringify(state));
 
   Object.values(nextState).forEach(pendingRelease => {
-    if (
-      pendingRelease.canBeProgressive &&
-      !pendingRelease.progressive &&
-      progressive.percentage < 100
-    ) {
-      pendingRelease.progressive = { paused: false, ...progressive };
-    }
+    Object.values(pendingRelease).forEach(channel => {
+      if (
+        channel.canBeProgressive &&
+        !channel.progressive &&
+        progressive.percentage < 100
+      ) {
+        channel.progressive = { paused: false, ...progressive };
+      }
+    });
   });
 
   return nextState;
@@ -99,16 +98,15 @@ function updateProgressiveRelease(state, progressive) {
   const nextState = JSON.parse(JSON.stringify(state));
 
   Object.values(nextState).forEach(pendingRelease => {
-    if (
-      pendingRelease.progressive &&
-      pendingRelease.progressive.key === progressive.key
-    ) {
-      if (progressive.percentage < 100) {
-        pendingRelease.progressive.percentage = progressive.percentage;
-      } else {
-        delete pendingRelease.progressive; // At 100% we just want to do a regular release
+    Object.values(pendingRelease).forEach(channel => {
+      if (channel.progressive && channel.progressive.key === progressive.key) {
+        if (progressive.percentage < 100) {
+          channel.progressive.percentage = progressive.percentage;
+        } else {
+          delete channel.progressive; // At 100% we just want to do a regular release
+        }
       }
-    }
+    });
   });
 
   return nextState;
@@ -118,9 +116,11 @@ function pauseProgressiveRelease(state, key) {
   const nextState = JSON.parse(JSON.stringify(state));
 
   Object.values(nextState).forEach(pendingRelease => {
-    if (pendingRelease.progressive && pendingRelease.progressive.key === key) {
-      pendingRelease.progressive.paused = true;
-    }
+    Object.values(pendingRelease).forEach(channel => {
+      if (channel.progressive && channel.progressive.key === key) {
+        channel.progressive.paused = true;
+      }
+    });
   });
 
   return nextState;
@@ -130,9 +130,11 @@ function resumeProgressiveRelease(state, key) {
   const nextState = JSON.parse(JSON.stringify(state));
 
   Object.values(nextState).forEach(pendingRelease => {
-    if (pendingRelease.progressive && pendingRelease.progressive.key === key) {
-      pendingRelease.progressive.paused = false;
-    }
+    Object.values(pendingRelease).forEach(channel => {
+      if (channel.progressive && channel.progressive.key === key) {
+        channel.progressive.paused = false;
+      }
+    });
   });
 
   return nextState;

@@ -70,55 +70,55 @@ class ReleasesConfirm extends Component {
     const newReleases = {};
     const newReleasesToProgress = {};
 
-    Object.keys(pendingReleases).forEach(key => {
-      if (pendingReleases[key].progressive) {
-        // Ensure we make a copy, otherwise the "changes" key will polute the
-        // pendingRelease state
-        const releaseCopy = JSON.parse(JSON.stringify(pendingReleases[key]));
-        // What are the differences?
-        const previousState = releaseCopy.revision.release
-          ? releaseCopy.revision.release.progressive
-          : {};
-        const newState = releaseCopy.progressive;
+    Object.keys(pendingReleases).forEach(revId => {
+      Object.keys(pendingReleases[revId]).forEach(channel => {
+        const pendingRelease = pendingReleases[revId][channel];
+        const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
+        if (pendingRelease.progressive) {
+          // What are the differences?
+          const previousState = releaseCopy.revision.release
+            ? releaseCopy.revision.release.progressive
+            : {};
+          const newState = releaseCopy.progressive;
 
-        const changes = [];
-        if (newState.paused !== previousState.paused) {
-          changes.push({
-            key: "paused",
-            value: newState.paused
-          });
-        }
+          const changes = [];
+          if (newState.paused !== previousState.paused) {
+            changes.push({
+              key: "paused",
+              value: newState.paused
+            });
+          }
 
-        if (
-          !newState.paused &&
-          newState.percentage !== previousState.percentage
-        ) {
-          changes.push({
-            key: "percentage",
-            value: newState.percentage
-          });
-        }
+          if (
+            !newState.paused &&
+            newState.percentage !== previousState.percentage
+          ) {
+            changes.push({
+              key: "percentage",
+              value: newState.percentage
+            });
+          }
 
-        if (changes.length > 0) {
-          // Add this to the copy of the pendingRelease state
-          releaseCopy.progressive.changes = changes;
-          progressiveUpdates[key] = releaseCopy;
-        }
-      } else {
-        const releaseCopy = JSON.parse(JSON.stringify(pendingReleases[key]));
-        const currentRelease = releases.filter(
-          release =>
-            release.architecture === releaseCopy.revision.architectures[0] &&
-            getChannelString(release) === releaseCopy.channels[0]
-        );
-
-        if (currentRelease[0] && currentRelease[0].revision) {
-          pendingReleases[key].canBeProgressive = true;
-          newReleasesToProgress[key] = releaseCopy;
+          if (changes.length > 0) {
+            // Add this to the copy of the pendingRelease state
+            releaseCopy.progressive.changes = changes;
+            progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
+          }
         } else {
-          newReleases[key] = releaseCopy;
+          const currentRelease = releases.filter(
+            release =>
+              release.architecture === releaseCopy.revision.architectures[0] &&
+              getChannelString(release) === releaseCopy.channel
+          );
+
+          if (currentRelease[0] && currentRelease[0].revision) {
+            pendingRelease.canBeProgressive = true;
+            newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
+          } else {
+            newReleases[`${revId}-${channel}`] = releaseCopy;
+          }
         }
-      }
+      });
     });
 
     const progressiveUpdatesCount = Object.keys(progressiveUpdates).length;
@@ -178,7 +178,7 @@ class ReleasesConfirm extends Component {
                         <b>{release.revision.revision}</b> (
                         {release.revision.version}){" "}
                         {release.revision.architectures.join(", ")} to{" "}
-                        {release.channels.join(", ")}
+                        {release.channel}
                         {"\n"}
                       </span>
                     );
@@ -206,7 +206,7 @@ class ReleasesConfirm extends Component {
                         <b>{release.revision.revision}</b> (
                         {release.revision.version}) on{" "}
                         {release.revision.architectures.join(", ")}{" "}
-                        {release.channels[0]} to{" "}
+                        {release.channel} to{" "}
                         <b>
                           {release.progressive.changes
                             .map(change => {

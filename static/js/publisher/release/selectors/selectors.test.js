@@ -320,8 +320,10 @@ describe("getPendingChannelMap", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["latest/stable"]
+          "latest/stable": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "latest/stable"
+          }
         }
       }
     };
@@ -331,7 +333,8 @@ describe("getPendingChannelMap", () => {
         ...stateWithPendingReleases.channelMap,
         "latest/stable": {
           test64: {
-            ...stateWithPendingReleases.pendingReleases[2].revision
+            ...stateWithPendingReleases.pendingReleases["2"]["latest/stable"]
+              .revision
           }
         }
       });
@@ -347,8 +350,10 @@ describe("getPendingChannelMap", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["test/edge"]
+          "test/edge": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "test/edge"
+          }
         }
       }
     };
@@ -358,7 +363,8 @@ describe("getPendingChannelMap", () => {
         ...stateWithPendingReleases.channelMap,
         "test/edge": {
           test64: {
-            ...stateWithPendingReleases.pendingReleases[2].revision
+            ...stateWithPendingReleases.pendingReleases["2"]["test/edge"]
+              .revision
           }
         }
       });
@@ -574,8 +580,10 @@ describe("hasPendingRelease", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["latest/stable"]
+          "latest/stable": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "latest/stable"
+          }
         }
       }
     };
@@ -602,8 +610,10 @@ describe("hasPendingRelease", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["test/edge"]
+          "test/edge": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "test/edge"
+          }
         }
       }
     };

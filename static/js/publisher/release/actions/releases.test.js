@@ -170,12 +170,14 @@ describe("releases actions", () => {
         },
         pendingReleases: {
           "3": {
-            revision: revision,
-            channels: ["latest/edge"],
-            progressive: {
-              key: "test",
-              percentage: 50,
-              paused: false
+            "latest/edge": {
+              revision: revision,
+              channel: "latest/edge",
+              progressive: {
+                key: "test",
+                percentage: 50,
+                paused: false
+              }
             }
           }
         },

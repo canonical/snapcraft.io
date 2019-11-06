@@ -121,18 +121,23 @@ export function releaseRevisions() {
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName, defaultTrack } = options;
-    const releases = Object.keys(pendingReleases).map(key => {
-      const pendingRelease = pendingReleases[key];
+    const releases = Object.keys(pendingReleases)
+      .map(key => {
+        return Object.keys(pendingReleases[key]).map(channel => {
+          const pendingRelease = pendingReleases[key][channel];
 
-      const release = {
-        id: pendingRelease.revision.revision,
-        revision: pendingRelease.revision,
-        channels: pendingRelease.channels,
-        progressive: pendingRelease.progressive
-      };
+          const release = {
+            id: pendingRelease.revision.revision,
+            revision: pendingRelease.revision,
+            channels: [pendingRelease.channel],
+            progressive: pendingRelease.progressive
+          };
 
-      return release;
-    });
+          return release;
+        });
+      })
+      .reduce((acc, val) => acc.concat(val), []);
+    //.flat(); this is not yet available in all browsers including jsdom
 
     const _handleReleaseResponse = (json, release) => {
       return handleReleaseResponse(

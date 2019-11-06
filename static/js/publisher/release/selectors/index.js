@@ -100,8 +100,8 @@ export function getPendingChannelMap(state) {
 
   // for each release
   Object.keys(pendingReleases).forEach(releasedRevision => {
-    pendingReleases[releasedRevision].channels.forEach(channel => {
-      const revision = pendingReleases[releasedRevision].revision;
+    Object.keys(pendingReleases[releasedRevision]).forEach(channel => {
+      const revision = pendingReleases[releasedRevision][channel].revision;
 
       if (!pendingChannelMap[channel]) {
         pendingChannelMap[channel] = {};
@@ -306,7 +306,9 @@ export function getProgressiveState(state, channel, arch, revision) {
     }
   }
 
-  const pendingMatch = pendingReleases[`${revision}-${channel}`];
+  const pendingMatch = pendingReleases[revision]
+    ? pendingReleases[revision][channel]
+    : undefined;
 
   if (pendingMatch) {
     const release = pendingMatch.revision.release;
