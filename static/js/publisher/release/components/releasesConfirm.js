@@ -66,6 +66,8 @@ class ReleasesConfirm extends Component {
 
     const isPercentageValid = +percentage > 0 && +percentage <= 100;
 
+    // These are only used locally and therefore use revId-channel as a key, rather
+    // than the usual nested [revId][channel] format of pending releases
     const progressiveUpdates = {};
     const newReleases = {};
     const newReleasesToProgress = {};
@@ -75,7 +77,8 @@ class ReleasesConfirm extends Component {
         const pendingRelease = pendingReleases[revId][channel];
         const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
         if (pendingRelease.progressive) {
-          // What are the differences?
+          // What are the differences between the previous progressive state
+          // and the new state.
           const previousState = releaseCopy.revision.release
             ? releaseCopy.revision.release.progressive
             : {};
@@ -112,7 +115,6 @@ class ReleasesConfirm extends Component {
           );
 
           if (currentRelease[0] && currentRelease[0].revision) {
-            pendingRelease.canBeProgressive = true;
             newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
           } else {
             newReleases[`${revId}-${channel}`] = releaseCopy;

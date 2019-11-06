@@ -23,7 +23,8 @@ import {
   getLaunchpadRevisions,
   getRevisionsFromBuild,
   getProgressiveState,
-  isProgressiveReleaseEnabled
+  isProgressiveReleaseEnabled,
+  hasRelease
 } from "./index";
 
 import reducers from "../reducers";
@@ -956,5 +957,58 @@ describe("isProgressiveReleaseEnabled", () => {
     expect(isProgressiveReleaseEnabled(stateWithProgressiveDisabled)).toBe(
       false
     );
+  });
+});
+
+describe("hasRelease", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithARelease = {
+    ...initialState,
+    releases: [
+      { architecture: "arm64", risk: "beta", track: "latest", revision: 1 }
+    ]
+  };
+  const stateWithAClose = {
+    ...initialState,
+    releases: [
+      { architecture: "arm64", risk: "beta", track: "latest", revision: null }
+    ]
+  };
+  const stateWithMultipleArchAndChannels = {
+    ...initialState,
+    releases: [
+      { architecture: "amd64", risk: "stable", track: "latest", revision: 1 },
+      {
+        architecture: "arm64",
+        risk: "candidate",
+        track: "latest",
+        revision: 2
+      },
+      {
+        architecture: "arm64",
+        risk: "stable",
+        track: "latest",
+        revision: null
+      },
+      { architecture: "arm64", risk: "beta", track: "latest", revision: 3 }
+    ]
+  };
+
+  it("should return false if there are no releases", () => {
+    expect(hasRelease(initialState, "latest/beta", "arm64")).toBe(false);
+  });
+
+  it("should return false if the previous release was a close", () => {
+    expect(hasRelease(stateWithAClose, "latest/beta", "arm64")).toBe(false);
+    expect(
+      hasRelease(stateWithMultipleArchAndChannels, "latest/stable", "arm64")
+    ).toBe(false);
+  });
+
+  it("should return true if there is a previous release", () => {
+    expect(hasRelease(stateWithARelease, "latest/beta", "arm64")).toBe(true);
+    expect(
+      hasRelease(stateWithMultipleArchAndChannels, "latest/beta", "arm64")
+    ).toBe(true);
   });
 });

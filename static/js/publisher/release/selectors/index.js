@@ -323,3 +323,19 @@ export function getProgressiveState(state, channel, arch, revision) {
 
   return [progressiveStatus, previousRevision, pendingProgressiveStatus];
 }
+
+// Is the latest release for a channel & architecture a valid revision?
+export function hasRelease(state, channel, architecture) {
+  const { releases } = state;
+  const filteredReleases = releases.filter(
+    release =>
+      release.architecture === architecture &&
+      getChannelString(release) === channel
+  );
+
+  return filteredReleases &&
+    filteredReleases[0] &&
+    filteredReleases[0].revision !== null
+    ? true
+    : false;
+}
