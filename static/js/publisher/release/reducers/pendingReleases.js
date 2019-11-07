@@ -25,13 +25,7 @@ function removePendingRelease(state, revision, channel) {
   return newState;
 }
 
-function releaseRevision(
-  state,
-  revision,
-  channel,
-  progressive,
-  hasPreviousRevision
-) {
+function releaseRevision(state, revision, channel, progressive) {
   state = { ...state };
 
   // cancel any other pending release for the same channel in same architectures
@@ -60,10 +54,6 @@ function releaseRevision(
     revision,
     channel
   };
-
-  if (hasPreviousRevision) {
-    state[revision.revision][channel].canBeProgressive = true;
-  }
 
   if (progressive) {
     state[revision.revision][channel].progressive = progressive;
