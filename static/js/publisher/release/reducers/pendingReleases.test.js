@@ -155,6 +155,43 @@ describe("pendingReleases", () => {
       });
     });
 
+    describe("when canBeProgressive is passed", () => {
+      let releaseRevisionCanBeProgressiveAction = {
+        type: RELEASE_REVISION,
+        payload: {
+          revision: { revision: 1, architectures: ["abc42", "test64"] },
+          channel: "test/edge",
+          canBeProgressive: true
+        }
+      };
+
+      it("should set a release to allow progressive releaes", () => {
+        const state = {
+          "1": {
+            "test/edge": {
+              revision: releaseRevisionCanBeProgressiveAction.payload.revision,
+              channel: "test/edge"
+            }
+          }
+        };
+
+        const result = pendingReleases(
+          state,
+          releaseRevisionCanBeProgressiveAction
+        );
+
+        expect(result).toEqual({
+          "1": {
+            "test/edge": {
+              revision: releaseRevisionCanBeProgressiveAction.payload.revision,
+              channel: "test/edge",
+              canBeProgressive: true
+            }
+          }
+        });
+      });
+    });
+
     describe("when progressive state is passed", () => {
       let releaseRevisionActionWithProgressive = {
         type: RELEASE_REVISION,

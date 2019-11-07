@@ -10,10 +10,15 @@ export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 
 import { getPendingChannelMap, hasRelease } from "../selectors";
 
-export function releaseRevision(revision, channel, progressive) {
+export function releaseRevision(
+  revision,
+  channel,
+  progressive,
+  canBeProgressive
+) {
   return {
     type: RELEASE_REVISION,
-    payload: { revision, channel, progressive }
+    payload: { revision, channel, progressive, canBeProgressive }
   };
 }
 
