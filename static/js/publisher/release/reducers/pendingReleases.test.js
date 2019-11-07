@@ -4,7 +4,9 @@ import {
   UNDO_RELEASE,
   CANCEL_PENDING_RELEASES,
   SET_PROGRESSIVE_RELEASE_PERCENTAGE,
-  UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE
+  UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
+  PAUSE_PROGRESSIVE_RELEASE,
+  RESUME_PROGRESSIVE_RELEASE
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
@@ -150,6 +152,206 @@ describe("pendingReleases", () => {
         );
 
         expect(Object.keys(result)).not.toContain(4);
+      });
+    });
+
+    describe("when progressive state is passed", () => {
+      let releaseRevisionActionWithProgressive = {
+        type: RELEASE_REVISION,
+        payload: {
+          revision: { revision: 1, architectures: ["abc42", "test64"] },
+          channel: "test/edge",
+          progressive: {
+            key: "progressive-test",
+            percentage: 10,
+            paused: false
+          }
+        }
+      };
+
+      it("should add a pending release with progressive state", () => {
+        const result = pendingReleases(
+          {},
+          releaseRevisionActionWithProgressive
+        );
+
+        expect(result).toEqual({
+          "1": {
+            "test/edge": {
+              ...releaseRevisionActionWithProgressive.payload
+            }
+          }
+        });
+      });
+      it("should not add progressive state if progressive percentage is 100%", () => {
+        const releaseRevisionActionWith100Progressive = {
+          ...releaseRevisionActionWithProgressive
+        };
+
+        releaseRevisionActionWith100Progressive.payload.progressive.percentage = 100;
+
+        const result = pendingReleases(
+          {},
+          releaseRevisionActionWith100Progressive
+        );
+
+        expect(result).toEqual({
+          "1": {
+            "test/edge": {
+              ...releaseRevisionActionWithProgressive.payload
+            }
+          }
+        });
+      });
+    });
+  });
+
+  describe("on PAUSE_PROGRESSIVE_RELEASE action", () => {
+    const pauseProgressiveReleaseAction = {
+      type: PAUSE_PROGRESSIVE_RELEASE,
+      payload: "progressive-test"
+    };
+
+    describe("when state is empty", () => {
+      const emptyState = {};
+
+      it("should not add a pendingRelease", () => {
+        const result = pendingReleases(
+          emptyState,
+          pauseProgressiveReleaseAction
+        );
+
+        expect(result).toEqual(emptyState);
+      });
+    });
+
+    describe("when there is a non-progressive pendingRelease", () => {
+      const nonProgressiveState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable"
+          }
+        }
+      };
+
+      it("should not change the pendingRelease", () => {
+        const result = pendingReleases(
+          nonProgressiveState,
+          pauseProgressiveReleaseAction
+        );
+
+        expect(result).toEqual(nonProgressiveState);
+      });
+    });
+
+    describe("when there is a progressive pendingRelease", () => {
+      const progressiveReleaseState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable",
+            progressive: {
+              key: "progressive-test",
+              percentage: 10,
+              paused: false
+            }
+          }
+        }
+      };
+
+      it("should pause a key matching progressive release", () => {
+        const result = pendingReleases(
+          progressiveReleaseState,
+          pauseProgressiveReleaseAction
+        );
+
+        expect(result).toEqual({
+          "1": {
+            "latest/stable": {
+              ...progressiveReleaseState["1"]["latest/stable"],
+              progressive: {
+                ...progressiveReleaseState["1"]["latest/stable"].progressive,
+                paused: true
+              }
+            }
+          }
+        });
+      });
+    });
+  });
+
+  describe("on RESUME_PROGRESSIVE_RELEASE action", () => {
+    const resumeProgressiveReleaseAction = {
+      type: RESUME_PROGRESSIVE_RELEASE,
+      payload: "progressive-test"
+    };
+
+    describe("when state is empty", () => {
+      const emptyState = {};
+
+      it("should not add a pendingRelease", () => {
+        const result = pendingReleases(
+          emptyState,
+          resumeProgressiveReleaseAction
+        );
+
+        expect(result).toEqual(emptyState);
+      });
+    });
+
+    describe("when there is a non-progressive pendingRelease", () => {
+      const nonProgressiveState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable"
+          }
+        }
+      };
+
+      it("should not change the pendingRelease", () => {
+        const result = pendingReleases(
+          nonProgressiveState,
+          resumeProgressiveReleaseAction
+        );
+
+        expect(result).toEqual(nonProgressiveState);
+      });
+    });
+
+    describe("when there is a progressive pendingRelease", () => {
+      const progressiveReleaseState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable",
+            progressive: {
+              key: "progressive-test",
+              percentage: 10,
+              paused: true
+            }
+          }
+        }
+      };
+
+      it("should resume a key matching progressive release", () => {
+        const result = pendingReleases(
+          progressiveReleaseState,
+          resumeProgressiveReleaseAction
+        );
+
+        expect(result).toEqual({
+          "1": {
+            "latest/stable": {
+              ...progressiveReleaseState["1"]["latest/stable"],
+              progressive: {
+                ...progressiveReleaseState["1"]["latest/stable"].progressive,
+                paused: false
+              }
+            }
+          }
+        });
       });
     });
   });

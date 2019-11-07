@@ -311,11 +311,9 @@ export function getProgressiveState(state, channel, arch, revision) {
     : undefined;
 
   if (pendingMatch) {
-    const release = pendingMatch.revision.release;
     if (
-      release &&
-      channel === getChannelString(release) &&
-      arch === release.architecture
+      channel === pendingMatch.channel &&
+      pendingMatch.revision.architectures.includes(arch)
     ) {
       pendingProgressiveStatus = Object.assign({}, pendingMatch.progressive);
     }

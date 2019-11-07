@@ -879,6 +879,23 @@ describe("getProgressiveState", () => {
     }
   };
 
+  const stateWithProgressiveEnabledAndPendingRelease = {
+    ...stateWithProgressiveEnabled,
+    pendingReleases: {
+      "3": {
+        "latest/stable": {
+          revision: { revision: "3", architectures: ["arch2"] },
+          channel: "latest/stable",
+          progressive: {
+            key: "progressive-test",
+            percentage: 40,
+            paused: false
+          }
+        }
+      }
+    }
+  };
+
   it("should return the progressive release state of a channel and arch", () => {
     expect(
       getProgressiveState(
@@ -912,6 +929,21 @@ describe("getProgressiveState", () => {
       },
       [],
       null
+    ]);
+  });
+
+  it("should return the progressiveState and pendingProgressiveStatus", () => {
+    expect(
+      getProgressiveState(
+        stateWithProgressiveEnabledAndPendingRelease,
+        "latest/stable",
+        "arch2",
+        "3"
+      )
+    ).toEqual([
+      { key: "test", paused: false, percentage: 60 },
+      "revision2",
+      { key: "progressive-test", paused: false, percentage: 40 }
     ]);
   });
 
