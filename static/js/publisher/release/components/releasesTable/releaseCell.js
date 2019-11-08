@@ -132,7 +132,7 @@ const ReleasesTableReleaseCell = props => {
         isPending={isPendingRelease}
         showVersion={showVersion}
         progressiveState={progressiveState}
-        previousRevision={previousRevision}
+        previousRevision={previousRevision ? previousRevision.revision : null}
       />
     );
   } else if (isUnassigned) {

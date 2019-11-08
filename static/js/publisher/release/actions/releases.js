@@ -122,9 +122,9 @@ export function releaseRevisions() {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName, defaultTrack } = options;
     const releases = Object.keys(pendingReleases)
-      .map(key => {
-        return Object.keys(pendingReleases[key]).map(channel => {
-          const pendingRelease = pendingReleases[key][channel];
+      .map(revId => {
+        return Object.keys(pendingReleases[revId]).map(channel => {
+          const pendingRelease = pendingReleases[revId][channel];
 
           const release = {
             id: pendingRelease.revision.revision,

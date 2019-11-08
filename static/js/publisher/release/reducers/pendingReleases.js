@@ -11,7 +11,7 @@ import {
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 function removePendingRelease(state, revision, channel) {
-  const newState = { ...state };
+  const newState = JSON.parse(JSON.stringify(state));
   if (newState[revision.revision]) {
     if (newState[revision.revision][channel]) {
       delete newState[revision.revision][channel];
@@ -156,7 +156,9 @@ function resumeProgressiveRelease(state, key) {
 // {
 //  <revisionId>: {
 //    revision: { revision: <revisionId>, version, ... },
-//    channels: [ ... ]
+//    channel: channel,
+//    progressive: { key, percentage, paused },
+//    canBeProgressive: bool
 //  }
 // }
 // TODO: remove `revision` from here, use only data from `revisions` state

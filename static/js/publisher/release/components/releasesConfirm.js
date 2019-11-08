@@ -2,13 +2,15 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getChannelString } from "../../../libs/channels";
 import {
   cancelPendingReleases,
   setProgressiveReleasePercentage
 } from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
-import { isProgressiveReleaseEnabled } from "../selectors";
+import {
+  isProgressiveReleaseEnabled,
+  getSeparatePendingReleases
+} from "../selectors";
 
 import ProgressiveConfirm from "./progressiveConfirm";
 
@@ -57,71 +59,19 @@ class ReleasesConfirm extends Component {
   render() {
     const { isLoading, percentage } = this.state;
     const {
-      releases,
-      pendingReleases,
       pendingCloses,
-      isProgressiveReleaseEnabled
+      isProgressiveReleaseEnabled,
+      separatePendingReleases
     } = this.props;
     const closesCount = pendingCloses.length;
 
     const isPercentageValid = +percentage > 0 && +percentage <= 100;
 
-    // These are only used locally and therefore use revId-channel as a key, rather
-    // than the usual nested [revId][channel] format of pending releases
-    const progressiveUpdates = {};
-    const newReleases = {};
-    const newReleasesToProgress = {};
-
-    Object.keys(pendingReleases).forEach(revId => {
-      Object.keys(pendingReleases[revId]).forEach(channel => {
-        const pendingRelease = pendingReleases[revId][channel];
-        const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
-        if (pendingRelease.progressive) {
-          // What are the differences between the previous progressive state
-          // and the new state.
-          const previousState = releaseCopy.revision.release
-            ? releaseCopy.revision.release.progressive
-            : {};
-          const newState = releaseCopy.progressive;
-
-          const changes = [];
-          if (newState.paused !== previousState.paused) {
-            changes.push({
-              key: "paused",
-              value: newState.paused
-            });
-          }
-
-          if (
-            !newState.paused &&
-            newState.percentage !== previousState.percentage
-          ) {
-            changes.push({
-              key: "percentage",
-              value: newState.percentage
-            });
-          }
-
-          if (changes.length > 0) {
-            // Add this to the copy of the pendingRelease state
-            releaseCopy.progressive.changes = changes;
-            progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
-          }
-        } else {
-          const currentRelease = releases.filter(
-            release =>
-              release.architecture === releaseCopy.revision.architectures[0] &&
-              getChannelString(release) === releaseCopy.channel
-          );
-
-          if (currentRelease[0] && currentRelease[0].revision) {
-            newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
-          } else {
-            newReleases[`${revId}-${channel}`] = releaseCopy;
-          }
-        }
-      });
-    });
+    const {
+      progressiveUpdates,
+      newReleases,
+      newReleasesToProgress
+    } = separatePendingReleases;
 
     const progressiveUpdatesCount = Object.keys(progressiveUpdates).length;
     const releasesCount = Object.keys(newReleases).length;
@@ -262,10 +212,9 @@ class ReleasesConfirm extends Component {
 }
 
 ReleasesConfirm.propTypes = {
-  releases: PropTypes.array.isRequired,
-  pendingReleases: PropTypes.object.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   isProgressiveReleaseEnabled: PropTypes.bool.isRequired,
+  separatePendingReleases: PropTypes.object.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired,
@@ -274,10 +223,9 @@ ReleasesConfirm.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    releases: state.releases,
     pendingCloses: state.pendingCloses,
-    pendingReleases: state.pendingReleases,
-    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
+    separatePendingReleases: getSeparatePendingReleases(state)
   };
 };
 

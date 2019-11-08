@@ -55,15 +55,10 @@ export const RevisionInfo = ({
   progressiveState,
   previousRevision
 }) => {
-  let from = null;
   let buildIcon = null;
 
   if (isRevisionBuiltOnLauchpad(revision)) {
     buildIcon = <i className="p-icon--lp" />;
-  }
-
-  if (previousRevision && previousRevision.revision) {
-    from = previousRevision.revision;
   }
 
   return (
@@ -73,7 +68,7 @@ export const RevisionInfo = ({
           <RevisionLabel
             revision={revision}
             showTooltip={false}
-            isProgressive={from ? true : false}
+            isProgressive={previousRevision ? true : false}
           />
         </span>
         {showVersion && (
@@ -110,13 +105,13 @@ export const RevisionInfo = ({
             </Fragment>
           )}
           <br />
-          {from && (
+          {previousRevision && (
             <Fragment>
               <b>
                 Progressive release of revision {revision.revision} in progress
               </b>
               <br />
-              Revision: <b>{from}</b>
+              Revision: <b>{previousRevision}</b>
               {progressiveState
                 ? ` (${100 - progressiveState.percentage}% of devices)`
                 : ""}
@@ -144,7 +139,7 @@ RevisionInfo.propTypes = {
   isPending: PropTypes.bool,
   showVersion: PropTypes.bool,
   progressiveState: PropTypes.object,
-  previousRevision: PropTypes.object
+  previousRevision: PropTypes.number
 };
 
 // generic draggable view of releases table cell

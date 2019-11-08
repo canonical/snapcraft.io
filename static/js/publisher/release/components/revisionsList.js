@@ -40,26 +40,24 @@ class RevisionsList extends Component {
   }
 
   renderRow(
-    index,
     revision,
     isSelectable,
     showChannels,
     isPending,
     isActive,
     showBuildRequest,
-    activeChannel
+    showProgressive
   ) {
     return (
       <RevisionsListRow
         key={`revision-row-${revision.revision}`}
-        index={index}
+        showProgressive={showProgressive}
         revision={revision}
         isSelectable={isSelectable}
         showChannels={showChannels}
         isPending={isPending}
         isActive={isActive}
         showBuildRequest={showBuildRequest}
-        channel={activeChannel}
       />
     );
   }
@@ -70,23 +68,22 @@ class RevisionsList extends Component {
     showChannels,
     activeRevision,
     showBuildRequest,
-    activeChannel,
     hasPendingRelease
   ) {
     return revisions.map((revision, index) => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
 
+      const showProgressive = index === 0 && !hasPendingRelease;
+
       return this.renderRow(
-        // bump index by 1 if there's a pending release
-        hasPendingRelease ? index + 1 : index,
         revision,
         isSelectable,
         showChannels,
         false,
         isActive,
         showBuildRequest,
-        activeChannel
+        showProgressive
       );
     });
   }
@@ -245,9 +242,8 @@ class RevisionsList extends Component {
 
     let activeRevision = null;
 
-    let activeChannel;
     if (this.props.filters) {
-      activeChannel = getChannelName(filters.track, filters.risk);
+      const activeChannel = getChannelName(filters.track, filters.risk);
       activeRevision = pendingChannelMap[activeChannel]
         ? pendingChannelMap[activeChannel][filters.arch]
         : null;
@@ -343,14 +339,13 @@ class RevisionsList extends Component {
           <tbody>
             {showPendingRelease &&
               this.renderRow(
-                -1,
                 pendingRelease,
                 !isReleaseHistory,
                 showChannels,
                 true,
                 activeRevision.revision === pendingRelease.revision,
                 showBuildRequest,
-                activeChannel
+                false
               )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
@@ -361,7 +356,6 @@ class RevisionsList extends Component {
                 showChannels,
                 activeRevision,
                 showBuildRequest,
-                activeChannel,
                 showPendingRelease
               )
             ) : (

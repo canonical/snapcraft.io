@@ -169,23 +169,21 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   render() {
-    const { readonly, disabled } = this.props;
+    const { disabled } = this.props;
     const { current, scrubTarget, scrubbing } = this.state;
     const classes = ["progressive-bar__interactive-wrapper"];
     if (scrubbing) {
       classes.push("is-scrubbing");
     }
-    if (!readonly) {
-      classes.push("is-interactive");
-    }
+
+    classes.push("is-interactive");
+
     return (
       <div
         className={classes.join(" ")}
         ref={this.barHolder}
-        onMouseDown={
-          !readonly && !disabled ? this.onMouseDownHandler : undefined
-        }
-        onWheel={!readonly && !disabled ? this.onWheelHandler : undefined}
+        onMouseDown={!disabled ? this.onMouseDownHandler : undefined}
+        onWheel={!disabled ? this.onWheelHandler : undefined}
       >
         <ProgressiveBar
           percentage={current}
@@ -200,7 +198,6 @@ class InteractiveProgressiveBar extends React.Component {
 
 InteractiveProgressiveBar.propTypes = {
   percentage: PropTypes.number,
-  readonly: PropTypes.bool,
   singleDirection: PropTypes.number,
   onChange: PropTypes.func,
   targetPercentage: PropTypes.number,

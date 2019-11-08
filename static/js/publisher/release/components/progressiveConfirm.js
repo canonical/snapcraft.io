@@ -23,7 +23,7 @@ const ProgressiveConfirm = ({ percentage, newReleases, onChange }) => {
                   <b>{release.revision.revision}</b> ({release.revision.version}
                   ) {release.revision.architectures.join(", ")} to{" "}
                   {release.channel}
-                  {"\n"}
+                  <br />
                 </span>
               );
             })}
