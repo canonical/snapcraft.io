@@ -24,7 +24,8 @@ import {
   getRevisionsFromBuild,
   getProgressiveState,
   isProgressiveReleaseEnabled,
-  hasRelease
+  hasRelease,
+  getSeparatePendingReleases
 } from "./index";
 
 import reducers from "../reducers";
@@ -1042,5 +1043,114 @@ describe("hasRelease", () => {
     expect(
       hasRelease(stateWithMultipleArchAndChannels, "latest/beta", "arm64")
     ).toBe(true);
+  });
+
+  describe("getSeparatePendingReleases", () => {
+    const initialState = reducers(undefined, {});
+
+    const stateWithPendingRelease = {
+      ...initialState,
+      pendingReleases: {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable"
+          }
+        }
+      }
+    };
+
+    const stateWithPendingReleaseToProgress = {
+      ...stateWithPendingRelease,
+      releases: [
+        {
+          architecture: "amd64",
+          track: "latest",
+          risk: "stable",
+          revision: { revision: 2, architectures: ["amd64"] }
+        }
+      ]
+    };
+
+    const stateWithPendingReleaseToUpdate = {
+      ...initialState,
+      pendingReleases: {
+        "1": {
+          "latest/stable": {
+            revision: {
+              revision: 1,
+              architectures: ["amd64"],
+              release: {
+                progressive: {
+                  key: "progressive-test",
+                  percentage: 20,
+                  paused: false
+                }
+              }
+            },
+            channel: "latest/stable",
+            progressive: {
+              key: "progressive-test",
+              percentage: 40,
+              paused: false
+            }
+          }
+        }
+      }
+    };
+
+    it("should return nothing if there are no pending releases", () => {
+      expect(getSeparatePendingReleases(initialState)).toEqual({
+        newReleases: {},
+        newReleasesToProgress: {},
+        progressiveUpdates: {}
+      });
+    });
+
+    it("should return new release", () => {
+      expect(getSeparatePendingReleases(stateWithPendingRelease)).toEqual({
+        newReleases: {
+          "1-latest/stable":
+            stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
+        },
+        newReleasesToProgress: {},
+        progressiveUpdates: {}
+      });
+    });
+
+    it("should return new release and releases to progress", () => {
+      expect(
+        getSeparatePendingReleases(stateWithPendingReleaseToProgress)
+      ).toEqual({
+        newReleases: {},
+        newReleasesToProgress: {
+          "1-latest/stable":
+            stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
+        },
+        progressiveUpdates: {}
+      });
+    });
+
+    it("should return a pending release to update", () => {
+      expect(
+        getSeparatePendingReleases(stateWithPendingReleaseToUpdate)
+      ).toEqual({
+        newReleases: {},
+        newReleasesToProgress: {},
+        progressiveUpdates: {
+          "1-latest/stable": {
+            ...stateWithPendingReleaseToUpdate.pendingReleases["1"][
+              "latest/stable"
+            ],
+            progressive: {
+              changes: [{ key: "percentage", value: 40 }],
+              key: "progressive-test",
+              paused: false,
+              percentage: 40
+            }
+          }
+        }
+      });
+    });
   });
 });

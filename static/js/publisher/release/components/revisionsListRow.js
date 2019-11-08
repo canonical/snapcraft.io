@@ -25,7 +25,8 @@ const RevisionsListRow = props => {
     showBuildRequest,
     isPending,
     isActive,
-    isProgressiveReleaseEnabled
+    isProgressiveReleaseEnabled,
+    showProgressive
   } = props;
 
   const [canDrag, setDraggable] = useState(true);
@@ -64,7 +65,8 @@ const RevisionsListRow = props => {
   const buildRequestId =
     revision.attributes && revision.attributes["build-request-id"];
 
-  const showProgressiveReleases = isProgressiveReleaseEnabled && !showChannels;
+  const canShowProgressiveReleases =
+    isProgressiveReleaseEnabled && !showChannels;
 
   return (
     <tr
@@ -108,14 +110,18 @@ const RevisionsListRow = props => {
           )}
         </td>
       )}
-      {showProgressiveReleases &&
+      {canShowProgressiveReleases &&
         revision.release && (
-          <RevisionsListRowProgressive
-            setDraggable={setDraggable}
-            channel={channel}
-            architecture={revision.release.architecture}
-            revision={revision}
-          />
+          <td>
+            {showProgressive && (
+              <RevisionsListRowProgressive
+                setDraggable={setDraggable}
+                channel={channel}
+                architecture={revision.release.architecture}
+                revision={revision}
+              />
+            )}
+          </td>
         )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">

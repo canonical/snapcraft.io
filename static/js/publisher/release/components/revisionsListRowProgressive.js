@@ -74,80 +74,78 @@ const RevisionsListRowProgressive = ({
     updateProgressiveReleasePercentage(progressiveState.key, percentage);
   };
 
-  return (
-    <td>
-      {progressiveState && (
-        <div
-          className="p-revisions-list__revision-progressive"
-          onMouseOver={() => setDraggable(false)}
-          onMouseOut={() => setDraggable(true)}
-        >
-          {showProgressivePause && (
+  if (progressiveState) {
+    return (
+      <div
+        className="p-revisions-list__revision-progressive"
+        onMouseOver={() => setDraggable(false)}
+        onMouseOut={() => setDraggable(true)}
+      >
+        {showProgressivePause && (
+          <span
+            className="p-progressive__pause p-tooltip--btm-center"
+            aria-describedby={`${revision.revision}-pause`}
+            onClick={handlePauseProgressiveRelease}
+          >
+            <i className="p-icon--pause" />
             <span
-              className="p-progressive__pause p-tooltip--btm-center"
-              aria-describedby={`${revision.revision}-pause`}
-              onClick={handlePauseProgressiveRelease}
+              className="p-tooltip__message"
+              role="tooltip"
+              id={`${revision.revision}-pause`}
             >
-              <i className="p-icon--pause" />
-              <span
-                className="p-tooltip__message"
-                role="tooltip"
-                id={`${revision.revision}-pause`}
-              >
-                Pause progressive release of <b>{revision.revision}</b>
-              </span>
+              Pause progressive release of <b>{revision.revision}</b>
             </span>
-          )}
-          {showProgressiveResume && (
+          </span>
+        )}
+        {showProgressiveResume && (
+          <span
+            className="p-progressive__pause p-tooltip--btm-center"
+            aria-describedby={`${revision.revision}-resume`}
+            onClick={handleResumeProgressiveRelease}
+          >
+            <i className="p-icon--resume" />
             <span
-              className="p-progressive__pause p-tooltip--btm-center"
-              aria-describedby={`${revision.revision}-resume`}
-              onClick={handleResumeProgressiveRelease}
+              className="p-tooltip__message"
+              role="tooltip"
+              id={`${revision.revision}-resume`}
             >
-              <i className="p-icon--resume" />
-              <span
-                className="p-tooltip__message"
-                role="tooltip"
-                id={`${revision.revision}-resume`}
-              >
-                Resume progressive release of <b>{revision.revision}</b>
-              </span>
+              Resume progressive release of <b>{revision.revision}</b>
             </span>
-          )}
-          <InteractiveProgressiveBar
-            percentage={progressiveState.percentage}
-            targetPercentage={
-              pendingProgressiveState
-                ? pendingProgressiveState.percentage
-                : null
-            }
-            singleDirection={1}
-            onChange={handleProgressiveChange}
-            disabled={showProgressiveResume}
-          />
-          {previousRevision && (
+          </span>
+        )}
+        <InteractiveProgressiveBar
+          percentage={progressiveState.percentage}
+          targetPercentage={
+            pendingProgressiveState ? pendingProgressiveState.percentage : null
+          }
+          singleDirection={1}
+          onChange={handleProgressiveChange}
+          disabled={showProgressiveResume}
+        />
+        {previousRevision && (
+          <span
+            className="p-progressive__cancel p-tooltip--btm-center"
+            aria-describedby={`${revision.revision}-cancel`}
+          >
+            <i
+              className="p-icon--close"
+              onClick={handleCancelProgressiveRelease}
+            />
             <span
-              className="p-progressive__cancel p-tooltip--btm-center"
-              aria-describedby={`${revision.revision}-cancel`}
+              className="p-tooltip__message"
+              role="tooltip"
+              id={`${revision.revision}-cancel`}
             >
-              <i
-                className="p-icon--close"
-                onClick={handleCancelProgressiveRelease}
-              />
-              <span
-                className="p-tooltip__message"
-                role="tooltip"
-                id={`${revision.revision}-cancel`}
-              >
-                Cancel progressive release and revert all devices to{" "}
-                <b>{previousRevision.revision}</b>
-              </span>
+              Cancel progressive release and revert all devices to{" "}
+              <b>{previousRevision.revision}</b>
             </span>
-          )}
-        </div>
-      )}
-    </td>
-  );
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  return false;
 };
 
 RevisionsListRowProgressive.propTypes = {

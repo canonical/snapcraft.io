@@ -154,12 +154,14 @@ function resumeProgressiveRelease(state, key) {
 // key is the id of revision to release
 // value is object containing release object and channels to release to
 // {
-//  <revisionId>: {
-//    revision: { revision: <revisionId>, version, ... },
-//    channel: channel,
-//    progressive: { key, percentage, paused },
-//    canBeProgressive: bool
-//  }
+//   <revisionId>: {
+//     <channel>: {
+//       revision: { revision: <revisionId>, version, ... },
+//       channel: <channel>,
+//       progressive: { key, percentage, paused },
+//       canBeProgressive: bool
+//     }
+//   }
 // }
 // TODO: remove `revision` from here, use only data from `revisions` state
 // to prevent duplication of revison data

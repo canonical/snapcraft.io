@@ -61,17 +61,13 @@ class ReleasesConfirm extends Component {
     const {
       pendingCloses,
       isProgressiveReleaseEnabled,
-      separatePendingReleases
+      progressiveUpdates,
+      newReleases,
+      newReleasesToProgress
     } = this.props;
     const closesCount = pendingCloses.length;
 
     const isPercentageValid = +percentage > 0 && +percentage <= 100;
-
-    const {
-      progressiveUpdates,
-      newReleases,
-      newReleasesToProgress
-    } = separatePendingReleases;
 
     const progressiveUpdatesCount = Object.keys(progressiveUpdates).length;
     const releasesCount = Object.keys(newReleases).length;
@@ -214,7 +210,9 @@ class ReleasesConfirm extends Component {
 ReleasesConfirm.propTypes = {
   pendingCloses: PropTypes.array.isRequired,
   isProgressiveReleaseEnabled: PropTypes.bool.isRequired,
-  separatePendingReleases: PropTypes.object.isRequired,
+  progressiveUpdates: PropTypes.object.isRequired,
+  newReleases: PropTypes.object.isRequired,
+  newReleasesToProgress: PropTypes.object.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired,
@@ -222,10 +220,11 @@ ReleasesConfirm.propTypes = {
 };
 
 const mapStateToProps = state => {
+  const separatePendingReleases = getSeparatePendingReleases(state);
   return {
+    ...separatePendingReleases,
     pendingCloses: state.pendingCloses,
-    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
-    separatePendingReleases: getSeparatePendingReleases(state)
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
   };
 };
 
