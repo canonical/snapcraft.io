@@ -275,7 +275,7 @@ export function getRevisionsFromBuild(state, buildId) {
 // ]
 export function getProgressiveState(state, channel, arch, revision) {
   if (!isProgressiveReleaseEnabled(state)) {
-    return null;
+    return [null, null, null];
   }
 
   const { releases, pendingReleases, revisions } = state;

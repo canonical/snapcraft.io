@@ -948,7 +948,7 @@ describe("getProgressiveState", () => {
     ]);
   });
 
-  it("should return null if progressive release flag is disabled", () => {
+  it("should return array of nulls if progressive release flag is disabled", () => {
     expect(
       getProgressiveState(
         stateWithProgressiveDisabled,
@@ -956,7 +956,7 @@ describe("getProgressiveState", () => {
         "arch2",
         "2"
       )
-    ).toBe(null);
+    ).toEqual([null, null, null]);
   });
 });
 
