@@ -162,7 +162,8 @@ const ReleasesTableReleaseCell = props => {
           branchName
         )}
       />
-      {progressiveState &&
+      {!isChannelPendingClose &&
+        progressiveState &&
         progressiveState.percentage && (
           <span
             className="p-release__progressive-percentage"
