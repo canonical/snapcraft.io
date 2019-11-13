@@ -10,7 +10,7 @@ import { getChannelName } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
-import { promoteRevision, undoRelease } from "../../actions/pendingReleases";
+import { undoRelease } from "../../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
@@ -59,10 +59,11 @@ const ReleasesTableReleaseCell = props => {
   // check if there is a pending release in this cell
   const isPendingRelease = hasPendingRelease(channel, arch);
 
-  let progressiveState = null;
+  let progressiveState;
+  let previousRevision;
 
-  if (currentRevision) {
-    progressiveState = getProgressiveState(
+  if (!isPendingRelease && currentRevision) {
+    [progressiveState, previousRevision] = getProgressiveState(
       channel,
       arch,
       currentRevision.revision
@@ -131,6 +132,7 @@ const ReleasesTableReleaseCell = props => {
         isPending={isPendingRelease}
         showVersion={showVersion}
         progressiveState={progressiveState}
+        previousRevision={previousRevision ? previousRevision.revision : null}
       />
     );
   } else if (isUnassigned) {
@@ -185,7 +187,6 @@ ReleasesTableReleaseCell.propTypes = {
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
-  promoteRevision: PropTypes.func.isRequired,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -216,10 +217,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) =>
-      dispatch(undoRelease(revision, channel)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel))
+    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
   };
 };
 

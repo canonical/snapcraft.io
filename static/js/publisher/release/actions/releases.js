@@ -7,6 +7,7 @@ import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
 import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
 import { updateRevisions } from "./revisions";
+import { closeHistory } from "./history";
 
 import {
   fetchReleasesHistory,
@@ -120,18 +121,23 @@ export function releaseRevisions() {
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName, defaultTrack } = options;
-    const releases = Object.keys(pendingReleases).map(id => {
-      const pendingRelease = pendingReleases[id];
+    const releases = Object.keys(pendingReleases)
+      .map(revId => {
+        return Object.keys(pendingReleases[revId]).map(channel => {
+          const pendingRelease = pendingReleases[revId][channel];
 
-      const release = {
-        id,
-        revision: pendingRelease.revision,
-        channels: pendingRelease.channels,
-        progressive: pendingRelease.progressive
-      };
+          const release = {
+            id: pendingRelease.revision.revision,
+            revision: pendingRelease.revision,
+            channels: [pendingRelease.channel],
+            progressive: pendingRelease.progressive
+          };
 
-      return release;
-    });
+          return release;
+        });
+      })
+      .reduce((acc, val) => acc.concat(val), []);
+    //.flat(); this is not yet available in all browsers including jsdom
 
     const _handleReleaseResponse = (json, release) => {
       return handleReleaseResponse(
@@ -163,7 +169,8 @@ export function releaseRevisions() {
           })
         )
       )
-      .then(() => dispatch(cancelPendingReleases()));
+      .then(() => dispatch(cancelPendingReleases()))
+      .then(() => dispatch(closeHistory()));
   };
 }
 
