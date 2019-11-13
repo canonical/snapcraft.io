@@ -1,21 +1,21 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import { getChannelString } from "../../../libs/channels.js";
+import { getChannelString } from "../../../libs/channels";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
+
 import {
   getSelectedRevisions,
-  getProgressiveState,
   isProgressiveReleaseEnabled
 } from "../selectors";
 
 import RevisionLabel from "./revisionLabel";
-import { ProgressiveBar } from "./progressiveBar";
+import RevisionsListRowProgressive from "./revisionsListRowProgressive";
 
 const RevisionsListRow = props => {
   const {
@@ -25,9 +25,11 @@ const RevisionsListRow = props => {
     showBuildRequest,
     isPending,
     isActive,
-    getProgressiveState,
-    isProgressiveReleaseEnabled
+    isProgressiveReleaseEnabled,
+    showProgressive
   } = props;
+
+  const [canDrag, setDraggable] = useState(true);
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -35,18 +37,13 @@ const RevisionsListRow = props => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
-  function revisionSelectChange() {
-    props.toggleRevision(revision);
+  let channel;
+  if (revision.release) {
+    channel = getChannelString(revision.release);
   }
 
-  let progressiveState;
-
-  if (revision.release) {
-    progressiveState = getProgressiveState(
-      getChannelString(revision.release),
-      revision.release.architecture,
-      revision.revision
-    );
+  function revisionSelectChange() {
+    props.toggleRevision(revision);
   }
 
   const [isDragging, isGrabbing, drag] = useDragging({
@@ -54,7 +51,8 @@ const RevisionsListRow = props => {
       revisions: [revision],
       architectures: revision.architectures,
       type: DND_ITEM_REVISIONS
-    }
+    },
+    canDrag: canDrag
   });
 
   const id = `revision-check-${revision.revision}`;
@@ -67,7 +65,8 @@ const RevisionsListRow = props => {
   const buildRequestId =
     revision.attributes && revision.attributes["build-request-id"];
 
-  const showProgressiveReleases = isProgressiveReleaseEnabled && !showChannels;
+  const canShowProgressiveReleases =
+    isProgressiveReleaseEnabled && !showChannels;
 
   return (
     <tr
@@ -111,16 +110,19 @@ const RevisionsListRow = props => {
           )}
         </td>
       )}
-      {showProgressiveReleases && (
-        <td>
-          {progressiveState && (
-            <ProgressiveBar
-              percentage={progressiveState.percentage}
-              readonly={true}
-            />
-          )}
-        </td>
-      )}
+      {canShowProgressiveReleases &&
+        revision.release && (
+          <td>
+            {showProgressive && (
+              <RevisionsListRowProgressive
+                setDraggable={setDraggable}
+                channel={channel}
+                architecture={revision.release.architecture}
+                revision={revision}
+              />
+            )}
+          </td>
+        )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
         {isPending ? (
@@ -147,6 +149,7 @@ const RevisionsListRow = props => {
 
 RevisionsListRow.propTypes = {
   // props
+  showProgressive: PropTypes.bool.isRequired,
   revision: PropTypes.object.isRequired,
   isSelectable: PropTypes.bool,
   showChannels: PropTypes.bool,
@@ -166,8 +169,6 @@ RevisionsListRow.propTypes = {
 const mapStateToProps = state => {
   return {
     selectedRevisions: getSelectedRevisions(state),
-    getProgressiveState: (channel, arch, revision) =>
-      getProgressiveState(state, channel, arch, revision),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
   };
 };

@@ -100,8 +100,8 @@ export function getPendingChannelMap(state) {
 
   // for each release
   Object.keys(pendingReleases).forEach(releasedRevision => {
-    pendingReleases[releasedRevision].channels.forEach(channel => {
-      const revision = pendingReleases[releasedRevision].revision;
+    Object.keys(pendingReleases[releasedRevision]).forEach(channel => {
+      const revision = pendingReleases[releasedRevision][channel].revision;
 
       if (!pendingChannelMap[channel]) {
         pendingChannelMap[channel] = {};
@@ -267,13 +267,23 @@ export function getRevisionsFromBuild(state, buildId) {
   );
 }
 
-// return the progressive release status based on channel, arch
+// return an array of 3 items:
+// [
+//    current progressive release status,
+//    the previous revision number,
+//    the progressive release status of a pending release of the same release
+// ]
 export function getProgressiveState(state, channel, arch, revision) {
   if (!isProgressiveReleaseEnabled(state)) {
-    return null;
+    return [null, null, null];
   }
 
-  const { releases } = state;
+  const { releases, pendingReleases, revisions } = state;
+
+  let progressiveStatus = null;
+  let previousRevision = null;
+  let pendingProgressiveStatus = null;
+
   const allReleases = releases.filter(
     item => channel === getChannelString(item) && arch === item.architecture
   );
@@ -282,19 +292,124 @@ export function getProgressiveState(state, channel, arch, revision) {
     item => revision === item.revision
   );
 
-  let progressive = null;
-
   const release = allReleases[releaseIndex];
 
-  if (release && release.progressive && release.progressive.key) {
-    progressive = release.progressive;
+  if (
+    release &&
+    release.progressive &&
+    release.progressive &&
+    release.progressive.key
+  ) {
+    progressiveStatus = JSON.parse(JSON.stringify(release.progressive));
 
-    // TODO: Confirm that this is true when multiple progressive
-    // releases have occured.
-    if (allReleases[releaseIndex + 1]) {
-      progressive.from = allReleases[releaseIndex + 1].revision;
+    previousRevision = allReleases
+      .slice(releaseIndex)
+      .filter(item => item.revision !== release.revision);
+
+    if (previousRevision[0]) {
+      previousRevision = revisions[previousRevision[0].revision];
     }
   }
 
-  return progressive;
+  const pendingMatch = pendingReleases[revision]
+    ? pendingReleases[revision][channel]
+    : undefined;
+
+  if (pendingMatch) {
+    if (
+      channel === pendingMatch.channel &&
+      pendingMatch.revision.architectures.includes(arch)
+    ) {
+      pendingProgressiveStatus = Object.assign({}, pendingMatch.progressive);
+    }
+  }
+
+  return [progressiveStatus, previousRevision, pendingProgressiveStatus];
+}
+
+// Is the latest release for a channel & architecture a valid revision?
+export function hasRelease(state, channel, architecture) {
+  const { releases } = state;
+  const filteredReleases = releases.filter(
+    release =>
+      release.architecture === architecture &&
+      getChannelString(release) === channel
+  );
+
+  return filteredReleases &&
+    filteredReleases[0] &&
+    filteredReleases[0].revision !== null
+    ? true
+    : false;
+}
+
+// Separate pendingRelease actions
+export function getSeparatePendingReleases(state) {
+  const { pendingReleases, releases } = state;
+  const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
+
+  const progressiveUpdates = {};
+  const newReleases = {};
+  const newReleasesToProgress = {};
+
+  Object.keys(pendingReleases).forEach(revId => {
+    Object.keys(pendingReleases[revId]).forEach(channel => {
+      const pendingRelease = pendingReleases[revId][channel];
+      const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
+      if (isProgressiveEnabled && pendingRelease.progressive) {
+        // What are the differences between the previous progressive state
+        // and the new state.
+        const previousState = releaseCopy.revision.release
+          ? releaseCopy.revision.release.progressive
+          : {};
+        const newState = releaseCopy.progressive;
+
+        const changes = [];
+        if (newState.paused !== previousState.paused) {
+          changes.push({
+            key: "paused",
+            value: newState.paused
+          });
+        }
+
+        if (
+          !newState.paused &&
+          newState.percentage !== previousState.percentage
+        ) {
+          changes.push({
+            key: "percentage",
+            value: newState.percentage
+          });
+        }
+
+        if (changes.length > 0) {
+          // Add this to the copy of the pendingRelease state
+          releaseCopy.progressive.changes = changes;
+          progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
+        }
+      } else {
+        const currentRelease = releases.filter(
+          release =>
+            release.architecture === releaseCopy.revision.architectures[0] &&
+            getChannelString(release) === releaseCopy.channel
+        );
+
+        if (
+          isProgressiveEnabled &&
+          currentRelease[0] &&
+          currentRelease[0].revision
+        ) {
+          newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
+        } else {
+          newReleases[`${revId}-${channel}`] = releaseCopy;
+        }
+      }
+    });
+  });
+
+  return {
+    progressiveUpdates,
+    newReleases,
+    newReleasesToProgress
+  };
 }
