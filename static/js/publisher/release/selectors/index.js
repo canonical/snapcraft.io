@@ -344,7 +344,10 @@ export function hasRelease(state, channel, architecture) {
 }
 
 // Separate pendingRelease actions
-export function getSeparatePendingReleases({ pendingReleases, releases }) {
+export function getSeparatePendingReleases(state) {
+  const { pendingReleases, releases } = state;
+  const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
+
   const progressiveUpdates = {};
   const newReleases = {};
   const newReleasesToProgress = {};
@@ -353,7 +356,7 @@ export function getSeparatePendingReleases({ pendingReleases, releases }) {
     Object.keys(pendingReleases[revId]).forEach(channel => {
       const pendingRelease = pendingReleases[revId][channel];
       const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
-      if (pendingRelease.progressive) {
+      if (isProgressiveEnabled && pendingRelease.progressive) {
         // What are the differences between the previous progressive state
         // and the new state.
         const previousState = releaseCopy.revision.release
@@ -391,7 +394,11 @@ export function getSeparatePendingReleases({ pendingReleases, releases }) {
             getChannelString(release) === releaseCopy.channel
         );
 
-        if (currentRelease[0] && currentRelease[0].revision) {
+        if (
+          isProgressiveEnabled &&
+          currentRelease[0] &&
+          currentRelease[0].revision
+        ) {
           newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
         } else {
           newReleases[`${revId}-${channel}`] = releaseCopy;
