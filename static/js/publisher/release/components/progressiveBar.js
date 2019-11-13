@@ -80,14 +80,23 @@ class InteractiveProgressiveBar extends React.Component {
     window.removeEventListener("mousemove", this.onMouseMoveHandler);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    const { disabled: prevDisabled } = prevProps;
+    const { scrubTarget } = prevState;
+    const { disabled: nextDisabled, targetPercentage } = this.props;
     // We really don't want to flood the browser with event listeners
-    if (prevProps.disabled && !this.props.disabled) {
+    if (prevDisabled && !nextDisabled) {
       window.addEventListener("mouseup", this.onMouseUpHandler);
       window.addEventListener("mousemove", this.onMouseMoveHandler);
-    } else if (!prevProps.disabled && this.props.disabled) {
+    } else if (!prevDisabled && nextDisabled) {
       window.removeEventListener("mouseup", this.onMouseUpHandler);
       window.removeEventListener("mousemove", this.onMouseMoveHandler);
+    }
+
+    if (scrubTarget !== targetPercentage) {
+      this.setState({
+        scrubTarget: targetPercentage
+      });
     }
   }
 

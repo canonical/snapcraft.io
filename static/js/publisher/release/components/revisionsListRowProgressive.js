@@ -15,21 +15,16 @@ import { InteractiveProgressiveBar } from "./progressiveBar";
 
 const RevisionsListRowProgressive = ({
   channel,
-  architecture,
   revision,
   setDraggable,
-  getProgressiveState,
   releaseRevision,
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
-  resumeProgressiveRelease
+  resumeProgressiveRelease,
+  progressiveState,
+  previousRevision,
+  pendingProgressiveState
 }) => {
-  const [
-    progressiveState,
-    previousRevision,
-    pendingProgressiveState
-  ] = getProgressiveState(channel, architecture, revision.revision);
-
   let showProgressivePause = false;
   let showProgressiveResume = false;
 
@@ -117,7 +112,9 @@ const RevisionsListRowProgressive = ({
         <InteractiveProgressiveBar
           percentage={progressiveState.percentage}
           targetPercentage={
-            pendingProgressiveState ? pendingProgressiveState.percentage : null
+            pendingProgressiveState
+              ? pendingProgressiveState.percentage
+              : progressiveState.percentage
           }
           singleDirection={1}
           onChange={handleProgressiveChange}
@@ -156,17 +153,28 @@ RevisionsListRowProgressive.propTypes = {
 
   setDraggable: PropTypes.func.isRequired,
 
-  getProgressiveState: PropTypes.func.isRequired,
+  progressiveState: PropTypes.object,
+  previousRevision: PropTypes.object,
+  pendingProgressiveState: PropTypes.object,
   releaseRevision: PropTypes.func.isRequired,
   updateProgressiveReleasePercentage: PropTypes.func.isRequired,
   pauseProgressiveRelease: PropTypes.func.isRequired,
   resumeProgressiveRelease: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  getProgressiveState: (channel, arch, revision) =>
-    getProgressiveState(state, channel, arch, revision)
-});
+const mapStateToProps = (state, { channel, architecture, revision }) => {
+  const [
+    progressiveState,
+    previousRevision,
+    pendingProgressiveState
+  ] = getProgressiveState(state, channel, architecture, revision.revision);
+
+  return {
+    progressiveState,
+    previousRevision,
+    pendingProgressiveState
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
