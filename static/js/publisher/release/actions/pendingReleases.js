@@ -3,15 +3,24 @@ export const UNDO_RELEASE = "UNDO_RELEASE";
 export const CANCEL_PENDING_RELEASES = "CANCEL_PENDING_RELEASES";
 export const SET_PROGRESSIVE_RELEASE_PERCENTAGE =
   "SET_PROGRESSIVE_RELEASE_PERCENTAGE";
+export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
+  "UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE";
+export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
+export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 
-export function releaseRevision(revision, channel) {
+import { getPendingChannelMap, hasRelease } from "../selectors";
+
+export function releaseRevision(
+  revision,
+  channel,
+  progressive,
+  canBeProgressive
+) {
   return {
     type: RELEASE_REVISION,
-    payload: { revision, channel }
+    payload: { revision, channel, progressive, canBeProgressive }
   };
 }
-
-import { getPendingChannelMap } from "../selectors";
 
 export function setProgressiveReleasePercentage(key, percentage) {
   return {
@@ -20,6 +29,30 @@ export function setProgressiveReleasePercentage(key, percentage) {
       key,
       percentage
     }
+  };
+}
+
+export function updateProgressiveReleasePercentage(key, percentage) {
+  return {
+    type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
+    payload: {
+      key,
+      percentage
+    }
+  };
+}
+
+export function pauseProgressiveRelease(key) {
+  return {
+    type: PAUSE_PROGRESSIVE_RELEASE,
+    payload: key
+  };
+}
+
+export function resumeProgressiveRelease(key) {
+  return {
+    type: RESUME_PROGRESSIVE_RELEASE,
+    payload: key
   };
 }
 
@@ -37,8 +70,19 @@ export function promoteRevision(revision, channel) {
       );
     });
 
+    const canBeProgressive = revision.architectures.some(arch =>
+      hasRelease(getState(), channel, arch)
+    );
+
     if (!isAlreadyReleased) {
-      dispatch(releaseRevision(revision, channel));
+      dispatch(
+        releaseRevision(
+          revision,
+          channel,
+          undefined,
+          canBeProgressive ? true : undefined
+        )
+      );
     }
   };
 }

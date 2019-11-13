@@ -1,5 +1,4 @@
 import { OPEN_HISTORY, CLOSE_HISTORY } from "../actions/history";
-import { RELEASE_REVISION } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 export default function history(
@@ -17,7 +16,6 @@ export default function history(
         ...action.payload
       };
     case CLOSE_HISTORY:
-    case RELEASE_REVISION:
     case CLOSE_CHANNEL:
       return {
         ...state,
