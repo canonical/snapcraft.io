@@ -155,21 +155,23 @@ describe("pendingReleases", () => {
       });
     });
 
-    describe("when canBeProgressive is passed", () => {
-      let releaseRevisionCanBeProgressiveAction = {
+    describe("when previousRevisions are passed", () => {
+      let releaseRevisionPreviousRevisionsAction = {
         type: RELEASE_REVISION,
         payload: {
           revision: { revision: 1, architectures: ["abc42", "test64"] },
           channel: "test/edge",
-          canBeProgressive: true
+          previousRevisions: {
+            abc42: { revision: 0, architectures: ["abc42"] }
+          }
         }
       };
 
-      it("should set a release to allow progressive releaes", () => {
+      it("should save previous revisions in release object", () => {
         const state = {
           "1": {
             "test/edge": {
-              revision: releaseRevisionCanBeProgressiveAction.payload.revision,
+              revision: releaseRevisionPreviousRevisionsAction.payload.revision,
               channel: "test/edge"
             }
           }
@@ -177,15 +179,17 @@ describe("pendingReleases", () => {
 
         const result = pendingReleases(
           state,
-          releaseRevisionCanBeProgressiveAction
+          releaseRevisionPreviousRevisionsAction
         );
 
         expect(result).toEqual({
           "1": {
             "test/edge": {
-              revision: releaseRevisionCanBeProgressiveAction.payload.revision,
+              revision: releaseRevisionPreviousRevisionsAction.payload.revision,
               channel: "test/edge",
-              canBeProgressive: true
+              previousRevisions: {
+                abc42: { revision: 0, architectures: ["abc42"] }
+              }
             }
           }
         });
@@ -625,7 +629,9 @@ describe("pendingReleases", () => {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
-            canBeProgressive: true
+            previousRevisions: {
+              abc42: { revision: 0, architectures: ["abc42"] }
+            }
           }
         }
       };
@@ -738,7 +744,9 @@ describe("pendingReleases", () => {
               percentage: 20,
               paused: true
             },
-            canBeProgressive: true
+            previousRevisions: {
+              abc42: { revision: 0, architectures: ["abc42"] }
+            }
           }
         }
       };

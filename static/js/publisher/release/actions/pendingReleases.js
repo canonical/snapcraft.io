@@ -8,17 +8,17 @@ export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
 export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
 export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 
-import { getPendingChannelMap, hasRelease } from "../selectors";
+import { getPendingChannelMap } from "../selectors";
 
 export function releaseRevision(
   revision,
   channel,
   progressive,
-  canBeProgressive
+  previousRevisions
 ) {
   return {
     type: RELEASE_REVISION,
-    payload: { revision, channel, progressive, canBeProgressive }
+    payload: { revision, channel, progressive, previousRevisions }
   };
 }
 
@@ -70,9 +70,17 @@ export function promoteRevision(revision, channel) {
       );
     });
 
-    const canBeProgressive = revision.architectures.some(arch =>
-      hasRelease(getState(), channel, arch)
-    );
+    const previousRevisions = {};
+
+    const { channelMap } = getState();
+
+    revision.architectures.forEach(arch => {
+      const prevRevision = channelMap[channel] && channelMap[channel][arch];
+
+      if (prevRevision) {
+        previousRevisions[arch] = prevRevision;
+      }
+    });
 
     if (!isAlreadyReleased) {
       dispatch(
@@ -80,7 +88,9 @@ export function promoteRevision(revision, channel) {
           revision,
           channel,
           undefined,
-          canBeProgressive ? true : undefined
+          Object.keys(previousRevisions).length > 0
+            ? previousRevisions
+            : undefined
         )
       );
     }

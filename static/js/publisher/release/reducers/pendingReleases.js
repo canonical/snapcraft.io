@@ -30,7 +30,7 @@ function releaseRevision(
   revision,
   channel,
   progressive,
-  canBeProgressive
+  previousRevisions
 ) {
   state = { ...state };
 
@@ -61,8 +61,8 @@ function releaseRevision(
     channel
   };
 
-  if (canBeProgressive) {
-    state[revision.revision][channel].canBeProgressive = true;
+  if (previousRevisions) {
+    state[revision.revision][channel].previousRevisions = previousRevisions;
   }
 
   if (progressive) {
@@ -91,8 +91,12 @@ function setProgressiveRelease(state, progressive) {
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
+      const hasPreviousRevisions =
+        channel.previousRevisions &&
+        Object.keys(channel.previousRevisions).length > 0;
+
       if (
-        channel.canBeProgressive &&
+        hasPreviousRevisions &&
         !channel.progressive &&
         progressive.percentage < 100
       ) {
@@ -159,7 +163,9 @@ function resumeProgressiveRelease(state, key) {
 //       revision: { revision: <revisionId>, version, ... },
 //       channel: <channel>,
 //       progressive: { key, percentage, paused },
-//       canBeProgressive: bool
+//       previousRevisions: {
+//         <arch>: { revision: <revisionId>, version, ... }
+//       }
 //     }
 //   }
 // }
@@ -173,7 +179,7 @@ export default function pendingReleases(state = {}, action) {
         action.payload.revision,
         action.payload.channel,
         action.payload.progressive,
-        action.payload.canBeProgressive
+        action.payload.previousRevisions
       );
     case UNDO_RELEASE:
       return removePendingRelease(
