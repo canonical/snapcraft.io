@@ -132,7 +132,7 @@ export function releaseRevisions() {
             channels: [pendingRelease.channel],
             progressive:
               pendingRelease.progressive &&
-              pendingRelease.progressive.percentages < 100
+              pendingRelease.progressive.percentage < 100
                 ? pendingRelease.progressive
                 : null
           };

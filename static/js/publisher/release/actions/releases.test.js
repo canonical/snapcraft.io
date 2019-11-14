@@ -91,55 +91,104 @@ describe("releases actions", () => {
   });
 
   describe("handleReleaseResponse", () => {
-    it("should dispatch RELEASE_REVISION_SUCCESS", () => {
-      const store = mockStore({});
+    describe("RELEASE_REVISION_SUCCESS", () => {
+      it("should be dispatched if revision is passed", () => {
+        const store = mockStore({});
 
-      const dispatch = store.dispatch;
-      const json = {
-        success: true,
-        channel_map_tree: {
-          latest: {
-            16: {
-              amd64: [
-                {
-                  channel: "edge",
-                  info: "specific",
-                  revision: 3,
-                  version: "test"
-                }
-              ]
+        const dispatch = store.dispatch;
+        const json = {
+          success: true,
+          channel_map_tree: {
+            latest: {
+              16: {
+                amd64: [
+                  {
+                    channel: "edge",
+                    info: "specific",
+                    revision: 3,
+                    version: "test"
+                  }
+                ]
+              }
             }
           }
-        }
-      };
+        };
 
-      const release = [
-        {
-          id: 3,
+        const release = [
+          {
+            id: 3,
+            revision: 3,
+            channels: ["latest/edge"]
+          }
+        ];
+
+        const revision = {
+          architectures: ["amd64"],
+          revision: 3
+        };
+
+        const revisions = {
+          "3": revision
+        };
+
+        handleReleaseResponse(dispatch, json, release, revisions, "latest");
+
+        const actions = store.getActions();
+
+        expect(actions[0]).toEqual({
+          payload: {
+            channel: "latest/edge",
+            revision: revision
+          },
+          type: "RELEASE_REVISION_SUCCESS"
+        });
+      });
+
+      it("should be dispatched if there are no revisions", () => {
+        const store = mockStore({});
+
+        const dispatch = store.dispatch;
+        const json = {
+          success: true,
+          channel_map_tree: {
+            latest: {
+              16: {
+                amd64: [
+                  {
+                    channel: "edge",
+                    info: "specific",
+                    revision: 3,
+                    version: "test"
+                  }
+                ]
+              }
+            }
+          }
+        };
+
+        const revision = {
+          architectures: ["amd64"],
           revision: 3,
+          version: "test"
+        };
+
+        const release = {
+          id: 4,
+          revision: revision,
           channels: ["latest/edge"]
-        }
-      ];
+        };
 
-      const revision = {
-        architectures: ["amd64"],
-        revision: 3
-      };
+        handleReleaseResponse(dispatch, json, release, {}, "latest");
 
-      const revisions = {
-        "3": revision
-      };
+        const actions = store.getActions();
 
-      handleReleaseResponse(dispatch, json, release, revisions, "latest");
-
-      const actions = store.getActions();
-
-      expect(actions[0]).toEqual({
-        payload: {
-          channel: "latest/edge",
-          revision: revision
-        },
-        type: "RELEASE_REVISION_SUCCESS"
+        expect(actions[0]).toEqual({
+          payload: {
+            channel: "latest/edge",
+            revision: revision
+          },
+          type: "RELEASE_REVISION_SUCCESS"
+        });
       });
     });
   });
