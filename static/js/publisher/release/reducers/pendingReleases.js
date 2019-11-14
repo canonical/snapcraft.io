@@ -114,11 +114,7 @@ function updateProgressiveRelease(state, progressive) {
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
       if (channel.progressive && channel.progressive.key === progressive.key) {
-        if (progressive.percentage < 100) {
-          channel.progressive.percentage = progressive.percentage;
-        } else {
-          delete channel.progressive; // At 100% we just want to do a regular release
-        }
+        channel.progressive.percentage = progressive.percentage;
       }
     });
   });
