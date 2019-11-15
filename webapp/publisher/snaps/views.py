@@ -27,6 +27,7 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiTimeoutError,
     StoreApiCircuitBreaker,
 )
+from webapp.api.launchpad import launchpad
 from webapp.store.logic import (
     get_categories,
     filter_screenshots,
@@ -1320,3 +1321,62 @@ def post_preview(snap_name):
     context["normalized_os"] = preview_data.get_normalised_oses()
 
     return flask.render_template("store/snap-details.html", **context)
+
+
+@publisher_snaps.route("/<snap_name>/builds", methods=["GET"])
+@login_required
+def get_snap_builds(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_errors(api_error)
+
+    context = {
+        "snap_id": details["snap_id"],
+        "snap_name": details["snap_name"],
+        "snap_title": details["title"],
+    }
+
+    lp_snaps = launchpad.snaps.findByStoreName(
+        owner="https://api.launchpad.net/devel/~build.snapcraft.io",
+        store_name=details["snap_name"],
+    )
+
+    def build_link(snap, build):
+        build_id = build.self_link.split("/")[-1]
+        bsi_user = snap.git_repository_url.split("https://github.com/")[-1]
+        return f"https://build.snapcraft.io/user/{bsi_user}/{build_id}"
+
+    builds = []
+    if len(lp_snaps) >= 1:
+        for build in lp_snaps[0].builds:
+            builds.append(
+                {
+                    "arch_tag": build.arch_tag,
+                    "datebuilt": build.datebuilt,
+                    "duration": build.duration,
+                    "link": build_link(lp_snaps[0], build),
+                    "logs": build.build_log_url,
+                    "revision_id": build.revision_id,
+                    "status": build.buildstate,
+                    "store": {
+                        "upload_status": build.store_upload_status,
+                        "error_messages": build.store_upload_error_messages,
+                    },
+                    "title": build.title,
+                }
+            )
+
+    context = {
+        "snap_id": details["snap_id"],
+        "snap_builds": builds,
+        "snap_name": details["snap_name"],
+        "snap_title": details["title"],
+    }
+
+    return flask.render_template("publisher/build-list.html", **context)
