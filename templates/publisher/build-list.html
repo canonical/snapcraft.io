@@ -1,0 +1,12 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+  Build details for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div id="main-content">
+    {% set selected_tab='builds' %}
+    {% include "publisher/_header.html" %}
+  </div>
+{% endblock %}
