@@ -10,6 +10,7 @@ import stickyListingBar from "./market/stickyListingBar";
 import { preview } from "./preview";
 import submitEnabler from "./submitEnabler";
 import * as tour from "./tour";
+import { initBuilds } from "./builds";
 
 const settings = { enableInput, changeHandler };
 
@@ -25,5 +26,6 @@ export {
   settings,
   preview,
   submitEnabler,
-  tour
+  tour,
+  initBuilds
 };
