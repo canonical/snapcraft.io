@@ -117,6 +117,15 @@
   resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.1.0.tgz#67b6a499a39ff8135e15fcc6a275cd1e29b504fa"
   integrity sha512-/bQ5C36/9GbP29mhKqNuGHq44Xqv33H1hYTn7U5bSZQKiN2hdYN5AsM5J4Kl/88w9xMqvNOCt3vZs9XmK+j1AQ==
 
+"@canonical/react-components@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.2.1.tgz#602684d0a8698a3b07d2ce8f90b56bdaff1da6db"
+  integrity sha512-RmWrmANOHKyIoNPBSgCyiZE8yxLJgRIn2wHTfmMQpq2xu7jAARvWJgKaUNnojhXxoaCrrObHBaS+ViO+xfIGfA==
+  dependencies:
+    classnames "2.2.6"
+    prop-types "15.7.2"
+    vanilla-framework "2.4.1"
+
 "@iamstarkov/listr-update-renderer@0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@iamstarkov/listr-update-renderer/-/listr-update-renderer-0.4.1.tgz#d7c48092a2dcf90fd672b6c8b458649cb350c77e"
@@ -1661,6 +1670,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
 
 cli-cursor@^1.0.1:
   version "1.0.2"
@@ -6004,7 +6018,7 @@ promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
 
-prop-types@^15.5.7:
+prop-types@15.7.2, prop-types@^15.5.7:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   dependencies:
@@ -7561,6 +7575,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+vanilla-framework@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.4.1.tgz#36ef374e90b8457a07e55cf33be1bcfd07092c84"
+  integrity sha512-St8LdmoMpWSFWvFRDBNjFcdfWo/nOMwrkRPJN+dR0vOHP/Jb1UqOSxw+wDxkiGrpeRb0VPFwCuz/2u0RWb0xuQ==
 
 vanilla-framework@^2.3.0:
   version "2.3.0"
