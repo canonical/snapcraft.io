@@ -749,6 +749,14 @@ def post_default_track(snap_name):
     return flask.jsonify({"success": True})
 
 
+@publisher_snaps.route("/<snap_name>/builds")
+@login_required
+def get_builds(snap_name):
+    context = {"snap_name": snap_name}
+
+    return flask.render_template("publisher/builds.html", **context)
+
+
 @publisher_snaps.route("/account/register-snap")
 def redirect_get_register_name():
     return flask.redirect(flask.url_for(".get_register_name"))
