@@ -749,14 +749,6 @@ def post_default_track(snap_name):
     return flask.jsonify({"success": True})
 
 
-@publisher_snaps.route("/<snap_name>/builds")
-@login_required
-def get_builds(snap_name):
-    context = {"snap_name": snap_name}
-
-    return flask.render_template("publisher/builds.html", **context)
-
-
 @publisher_snaps.route("/account/register-snap")
 def redirect_get_register_name():
     return flask.redirect(flask.url_for(".get_register_name"))
@@ -1353,6 +1345,7 @@ def get_snap_builds(snap_name):
         for build in lp_snaps[0].builds:
             builds.append(
                 {
+                    "id": build.self_link.split("/")[-1],
                     "arch_tag": build.arch_tag,
                     "datebuilt": build.datebuilt,
                     "duration": build.duration,
@@ -1375,4 +1368,4 @@ def get_snap_builds(snap_name):
         "snap_title": details["title"],
     }
 
-    return flask.render_template("publisher/build-list.html", **context)
+    return flask.render_template("publisher/builds.html", **context)
