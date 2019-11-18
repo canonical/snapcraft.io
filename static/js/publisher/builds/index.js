@@ -3,13 +3,12 @@ import ReactDOM from "react-dom";
 
 import MainTable from "@canonical/react-components/dist/components/MainTable";
 
-export function initBuilds(id, snapName, dummyData) {
-  const rows = dummyData.payload.builds.map(build => {
-    const id = build.self_link.substr(build.self_link.lastIndexOf("/") + 1);
+export function initBuilds(id, snapName, builds) {
+  const rows = builds.map(build => {
     return {
       columns: [
         {
-          content: <a href={build.web_link}>{id}</a>
+          content: <a href={build.link}>{build.id}</a>
         },
         {
           content: build.arch_tag
@@ -18,7 +17,7 @@ export function initBuilds(id, snapName, dummyData) {
           content: build.duration
         },
         {
-          content: <a href={build.build_log_url}>{build.buildstate}</a>
+          content: <a href={build.logs}>{build.status}</a>
         }
       ]
     };
