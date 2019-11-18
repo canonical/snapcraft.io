@@ -56,9 +56,8 @@ class InteractiveProgressiveBar extends React.Component {
 
     this.state = {
       current: props.percentage,
-      target: props.percentage,
       scrubTarget: props.targetPercentage || props.percentage,
-      scrubbing: false,
+      scrubStart: null,
       mousePosition: 0
     };
 
@@ -80,27 +79,23 @@ class InteractiveProgressiveBar extends React.Component {
     window.removeEventListener("mousemove", this.onMouseMoveHandler);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { disabled: prevDisabled } = prevProps;
-    const { scrubTarget } = prevState;
-    const { disabled: nextDisabled, targetPercentage } = this.props;
+    const { disabled: nextDisabled } = this.props;
+
     // We really don't want to flood the browser with event listeners
     if (prevDisabled && !nextDisabled) {
+      // was disabled, now isn't
       window.addEventListener("mouseup", this.onMouseUpHandler);
       window.addEventListener("mousemove", this.onMouseMoveHandler);
     } else if (!prevDisabled && nextDisabled) {
+      // wasn't disabled, now is
       window.removeEventListener("mouseup", this.onMouseUpHandler);
       window.removeEventListener("mousemove", this.onMouseMoveHandler);
     }
-
-    if (scrubTarget !== targetPercentage) {
-      this.setState({
-        scrubTarget: targetPercentage
-      });
-    }
   }
 
-  scrubTo(target, setTarget) {
+  scrubTo(target) {
     const { current } = this.state;
     const { singleDirection, onChange } = this.props;
 
@@ -134,10 +129,6 @@ class InteractiveProgressiveBar extends React.Component {
       scrubTarget: target
     };
 
-    if (setTarget) {
-      newState.target = target;
-    }
-
     this.setState(newState);
     onChange(target);
   }
@@ -145,28 +136,29 @@ class InteractiveProgressiveBar extends React.Component {
   onMouseDownHandler(e) {
     this.setState({
       mousePosition: e.clientX,
-      scrubbing: true
+      scrubStart: this.state.scrubTarget
     });
   }
 
   onMouseMoveHandler(e) {
-    const { mousePosition, scrubbing, target } = this.state;
-    if (!scrubbing) {
+    const { mousePosition, scrubStart } = this.state;
+    if (!scrubStart) {
       return;
     }
-    const diff = e.clientX - mousePosition;
     const width = this.barHolder.current.clientWidth;
-    this.scrubTo(Math.round(target + (diff / width) * 100));
+    const diff = e.clientX - mousePosition;
+    const diffPercentage = Math.round((diff / width) * 100);
+
+    this.scrubTo(scrubStart + diffPercentage);
   }
 
   onMouseUpHandler() {
-    const { scrubbing, scrubTarget } = this.state;
-    if (!scrubbing) {
+    const { scrubStart } = this.state;
+    if (!scrubStart) {
       return;
     }
     this.setState({
-      scrubbing: false,
-      target: scrubTarget
+      scrubStart: null
     });
   }
 
@@ -174,14 +166,14 @@ class InteractiveProgressiveBar extends React.Component {
     e.preventDefault();
     const { scrubTarget } = this.state;
     const direction = e.nativeEvent.deltaY > 0 ? -1 : 1;
-    this.scrubTo(Math.round(scrubTarget + direction), true);
+    this.scrubTo(Math.round(scrubTarget + direction));
   }
 
   render() {
     const { disabled } = this.props;
-    const { current, scrubTarget, scrubbing } = this.state;
+    const { current, scrubTarget, scrubStart } = this.state;
     const classes = ["progressive-bar__interactive-wrapper"];
-    if (scrubbing) {
+    if (scrubStart) {
       classes.push("is-scrubbing");
     }
 

@@ -35,11 +35,13 @@ function releaseRevision(
   state = { ...state };
 
   // cancel any other pending release for the same channel in same architectures
+  // if it's a different revision
   revision.architectures.forEach(arch => {
     Object.keys(state).forEach(revId => {
       const pendingRelease = state[revId];
 
       if (
+        parseInt(revId) !== revision.revision &&
         pendingRelease[channel] &&
         pendingRelease[channel].revision.architectures.includes(arch)
       ) {
@@ -56,16 +58,18 @@ function releaseRevision(
     state[revision.revision] = {};
   }
 
-  state[revision.revision][channel] = {
-    revision,
-    channel
-  };
+  if (!state[revision.revision][channel]) {
+    state[revision.revision][channel] = {
+      revision,
+      channel
+    };
+  }
 
   if (previousRevisions) {
     state[revision.revision][channel].previousRevisions = previousRevisions;
   }
 
-  if (progressive) {
+  if (progressive && !state[revision.revision][channel].progressive) {
     state[revision.revision][channel].progressive = progressive;
   }
 
