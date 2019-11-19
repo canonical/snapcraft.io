@@ -63,7 +63,8 @@ class ReleasesConfirm extends Component {
       isProgressiveReleaseEnabled,
       progressiveUpdates,
       newReleases,
-      newReleasesToProgress
+      newReleasesToProgress,
+      cancelProgressive
     } = this.props;
     const closesCount = pendingCloses.length;
 
@@ -72,6 +73,7 @@ class ReleasesConfirm extends Component {
     const progressiveUpdatesCount = Object.keys(progressiveUpdates).length;
     const releasesCount = Object.keys(newReleases).length;
     const releasesToProgressCount = Object.keys(newReleasesToProgress).length;
+    const cancelProgressiveCount = Object.keys(cancelProgressive).length;
 
     const showProgressive =
       isProgressiveReleaseEnabled && releasesToProgressCount > 0;
@@ -80,7 +82,8 @@ class ReleasesConfirm extends Component {
       (releasesCount > 0 ||
         releasesToProgressCount > 0 ||
         closesCount > 0 ||
-        progressiveUpdatesCount > 0) &&
+        progressiveUpdatesCount > 0 ||
+        cancelProgressiveCount > 0) &&
       !isLoading &&
       isPercentageValid;
 
@@ -88,12 +91,13 @@ class ReleasesConfirm extends Component {
       (releasesCount > 0 ||
         releasesToProgressCount > 0 ||
         closesCount > 0 ||
-        progressiveUpdatesCount > 0) &&
+        progressiveUpdatesCount > 0 ||
+        cancelProgressiveCount > 0) &&
       !isLoading;
 
     return (
       <div className="p-releases-confirm u-vertically-center row">
-        <div className="col-5">
+        <div className="col-6">
           {closesCount > 0 && (
             <Fragment>
               <span className="p-tooltip">
@@ -127,7 +131,7 @@ class ReleasesConfirm extends Component {
                         {release.revision.version}){" "}
                         {release.revision.architectures.join(", ")} to{" "}
                         {release.channel}
-                        {"\n"}
+                        <br />
                       </span>
                     );
                   })}
@@ -167,17 +171,44 @@ class ReleasesConfirm extends Component {
                             })
                             .join(" at ")}
                         </b>
-                        {"\n"}
+                        <br />
+                      </span>
+                    );
+                  })}
+                  <br />
+                </span>
+              </span>{" "}
+              to update.
+            </Fragment>
+          )}{" "}
+          {cancelProgressiveCount > 0 && (
+            <Fragment>
+              <span className="p-tooltip">
+                <span className="p-help">
+                  {cancelProgressiveCount} release
+                  {cancelProgressiveCount > 1 ? "s" : ""}
+                </span>
+                <span className="p-tooltip__message" role="tooltip">
+                  {Object.keys(cancelProgressive).map(revId => {
+                    const release = cancelProgressive[revId];
+
+                    return (
+                      <span key={revId}>
+                        <b>{release.revision.revision}</b> (
+                        {release.revision.version}) on{" "}
+                        {release.revision.architectures.join(", ")}{" "}
+                        {release.channel}
+                        <br />
                       </span>
                     );
                   })}
                 </span>
               </span>{" "}
-              to update
+              to cancel.
             </Fragment>
           )}
         </div>
-        <div className="col-7 p-releasses-confirm__actions">
+        <div className="col-6 p-releasses-confirm__actions">
           {showProgressive && (
             <ProgressiveConfirm
               percentage={this.state.percentage}
@@ -213,6 +244,7 @@ ReleasesConfirm.propTypes = {
   progressiveUpdates: PropTypes.object.isRequired,
   newReleases: PropTypes.object.isRequired,
   newReleasesToProgress: PropTypes.object.isRequired,
+  cancelProgressive: PropTypes.object.isRequired,
 
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired,
