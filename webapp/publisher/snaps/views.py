@@ -30,8 +30,12 @@ from webapp.store.logic import (
 )
 from webapp.decorators import login_required
 from webapp.helpers import get_licenses
-from webapp.publisher.snaps import logic
-from webapp.publisher.snaps import preview_data
+from webapp.publisher.snaps import logic, preview_data
+from webapp.publisher.snaps.builds import (
+    build_link,
+    map_build_and_upload_states,
+)
+
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -1335,28 +1339,26 @@ def get_snap_builds(snap_name):
         store_name=details["snap_name"],
     )
 
-    def build_link(snap, build):
-        build_id = build.self_link.split("/")[-1]
-        bsi_user = snap.git_repository_url.split("https://github.com/")[-1]
-        return f"https://build.snapcraft.io/user/{bsi_user}/{build_id}"
-
     builds = []
     if len(lp_snaps) >= 1:
+        bsi_url = flask.current_app.config["BSI_URL"]
+
         for build in lp_snaps[0].builds:
+            link = build_link(bsi_url, lp_snaps[0], build)
+            status = map_build_and_upload_states(
+                build.buildstate, build.store_upload_status
+            )
+
             builds.append(
                 {
                     "id": build.self_link.split("/")[-1],
                     "arch_tag": build.arch_tag,
                     "datebuilt": build.datebuilt,
                     "duration": build.duration,
-                    "link": build_link(lp_snaps[0], build),
+                    "link": link,
                     "logs": build.build_log_url,
                     "revision_id": build.revision_id,
-                    "status": build.buildstate,
-                    "store": {
-                        "upload_status": build.store_upload_status,
-                        "error_messages": build.store_upload_error_messages,
-                    },
+                    "status": status,
                     "title": build.title,
                 }
             )
