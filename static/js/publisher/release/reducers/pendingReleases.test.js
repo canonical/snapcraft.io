@@ -6,7 +6,8 @@ import {
   SET_PROGRESSIVE_RELEASE_PERCENTAGE,
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
-  RESUME_PROGRESSIVE_RELEASE
+  RESUME_PROGRESSIVE_RELEASE,
+  CANCEL_PROGRESSIVE_RELEASE
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
@@ -773,6 +774,88 @@ describe("pendingReleases", () => {
         );
 
         expect(result[2]).toEqual(stateWithProgressiveReleases[2]);
+      });
+    });
+  });
+
+  describe("on CANCEL_PROGRESSIVE_RELEASE action", () => {
+    const cancelProgressiveReleaseAction = {
+      type: CANCEL_PROGRESSIVE_RELEASE,
+      payload: {
+        key: "progressive-test",
+        previousRevision: {
+          architectures: ["amd64"],
+          revision: 2
+        }
+      }
+    };
+
+    describe("when state is empty", () => {
+      const emptyState = {};
+
+      it("should not add a pendingRelease", () => {
+        const result = pendingReleases(
+          emptyState,
+          cancelProgressiveReleaseAction
+        );
+
+        expect(result).toEqual(emptyState);
+      });
+    });
+
+    describe("when there is a non-progressive pendingRelease", () => {
+      const nonProgressiveState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable"
+          }
+        }
+      };
+
+      it("should not change the pendingRelease", () => {
+        const result = pendingReleases(
+          nonProgressiveState,
+          cancelProgressiveReleaseAction
+        );
+
+        expect(result).toEqual(nonProgressiveState);
+      });
+    });
+
+    describe("when there is a progressive pendingRelease", () => {
+      const progressiveReleaseState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable",
+            progressive: {
+              key: "progressive-test",
+              percentage: 10,
+              paused: true
+            }
+          }
+        }
+      };
+
+      it("should replace a key matching progressive release with the new release", () => {
+        const result = pendingReleases(
+          progressiveReleaseState,
+          cancelProgressiveReleaseAction
+        );
+
+        expect(result).toEqual({
+          "2": {
+            "latest/stable": {
+              channel: "latest/stable",
+              replaces: progressiveReleaseState["1"]["latest/stable"],
+              revision: {
+                architectures: ["amd64"],
+                revision: 2
+              }
+            }
+          }
+        });
       });
     });
   });

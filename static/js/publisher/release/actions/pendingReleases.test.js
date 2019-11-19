@@ -13,6 +13,7 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
+  CANCEL_PROGRESSIVE_RELEASE,
   releaseRevision,
   promoteRevision,
   promoteChannel,
@@ -21,7 +22,8 @@ import {
   setProgressiveReleasePercentage,
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
-  resumeProgressiveRelease
+  resumeProgressiveRelease,
+  cancelProgressiveRelease
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
@@ -223,6 +225,29 @@ describe("pendingReleases actions", () => {
 
     it("should supply a key as the payload", () => {
       expect(resumeProgressiveRelease(key).payload).toBe(key);
+    });
+  });
+
+  describe("cancelProgressiverelease", () => {
+    const key = "progressive-test";
+    const previousRevision = "previous-revision";
+
+    it("should create an action to cancel a release", () => {
+      expect(cancelProgressiveRelease(key, previousRevision).type).toBe(
+        CANCEL_PROGRESSIVE_RELEASE
+      );
+    });
+
+    it("should supply a key in the payload", () => {
+      expect(cancelProgressiveRelease(key, previousRevision).payload.key).toBe(
+        key
+      );
+    });
+
+    it("should supply a revision in the payload", () => {
+      expect(
+        cancelProgressiveRelease(key, previousRevision).payload.previousRevision
+      ).toBe(previousRevision);
     });
   });
 });
