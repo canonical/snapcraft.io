@@ -47,7 +47,9 @@ const RevisionsListRowProgressive = ({
   }
 
   const handlePauseProgressiveRelease = () => {
-    releaseRevision(revision, channel, progressiveState);
+    if (!pendingProgressiveState) {
+      releaseRevision(revision, channel, progressiveState);
+    }
     pauseProgressiveRelease(progressiveState.key);
   };
 
