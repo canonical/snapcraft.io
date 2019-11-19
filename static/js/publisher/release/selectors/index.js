@@ -372,10 +372,7 @@ export function getSeparatePendingReleases(state) {
           });
         }
 
-        if (
-          !newState.paused &&
-          newState.percentage !== previousState.percentage
-        ) {
+        if (newState.percentage !== previousState.percentage) {
           changes.push({
             key: "percentage",
             value: newState.percentage
