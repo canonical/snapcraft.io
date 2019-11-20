@@ -230,7 +230,22 @@ describe("pendingReleases actions", () => {
 
   describe("cancelProgressiverelease", () => {
     const key = "progressive-test";
-    const previousRevision = "previous-revision";
+    const previousRevision = {
+      architectures: ["amd64"],
+      attributes: {},
+      base: "core18",
+      build_url: null,
+      channels: ["latest/edge"],
+      confinement: "strict",
+      created_at: "2019-07-16T08:58:04Z",
+      epoch: { read: null, write: null },
+      grade: "stable",
+      revision: 3,
+      "sha3-384": "test",
+      size: 4096,
+      status: "Published",
+      version: "1.8.0"
+    };
 
     it("should create an action to cancel a release", () => {
       expect(cancelProgressiveRelease(key, previousRevision).type).toBe(
