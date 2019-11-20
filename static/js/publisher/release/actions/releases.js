@@ -118,30 +118,48 @@ export function handleReleaseResponse(
 }
 
 export function releaseRevisions() {
+  const mapToRelease = pendingRelease => {
+    return {
+      id: pendingRelease.revision.revision,
+      revision: pendingRelease.revision,
+      channels: [pendingRelease.channel],
+      progressive:
+        pendingRelease.progressive &&
+        pendingRelease.progressive.percentage < 100
+          ? pendingRelease.progressive
+          : null
+    };
+  };
+
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName, defaultTrack } = options;
-    const releases = Object.keys(pendingReleases)
-      .map(revId => {
-        return Object.keys(pendingReleases[revId]).map(channel => {
-          const pendingRelease = pendingReleases[revId][channel];
 
-          const release = {
-            id: pendingRelease.revision.revision,
-            revision: pendingRelease.revision,
-            channels: [pendingRelease.channel],
-            progressive:
-              pendingRelease.progressive &&
-              pendingRelease.progressive.percentage < 100
-                ? pendingRelease.progressive
-                : null
-          };
+    // To dedupe releases
+    const progressiveReleases = [];
+    const regularReleases = [];
+    Object.keys(pendingReleases).forEach(revId => {
+      Object.keys(pendingReleases[revId]).forEach(channel => {
+        const pendingRelease = pendingReleases[revId][channel];
 
-          return release;
-        });
-      })
-      .reduce((acc, val) => acc.concat(val), []);
-    //.flat(); this is not yet available in all browsers including jsdom
+        if (pendingRelease.progressive) {
+          // first move progressive releases out
+
+          progressiveReleases.push(mapToRelease(pendingRelease));
+        } else {
+          const releaseIndex = regularReleases.findIndex(
+            release => release.revision.revision === parseInt(revId)
+          );
+          if (releaseIndex === -1) {
+            regularReleases.push(mapToRelease(pendingRelease));
+          } else {
+            regularReleases[releaseIndex].channels.push(pendingRelease.channel);
+          }
+        }
+      });
+    });
+
+    const releases = progressiveReleases.concat(regularReleases);
 
     const _handleReleaseResponse = (json, release) => {
       return handleReleaseResponse(
