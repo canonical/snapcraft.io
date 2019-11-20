@@ -155,6 +155,10 @@ function resumeProgressiveRelease(state, key) {
   return nextState;
 }
 
+// This only works on the channel/arch the cancel button is pressed on
+// because we're using the previousRevision from that specific combo.
+// That means the progressive.key is ignored and other releases with the
+// same key are not affected.
 function cancelProgressiveRelease(state, key, previousRevision) {
   let nextState = JSON.parse(JSON.stringify(state));
 
@@ -187,7 +191,8 @@ function cancelProgressiveRelease(state, key, previousRevision) {
 //       progressive: { key, percentage, paused },
 //       previousRevisions: {
 //         <arch>: { revision: <revisionId>, version, ... }
-//       }
+//       },
+//       replaces: <revision>
 //     }
 //   }
 // }

@@ -858,5 +858,52 @@ describe("pendingReleases", () => {
         });
       });
     });
+
+    describe("when there are multiple progressive pendingReleases with the same key", () => {
+      const progressiveReleasesState = {
+        "1": {
+          "latest/stable": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/stable",
+            progressive: {
+              key: "progressive-test",
+              percentage: 10,
+              paused: false
+            }
+          },
+          "latest/candidate": {
+            revision: { revision: 1, architectures: ["amd64"] },
+            channel: "latest/candidate",
+            progressive: {
+              key: "progressive-test",
+              percentage: 10,
+              paused: false
+            }
+          }
+        }
+      };
+
+      it("should replace only the release in the specified channel", () => {
+        const result = pendingReleases(
+          progressiveReleasesState,
+          cancelProgressiveReleaseAction
+        );
+
+        expect(result).toEqual({
+          "1": {
+            "latest/stable": {
+              ...progressiveReleasesState["1"]["latest/stable"]
+            }
+          },
+          "2": {
+            "latest/candidate": {
+              channel: "latest/candidate",
+              replaces: progressiveReleasesState["1"]["latest/candidate"],
+              revision: { architectures: ["amd64"], revision: 2 }
+            }
+          }
+        });
+      });
+    });
   });
 });
