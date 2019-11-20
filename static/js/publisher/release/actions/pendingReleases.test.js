@@ -13,6 +13,7 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
+  CANCEL_PROGRESSIVE_RELEASE,
   releaseRevision,
   promoteRevision,
   promoteChannel,
@@ -21,7 +22,8 @@ import {
   setProgressiveReleasePercentage,
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
-  resumeProgressiveRelease
+  resumeProgressiveRelease,
+  cancelProgressiveRelease
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
@@ -223,6 +225,44 @@ describe("pendingReleases actions", () => {
 
     it("should supply a key as the payload", () => {
       expect(resumeProgressiveRelease(key).payload).toBe(key);
+    });
+  });
+
+  describe("cancelProgressiverelease", () => {
+    const key = "progressive-test";
+    const previousRevision = {
+      architectures: ["amd64"],
+      attributes: {},
+      base: "core18",
+      build_url: null,
+      channels: ["latest/edge"],
+      confinement: "strict",
+      created_at: "2019-07-16T08:58:04Z",
+      epoch: { read: null, write: null },
+      grade: "stable",
+      revision: 3,
+      "sha3-384": "test",
+      size: 4096,
+      status: "Published",
+      version: "1.8.0"
+    };
+
+    it("should create an action to cancel a release", () => {
+      expect(cancelProgressiveRelease(key, previousRevision).type).toBe(
+        CANCEL_PROGRESSIVE_RELEASE
+      );
+    });
+
+    it("should supply a key in the payload", () => {
+      expect(cancelProgressiveRelease(key, previousRevision).payload.key).toBe(
+        key
+      );
+    });
+
+    it("should supply a revision in the payload", () => {
+      expect(
+        cancelProgressiveRelease(key, previousRevision).payload.previousRevision
+      ).toBe(previousRevision);
     });
   });
 });
