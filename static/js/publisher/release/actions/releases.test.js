@@ -198,6 +198,65 @@ describe("releases actions", () => {
       global.fetch.mockRestore();
     });
 
+    it("should combine releases of the same revision that aren't progressive", () => {
+      const revision = { architectures: ["amd64"], revision: 1 };
+      const store = mockStore({
+        options: {
+          snapName: "test",
+          csrfToken: "test",
+          defaultTrack: "latest"
+        },
+        pendingReleases: {
+          "1": {
+            "latest/edge": {
+              revision: revision,
+              channel: "latest/edge",
+              progressive: {
+                key: "test",
+                percentage: 50,
+                paused: false
+              }
+            },
+            "latest/beta": {
+              revision: revision,
+              channel: "latest/beta"
+            },
+            "latest/candidate": {
+              revision: revision,
+              channel: "latest/candidate"
+            }
+          }
+        }
+      });
+
+      global.fetch = jest
+        .fn()
+        .mockResolvedValue({ json: () => ({ sucess: true }) });
+
+      return store.dispatch(releaseRevisions()).then(() => {
+        const calls = global.fetch.mock.calls;
+
+        expect(calls.length).toEqual(3); // 2 posts and 1 get
+
+        expect(JSON.parse(calls[0][1].body)).toEqual({
+          name: "test",
+          revision: 1,
+          channels: ["latest/edge"],
+          progressive: {
+            key: "test",
+            percentage: 50,
+            paused: false
+          }
+        });
+
+        expect(JSON.parse(calls[1][1].body)).toEqual({
+          name: "test",
+          revision: 1,
+          channels: ["latest/beta", "latest/candidate"]
+        });
+      });
+    });
+
     it("should remove progressive release if percentage is 100", () => {
       const revision = {
         architectures: ["amd64"],
