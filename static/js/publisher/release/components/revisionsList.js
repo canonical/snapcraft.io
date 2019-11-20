@@ -23,10 +23,9 @@ import {
   getSelectedArchitectures,
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch,
-  isProgressiveReleaseEnabled
+  isProgressiveReleaseEnabled,
+  getPendingRelease
 } from "../selectors";
-
-import { getPendingRelease } from "../releasesState";
 
 class RevisionsList extends Component {
   constructor() {
@@ -115,7 +114,8 @@ class RevisionsList extends Component {
       showChannels,
       filteredAvailableRevisions,
       pendingChannelMap,
-      isProgressiveReleaseEnabled
+      isProgressiveReleaseEnabled,
+      getPendingRelease
     } = this.props;
     let filteredRevisions = filteredAvailableRevisions;
     let title = "Latest revisions";
@@ -186,7 +186,6 @@ class RevisionsList extends Component {
         filteredRevisions = this.props.filteredReleaseHistory;
 
         pendingRelease = getPendingRelease(
-          this.props.pendingReleases,
           filters.arch,
           `${filters.track}/${filters.risk}`
         );
@@ -410,6 +409,7 @@ RevisionsList.propTypes = {
   getFilteredAvailableRevisionsForArch: PropTypes.func.isRequired,
   pendingChannelMap: PropTypes.object,
   isProgressiveReleaseEnabled: PropTypes.bool,
+  getPendingRelease: PropTypes.func.isRequired,
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
@@ -435,7 +435,9 @@ const mapStateToProps = state => {
     filteredAvailableRevisions: getFilteredAvailableRevisions(state),
     getFilteredAvailableRevisionsForArch: arch =>
       getFilteredAvailableRevisionsForArch(state, arch),
-    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
+    getPendingRelease: (arch, channel) =>
+      getPendingRelease(state, arch, channel)
   };
 };
 

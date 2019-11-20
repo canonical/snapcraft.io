@@ -418,3 +418,20 @@ export function getSeparatePendingReleases(state) {
     cancelProgressive
   };
 }
+
+// Get pending release for architecture
+export function getPendingRelease({ pendingReleases }, arch, channel) {
+  // for each release
+  return Object.keys(pendingReleases).map(releasedRevision => {
+    if (
+      pendingReleases[releasedRevision][channel] &&
+      pendingReleases[releasedRevision][
+        channel
+      ].revision.architectures.includes(arch)
+    ) {
+      return pendingReleases[releasedRevision][channel];
+    }
+
+    return null;
+  })[0];
+}
