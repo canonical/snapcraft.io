@@ -126,7 +126,7 @@ function getPendingRelease(pendingReleases, arch, channel) {
         channel
       ].revision.architectures.includes(arch)
     ) {
-      pendingRelease = releasedRevision;
+      pendingRelease = pendingReleases[releasedRevision][channel];
     }
   });
 

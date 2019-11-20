@@ -26,7 +26,8 @@ const RevisionsListRow = props => {
     isPending,
     isActive,
     isProgressiveReleaseEnabled,
-    showProgressive
+    showProgressive,
+    progressiveBeingCancelled
   } = props;
 
   const [canDrag, setDraggable] = useState(true);
@@ -66,7 +67,7 @@ const RevisionsListRow = props => {
     revision.attributes && revision.attributes["build-request-id"];
 
   const canShowProgressiveReleases =
-    isProgressiveReleaseEnabled && !showChannels;
+    isProgressiveReleaseEnabled && !showChannels && !progressiveBeingCancelled;
 
   return (
     <tr
@@ -123,25 +124,30 @@ const RevisionsListRow = props => {
             )}
         </td>
       )}
+      {progressiveBeingCancelled && (
+        <td>
+          <em>Cancel &amp; release previous revision</em>
+        </td>
+      )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
-        {isPending ? (
-          <em>pending release</em>
-        ) : (
-          <span
-            className="p-tooltip p-tooltip--btm-center"
-            aria-describedby={`revision-uploaded-${revision.revision}`}
-          >
-            {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
+        {isPending && <em>pending release</em>}
+        {!isPending &&
+          !progressiveBeingCancelled && (
             <span
-              className="p-tooltip__message u-align--center"
-              role="tooltip"
-              id={`revision-uploaded-${revision.revision}`}
+              className="p-tooltip p-tooltip--btm-center"
+              aria-describedby={`revision-uploaded-${revision.revision}`}
             >
-              {format(revisionDate, "YYYY-MM-DD HH:mm")}
+              {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
+              <span
+                className="p-tooltip__message u-align--center"
+                role="tooltip"
+                id={`revision-uploaded-${revision.revision}`}
+              >
+                {format(revisionDate, "YYYY-MM-DD HH:mm")}
+              </span>
             </span>
-          </span>
-        )}
+          )}
       </td>
     </tr>
   );
@@ -156,6 +162,7 @@ RevisionsListRow.propTypes = {
   isPending: PropTypes.bool,
   isActive: PropTypes.bool,
   showBuildRequest: PropTypes.bool.isRequired,
+  progressiveBeingCancelled: PropTypes.bool.isRequired,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
