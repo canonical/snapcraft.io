@@ -1080,7 +1080,8 @@ describe("hasRelease", () => {
               ]
           },
           newReleasesToProgress: {},
-          progressiveUpdates: {}
+          progressiveUpdates: {},
+          cancelProgressive: {}
         });
       });
     });
@@ -1147,11 +1148,34 @@ describe("hasRelease", () => {
         }
       };
 
+      const stateWithPendingReleaseToCancel = {
+        ...stateWithFlagEnabled,
+        pendingReleases: {
+          "2": {
+            "latest/stable": {
+              revision: {
+                revision: 2,
+                architectures: ["amd64"]
+              },
+              channel: "latest/stable",
+              replaces: {
+                revision: {
+                  architectures: ["amd64"],
+                  revision: 1
+                },
+                channel: "latest/stable"
+              }
+            }
+          }
+        }
+      };
+
       it("should return nothing if there are no pending releases", () => {
         expect(getSeparatePendingReleases(initialState)).toEqual({
           newReleases: {},
           newReleasesToProgress: {},
-          progressiveUpdates: {}
+          progressiveUpdates: {},
+          cancelProgressive: {}
         });
       });
 
@@ -1162,7 +1186,8 @@ describe("hasRelease", () => {
               stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
           },
           newReleasesToProgress: {},
-          progressiveUpdates: {}
+          progressiveUpdates: {},
+          cancelProgressive: {}
         });
       });
 
@@ -1175,7 +1200,8 @@ describe("hasRelease", () => {
             "1-latest/stable":
               stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
           },
-          progressiveUpdates: {}
+          progressiveUpdates: {},
+          cancelProgressive: {}
         });
       });
 
@@ -1195,6 +1221,26 @@ describe("hasRelease", () => {
                 key: "progressive-test",
                 paused: false,
                 percentage: 40
+              }
+            }
+          },
+          cancelProgressive: {}
+        });
+      });
+
+      it("should return a progressive release to cancel", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToCancel)
+        ).toEqual({
+          newReleases: {},
+          newReleasesToProgress: {},
+          progressiveUpdates: {},
+          cancelProgressive: {
+            "1-latest/stable": {
+              channel: "latest/stable",
+              revision: {
+                architectures: ["amd64"],
+                revision: 1
               }
             }
           }
