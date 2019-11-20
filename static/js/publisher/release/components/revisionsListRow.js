@@ -110,10 +110,10 @@ const RevisionsListRow = props => {
           )}
         </td>
       )}
-      {canShowProgressiveReleases &&
-        revision.release && (
-          <td>
-            {showProgressive && (
+      {canShowProgressiveReleases && (
+        <td>
+          {revision.release &&
+            showProgressive && (
               <RevisionsListRowProgressive
                 setDraggable={setDraggable}
                 channel={channel}
@@ -121,8 +121,8 @@ const RevisionsListRow = props => {
                 revision={revision}
               />
             )}
-          </td>
-        )}
+        </td>
+      )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
         {isPending ? (

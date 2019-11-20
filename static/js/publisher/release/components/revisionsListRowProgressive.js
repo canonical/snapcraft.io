@@ -6,7 +6,8 @@ import {
   releaseRevision,
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
-  resumeProgressiveRelease
+  resumeProgressiveRelease,
+  cancelProgressiveRelease
 } from "../actions/pendingReleases";
 
 import { getProgressiveState } from "../selectors";
@@ -21,6 +22,7 @@ const RevisionsListRowProgressive = ({
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
+  cancelProgressiveRelease,
   progressiveState,
   previousRevision,
   pendingProgressiveState
@@ -61,7 +63,8 @@ const RevisionsListRowProgressive = ({
   };
 
   const handleCancelProgressiveRelease = () => {
-    releaseRevision(previousRevision, channel, null);
+    releaseRevision(revision, channel, progressiveState);
+    cancelProgressiveRelease(progressiveState.key, previousRevision);
     setDraggable(true);
   };
 
@@ -161,7 +164,8 @@ RevisionsListRowProgressive.propTypes = {
   releaseRevision: PropTypes.func.isRequired,
   updateProgressiveReleasePercentage: PropTypes.func.isRequired,
   pauseProgressiveRelease: PropTypes.func.isRequired,
-  resumeProgressiveRelease: PropTypes.func.isRequired
+  resumeProgressiveRelease: PropTypes.func.isRequired,
+  cancelProgressiveRelease: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, { channel, architecture, revision }) => {
@@ -185,7 +189,9 @@ const mapDispatchToProps = dispatch => {
     updateProgressiveReleasePercentage: (key, percentage) =>
       dispatch(updateProgressiveReleasePercentage(key, percentage)),
     pauseProgressiveRelease: key => dispatch(pauseProgressiveRelease(key)),
-    resumeProgressiveRelease: key => dispatch(resumeProgressiveRelease(key))
+    resumeProgressiveRelease: key => dispatch(resumeProgressiveRelease(key)),
+    cancelProgressiveRelease: (key, previousRevision) =>
+      dispatch(cancelProgressiveRelease(key, previousRevision))
   };
 };
 

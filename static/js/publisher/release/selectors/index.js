@@ -351,12 +351,19 @@ export function getSeparatePendingReleases(state) {
   const progressiveUpdates = {};
   const newReleases = {};
   const newReleasesToProgress = {};
+  const cancelProgressive = {};
 
   Object.keys(pendingReleases).forEach(revId => {
     Object.keys(pendingReleases[revId]).forEach(channel => {
       const pendingRelease = pendingReleases[revId][channel];
       const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
-      if (isProgressiveEnabled && pendingRelease.progressive) {
+
+      if (isProgressiveEnabled && pendingRelease.replaces) {
+        const oldRelease = pendingRelease.replaces;
+        cancelProgressive[
+          `${oldRelease.revision.revision}-${channel}`
+        ] = oldRelease;
+      } else if (isProgressiveEnabled && pendingRelease.progressive) {
         // What are the differences between the previous progressive state
         // and the new state.
         const previousState = releaseCopy.revision.release
@@ -407,6 +414,7 @@ export function getSeparatePendingReleases(state) {
   return {
     progressiveUpdates,
     newReleases,
-    newReleasesToProgress
+    newReleasesToProgress,
+    cancelProgressive
   };
 }
