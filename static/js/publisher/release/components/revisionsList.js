@@ -320,7 +320,7 @@ class RevisionsList extends Component {
               <th width="30px" />
               <th
                 className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
-                width="150px"
+                width="140px"
                 scope="col"
               >
                 Revision
@@ -331,7 +331,7 @@ class RevisionsList extends Component {
                 <th scope="col">Progressive release status</th>
               )}
               {showChannels && <th scope="col">Channels</th>}
-              <th scope="col" width="130px" className="u-align--right">
+              <th scope="col" width="140px" className="u-align--right">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
