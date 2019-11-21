@@ -224,3 +224,6 @@ $color-social-icon-foreground: $color-light;
 
 @import 'snapcraft_tour';
 @include snapcraft-tour;
+
+@import 'snapcraft_builds';
+@include snapcraft-builds;
