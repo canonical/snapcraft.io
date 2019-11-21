@@ -335,9 +335,9 @@
     font-size: .8rem;
   }
 
-  .p-release__progressive-percentage {
+  .p-release__progressive-percentage,
+  .p-release__progressive-pending-percentage {
     @include vf-animation (#{transform}, fast, in);
-    background: $color-link;
     border-radius: 0 4px 4px 0;
     bottom: 0;
     height: 3px;
@@ -347,8 +347,26 @@
     transform-origin: left;
   }
 
-  .p-releases-table__cell.is-active .p-release__progressive-percentage {
-    transform: scaleX(0);
+  .is-highlighted {
+    .p-release__progressive-percentage,
+    .p-release__progressive-pending-percentage {
+      height: 5px;
+    }
+  }
+
+  .p-release__progressive-percentage {
+    background: $color-link;
+  }
+
+  .p-release__progressive-pending-percentage {
+    background: scale-color($color-link, $lightness: -20%);
+  }
+
+  .p-releases-table__cell.is-active {
+    .p-release__progressive-percentage,
+    .p-release__progressive-pending-percentage {
+      transform: scaleX(0);
+    }
   }
 
   // REVISIONS LIST

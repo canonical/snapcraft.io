@@ -17,7 +17,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   getRevisionsFromBuild,
   getProgressiveState,
-  getPendingRelease
+  hasPendingRelease
 } from "../../selectors";
 
 import {
@@ -42,7 +42,7 @@ const ReleasesTableReleaseCell = props => {
     isOverParent,
     showVersion,
     getAvailableCount,
-    getPendingRelease,
+    hasPendingRelease,
     undoRelease,
     toggleHistoryPanel,
     getProgressiveState
@@ -57,23 +57,23 @@ const ReleasesTableReleaseCell = props => {
     pendingChannelMap[channel] && pendingChannelMap[channel][arch];
 
   // check if there is a pending release in this cell
-  const pendingRelease = getPendingRelease(channel, arch);
-
-  console.log(pendingRelease);
+  const pendingRelease = hasPendingRelease(channel, arch);
 
   let progressiveState;
   let previousRevision;
+  let pendingProgressiveState;
 
   if (!pendingRelease && currentRevision) {
-    [progressiveState, previousRevision] = getProgressiveState(
-      channel,
-      arch,
-      currentRevision.revision
-    );
+    [
+      progressiveState,
+      previousRevision,
+      pendingProgressiveState
+    ] = getProgressiveState(channel, arch, currentRevision.revision);
   }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
-  const isPending = pendingRelease || isChannelPendingClose;
+  const isPending =
+    pendingRelease || isChannelPendingClose || pendingProgressiveState;
   const isUnassigned = risk === AVAILABLE;
   const isActive =
     filters &&
@@ -165,6 +165,16 @@ const ReleasesTableReleaseCell = props => {
         )}
       />
       {!isChannelPendingClose &&
+        pendingProgressiveState &&
+        pendingProgressiveState.percentage && (
+          <span
+            className="p-release__progressive-pending-percentage"
+            style={{
+              width: `${pendingProgressiveState.percentage}%`
+            }}
+          />
+        )}
+      {!isChannelPendingClose &&
         progressiveState &&
         progressiveState.percentage && (
           <span
@@ -184,7 +194,7 @@ ReleasesTableReleaseCell.propTypes = {
   pendingChannelMap: PropTypes.object,
   // compute state
   getAvailableCount: PropTypes.func,
-  getPendingRelease: PropTypes.func,
+  hasPendingRelease: PropTypes.func,
   getRevisionsFromBuild: PropTypes.func,
   getProgressiveState: PropTypes.func,
   // actions
@@ -212,8 +222,8 @@ const mapStateToProps = state => {
     getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId),
     getProgressiveState: (channel, arch, revision) =>
       getProgressiveState(state, channel, arch, revision),
-    getPendingRelease: (arch, channel) =>
-      getPendingRelease(state, arch, channel)
+    hasPendingRelease: (channel, arch) =>
+      hasPendingRelease(state, channel, arch)
   };
 };
 
