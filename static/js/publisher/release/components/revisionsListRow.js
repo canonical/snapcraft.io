@@ -30,7 +30,13 @@ const RevisionsListRow = props => {
     progressiveBeingCancelled
   } = props;
 
-  const [canDrag, setDraggable] = useState(true);
+  const [canDrag, setDraggable] = useState(!progressiveBeingCancelled);
+
+  // This is needed to catch the case where a pending cancel is created
+  // and then reverted
+  if (!canDrag && !progressiveBeingCancelled) {
+    setDraggable(true);
+  }
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -57,10 +63,10 @@ const RevisionsListRow = props => {
   });
 
   const id = `revision-check-${revision.revision}`;
-  const className = `p-revisions-list__row is-draggable ${
-    isActive ? "is-active" : ""
-  } ${isSelectable ? "is-clickable" : ""} ${
-    isPending || isSelected ? "is-pending" : ""
+  const className = `p-revisions-list__row ${
+    progressiveBeingCancelled ? "" : "is-draggable"
+  } ${isActive ? "is-active" : ""} ${isSelectable ? "is-clickable" : ""} ${
+    isPending || isSelected || progressiveBeingCancelled ? "is-pending" : ""
   } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
 
   const buildRequestId =
@@ -76,9 +82,7 @@ const RevisionsListRow = props => {
       className={className}
       onClick={isSelectable ? revisionSelectChange : null}
     >
-      <td>
-        <Handle />
-      </td>
+      <td>{!progressiveBeingCancelled && <Handle />}</td>
       <td>
         {isSelectable ? (
           <Fragment>
@@ -162,7 +166,7 @@ RevisionsListRow.propTypes = {
   isPending: PropTypes.bool,
   isActive: PropTypes.bool,
   showBuildRequest: PropTypes.bool.isRequired,
-  progressiveBeingCancelled: PropTypes.bool.isRequired,
+  progressiveBeingCancelled: PropTypes.bool,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
