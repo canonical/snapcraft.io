@@ -65,7 +65,7 @@ const RevisionsListRowProgressive = ({
   const handleCancelProgressiveRelease = () => {
     releaseRevision(revision, channel, progressiveState);
     cancelProgressiveRelease(progressiveState.key, previousRevision);
-    setDraggable(true);
+    setDraggable(false);
   };
 
   const handleProgressiveChange = percentage => {

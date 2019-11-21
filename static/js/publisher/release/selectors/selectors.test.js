@@ -25,7 +25,8 @@ import {
   getProgressiveState,
   isProgressiveReleaseEnabled,
   hasRelease,
-  getSeparatePendingReleases
+  getSeparatePendingReleases,
+  getPendingRelease
 } from "./index";
 
 import reducers from "../reducers";
@@ -1247,5 +1248,44 @@ describe("hasRelease", () => {
         });
       });
     });
+  });
+});
+
+describe("getPendingRelease", () => {
+  const initialState = reducers(undefined, {});
+  const state = {
+    ...initialState,
+    pendingReleases: {
+      "1": {
+        "latest/stable": {
+          channel: "latest/stable",
+          revision: {
+            revision: 1,
+            architectures: ["amd64"]
+          }
+        },
+        "latest/candidate": {
+          channel: "latest/candidate",
+          revision: {
+            revision: 1,
+            architectures: ["amd64"]
+          }
+        }
+      }
+    }
+  };
+
+  it("should return the correct release", () => {
+    const result = getPendingRelease(state, "amd64", "latest/stable");
+
+    expect(result).toEqual({
+      ...state.pendingReleases["1"]["latest/stable"]
+    });
+  });
+
+  it("should return null if no pendingRelease is found", () => {
+    const result = getPendingRelease(state, "arm64", "latest/stable");
+
+    expect(result).toBeNull();
   });
 });
