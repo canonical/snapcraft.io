@@ -231,3 +231,6 @@ $color-social-icon-foreground: $color-light;
 // Convert first row of a card to a header
 @import 'snapcraft_p-table-mobile-card';
 @include snapcraft-p-table-mobile-card;
+
+@import 'snapcraft_builds';
+@include snapcraft-builds;
