@@ -26,10 +26,17 @@ const RevisionsListRow = props => {
     isPending,
     isActive,
     isProgressiveReleaseEnabled,
-    showProgressive
+    showProgressive,
+    progressiveBeingCancelled
   } = props;
 
-  const [canDrag, setDraggable] = useState(true);
+  const [canDrag, setDraggable] = useState(!progressiveBeingCancelled);
+
+  // This is needed to catch the case where a pending cancel is created
+  // and then reverted
+  if (!canDrag && !progressiveBeingCancelled) {
+    setDraggable(true);
+  }
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -56,17 +63,17 @@ const RevisionsListRow = props => {
   });
 
   const id = `revision-check-${revision.revision}`;
-  const className = `p-revisions-list__row is-draggable ${
-    isActive ? "is-active" : ""
-  } ${isSelectable ? "is-clickable" : ""} ${
-    isPending || isSelected ? "is-pending" : ""
+  const className = `p-revisions-list__row ${
+    progressiveBeingCancelled ? "" : "is-draggable"
+  } ${isActive ? "is-active" : ""} ${isSelectable ? "is-clickable" : ""} ${
+    isPending || isSelected || progressiveBeingCancelled ? "is-pending" : ""
   } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
 
   const buildRequestId =
     revision.attributes && revision.attributes["build-request-id"];
 
   const canShowProgressiveReleases =
-    isProgressiveReleaseEnabled && !showChannels;
+    isProgressiveReleaseEnabled && !showChannels && !progressiveBeingCancelled;
 
   return (
     <tr
@@ -75,9 +82,7 @@ const RevisionsListRow = props => {
       className={className}
       onClick={isSelectable ? revisionSelectChange : null}
     >
-      <td>
-        <Handle />
-      </td>
+      <td>{!progressiveBeingCancelled && <Handle />}</td>
       <td>
         {isSelectable ? (
           <Fragment>
@@ -123,25 +128,30 @@ const RevisionsListRow = props => {
             )}
         </td>
       )}
+      {progressiveBeingCancelled && (
+        <td>
+          <em>Cancel progressive release</em>
+        </td>
+      )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
-        {isPending ? (
-          <em>pending release</em>
-        ) : (
-          <span
-            className="p-tooltip p-tooltip--btm-center"
-            aria-describedby={`revision-uploaded-${revision.revision}`}
-          >
-            {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
+        {isPending && <em>pending release</em>}
+        {!isPending &&
+          !progressiveBeingCancelled && (
             <span
-              className="p-tooltip__message u-align--center"
-              role="tooltip"
-              id={`revision-uploaded-${revision.revision}`}
+              className="p-tooltip p-tooltip--btm-center"
+              aria-describedby={`revision-uploaded-${revision.revision}`}
             >
-              {format(revisionDate, "YYYY-MM-DD HH:mm")}
+              {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
+              <span
+                className="p-tooltip__message u-align--center"
+                role="tooltip"
+                id={`revision-uploaded-${revision.revision}`}
+              >
+                {format(revisionDate, "YYYY-MM-DD HH:mm")}
+              </span>
             </span>
-          </span>
-        )}
+          )}
       </td>
     </tr>
   );
@@ -156,6 +166,7 @@ RevisionsListRow.propTypes = {
   isPending: PropTypes.bool,
   isActive: PropTypes.bool,
   showBuildRequest: PropTypes.bool.isRequired,
+  progressiveBeingCancelled: PropTypes.bool,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
