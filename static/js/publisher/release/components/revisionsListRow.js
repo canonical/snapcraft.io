@@ -126,7 +126,7 @@ const RevisionsListRow = props => {
       )}
       {progressiveBeingCancelled && (
         <td>
-          <em>Cancel &amp; release previous revision</em>
+          <em>Cancel progressive release</em>
         </td>
       )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}

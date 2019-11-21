@@ -1282,4 +1282,10 @@ describe("getPendingRelease", () => {
       ...state.pendingReleases["1"]["latest/stable"]
     });
   });
+
+  it("should return null if no pendingRelease is found", () => {
+    const result = getPendingRelease(state, "arm64", "latest/stable");
+
+    expect(result).toBeNull();
+  });
 });
