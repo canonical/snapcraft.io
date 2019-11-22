@@ -317,7 +317,9 @@ def store_blueprint(store_query=None, testing=False):
                     status_code, error_info = _handle_errors(api_error)
 
                 snaps_results = logic.get_searched_snaps(searched_results)
-                context["snaps"] = context["snaps"] + snaps_results
+                context["snaps"] = context["snaps"] + [
+                    snap for snap in snaps_results if snap["apps"]
+                ]
 
         if "snaps" not in context:
             snaps = helpers.get_yaml(
