@@ -303,6 +303,9 @@ def store_blueprint(store_query=None, testing=False):
             publisher_content_path + publisher + ".yaml", typ="safe"
         )
 
+        if not context:
+            flask.abort(404)
+
         if "publishers" in context:
             context["snaps"] = []
             for publisher in context["publishers"]:
@@ -315,7 +318,8 @@ def store_blueprint(store_query=None, testing=False):
 
                 snaps_results = logic.get_searched_snaps(searched_results)
                 context["snaps"] = context["snaps"] + snaps_results
-        else:
+
+        if "snaps" not in context:
             snaps = helpers.get_yaml(
                 publisher_content_path + publisher + "-snaps.yaml", typ="safe"
             )
@@ -331,9 +335,6 @@ def store_blueprint(store_query=None, testing=False):
             for snap in context["snaps"]
             if snap["package_name"] not in featured_snaps
         ]
-
-        if not context:
-            flask.abort(404)
 
         return flask.render_template("store/publisher-details.html", **context)
 
