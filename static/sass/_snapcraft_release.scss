@@ -362,6 +362,11 @@
     background: scale-color($color-link, $lightness: -20%);
   }
 
+  .p-release__progressive-pending-percentage + .p-release__progressive-percentage {
+    border-radius: 0;
+    border-right: 1px solid $color-x-light;
+  }
+
   .p-releases-table__cell.is-active {
     .p-release__progressive-percentage,
     .p-release__progressive-pending-percentage {
