@@ -47,7 +47,7 @@ EmptyInfo.propTypes = {
   trackingChannel: PropTypes.string
 };
 
-const ProgressiveState = ({
+const ProgressiveTooltip = ({
   revision,
   previousRevision,
   progressiveState,
@@ -92,7 +92,7 @@ const ProgressiveState = ({
   );
 };
 
-ProgressiveState.propTypes = {
+ProgressiveTooltip.propTypes = {
   revision: PropTypes.number,
   previousRevision: PropTypes.number,
   progressiveState: PropTypes.object,
@@ -159,7 +159,7 @@ export const RevisionInfo = ({
           )}
           <br />
           {previousRevision && (
-            <ProgressiveState
+            <ProgressiveTooltip
               revision={revision.revision}
               previousRevision={previousRevision}
               progressiveState={progressiveState}
