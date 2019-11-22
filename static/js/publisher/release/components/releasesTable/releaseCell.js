@@ -15,9 +15,9 @@ import { undoRelease } from "../../actions/pendingReleases";
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
-  hasPendingRelease,
   getRevisionsFromBuild,
-  getProgressiveState
+  getProgressiveState,
+  hasPendingRelease
 } from "../../selectors";
 
 import {
@@ -57,21 +57,23 @@ const ReleasesTableReleaseCell = props => {
     pendingChannelMap[channel] && pendingChannelMap[channel][arch];
 
   // check if there is a pending release in this cell
-  const isPendingRelease = hasPendingRelease(channel, arch);
+  const pendingRelease = hasPendingRelease(channel, arch);
 
   let progressiveState;
   let previousRevision;
+  let pendingProgressiveState;
 
-  if (!isPendingRelease && currentRevision) {
-    [progressiveState, previousRevision] = getProgressiveState(
-      channel,
-      arch,
-      currentRevision.revision
-    );
+  if (!pendingRelease && currentRevision) {
+    [
+      progressiveState,
+      previousRevision,
+      pendingProgressiveState
+    ] = getProgressiveState(channel, arch, currentRevision.revision);
   }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
-  const isPending = isPendingRelease || isChannelPendingClose;
+  const isPending =
+    pendingRelease || isChannelPendingClose || pendingProgressiveState;
   const isUnassigned = risk === AVAILABLE;
   const isActive =
     filters &&
@@ -107,7 +109,7 @@ const ReleasesTableReleaseCell = props => {
     isOverParent ? "is-over" : ""
   ].join(" ");
 
-  const actionsNode = isPendingRelease ? (
+  const actionsNode = pendingRelease ? (
     <div className="p-release-buttons">
       <button
         className="p-action-button p-tooltip p-tooltip--btm-center"
@@ -129,10 +131,11 @@ const ReleasesTableReleaseCell = props => {
     cellInfoNode = (
       <RevisionInfo
         revision={currentRevision}
-        isPending={isPendingRelease}
+        isPending={pendingRelease ? true : false}
         showVersion={showVersion}
         progressiveState={progressiveState}
         previousRevision={previousRevision ? previousRevision.revision : null}
+        pendingProgressiveState={pendingProgressiveState}
       />
     );
   } else if (isUnassigned) {
@@ -162,6 +165,16 @@ const ReleasesTableReleaseCell = props => {
           branchName
         )}
       />
+      {!isChannelPendingClose &&
+        pendingProgressiveState &&
+        pendingProgressiveState.percentage && (
+          <span
+            className="p-release__progressive-pending-percentage"
+            style={{
+              width: `${pendingProgressiveState.percentage}%`
+            }}
+          />
+        )}
       {!isChannelPendingClose &&
         progressiveState &&
         progressiveState.percentage && (
@@ -207,11 +220,11 @@ const mapStateToProps = state => {
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: arch =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
-    hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch),
     getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId),
     getProgressiveState: (channel, arch, revision) =>
-      getProgressiveState(state, channel, arch, revision)
+      getProgressiveState(state, channel, arch, revision),
+    hasPendingRelease: (channel, arch) =>
+      hasPendingRelease(state, channel, arch)
   };
 };
 
