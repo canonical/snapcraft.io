@@ -309,6 +309,7 @@ def store_blueprint(store_query=None, testing=False):
         if "publishers" in context:
             context["snaps"] = []
             for publisher in context["publishers"]:
+                searched_results = []
                 try:
                     searched_results = api.get_searched_snaps(
                         "publisher:" + publisher, size=500, page=1
