@@ -47,13 +47,66 @@ EmptyInfo.propTypes = {
   trackingChannel: PropTypes.string
 };
 
+const ProgressiveTooltip = ({
+  revision,
+  previousRevision,
+  progressiveState,
+  pendingProgressiveState
+}) => {
+  let previousRevisionInfo = "";
+  let revisionInfo = "";
+  if (progressiveState) {
+    previousRevisionInfo = ` (${100 - progressiveState.percentage}%`;
+    revisionInfo = ` (${progressiveState.percentage}%`;
+    if (pendingProgressiveState) {
+      previousRevisionInfo = `${previousRevisionInfo} → ${100 -
+        pendingProgressiveState.percentage}%`;
+      revisionInfo = `${revisionInfo} → ${pendingProgressiveState.percentage}%`;
+    }
+    previousRevisionInfo = `${previousRevisionInfo} of devices)`;
+    revisionInfo = `${revisionInfo} of devices)`;
+  }
+
+  const previousRevisionState = (
+    <Fragment>
+      Revision: <b>{previousRevision}</b>
+      {previousRevisionInfo}
+    </Fragment>
+  );
+
+  const revisionState = (
+    <Fragment>
+      Revision: <b>{revision}</b>
+      {revisionInfo}
+    </Fragment>
+  );
+
+  return (
+    <Fragment>
+      <b>Progressive release of revision {revision} in progress</b>
+      <br />
+      {previousRevisionState}
+      <br />
+      {revisionState}
+    </Fragment>
+  );
+};
+
+ProgressiveTooltip.propTypes = {
+  revision: PropTypes.number,
+  previousRevision: PropTypes.number,
+  progressiveState: PropTypes.object,
+  pendingProgressiveState: PropTypes.object
+};
+
 // contents of a cell with a revision
 export const RevisionInfo = ({
   revision,
   isPending,
   showVersion,
   progressiveState,
-  previousRevision
+  previousRevision,
+  pendingProgressiveState
 }) => {
   let buildIcon = null;
 
@@ -106,19 +159,12 @@ export const RevisionInfo = ({
           )}
           <br />
           {previousRevision && (
-            <Fragment>
-              <b>
-                Progressive release of revision {revision.revision} in progress
-              </b>
-              <br />
-              Revision: <b>{previousRevision}</b>
-              {progressiveState
-                ? ` (${100 - progressiveState.percentage}% of devices)`
-                : ""}
-              <br />
-              Revision: <b>{revision.revision}</b> (
-              {progressiveState.percentage}% of devices)
-            </Fragment>
+            <ProgressiveTooltip
+              revision={revision.revision}
+              previousRevision={previousRevision}
+              progressiveState={progressiveState}
+              pendingProgressiveState={pendingProgressiveState}
+            />
           )}
         </div>
 
@@ -139,7 +185,8 @@ RevisionInfo.propTypes = {
   isPending: PropTypes.bool,
   showVersion: PropTypes.bool,
   progressiveState: PropTypes.object,
-  previousRevision: PropTypes.number
+  previousRevision: PropTypes.number,
+  pendingProgressiveState: PropTypes.object
 };
 
 // generic draggable view of releases table cell
