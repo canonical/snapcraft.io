@@ -303,6 +303,35 @@ def store_blueprint(store_query=None, testing=False):
             publisher_content_path + publisher + ".yaml", typ="safe"
         )
 
+        if "publishers" in context:
+            context["snaps"] = []
+            for publisher in context["publishers"]:
+                try:
+                    searched_results = api.get_searched_snaps(
+                        "publisher:" + publisher, size=500, page=1
+                    )
+                except ApiError as api_error:
+                    status_code, error_info = _handle_errors(api_error)
+
+                snaps_results = logic.get_searched_snaps(searched_results)
+                context["snaps"] = context["snaps"] + snaps_results
+        else:
+            snaps = helpers.get_yaml(
+                publisher_content_path + publisher + "-snaps.yaml", typ="safe"
+            )
+
+            context["snaps"] = snaps["snaps"]
+
+        featured_snaps = [
+            snap["package_name"] for snap in context["featured_snaps"]
+        ]
+
+        context["snaps"] = [
+            snap
+            for snap in context["snaps"]
+            if snap["package_name"] not in featured_snaps
+        ]
+
         if not context:
             flask.abort(404)
 
