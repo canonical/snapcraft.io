@@ -77,7 +77,7 @@ def snap_details_views(store, api, handle_errors):
 
         icons = logic.get_icon(details["snap"]["media"])
 
-        publisher_info_and_snaps = helpers.get_yaml(
+        publisher_info = helpers.get_yaml(
             "{}{}.yaml".format(
                 flask.current_app.config["CONTENT_DIRECTORY"][
                     "PUBLISHER_PAGES"
@@ -87,15 +87,22 @@ def snap_details_views(store, api, handle_errors):
             typ="safe",
         )
 
-        publisher_featured_snaps = None
-        publisher_snaps = None
+        publisher_snaps = helpers.get_yaml(
+            "{}{}-snaps.yaml".format(
+                flask.current_app.config["CONTENT_DIRECTORY"][
+                    "PUBLISHER_PAGES"
+                ],
+                details["snap"]["publisher"]["username"],
+            ),
+            typ="safe",
+        )
 
-        if publisher_info_and_snaps:
-            publisher_featured_snaps = publisher_info_and_snaps.get(
-                "featured_snaps"
-            )
+        publisher_featured_snaps = None
+
+        if publisher_info:
+            publisher_featured_snaps = publisher_info.get("featured_snaps")
             publisher_snaps = logic.get_n_random_snaps(
-                publisher_info_and_snaps["snaps"], 4
+                publisher_snaps["snaps"], 4
             )
 
         videos = logic.get_videos(details["snap"]["media"])
@@ -151,7 +158,7 @@ def snap_details_views(store, api, handle_errors):
             "videos": videos,
             "publisher_snaps": publisher_snaps,
             "publisher_featured_snaps": publisher_featured_snaps,
-            "has_publisher_page": publisher_info_and_snaps is not None,
+            "has_publisher_page": publisher_info is not None,
             "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),
