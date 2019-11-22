@@ -313,13 +313,13 @@ def store_blueprint(store_query=None, testing=False):
                     searched_results = api.get_searched_snaps(
                         "publisher:" + publisher, size=500, page=1
                     )
-                except ApiError as api_error:
-                    status_code, error_info = _handle_errors(api_error)
+                except ApiError:
+                    pass
 
                 snaps_results = logic.get_searched_snaps(searched_results)
-                context["snaps"] = context["snaps"] + [
-                    snap for snap in snaps_results if snap["apps"]
-                ]
+                context["snaps"].extend(
+                    [snap for snap in snaps_results if snap["apps"]]
+                )
 
         if "snaps" not in context:
             snaps = helpers.get_yaml(
