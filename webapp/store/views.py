@@ -306,6 +306,39 @@ def store_blueprint(store_query=None, testing=False):
         if not context:
             flask.abort(404)
 
+        if "publishers" in context:
+            context["snaps"] = []
+            for publisher in context["publishers"]:
+                searched_results = []
+                try:
+                    searched_results = api.get_searched_snaps(
+                        "publisher:" + publisher, size=500, page=1
+                    )
+                except ApiError:
+                    pass
+
+                snaps_results = logic.get_searched_snaps(searched_results)
+                context["snaps"].extend(
+                    [snap for snap in snaps_results if snap["apps"]]
+                )
+
+        if "snaps" not in context:
+            snaps = helpers.get_yaml(
+                publisher_content_path + publisher + "-snaps.yaml", typ="safe"
+            )
+
+            context["snaps"] = snaps["snaps"]
+
+        featured_snaps = [
+            snap["package_name"] for snap in context["featured_snaps"]
+        ]
+
+        context["snaps"] = [
+            snap
+            for snap in context["snaps"]
+            if snap["package_name"] not in featured_snaps
+        ]
+
         return flask.render_template("store/publisher-details.html", **context)
 
     @store.route("/store/categories/<category>")

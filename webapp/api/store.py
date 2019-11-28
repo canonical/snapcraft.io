@@ -34,7 +34,7 @@ SNAP_SEARCH_URL = "".join(
         "?q={snap_name}&page={page}&size={size}&scope=wide&arch=wide",
         "&confinement=strict,classic",
         "&fields=package_name,title,summary,icon_url,media,publisher,",
-        "developer_validation,origin",
+        "developer_validation,origin,apps",
     ]
 )
 
