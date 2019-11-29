@@ -1393,8 +1393,9 @@ def get_snap_builds(snap_name):
         store_name=details["snap_name"],
     )
 
-    builds = []
-    if len(lp_snaps) >= 1:
+    context["snap_builds_enabled"] = len(lp_snaps) >= 1
+    if context["snap_builds_enabled"]:
+        context["snap_builds"] = []
         bsi_url = flask.current_app.config["BSI_URL"]
 
         for build in lp_snaps[0].builds:
@@ -1403,7 +1404,7 @@ def get_snap_builds(snap_name):
                 build.buildstate, build.store_upload_status
             )
 
-            builds.append(
+            context["snap_builds"].append(
                 {
                     "id": build.self_link.split("/")[-1],
                     "arch_tag": build.arch_tag,
@@ -1416,12 +1417,5 @@ def get_snap_builds(snap_name):
                     "title": build.title,
                 }
             )
-
-    context = {
-        "snap_id": details["snap_id"],
-        "snap_builds": builds,
-        "snap_name": details["snap_name"],
-        "snap_title": details["title"],
-    }
 
     return flask.render_template("publisher/builds.html", **context)
