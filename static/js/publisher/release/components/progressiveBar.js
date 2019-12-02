@@ -6,36 +6,44 @@ const ProgressiveBar = ({
   targetPercentage,
   readonly,
   disabled
-}) => (
-  <div
-    className={`progressive-bar p-tooltip--btm-center ${
-      disabled ? "is-disabled" : ""
-    }`}
-  >
-    {!readonly && (
-      <div
-        className="progressive-bar__target"
-        style={{ width: `${targetPercentage}%` }}
-      >
-        <div className="progressive-bar__target-adjust" />
-      </div>
-    )}
+}) => {
+  let current = percentage;
+
+  if (targetPercentage < current) {
+    current = targetPercentage;
+  }
+
+  return (
     <div
-      className="progressive-bar__target-value"
-      style={{
-        left: `${targetPercentage ? targetPercentage : percentage}%`
-      }}
+      className={`progressive-bar p-tooltip--btm-center ${
+        disabled ? "is-disabled" : ""
+      }`}
     >
-      <span className="p-tooltip__message" role="tooltip">
-        {targetPercentage ? targetPercentage : percentage}%
-      </span>
+      {!readonly && (
+        <div
+          className="progressive-bar__target"
+          style={{ width: `${targetPercentage}%` }}
+        >
+          <div className="progressive-bar__target-adjust" />
+        </div>
+      )}
+      <div
+        className="progressive-bar__target-value"
+        style={{
+          left: `${targetPercentage ? targetPercentage : percentage}%`
+        }}
+      >
+        <span className="p-tooltip__message" role="tooltip">
+          {targetPercentage ? targetPercentage : percentage}%
+        </span>
+      </div>
+      <div
+        className="progressive-bar__current"
+        style={{ width: `${current}%` }}
+      />
     </div>
-    <div
-      className="progressive-bar__current"
-      style={{ width: `${percentage}%` }}
-    />
-  </div>
-);
+  );
+};
 
 ProgressiveBar.defaultProps = {
   readonly: true
@@ -97,7 +105,7 @@ class InteractiveProgressiveBar extends React.Component {
 
   scrubTo(target) {
     const { current } = this.state;
-    const { singleDirection, onChange } = this.props;
+    const { singleDirection, onChange, min } = this.props;
 
     if (singleDirection && singleDirection > 0) {
       if (target < current) {
@@ -123,6 +131,10 @@ class InteractiveProgressiveBar extends React.Component {
       if (target > 100) {
         target = 100;
       }
+    }
+
+    if (min && target < min) {
+      target = min;
     }
 
     const newState = {
@@ -202,7 +214,8 @@ InteractiveProgressiveBar.propTypes = {
   singleDirection: PropTypes.number,
   onChange: PropTypes.func,
   targetPercentage: PropTypes.number,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  min: PropTypes.number
 };
 
 export { ProgressiveBar, InteractiveProgressiveBar };

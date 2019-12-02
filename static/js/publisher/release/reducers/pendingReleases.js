@@ -68,6 +68,14 @@ function releaseRevision(
 
   if (previousRevisions) {
     state[revision.revision][channel].previousRevisions = previousRevisions;
+
+    if (!progressive) {
+      progressive = {
+        key: `ui-progressive-release-${new Date().getTime()}`,
+        percentage: 100,
+        paused: false
+      };
+    }
   }
 
   if (progressive && !state[revision.revision][channel].progressive) {
