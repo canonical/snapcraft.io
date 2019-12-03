@@ -26,7 +26,8 @@ import {
   isProgressiveReleaseEnabled,
   hasRelease,
   getSeparatePendingReleases,
-  getPendingRelease
+  getPendingRelease,
+  getReleases
 } from "./index";
 
 import reducers from "../reducers";
@@ -1111,7 +1112,21 @@ describe("hasRelease", () => {
       };
 
       const stateWithPendingReleaseToProgress = {
-        ...stateWithPendingRelease,
+        ...stateWithFlagEnabled,
+        pendingReleases: {
+          "1": {
+            "latest/stable": {
+              revision: { revision: 1, architectures: ["amd64"] },
+              channel: "latest/stable",
+              progressive: {
+                key: "progressive-test",
+                percentage: 100,
+                paused: false
+              },
+              previousRevisions: [{ revision: 2 }]
+            }
+          }
+        },
         releases: [
           {
             architecture: "amd64",
@@ -1143,7 +1158,12 @@ describe("hasRelease", () => {
                 key: "progressive-test",
                 percentage: 40,
                 paused: false
-              }
+              },
+              previousRevisions: [
+                {
+                  revision: 2
+                }
+              ]
             }
           }
         }
@@ -1199,7 +1219,9 @@ describe("hasRelease", () => {
           newReleases: {},
           newReleasesToProgress: {
             "1-latest/stable":
-              stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
+              stateWithPendingReleaseToProgress.pendingReleases["1"][
+                "latest/stable"
+              ]
           },
           progressiveUpdates: {},
           cancelProgressive: {}
@@ -1287,5 +1309,41 @@ describe("getPendingRelease", () => {
     const result = getPendingRelease(state, "arm64", "latest/stable");
 
     expect(result).toBeNull();
+  });
+});
+
+describe("getReleases", () => {
+  it("should return nothing if there are no releases", () => {
+    const result = getReleases(
+      {
+        releases: []
+      },
+      "amd64",
+      "latest/stable"
+    );
+
+    expect(result).toEqual([]);
+  });
+
+  it("should return any release that matches", () => {
+    const releases = [
+      {
+        architecture: "amd64",
+        channel: "latest/stable"
+      },
+      {
+        architecture: "arm64",
+        channel: "latest/stable"
+      }
+    ];
+    const result = getReleases(
+      {
+        releases
+      },
+      "amd64",
+      "latest/stable"
+    );
+
+    expect(result).toEqual([releases[0]]);
   });
 });

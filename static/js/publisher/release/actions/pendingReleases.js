@@ -29,7 +29,15 @@ export function releaseRevision(revision, channel, progressive) {
         .map(release => revisions[release.revision]);
     }
 
-    dispatch({
+    if (!progressive) {
+      progressive = {
+        key: `ui-progressive-release-${new Date().getTime()}`,
+        percentage: 100,
+        paused: false
+      };
+    }
+
+    return dispatch({
       type: RELEASE_REVISION,
       payload: {
         revision,
