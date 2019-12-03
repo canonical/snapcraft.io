@@ -430,8 +430,9 @@ export function getPendingRelease({ pendingReleases }, arch, channel) {
 }
 
 // Get releases
-export function getReleases({ releases }, arch, channel) {
+export function getReleases({ releases }, archs, channel) {
   return releases.filter(
-    release => release.architecture === arch && release.channel === channel
+    release =>
+      archs.includes(release.architecture) && release.channel === channel
   );
 }

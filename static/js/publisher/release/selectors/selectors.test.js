@@ -1340,7 +1340,7 @@ describe("getReleases", () => {
       {
         releases
       },
-      "amd64",
+      ["amd64"],
       "latest/stable"
     );
 

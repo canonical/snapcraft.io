@@ -16,18 +16,15 @@ export function releaseRevision(revision, channel, progressive) {
     const state = getState();
     const { revisions } = state;
 
-    let previousRevisions = [];
-    if (revision.release) {
-      previousRevisions = getReleases(
-        state,
-        revision.release.architecture,
-        channel
+    const previousRevisions = getReleases(
+      state,
+      revision.architectures,
+      channel
+    )
+      .filter(
+        release => release.revision && release.revision !== revision.revision
       )
-        .filter(
-          release => release.revision && release.revision !== revision.revision
-        )
-        .map(release => revisions[release.revision]);
-    }
+      .map(release => revisions[release.revision]);
 
     if (!progressive) {
       progressive = {
