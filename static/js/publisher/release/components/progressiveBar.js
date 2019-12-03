@@ -9,6 +9,9 @@ const ProgressiveBar = ({
 }) => {
   let current = percentage;
 
+  // If the target can move below the current percentage
+  // use the main percentage bar to show the position
+  // (the target bar is behind the main bar)
   if (targetPercentage < current) {
     current = targetPercentage;
   }
@@ -105,7 +108,7 @@ class InteractiveProgressiveBar extends React.Component {
 
   scrubTo(target) {
     const { current } = this.state;
-    const { singleDirection, onChange, min } = this.props;
+    const { singleDirection, onChange, minPercentage } = this.props;
 
     if (singleDirection && singleDirection > 0) {
       if (target < current) {
@@ -133,8 +136,8 @@ class InteractiveProgressiveBar extends React.Component {
       }
     }
 
-    if (min && target < min) {
-      target = min;
+    if (minPercentage && target < minPercentage) {
+      target = minPercentage;
     }
 
     const newState = {
@@ -215,7 +218,7 @@ InteractiveProgressiveBar.propTypes = {
   onChange: PropTypes.func,
   targetPercentage: PropTypes.number,
   disabled: PropTypes.bool,
-  min: PropTypes.number
+  minPercentage: PropTypes.number
 };
 
 export { ProgressiveBar, InteractiveProgressiveBar };

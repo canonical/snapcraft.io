@@ -41,7 +41,9 @@
   }
 
   .p-releases-confirm__details {
-    margin: .5rem 0 1rem;
+    border-bottom: 1px solid $color-mid-light;
+    margin: .5rem 0 .5rem;
+    padding-bottom: .5rem;
   }
 
   .p-releases-confirm-details__row {
@@ -49,7 +51,7 @@
     display: grid;
     font-size: .875rem;
     grid-column-gap: 1rem;
-    grid-template-columns: 9rem 2rem 8rem 2rem auto 16rem;
+    grid-template-columns: 4rem 15rem 2rem auto 16rem;
     padding: 1rem;
 
     &.is-closing {
@@ -64,14 +66,9 @@
       text-align: center;
     }
 
-    &-revision,
-    &-channel,
-    &-progress {
-      font-weight: 400;
-    }
-
     &-progress {
       display: grid;
+      font-weight: 400;
       grid-column-gap: .5rem;
       grid-template-columns: auto 8rem;
     }

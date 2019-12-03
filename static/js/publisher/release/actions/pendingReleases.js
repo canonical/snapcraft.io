@@ -9,17 +9,35 @@ export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
 export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 export const CANCEL_PROGRESSIVE_RELEASE = "CANCEL_PROGRESSIVE_RELEASE";
 
-import { getPendingChannelMap } from "../selectors";
+import { getPendingChannelMap, getReleases } from "../selectors";
 
-export function releaseRevision(
-  revision,
-  channel,
-  progressive,
-  previousRevisions
-) {
-  return {
-    type: RELEASE_REVISION,
-    payload: { revision, channel, progressive, previousRevisions }
+export function releaseRevision(revision, channel, progressive) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const { revisions } = state;
+
+    let previousRevisions = [];
+    if (revision.release) {
+      previousRevisions = getReleases(
+        state,
+        revision.release.architecture,
+        channel
+      )
+        .filter(
+          release => release.revision && release.revision !== revision.revision
+        )
+        .map(release => revisions[release.revision]);
+    }
+
+    dispatch({
+      type: RELEASE_REVISION,
+      payload: {
+        revision,
+        channel,
+        progressive,
+        previousRevisions
+      }
+    });
   };
 }
 
@@ -81,29 +99,8 @@ export function promoteRevision(revision, channel) {
       );
     });
 
-    const previousRevisions = {};
-
-    const { channelMap } = getState();
-
-    revision.architectures.forEach(arch => {
-      const prevRevision = channelMap[channel] && channelMap[channel][arch];
-
-      if (prevRevision) {
-        previousRevisions[arch] = prevRevision;
-      }
-    });
-
     if (!isAlreadyReleased) {
-      dispatch(
-        releaseRevision(
-          revision,
-          channel,
-          undefined,
-          Object.keys(previousRevisions).length > 0
-            ? previousRevisions
-            : undefined
-        )
-      );
+      dispatch(releaseRevision(revision, channel, undefined));
     }
   };
 }

@@ -5,19 +5,29 @@ import PropTypes from "prop-types";
 import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
 import { isProgressiveReleaseEnabled } from "../selectors";
 
-import { InteractiveProgressiveBar } from "./progressiveBar";
+import { ProgressiveBar, InteractiveProgressiveBar } from "./progressiveBar";
 
-const ReleaseRow = ({ revisionInfo, channel, progress, notes }) => (
+const progressiveTypes = {
+  RELEASE: "release",
+  UPDATE: "update",
+  CANCELLATION: "cancel"
+};
+
+const ReleaseRow = ({ type, revisionInfo, channel, progress, notes }) => (
   <div className="p-releases-confirm-details__row">
-    <span className="p-releases-confirm-details__row-revision">
-      {revisionInfo.revision} ({revisionInfo.version}){" "}
-      {revisionInfo.architectures.join(", ")}
+    <span className="p-releases-confirm-details__row-type">{type}</span>
+    <span className="p-releases-confirm-details__row-info">
+      <span className="p-tooltip--btm-center">
+        <b>{revisionInfo.revision}</b> to{" "}
+        <span className="p-tooltip__message">
+          Version: <b>{revisionInfo.version}</b>
+        </span>{" "}
+        <b>{channel}</b> on <b>{revisionInfo.architectures.join(", ")}</b>
+      </span>
     </span>
-    <span className="p-releases-confirm-details__row-join">to</span>
-    <span className="p-releases-confirm-details__row-channel">{channel}</span>
     {progress && (
       <Fragment>
-        <span className="p-releases-confirm-details__row-join">on</span>
+        <span className="p-releases-confirm-details__row-join">to</span>
         <span className="p-releases-confirm-details__row-progress">
           {progress}
         </span>
@@ -38,13 +48,57 @@ const ReleaseRow = ({ revisionInfo, channel, progress, notes }) => (
 );
 
 ReleaseRow.propTypes = {
+  type: PropTypes.string,
   revisionInfo: PropTypes.object,
   channel: PropTypes.node,
   progress: PropTypes.node,
   notes: PropTypes.node
 };
 
-const _ProgressiveRow = ({ release, updateProgressiveReleasePercentage }) => {
+const CancelProgressiveRow = ({ release }) => {
+  const revisionInfo = release.revision;
+
+  return revisionInfo.architectures.map(arch => {
+    const previousRevision = release.previousRevisions[0];
+    return (
+      <div
+        className="p-releases-confirm-details__row is-closing"
+        key={`close-${revisionInfo.revision}-${release.channel}`}
+      >
+        <span>
+          Cancel progressive release of <b>{revisionInfo.revision}</b> in{" "}
+          <b>{release.channel}</b> on <b>{arch}</b>. Revert to{" "}
+          <b>{previousRevision.revision}</b>.
+        </span>
+      </div>
+    );
+  });
+};
+
+CancelProgressiveRow.propTypes = {
+  release: PropTypes.object
+};
+
+const _ProgressiveRow = ({
+  release,
+  updateProgressiveReleasePercentage,
+  type
+}) => {
+  if (!release.progressive) {
+    return false;
+  }
+
+  let startingPercentage = 100;
+  switch (type) {
+    case progressiveTypes.RELEASE:
+      startingPercentage = release.progressive.percentage;
+      break;
+    case progressiveTypes.UPDATE:
+      startingPercentage = release.revision.release.progressive.percentage;
+      break;
+    default:
+  }
+
   const [percentage, setPercentage] = useState(
     release.progressive ? release.progressive.percentage : 100
   );
@@ -54,44 +108,64 @@ const _ProgressiveRow = ({ release, updateProgressiveReleasePercentage }) => {
     setPercentage(percentage);
     updateProgressiveReleasePercentage(release.progressive.key, percentage);
   };
-  const progress = (
-    <Fragment>
-      <InteractiveProgressiveBar
-        percentage={percentage}
-        onChange={updatePercentage}
-        targetPercentage={percentage}
-        min={1}
-      />
-      <span>
-        <span className="p-tooltip--btm-right">
-          <span className="p-help">{percentage}% of devices</span>
-          <span className="p-tooltip__message">
-            Releases are delivered to devices via snap refreshes, as such, is
-            may
-            <br />
-            take some time for devices to receive the new version. There is also
-            no
-            <br />
-            guarentee that this release will achieve the entire target
-            percentage.
+
+  let progress;
+  if (
+    type === progressiveTypes.UPDATE &&
+    release.progressive.changes.some(change => change.key === "paused")
+  ) {
+    const paused = release.progressive.changes.find(
+      change => change.key === "paused"
+    ).value;
+    progress = (
+      <Fragment>
+        <ProgressiveBar percentage={percentage} />
+        <span>{paused ? "Paused" : "Resumed"}</span>
+      </Fragment>
+    );
+  } else {
+    progress = (
+      <Fragment>
+        <InteractiveProgressiveBar
+          percentage={startingPercentage}
+          onChange={updatePercentage}
+          targetPercentage={percentage}
+          minPercentage={1}
+          singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
+        />
+        <span>
+          <span className="p-tooltip--btm-right">
+            <span className="p-help">{percentage}% of devices</span>
+            <span className="p-tooltip__message">
+              Releases are delivered to devices via snap refreshes, as such, is
+              may
+              <br />
+              take some time for devices to receive the new version. There is
+              also no
+              <br />
+              guarentee that this release will achieve the entire target
+              percentage.
+            </span>
           </span>
         </span>
-      </span>
-    </Fragment>
-  );
+      </Fragment>
+    );
+  }
 
   let notes;
   if (release.previousRevisions) {
-    const prevArch = Object.keys(release.previousRevisions)[0];
-    const prevRev = release.previousRevisions[prevArch].revision;
-    const prevVer = release.previousRevisions[prevArch].version;
+    const prevRev = release.previousRevisions[0].revision;
+    const prevVer = release.previousRevisions[0].version;
 
     notes = `${100 -
       percentage}% of devices will stay on ${prevRev} (${prevVer})`;
   }
 
+  const displayType = type.charAt(0).toUpperCase() + type.slice(1);
+
   return (
     <ReleaseRow
+      type={displayType}
       revisionInfo={revisionInfo}
       channel={channel}
       progress={progress}
@@ -102,6 +176,7 @@ const _ProgressiveRow = ({ release, updateProgressiveReleasePercentage }) => {
 
 _ProgressiveRow.propTypes = {
   release: PropTypes.object,
+  type: PropTypes.string,
   updateProgressiveReleasePercentage: PropTypes.func
 };
 
@@ -117,16 +192,36 @@ const ProgressiveRow = connect(
   mapDispatchToProps
 )(_ProgressiveRow);
 
-const CloseChannelRow = ({ channel }) => (
-  <div className="p-releases-confirm-details__row is-closing">
-    <span>
-      Close <b>{channel}</b> channel
-    </span>
-  </div>
-);
+const CloseChannelsRow = ({ channels }) => {
+  let group = Array.from(channels);
+  let last;
+  if (channels.length > 1) {
+    last = group.pop();
+  }
+  return (
+    <div className="p-releases-confirm-details__row is-closing">
+      <span>
+        Close{" "}
+        {group
+          .map(channel => <b key={channel}>{channel}</b>)
+          .reduce((acc, el) => {
+            return acc === null ? [el] : [...acc, ", ", el];
+          }, null)}
+        {last ? (
+          <Fragment>
+            {" "}
+            & <b>{last}</b>
+          </Fragment>
+        ) : (
+          ""
+        )}
+      </span>
+    </div>
+  );
+};
 
-CloseChannelRow.propTypes = {
-  channel: PropTypes.string
+CloseChannelsRow.propTypes = {
+  channels: PropTypes.array
 };
 
 const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
@@ -153,6 +248,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           return (
             <ProgressiveRow
               release={progressiveReleases[releaseKey]}
+              type={progressiveTypes.RELEASE}
               key={releaseKey}
             />
           );
@@ -162,6 +258,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           return (
             <ProgressiveRow
               release={progressiveUpdates[releaseKey]}
+              type={progressiveTypes.UPDATE}
               key={releaseKey}
             />
           );
@@ -169,7 +266,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
       {showProgressiveCancellations &&
         Object.keys(progressiveCancellations).map(releaseKey => {
           return (
-            <ProgressiveRow
+            <CancelProgressiveRow
               release={progressiveCancellations[releaseKey]}
               key={releaseKey}
             />
@@ -184,6 +281,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
 
           return (
             <ReleaseRow
+              type="Release"
               revisionInfo={revisionInfo}
               channel={channel}
               notes={notes}
@@ -191,10 +289,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
             />
           );
         })}
-      {showPendingCloses &&
-        pendingCloses.map(channel => (
-          <CloseChannelRow channel={channel} key={channel} />
-        ))}
+      {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
     </div>
   );
 };

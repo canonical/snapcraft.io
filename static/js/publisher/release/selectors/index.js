@@ -345,7 +345,7 @@ export function hasRelease(state, channel, architecture) {
 
 // Separate pendingRelease actions
 export function getSeparatePendingReleases(state) {
-  const { pendingReleases, releases } = state;
+  const { pendingReleases } = state;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
 
   const progressiveUpdates = {};
@@ -363,7 +363,11 @@ export function getSeparatePendingReleases(state) {
         cancelProgressive[
           `${oldRelease.revision.revision}-${channel}`
         ] = oldRelease;
-      } else if (isProgressiveEnabled && pendingRelease.progressive) {
+      } else if (
+        isProgressiveEnabled &&
+        pendingRelease.progressive &&
+        pendingRelease.previousRevisions.length > 0
+      ) {
         // What are the differences between the previous progressive state
         // and the new state.
         const previousState = releaseCopy.revision.release
@@ -386,27 +390,15 @@ export function getSeparatePendingReleases(state) {
           });
         }
 
-        if (changes.length > 0) {
+        if (previousState.key) {
           // Add this to the copy of the pendingRelease state
           releaseCopy.progressive.changes = changes;
           progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
+        } else {
+          newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
         }
       } else {
-        const currentRelease = releases.filter(
-          release =>
-            release.architecture === releaseCopy.revision.architectures[0] &&
-            getChannelString(release) === releaseCopy.channel
-        );
-
-        if (
-          isProgressiveEnabled &&
-          currentRelease[0] &&
-          currentRelease[0].revision
-        ) {
-          newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
-        } else {
-          newReleases[`${revId}-${channel}`] = releaseCopy;
-        }
+        newReleases[`${revId}-${channel}`] = releaseCopy;
       }
     });
   });
@@ -434,4 +426,11 @@ export function getPendingRelease({ pendingReleases }, arch, channel) {
 
     return null;
   })[0];
+}
+
+// Get releases
+export function getReleases({ releases }, arch, channel) {
+  return releases.filter(
+    release => release.architecture === arch && release.channel === channel
+  );
 }
