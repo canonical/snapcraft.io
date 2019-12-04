@@ -367,7 +367,8 @@ export function getSeparatePendingReleases(state) {
         isProgressiveEnabled &&
         pendingRelease.progressive &&
         pendingRelease.previousRevisions &&
-        pendingRelease.previousRevisions.length > 0
+        pendingRelease.previousRevisions.length > 0 &&
+        pendingRelease.previousRevisions[0]
       ) {
         // What are the differences between the previous progressive state
         // and the new state.

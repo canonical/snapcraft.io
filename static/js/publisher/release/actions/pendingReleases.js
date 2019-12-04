@@ -21,14 +21,12 @@ export function releaseRevision(revision, channel, progressive) {
       revision.architectures,
       channel
     )
-      .filter(
-        release => release.revision && release.revision !== revision.revision
-      )
+      .filter(release => release.revision !== revision.revision)
       .map(release => revisions[release.revision]);
 
     if (!progressive) {
       progressive = {
-        key: `ui-progressive-release-${new Date().getTime()}`,
+        key: null,
         percentage: 100,
         paused: false
       };

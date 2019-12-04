@@ -198,6 +198,40 @@ describe("releases actions", () => {
       global.fetch.mockRestore();
     });
 
+    it("should generate progressive key if null", () => {
+      const revision = { architectures: ["amd64"], revision: 1 };
+      const store = mockStore({
+        options: {
+          snapName: "test",
+          csrfToken: "test",
+          defaultTrack: "latest"
+        },
+        pendingReleases: {
+          "1": {
+            "latest/edge": {
+              revision: revision,
+              channel: "latest/edge",
+              progressive: {
+                key: null,
+                percentage: 50,
+                paused: false
+              }
+            }
+          }
+        }
+      });
+
+      global.fetch = jest
+        .fn()
+        .mockResolvedValue({ json: () => ({ sucess: true }) });
+
+      return store.dispatch(releaseRevisions()).then(() => {
+        const calls = global.fetch.mock.calls;
+
+        expect(JSON.parse(calls[0][1].body).progressive.key).toBeDefined();
+      });
+    });
+
     it("should combine releases of the same revision that aren't progressive", () => {
       const revision = { architectures: ["amd64"], revision: 1 };
       const store = mockStore({

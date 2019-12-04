@@ -61,7 +61,11 @@ describe("pendingReleases actions", () => {
       const store = mockStore(initialState);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.progressive
-      ).toBeDefined();
+      ).toEqual({
+        key: null,
+        percentage: 100,
+        paused: false
+      });
     });
 
     it("should supply a payload with previous revisions", () => {
