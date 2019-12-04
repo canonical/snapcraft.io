@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import ReleasesConfirmDetails from "./releasesConfirmDetails";
+import ReleasesConfirmDetails from "./releasesConfirmDetails/";
 
 import {
   cancelPendingReleases,
@@ -23,6 +23,9 @@ class ReleasesConfirm extends Component {
 
   onRevertClick() {
     this.props.cancelPendingReleases();
+    this.setState({
+      showDetails: false
+    });
   }
 
   onApplyClick() {
