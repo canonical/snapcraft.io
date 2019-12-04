@@ -124,7 +124,6 @@ export function releaseRevisions() {
 
     if (
       pendingRelease.progressive &&
-      pendingRelease.progressive &&
       pendingRelease.progressive.percentage < 100
     ) {
       progressive = pendingRelease.progressive;
