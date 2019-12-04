@@ -137,7 +137,7 @@ const _ProgressiveRow = ({
           <span className="p-tooltip--btm-right">
             <span className="p-help">{percentage}% of devices</span>
             <span className="p-tooltip__message">
-              Releases are delivered to devices via snap refreshes, as such, is
+              Releases are delivered to devices via snap refreshes, as such, it
               may
               <br />
               take some time for devices to receive the new version. There is
