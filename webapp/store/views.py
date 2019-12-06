@@ -4,16 +4,16 @@ from urllib.parse import quote_plus
 import flask
 import webapp.helpers as helpers
 import webapp.store.logic as logic
-from webapp.api.exceptions import (
-    ApiCircuitBreaker,
-    ApiConnectionError,
-    ApiError,
-    ApiResponseDecodeError,
-    ApiResponseError,
-    ApiResponseErrorList,
-    ApiTimeoutError,
+from canonicalwebteam.store_api.store import StoreApi
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiCircuitBreaker,
+    StoreApiConnectionError,
+    StoreApiError,
+    StoreApiResponseDecodeError,
+    StoreApiResponseError,
+    StoreApiResponseErrorList,
+    StoreApiTimeoutError,
 )
-from webapp.api.store import StoreApi
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 
@@ -28,22 +28,22 @@ def store_blueprint(store_query=None, testing=False):
         static_folder="/static",
     )
 
-    def _handle_errors(api_error: ApiError):
+    def _handle_errors(api_error: StoreApiError):
         status_code = 502
         error = {"message": str(api_error)}
 
-        if type(api_error) is ApiTimeoutError:
+        if type(api_error) is StoreApiTimeoutError:
             status_code = 504
-        elif type(api_error) is ApiResponseDecodeError:
+        elif type(api_error) is StoreApiResponseDecodeError:
             status_code = 502
-        elif type(api_error) is ApiResponseErrorList:
+        elif type(api_error) is StoreApiResponseErrorList:
             error["errors"] = api_error.errors
             status_code = 502
-        elif type(api_error) is ApiResponseError:
+        elif type(api_error) is StoreApiResponseError:
             status_code = 502
-        elif type(api_error) is ApiConnectionError:
+        elif type(api_error) is StoreApiConnectionError:
             status_code = 502
-        elif type(api_error) is ApiCircuitBreaker:
+        elif type(api_error) is StoreApiCircuitBreaker:
             # Special case for this one, because it is the only case where we
             # don't want the user to be able to access the page.
             return flask.abort(503)
@@ -62,7 +62,7 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             categories_results = api.get_categories()
-        except ApiError:
+        except StoreApiError:
             categories_results = []
 
         categories = logic.get_categories(categories_results)
@@ -71,7 +71,7 @@ def store_blueprint(store_query=None, testing=False):
             featured_snaps_results = api.get_searched_snaps(
                 snap_searched="", category="featured", size=10, page=1
             )
-        except ApiError as api_error:
+        except StoreApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
             return flask.abort(status_code)
 
@@ -110,7 +110,7 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             snaps_results = api.get_all_snaps(size=16)
-        except ApiError as api_error:
+        except StoreApiError as api_error:
             snaps_results = []
             status_code, error_info = _handle_errors(api_error)
 
@@ -161,7 +161,7 @@ def store_blueprint(store_query=None, testing=False):
                 size=size,
                 page=page,
             )
-        except ApiError as api_error:
+        except StoreApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
         total_pages = None
@@ -264,7 +264,7 @@ def store_blueprint(store_query=None, testing=False):
             searched_results = api.get_searched_snaps(
                 quote_plus(snap_searched), size=size, page=page
             )
-        except ApiError as api_error:
+        except StoreApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
         snaps_results = logic.get_searched_snaps(searched_results)
@@ -314,7 +314,7 @@ def store_blueprint(store_query=None, testing=False):
                     searched_results = api.get_searched_snaps(
                         "publisher:" + publisher, size=500, page=1
                     )
-                except ApiError:
+                except StoreApiError:
                     pass
 
                 snaps_results = logic.get_searched_snaps(searched_results)
@@ -351,7 +351,7 @@ def store_blueprint(store_query=None, testing=False):
             category_results = api.get_searched_snaps(
                 snap_searched="", category=category, size=10, page=1
             )
-        except ApiError as api_error:
+        except StoreApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
 
         snaps_results = logic.get_searched_snaps(category_results)

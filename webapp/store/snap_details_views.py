@@ -7,13 +7,13 @@ import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from pybadges import badge
 from webapp import authentication
-from webapp.api.exceptions import (
-    ApiCircuitBreaker,
-    ApiError,
-    ApiResponseDecodeError,
-    ApiResponseError,
-    ApiResponseErrorList,
-    ApiTimeoutError,
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiCircuitBreaker,
+    StoreApiError,
+    StoreApiResponseDecodeError,
+    StoreApiResponseError,
+    StoreApiResponseErrorList,
+    StoreApiTimeoutError,
 )
 from webapp.markdown import parse_markdown_description
 
@@ -26,11 +26,11 @@ def snap_details_views(store, api, handle_errors):
     def _get_context_snap_details(snap_name):
         try:
             details = api.get_snap_details(snap_name)
-        except ApiTimeoutError as api_timeout_error:
+        except StoreApiTimeoutError as api_timeout_error:
             flask.abort(504, str(api_timeout_error))
-        except ApiResponseDecodeError as api_response_decode_error:
+        except StoreApiResponseDecodeError as api_response_decode_error:
             flask.abort(502, str(api_response_decode_error))
-        except ApiResponseErrorList as api_response_error_list:
+        except StoreApiResponseErrorList as api_response_error_list:
             if api_response_error_list.status_code == 404:
                 flask.abort(404, "No snap named {}".format(snap_name))
             else:
@@ -41,11 +41,11 @@ def snap_details_views(store, api, handle_errors):
                 else:
                     error_messages = "An error occurred."
                 flask.abort(502, error_messages)
-        except ApiResponseError as api_response_error:
+        except StoreApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
-        except ApiCircuitBreaker:
+        except StoreApiCircuitBreaker:
             flask.abort(503)
-        except ApiError as api_error:
+        except StoreApiError as api_error:
             flask.abort(502, str(api_error))
 
         # When removing all the channel maps of an existing snap the API,
@@ -224,7 +224,7 @@ def snap_details_views(store, api, handle_errors):
                 metrics_response = api.get_public_metrics(
                     snap_name, metrics_query_json
                 )
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 status_code, error_info = handle_errors(api_error)
                 metrics_response = None
 
@@ -416,7 +416,7 @@ def snap_details_views(store, api, handle_errors):
             featured_snaps_results = api.get_searched_snaps(
                 snap_searched="", category="featured", size=13, page=1
             )
-        except ApiError:
+        except StoreApiError:
             featured_snaps_results = []
 
         featured_snaps = [

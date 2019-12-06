@@ -20,7 +20,12 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-from webapp.api.store import StoreApi
+from canonicalwebteam.store_api.store import StoreApi
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiTimeoutError,
+    StoreApiCircuitBreaker,
+)
 from webapp.store.logic import (
     get_categories,
     filter_screenshots,
@@ -60,7 +65,7 @@ def refresh_redirect(path):
 
 
 def _handle_errors(api_error: ApiError):
-    if type(api_error) is ApiTimeoutError:
+    if type(api_error) in [ApiTimeoutError, StoreApiTimeoutError]:
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
         return flask.redirect(flask.url_for("account.get_account_name"))
@@ -68,7 +73,7 @@ def _handle_errors(api_error: ApiError):
         return flask.redirect(flask.url_for("account.get_agreement"))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
-    elif type(api_error) is ApiCircuitBreaker:
+    elif type(api_error) in [ApiCircuitBreaker, StoreApiCircuitBreaker]:
         return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
@@ -328,7 +333,7 @@ def get_listing_snap(snap_name):
 
     try:
         categories_results = store_api.get_categories()
-    except ApiError:
+    except StoreApiError:
         categories_results = []
 
     categories = sorted(
@@ -501,7 +506,7 @@ def post_listing_snap(snap_name):
 
             try:
                 categories_results = store_api.get_categories()
-            except ApiError:
+            except StoreApiError:
                 categories_results = []
 
             categories = get_categories(categories_results)
@@ -1212,7 +1217,7 @@ def get_publicise_badges(snap_name):
 
     try:
         snap_public_details = store_api.get_snap_details(snap_name)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_errors(api_error)
 
     context = {

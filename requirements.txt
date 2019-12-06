@@ -13,15 +13,16 @@ humanize==0.5.1
 Markdown==3.0.1
 mistune==0.8.4
 pybadges==1.1.0
-pybreaker==0.4.4
+pybreaker==0.6.0
 pycountry==17.9.23
 pymacaroons==0.12.0
 python-dateutil==2.6.1
-requests==2.21.0
-requests-cache==0.4.13
+requests==2.22
+requests-cache==0.5.2
 responses==0.9.0
 ruamel.yaml==0.15.72
 talisker[flask,gunicorn,raven,prometheus]==0.15.0
+git+https://github.com/jkfran/canonicalwebteam.store-api.git@refactor#egg=canonicalwebteam.store-api
 
 # Temporary fix to SSO redirect issue
 Werkzeug==0.14.1
