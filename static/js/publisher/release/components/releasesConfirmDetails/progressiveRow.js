@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -19,23 +19,21 @@ const ProgressiveRow = ({
   }
 
   let startingPercentage = 100;
+  let targetPercentage = 100;
   switch (type) {
     case progressiveTypes.RELEASE:
       startingPercentage = release.progressive.percentage;
       break;
     case progressiveTypes.UPDATE:
       startingPercentage = release.revision.release.progressive.percentage;
+      targetPercentage = release.progressive.percentage;
       break;
     default:
   }
 
-  const [percentage, setPercentage] = useState(
-    release.progressive ? release.progressive.percentage : 100
-  );
   const revisionInfo = release.revision;
   const channel = release.channel;
   const updatePercentage = percentage => {
-    setPercentage(percentage);
     updateProgressiveReleasePercentage(release.progressive.key, percentage);
   };
 
@@ -49,7 +47,7 @@ const ProgressiveRow = ({
     ).value;
     progress = (
       <Fragment>
-        <ProgressiveBar percentage={percentage} />
+        <ProgressiveBar percentage={startingPercentage} />
         <span>{paused ? "Paused" : "Resumed"}</span>
       </Fragment>
     );
@@ -59,13 +57,13 @@ const ProgressiveRow = ({
         <InteractiveProgressiveBar
           percentage={startingPercentage}
           onChange={updatePercentage}
-          targetPercentage={percentage}
+          targetPercentage={targetPercentage}
           minPercentage={1}
           singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
         />
         <span>
           <span className="p-tooltip--btm-right">
-            <span className="p-help">{percentage}% of devices</span>
+            <span className="p-help">{targetPercentage}% of devices</span>
             <span className="p-tooltip__message">
               Releases are delivered to devices via snap refreshes, as such, it
               may
@@ -88,7 +86,7 @@ const ProgressiveRow = ({
     const prevVer = release.previousRevisions[0].version;
 
     notes = `${100 -
-      percentage}% of devices will stay on ${prevRev} (${prevVer})`;
+      startingPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
   }
 
   const displayType = type.charAt(0).toUpperCase() + type.slice(1);

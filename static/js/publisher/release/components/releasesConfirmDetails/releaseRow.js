@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
+import { ProgressiveBar } from "../progressiveBar";
+
 const ReleaseRow = ({ type, revisionInfo, channel, progress, notes }) => (
   <div className="p-release-details-row">
     <span className="p-release-details-row__type">{type}</span>
@@ -21,8 +23,18 @@ const ReleaseRow = ({ type, revisionInfo, channel, progress, notes }) => (
     )}
     {!progress && (
       <Fragment>
-        <span />
-        <span />
+        <span className="p-release-details-row__join">to</span>
+        <span className="p-release-details-row__progress">
+          <ProgressiveBar percentage={100} disabled={true} />
+          <span>
+            <span className="p-tooltip--btm-right">
+              <span className="p-help">100% of devices</span>
+              <span className="p-tooltip__message">
+                Cannot progressively release to an empty channel
+              </span>
+            </span>
+          </span>
+        </span>
       </Fragment>
     )}
     {notes && (

@@ -85,6 +85,17 @@ class InteractiveProgressiveBar extends React.Component {
     }
   }
 
+  // Ensure that if the targetPercentage is changed,
+  // it overrides the scrubTarget state
+  static getDerivedStateFromProps(props, state) {
+    const newState = { ...state };
+    if (props.targetPercentage !== state.scrubTarget) {
+      newState.scrubTarget = props.targetPercentage;
+    }
+
+    return newState;
+  }
+
   componentWillUnmount() {
     window.removeEventListener("mouseup", this.onMouseUpHandler);
     window.removeEventListener("mousemove", this.onMouseMoveHandler);

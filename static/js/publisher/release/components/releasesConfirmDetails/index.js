@@ -63,14 +63,12 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           const release = newReleases[releaseKey];
           const revisionInfo = release.revision;
           const channel = release.channel;
-          const notes = "Cannot be progressively released";
 
           return (
             <ReleaseRow
               type="Release"
               revisionInfo={revisionInfo}
               channel={channel}
-              notes={notes}
               key={`${revisionInfo.revision}-{${channel}`}
             />
           );
