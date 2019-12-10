@@ -27,25 +27,99 @@ import {
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
-  const revision = { revision: 1, architectures: ["test64"] };
+  const revision = {
+    revision: 1,
+    architectures: ["test64"]
+  };
   const channel = "test/edge";
+  const previousRevisions = [];
   const initialState = reducers(undefined, {});
 
   describe("releaseRevision", () => {
+    const store = mockStore(initialState);
     it("should create an action to promote revision", () => {
-      expect(releaseRevision(revision, channel).type).toBe(RELEASE_REVISION);
+      expect(store.dispatch(releaseRevision(revision, channel)).type).toBe(
+        RELEASE_REVISION
+      );
     });
 
     it("should supply a payload with revision", () => {
-      expect(releaseRevision(revision, channel).payload.revision).toEqual(
-        revision
-      );
+      const store = mockStore(initialState);
+      expect(
+        store.dispatch(releaseRevision(revision, channel)).payload.revision
+      ).toEqual(revision);
     });
 
     it("should supply a payload with channel", () => {
-      expect(releaseRevision(revision, channel).payload.channel).toEqual(
-        channel
-      );
+      const store = mockStore(initialState);
+      expect(
+        store.dispatch(releaseRevision(revision, channel)).payload.channel
+      ).toEqual(channel);
+    });
+
+    it("should supply a payload with a progressive release", () => {
+      const store = mockStore(initialState);
+      expect(
+        store.dispatch(releaseRevision(revision, channel)).payload.progressive
+      ).toEqual({
+        key: null,
+        percentage: 100,
+        paused: false
+      });
+    });
+
+    it("should supply a payload with previous revisions", () => {
+      const store = mockStore(initialState);
+      expect(
+        store.dispatch(releaseRevision(revision, channel)).payload
+          .previousRevisions
+      ).toEqual([]);
+    });
+
+    describe("if previous revisions", () => {
+      const stateWithPreviousRevisions = {
+        ...initialState,
+        releases: [
+          {
+            architecture: "test64",
+            branch: null,
+            channel: "test/edge",
+            revision: 2,
+            risk: "edge",
+            track: "test"
+          }
+        ],
+        revisions: {
+          "2": {
+            revision: 2,
+            achitectures: ["test64"]
+          }
+        }
+      };
+
+      it("should return previous revisions, if available", () => {
+        const store = mockStore(stateWithPreviousRevisions);
+
+        const revisionWithRelease = {
+          ...revision,
+          release: {
+            architecture: "test64"
+          }
+        };
+
+        const dispatch = store.dispatch(
+          releaseRevision(revisionWithRelease, channel)(
+            store.dispatch,
+            store.getState
+          )
+        );
+
+        expect(dispatch.payload.previousRevisions).toEqual([
+          {
+            ...stateWithPreviousRevisions.revisions["2"]
+          }
+        ]);
+      });
     });
   });
 
@@ -57,9 +131,12 @@ describe("pendingReleases actions", () => {
         store.dispatch(promoteRevision(revision, channel));
 
         const actions = store.getActions();
-        const expectedAction = releaseRevision(revision, channel);
+        const expectedAction = releaseRevision(revision, channel)(
+          store.dispatch,
+          store.getState
+        );
 
-        expect(actions).toEqual([expectedAction]);
+        expect(actions).toContainEqual(expectedAction);
       });
     });
 
@@ -120,14 +197,26 @@ describe("pendingReleases actions", () => {
           type: RELEASE_REVISION,
           payload: {
             revision,
-            channel: targetChannel
+            channel: targetChannel,
+            previousRevisions,
+            progressive: actions.find(
+              action =>
+                action.payload.revision.revision === revision.revision &&
+                action.payload.channel === targetChannel
+            ).payload.progressive
           }
         });
         expect(actions).toContainEqual({
           type: RELEASE_REVISION,
           payload: {
+            progressive: actions.find(
+              action =>
+                action.payload.revision.revision === revision2.revision &&
+                action.payload.channel === targetChannel
+            ).payload.progressive,
             revision: revision2,
-            channel: targetChannel
+            channel: targetChannel,
+            previousRevisions: []
           }
         });
       });
