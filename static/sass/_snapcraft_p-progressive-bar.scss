@@ -60,22 +60,21 @@
 
   .progressive-bar__target-adjust {
     @include vf-animation(all, snap, in);
-    background: $color-x-dark;
+    background: $color-dark;
     border-radius: 3px;
-    bottom: 0;
+    bottom: -4px;
     display: block;
     position: absolute;
     right: 0;
-    top: 0;
-    width: 1px;
+    top: -4px;
+    width: 3px;
     z-index: 1;
   }
 
   .progressive-bar:hover .progressive-bar__target-adjust,
-  .progressive-bar.is-scrubbing .progressive-bar__target-adjust {
-    bottom: -4px;
-    top: -4px;
-    transform: translateX(1px);
-    width: 3px;
+  .progressive-bar__interactive-wrapper.is-scrubbing .progressive-bar__target-adjust {
+    border-radius: 17px;
+    transform: translate(7px);
+    width: 17px;
   }
 }

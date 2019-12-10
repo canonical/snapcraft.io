@@ -6,36 +6,47 @@ const ProgressiveBar = ({
   targetPercentage,
   readonly,
   disabled
-}) => (
-  <div
-    className={`progressive-bar p-tooltip--btm-center ${
-      disabled ? "is-disabled" : ""
-    }`}
-  >
-    {!readonly && (
-      <div
-        className="progressive-bar__target"
-        style={{ width: `${targetPercentage}%` }}
-      >
-        <div className="progressive-bar__target-adjust" />
-      </div>
-    )}
+}) => {
+  let current = percentage;
+
+  // If the target can move below the current percentage
+  // use the main percentage bar to show the position
+  // (the target bar is behind the main bar)
+  if (targetPercentage < current) {
+    current = targetPercentage;
+  }
+
+  return (
     <div
-      className="progressive-bar__target-value"
-      style={{
-        left: `${targetPercentage ? targetPercentage : percentage}%`
-      }}
+      className={`progressive-bar p-tooltip--btm-center ${
+        disabled ? "is-disabled" : ""
+      }`}
     >
-      <span className="p-tooltip__message" role="tooltip">
-        {targetPercentage ? targetPercentage : percentage}%
-      </span>
+      {!readonly && (
+        <div
+          className="progressive-bar__target"
+          style={{ width: `${targetPercentage}%` }}
+        >
+          <div className="progressive-bar__target-adjust" />
+        </div>
+      )}
+      <div
+        className="progressive-bar__target-value"
+        style={{
+          left: `${targetPercentage ? targetPercentage : percentage}%`
+        }}
+      >
+        <span className="p-tooltip__message" role="tooltip">
+          {targetPercentage ? targetPercentage : percentage}%
+        </span>
+      </div>
+      <div
+        className="progressive-bar__current"
+        style={{ width: `${current}%` }}
+      />
     </div>
-    <div
-      className="progressive-bar__current"
-      style={{ width: `${percentage}%` }}
-    />
-  </div>
-);
+  );
+};
 
 ProgressiveBar.defaultProps = {
   readonly: true
@@ -74,6 +85,17 @@ class InteractiveProgressiveBar extends React.Component {
     }
   }
 
+  // Ensure that if the targetPercentage is changed,
+  // it overrides the scrubTarget state
+  static getDerivedStateFromProps(props, state) {
+    const newState = { ...state };
+    if (props.targetPercentage !== state.scrubTarget) {
+      newState.scrubTarget = props.targetPercentage;
+    }
+
+    return newState;
+  }
+
   componentWillUnmount() {
     window.removeEventListener("mouseup", this.onMouseUpHandler);
     window.removeEventListener("mousemove", this.onMouseMoveHandler);
@@ -97,7 +119,7 @@ class InteractiveProgressiveBar extends React.Component {
 
   scrubTo(target) {
     const { current } = this.state;
-    const { singleDirection, onChange } = this.props;
+    const { singleDirection, onChange, minPercentage } = this.props;
 
     if (singleDirection && singleDirection > 0) {
       if (target < current) {
@@ -123,6 +145,10 @@ class InteractiveProgressiveBar extends React.Component {
       if (target > 100) {
         target = 100;
       }
+    }
+
+    if (minPercentage && target < minPercentage) {
+      target = minPercentage;
     }
 
     const newState = {
@@ -202,7 +228,8 @@ InteractiveProgressiveBar.propTypes = {
   singleDirection: PropTypes.number,
   onChange: PropTypes.func,
   targetPercentage: PropTypes.number,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  minPercentage: PropTypes.number
 };
 
 export { ProgressiveBar, InteractiveProgressiveBar };
