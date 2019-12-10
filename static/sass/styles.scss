@@ -241,6 +241,9 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_p-progressive-bar';
 @include snapcraft-p-progressive-bar;
 
+@import 'snapcraft_p-release-details-row';
+@include snapcraft-p-release-details-row;
+
 // **** Vanilla overrides & temporary bug fixes ****
 
 // Temporary bug fix for https://github.com/canonical-web-and-design/vanilla-framework/issues/2791

@@ -118,16 +118,26 @@ export function handleReleaseResponse(
 }
 
 export function releaseRevisions() {
+  const progressiveKey = `ui-progressive-release-${new Date().getTime()}`;
   const mapToRelease = pendingRelease => {
+    let progressive = null;
+
+    if (
+      pendingRelease.progressive &&
+      pendingRelease.progressive.percentage < 100
+    ) {
+      progressive = pendingRelease.progressive;
+
+      if (progressive.key === null) {
+        progressive.key = progressiveKey;
+      }
+    }
+
     return {
       id: pendingRelease.revision.revision,
       revision: pendingRelease.revision,
       channels: [pendingRelease.channel],
-      progressive:
-        pendingRelease.progressive &&
-        pendingRelease.progressive.percentage < 100
-          ? pendingRelease.progressive
-          : null
+      progressive: progressive
     };
   };
 

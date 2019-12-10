@@ -1,0 +1,33 @@
+@mixin snapcraft-p-release-details-row {
+  .p-release-details-row {
+    align-items: center;
+    display: grid;
+    font-size: .875rem;
+    grid-column-gap: 1rem;
+    grid-template-columns: 4rem 15rem 2rem auto 16rem;
+    padding: 1rem;
+
+    &.is-closing {
+      grid-template-columns: auto;
+    }
+
+    &:nth-child(odd) {
+      background: $color-light;
+    }
+
+    &__join {
+      text-align: center;
+    }
+
+    &__progress {
+      display: grid;
+      font-weight: 400;
+      grid-column-gap: .5rem;
+      grid-template-columns: auto 8rem;
+    }
+
+    &__notes {
+      color: $color-dark;
+    }
+  }
+}
