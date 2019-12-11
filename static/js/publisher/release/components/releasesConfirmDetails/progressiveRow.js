@@ -12,7 +12,8 @@ import { ProgressiveBar, InteractiveProgressiveBar } from "../progressiveBar";
 const ProgressiveRow = ({
   release,
   updateProgressiveReleasePercentage,
-  type
+  type,
+  globalPercentage
 }) => {
   if (!release.progressive) {
     return false;
@@ -20,15 +21,20 @@ const ProgressiveRow = ({
 
   let startingPercentage = 100;
   let targetPercentage = 100;
-  switch (type) {
-    case progressiveTypes.RELEASE:
-      startingPercentage = release.progressive.percentage;
-      break;
-    case progressiveTypes.UPDATE:
-      startingPercentage = release.revision.release.progressive.percentage;
-      targetPercentage = release.progressive.percentage;
-      break;
-    default:
+
+  if (globalPercentage) {
+    startingPercentage = targetPercentage = globalPercentage;
+  } else {
+    switch (type) {
+      case progressiveTypes.RELEASE:
+        startingPercentage = targetPercentage = release.progressive.percentage;
+        break;
+      case progressiveTypes.UPDATE:
+        startingPercentage = release.revision.release.progressive.percentage;
+        targetPercentage = release.progressive.percentage;
+        break;
+      default:
+    }
   }
 
   const revisionInfo = release.revision;
@@ -54,13 +60,15 @@ const ProgressiveRow = ({
   } else {
     progress = (
       <Fragment>
-        <InteractiveProgressiveBar
-          percentage={startingPercentage}
-          onChange={updatePercentage}
-          targetPercentage={targetPercentage}
-          minPercentage={1}
-          singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
-        />
+        {!globalPercentage && (
+          <InteractiveProgressiveBar
+            percentage={startingPercentage}
+            onChange={updatePercentage}
+            targetPercentage={targetPercentage}
+            minPercentage={1}
+            singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
+          />
+        )}
         <span>
           <span className="p-tooltip--btm-right">
             <span className="p-help">{targetPercentage}% of devices</span>
@@ -105,6 +113,7 @@ const ProgressiveRow = ({
 ProgressiveRow.propTypes = {
   release: PropTypes.object,
   type: PropTypes.string,
+  globalPercentage: PropTypes.number,
   updateProgressiveReleasePercentage: PropTypes.func
 };
 

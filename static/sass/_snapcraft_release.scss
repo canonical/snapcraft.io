@@ -46,6 +46,23 @@
     padding-bottom: .5rem;
   }
 
+  .p-releases-confirm__details-global {
+    font-size: .875rem;
+
+    .p-releases-confirm__details-switch {
+      .p-switch {
+        position: absolute;
+      }
+
+      .p-switch__slider {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-left: 1rem;
+        vertical-align: middle;
+      }
+    }
+  }
+
   // RELEASES TABLE
 
   .p-releases-table {
