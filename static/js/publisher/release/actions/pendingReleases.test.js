@@ -14,6 +14,8 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
+  SET_TEMP_PROGRESSIVE_KEYS,
+  REMOVE_TEMP_PROGRESSIVE_KEYS,
   releaseRevision,
   promoteRevision,
   promoteChannel,
@@ -23,7 +25,9 @@ import {
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
-  cancelProgressiveRelease
+  cancelProgressiveRelease,
+  setTemporaryProgressiveReleaseKeys,
+  removeTemporaryProgressiveReleaseKeys
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
@@ -352,6 +356,22 @@ describe("pendingReleases actions", () => {
       expect(
         cancelProgressiveRelease(key, previousRevision).payload.previousRevision
       ).toBe(previousRevision);
+    });
+  });
+
+  describe("setTemporaryprogressivereleasekeys", () => {
+    it("should create an action to set temporary progressive release keys", () => {
+      expect(setTemporaryProgressiveReleaseKeys().type).toBe(
+        SET_TEMP_PROGRESSIVE_KEYS
+      );
+    });
+  });
+
+  describe("removeTemporaryprogressivereleasekeys", () => {
+    it("should create an action to remove temporary progressive release keys", () => {
+      expect(removeTemporaryProgressiveReleaseKeys().type).toBe(
+        REMOVE_TEMP_PROGRESSIVE_KEYS
+      );
     });
   });
 });
