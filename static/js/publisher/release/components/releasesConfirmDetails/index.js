@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
+import {
+  updateProgressiveReleasePercentage,
+  setTemporaryProgressiveReleaseKeys,
+  removeTemporaryProgressiveReleaseKeys
+} from "../../actions/pendingReleases";
 import { isProgressiveReleaseEnabled } from "../../selectors";
 
 import progressiveTypes from "./types";
@@ -16,9 +20,11 @@ import { InteractiveProgressiveBar } from "../progressiveBar";
 const ReleasesConfirmDetails = ({
   updates,
   isProgressiveReleaseEnabled,
-  updateProgressiveReleasePercentage
+  updateProgressiveReleasePercentage,
+  setTemporaryProgressiveReleaseKeys,
+  removeTemporaryProgressiveReleaseKeys
 }) => {
-  const [useGlobal, setGlobal] = useState(false);
+  const [useGlobal, setGlobal] = useState(true);
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
   const progressiveReleases = updates.newReleasesToProgress;
@@ -38,7 +44,13 @@ const ReleasesConfirmDetails = ({
   const showPendingCloses = pendingCloses.length > 0;
 
   const toggleGlobal = () => {
-    setGlobal(!useGlobal);
+    const newUseGlobal = !useGlobal;
+    setGlobal(newUseGlobal);
+    if (!newUseGlobal) {
+      setTemporaryProgressiveReleaseKeys();
+    } else {
+      removeTemporaryProgressiveReleaseKeys();
+    }
   };
 
   const updatePercentage = percentage => {
@@ -53,7 +65,7 @@ const ReleasesConfirmDetails = ({
           <div className="col-4">
             <label>
               <span>
-                <span className="p-tooltip--btm-left">
+                <span className="p-tooltip--btm-center">
                   <span className="p-help">
                     Use the same progressive release percentage
                   </span>
@@ -154,7 +166,9 @@ const ReleasesConfirmDetails = ({
 ReleasesConfirmDetails.propTypes = {
   updates: PropTypes.object.isRequired,
   isProgressiveReleaseEnabled: PropTypes.bool,
-  updateProgressiveReleasePercentage: PropTypes.func
+  updateProgressiveReleasePercentage: PropTypes.func,
+  setTemporaryProgressiveReleaseKeys: PropTypes.func,
+  removeTemporaryProgressiveReleaseKeys: PropTypes.func
 };
 
 const mapStateToProps = state => ({
@@ -164,7 +178,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     updateProgressiveReleasePercentage: (key, percentage) =>
-      dispatch(updateProgressiveReleasePercentage(key, percentage))
+      dispatch(updateProgressiveReleasePercentage(key, percentage)),
+    setTemporaryProgressiveReleaseKeys: () =>
+      dispatch(setTemporaryProgressiveReleaseKeys()),
+    removeTemporaryProgressiveReleaseKeys: () =>
+      dispatch(removeTemporaryProgressiveReleaseKeys())
   };
 };
 

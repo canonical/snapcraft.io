@@ -128,7 +128,10 @@ export function releaseRevisions() {
     ) {
       progressive = pendingRelease.progressive;
 
-      if (progressive.key === null) {
+      if (
+        progressive.key === null ||
+        progressive.key.indexOf("ui-temp") === 0
+      ) {
         progressive.key = progressiveKey;
       }
     }

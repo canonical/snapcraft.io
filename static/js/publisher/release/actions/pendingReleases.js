@@ -8,6 +8,8 @@ export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
 export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
 export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 export const CANCEL_PROGRESSIVE_RELEASE = "CANCEL_PROGRESSIVE_RELEASE";
+export const SET_TEMP_PROGRESSIVE_KEYS = "SET_TEMP_PROGRESSIVE_KEYS";
+export const REMOVE_TEMP_PROGRESSIVE_KEYS = "REMOVE_TEMP_PROGRESSIVE_KEYS";
 
 import { getPendingChannelMap, getReleases } from "../selectors";
 
@@ -88,6 +90,18 @@ export function cancelProgressiveRelease(key, previousRevision) {
       key,
       previousRevision
     }
+  };
+}
+
+export function setTemporaryProgressiveReleaseKeys() {
+  return {
+    type: SET_TEMP_PROGRESSIVE_KEYS
+  };
+}
+
+export function removeTemporaryProgressiveReleaseKeys() {
+  return {
+    type: REMOVE_TEMP_PROGRESSIVE_KEYS
   };
 }
 
