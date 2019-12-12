@@ -51,7 +51,7 @@ const GlobalRow = ({
                 take some time for devices to receive the new version. There is
                 also no
                 <br />
-                guarentee that this release will achieve the entire target
+                guarantee that this release will achieve the entire target
                 percentage.
               </span>
             </span>
