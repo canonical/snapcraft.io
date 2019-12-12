@@ -13,14 +13,12 @@ const GlobalRow = ({
     <div className="p-releases-confirm__details-global row u-vertically-center">
       <div className="col-4">
         <label>
-          <span>
-            <span className="p-tooltip--btm-center">
-              <span className="p-help">
-                Use the same progressive release percentage
-              </span>
-              <span className="p-tooltip__message">
-                For new progressive releases
-              </span>
+          <span className="p-tooltip--btm-center">
+            <span className="p-help">
+              Use the same progressive release percentage
+            </span>
+            <span className="p-tooltip__message">
+              For new progressive releases
             </span>
           </span>
           <span className="p-releases-confirm__details-switch">
@@ -44,7 +42,7 @@ const GlobalRow = ({
             onChange={updatePercentage}
           />
           <span>
-            <span className="p-tooltip--btm-right">
+            <span className="p-tooltip--btm-center">
               <span className="p-help">{globalPercentage}% of devices</span>
               <span className="p-tooltip__message">
                 Releases are delivered to devices via snap refreshes, as such,
