@@ -1,10 +1,11 @@
 from math import ceil, floor
 from urllib.parse import quote_plus
-
+import talisker.requests
 import flask
 import webapp.helpers as helpers
 import webapp.store.logic as logic
-from canonicalwebteam.store_api.store import StoreApi
+from webapp.api import requests
+from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
 from canonicalwebteam.store_api.exceptions import (
     StoreApiCircuitBreaker,
     StoreApiConnectionError,
@@ -19,7 +20,12 @@ from webapp.store.snap_details_views import snap_details_views
 
 
 def store_blueprint(store_query=None, testing=False):
-    api = StoreApi(store=store_query, testing=testing)
+    if testing:
+        session = talisker.requests.get_session(requests.Session)
+    else:
+        session = talisker.requests.get_session(requests.CachedSession)
+
+    api = SnapcraftStoreApi(session, store_query)
 
     store = flask.Blueprint(
         "store",
@@ -68,8 +74,8 @@ def store_blueprint(store_query=None, testing=False):
         categories = logic.get_categories(categories_results)
 
         try:
-            featured_snaps_results = api.get_searched_snaps(
-                snap_searched="", category="featured", size=10, page=1
+            featured_snaps_results = api.get_searcheds(
+                search="", category="featured", size=10, page=1
             )
         except StoreApiError as api_error:
             status_code, error_info = _handle_errors(api_error)
@@ -109,7 +115,7 @@ def store_blueprint(store_query=None, testing=False):
         status_code = 200
 
         try:
-            snaps_results = api.get_all_snaps(size=16)
+            snaps_results = api.get_all(size=16, api_version=2)
         except StoreApiError as api_error:
             snaps_results = []
             status_code, error_info = _handle_errors(api_error)
@@ -155,7 +161,7 @@ def store_blueprint(store_query=None, testing=False):
         searched_results = []
 
         try:
-            searched_results = api.get_searched_snaps(
+            searched_results = api.get_searcheds(
                 quote_plus(snap_searched),
                 category=snap_category,
                 size=size,
@@ -261,7 +267,7 @@ def store_blueprint(store_query=None, testing=False):
         searched_results = []
 
         try:
-            searched_results = api.get_searched_snaps(
+            searched_results = api.get_searcheds(
                 quote_plus(snap_searched), size=size, page=page
             )
         except StoreApiError as api_error:
@@ -311,7 +317,7 @@ def store_blueprint(store_query=None, testing=False):
             for publisher in context["publishers"]:
                 searched_results = []
                 try:
-                    searched_results = api.get_searched_snaps(
+                    searched_results = api.get_searcheds(
                         "publisher:" + publisher, size=500, page=1
                     )
                 except StoreApiError:
@@ -348,8 +354,8 @@ def store_blueprint(store_query=None, testing=False):
         category_results = []
 
         try:
-            category_results = api.get_searched_snaps(
-                snap_searched="", category=category, size=10, page=1
+            category_results = api.get_searcheds(
+                search="", category=category, size=10, page=1
             )
         except StoreApiError as api_error:
             status_code, error_info = _handle_errors(api_error)

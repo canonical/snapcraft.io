@@ -77,6 +77,7 @@ class CachedSession(BaseSession, requests_cache.CachedSession):
             # Include headers in cache key
             "include_get_headers": True,
             "old_data_on_error": True,
+            "timeout": (1, 6),
         }
 
         options.update(kwargs)

@@ -1,7 +1,7 @@
 from json import loads
 
 import flask
-
+import talisker.requests
 import bleach
 import pycountry
 import webapp.helpers as helpers
@@ -10,6 +10,7 @@ import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 from webapp import authentication
+from webapp.api import requests
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
@@ -20,7 +21,7 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-from canonicalwebteam.store_api.store import StoreApi
+from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
     StoreApiTimeoutError,
@@ -44,7 +45,7 @@ publisher_snaps = flask.Blueprint(
     static_folder="/static",
 )
 
-store_api = StoreApi(cache=False)
+store_api = SnapcraftStoreApi(talisker.requests.get_session(requests.Session))
 
 
 def refresh_redirect(path):
@@ -1216,7 +1217,7 @@ def get_publicise_badges(snap_name):
         return flask.abort(404, "No snap named {}".format(snap_name))
 
     try:
-        snap_public_details = store_api.get_snap_details(snap_name)
+        snap_public_details = store_api.get_details(snap_name, api_version=2)
     except StoreApiError as api_error:
         return _handle_errors(api_error)
 
