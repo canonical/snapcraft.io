@@ -25,7 +25,7 @@ def snap_details_views(store, api, handle_errors):
 
     def _get_context_snap_details(snap_name):
         try:
-            details = api.get_details(snap_name, api_version=2)
+            details = api.get_item_details(snap_name, api_version=2)
         except StoreApiTimeoutError as api_timeout_error:
             flask.abort(504, str(api_timeout_error))
         except StoreApiResponseDecodeError as api_response_decode_error:
@@ -411,9 +411,7 @@ def snap_details_views(store, api, handle_errors):
         )
 
         try:
-            featured_snaps_results = api.get_searcheds(
-                search="", category="featured", size=13, page=1
-            )
+            featured_snaps_results = api.get_featured_items(size=13, page=1)
         except StoreApiError:
             featured_snaps_results = []
 

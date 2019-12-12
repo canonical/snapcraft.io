@@ -1217,7 +1217,9 @@ def get_publicise_badges(snap_name):
         return flask.abort(404, "No snap named {}".format(snap_name))
 
     try:
-        snap_public_details = store_api.get_details(snap_name, api_version=2)
+        snap_public_details = store_api.get_item_details(
+            snap_name, api_version=2
+        )
     except StoreApiError as api_error:
         return _handle_errors(api_error)
 
