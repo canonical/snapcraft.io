@@ -13,6 +13,8 @@ import {
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
+import { TEMP_KEY } from "../constants";
+
 function removePendingRelease(state, revision, channel) {
   const newState = JSON.parse(JSON.stringify(state));
   if (newState[revision.revision]) {
@@ -195,7 +197,7 @@ function setTempProgressiveKeys(state) {
         pendingRelease.progressive &&
         pendingRelease.progressive.key === null
       ) {
-        pendingRelease.progressive.key = `ui-temp-${index}`;
+        pendingRelease.progressive.key = `${TEMP_KEY}${index}`;
       }
       index = index + 1;
     });
@@ -214,7 +216,7 @@ function removeTempProgressiveKeys(state) {
 
       if (
         pendingRelease.progressive &&
-        pendingRelease.progressive.key.indexOf("ui-temp-") === 0
+        pendingRelease.progressive.key.indexOf(TEMP_KEY) === 0
       ) {
         pendingRelease.progressive.key = null;
       }

@@ -1,6 +1,7 @@
 import {
   RISKS_WITH_AVAILABLE as RISKS,
-  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE
+  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE,
+  TEMP_KEY
 } from "../constants";
 
 import { hideNotification, showNotification } from "./globalNotification";
@@ -128,10 +129,7 @@ export function releaseRevisions() {
     ) {
       progressive = pendingRelease.progressive;
 
-      if (
-        progressive.key === null ||
-        progressive.key.indexOf("ui-temp") === 0
-      ) {
+      if (progressive.key === null || progressive.key.indexOf(TEMP_KEY) === 0) {
         progressive.key = progressiveKey;
       }
     }
