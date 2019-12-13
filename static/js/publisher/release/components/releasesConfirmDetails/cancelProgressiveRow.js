@@ -11,10 +11,10 @@ const CancelProgressiveRow = ({ release }) => {
         className="p-release-details-row is-closing"
         key={`close-${revisionInfo.revision}-${release.channel}`}
       >
+        <span>Cancel</span>
         <span>
-          Cancel progressive release of <b>{revisionInfo.revision}</b> in{" "}
-          <b>{release.channel}</b> on <b>{arch}</b>. Revert to{" "}
-          <b>{previousRevision.revision}</b>.
+          <b>{revisionInfo.revision}</b> in <b>{release.channel}</b> on{" "}
+          <b>{arch}</b>. Revert to <b>{previousRevision.revision}</b>.
         </span>
       </div>
     );

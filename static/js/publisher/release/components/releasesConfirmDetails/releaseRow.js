@@ -27,7 +27,7 @@ const ReleaseRow = ({ type, revisionInfo, channel, progress, notes }) => (
         <span className="p-release-details-row__progress">
           <ProgressiveBar percentage={100} disabled={true} />
           <span>
-            <span className="p-tooltip--btm-right">
+            <span className="p-tooltip--btm-center">
               <span className="p-help">100% of devices</span>
               <span className="p-tooltip__message">
                 Cannot progressively release to an empty channel
@@ -38,7 +38,7 @@ const ReleaseRow = ({ type, revisionInfo, channel, progress, notes }) => (
       </Fragment>
     )}
     {notes && (
-      <span className="p-release-details__row-notes">
+      <span className="p-release-details-row__notes">
         <small>{notes}</small>
       </span>
     )}

@@ -13,8 +13,8 @@ import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
 import CancelProgressiveRow from "./cancelProgressiveRow";
 import ProgressiveRow from "./progressiveRow";
+import ProgressiveRowGroup from "./progressiveRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
-import GlobalRow from "./globalRow";
 
 const ReleasesConfirmDetails = ({
   updates,
@@ -60,24 +60,14 @@ const ReleasesConfirmDetails = ({
   return (
     <div className="p-releases-confirm__details">
       {showProgressiveReleases && (
-        <GlobalRow
+        <ProgressiveRowGroup
+          releases={progressiveReleases}
           useGlobal={useGlobal}
-          toggleGlobal={toggleGlobal}
           globalPercentage={globalPercentage}
+          toggleGlobal={toggleGlobal}
           updatePercentage={updatePercentage}
         />
       )}
-      {showProgressiveReleases &&
-        Object.keys(progressiveReleases).map(releaseKey => {
-          return (
-            <ProgressiveRow
-              release={progressiveReleases[releaseKey]}
-              type={progressiveTypes.RELEASE}
-              globalPercentage={useGlobal ? globalPercentage : null}
-              key={releaseKey}
-            />
-          );
-        })}
       {showProgressiveUpdates &&
         Object.keys(progressiveUpdates).map(releaseKey => {
           return (

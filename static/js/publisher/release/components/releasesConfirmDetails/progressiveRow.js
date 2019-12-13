@@ -13,7 +13,8 @@ const ProgressiveRow = ({
   release,
   updateProgressiveReleasePercentage,
   type,
-  globalPercentage
+  globalPercentage,
+  updateGlobalPercentage
 }) => {
   if (!release.progressive) {
     return false;
@@ -39,8 +40,12 @@ const ProgressiveRow = ({
 
   const revisionInfo = release.revision;
   const channel = release.channel;
-  const updatePercentage = percentage => {
-    updateProgressiveReleasePercentage(release.progressive.key, percentage);
+  const onChangeHandler = percentage => {
+    if (updateGlobalPercentage) {
+      updateGlobalPercentage(percentage);
+    } else {
+      updateProgressiveReleasePercentage(release.progressive.key, percentage);
+    }
   };
 
   let progress;
@@ -60,17 +65,21 @@ const ProgressiveRow = ({
   } else {
     progress = (
       <Fragment>
-        {!globalPercentage && (
+        {globalPercentage &&
+          !updateGlobalPercentage && (
+            <ProgressiveBar percentage={globalPercentage} disabled={true} />
+          )}
+        {(!globalPercentage || updateGlobalPercentage) && (
           <InteractiveProgressiveBar
             percentage={startingPercentage}
-            onChange={updatePercentage}
+            onChange={onChangeHandler}
             targetPercentage={targetPercentage}
             minPercentage={1}
             singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
           />
         )}
         <span>
-          <span className="p-tooltip--btm-right">
+          <span className="p-tooltip--btm-center">
             <span className="p-help">{targetPercentage}% of devices</span>
             <span className="p-tooltip__message">
               Releases are delivered to devices via snap refreshes, as such, it
@@ -114,6 +123,7 @@ ProgressiveRow.propTypes = {
   release: PropTypes.object,
   type: PropTypes.string,
   globalPercentage: PropTypes.number,
+  updateGlobalPercentage: PropTypes.func,
   updateProgressiveReleasePercentage: PropTypes.func
 };
 

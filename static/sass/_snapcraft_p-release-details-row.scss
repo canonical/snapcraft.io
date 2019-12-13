@@ -7,12 +7,34 @@
     grid-template-columns: 4rem 15rem 2rem auto 16rem;
     padding: 1rem;
 
-    &.is-closing {
-      grid-template-columns: auto;
+    @media screen and (max-width: $breakpoint-large) {
+      grid-column-gap: .5rem;
+      grid-template-columns: 3rem 11rem 2rem auto 16rem;
     }
 
-    &:nth-child(even) {
-      background: $color-light;
+    // Same as the global nav breakpoint
+    @media screen and (max-width: 875px) {
+      grid-template-columns: 3rem 11rem 2rem auto 0;
+
+      &__notes {
+        display: none;
+      }
+    }
+
+    &.is-closing {
+      grid-template-columns: 4rem auto;
+
+      @media screen and (max-width: $breakpoint-large) {
+        grid-template-columns: 3rem auto;
+      }
+    }
+
+    &.is-global {
+      padding: .5rem;
+
+      .p-release-details-row__global-check {
+        grid-column-start: 4;
+      }
     }
 
     &__join {

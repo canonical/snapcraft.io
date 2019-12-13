@@ -1,68 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { InteractiveProgressiveBar } from "../progressiveBar";
-
-const GlobalRow = ({
-  useGlobal,
-  toggleGlobal,
-  globalPercentage,
-  updatePercentage
-}) => {
+const GlobalRow = ({ useGlobal, toggleGlobal }) => {
   return (
-    <div className="p-releases-confirm__details-global row u-vertically-center">
-      <div className="col-4">
-        <label>
-          <span className="p-tooltip--btm-center">
-            <span className="p-help">
-              Use the same progressive release percentage
-            </span>
-            <span className="p-tooltip__message">
-              For new progressive releases
-            </span>
-          </span>
-          <span className="p-releases-confirm__details-switch">
-            <input
-              type="checkbox"
-              className="p-switch"
-              checked={useGlobal}
-              onChange={toggleGlobal}
-            />
-            <div className="p-switch__slider" />
-          </span>
+    <div className="p-release-details-row is-global">
+      <span className="p-release-details-row__global-check">
+        <input
+          type="checkbox"
+          checked={useGlobal}
+          onChange={toggleGlobal}
+          id="useGlobalToggle"
+        />
+        <label htmlFor="useGlobalToggle">
+          Same percentage for all releases
         </label>
-      </div>
-      {useGlobal && (
-        <div className="col-4 p-release-details-row__progress">
-          <InteractiveProgressiveBar
-            percentage={globalPercentage}
-            targetPercentage={globalPercentage}
-            minPercentage={1}
-            singleDirection={0}
-            onChange={updatePercentage}
-          />
-          <span>
-            <span className="p-tooltip--btm-center">
-              <span className="p-help">{globalPercentage}% of devices</span>
-              <span className="p-tooltip__message">
-                Releases are delivered to devices via snap refreshes. So it may
-                <br />
-                take some time for devices to receive the new version. There is
-                also no
-                <br />
-                guarantee that this release will achieve the entire target
-                percentage.
-              </span>
-            </span>
-          </span>
-        </div>
-      )}
+      </span>
     </div>
   );
 };
 
 GlobalRow.propTypes = {
-  useGlobal: PropTypes.boolean,
+  useGlobal: PropTypes.bool,
   toggleGlobal: PropTypes.func,
   globalPercentage: PropTypes.number,
   updatePercentage: PropTypes.func
