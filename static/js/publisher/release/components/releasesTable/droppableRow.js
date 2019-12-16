@@ -50,7 +50,17 @@ const ReleasesTableDroppableRow = props => {
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
     drop: item => {
-      item.revisions.forEach(r => promoteRevision(r, channel));
+      item.revisions.forEach(r => {
+        const revision = JSON.parse(JSON.stringify(r));
+        if (revision.release && revision.release.progressive) {
+          revision.release.progressive = {
+            key: null,
+            percentage: 100,
+            paused: false
+          };
+        }
+        promoteRevision(revision, channel);
+      });
     },
     canDrop: item => {
       const draggedRevisions = item.revisions;
