@@ -5,7 +5,7 @@
     font-size: .875rem;
     grid-column-gap: 1rem;
     grid-template-columns: 4rem 15rem 2rem auto 16rem;
-    padding: 1rem;
+    padding: .25rem;
 
     @media screen and (max-width: $breakpoint-large) {
       grid-column-gap: .5rem;
@@ -30,7 +30,7 @@
     }
 
     &.is-global {
-      padding: .5rem;
+      padding: .25rem;
 
       .p-release-details-row__global-check {
         grid-column-start: 4;
