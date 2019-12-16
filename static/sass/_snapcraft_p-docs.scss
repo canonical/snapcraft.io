@@ -11,6 +11,12 @@
       max-width: 100%;
     }
 
+    .lightbox-wrapper {
+      .meta {
+        display: none;
+      }
+    }
+
     // Discourse adds "emoji" <img>s, which are huge
     // They need to be constrained
     .emoji {
