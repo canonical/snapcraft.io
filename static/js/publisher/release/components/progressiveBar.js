@@ -196,8 +196,8 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   render() {
-    const { disabled } = this.props;
-    const { current, scrubTarget, scrubStart, singleDirection } = this.state;
+    const { disabled, singleDirection } = this.props;
+    const { current, scrubTarget, scrubStart } = this.state;
     const classes = ["progressive-bar__interactive-wrapper"];
     if (scrubStart) {
       classes.push("is-scrubbing");
