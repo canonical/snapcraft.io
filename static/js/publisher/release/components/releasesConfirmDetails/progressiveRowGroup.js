@@ -13,7 +13,7 @@ const ProgressiveRowGroup = ({
   updatePercentage
 }) => {
   return (
-    <Fragment>
+    <div className="p-release-details-group">
       {Object.keys(releases).map((releaseKey, index) => {
         if (index === 1) {
           return (
@@ -44,7 +44,7 @@ const ProgressiveRowGroup = ({
           />
         );
       })}
-    </Fragment>
+    </div>
   );
 };
 

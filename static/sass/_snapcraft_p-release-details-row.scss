@@ -52,4 +52,11 @@
       color: $color-dark;
     }
   }
+
+  .p-release-details-group +
+  .p-release-details-row {
+    border-top: 1px dashed $color-mid-light;
+    margin-top: .5rem;
+    padding-top: .5rem;
+  }
 }
