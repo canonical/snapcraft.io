@@ -38,9 +38,7 @@ const ProgressiveRowGroup = ({
             type={progressiveTypes.RELEASE}
             globalPercentage={useGlobal ? globalPercentage : null}
             key={releaseKey}
-            updateGlobalPercentage={
-              useGlobal && index === 0 ? updatePercentage : null
-            }
+            updateGlobalPercentage={index === 0 ? updatePercentage : null}
           />
         );
       })}

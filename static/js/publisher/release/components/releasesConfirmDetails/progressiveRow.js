@@ -43,9 +43,8 @@ const ProgressiveRow = ({
   const onChangeHandler = percentage => {
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
-    } else {
-      updateProgressiveReleasePercentage(release.progressive.key, percentage);
     }
+    updateProgressiveReleasePercentage(release.progressive.key, percentage);
   };
 
   const isInteractive = !globalPercentage || updateGlobalPercentage;
@@ -104,7 +103,7 @@ const ProgressiveRow = ({
     const prevVer = release.previousRevisions[0].version;
 
     notes = `${100 -
-      startingPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
+      targetPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
   }
 
   const displayType = type.charAt(0).toUpperCase() + type.slice(1);
