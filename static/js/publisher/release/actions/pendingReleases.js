@@ -26,7 +26,11 @@ export function releaseRevision(revision, channel, progressive) {
       .filter(release => release.revision !== revision.revision)
       .map(release => revisions[release.revision]);
 
+    let revisionToRelease = revision;
+
     if (!progressive) {
+      revisionToRelease = revisions[revision.revision];
+
       // Set key to null as we want to set the same key for a group
       // of releases on release. In actions/releases.js the key is either
       // updated, or the progressive object is removed completely
@@ -40,7 +44,7 @@ export function releaseRevision(revision, channel, progressive) {
     return dispatch({
       type: RELEASE_REVISION,
       payload: {
-        revision,
+        revision: revisionToRelease,
         channel,
         progressive,
         previousRevisions

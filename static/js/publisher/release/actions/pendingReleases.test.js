@@ -38,9 +38,15 @@ describe("pendingReleases actions", () => {
   const channel = "test/edge";
   const previousRevisions = [];
   const initialState = reducers(undefined, {});
+  const stateWithRevisions = {
+    ...initialState,
+    revisions: {
+      [revision.revision]: revision
+    }
+  };
 
   describe("releaseRevision", () => {
-    const store = mockStore(initialState);
+    const store = mockStore(stateWithRevisions);
     it("should create an action to promote revision", () => {
       expect(store.dispatch(releaseRevision(revision, channel)).type).toBe(
         RELEASE_REVISION
@@ -48,21 +54,21 @@ describe("pendingReleases actions", () => {
     });
 
     it("should supply a payload with revision", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.revision
       ).toEqual(revision);
     });
 
     it("should supply a payload with channel", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.channel
       ).toEqual(channel);
     });
 
     it("should supply a payload with a progressive release", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toEqual({
@@ -73,7 +79,7 @@ describe("pendingReleases actions", () => {
     });
 
     it("should supply a payload with previous revisions", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload
           .previousRevisions
@@ -188,6 +194,10 @@ describe("pendingReleases actions", () => {
             test64: { ...revision },
             abc42: { ...revision2 }
           }
+        },
+        revisions: {
+          [revision.revision]: revision,
+          [revision2.revision]: revision2
         }
       };
 

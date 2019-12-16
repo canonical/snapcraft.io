@@ -84,22 +84,8 @@ const ReleasesTableReleaseCell = props => {
 
   const canDrag = currentRevision && !isChannelPendingClose;
 
-  // When we're dragging and dropping, we really don't want to persist the
-  // progressive state, so reset it here
-  let dndRevision;
-  if (currentRevision) {
-    dndRevision = JSON.parse(JSON.stringify(currentRevision));
-    if (dndRevision.release && dndRevision.release.progressive) {
-      dndRevision.release.progressive = {
-        key: null,
-        percentage: 100,
-        paused: false
-      };
-    }
-  }
-
   const item = {
-    revisions: [dndRevision],
+    revisions: [currentRevision],
     architectures: currentRevision ? currentRevision.architectures : [],
     risk,
     branch,
