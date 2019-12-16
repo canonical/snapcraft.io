@@ -12,7 +12,7 @@ const GlobalRow = ({ useGlobal, toggleGlobal }) => {
           id="useGlobalToggle"
         />
         <label htmlFor="useGlobalToggle">
-          Use this percentage for all releases
+          Use this percentage for all progressive releases
         </label>
       </span>
     </div>

@@ -48,6 +48,8 @@ const ProgressiveRow = ({
     }
   };
 
+  const isInteractive = !globalPercentage || updateGlobalPercentage;
+
   let progress;
   if (
     type === progressiveTypes.UPDATE &&
@@ -65,11 +67,10 @@ const ProgressiveRow = ({
   } else {
     progress = (
       <Fragment>
-        {globalPercentage &&
-          !updateGlobalPercentage && (
-            <ProgressiveBar percentage={globalPercentage} disabled={true} />
-          )}
-        {(!globalPercentage || updateGlobalPercentage) && (
+        {!isInteractive && (
+          <ProgressiveBar percentage={globalPercentage} disabled={true} />
+        )}
+        {isInteractive && (
           <InteractiveProgressiveBar
             percentage={startingPercentage}
             onChange={onChangeHandler}
