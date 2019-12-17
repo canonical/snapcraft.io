@@ -48,9 +48,12 @@ class RevisionsList extends Component {
     showProgressive,
     progressiveBeingCancelled
   ) {
+    const rowKey = `revision-row-${revision.revision}-${
+      revision.release ? revision.release.channel : new Date().getTime()
+    }`;
     return (
       <RevisionsListRow
-        key={`revision-row-${revision.revision}`}
+        key={rowKey}
         showProgressive={showProgressive}
         revision={revision}
         isSelectable={isSelectable}
