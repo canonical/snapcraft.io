@@ -8,7 +8,7 @@ $color-modal-controls: rgba($color-x-dark, .2);
     width: auto;
 
     &--expand {
-      margin: 0 auto 20px;
+      margin: 0 auto 1.25rem;
       overflow: visible;
       position: relative;
 
@@ -28,10 +28,10 @@ $color-modal-controls: rgba($color-x-dark, .2);
         box-shadow: 0 5px 10px 0 $color-modal-controls;
         content: '';
         display: block;
-        height: 20px;
+        height: 1.25rem;
         position: absolute;
         right: 15px;
-        width: 20px;
+        width: 1.25rem;
       }
     }
   }
@@ -63,15 +63,15 @@ $color-modal-controls: rgba($color-x-dark, .2);
 
   // circle preloader
   .vbox-preloader {
-    height: 32px;
+    height: 2rem;
     left: 50%;
-    margin-left: -16px;
-    margin-top: -16px;
+    margin-left: -$sph-inner--small;
+    margin-top: -$sph-inner--small;
     overflow: hidden;
     position: fixed;
     text-indent: -100px;
     top: 50%;
-    width: 32px;
+    width: 2rem;
   }
 
   @keyframes playload {
@@ -148,9 +148,9 @@ $color-modal-controls: rgba($color-x-dark, .2);
     font-size: 1rem;
     height: auto;
     left: 0;
-    line-height: 28px;
+    line-height: 1.75rem;
     overflow: hidden;
-    padding: 40px;
+    padding: 2.5rem;
     position: fixed;
     text-align: center;
     width: 100%;
@@ -166,11 +166,11 @@ $color-modal-controls: rgba($color-x-dark, .2);
     cursor: pointer;
     display: none;
     font-size: 12px;
-    height: 40px;
+    height: 2.5rem;
     left: 0;
     line-height: 28px;
     overflow: hidden;
-    padding: 6px 10px;
+    padding: .375rem .625rem;
     position: fixed;
     top: -1px;
   }
@@ -181,7 +181,7 @@ $color-modal-controls: rgba($color-x-dark, .2);
     height: 315px;
     margin: 0 auto;
     overflow: auto;
-    padding: 10px;
+    padding: .625rem;
     text-align: left;
     width: 420px;
   }
@@ -243,7 +243,7 @@ $color-modal-controls: rgba($color-x-dark, .2);
     height: 100%;
     justify-content: center;
     overflow: hidden;
-    padding: 40px 0;
+    padding: 2.5rem 0;
     position: relative;
     text-align: center;
     width: 100%;
