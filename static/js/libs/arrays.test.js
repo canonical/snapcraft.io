@@ -10,7 +10,7 @@ describe("arraysEqual", () => {
   });
 
   it("should return arrays of strings as equal", () => {
-    expect(arraysEqual(["test"], ["test"])).toEqual(true);
+    expect(arraysEqual(["a", "b", "c"], ["a", "b", "c"])).toEqual(true);
   });
 
   it("should return arrays of numbers as equal", () => {
@@ -35,7 +35,7 @@ describe("arraysEqual", () => {
   });
 
   it("should fail if an array of strings differ", () => {
-    expect(arraysEqual(["a"], ["b"])).toEqual(false);
+    expect(arraysEqual(["a", "b", "c"], ["a", "d", "c"])).toEqual(false);
   });
 
   it("should fail if an array of numbers differ", () => {
@@ -44,6 +44,18 @@ describe("arraysEqual", () => {
 
   it("should fail if an array of objects differ", () => {
     expect(arraysEqual([{ test: "test" }], [{ test: "test2" }])).toEqual(false);
+  });
+
+  it("should fail if an array is modified", () => {
+    let arr1 = ["test1", 1];
+    let arr1Copy = [...arr1];
+    let arr2 = ["test2", 2];
+    let arr2Copy = [...arr2];
+    arraysEqual(arr1, arr2);
+    expect(
+      JSON.stringify(arr1) === JSON.stringify(arr1Copy) &&
+        JSON.stringify(arr2) === JSON.stringify(arr2Copy)
+    ).toEqual(true);
   });
 });
 

@@ -342,6 +342,10 @@ def get_listing_snap(snap_name):
 
     snap_categories = logic.filter_categories(snap_categories)
 
+    snap_categories["categories"] = [
+        category["name"] for category in snap_categories["categories"]
+    ]
+
     filename = f"publisher/content/listing_tour.yaml"
     tour_steps = helpers.get_yaml(filename, typ="rt")
 

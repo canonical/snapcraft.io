@@ -127,7 +127,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
             <select
               name="primary_category"
               {% if snap_categories.categories[0] %}
-              value="{{ snap_categories.categories[0].name }}"
+              value="{{ snap_categories.categories[0] }}"
               {% endif %}
               {% if snap_categories.locked %} disabled="disabled"{% endif %}
               >
@@ -135,7 +135,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               {% for category in categories %}
               <option
                 value="{{ category.slug }}"
-                {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
+                {% if snap_categories.categories[0] and (snap_categories.categories[0] == category.slug) %}
                 selected="selected"
                 {% endif %}
                 >{{ category.name }}</option>
@@ -171,7 +171,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               <select
                 name="secondary_category"
                 {% if snap_categories.categories[1] %}
-                value="{{ snap_categories.categories[1].name }}"
+                value="{{ snap_categories.categories[1] }}"
                 {% endif %}
                 {% if snap_categories.locked %} disabled="disabled"{% endif %}
                 >
@@ -179,10 +179,10 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
                 {% for category in categories %}
                 <option
                   value="{{ category.slug }}"
-                  {% if snap_categories.categories[1] and (snap_categories.categories[1].name == category.slug) %}
+                  {% if snap_categories.categories[1] and (snap_categories.categories[1] == category.slug) %}
                   selected="selected"
                   {% endif %}
-                  {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0].name %}
+                  {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0] %}
                   disabled="disabled"
                   {% endif %}
                   >{{ category.name }}</option>
