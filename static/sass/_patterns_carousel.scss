@@ -42,17 +42,17 @@
           background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
           background-position: 50% 50%;
           background-repeat: no-repeat;
-          background-size: 12px 12px;
+          background-size: .75rem .75rem;
           border: 1px solid $color-light;
           border-radius: 2px;
           content: '';
           display: block;
-          height: 24px;
+          height: 1.5rem;
           pointer-events: none;
           position: absolute;
-          right: 10px;
-          top: 10px;
-          width: 24px;
+          right: .625rem;
+          top: .625rem;
+          width: 1.5rem;
         }
       }
     }

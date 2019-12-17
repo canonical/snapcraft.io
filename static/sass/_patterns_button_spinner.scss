@@ -7,7 +7,7 @@
   // fighting with Vanilla specificity
   [class*="p-button-"] .p-button__spinner {
     display: none;
-    left: calc(50% - 8px);
+    left: calc(50% - .5rem);
     position: absolute;
     top: calc(50% -11px);
 
