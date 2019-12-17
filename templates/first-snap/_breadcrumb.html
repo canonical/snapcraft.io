@@ -39,7 +39,11 @@
         </li>
       {% endif %}
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build' or fsf_step == 'test' %} is-disabled{% endif %}">
-        Publish to store
+        {% if fsf_step == 'build' and os and os.startswith('macos') %}
+          <a href="/first-snap/{{ language }}/{{ os }}/push">Publish to store</a>
+        {% else %}
+          Publish to store
+        {% endif %}
       </li>
     </ul>
   </div>
