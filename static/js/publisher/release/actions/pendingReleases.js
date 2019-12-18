@@ -28,7 +28,7 @@ export function releaseRevision(revision, channel, progressive) {
 
     let revisionToRelease = revision;
 
-    if (!progressive) {
+    if (!progressive && previousRevisions.length > 0 && previousRevisions[0]) {
       revisionToRelease = revisions[revision.revision];
 
       // Set key to null as we want to set the same key for a group

@@ -35,13 +35,18 @@ describe("pendingReleases actions", () => {
     revision: 1,
     architectures: ["test64"]
   };
+  const revision2 = {
+    revision: 2,
+    architectures: ["test64"]
+  };
   const channel = "test/edge";
   const previousRevisions = [];
   const initialState = reducers(undefined, {});
   const stateWithRevisions = {
     ...initialState,
     revisions: {
-      [revision.revision]: revision
+      [revision.revision]: revision,
+      [revision2.revision]: revision2
     }
   };
 
@@ -67,8 +72,18 @@ describe("pendingReleases actions", () => {
       ).toEqual(channel);
     });
 
-    it("should supply a payload with a progressive release", () => {
-      const store = mockStore(stateWithRevisions);
+    it("should supply a payload with a progressive release if there are previous releases", () => {
+      const stateWithPreviousReleases = {
+        ...stateWithRevisions,
+        releases: [
+          {
+            architecture: "test64",
+            channel: channel,
+            revision: 2
+          }
+        ]
+      };
+      const store = mockStore(stateWithPreviousReleases);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toEqual({
@@ -76,6 +91,13 @@ describe("pendingReleases actions", () => {
         percentage: 100,
         paused: false
       });
+    });
+
+    it("should not supply a payload with a progressive release if there aren't previous releases", () => {
+      const store = mockStore(stateWithRevisions);
+      expect(
+        store.dispatch(releaseRevision(revision, channel)).payload.progressive
+      ).toBeUndefined();
     });
 
     it("should supply a payload with previous revisions", () => {
