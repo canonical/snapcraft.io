@@ -1,7 +1,7 @@
 from json import loads
 
 import flask
-
+import talisker.requests
 import bleach
 import pycountry
 import webapp.helpers as helpers
@@ -10,6 +10,7 @@ import webapp.api.dashboard as api
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 from webapp import authentication
+from webapp.api import requests
 from webapp.api.exceptions import (
     AgreementNotSigned,
     ApiError,
@@ -20,7 +21,12 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
-from webapp.api.store import StoreApi
+from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiTimeoutError,
+    StoreApiCircuitBreaker,
+)
 from webapp.store.logic import (
     get_categories,
     filter_screenshots,
@@ -39,7 +45,7 @@ publisher_snaps = flask.Blueprint(
     static_folder="/static",
 )
 
-store_api = StoreApi(cache=False)
+store_api = SnapcraftStoreApi(talisker.requests.get_session(requests.Session))
 
 
 def refresh_redirect(path):
@@ -60,7 +66,7 @@ def refresh_redirect(path):
 
 
 def _handle_errors(api_error: ApiError):
-    if type(api_error) is ApiTimeoutError:
+    if type(api_error) in [ApiTimeoutError, StoreApiTimeoutError]:
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
         return flask.redirect(flask.url_for("account.get_account_name"))
@@ -68,7 +74,7 @@ def _handle_errors(api_error: ApiError):
         return flask.redirect(flask.url_for("account.get_agreement"))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
-    elif type(api_error) is ApiCircuitBreaker:
+    elif type(api_error) in [ApiCircuitBreaker, StoreApiCircuitBreaker]:
         return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
@@ -328,7 +334,7 @@ def get_listing_snap(snap_name):
 
     try:
         categories_results = store_api.get_categories()
-    except ApiError:
+    except StoreApiError:
         categories_results = []
 
     categories = sorted(
@@ -501,7 +507,7 @@ def post_listing_snap(snap_name):
 
             try:
                 categories_results = store_api.get_categories()
-            except ApiError:
+            except StoreApiError:
                 categories_results = []
 
             categories = get_categories(categories_results)
@@ -1211,8 +1217,10 @@ def get_publicise_badges(snap_name):
         return flask.abort(404, "No snap named {}".format(snap_name))
 
     try:
-        snap_public_details = store_api.get_snap_details(snap_name)
-    except ApiError as api_error:
+        snap_public_details = store_api.get_item_details(
+            snap_name, api_version=2
+        )
+    except StoreApiError as api_error:
         return _handle_errors(api_error)
 
     context = {

@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -48,17 +49,45 @@ class GetDistroPageTest(TestCase):
                 "https://api.snapcraft.io/v2/",
                 "snaps/info/",
                 self.snap_name,
-                "?fields=title,summary,description,license,contact,website,",
-                "publisher,prices,media,download,version,created-at,"
-                "confinement,categories,trending",
+                "?",
+                urlencode(
+                    {
+                        "fields": ",".join(
+                            [
+                                "title",
+                                "summary",
+                                "description",
+                                "license",
+                                "contact",
+                                "website",
+                                "publisher",
+                                "prices",
+                                "media",
+                                "download",
+                                "version",
+                                "created-at",
+                                "confinement",
+                                "categories",
+                                "trending",
+                            ]
+                        )
+                    }
+                ),
             ]
         )
         self.featured_snaps_api_url = "".join(
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?confinement=strict,classic&section=featured&scope=wide",
-                "&fields=package_name,title,icon_url",
+                "?",
+                urlencode(
+                    {
+                        "confinement": "strict,classic",
+                        "section": "featured",
+                        "scope": "wide",
+                        "fields": "package_name,title,icon_url",
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/install/" + self.snap_name + "/debian"

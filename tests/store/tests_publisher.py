@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -12,11 +13,30 @@ class GetPublisherPageTest(TestCase):
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?q=publisher:28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
-                "&page=1&size=500&scope=wide&arch=wide",
-                "&confinement=strict,classic",
-                "&fields=package_name,title,summary,icon_url,media,publisher,",
-                "developer_validation,origin,apps",
+                "?",
+                urlencode(
+                    {
+                        "q": "publisher:28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
+                        "page": "1",
+                        "size": "500",
+                        "scope": "wide",
+                        "arch": "wide",
+                        "confinement": "strict,classic",
+                        "fields": ",".join(
+                            [
+                                "package_name",
+                                "title",
+                                "summary",
+                                "icon_url",
+                                "media",
+                                "publisher",
+                                "developer_validation",
+                                "origin",
+                                "apps",
+                            ]
+                        ),
+                    }
+                ),
             ]
         )
 

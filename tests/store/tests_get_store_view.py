@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -14,8 +15,15 @@ class GetStoreViewTest(TestCase):
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?confinement=strict,classic&section=featured&scope=wide",
-                "&fields=package_name,title,icon_url",
+                "?",
+                urlencode(
+                    {
+                        "confinement": "strict,classic",
+                        "section": "featured",
+                        "scope": "wide",
+                        "fields": "package_name,title,icon_url",
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/store"
