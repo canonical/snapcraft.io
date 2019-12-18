@@ -189,8 +189,8 @@ class RevisionsList extends Component {
         filteredRevisions = this.props.filteredReleaseHistory;
 
         pendingRelease = getPendingRelease(
-          filters.arch,
-          `${filters.track}/${filters.risk}`
+          `${filters.track}/${filters.risk}`,
+          filters.arch
         );
       }
 
@@ -439,8 +439,8 @@ const mapStateToProps = state => {
     getFilteredAvailableRevisionsForArch: arch =>
       getFilteredAvailableRevisionsForArch(state, arch),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
-    getPendingRelease: (arch, channel) =>
-      getPendingRelease(state, arch, channel)
+    getPendingRelease: (channel, arch) =>
+      getPendingRelease(state, channel, arch)
   };
 };
 
