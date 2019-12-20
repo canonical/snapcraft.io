@@ -8,6 +8,8 @@ export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
 export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
 export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 export const CANCEL_PROGRESSIVE_RELEASE = "CANCEL_PROGRESSIVE_RELEASE";
+export const SET_TEMP_PROGRESSIVE_KEYS = "SET_TEMP_PROGRESSIVE_KEYS";
+export const REMOVE_TEMP_PROGRESSIVE_KEYS = "REMOVE_TEMP_PROGRESSIVE_KEYS";
 
 import { getPendingChannelMap, getReleases } from "../selectors";
 
@@ -24,7 +26,11 @@ export function releaseRevision(revision, channel, progressive) {
       .filter(release => release.revision !== revision.revision)
       .map(release => revisions[release.revision]);
 
-    if (!progressive) {
+    let revisionToRelease = revision;
+
+    if (!progressive && previousRevisions.length > 0 && previousRevisions[0]) {
+      revisionToRelease = revisions[revision.revision];
+
       // Set key to null as we want to set the same key for a group
       // of releases on release. In actions/releases.js the key is either
       // updated, or the progressive object is removed completely
@@ -38,7 +44,7 @@ export function releaseRevision(revision, channel, progressive) {
     return dispatch({
       type: RELEASE_REVISION,
       payload: {
-        revision,
+        revision: revisionToRelease,
         channel,
         progressive,
         previousRevisions
@@ -88,6 +94,18 @@ export function cancelProgressiveRelease(key, previousRevision) {
       key,
       previousRevision
     }
+  };
+}
+
+export function setTemporaryProgressiveReleaseKeys() {
+  return {
+    type: SET_TEMP_PROGRESSIVE_KEYS
+  };
+}
+
+export function removeTemporaryProgressiveReleaseKeys() {
+  return {
+    type: REMOVE_TEMP_PROGRESSIVE_KEYS
   };
 }
 

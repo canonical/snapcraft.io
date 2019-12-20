@@ -14,6 +14,8 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
+  SET_TEMP_PROGRESSIVE_KEYS,
+  REMOVE_TEMP_PROGRESSIVE_KEYS,
   releaseRevision,
   promoteRevision,
   promoteChannel,
@@ -23,7 +25,9 @@ import {
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
-  cancelProgressiveRelease
+  cancelProgressiveRelease,
+  setTemporaryProgressiveReleaseKeys,
+  removeTemporaryProgressiveReleaseKeys
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
@@ -31,12 +35,23 @@ describe("pendingReleases actions", () => {
     revision: 1,
     architectures: ["test64"]
   };
+  const revision2 = {
+    revision: 2,
+    architectures: ["test64"]
+  };
   const channel = "test/edge";
   const previousRevisions = [];
   const initialState = reducers(undefined, {});
+  const stateWithRevisions = {
+    ...initialState,
+    revisions: {
+      [revision.revision]: revision,
+      [revision2.revision]: revision2
+    }
+  };
 
   describe("releaseRevision", () => {
-    const store = mockStore(initialState);
+    const store = mockStore(stateWithRevisions);
     it("should create an action to promote revision", () => {
       expect(store.dispatch(releaseRevision(revision, channel)).type).toBe(
         RELEASE_REVISION
@@ -44,21 +59,31 @@ describe("pendingReleases actions", () => {
     });
 
     it("should supply a payload with revision", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.revision
       ).toEqual(revision);
     });
 
     it("should supply a payload with channel", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.channel
       ).toEqual(channel);
     });
 
-    it("should supply a payload with a progressive release", () => {
-      const store = mockStore(initialState);
+    it("should supply a payload with a progressive release if there are previous releases", () => {
+      const stateWithPreviousReleases = {
+        ...stateWithRevisions,
+        releases: [
+          {
+            architecture: "test64",
+            channel: channel,
+            revision: 2
+          }
+        ]
+      };
+      const store = mockStore(stateWithPreviousReleases);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toEqual({
@@ -68,8 +93,15 @@ describe("pendingReleases actions", () => {
       });
     });
 
+    it("should not supply a payload with a progressive release if there aren't previous releases", () => {
+      const store = mockStore(stateWithRevisions);
+      expect(
+        store.dispatch(releaseRevision(revision, channel)).payload.progressive
+      ).toBeUndefined();
+    });
+
     it("should supply a payload with previous revisions", () => {
-      const store = mockStore(initialState);
+      const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload
           .previousRevisions
@@ -184,6 +216,10 @@ describe("pendingReleases actions", () => {
             test64: { ...revision },
             abc42: { ...revision2 }
           }
+        },
+        revisions: {
+          [revision.revision]: revision,
+          [revision2.revision]: revision2
         }
       };
 
@@ -352,6 +388,22 @@ describe("pendingReleases actions", () => {
       expect(
         cancelProgressiveRelease(key, previousRevision).payload.previousRevision
       ).toBe(previousRevision);
+    });
+  });
+
+  describe("setTemporaryprogressivereleasekeys", () => {
+    it("should create an action to set temporary progressive release keys", () => {
+      expect(setTemporaryProgressiveReleaseKeys().type).toBe(
+        SET_TEMP_PROGRESSIVE_KEYS
+      );
+    });
+  });
+
+  describe("removeTemporaryprogressivereleasekeys", () => {
+    it("should create an action to remove temporary progressive release keys", () => {
+      expect(removeTemporaryProgressiveReleaseKeys().type).toBe(
+        REMOVE_TEMP_PROGRESSIVE_KEYS
+      );
     });
   });
 });
