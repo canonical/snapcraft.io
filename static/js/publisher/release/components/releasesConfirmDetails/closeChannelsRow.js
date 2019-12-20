@@ -9,8 +9,8 @@ const CloseChannelsRow = ({ channels }) => {
   }
   return (
     <div className="p-release-details-row is-closing">
+      <span>Close</span>
       <span>
-        Close{" "}
         {group
           .map(channel => <b key={channel}>{channel}</b>)
           .reduce((acc, el) => {

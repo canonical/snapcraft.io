@@ -1298,7 +1298,7 @@ describe("getPendingRelease", () => {
   };
 
   it("should return the correct release", () => {
-    const result = getPendingRelease(state, "amd64", "latest/stable");
+    const result = getPendingRelease(state, "latest/stable", "amd64");
 
     expect(result).toEqual({
       ...state.pendingReleases["1"]["latest/stable"]
@@ -1306,7 +1306,7 @@ describe("getPendingRelease", () => {
   });
 
   it("should return null if no pendingRelease is found", () => {
-    const result = getPendingRelease(state, "arm64", "latest/stable");
+    const result = getPendingRelease(state, "latest/stable", "arm64");
 
     expect(result).toBeNull();
   });

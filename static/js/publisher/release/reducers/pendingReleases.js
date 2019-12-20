@@ -6,10 +6,14 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE
+  CANCEL_PROGRESSIVE_RELEASE,
+  SET_TEMP_PROGRESSIVE_KEYS,
+  REMOVE_TEMP_PROGRESSIVE_KEYS
 } from "../actions/pendingReleases";
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+
+import { TEMP_KEY } from "../constants";
 
 function removePendingRelease(state, revision, channel) {
   const newState = JSON.parse(JSON.stringify(state));
@@ -180,6 +184,48 @@ function cancelProgressiveRelease(state, key, previousRevision) {
   return nextState;
 }
 
+function setTempProgressiveKeys(state) {
+  const nextState = JSON.parse(JSON.stringify(state));
+
+  let index = 0;
+  Object.keys(nextState).forEach(revision => {
+    const pendingReleaseChannels = nextState[revision];
+    Object.keys(pendingReleaseChannels).forEach(channel => {
+      const pendingRelease = pendingReleaseChannels[channel];
+
+      if (
+        pendingRelease.progressive &&
+        pendingRelease.progressive.key === null
+      ) {
+        pendingRelease.progressive.key = `${TEMP_KEY}${index}`;
+      }
+      index = index + 1;
+    });
+  });
+
+  return nextState;
+}
+
+function removeTempProgressiveKeys(state) {
+  const nextState = JSON.parse(JSON.stringify(state));
+
+  Object.keys(nextState).forEach(revision => {
+    const pendingReleaseChannels = nextState[revision];
+    Object.keys(pendingReleaseChannels).forEach(channel => {
+      const pendingRelease = pendingReleaseChannels[channel];
+
+      if (
+        pendingRelease.progressive &&
+        pendingRelease.progressive.key.indexOf(TEMP_KEY) === 0
+      ) {
+        pendingRelease.progressive.key = null;
+      }
+    });
+  });
+
+  return nextState;
+}
+
 // revisions to be released:
 // key is the id of revision to release
 // value is object containing release object and channels to release to
@@ -232,6 +278,10 @@ export default function pendingReleases(state = {}, action) {
         action.payload.key,
         action.payload.previousRevision
       );
+    case SET_TEMP_PROGRESSIVE_KEYS:
+      return setTempProgressiveKeys(state);
+    case REMOVE_TEMP_PROGRESSIVE_KEYS:
+      return removeTempProgressiveKeys(state);
     default:
       return state;
   }

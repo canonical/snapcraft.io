@@ -12,7 +12,9 @@ import { ProgressiveBar, InteractiveProgressiveBar } from "../progressiveBar";
 const ProgressiveRow = ({
   release,
   updateProgressiveReleasePercentage,
-  type
+  type,
+  globalPercentage,
+  updateGlobalPercentage
 }) => {
   if (!release.progressive) {
     return false;
@@ -20,22 +22,32 @@ const ProgressiveRow = ({
 
   let startingPercentage = 100;
   let targetPercentage = 100;
-  switch (type) {
-    case progressiveTypes.RELEASE:
-      startingPercentage = release.progressive.percentage;
-      break;
-    case progressiveTypes.UPDATE:
-      startingPercentage = release.revision.release.progressive.percentage;
-      targetPercentage = release.progressive.percentage;
-      break;
-    default:
+
+  if (globalPercentage) {
+    startingPercentage = targetPercentage = globalPercentage;
+  } else {
+    switch (type) {
+      case progressiveTypes.RELEASE:
+        startingPercentage = targetPercentage = release.progressive.percentage;
+        break;
+      case progressiveTypes.UPDATE:
+        startingPercentage = release.revision.release.progressive.percentage;
+        targetPercentage = release.progressive.percentage;
+        break;
+      default:
+    }
   }
 
   const revisionInfo = release.revision;
   const channel = release.channel;
-  const updatePercentage = percentage => {
+  const onChangeHandler = percentage => {
+    if (updateGlobalPercentage) {
+      updateGlobalPercentage(percentage);
+    }
     updateProgressiveReleasePercentage(release.progressive.key, percentage);
   };
+
+  const isInteractive = !globalPercentage || updateGlobalPercentage;
 
   let progress;
   if (
@@ -54,15 +66,20 @@ const ProgressiveRow = ({
   } else {
     progress = (
       <Fragment>
-        <InteractiveProgressiveBar
-          percentage={startingPercentage}
-          onChange={updatePercentage}
-          targetPercentage={targetPercentage}
-          minPercentage={1}
-          singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
-        />
+        {!isInteractive && (
+          <ProgressiveBar percentage={globalPercentage} disabled={true} />
+        )}
+        {isInteractive && (
+          <InteractiveProgressiveBar
+            percentage={startingPercentage}
+            onChange={onChangeHandler}
+            targetPercentage={targetPercentage}
+            minPercentage={1}
+            singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
+          />
+        )}
         <span>
-          <span className="p-tooltip--btm-right">
+          <span className="p-tooltip--btm-center">
             <span className="p-help">{targetPercentage}% of devices</span>
             <span className="p-tooltip__message">
               Releases are delivered to devices via snap refreshes, as such, it
@@ -86,7 +103,7 @@ const ProgressiveRow = ({
     const prevVer = release.previousRevisions[0].version;
 
     notes = `${100 -
-      startingPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
+      targetPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
   }
 
   const displayType = type.charAt(0).toUpperCase() + type.slice(1);
@@ -105,6 +122,8 @@ const ProgressiveRow = ({
 ProgressiveRow.propTypes = {
   release: PropTypes.object,
   type: PropTypes.string,
+  globalPercentage: PropTypes.number,
+  updateGlobalPercentage: PropTypes.func,
   updateProgressiveReleasePercentage: PropTypes.func
 };
 
