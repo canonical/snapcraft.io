@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
+import {
+  updateProgressiveReleasePercentage,
+  setTemporaryProgressiveReleaseKeys,
+  removeTemporaryProgressiveReleaseKeys
+} from "../../actions/pendingReleases";
 import { isProgressiveReleaseEnabled } from "../../selectors";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
 import CancelProgressiveRow from "./cancelProgressiveRow";
 import ProgressiveRow from "./progressiveRow";
+import ProgressiveRowGroup from "./progressiveRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
-const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
+const ReleasesConfirmDetails = ({
+  updates,
+  isProgressiveReleaseEnabled,
+  updateProgressiveReleasePercentage,
+  setTemporaryProgressiveReleaseKeys,
+  removeTemporaryProgressiveReleaseKeys
+}) => {
+  const [useGlobal, setGlobal] = useState(true);
+  const [globalPercentage, setGlobalPercentage] = useState(100);
+
   const progressiveReleases = updates.newReleasesToProgress;
   const progressiveUpdates = updates.progressiveUpdates;
   const progressiveCancellations = updates.cancelProgressive;
@@ -27,18 +42,32 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
 
+  const toggleGlobal = () => {
+    const newUseGlobal = !useGlobal;
+    setGlobal(newUseGlobal);
+    if (!newUseGlobal) {
+      setTemporaryProgressiveReleaseKeys();
+    } else {
+      removeTemporaryProgressiveReleaseKeys();
+    }
+  };
+
+  const updatePercentage = percentage => {
+    setGlobalPercentage(percentage);
+    updateProgressiveReleasePercentage(null, percentage);
+  };
+
   return (
     <div className="p-releases-confirm__details">
-      {showProgressiveReleases &&
-        Object.keys(progressiveReleases).map(releaseKey => {
-          return (
-            <ProgressiveRow
-              release={progressiveReleases[releaseKey]}
-              type={progressiveTypes.RELEASE}
-              key={releaseKey}
-            />
-          );
-        })}
+      {showProgressiveReleases && (
+        <ProgressiveRowGroup
+          releases={progressiveReleases}
+          useGlobal={useGlobal}
+          globalPercentage={globalPercentage}
+          toggleGlobal={toggleGlobal}
+          updatePercentage={updatePercentage}
+        />
+      )}
       {showProgressiveUpdates &&
         Object.keys(progressiveUpdates).map(releaseKey => {
           return (
@@ -80,11 +109,28 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
 
 ReleasesConfirmDetails.propTypes = {
   updates: PropTypes.object.isRequired,
-  isProgressiveReleaseEnabled: PropTypes.bool
+  isProgressiveReleaseEnabled: PropTypes.bool,
+  updateProgressiveReleasePercentage: PropTypes.func,
+  setTemporaryProgressiveReleaseKeys: PropTypes.func,
+  removeTemporaryProgressiveReleaseKeys: PropTypes.func
 };
 
 const mapStateToProps = state => ({
   isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
 });
 
-export default connect(mapStateToProps)(ReleasesConfirmDetails);
+const mapDispatchToProps = dispatch => {
+  return {
+    updateProgressiveReleasePercentage: (key, percentage) =>
+      dispatch(updateProgressiveReleasePercentage(key, percentage)),
+    setTemporaryProgressiveReleaseKeys: () =>
+      dispatch(setTemporaryProgressiveReleaseKeys()),
+    removeTemporaryProgressiveReleaseKeys: () =>
+      dispatch(removeTemporaryProgressiveReleaseKeys())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ReleasesConfirmDetails);

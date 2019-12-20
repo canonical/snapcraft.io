@@ -273,7 +273,7 @@ export function getRevisionsFromBuild(state, buildId) {
 //    the previous revision number,
 //    the progressive release status of a pending release of the same release
 // ]
-export function getProgressiveState(state, channel, arch, revision) {
+export function getProgressiveState(state, channel, arch, revision, isPending) {
   if (!isProgressiveReleaseEnabled(state)) {
     return [null, null, null];
   }
@@ -294,12 +294,9 @@ export function getProgressiveState(state, channel, arch, revision) {
 
   const release = allReleases[releaseIndex];
 
-  if (
-    release &&
-    release.progressive &&
-    release.progressive &&
-    release.progressive.key
-  ) {
+  // If the release is pending we don't want to look up the previous state, as it will be
+  // for an outdated release
+  if (!isPending && release && release.progressive && release.progressive.key) {
     progressiveStatus = JSON.parse(JSON.stringify(release.progressive));
 
     previousRevision = allReleases
@@ -414,7 +411,7 @@ export function getSeparatePendingReleases(state) {
 }
 
 // Get pending release for architecture
-export function getPendingRelease({ pendingReleases }, arch, channel) {
+export function getPendingRelease({ pendingReleases }, channel, arch) {
   // for each release
   return Object.keys(pendingReleases).map(releasedRevision => {
     if (

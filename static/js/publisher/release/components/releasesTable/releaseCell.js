@@ -63,12 +63,17 @@ const ReleasesTableReleaseCell = props => {
   let previousRevision;
   let pendingProgressiveState;
 
-  if (!pendingRelease && currentRevision) {
+  if (currentRevision) {
     [
       progressiveState,
       previousRevision,
       pendingProgressiveState
-    ] = getProgressiveState(channel, arch, currentRevision.revision);
+    ] = getProgressiveState(
+      channel,
+      arch,
+      currentRevision.revision,
+      pendingRelease
+    );
   }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
@@ -221,8 +226,8 @@ const mapStateToProps = state => {
     getAvailableCount: arch =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
     getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId),
-    getProgressiveState: (channel, arch, revision) =>
-      getProgressiveState(state, channel, arch, revision),
+    getProgressiveState: (channel, arch, revision, isPending) =>
+      getProgressiveState(state, channel, arch, revision, isPending),
     hasPendingRelease: (channel, arch) =>
       hasPendingRelease(state, channel, arch)
   };
