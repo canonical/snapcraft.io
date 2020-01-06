@@ -12,6 +12,7 @@ import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
 import { newsletter } from "./newsletter";
+import { formValidation } from "./formValidation";
 import initExpandableSnapDetails from "./expandable-details";
 import triggerEventWhenVisible from "./ga-scroll-event";
 import { initLinkScroll } from "./scroll-to";
@@ -35,5 +36,6 @@ export {
   initLinkScroll,
   videos,
   nps,
-  newsletter
+  newsletter,
+  formValidation
 };
