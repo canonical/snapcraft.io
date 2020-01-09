@@ -67,13 +67,13 @@
                         Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
                       </p>
                     </div>
-                    <div id="register-name-notification" class="p-notification--caution">
+                    <div id="register-name-notification" class="p-notification--caution u-hide">
                       <p class="p-notification__response">
                         <span class="p-notification__status"></span>
                         Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
                       </p>
                     </div>
-                    <button class="p-button--positive" {% if not has_user_chosen_name %}disabled{% endif %}>Register snap name</button>
+                    <button class="p-button--positive">Register snap name</button>
                   </form>
                 </div>
               </div>

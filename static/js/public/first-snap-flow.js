@@ -225,14 +225,13 @@ function initChooseName(formEl, language) {
 }
 
 function initRegisterName(formEl, notificationEl, successEl) {
-  const initialNotificationClassName = notificationEl.className;
-  const initialNotificationHtml = notificationEl.querySelector(
-    ".p-notification__response"
-  ).innerHTML;
-
   const snapNameInput = formEl.querySelector("[name=snap-name]");
 
   snapNameInput.addEventListener("keyup", () => {
+    if (notificationEl.classList.contains("u-hide")) {
+      notificationEl.classList.remove("u-hide");
+    }
+
     const isValid = validateSnapName(snapNameInput.value);
 
     if (!isValid) {
@@ -242,12 +241,6 @@ function initRegisterName(formEl, notificationEl, successEl) {
       snapNameInput.parentNode.classList.remove("is-error");
       formEl.querySelector("button").disabled = false;
     }
-
-    updateNotification(
-      notificationEl,
-      initialNotificationClassName,
-      initialNotificationHtml
-    );
   });
 
   function showSuccess(message) {
