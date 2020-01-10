@@ -12,6 +12,12 @@
   {% endblock %}
 {% endif %}
 
+{% block extra_meta %}
+  {% if unlisted %}
+    <meta name="robots" content="noindex" />
+  {% endif %}
+{% endblock %}
+
 {% block meta_schema %}
   <script type="application/ld+json">
     {

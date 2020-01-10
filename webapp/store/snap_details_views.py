@@ -176,6 +176,7 @@ def snap_details_views(store, api, handle_errors):
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
             "is_users_snap": is_users_snap,
+            "unlisted": details["snap"]["unlisted"],
         }
 
         return context

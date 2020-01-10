@@ -34,6 +34,7 @@ class GetDetailsPageTest(TestCase):
                                 "confinement",
                                 "categories",
                                 "trending",
+                                "unlisted",
                             ]
                         )
                     }
@@ -117,6 +118,7 @@ class GetDetailsPageTest(TestCase):
                 },
                 "categories": [{"name": "test"}],
                 "trending": False,
+                "unlisted": False,
             },
         }
 
@@ -150,6 +152,7 @@ class GetDetailsPageTest(TestCase):
                 },
                 "categories": [{"name": "test"}],
                 "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -213,6 +216,7 @@ class GetDetailsPageTest(TestCase):
                 },
                 "categories": [{"name": "test"}],
                 "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -268,6 +272,7 @@ class GetDetailsPageTest(TestCase):
                 },
                 "categories": [{"name": "test"}],
                 "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
