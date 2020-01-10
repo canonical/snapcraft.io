@@ -25,6 +25,7 @@ class GetEmbeddedCardTest(TestCase):
             },
             "categories": [{"name": "test"}],
             "trending": False,
+            "unlisted": False,
         },
         "channel-map": [
             {
@@ -69,6 +70,7 @@ class GetEmbeddedCardTest(TestCase):
                                 "confinement",
                                 "categories",
                                 "trending",
+                                "unlisted",
                             ]
                         )
                     }

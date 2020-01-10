@@ -25,6 +25,7 @@ class GetDistroPageTest(TestCase):
             },
             "categories": [{"name": "test"}],
             "trending": False,
+            "unlisted": False,
         },
         "channel-map": [
             {
@@ -69,6 +70,7 @@ class GetDistroPageTest(TestCase):
                                 "confinement",
                                 "categories",
                                 "trending",
+                                "unlisted",
                             ]
                         )
                     }
