@@ -273,7 +273,7 @@ export function getRevisionsFromBuild(state, buildId) {
 //    the previous revision number,
 //    the progressive release status of a pending release of the same release
 // ]
-export function getProgressiveState(state, channel, arch, revision, isPending) {
+export function getProgressiveState(state, channel, arch, isPending) {
   if (!isProgressiveReleaseEnabled(state)) {
     return [null, null, null];
   }
@@ -288,36 +288,45 @@ export function getProgressiveState(state, channel, arch, revision, isPending) {
     item => channel === getChannelString(item) && arch === item.architecture
   );
 
-  const releaseIndex = allReleases.findIndex(
-    item => revision === item.revision
-  );
+  const release = allReleases[0];
 
-  const release = allReleases[releaseIndex];
-
-  // If the release is pending we don't want to look up the previous state, as it will be
-  // for an outdated release
-  if (!isPending && release && release.progressive && release.progressive.key) {
-    progressiveStatus = JSON.parse(JSON.stringify(release.progressive));
-
-    previousRevision = allReleases
-      .slice(releaseIndex)
-      .filter(item => item.revision !== release.revision);
-
-    if (previousRevision[0]) {
-      previousRevision = revisions[previousRevision[0].revision];
-    }
-  }
-
-  const pendingMatch = pendingReleases[revision]
-    ? pendingReleases[revision][channel]
-    : undefined;
-
-  if (pendingMatch) {
+  if (release && release.revision) {
+    // If the release is pending we don't want to look up the previous state, as it will be
+    // for an outdated release
     if (
-      channel === pendingMatch.channel &&
-      pendingMatch.revision.architectures.includes(arch)
+      !isPending &&
+      release &&
+      release.progressive &&
+      release.progressive.key
     ) {
-      pendingProgressiveStatus = Object.assign({}, pendingMatch.progressive);
+      progressiveStatus = JSON.parse(JSON.stringify(release.progressive));
+
+      previousRevision = allReleases[1];
+
+      if (previousRevision && previousRevision.revision) {
+        previousRevision = revisions[previousRevision.revision];
+      }
+    }
+
+    let pendingMatch;
+
+    Object.keys(pendingReleases).forEach(revId => {
+      if (
+        pendingReleases[revId][channel] &&
+        pendingReleases[revId][channel].revision &&
+        pendingReleases[revId][channel].revision.architectures.includes(arch)
+      ) {
+        pendingMatch = pendingReleases[revId][channel];
+      }
+    });
+
+    if (pendingMatch) {
+      if (
+        channel === pendingMatch.channel &&
+        pendingMatch.revision.architectures.includes(arch)
+      ) {
+        pendingProgressiveStatus = Object.assign({}, pendingMatch.progressive);
+      }
     }
   }
 
