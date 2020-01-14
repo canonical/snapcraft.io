@@ -158,6 +158,26 @@
       <div class="col-4">
         {% include "store/snap-details/_details.html" %}
 
+        {% if request.path in ["/vlc", "/standard-notes", "/plexmediaserver"] %}
+        <h4>Companion apps</h4>
+        <ul class="p-list">
+          <li class="p-list__item u-no-padding--left">
+            <a href="{% if request.path == '/vlc' %}https://apps.apple.com/us/app/vlc-for-mobile/id650377962{% elif  request.path == '/standard-notes' %}https://apps.apple.com/gb/app/standard-notes/id1285392450{% elif request.path == '/plexmediaserver' %}https://apps.apple.com/gb/app/plex-movies-tv-music-more/id383457673{% endif %}" onclick="dataLayer.push({'event' : 'GAEvent', 'eventCategory' : '3rd Party Store Link', 'eventAction' : 'Apple Store', 'eventLabel' : '{{ snap_title }}', 'eventValue' : undefined });">
+            <img
+              src="https://assets.ubuntu.com/v1/2f2fe1cb-Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg"
+              alt="" width="120" height="40">
+            </a>
+          </li>
+          <li class="p-list__item u-no-padding--left">
+            <a href="{% if request.path == '/vlc' %}https://play.google.com/store/apps/details?id=org.videolan.vlc{% elif  request.path == '/standard-notes' %}https://play.google.com/store/apps/details?id=com.standardnotes{% elif request.path == '/plexmediaserver' %}https://play.google.com/store/apps/details?id=com.plexapp.android{% endif %}" onclick="dataLayer.push({'event' : 'GAEvent', 'eventCategory' : '3rd Party Store Link', 'eventAction' : 'Google Play Store', 'eventLabel' : '{{ snap_title }}', 'eventValue' : undefined });">
+              <img
+              src="https://assets.ubuntu.com/v1/75d13896-google-play-badge.png" alt=""
+              width="134" height="40">
+            </a>
+          </li>
+        </ul>
+        {% endif %}
+
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
         {% if not is_preview and not IS_BRAND_STORE %}
           <h4>Share this snap</h4>
