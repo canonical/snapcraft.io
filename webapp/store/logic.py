@@ -230,6 +230,20 @@ categories_list = [
 blacklist = ["featured"]
 
 
+def format_category_name(slug):
+    """Format category name into a standard title format
+
+    :param slug: The hypen spaced, lowercase slug to be formatted
+    :return: The formatted string
+    """
+    return (
+        slug.title()
+        .replace("-", " ")
+        .replace("And", "and")
+        .replace("Iot", "IoT")
+    )
+
+
 def get_categories(categories_json):
     """Retrieve and flatten the nested array from the legacy API response.
 
@@ -249,10 +263,7 @@ def get_categories(categories_json):
 
         for category in categories_list:
             categories.append(
-                {
-                    "slug": category,
-                    "name": category.capitalize().replace("-", " "),
-                }
+                {"slug": category, "name": format_category_name(category)}
             )
 
     return categories
@@ -271,7 +282,7 @@ def get_snap_categories(snap_categories):
             categories.append(
                 {
                     "slug": cat["name"],
-                    "name": cat["name"].capitalize().replace("-", " "),
+                    "name": format_category_name(cat["name"]),
                 }
             )
 
