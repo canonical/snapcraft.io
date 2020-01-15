@@ -14,6 +14,7 @@ import nps from "./nps";
 import { newsletter } from "./newsletter";
 import { formValidation } from "./formValidation";
 import initExpandableSnapDetails from "./expandable-details";
+import initExpandableDistroChart from "./snap-details/exapandable-distr-chart";
 import triggerEventWhenVisible from "./ga-scroll-event";
 import { initLinkScroll } from "./scroll-to";
 
@@ -28,6 +29,7 @@ export {
   initAccordion,
   initAccordionButtons,
   initEmbeddedCardModal,
+  initExpandableDistroChart,
   initExpandableSnapDetails,
   initFSFLanguageSelect,
   initReportSnap,

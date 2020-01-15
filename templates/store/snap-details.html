@@ -205,7 +205,7 @@
             </div>
           {% endif %}
           {% if normalized_os %}
-            <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
+            <div class="col-4 js-snap-distro-chart-holder snapcraft-distro-chart-container" data-live="weekly_installed_base_by_operating_system_normalized">
               <h4>Users by distribution (log)</h4>
               <div class="snapcraft-distro-chart">
                 <div class="snapcraft-distro-chart__names">
@@ -221,6 +221,9 @@
                     ></div>
                   {% endfor %}
                 </div>
+              </div>
+              <div class="snapcraft-distro-chart__more u-hide">
+                <a href="/{{ package_name }}" class="js-show-more-description">Show more</a>
               </div>
             </div>
           {% endif %}
@@ -335,6 +338,12 @@
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function () {
+        try {
+          snapcraft.public.initExpandableDistroChart();
+        } catch (e) {
+          Raven.captureException(e);
+        }
+
         {% if not is_preview %}
         try {
           snapcraft.public.screenshots('#js-snap-screenshots');
