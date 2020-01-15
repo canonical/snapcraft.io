@@ -27,7 +27,7 @@ const ProgressiveBar = ({
           className="progressive-bar__target"
           style={{ width: `${targetPercentage}%` }}
         >
-          <div className="progressive-bar__target-adjust" />
+          {!disabled && <div className="progressive-bar__target-adjust" />}
         </div>
       )}
       <div
@@ -198,6 +198,10 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   onWheelHandler(e) {
+    const { disabled } = this.props;
+    if (disabled) {
+      return;
+    }
     e.preventDefault();
     const { scrubTarget } = this.state;
     const direction = e.deltaY > 0 ? -1 : 1;
