@@ -32,12 +32,6 @@ const RevisionsListRow = props => {
 
   const [canDrag, setDraggable] = useState(!progressiveBeingCancelled);
 
-  // This is needed to catch the case where a pending cancel is created
-  // and then reverted
-  if (!canDrag && !progressiveBeingCancelled) {
-    setDraggable(true);
-  }
-
   const revisionDate = revision.release
     ? new Date(revision.release.when)
     : new Date(revision.created_at);

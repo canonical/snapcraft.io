@@ -27,7 +27,7 @@ const ProgressiveBar = ({
           className="progressive-bar__target"
           style={{ width: `${targetPercentage}%` }}
         >
-          <div className="progressive-bar__target-adjust" />
+          {!disabled && <div className="progressive-bar__target-adjust" />}
         </div>
       )}
       <div
@@ -96,9 +96,18 @@ class InteractiveProgressiveBar extends React.Component {
     return newState;
   }
 
+  // This is here because of https://github.com/facebook/react/issues/6436
+  componentDidMount() {
+    const { disabled } = this.props;
+    if (!disabled) {
+      this.barHolder.current.addEventListener("wheel", this.onWheelHandler);
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener("mouseup", this.onMouseUpHandler);
     window.removeEventListener("mousemove", this.onMouseMoveHandler);
+    this.barHolder.current.removeEventListener("wheel", this.onWheelHandler);
   }
 
   componentDidUpdate(prevProps) {
@@ -189,9 +198,13 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   onWheelHandler(e) {
+    const { disabled } = this.props;
+    if (disabled) {
+      return;
+    }
     e.preventDefault();
     const { scrubTarget } = this.state;
-    const direction = e.nativeEvent.deltaY > 0 ? -1 : 1;
+    const direction = e.deltaY > 0 ? -1 : 1;
     this.scrubTo(Math.round(scrubTarget + direction));
   }
 
@@ -215,7 +228,6 @@ class InteractiveProgressiveBar extends React.Component {
         className={classes.join(" ")}
         ref={this.barHolder}
         onMouseDown={!disabled ? this.onMouseDownHandler : undefined}
-        onWheel={!disabled ? this.onWheelHandler : undefined}
       >
         <ProgressiveBar
           percentage={currentAndTargetEqual ? scrubTarget : current}
