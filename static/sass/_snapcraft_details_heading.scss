@@ -16,7 +16,6 @@
 
     &__title {
       flex-grow: 1;
-      flex-shrink: 0;
       margin: 0;
       margin-bottom: $sp-large;
 
@@ -32,8 +31,6 @@
 
     &__name {
       margin-bottom: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     &__publisher {

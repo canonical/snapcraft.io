@@ -145,7 +145,7 @@
 
   <div class="p-strip is-shallow">
     <div class="row">
-      <div class="col-8">
+      <div class="col-8 u-text-wrap">
         {% if summary or is_preview %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
         <div data-live="description">{{ description | safe }}</div>
         {% if website or is_preview %}<p><a href="{{ website }}" data-live="website">Developer website</a></p>{% endif %}

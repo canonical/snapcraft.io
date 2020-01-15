@@ -222,5 +222,8 @@ $color-social-icon-foreground: $color-light;
 @import 'utilities_disabled';
 @include u-disabled;
 
+@import 'utilities_text-wrap';
+@include u-text-wrap;
+
 @import 'snapcraft_tour';
 @include snapcraft-tour;
