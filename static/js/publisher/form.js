@@ -54,7 +54,10 @@ function initForm(config, initialState, errors) {
       errorInput.focus();
 
       if (errorInput.scrollIntoView) {
+        const stickyHeight = document.querySelector(".snapcraft-p-sticky")
+          .scrollHeight;
         errorInput.scrollIntoView();
+        window.scrollBy(0, -(stickyHeight + 16));
       }
     }
   }
