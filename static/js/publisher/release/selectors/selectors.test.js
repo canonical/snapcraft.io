@@ -901,12 +901,7 @@ describe("getProgressiveState", () => {
 
   it("should return the progressive release state of a channel and arch", () => {
     expect(
-      getProgressiveState(
-        stateWithProgressiveEnabled,
-        "latest/stable",
-        "arch2",
-        "3"
-      )
+      getProgressiveState(stateWithProgressiveEnabled, "latest/stable", "arch2")
     ).toEqual([
       {
         key: "test",
@@ -916,23 +911,6 @@ describe("getProgressiveState", () => {
       "revision2",
       null
     ]);
-
-    expect(
-      getProgressiveState(
-        stateWithProgressiveEnabled,
-        "latest/stable",
-        "arch2",
-        "2"
-      )
-    ).toEqual([
-      {
-        key: "test",
-        paused: false,
-        percentage: 50
-      },
-      [],
-      null
-    ]);
   });
 
   it("should return the progressiveState and pendingProgressiveStatus", () => {
@@ -940,8 +918,7 @@ describe("getProgressiveState", () => {
       getProgressiveState(
         stateWithProgressiveEnabledAndPendingRelease,
         "latest/stable",
-        "arch2",
-        "3"
+        "arch2"
       )
     ).toEqual([
       { key: "test", paused: false, percentage: 60 },
@@ -955,8 +932,7 @@ describe("getProgressiveState", () => {
       getProgressiveState(
         stateWithProgressiveDisabled,
         "latest/stable",
-        "arch2",
-        "2"
+        "arch2"
       )
     ).toEqual([null, null, null]);
   });

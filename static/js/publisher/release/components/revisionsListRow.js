@@ -164,7 +164,6 @@ RevisionsListRow.propTypes = {
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
-  getProgressiveState: PropTypes.func,
   isProgressiveReleaseEnabled: PropTypes.bool,
 
   // actions
