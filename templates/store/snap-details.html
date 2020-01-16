@@ -207,7 +207,7 @@
           {% if normalized_os %}
             <div class="col-4 js-snap-distro-chart-holder snapcraft-distro-chart-container" data-live="weekly_installed_base_by_operating_system_normalized">
               <h4>Users by distribution (log)</h4>
-              <div class="snapcraft-distro-chart">
+              <div class="snapcraft-distro-chart is-collapsed">
                 <div class="snapcraft-distro-chart__names">
                   {% for distro in normalized_os %}
                   <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
@@ -222,9 +222,14 @@
                   {% endfor %}
                 </div>
               </div>
-              <div class="snapcraft-distro-chart__more u-hide">
-                <a href="/{{ package_name }}" class="js-show-more-description">Show more</a>
+              {% if normalized_os|length > 10 %}
+              <div class="snapcraft-distro-chart__more u-hide u-show--small">
+                <a href="/{{ package_name }}" data-js="js-show-more-description">Show more</a>
               </div>
+              <div class="snapcraft-distro-chart__less u-hide">
+                <a href="/{{ package_name }}" data-js="js-show-less-description">Show less</a>
+              </div>
+              {% endif %}
             </div>
           {% endif %}
         </div>
