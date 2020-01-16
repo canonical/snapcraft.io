@@ -28,7 +28,11 @@ def get_licenses():
         with open("webapp/licenses.json") as f:
             licenses_file = json.load(f)
 
-        licenses = licenses_file["licenses"]
+        licenses = [
+            license
+            for license in licenses_file["licenses"]
+            if not license["isDeprecatedLicenseId"]
+        ]
 
         def _build_custom_license(license_id, license_name):
             return {"licenseId": license_id, "name": license_name}
