@@ -168,12 +168,12 @@ RevisionsListRowProgressive.propTypes = {
   cancelProgressiveRelease: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state, { channel, architecture, revision }) => {
+const mapStateToProps = (state, { channel, architecture }) => {
   const [
     progressiveState,
     previousRevision,
     pendingProgressiveState
-  ] = getProgressiveState(state, channel, architecture, revision.revision);
+  ] = getProgressiveState(state, channel, architecture);
 
   return {
     progressiveState,
