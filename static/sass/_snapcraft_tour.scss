@@ -255,11 +255,6 @@
     }
   }
 
-  .p-card--tour__content {
-    // compensate spacing for content being wrapped in div instead of being directly after heading
-    @extend %sp--hp;
-  }
-
   .p-tour-controls {
     display: flex;
     justify-content: space-between;
