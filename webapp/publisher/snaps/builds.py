@@ -38,10 +38,10 @@ class LaunchpadStoreUploadState(Enum):
 def build_link(bsi_url, snap, build):
     """ Builds the link to the build page
     """
-    build_id = build.self_link.split("/")[-1]
+    build_id = build["self_link"].split("/")[-1]
 
     # Remove GitHub hostname & split owner/repo
-    owner, repo = snap.git_repository_url[19:].split("/")
+    owner, repo = snap["git_repository_url"][19:].split("/")
 
     return f"{bsi_url}/user/{owner}/{repo}/{build_id}"
 
