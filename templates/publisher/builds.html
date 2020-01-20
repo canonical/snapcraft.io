@@ -9,12 +9,115 @@ Builds for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif 
   {% set selected_tab='builds' %}
   {% include "publisher/_header.html" %}
 
+  <form id="market-form" class="market-form p-form p-form--stacked" method="POST" enctype='multipart/form-data'>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="snap_id" value="{{ snap_id }}" />
+
+    {% if not github_repository %}
+    <div class="snapcraft-p-sticky js-sticky-bar">
+      <div class="row">
+        <div class="col-7">
+          <p class="snapcraft-p-market-message u-no-margin--bottom">
+            {% if not github_user %}
+            You need to be logged in on GitHub to make changes
+            {% else %}
+            Your GitHub account is connected.
+            {% endif %}
+          </p>
+        </div>
+        <div class="col-5">
+          <div class="u-align--right u-clearfix">
+            {% if not github_user %}
+              <a href="/github/auth?back=1" class="p-button--positive has-icon u-no-margin--bottom">
+                <span>Log in </span><i class="p-icon--github-white"></i>
+              </a>
+            {% else %}
+              <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/builds">Revert</a>
+              <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
+                <span class="p-button__spinner vanilla-workaround--dark">
+                  <i class="p-icon--spinner u-animation--spin"></i>
+                </span>
+                <span class="p-button__text">Save</span>
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <hr class="u-no-margin--bottom" />
+    </div>
+    {% endif %}
+
+    <section class="p-strip is-shallow">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="u-fixed-width">
+        {% for category, message in messages %}
+        <div class="p-notification--{{ category }}">
+          <p class="p-notification__response">
+            {{ message }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      <div class="u-fixed-width">
+        <h2 class="p-heading--four">
+          GitHub configuration
+        </h2>
+      </div>
+
+      <div class="row p-form__group">
+        <div class="col-2" data-tour="listing-category">
+          <label class="p-form__label">Repository:</label>
+        </div>
+        <div class="col-4">
+          <div class="p-form__control" data-tour="listing-category">
+            {% if github_repository %}
+              {{ github_repository }}
+            {% else %}
+              <select
+                name="github_repository"
+                {% if not github_repositories %} disabled="disabled"{% endif %}
+                >
+                <option value="">Select repository</option>
+                {% for repo in github_repositories %}
+                <option
+                  value="{{ repo.full_name }}"
+                  {% if (repo.full_name == github_repository) %}
+                  selected="selected"
+                  {% endif %}
+                  >{{ repo.full_name }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <hr class="u-no-margin--bottom" />
+    </div>
+  </div>
+
+
+  {% if snap_builds_enabled %}
   <section class="p-strip is-shallow">
     <div class="row">
+      <h3>Builds</h3>
       <div id="builds-wrapper" class="col-12">
       </div>
     </div>
   </section>
+  {% endif %}
 </div>
 
 {% endblock %}
@@ -24,14 +127,16 @@ Builds for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif 
 {% endblock %}
 
 {% block scripts %}
+{% if snap_builds %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function () {
         snapcraft.publisher.initBuilds('#builds-wrapper',
-          {{ snap_name|tojson }},
-          {{ snap_builds|tojson }}
+          {{ snap_name | tojson }},
+          {{ snap_builds | tojson }}
         );
       });
     });
   </script>
+{% endif %}
 {% endblock %}
