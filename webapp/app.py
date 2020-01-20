@@ -25,6 +25,7 @@ from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
 from webapp.login.views import login
+from webapp.login.oauth_views import oauth
 from webapp.publisher.snaps.views import publisher_snaps
 from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
@@ -78,6 +79,7 @@ def init_snapcraft(app, testing=False):
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
+    app.register_blueprint(oauth)
     app.register_blueprint(store_blueprint(testing=testing))
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)

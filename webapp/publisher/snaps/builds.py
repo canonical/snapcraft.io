@@ -39,9 +39,11 @@ def build_link(bsi_url, snap, build):
     """ Builds the link to the build page
     """
     build_id = build.self_link.split("/")[-1]
-    github_user = snap.git_repository_url.split("https://github.com/")[-1]
 
-    return f"{bsi_url}/user/{github_user}/{build_id}"
+    # Remove GitHub hostname & split owner/repo
+    owner, repo = snap.git_repository_url[19:].split("/")
+
+    return f"{bsi_url}/user/{owner}/{repo}/{build_id}"
 
 
 def _map_upload_state(upload_state):
