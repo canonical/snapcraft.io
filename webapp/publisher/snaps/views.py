@@ -27,6 +27,7 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiTimeoutError,
     StoreApiCircuitBreaker,
 )
+from webapp.api.github import GitHubAPI
 from webapp.api.launchpad import launchpad
 from webapp.store.logic import (
     get_categories,
@@ -1350,6 +1351,12 @@ def get_snap_builds(snap_name):
         owner="https://api.launchpad.net/devel/~build.snapcraft.io",
         store_name=details["snap_name"],
     )
+
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    context["github_user"] = github.get_user()
+
+    if context["github_user"]:
+        context["github_repositories"] = github.get_user_repositories()
 
     context["snap_builds_enabled"] = len(lp_snaps) >= 1
     if context["snap_builds_enabled"]:
