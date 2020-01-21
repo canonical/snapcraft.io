@@ -24,6 +24,7 @@ requests-cache==0.5.2
 responses==0.9.0
 ruamel.yaml==0.15.72
 talisker[flask,gunicorn,raven,prometheus]==0.15.0
+gevent==1.4.0
 
 # Temporary fix to SSO redirect issue
 Werkzeug==0.14.1

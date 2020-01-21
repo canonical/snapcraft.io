@@ -2,7 +2,7 @@
 
 set -e
 
-RUN_COMMAND="talisker.gunicorn webapp.app:create_app() --bind $1 --worker-class sync --workers 5 --name talisker-`hostname`"
+RUN_COMMAND="talisker.gunicorn.gevent webapp.app:create_app() --bind $1 --worker-class gevent --max-requests 1000 --name talisker-`hostname`"
 
 if [ "${FLASK_DEBUG}" = true ] || [ "${FLASK_DEBUG}" = 1 ]; then
     RUN_COMMAND="${RUN_COMMAND} --reload --log-level debug --timeout 9999"
