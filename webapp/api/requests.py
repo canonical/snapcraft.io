@@ -11,27 +11,14 @@ from webapp.api.exceptions import (
 )
 
 
-class TimeoutHTTPAdapter(requests.adapters.HTTPAdapter):
-    def __init__(self, timeout=None, *args, **kwargs):
-        self.timeout = timeout
-        super().__init__(*args, **kwargs)
-
-    def send(self, *args, **kwargs):
-        kwargs["timeout"] = self.timeout
-        return super().send(*args, **kwargs)
-
-
 class BaseSession:
     """A base session interface to implement common functionality
 
     Create an interface to manage exceptions and return API exceptions
     """
 
-    def __init__(self, timeout=(0.5, 3), *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.mount("http://", TimeoutHTTPAdapter(timeout=timeout))
-        self.mount("https://", TimeoutHTTPAdapter(timeout=timeout))
 
         # TODO allow user to choose it's own user agent
         storefront_header = "storefront ({commit_hash};{environment})".format(
@@ -77,7 +64,6 @@ class CachedSession(BaseSession, requests_cache.CachedSession):
             # Include headers in cache key
             "include_get_headers": True,
             "old_data_on_error": True,
-            "timeout": (1, 6),
         }
 
         options.update(kwargs)
