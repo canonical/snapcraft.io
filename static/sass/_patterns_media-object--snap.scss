@@ -15,22 +15,22 @@
       margin-top: -.5rem;
 
       p {
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
         color: $color-mid-dark;
         display: -webkit-box;
-        text-decoration: none;
         max-height: 3.4rem;
         overflow: hidden;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+        text-decoration: none;
       }
 
       p + p {
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
         color: $color-dark;
         display: -webkit-box;
         max-height: 3.4rem;
         overflow: hidden;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
       }
     }
 

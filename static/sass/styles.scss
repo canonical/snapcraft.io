@@ -1,10 +1,9 @@
 // colour definitions
 $color-brand: #00302f;
 $color-accent: $color-brand;
-$color-navigation-background: #333;
-$color-navigation-border: $color-navigation-background;
-$color-navigation-selected: #9c9c9c;
 
+// navigation variables
+$theme-default-nav: dark;
 $breakpoint-navigation-threshold: 800px;
 
 // vanilla patterns
