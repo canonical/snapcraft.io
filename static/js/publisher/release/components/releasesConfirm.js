@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import ReleasesConfirmDetails from "./releasesConfirmDetails/";
+import ReleasesConfirmActions from "./releasesConfirmActions";
 
 import {
   cancelPendingReleases,
@@ -107,22 +108,13 @@ class ReleasesConfirm extends Component {
                   </p>
                 </div>
               )}
-              <div className="p-releases-confirm__buttons">
-                <button
-                  className="p-button--neutral u-no-margin--bottom"
-                  disabled={!isCancelEnabled}
-                  onClick={this.onRevertClick.bind(this)}
-                >
-                  Revert
-                </button>
-                <button
-                  className="p-button--positive is-inline u-no-margin--bottom u-no-margin--right"
-                  disabled={!isApplyEnabled}
-                  onClick={this.onApplyClick.bind(this)}
-                >
-                  {isLoading ? "Loading..." : "Save"}
-                </button>
-              </div>
+              <ReleasesConfirmActions
+                isCancelEnabled={isCancelEnabled}
+                cancelPendingReleases={this.onRevertClick.bind(this)}
+                isApplyEnabled={isApplyEnabled}
+                applyPendingReleases={this.onApplyClick.bind(this)}
+                isLoading={isLoading}
+              />
             </div>
           </div>
         </div>
