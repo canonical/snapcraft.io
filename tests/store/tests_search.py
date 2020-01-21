@@ -221,7 +221,7 @@ class GetSearchViewTest(TestCase):
             snap_list.append({"package_name": "toto" + str(i), "icon_url": ""})
 
         payload = {
-            "_embedded": {"clickindex:package": snap_list[:47]},
+            "_embedded": {"clickindex:package": snap_list[:44]},
             "total": 144,
             "_links": {
                 "last": {"href": "http://url.c?q=snap&size=1&page=1"},
@@ -231,7 +231,7 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="47"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -248,9 +248,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context("category", "toto")
         self.assert_context("category_display", "Toto")
         self.assert_context(
-            "featured_snaps", [snap_list[1], snap_list[0]] + snap_list[2:19]
+            "featured_snaps", [snap_list[1], snap_list[0]] + snap_list[2:16]
         )
-        self.assert_context("searched_snaps", snap_list[19:47])
+        self.assert_context("searched_snaps", snap_list[16:44])
         self.assert_context("page", 1)
         self.assert_context("total", 144)
         self.assert_context(

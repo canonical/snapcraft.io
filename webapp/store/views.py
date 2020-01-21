@@ -145,15 +145,11 @@ def store_blueprint(store_query=None, testing=False):
         if not snap_searched and not snap_category:
             return flask.redirect(flask.url_for(".homepage"))
 
-        # The default size should be 44 (rows of 4)
-        # it's important that this is smaller than the category page 1 size
-        # below otherwise snaps can be missed out of results
-        size = 44
+        # The default size is 44
+        # (11 rows of 4) - on search results pages
+        # or (1 + 5 rows of 3 + 7 rows of 4) - on category page 1
 
-        # Page 1 has a snap at the top, and a few rows of 3, followed by rows
-        # of 4 - so we need to offset to ensure there's no hanging snap
-        if snap_category and page == 1:
-            size = 47
+        size = 44
 
         error_info = {}
         searched_results = []
@@ -209,7 +205,7 @@ def store_blueprint(store_query=None, testing=False):
 
         # These are the hand-selected "featured snaps" in each category.
         # We don't have this information on the API, so it's hardcoded.
-        number_of_featured_snaps = 19
+        number_of_featured_snaps = 16
 
         if snap_category_display and page == 1:
             if snaps_results and snaps_results[0]:
