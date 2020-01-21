@@ -28,7 +28,7 @@ const ReleasesConfirmActions = ({
 
 ReleasesConfirmActions.propTypes = {
   isCancelEnabled: PropTypes.bool,
-  cancelPendingRelease: PropTypes.func,
+  cancelPendingReleases: PropTypes.func,
   isApplyEnabled: PropTypes.bool,
   applyPendingReleases: PropTypes.func,
   isLoading: PropTypes.bool
