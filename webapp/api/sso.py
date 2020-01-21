@@ -2,7 +2,7 @@ import os
 from webapp import api
 from webapp.api.exceptions import ApiResponseError, ApiResponseDecodeError
 
-api_session = api.requests.Session(timeout=(0.5, 6))
+api_session = api.requests.Session()
 
 DASHBOARD_API = os.getenv(
     "DASHBOARD_API", "https://dashboard.snapcraft.io/dev/api/"

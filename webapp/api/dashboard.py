@@ -17,7 +17,7 @@ from webapp.api.exceptions import (
 # is solved in the Store we will relax the requests `read` timeout according
 # to what the frontend (k8s ingress) permits.
 # See https://bugs.launchpad.net/snapstore/+bug/1785094 for more information.
-api_session = api.requests.Session(timeout=(1, 6))
+api_session = api.requests.Session()
 
 
 DASHBOARD_API = os.getenv(

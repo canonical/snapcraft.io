@@ -25,7 +25,7 @@ LEADS = BASE_URL + "rest/v1/leads.json?access_token={token}"
 class MarketoApi:
     # Marketo isn't fast, so give it plenty of time to make a connection,
     # and respond
-    def __init__(self, api_session=api.requests.Session(timeout=(2, 12))):
+    def __init__(self, api_session=api.requests.Session()):
         self.api_session = api_session
         self.token = None
 
