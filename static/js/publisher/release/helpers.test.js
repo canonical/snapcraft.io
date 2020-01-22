@@ -3,7 +3,8 @@ import {
   getChannelName,
   isRevisionBuiltOnLauchpad,
   getRevisionsArchitectures,
-  isSameVersion
+  isSameVersion,
+  jsonClone
 } from "./helpers";
 
 describe("getChannelName", () => {
@@ -83,5 +84,30 @@ describe("isSameVersion", () => {
       { version: "test2" }
     ];
     expect(isSameVersion(revisions)).toBe(false);
+  });
+});
+
+describe("jsonClone", () => {
+  it("should make a copy of a JS Object Literal", () => {
+    const testJson = {
+      string: "string",
+      number: 12,
+      boolean: true,
+      array: ["string", 12, true]
+    };
+    const result = jsonClone(testJson);
+    expect(result).toEqual(testJson);
+    expect(result).not.toBe(testJson);
+  });
+
+  it("should remove methods", () => {
+    const testJson = {
+      string: "string",
+      function: function() {
+        return "test";
+      }
+    };
+
+    expect(jsonClone(testJson)).toEqual({ string: "string" });
   });
 });
