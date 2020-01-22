@@ -5,7 +5,12 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
 } from "../constants";
-import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
+import {
+  isInDevmode,
+  getBuildId,
+  isRevisionBuiltOnLauchpad,
+  jsonClone
+} from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../libs/channels";
 
 // returns true if isProgressiveReleaseEnabled feature flag is enabled
@@ -96,7 +101,7 @@ export function hasDevmodeRevisions(state) {
 // get channel map data updated with any pending releases
 export function getPendingChannelMap(state) {
   const { channelMap, pendingReleases } = state;
-  const pendingChannelMap = JSON.parse(JSON.stringify(channelMap));
+  const pendingChannelMap = jsonClone(channelMap);
 
   // for each release
   Object.keys(pendingReleases).forEach(releasedRevision => {
@@ -299,7 +304,7 @@ export function getProgressiveState(state, channel, arch, isPending) {
       release.progressive &&
       release.progressive.key
     ) {
-      progressiveStatus = JSON.parse(JSON.stringify(release.progressive));
+      progressiveStatus = jsonClone(release.progressive);
 
       previousRevision = allReleases[1];
 
@@ -362,7 +367,7 @@ export function getSeparatePendingReleases(state) {
   Object.keys(pendingReleases).forEach(revId => {
     Object.keys(pendingReleases[revId]).forEach(channel => {
       const pendingRelease = pendingReleases[revId][channel];
-      const releaseCopy = JSON.parse(JSON.stringify(pendingRelease));
+      const releaseCopy = jsonClone(pendingRelease);
 
       if (isProgressiveEnabled && pendingRelease.replaces) {
         const oldRelease = pendingRelease.replaces;

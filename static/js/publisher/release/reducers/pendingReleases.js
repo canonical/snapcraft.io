@@ -14,9 +14,10 @@ import {
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 import { TEMP_KEY } from "../constants";
+import { jsonClone } from "../helpers";
 
 function removePendingRelease(state, revision, channel) {
-  const newState = JSON.parse(JSON.stringify(state));
+  const newState = jsonClone(state);
   if (newState[revision.revision]) {
     if (newState[revision.revision][channel]) {
       delete newState[revision.revision][channel];
@@ -96,7 +97,7 @@ function closeChannel(state, channel) {
 }
 
 function setProgressiveRelease(state, progressive) {
-  const nextState = JSON.parse(JSON.stringify(state));
+  const nextState = jsonClone(state);
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
@@ -118,7 +119,7 @@ function setProgressiveRelease(state, progressive) {
 }
 
 function updateProgressiveRelease(state, progressive) {
-  const nextState = JSON.parse(JSON.stringify(state));
+  const nextState = jsonClone(state);
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
@@ -132,7 +133,7 @@ function updateProgressiveRelease(state, progressive) {
 }
 
 function pauseProgressiveRelease(state, key) {
-  const nextState = JSON.parse(JSON.stringify(state));
+  const nextState = jsonClone(state);
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
@@ -146,7 +147,7 @@ function pauseProgressiveRelease(state, key) {
 }
 
 function resumeProgressiveRelease(state, key) {
-  const nextState = JSON.parse(JSON.stringify(state));
+  const nextState = jsonClone(state);
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
@@ -164,7 +165,7 @@ function resumeProgressiveRelease(state, key) {
 // That means the progressive.key is ignored and other releases with the
 // same key are not affected.
 function cancelProgressiveRelease(state, key, previousRevision) {
-  let nextState = JSON.parse(JSON.stringify(state));
+  let nextState = jsonClone(state);
 
   Object.keys(nextState).forEach(revision => {
     const pendingReleaseChannels = nextState[revision];
@@ -185,7 +186,7 @@ function cancelProgressiveRelease(state, key, previousRevision) {
 }
 
 function setTempProgressiveKeys(state) {
-  const nextState = JSON.parse(JSON.stringify(state));
+  const nextState = jsonClone(state);
 
   let index = 0;
   Object.keys(nextState).forEach(revision => {
@@ -207,7 +208,7 @@ function setTempProgressiveKeys(state) {
 }
 
 function removeTempProgressiveKeys(state) {
-  const nextState = JSON.parse(JSON.stringify(state));
+  const nextState = jsonClone(state);
 
   Object.keys(nextState).forEach(revision => {
     const pendingReleaseChannels = nextState[revision];
