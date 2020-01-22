@@ -115,9 +115,9 @@ My published snaps — Linux software in the Snap Store
   {% endfor %}
   {% endif %}
   <div class="u-fixed-width">
-    <table class="p-table--vertical-middle u-text-wrap">
+    <table class="p-table--mobile-card" role="grid">
       <thead>
-        <tr>
+        <tr role="row">
           <th width="30%">Name</th>
           <th width="10%">Visibility</th>
           <th width="20%">Owner</th>
@@ -134,8 +134,8 @@ My published snaps — Linux software in the Snap Store
         {% else %}
         {% set published = False %}
         {% endif %}
-        <tr>
-          <td>
+        <tr role="row">
+          <td role="rowheader" class="p-table--mobile-card__header">
             <a href="/{{snap}}/listing" class="p-heading-icon--small">
               <span class="p-heading-icon__header">
                 {% if snaps[snap].icon_url %}
@@ -156,14 +156,14 @@ My published snaps — Linux software in the Snap Store
               </span>
             </a>
           </td>
-          <td>
+          <td role="gridcell" aria-label="Visibility">
             {% if snaps[snap].private %}
             Private
             {% else %}
             Public
             {% endif %}
           </td>
-          <td>
+          <td role="gridcell" aria-label="Owner">
             {% if snaps[snap].publisher.username == current_user %}
             You
             {% else %}
@@ -171,15 +171,15 @@ My published snaps — Linux software in the Snap Store
             {% endif %}
           </td>
           {% if published %}
-          <td>{{ snaps[snap].latest_release.channels[0] }}</td>
-          <td>
+          <td role="gridcell" aria-label="Latest release">{{ snaps[snap].latest_release.channels[0] }}</td>
+          <td role="gridcell" aria-label="Version">
             <a href="/{{snap}}/releases">
               {{ snaps[snap].latest_release.version }}
             </a>
           </td>
           {% else %}
-          <td><a href="/{{snap}}/releases">Not released</a></td>
-          <td></td>
+          <td role="gridcell" aria-label="Latest release"><a href="/{{snap}}/releases">Not released</a></td>
+          <td role="gridcell" aria-label="Version"></td>
           {% endif %}
         </tr>
         {% endwith %}
