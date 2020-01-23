@@ -3,6 +3,16 @@
   $active: $color-link;
   $target: scale-color($color-link, $lightness: -20%);
 
+  %bar {
+    border-radius: 9px 0 0 9px;
+    border-right: 1px solid $color-x-light;
+    height: 9px;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+  }
+
   .progressive-bar {
     background: $inactive;
     border-radius: 9px;
@@ -20,19 +30,20 @@
 
   .progressive-bar.is-disabled {
     cursor: not-allowed;
-    opacity: .8;
     pointer-events: none;
+
+    .progressive-bar__current {
+      background: lighten(grayscale($active), 20);
+    }
+
+    .progressive-bar__target {
+      background: lighten(grayscale($target), 20);
+    }
   }
 
   .progressive-bar__current {
+    @extend %bar;
     background: $active;
-    border-radius: 9px 0 0 9px;
-    border-right: 1px solid $color-x-light;
-    height: 9px;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
   }
 
   .progressive-bar__target-value {
@@ -49,14 +60,8 @@
   }
 
   .progressive-bar__target {
+    @extend %bar;
     background: $target;
-    border-radius: 9px 0 0 9px;
-    border-right: 1px solid $color-x-light;
-    height: 9px;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
   }
 
   .progressive-bar__target-adjust {
@@ -77,5 +82,11 @@
     border-radius: 17px;
     transform: translate(7px);
     width: 17px;
+  }
+
+  .progressive-bar__current.is-full,
+  .progressive-bar__target.is-full {
+    border-radius: 9px;
+    border-right: 0;
   }
 }
