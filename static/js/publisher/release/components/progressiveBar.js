@@ -16,15 +16,19 @@ const ProgressiveBar = ({
     current = targetPercentage;
   }
 
+  const classes = [
+    "progressive-bar",
+    "p-tooltip--btm-center",
+    disabled ? "is-disabled" : ""
+  ];
+
   return (
-    <div
-      className={`progressive-bar p-tooltip--btm-center ${
-        disabled ? "is-disabled" : ""
-      }`}
-    >
+    <div className={classes.join(" ")}>
       {!readonly && (
         <div
-          className="progressive-bar__target"
+          className={`progressive-bar__target ${
+            targetPercentage === 100 ? "is-full" : ""
+          }`}
           style={{ width: `${targetPercentage}%` }}
         >
           {!disabled && <div className="progressive-bar__target-adjust" />}
@@ -41,7 +45,9 @@ const ProgressiveBar = ({
         </span>
       </div>
       <div
-        className="progressive-bar__current"
+        className={`progressive-bar__current ${
+          current === 100 ? "is-full" : ""
+        }`}
         style={{ width: `${current}%` }}
       />
     </div>
