@@ -18,6 +18,8 @@ import { closeChannel } from "../../actions/pendingCloses";
 
 import { toggleBranches } from "../../actions/branches";
 
+import { triggerGAEvent } from "../../actions/gaEventTracking";
+
 import {
   RISKS_WITH_AVAILABLE as RISKS,
   AVAILABLE,
@@ -299,6 +301,14 @@ const ReleasesTableChannelHeading = props => {
     );
   };
 
+  const triggerGAEvents = (targetChannel, actionType) => {
+    if (actionType === "close") {
+      props.triggerGAEvent("click-close-channel", targetChannel);
+    } else {
+      props.triggerGAEvent("click-promote", channel, targetChannel);
+    }
+  };
+
   return (
     <div
       ref={drag}
@@ -329,6 +339,7 @@ const ReleasesTableChannelHeading = props => {
             promoteToChannel={promoteRevisions}
             channel={channel}
             closeChannel={canBeClosed ? props.closeChannel : null}
+            gaEvent={triggerGAEvents}
           />
         )}
       </span>
@@ -379,7 +390,8 @@ ReleasesTableChannelHeading.propTypes = {
   // actions
   closeChannel: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
-  toggleBranches: PropTypes.func.isRequired
+  toggleBranches: PropTypes.func.isRequired,
+  triggerGAEvent: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, props) => {
@@ -408,7 +420,8 @@ const mapDispatchToProps = dispatch => {
     promoteRevision: (revision, targetChannel) =>
       dispatch(promoteRevision(revision, targetChannel)),
     closeChannel: channel => dispatch(closeChannel(channel)),
-    toggleBranches: channel => dispatch(toggleBranches(channel))
+    toggleBranches: channel => dispatch(toggleBranches(channel)),
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
   };
 };
 

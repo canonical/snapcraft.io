@@ -10,6 +10,7 @@ import {
   setProgressiveReleasePercentage
 } from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
+import { triggerGAEvent } from "../actions/gaEventTracking";
 import { getSeparatePendingReleases } from "../selectors";
 
 class ReleasesConfirm extends Component {
@@ -23,6 +24,7 @@ class ReleasesConfirm extends Component {
   }
 
   onRevertClick() {
+    this.props.triggerGAEvent("click-revert");
     this.props.cancelPendingReleases();
     this.setState({
       showDetails: false
@@ -30,6 +32,8 @@ class ReleasesConfirm extends Component {
   }
 
   onApplyClick() {
+    this.props.triggerGAEvent("click-save");
+
     this.setState({
       isLoading: true
     });
@@ -58,6 +62,9 @@ class ReleasesConfirm extends Component {
   }
 
   toggleDetails() {
+    this.props.triggerGAEvent(
+      `click-${this.state.showDetails ? "hide" : "show"}Details`
+    );
     this.setState({
       showDetails: !this.state.showDetails
     });
@@ -128,7 +135,8 @@ ReleasesConfirm.propTypes = {
 
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired,
-  setProgressiveReleasePercentage: PropTypes.func.isRequired
+  setProgressiveReleasePercentage: PropTypes.func.isRequired,
+  triggerGAEvent: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -145,7 +153,8 @@ const mapDispatchToProps = dispatch => {
     releaseRevisions: () => dispatch(releaseRevisions()),
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
     setProgressiveReleasePercentage: (key, percentage) =>
-      dispatch(setProgressiveReleasePercentage(key, percentage))
+      dispatch(setProgressiveReleasePercentage(key, percentage)),
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
   };
 };
 

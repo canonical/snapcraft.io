@@ -11,6 +11,7 @@ import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
 import { undoRelease } from "../../actions/pendingReleases";
+import { triggerGAEvent } from "../../actions/gaEventTracking";
 
 import {
   getPendingChannelMap,
@@ -45,7 +46,8 @@ const ReleasesTableReleaseCell = props => {
     hasPendingRelease,
     undoRelease,
     toggleHistoryPanel,
-    getProgressiveState
+    getProgressiveState,
+    triggerGAEvent
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -93,11 +95,16 @@ const ReleasesTableReleaseCell = props => {
   };
 
   function handleHistoryIconClick(arch, risk, track, branchName) {
+    triggerGAEvent("click-history", `${track}/${risk}/${branchName}/${arch}`);
     toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
   function undoClick(revision, channel, event) {
     event.stopPropagation();
+    triggerGAEvent(
+      "click-cancel-promotion",
+      `${channel}/${revision.architectures[0]}`
+    );
     undoRelease(revision, channel);
   }
 
@@ -201,6 +208,7 @@ ReleasesTableReleaseCell.propTypes = {
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
+  triggerGAEvent: PropTypes.func.isRequired,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -231,7 +239,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
+    undoRelease: (revision, channel) =>
+      dispatch(undoRelease(revision, channel)),
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
   };
 };
 

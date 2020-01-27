@@ -6,6 +6,7 @@ import { getPendingChannelMap } from "../../selectors";
 import { useDrop, DND_ITEM_REVISIONS } from "../dnd";
 
 import { promoteRevision } from "../../actions/pendingReleases";
+import { triggerGAEvent } from "../../actions/gaEventTracking";
 
 import { STABLE, CANDIDATE, BETA, EDGE } from "../../constants";
 
@@ -40,7 +41,8 @@ const ReleasesTableDroppableRow = props => {
     branch,
     revisions,
     promoteRevision,
-    pendingChannelMap
+    pendingChannelMap,
+    triggerGAEvent
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -51,6 +53,22 @@ const ReleasesTableDroppableRow = props => {
     accept: DND_ITEM_REVISIONS,
     drop: item => {
       item.revisions.forEach(r => promoteRevision(r, channel));
+
+      if (item.revisions.length > 1) {
+        triggerGAEvent(
+          "drop-channel",
+          `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}`,
+          `${currentTrack}/${risk}/${branchName}`
+        );
+      } else {
+        triggerGAEvent(
+          "drop-revision",
+          `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}/${
+            item.architectures[0]
+          }`,
+          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`
+        );
+      }
     },
     canDrop: item => {
       const draggedRevisions = item.revisions;
@@ -135,7 +153,8 @@ ReleasesTableDroppableRow.propTypes = {
   pendingChannelMap: PropTypes.object,
 
   // actions
-  promoteRevision: PropTypes.func.isRequired
+  promoteRevision: PropTypes.func.isRequired,
+  triggerGAEvent: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -148,7 +167,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     promoteRevision: (revision, targetChannel) =>
-      dispatch(promoteRevision(revision, targetChannel))
+      dispatch(promoteRevision(revision, targetChannel)),
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
   };
 };
 
