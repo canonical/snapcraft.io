@@ -38,7 +38,7 @@ def refresh_redirect(path):
     return flask.redirect(path)
 
 
-def _handle_errors(api_error: ApiError):
+def _handle_error(api_error: ApiError):
     if type(api_error) is ApiTimeoutError:
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
@@ -77,7 +77,7 @@ def get_account_details():
     except ApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     flask_user = flask.session["openid"]
 
@@ -145,7 +145,7 @@ def post_agreement():
             error_messages = ", ".join(codes)
             flask.abort(502, error_messages)
         except ApiError as api_error:
-            return _handle_errors(api_error)
+            return _handle_error(api_error)
 
         return flask.redirect(flask.url_for(".get_account"))
     else:
@@ -170,7 +170,7 @@ def post_account_name():
         except ApiResponseErrorList as api_response_error_list:
             errors = errors + api_response_error_list.errors
         except ApiError as api_error:
-            return _handle_errors(api_error)
+            return _handle_error(api_error)
 
         if errors:
             return flask.render_template(
