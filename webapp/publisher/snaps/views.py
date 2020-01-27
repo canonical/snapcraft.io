@@ -1345,7 +1345,7 @@ def get_snap_builds(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     context = {
         "snap_id": details["snap_id"],
@@ -1410,7 +1410,7 @@ def post_snap_builds(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     # Get built snap in launchpad with this store name
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
@@ -1418,16 +1418,8 @@ def post_snap_builds(snap_name):
     git_url = f"https://github.com/{github_repo}"
 
     if not lp_snap:
-        result = launchpad.new_snap(snap_name, git_url)
-
-        if result:
-            flask.flash(
-                "The GitHub repository was linked correctly.", "positive"
-            )
-        else:
-            flask.flash(
-                "An error occurred linking the GitHub repository.", "negative"
-            )
+        launchpad.new_snap(snap_name, git_url)
+        flask.flash("The GitHub repository was linked correctly.", "positive")
     elif lp_snap["git_repository_url"] != git_url:
         # In the future, create a new record, delete the old one
         raise AttributeError(
