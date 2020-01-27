@@ -10,9 +10,7 @@ class GitHubAPI:
 
     BASE_URL = "https://api.github.com/"
 
-    def __init__(
-        self, access_token=None, session=api.requests.Session(),
-    ):
+    def __init__(self, access_token=None, session=api.requests.Session()):
         self.access_token = access_token
         self.session = session
         self.session.headers["Accept"] = "application/json"
@@ -34,7 +32,7 @@ class GitHubAPI:
         """
         params = {"per_page": per_page, "page": page}
 
-        return self._request(method="GET", url_path=url_path, params=params,)
+        return self._request(method="GET", url_path=url_path, params=params)
 
     def get_user(self):
         """
