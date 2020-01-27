@@ -1418,16 +1418,8 @@ def post_snap_builds(snap_name):
     git_url = f"https://github.com/{github_repo}"
 
     if not lp_snap:
-        result = launchpad.new_snap(snap_name, git_url)
-
-        if result:
-            flask.flash(
-                "The GitHub repository was linked correctly.", "positive"
-            )
-        else:
-            flask.flash(
-                "An error occurred linking the GitHub repository.", "negative"
-            )
+        launchpad.new_snap(snap_name, git_url)
+        flask.flash("The GitHub repository was linked correctly.", "positive")
     elif lp_snap["git_repository_url"] != git_url:
         # In the future, create a new record, delete the old one
         raise AttributeError(
