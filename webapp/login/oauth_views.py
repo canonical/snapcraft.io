@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest
 
 
 oauth = flask.Blueprint(
-    "oauth", __name__, template_folder="/templates", static_folder="/static",
+    "oauth", __name__, template_folder="/templates", static_folder="/static"
 )
 
 
