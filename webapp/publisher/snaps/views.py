@@ -1456,19 +1456,25 @@ def post_snap_builds(snap_name):
 
     # Get built snap in launchpad with this store name
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+    github_repo = flask.request.form.get("github_repository")
+    git_url = f"https://github.com/{github_repo}"
 
-    if lp_snap:
-        flask.flash(
-            "It is not possible to change the git repository for this snap.",
-            "negative",
+    if not lp_snap:
+        result = launchpad.new_snap(snap_name, git_url)
+
+        if result:
+            flask.flash(
+                "The GitHub repository was linked correctly.", "positive"
+            )
+        else:
+            flask.flash(
+                "An error occurred linking the GitHub repository.", "negative"
+            )
+    elif lp_snap["git_repository_url"] != git_url:
+        # In the future, create a new record, delete the old one
+        raise AttributeError(
+            f"Snap {snap_name} already has a build repository associated"
         )
-    else:
-        github_repo = flask.request.form.get("github_repository")
-        git_url = f"https://github.com/{github_repo}"
-
-        launchpad.new_snap(snap_name, git_url)
-
-        flask.flash("The GitHub repository was linked correctly.", "positive")
 
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)
