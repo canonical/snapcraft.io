@@ -63,7 +63,7 @@ class ReleasesConfirm extends Component {
 
   toggleDetails() {
     this.props.triggerGAEvent(
-      `click-${this.state.showDetails ? "hide" : "show"}Details`
+      `click-${this.state.showDetails ? "hide" : "show"}-details`
     );
     this.setState({
       showDetails: !this.state.showDetails

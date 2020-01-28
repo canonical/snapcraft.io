@@ -301,7 +301,7 @@ const ReleasesTableChannelHeading = props => {
     );
   };
 
-  const triggerGAEvents = (targetChannel, actionType) => {
+  const triggerGAEvent = (targetChannel, actionType) => {
     if (actionType === "close") {
       props.triggerGAEvent("click-close-channel", targetChannel);
     } else {
@@ -339,7 +339,7 @@ const ReleasesTableChannelHeading = props => {
             promoteToChannel={promoteRevisions}
             channel={channel}
             closeChannel={canBeClosed ? props.closeChannel : null}
-            gaEvent={triggerGAEvents}
+            gaEvent={triggerGAEvent}
           />
         )}
       </span>

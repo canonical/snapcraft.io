@@ -1,6 +1,8 @@
 export const OPEN_HISTORY = "OPEN_HISTORY";
 export const CLOSE_HISTORY = "CLOSE_HISTORY";
 
+import { triggerGAEvent } from "../actions/gaEventTracking";
+
 export function openHistory(filters) {
   return {
     type: OPEN_HISTORY,
@@ -17,6 +19,13 @@ export function closeHistory() {
 export function toggleHistory(filters) {
   return (dispatch, getState) => {
     const { history } = getState();
+
+    dispatch(
+      triggerGAEvent(
+        `click-${history.isOpen ? "close" : "open"}-history`,
+        `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`
+      )
+    );
 
     if (
       history.isOpen &&

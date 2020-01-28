@@ -13,6 +13,8 @@ export const REMOVE_TEMP_PROGRESSIVE_KEYS = "REMOVE_TEMP_PROGRESSIVE_KEYS";
 
 import { getPendingChannelMap, getReleases } from "../selectors";
 
+import { triggerGAEvent } from "../actions/gaEventTracking";
+
 export function releaseRevision(revision, channel, progressive) {
   return (dispatch, getState) => {
     const state = getState();
@@ -143,14 +145,24 @@ export function promoteChannel(channel, targetChannel) {
 }
 
 export function undoRelease(revision, channel) {
-  return {
-    type: UNDO_RELEASE,
-    payload: { revision, channel }
+  return dispatch => {
+    dispatch(
+      triggerGAEvent(
+        "click-cancel-promotion",
+        `${channel}/${revision.architectures[0]}`
+      )
+    );
+    return dispatch({
+      type: UNDO_RELEASE,
+      payload: { revision, channel }
+    });
   };
 }
 
 export function cancelPendingReleases() {
-  return {
-    type: CANCEL_PENDING_RELEASES
+  return dispatch => {
+    return dispatch({
+      type: CANCEL_PENDING_RELEASES
+    });
   };
 }
