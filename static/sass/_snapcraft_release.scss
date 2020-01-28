@@ -7,7 +7,7 @@
 
   .p-releases-confirm {
     border-bottom: 1px solid $color-mid-light;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
     padding: .5em 0;
     position: relative;
   }
@@ -42,8 +42,10 @@
 
   .p-releases-confirm__details {
     border-bottom: 1px solid $color-mid-light;
-    margin: .5rem 0 .5rem;
+    margin: .5rem 0 1rem;
     padding-bottom: .5rem;
+    position: relative;
+    top: -1rem;
   }
 
   // RELEASES TABLE

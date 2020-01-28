@@ -83,7 +83,6 @@ class ReleasesConfirm extends Component {
     return (
       <Fragment>
         <div className="p-releases-confirm">
-          {showDetails && <ReleasesConfirmDetails updates={updates} />}
           <div className="row u-vertically-center">
             <div className="col-6">
               {updatesCount > 0 && (
@@ -118,6 +117,7 @@ class ReleasesConfirm extends Component {
             </div>
           </div>
         </div>
+        {showDetails && <ReleasesConfirmDetails updates={updates} />}
       </Fragment>
     );
   }
