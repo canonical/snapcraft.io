@@ -2,8 +2,6 @@ import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import throttle from "../../../../libs/throttle";
-
 import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
 
 import progressiveTypes from "./types";
@@ -19,16 +17,16 @@ class ProgressiveRow extends React.Component {
   }
 
   onChangeHandler(percentage) {
-    const { updateGlobalPercentage, release } = this.props;
+    const {
+      updateProgressiveReleasePercentage,
+      updateGlobalPercentage,
+      release
+    } = this.props;
 
-    const update = () => {
-      if (updateGlobalPercentage) {
-        updateGlobalPercentage(percentage);
-      }
-      updateProgressiveReleasePercentage(release.progressive.key, percentage);
-    };
-
-    throttle(update(), 250);
+    if (updateGlobalPercentage) {
+      updateGlobalPercentage(percentage);
+    }
+    updateProgressiveReleasePercentage(release.progressive.key, percentage);
   }
 
   render() {

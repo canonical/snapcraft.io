@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import throttle from "../../../libs/throttle";
+
 const ProgressiveBar = ({
   percentage,
   targetPercentage,
@@ -171,7 +173,9 @@ class InteractiveProgressiveBar extends React.Component {
     };
 
     this.setState(newState);
-    onChange(target);
+    if (onChange) {
+      throttle(onChange(target), 250);
+    }
   }
 
   onMouseDownHandler(e) {
@@ -186,6 +190,7 @@ class InteractiveProgressiveBar extends React.Component {
     if (!scrubStart) {
       return;
     }
+
     const width = this.barHolder.current.clientWidth;
     const diff = e.clientX - mousePosition;
     const diffPercentage = Math.round((diff / width) * 100);
