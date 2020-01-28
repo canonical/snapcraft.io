@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import throttle from "react-throttle-render";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -7,7 +8,42 @@ import { updateProgressiveReleasePercentage } from "../../actions/pendingRelease
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
 
-import { ProgressiveBar, InteractiveProgressiveBar } from "../progressiveBar";
+import {
+  ProgressiveBar,
+  InteractiveProgressiveBar,
+  DisabledProgressiveBar
+} from "../progressiveBar";
+
+const ProgressiveRowTargetDevices = throttle(100)(({ targetPercentage }) => (
+  <span className="p-tooltip--btm-center">
+    <span className="p-help">{targetPercentage}% of devices</span>
+    <span className="p-tooltip__message">
+      Releases are delivered to devices via snap refreshes, as such, it may
+      <br />
+      take some time for devices to receive the new version. There is also no
+      <br />
+      guarentee that this release will achieve the entire target percentage.
+    </span>
+  </span>
+));
+
+ProgressiveRowTargetDevices.propTypes = {
+  targetPercentage: PropTypes.number
+};
+
+const ProgressiveRowPreviousTarget = throttle(100)(
+  ({ targetPercentage, prevRev, prevVer }) => (
+    <span>
+      {100 - targetPercentage}% of devices will stay on {prevRev} ({prevVer})
+    </span>
+  )
+);
+
+ProgressiveRowPreviousTarget.propTypes = {
+  targetPercentage: PropTypes.number,
+  prevRev: PropTypes.number,
+  prevVer: PropTypes.string
+};
 
 class ProgressiveRow extends React.Component {
   constructor(props) {
@@ -26,6 +62,7 @@ class ProgressiveRow extends React.Component {
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
     }
+
     updateProgressiveReleasePercentage(release.progressive.key, percentage);
   }
 
@@ -83,7 +120,7 @@ class ProgressiveRow extends React.Component {
       progress = (
         <Fragment>
           {!isInteractive && (
-            <ProgressiveBar percentage={globalPercentage} disabled={true} />
+            <DisabledProgressiveBar percentage={globalPercentage} />
           )}
           {isInteractive && (
             <InteractiveProgressiveBar
@@ -95,19 +132,7 @@ class ProgressiveRow extends React.Component {
             />
           )}
           <span>
-            <span className="p-tooltip--btm-center">
-              <span className="p-help">{targetPercentage}% of devices</span>
-              <span className="p-tooltip__message">
-                Releases are delivered to devices via snap refreshes, as such,
-                it may
-                <br />
-                take some time for devices to receive the new version. There is
-                also no
-                <br />
-                guarentee that this release will achieve the entire target
-                percentage.
-              </span>
-            </span>
+            <ProgressiveRowTargetDevices targetPercentage={targetPercentage} />
           </span>
         </Fragment>
       );
@@ -118,8 +143,13 @@ class ProgressiveRow extends React.Component {
       const prevRev = release.previousRevisions[0].revision;
       const prevVer = release.previousRevisions[0].version;
 
-      notes = `${100 -
-        targetPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
+      notes = (
+        <ProgressiveRowPreviousTarget
+          targetPercentage={targetPercentage}
+          prevRev={prevRev}
+          prevVer={prevVer}
+        />
+      );
     }
 
     const displayType = type.charAt(0).toUpperCase() + type.slice(1);

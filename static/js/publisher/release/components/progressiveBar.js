@@ -1,4 +1,5 @@
 import React from "react";
+import throttle from "react-throttle-render";
 import PropTypes from "prop-types";
 
 const ProgressiveBar = ({
@@ -258,4 +259,18 @@ InteractiveProgressiveBar.propTypes = {
   minPercentage: PropTypes.number
 };
 
-export { ProgressiveBar, InteractiveProgressiveBar };
+const DisabledProgressiveBar = throttle(250)(props => (
+  <ProgressiveBar
+    percentage={props.percentage}
+    targetPercentage={props.targetPercentage}
+    readonly={true}
+    disabled={true}
+  />
+));
+
+DisabledProgressiveBar.propTypes = {
+  percentage: PropTypes.number,
+  targetPercentage: PropTypes.number
+};
+
+export { ProgressiveBar, InteractiveProgressiveBar, DisabledProgressiveBar };
