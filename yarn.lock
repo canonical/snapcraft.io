@@ -3698,11 +3698,6 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoist-non-react-statics@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
-  integrity sha1-qkSM8JhtVcxAdzsXF0t90GbLfPs=
-
 hoist-non-react-statics@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.2.0.tgz#d21b9fc72b50fdc38c5d88f6e2c52f2c2dbe5ee2"
@@ -4917,11 +4912,6 @@ lodash.kebabcase@^4.0.0:
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
-
-lodash.throttle@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
-  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash@^3.5.0:
   version "3.10.1"
@@ -6333,14 +6323,6 @@ react-testing-library@^6.0.0:
   dependencies:
     "@babel/runtime" "^7.3.1"
     dom-testing-library "^3.13.1"
-
-react-throttle-render@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-throttle-render/-/react-throttle-render-2.0.0.tgz#9c2b9ead37fb2fa4db477d4e9031a91162683750"
-  integrity sha1-nCuerTf7L6TbR31OkDGpEWJoN1A=
-  dependencies:
-    hoist-non-react-statics "^1.2.0"
-    lodash.throttle "^4.1.1"
 
 react@^16.4.1:
   version "16.8.6"

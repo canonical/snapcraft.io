@@ -1,5 +1,4 @@
 import React from "react";
-import throttle from "react-throttle-render";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -239,4 +238,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(throttle(250)(ReleasesTableReleaseCell));
+)(ReleasesTableReleaseCell);
