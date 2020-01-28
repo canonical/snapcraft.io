@@ -29,8 +29,10 @@ def set_handlers(app):
 
         if authentication.is_authenticated(flask.session):
             user_name = flask.session["openid"]["fullname"]
+            user_is_canonical = flask.session["openid"]["is_canonical"]
         else:
             user_name = None
+            user_is_canonical = False
 
         page_slug = template_utils.generate_slug(flask.request.path)
 
@@ -53,6 +55,7 @@ def set_handlers(app):
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
             "IS_BRAND_STORE": is_brand_store,
+            "user_is_canonical": user_is_canonical,
             # Functions
             "contains": template_utils.contains,
             "join": template_utils.join,
