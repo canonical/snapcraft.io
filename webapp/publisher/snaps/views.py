@@ -65,7 +65,7 @@ def refresh_redirect(path):
     return flask.redirect(path)
 
 
-def _handle_errors(api_error: ApiError):
+def _handle_error(api_error: ApiError):
     if type(api_error) in [ApiTimeoutError, StoreApiTimeoutError]:
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
@@ -104,7 +104,7 @@ def get_account_snaps():
     except ApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
@@ -172,7 +172,7 @@ def publisher_snap_metrics(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     metric_requested = logic.extract_metrics_period(
         flask.request.args.get("period", default="30d", type=str)
@@ -200,7 +200,7 @@ def publisher_snap_metrics(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
@@ -305,7 +305,7 @@ def get_listing_snap(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
     details_blacklist = snap_details["public_metrics_blacklist"]
@@ -419,7 +419,7 @@ def post_listing_snap(snap_name):
                 else:
                     return _handle_error_list(api_response_error_list.errors)
             except ApiError as api_error:
-                return _handle_errors(api_error)
+                return _handle_error(api_error)
 
             images_json, images_files = logic.build_changed_images(
                 changes["images"],
@@ -441,7 +441,7 @@ def post_listing_snap(snap_name):
                 else:
                     error_list = error_list + api_response_error_list.errors
             except ApiError as api_error:
-                return _handle_errors(api_error)
+                return _handle_error(api_error)
 
         body_json = logic.filter_changes_data(changes)
 
@@ -461,7 +461,7 @@ def post_listing_snap(snap_name):
                 else:
                     error_list = error_list + api_response_error_list.errors
             except ApiError as api_error:
-                return _handle_errors(api_error)
+                return _handle_error(api_error)
 
         if error_list:
             try:
@@ -474,7 +474,7 @@ def post_listing_snap(snap_name):
                 else:
                     error_list = error_list + api_response_error_list.errors
             except ApiError as api_error:
-                return _handle_errors(api_error)
+                return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
@@ -606,7 +606,7 @@ def get_release_history(snap_name):
     except ApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     try:
         info = api.get_snap_info(snap_name, flask.session)
@@ -616,7 +616,7 @@ def get_release_history(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     context = {
         "snap_name": snap_name,
@@ -653,7 +653,7 @@ def get_release_history_json(snap_name):
         else:
             return flask.jsonify(api_response_error_list.errors), 400
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     return flask.jsonify(release_history)
 
@@ -674,7 +674,7 @@ def post_release(snap_name):
         else:
             return flask.jsonify(api_response_error_list.errors), 400
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     return flask.jsonify(response)
 
@@ -703,7 +703,7 @@ def post_close_channel(snap_name):
         else:
             return flask.jsonify(api_response_error_list.errors), 400
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     try:
         response = api.post_close_channel(flask.session, snap_id, data)
@@ -717,7 +717,7 @@ def post_close_channel(snap_name):
             }
             return flask.jsonify(response), 400
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     response["success"] = True
     return flask.jsonify(response)
@@ -739,7 +739,7 @@ def post_default_track(snap_name):
         else:
             return flask.jsonify(api_response_error_list.errors), 400
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     try:
         api.snap_metadata(snap_id, flask.session, data)
@@ -753,7 +753,7 @@ def post_default_track(snap_name):
             }
             return flask.jsonify(response), 400
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     return flask.jsonify({"success": True})
 
@@ -769,7 +769,7 @@ def get_register_name():
     try:
         user = api.get_account(flask.session)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     available_stores = logic.filter_available_stores(user["stores"])
 
@@ -837,7 +837,7 @@ def post_register_name():
         try:
             user = api.get_account(flask.session)
         except ApiError as api_error:
-            return _handle_errors(api_error)
+            return _handle_error(api_error)
 
         available_stores = logic.filter_available_stores(user["stores"])
 
@@ -887,7 +887,7 @@ def post_register_name():
 
         return flask.render_template("publisher/register-snap.html", **context)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     flask.flash(
         "".join(
@@ -931,7 +931,7 @@ def post_register_name_json():
             api_response_error_list.status_code,
         )
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     response["code"] = "created"
 
@@ -970,7 +970,7 @@ def post_register_name_dispute():
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     return flask.render_template(
         "publisher/register-name-dispute-success.html", snap_name=snap_name
@@ -1001,7 +1001,7 @@ def get_settings(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
@@ -1070,7 +1070,7 @@ def post_settings(snap_name):
                 else:
                     error_list = error_list + api_response_error_list.errors
             except ApiError as api_error:
-                return _handle_errors(api_error)
+                return _handle_error(api_error)
 
         if error_list:
             try:
@@ -1083,7 +1083,7 @@ def post_settings(snap_name):
                 else:
                     error_list = error_list + api_response_error_list.errors
             except ApiError as api_error:
-                return _handle_errors(api_error)
+                return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
@@ -1148,7 +1148,7 @@ def snap_count():
     except ApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
@@ -1168,7 +1168,7 @@ def get_publicise(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     available_languages = {
         "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
@@ -1211,7 +1211,7 @@ def get_publicise_badges(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     if snap_details["private"]:
         return flask.abort(404, "No snap named {}".format(snap_name))
@@ -1221,7 +1221,7 @@ def get_publicise_badges(snap_name):
             snap_name, api_version=2
         )
     except StoreApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     context = {
         "snap_name": snap_details["snap_name"],
@@ -1246,7 +1246,7 @@ def get_publicise_cards(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     if snap_details["private"]:
         return flask.abort(404, "No snap named {}".format(snap_name))
@@ -1277,7 +1277,7 @@ def post_preview(snap_name):
         else:
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
-        return _handle_errors(api_error)
+        return _handle_error(api_error)
 
     context = {
         "publisher": snap_details["publisher"]["display-name"],
