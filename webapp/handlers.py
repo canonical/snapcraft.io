@@ -8,6 +8,8 @@ import prometheus_client
 import webapp.template_utils as template_utils
 from webapp import authentication
 
+from datetime import datetime
+
 badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
 )
@@ -53,6 +55,7 @@ def set_handlers(app):
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
             "IS_BRAND_STORE": is_brand_store,
+            "now": datetime.now(),
             # Functions
             "contains": template_utils.contains,
             "join": template_utils.join,
