@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import throttle from "../../../libs/throttle";
-
 const ProgressiveBar = ({
   percentage,
   targetPercentage,
@@ -174,7 +172,7 @@ class InteractiveProgressiveBar extends React.Component {
 
     this.setState(newState);
     if (onChange) {
-      throttle(onChange(target), 250);
+      onChange(target);
     }
   }
 
