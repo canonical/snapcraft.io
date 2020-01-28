@@ -171,7 +171,9 @@ class InteractiveProgressiveBar extends React.Component {
     };
 
     this.setState(newState);
-    onChange(target);
+    if (onChange) {
+      onChange(target);
+    }
   }
 
   onMouseDownHandler(e) {
@@ -186,6 +188,7 @@ class InteractiveProgressiveBar extends React.Component {
     if (!scrubStart) {
       return;
     }
+
     const width = this.barHolder.current.clientWidth;
     const diff = e.clientX - mousePosition;
     const diffPercentage = Math.round((diff / width) * 100);
