@@ -20,13 +20,6 @@ export function toggleHistory(filters) {
   return (dispatch, getState) => {
     const { history } = getState();
 
-    dispatch(
-      triggerGAEvent(
-        `click-${history.isOpen ? "close" : "open"}-history`,
-        `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`
-      )
-    );
-
     if (
       history.isOpen &&
       (history.filters == filters ||
@@ -37,8 +30,20 @@ export function toggleHistory(filters) {
           filters.risk === history.filters.risk &&
           filters.branch === history.filters.branch))
     ) {
+      dispatch(
+        triggerGAEvent(
+          `click-close-history`,
+          `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`
+        )
+      );
       dispatch(closeHistory());
     } else {
+      dispatch(
+        triggerGAEvent(
+          `click-open-history`,
+          `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`
+        )
+      );
       dispatch(openHistory(filters));
     }
   };

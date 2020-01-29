@@ -160,9 +160,7 @@ export function undoRelease(revision, channel) {
 }
 
 export function cancelPendingReleases() {
-  return dispatch => {
-    return dispatch({
-      type: CANCEL_PENDING_RELEASES
-    });
+  return {
+    type: CANCEL_PENDING_RELEASES
   };
 }

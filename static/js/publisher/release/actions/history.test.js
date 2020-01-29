@@ -15,7 +15,8 @@ describe("history actions", () => {
   const dummyFilters = {
     arch: "abc42",
     track: "latest",
-    risk: "stable"
+    risk: "stable",
+    branch: null
   };
 
   describe("openHistory", () => {
@@ -42,6 +43,9 @@ describe("history actions", () => {
     describe("when history with same filters is open", () => {
       it("should dispatch action to close history panel", () => {
         const store = mockStore({
+          options: {
+            snapName: "test"
+          },
           history: {
             isOpen: true,
             filters: {
