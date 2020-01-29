@@ -1,3 +1,5 @@
+/* global global, jest */
+
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -18,6 +20,14 @@ describe("history actions", () => {
     risk: "stable",
     branch: null
   };
+
+  beforeEach(() => {
+    global.dataLayer = { push: jest.fn() };
+  });
+
+  afterEach(() => {
+    global.dataLayer = undefined;
+  });
 
   describe("openHistory", () => {
     it("should create an action to open history panel", () => {
@@ -82,6 +92,9 @@ describe("history actions", () => {
     describe("when history with different filters is open", () => {
       it("should dispatch action to open history panel with new filters", () => {
         const store = mockStore({
+          options: {
+            snapName: "test"
+          },
           history: {
             isOpen: true,
             filters: {
@@ -104,6 +117,9 @@ describe("history actions", () => {
     describe("when history is closed", () => {
       it("should dispatch action to open history panel", () => {
         const store = mockStore({
+          options: {
+            snapName: "test"
+          },
           history: {
             isOpen: false,
             filters: null

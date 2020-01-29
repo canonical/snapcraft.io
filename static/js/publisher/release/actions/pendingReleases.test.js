@@ -1,3 +1,5 @@
+/* global global, jest */
+
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -49,6 +51,14 @@ describe("pendingReleases actions", () => {
       [revision2.revision]: revision2
     }
   };
+
+  beforeEach(() => {
+    global.dataLayer = { push: jest.fn() };
+  });
+
+  afterEach(() => {
+    global.dataLayer = undefined;
+  });
 
   describe("releaseRevision", () => {
     const store = mockStore(stateWithRevisions);
@@ -260,16 +270,23 @@ describe("pendingReleases actions", () => {
   });
 
   describe("undoRelease", () => {
+    const store = mockStore(stateWithRevisions);
     it("should create an action to undo release of revision", () => {
-      expect(undoRelease(revision, channel).type).toBe(UNDO_RELEASE);
+      expect(store.dispatch(undoRelease(revision, channel)).type).toBe(
+        UNDO_RELEASE
+      );
     });
 
     it("should supply a payload with revision", () => {
-      expect(undoRelease(revision, channel).payload.revision).toEqual(revision);
+      expect(
+        store.dispatch(undoRelease(revision, channel)).payload.revision
+      ).toEqual(revision);
     });
 
     it("should supply a payload with channel", () => {
-      expect(undoRelease(revision, channel).payload.channel).toEqual(channel);
+      expect(
+        store.dispatch(undoRelease(revision, channel)).payload.channel
+      ).toEqual(channel);
     });
   });
 
