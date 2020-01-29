@@ -29,7 +29,9 @@ def set_handlers(app):
 
         if authentication.is_authenticated(flask.session):
             user_name = flask.session["openid"]["fullname"]
-            user_is_canonical = flask.session["openid"]["is_canonical"]
+            user_is_canonical = flask.session["openid"].get(
+                "is_canonical", False
+            )
         else:
             user_name = None
             user_is_canonical = False
