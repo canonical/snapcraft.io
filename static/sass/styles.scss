@@ -231,3 +231,12 @@ $color-social-icon-foreground: $color-light;
 // Convert first row of a card to a header
 @import 'snapcraft_p-table-mobile-card';
 @include snapcraft-p-table-mobile-card;
+
+
+// **** Vanilla overrides & temporary bug fixes ****
+
+// Temporary bug fix for https://github.com/canonical-web-and-design/vanilla-framework/issues/2791
+
+dl {
+  margin-bottom: $spv-outer--scaleable;
+}
