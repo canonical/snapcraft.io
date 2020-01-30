@@ -45,7 +45,7 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
               defaultTrack: {% if default_track %}{{ default_track|tojson }}{% else %}"latest"{% endif %},
               csrfToken: {{ csrf_token()|tojson }},
               flags: {
-                isProgressiveReleaseEnabled: true
+                isProgressiveReleaseEnabled: {{ user_is_canonical|tojson }}
               }
             }
           );

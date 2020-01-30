@@ -99,6 +99,7 @@ const ReleasesConfirmDetails = ({
               revisionInfo={revisionInfo}
               channel={channel}
               key={`${revisionInfo.revision}-{${channel}`}
+              showBar={showProgressiveReleases}
             />
           );
         })}
