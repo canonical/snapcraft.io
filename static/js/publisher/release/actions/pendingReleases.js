@@ -18,7 +18,7 @@ import { triggerGAEvent } from "../actions/gaEventTracking";
 export function releaseRevision(revision, channel, progressive) {
   return (dispatch, getState) => {
     const state = getState();
-    const { revisions } = state;
+    const { revisions, pendingReleases } = state;
 
     const previousRevisions = getReleases(
       state,
@@ -33,12 +33,30 @@ export function releaseRevision(revision, channel, progressive) {
     if (!progressive && previousRevisions.length > 0 && previousRevisions[0]) {
       revisionToRelease = revisions[revision.revision];
 
+      let percentage = 100;
+
+      // If there's already a "null" release in staging that is progressive
+      // assign that value to subsequent progressive releases
+      Object.keys(pendingReleases).forEach(revision => {
+        Object.keys(pendingReleases[revision]).forEach(channel => {
+          const release = pendingReleases[revision][channel];
+
+          if (
+            release.progressive &&
+            release.progressive.key === null &&
+            percentage === 100
+          ) {
+            percentage = release.progressive.percentage;
+          }
+        });
+      });
+
       // Set key to null as we want to set the same key for a group
       // of releases on release. In actions/releases.js the key is either
       // updated, or the progressive object is removed completely
       progressive = {
         key: null,
-        percentage: 100,
+        percentage: percentage,
         paused: false
       };
     }
