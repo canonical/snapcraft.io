@@ -18,5 +18,6 @@ export function triggerGAEvent() {
       eventLabel = currentState.options.snapName;
     }
     triggerEventReleaseUI(eventAction, eventLabel);
+    return { type: "GA_EVENT_SENT" };
   };
 }
