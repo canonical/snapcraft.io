@@ -10,6 +10,8 @@ export default class ChannelMenu extends Component {
   }
 
   promoteToChannelClick(targetChannel, event) {
+    this.props.gaEvent(targetChannel, "promote");
+
     this.props.promoteToChannel(targetChannel);
 
     if (this.menu) {
@@ -60,6 +62,8 @@ export default class ChannelMenu extends Component {
   }
 
   closeChannelClick(channel, event) {
+    this.props.gaEvent(channel, "close");
+
     this.props.closeChannel(channel);
 
     if (this.menu) {
@@ -125,5 +129,6 @@ ChannelMenu.propTypes = {
   targetChannels: PropTypes.array.isRequired,
   tooltip: PropTypes.string,
   promoteToChannel: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func
+  closeChannel: PropTypes.func,
+  gaEvent: PropTypes.func.isRequired
 };
