@@ -1,3 +1,13 @@
+/**
+   These configs can contain a whitelist array of objects at the top level
+   containing: {
+     dimensions: [width, height],
+     fileName: "string",
+     accept: ["file/format", "file/format"]
+   }
+   This was previously used for legacy banners
+*/
+
 const MEDIA_RESTRICTIONS = {
   accept: ["image/png", "image/gif", "image/jpeg"],
   width: {
@@ -26,19 +36,7 @@ const MEDIA_RESTRICTIONS = {
       min: 0,
       max: 40
     }
-  },
-  whitelist: [
-    {
-      dimensions: [1218, 240],
-      fileName: "banner",
-      accept: ["image/png", "image/jpeg"]
-    },
-    {
-      dimensions: [240, 240],
-      fileName: "banner-icon",
-      accept: ["image/png", "image/jpeg"]
-    }
-  ]
+  }
 };
 
 const ICON_RESTRICTIONS = {
