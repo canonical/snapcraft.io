@@ -123,6 +123,9 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_patterns_icons';
 @include snapcraft-p-icon-top;
 
+@import 'snapcraft_show-more';
+@include snapcraft-show-more;
+
 @import 'snapcraft_snap-details';
 @include snapcraft-snap-details;
 
