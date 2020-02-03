@@ -1,0 +1,41 @@
+@mixin snapcraft-show-more {
+  $color-transparent-white: rgba(255, 255, 255, 0);
+
+  .p-show-more {
+    position: relative;
+
+    &.is-collapsed {
+      > :first-child {
+        max-height: 17.5rem;
+        overflow: hidden;
+      }
+    }
+
+    &__fade {
+      background: linear-gradient($color-transparent-white, $color-x-light 50%);
+      bottom: -1.5rem;
+      padding-top: 3rem;
+      position: absolute;
+      width: 100%;
+    }
+
+    &__link-container {
+      border-bottom: 1px dotted $color-mid-light;
+    }
+
+    &__link {
+      background: $color-x-light;
+      color: $color-dark;
+      float: right;
+      margin-right: 5px;
+      padding: 0 5px;
+      position: relative;
+      text-decoration: none;
+      top: -.725rem;
+
+      &:visited {
+        color: $color-dark;
+      }
+    }
+  }
+}

@@ -20,12 +20,12 @@
 
   <div class="col-6">
     <h4>Here’s how httplab defines snapcraft.yaml:</h4>
-    <pre class="p-code-yaml"><b>name</b>: httplab
+    <div class ="p-show-more is-collapsed" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: httplab
 <b>version</b>: git
 <b>summary</b>: An interactive web server.
 <b>description</b>: |
-  HTTPLab let you inspect HTTP requests and forge
-  responses.
+  HTTPLab let you inspect HTTP requests [&hellip;]
 
 <b>confinement</b>: devmode
 <b>base</b>: core18
@@ -42,5 +42,9 @@
 <b>apps</b>:
   <b>httplab</b>:
     <b>command</b>: bin/httplab</pre>
+
+      {% include "home/_fsf_yaml_show_more.html" %}
+
+    </div>
   </div>
 </div>

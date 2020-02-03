@@ -16,21 +16,14 @@
 
   <div class="col-6">
     <h4>Here's how xsv defines snapcraft.yaml:</h4>
-    <pre class="p-code-yaml"><b>name</b>: xsv
+    <div class="p-show-more is-collapsed" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: xsv
 <b>version</b>: git
 <b>summary</b>: A fast CSV command line toolkit written in Rust
 <b>description</b>: |
-  xsv is a command line program for indexing,
-  slicing, analyzing, splitting and joining CSV
-  files. Commands should be simple, fast and
-  composable:
-  - Simple tasks should be easy.
-  - Performance trade offs should be exposed
-    in the CLI interface.
-  - Composition should not come at the
-    expense of performance.
+  xsv is a command line program for indexing [&hellip;]
 
-<b>confinement</b>: devmode
+<b>confinement</b>: devmode1
 <b>base</b>: core18
 
 <b>parts</b>:
@@ -41,5 +34,9 @@
 <b>apps</b>:
   <b>xsv</b>:
     <b>command</b>: bin/xsv</pre>
+
+    {% include "home/_fsf_yaml_show_more.html" %}
+    
+    </div>
   </div>
 </div>
