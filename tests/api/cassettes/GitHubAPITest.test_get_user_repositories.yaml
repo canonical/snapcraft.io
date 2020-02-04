@@ -1,0 +1,163 @@
+interactions:
+- request:
+    body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
+      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:\n                        [OWNER,
+      ORGANIZATION_MEMBER],\n                \n                ) {\n              edges
+      {\n                node {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
+      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
+      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
+      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
+      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n              }\n              pageInfo
+      {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1065'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (a85017b3bae1b0f4530624eb0909c64e855c8a6a;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA7WUUW+bMBDHv4ufEy0BMmmR+pDOGyOb7TE5RWbagwdOsLEBBVIKEd99tvbUppGq
+        tXs46e4vnX0//08+g5x3HKzP4F6KXhxddhRN3cquPkrRulrkB5f8PIOqzoVTKm5EIruC9JVrAb9P
+        UufztuMHWR3mbcWb7Mj33VzW7zrRdkswAwM3+lud8U7W1dKdIXPbiGD8PjYP90xFI4GfVkjtVpjW
+        vc1HpsoRqc3AaGRjMxJ68BktexxGfqpuC0xZjwwb2IhWWG0LMD2+xQPr6qT1Y9F/Tgz+itM0+2dE
+        7xLx8nI70VVu5iNYDyj8odOQBRjuvFTlJYE2wniBVRYwE/UpRT1LIo8k24KZXZ/CeHzK/b8Q/Rci
+        XnLbia5yZwOmTUmS2CfwViKIC6wKVy8J3C1SqksbOjVoTGm8tD7bN9kapLR5yv0GLgavQbzkthNd
+        5w6QajSCbo9zw+hWoXC3TMPUYGW9NyxAtPQQzDxC7yRJPmtk/ba7vwDTaxZ19eaIjnuafs1Aww8i
+        qva1oy54i8VD991KYL3nuhUzIKr84+nY1u7HYP7dkHkfBlKxgTRfCFRfo3Fzc+PgpukP4k+8cJYE
+        AAA=
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Tue, 04 Feb 2020 12:01:38 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+      X-Accepted-OAuth-Scopes:
+      - repo
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - BE32:2BEC7:11F91D3:1527136:5E395D21
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4993'
+      X-RateLimit-Reset:
+      - '1580817914'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
+      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:\n                        [OWNER,
+      ORGANIZATION_MEMBER],\n                \n                ) {\n              edges
+      {\n                node {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
+      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
+      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
+      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
+      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n              }\n              pageInfo
+      {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1065'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (a85017b3bae1b0f4530624eb0909c64e855c8a6a;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: '{"message":"Bad credentials","documentation_url":"https://developer.github.com/v4"}'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Content-Length:
+      - '83'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Tue, 04 Feb 2020 12:01:38 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 401 Unauthorized
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - BE32:2BEC7:11F92B4:152723F:5E395D22
+      X-RateLimit-Limit:
+      - '0'
+      X-RateLimit-Remaining:
+      - '0'
+      X-RateLimit-Reset:
+      - '1580821298'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 401
+      message: Unauthorized
+version: 1
