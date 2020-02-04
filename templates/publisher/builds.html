@@ -9,46 +9,46 @@ Builds for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif 
   {% set selected_tab='builds' %}
   {% include "publisher/_header.html" %}
 
-  <form id="market-form" class="market-form p-form p-form--stacked" method="POST" enctype='multipart/form-data'>
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <input type="hidden" name="snap_id" value="{{ snap_id }}" />
-
-    {% if not github_repository %}
-    <div class="snapcraft-p-sticky js-sticky-bar">
-      <div class="row">
-        <div class="col-7">
-          <p class="snapcraft-p-market-message u-no-margin--bottom">
-            {% if not github_user %}
-            You need to be logged in on GitHub to make changes
-            {% else %}
-            Your GitHub account is connected.
-            {% endif %}
-          </p>
-        </div>
-        <div class="col-5">
-          <div class="u-align--right u-clearfix">
-            {% if not github_user %}
-              <a href="/github/auth?back=1" class="p-button--positive has-icon u-no-margin--bottom">
-                <span>Log in </span><i class="p-icon--github-white"></i>
-              </a>
-            {% else %}
-              <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/builds">Revert</a>
-              <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
-                <span class="p-button__spinner vanilla-workaround--dark">
-                  <i class="p-icon--spinner u-animation--spin"></i>
-                </span>
-                <span class="p-button__text">Save</span>
-              </button>
-            {% endif %}
-          </div>
+  {% if not github_repository %}
+  <div class="snapcraft-p-sticky js-sticky-bar">
+    <div class="row">
+      <div class="col-7">
+        <p class="snapcraft-p-market-message u-no-margin--bottom">
+          {% if not github_user %}
+          Login to your GitHub account to start building.
+          {% else %}
+          Your GitHub account is connected.
+          {% endif %}
+        </p>
+      </div>
+      <div class="col-5">
+        <div class="u-align--right u-clearfix">
+          {% if not github_user %}
+          <a href="/github/auth?back=1"
+            class="p-button--positive has-icon u-no-margin--bottom">
+            <span>Log in </span><i class="p-icon--github-white"></i>
+          </a>
+          {% else %}
+          <a href="https://github.com/{{ github_user['login'] }}" class="p-link--soft">
+            <img src="{{ github_user['avatar_url'] }}" alt="@{{ github_user['login'] }}" class="p-build__avatar">
+            {{ github_user["login"] }}
+          </a>
+          &mid;
+          <a href="#">Change account</a>
+          {% endif %}
         </div>
       </div>
     </div>
+  </div>
+  {% endif %}
+  
+  <div class="u-fixed-width">
+    <hr class="u-no-margin--bottom" />
+  </div>
 
-    <div class="row">
-      <hr class="u-no-margin--bottom" />
-    </div>
-    {% endif %}
+  <form id="market-form" class="market-form p-form p-form--stacked" method="POST" enctype='multipart/form-data'>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
     <section class="p-strip is-shallow">
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -65,15 +65,42 @@ Builds for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif 
       {% endif %}
       {% endwith %}
 
+      {% if not github_repositories and not github_user %}
       <div class="u-fixed-width">
-        <h2 class="p-heading--four">
-          GitHub configuration
+        <h2 class="p-heading--four u-align-text--center">
+          Auto-build and publish software for any Linux system or device
         </h2>
+        <div class="u-align--center">
+          <img src="https://assets.ubuntu.com/v1/dcae3c70-header-final-01.svg" alt=""
+            width="750" height="228">
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <p>Start by creating a repo and pushing your code to GitHub. Make
+              sure that your
+              repo includes a snapcraft.yaml file.</p>
+          </div>
+          <div class="col-4">
+            <p>Register a name on Snapcraft and attach it to your repo to start
+              building. Your
+              snap will be built automatically for all the distros.</p>
+          </div>
+          <div class="col-4">
+            <p>Release your snap to your users. From here on, all the updates you
+              do to your
+              code will trigger automatic builds.</p>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="u-fixed-width">
+        <p>Your repo needs a snapcraft.yaml file, so that Snapcraft can make it
+          buildable, installable, and runnable.</p>
       </div>
 
       <div class="row p-form__group">
         <div class="col-2" data-tour="listing-category">
-          <label class="p-form__label">Repository:</label>
+          <label class="p-form__label">Select a repo:</label>
         </div>
         <div class="col-4">
           <div class="p-form__control" data-tour="listing-category">
@@ -98,16 +125,9 @@ Builds for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif 
           </div>
         </div>
       </div>
+      {% endif %}
     </section>
   </form>
-
-
-  <div class="p-strip is-shallow">
-    <div class="row">
-      <hr class="u-no-margin--bottom" />
-    </div>
-  </div>
-
 
   {% if snap_builds_enabled %}
   <section class="p-strip is-shallow">
@@ -127,16 +147,17 @@ Builds for {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif 
 {% endblock %}
 
 {% block scripts %}
-{% if snap_builds %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function () {
+        {% if snap_builds %}
         snapcraft.publisher.initBuilds('#builds-wrapper',
           {{ snap_name | tojson }},
           {{ snap_builds | tojson }}
         );
+        {% endif %}
+        snapcraft.publisher.stickyListingBar();
       });
     });
   </script>
-{% endif %}
 {% endblock %}
