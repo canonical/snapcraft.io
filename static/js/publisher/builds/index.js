@@ -112,18 +112,34 @@ function createStatus(statusMessage, colour, icon, priority, badge) {
   };
 }
 
+function createDuration(duration) {
+  const durationParts = duration.split(":");
+  const hours = parseInt(durationParts[0]);
+  const minutes = parseInt(durationParts[1]);
+  const seconds = Math.round(parseInt(durationParts[2]));
+
+  if (hours > 0) {
+    return `${hours} hour${hours > 1 ? "s" : ""}`;
+  }
+  if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""}`;
+  }
+
+  return `${seconds} second${seconds > 1 || seconds === 0 ? "s" : ""}`;
+}
+
 export function initBuilds(id, snapName, builds) {
   const rows = builds.map(build => {
     return {
       columns: [
         {
-          content: <a href={build.link}>{build.id}</a>
+          content: <a href={build.link}>#{build.id}</a>
         },
         {
           content: build.arch_tag
         },
         {
-          content: build.duration,
+          content: createDuration(build.duration),
           className: "u-hide--small"
         },
         {
@@ -133,9 +149,7 @@ export function initBuilds(id, snapName, builds) {
                 UserFacingStatus[build.status].colour
               }`}
             >
-              <a href={build.logs}>
-                {UserFacingStatus[build.status].statusMessage}
-              </a>
+              {UserFacingStatus[build.status].statusMessage}
             </span>
           )
         },
@@ -153,7 +167,7 @@ export function initBuilds(id, snapName, builds) {
     <MainTable
       headers={[
         {
-          content: "Build id"
+          content: "ID"
         },
         {
           content: "Architecture"
@@ -166,7 +180,7 @@ export function initBuilds(id, snapName, builds) {
           content: "Result"
         },
         {
-          content: "Build date",
+          content: "",
           className: "u-align--right"
         }
       ]}
