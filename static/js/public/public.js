@@ -17,6 +17,7 @@ import initExpandableSnapDetails from "./expandable-details";
 import initExpandableDistroChart from "./snap-details/exapandable-distr-chart";
 import triggerEventWhenVisible from "./ga-scroll-event";
 import { initLinkScroll } from "./scroll-to";
+import initExpandableYaml from "./fsf-expandable-yaml-details";
 
 export {
   map,
@@ -31,6 +32,7 @@ export {
   initEmbeddedCardModal,
   initExpandableDistroChart,
   initExpandableSnapDetails,
+  initExpandableYaml,
   initFSFLanguageSelect,
   initReportSnap,
   firstSnapFlow,

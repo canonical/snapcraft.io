@@ -15,17 +15,12 @@
 
   <div class="col-6">
     <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
-    <pre class="p-code-yaml"><b>name</b>: freeplane
+    <div class ="p-show-more is-collapsed" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: freeplane
 <b>version</b>: '1.6.10'
-<b>summary</b>: Application for Mind Mapping, Knowledge and Project Management
+<b>summary</b>: Application for Mind Mapping [&hellip;]
 <b>description</b>: |
-  Freeplane is a free and open source software
-  application that supports thinking, sharing
-  information and getting things done at work,
-  in school and at home. The core of the
-  software is tools for mind mapping (also known
-  as concept mapping or information mapping)
-  and using mapped information.
+  Freeplane is a free and open source software [&hellip;]
 
 <b>confinement</b>: devmode
 
@@ -46,5 +41,9 @@
 <b>apps</b>:
   <b>freeplane</b>:
     <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh</pre>
+
+      {% include "home/_fsf_yaml_show_more.html" %}
+
+    </div>
   </div>
 </div>

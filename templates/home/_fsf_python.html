@@ -21,12 +21,12 @@
 
   <div class="col-6">
     <h4>Here's how <a href="https://snapcraft.io/offlineimap">offlineimap</a> defines snapcraft.yaml:</h4>
-    <pre class="p-code-yaml"><b>name</b>: offlineimap
+    <div class ="p-show-more is-collapsed" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: offlineimap
 <b>version</b>: git
 <b>summary</b>: OfflineIMAP
 <b>description</b>: |
-  OfflineIMAP is software that downloads your email mailbox(es) as local
-  Maildirs. OfflineIMAP will synchronize both sides via IMAP.
+  OfflineIMAP is software that downloads [&hellip;]
 
 <b>confinement</b>: devmode
 <b>base</b>: core18
@@ -42,5 +42,9 @@
 <b>apps</b>:
   <b>offlineimap</b>:
     <b>command</b>: bin/offlineimap</pre>
+
+    {% include "home/_fsf_yaml_show_more.html" %}
+
+    </div>
   </div>
 </div>

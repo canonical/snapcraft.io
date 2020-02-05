@@ -14,6 +14,7 @@
   window.addEventListener("DOMContentLoaded", function() {
     Raven.context(function () {
       snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+      snapcraft.public.initExpandableYaml();
     });
   });
 </script>

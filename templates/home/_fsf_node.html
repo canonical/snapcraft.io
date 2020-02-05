@@ -15,16 +15,12 @@
 
   <div class="col-6">
     <h4>Here's how <a href="https://snapcraft.io/wethr">wethr</a> defines snapcraft.yaml:</h4>
-    <pre class="p-code-yaml"><b>name</b>: wethr
+    <div class ="p-show-more is-collapsed" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: wethr
 <b>version</b>: git
 <b>summary</b>: Command line weather tool.
 <b>description</b>: |
-  Get current weather:-
-  $ wethr
-  Get current weather in metric units
-  $ wethr --metric
-  Get current weather in imperial units
-  $ wethr --imperial
+  Get current weather [&hellip;]
 
 <b>confinement</b>: devmode
 <b>base</b>: core18
@@ -37,5 +33,9 @@
 <b>apps</b>:
   <b>wethr</b>:
     <b>command</b>: wethr</pre>
+
+      {% include "home/_fsf_yaml_show_more.html" %}
+
+    </div>
   </div>
 </div>

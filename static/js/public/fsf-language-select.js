@@ -16,6 +16,24 @@ function initFSFLanguageSelect(rootEl) {
     }
   };
 
+  // reset expandable yaml files to being truncated
+  const resetExpandableYaml = () => {
+    const showMoreContainer = document.querySelectorAll(
+      "[data-js='js-show-more']"
+    );
+
+    if (showMoreContainer) {
+      showMoreContainer.forEach(el => {
+        const fadeEL = el.querySelector(".p-show-more__fade");
+
+        if (fadeEL) {
+          fadeEL.classList.remove("u-hide");
+          el.classList.add("is-collapsed");
+        }
+      });
+    }
+  };
+
   const openDetails = link => {
     if (link && link.dataset.flowLink) {
       // find where the next row of links starts to insert details panel before
@@ -32,6 +50,8 @@ function initFSFLanguageSelect(rootEl) {
         }
       }
       const isOpen = link.classList.contains("is-open");
+
+      resetExpandableYaml();
 
       closeDetails();
 
