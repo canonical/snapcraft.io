@@ -1413,11 +1413,11 @@ def get_snap_builds(snap_name):
         github_owner, github_repo = context["github_repository"].split("/")
 
         # Check if this repo has a snapcraft.yaml
-        context["yaml_file_exist"] = github.is_snapcraft_yaml_present(
+        context["yaml_file_exists"] = github.is_snapcraft_yaml_present(
             github_owner, github_repo
         )
 
-        if not context["yaml_file_exist"]:
+        if not context["yaml_file_exists"]:
             flask.flash(
                 "This repository doesn't contain a snapcraft.yaml", "negative",
             )
