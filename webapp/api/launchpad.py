@@ -86,3 +86,31 @@ class Launchpad:
         }
 
         return self._request("POST", "+snaps", data=data)
+
+    def trigger_build(self, snap_name):
+        """
+        Create a new build for a Snap
+        """
+        lp_snap = self.get_snap_by_store_name(snap_name)
+
+        data = {
+            "ws.op": "requestBuild",
+            "channels": "snapcraft,apt",
+            "archive": f"{self.BASE_URL}/devel/ubuntu/+archive/primary",
+            "pocket": "Updates",
+        }
+
+        archs = [
+            "amd64",
+            "arm64",
+            "armhf",
+            "i386",
+            "ppc64el",
+            "s390x",
+        ]
+
+        for arch in archs:
+            data["distro_arch_series"] = f"/ubuntu/xenial/{arch}"
+            self._request("POST", lp_snap["self_link"][32:], data=data)
+
+        return True
