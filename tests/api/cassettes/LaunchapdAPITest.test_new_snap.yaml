@@ -1,0 +1,124 @@
+interactions:
+- request:
+    body: ws.op=new&owner=%2F%7Ebuild.snapcraft.io&name=57872c9265e7749eb552312d0ac74b79&store_name=new-test-snap&git_repository_url=https%3A%2F%2Fgithub.com%2Fbuild-staging-snapcraft-io%2Ftest1&git_path=HEAD&auto_build=false&auto_build_archive=%2Fubuntu%2F%2Barchive%2Fprimary&auto_build_pocket=Updates&processors=%2F%2Bprocessors%2Famd64&processors=%2F%2Bprocessors%2Farm64&processors=%2F%2Bprocessors%2Farmhf&processors=%2F%2Bprocessors%2Fi386&processors=%2F%2Bprocessors%2Fppc64el&processors=%2F%2Bprocessors%2Fs390x&store_series=%2F%2Bsnappy-series%2F16
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '548'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - storefront (82e80f8ae4234617b3fd3caf6fc2ca22d24774d8;devel)
+    method: POST
+    uri: https://api.launchpad.net/devel/+snaps
+  response:
+    body:
+      string: ''
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Length:
+      - '0'
+      Content-Security-Policy:
+      - frame-ancestors 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      Date:
+      - Thu, 06 Feb 2020 11:59:23 GMT
+      Keep-Alive:
+      - timeout=60, max=100
+      Location:
+      - https://api.launchpad.net/devel/~build.snapcraft.io/+snap/57872c9265e7749eb552312d0ac74b79
+      Server:
+      - zope.server.http (HTTP)
+      Strict-Transport-Security:
+      - max-age=15552000
+      Vary:
+      - Accept
+      X-Content-Type-Options:
+      - nosniff
+      X-Content-Type-Warning:
+      - guessed from content
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Launchpad-Revision:
+      - 0a62c17273454a1313f81a74a2198ec30b44c7b6
+      X-Lazr-Notifications:
+      - '[]'
+      X-Powered-By:
+      - Zope (www.zope.org), Python (www.python.org)
+      X-Xss-Protection:
+      - 1; mode=block
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - storefront (82e80f8ae4234617b3fd3caf6fc2ca22d24774d8;devel)
+    method: GET
+    uri: https://api.launchpad.net/devel/+snaps?ws.op=findByStoreName&owner=%2F~build.snapcraft.io&store_name=new-test-snap
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA8VWy27bMBD8lYA9urIo2XrQtwIt0A9oT00gUOTKIkKTLEnZcIP020vKcSy7AWo0
+        QHKStNTO7uxjpAfktaeyceIXoNVN9vEGOU+tD/c43IPyVoALTz8ewoG20LCeKgVytN2FVzj10Ejq
+        fLPRXHQCeDhBOc5xgvMEl9+ybFWQVb6Yk0Ve18sZxiuM0Rgo4g1Gahp9OiodBPNa+MZC10ih7iNU
+        771xqzSlRswlHRTrDeVzBT7lsAWZzsLL6dcvnz5HTGPFNiQ0gdtB+xfUOczvdhCSz52ihlna+bnQ
+        6Sw+pUVVVzkjeVlAVS0JtEWRL7KcY8qqZVuRGLG1NGAdQ6hBymCkg9fNCDvJ5GScFvHJw1jNwDlt
+        XcO0lMC80OrqGvw/hfQUGD0X32gnQnP2F6wYVU/tagKTsX0TehZ+DiI0dCusH6gMAxXJezvEQwOK
+        C7U+0H9zimfB0XkrqGW92MLVeQztoPyQzp78Qv3Ehtr9OAojoNODZdCELWqplJMCvQv3E+ezKjSx
+        W+D8u7biOYlRDUBev/OvW1kunLdhgCFq28WMc3DMChPrMVlnKfWuEcqDDTmcpjpui6G+jykfFSim
+        3oCn62i8RawltCSEAMvZslpgUhbLmocEu5yzJcZdV5Qkr7OElwsgNcXLIi9YURWkIy3Hebboqo6W
+        NSvKriUVZ7cIHVSt1/r+rdt3DHuS7/Mi/lusYxyzTw5uaVa+IDqDlVOocNoP7ZzpzWGYk/CBWocZ
+        Sp4JJIGAD3OURbCOCgn8faf8xRxicopuomSia6b0UN+jh4JdEjmOrNEot0eh2Zvr1evDyX0dt4Aq
+        /5qCRCS9U2BfCzL+RTAL4XL1/0OYCCPBHwv91k2+DH/xXTGa3Y9agb6byM6hx7vHP+bUvnNvCQAA
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '684'
+      Content-Security-Policy:
+      - frame-ancestors 'self';
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 06 Feb 2020 11:59:24 GMT
+      Keep-Alive:
+      - timeout=60, max=99
+      Server:
+      - zope.server.http (HTTP)
+      Strict-Transport-Security:
+      - max-age=15552000
+      Vary:
+      - Accept,Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Launchpad-Revision:
+      - 0a62c17273454a1313f81a74a2198ec30b44c7b6
+      X-Lazr-Notifications:
+      - '[]'
+      X-Powered-By:
+      - Zope (www.zope.org), Python (www.python.org)
+      X-Xss-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: Ok
+version: 1
