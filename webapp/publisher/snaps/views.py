@@ -1360,17 +1360,11 @@ def get_snap_builds(snap_name):
     github = GitHubAPI(flask.session.get("github_auth_secret"))
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
-    try:
-        context["github_user"] = github.get_username()
-    except Unauthorized:
-        context["github_user"] = None
-
     if lp_snap:
         # Git repository without GitHub hostname
         context["github_repository"] = lp_snap["git_repository_url"][19:]
         github_owner, github_repo = context["github_repository"].split("/")
 
-        # Check if this repo has a snapcraft.yaml
         context["yaml_file_exists"] = github.is_snapcraft_yaml_present(
             github_owner, github_repo
         )
@@ -1408,13 +1402,19 @@ def get_snap_builds(snap_name):
                     "title": build["title"],
                 }
             )
-    elif context["github_user"]:
-        # Get snapcraft repositories sorted by snapcraft_yaml
-        context["github_repositories"] = sorted(
-            github.get_user_repositories(),
-            key=lambda k: k["snapcraft_yaml"],
-            reverse=True,
-        )
+    else:
+        try:
+            context["github_user"] = github.get_username()
+        except Unauthorized:
+            context["github_user"] = None
+
+        if context["github_user"]:
+            # Get snapcraft repositories sorted by snapcraft_yaml
+            context["github_repositories"] = sorted(
+                github.get_user_repositories(),
+                key=lambda k: k["snapcraft_yaml"],
+                reverse=True,
+            )
 
     return flask.render_template("publisher/builds.html", **context)
 
