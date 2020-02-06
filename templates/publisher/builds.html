@@ -138,6 +138,28 @@ Builds for
   {% endif %}
   </form>
 
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <hr class="u-no-margin--bottom" />
+    </div>
+  </div>
+
+  {% if github_repository %}
+  <section class="p-strip is-shallow">
+    <div class="row">
+      <form action="/{{ snap_name }}/builds/trigger-build" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
+          <span class="p-button__spinner vanilla-workaround--dark">
+            <i class="p-icon--spinner u-animation--spin"></i>
+          </span>
+          <span class="p-button__text">Trigger new build</span>
+        </button>
+      </form>
+    </div>
+  </section>
+  {% endif %}
+
   {% if snap_builds_enabled %}
   <section class="p-strip is-shallow">
     <div class="row">
