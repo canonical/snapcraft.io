@@ -42,7 +42,7 @@ Builds for
           <li class="p-inline-list__item">
             {% if github_user %}
             <a href="https://github.com/{{ github_user['login'] }}" class="p-link--soft u-float-right">
-              <img src="{{ github_user['avatar_url'] }}" alt="@{{ github_user['login'] }}"
+              <img src="{{ github_user['avatarUrl'] }}" alt="@{{ github_user['login'] }}"
                 class="p-build__avatar">
               {{ github_user["login"] }}
             </a>
@@ -111,6 +111,20 @@ Builds for
       </div>
     {% else %}
       <div class="row p-form__group">
+        <div class="col-2" data-tour="listing-category">
+          <label class="p-form__label">Select a organization:</label>
+        </div>
+        <div class="col-4">
+          <div class="p-form__control" data-tour="listing-category">
+            <select name="github_org">
+              <option value="">{{ github_user["login"] }}</option>
+              {% for org in github_orgs %}
+              <option value="{{ org.login }}">{{ org.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
         <div class="col-2" data-tour="listing-category">
           <label class="p-form__label">Select a repository:</label>
         </div>
