@@ -1446,17 +1446,12 @@ def get_snap_builds(snap_name):
             )
     else:
         try:
-            context["github_user"] = github.get_username()
+            context["github_user"] = github.get_user()
         except Unauthorized:
             context["github_user"] = None
 
         if context["github_user"]:
-            # Get snapcraft repositories sorted by snapcraft_yaml
-            context["github_repositories"] = sorted(
-                github.get_user_repositories(),
-                key=lambda k: k["snapcraft_yaml"],
-                reverse=True,
-            )
+            context["github_orgs"] = github.get_orgs()
 
     return flask.render_template("publisher/builds.html", **context)
 
