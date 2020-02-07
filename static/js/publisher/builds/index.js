@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 
 import distanceInWords from "date-fns/distance_in_words_strict";
@@ -80,75 +81,160 @@ function createDuration(duration) {
   return `${seconds} second${seconds > 1 || seconds === 0 ? "s" : ""}`;
 }
 
-export function initBuilds(id, snapName, builds) {
-  const rows = builds.map(build => {
-    const status = UserFacingStatus[build.status];
-    let icon;
+class Builds extends React.Component {
+  constructor(props) {
+    super(props);
 
-    if (status.icon) {
-      icon = `p-icon--${status.icon}`;
+    this.fetchTimer = null;
+
+    this.state = {
+      isLoading: false,
+      fetchLimit: 15,
+      builds: props.builds ? props.builds : []
+    };
+
+    this.showMoreHandler = this.showMoreHandler.bind(this);
+  }
+
+  fetchBuilds() {
+    const { fetchLimit } = this.state;
+    const { updateFreq } = this.props;
+
+    fetch(`url${fetchLimit}`)
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          isLoading: false,
+          builds: result
+        });
+      })
+      .catch(() => {
+        this.setState({
+          isLoading: false
+        });
+      });
+
+    if (this.fetchTimer) {
+      clearTimeout(this.fetchTimer);
+    }
+    this.fetchTimer = setTimeout(() => this.fetchBuilds(), updateFreq);
+  }
+
+  showMoreHandler(e) {
+    const { fetchLimit } = this.state;
+    e.preventDefault();
+    this.setState(
+      {
+        fetchLimit: fetchLimit + 15,
+        isLoading: true
+      },
+      () => {
+        this.fetchBuilds();
+      }
+    );
+  }
+
+  componentDidMount() {
+    const { builds, updateFreq } = this.props;
+    if (!builds) {
+      this.fetchBuilds();
     }
 
-    return {
-      columns: [
-        {
-          content: <a href={build.link}>#{build.id}</a>
-        },
-        {
-          content: build.arch_tag
-        },
-        {
-          content: createDuration(build.duration),
-          className: "u-hide--small"
-        },
-        {
-          content: (
-            <Fragment>
-              <span className="u-hide u-show--small">
-                {icon && <i className={icon} />}
-                {status.shortStatusMessage}
-              </span>
-              <span className="u-hide--small">
-                {icon && <i className={icon} />}
-                {status.statusMessage}
-              </span>
-            </Fragment>
-          ),
-          className: "has-icon"
-        },
-        {
-          content: distanceInWords(new Date(), build.datebuilt, {
-            addSuffix: true
-          }),
-          className: "u-align-text--right"
-        }
-      ]
-    };
-  });
+    this.fetchTimer = setTimeout(() => this.fetchBuilds(), updateFreq);
+  }
 
+  render() {
+    const { builds, isLoading } = this.state;
+    const rows = builds.map(build => {
+      const status = UserFacingStatus[build.status];
+      let icon;
+
+      if (status.icon) {
+        icon = `p-icon--${status.icon}`;
+      }
+
+      return {
+        columns: [
+          {
+            content: <a href={build.link}>#{build.id}</a>
+          },
+          {
+            content: build.arch_tag
+          },
+          {
+            content: createDuration(build.duration),
+            className: "u-hide--small"
+          },
+          {
+            content: (
+              <Fragment>
+                <span className="u-hide u-show--small">
+                  {icon && <i className={icon} />}
+                  {status.shortStatusMessage}
+                </span>
+                <span className="u-hide--small">
+                  {icon && <i className={icon} />}
+                  {status.statusMessage}
+                </span>
+              </Fragment>
+            ),
+            className: "has-icon"
+          },
+          {
+            content: distanceInWords(new Date(), build.datebuilt, {
+              addSuffix: true
+            }),
+            className: "u-align-text--right"
+          }
+        ]
+      };
+    });
+
+    return (
+      <Fragment>
+        <MainTable
+          headers={[
+            {
+              content: "ID"
+            },
+            {
+              content: "Architecture"
+            },
+            {
+              content: "Duration",
+              className: "u-hide--small"
+            },
+            {
+              content: "Result",
+              className: "has-icon"
+            },
+            {
+              content: ""
+            }
+          ]}
+          rows={rows}
+        />
+        {isLoading && <div>Loading</div>}
+        {!isLoading && (
+          <div className="p-show-more__link-container">
+            <a className="p-show-more__link" onClick={this.showMoreHandler}>
+              Show more
+            </a>
+          </div>
+        )}
+      </Fragment>
+    );
+  }
+}
+
+Builds.propTypes = {
+  builds: PropTypes.array,
+  updateFreq: PropTypes.number
+};
+
+export function initBuilds(id, snapName, builds) {
   ReactDOM.render(
-    <MainTable
-      headers={[
-        {
-          content: "ID"
-        },
-        {
-          content: "Architecture"
-        },
-        {
-          content: "Duration",
-          className: "u-hide--small"
-        },
-        {
-          content: "Result",
-          className: "has-icon"
-        },
-        {
-          content: ""
-        }
-      ]}
-      rows={rows}
-    />,
+    <Builds builds={builds} updateFreq={30000} />,
     document.querySelector(id)
   );
 }
