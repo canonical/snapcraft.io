@@ -196,12 +196,9 @@ Builds for
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
-      {% if snap_builds %}
       snapcraft.publisher.initBuilds('#builds-wrapper',
-        {{ snap_name | tojson }},
-        {{ snap_builds | tojson }}
+        {{ snap_name | tojson }}
       );
-      {% endif %}
       snapcraft.publisher.stickyListingBar();
     });
   });
