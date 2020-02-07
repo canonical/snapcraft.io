@@ -36,21 +36,71 @@ class GitHubAPI:
             raise Unauthorized(response=response)
 
         response.raise_for_status()
-
         return response.json()["data"]
 
-    def get_username(self):
+    def _get_nodes(self, edges):
         """
-        Return the username of the current user
+        GraphQL: Return the list of nodes from the edges
         """
-        gql = "{ viewer { login } }"
+        return [i["node"] for i in edges]
 
-        return self._request(gql)["viewer"]["login"]
+    def get_user(self):
+        """
+        Return some user properties of the current user
+        """
+        gql = """
+        {
+          viewer {
+            login
+            name
+            avatarUrl(size: 100)
+          }
+        }
+        """
+
+        return self._request(gql)["viewer"]
+
+    def get_orgs(self, end_cursor=None):
+        """
+        Lists of organizations that the authenticated user has explicit
+        permission to access.
+        """
+        gql = (
+            """
+            {
+              viewer {
+                organizations(first: 100,"""
+            + (f'after: "{end_cursor}"' if end_cursor else "")
+            + """) {
+                  edges {
+                    node {
+                      login
+                      name
+                    }
+                  }
+                  pageInfo {
+                    hasNextPage
+                    endCursor
+                  }
+                }
+              }
+            }
+        """
+        )
+
+        gql_response = self._request(gql)["viewer"]["organizations"]
+        page_info = gql_response["pageInfo"]
+        orgs = self._get_nodes(gql_response["edges"])
+
+        if page_info["hasNextPage"]:
+            next_page = self.get_orgs(page_info["endCursor"])
+            orgs.append(next_page)
+
+        return orgs
 
     def get_user_repositories(self, end_cursor=None):
         """
-        Lists repositories that the authenticated user has explicit permission
-        to access.
+        Lists of public repositories from the authenticated user
         """
         gql = (
             """{
@@ -58,8 +108,7 @@ class GitHubAPI:
                 repositories(
                     first: 100,
                     privacy: PUBLIC,
-                    ownerAffiliations:
-                        [OWNER, ORGANIZATION_MEMBER],
+                    ownerAffiliations: [OWNER],
                 """
             + (f'after: "{end_cursor}"' if end_cursor else "")
             + """
@@ -92,22 +141,96 @@ class GitHubAPI:
 
         gql_response = self._request(gql)["viewer"]["repositories"]
         page_info = gql_response["pageInfo"]
-        repositories = gql_response["edges"]
-        processed_repos = []
+        repositories = self._get_nodes(gql_response["edges"])
+        processed_repos = {"with-yaml": [], "others": []}
 
         for repo in repositories:
             processed_repo = {}
 
-            processed_repo["name"] = repo["node"]["nameWithOwner"]
+            processed_repo["name"] = repo["nameWithOwner"]
             processed_repo["snapcraft_yaml"] = any(
-                [bool(repo["node"][f"yamlLocation{i}"]) for i in range(1, 4)]
+                [bool(repo[f"yamlLocation{i}"]) for i in range(1, 4)]
             )
-            processed_repos.append(processed_repo)
+
+            if processed_repo["snapcraft_yaml"]:
+                processed_repos["with-yaml"].append(processed_repo)
+            else:
+                processed_repos["others"].append(processed_repo)
 
         if page_info["hasNextPage"]:
-            processed_repos.extend(
-                self.get_user_repositories(page_info["endCursor"])
+            next_page = self.get_user_repositories(page_info["endCursor"])
+            processed_repos["with-yaml"].extend(next_page["with-yaml"])
+            processed_repos["others"].extend(next_page["others"])
+
+        return processed_repos
+
+    def get_org_repositories(self, org_login, end_cursor=None):
+        """
+        Lists of public repositories from the authenticated user
+        """
+        gql = (
+            """{
+              viewer {
+              organization(login: \""""
+            + org_login
+            + """") {
+                    repositories(
+                        first: 100,
+                        privacy: PUBLIC
+                    """
+            + (f'after: "{end_cursor}"' if end_cursor else "")
+            + """
+                ) {
+              edges {
+                node {
+                  nameWithOwner
+                  yamlLocation1:
+                    object(expression: "master:snapcraft.yaml")
+                    { id }
+                  yamlLocation2:
+                    object(expression: "master:.snapcraft.yaml")
+                    { id }
+                  yamlLocation3:
+                    object(expression: "master:snap/snapcraft.yaml")
+                    { id }
+                  yamlLocation4:
+                    object(expression: "master:build-aux/snap/snapcraft.yaml")
+                    { id }
+                }
+                }
+                pageInfo {
+                  hasNextPage
+                  endCursor
+                }
+              }
+            }
+          }
+        }"""
+        )
+        response = self._request(gql)["viewer"]["organization"]["repositories"]
+        page_info = response["pageInfo"]
+        repositories = self._get_nodes(response["edges"])
+        processed_repos = {"with-yaml": [], "others": []}
+
+        for repo in repositories:
+            processed_repo = {}
+
+            processed_repo["name"] = repo["nameWithOwner"]
+            processed_repo["snapcraft_yaml"] = any(
+                [bool(repo[f"yamlLocation{i}"]) for i in range(1, 4)]
             )
+
+            if processed_repo["snapcraft_yaml"]:
+                processed_repos["with-yaml"].append(processed_repo)
+            else:
+                processed_repos["others"].append(processed_repo)
+
+        if page_info["hasNextPage"]:
+            next_page = self.get_org_repositories(
+                org_login, page_info["endCursor"]
+            )
+            processed_repos["with-yaml"].extend(next_page["with-yaml"])
+            processed_repos["others"].extend(next_page["others"])
 
         return processed_repos
 

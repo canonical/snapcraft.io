@@ -11,13 +11,11 @@ publisher_github = flask.Blueprint(
 @login_required
 def get_repos():
     github = GitHubAPI(flask.session.get("github_auth_secret"))
-    repos = github.get_user_repositories()
+    org = flask.request.args.get("org")
+
+    if org:
+        repos = github.get_org_repositories(org)
+    else:
+        repos = github.get_user_repositories()
+
     return flask.jsonify(repos)
-
-
-@publisher_github.route("/publisher/github/get-orgs", methods=["GET"])
-@login_required
-def get_orgs():
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
-    orgs = github.get_orgs()
-    return flask.jsonify(orgs)
