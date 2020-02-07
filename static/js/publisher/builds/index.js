@@ -6,80 +6,7 @@ import distanceInWords from "date-fns/distance_in_words_strict";
 
 import MainTable from "@canonical/react-components/dist/components/MainTable";
 
-const NEVER_BUILT = "never_built";
-const BUILDING_SOON = "building_soon";
-const WONT_RELEASE = "wont_release";
-const RELEASED = "released";
-const RELEASE_FAILED = "release_failed";
-const RELEASING_SOON = "releasing_soon";
-const IN_PROGRESS = "in_progress";
-const FAILED_TO_BUILD = "failed_to_build";
-const UNKNOWN = "unknown";
-
-export const UserFacingStatus = {
-  // Used only when there is no build returned from LP.
-  // When build is returned from LP (scheduled) it's 'Building soon' for BSI.
-  [NEVER_BUILT]: createStatus("Never built", "Never built", 8, "never_built"),
-  [BUILDING_SOON]: createStatus(
-    "Building soon",
-    "Building",
-    7,
-    "building_soon"
-  ),
-  [WONT_RELEASE]: createStatus(
-    "Built, won’t be released",
-    "Built",
-    6,
-    "wont_release"
-  ),
-  [RELEASED]: createStatus("Built and released", "Released", 5, "released"),
-  [RELEASE_FAILED]: createStatus(
-    "Built, failed to release",
-    "Failed",
-    4,
-    "release_failed"
-  ),
-  [RELEASING_SOON]: createStatus(
-    "Built, releasing soon",
-    "Built",
-    3,
-    "releasing_soon"
-  ),
-  [IN_PROGRESS]: createStatus("In progress", "In progress", 2, "in_progress"),
-  [FAILED_TO_BUILD]: createStatus(
-    "Failed to build",
-    "Failed",
-    1,
-    "failed_to_build"
-  ),
-  [UNKNOWN]: createStatus("Unknown", "Unknown", 8, "never_built")
-};
-
-function createStatus(statusMessage, shortStatusMessage, priority, badge) {
-  return {
-    statusMessage,
-    shortStatusMessage,
-    icon: badge.indexOf("failed") > -1 ? "error" : false,
-    priority,
-    badge
-  };
-}
-
-function createDuration(duration) {
-  const durationParts = duration.split(":");
-  const hours = parseInt(durationParts[0]);
-  const minutes = parseInt(durationParts[1]);
-  const seconds = Math.round(parseInt(durationParts[2]));
-
-  if (hours > 0) {
-    return `${hours} hour${hours > 1 ? "s" : ""}`;
-  }
-  if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? "s" : ""}`;
-  }
-
-  return `${seconds} second${seconds > 1 || seconds === 0 ? "s" : ""}`;
-}
+import { UserFacingStatus, createDuration } from "./helpers";
 
 class Builds extends React.Component {
   constructor(props) {
@@ -89,23 +16,41 @@ class Builds extends React.Component {
 
     this.state = {
       isLoading: false,
-      fetchLimit: 15,
+      fetchSize: 15,
+      fetchStart: 0,
       builds: props.builds ? props.builds : []
     };
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
   }
 
-  fetchBuilds() {
-    const { fetchLimit } = this.state;
-    const { updateFreq } = this.props;
+  fetchBuilds(fromStart) {
+    const { fetchSize, fetchStart, builds } = this.state;
+    const { snapName, updateFreq } = this.props;
 
-    fetch(`url${fetchLimit}`)
+    let url = `/${snapName}/builds.json`;
+    let params = [];
+
+    if (fetchStart && !fromStart) {
+      params.push(`start=${fetchStart}`);
+    }
+
+    if (fetchSize) {
+      params.push(`size=${fetchSize}`);
+    }
+
+    if (params.length > 0) {
+      url += `?${params.join("&")}`;
+    }
+
+    fetch(url)
       .then(res => res.json())
       .then(result => {
+        const newBuilds = builds;
+        
         this.setState({
           isLoading: false,
-          builds: result
+          builds: fromStart ? result.snap_builds : newBuilds.concat(result.snap_builds)
         });
       })
       .catch(() => {
@@ -117,15 +62,16 @@ class Builds extends React.Component {
     if (this.fetchTimer) {
       clearTimeout(this.fetchTimer);
     }
-    this.fetchTimer = setTimeout(() => this.fetchBuilds(), updateFreq);
+    this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
   }
 
   showMoreHandler(e) {
-    const { fetchLimit } = this.state;
+    const { fetchStart, fetchSize } = this.state;
     e.preventDefault();
     this.setState(
       {
-        fetchLimit: fetchLimit + 15,
+        fetchStart: fetchStart + 15,
+        fetchSize: fetchSize + 15,
         isLoading: true
       },
       () => {
@@ -140,11 +86,17 @@ class Builds extends React.Component {
       this.fetchBuilds();
     }
 
-    this.fetchTimer = setTimeout(() => this.fetchBuilds(), updateFreq);
+    this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
   }
 
   render() {
     const { builds, isLoading } = this.state;
+    const { totalBuilds } = this.props;
+
+    const remainingBuilds = totalBuilds - builds.length;
+    
+    const showMoreCount = remainingBuilds > 15 ? 15 : remainingBuilds;
+    
     const rows = builds.map(build => {
       const status = UserFacingStatus[build.status];
       let icon;
@@ -214,12 +166,18 @@ class Builds extends React.Component {
           ]}
           rows={rows}
         />
-        {isLoading && <div>Loading</div>}
-        {!isLoading && (
+        {builds.length < totalBuilds && (
           <div className="p-show-more__link-container">
-            <a className="p-show-more__link" onClick={this.showMoreHandler}>
-              Show more
-            </a>
+            {isLoading && 
+             <span className="p-show-more__link">
+               <i className="p-icon--spinner u-animation--spin"/>
+             </span>
+            }
+            {!isLoading &&
+             <a className="p-show-more__link" onClick={this.showMoreHandler}>
+               Show {showMoreCount} more
+             </a>
+            }
           </div>
         )}
       </Fragment>
@@ -228,13 +186,15 @@ class Builds extends React.Component {
 }
 
 Builds.propTypes = {
+  snapName: PropTypes.string,
   builds: PropTypes.array,
+  totalBuilds: PropTypes.number,
   updateFreq: PropTypes.number
 };
 
-export function initBuilds(id, snapName, builds) {
+export function initBuilds(id, snapName, builds, totalBuilds) {
   ReactDOM.render(
-    <Builds builds={builds} updateFreq={30000} />,
+    <Builds snapName={snapName} builds={builds} totalBuilds={totalBuilds} updateFreq={30000} />,
     document.querySelector(id)
   );
 }
