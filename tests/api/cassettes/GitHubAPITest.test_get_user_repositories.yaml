@@ -1,9 +1,9 @@
 interactions:
 - request:
     body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
-      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:\n                        [OWNER,
-      ORGANIZATION_MEMBER],\n                \n                ) {\n              edges
-      {\n                node {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
+      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
+      [OWNER],\n                \n                ) {\n              edges {\n                node
+      {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
       \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
       \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
       \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
@@ -17,11 +17,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1065'
+      - '1019'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (a85017b3bae1b0f4530624eb0909c64e855c8a6a;devel)
+      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
@@ -52,7 +52,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 04 Feb 2020 12:01:38 GMT
+      - Fri, 07 Feb 2020 17:00:37 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -74,17 +74,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - BE32:2BEC7:11F91D3:1527136:5E395D21
+      - 97A2:3128F:4DE783:5CC42E:5E3D97B4
       X-OAuth-Client-Id:
       - cdeb3a60fecee4208395
       X-OAuth-Scopes:
-      - repo
+      - read:org, repo
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4993'
+      - '4992'
       X-RateLimit-Reset:
-      - '1580817914'
+      - '1581097999'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -92,9 +92,9 @@ interactions:
       message: OK
 - request:
     body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
-      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:\n                        [OWNER,
-      ORGANIZATION_MEMBER],\n                \n                ) {\n              edges
-      {\n                node {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
+      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
+      [OWNER],\n                \n                ) {\n              edges {\n                node
+      {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
       \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
       \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
       \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
@@ -108,11 +108,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1065'
+      - '1019'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (a85017b3bae1b0f4530624eb0909c64e855c8a6a;devel)
+      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
@@ -132,7 +132,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 04 Feb 2020 12:01:38 GMT
+      - Fri, 07 Feb 2020 17:00:37 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -148,13 +148,13 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - BE32:2BEC7:11F92B4:152723F:5E395D22
+      - 97A2:3128F:4DE7C5:5CC46F:5E3D97B5
       X-RateLimit-Limit:
       - '0'
       X-RateLimit-Remaining:
       - '0'
       X-RateLimit-Reset:
-      - '1580821298'
+      - '1581098437'
       X-XSS-Protection:
       - 1; mode=block
     status:

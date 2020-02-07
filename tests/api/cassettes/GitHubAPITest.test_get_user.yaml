@@ -1,6 +1,7 @@
 interactions:
 - request:
-    body: '{"query": "{ viewer { login } }"}'
+    body: '{"query": "\n        {\n          viewer {\n            login\n            name\n            avatarUrl(size:
+      100)\n          }\n        }\n        "}'
     headers:
       Accept:
       - application/json
@@ -9,18 +10,19 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '33'
+      - '149'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (a85017b3bae1b0f4530624eb0909c64e855c8a6a;devel)
+      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA6tWSkksSVSyqlYqy0wtTy0CsXLy0zPzlKyUkkozc1J0i0sSgdx03eK8xILkosS0
-        Et3MfKXa2loA1+bv3DoAAAA=
+        H4sIAAAAAAAAAzWMQQrCMBREryJ/IQq2iaGgDRQPIR7gt41poE1K8hMXJXc3ou5m3jxmgxEJQW6Q
+        jHop/0mz08aChD6aeawCYam6ChbXweOTKuPgBBYXVZz7n+4OP/FYRkzl1D/8XIyJaA2SsS8LotaG
+        ptjHoPzgLClL9eAWFploLlzwa3sL3ZnzfeoayDm/AbHk/8ShAAAA
     headers:
       Access-Control-Allow-Origin:
       - '*'
@@ -37,7 +39,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 04 Feb 2020 11:21:42 GMT
+      - Fri, 07 Feb 2020 17:00:36 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -59,24 +61,25 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - DBAA:2415D:5C9ED4:6BF4CF:5E3953C6
+      - 979E:3CC0D:1DDC74E:2418E80:5E3D97B4
       X-OAuth-Client-Id:
       - cdeb3a60fecee4208395
       X-OAuth-Scopes:
-      - repo
+      - read:org, repo
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4996'
+      - '4993'
       X-RateLimit-Reset:
-      - '1580817914'
+      - '1581098000'
       X-XSS-Protection:
       - 1; mode=block
     status:
       code: 200
       message: OK
 - request:
-    body: '{"query": "{ viewer { login } }"}'
+    body: '{"query": "\n        {\n          viewer {\n            login\n            name\n            avatarUrl(size:
+      100)\n          }\n        }\n        "}'
     headers:
       Accept:
       - application/json
@@ -85,11 +88,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '33'
+      - '149'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (a85017b3bae1b0f4530624eb0909c64e855c8a6a;devel)
+      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
@@ -109,7 +112,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 04 Feb 2020 11:21:42 GMT
+      - Fri, 07 Feb 2020 17:00:36 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -125,13 +128,13 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - DBAA:2415D:5C9EF3:6BF4F4:5E3953C6
+      - 979E:3CC0D:1DDC800:2418F3E:5E3D97B4
       X-RateLimit-Limit:
       - '0'
       X-RateLimit-Remaining:
       - '0'
       X-RateLimit-Reset:
-      - '1580818902'
+      - '1581098436'
       X-XSS-Protection:
       - 1; mode=block
     status:

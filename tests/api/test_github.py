@@ -13,25 +13,43 @@ class GitHubAPITest(VCRTestCase):
         return {"filter_headers": ["Authorization"]}
 
     def setUp(self):
-        self.client = GitHubAPI(getenv("GITHUB_TEST_USER_TOKEN", "secret"))
+        self.client = GitHubAPI(getenv("TESTS_GITHUB_USER_TOKEN", "secret"))
         return super(GitHubAPITest, self).setUp()
 
-    def test_get_username(self):
-        username = self.client.get_username()
-        self.assertEqual("build-staging-snapcraft-io", username)
+    def test_get_user(self):
+        user = self.client.get_user()
+        self.assertIn("login", user)
+        self.assertIn("name", user)
+        self.assertIn("avatarUrl", user)
 
         # Test Unauthorized exception when using bad credentials
         self.client.access_token = "bad-token"
-        self.assertRaises(Unauthorized, self.client.get_username)
+        self.assertRaises(Unauthorized, self.client.get_user)
 
     def test_get_user_repositories(self):
         repos = self.client.get_user_repositories()
-        [self.assertIn("name", repo) for repo in repos]
-        [self.assertIn("snapcraft_yaml", repo) for repo in repos]
+        [self.assertIn("name", repo) for repo in repos["with-yaml"]]
+        [self.assertIn("name", repo) for repo in repos["others"]]
 
         # Test Unauthorized exception when using bad credentials
         self.client.access_token = "bad-token"
         self.assertRaises(Unauthorized, self.client.get_user_repositories)
+        self.client.access_token = getenv("TESTS_GITHUB_USER_TOKEN", "secret")
+
+    def test_get_org_repositories(self):
+        repos = self.client.get_org_repositories("canonical-web-and-design")
+        [self.assertIn("name", repo) for repo in repos["with-yaml"]]
+        [self.assertIn("name", repo) for repo in repos["others"]]
+
+        # Test Unauthorized exception when using bad credentials
+        self.client.access_token = "bad-token"
+        self.assertRaises(Unauthorized, self.client.get_user_repositories)
+        self.client.access_token = getenv("TESTS_GITHUB_USER_TOKEN", "secret")
+
+    def test_get_orgs(self):
+        orgs = self.client.get_orgs()
+        [self.assertIn("name", org) for org in orgs]
+        [self.assertIn("login", org) for org in orgs]
 
     def test_is_snapcraft_yaml_present(self):
         # /snapcraft.yaml is present
