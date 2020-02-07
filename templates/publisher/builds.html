@@ -10,17 +10,18 @@ Builds for
   {% set selected_tab='builds' %}
   {% include "publisher/_header.html" %}
 
-  <form id="market-form" class="market-form p-form p-form--stacked"
-    method="POST" enctype='multipart/form-data'>
+  <form class="p-form p-form--stacked" method="POST"
+    enctype='multipart/form-data'
+    action="/{{ snap_name }}/builds/trigger-build">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
     {% if snap_builds %}
     <div class="snapcraft-p-sticky js-sticky-bar">
       <div class="row">
-        <p class="snapcraft-p-market-message u-no-margin--bottom">
-          Your snap is linked to:&ensp;
-          <a href="https://github.com/{{ github_repository }}" class="p-link--external">
+        <p class="p-heading--four u-no-margin--bottom">
+          Your snap is linked to:
+          <a href="https://github.com/{{ github_repository }}"
+            class="p-link--external">
             {{ github_repository }}
           </a>
         </p>
@@ -34,16 +35,17 @@ Builds for
         <ul class="p-inline-list u-no-margin--bottom">
           <li class="p-inline-list__item u-no-margin--right">
             {% if not github_user %}
-              Login to your GitHub account to start building.
+            Login to your GitHub account to start building.
             {% else %}
-              Your GitHub account is connected.
+            Your GitHub account is connected.
             {% endif %}
           </li>
           <li class="p-inline-list__item">
             {% if github_user %}
-            <a href="https://github.com/{{ github_user['login'] }}" class="p-link--soft u-float-right">
-              <img src="{{ github_user['avatarUrl'] }}" alt="@{{ github_user['login'] }}"
-                class="p-build__avatar">
+            <a href="https://github.com/{{ github_user['login'] }}"
+              class="p-link--soft u-float-right">
+              <img src="{{ github_user['avatarUrl'] }}"
+                alt="@{{ github_user['login'] }}" class="p-build__avatar">
               {{ github_user["login"] }}
             </a>
             {% else %}
@@ -61,9 +63,9 @@ Builds for
     </div>
     {% endif %}
 
-    
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
     <section class="p-strip is-shallow">
       <div class="u-fixed-width">
         {% for category, message in messages %}
@@ -75,95 +77,137 @@ Builds for
         {% endfor %}
       </div>
     </section>
-  {% endif %}
-  {% endwith %}
-    
+    {% endif %}
+    {% endwith %}
 
-  {% if not github_repository %}
+
+    {% if not github_repository %}
     <section class="p-strip is-shallow">
-    {% if not github_user %}
+      {% if not github_user %}
       <div class="u-fixed-width u-align--center u-hide--small">
-        <img src="https://assets.ubuntu.com/v1/ed6d1c5b-build.snapcraft.hero.svg"
+        <img
+          src="https://assets.ubuntu.com/v1/ed6d1c5b-build.snapcraft.hero.svg"
           alt="" width="100%">
       </div>
       <div class="row">
         <div class="col-4 u-align-text--center">
-          <img src="https://assets.ubuntu.com/v1/82de77b0-build.snapcraft.hero-01.svg" alt="" width="343" height="288" class="u-hide u-show--small">
+          <img
+            src="https://assets.ubuntu.com/v1/82de77b0-build.snapcraft.hero-01.svg"
+            alt="" width="343" height="288" class="u-hide u-show--small">
           <p>
             Start by creating a repo and pushing your code to GitHub. Make
             sure that your repo includes a snapcraft.yaml file.
           </p>
         </div>
         <div class="col-4 u-align-text--center">
-          <img src="https://assets.ubuntu.com/v1/275ddbf9-build.snapcraft.hero-02.svg" alt="" width="343" height="288" class="u-hide u-show--small">
+          <img
+            src="https://assets.ubuntu.com/v1/275ddbf9-build.snapcraft.hero-02.svg"
+            alt="" width="343" height="288" class="u-hide u-show--small">
           <p>
             Register a name on Snapcraft and attach it to your repo to start
-            building. Your snap will be built automatically for all the distros.
+            building. Your snap will be built automatically for all the
+            distros.
           </p>
         </div>
         <div class="col-4 u-align-text--center">
-          <img src="https://assets.ubuntu.com/v1/e708bab9-build.snapcraft.hero-03.svg" alt="" width="343" height="288" class="u-hide u-show--small">
+          <img
+            src="https://assets.ubuntu.com/v1/e708bab9-build.snapcraft.hero-03.svg"
+            alt="" width="343" height="288" class="u-hide u-show--small">
           <p>
             Release your snap to your users. From here on, all the updates you
             do to your code will trigger automatic builds.
           </p>
         </div>
       </div>
-    {% else %}
-      <div class="row p-form__group">
-        <div class="col-2" data-tour="listing-category">
-          <label class="p-form__label">Select a organization:</label>
-        </div>
-        <div class="col-4">
-          <div class="p-form__control" data-tour="listing-category">
-            <select name="github_org">
-              <option value="">{{ github_user["login"] }}</option>
-              {% for org in github_orgs %}
-              <option value="{{ org.login }}">{{ org.name }}</option>
-              {% endfor %}
-            </select>
+      {% else %}
+      <div class="u-fixed-width">
+        <p>Your repo needs a snapcraft.yaml file, so that Snapcraft can make it
+          buildable,
+          installable, and runnable.</p>
+        <label class="p-form__label">Select a
+          repository:</label>
+      </div>
+      <noscript>
+        <div class="row">
+          <div class="col-10 p-form--inline">
+            <label>https://github.com/</label>
+            <input type="text" name="github_repository"
+              placeholder="e.g. organization_name/repo_name">
+          </div>
+          <div class="col-2">
+            <button type="submit" class="p-button--positive">Start
+              building</button>
           </div>
         </div>
+      </noscript>
+      <div data-js="repo-connect"></div>
+      {% endif %}
+    </section>
+    {% endif %}
 
-        <div class="col-2" data-tour="listing-category">
-          <label class="p-form__label">Select a repository:</label>
+    {% if not github_repository and github_user %}
+    <div class="p-strip is-shallow u-no-padding--top">
+      <div class="u-fixed-width">
+        <hr />
+      </div>
+    </div>
+    <section class="p-strip is-shallow u-no-padding--top">
+      <div class="u-fixed-width">
+        <h4>If you can't find a repository &hellip;</h4>
+        <p>Want to <strong>use a private repo</strong>? We're working hard on
+          making
+          these buildable. If you like, we can e-mail you when we're ready.</p>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <input type="text" id="exampleInputEmail1"
+            placeholder="Email address">
         </div>
         <div class="col-4">
-          <div class="p-form__control" data-tour="listing-category">
-            {% if github_repository %}
-            <a href="https://github.com/{{ github_repository }}"
-              class="p-link--external">{{ github_repository }}</a>
-            {% else %}
-            <select name="github_repository" {% if not github_repositories %}
-              disabled="disabled" {% endif %}>
-              <option value="">Select repository</option>
-              {% for repo in github_repositories %}
-              <option value="{{ repo.full_name }}"
-                {% if (repo.full_name == github_repository) %} selected="selected"
-                {% endif %}>{{ repo.full_name }}</option>
-              {% endfor %}
-            </select>
-            {% endif %}
-          </div>
+          <button class="p-button--neutral">Keep me posted</button>
         </div>
       </div>
-    {% endif %}
+      <div class="u-fixed-width">
+        <p><strong>Don't have admin permission</strong>? Ask a repo admin to
+          add it instead, and it will show up in your repo list too.
+          {{github_repositories}}</p>
+        <p><strong>Missing an organization</strong>?
+          {% if github_orgs|length == 0%}
+            Snapcraft doesn't have access to any organizations.
+          {% else %}
+            Snapcraft has access to
+            {{ github_orgs|length }} organizations you're a member of
+            {% if github_orgs|length == 1 %}
+              <i>{{ github_orgs[0].name }}</i>)
+            {% else %}
+              {% for github_org in github_orgs %}
+                {% if loop.index < github_orgs|length-1 %}
+                  <i>{{ github_org.name }}</i>,
+                {% elif loop.index < github_orgs|length %}
+                  <i>{{ github_org.name }}</i>
+                {% else %}
+                  and <i>{{ github_org.name }}</i>.
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+        </p>
+        <a href="https://github.com/settings/applications"
+          class="p-button--neutral">Review organization access</a>
+      </div>
     </section>
-  {% endif %}
+    {% endif %}
   </form>
 
-  <div class="p-strip is-shallow">
-    <div class="row">
-      <hr class="u-no-margin--bottom" />
-    </div>
-  </div>
-
-  {% if github_repository %}
+  {% if snap_builds_enabled %}
   <section class="p-strip is-shallow">
-    <div class="row">
+    <div class="u-fixed-width">
+      <h4 class="u-float-left">Latest builds</h4>
       <form action="/{{ snap_name }}/builds/trigger-build" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button type="submit"
+          class="u-float-right p-button-spinner js-form-submit"
+          name="submit_apply" value="Save">
           <span class="p-button__spinner vanilla-workaround--dark">
             <i class="p-icon--spinner u-animation--spin"></i>
           </span>
@@ -171,13 +215,7 @@ Builds for
         </button>
       </form>
     </div>
-  </section>
-  {% endif %}
-
-  {% if snap_builds_enabled %}
-  <section class="p-strip is-shallow">
     <div class="row">
-      <h4>Latest Builds</h4>
       <div id="builds-wrapper" class="col-12">
       </div>
     </div>
@@ -196,14 +234,19 @@ Builds for
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
+      // snapcraft.publisher.initSearchSelect('.js-license', [{ "key": "Glide", "name": "3dfx Glide License" }, { "key": "Abstyles", "name": "Abstyles License" }, { "key": "AFL-1.1", "name": "Academic Free License v1.1" }, { "key": "AFL-1.2", "name": "Academic Free License v1.2" }, { "key": "AFL-2.0", "name": "Academic Free License v2.0" }, { "key": "AFL-2.1", "name": "Academic Free License v2.1" }, { "key": "AFL-3.0", "name": "Academic Free License v3.0" }, { "key": "AMPAS", "name": "Academy of Motion Picture Arts and Sciences BSD" }, { "key": "APL-1.0", "name": "Adaptive Public License 1.0" }, { "key": "Adobe-Glyph", "name": "Adobe Glyph List License" }], ' OR ');
       {% if snap_builds %}
         snapcraft.publisher.initBuilds('#builds-wrapper',
-                                     {{ snap_name | tojson }},
-                                     {{ snap_builds | tojson }},
-                                     {{ total_builds | tojson }}
-      );
+          {{ snap_name | tojson }},
+          {{ snap_builds | tojson }},
+          {{ total_builds | tojson }}
+        );
       {% endif %}
       snapcraft.publisher.stickyListingBar();
+      snapcraft.publisher.stickyListingBar();
+      {% if github_orgs and github_user %}
+        snapcraft.publisher.initRepoConnect('[data-js="repo-connect"]', {{ github_orgs | tojson }}, {{ github_user | tojson }}, {{ snap_name | tojson }});
+      {% endif %}
     });
   });
 </script>

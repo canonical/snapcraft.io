@@ -168,6 +168,9 @@ $color-social-icon-foreground: $color-light;
 @import 'patterns_form-multiselect';
 @include snapcraft-p-multiselect;
 
+@import 'patterns_form-search-select';
+@include snapcraft-p-search-select;
+
 @import 'patterns_first-snap-flow';
 @include snapcraft-p-first-snap-flow;
 
