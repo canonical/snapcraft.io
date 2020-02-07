@@ -1,26 +1,10 @@
 @mixin snapcraft-builds {
-  .u-build-status--blue,
-  .u-build-status--blue a {
-    color: $color-information;
-  }
+  .has-icon {
+    padding-left: 1.5rem;
 
-  .u-build-status--green,
-  .u-build-status--green a {
-    color: $color-positive;
-  }
-
-  .u-build-status--yellow,
-  .u-build-status--yellow a {
-    color: $color-caution;
-  }
-
-  .u-build-status--red,
-  .u-build-status--red a {
-    color: $color-negative;
-  }
-
-  .u-build-status--grey,
-  .u-build-status--grey a {
-    color: $color-mid-dark;
+    [class^="p-icon"] {
+      margin-left: -1.5rem;
+      margin-right: .5rem;
+    }
   }
 }
