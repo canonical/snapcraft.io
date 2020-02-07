@@ -39,6 +39,7 @@ def empty_session(session):
     session.pop("macaroon_discharge", None)
     session.pop("openid", None)
     session.pop("user_shared_snaps", None)
+    session.pop("github_auth_secret", None)
 
 
 def get_caveat_id(root):

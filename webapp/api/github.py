@@ -1,5 +1,5 @@
-from urllib.parse import urljoin
 from webapp import api
+from werkzeug.exceptions import Unauthorized
 
 
 class GitHubAPI:
@@ -8,69 +8,131 @@ class GitHubAPI:
     for checking organization access and getting user data from the Github API.
     """
 
-    BASE_URL = "https://api.github.com/"
+    REST_API_URL = "https://api.github.com"
+    GRAPHQL_API_URL = "https://api.github.com/graphql"
 
     def __init__(self, access_token=None, session=api.requests.Session()):
         self.access_token = access_token
         self.session = session
         self.session.headers["Accept"] = "application/json"
 
-        if self.access_token:
-            self.session.headers["Authorization"] = f"token {access_token}"
-
-    def _request(self, method, url_path, data={}, params={}):
+    def _request(self, query={}):
         """
         Makes a raw HTTP request and returns the response.
         """
-        return self.session.request(
-            method, urljoin(self.BASE_URL, url_path), params=params, json=data
+        if self.access_token:
+            headers = {"Authorization": f"token {self.access_token}"}
+        else:
+            headers = {}
+
+        response = self.session.request(
+            "POST",
+            self.GRAPHQL_API_URL,
+            json={"query": query},
+            headers=headers,
         )
 
-    def get_resource(self, url_path, per_page=100, page=1):
-        """
-        Makes a raw HTTP GET request and returns the response.
-        """
-        params = {"per_page": per_page, "page": page}
+        if response.status_code == 401:
+            raise Unauthorized(response=response)
 
-        return self._request(method="GET", url_path=url_path, params=params)
+        response.raise_for_status()
 
-    def get_user(self):
+        return response.json()["data"]
+
+    def get_username(self):
         """
-        Sets the user to the currently authorized user if it is not already and
-        returns it. The user object is the dictionary response from the API.
+        Return the username of the current user
         """
-        resp = self.get_resource("user")
+        gql = "{ viewer { login } }"
 
-        return resp.json() if resp.ok else None
+        return self._request(gql)["viewer"]["login"]
 
-    def get_user_repositories(self, all_pages=True, page=1):
+    def get_user_repositories(self, end_cursor=None):
         """
         Lists repositories that the authenticated user has explicit permission
         to access.
         """
-        repos = []
-        resp = self.get_resource(f"user/repos", page=page)
+        gql = (
+            """{
+              viewer {
+                repositories(
+                    first: 100,
+                    privacy: PUBLIC,
+                    ownerAffiliations:
+                        [OWNER, ORGANIZATION_MEMBER],
+                """
+            + (f'after: "{end_cursor}"' if end_cursor else "")
+            + """
+                ) {
+              edges {
+                node {
+                  nameWithOwner
+                  yamlLocation1:
+                    object(expression: "master:snapcraft.yaml")
+                    { id }
+                  yamlLocation2:
+                    object(expression: "master:.snapcraft.yaml")
+                    { id }
+                  yamlLocation3:
+                    object(expression: "master:snap/snapcraft.yaml")
+                    { id }
+                  yamlLocation4:
+                    object(expression: "master:build-aux/snap/snapcraft.yaml")
+                    { id }
+                }
+              }
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+            }
+          }
+        }"""
+        )
 
-        if resp.ok:
-            repos.extend(resp.json())
+        gql_response = self._request(gql)["viewer"]["repositories"]
+        page_info = gql_response["pageInfo"]
+        repositories = gql_response["edges"]
+        processed_repos = []
 
-        if all_pages and "next" in resp.links:
-            repos.extend(self.get_user_repositories(page=page + 1))
+        for repo in repositories:
+            processed_repo = {}
 
-        return repos
+            processed_repo["name"] = repo["node"]["nameWithOwner"]
+            processed_repo["snapcraft_yaml"] = any(
+                [bool(repo["node"][f"yamlLocation{i}"]) for i in range(1, 4)]
+            )
+            processed_repos.append(processed_repo)
 
-    def get_user_orgs(self, all_pages=True, page=1):
+        if page_info["hasNextPage"]:
+            processed_repos.extend(
+                self.get_user_repositories(page_info["endCursor"])
+            )
+
+        return processed_repos
+
+    def is_snapcraft_yaml_present(self, owner, repo):
         """
-        Lists organizations that the authenticated user has explicit permission
-        to access.
+        Check is the snapcraft.yaml file exist in the GitHub repo
         """
-        orgs = []
-        resp = self.get_resource(f"user/orgs", page=page)
+        yaml_locations = [
+            f"/repos/{owner}/{repo}/contents/snapcraft.yaml",
+            f"/repos/{owner}/{repo}/contents/.snapcraft.yaml",
+            f"/repos/{owner}/{repo}/contents/snap/snapcraft.yaml",
+            f"/repos/{owner}/{repo}/contents/build-aux/snap/snapcraft.yaml",
+        ]
 
-        if resp.ok:
-            orgs.extend(resp.json())
+        # It is not possible to use GraphQL without authentication
+        # for that reason we are doing a call for each location to the REST API
+        for location in yaml_locations:
+            response = self.session.request(
+                "GET", f"{self.REST_API_URL}{location}"
+            )
+            if response.status_code == 404:
+                continue
+            elif response.status_code == 200:
+                return True
 
-        if all_pages and "next" in resp.links:
-            orgs.extend(self.get_user_orgs(page=page + 1))
+            response.raise_for_status()
 
-        return orgs
+        return False

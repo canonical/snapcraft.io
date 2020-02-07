@@ -43,6 +43,7 @@ from webapp.publisher.snaps.builds import (
     build_link,
     map_build_and_upload_states,
 )
+from werkzeug.exceptions import Unauthorized
 
 
 publisher_snaps = flask.Blueprint(
@@ -1356,11 +1357,23 @@ def get_snap_builds(snap_name):
     }
 
     # Get built snap in launchpad with this store name
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
         # Git repository without GitHub hostname
         context["github_repository"] = lp_snap["git_repository_url"][19:]
+        github_owner, github_repo = context["github_repository"].split("/")
+
+        context["yaml_file_exists"] = github.is_snapcraft_yaml_present(
+            github_owner, github_repo
+        )
+
+        if not context["yaml_file_exists"]:
+            flask.flash(
+                "This repository doesn't contain a snapcraft.yaml", "negative",
+            )
+
         bsi_url = flask.current_app.config["BSI_URL"]
 
         builds = launchpad.get_collection_entries(
@@ -1390,11 +1403,18 @@ def get_snap_builds(snap_name):
                 }
             )
     else:
-        github = GitHubAPI(flask.session.get("github_auth_secret"))
-        context["github_user"] = github.get_user()
+        try:
+            context["github_user"] = github.get_username()
+        except Unauthorized:
+            context["github_user"] = None
 
         if context["github_user"]:
-            context["github_repositories"] = github.get_user_repositories()
+            # Get snapcraft repositories sorted by snapcraft_yaml
+            context["github_repositories"] = sorted(
+                github.get_user_repositories(),
+                key=lambda k: k["snapcraft_yaml"],
+                reverse=True,
+            )
 
     return flask.render_template("publisher/builds.html", **context)
 
