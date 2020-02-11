@@ -100,14 +100,7 @@ class Launchpad:
             "pocket": "Updates",
         }
 
-        archs = [
-            "amd64",
-            "arm64",
-            "armhf",
-            "i386",
-            "ppc64el",
-            "s390x",
-        ]
+        archs = ["amd64", "arm64", "armhf", "i386", "ppc64el", "s390x"]
 
         for arch in archs:
             data["distro_arch_series"] = f"/ubuntu/xenial/{arch}"

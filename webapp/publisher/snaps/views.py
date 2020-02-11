@@ -1422,7 +1422,8 @@ def get_snap_builds(snap_name):
 
             if not context["yaml_file_exists"]:
                 flask.flash(
-                    "This repository doesn't contain a snapcraft.yaml", "negative",
+                    "This repository doesn't contain a snapcraft.yaml",
+                    "negative",
                 )
 
     return flask.render_template("publisher/builds.html", **context)

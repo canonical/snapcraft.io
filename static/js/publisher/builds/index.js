@@ -47,10 +47,12 @@ class Builds extends React.Component {
       .then(res => res.json())
       .then(result => {
         const newBuilds = builds;
-        
+
         this.setState({
           isLoading: false,
-          builds: fromStart ? result.snap_builds : newBuilds.concat(result.snap_builds)
+          builds: fromStart
+            ? result.snap_builds
+            : newBuilds.concat(result.snap_builds)
         });
       })
       .catch(() => {
@@ -94,9 +96,9 @@ class Builds extends React.Component {
     const { totalBuilds } = this.props;
 
     const remainingBuilds = totalBuilds - builds.length;
-    
+
     const showMoreCount = remainingBuilds > 15 ? 15 : remainingBuilds;
-    
+
     const rows = builds.map(build => {
       const status = UserFacingStatus[build.status];
       let icon;
@@ -168,16 +170,16 @@ class Builds extends React.Component {
         />
         {builds.length < totalBuilds && (
           <div className="p-show-more__link-container">
-            {isLoading && 
-             <span className="p-show-more__link">
-               <i className="p-icon--spinner u-animation--spin"/>
-             </span>
-            }
-            {!isLoading &&
-             <a className="p-show-more__link" onClick={this.showMoreHandler}>
-               Show {showMoreCount} more
-             </a>
-            }
+            {isLoading && (
+              <span className="p-show-more__link">
+                <i className="p-icon--spinner u-animation--spin" />
+              </span>
+            )}
+            {!isLoading && (
+              <a className="p-show-more__link" onClick={this.showMoreHandler}>
+                Show {showMoreCount} more
+              </a>
+            )}
           </div>
         )}
       </Fragment>
@@ -194,7 +196,12 @@ Builds.propTypes = {
 
 export function initBuilds(id, snapName, builds, totalBuilds) {
   ReactDOM.render(
-    <Builds snapName={snapName} builds={builds} totalBuilds={totalBuilds} updateFreq={30000} />,
+    <Builds
+      snapName={snapName}
+      builds={builds}
+      totalBuilds={totalBuilds}
+      updateFreq={30000}
+    />,
     document.querySelector(id)
   );
 }
