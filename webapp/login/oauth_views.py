@@ -27,7 +27,7 @@ def github_auth():
 
     params = {
         "client_id": os.getenv("GITHUB_CLIENT_ID"),
-        "scope": "repo",
+        "scope": "repo read:org",
         "state": flask.session["csrf_token"],
     }
 

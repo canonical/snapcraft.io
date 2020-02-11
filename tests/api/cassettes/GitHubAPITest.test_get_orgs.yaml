@@ -1,0 +1,82 @@
+interactions:
+- request:
+    body: '{"query": "\n            {\n              viewer {\n                organizations(first:
+      100,) {\n                  edges {\n                    node {\n                      login\n                      name\n                    }\n                  }\n                  pageInfo
+      {\n                    hasNextPage\n                    endCursor\n                  }\n                }\n              }\n            }\n        "}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '430'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA22PMQvCQAyF/0rJ3C46WXCQLhbEOokiDrGXngdtTnqnZy3+d3OIOGimx5f3HskI
+        Cj1CPsLNUKA+KttrZPNAbyy7CEhpEnEYga2iSFqrDUMOBbJlU2O78gpSYOxk/aVJxM9n+husP8Es
+        0ClDVpkiZzT/KxFHIo7k7Ug8YSelxxQuqKnkxsaLzujWdPcbQZA32DpKgVgV195Z+Qr20+1QT2ZD
+        xfuhuiyrRbkLRZjPpUnmBU2gXucHAQAA
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 07 Feb 2020 17:13:34 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+      X-Accepted-OAuth-Scopes:
+      - repo
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - A1F4:015D:2694259:2EB5576:5E3D9ABE
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4980'
+      X-RateLimit-Reset:
+      - '1581097620'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
