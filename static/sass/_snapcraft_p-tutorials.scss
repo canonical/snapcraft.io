@@ -9,9 +9,13 @@
   }
 
   .p-tutorial__nav-title {
+    position: relative;
+
     &::before {
       height: $sp-large;
+      left: 0;
       margin-right: $sp-medium;
+      position: absolute;
       width: $sp-large;
     }
 

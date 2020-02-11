@@ -209,4 +209,18 @@
     });
   })();
 </script>
+
+<script>
+  (function() {
+    var toggleSidebar = document.querySelector('.p-sidebar__toggle');
+      var sidebar = document.querySelector('.p-sidebar__content');
+      if (toggleSidebar) {
+        toggleSidebar.addEventListener('click', function(e) {
+          sidebar.classList.toggle('u-hide--small');
+          toggleSidebar.classList.toggle('p-icon--close');
+          toggleSidebar.classList.toggle('p-icon--menu');
+        });
+      }
+  })();
+</script>
 {% endblock %}
