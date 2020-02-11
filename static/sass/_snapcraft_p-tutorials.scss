@@ -2,12 +2,6 @@
   .p-tutorial__nav {
     margin-left: 0;
     padding-top: $sp-medium;
-
-    @media only screen and (min-width: $breakpoint-small) {
-      padding-top: $sp-large;
-      position: sticky;
-      top: 0;
-    }
   }
 
   .p-tutorial__nav-item {
@@ -41,6 +35,14 @@
 
     &:hover {
       text-decoration: none;
+    }
+  }
+
+  .p-tutorial-section {
+    display: none;
+
+    &:target {
+      display: block;
     }
   }
 
