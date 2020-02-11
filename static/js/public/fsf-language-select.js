@@ -22,7 +22,7 @@ function initFSFLanguageSelect(rootEl) {
       "[data-js='js-show-more']"
     );
 
-    if (showMoreContainer) {
+    if (showMoreContainer && showMoreContainer.length > 0) {
       showMoreContainer.forEach(el => {
         const fadeEL = el.querySelector(".p-show-more__fade");
 
