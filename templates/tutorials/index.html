@@ -5,18 +5,16 @@
 {% block content %}
 
 {% if page == 1 %}
-<section class="p-strip-slanted--snapcraft">
+<section class="p-strip--image is-shallow snapcraft-banner-background">
   <div class="row">
-    <div class="col-6">
-      <h1>Tutorials</h1>
-      <p>These tutorials provide a step-by-step process to doing development and dev-ops activities on Ubuntu machines, servers or devices.</p>
-      <p><a class="p-link--inverted" href="https://discourse.ubuntu.com/c/tutorials">You can write your own&nbsp;&rsaquo;</a></p>
+    <div class="col-10">
+      <h2 class="u-no-margin--bottom">Tutorials</h2>
     </div>
   </div>
 </section>
 {% endif %}
 
-<section class="p-strip is-shallow">
+<!-- <section class="p-strip is-shallow">
   <div class="row">
     <div class="col-4">
       <div class="p-form__group">
@@ -44,9 +42,9 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
-<section class="p-strip has-shadow">
+<section class="p-strip is-shallow">
   <div class="row u-equal-height">
     {% for item in metadata %}
       {% if loop.index <= posts_per_page * page and loop.index >= posts_per_page * page - posts_per_page + 1 %}
@@ -68,6 +66,89 @@
         </div>
       {% endif %}
     {% endfor %}
+  </div>
+
+  <div class="u-fixed-width">
+    <ol class="p-pagination u-align--center">
+      {% set current_page = page %}
+      {% if current_page > 1 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link--previous" href="/tutorials?page={{ current_page - 1 }}" title="Previous page">
+            <i class="p-icon--contextual-menu">Previous page</i>
+          </a>
+        </li>
+      {% else %}
+        <li class="p-pagination__item">
+          <span class="p-pagination__link--previous is-disabled"><i class="p-icon--contextual-menu">Previous page</i></span>
+        </li>
+      {% endif %}
+
+      {# always show 5 pages in pagination #}
+      {% if current_page > 4 and current_page == total_pages %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page - 4 }}">{{ current_page - 4 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page > 3 and current_page >= total_pages - 1 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page - 3 }}">{{ current_page - 3 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page > 2 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page - 2 }}">{{ current_page - 2 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page > 1 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page - 1 }}">{{ current_page - 1 }}</a>
+        </li>
+      {% endif %}
+
+      <!-- current page -->
+      <li class="p-pagination__item">
+        <a class="p-pagination__link is-active" href="/tutorials?page={{ current_page }}">{{ current_page }}</a>
+      </li>
+
+      {% if current_page < total_pages %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page + 1 }}">{{ current_page + 1 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page < total_pages - 1 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page + 2 }}">{{ current_page + 2 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page < total_pages - 2 and current_page <= 2 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page + 3 }}">{{ current_page + 3 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page < total_pages - 3 and current_page == 1 %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link" href="/tutorials?page={{ current_page + 4 }}">{{ current_page + 4 }}</a>
+        </li>
+      {% endif %}
+
+      {% if current_page != total_pages %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link--next" href="/tutorials?page={{ current_page + 1 }}" title="Next page">
+            <i class="p-icon--contextual-menu">Next page</i>
+          </a>
+        </li>
+      {% else %}
+        <li class="p-pagination__item">
+          <span class="p-pagination__link--next is-disabled"><i class="p-icon--contextual-menu">Next page</i></span>
+        </li>
+      {% endif %}
+    </ol>
   </div>
 </section>
 
