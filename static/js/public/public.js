@@ -13,11 +13,9 @@ import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
 import { newsletter } from "./newsletter";
 import { formValidation } from "./formValidation";
-import initExpandableSnapDetails from "./expandable-details";
-import initExpandableDistroChart from "./snap-details/exapandable-distr-chart";
+import initExpandableArea from "./expandable-area";
 import triggerEventWhenVisible from "./ga-scroll-event";
 import { initLinkScroll } from "./scroll-to";
-import initExpandableYaml from "./fsf-expandable-yaml-details";
 
 export {
   map,
@@ -30,9 +28,7 @@ export {
   initAccordion,
   initAccordionButtons,
   initEmbeddedCardModal,
-  initExpandableDistroChart,
-  initExpandableSnapDetails,
-  initExpandableYaml,
+  initExpandableArea,
   initFSFLanguageSelect,
   initReportSnap,
   firstSnapFlow,

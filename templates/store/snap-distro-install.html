@@ -110,21 +110,23 @@
             {% include "store/snap-details/_screenshots.html" %}
           </div>
         {% endif %}
-
-        <div class="row">
-          <div class="col-8 js-snap-description-text">
-            {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
-            <div data-live="description">{{ description | safe }}</div>
-          </div>
-          <div class="col-4">
-            <div class="js-snap-description-details">
-              {% include "store/snap-details/_details.html" %}
+        <div class="p-show-more is-shallow is-collapsed" data-js="js-show-more">
+          <div class="row">
+            <div class="col-8 js-snap-description-text">
+              {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
+              <div data-live="description">{{ description | safe }}</div>
+            </div>
+            <div class="col-4">
+              <div class="js-snap-description-details">
+                {% include "store/snap-details/_details.html" %}
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="snap-description-more u-hide">
-          <a href="/{{ package_name }}" class="js-show-more-description">Show more</a>
+          <div class="p-show-more__fade">
+            <div class="p-show-more__link-container">
+              <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -281,7 +283,7 @@
         }
 
         try {
-          snapcraft.public.initExpandableSnapDetails();
+          snapcraft.public.initExpandableArea();
         } catch(e) {
           Raven.captureException(e);
         }
