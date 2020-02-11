@@ -10,11 +10,11 @@ def init_docs(app, url_prefix):
     discourse_parser = DocParser(
         api=DiscourseAPI(base_url="https://forum.snapcraft.io/"),
         index_topic_id=11127,
+        category_id=15,
         url_prefix=url_prefix,
     )
     discourse_docs = DiscourseDocs(
         parser=discourse_parser,
-        category_id=15,
         document_template="docs/document.html",
         url_prefix=url_prefix,
     )
