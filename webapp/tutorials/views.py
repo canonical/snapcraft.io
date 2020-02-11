@@ -25,29 +25,9 @@ def init_tutorials(app, url_prefix):
     @app.route(url_prefix)
     def index():
         page = flask.request.args.get("page", default=1, type=int)
-        topic = flask.request.args.get("topic", default=None, type=str)
-        sort = flask.request.args.get("sort", default=None, type=str)
-        posts_per_page = 15
+        posts_per_page = 12
         discourse_docs.parser.parse()
-        if not topic:
-            metadata = discourse_docs.parser.metadata
-        else:
-            metadata = [
-                doc
-                for doc in discourse_docs.parser.metadata
-                if topic in doc["categories"]
-            ]
-
-        if sort == "difficulty-desc":
-            metadata = sorted(
-                metadata, key=lambda k: k["difficulty"], reverse=True
-            )
-
-        if sort == "difficulty-asc" or not sort:
-            metadata = sorted(
-                metadata, key=lambda k: k["difficulty"], reverse=False
-            )
-
+        metadata = discourse_docs.parser.metadata
         total_pages = math.ceil(len(metadata) / posts_per_page)
 
         return flask.render_template(
@@ -56,8 +36,6 @@ def init_tutorials(app, url_prefix):
             forum_url=discourse_docs.parser.api.base_url,
             metadata=metadata,
             page=page,
-            topic=topic,
-            sort=sort,
             posts_per_page=posts_per_page,
             total_pages=total_pages,
             page_slug="tutorials",

@@ -231,6 +231,9 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_tour';
 @include snapcraft-tour;
 
+@import 'snapcraft_p-tutorials';
+@include snapcraft-pattern-tutorials;
+
 // Convert first row of a card to a header
 @import 'snapcraft_p-table-mobile-card';
 @include snapcraft-p-table-mobile-card;
