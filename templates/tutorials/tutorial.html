@@ -135,19 +135,11 @@
   })();
 </script>
 
-<!-- <script>
+<script>
 (function() {
-  function toggleTutorialNavigation() {
-    var toggleButton = document.querySelector('.l-tutorial__nav-toggle');
-    var menu = document.querySelector('.l-tutorial__nav');
-    toggleButton.classList.toggle('p-icon--menu');
-    toggleButton.classList.toggle('p-icon--close');
-    menu.classList.toggle('u-hide--small');
-  }
-
   function setActiveLink(navigationItems) {
     [].forEach.call(navigationItems, function(item) {
-      var link = item.querySelector('.l-tutorial__nav-link');
+      var link = item.querySelector('.p-tutorial__nav-link');
       if (link.getAttribute('href') === window.location.hash) {
         item.classList.add('is-active');
       } else {
@@ -156,17 +148,10 @@
     });
   };
 
-  var navigationItems = document.querySelectorAll('.l-tutorial__nav-item');
-  var toggleButton = document.querySelector('.l-tutorial__nav-toggle');
-
-  toggleButton.addEventListener('click', toggleTutorialNavigation);
+  var navigationItems = document.querySelectorAll('.p-tutorial__nav-item');
+  var toggleButton = document.querySelector('.p-tutorial__nav-toggle');
 
   setActiveLink(navigationItems);
-
-  [].forEach.call(navigationItems, function(item) {
-    var link = item.querySelector('.l-tutorial__nav-link');
-    link.addEventListener('click', toggleTutorialNavigation);
-  });
 
   window.addEventListener('hashchange', function(e) {
     e.preventDefault();
@@ -175,14 +160,14 @@
 
   sectionIds = [];
 
-  var tutorialSections = document.querySelectorAll('.l-tutorial__content section');
+  var tutorialSections = document.querySelectorAll('.p-tutorial__content section');
   [].forEach.call(tutorialSections, function(section) {
     sectionIds.push(section.id);
   });
 
   // Navigate to first tutorial step on load if no URL hash
   if (!window.location.hash) {
-    var firstSectionLink = document.querySelector('.l-tutorial__nav-link');
+    var firstSectionLink = document.querySelector('.p-tutorial__nav-link');
     window.location.hash = firstSectionLink.getAttribute('href');
   } else {
     // Redirect #0, #1 etc. to the correct section
@@ -196,12 +181,6 @@
     }
   }
 })();
-</script>
-
-<script>
-  if (window.location.hash == "#0") {
-    window.location.hash == "#welcome";
-  }
 </script>
 
 <script>
@@ -229,5 +208,5 @@
       });
     });
   })();
-</script> -->
+</script>
 {% endblock %}
