@@ -1395,6 +1395,7 @@ def get_snap_builds(snap_name):
         "snap_title": details["title"],
         "snap_builds_enabled": False,
         "snap_builds": [],
+        "total_builds": 0,
     }
 
     # Get built snap in launchpad with this store name
@@ -1402,6 +1403,18 @@ def get_snap_builds(snap_name):
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
+        # Git repository without GitHub hostname
+        context["github_repository"] = lp_snap["git_repository_url"][19:]
+        github_owner, github_repo = context["github_repository"].split("/")
+
+        context["yaml_file_exists"] = github.is_snapcraft_yaml_present(
+            github_owner, github_repo
+        )
+
+        if not context["yaml_file_exists"]:
+            flask.flash(
+                "This repository doesn't contain a snapcraft.yaml", "negative"
+            )
         context = get_builds(lp_snap, context, slice(0, BUILDS_PER_PAGE))
     else:
         try:
@@ -1411,20 +1424,6 @@ def get_snap_builds(snap_name):
 
         if context["github_user"]:
             context["github_orgs"] = github.get_orgs()
-
-            # Git repository without GitHub hostname
-            context["github_repository"] = lp_snap["git_repository_url"][19:]
-            github_owner, github_repo = context["github_repository"].split("/")
-
-            context["yaml_file_exists"] = github.is_snapcraft_yaml_present(
-                github_owner, github_repo
-            )
-
-            if not context["yaml_file_exists"]:
-                flask.flash(
-                    "This repository doesn't contain a snapcraft.yaml",
-                    "negative",
-                )
 
     return flask.render_template("publisher/builds.html", **context)
 
