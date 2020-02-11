@@ -1,6 +1,6 @@
 export default function initExpandableYaml() {
-  const showMoreContainer = document.querySelectorAll(
-    "[data-js='js-show-more']"
+  const showMoreContainer = [].slice.call(
+    document.querySelectorAll("[data-js='js-show-more']")
   );
 
   if (showMoreContainer) {

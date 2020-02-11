@@ -18,8 +18,8 @@ function initFSFLanguageSelect(rootEl) {
 
   // reset expandable yaml files to being truncated
   const resetExpandableYaml = () => {
-    const showMoreContainer = document.querySelectorAll(
-      "[data-js='js-show-more']"
+    const showMoreContainer = [].slice.call(
+      document.querySelectorAll("[data-js='js-show-more']")
     );
 
     if (showMoreContainer) {
