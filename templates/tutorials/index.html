@@ -50,13 +50,13 @@
   <div class="row u-equal-height">
     {% for item in metadata %}
       {% if loop.index <= posts_per_page * page and loop.index >= posts_per_page * page - posts_per_page + 1 %}
-        <div class="col-4">
-          <header class="">
+        <div class="col-4 col-medium-3 p-card">
+          <header>
             <h5 class="p-muted-heading u-no-margin--bottom">
               {{ item.categories }}
             </h5>
           </header>
-          <div class="">
+          <div class="p-card__content">
             <h3 class="p-heading--three u-no-margin--top u-no-margin--bottom">
               {{ item.topic | replace("inline-onebox", "p-link--soft") | safe }}
             </h3>
