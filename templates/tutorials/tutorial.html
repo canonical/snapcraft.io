@@ -1,45 +1,36 @@
 {% extends "_layout.html" %}
 
 {% set small_footer=True %}
-{% block title %}{{ document["title"] }}{% endblock %}
-{% block meta_image %}https://assets.ubuntu.com/v1/ebdfffbf-Aubergine_suru_background.png{% endblock %}
+{% block meta_title %}{{ document["title"] }} | Snapcraft{% endblock %}
 
 {% block content %}
 
-<nav class="p-navigation--secondary">
-  <div class="row">
-    <div class="col-12 u-equal-height">
-      <a class="p-navigation--secondary__banner u-hide--nav-threshold-down" href="/tutorials">
-        <h5 class="p-navigation--secondary__logo">
-          Tutorials
-        </h5>
-      </a>
-      <ul class="breadcrumbs--secondary">
-        <li class="breadcrumbs__item" style="width: 100%;"> <!-- style only applies to this template -->
-          <a class="breadcrumbs__link p-link--soft" href="{{ document['slug'] }}">{{ document.title }}</a>
-        </li>
-      </ul>
+<div class="docs-container u-fixed-width">
+  <aside class="p-sidebar" id="navigation">
+    <div class="p-sidebar__banner u-hide--medium u-hide--large">
+      <i class="p-sidebar__toggle p-icon--menu"></i>
     </div>
-  </div>
-</nav>
-
-<div class="l-tutorial">
-  <aside class="l-tutorial__sidebar">
-    <i class="l-tutorial__nav-toggle p-icon--menu u-hide u-show--small"></i>
-    <ol class="l-tutorial__nav p-stepped-list u-hide--small">
-      {% for section in document.sections %}
-        <li class="p-stepped-list__item l-tutorial__nav-item">
-          <p class="p-stepped-list__title l-tutorial__nav-title u-no-margin--bottom">
-            <a class="l-tutorial__nav-link" href="#{{ loop.index }}-{{ section['slug'] }}">
-              {{ section["title"]}}
-            </a>
-          </p>
-        </li>
-      {% endfor %}
-    </ol>
+    <div class="p-sidebar__content u-hide--small">
+      <nav class="p-sidebar-nav">
+        <ol class="p-stepped-list">
+          {% for section in document.sections %}
+            <li class="p-stepped-list__item">
+              <p class="p-stepped-list__title u-no-margin--bottom">
+                <a href="#{{ loop.index }}-{{ section['slug'] }}">
+                  {{ section["title"]}}
+                </a>
+              </p>
+            </li>
+          {% endfor %}
+        </ol>
+      </nav>
+    </div>
   </aside>
-  <div class="l-tutorial__content">
-    {% for section in document.sections %}
+  <div class="p-content">
+    <div class="p-strip is-shallow">
+      <div class="p-content__row">
+        <h1>{{ document["title"] }}</h1>
+        {% for section in document.sections %}
     <section class="l-tutorial-section" id="{{ loop.index }}-{{ section['slug']}}">
       <h2 class="p-heading--three">{{ loop.index }}. {{ section["title"]}}</h2>
 
@@ -115,6 +106,8 @@
       </footer>
     </section>
     {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 

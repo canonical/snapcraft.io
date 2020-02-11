@@ -10,9 +10,9 @@ from canonicalwebteam.discourse_docs import (
 
 def init_tutorials(app, url_prefix):
     discourse_parser = DocParser(
-        api=DiscourseAPI(base_url="https://discourse.ubuntu.com/"),
-        index_topic_id=13611,
-        category_id=34,
+        api=DiscourseAPI(base_url="https://forum.snapcraft.io/"),
+        index_topic_id=15409,
+        category_id=20,
         url_prefix=url_prefix,
     )
     discourse_docs = DiscourseDocs(

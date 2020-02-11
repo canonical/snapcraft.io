@@ -29,6 +29,7 @@
     {% endfor %}
   </div>
 
+  {% if total_pages > 1 %}
   <div class="u-fixed-width">
     <ol class="p-pagination u-align--center">
       {% set current_page = page %}
@@ -111,6 +112,7 @@
       {% endif %}
     </ol>
   </div>
+  {% endif %}
 </section>
 
 {% endblock %}
