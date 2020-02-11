@@ -60,6 +60,7 @@ def init_tutorials(app, url_prefix):
             sort=sort,
             posts_per_page=posts_per_page,
             total_pages=total_pages,
+            page_slug="tutorials",
         )
 
     discourse_docs.init_app(app)
