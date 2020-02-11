@@ -5,6 +5,14 @@
 
 {% block content %}
 
+<section class="p-strip--image is-shallow snapcraft-banner-background">
+  <div class="row">
+    <div class="col-10">
+      <h1 class="p-heading--two u-no-margin--bottom">{{ document["title"] }}</h1>
+    </div>
+  </div>
+</section>
+
 <div class="docs-container u-fixed-width">
   <aside class="p-sidebar" id="navigation">
     <div class="p-sidebar__banner u-hide--medium u-hide--large">
@@ -29,8 +37,6 @@
   <div class="p-content">
     <div class="p-strip is-shallow">
       <div class="p-content__row">
-        <h1>{{ document["title"] }}</h1>
-
         {% for section in document.sections %}
         <section class="p-tutorial-section" id="{{ loop.index }}-{{ section['slug']}}">
           <h2 class="p-heading--three">{{ loop.index }}. {{ section["title"]}}</h2>
