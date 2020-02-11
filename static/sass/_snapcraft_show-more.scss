@@ -9,6 +9,18 @@
         max-height: 17.5rem;
         overflow: hidden;
       }
+
+      &.is-shallow {
+        > :first-child {
+          max-height: 11.25rem;
+        }
+      }
+
+      &.is-deep {
+        > :first-child {
+          max-height: 26rem;
+        }
+      }
     }
 
     &__fade {
