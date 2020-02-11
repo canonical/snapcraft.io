@@ -21,6 +21,7 @@ from canonicalwebteam.yaml_responses.flask_helpers import (
 # from webapp.blog.views import blog
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
+from webapp.tutorials.views import init_tutorials
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
@@ -83,6 +84,7 @@ def init_snapcraft(app, testing=False):
     app.register_blueprint(publisher_snaps)
     init_docs(app, "/docs")
     init_blog(app, "/blog")
+    init_tutorials(app, "/tutorials")
 
 
 def init_extensions(app):
