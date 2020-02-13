@@ -9,7 +9,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test1/contents/snapcraft.yaml
   response:
@@ -31,7 +31,7 @@ interactions:
         X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
         X-GitHub-Media-Type
       Cache-Control:
-      - public, max-age=60, s-maxage=60
+      - private, max-age=60, s-maxage=60
       Content-Encoding:
       - gzip
       Content-Security-Policy:
@@ -39,7 +39,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:38 GMT
+      - Thu, 13 Feb 2020 16:19:38 GMT
       ETag:
       - W/"0813b93202a22a03987a904b7f0a5602f2c3962a"
       Last-Modified:
@@ -55,8 +55,10 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept
-      - Accept-Encoding
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -64,13 +66,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FA793:2E06BFB:5E3D97B5
+      - 9CF2:3ADF:26A3F91:2ED729E:5E45771A
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '31'
+      - '4997'
       X-RateLimit-Reset:
-      - '1581097806'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -86,7 +92,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test2/contents/snapcraft.yaml
   response:
@@ -108,7 +114,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:38 GMT
+      - Thu, 13 Feb 2020 16:19:39 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -119,6 +125,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -126,13 +136,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FA7F0:2E06C58:5E3D97B6
+      - 9CF2:3ADF:26A3FE0:2ED72EE:5E45771A
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '30'
+      - '4996'
       X-RateLimit-Reset:
-      - '1581097806'
+      - '1581613959'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -148,7 +162,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test2/contents/.snapcraft.yaml
   response:
@@ -170,7 +184,7 @@ interactions:
         X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
         X-GitHub-Media-Type
       Cache-Control:
-      - public, max-age=60, s-maxage=60
+      - private, max-age=60, s-maxage=60
       Content-Encoding:
       - gzip
       Content-Security-Policy:
@@ -178,7 +192,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:38 GMT
+      - Thu, 13 Feb 2020 16:19:39 GMT
       ETag:
       - W/"20dedf8456f7d87d8d4678bb0e30ab69babe0d43"
       Last-Modified:
@@ -194,8 +208,10 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept
-      - Accept-Encoding
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -203,13 +219,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FA868:2E06CB9:5E3D97B6
+      - 9CF2:3ADF:26A402C:2ED7357:5E45771B
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '29'
+      - '4995'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -225,7 +245,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test3/contents/snapcraft.yaml
   response:
@@ -247,7 +267,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:38 GMT
+      - Thu, 13 Feb 2020 16:19:39 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -258,6 +278,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -265,13 +289,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FA91D:2E06DB4:5E3D97B6
+      - 9CF2:3ADF:26A407E:2ED73B6:5E45771B
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '28'
+      - '4994'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -287,7 +315,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test3/contents/.snapcraft.yaml
   response:
@@ -309,7 +337,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:39 GMT
+      - Thu, 13 Feb 2020 16:19:39 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -320,6 +348,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -327,13 +359,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FA962:2E06E18:5E3D97B6
+      - 9CF2:3ADF:26A40CB:2ED7415:5E45771B
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '27'
+      - '4993'
       X-RateLimit-Reset:
-      - '1581097806'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -349,7 +385,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test3/contents/snap/snapcraft.yaml
   response:
@@ -371,7 +407,7 @@ interactions:
         X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
         X-GitHub-Media-Type
       Cache-Control:
-      - public, max-age=60, s-maxage=60
+      - private, max-age=60, s-maxage=60
       Content-Encoding:
       - gzip
       Content-Security-Policy:
@@ -379,7 +415,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:39 GMT
+      - Thu, 13 Feb 2020 16:19:39 GMT
       ETag:
       - W/"d9d780b03a68d9d5854e9de9efc3e4562d82f29f"
       Last-Modified:
@@ -395,8 +431,10 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept
-      - Accept-Encoding
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -404,13 +442,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FA9BD:2E06E76:5E3D97B7
+      - 9CF2:3ADF:26A4113:2ED7463:5E45771B
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '26'
+      - '4992'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -426,7 +468,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test4/contents/snapcraft.yaml
   response:
@@ -448,7 +490,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:39 GMT
+      - Thu, 13 Feb 2020 16:19:40 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -459,6 +501,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -466,13 +512,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FAA1A:2E06EEA:5E3D97B7
+      - 9CF2:3ADF:26A4166:2ED74D0:5E45771B
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '25'
+      - '4991'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -488,7 +538,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test4/contents/.snapcraft.yaml
   response:
@@ -510,7 +560,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:39 GMT
+      - Thu, 13 Feb 2020 16:19:40 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -521,6 +571,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -528,13 +582,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FAA69:2E06F56:5E3D97B7
+      - 9CF2:3ADF:26A41B6:2ED752D:5E45771C
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '24'
+      - '4990'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -550,7 +608,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test4/contents/snap/snapcraft.yaml
   response:
@@ -572,7 +630,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:39 GMT
+      - Thu, 13 Feb 2020 16:19:40 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -583,6 +641,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -590,13 +652,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FAAD7:2E06FBE:5E3D97B7
+      - 9CF2:3ADF:26A4204:2ED759E:5E45771C
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '23'
+      - '4989'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -612,7 +678,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test4/contents/build-aux/snap/snapcraft.yaml
   response:
@@ -634,7 +700,7 @@ interactions:
         X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
         X-GitHub-Media-Type
       Cache-Control:
-      - public, max-age=60, s-maxage=60
+      - private, max-age=60, s-maxage=60
       Content-Encoding:
       - gzip
       Content-Security-Policy:
@@ -642,7 +708,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:40 GMT
+      - Thu, 13 Feb 2020 16:19:40 GMT
       ETag:
       - W/"e00a57fa2c0e5dff656ff819607695b9ae2e04b4"
       Last-Modified:
@@ -658,8 +724,10 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept
-      - Accept-Encoding
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -667,13 +735,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FAB1C:2E07025:5E3D97B7
+      - 9CF2:3ADF:26A427B:2ED7611:5E45771C
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '22'
+      - '4988'
       X-RateLimit-Reset:
-      - '1581097806'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -689,7 +761,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/snapcraft.yaml
   response:
@@ -712,7 +784,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:40 GMT
+      - Thu, 13 Feb 2020 16:19:41 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -723,6 +795,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -730,13 +806,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FAB7D:2E07085:5E3D97B8
+      - 9CF2:3ADF:26A42C1:2ED7690:5E45771C
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '21'
+      - '4987'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613959'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -752,7 +832,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/.snapcraft.yaml
   response:
@@ -775,7 +855,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:40 GMT
+      - Thu, 13 Feb 2020 16:19:41 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -786,6 +866,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -793,13 +877,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FABE9:2E07104:5E3D97B8
+      - 9CF2:3ADF:26A432B:2ED7701:5E45771D
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '20'
+      - '4986'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -815,7 +903,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/snap/snapcraft.yaml
   response:
@@ -838,7 +926,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:40 GMT
+      - Thu, 13 Feb 2020 16:19:41 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -849,6 +937,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -856,13 +948,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FAC56:2E07189:5E3D97B8
+      - 9CF2:3ADF:26A4376:2ED7769:5E45771D
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '19'
+      - '4985'
       X-RateLimit-Reset:
-      - '1581097805'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -878,7 +974,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (8cd60f0179a7eb99942ba10e86767a02c0c9d7b5;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/build-aux/snap/snapcraft.yaml
   response:
@@ -901,7 +997,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:41 GMT
+      - Thu, 13 Feb 2020 16:19:41 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -912,6 +1008,10 @@ interactions:
       - max-age=31536000; includeSubdomains; preload
       Transfer-Encoding:
       - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -919,13 +1019,17 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - 97A6:31293:25FACB5:2E07208:5E3D97B8
+      - 9CF2:3ADF:26A43E8:2ED77EB:5E45771D
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '18'
+      - '4984'
       X-RateLimit-Reset:
-      - '1581097806'
+      - '1581613958'
       X-XSS-Protection:
       - 1; mode=block
     status:
