@@ -135,9 +135,11 @@ class Builds extends React.Component {
             className: "has-icon"
           },
           {
-            content: distanceInWords(new Date(), build.datebuilt, {
-              addSuffix: true
-            }),
+            content: build.datebuilt
+              ? distanceInWords(new Date(), build.datebuilt, {
+                  addSuffix: true
+                })
+              : "",
             className: "u-align-text--right"
           }
         ]

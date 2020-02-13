@@ -58,17 +58,20 @@ function createStatus(statusMessage, shortStatusMessage, priority, badge) {
 }
 
 export function createDuration(duration) {
-  const durationParts = duration.split(":");
-  const hours = parseInt(durationParts[0]);
-  const minutes = parseInt(durationParts[1]);
-  const seconds = Math.round(parseInt(durationParts[2]));
+  if (duration) {
+    const durationParts = duration.split(":");
+    const hours = parseInt(durationParts[0]);
+    const minutes = parseInt(durationParts[1]);
+    const seconds = Math.round(parseInt(durationParts[2]));
 
-  if (hours > 0) {
-    return `${hours} hour${hours > 1 ? "s" : ""}`;
-  }
-  if (minutes > 0) {
-    return `${minutes} minute${minutes > 1 ? "s" : ""}`;
-  }
+    if (hours > 0) {
+      return `${hours} hour${hours > 1 ? "s" : ""}`;
+    }
+    if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? "s" : ""}`;
+    }
 
-  return `${seconds} second${seconds > 1 || seconds === 0 ? "s" : ""}`;
+    return `${seconds} second${seconds > 1 || seconds === 0 ? "s" : ""}`;
+  }
+  return "";
 }
