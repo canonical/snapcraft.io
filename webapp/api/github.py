@@ -1,5 +1,6 @@
 from webapp import api
 from werkzeug.exceptions import Unauthorized
+from webapp.helpers import get_yaml_loader
 
 
 class GitHubAPI:
@@ -11,12 +12,40 @@ class GitHubAPI:
     REST_API_URL = "https://api.github.com"
     GRAPHQL_API_URL = "https://api.github.com/graphql"
 
+    YAML_LOCATIONS = [
+        "snapcraft.yaml",
+        ".snapcraft.yaml",
+        "snap/snapcraft.yaml",
+        "build-aux/snap/snapcraft.yaml",
+    ]
+
     def __init__(self, access_token=None, session=api.requests.Session()):
         self.access_token = access_token
         self.session = session
         self.session.headers["Accept"] = "application/json"
 
-    def _request(self, query={}):
+    def _request(self, method="GET", url="", raise_exceptions=True):
+        """
+        Makes a raw HTTP request and returns the response.
+        """
+        if self.access_token:
+            headers = {"Authorization": f"token {self.access_token}"}
+        else:
+            headers = {}
+
+        response = self.session.request(
+            method, f"{self.REST_API_URL}/{url}", headers=headers,
+        )
+
+        if raise_exceptions:
+            if response.status_code == 401:
+                raise Unauthorized(response=response)
+
+            response.raise_for_status()
+
+        return response
+
+    def _gql_request(self, query={}):
         """
         Makes a raw HTTP request and returns the response.
         """
@@ -58,7 +87,7 @@ class GitHubAPI:
         }
         """
 
-        return self._request(gql)["viewer"]
+        return self._gql_request(gql)["viewer"]
 
     def get_orgs(self, end_cursor=None):
         """
@@ -88,13 +117,13 @@ class GitHubAPI:
         """
         )
 
-        gql_response = self._request(gql)["viewer"]["organizations"]
+        gql_response = self._gql_request(gql)["viewer"]["organizations"]
         page_info = gql_response["pageInfo"]
         orgs = self._get_nodes(gql_response["edges"])
 
         if page_info["hasNextPage"]:
             next_page = self.get_orgs(page_info["endCursor"])
-            orgs.append(next_page)
+            orgs.extend(next_page)
 
         return orgs
 
@@ -116,18 +145,6 @@ class GitHubAPI:
               edges {
                 node {
                   nameWithOwner
-                  yamlLocation1:
-                    object(expression: "master:snapcraft.yaml")
-                    { id }
-                  yamlLocation2:
-                    object(expression: "master:.snapcraft.yaml")
-                    { id }
-                  yamlLocation3:
-                    object(expression: "master:snap/snapcraft.yaml")
-                    { id }
-                  yamlLocation4:
-                    object(expression: "master:build-aux/snap/snapcraft.yaml")
-                    { id }
                 }
               }
               pageInfo {
@@ -139,30 +156,15 @@ class GitHubAPI:
         }"""
         )
 
-        gql_response = self._request(gql)["viewer"]["repositories"]
+        gql_response = self._gql_request(gql)["viewer"]["repositories"]
         page_info = gql_response["pageInfo"]
         repositories = self._get_nodes(gql_response["edges"])
-        processed_repos = {"with-yaml": [], "others": []}
-
-        for repo in repositories:
-            processed_repo = {}
-
-            processed_repo["name"] = repo["nameWithOwner"]
-            processed_repo["snapcraft_yaml"] = any(
-                [bool(repo[f"yamlLocation{i}"]) for i in range(1, 4)]
-            )
-
-            if processed_repo["snapcraft_yaml"]:
-                processed_repos["with-yaml"].append(processed_repo)
-            else:
-                processed_repos["others"].append(processed_repo)
 
         if page_info["hasNextPage"]:
             next_page = self.get_user_repositories(page_info["endCursor"])
-            processed_repos["with-yaml"].extend(next_page["with-yaml"])
-            processed_repos["others"].extend(next_page["others"])
+            repositories.extend(next_page)
 
-        return processed_repos
+        return repositories
 
     def get_org_repositories(self, org_login, end_cursor=None):
         """
@@ -184,18 +186,6 @@ class GitHubAPI:
               edges {
                 node {
                   nameWithOwner
-                  yamlLocation1:
-                    object(expression: "master:snapcraft.yaml")
-                    { id }
-                  yamlLocation2:
-                    object(expression: "master:.snapcraft.yaml")
-                    { id }
-                  yamlLocation3:
-                    object(expression: "master:snap/snapcraft.yaml")
-                    { id }
-                  yamlLocation4:
-                    object(expression: "master:build-aux/snap/snapcraft.yaml")
-                    { id }
                 }
                 }
                 pageInfo {
@@ -207,55 +197,61 @@ class GitHubAPI:
           }
         }"""
         )
-        response = self._request(gql)["viewer"]["organization"]["repositories"]
+        response = self._gql_request(gql)["viewer"]["organization"][
+            "repositories"
+        ]
         page_info = response["pageInfo"]
         repositories = self._get_nodes(response["edges"])
-        processed_repos = {"with-yaml": [], "others": []}
-
-        for repo in repositories:
-            processed_repo = {}
-
-            processed_repo["name"] = repo["nameWithOwner"]
-            processed_repo["snapcraft_yaml"] = any(
-                [bool(repo[f"yamlLocation{i}"]) for i in range(1, 4)]
-            )
-
-            if processed_repo["snapcraft_yaml"]:
-                processed_repos["with-yaml"].append(processed_repo)
-            else:
-                processed_repos["others"].append(processed_repo)
 
         if page_info["hasNextPage"]:
             next_page = self.get_org_repositories(
                 org_login, page_info["endCursor"]
             )
-            processed_repos["with-yaml"].extend(next_page["with-yaml"])
-            processed_repos["others"].extend(next_page["others"])
+            repositories.extend(next_page)
 
-        return processed_repos
+        return repositories
 
-    def is_snapcraft_yaml_present(self, owner, repo):
+    def get_snapcraft_yaml_location(self, owner, repo):
         """
-        Check is the snapcraft.yaml file exist in the GitHub repo
+        Return the snapcraft.yaml file location in the GitHub repo
         """
-        yaml_locations = [
-            f"/repos/{owner}/{repo}/contents/snapcraft.yaml",
-            f"/repos/{owner}/{repo}/contents/.snapcraft.yaml",
-            f"/repos/{owner}/{repo}/contents/snap/snapcraft.yaml",
-            f"/repos/{owner}/{repo}/contents/build-aux/snap/snapcraft.yaml",
-        ]
 
         # It is not possible to use GraphQL without authentication
         # for that reason we are doing a call for each location to the REST API
-        for location in yaml_locations:
-            response = self.session.request(
-                "GET", f"{self.REST_API_URL}{location}"
+        for loc in self.YAML_LOCATIONS:
+            response = self._request(
+                "GET",
+                f"repos/{owner}/{repo}/contents/{loc}",
+                raise_exceptions=False,
             )
             if response.status_code == 404:
                 continue
             elif response.status_code == 200:
-                return True
+                return loc
 
             response.raise_for_status()
+
+        return False
+
+    def check_snapcraft_yaml_name(self, owner, repo, snap_name):
+        """
+        Return True if the name inside the yaml file match with the snap
+        """
+        loc = self.get_snapcraft_yaml_location(owner, repo)
+
+        if loc:
+            response = self._request(
+                "GET", f"repos/{owner}/{repo}/contents/{loc}",
+            )
+            file_metadata = response.json()
+
+            response = self.session.request(
+                "GET", file_metadata["download_url"]
+            )
+
+            yaml = get_yaml_loader()
+            content = yaml.load(response.content)
+
+            return content.get("name") == snap_name
 
         return False
