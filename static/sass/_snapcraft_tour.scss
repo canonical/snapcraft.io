@@ -1,5 +1,5 @@
 @mixin snapcraft-tour {
-  $color-overlay: transparentize($color-dark, .15);
+  $color-overlay: transparentize($color-dark, .35);
   $triangle-height: $sp-unit;
   $triangle-spacing: 2 * $triangle-height;
 
