@@ -211,6 +211,20 @@ class GitHubAPI:
 
         return repositories
 
+    def check_permissions_over_repo(
+        self, owner, repo, permissions=["admin", "write"]
+    ):
+        """
+        Return True when the current user has the requested permissions
+        """
+        username = self.get_user()["login"]
+        response = self._request(
+            "GET",
+            f"repos/{owner}/{repo}/collaborators/{username}/permission",
+            raise_exceptions=False,
+        )
+        return response.json().get("permission") in permissions
+
     def get_snapcraft_yaml_location(self, owner, repo):
         """
         Return the snapcraft.yaml file location in the GitHub repo
