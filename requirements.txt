@@ -1,6 +1,6 @@
 # App dependencies
 bleach==3.1.0
-canonicalwebteam.discourse-docs==0.11.0
+canonicalwebteam.discourse-docs==0.11.1
 canonicalwebteam.blog==4.0.2
 canonicalwebteam.search==0.1.0
 canonicalwebteam.yaml-responses==1.1.1
