@@ -44,6 +44,7 @@ from webapp.publisher.snaps.builds import (
     map_build_and_upload_states,
 )
 from werkzeug.exceptions import Unauthorized
+from webapp.publisher.snaps.build_views import get_validate_repo
 
 
 BUILDS_PER_PAGE = 15
@@ -103,6 +104,11 @@ def _handle_error_list(errors):
 
     error_messages = ", ".join(codes)
     return flask.abort(502, error_messages)
+
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/validate-repo", view_func=get_validate_repo
+)
 
 
 @publisher_snaps.route("/account/snaps")
@@ -1407,7 +1413,7 @@ def get_snap_builds(snap_name):
         context["github_repository"] = lp_snap["git_repository_url"][19:]
         github_owner, github_repo = context["github_repository"].split("/")
 
-        context["yaml_file_exists"] = github.is_snapcraft_yaml_present(
+        context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
             github_owner, github_repo
         )
 
