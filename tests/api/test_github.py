@@ -47,6 +47,19 @@ class GitHubAPITest(VCRTestCase):
         [self.assertIn("name", org) for org in orgs]
         [self.assertIn("login", org) for org in orgs]
 
+    def test_check_permissions_over_repo(self):
+        # The user is the owner of the repo
+        case1 = self.client.check_permissions_over_repo(
+            "build-staging-snapcraft-io", "test1", ["admin", "write"]
+        )
+        self.assertEqual(True, case1)
+
+        # The user doesn't have permissions for this repo
+        case2 = self.client.check_permissions_over_repo(
+            "canonical-web-and-design", "snapcraft.io", ["write"]
+        )
+        self.assertEqual(False, case2)
+
     def test_get_snapcraft_yaml_location(self):
         # /snapcraft.yaml is present
         case1 = self.client.get_snapcraft_yaml_location(

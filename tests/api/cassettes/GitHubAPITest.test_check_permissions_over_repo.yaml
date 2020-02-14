@@ -1,0 +1,309 @@
+interactions:
+- request:
+    body: '{"query": "\n        {\n          viewer {\n            login\n            name\n            avatarUrl(size:
+      100)\n          }\n        }\n        "}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '149'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAzWMQQrCMBREryJ/IQq2iaGgDRQPIR7gt41poE1K8hMXJXc3ou5m3jxmgxEJQW6Q
+        jHop/0mz08aChD6aeawCYam6ChbXweOTKuPgBBYXVZz7n+4OP/FYRkzl1D/8XIyJaA2SsS8LotaG
+        ptjHoPzgLClL9eAWFploLlzwa3sL3ZnzfeoayDm/AbHk/8ShAAAA
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 14 Feb 2020 15:26:42 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - repo
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - BA00:757F:78DC19:935603:5E46BC31
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4998'
+      X-RateLimit-Reset:
+      - '1581697499'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
+    method: GET
+    uri: https://api.github.com/repos/build-staging-snapcraft-io/test1/collaborators/build-staging-snapcraft-io/permission
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA62US2vDMAyA/4vPbd2V7hUYY9DLDi3ssLFbcR030XBsIyspbeh/n5x0g/YwGOkp
+        sZE/fZIfrQgGK4gRvBOZUHkFToxEHQ2KrBXWFzzOxKYGm48jKR4W4+hU0Ki2NAbPwZCLbDa/n86m
+        D48j4Xxu1mlKLBdvdx+fK6u/Xqerw8t+uShuOVw1ihSua7QcUxKFmEnZT8abSQFU1puUX3tHxtFE
+        +0rW8ifBc/M0Z0iBJ0yXKRmf4wKcSP1yxkX5ZxElVfbCqVfpAH8u3Xpr/Y4zXNb0Pwn5y+Fy+n9u
+        9lWYzGmlp9Jw27kVx9RAiDRUuGO0Mn14xxOVTwiiyQdKnyisvHNs20o0wXf4ehM1QiA+rUPlz1jM
+        9lgoBwd1DTazIiOT9lDNjsEs0/BdGArrIa0MCI3S+9RSNNpAw1t2lQQXNObTPhi+oe/pQeENBDLr
+        /pHJtspGczx+Awrj8Q6CBAAA
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 14 Feb 2020 15:26:42 GMT
+      ETag:
+      - W/"56fb55f774f4e683dea594bbc1a39feb"
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3
+      X-GitHub-Request-Id:
+      - BA00:757F:78DC7E:935672:5E46BC32
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4998'
+      X-RateLimit-Reset:
+      - '1581697499'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "\n        {\n          viewer {\n            login\n            name\n            avatarUrl(size:
+      100)\n          }\n        }\n        "}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '149'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAzWMQQrCMBREryJ/IQq2iaGgDRQPIR7gt41poE1K8hMXJXc3ou5m3jxmgxEJQW6Q
+        jHop/0mz08aChD6aeawCYam6ChbXweOTKuPgBBYXVZz7n+4OP/FYRkzl1D/8XIyJaA2SsS8LotaG
+        ptjHoPzgLClL9eAWFploLlzwa3sL3ZnzfeoayDm/AbHk/8ShAAAA
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 14 Feb 2020 15:26:42 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - repo
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - BA00:757F:78DCD5:9356DE:5E46BC32
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4997'
+      X-RateLimit-Reset:
+      - '1581697499'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
+    method: GET
+    uri: https://api.github.com/repos/canonical-web-and-design/snapcraft.io/collaborators/build-staging-snapcraft-io/permission
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA02NMQ7CMAxFr2KFlTQDW+/AGZAbrCZSUke2EwbE3UknWP/7eu/tKqniTm51964G
+        CQdB65oAY5wIjGFkekHkUnBjQWOBRlKzauZjcVf35NgrHYY2h0eXMmXJrOkawpMGFZ7/Zc+W+rZE
+        rmHcglBjDf9SDRehM+XRdyVR/6v4cmrc5wt5KpKLrwAAAA==
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 14 Feb 2020 15:26:42 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 403 Forbidden
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3
+      X-GitHub-Request-Id:
+      - BA00:757F:78DD4D:935768:5E46BC32
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4997'
+      X-RateLimit-Reset:
+      - '1581697499'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 403
+      message: Forbidden
+version: 1
