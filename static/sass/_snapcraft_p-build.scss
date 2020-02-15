@@ -21,6 +21,28 @@
     height: 30px;
     vertical-align: middle;
   }
+
+  .p-icon--restart {
+    @extend %icon;
+    background-image: url("#{$assets-path}34f54cf0-restart.svg");
+  }
+
+  .p-build {
+    &-container {
+      display: inline-flex;
+
+      .p-build__icon {
+        padding-left: .5rem;
+        padding-top: .4rem;
+      }
+
+      .is-error {
+        border: 1px solid $color-negative;
+      }
+
+      .is-success {
+        border: 1px solid $color-positive;
+      }
+    }
+  }
 }
-
-
