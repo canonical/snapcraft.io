@@ -3,11 +3,7 @@ interactions:
     body: '{"query": "{\n              viewer {\n              organization(login:
       \"canonical-web-and-design\") {\n                    repositories(\n                        first:
       100,\n                        privacy: PUBLIC\n                    \n                )
-      {\n              edges {\n                node {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
-      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
-      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
-      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
-      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n                }\n                pageInfo
+      {\n              edges {\n                node {\n                  name\n                }\n                }\n                pageInfo
       {\n                  hasNextPage\n                  endCursor\n                }\n              }\n            }\n          }\n        }"}'
     headers:
       Accept:
@@ -17,43 +13,35 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1079'
+      - '533'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
     body:
       string: !!binary |
-        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
-        bn+df9C/ClG+A/7d4esvAsARR8Y+AAA=
+        H4sIAAAAAAAAA41XTXPjNgz9Lz6HPmwvbWb2tJftpempMzudPUAkLNGiSA4/7CiZ/e99tB2nGUNW
+        coltQSDw8PAAvm4MFdo8vm4Olo+c2qeQevL2hYoNvn1PHEO2JSTLuX1n07cP/75ufDDcfvE04f/m
+        eDxuNfngrSa31WHa/Pr1cGNVu+pLXXw8cApjVV21zkTSo4pzGYJXR1sG1b0k0efJOheO4lOzJ98H
+        1bnKMVlfRKNr4EfuCtO0PXDKQICNygVYaPGti+uzhUohFLWz3gBIKXXKmUveriAwkaee0/Zz1oBE
+        5dkvhBf0yOkNwo4yi3FFSsUj3bXIThGpiWJcSPCCnYop7FmXcxUXbA8gmXOkdgnsOYY0iqHV6AIZ
+        dcZCtJiI8tYG8Zn2aymZMIJthnHMrOwE4FV0tbde9Ofx4FntQjpSMqoEFUOS6ZR1iJzBiOq4FBn2
+        3gJMm1JABTkdrJbN9nVflcaBWYzJUfV6iACpq/099sVEGjxG70rc1C5Uo6y3ZQnMfVwF89xoO0bT
+        FOrFc0zQGXhPcsEcdezkAPFi47JJYI3o2ZE3WVNk1c4QTc6dp/RgPSlwzsTEOasyMARMQsVwtr1X
+        n+Nq70JHTnk6yL4Q1SqCQdeJfRMcaN5J1hba5y2VkO7ka/jADkRMa+fmMjtWfbVIWAz+FMo2e4o6
+        0W6RIxFSfSeeUtsYIbeKwwXwqzYscbIFBNFBKwY3WrkV+ZmmiOz2cmbnEq8B9MaAdhgmW0SavsgO
+        L5UZkOkLirhMLh38vqJ8NS6l14iMSblm9sECzdU4K1bxI51X0W0D/X1Y3XPcM+YHobgQqssC0Lrw
+        nctiONJblxEi2v8vlkIjB4xoRQndfFjo3qY1V86JLm+qfy9LZFQ4yyz7kLeqxS7ImA5htBgywVk9
+        L4Q0hXvz4GZT6TGUm+bKdDzPtiYqIK7f2V42W21tXXMJk4JggvyZ1cAEbZKdAdWxhHgPy86Ffq3p
+        3iSfZUG9UWUEhxEnglrz6ioQmtYqilbOqU/Mfgg181K3YsCy5oh9WholL3i7dqrDTovU0fTYvJe0
+        3dudxQzliaxThSFfsBW97hzlUUHivTWigeeCt/1SzF2d16rQmIHSQ6iAjXjGDSOHUhZW8SZoq1Sb
+        qis2YufbpioL2WQ1rgm/Ly5+WKtOOxUm38JqaCxWtJpA5InSaMLRKx8WQO4x8rCUw6Mvab63IF6n
+        cpyXt5Br/pcCY55MMuf2bbclGfS3BBpV5OvGTVlmmty1geUT35eoLgU9YDxtcWPi5Eleus4turNu
+        YW+4ieFyY2rXTTmCmzeaUnyOduf9/W6/lNYuGjoBQotOK2GZGLnR7ufDJuJC8KffhXbLHSj/xc/l
+        b/y0eSyp8sOGvfkGDsHV4+bHb//M+ssf85P/MT/F70/f/Hdr+69f4aj9/QeWl7NAag8AAA==
     headers:
       Access-Control-Allow-Origin:
       - '*'
@@ -70,7 +58,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:08:31 GMT
+      - Mon, 17 Feb 2020 13:39:01 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -82,7 +70,7 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept-Encoding
+      - Accept-Encoding, Accept, X-Requested-With
       X-Accepted-OAuth-Scopes:
       - repo
       X-Content-Type-Options:
@@ -92,7 +80,7 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - 9E06:2C0B4:148B579:18B4486:5E3D998A
+      - AE94:3AA51:7885B1E:8F26A25:5E4A9775
       X-OAuth-Client-Id:
       - cdeb3a60fecee4208395
       X-OAuth-Scopes:
@@ -100,9 +88,9 @@ interactions:
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4983'
+      - '4998'
       X-RateLimit-Reset:
-      - '1581097620'
+      - '1581949286'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -112,11 +100,7 @@ interactions:
     body: '{"query": "{\n              viewer {\n              organization(login:
       \"canonical-web-and-design\") {\n                    repositories(\n                        first:
       100,\n                        privacy: PUBLIC\n                    after: \"Y3Vyc29yOnYyOpHOCnHiig==\"\n                )
-      {\n              edges {\n                node {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
-      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
-      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
-      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
-      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n                }\n                pageInfo
+      {\n              edges {\n                node {\n                  name\n                }\n                }\n                pageInfo
       {\n                  hasNextPage\n                  endCursor\n                }\n              }\n            }\n          }\n        }"}'
     headers:
       Accept:
@@ -126,27 +110,24 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1114'
+      - '568'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA82X32/TMBDH/xc/16HrOiQm7QHRiR+iDUUdI0U8XOxr4zb2BdtZ+kP937GLBkzb
-        Ex2S8+SclOQT++77vdszCR7Y5Z7dKezQxhXZJRi1A6/IxHuLDTnlySp08R7lMi6+7ZkhiTFiQOOt
-        8lXemfgKJsCQUQJq3mHJwUgu0amleSFJuGzVrlpRgdUuE6RZj21B1x9JHD94xi5NW9cPg4OngudP
-        BYe/godD7x/ofmMHao+gM6mcoNY65BE8IVKLNYJDl0nUlFXQpgT31+k33KLzXICoMKHtk+Rta04B
-        2jMlQ6KPR9OXU725K1bXw8nu9dl4Nu1PRtTN9XQ4GVxvJrfTQbFbn+ezD1X+9mYzn4mL+e30Yr76
-        rIvVcjjeibMiPJPPRJ8dHib986byoga35mVImlN++3FpnkaJ1qtFEIpY+Vlbtsa3qWpCYlwawPFW
-        pXSY96J/r54edVODx4UyMthCOjq/bktc1NRxg11qHuSjXkbHDAJvT5KoZ67VpfK8I7t2FTUJneUj
-        z3Zh30SVEKFFEMECSTdk0PiUnHoVRUSCq0oCKxPaM/mjVh4zRQkxoRfpQWklLDkPYp2d2NE8s1zE
-        Jj9TSSV7IPqT7Lyx5Mlvm5T6oeCcYdBCXpKq0R7NM6ECOM5sKDk5nVgz9NgEwrSKHJqU+iMwJW24
-        qKmV/0/YvvdYA0t8bxYUB/MK3AQ3/lMIscsF1A57DI18E2ZaioN6cf5lKwavtrkptnnzLh8VX/vQ
-        XV2xw/H6CaltDIUeEAAA
+        H4sIAAAAAAAAA4VUTY8UIRD9L5wHYvTkJnvSg14cT2YnGw/VUD3NDFBIFfaOk/3vwppo4tDKhY+q
+        Lh7vveqrciCg7q7qu8cVS19ROULyP0A8pb4vmIm9UPHIfY/u2BePV5XIYT9JENusHFk2p3qqdoES
+        2ViK6vl5d5NnIVHyFsKKkyBE4zxbqoVR9xLDbwoGBEY2DiOZBeo47XdpvWZdkEVbsAsOSzqSUtMw
+        dINwDsBnPTUE43ws4uf2pM6ZqVNNUv///M2MCMC6+vFVf5MnGHMAwdkn1wQcEX6uE86BVp1w3ZZF
+        Ol2QnG5MlzEvRy96pXLmhfLwphviuNWyyzC3INimD8VMCZOMBT11KhzwMhEUN6zjvgUvaDwNoyj2
+        X+HobSEWsGezZYbuaOM34LXYH3g6FxKSSx67pNm99RHqiXzA8iLaEPJL+6DTxHHTIrdEtwZFDXns
+        GkgTPWkbqLpfRH3dqQxH/Jhm6h28AH/CJ/ncjtTdDIFxpzC5d60pqf0U1OHNl4t9/fayT4fLPn/Y
+        vz88vIL1/r7h7+Mn6sIW90cEAAA=
     headers:
       Access-Control-Allow-Origin:
       - '*'
@@ -163,7 +144,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:08:33 GMT
+      - Mon, 17 Feb 2020 13:39:02 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -175,7 +156,7 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept-Encoding
+      - Accept-Encoding, Accept, X-Requested-With
       X-Accepted-OAuth-Scopes:
       - repo
       X-Content-Type-Options:
@@ -185,7 +166,7 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - 9E06:2C0B4:148BA2D:18B4A34:5E3D998F
+      - AE94:3AA51:7885D06:8F26C37:5E4A9775
       X-OAuth-Client-Id:
       - cdeb3a60fecee4208395
       X-OAuth-Scopes:
@@ -193,9 +174,9 @@ interactions:
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4982'
+      - '4997'
       X-RateLimit-Reset:
-      - '1581097620'
+      - '1581949287'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -205,11 +186,7 @@ interactions:
     body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
       100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
       [OWNER],\n                \n                ) {\n              edges {\n                node
-      {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
-      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
-      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
-      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
-      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n              }\n              pageInfo
+      {\n                  name\n                }\n              }\n              pageInfo
       {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
     headers:
       Accept:
@@ -219,11 +196,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1019'
+      - '473'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
@@ -243,7 +220,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:08:33 GMT
+      - Mon, 17 Feb 2020 13:39:02 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -252,6 +229,8 @@ interactions:
       - 401 Unauthorized
       Strict-Transport-Security:
       - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -259,13 +238,13 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - 9E06:2C0B4:148BBAD:18B4C14:5E3D9991
+      - AE94:3AA51:7885E62:8F26E16:5E4A9776
       X-RateLimit-Limit:
       - '0'
       X-RateLimit-Remaining:
       - '0'
       X-RateLimit-Reset:
-      - '1581098913'
+      - '1581950342'
       X-XSS-Protection:
       - 1; mode=block
     status:
