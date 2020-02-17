@@ -3,11 +3,7 @@ interactions:
     body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
       100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
       [OWNER],\n                \n                ) {\n              edges {\n                node
-      {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
-      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
-      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
-      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
-      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n              }\n              pageInfo
+      {\n                  name\n                }\n              }\n              pageInfo
       {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
     headers:
       Accept:
@@ -17,25 +13,19 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1019'
+      - '473'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA7WUUW+bMBDHv4ufEy0BMmmR+pDOGyOb7TE5RWbagwdOsLEBBVIKEd99tvbUppGq
-        tXs46e4vnX0//08+g5x3HKzP4F6KXhxddhRN3cquPkrRulrkB5f8PIOqzoVTKm5EIruC9JVrAb9P
-        UufztuMHWR3mbcWb7Mj33VzW7zrRdkswAwM3+lud8U7W1dKdIXPbiGD8PjYP90xFI4GfVkjtVpjW
-        vc1HpsoRqc3AaGRjMxJ68BktexxGfqpuC0xZjwwb2IhWWG0LMD2+xQPr6qT1Y9F/Tgz+itM0+2dE
-        7xLx8nI70VVu5iNYDyj8odOQBRjuvFTlJYE2wniBVRYwE/UpRT1LIo8k24KZXZ/CeHzK/b8Q/Rci
-        XnLbia5yZwOmTUmS2CfwViKIC6wKVy8J3C1SqksbOjVoTGm8tD7bN9kapLR5yv0GLgavQbzkthNd
-        5w6QajSCbo9zw+hWoXC3TMPUYGW9NyxAtPQQzDxC7yRJPmtk/ba7vwDTaxZ19eaIjnuafs1Aww8i
-        qva1oy54i8VD991KYL3nuhUzIKr84+nY1u7HYP7dkHkfBlKxgTRfCFRfo3Fzc+PgpukP4k+8cJYE
-        AAA=
+        H4sIAAAAAAAAA3WPPwvCMBDFv8vNWWx1sNBBdLAIxkko4nCYa41oEpL4J4Z+d5Pd3HLv3g8e7yII
+        9AhNhJekN9msLBntpNdWkss3iTGLUwSlBWVH4SNt8OT8DKaJ/SVVkdRFMi+SRSJnBgZH6tSgc4sr
+        uj19/CFZ0Ax4d8SAlFg/rdPpEejrY7hUy8BVH7jZ8s1t131XbZuS0vwAWZ+8kvoAAAA=
     headers:
       Access-Control-Allow-Origin:
       - '*'
@@ -52,7 +42,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:37 GMT
+      - Mon, 17 Feb 2020 13:33:31 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -64,7 +54,7 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept-Encoding
+      - Accept-Encoding, Accept, X-Requested-With
       X-Accepted-OAuth-Scopes:
       - repo
       X-Content-Type-Options:
@@ -74,7 +64,7 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - 97A2:3128F:4DE783:5CC42E:5E3D97B4
+      - AA88:D864:762CC31:8C7B0A0:5E4A962A
       X-OAuth-Client-Id:
       - cdeb3a60fecee4208395
       X-OAuth-Scopes:
@@ -82,9 +72,9 @@ interactions:
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4992'
+      - '4998'
       X-RateLimit-Reset:
-      - '1581097999'
+      - '1581950009'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -94,11 +84,7 @@ interactions:
     body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
       100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
       [OWNER],\n                \n                ) {\n              edges {\n                node
-      {\n                  nameWithOwner\n                  yamlLocation1:\n                    object(expression:
-      \"master:snapcraft.yaml\")\n                    { id }\n                  yamlLocation2:\n                    object(expression:
-      \"master:.snapcraft.yaml\")\n                    { id }\n                  yamlLocation3:\n                    object(expression:
-      \"master:snap/snapcraft.yaml\")\n                    { id }\n                  yamlLocation4:\n                    object(expression:
-      \"master:build-aux/snap/snapcraft.yaml\")\n                    { id }\n                }\n              }\n              pageInfo
+      {\n                  name\n                }\n              }\n              pageInfo
       {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
     headers:
       Accept:
@@ -108,11 +94,11 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '1019'
+      - '473'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (7104187423b5359d0e2cc3fe52d2c408b1df98eb;devel)
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
     method: POST
     uri: https://api.github.com/graphql
   response:
@@ -132,7 +118,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 07 Feb 2020 17:00:37 GMT
+      - Mon, 17 Feb 2020 13:33:31 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -141,6 +127,8 @@ interactions:
       - 401 Unauthorized
       Strict-Transport-Security:
       - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -148,13 +136,13 @@ interactions:
       X-GitHub-Media-Type:
       - github.v4
       X-GitHub-Request-Id:
-      - 97A2:3128F:4DE7C5:5CC46F:5E3D97B5
+      - AA88:D864:762CD9B:8C7B1F5:5E4A962B
       X-RateLimit-Limit:
       - '0'
       X-RateLimit-Remaining:
       - '0'
       X-RateLimit-Reset:
-      - '1581098437'
+      - '1581950011'
       X-XSS-Protection:
       - 1; mode=block
     status:
