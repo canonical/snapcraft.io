@@ -28,7 +28,7 @@ class GitHubAPITest(VCRTestCase):
 
     def test_get_user_repositories(self):
         repos = self.client.get_user_repositories()
-        [self.assertIn("nameWithOwner", repo) for repo in repos]
+        [self.assertIn("name", repo) for repo in repos]
 
         # Test Unauthorized exception when using bad credentials
         self.client.access_token = "bad-token"
@@ -36,7 +36,7 @@ class GitHubAPITest(VCRTestCase):
 
     def test_get_org_repositories(self):
         repos = self.client.get_org_repositories("canonical-web-and-design")
-        [self.assertIn("nameWithOwner", repo) for repo in repos]
+        [self.assertIn("name", repo) for repo in repos]
 
         # Test Unauthorized exception when using bad credentials
         self.client.access_token = "bad-token"
@@ -91,18 +91,13 @@ class GitHubAPITest(VCRTestCase):
         )
         self.assertEqual(False, case5)
 
-    def check_snapcraft_yaml_name(self):
-        case1 = self.client.check_snapcraft_yaml_name(
-            "build-staging-snapcraft-io", "test1", "test1"
+    def test_get_snapcraft_yaml_name(self):
+        case1 = self.client.get_snapcraft_yaml_name(
+            "build-staging-snapcraft-io", "test1"
         )
-        self.assertEqual(True, case1)
+        self.assertEqual("test1", case1)
 
-        case2 = self.client.check_snapcraft_yaml_name(
-            "build-staging-snapcraft-io", "test1", "new-name"
+        case2 = self.client.get_snapcraft_yaml_name(
+            "build-staging-snapcraft-io", "test5"
         )
         self.assertEqual(False, case2)
-
-        case3 = self.client.check_snapcraft_yaml_name(
-            "build-staging-snapcraft-io", "test5", "no-snap"
-        )
-        self.assertEqual(False, case3)
