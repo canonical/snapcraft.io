@@ -2,6 +2,8 @@
 
 import "whatwg-fetch";
 
+import { toggleAccordion } from "./accordion";
+
 function install(language) {
   const osPickers = Array.from(document.querySelectorAll(".js-os-select"));
   const osWrappers = Array.from(document.querySelectorAll(".js-os-wrapper"));
@@ -267,6 +269,14 @@ function initRegisterName(formEl, notificationEl, successEl) {
         } else if (json.code == "created") {
           showSuccess(`Name "${json.snap_name}" registered successfully.`);
         } else if (json.code == "already_owned") {
+          // Jump to the next accordion panel
+          const currentPanel = formEl.closest(".p-accordion__group");
+          const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+          const nextPanel = currentPanel.nextElementSibling;
+          const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+          toggleAccordion(currentToggle, false);
+          toggleAccordion(nextToggle, true);
+
           showSuccess(`You already own "${json.snap_name}"".`);
         }
       })
