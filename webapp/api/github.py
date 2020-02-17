@@ -144,7 +144,7 @@ class GitHubAPI:
                 ) {
               edges {
                 node {
-                  nameWithOwner
+                  name
                 }
               }
               pageInfo {
@@ -185,7 +185,7 @@ class GitHubAPI:
                 ) {
               edges {
                 node {
-                  nameWithOwner
+                  name
                 }
                 }
                 pageInfo {
@@ -247,7 +247,7 @@ class GitHubAPI:
 
         return False
 
-    def check_snapcraft_yaml_name(self, owner, repo, snap_name):
+    def get_snapcraft_yaml_name(self, owner, repo):
         """
         Return True if the name inside the yaml file match with the snap
         """
@@ -266,6 +266,6 @@ class GitHubAPI:
             yaml = get_yaml_loader()
             content = yaml.load(response.content)
 
-            return content.get("name") == snap_name
+            return content.get("name")
 
         return False
