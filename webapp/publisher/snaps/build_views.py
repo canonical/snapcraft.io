@@ -1,10 +1,177 @@
+import os
 import flask
 
 import webapp.api.dashboard as api
 from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.api.github import GitHubAPI
+from webapp.api.launchpad import Launchpad
 from webapp.decorators import login_required
+from webapp.publisher.snaps.builds import (
+    build_link,
+    map_build_and_upload_states,
+)
 from webapp.publisher.views import _handle_error, _handle_error_list
+from werkzeug.exceptions import Unauthorized
+
+
+BUILDS_PER_PAGE = 15
+launchpad = Launchpad(
+    username=os.getenv("LP_API_USERNAME"),
+    token=os.getenv("LP_API_TOKEN"),
+    signature=os.getenv("LP_API_TOKEN_SECRET"),
+)
+
+
+def get_builds(lp_snap, context, selection):
+    # Git repository without GitHub hostname
+    context["github_repository"] = lp_snap["git_repository_url"][19:]
+    bsi_url = flask.current_app.config["BSI_URL"]
+
+    builds = launchpad.get_collection_entries(
+        # Remove first part of the URL
+        lp_snap["builds_collection_link"][32:]
+    )
+
+    context["total_builds"] = len(builds)
+
+    builds = builds[selection]
+
+    context["snap_builds_enabled"] = bool(builds)
+
+    for build in builds:
+        link = build_link(bsi_url, lp_snap, build)
+        status = map_build_and_upload_states(
+            build["buildstate"], build["store_upload_status"]
+        )
+
+        context["snap_builds"].append(
+            {
+                "id": build["self_link"].split("/")[-1],
+                "arch_tag": build["arch_tag"],
+                "datebuilt": build["datebuilt"],
+                "duration": build["duration"],
+                "link": link,
+                "logs": build["build_log_url"],
+                "revision_id": build["revision_id"],
+                "status": status,
+                "title": build["title"],
+            }
+        )
+
+    return context
+
+
+@login_required
+def get_snap_builds(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    context = {
+        "snap_id": details["snap_id"],
+        "snap_name": details["snap_name"],
+        "snap_title": details["title"],
+        "snap_builds_enabled": False,
+        "snap_builds": [],
+        "total_builds": 0,
+    }
+
+    # Get built snap in launchpad with this store name
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+
+    if lp_snap:
+        # Git repository without GitHub hostname
+        context["github_repository"] = lp_snap["git_repository_url"][19:]
+        github_owner, github_repo = context["github_repository"].split("/")
+
+        context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
+            github_owner, github_repo
+        )
+
+        if not context["yaml_file_exists"]:
+            flask.flash(
+                "This repository doesn't contain a snapcraft.yaml", "negative"
+            )
+        context = get_builds(lp_snap, context, slice(0, BUILDS_PER_PAGE))
+    else:
+        try:
+            context["github_user"] = github.get_user()
+        except Unauthorized:
+            context["github_user"] = None
+
+        if context["github_user"]:
+            context["github_orgs"] = github.get_orgs()
+
+    return flask.render_template("publisher/builds.html", **context)
+
+
+def validate_repo(snap_name, gh_owner, gh_repo):
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    result = {"success": True}
+
+    # The ygithubaml is not present
+    if not github.get_snapcraft_yaml_location(gh_owner, gh_repo):
+        result["success"] = False
+        result["error"] = {
+            "type": "MISSING_YAML_FILE",
+            "message": (
+                "This repo needs a snapcraft.yaml file, so that Snapcraft can "
+                "make it buildable, installable and runnable."
+            ),
+        }
+    # The property name inside the yaml file doesn't match the snap
+    else:
+        gh_snap_name = github.get_snapcraft_yaml_name(gh_owner, gh_repo)
+
+        if gh_snap_name != snap_name:
+            result["success"] = False
+            result["error"] = {
+                "type": "SNAP_NAME_DOES_NOT_MATCH",
+                "message": (
+                    'Name mismatch: the snapcraft.yaml uses the snap name "'
+                    + gh_snap_name
+                    + '", but you\'ve registered the name "'
+                    + snap_name
+                    + '". Update your '
+                    "snapcraft.yaml to continue."
+                ),
+            }
+
+    return result
+
+
+@login_required
+def get_snap_builds_json(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    context = {"snap_builds_enabled": False, "snap_builds": []}
+
+    start = flask.request.args.get("start", 0, type=int)
+    size = flask.request.args.get("size", 15, type=int)
+    build_slice = slice(start, start + size)
+
+    # Get built snap in launchpad with this store name
+    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+
+    if lp_snap:
+        context = get_builds(lp_snap, context, build_slice)
+
+    return flask.jsonify(context)
 
 
 @login_required
@@ -19,19 +186,74 @@ def get_validate_repo(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
     owner, repo = flask.request.args.get("repo").split("/")
-    response = {"success": True}
 
-    # The yaml is not present
-    if not github.get_snapcraft_yaml_location(owner, repo):
-        response["success"] = False
-        response["error"] = "MISSING_YAML_FILE"
-    # The property name inside the yaml file doesn't match the snap
-    elif not github.check_snapcraft_yaml_name(
-        owner, repo, details["snap_name"]
-    ):
-        response["success"] = False
-        response["error"] = "SNAP_NAME_DOES_NOT_MATCH"
+    return flask.jsonify(validate_repo(details["snap_name"], owner, repo))
 
-    return flask.jsonify(response)
+
+@login_required
+def post_snap_builds(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
+
+    # Get built snap in launchpad with this store name
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    owner, repo = flask.request.form.get("github_repository").split("/")
+
+    if not github.check_permissions_over_repo(owner, repo):
+        flask.flash(
+            "Your GitHub account doens't have permissions in the repository",
+            "negative",
+        )
+        return flask.redirect(redirect_url)
+
+    repo_validation = validate_repo(snap_name, owner, repo)
+    if not repo_validation["success"]:
+        flask.flash(repo_validation["error"]["message"], "negative")
+        return flask.redirect(redirect_url)
+
+    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+    git_url = f"https://github.com/{owner}/{repo}"
+
+    if not lp_snap:
+        launchpad.new_snap(snap_name, git_url)
+
+        # We trigger a first build
+        launchpad.trigger_build(details["snap_name"])
+
+        flask.flash("The GitHub repository was linked correctly.", "positive")
+    elif lp_snap["git_repository_url"] != git_url:
+        # In the future, create a new record, delete the old one
+        raise AttributeError(
+            f"Snap {snap_name} already has a build repository associated"
+        )
+
+    return flask.redirect(redirect_url)
+
+
+@login_required
+def post_trigger_build(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    launchpad.trigger_build(details["snap_name"])
+
+    return flask.redirect(
+        flask.url_for(".get_snap_builds", snap_name=snap_name)
+    )
