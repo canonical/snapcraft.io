@@ -1475,13 +1475,41 @@ def post_snap_builds(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
+
     # Get built snap in launchpad with this store name
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    owner, repo = flask.request.form.get("github_repository").split("/")
+
+    if not github.check_permissions_over_repo(owner, repo):
+        flask.flash(
+            "Your GitHub account doens't have permissions in the repository",
+            "negative",
+        )
+        return flask.redirect(redirect_url)
+
+    if not github.get_snapcraft_yaml_location(owner, repo):
+        flask.flash(
+            "The selected repository doesn't have a snapcraft.yaml", "negative"
+        )
+        return flask.redirect(redirect_url)
+
+    if not github.check_snapcraft_yaml_name(owner, repo, snap_name):
+        flask.flash(
+            "The name defined in the snapcraft.yaml doesn't match this Snap",
+            "negative",
+        )
+        return flask.redirect(redirect_url)
+
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-    github_repo = flask.request.form.get("github_repository")
-    git_url = f"https://github.com/{github_repo}"
+    git_url = f"https://github.com/{owner}/{repo}"
 
     if not lp_snap:
         launchpad.new_snap(snap_name, git_url)
+
+        # We trigger a first build
+        launchpad.trigger_build(details["snap_name"])
+
         flask.flash("The GitHub repository was linked correctly.", "positive")
     elif lp_snap["git_repository_url"] != git_url:
         # In the future, create a new record, delete the old one
@@ -1489,9 +1517,7 @@ def post_snap_builds(snap_name):
             f"Snap {snap_name} already has a build repository associated"
         )
 
-    return flask.redirect(
-        flask.url_for(".get_snap_builds", snap_name=snap_name)
-    )
+    return flask.redirect(redirect_url)
 
 
 @publisher_snaps.route("/<snap_name>/builds/trigger-build", methods=["POST"])
