@@ -1,53 +1,48 @@
-import os
 from json import loads
 
-import flask
-import talisker.requests
 import bleach
+import flask
 import pycountry
-import webapp.helpers as helpers
-from webapp.markdown import parse_markdown_description
+import talisker.requests
 import webapp.api.dashboard as api
+import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiCircuitBreaker,
+    StoreApiError,
+    StoreApiTimeoutError,
+)
+from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
 from webapp import authentication
 from webapp.api import requests
 from webapp.api.exceptions import (
     AgreementNotSigned,
+    ApiCircuitBreaker,
     ApiError,
     ApiResponseError,
     ApiResponseErrorList,
     ApiTimeoutError,
-    ApiCircuitBreaker,
     MacaroonRefreshRequired,
     MissingUsername,
 )
-from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-    StoreApiTimeoutError,
-    StoreApiCircuitBreaker,
+from webapp.decorators import login_required
+from webapp.helpers import get_licenses
+from webapp.markdown import parse_markdown_description
+from webapp.publisher.snaps import logic, preview_data
+from webapp.publisher.snaps.build_views import (
+    get_snap_builds,
+    get_snap_builds_json,
+    get_validate_repo,
+    post_snap_builds,
+    post_trigger_build,
 )
-from webapp.api.github import GitHubAPI
-from webapp.api.launchpad import Launchpad
 from webapp.store.logic import (
-    get_categories,
     filter_screenshots,
+    get_categories,
     get_icon,
     get_videos,
 )
-from webapp.decorators import login_required
-from webapp.helpers import get_licenses
-from webapp.publisher.snaps import logic, preview_data
-from webapp.publisher.snaps.builds import (
-    build_link,
-    map_build_and_upload_states,
-)
-from werkzeug.exceptions import Unauthorized
-from webapp.publisher.snaps.build_views import get_validate_repo
-
-
-BUILDS_PER_PAGE = 15
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -57,11 +52,6 @@ publisher_snaps = flask.Blueprint(
 )
 
 store_api = SnapcraftStoreApi(talisker.requests.get_session(requests.Session))
-launchpad = Launchpad(
-    username=os.getenv("LP_API_USERNAME"),
-    token=os.getenv("LP_API_TOKEN"),
-    signature=os.getenv("LP_API_TOKEN_SECRET"),
-)
 
 
 def refresh_redirect(path):
@@ -107,7 +97,23 @@ def _handle_error_list(errors):
 
 
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/validate-repo", view_func=get_validate_repo
+    "/<snap_name>/builds", view_func=get_snap_builds, methods=["GET"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds.json", view_func=get_snap_builds_json, methods=["GET"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds", view_func=post_snap_builds, methods=["POST"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/validate-repo",
+    view_func=get_validate_repo,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/trigger-build",
+    view_func=post_trigger_build,
+    methods=["POST"],
 )
 
 
@@ -1341,200 +1347,3 @@ def post_preview(snap_name):
     context["normalized_os"] = preview_data.get_normalised_oses()
 
     return flask.render_template("store/snap-details.html", **context)
-
-
-def get_builds(lp_snap, context, selection):
-    # Git repository without GitHub hostname
-    context["github_repository"] = lp_snap["git_repository_url"][19:]
-    bsi_url = flask.current_app.config["BSI_URL"]
-
-    builds = launchpad.get_collection_entries(
-        # Remove first part of the URL
-        lp_snap["builds_collection_link"][32:]
-    )
-
-    context["total_builds"] = len(builds)
-
-    builds = builds[selection]
-
-    context["snap_builds_enabled"] = bool(builds)
-
-    for build in builds:
-        link = build_link(bsi_url, lp_snap, build)
-        status = map_build_and_upload_states(
-            build["buildstate"], build["store_upload_status"]
-        )
-
-        context["snap_builds"].append(
-            {
-                "id": build["self_link"].split("/")[-1],
-                "arch_tag": build["arch_tag"],
-                "datebuilt": build["datebuilt"],
-                "duration": build["duration"],
-                "link": link,
-                "logs": build["build_log_url"],
-                "revision_id": build["revision_id"],
-                "status": status,
-                "title": build["title"],
-            }
-        )
-
-    return context
-
-
-@publisher_snaps.route("/<snap_name>/builds", methods=["GET"])
-@login_required
-def get_snap_builds(snap_name):
-    try:
-        details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_error(api_error)
-
-    context = {
-        "snap_id": details["snap_id"],
-        "snap_name": details["snap_name"],
-        "snap_title": details["title"],
-        "snap_builds_enabled": False,
-        "snap_builds": [],
-        "total_builds": 0,
-    }
-
-    # Get built snap in launchpad with this store name
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
-    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-
-    if lp_snap:
-        # Git repository without GitHub hostname
-        context["github_repository"] = lp_snap["git_repository_url"][19:]
-        github_owner, github_repo = context["github_repository"].split("/")
-
-        context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
-            github_owner, github_repo
-        )
-
-        if not context["yaml_file_exists"]:
-            flask.flash(
-                "This repository doesn't contain a snapcraft.yaml", "negative"
-            )
-        context = get_builds(lp_snap, context, slice(0, BUILDS_PER_PAGE))
-    else:
-        try:
-            context["github_user"] = github.get_user()
-        except Unauthorized:
-            context["github_user"] = None
-
-        if context["github_user"]:
-            context["github_orgs"] = github.get_orgs()
-
-    return flask.render_template("publisher/builds.html", **context)
-
-
-@publisher_snaps.route("/<snap_name>/builds.json", methods=["GET"])
-@login_required
-def get_snap_builds_json(snap_name):
-    try:
-        details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_error(api_error)
-
-    context = {"snap_builds_enabled": False, "snap_builds": []}
-
-    start = flask.request.args.get("start", 0, type=int)
-    size = flask.request.args.get("size", 15, type=int)
-    build_slice = slice(start, start + size)
-
-    # Get built snap in launchpad with this store name
-    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-
-    if lp_snap:
-        context = get_builds(lp_snap, context, build_slice)
-
-    return flask.jsonify(context)
-
-
-@publisher_snaps.route("/<snap_name>/builds", methods=["POST"])
-@login_required
-def post_snap_builds(snap_name):
-    try:
-        details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_error(api_error)
-
-    redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
-
-    # Get built snap in launchpad with this store name
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
-    owner, repo = flask.request.form.get("github_repository").split("/")
-
-    if not github.check_permissions_over_repo(owner, repo):
-        flask.flash(
-            "Your GitHub account doens't have permissions in the repository",
-            "negative",
-        )
-        return flask.redirect(redirect_url)
-
-    if not github.get_snapcraft_yaml_location(owner, repo):
-        flask.flash(
-            "The selected repository doesn't have a snapcraft.yaml", "negative"
-        )
-        return flask.redirect(redirect_url)
-
-    if not github.check_snapcraft_yaml_name(owner, repo, snap_name):
-        flask.flash(
-            "The name defined in the snapcraft.yaml doesn't match this Snap",
-            "negative",
-        )
-        return flask.redirect(redirect_url)
-
-    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-    git_url = f"https://github.com/{owner}/{repo}"
-
-    if not lp_snap:
-        launchpad.new_snap(snap_name, git_url)
-
-        # We trigger a first build
-        launchpad.trigger_build(details["snap_name"])
-
-        flask.flash("The GitHub repository was linked correctly.", "positive")
-    elif lp_snap["git_repository_url"] != git_url:
-        # In the future, create a new record, delete the old one
-        raise AttributeError(
-            f"Snap {snap_name} already has a build repository associated"
-        )
-
-    return flask.redirect(redirect_url)
-
-
-@publisher_snaps.route("/<snap_name>/builds/trigger-build", methods=["POST"])
-@login_required
-def post_trigger_build(snap_name):
-    try:
-        details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_error(api_error)
-
-    launchpad.trigger_build(details["snap_name"])
-
-    return flask.redirect(
-        flask.url_for(".get_snap_builds", snap_name=snap_name)
-    )
