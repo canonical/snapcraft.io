@@ -63,7 +63,7 @@ export function initListingTour({ snapName, container, steps, formFields }) {
 
   const isFormCompleted = isCompleted(completedFields);
   const isTourFinished = !!(
-    window.localStorage && window.localStorage.getItem(storageKey)
+    window.localStorage && window.localStorage.getItem(storageKey) === "true"
   );
 
   // start the tour automatically if form is not completed
