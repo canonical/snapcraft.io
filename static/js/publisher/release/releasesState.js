@@ -116,27 +116,7 @@ function getUnassignedRevisions(revisionsMap, arch) {
   return filteredRevisions;
 }
 
-function getPendingRelease(pendingReleases, arch, channel) {
-  let pendingRelease = null;
-  // for each release
-  Object.keys(pendingReleases).forEach(releasedRevision => {
-    const isSameChannel = pendingReleases[releasedRevision].channels.includes(
-      channel
-    );
-    const isSameArch = pendingReleases[
-      releasedRevision
-    ].revision.architectures.includes(arch);
-
-    if (isSameArch && isSameChannel) {
-      pendingRelease = releasedRevision;
-    }
-  });
-
-  return pendingRelease;
-}
-
 export {
-  getPendingRelease,
   getUnassignedRevisions,
   getTrackingChannel,
   getRevisionsMap,

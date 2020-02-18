@@ -1,0 +1,62 @@
+@mixin snapcraft-p-release-details-row {
+  .p-release-details-row {
+    align-items: center;
+    display: grid;
+    font-size: .875rem;
+    grid-column-gap: 1rem;
+    grid-template-columns: 4rem 15rem 2rem auto 16rem;
+    padding: .25rem;
+
+    @media screen and (max-width: $breakpoint-large) {
+      grid-column-gap: .5rem;
+      grid-template-columns: 3rem 11rem 2rem auto 16rem;
+    }
+
+    // Same as the global nav breakpoint
+    @media screen and (max-width: 875px) {
+      grid-template-columns: 3rem 11rem 2rem auto 0;
+
+      &__notes {
+        display: none;
+      }
+    }
+
+    &.is-closing {
+      grid-template-columns: 4rem auto;
+
+      @media screen and (max-width: $breakpoint-large) {
+        grid-template-columns: 3rem auto;
+      }
+    }
+
+    &.is-global {
+      padding: .25rem;
+
+      .p-release-details-row__global-check {
+        grid-column-start: 4;
+      }
+    }
+
+    &__join {
+      text-align: center;
+    }
+
+    &__progress {
+      display: grid;
+      font-weight: 400;
+      grid-column-gap: .5rem;
+      grid-template-columns: auto 8rem;
+    }
+
+    &__notes {
+      color: $color-dark;
+    }
+  }
+
+  .p-release-details-group +
+  .p-release-details-row {
+    border-top: 1px dashed $color-mid-light;
+    margin-top: .5rem;
+    padding-top: .5rem;
+  }
+}

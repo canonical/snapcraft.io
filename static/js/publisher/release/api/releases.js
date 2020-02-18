@@ -12,7 +12,8 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
         csrfToken,
         snapName,
         release.id,
-        release.channels
+        release.channels,
+        release.progressive
       ).then(json => onComplete(json, release));
     }));
   });
@@ -39,7 +40,23 @@ export function fetchReleasesHistory(csrfToken, snapName) {
     });
 }
 
-export function fetchRelease(csrfToken, snapName, revision, channels) {
+export function fetchRelease(
+  csrfToken,
+  snapName,
+  revision,
+  channels,
+  progressive
+) {
+  const body = {
+    name: snapName,
+    revision,
+    channels
+  };
+
+  if (progressive) {
+    body.progressive = progressive;
+  }
+
   return fetch(`/${snapName}/releases`, {
     method: "POST",
     mode: "cors",
@@ -51,7 +68,7 @@ export function fetchRelease(csrfToken, snapName, revision, channels) {
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ revision, channels, name: snapName })
+    body: JSON.stringify(body)
   })
     .then(response => response.json())
     .catch(() => {
@@ -60,7 +77,7 @@ export function fetchRelease(csrfToken, snapName, revision, channels) {
 }
 
 export function fetchCloses(onComplete, csrfToken, snapName, channels) {
-  if (channels.length) {
+  if (channels && channels.length) {
     return fetchClose(csrfToken, snapName, channels).then(json => {
       onComplete(json, channels);
     });

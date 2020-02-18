@@ -6,16 +6,46 @@
   // RELEASES CONFIRM
 
   .p-releases-confirm {
-    background: $color-light;
-    margin-bottom: 1em;
-    padding: 1em;
+    border-bottom: 1px solid $color-mid-light;
+    margin-bottom: 1rem;
+    padding: .5em 0;
     position: relative;
   }
 
   .p-releases-confirm__buttons {
-    position: absolute;
-    right: 1em;
-    top: .625rem;
+    justify-self: end;
+    margin-left: auto;
+  }
+
+  .p-releases-confirm__details-toggle {
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    margin-right: 1rem;
+
+    .p-icon--contextual-menu {
+      transform: rotate(0deg);
+    }
+
+    &.is-open {
+      .p-icon--contextual-menu {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .p-releases-confirm__actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .p-releases-confirm__details {
+    border-bottom: 1px solid $color-mid-light;
+    margin: .5rem 0 1rem;
+    padding-bottom: .5rem;
+    position: relative;
+    top: -1rem;
   }
 
   // RELEASES TABLE
@@ -312,6 +342,45 @@
     font-size: .8rem;
   }
 
+  .p-release__progressive-percentage,
+  .p-release__progressive-pending-percentage {
+    @include vf-animation (#{transform}, fast, in);
+    border-radius: 0 4px 4px 0;
+    bottom: 0;
+    height: 3px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .is-highlighted {
+    .p-release__progressive-percentage,
+    .p-release__progressive-pending-percentage {
+      height: 5px;
+    }
+  }
+
+  .p-release__progressive-percentage {
+    background: $color-link;
+  }
+
+  .p-release__progressive-pending-percentage {
+    background: scale-color($color-link, $lightness: -20%);
+  }
+
+  .p-release__progressive-pending-percentage + .p-release__progressive-percentage {
+    border-radius: 0;
+    border-right: 1px solid $color-x-light;
+  }
+
+  .p-releases-table__cell.is-active {
+    .p-release__progressive-percentage,
+    .p-release__progressive-pending-percentage {
+      transform: scaleX(0);
+    }
+  }
+
   // REVISIONS LIST
 
   .p-revisions-list {
@@ -346,6 +415,22 @@
 
         &:hover {
           background-color: $color-x-light;
+        }
+      }
+
+      .p-revisions-list__revision-progressive {
+        cursor: default;
+        display: flex;
+        flex-direction: row;
+
+        .p-progressive__pause,
+        .p-progressive__cancel {
+          cursor: pointer;
+        }
+
+        .progressive-bar__interactive-wrapper {
+          flex-grow: 1;
+          margin: 0 1rem;
         }
       }
     }
@@ -520,5 +605,15 @@
     @extend %icon;
     @include snapcraft-icon-branch($color-dark, "8px", "11px");
     top: 2px;
+  }
+
+  .p-icon--pause {
+    @extend %icon;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Crect width='4' height='16' fill='%23666'/%3E %3Crect x='8' width='4' height='16' fill='%23666'/%3E %3C/svg%3E ");
+  }
+
+  .p-icon--resume {
+    @extend %icon;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg%3E %3Cpath d='M14 8L2 14.9282L2 1.0718L14 8Z' fill='%23666'/%3E %3C/g%3E%3C/svg%3E");
   }
 }

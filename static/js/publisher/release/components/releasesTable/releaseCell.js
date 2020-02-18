@@ -10,13 +10,14 @@ import { getChannelName } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
-import { promoteRevision, undoRelease } from "../../actions/pendingReleases";
+import { undoRelease } from "../../actions/pendingReleases";
 
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
-  hasPendingRelease,
-  getRevisionsFromBuild
+  getRevisionsFromBuild,
+  getProgressiveState,
+  hasPendingRelease
 } from "../../selectors";
 
 import {
@@ -43,7 +44,8 @@ const ReleasesTableReleaseCell = props => {
     getAvailableCount,
     hasPendingRelease,
     undoRelease,
-    toggleHistoryPanel
+    toggleHistoryPanel,
+    getProgressiveState
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -55,10 +57,23 @@ const ReleasesTableReleaseCell = props => {
     pendingChannelMap[channel] && pendingChannelMap[channel][arch];
 
   // check if there is a pending release in this cell
-  const isPendingRelease = hasPendingRelease(channel, arch);
+  const pendingRelease = hasPendingRelease(channel, arch);
+
+  let progressiveState;
+  let previousRevision;
+  let pendingProgressiveState;
+
+  if (currentRevision) {
+    [
+      progressiveState,
+      previousRevision,
+      pendingProgressiveState
+    ] = getProgressiveState(channel, arch, pendingRelease);
+  }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
-  const isPending = isPendingRelease || isChannelPendingClose;
+  const isPending =
+    pendingRelease || isChannelPendingClose || pendingProgressiveState;
   const isUnassigned = risk === AVAILABLE;
   const isActive =
     filters &&
@@ -94,7 +109,7 @@ const ReleasesTableReleaseCell = props => {
     isOverParent ? "is-over" : ""
   ].join(" ");
 
-  const actionsNode = isPendingRelease ? (
+  const actionsNode = pendingRelease ? (
     <div className="p-release-buttons">
       <button
         className="p-action-button p-tooltip p-tooltip--btm-center"
@@ -116,8 +131,11 @@ const ReleasesTableReleaseCell = props => {
     cellInfoNode = (
       <RevisionInfo
         revision={currentRevision}
-        isPending={isPendingRelease}
+        isPending={pendingRelease ? true : false}
         showVersion={showVersion}
+        progressiveState={progressiveState}
+        previousRevision={previousRevision ? previousRevision.revision : null}
+        pendingProgressiveState={pendingProgressiveState}
       />
     );
   } else if (isUnassigned) {
@@ -147,6 +165,24 @@ const ReleasesTableReleaseCell = props => {
           branchName
         )}
       />
+      {!isChannelPendingClose &&
+        pendingProgressiveState &&
+        pendingProgressiveState.percentage && (
+          <span
+            className="p-release__progressive-pending-percentage"
+            style={{
+              width: `${pendingProgressiveState.percentage}%`
+            }}
+          />
+        )}
+      {!isChannelPendingClose &&
+        progressiveState &&
+        progressiveState.percentage && (
+          <span
+            className="p-release__progressive-percentage"
+            style={{ width: `${progressiveState.percentage}%` }}
+          />
+        )}
     </ReleasesTableCellView>
   );
 };
@@ -161,10 +197,10 @@ ReleasesTableReleaseCell.propTypes = {
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
   getRevisionsFromBuild: PropTypes.func,
+  getProgressiveState: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
   undoRelease: PropTypes.func.isRequired,
-  promoteRevision: PropTypes.func.isRequired,
   // props
   track: PropTypes.string,
   risk: PropTypes.string,
@@ -184,19 +220,18 @@ const mapStateToProps = state => {
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: arch =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
+    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId),
+    getProgressiveState: (channel, arch, isPending) =>
+      getProgressiveState(state, channel, arch, isPending),
     hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch),
-    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId)
+      hasPendingRelease(state, channel, arch)
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) =>
-      dispatch(undoRelease(revision, channel)),
-    promoteRevision: (revision, channel) =>
-      dispatch(promoteRevision(revision, channel))
+    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
   };
 };
 

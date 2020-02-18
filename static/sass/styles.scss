@@ -238,6 +238,11 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_p-table-mobile-card';
 @include snapcraft-p-table-mobile-card;
 
+@import 'snapcraft_p-progressive-bar';
+@include snapcraft-p-progressive-bar;
+
+@import 'snapcraft_p-release-details-row';
+@include snapcraft-p-release-details-row;
 
 // **** Vanilla overrides & temporary bug fixes ****
 

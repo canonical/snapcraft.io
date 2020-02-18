@@ -9,7 +9,7 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
   {% set selected_tab='release' %}
   {% include "publisher/_header.html" %}
 
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-shallow u-no-padding--top">
     <div id="release-history">
       {% if release_history["error-list"] %}
         <div class="row">
@@ -43,7 +43,10 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
             {{ channel_maps_list|tojson }},
             {
               defaultTrack: {% if default_track %}{{ default_track|tojson }}{% else %}"latest"{% endif %},
-              csrfToken: {{ csrf_token()|tojson }}
+              csrfToken: {{ csrf_token()|tojson }},
+              flags: {
+                isProgressiveReleaseEnabled: {{ user_is_canonical|tojson }}
+              }
             }
           );
         });

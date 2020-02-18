@@ -1,12 +1,14 @@
 import {
   RISKS_WITH_AVAILABLE as RISKS,
-  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE
+  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE,
+  TEMP_KEY
 } from "../constants";
 
 import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
 import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
 import { updateRevisions } from "./revisions";
+import { closeHistory } from "./history";
 
 import {
   fetchReleasesHistory,
@@ -117,16 +119,58 @@ export function handleReleaseResponse(
 }
 
 export function releaseRevisions() {
+  const progressiveKey = `ui-progressive-release-${new Date().getTime()}`;
+  const mapToRelease = pendingRelease => {
+    let progressive = null;
+
+    if (
+      pendingRelease.progressive &&
+      pendingRelease.progressive.percentage < 100
+    ) {
+      progressive = pendingRelease.progressive;
+
+      if (progressive.key === null || progressive.key.indexOf(TEMP_KEY) === 0) {
+        progressive.key = progressiveKey;
+      }
+    }
+
+    return {
+      id: pendingRelease.revision.revision,
+      revision: pendingRelease.revision,
+      channels: [pendingRelease.channel],
+      progressive: progressive
+    };
+  };
+
   return (dispatch, getState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName, defaultTrack } = options;
-    const releases = Object.keys(pendingReleases).map(id => {
-      return {
-        id,
-        revision: pendingReleases[id].revision,
-        channels: pendingReleases[id].channels
-      };
+
+    // To dedupe releases
+    const progressiveReleases = [];
+    const regularReleases = [];
+    Object.keys(pendingReleases).forEach(revId => {
+      Object.keys(pendingReleases[revId]).forEach(channel => {
+        const pendingRelease = pendingReleases[revId][channel];
+
+        if (pendingRelease.progressive) {
+          // first move progressive releases out
+
+          progressiveReleases.push(mapToRelease(pendingRelease));
+        } else {
+          const releaseIndex = regularReleases.findIndex(
+            release => release.revision.revision === parseInt(revId)
+          );
+          if (releaseIndex === -1) {
+            regularReleases.push(mapToRelease(pendingRelease));
+          } else {
+            regularReleases[releaseIndex].channels.push(pendingRelease.channel);
+          }
+        }
+      });
     });
+
+    const releases = progressiveReleases.concat(regularReleases);
 
     const _handleReleaseResponse = (json, release) => {
       return handleReleaseResponse(
@@ -158,7 +202,8 @@ export function releaseRevisions() {
           })
         )
       )
-      .then(() => dispatch(cancelPendingReleases()));
+      .then(() => dispatch(cancelPendingReleases()))
+      .then(() => dispatch(closeHistory()));
   };
 }
 

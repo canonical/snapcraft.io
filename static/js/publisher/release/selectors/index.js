@@ -5,8 +5,18 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
 } from "../constants";
-import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
-import { sortAlphaNum } from "../../../libs/channels";
+import {
+  isInDevmode,
+  getBuildId,
+  isRevisionBuiltOnLauchpad,
+  jsonClone
+} from "../helpers";
+import { sortAlphaNum, getChannelString } from "../../../libs/channels";
+
+// returns true if isProgressiveReleaseEnabled feature flag is enabled
+export function isProgressiveReleaseEnabled(state) {
+  return !!state.options.flags.isProgressiveReleaseEnabled;
+}
 
 // returns release history filtered by history filters
 export function getFilteredReleaseHistory(state) {
@@ -91,12 +101,12 @@ export function hasDevmodeRevisions(state) {
 // get channel map data updated with any pending releases
 export function getPendingChannelMap(state) {
   const { channelMap, pendingReleases } = state;
-  const pendingChannelMap = JSON.parse(JSON.stringify(channelMap));
+  const pendingChannelMap = jsonClone(channelMap);
 
   // for each release
   Object.keys(pendingReleases).forEach(releasedRevision => {
-    pendingReleases[releasedRevision].channels.forEach(channel => {
-      const revision = pendingReleases[releasedRevision].revision;
+    Object.keys(pendingReleases[releasedRevision]).forEach(channel => {
+      const revision = pendingReleases[releasedRevision][channel].revision;
 
       if (!pendingChannelMap[channel]) {
         pendingChannelMap[channel] = {};
@@ -259,5 +269,182 @@ export function getLaunchpadRevisions(state) {
 export function getRevisionsFromBuild(state, buildId) {
   return getAllRevisions(state).filter(
     revision => getBuildId(revision) === buildId
+  );
+}
+
+// return an array of 3 items:
+// [
+//    current progressive release status,
+//    the previous revision number,
+//    the progressive release status of a pending release of the same release
+// ]
+export function getProgressiveState(state, channel, arch, isPending) {
+  if (!isProgressiveReleaseEnabled(state)) {
+    return [null, null, null];
+  }
+
+  const { releases, pendingReleases, revisions } = state;
+
+  let progressiveStatus = null;
+  let previousRevision = null;
+  let pendingProgressiveStatus = null;
+
+  const allReleases = releases.filter(
+    item => channel === getChannelString(item) && arch === item.architecture
+  );
+
+  const release = allReleases[0];
+
+  if (release && release.revision) {
+    // If the release is pending we don't want to look up the previous state, as it will be
+    // for an outdated release
+    if (
+      !isPending &&
+      release &&
+      release.progressive &&
+      release.progressive.key
+    ) {
+      progressiveStatus = jsonClone(release.progressive);
+
+      previousRevision = allReleases[1];
+
+      if (previousRevision && previousRevision.revision) {
+        previousRevision = revisions[previousRevision.revision];
+      }
+    }
+
+    let pendingMatch;
+
+    Object.keys(pendingReleases).forEach(revId => {
+      if (
+        pendingReleases[revId][channel] &&
+        pendingReleases[revId][channel].revision &&
+        pendingReleases[revId][channel].revision.architectures.includes(arch)
+      ) {
+        pendingMatch = pendingReleases[revId][channel];
+      }
+    });
+
+    if (pendingMatch) {
+      if (
+        channel === pendingMatch.channel &&
+        pendingMatch.revision.architectures.includes(arch)
+      ) {
+        pendingProgressiveStatus = Object.assign({}, pendingMatch.progressive);
+      }
+    }
+  }
+
+  return [progressiveStatus, previousRevision, pendingProgressiveStatus];
+}
+
+// Is the latest release for a channel & architecture a valid revision?
+export function hasRelease(state, channel, architecture) {
+  const { releases } = state;
+  const filteredReleases = releases.filter(
+    release =>
+      release.architecture === architecture &&
+      getChannelString(release) === channel
+  );
+
+  return filteredReleases &&
+    filteredReleases[0] &&
+    filteredReleases[0].revision !== null
+    ? true
+    : false;
+}
+
+// Separate pendingRelease actions
+export function getSeparatePendingReleases(state) {
+  const { pendingReleases } = state;
+  const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
+
+  const progressiveUpdates = {};
+  const newReleases = {};
+  const newReleasesToProgress = {};
+  const cancelProgressive = {};
+
+  Object.keys(pendingReleases).forEach(revId => {
+    Object.keys(pendingReleases[revId]).forEach(channel => {
+      const pendingRelease = pendingReleases[revId][channel];
+      const releaseCopy = jsonClone(pendingRelease);
+
+      if (isProgressiveEnabled && pendingRelease.replaces) {
+        const oldRelease = pendingRelease.replaces;
+        cancelProgressive[
+          `${oldRelease.revision.revision}-${channel}`
+        ] = oldRelease;
+      } else if (
+        isProgressiveEnabled &&
+        pendingRelease.progressive &&
+        pendingRelease.previousRevisions &&
+        pendingRelease.previousRevisions.length > 0 &&
+        pendingRelease.previousRevisions[0]
+      ) {
+        // What are the differences between the previous progressive state
+        // and the new state.
+        const previousState = releaseCopy.revision.release
+          ? releaseCopy.revision.release.progressive
+          : {};
+        const newState = releaseCopy.progressive;
+
+        const changes = [];
+        if (newState.paused !== previousState.paused) {
+          changes.push({
+            key: "paused",
+            value: newState.paused
+          });
+        }
+
+        if (newState.percentage !== previousState.percentage) {
+          changes.push({
+            key: "percentage",
+            value: newState.percentage
+          });
+        }
+
+        if (previousState.key) {
+          // Add this to the copy of the pendingRelease state
+          releaseCopy.progressive.changes = changes;
+          progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
+        } else {
+          newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
+        }
+      } else {
+        newReleases[`${revId}-${channel}`] = releaseCopy;
+      }
+    });
+  });
+
+  return {
+    progressiveUpdates,
+    newReleases,
+    newReleasesToProgress,
+    cancelProgressive
+  };
+}
+
+// Get pending release for architecture
+export function getPendingRelease({ pendingReleases }, channel, arch) {
+  // for each release
+  return Object.keys(pendingReleases).map(releasedRevision => {
+    if (
+      pendingReleases[releasedRevision][channel] &&
+      pendingReleases[releasedRevision][
+        channel
+      ].revision.architectures.includes(arch)
+    ) {
+      return pendingReleases[releasedRevision][channel];
+    }
+
+    return null;
+  })[0];
+}
+
+// Get releases
+export function getReleases({ releases }, archs, channel) {
+  return releases.filter(
+    release =>
+      archs.includes(release.architecture) && release.channel === channel
   );
 }

@@ -32,6 +32,18 @@ function triggerEvent(category, from, to, label) {
   }
 }
 
+function triggerEventReleaseUI(action, label) {
+  if (dataLayer) {
+    dataLayer.push({
+      event: "GAEvent",
+      eventCategory: `Release UI`,
+      eventAction: action,
+      eventLabel: label,
+      eventValue: undefined
+    });
+  }
+}
+
 function triggerCopyEvent(category, clipboardTarget) {
   const clipboardTargetEl = document.querySelector(clipboardTarget);
 
@@ -116,4 +128,4 @@ if (typeof dataLayer !== "undefined") {
   });
 }
 
-export { triggerEvent };
+export { triggerEvent, triggerEventReleaseUI };

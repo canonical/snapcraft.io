@@ -21,7 +21,13 @@ import {
   getBranches,
   hasBuildRequestId,
   getLaunchpadRevisions,
-  getRevisionsFromBuild
+  getRevisionsFromBuild,
+  getProgressiveState,
+  isProgressiveReleaseEnabled,
+  hasRelease,
+  getSeparatePendingReleases,
+  getPendingRelease,
+  getReleases
 } from "./index";
 
 import reducers from "../reducers";
@@ -318,8 +324,10 @@ describe("getPendingChannelMap", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["latest/stable"]
+          "latest/stable": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "latest/stable"
+          }
         }
       }
     };
@@ -329,7 +337,8 @@ describe("getPendingChannelMap", () => {
         ...stateWithPendingReleases.channelMap,
         "latest/stable": {
           test64: {
-            ...stateWithPendingReleases.pendingReleases[2].revision
+            ...stateWithPendingReleases.pendingReleases["2"]["latest/stable"]
+              .revision
           }
         }
       });
@@ -345,8 +354,10 @@ describe("getPendingChannelMap", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["test/edge"]
+          "test/edge": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "test/edge"
+          }
         }
       }
     };
@@ -356,7 +367,8 @@ describe("getPendingChannelMap", () => {
         ...stateWithPendingReleases.channelMap,
         "test/edge": {
           test64: {
-            ...stateWithPendingReleases.pendingReleases[2].revision
+            ...stateWithPendingReleases.pendingReleases["2"]["test/edge"]
+              .revision
           }
         }
       });
@@ -572,8 +584,10 @@ describe("hasPendingRelease", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["latest/stable"]
+          "latest/stable": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "latest/stable"
+          }
         }
       }
     };
@@ -600,8 +614,10 @@ describe("hasPendingRelease", () => {
       },
       pendingReleases: {
         2: {
-          revision: { revision: 2, architectures: ["test64"] },
-          channels: ["test/edge"]
+          "test/edge": {
+            revision: { revision: 2, architectures: ["test64"] },
+            channel: "test/edge"
+          }
         }
       }
     };
@@ -803,5 +819,507 @@ describe("getRevisionsFromBuild", () => {
       stateWithLauchpadBuilds.revisions[3],
       stateWithLauchpadBuilds.revisions[4]
     );
+  });
+});
+
+describe("getProgressiveState", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithProgressiveEnabled = {
+    ...initialState,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: true
+      }
+    },
+    releases: [
+      {
+        architecture: "arch1",
+        branch: null,
+        track: "latest",
+        risk: "stable",
+        revision: "1",
+        progressive: null
+      },
+      {
+        architecture: "arch2",
+        branch: null,
+        track: "latest",
+        risk: "stable",
+        revision: "3",
+        progressive: {
+          key: "test",
+          percentage: 60,
+          paused: false
+        }
+      },
+      {
+        architecture: "arch2",
+        branch: null,
+        track: "latest",
+        risk: "stable",
+        revision: "2",
+        progressive: {
+          key: "test",
+          percentage: 50,
+          paused: false
+        }
+      }
+    ],
+    revisions: {
+      "3": "revision3",
+      "2": "revision2"
+    }
+  };
+
+  const stateWithProgressiveDisabled = {
+    ...stateWithProgressiveEnabled,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: false
+      }
+    }
+  };
+
+  const stateWithProgressiveEnabledAndPendingRelease = {
+    ...stateWithProgressiveEnabled,
+    pendingReleases: {
+      "3": {
+        "latest/stable": {
+          revision: { revision: "3", architectures: ["arch2"] },
+          channel: "latest/stable",
+          progressive: {
+            key: "progressive-test",
+            percentage: 40,
+            paused: false
+          }
+        }
+      }
+    }
+  };
+
+  it("should return the progressive release state of a channel and arch", () => {
+    expect(
+      getProgressiveState(stateWithProgressiveEnabled, "latest/stable", "arch2")
+    ).toEqual([
+      {
+        key: "test",
+        paused: false,
+        percentage: 60
+      },
+      "revision2",
+      null
+    ]);
+  });
+
+  it("should return the progressiveState and pendingProgressiveStatus", () => {
+    expect(
+      getProgressiveState(
+        stateWithProgressiveEnabledAndPendingRelease,
+        "latest/stable",
+        "arch2"
+      )
+    ).toEqual([
+      { key: "test", paused: false, percentage: 60 },
+      "revision2",
+      { key: "progressive-test", paused: false, percentage: 40 }
+    ]);
+  });
+
+  it("should return array of nulls if progressive release flag is disabled", () => {
+    expect(
+      getProgressiveState(
+        stateWithProgressiveDisabled,
+        "latest/stable",
+        "arch2"
+      )
+    ).toEqual([null, null, null]);
+  });
+});
+
+describe("isProgressiveReleaseEnabled", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithProgressiveEnabled = {
+    ...initialState,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: true
+      }
+    }
+  };
+
+  const stateWithProgressiveDisabled = {
+    ...initialState,
+    options: {
+      ...initialState.options,
+      flags: {
+        isProgressiveReleaseEnabled: false
+      }
+    }
+  };
+
+  it("should be true with isProgressiveReleaseEnabled flag turned on", () => {
+    expect(isProgressiveReleaseEnabled(stateWithProgressiveEnabled)).toBe(true);
+  });
+
+  it("should be false with isProgressiveReleaseEnabled flag turned off", () => {
+    expect(isProgressiveReleaseEnabled(stateWithProgressiveDisabled)).toBe(
+      false
+    );
+  });
+});
+
+describe("hasRelease", () => {
+  const initialState = reducers(undefined, {});
+  const stateWithARelease = {
+    ...initialState,
+    releases: [
+      { architecture: "arm64", risk: "beta", track: "latest", revision: 1 }
+    ]
+  };
+  const stateWithAClose = {
+    ...initialState,
+    releases: [
+      { architecture: "arm64", risk: "beta", track: "latest", revision: null }
+    ]
+  };
+  const stateWithMultipleArchAndChannels = {
+    ...initialState,
+    releases: [
+      { architecture: "amd64", risk: "stable", track: "latest", revision: 1 },
+      {
+        architecture: "arm64",
+        risk: "candidate",
+        track: "latest",
+        revision: 2
+      },
+      {
+        architecture: "arm64",
+        risk: "stable",
+        track: "latest",
+        revision: null
+      },
+      { architecture: "arm64", risk: "beta", track: "latest", revision: 3 }
+    ]
+  };
+
+  it("should return false if there are no releases", () => {
+    expect(hasRelease(initialState, "latest/beta", "arm64")).toBe(false);
+  });
+
+  it("should return false if the previous release was a close", () => {
+    expect(hasRelease(stateWithAClose, "latest/beta", "arm64")).toBe(false);
+    expect(
+      hasRelease(stateWithMultipleArchAndChannels, "latest/stable", "arm64")
+    ).toBe(false);
+  });
+
+  it("should return true if there is a previous release", () => {
+    expect(hasRelease(stateWithARelease, "latest/beta", "arm64")).toBe(true);
+    expect(
+      hasRelease(stateWithMultipleArchAndChannels, "latest/beta", "arm64")
+    ).toBe(true);
+  });
+
+  describe("getSeparatePendingReleases", () => {
+    const initialState = reducers(undefined, {});
+
+    describe("with progressive releases disabled", () => {
+      const stateWithPendingReleaseToProgress = {
+        ...initialState,
+        pendingReleases: {
+          "1": {
+            "latest/stable": {
+              revision: { revision: 1, architectures: ["amd64"] },
+              channel: "latest/stable"
+            }
+          }
+        },
+        releases: [
+          {
+            architecture: "amd64",
+            track: "latest",
+            risk: "stable",
+            revision: { revision: 2, architectures: ["amd64"] }
+          }
+        ]
+      };
+
+      it("should return new releases and ignore releases to progress", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToProgress)
+        ).toEqual({
+          newReleases: {
+            "1-latest/stable":
+              stateWithPendingReleaseToProgress.pendingReleases["1"][
+                "latest/stable"
+              ]
+          },
+          newReleasesToProgress: {},
+          progressiveUpdates: {},
+          cancelProgressive: {}
+        });
+      });
+    });
+
+    describe("with progressive releases enabled", () => {
+      const stateWithFlagEnabled = {
+        ...initialState,
+        options: {
+          ...initialState.options,
+          flags: {
+            isProgressiveReleaseEnabled: true
+          }
+        }
+      };
+
+      const stateWithPendingRelease = {
+        ...stateWithFlagEnabled,
+        pendingReleases: {
+          "1": {
+            "latest/stable": {
+              revision: { revision: 1, architectures: ["amd64"] },
+              channel: "latest/stable"
+            }
+          }
+        }
+      };
+
+      const stateWithPendingReleaseToProgress = {
+        ...stateWithFlagEnabled,
+        pendingReleases: {
+          "1": {
+            "latest/stable": {
+              revision: { revision: 1, architectures: ["amd64"] },
+              channel: "latest/stable",
+              progressive: {
+                key: "progressive-test",
+                percentage: 100,
+                paused: false
+              },
+              previousRevisions: [{ revision: 2 }]
+            }
+          }
+        },
+        releases: [
+          {
+            architecture: "amd64",
+            track: "latest",
+            risk: "stable",
+            revision: { revision: 2, architectures: ["amd64"] }
+          }
+        ]
+      };
+
+      const stateWithPendingReleaseToUpdate = {
+        ...stateWithFlagEnabled,
+        pendingReleases: {
+          "1": {
+            "latest/stable": {
+              revision: {
+                revision: 1,
+                architectures: ["amd64"],
+                release: {
+                  progressive: {
+                    key: "progressive-test",
+                    percentage: 20,
+                    paused: false
+                  }
+                }
+              },
+              channel: "latest/stable",
+              progressive: {
+                key: "progressive-test",
+                percentage: 40,
+                paused: false
+              },
+              previousRevisions: [
+                {
+                  revision: 2
+                }
+              ]
+            }
+          }
+        }
+      };
+
+      const stateWithPendingReleaseToCancel = {
+        ...stateWithFlagEnabled,
+        pendingReleases: {
+          "2": {
+            "latest/stable": {
+              revision: {
+                revision: 2,
+                architectures: ["amd64"]
+              },
+              channel: "latest/stable",
+              replaces: {
+                revision: {
+                  architectures: ["amd64"],
+                  revision: 1
+                },
+                channel: "latest/stable"
+              }
+            }
+          }
+        }
+      };
+
+      it("should return nothing if there are no pending releases", () => {
+        expect(getSeparatePendingReleases(initialState)).toEqual({
+          newReleases: {},
+          newReleasesToProgress: {},
+          progressiveUpdates: {},
+          cancelProgressive: {}
+        });
+      });
+
+      it("should return new release", () => {
+        expect(getSeparatePendingReleases(stateWithPendingRelease)).toEqual({
+          newReleases: {
+            "1-latest/stable":
+              stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
+          },
+          newReleasesToProgress: {},
+          progressiveUpdates: {},
+          cancelProgressive: {}
+        });
+      });
+
+      it("should return new release and releases to progress", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToProgress)
+        ).toEqual({
+          newReleases: {},
+          newReleasesToProgress: {
+            "1-latest/stable":
+              stateWithPendingReleaseToProgress.pendingReleases["1"][
+                "latest/stable"
+              ]
+          },
+          progressiveUpdates: {},
+          cancelProgressive: {}
+        });
+      });
+
+      it("should return a pending release to update", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToUpdate)
+        ).toEqual({
+          newReleases: {},
+          newReleasesToProgress: {},
+          progressiveUpdates: {
+            "1-latest/stable": {
+              ...stateWithPendingReleaseToUpdate.pendingReleases["1"][
+                "latest/stable"
+              ],
+              progressive: {
+                changes: [{ key: "percentage", value: 40 }],
+                key: "progressive-test",
+                paused: false,
+                percentage: 40
+              }
+            }
+          },
+          cancelProgressive: {}
+        });
+      });
+
+      it("should return a progressive release to cancel", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToCancel)
+        ).toEqual({
+          newReleases: {},
+          newReleasesToProgress: {},
+          progressiveUpdates: {},
+          cancelProgressive: {
+            "1-latest/stable": {
+              channel: "latest/stable",
+              revision: {
+                architectures: ["amd64"],
+                revision: 1
+              }
+            }
+          }
+        });
+      });
+    });
+  });
+});
+
+describe("getPendingRelease", () => {
+  const initialState = reducers(undefined, {});
+  const state = {
+    ...initialState,
+    pendingReleases: {
+      "1": {
+        "latest/stable": {
+          channel: "latest/stable",
+          revision: {
+            revision: 1,
+            architectures: ["amd64"]
+          }
+        },
+        "latest/candidate": {
+          channel: "latest/candidate",
+          revision: {
+            revision: 1,
+            architectures: ["amd64"]
+          }
+        }
+      }
+    }
+  };
+
+  it("should return the correct release", () => {
+    const result = getPendingRelease(state, "latest/stable", "amd64");
+
+    expect(result).toEqual({
+      ...state.pendingReleases["1"]["latest/stable"]
+    });
+  });
+
+  it("should return null if no pendingRelease is found", () => {
+    const result = getPendingRelease(state, "latest/stable", "arm64");
+
+    expect(result).toBeNull();
+  });
+});
+
+describe("getReleases", () => {
+  it("should return nothing if there are no releases", () => {
+    const result = getReleases(
+      {
+        releases: []
+      },
+      "amd64",
+      "latest/stable"
+    );
+
+    expect(result).toEqual([]);
+  });
+
+  it("should return any release that matches", () => {
+    const releases = [
+      {
+        architecture: "amd64",
+        channel: "latest/stable"
+      },
+      {
+        architecture: "arm64",
+        channel: "latest/stable"
+      }
+    ];
+    const result = getReleases(
+      {
+        releases
+      },
+      ["amd64"],
+      "latest/stable"
+    );
+
+    expect(result).toEqual([releases[0]]);
   });
 });
