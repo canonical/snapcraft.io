@@ -257,6 +257,21 @@ function initRegisterName(formEl, notificationEl, successEl) {
   formEl.addEventListener("submit", event => {
     event.preventDefault();
     let formData = new FormData(formEl);
+    const submitButton = formEl.querySelector(
+      "[data-js='js-snap-name-register']"
+    );
+
+    const currentPanel = formEl.closest(".p-accordion__group");
+    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+    const nextPanel = currentPanel.nextElementSibling;
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+
+    // Show spinner if data fetch takes long
+    setTimeout(() => {
+      if (currentToggle.getAttribute("aria-expanded") === "true") {
+        submitButton.classList.add("has-spinner");
+      }
+    }, 400);
 
     fetch("/register-snap/json", {
       method: "POST",
@@ -267,20 +282,25 @@ function initRegisterName(formEl, notificationEl, successEl) {
         if (json.errors) {
           showError(json.errors[0].message);
         } else if (json.code == "created") {
+          // Jump to the next accordion panel
+          toggleAccordion(currentToggle, false);
+          toggleAccordion(nextToggle, true);
+
+          submitButton.classList.remove("has-spinner");
+
           showSuccess(`Name "${json.snap_name}" registered successfully.`);
         } else if (json.code == "already_owned") {
           // Jump to the next accordion panel
-          const currentPanel = formEl.closest(".p-accordion__group");
-          const currentToggle = currentPanel.querySelector(".p-accordion__tab");
-          const nextPanel = currentPanel.nextElementSibling;
-          const nextToggle = nextPanel.querySelector(".p-accordion__tab");
           toggleAccordion(currentToggle, false);
           toggleAccordion(nextToggle, true);
+
+          submitButton.classList.remove("has-spinner");
 
           showSuccess(`You already own "${json.snap_name}"".`);
         }
       })
       .catch(() => {
+        submitButton.classList.remove("has-spinner");
         errorNotification(
           notificationEl,
           "There was some problem registering name. Please try again."
