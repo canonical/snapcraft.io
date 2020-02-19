@@ -266,10 +266,18 @@ function initRegisterName(formEl, notificationEl, successEl) {
     const nextPanel = currentPanel.nextElementSibling;
     const nextToggle = nextPanel.querySelector(".p-accordion__tab");
 
+    const enableButton = () => {
+      if (submitButton.disabled) {
+        submitButton.classList.remove("has-spinner");
+        submitButton.disabled = false;
+      }
+    };
+
     // Show spinner if data fetch takes long
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       if (currentToggle.getAttribute("aria-expanded") === "true") {
         submitButton.classList.add("has-spinner");
+        submitButton.disabled = true;
       }
     }, 400);
 
@@ -279,28 +287,30 @@ function initRegisterName(formEl, notificationEl, successEl) {
     })
       .then(response => response.json())
       .then(json => {
+        clearTimeout(timer);
+        let message;
         if (json.errors) {
           showError(json.errors[0].message);
+          enableButton();
+          return;
         } else if (json.code == "created") {
-          // Jump to the next accordion panel
-          toggleAccordion(currentToggle, false);
-          toggleAccordion(nextToggle, true);
-
-          submitButton.classList.remove("has-spinner");
-
-          showSuccess(`Name "${json.snap_name}" registered successfully.`);
+          message = `Name "${json.snap_name}" registered successfully.`;
         } else if (json.code == "already_owned") {
-          // Jump to the next accordion panel
-          toggleAccordion(currentToggle, false);
-          toggleAccordion(nextToggle, true);
-
-          submitButton.classList.remove("has-spinner");
-
-          showSuccess(`You already own "${json.snap_name}"".`);
+          message = `You already own "${json.snap_name}"".`;
         }
+        // Jump to the next accordion panel
+        toggleAccordion(currentToggle, false);
+        toggleAccordion(nextToggle, true);
+
+        enableButton();
+        showSuccess(message);
       })
       .catch(() => {
-        submitButton.classList.remove("has-spinner");
+        clearTimeout(timer);
+        if (submitButton.disabled) {
+          submitButton.classList.remove("has-spinner");
+          submitButton.disabled = false;
+        }
         errorNotification(
           notificationEl,
           "There was some problem registering name. Please try again."
