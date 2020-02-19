@@ -45,6 +45,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {
                 "items": [{"name": "test", "since": "2018-01-01T00:00:00"}]
             },
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.info_url, json=payload, status=200)

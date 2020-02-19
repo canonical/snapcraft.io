@@ -102,6 +102,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "store": "stotore",
             "keywords": [],
             "status": "published",
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -163,6 +164,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "store": "stotore",
             "keywords": [],
             "status": "published",
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)

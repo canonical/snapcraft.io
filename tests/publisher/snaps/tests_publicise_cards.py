@@ -49,6 +49,7 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "snap_name": snap_name,
             "keywords": [],
             "media": [],
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -76,6 +77,7 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "snap_name": snap_name,
             "keywords": [],
             "media": [{"url": "this is a url", "type": "screenshot"}],
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
