@@ -202,6 +202,23 @@ def publisher_snap_metrics(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    try:
+        latest_day_period = logic.extract_metrics_period("1d")
+        latest_installed_base = logic.get_installed_based_metric("version")
+        latest_day_query_json = metrics_helper.build_metrics_json(
+            snap_id=details["snap_id"],
+            installed_base=latest_installed_base,
+            metric_period=latest_day_period["int"],
+            metric_bucket=latest_day_period["bucket"],
+        )
+        latest_day_response = api.get_publisher_metrics(
+            flask.session, json=latest_day_query_json
+        )
+    except ApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
@@ -213,8 +230,24 @@ def publisher_snap_metrics(snap_name):
     )
 
     latest_active = 0
+
     if active_devices:
         latest_active = active_devices.get_number_latest_active_devices()
+
+    if latest_day_response:
+        latest_active_metrics = metrics_helper.find_metric(
+            latest_day_response["metrics"], latest_installed_base
+        )
+        if latest_active_metrics:
+            latest_active_devices = metrics.ActiveDevices(
+                name=latest_active_metrics["metric_name"],
+                series=latest_active_metrics["series"],
+                buckets=latest_active_metrics["buckets"],
+                status=latest_active_metrics["status"],
+            )
+            latest_active = (
+                latest_active_devices.get_number_latest_active_devices()
+            )
 
     country_metric = metrics_helper.find_metric(
         metrics_response["metrics"], "weekly_installed_base_by_country"

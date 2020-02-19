@@ -84,7 +84,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -134,7 +134,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=1y")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -184,7 +184,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=30d")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -234,7 +234,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=7d")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -288,7 +288,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=3m")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -340,7 +340,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=7d&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -392,7 +392,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=1y&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -444,7 +444,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=30d&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -500,7 +500,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=3m&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
