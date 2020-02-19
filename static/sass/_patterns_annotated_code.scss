@@ -21,6 +21,15 @@
       font-weight: bold;
     }
 
+    .p-annotated-code__filename {
+      background-color: $color-mid-light;
+      float: right;
+      margin: $spv-outer--small $spv-outer--small 0 0;
+      padding: $spv-inner--x-small $spv-inner--small;
+      position: relative;
+      z-index: 1;
+    }
+
     &:hover .p-annotated-code__block {
       opacity: .5;
 
