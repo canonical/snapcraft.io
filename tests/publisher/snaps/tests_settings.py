@@ -52,6 +52,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "store": "stotore",
             "keywords": [],
             "status": "published",
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)

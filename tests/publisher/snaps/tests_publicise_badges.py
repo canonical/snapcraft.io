@@ -82,6 +82,7 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "snap_name": snap_name,
             "keywords": [],
             "media": [],
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)

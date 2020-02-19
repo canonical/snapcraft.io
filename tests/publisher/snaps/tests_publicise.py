@@ -48,6 +48,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
             "private": False,
             "snap_name": snap_name,
             "keywords": [],
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -73,6 +74,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
             "private": True,
             "snap_name": snap_name,
             "keywords": [],
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
