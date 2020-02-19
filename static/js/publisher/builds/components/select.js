@@ -1,39 +1,25 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-class Select extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { options, updateSelection, disabled, selectedOption } = this.props;
-    return (
-      <div>
-        <select
-          onChange={e => updateSelection(e.target.value)}
-          disabled={disabled}
-          value={selectedOption}
+const Select = ({ options, updateSelection, disabled, selectedOption }) => (
+  <Fragment>
+    <select
+      onChange={e => updateSelection(e.target.value)}
+      disabled={disabled}
+      value={selectedOption}
+    >
+      {options.map((item, i) => (
+        <option
+          disabled={item.disabled}
+          value={i === 0 ? "" : item.value}
+          key={i}
         >
-          {options.map((item, i) => (
-            <option
-              disabled={item.disabled}
-              value={i === 0 ? "" : item.value}
-              key={i}
-            >
-              {item.value}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-}
-
-Select.defaultProps = {
-  disabled: false,
-  selectedOption: ""
-};
+          {item.value}
+        </option>
+      ))}
+    </select>
+  </Fragment>
+);
 
 Select.propTypes = {
   options: PropTypes.array.isRequired,

@@ -6,19 +6,28 @@ import Button from "@canonical/react-components/dist/components/Button";
 import DatalistSelect from "./datalistSelect";
 import Select from "./select";
 
+const LOADING = "LOADING";
+const ERROR = "ERROR";
+const SNAP_NAME_DOES_NOT_MATCH = "SNAP_NAME_DOES_NOT_MATCH";
+const MISSING_YAML_FILE = "MISSING_YAML_FILE";
+const SUCCESS = "SUCCESS";
+
 class RepoConnect extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       selectedRepo: "",
-      repoList: [{ value: "someName" }, { value: "someOtherName" }],
+      repoList: [],
       selectedOrganization: "",
       organizations: this.props.organizations,
       user: this.props.user,
       isRepoListDisabled: true,
-      message: { icon: "", description: "" },
-      snapName: this.props.snapName
+      message: null,
+      status: null,
+      snapName: this.props.snapName,
+      yamlFilePath: null,
+      errorType: null
     };
 
     this.handleRepoSelect = this.handleRepoSelect.bind(this);
@@ -40,7 +49,7 @@ class RepoConnect extends React.Component {
     this.setState(
       {
         selectedRepo: selectedRepo,
-        message: { icon: "", description: "" }
+        status: null
       },
       () => this.checkRepo(selectedRepo)
     );
@@ -72,7 +81,7 @@ class RepoConnect extends React.Component {
     }
     this.setState({
       isRepoListDisabled: true,
-      message: { icon: "spinner", description: "" }
+      status: LOADING
     });
 
     fetch(url)
@@ -86,23 +95,19 @@ class RepoConnect extends React.Component {
         this.setState({
           repoList: newRepoList,
           isRepoListDisabled: false,
-          message: { icon: "", description: "" }
+          status: null
         });
       })
       .catch(() => {
         this.setState({
           isRepoListDisabled: false,
-          message: {
-            icon: "error",
-            description:
-              "There was an error fetching your repository list. Please try again."
-          }
+          status: ERROR
         });
       });
   }
 
   /**
-   * Check if repository is suitable for buld
+   * Check if repository is suitable for build
    *
    * @param selectedRepo
    */
@@ -113,28 +118,32 @@ class RepoConnect extends React.Component {
 
       this.setState({
         isRepoListDisabled: true,
-        message: { icon: "spinner", description: "" }
+        status: LOADING
       });
 
       fetch(url)
         .then(res => res.json())
         .then(result => {
-          this.setState({
-            isRepoListDisabled: false,
-            message: {
-              icon: result.success ? "success" : "error",
-              description: result.success ? "" : result.error.message
-            }
-          });
+          if (result.success) {
+            this.setState({
+              isRepoListDisabled: false,
+              status: SUCCESS
+            });
+          } else {
+            this.setState({
+              isRepoListDisabled: false,
+              status: result.error.type,
+              message: result.error.message,
+              yamlFilePath: result.error.yaml_location
+                ? result.error.yaml_location
+                : null
+            });
+          }
         })
         .catch(() => {
           this.setState({
             isRepoListDisabled: false,
-            message: {
-              icon: "error",
-              description:
-                "An error occured while checking your repository. Please try again."
-            }
+            status: ERROR
           });
         });
     }
@@ -147,34 +156,41 @@ class RepoConnect extends React.Component {
   }
 
   renderMessage() {
-    const { message } = this.state;
-    if (message) {
+    const {
+      message,
+      status,
+      selectedRepo,
+      selectedOrganization,
+      yamlFilePath,
+      snapName
+    } = this.state;
+    if (status === SNAP_NAME_DOES_NOT_MATCH) {
+      const splitDescription = message.split(". ");
       return (
         <div className="u-fixed-width">
-          <p>{message.description}</p>
+          <p>
+            {`${splitDescription[0]}. `}
+            <a
+              className="p-link--external"
+              href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
+            >
+              {splitDescription[1]}
+            </a>
+          </p>
         </div>
       );
-    }
-  }
-
-  getTemplateUrl() {
-    const { selectedOrganization, snapName } = this.state;
-    return `https://github.com/${selectedOrganization}/${snapName}/new/master?filename=snap%2Fsnapcraft.yaml&value=%0A%20%20%23%20After%20registering%20a%20name%20on%20build.snapcraft.io%2C%20commit%20an%20uncommented%20line%3A%0A%20%20%23%20name%3A%20${snapName}%0A%20%20version%3A%20%270.1%27%20%23%20just%20for%20humans%2C%20typically%20%271.2%2Bgit%27%20or%20%271.3.2%27%0A%20%20summary%3A%20Single-line%20elevator%20pitch%20for%20your%20amazing%20snap%20%23%2079%20char%20long%20summary%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20my-snap%27s%20description.%20You%20have%20a%20paragraph%20or%20two%20to%20tell%20the%0A%20%20%20%20most%20important%20story%20about%20your%20snap.%20Keep%20it%20under%20100%20words%20though%2C%0A%20%20%20%20we%20live%20in%20tweetspace%20and%20your%20description%20wants%20to%20look%20good%20in%20the%20snap%0A%20%20%20%20store.%0A%0A%20%20grade%3A%20devel%20%23%20must%20be%20%27stable%27%20to%20release%20into%20candidate%2Fstable%20channels%0A%20%20confinement%3A%20devmode%20%23%20use%20%27strict%27%20once%20you%20have%20the%20right%20plugs%20and%20slots%0A%0A%20%20parts%3A%0A%20%20%20%20my-part%3A%0A%20%20%20%20%20%20%23%20See%20%27snapcraft%20plugins%27%0A%20%20%20%20%20%20plugin%3A%20nil%0A%20%20`;
-  }
-
-  renderNoYamlInfo() {
-    if (
-      this.state.message.description ===
-      "This repo needs a snapcraft.yaml file, so that Snapcraft can make it buildable, installable and runnable."
-    ) {
+    } else if (status === MISSING_YAML_FILE) {
       return (
         <div className="u-fixed-width">
+          <p>{message}</p>
           <p>
             <a href="https://snapcraft.io/docs/creating-a-snap">
               Learn the basics
             </a>
             , or{" "}
-            <a href={this.getTemplateUrl()}>get started with a template.</a>
+            <a className="p-link--external" href={this.getTemplateUrl()}>
+              get started with a template.
+            </a>
           </p>
           <p>
             Don’t have snapcraft?{" "}
@@ -184,35 +200,65 @@ class RepoConnect extends React.Component {
           </p>
         </div>
       );
+    } else if (status === ERROR) {
+      return (
+        <div className="u-fixed-width">
+          <p>
+            We were not able to check if your repository can be linked to{" "}
+            {snapName}. Please check your internet connection and{" "}
+            <a onClick={this.handleRefreshButtonClick}>try again</a>.
+          </p>
+        </div>
+      );
+    }
+  }
+
+  getTemplateUrl() {
+    const { selectedOrganization, selectedRepo, snapName } = this.state;
+    return `https://github.com/${selectedOrganization}/${selectedRepo}/new/master?filename=snap%2Fsnapcraft.yaml&value=%0A%20%20%23%20After%20registering%20a%20name%20on%20build.snapcraft.io%2C%20commit%20an%20uncommented%20line%3A%0A%20%20%23%20name%3A%20${snapName}%0A%20%20version%3A%20%270.1%27%20%23%20just%20for%20humans%2C%20typically%20%271.2%2Bgit%27%20or%20%271.3.2%27%0A%20%20summary%3A%20Single-line%20elevator%20pitch%20for%20your%20amazing%20snap%20%23%2079%20char%20long%20summary%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20my-snap%27s%20description.%20You%20have%20a%20paragraph%20or%20two%20to%20tell%20the%0A%20%20%20%20most%20important%20story%20about%20your%20snap.%20Keep%20it%20under%20100%20words%20though%2C%0A%20%20%20%20we%20live%20in%20tweetspace%20and%20your%20description%20wants%20to%20look%20good%20in%20the%20snap%0A%20%20%20%20store.%0A%0A%20%20grade%3A%20devel%20%23%20must%20be%20%27stable%27%20to%20release%20into%20candidate%2Fstable%20channels%0A%20%20confinement%3A%20devmode%20%23%20use%20%27strict%27%20once%20you%20have%20the%20right%20plugs%20and%20slots%0A%0A%20%20parts%3A%0A%20%20%20%20my-part%3A%0A%20%20%20%20%20%20%23%20See%20%27snapcraft%20plugins%27%0A%20%20%20%20%20%20plugin%3A%20nil%0A%20%20`;
+  }
+
+  renderButton() {
+    const { status } = this.state;
+    if (
+      status === ERROR ||
+      status === SNAP_NAME_DOES_NOT_MATCH ||
+      status === MISSING_YAML_FILE
+    ) {
+      return (
+        <button
+          className="p-tooltip--btm-center"
+          aria-describedby="btm-cntr"
+          onClick={this.handleRefreshButtonClick}
+        >
+          <i className="p-icon--restart" />
+          <span className="p-tooltip__message" role="tooltip" id="btm-cntr">
+            Re-check
+          </span>
+        </button>
+      );
+    } else if (status === SUCCESS) {
+      return <Button appearance="positive">Start building</Button>;
     }
   }
 
   renderIcon() {
-    const { message } = this.state;
-    if (message.icon) {
-      return (
-        <span className="p-build__icon">
-          <i
-            className={`p-icon--${message.icon}${
-              message.icon === "spinner" ? " u-animation--spin" : ""
-            }`}
-          />
-        </span>
-      );
+    const { status } = this.state;
+    let icon;
+    switch (status) {
+      default:
+        icon = "";
+        break;
+      case ERROR:
+      case MISSING_YAML_FILE:
+      case SNAP_NAME_DOES_NOT_MATCH:
+        icon = " is-error";
+        break;
+      case SUCCESS:
+        icon = " is-success";
+        break;
     }
-  }
-
-  renderButton() {
-    const { message } = this.state;
-    if (message.icon === "error") {
-      return (
-        <Button onClick={this.handleRefreshButtonClick}>
-          <i className="p-icon--restart" />
-        </Button>
-      );
-    } else if (message.icon === "success") {
-      return <Button appearance="positive">Start building</Button>;
-    }
+    return icon;
   }
 
   componentDidMount() {
@@ -231,24 +277,24 @@ class RepoConnect extends React.Component {
       selectedRepo,
       isRepoListDisabled,
       repoList,
-      message
+      status
     } = this.state;
     return (
       <Fragment>
         <div className="row">
           <div className="col-4">
-            {/* <input
-            type="hidden"
-            name="github_repository"
-            value={selectedRepo.length > 0 ? selectedRepo[0].name : ""}
-          /> */}
+            <input
+              type="hidden"
+              name="github_repository"
+              value={`${selectedOrganization}/${selectedRepo}`}
+            />
             <Select
               options={organizations}
               selectedOption={selectedOrganization}
               updateSelection={this.handleOrganiationSelect}
             />
           </div>
-          <div className="col-6 p-build-container">
+          <div className={`col-6 p-form-validation${this.renderIcon()}`}>
             <DatalistSelect
               options={repoList}
               selectedOption={selectedRepo}
@@ -256,18 +302,12 @@ class RepoConnect extends React.Component {
               placeholder="Search your repos"
               updateSelection={this.handleRepoSelect}
               listId="repo-list"
-              className={
-                message.icon === "error" || message.icon === "success"
-                  ? `is-${message.icon}`
-                  : ""
-              }
+              isLoading={status === "LOADING" ? true : false}
             />
-            {this.renderIcon()}
           </div>
           <div className="col-2">{this.renderButton()}</div>
         </div>
         {this.renderMessage()}
-        {this.renderNoYamlInfo()}
       </Fragment>
     );
   }

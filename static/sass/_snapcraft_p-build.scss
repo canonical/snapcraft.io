@@ -1,4 +1,6 @@
 @mixin snapcraft-p-build {
+  $icon-size: map-get($icon-sizes, default);
+
   .p-icon--github-white {
     @extend %icon;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='999' version='1'%3E%3Cpath fill='%23fff' fill-rule='evenodd' d='M512 0a512 512 0 0 0-162 998c26 4 35-11 35-25l-1-95c-142 31-172-61-172-61-23-59-57-74-57-74-46-32 4-32 4-32 51 4 78 53 78 53 46 78 120 56 149 43 5-33 18-56 33-69-114-13-234-57-234-253 0-56 20-101 53-137-5-13-23-65 5-136 0 0 43-13 141 53a488 488 0 0 1 256 0c98-66 141-53 141-53 28 71 10 123 5 136 33 36 53 81 53 137 0 197-120 240-234 253 18 16 35 47 35 95l-1 140c0 14 9 30 35 25A512 512 0 0 0 512 0z'/%3E%3C/svg%3E");
@@ -27,22 +29,11 @@
     background-image: url("#{$assets-path}34f54cf0-restart.svg");
   }
 
-  .p-build {
-    &-container {
-      display: inline-flex;
-
-      .p-build__icon {
-        padding-left: .5rem;
-        padding-top: .4rem;
-      }
-
-      .is-error {
-        border: 1px solid $color-negative;
-      }
-
-      .is-success {
-        border: 1px solid $color-positive;
-      }
+  .p-form-validation {
+    .p-icon-container {
+      position: absolute;
+      top: .4rem;
+      right: .55rem;
     }
   }
 }
