@@ -11,7 +11,9 @@
   {% endif %}
   <div class="u-fixed-width">
     <a href="/snaps">&lsaquo; My snaps</a>
-    <h1 class="p-heading--three">{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}</h1>
+    <h1 class="p-heading--three">
+      {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}
+      {% if publisher_name and publisher_name != user_name %} <small>by {{publisher_name}}</small>{% endif %}</h1>
     <nav class="p-tabs">
       <ul class="p-tabs__list u-float-right u-no-margin--bottom" role="tablist">
         <li class="p-tabs__item" role="presentation">

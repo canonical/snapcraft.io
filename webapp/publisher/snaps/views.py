@@ -268,6 +268,7 @@ def publisher_snap_metrics(snap_name):
         # Data direct from details API
         "snap_name": snap_name,
         "snap_title": details["title"],
+        "publisher_name": details["publisher"]["display-name"],
         "metric_period": metric_requested["period"],
         "active_device_metric": installed_base_metric,
         "default_track": default_track,
@@ -527,7 +528,6 @@ def post_listing_snap(snap_name):
                 "snap_name": snap_details["snap_name"],
                 "snap_categories": snap_categories,
                 "icon_url": icon_urls[0] if icon_urls else None,
-                "publisher_name": snap_details["publisher"]["display-name"],
                 "username": snap_details["publisher"]["username"],
                 "screenshot_urls": screenshot_urls,
                 "banner_urls": banner_urls,
@@ -571,6 +571,7 @@ def post_listing_snap(snap_name):
                 "licenses": licenses,
                 "is_on_stable": is_on_stable,
                 "categories": categories,
+                "publisher_name": snap_details["publisher"]["display-name"],
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
@@ -620,6 +621,8 @@ def get_release_history(snap_name):
 
     context = {
         "snap_name": snap_name,
+        "snap_title": info["title"],
+        "publisher_name": info["publisher"]["display-name"],
         "release_history": release_history,
         "private": info.get("private"),
         "channel_maps_list": info.get("channel_maps_list"),
@@ -1029,6 +1032,7 @@ def get_settings(snap_name):
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
+        "publisher_name": snap_details["publisher"]["display-name"],
         "license": license,
         "private": snap_details["private"],
         "unlisted": snap_details["unlisted"],
@@ -1115,6 +1119,7 @@ def post_settings(snap_name):
                 # read-only values from details API
                 "snap_name": snap_details["snap_name"],
                 "snap_title": snap_details["title"],
+                "publisher_name": snap_details["publisher"]["display-name"],
                 "snap_id": snap_details["snap_id"],
                 "private": snap_details["private"],
                 "unlisted": snap_details["unlisted"],
@@ -1190,6 +1195,7 @@ def get_publicise(snap_name):
         "private": snap_details["private"],
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
+        "publisher_name": snap_details["publisher"]["display-name"],
         "snap_id": snap_details["snap_id"],
         "available": available_languages,
         "download_version": "v1.3",
@@ -1226,6 +1232,7 @@ def get_publicise_badges(snap_name):
     context = {
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
+        "publisher_name": snap_details["publisher"]["display-name"],
         "snap_id": snap_details["snap_id"],
         "trending": snap_public_details["snap"]["trending"],
     }
@@ -1258,6 +1265,7 @@ def get_publicise_cards(snap_name):
         "has_screenshot": has_screenshot,
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
+        "publisher_name": snap_details["publisher"]["display-name"],
         "snap_id": snap_details["snap_id"],
     }
 
