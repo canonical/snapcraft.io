@@ -34,6 +34,7 @@ from webapp.publisher.snaps.build_views import (
     get_snap_builds,
     get_snap_builds_json,
     get_validate_repo,
+    post_github_webhook,
     post_snap_builds,
     post_trigger_build,
 )
@@ -113,6 +114,17 @@ publisher_snaps.add_url_rule(
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/trigger-build",
     view_func=post_trigger_build,
+    methods=["POST"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/webhook/notify",
+    view_func=post_github_webhook,
+    methods=["POST"],
+)
+# This route is to support previous webhooks from build.snapcraft.io
+publisher_snaps.add_url_rule(
+    "/<github_owner>/<github_repo>/webhook/notify",
+    view_func=post_github_webhook,
     methods=["POST"],
 )
 
