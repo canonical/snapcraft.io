@@ -47,8 +47,8 @@ class ReleasesController extends Component {
         <div className="row">
           <ReleasesConfirm />
           {visible && <Notification />}
-          <ReleasesHeading />
         </div>
+        <ReleasesHeading />
         <ReleasesTable />
         {showModal && <Modal />}
       </Fragment>
