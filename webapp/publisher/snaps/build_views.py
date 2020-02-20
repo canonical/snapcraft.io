@@ -1,11 +1,13 @@
 import os
-import flask
+from hashlib import md5
 
+import flask
 import webapp.api.dashboard as api
 from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.api.github import GitHubAPI
 from webapp.api.launchpad import Launchpad
 from webapp.decorators import login_required
+from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import (
     build_link,
     map_build_and_upload_states,
@@ -13,7 +15,7 @@ from webapp.publisher.snaps.builds import (
 from webapp.publisher.views import _handle_error, _handle_error_list
 from werkzeug.exceptions import Unauthorized
 
-
+GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 BUILDS_PER_PAGE = 15
 launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
@@ -112,12 +114,13 @@ def get_snap_builds(snap_name):
     return flask.render_template("publisher/builds.html", **context)
 
 
-def validate_repo(snap_name, gh_owner, gh_repo):
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
+def validate_repo(github_token, snap_name, gh_owner, gh_repo):
+    github = GitHubAPI(github_token)
     result = {"success": True}
+    yaml_location = github.get_snapcraft_yaml_location(gh_owner, gh_repo)
 
-    # The ygithubaml is not present
-    if not github.get_snapcraft_yaml_location(gh_owner, gh_repo):
+    # The snapcraft.yaml is not present
+    if not yaml_location:
         result["success"] = False
         result["error"] = {
             "type": "MISSING_YAML_FILE",
@@ -142,6 +145,7 @@ def validate_repo(snap_name, gh_owner, gh_repo):
                     + '". Update your '
                     "snapcraft.yaml to continue."
                 ),
+                "yaml_location": yaml_location,
             }
 
     return result
@@ -188,7 +192,14 @@ def get_validate_repo(snap_name):
 
     owner, repo = flask.request.args.get("repo").split("/")
 
-    return flask.jsonify(validate_repo(details["snap_name"], owner, repo))
+    return flask.jsonify(
+        validate_repo(
+            flask.session.get("github_auth_secret"),
+            details["snap_name"],
+            owner,
+            repo,
+        )
+    )
 
 
 @login_required
@@ -216,7 +227,10 @@ def post_snap_builds(snap_name):
         )
         return flask.redirect(redirect_url)
 
-    repo_validation = validate_repo(snap_name, owner, repo)
+    repo_validation = validate_repo(
+        flask.session.get("github_auth_secret"), snap_name, owner, repo
+    )
+
     if not repo_validation["success"]:
         flask.flash(repo_validation["error"]["message"], "negative")
         return flask.redirect(redirect_url)
@@ -257,3 +271,38 @@ def post_trigger_build(snap_name):
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)
     )
+
+
+@csrf.exempt
+def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
+    repo_url = flask.request.json["repository"]["url"]
+    gh_owner = flask.request.json["repository"]["owner"]["login"]
+    gh_repo = flask.request.json["repository"]["name"]
+
+    if snap_name:
+        lp_snap = launchpad.get_snap_by_store_name(snap_name)
+    else:
+        lp_snap = launchpad.get_snap(md5(repo_url.encode("UTF-8")).hexdigest())
+
+    # Check that this is the repo for this snap
+    if lp_snap["git_repository_url"] != repo_url:
+        return ("The repository does not match the one used by this Snap", 403)
+
+    github = GitHubAPI()
+    valid_secret = github.gen_webhook_secret(gh_owner, gh_repo)
+
+    if valid_secret != flask.request.headers.get("X-Hub-Signature").replace(
+        "sha1=", ""
+    ):
+        return ("Invalid secret", 403)
+
+    validation = validate_repo(
+        GITHUB_SNAPCRAFT_USER_TOKEN, lp_snap["store_name"], gh_owner, gh_repo,
+    )
+
+    if not validation["success"]:
+        return (validation["error"]["message"], 400)
+
+    launchpad.trigger_build(lp_snap["store_name"])
+
+    return ("", 204)
