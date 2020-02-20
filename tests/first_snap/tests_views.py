@@ -79,59 +79,35 @@ class FirstSnap(TestCase):
         response = self.client.get("/first-snap/toto-lang/snapcraft.yaml")
         self.assert404(response)
 
-    def test_get_build(self):
-        response = self.client.get("/first-snap/python/linux-auto/build")
+    def test_get_build_and_test(self):
+        response = self.client.get(
+            "/first-snap/python/linux-auto/build-and-test"
+        )
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux-auto")
-        self.assert_template_used("first-snap/build.html")
+        self.assert_template_used("first-snap/build-and-test.html")
 
-    def test_get_build_snap_name(self):
+    def test_get_build_and_test_snap_name(self):
         response = self.client.get(
-            "/first-snap/python/linux-auto/build",
+            "/first-snap/python/linux-auto/build-and-test",
             headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
         )
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux-auto")
         self.assert_context("snap_name", "test-snap-name-python")
-        self.assert_template_used("first-snap/build.html")
+        self.assert_template_used("first-snap/build-and-test.html")
 
-    def test_get_build_404_language(self):
-        response = self.client.get("/first-snap/toto-lang/linux/build")
-
-        assert response.status_code == 404
-
-    def test_get_build_404_os(self):
-        response = self.client.get("/first-snap/python/totOs/build")
-
-        assert response.status_code == 404
-
-    def test_get_test(self):
-        response = self.client.get("/first-snap/python/macos-auto/test")
-        assert response.status_code == 200
-        self.assert_context("language", "python")
-        self.assert_context("os", "macos-auto")
-        self.assert_template_used("first-snap/test.html")
-
-    def test_get_test_snap_name(self):
+    def test_get_build_and_test_404_language(self):
         response = self.client.get(
-            "/first-snap/python/macos-auto/test",
-            headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
+            "/first-snap/toto-lang/linux/build-and-test"
         )
-        assert response.status_code == 200
-        self.assert_context("language", "python")
-        self.assert_context("os", "macos-auto")
-        self.assert_context("snap_name", "test-snap-name-python")
-        self.assert_template_used("first-snap/test.html")
-
-    def test_get_test_404_language(self):
-        response = self.client.get("/first-snap/toto-lang/linux/test")
 
         assert response.status_code == 404
 
-    def test_get_test_404_os(self):
-        response = self.client.get("/first-snap/python/totOs/test")
+    def test_get_build_and_test_404_os(self):
+        response = self.client.get("/first-snap/python/totOs/build-and-test")
 
         assert response.status_code == 404
 
