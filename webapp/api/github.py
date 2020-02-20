@@ -1,6 +1,13 @@
+import hmac
+from hashlib import sha1
+from os import getenv
+
 from webapp import api
-from werkzeug.exceptions import Unauthorized
 from webapp.helpers import get_yaml_loader
+from werkzeug.exceptions import Unauthorized
+
+
+GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
 
 
 class GitHubAPI:
@@ -24,7 +31,7 @@ class GitHubAPI:
         self.session = session
         self.session.headers["Accept"] = "application/json"
 
-    def _request(self, method="GET", url="", raise_exceptions=True):
+    def _request(self, method="GET", url="", data={}, raise_exceptions=True):
         """
         Makes a raw HTTP request and returns the response.
         """
@@ -34,7 +41,7 @@ class GitHubAPI:
             headers = {}
 
         response = self.session.request(
-            method, f"{self.REST_API_URL}/{url}", headers=headers,
+            method, f"{self.REST_API_URL}/{url}", headers=headers, json=data
         )
 
         if raise_exceptions:
@@ -269,3 +276,13 @@ class GitHubAPI:
             return content.get("name")
 
         return False
+
+    def gen_webhook_secret(self, owner, repo):
+        """
+        Generate the same secret that we receive from a GitHub webhook.
+        """
+        key = bytes(GITHUB_WEBHOOK_SECRET, "UTF-8")
+        hm = hmac.new(key, digestmod=sha1)
+        hm.update(owner.encode("UTF-8"))
+        hm.update(repo.encode("UTF-8"))
+        return hm.hexdigest()
