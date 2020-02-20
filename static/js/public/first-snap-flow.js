@@ -2,6 +2,8 @@
 
 import "whatwg-fetch";
 
+import { toggleAccordion } from "./accordion";
+
 function install(language) {
   const osPickers = Array.from(document.querySelectorAll(".js-os-select"));
   const osWrappers = Array.from(document.querySelectorAll(".js-os-wrapper"));
@@ -255,6 +257,29 @@ function initRegisterName(formEl, notificationEl, successEl) {
   formEl.addEventListener("submit", event => {
     event.preventDefault();
     let formData = new FormData(formEl);
+    const submitButton = formEl.querySelector(
+      "[data-js='js-snap-name-register']"
+    );
+
+    const currentPanel = formEl.closest(".p-accordion__group");
+    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+    const nextPanel = currentPanel.nextElementSibling;
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+
+    const enableButton = () => {
+      if (submitButton.disabled) {
+        submitButton.classList.remove("has-spinner");
+        submitButton.disabled = false;
+      }
+    };
+
+    // Show spinner if data fetch takes long
+    const timer = setTimeout(() => {
+      if (currentToggle.getAttribute("aria-expanded") === "true") {
+        submitButton.classList.add("has-spinner");
+        submitButton.disabled = true;
+      }
+    }, 400);
 
     fetch("/register-snap/json", {
       method: "POST",
@@ -262,15 +287,30 @@ function initRegisterName(formEl, notificationEl, successEl) {
     })
       .then(response => response.json())
       .then(json => {
+        clearTimeout(timer);
+        let message;
         if (json.errors) {
           showError(json.errors[0].message);
+          enableButton();
+          return;
         } else if (json.code == "created") {
-          showSuccess(`Name "${json.snap_name}" registered successfully.`);
+          message = `Name "${json.snap_name}" registered successfully.`;
         } else if (json.code == "already_owned") {
-          showSuccess(`You already own "${json.snap_name}"".`);
+          message = `You already own "${json.snap_name}"".`;
         }
+        // Jump to the next accordion panel
+        toggleAccordion(currentToggle, false);
+        toggleAccordion(nextToggle, true);
+
+        enableButton();
+        showSuccess(message);
       })
       .catch(() => {
+        clearTimeout(timer);
+        if (submitButton.disabled) {
+          submitButton.classList.remove("has-spinner");
+          submitButton.disabled = false;
+        }
         errorNotification(
           notificationEl,
           "There was some problem registering name. Please try again."

@@ -73,7 +73,12 @@
                         Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
                       </p>
                     </div>
-                    <button class="p-button--positive">Register snap name</button>
+                    <button class="p-button--positive p-button-spinner" data-js="js-snap-name-register">
+                      <span class="p-button__spinner vanilla-workaround--dark">
+                        <i class="p-icon--spinner u-animation--spin"></i>
+                      </span>
+                      <span class="p-button__text">Register snap name</span>
+                  </button>
                   </form>
                 </div>
               </div>
