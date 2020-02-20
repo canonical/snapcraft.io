@@ -1,5 +1,5 @@
 name: ${name}
-version: git
+version: '1.0'
 summary: A fast CSV command line toolkit written in Rust
 description: |
   xsv is a command line program for indexing,

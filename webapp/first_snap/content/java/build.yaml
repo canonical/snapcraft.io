@@ -5,28 +5,28 @@ linux:
       command: mkdir ~/${name} && mv ~/Downloads/snapcraft.yaml ~/${name} && cd  ~/${name}
     - action: "Run snapcraft:"
       command: snapcraft
-    - action: "Install the snap"
+    - action: "Install the snap:"
       command: sudo snap install --devmode --dangerous *.snap
-    - action: "List your installed snaps to confirm"
+    - action: "List your installed snaps to confirm:"
       command: snap list
-    - action: "Run the snap"
+    - action: "Run the snap:"
       command: ${name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>${name}</code>)
   manual:
-    - action: "Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image"
+    - action: Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image
       command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
-    - action: "Install the snap"
+    - action: Install the snap
       command: sudo snap install --devmode --dangerous *.snap
-    - action: "List your installed snaps to confirm"
+    - action: List your installed snaps to confirm
       command: snap list
-    - action: "Run the snap"
+    - action: Run the snap
       command: ${name} -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>${name}</code>)
 macos:
   auto:
-   - action: "Create a directory, move the downloaded snapcraft.yaml file into the new directory and navigate there:"
+    - action: "Create a directory, move the downloaded snapcraft.yaml file into the new directory and navigate there:"
       command: mkdir ~/${name} && mv ~/Downloads/snapcraft.yaml ~/${name} && cd  ~/${name}
     - action: "Run snapcraft:"
       command: snapcraft
