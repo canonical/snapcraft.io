@@ -40,9 +40,17 @@ class Launchpad:
 
         return collection.get("entries", [])
 
+    def get_snap(self, name):
+        """
+        Return a Snap from the Launchpad API by name
+        """
+        snap = self._request("GET", f"~{self.username}/+snap/{name}")
+
+        return snap
+
     def get_snap_by_store_name(self, snap_name):
         """
-        Return an Snap from the Launchpad API by store_name
+        Return a Snap from the Launchpad API by store_name
         """
         snaps = self.get_collection_entries(
             "+snaps",
