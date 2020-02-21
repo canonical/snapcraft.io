@@ -1,0 +1,83 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+Builds for
+{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="main-content" class="u-no-margin--top">
+  {% set selected_tab='builds' %}
+  {% set suppress_nav=True%}
+  {% set suppress_title=True%}
+  {% set snap_link="builds" %}
+  {% include "publisher/_header.html" %}
+
+  <section class="p-strip is-shallow u-no-padding--top" id="top">
+    <div class="row">
+      <h1 class="p-heading--three">Build #{{snap_build.id}}</h1>
+      <div id="builds-wrapper" class="col-12">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Architecture</th>
+              <th class="u-hide--small">Duration</th>
+              <th class="has-icon">Result</th>
+              <th></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Loading...</td>
+              <td></td>
+              <td class="u-hide--small"></td>
+              <td class="has-icon"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {{ snap_build.raw }}
+    {% if raw_logs %}
+    <div class="row">
+      <div class="col-6">
+        <h4>Build Log</h4>
+      </div>
+      <div class="col-6 u-align-text--right">
+        <a href="#footer">Scroll to bottom</a>&nbsp;
+        <a href="{{snap_build.logs}}" class="p-button" target="_blank">View raw</a>
+      </div>
+    </div>
+    <div class="row">
+      <pre><code>{{raw_logs}}</code></pre>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+{% endblock %}
+
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      {% if snap_build %}
+        snapcraft.publisher.initBuilds('#builds-wrapper',
+          {{ snap_name | tojson }},
+          [{{ snap_build | tojson }}],
+          1,
+          true
+      );
+      {% endif %}
+      snapcraft.publisher.stickyListingBar();
+    });
+  });
+</script>
+{% endblock %}

@@ -13,10 +13,7 @@ from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.api.github import GitHub
 from webapp.decorators import login_required
 from webapp.extensions import csrf
-from webapp.publisher.snaps.builds import (
-    build_link,
-    map_build_and_upload_states,
-)
+from webapp.publisher.snaps.builds import map_build_and_upload_states
 from webapp.publisher.views import _handle_error, _handle_error_list
 from werkzeug.exceptions import Unauthorized
 
@@ -30,15 +27,21 @@ launchpad = Launchpad(
 )
 
 
-def get_builds(lp_snap, context, selection):
+def get_builds(lp_snap, context, build_id, selection):
     # Git repository without GitHub hostname
     context["github_repository"] = lp_snap["git_repository_url"][19:]
-    bsi_url = flask.current_app.config["BSI_URL"]
 
     builds = launchpad.get_collection_entries(
         # Remove first part of the URL
         lp_snap["builds_collection_link"][32:]
     )
+
+    if build_id:
+        builds = [
+            build
+            for build in builds
+            if build["self_link"].split("/")[-1] == build_id
+        ]
 
     context["total_builds"] = len(builds)
 
@@ -47,7 +50,6 @@ def get_builds(lp_snap, context, selection):
     context["snap_builds_enabled"] = bool(builds)
 
     for build in builds:
-        link = build_link(bsi_url, lp_snap, build)
         status = map_build_and_upload_states(
             build["buildstate"], build["store_upload_status"]
         )
@@ -58,7 +60,6 @@ def get_builds(lp_snap, context, selection):
                 "arch_tag": build["arch_tag"],
                 "datebuilt": build["datebuilt"],
                 "duration": build["duration"],
-                "link": link,
                 "logs": build["build_log_url"],
                 "revision_id": build["revision_id"],
                 "status": status,
@@ -107,7 +108,7 @@ def get_snap_builds(snap_name):
             flask.flash(
                 "This repository doesn't contain a snapcraft.yaml", "negative"
             )
-        context = get_builds(lp_snap, context, slice(0, BUILDS_PER_PAGE))
+        context = get_builds(lp_snap, context, None, slice(0, BUILDS_PER_PAGE))
     else:
         try:
             context["github_user"] = github.get_user()
@@ -118,6 +119,51 @@ def get_snap_builds(snap_name):
             context["github_orgs"] = github.get_orgs()
 
     return flask.render_template("publisher/builds.html", **context)
+
+
+@login_required
+def get_snap_build(snap_name, build_id):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    context = {
+        "snap_id": details["snap_id"],
+        "snap_name": details["snap_name"],
+        "snap_title": details["title"],
+        "snap_build": {},
+    }
+
+    # Get build by snap name and build_id
+    lp_build = launchpad.get_snap_build(details["snap_name"], build_id)
+
+    if lp_build:
+        status = map_build_and_upload_states(
+            lp_build["buildstate"], lp_build["store_upload_status"]
+        )
+        context["snap_build"] = {
+            "id": lp_build["self_link"].split("/")[-1],
+            "arch_tag": lp_build["arch_tag"],
+            "datebuilt": lp_build["datebuilt"],
+            "duration": lp_build["duration"],
+            "logs": lp_build["build_log_url"],
+            "revision_id": lp_build["revision_id"],
+            "status": status,
+            "title": lp_build["title"],
+        }
+
+        if context["snap_build"]["logs"]:
+            context["raw_logs"] = launchpad.get_snap_build_log(
+                details["snap_name"], build_id
+            )
+
+    return flask.render_template("publisher/build.html", **context)
 
 
 def validate_repo(github_token, snap_name, gh_owner, gh_repo):
@@ -181,7 +227,7 @@ def get_snap_builds_json(snap_name):
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
-        context = get_builds(lp_snap, context, build_slice)
+        context = get_builds(lp_snap, context, None, build_slice)
 
     return flask.jsonify(context)
 

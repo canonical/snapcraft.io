@@ -64,7 +64,9 @@ class Builds extends React.Component {
     if (this.fetchTimer) {
       clearTimeout(this.fetchTimer);
     }
-    this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
+    if (updateFreq) {
+      this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
+    }
   }
 
   showMoreHandler(e) {
@@ -88,12 +90,14 @@ class Builds extends React.Component {
       this.fetchBuilds();
     }
 
-    this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
+    if (updateFreq) {
+      this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
+    }
   }
 
   render() {
     const { builds, isLoading } = this.state;
-    const { totalBuilds } = this.props;
+    const { totalBuilds, singleBuild, snapName } = this.props;
 
     const remainingBuilds = totalBuilds - builds.length;
 
@@ -110,7 +114,11 @@ class Builds extends React.Component {
       return {
         columns: [
           {
-            content: <a href={build.link}>#{build.id}</a>
+            content: singleBuild ? (
+              `#${build.id}`
+            ) : (
+              <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+            )
           },
           {
             content: build.arch_tag
@@ -193,16 +201,22 @@ Builds.propTypes = {
   snapName: PropTypes.string,
   builds: PropTypes.array,
   totalBuilds: PropTypes.number,
-  updateFreq: PropTypes.number
+  updateFreq: PropTypes.number,
+  singleBuild: PropTypes.boolean
 };
 
-export function initBuilds(id, snapName, builds, totalBuilds) {
+Builds.defaultProps = {
+  singleBuild: false
+};
+
+export function initBuilds(id, snapName, builds, totalBuilds, singleBuild) {
   ReactDOM.render(
     <Builds
       snapName={snapName}
       builds={builds}
       totalBuilds={totalBuilds}
-      updateFreq={30000}
+      updateFreq={singleBuild ? null : 30000}
+      singleBuild={singleBuild}
     />,
     document.querySelector(id)
   );

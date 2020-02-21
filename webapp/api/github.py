@@ -268,7 +268,7 @@ class GitHub:
 
         if loc:
             response = self._request(
-                "GET", f"repos/{owner}/{repo}/contents/{loc}",
+                "GET", f"repos/{owner}/{repo}/contents/{loc}"
             )
             file_metadata = response.json()
 
