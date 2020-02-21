@@ -1,11 +1,16 @@
+# Standard library
 import os
 from hashlib import md5
 
+# Packages
 import flask
+import talisker.requests
+from canonicalwebteam.launchpad import Launchpad
+
+# Local
 import webapp.api.dashboard as api
 from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.api.github import GitHubAPI
-from webapp.api.launchpad import Launchpad
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import (
@@ -20,7 +25,8 @@ BUILDS_PER_PAGE = 15
 launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
     token=os.getenv("LP_API_TOKEN"),
-    signature=os.getenv("LP_API_TOKEN_SECRET"),
+    secret=os.getenv("LP_API_TOKEN_SECRET"),
+    session=talisker.requests.get_session(),
 )
 
 
@@ -241,10 +247,10 @@ def post_snap_builds(snap_name):
     git_url = f"https://github.com/{owner}/{repo}"
 
     if not lp_snap:
-        launchpad.new_snap(snap_name, git_url)
+        launchpad.create_snap(snap_name, git_url)
 
         # We trigger a first build
-        launchpad.trigger_build(details["snap_name"])
+        launchpad.build_snap(details["snap_name"])
 
         flask.flash("The GitHub repository was linked correctly.", "positive")
     elif lp_snap["git_repository_url"] != git_url:
@@ -257,7 +263,7 @@ def post_snap_builds(snap_name):
 
 
 @login_required
-def post_trigger_build(snap_name):
+def post_build(snap_name):
     try:
         details = api.get_snap_info(snap_name, flask.session)
     except ApiResponseErrorList as api_response_error_list:
@@ -268,7 +274,7 @@ def post_trigger_build(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    launchpad.trigger_build(details["snap_name"])
+    launchpad.build_snap(details["snap_name"])
 
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)
@@ -299,12 +305,12 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
         return ("Invalid secret", 403)
 
     validation = validate_repo(
-        GITHUB_SNAPCRAFT_USER_TOKEN, lp_snap["store_name"], gh_owner, gh_repo,
+        GITHUB_SNAPCRAFT_USER_TOKEN, lp_snap["store_name"], gh_owner, gh_repo
     )
 
     if not validation["success"]:
         return (validation["error"]["message"], 400)
 
-    launchpad.trigger_build(lp_snap["store_name"])
+    launchpad.build_snap(lp_snap["store_name"])
 
     return ("", 204)
