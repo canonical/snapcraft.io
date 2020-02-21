@@ -244,28 +244,10 @@ def snapcraft_blueprint():
     def create_redirect():
         return flask.redirect("https://docs.snapcraft.io/build-snaps")
 
-    @snapcraft.route("/favicon.ico")
-    def favicon():
-        return flask.redirect(
-            "https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png"
-        )
-
     @snapcraft.route("/build")
     def build():
         status_code = 200
 
         return flask.render_template("snapcraft/build.html"), status_code
-
-    @snapcraft.route("/robots.txt")
-    def robots():
-        return flask.Response("", mimetype="text/plain")
-
-    @snapcraft.route("/humans.txt")
-    def humans():
-        return flask.send_file("../static/humans.txt")
-
-    @snapcraft.route("/_status/check")
-    def check():
-        return "OK"
 
     return snapcraft
