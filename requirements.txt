@@ -7,7 +7,7 @@ canonicalwebteam.yaml-responses==1.1.1
 canonicalwebteam.image-template==1.0.0
 canonicalwebteam.store-api==1.0.4
 django-openid-auth==0.15
-canonicalwebteam.flask_base==0.4
+Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.2
 humanize==0.5.1
@@ -24,5 +24,8 @@ responses==0.9.0
 ruamel.yaml==0.15.72
 talisker[flask,gunicorn,raven,prometheus]==0.15.0
 
+# Temporary fix to SSO redirect issue
+Werkzeug==0.14.1
+
 # Development dependencies
-Flask-Testing==0.7.1
+Flask-Testing==0.6.2
