@@ -4,7 +4,7 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-from canonicalwebteam.flask_base.app import FlaskBase
+import flask
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.debug import DebuggedApplication
 
@@ -33,13 +33,10 @@ from webapp.store.views import store_blueprint
 
 
 def create_app(testing=False):
-    app = FlaskBase(
-        __name__,
-        "snapcraft.io",
-        template_folder="../templates",
-        static_folder="../static",
-        template_404="404.html",
+    app = flask.Flask(
+        __name__, template_folder="../templates", static_folder="../static"
     )
+
     app.config.from_object("webapp.config")
     app.testing = testing
 
