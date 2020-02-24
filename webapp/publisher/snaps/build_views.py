@@ -125,8 +125,9 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
         result["error"] = {
             "type": "MISSING_YAML_FILE",
             "message": (
-                "This repo needs a snapcraft.yaml file, so that Snapcraft can "
-                "make it buildable, installable and runnable."
+                "Missing snapcraft.yaml: this repo needs a snapcraft.yaml "
+                "file, so that Snapcraft can make it buildable, installable "
+                "and runnable."
             ),
         }
     # The property name inside the yaml file doesn't match the snap
@@ -146,6 +147,7 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
                     "snapcraft.yaml to continue."
                 ),
                 "yaml_location": yaml_location,
+                "gh_snap_name": gh_snap_name,
             }
 
     return result

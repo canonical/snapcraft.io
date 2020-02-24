@@ -2,6 +2,7 @@ import * as metrics from "./metrics/metrics";
 import { selector } from "./metrics/filters";
 import * as market from "./form";
 import { initMultiselect } from "./form/multiselect";
+import { initRepoConnect } from "./builds/components/repoConnect";
 import { enableInput, changeHandler } from "./settings";
 import * as publicise from "./publicise";
 import { initCategories } from "./market/categories";
@@ -17,6 +18,7 @@ const settings = { enableInput, changeHandler };
 export {
   initCategories,
   initMultiselect,
+  initRepoConnect,
   markdownToggle,
   metrics,
   market,
