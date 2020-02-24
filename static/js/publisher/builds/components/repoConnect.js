@@ -23,7 +23,7 @@ class RepoConnect extends React.Component {
       organizations: this.props.organizations,
       user: this.props.user,
       isRepoListDisabled: true,
-      message: null,
+      yamlSnap: null,
       status: null,
       snapName: this.props.snapName,
       yamlFilePath: null,
@@ -133,7 +133,9 @@ class RepoConnect extends React.Component {
             this.setState({
               isRepoListDisabled: false,
               status: result.error.type,
-              message: result.error.message,
+              yamlSnap: result.error.gh_snap_name
+                ? result.error.gh_snap_name
+                : null,
               yamlFilePath: result.error.yaml_location
                 ? result.error.yaml_location
                 : null
@@ -157,24 +159,24 @@ class RepoConnect extends React.Component {
 
   renderMessage() {
     const {
-      message,
       status,
       selectedRepo,
       selectedOrganization,
       yamlFilePath,
-      snapName
+      snapName,
+      yamlSnap
     } = this.state;
     if (status === SNAP_NAME_DOES_NOT_MATCH) {
-      const splitDescription = message.split(". ");
       return (
         <div className="u-fixed-width">
           <p>
-            {`${splitDescription[0]}. `}
+            <strong>Name mismatch: </strong>
+            {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
             <a
               className="p-link--external"
               href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
             >
-              {splitDescription[1]}
+              Update your snapcraft.yaml to continue.
             </a>
           </p>
         </div>
@@ -182,7 +184,11 @@ class RepoConnect extends React.Component {
     } else if (status === MISSING_YAML_FILE) {
       return (
         <div className="u-fixed-width">
-          <p>{message}</p>
+          <p>
+            <strong>Missing snapcraft.yaml: </strong>
+            this repo needs a snapcraft.yaml file, so that Snapcraft can make it
+            buildable, installable and runnable.
+          </p>
           <p>
             <a href="https://snapcraft.io/docs/creating-a-snap">
               Learn the basics
@@ -204,6 +210,7 @@ class RepoConnect extends React.Component {
       return (
         <div className="u-fixed-width">
           <p>
+            <strong>Error: </strong>
             We were not able to check if your repository can be linked to{" "}
             {snapName}. Please check your internet connection and{" "}
             <a onClick={this.handleRefreshButtonClick}>try again</a>.
@@ -228,11 +235,15 @@ class RepoConnect extends React.Component {
       return (
         <button
           className="p-tooltip--btm-center"
-          aria-describedby="btm-cntr"
+          aria-describedby="recheck-tooltip"
           onClick={this.handleRefreshButtonClick}
         >
           <i className="p-icon--restart" />
-          <span className="p-tooltip__message" role="tooltip" id="btm-cntr">
+          <span
+            className="p-tooltip__message"
+            role="tooltip"
+            id="recheck-tooltip"
+          >
             Re-check
           </span>
         </button>
@@ -262,7 +273,8 @@ class RepoConnect extends React.Component {
   }
 
   componentDidMount() {
-    // Pre-select user's own "organization" if the user is not part of any organizations
+    // Pre-select user's own "organization" if the user is not part of any organizations - array length 2
+    // [ { value: "Select organization", disabled: true }, { value: user.login }, { value: organization1 }, { value: organization2 }, ... ]
     if (this.state.organizations.length === 2) {
       this.setState({ selectedOrganization: this.state.user.login }, () => {
         this.fetchRepoList();

@@ -24,6 +24,7 @@
     vertical-align: middle;
   }
 
+  // This should be removed once the restart icon is implemented in vanilla and use the vanilla one
   .p-icon--restart {
     @extend %icon;
     background-image: url("#{$assets-path}34f54cf0-restart.svg");

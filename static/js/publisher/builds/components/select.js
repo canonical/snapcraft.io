@@ -1,24 +1,22 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 const Select = ({ options, updateSelection, disabled, selectedOption }) => (
-  <Fragment>
-    <select
-      onChange={e => updateSelection(e.target.value)}
-      disabled={disabled}
-      value={selectedOption}
-    >
-      {options.map((item, i) => (
-        <option
-          disabled={item.disabled}
-          value={i === 0 ? "" : item.value}
-          key={i}
-        >
-          {item.value}
-        </option>
-      ))}
-    </select>
-  </Fragment>
+  <select
+    onChange={e => updateSelection(e.target.value)}
+    disabled={disabled}
+    value={selectedOption}
+  >
+    {options.map((item, i) => (
+      <option
+        disabled={item.disabled}
+        value={i === 0 ? "" : item.value}
+        key={i}
+      >
+        {item.value}
+      </option>
+    ))}
+  </select>
 );
 
 Select.propTypes = {
