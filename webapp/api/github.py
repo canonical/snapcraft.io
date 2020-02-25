@@ -10,7 +10,7 @@ from werkzeug.exceptions import Unauthorized
 GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
 
 
-class GitHubAPI:
+class GitHub:
     """
     Provides authentication for GitHub users. Helper methods are also provided
     for checking organization access and getting user data from the Github API.
