@@ -201,7 +201,7 @@ My published snaps — Linux software in the Snap Store
         {% with dispute_pending = registered_snaps[snap].status == "DisputePending" %}
         <tr class="p-snapcraft-dispute-list__item">
           <td width="25%">
-            {{ snap }}
+            <a href="/{{snap}}/listing">{{ snap }}</a>
             {% if dispute_pending %}
             &nbsp;<i class="p-icon--warning p-snapcraft-dispute-list__icon"></i>
             {% endif %}

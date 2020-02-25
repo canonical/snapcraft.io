@@ -22,7 +22,7 @@ function install(language) {
     if (!document.querySelector(".js-linux-manual")) {
       const paginationBtn = document.querySelector(`#js-pagination-next`);
       if (paginationBtn) {
-        paginationBtn.classList.remove("is--disabled");
+        paginationBtn.classList.remove("is-disabled");
         paginationBtn.href = `/first-snap/${language}/${selectedOs}/package`;
       }
     }
@@ -86,7 +86,7 @@ function install(language) {
 
     const paginationBtn = document.querySelector(`#js-pagination-next`);
     if (paginationBtn) {
-      paginationBtn.classList.remove("is--disabled");
+      paginationBtn.classList.remove("is-disabled");
       paginationBtn.href = `/first-snap/${language}/${type}/package`;
     }
   }
@@ -168,19 +168,20 @@ function push() {
   }
 
   getCount(snapName => {
+    // Enable "Continue" button
     const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
       continueBtn.href = `/${snapName}/listing?from=first-snap`;
       continueBtn.classList.add("p-button--positive");
       continueBtn.classList.remove("p-button--neutral");
-      continueBtn.classList.remove("is--disabled");
+      continueBtn.classList.remove("is-disabled");
       continueBtn.innerHTML = "Continue";
     }
-
+    // Update "Go to listing" button for a published snap
     const paginationBtn = document.querySelector("#js-pagination-next");
     if (paginationBtn) {
       paginationBtn.href = `/${snapName}/listing?from=first-snap`;
-      paginationBtn.classList.remove("is--disabled");
+      paginationBtn.classList.remove("is-disabled");
     }
   });
 }
@@ -273,6 +274,17 @@ function initRegisterName(formEl, notificationEl, successEl) {
       }
     };
 
+    // Enable "Go to listing" button for an unpublished app
+    const enableGoToListingButton = () => {
+      const snapName = formEl.querySelector("[name=snap-name]").value;
+      const paginationBtn = document.querySelector("#js-pagination-next");
+      if (paginationBtn) {
+        paginationBtn.href = `/${snapName}/listing?from=first-snap-unpublished`;
+        paginationBtn.classList.remove("is-disabled");
+        ``;
+      }
+    };
+
     // Show spinner if data fetch takes long
     const timer = setTimeout(() => {
       if (currentToggle.getAttribute("aria-expanded") === "true") {
@@ -304,6 +316,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
 
         enableButton();
         showSuccess(message);
+        enableGoToListingButton();
       })
       .catch(() => {
         clearTimeout(timer);
