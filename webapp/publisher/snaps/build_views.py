@@ -10,7 +10,7 @@ from canonicalwebteam.launchpad import Launchpad
 # Local
 import webapp.api.dashboard as api
 from webapp.api.exceptions import ApiError, ApiResponseErrorList
-from webapp.api.github import GitHubAPI
+from webapp.api.github import GitHub
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import (
@@ -91,7 +91,7 @@ def get_snap_builds(snap_name):
     }
 
     # Get built snap in launchpad with this store name
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    github = GitHub(flask.session.get("github_auth_secret"))
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
@@ -121,7 +121,7 @@ def get_snap_builds(snap_name):
 
 
 def validate_repo(github_token, snap_name, gh_owner, gh_repo):
-    github = GitHubAPI(github_token)
+    github = GitHub(github_token)
     result = {"success": True}
     yaml_location = github.get_snapcraft_yaml_location(gh_owner, gh_repo)
 
@@ -225,7 +225,7 @@ def post_snap_builds(snap_name):
     redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
 
     # Get built snap in launchpad with this store name
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    github = GitHub(flask.session.get("github_auth_secret"))
     owner, repo = flask.request.form.get("github_repository").split("/")
 
     if not github.check_permissions_over_repo(owner, repo):
@@ -301,7 +301,7 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
     if lp_snap["git_repository_url"] != repo_url:
         return ("The repository does not match the one used by this Snap", 403)
 
-    github = GitHubAPI()
+    github = GitHub()
     valid_secret = github.gen_webhook_secret(gh_owner, gh_repo)
 
     if valid_secret != flask.request.headers.get("X-Hub-Signature").replace(
@@ -337,7 +337,7 @@ def post_update_gh_webhooks(snap_name):
     gh_link = lp_snap["git_repository_url"][19:]
     gh_owner, gh_repo = gh_link.split("/")
 
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    github = GitHub(flask.session.get("github_auth_secret"))
     old_url = f"https://build.snapcraft.io/{gh_owner}/{gh_repo}/webhook/notify"
     old_hook = github.get_hook_by_url(gh_owner, gh_repo, old_url)
 

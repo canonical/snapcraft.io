@@ -22,7 +22,7 @@ LEAD_NEWSLETTER_SUBSCRIPTION = BASE_URL + (
 LEADS = BASE_URL + "rest/v1/leads.json?access_token={token}"
 
 
-class MarketoApi:
+class Marketo:
     # Marketo isn't fast, so give it plenty of time to make a connection,
     # and respond
     def __init__(self, api_session=api.requests.Session()):

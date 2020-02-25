@@ -1,5 +1,5 @@
 import flask
-from webapp.api.github import GitHubAPI
+from webapp.api.github import GitHub
 from webapp.decorators import login_required
 
 publisher_github = flask.Blueprint(
@@ -10,7 +10,7 @@ publisher_github = flask.Blueprint(
 @publisher_github.route("/publisher/github/get-repos", methods=["GET"])
 @login_required
 def get_repos():
-    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    github = GitHub(flask.session.get("github_auth_secret"))
     org = flask.request.args.get("org")
 
     if org:

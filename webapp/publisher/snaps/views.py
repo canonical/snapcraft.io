@@ -13,7 +13,7 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
     StoreApiTimeoutError,
 )
-from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
+from canonicalwebteam.store_api.stores.snapstore import SnapStore
 from webapp import authentication
 from webapp.api import requests
 from webapp.api.exceptions import (
@@ -53,7 +53,7 @@ publisher_snaps = flask.Blueprint(
     static_folder="/static",
 )
 
-store_api = SnapcraftStoreApi(talisker.requests.get_session(requests.Session))
+store_api = SnapStore(talisker.requests.get_session(requests.Session))
 
 
 def refresh_redirect(path):

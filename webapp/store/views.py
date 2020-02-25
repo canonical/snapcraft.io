@@ -5,7 +5,7 @@ import flask
 import webapp.helpers as helpers
 import webapp.store.logic as logic
 from webapp.api import requests
-from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
+from canonicalwebteam.store_api.stores.snapstore import SnapStore
 from canonicalwebteam.store_api.exceptions import (
     StoreApiCircuitBreaker,
     StoreApiConnectionError,
@@ -25,7 +25,7 @@ def store_blueprint(store_query=None, testing=False):
     else:
         session = talisker.requests.get_session(requests.CachedSession)
 
-    api = SnapcraftStoreApi(session, store_query)
+    api = SnapStore(session, store_query)
 
     store = flask.Blueprint(
         "store",
