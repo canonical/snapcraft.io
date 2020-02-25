@@ -171,7 +171,7 @@ function push() {
     // Enable "Continue" button
     const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
-      continueBtn.href = `/${snapName}/listing?from=first-snap`;
+      continueBtn.href = `/${snapName}/releases`;
       continueBtn.classList.add("p-button--positive");
       continueBtn.classList.remove("p-button--neutral");
       continueBtn.classList.remove("is-disabled");
