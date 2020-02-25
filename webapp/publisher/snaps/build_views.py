@@ -101,7 +101,7 @@ def get_snap_builds(snap_name):
             flask.flash(
                 "This repository doesn't contain a snapcraft.yaml", "negative"
             )
-        context = get_builds(lp_snap, context, None, slice(0, BUILDS_PER_PAGE))
+        context = get_builds(lp_snap, context, slice(0, BUILDS_PER_PAGE))
     else:
         try:
             context["github_user"] = github.get_user()
