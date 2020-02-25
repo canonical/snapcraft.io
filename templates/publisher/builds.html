@@ -12,7 +12,7 @@ Builds for
 
   <form class="p-form p-form--stacked" method="POST"
     enctype='multipart/form-data'
-    action="/{{ snap_name }}/builds/trigger-build"
+    action="/{{ snap_name }}/builds"
     data-js="js-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
