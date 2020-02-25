@@ -36,7 +36,7 @@ from webapp.publisher.snaps.build_views import (
     get_validate_repo,
     post_github_webhook,
     post_snap_builds,
-    post_trigger_build,
+    post_build,
 )
 from webapp.store.logic import (
     filter_screenshots,
@@ -104,7 +104,7 @@ publisher_snaps.add_url_rule(
     "/<snap_name>/builds.json", view_func=get_snap_builds_json, methods=["GET"]
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds", view_func=post_snap_builds, methods=["POST"],
+    "/<snap_name>/builds", view_func=post_snap_builds, methods=["POST"]
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/validate-repo",
@@ -112,9 +112,7 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/trigger-build",
-    view_func=post_trigger_build,
-    methods=["POST"],
+    "/<snap_name>/builds/trigger-build", view_func=post_build, methods=["POST"]
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/webhook/notify",
