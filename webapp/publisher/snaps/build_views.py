@@ -27,7 +27,7 @@ launchpad = Launchpad(
 )
 
 
-def get_builds(lp_snap, context, build_id, selection):
+def get_builds(lp_snap, context, selection):
     # Git repository without GitHub hostname
     context["github_repository"] = lp_snap["git_repository_url"][19:]
 
@@ -35,13 +35,6 @@ def get_builds(lp_snap, context, build_id, selection):
         # Remove first part of the URL
         lp_snap["builds_collection_link"][32:]
     )
-
-    if build_id:
-        builds = [
-            build
-            for build in builds
-            if build["self_link"].split("/")[-1] == build_id
-        ]
 
     context["total_builds"] = len(builds)
 
