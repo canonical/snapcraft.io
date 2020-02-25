@@ -220,7 +220,7 @@ def get_snap_builds_json(snap_name):
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
-        context = get_builds(lp_snap, context, None, build_slice)
+        context = get_builds(lp_snap, context, build_slice)
 
     return flask.jsonify(context)
 
