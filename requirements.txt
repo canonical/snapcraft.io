@@ -6,6 +6,7 @@ canonicalwebteam.search==0.1.0
 canonicalwebteam.yaml-responses==1.1.1
 canonicalwebteam.image-template==1.0.0
 canonicalwebteam.store-api==1.0.4
+canonicalwebteam.launchpad==0.2.0
 django-openid-auth==0.15
 Flask==1.0.2
 Flask-OpenID-Stateless==1.2.6
