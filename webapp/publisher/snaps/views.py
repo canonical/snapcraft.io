@@ -37,6 +37,7 @@ from webapp.publisher.snaps.build_views import (
     post_github_webhook,
     post_snap_builds,
     post_build,
+    post_update_gh_webhooks,
 )
 from webapp.store.logic import (
     filter_screenshots,
@@ -123,6 +124,11 @@ publisher_snaps.add_url_rule(
 publisher_snaps.add_url_rule(
     "/<github_owner>/<github_repo>/webhook/notify",
     view_func=post_github_webhook,
+    methods=["POST"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/update-webhook",
+    view_func=post_update_gh_webhooks,
     methods=["POST"],
 )
 
