@@ -1,10 +1,10 @@
 from os import getenv
 from vcr_unittest import VCRTestCase
-from webapp.api.github import GitHubAPI
+from webapp.api.github import GitHub
 from werkzeug.exceptions import Unauthorized
 
 
-class GitHubAPITest(VCRTestCase):
+class GitHubTest(VCRTestCase):
     def _get_vcr_kwargs(self):
         """
         This removes the authorization header
@@ -13,8 +13,8 @@ class GitHubAPITest(VCRTestCase):
         return {"filter_headers": ["Authorization"]}
 
     def setUp(self):
-        self.client = GitHubAPI(getenv("TESTS_GITHUB_USER_TOKEN", "secret"))
-        return super(GitHubAPITest, self).setUp()
+        self.client = GitHub(getenv("TESTS_GITHUB_USER_TOKEN", "secret"))
+        return super(GitHubTest, self).setUp()
 
     def test_get_user(self):
         user = self.client.get_user()
