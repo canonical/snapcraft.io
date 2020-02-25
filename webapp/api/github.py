@@ -31,7 +31,9 @@ class GitHubAPI:
         self.session = session
         self.session.headers["Accept"] = "application/json"
 
-    def _request(self, method="GET", url="", data={}, raise_exceptions=True):
+    def _request(
+        self, method="GET", url="", params={}, data={}, raise_exceptions=True
+    ):
         """
         Makes a raw HTTP request and returns the response.
         """
@@ -41,7 +43,11 @@ class GitHubAPI:
             headers = {}
 
         response = self.session.request(
-            method, f"{self.REST_API_URL}/{url}", headers=headers, json=data
+            method,
+            f"{self.REST_API_URL}/{url}",
+            headers=headers,
+            params=params,
+            json=data,
         )
 
         if raise_exceptions:
@@ -286,3 +292,66 @@ class GitHubAPI:
         hm.update(owner.encode("UTF-8"))
         hm.update(repo.encode("UTF-8"))
         return hm.hexdigest()
+
+    def get_hooks(self, owner, repo, page=1):
+        """
+        Return all the webhooks in the repo
+        """
+        response = self._request(
+            "GET",
+            f"repos/{owner}/{repo}/hooks",
+            params={"per_page": 100, "page": page},
+        )
+        hooks = response.json()
+
+        if "next" in response.links:
+            hooks.extend(self.get_hooks(page=page + 1))
+
+        return hooks
+
+    def get_hook_by_url(self, owner, repo, url):
+        """
+        Return a webhook from the repo with the url
+        """
+        hooks = self.get_hooks(owner, repo)
+
+        for hook in hooks:
+            if hook["config"]["url"] == url:
+                return hook
+
+        return None
+
+    def update_hook_url(self, owner, repo, hook_id, new_url):
+        """
+        Update a webhook to activate it and update the URL
+        """
+        data = {
+            "active": True,
+            "config": {
+                "url": new_url,
+                "content_type": "json",
+                "secret": GITHUB_WEBHOOK_SECRET,
+            },
+        }
+
+        self._request(
+            "PATCH", f"repos/{owner}/{repo}/hooks/{hook_id}", data=data
+        )
+
+        return True
+
+    def create_hook(self, owner, repo, hook_url):
+        """
+        Create the webhook in the repo
+        """
+        data = {
+            "config": {
+                "url": hook_url,
+                "content_type": "json",
+                "secret": GITHUB_WEBHOOK_SECRET,
+            },
+        }
+
+        self._request("POST", f"repos/{owner}/{repo}/hooks", data=data)
+
+        return True
