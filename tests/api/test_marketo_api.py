@@ -12,7 +12,7 @@ import webapp.api.marketo as marketo_api
 responses.mock.assert_all_requests_are_fired = True
 
 
-class MarketoApi(unittest.TestCase):
+class Marketo(unittest.TestCase):
     @responses.activate
     def test_auth(self):
         marketo_auth_url = "".join(
@@ -53,7 +53,7 @@ class MarketoApi(unittest.TestCase):
 
         os.environ["MARKETO_CLIENT_ID"] = "fake_id"
         os.environ["MARKETO_CLIENT_SECRET"] = "fake_secret"
-        marketo = marketo_api.MarketoApi()
+        marketo = marketo_api.Marketo()
         user = marketo.get_user("testing@testing.com")
 
         self.assertEqual(user, {"id": "test"})
@@ -78,7 +78,7 @@ class MarketoApi(unittest.TestCase):
             status=200,
         )
 
-        marketo = marketo_api.MarketoApi()
+        marketo = marketo_api.Marketo()
         marketo.token = "test"
         user = marketo.get_user("testing@testing.com")
 
@@ -103,7 +103,7 @@ class MarketoApi(unittest.TestCase):
             status=200,
         )
 
-        marketo = marketo_api.MarketoApi()
+        marketo = marketo_api.Marketo()
         marketo.token = "test"
         subscription = marketo.get_newsletter_subscription("test")
 
@@ -128,7 +128,7 @@ class MarketoApi(unittest.TestCase):
             status=200,
         )
 
-        marketo = marketo_api.MarketoApi()
+        marketo = marketo_api.Marketo()
         marketo.token = "test"
         subscription = marketo.get_newsletter_subscription("test")
 
@@ -149,7 +149,7 @@ class MarketoApi(unittest.TestCase):
             responses.POST, marketo_set_subscription_url, json={}, status=200
         )
 
-        marketo = marketo_api.MarketoApi()
+        marketo = marketo_api.Marketo()
         marketo.token = "test"
         response = marketo.set_newsletter_subscription("test", True)
 
@@ -195,7 +195,7 @@ class MarketoApi(unittest.TestCase):
             status=200,
         )
 
-        marketo = marketo_api.MarketoApi()
+        marketo = marketo_api.Marketo()
         marketo.token = "expired_token"
         marketo.get_user("testing@testing.com")
 
