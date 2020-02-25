@@ -202,7 +202,7 @@ Builds.propTypes = {
   builds: PropTypes.array,
   totalBuilds: PropTypes.number,
   updateFreq: PropTypes.number,
-  singleBuild: PropTypes.boolean
+  singleBuild: PropTypes.bool
 };
 
 Builds.defaultProps = {
