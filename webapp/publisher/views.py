@@ -87,13 +87,14 @@ def get_account_details():
     # if anything fails, just continue and don't show
     # this section
     try:
-        marketo_user = marketo.get_user(flask_user["email"])
-        marketo_subscribed = marketo.get_newsletter_subscription(
-            marketo_user["id"]
-        )
         subscribed_to_newsletter = False
-        if marketo_subscribed.get("snapcraftnewsletter"):
-            subscribed_to_newsletter = True
+        marketo_user = marketo.get_user(flask_user["email"])
+        if marketo_user:
+            marketo_subscribed = marketo.get_newsletter_subscription(
+                marketo_user["id"]
+            )
+            if marketo_subscribed.get("snapcraftnewsletter"):
+                subscribed_to_newsletter = True
 
         subscriptions = {"newsletter": subscribed_to_newsletter}
     except Exception:
