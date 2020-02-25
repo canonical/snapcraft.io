@@ -414,6 +414,7 @@ def get_listing_snap(snap_name):
         "from": referrer,
         "categories": categories,
         "tour_steps": tour_steps,
+        "status": snap_details["status"],
     }
 
     return flask.render_template("publisher/listing.html", **context)

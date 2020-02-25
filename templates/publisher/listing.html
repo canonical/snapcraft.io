@@ -19,7 +19,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           <p class="snapcraft-p-market-message u-no-margin--bottom">
             {% if private %}
             This listing is not public because the snap is set to private.
-            {% else %}
+            {% elif status == "published" %}
             Updates to this information will appear immediately on the <a href="/{{ snap_name }}">snap listing page</a>.
             {% endif %}
           </p>
