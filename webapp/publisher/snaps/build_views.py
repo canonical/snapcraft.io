@@ -230,7 +230,7 @@ def post_snap_builds(snap_name):
 
     if not github.check_permissions_over_repo(owner, repo):
         flask.flash(
-            "Your GitHub account doens't have permissions in the repository",
+            "Your GitHub account doesn't have permissions in the repository",
             "negative",
         )
         return flask.redirect(redirect_url)
@@ -248,6 +248,11 @@ def post_snap_builds(snap_name):
 
     if not lp_snap:
         launchpad.create_snap(snap_name, git_url)
+
+        # Create webhook in the repo
+        github.create_hook(
+            owner, repo, f"https://snapcraft.io/{snap_name}/webhook/notify"
+        )
 
         # We trigger a first build
         launchpad.build_snap(details["snap_name"])
@@ -314,3 +319,36 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
     launchpad.build_snap(lp_snap["store_name"])
 
     return ("", 204)
+
+
+@login_required
+def post_update_gh_webhooks(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+    gh_link = lp_snap["git_repository_url"][19:]
+    gh_owner, gh_repo = gh_link.split("/")
+
+    github = GitHubAPI(flask.session.get("github_auth_secret"))
+    old_url = f"https://build.snapcraft.io/{gh_owner}/{gh_repo}/webhook/notify"
+    old_hook = github.get_hook_by_url(gh_owner, gh_repo, old_url)
+
+    if old_hook:
+        github.update_hook_url(
+            gh_owner,
+            gh_repo,
+            old_hook["id"],
+            f"https://snapcraft.io/{snap_name}/webhook/notify",
+        )
+
+    return flask.redirect(
+        flask.url_for(".get_snap_builds", snap_name=snap_name)
+    )
