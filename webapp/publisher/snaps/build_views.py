@@ -31,10 +31,7 @@ def get_builds(lp_snap, context, selection):
     # Git repository without GitHub hostname
     context["github_repository"] = lp_snap["git_repository_url"][19:]
 
-    builds = launchpad.get_collection_entries(
-        # Remove first part of the URL
-        lp_snap["builds_collection_link"][32:]
-    )
+    builds = launchpad.get_snap_builds(lp_snap["store_name"])
 
     context["total_builds"] = len(builds)
 
