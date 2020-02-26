@@ -84,7 +84,11 @@ class MarketoApi:
         response = self.request(
             method="GET", url=LEAD_BY_EMAIL, url_args=dict(email=email)
         )
-        return response["result"][0]
+        if "result" in response and len(response["result"]) > 0:
+            return response["result"][0]
+
+        else:
+            return None
 
     def get_newsletter_subscription(self, lead_id):
         response = self.request(
