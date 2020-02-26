@@ -14,10 +14,17 @@
   </div>
   {% endif %}
   <div class="u-fixed-width">
+    {% if snap_link %}
+    <a href="/{{snap_name}}/{{snap_link}}">&lsaquo; {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %} - {{snap_link}}</a>
+    {% else %}
     <a href="/snaps">&lsaquo; My snaps</a>
+    {% endif %}
+    {% if not suppress_title %}
     <h1 class="p-heading--three">
       {% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}
       {% if publisher_name and publisher_name != user_name %} <small>by {{publisher_name}}</small>{% endif %}</h1>
+    {% endif %}
+    {% if not suppress_nav %}
     <nav class="p-tabs">
       <ul class="p-tabs__list u-float-right u-no-margin--bottom" role="tablist">
         <li class="p-tabs__item" role="presentation">
@@ -104,5 +111,6 @@
         </li>
       </ul>
     </nav>
+    {% endif %}
   </div>
 </section>
