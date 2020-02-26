@@ -31,6 +31,7 @@ from webapp.helpers import get_licenses
 from webapp.markdown import parse_markdown_description
 from webapp.publisher.snaps import logic, preview_data
 from webapp.publisher.snaps.build_views import (
+    get_snap_build,
     get_snap_builds,
     get_snap_builds_json,
     get_validate_repo,
@@ -106,6 +107,9 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds", view_func=post_snap_builds, methods=["POST"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/<build_id>", view_func=get_snap_build, methods=["GET"]
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/validate-repo",
