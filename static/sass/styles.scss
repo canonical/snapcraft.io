@@ -83,10 +83,6 @@ $color-social-icon-foreground: $color-light;
 @import 'patterns_sticky_footer';
 @include p-sticky-footer;
 
-// some bugfixes for Vanilla navigation issues
-@import 'snapcraft_p-navigation';
-@include snapcraft-p-navigation;
-
 @import 'snapcraft_banner';
 @include snapcraft-banner;
 

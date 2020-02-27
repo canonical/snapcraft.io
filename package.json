@@ -91,7 +91,7 @@
     "swiper": "^4.4.1",
     "topojson-client": "^3.0.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
-    "vanilla-framework": "^2.5.0",
+    "vanilla-framework": "^2.7.1",
     "watch-cli": "^0.2.2",
     "webpack": "^4.22.0",
     "webpack-cli": "^3.1.2",
