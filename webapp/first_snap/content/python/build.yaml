@@ -1,7 +1,9 @@
 name: test-offlineimap-{name}
 linux:
   auto:
-    - action: "Return to the root directory of the project containing your snapcraft.yaml and run snapcraft:"
+    - action: "Create a directory, move the downloaded snapcraft.yaml file into the new directory and navigate there:"
+      command: mkdir ~/${name} && mv ~/Downloads/snapcraft.yaml ~/${name} && cd  ~/${name}
+    - action: "Run snapcraft:"
       command: snapcraft
     - action: "Install the snap:"
       command: sudo snap install --devmode --dangerous *.snap
@@ -24,7 +26,9 @@ linux:
         Make sure the name matches what has been used previously (i.e <code>${name}</code>)
 macos:
   auto:
-    - action: "Return to the root directory of the project containing your snapcraft.yaml and run snapcraft:"
+    - action: "Create a directory, move the downloaded snapcraft.yaml file into the new directory and navigate there:"
+      command: mkdir ~/${name} && mv ~/Downloads/snapcraft.yaml ~/${name} && cd  ~/${name}
+    - action: "Run snapcraft:"
       command: snapcraft
   manual:
     - action: "Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image:"
