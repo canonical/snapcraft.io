@@ -1,5 +1,5 @@
 name: ${name}
-version: git
+version: '1.0'
 summary: An interactive web server.
 description: |
   HTTPLab let you inspect HTTP requests and forge responses.

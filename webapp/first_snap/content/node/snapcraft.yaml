@@ -1,5 +1,5 @@
 name: ${name}
-version: git
+version: '1.0'
 summary: Command line weather tool.
 description: |
   Get current weather:-
