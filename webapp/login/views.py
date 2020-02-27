@@ -99,9 +99,7 @@ def after_login(resp):
 @login.route("/logout")
 def logout():
     no_redirect = flask.request.args.get("no_redirect", default="false")
-
-    if authentication.is_authenticated(flask.session):
-        authentication.empty_session(flask.session)
+    authentication.empty_session(flask.session)
 
     if no_redirect == "true":
         return flask.redirect("/")

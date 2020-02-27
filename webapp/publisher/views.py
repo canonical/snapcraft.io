@@ -18,7 +18,7 @@ account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
 
-marketo = marketo_api.MarketoApi()
+marketo = marketo_api.Marketo()
 
 
 def refresh_redirect(path):
