@@ -5,12 +5,6 @@ linux:
       command: mkdir ~/${name} && mv ~/Downloads/snapcraft.yaml ~/${name} && cd  ~/${name}
     - action: "Run snapcraft:"
       command: snapcraft
-    - action: "Install the snap:"
-      command: sudo snap install --devmode --dangerous *.snap
-    - action: "List your installed snaps to confirm:"
-      command: snap list
-    - action: "Run the snap:"
-      command: test-moos-{name}.MOOSDB -h
     - warning: |
         Make sure the name matches what has been used previously (i.e <code>test-moos-{name}</code>)
   manual:

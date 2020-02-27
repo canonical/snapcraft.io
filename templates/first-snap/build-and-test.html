@@ -1,0 +1,131 @@
+{% set fsf_step = "build_and_test" %}
+{% extends "first-snap/_layout_fsf.html" %}
+
+{% block fsf_content %}
+  <div class="row">
+    <div class="p-accordion" role="tablist" aria-multiselect="true">
+      <ol class="p-accordion__list">
+        <li class="p-accordion__group">
+          <button aria-expanded="true" type="button"
+            class="p-accordion__tab" id="tab1" role="tab"
+            aria-controls="#tab1-section">
+            <h4 class="u-no-margin--bottom">
+              Step 1: Build snap
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab1-section" role="tabpanel"
+            aria-hidden="false"
+            aria-labelledby="tab1-section">
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <ol class="p-stepped-list has-margin">
+                    {% for step in build_steps %}
+                    {% if not step.warning %}
+                    <li class="p-stepped-list__item">
+                      <h4 class="p-stepped-list__title u-no-limit">
+                        {{ step.action|safe }}
+                      </h4>
+                      {% if step.command %}
+                      <span class="p-stepped-list__content">
+                        {% set snippet_value = step.command|replace("${name}", snap_name) %}
+                        {% set snippet_id = 10 + loop.index %}
+                        {% if snippet_value.count('\n') == 0 %}
+                        {% include "/partials/_code-snippet.html" %}
+                        {% else %}
+                        {% include "/partials/_code-snippet-multi.html" %}
+                        {% endif %}
+                      </span>
+                      {% endif %}
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% for step in build_steps %}
+                    {% if loop.last and step.warning %}
+                    <div class="p-notification--caution">
+                      <p class="p-notification__response">
+                        {{ step.warning|replace("${name}", snap_name)|safe }}
+                      </p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                  </ol>
+                  <button class="p-button--positive" data-js="js-accordion-next-button">Continue</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </li>
+        <li class="p-accordion__group">
+          <button aria-expanded="false" type="button"
+            class="p-accordion__tab" id="tab2" role="tab"
+            aria-controls="#tab2-section">
+            <h4 class="u-no-margin--bottom">
+              Step 2: Test snap <span class="p-text-optional">(optional)</span>
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab2-section" role="tabpanel"
+            aria-hidden="true" aria-labelledby="tab2-section">
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <p>Whilst we do encourage testing your snaps, it is not required for this
+                  tutorial. If you wish you can <a href="/first-snap/{{ language }}/{{ os }}/push">skip this section</a> and move on to the next step.</p>
+                  <ol class="p-stepped-list has-margin">
+                    {% for step in test_steps %}
+                    <li class="p-stepped-list__item">
+                      <h4 class="p-stepped-list__title u-no-limit">
+                        {{ step.action|safe }}
+                      </h4>
+                      {% if step.command %}
+                      <span class="p-stepped-list__content">
+                        {% set snippet_value = step.command|replace("${name}", snap_name) %}
+                        {% set snippet_id = 20 + loop.index %}
+                        {% if snippet_value.count('\n') == 0 %}
+                        {% include "/partials/_code-snippet.html" %}
+                        {% else %}
+                        {% include "/partials/_code-snippet-multi.html" %}
+                        {% endif %}
+                      </span>
+                      {% endif %}
+                      {% if step.warning %}
+                      <span class="p-stepped-list__content">
+                        <div class="p-notification--caution">
+                          <p class="p-notification__response">
+                            {{ step.warning|replace("${name}", snap_name)|safe }}
+                          </p>
+                        </div>
+                      </span>
+                      {% endif %}
+                    </li>
+                    {% endfor %}
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </section>
+        </li>
+      </ol>
+    </div>
+  </div>
+{% endblock %}
+
+{% block fsf_pagination %}
+  <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/package">
+    &lsaquo; Previous: Package snap
+  </a>
+
+  <a class="p-button--positive u-float-right u-no-margin--right" href="/first-snap/{{ language }}/{{ os }}/push">
+    Next: Publish to store &rsaquo;
+  </a>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      snapcraft.public.initAccordion('.p-accordion__list');
+    });
+  });
+</script>
+{% endblock %}
