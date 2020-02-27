@@ -124,17 +124,11 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  {% if os and os.startswith('macos') %}
-    <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/test" aria-label="Previous: Test snap">
-      &lsaquo; Test snap
-    </a>
-  {% else %}
-    <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/build" aria-label="Previous: Build snap">
-      &lsaquo; Build snap
-    </a>
-  {% endif %}
-  <a class="p-button--positive is-disabled u-float-right u-no-margin--right"
-    id="js-pagination-next" aria-label="Next: Go to listing">
+  <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/build-and-test" aria-label="Previous: Build & test snap">
+    &lsaquo; Build &amp; test snap
+  </a>
+
+  <a class="p-button--positive is-disabled u-float-right u-no-margin--right" id="js-pagination-next" aria-label="Next: Go to listing">
     Go to listing &rsaquo;
   </a>
 {% endblock %}

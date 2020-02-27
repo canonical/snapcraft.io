@@ -35,6 +35,28 @@ export default function initAccordion(accordionContainerSelector) {
         toggleAccordion(target, true);
       }
     });
+
+  // Add event listeners to buttons that expand the next section of the accordion
+  const nextButtons = [].slice.call(
+    document.querySelectorAll("[data-js='js-accordion-next-button']")
+  );
+  if (nextButtons) {
+    nextButtons.forEach(button => {
+      button.addEventListener("click", e => {
+        e.preventDefault();
+
+        const currentPanel = button.closest(".p-accordion__group");
+        const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+        const nextPanel = currentPanel.nextElementSibling;
+        const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+
+        if (currentPanel && nextPanel) {
+          toggleAccordion(currentToggle, false);
+          toggleAccordion(nextToggle, true);
+        }
+      });
+    });
+  }
 }
 
 /**
