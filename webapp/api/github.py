@@ -289,15 +289,17 @@ class GitHub:
 
         return False
 
-    def gen_webhook_secret(self, owner, repo):
+    def validate_webhook_signature(self, payload, signature):
         """
-        Generate the same secret that we receive from a GitHub webhook.
+        Generate the payload signature and compare with the given one
         """
         key = bytes(GITHUB_WEBHOOK_SECRET, "UTF-8")
-        hm = hmac.new(key, digestmod=sha1)
-        hm.update(owner.encode("UTF-8"))
-        hm.update(repo.encode("UTF-8"))
-        return hm.hexdigest()
+        hmac_gen = hmac.new(key, payload, sha1)
+
+        # Add append prefix to match the GitHub request format
+        digest = f"sha1={hmac_gen.hexdigest()}"
+
+        return hmac.compare_digest(digest, signature)
 
     def get_hooks(self, owner, repo, page=1):
         """
