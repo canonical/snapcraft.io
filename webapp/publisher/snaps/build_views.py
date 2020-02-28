@@ -338,10 +338,9 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
         return ("The repository does not match the one used by this Snap", 403)
 
     github = GitHub()
-    valid_secret = github.gen_webhook_secret(gh_owner, gh_repo)
 
-    if valid_secret != flask.request.headers.get("X-Hub-Signature").replace(
-        "sha1=", ""
+    if not github.validate_webhook_signature(
+        flask.request.data, flask.request.headers.get("X-Hub-Signature")
     ):
         return ("Invalid secret", 403)
 
