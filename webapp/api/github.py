@@ -18,6 +18,7 @@ class GitHub:
 
     REST_API_URL = "https://api.github.com"
     GRAPHQL_API_URL = "https://api.github.com/graphql"
+    RAW_CONTENT_URL = "https://raw.githubusercontent.com"
 
     YAML_LOCATIONS = [
         "snapcraft.yaml",
@@ -260,6 +261,12 @@ class GitHub:
 
         return False
 
+    def get_last_commit(self, owner, repo, branch="master"):
+        response = self._request(
+            "GET", f"repos/{owner}/{repo}/commits/{branch}"
+        )
+        return response.json()["sha"]
+
     def get_snapcraft_yaml_name(self, owner, repo):
         """
         Return True if the name inside the yaml file match with the snap
@@ -267,13 +274,12 @@ class GitHub:
         loc = self.get_snapcraft_yaml_location(owner, repo)
 
         if loc:
-            response = self._request(
-                "GET", f"repos/{owner}/{repo}/contents/{loc}"
-            )
-            file_metadata = response.json()
+            # Get last commit to avoid cache issues with raw.github.com
+            last_commit = self.get_last_commit(owner, repo)
 
             response = self.session.request(
-                "GET", file_metadata["download_url"]
+                "GET",
+                f"{self.RAW_CONTENT_URL}/{owner}/{repo}/{last_commit}/{loc}",
             )
 
             yaml = get_yaml_loader()
