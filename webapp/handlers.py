@@ -73,15 +73,6 @@ def set_handlers(app):
 
     # Error handlers
     # ===
-    @app.errorhandler(404)
-    def page_not_found(error):
-        """
-        For 404 pages, display the 404.html template,
-        passing through the error description.
-        """
-
-        return flask.render_template("404.html", error=error.description), 404
-
     @app.errorhandler(500)
     @app.errorhandler(501)
     @app.errorhandler(502)

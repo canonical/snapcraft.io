@@ -4,7 +4,6 @@ import flask
 import os
 
 from ruamel.yaml import YAML
-from werkzeug.routing import BaseConverter
 
 
 _yaml = YAML(typ="rt")
@@ -15,12 +14,6 @@ def get_yaml_loader(typ="safe"):
     if typ == "safe":
         return _yaml_safe
     return _yaml
-
-
-class RegexConverter(BaseConverter):
-    def __init__(self, url_map, *items):
-        super(RegexConverter, self).__init__(url_map)
-        self.regex = items[0]
 
 
 def get_licenses():
