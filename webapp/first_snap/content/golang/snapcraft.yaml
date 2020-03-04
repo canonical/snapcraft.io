@@ -11,7 +11,7 @@ parts:
   ${name}:
     plugin: go
     go-importpath: github.com/gchaincl/httplab
-    source: .
+    source: https://github.com/gchaincl/httplab
     source-type: git
     build-packages:
       - gcc

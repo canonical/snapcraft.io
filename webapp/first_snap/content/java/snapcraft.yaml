@@ -18,7 +18,7 @@ parts:
   ${name}:
     after: [desktop-glib-only]
     plugin: gradle
-    source: .
+    source: https://github.com/snapcraft-docs/freeplane
     build: |
       export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
       gradle release -x test -x createGitTag
