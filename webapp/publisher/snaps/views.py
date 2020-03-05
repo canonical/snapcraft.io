@@ -456,12 +456,27 @@ def post_listing_snap(snap_name):
             except ApiError as api_error:
                 return _handle_error(api_error)
 
+            icon_input = (
+                flask.request.files.get("icon")
+                if flask.request.files.get("icon")
+                else None
+            )
+            screenshots_input = [
+                s if s else None
+                for s in flask.request.files.getlist("screenshots")
+            ]
+            banner_image_input = (
+                flask.request.files.get("banner-image")
+                if flask.request.files.get("banner-image")
+                else None
+            )
+
             images_json, images_files = logic.build_changed_images(
                 changes["images"],
                 current_screenshots,
-                flask.request.files.get("icon"),
-                flask.request.files.getlist("screenshots"),
-                flask.request.files.get("banner-image"),
+                icon_input,
+                screenshots_input,
+                banner_image_input,
             )
 
             try:
