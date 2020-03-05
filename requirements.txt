@@ -1,14 +1,15 @@
 # App dependencies
-bleach==3.1.0
+canonicalwebteam.flask_base==0.4.3
+gunicorn[gevent]
 canonicalwebteam.discourse-docs==0.11.1
 canonicalwebteam.blog==4.0.2
 canonicalwebteam.search==0.1.0
 canonicalwebteam.image-template==1.0.0
 canonicalwebteam.store-api==1.0.4
 django-openid-auth==0.15
-canonicalwebteam.flask_base==0.4.2
 Flask-OpenID-Stateless==1.2.6
-Flask-WTF==0.14.2
+Flask-WTF==0.14.3
+bleach==3.1.0
 humanize==0.5.1
 Markdown==3.0.1
 mistune==0.8.4
@@ -21,7 +22,6 @@ requests==2.22
 requests-cache==0.5.2
 responses==0.9.0
 ruamel.yaml==0.15.72
-talisker[flask,gunicorn,raven,prometheus]==0.15.0
 
 # Development dependencies
-Flask-Testing==0.7.1
+Flask-Testing==0.8.0
