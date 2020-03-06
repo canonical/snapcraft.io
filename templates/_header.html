@@ -87,7 +87,7 @@
             </ul>
           </li>
         {% else %}
-          <li class="p-navigation__link" role="menuitem"><a href="/account"><i class="p-icon--user"></i> Developer account</a></li>
+          <li class="p-navigation__link" role="menuitem"><a href="{{ url_for('publisher_snaps.get_account_snaps') }}"><i class="p-icon--user"></i> Developer account</a></li>
         {% endif %}
       </ul>
     </nav>
