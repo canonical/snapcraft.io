@@ -16,6 +16,8 @@ from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
 from webapp.publisher.views import _handle_error, _handle_error_list
 from werkzeug.exceptions import Unauthorized
+from webapp.api import dashboard
+
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 BUILDS_PER_PAGE = 15
@@ -283,15 +285,19 @@ def post_snap_builds(snap_name):
     git_url = f"https://github.com/{owner}/{repo}"
 
     if not lp_snap:
-        launchpad.create_snap(snap_name, git_url)
+        macaroon = dashboard.get_package_upload_macaroon(
+            session=flask.session, snap_name=snap_name, channels=["edge"]
+        )["macaroon"]
+
+        launchpad.create_snap(snap_name, git_url, macaroon)
+
+        # We trigger a first build
+        launchpad.build_snap(details["snap_name"])
 
         # Create webhook in the repo
         github.create_hook(
             owner, repo, f"https://snapcraft.io/{snap_name}/webhook/notify"
         )
-
-        # We trigger a first build
-        launchpad.build_snap(details["snap_name"])
 
         flask.flash("The GitHub repository was linked correctly.", "positive")
     elif lp_snap["git_repository_url"] != git_url:
@@ -315,7 +321,8 @@ def post_build(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    launchpad.build_snap(details["snap_name"])
+    if not launchpad.is_snap_building(details["snap_name"]):
+        launchpad.build_snap(details["snap_name"])
 
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)
@@ -351,7 +358,8 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
     if not validation["success"]:
         return (validation["error"]["message"], 400)
 
-    launchpad.build_snap(lp_snap["store_name"])
+    if not launchpad.is_snap_building(lp_snap["store_name"]):
+        launchpad.build_snap(lp_snap["store_name"])
 
     return ("", 204)
 
