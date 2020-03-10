@@ -51,6 +51,8 @@ SNAP_INFO_URL = "".join([DASHBOARD_API, "snaps/info/{snap_name}"])
 
 REGISTER_NAME_URL = "".join([DASHBOARD_API, "register-name/"])
 
+ACL_URL = f"{DASHBOARD_API}acl/"
+
 REGISTER_NAME_DISPUTE_URL = "".join([DASHBOARD_API, "register-name-dispute/"])
 
 REVISION_HISTORY_URL = "".join([DASHBOARD_API, "snaps/{snap_id}/history"])
@@ -217,6 +219,23 @@ def get_snap_info(snap_name, session):
     response = api_session.get(
         url=SNAP_INFO_URL.format(snap_name=snap_name),
         headers=get_authorization_header(session),
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def get_package_upload_macaroon(session, snap_name, channels):
+    json = {
+        "packages": [{"name": snap_name, "series": "16"}],
+        "permissions": ["package_upload"],
+        "channels": channels,
+    }
+
+    response = api_session.post(
+        url=ACL_URL, headers=get_authorization_header(session), json=json,
     )
 
     if authentication.is_macaroon_expired(response.headers):

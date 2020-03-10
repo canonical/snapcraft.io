@@ -69,6 +69,7 @@ def request_macaroon():
                 "package_update",
                 "package_register",
                 "package_release",
+                "package_upload_request",
                 "edit_account",
             ]
         }
