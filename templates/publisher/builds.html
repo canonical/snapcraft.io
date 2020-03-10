@@ -16,7 +16,7 @@ Builds for
     data-js="js-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-    {% if snap_builds %}
+    {% if github_repository %}
     <div class="snapcraft-p-sticky js-sticky-bar">
       <div class="row">
         <p class="p-heading--four u-no-margin--bottom">
@@ -28,9 +28,7 @@ Builds for
         </p>
       </div>
     </div>
-    {% endif %}
-
-    {% if not github_repository %}
+    {% else %}
     <div class="snapcraft-p-sticky js-sticky-bar">
       <div class="row">
         <ul class="p-inline-list u-no-margin--bottom">
