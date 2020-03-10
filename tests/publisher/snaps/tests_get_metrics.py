@@ -322,7 +322,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -374,7 +376,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -426,7 +430,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -482,7 +488,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },

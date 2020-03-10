@@ -222,9 +222,18 @@ def publisher_snap_metrics(snap_name):
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
+
+    series = active_metrics["series"]
+
+    if installed_base_metric == "os":
+        capitalized_series = active_metrics["series"]
+        for item in capitalized_series:
+            item["name"] = metrics._capitalize_os_name(item["name"])
+        series = capitalized_series
+
     active_devices = metrics.ActiveDevices(
         name=active_metrics["metric_name"],
-        series=active_metrics["series"],
+        series=series,
         buckets=active_metrics["buckets"],
         status=active_metrics["status"],
     )

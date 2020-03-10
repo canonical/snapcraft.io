@@ -53,6 +53,39 @@ def _calculate_color(thisCountry, maxCountry, maxColor, minColor):
     return int(colorRange * countryFactor + minColor)
 
 
+def _capitalize_os_name(os_name):
+    """Capitalize OS name
+
+    :returns: Capitalized OS name (if part of the list)
+    """
+    capitalized_oses = {
+        "solus": "Solus",
+        "raspbian": "Raspbian",
+        "kali": "Kali Linux",
+        "galliumos": "GalliumOS",
+        "opensuse-leap": "openSUSE Leap",
+        "fedora": "Fedora",
+        "ubuntu-core": "Ubuntu Core",
+        "linuxmint": "Linux Mint",
+        "parrot": "Parrot OS",
+        "centos": "CentOS",
+        "ubuntu": "Ubuntu",
+        "arch": "Arch Linux",
+        "debian": "Debian",
+        "elementary": "elementary OS",
+        "neon": "KDE Neon",
+        "manjaro": "Manjaro",
+        "zorin": "Zorin OS",
+    }
+
+    name, version = os_name.split("/")
+
+    if version != "-":
+        return " ".join([capitalized_oses.get(name, name), version])
+    else:
+        return capitalized_oses.get(name, name)
+
+
 class Metric(object):
     """This is a basic class for metrics
 
@@ -270,13 +303,9 @@ class OsMetric(Metric):
 
         for distro in self.series:
             if distro["values"][0]:
-                name = distro["name"].replace("/-", "")
-                oses.append(
-                    {
-                        "name": name.replace("/", " "),
-                        "value": distro["values"][-1],
-                    }
-                )
+
+                name = _capitalize_os_name(distro["name"])
+                oses.append({"name": name, "value": distro["values"][-1]})
 
         oses.sort(key=lambda x: x["value"], reverse=True)
 
