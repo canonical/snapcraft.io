@@ -40,7 +40,7 @@ export const UserFacingStatus = {
     1,
     FAILED_TO_BUILD
   ),
-  [CANCELLED]: createStatus("Cancelled", "Cancelled", 8, FAILED_TO_BUILD),
+  [CANCELLED]: createStatus("Cancelled", "Cancelled", 8, CANCELLED),
   [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT)
 };
 
