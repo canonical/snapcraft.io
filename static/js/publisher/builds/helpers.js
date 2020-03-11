@@ -33,7 +33,7 @@ export const UserFacingStatus = {
   ),
   [RELEASING_SOON]: createStatus(
     "Built, releasing soon",
-    "Built",
+    "Releasing",
     3,
     "releasing_soon"
   ),
@@ -48,10 +48,18 @@ export const UserFacingStatus = {
 };
 
 function createStatus(statusMessage, shortStatusMessage, priority, badge) {
+  const loadingStatus = [IN_PROGRESS, RELEASING_SOON];
+  let icon;
+  if (badge.indexOf("failed") > -1) {
+    icon = "error";
+  } else if (loadingStatus.indexOf(badge) > -1) {
+    icon = "spinner u-animation--spin";
+  }
+
   return {
     statusMessage,
     shortStatusMessage,
-    icon: badge.indexOf("failed") > -1 ? "error" : false,
+    icon: icon,
     priority,
     badge
   };
