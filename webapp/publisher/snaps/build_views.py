@@ -291,10 +291,7 @@ def post_snap_builds(snap_name):
 
         launchpad.create_snap(snap_name, git_url, macaroon)
 
-        # We trigger a first build
-        launchpad.build_snap(details["snap_name"])
-
-        # Create webhook in the repo
+        # Create webhook in the repo, it should also trigger the first build
         github.create_hook(
             owner, repo, f"https://snapcraft.io/{snap_name}/webhook/notify"
         )
@@ -321,12 +318,12 @@ def post_build(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    if not launchpad.is_snap_building(details["snap_name"]):
-        launchpad.build_snap(details["snap_name"])
+    if launchpad.is_snap_building(details["snap_name"]):
+        launchpad.cancel_snap_builds(details["snap_name"])
 
-        flask.flash(
-            "Build triggered", "positive",
-        )
+    launchpad.build_snap(details["snap_name"])
+
+    flask.flash("Build triggered", "positive")
 
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)
@@ -362,8 +359,10 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
     if not validation["success"]:
         return (validation["error"]["message"], 400)
 
-    if not launchpad.is_snap_building(lp_snap["store_name"]):
-        launchpad.build_snap(lp_snap["store_name"])
+    if launchpad.is_snap_building(lp_snap["store_name"]):
+        launchpad.cancel_snap_builds(lp_snap["store_name"])
+
+    launchpad.build_snap(lp_snap["store_name"])
 
     return ("", 204)
 

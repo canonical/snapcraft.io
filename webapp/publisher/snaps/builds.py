@@ -10,6 +10,7 @@ class StoreFrontBuildState(Enum):
     RELEASING_SOON = "releasing_soon"
     IN_PROGRESS = "in_progress"
     FAILED_TO_BUILD = "failed_to_build"
+    CANCELLED = "cancelled"
     UNKNOWN = "unknown"
 
 
@@ -88,15 +89,19 @@ def map_build_and_upload_states(build_state, upload_state):
     elif build_state == LaunchpadBuildState.UPLOADING:
         return StoreFrontBuildState.IN_PROGRESS.value
 
-    elif (
-        build_state == LaunchpadBuildState.FAILED_BUILD
-        or LaunchpadBuildState.MANUALDEPWAIT
-        or LaunchpadBuildState.CHROOTWAIT
-        or LaunchpadBuildState.SUPERSEDED
-        or LaunchpadBuildState.FAILED_UPLOAD
-        or LaunchpadBuildState.CANCELLING
-        or LaunchpadBuildState.CANCELLED
-    ):
+    elif build_state in [
+        LaunchpadBuildState.CANCELLING,
+        LaunchpadBuildState.CANCELLED,
+    ]:
+        return StoreFrontBuildState.CANCELLED.value
+
+    elif build_state in [
+        LaunchpadBuildState.FAILED_BUILD,
+        LaunchpadBuildState.MANUALDEPWAIT,
+        LaunchpadBuildState.CHROOTWAIT,
+        LaunchpadBuildState.SUPERSEDED,
+        LaunchpadBuildState.FAILED_UPLOAD,
+    ]:
         return StoreFrontBuildState.FAILED_TO_BUILD.value
 
     return StoreFrontBuildState.UNKNOWN.value
