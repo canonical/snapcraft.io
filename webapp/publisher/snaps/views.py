@@ -1,42 +1,51 @@
 from json import loads
 
-import flask
-import talisker.requests
 import bleach
+import flask
 import pycountry
-import webapp.helpers as helpers
-from webapp.markdown import parse_markdown_description
+import talisker.requests
 import webapp.api.dashboard as api
+import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiCircuitBreaker,
+    StoreApiError,
+    StoreApiTimeoutError,
+)
+from canonicalwebteam.store_api.stores.snapstore import SnapStore
 from webapp import authentication
 from webapp.api import requests
 from webapp.api.exceptions import (
     AgreementNotSigned,
+    ApiCircuitBreaker,
     ApiError,
     ApiResponseError,
     ApiResponseErrorList,
     ApiTimeoutError,
-    ApiCircuitBreaker,
     MacaroonRefreshRequired,
     MissingUsername,
 )
-from canonicalwebteam.store_api.stores.snapcraft import SnapcraftStoreApi
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-    StoreApiTimeoutError,
-    StoreApiCircuitBreaker,
+from webapp.decorators import login_required
+from webapp.helpers import get_licenses
+from webapp.markdown import parse_markdown_description
+from webapp.publisher.snaps import logic, preview_data
+from webapp.publisher.snaps.build_views import (
+    get_snap_build,
+    get_snap_builds,
+    get_snap_builds_json,
+    get_validate_repo,
+    post_github_webhook,
+    post_snap_builds,
+    post_build,
+    post_update_gh_webhooks,
 )
 from webapp.store.logic import (
-    get_categories,
     filter_screenshots,
+    get_categories,
     get_icon,
     get_videos,
 )
-from webapp.decorators import login_required
-from webapp.helpers import get_licenses
-from webapp.publisher.snaps import logic
-from webapp.publisher.snaps import preview_data
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -45,7 +54,7 @@ publisher_snaps = flask.Blueprint(
     static_folder="/static",
 )
 
-store_api = SnapcraftStoreApi(talisker.requests.get_session(requests.Session))
+store_api = SnapStore(talisker.requests.get_session(requests.Session))
 
 
 def refresh_redirect(path):
@@ -88,6 +97,44 @@ def _handle_error_list(errors):
 
     error_messages = ", ".join(codes)
     return flask.abort(502, error_messages)
+
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds", view_func=get_snap_builds, methods=["GET"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds.json", view_func=get_snap_builds_json, methods=["GET"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds", view_func=post_snap_builds, methods=["POST"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/<build_id>", view_func=get_snap_build, methods=["GET"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/validate-repo",
+    view_func=get_validate_repo,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/trigger-build", view_func=post_build, methods=["POST"]
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/webhook/notify",
+    view_func=post_github_webhook,
+    methods=["POST"],
+)
+# This route is to support previous webhooks from build.snapcraft.io
+publisher_snaps.add_url_rule(
+    "/<github_owner>/<github_repo>/webhook/notify",
+    view_func=post_github_webhook,
+    methods=["POST"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/update-webhook",
+    view_func=post_update_gh_webhooks,
+    methods=["POST"],
+)
 
 
 @publisher_snaps.route("/account/snaps")

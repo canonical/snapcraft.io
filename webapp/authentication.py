@@ -39,6 +39,7 @@ def empty_session(session):
     session.pop("macaroon_discharge", None)
     session.pop("openid", None)
     session.pop("user_shared_snaps", None)
+    session.pop("github_auth_secret", None)
 
 
 def get_caveat_id(root):
@@ -68,6 +69,7 @@ def request_macaroon():
                 "package_update",
                 "package_register",
                 "package_release",
+                "package_upload_request",
                 "edit_account",
             ]
         }
