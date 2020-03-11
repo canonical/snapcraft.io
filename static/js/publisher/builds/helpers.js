@@ -11,40 +11,35 @@ const UNKNOWN = "unknown";
 export const UserFacingStatus = {
   // Used only when there is no build returned from LP.
   // When build is returned from LP (scheduled) it's 'Building soon' for BSI.
-  [NEVER_BUILT]: createStatus("Never built", "Never built", 8, "never_built"),
-  [BUILDING_SOON]: createStatus(
-    "Building soon",
-    "Building",
-    7,
-    "building_soon"
-  ),
+  [NEVER_BUILT]: createStatus("Never built", "Never built", 8, NEVER_BUILT),
+  [BUILDING_SOON]: createStatus("Building soon", "Building", 7, BUILDING_SOON),
   [WONT_RELEASE]: createStatus(
     "Built, won’t be released",
     "Built",
     6,
-    "wont_release"
+    WONT_RELEASE
   ),
   [RELEASED]: createStatus("Built and released", "Released", 5, "released"),
   [RELEASE_FAILED]: createStatus(
     "Built, failed to release",
     "Failed",
     4,
-    "release_failed"
+    RELEASE_FAILED
   ),
   [RELEASING_SOON]: createStatus(
     "Built, releasing soon",
     "Releasing",
     3,
-    "releasing_soon"
+    RELEASING_SOON
   ),
-  [IN_PROGRESS]: createStatus("In progress", "In progress", 2, "in_progress"),
+  [IN_PROGRESS]: createStatus("In progress", "In progress", 2, IN_PROGRESS),
   [FAILED_TO_BUILD]: createStatus(
     "Failed to build",
     "Failed",
     1,
-    "failed_to_build"
+    FAILED_TO_BUILD
   ),
-  [UNKNOWN]: createStatus("Unknown", "Unknown", 8, "never_built")
+  [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT)
 };
 
 function createStatus(statusMessage, shortStatusMessage, priority, badge) {

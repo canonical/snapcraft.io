@@ -118,10 +118,14 @@ class Builds extends React.Component {
       return {
         columns: [
           {
-            content: singleBuild ? (
-              `#${build.id}`
+            content: build.id ? (
+              singleBuild ? (
+                `#${build.id}`
+              ) : (
+                <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+              )
             ) : (
-              <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+              ""
             )
           },
           {
