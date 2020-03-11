@@ -189,7 +189,6 @@ Builds for
     {% endif %}
   </form>
 
-  {% if snap_builds_enabled %}
   <section class="p-strip is-shallow">
     <div class="u-fixed-width">
       <h4 class="u-float-left">Latest builds</h4>
@@ -207,10 +206,28 @@ Builds for
     </div>
     <div class="u-fixed-width">
       <div id="builds-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Architecture</th>
+              <th class="u-hide--small">Duration</th>
+              <th class="has-icon">Result</th>
+              <th></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Waiting for builds...</td>
+              <td></td>
+              <td class="u-hide--small"></td>
+              <td class="has-icon"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
-  {% endif %}
 </div>
 
 {% endblock %}
@@ -224,15 +241,11 @@ Builds for
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
-      // snapcraft.publisher.initSearchSelect('.js-license', [{ "key": "Glide", "name": "3dfx Glide License" }, { "key": "Abstyles", "name": "Abstyles License" }, { "key": "AFL-1.1", "name": "Academic Free License v1.1" }, { "key": "AFL-1.2", "name": "Academic Free License v1.2" }, { "key": "AFL-2.0", "name": "Academic Free License v2.0" }, { "key": "AFL-2.1", "name": "Academic Free License v2.1" }, { "key": "AFL-3.0", "name": "Academic Free License v3.0" }, { "key": "AMPAS", "name": "Academy of Motion Picture Arts and Sciences BSD" }, { "key": "APL-1.0", "name": "Adaptive Public License 1.0" }, { "key": "Adobe-Glyph", "name": "Adobe Glyph List License" }], ' OR ');
-      {% if snap_builds %}
-        snapcraft.publisher.initBuilds('#builds-wrapper',
-          {{ snap_name | tojson }},
-          {{ snap_builds | tojson }},
-          {{ total_builds | tojson }}
-        );
-      {% endif %}
-      snapcraft.publisher.stickyListingBar();
+      snapcraft.publisher.initBuilds('#builds-wrapper',
+        {{ snap_name | tojson }},
+        {{ snap_builds | tojson }},
+        {{ total_builds | tojson }}
+      );
       snapcraft.publisher.stickyListingBar();
       {% if github_orgs and github_user %}
         snapcraft.publisher.initRepoConnect('[data-js="repo-connect"]', {{ github_orgs | tojson }}, {{ github_user | tojson }}, {{ snap_name | tojson }});

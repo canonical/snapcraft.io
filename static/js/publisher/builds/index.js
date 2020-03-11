@@ -22,6 +22,15 @@ class Builds extends React.Component {
     };
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
+
+    const { builds, updateFreq } = props;
+    if (!builds) {
+      this.fetchBuilds();
+    } else {
+      if (updateFreq) {
+        this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
+      }
+    }
   }
 
   fetchBuilds(fromStart) {
@@ -84,17 +93,6 @@ class Builds extends React.Component {
     );
   }
 
-  componentDidMount() {
-    const { builds, updateFreq } = this.props;
-    if (!builds) {
-      this.fetchBuilds();
-    }
-
-    if (updateFreq) {
-      this.fetchTimer = setTimeout(() => this.fetchBuilds(true), updateFreq);
-    }
-  }
-
   render() {
     const { builds, isLoading } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
@@ -103,64 +101,78 @@ class Builds extends React.Component {
 
     const showMoreCount = remainingBuilds > 15 ? 15 : remainingBuilds;
 
-    const rows = builds.map(build => {
-      let buildStatus = build.status;
-      if (build.status === "in_progress" && build.duration) {
-        buildStatus = "releasing_soon";
-      }
-      const status = UserFacingStatus[buildStatus];
-      let icon;
+    let rows;
 
-      if (status.icon) {
-        icon = `p-icon--${status.icon}`;
-      }
+    if (builds.length > 0) {
+      rows = builds.map(build => {
+        let buildStatus = build.status;
+        if (build.status === "in_progress" && build.duration) {
+          buildStatus = "releasing_soon";
+        }
+        const status = UserFacingStatus[buildStatus];
+        let icon;
 
-      return {
-        columns: [
-          {
-            content: build.id ? (
-              singleBuild ? (
-                `#${build.id}`
+        if (status.icon) {
+          icon = `p-icon--${status.icon}`;
+        }
+
+        return {
+          columns: [
+            {
+              content: build.id ? (
+                singleBuild ? (
+                  `#${build.id}`
+                ) : (
+                  <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+                )
               ) : (
-                <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+                ""
               )
-            ) : (
-              ""
-            )
-          },
-          {
-            content: build.arch_tag
-          },
-          {
-            content: createDuration(build.duration),
-            className: "u-hide--small"
-          },
-          {
-            content: (
-              <Fragment>
-                <span className="u-hide u-show--small">
-                  {icon && <i className={icon} />}
-                  {status.shortStatusMessage}
-                </span>
-                <span className="u-hide--small">
-                  {icon && <i className={icon} />}
-                  {status.statusMessage}
-                </span>
-              </Fragment>
-            ),
-            className: "has-icon"
-          },
-          {
-            content: build.datebuilt
-              ? distanceInWords(new Date(), build.datebuilt, {
-                  addSuffix: true
-                })
-              : "",
-            className: "u-align-text--right"
-          }
-        ]
-      };
-    });
+            },
+            {
+              content: build.arch_tag
+            },
+            {
+              content: createDuration(build.duration),
+              className: "u-hide--small"
+            },
+            {
+              content: (
+                <Fragment>
+                  <span className="u-hide u-show--small">
+                    {icon && <i className={icon} />}
+                    {status.shortStatusMessage}
+                  </span>
+                  <span className="u-hide--small">
+                    {icon && <i className={icon} />}
+                    {status.statusMessage}
+                  </span>
+                </Fragment>
+              ),
+              className: "has-icon"
+            },
+            {
+              content: build.datebuilt
+                ? distanceInWords(new Date(), build.datebuilt, {
+                    addSuffix: true
+                  })
+                : "",
+              className: "u-align-text--right"
+            }
+          ]
+        };
+      });
+    } else {
+      rows = [
+        {
+          columns: [
+            {
+              content: "Waiting for builds..."
+            }
+          ]
+        }
+      ];
+    }
 
     return (
       <Fragment>
