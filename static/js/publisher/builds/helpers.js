@@ -6,6 +6,7 @@ const RELEASE_FAILED = "release_failed";
 const RELEASING_SOON = "releasing_soon";
 const IN_PROGRESS = "in_progress";
 const FAILED_TO_BUILD = "failed_to_build";
+const CANCELLED = "cancelled";
 const UNKNOWN = "unknown";
 
 export const UserFacingStatus = {
@@ -39,6 +40,7 @@ export const UserFacingStatus = {
     1,
     FAILED_TO_BUILD
   ),
+  [CANCELLED]: createStatus("Cancelled", "Cancelled", 8, FAILED_TO_BUILD),
   [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT)
 };
 
