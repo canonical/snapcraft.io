@@ -104,7 +104,11 @@ class Builds extends React.Component {
     const showMoreCount = remainingBuilds > 15 ? 15 : remainingBuilds;
 
     const rows = builds.map(build => {
-      const status = UserFacingStatus[build.status];
+      let buildStatus = build.status;
+      if (build.status === "in_progress" && build.duration) {
+        buildStatus = "releasing_soon";
+      }
+      const status = UserFacingStatus[buildStatus];
       let icon;
 
       if (status.icon) {
@@ -114,10 +118,14 @@ class Builds extends React.Component {
       return {
         columns: [
           {
-            content: singleBuild ? (
-              `#${build.id}`
+            content: build.id ? (
+              singleBuild ? (
+                `#${build.id}`
+              ) : (
+                <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+              )
             ) : (
-              <a href={`/${snapName}/builds/${build.id}`}>#{build.id}</a>
+              ""
             )
           },
           {
@@ -165,7 +173,7 @@ class Builds extends React.Component {
               content: "Architecture"
             },
             {
-              content: "Duration",
+              content: "Build Duration",
               className: "u-hide--small"
             },
             {
@@ -173,7 +181,8 @@ class Builds extends React.Component {
               className: "has-icon"
             },
             {
-              content: ""
+              content: "Build Finished",
+              className: "u-align-text--right"
             }
           ]}
           rows={rows}

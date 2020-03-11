@@ -324,6 +324,10 @@ def post_build(snap_name):
     if not launchpad.is_snap_building(details["snap_name"]):
         launchpad.build_snap(details["snap_name"])
 
+        flask.flash(
+            "Build triggered", "positive",
+        )
+
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)
     )
