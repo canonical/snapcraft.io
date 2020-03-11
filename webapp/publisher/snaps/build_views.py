@@ -332,7 +332,7 @@ def post_build(snap_name):
 
 @csrf.exempt
 def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
-    repo_url = flask.request.json["repository"]["url"]
+    repo_url = flask.request.json["repository"]["html_url"]
     gh_owner = flask.request.json["repository"]["owner"]["login"]
     gh_repo = flask.request.json["repository"]["name"]
 
