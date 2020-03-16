@@ -8,7 +8,8 @@ import talisker.requests
 from canonicalwebteam.launchpad import Launchpad
 
 # Local
-import webapp.api.dashboard as api
+from webapp import authentication
+from webapp.api import dashboard as api
 from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.api.github import GitHub
 from webapp.decorators import login_required
@@ -16,8 +17,6 @@ from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
 from webapp.publisher.views import _handle_error, _handle_error_list
 from werkzeug.exceptions import Unauthorized
-from webapp.api import dashboard
-
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 BUILDS_PER_PAGE = 15
@@ -73,6 +72,18 @@ def get_snap_builds(snap_name):
             return _handle_error_list(api_response_error_list.errors)
     except ApiError as api_error:
         return _handle_error(api_error)
+
+    # Make users without needed permissions refresh their session
+    # Users needs package_upload_request permission to use this feature
+    try:
+        api.get_package_upload_macaroon(
+            session=flask.session, snap_name=snap_name, channels=["edge"]
+        )
+    except ApiResponseErrorList as e:
+        if e.errors[0]["code"] == "macaroon-permission-required":
+            authentication.empty_session(flask.session)
+            return flask.redirect("/login?next=" + flask.request.path)
+        raise e
 
     context = {
         "snap_id": details["snap_id"],
@@ -285,7 +296,7 @@ def post_snap_builds(snap_name):
     git_url = f"https://github.com/{owner}/{repo}"
 
     if not lp_snap:
-        macaroon = dashboard.get_package_upload_macaroon(
+        macaroon = api.get_package_upload_macaroon(
             session=flask.session, snap_name=snap_name, channels=["edge"]
         )["macaroon"]
 
