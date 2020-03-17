@@ -12,6 +12,10 @@ from webapp.api.exceptions import (
     MacaroonRefreshRequired,
     MissingUsername,
 )
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiCircuitBreaker,
+    StoreApiTimeoutError,
+)
 from webapp.decorators import login_required
 
 account = flask.Blueprint(
@@ -39,22 +43,25 @@ def refresh_redirect(path):
 
 
 def _handle_error(api_error: ApiError):
-    if type(api_error) is ApiTimeoutError:
+    if type(api_error) in [ApiTimeoutError, StoreApiTimeoutError]:
         return flask.abort(504, str(api_error))
     elif type(api_error) is MissingUsername:
-        return flask.redirect(flask.url_for(".get_account_name"))
+        return flask.redirect(flask.url_for("account.get_account_name"))
     elif type(api_error) is AgreementNotSigned:
-        return flask.redirect(flask.url_for(".get_agreement"))
+        return flask.redirect(flask.url_for("account.get_agreement"))
     elif type(api_error) is MacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
-    elif type(api_error) is ApiCircuitBreaker:
+    elif type(api_error) in [ApiCircuitBreaker, StoreApiCircuitBreaker]:
         return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
 
 
 def _handle_error_list(errors):
-    codes = [error["code"] for error in errors]
+    codes = [
+        f"{error['code']}: {error.get('message', 'No message')}"
+        for error in errors
+    ]
 
     error_messages = ", ".join(codes)
     return flask.abort(502, error_messages)
