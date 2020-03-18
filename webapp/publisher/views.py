@@ -58,10 +58,10 @@ def _handle_error(api_error: ApiError):
 
 
 def _handle_error_list(errors):
-    if (
-        len(errors) == 1
-        and errors[0]["code"] == "macaroon-permission-required"
-    ):
+    if len(errors) == 1 and errors[0]["code"] in [
+        "macaroon-permission-required",
+        "macaroon-authorization-required",
+    ]:
         authentication.empty_session(flask.session)
         return flask.redirect("/login?next=" + flask.request.path)
 
