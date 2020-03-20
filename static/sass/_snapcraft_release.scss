@@ -384,6 +384,12 @@
   // REVISIONS LIST
 
   .p-revisions-list {
+
+    td,
+    th {
+      overflow: visible;
+    }
+
     .col-checkbox-spacer {
       padding-left: 2rem;
     }
