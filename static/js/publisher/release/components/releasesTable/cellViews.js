@@ -170,7 +170,7 @@ export const RevisionInfo = ({
 
         {isInDevmode(revision) && (
           <div className="p-tooltip__group">
-            Revisions in <b>devmode</b> or with grade <b>devel</b> can&#39;t
+            Revisions in <b>devmode</b> or with grade <b>devel</b> can’t
             <br />
             be promoted to stable or candidate channels.
           </div>
