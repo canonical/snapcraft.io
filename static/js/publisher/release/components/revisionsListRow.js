@@ -111,15 +111,14 @@ const RevisionsListRow = props => {
       )}
       {canShowProgressiveReleases && (
         <td>
-          {revision.release &&
-            showProgressive && (
-              <RevisionsListRowProgressive
-                setDraggable={setDraggable}
-                channel={channel}
-                architecture={revision.release.architecture}
-                revision={revision}
-              />
-            )}
+          {revision.release && showProgressive && (
+            <RevisionsListRowProgressive
+              setDraggable={setDraggable}
+              channel={channel}
+              architecture={revision.release.architecture}
+              revision={revision}
+            />
+          )}
         </td>
       )}
       {progressiveBeingCancelled && (
@@ -130,22 +129,21 @@ const RevisionsListRow = props => {
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
         {isPending && <em>pending release</em>}
-        {!isPending &&
-          !progressiveBeingCancelled && (
+        {!isPending && !progressiveBeingCancelled && (
+          <span
+            className="p-tooltip p-tooltip--btm-center"
+            aria-describedby={`revision-uploaded-${revision.revision}`}
+          >
+            {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
             <span
-              className="p-tooltip p-tooltip--btm-center"
-              aria-describedby={`revision-uploaded-${revision.revision}`}
+              className="p-tooltip__message u-align--center"
+              role="tooltip"
+              id={`revision-uploaded-${revision.revision}`}
             >
-              {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
-              <span
-                className="p-tooltip__message u-align--center"
-                role="tooltip"
-                id={`revision-uploaded-${revision.revision}`}
-              >
-                {format(revisionDate, "YYYY-MM-DD HH:mm")}
-              </span>
+              {format(revisionDate, "YYYY-MM-DD HH:mm")}
             </span>
-          )}
+          </span>
+        )}
       </td>
     </tr>
   );
@@ -183,7 +181,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RevisionsListRow);
+export default connect(mapStateToProps, mapDispatchToProps)(RevisionsListRow);
