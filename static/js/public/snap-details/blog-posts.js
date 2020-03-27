@@ -58,7 +58,13 @@ class BlogPosts {
           Object.keys(post).forEach(key => {
             postHTML = postHTML.split("${" + key + "}").join(post[key]);
           });
-          postHTML = postHTML.split("${size}").join(`col-${cols}`);
+          const containerClasses = [`col-${cols}`];
+          if (post.source) {
+            containerClasses.push(`p-blog-post--${post.source}`);
+          }
+          postHTML = postHTML
+            .split("${container_class}")
+            .join(containerClasses.join(" "));
           postsHTML.push(postHTML);
         });
 

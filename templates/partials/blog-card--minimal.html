@@ -1,5 +1,8 @@
-<div class="{{ size }}">
+<div class="{{ container_class }}">
+  <a href="{{ article.slug }}">
+    {{ article.image }}
+  </a>
   <h3 class="p-heading--four">
-    <a href="/blog/{{ article.slug }}">{{ article.title.rendered|safe }}</a>
+    <a href="{{ article.slug }}">{{ article.title.rendered|safe }}</a>
   </h3>
 </div>

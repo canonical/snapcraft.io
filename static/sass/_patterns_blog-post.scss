@@ -9,4 +9,14 @@
     position: sticky;
     top: 1rem;
   }
+
+  .p-blog-post__source {
+    border-radius: 0;
+    display: block;
+    height: 39px;
+    margin-bottom: -39px;
+    position: relative;
+    top: -39px;
+    width: 143px;
+  }
 }
