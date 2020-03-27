@@ -59,8 +59,8 @@ class BlogPosts {
             postHTML = postHTML.split("${" + key + "}").join(post[key]);
           });
           const containerClasses = [`col-${cols}`];
-          if (post.source) {
-            containerClasses.push(`p-blog-post--${post.source}`);
+          if (post.slug.indexOf("http") === 0) {
+            containerClasses.push(`p-blog-post--guest-post`);
           }
           postHTML = postHTML
             .split("${container_class}")
