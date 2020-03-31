@@ -78,7 +78,7 @@ def _capitalize_os_name(os_name):
         "zorin": "Zorin OS",
     }
 
-    name, version = os_name.split("/")
+    name, version = os_name.rsplit("/", 1)
 
     if version != "-":
         return " ".join([capitalized_oses.get(name, name), version])
