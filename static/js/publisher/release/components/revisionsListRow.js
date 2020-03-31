@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
+import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../libs/channels";
 import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
@@ -30,7 +31,11 @@ const RevisionsListRow = props => {
     progressiveBeingCancelled
   } = props;
 
-  const [canDrag, setDraggable] = useState(!progressiveBeingCancelled);
+  const releasable = canBeReleased(revision);
+
+  const [canDrag, setDraggable] = useState(
+    !progressiveBeingCancelled && releasable
+  );
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -59,7 +64,9 @@ const RevisionsListRow = props => {
   const id = `revision-check-${revision.revision}`;
   const className = `p-revisions-list__row ${
     progressiveBeingCancelled ? "" : "is-draggable"
-  } ${isActive ? "is-active" : ""} ${isSelectable ? "is-clickable" : ""} ${
+  } ${isActive ? "is-active" : ""} ${
+    isSelectable && releasable ? "is-clickable" : ""
+  } ${
     isPending || isSelected || progressiveBeingCancelled ? "is-pending" : ""
   } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
 
@@ -74,17 +81,18 @@ const RevisionsListRow = props => {
       ref={drag}
       key={id}
       className={className}
-      onClick={isSelectable ? revisionSelectChange : null}
+      onClick={isSelectable && releasable ? revisionSelectChange : null}
     >
-      <td>{!progressiveBeingCancelled && <Handle />}</td>
+      <td>{!progressiveBeingCancelled && releasable && <Handle />}</td>
       <td>
         {isSelectable ? (
           <Fragment>
             <input
               type="checkbox"
-              checked={isSelected}
+              checked={isSelected && releasable}
               id={id}
               onChange={revisionSelectChange}
+              disabled={!releasable}
             />
             <label
               className="p-revisions-list__revision is-inline-label"

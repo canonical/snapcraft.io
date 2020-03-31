@@ -10,7 +10,7 @@ import { triggerGAEvent } from "../../actions/gaEventTracking";
 
 import { STABLE, CANDIDATE, BETA, EDGE } from "../../constants";
 
-import { getChannelName, isInDevmode } from "../../helpers";
+import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
 
 import ReleasesTableChannelRow from "./channelRow";
 
@@ -52,7 +52,9 @@ const ReleasesTableDroppableRow = props => {
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
     drop: item => {
-      item.revisions.forEach(r => promoteRevision(r, channel));
+      item.revisions.forEach(
+        r => canBeReleased(r) && promoteRevision(r, channel)
+      );
 
       if (item.revisions.length > 1) {
         triggerGAEvent(

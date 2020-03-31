@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 
 import RevisionLabel from "../revisionLabel";
 
-import { isInDevmode, isRevisionBuiltOnLauchpad } from "../../helpers";
+import {
+  isInDevmode,
+  isRevisionBuiltOnLauchpad,
+  canBeReleased
+} from "../../helpers";
 import { useDragging, Handle } from "../dnd";
 
 // content of a cell when channel is closed
@@ -114,6 +118,15 @@ export const RevisionInfo = ({
     buildIcon = <i className="p-icon--lp" />;
   }
 
+  const releasable = canBeReleased(revision);
+
+  const blockedMessage = revision => (
+    <Fragment>
+      Can’t be released: <b>{revision.status}.</b>
+      <br />
+    </Fragment>
+  );
+
   return (
     <Fragment>
       <span className="p-release-data__info">
@@ -132,6 +145,7 @@ export const RevisionInfo = ({
         {isPending && "Pending release of:"}
 
         <div className="p-tooltip__group">
+          {!releasable && blockedMessage(revision)}
           Revision: <b>{revision.revision}</b>
           <br />
           Version: <b>{revision.version}</b>
