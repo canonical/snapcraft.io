@@ -6,7 +6,7 @@ import { AVAILABLE } from "../../constants";
 import { getTrackingChannel } from "../../releasesState";
 
 import HistoryIcon from "../historyIcon";
-import { getChannelName } from "../../helpers";
+import { getChannelName, canBeReleased } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
@@ -81,8 +81,9 @@ const ReleasesTableReleaseCell = props => {
     filters.risk === risk &&
     filters.branch === branchName;
   const isHighlighted = isPending || (isUnassigned && currentRevision);
+  const releasable = canBeReleased(currentRevision);
 
-  const canDrag = currentRevision && !isChannelPendingClose;
+  const canDrag = currentRevision && !isChannelPendingClose && releasable;
 
   const item = {
     revisions: [currentRevision],

@@ -21,6 +21,15 @@ const DEFAULT_ERROR_MESSAGE =
 
 const TEMP_KEY = "ui-temp-";
 
+const REVISION_STATUS = {
+  PUBLISHED: "Published",
+  UNPUBLISHED: "Unpublished",
+  MANUAL_REVIEW_PENDING: "ManualReviewPending",
+  NEEDS_INFORMATION: "NeedsInformation",
+  AUTOMATICALLY_REJECTED: "AutomaticallyRejected",
+  REJECTED: "Rejected"
+};
+
 export {
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -35,5 +44,6 @@ export {
   BUILD,
   RISKS,
   RISKS_WITH_AVAILABLE,
-  TEMP_KEY
+  TEMP_KEY,
+  REVISION_STATUS
 };

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import { DND_ITEM_REVISIONS } from "../dnd";
 
+import { canBeReleased } from "../../helpers";
 import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
 
 // releases table cell with data for a specific revision (unrelated to channel map)
@@ -16,7 +17,10 @@ const ReleasesTableRevisionCell = props => {
   };
 
   return (
-    <ReleasesTableCellView item={item} canDrag={!!revision}>
+    <ReleasesTableCellView
+      item={item}
+      canDrag={!!revision && canBeReleased(revision)}
+    >
       {revision ? (
         <RevisionInfo revision={revision} showVersion={showVersion} />
       ) : (

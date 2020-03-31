@@ -1,4 +1,4 @@
-import { AVAILABLE } from "./constants";
+import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../libs/channels";
 
 export function isInDevmode(revision) {
@@ -65,4 +65,10 @@ export function isSameVersion(revisions) {
 
 export function jsonClone(obj) {
   return JSON.parse(JSON.stringify(obj));
+}
+
+export function canBeReleased(revision) {
+  const allowed = [REVISION_STATUS.PUBLISHED, REVISION_STATUS.UNPUBLISHED];
+
+  return revision && allowed.includes(revision.status);
 }
