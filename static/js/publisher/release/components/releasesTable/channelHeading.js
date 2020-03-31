@@ -30,7 +30,7 @@ import {
   EDGE
 } from "../../constants";
 
-import { getChannelName, isInDevmode } from "../../helpers";
+import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
 import ChannelMenu from "../channelMenu";
 
 const disabledBecauseDevmode = (
@@ -296,8 +296,10 @@ const ReleasesTableChannelHeading = props => {
   }
 
   const promoteRevisions = targetChannel => {
-    Object.values(rowRevisions).forEach(revision =>
-      props.promoteRevision(revision, targetChannel)
+    Object.values(rowRevisions).forEach(
+      revision =>
+        canBeReleased(revision) &&
+        props.promoteRevision(revision, targetChannel)
     );
   };
 
