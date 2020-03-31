@@ -6,6 +6,7 @@ from hashlib import md5
 import flask
 import talisker.requests
 from canonicalwebteam.launchpad import Launchpad
+from requests.exceptions import HTTPError
 
 # Local
 from webapp.api import dashboard as api
@@ -289,6 +290,23 @@ def post_snap_builds(snap_name):
     git_url = f"https://github.com/{owner}/{repo}"
 
     if not lp_snap:
+        lp_snap_name = md5(git_url.encode("UTF-8")).hexdigest()
+
+        try:
+            repo_exist = bool(launchpad.get_snap(lp_snap_name))
+        except HTTPError as e:
+            if e.response.status_code == 404:
+                repo_exist = False
+            else:
+                raise e
+
+        if repo_exist:
+            error_msg = (
+                "The specified GitHub repository is being used by another snap"
+            )
+            flask.flash(error_msg, "negative")
+            return flask.redirect(redirect_url)
+
         macaroon = api.get_package_upload_macaroon(
             session=flask.session, snap_name=snap_name, channels=["edge"]
         )["macaroon"]

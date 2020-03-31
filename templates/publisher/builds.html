@@ -189,6 +189,7 @@ Builds for
     {% endif %}
   </form>
 
+  {% if github_repository %}
   <section class="p-strip is-shallow">
     <div class="u-fixed-width">
       <h4 class="u-float-left">Latest builds</h4>
@@ -228,6 +229,7 @@ Builds for
       </div>
     </div>
   </section>
+  {% endif %}
 </div>
 
 {% endblock %}
@@ -237,16 +239,19 @@ Builds for
 {% endblock %}
 
 {% block scripts %}
-
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
+      snapcraft.publisher.stickyListingBar();
+
+      {% if github_repository %}
       snapcraft.publisher.initBuilds('#builds-wrapper',
         {{ snap_name | tojson }},
         {{ snap_builds | tojson }},
         {{ total_builds | tojson }}
       );
-      snapcraft.publisher.stickyListingBar();
+      {% endif %}
+
       {% if github_orgs and github_user %}
         snapcraft.publisher.initRepoConnect('[data-js="repo-connect"]', {{ github_orgs | tojson }}, {{ github_user | tojson }}, {{ snap_name | tojson }});
       {% endif %}
