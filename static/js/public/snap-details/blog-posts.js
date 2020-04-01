@@ -58,7 +58,13 @@ class BlogPosts {
           Object.keys(post).forEach(key => {
             postHTML = postHTML.split("${" + key + "}").join(post[key]);
           });
-          postHTML = postHTML.split("${size}").join(`col-${cols}`);
+          const containerClasses = [`col-${cols}`];
+          if (post.slug.indexOf("http") === 0) {
+            containerClasses.push(`p-blog-post--guest-post`);
+          }
+          postHTML = postHTML
+            .split("${container_class}")
+            .join(containerClasses.join(" "));
           postsHTML.push(postHTML);
         });
 
