@@ -11,7 +11,7 @@ parts:
   ${name}:
     plugin: python
     python-version: python2
-    source: https://github.com/snapcraft-docs/offlineimap
+    source: https://github.com/snapcraft-docs/offlineimap.git
     stage-packages:
       - python-six
 

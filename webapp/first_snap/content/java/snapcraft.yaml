@@ -13,12 +13,13 @@ description: |
   and using mapped information.
 
 confinement: devmode
+base: core16
 
 parts:
   ${name}:
     after: [desktop-glib-only]
     plugin: gradle
-    source: https://github.com/snapcraft-docs/freeplane
+    source: https://github.com/snapcraft-docs/freeplane.git
     build: |
       export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
       gradle release -x test -x createGitTag
