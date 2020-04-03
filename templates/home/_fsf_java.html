@@ -17,30 +17,40 @@
     <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
     <div class ="p-show-more is-collapsed" data-js="js-show-more">
       <pre class="p-code-yaml"><b>name</b>: freeplane
-<b>version</b>: '1.6.10'
+<b>version</b>: '1.8.1'
 <b>summary</b>: Application for Mind Mapping [&hellip;]
 <b>description</b>: |
   Freeplane is a free and open source software [&hellip;]
 
 <b>confinement</b>: devmode
+<b>base</b>: core18
 
-<b>parts:</b>
-  <b>freeplane:</b>
-    <b>after:</b> [desktop-glib-only]
-    <b>plugin:</b> gradle
-    <b>source:</b> .
-    <b>build:</b> |
-      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-      gradle release -x test -x createGitTag
-    <b>install:</b> |
-      unzip DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
-    <b>build-packages:</b>
+<b>parts</b>:
+  <b>freeplane</b>:
+    <b>plugin</b>: gradle
+    <b>source</b>: https://github.com/freeplane/freeplane.git
+    <b>source-tag</b>: release-$SNAPCRAFT_PROJECT_VERSION
+    <b>gradle-version</b>: '5.1.1'
+    <b>gradle-output-dir</b>: BIN
+    <b>gradle-options</b>: [binZip, -xtest, -xcreateGitTag]
+    <b>override-build</b>: |
+      snapcraftctl build
+      unzip -o DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
+    <b>build-packages</b>:
       - unzip
-      - openjdk-8-jdk
 
 <b>apps</b>:
   <b>freeplane</b>:
-    <b>command</b>: desktop-launch $SNAP/freeplane-1.6.10/freeplane.sh</pre>
+    <b>extensions</b>:
+      - gnome-3-28
+    <b>command</b>: freeplane-$SNAPCRAFT_PROJECT_VERSION/freeplane.sh
+    <b>environment</b>:
+      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+      PATH: $JAVA_HOME/jre/bin:$PATH
+    <b>plugs</b>:
+      - home
+      - network
+      - cups-control</pre>
 
       {% include "home/_fsf_yaml_show_more.html" %}
 

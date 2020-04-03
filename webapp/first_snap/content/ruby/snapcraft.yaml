@@ -9,7 +9,7 @@ base: core18
 
 parts:
   ${name}:
-    source: .
+    source: https://github.com/snapcraft-docs/mdl.git
     plugin: ruby
     gems:
       - rake

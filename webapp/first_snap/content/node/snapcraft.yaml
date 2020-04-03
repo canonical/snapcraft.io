@@ -1,5 +1,5 @@
 name: ${name}
-version: git
+version: '1.0'
 summary: Command line weather tool.
 description: |
   Get current weather:-
@@ -15,7 +15,7 @@ base: core18
 parts:
   ${name}:
     plugin: nodejs
-    source: .
+    source: https://github.com/twobucks/wethr.git
 
 apps:
   ${name}:
