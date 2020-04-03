@@ -98,7 +98,7 @@ class FirstSnap(TestCase):
         self.assert_context("os", "linux-auto")
         self.assert_context("snap_name", "test-snap-name-python")
         self.assert_template_used("first-snap/build-and-test.html")
-    
+
     def test_get_build_and_test_snap_name(self):
         response = self.client.get(
             "/first-snap/python/linux-auto/build-and-test",
