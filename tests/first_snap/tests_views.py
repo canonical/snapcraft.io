@@ -88,46 +88,18 @@ class FirstSnap(TestCase):
         self.assert_context("os", "linux-auto")
         self.assert_template_used("first-snap/build-and-test.html")
 
-    def test_get_build_snap_name(self):
-        self.client.set_cookie(
-            "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
-        )
-        response = self.client.get("/first-snap/python/linux-auto/build")
-        assert response.status_code == 200
-        self.assert_context("language", "python")
-        self.assert_context("os", "linux-auto")
-        self.assert_context("snap_name", "test-snap-name-python")
-        self.assert_template_used("first-snap/build-and-test.html")
-
     def test_get_build_and_test_snap_name(self):
-        response = self.client.get(
-            "/first-snap/python/linux-auto/build-and-test",
-            headers={"Cookie": "fsf_snap_name_python=test-snap-name-python"},
+        self.client.set_cookie(
+            "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
         )
-        response = self.client.get("/first-snap/python/linux-auto/build")
+        response = self.client.get(
+            "/first-snap/python/linux-auto/build-and-test"
+        )
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux-auto")
         self.assert_context("snap_name", "test-snap-name-python")
         self.assert_template_used("first-snap/build-and-test.html")
-
-    def test_get_test(self):
-        response = self.client.get("/first-snap/python/macos-auto/test")
-        assert response.status_code == 200
-        self.assert_context("language", "python")
-        self.assert_context("os", "macos-auto")
-        self.assert_template_used("first-snap/test.html")
-
-    def test_get_test_snap_name(self):
-        self.client.set_cookie(
-            "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
-        )
-        response = self.client.get("/first-snap/python/macos-auto/test")
-        assert response.status_code == 200
-        self.assert_context("language", "python")
-        self.assert_context("os", "macos-auto")
-        self.assert_context("snap_name", "test-snap-name-python")
-        self.assert_template_used("first-snap/test.html")
 
     def test_get_build_and_test_404_language(self):
         response = self.client.get(
