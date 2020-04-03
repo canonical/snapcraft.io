@@ -1,9 +1,12 @@
 # Standard library
+import os
 from json import loads
 
 # Packages
 import flask
+import talisker.requests
 import pycountry
+from canonicalwebteam.launchpad import Launchpad
 
 # Local
 from webapp.api import dashboard as api
@@ -11,6 +14,13 @@ from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
+
+launchpad = Launchpad(
+    username=os.getenv("LP_API_USERNAME"),
+    token=os.getenv("LP_API_TOKEN"),
+    secret=os.getenv("LP_API_TOKEN_SECRET"),
+    session=talisker.requests.get_session(),
+)
 
 
 @login_required
@@ -47,6 +57,11 @@ def get_settings(snap_name):
     for country in pycountry.countries:
         countries.append({"key": country.alpha_2, "name": country.name})
 
+    is_on_lp = False
+    lp_snap = launchpad.get_snap_by_store_name(snap_details["snap_name"])
+    if lp_snap:
+        is_on_lp = True
+
     context = {
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
@@ -62,6 +77,7 @@ def get_settings(snap_name):
         "store": snap_details["store"],
         "keywords": snap_details["keywords"],
         "status": snap_details["status"],
+        "is_on_lp": is_on_lp,
     }
 
     return flask.render_template("publisher/settings.html", **context)
@@ -115,6 +131,13 @@ def post_settings(snap_name):
                     {"key": country.alpha_2, "name": country.name}
                 )
 
+            is_on_lp = False
+            lp_snap = launchpad.get_snap_by_store_name(
+                snap_details["snap_name"]
+            )
+            if lp_snap:
+                is_on_lp = True
+
             if "whitelist_country_codes" in snap_details:
                 whitelist_country_codes = (
                     snap_details["whitelist_country_codes"]
@@ -148,6 +171,7 @@ def post_settings(snap_name):
                 "store": snap_details["store"],
                 "keywords": snap_details["keywords"],
                 "status": snap_details["status"],
+                "is_on_lp": is_on_lp,
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
