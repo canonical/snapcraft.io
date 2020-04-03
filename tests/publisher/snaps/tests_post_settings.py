@@ -107,6 +107,22 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         responses.add(responses.GET, info_url, json=payload, status=200)
 
+        launchpad_url = "".join(
+            [
+                "https://api.launchpad.net",
+                "/devel/+snaps" "?ws.op=findByStoreName",
+                "&owner=%2F~build.snapcraft.io",
+                "&store_name=",
+                self.snap_name,
+            ]
+        )
+
+        launchpad_payload = {"snaps": [{"store_name": self.snap_name}]}
+
+        responses.add(
+            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+        )
+
         changes = {"private": True}
 
         response = self.client.post(
@@ -114,7 +130,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             data={"changes": json.dumps(changes), "snap_id": self.snap_id},
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -169,6 +185,22 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         responses.add(responses.GET, info_url, json=payload, status=200)
 
+        launchpad_url = "".join(
+            [
+                "https://api.launchpad.net",
+                "/devel/+snaps" "?ws.op=findByStoreName",
+                "&owner=%2F~build.snapcraft.io",
+                "&store_name=",
+                self.snap_name,
+            ]
+        )
+
+        launchpad_payload = {"snaps": [{"store_name": self.snap_name}]}
+
+        responses.add(
+            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+        )
+
         changes = {"license": "newLicense", "private": False}
 
         response = self.client.post(
@@ -176,7 +208,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             data={"changes": json.dumps(changes), "snap_id": self.snap_id},
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -241,6 +273,22 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
 
         responses.add(responses.GET, info_url, json=payload, status=200)
 
+        launchpad_url = "".join(
+            [
+                "https://api.launchpad.net",
+                "/devel/+snaps" "?ws.op=findByStoreName",
+                "&owner=%2F~build.snapcraft.io",
+                "&store_name=",
+                self.snap_name,
+            ]
+        )
+
+        launchpad_payload = {"snaps": [{"store_name": self.snap_name}]}
+
+        responses.add(
+            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+        )
+
         changes = {"description": "This is an updated description"}
 
         response = self.client.post(
@@ -248,7 +296,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             data={"changes": json.dumps(changes), "snap_id": self.snap_id},
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(

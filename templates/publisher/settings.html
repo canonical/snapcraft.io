@@ -216,6 +216,24 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
           </div>
         </div>
       </div>
+
+      {% if is_on_lp %}
+      <div class="row p-form__group">
+        <hr class="u-no-margin--bottom" />
+      </div>
+
+      <div class="row p-form__group">
+        <div class="col-2">
+          GitHub Webhook:
+        </div>
+        <div class="col-8">
+          <div class="p-form__control">
+            <input type="text"
+                   value="https://snapcraft.io/{{snap_name}}/webook/notify" />
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </section>
   </form>
 </div>
