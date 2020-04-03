@@ -58,7 +58,7 @@ def get_settings(snap_name):
         countries.append({"key": country.alpha_2, "name": country.name})
 
     is_on_lp = False
-    lp_snap = launchpad.get_snap_by_store_name(snap_details["snap_name"])
+    lp_snap = launchpad.get_snap_by_store_name(snap_name)
     if lp_snap:
         is_on_lp = True
 
