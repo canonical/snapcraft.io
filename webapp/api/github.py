@@ -363,3 +363,11 @@ class GitHub:
         self._request("POST", f"repos/{owner}/{repo}/hooks", data=data)
 
         return True
+
+    def remove_hook(self, owner, repo, hook_id):
+        """
+        Remove GitHub webhook in a repo
+        """
+        self._request("DELETE", f"repos/{owner}/{repo}/hooks/{hook_id}")
+
+        return True
