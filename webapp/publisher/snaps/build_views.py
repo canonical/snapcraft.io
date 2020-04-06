@@ -367,7 +367,9 @@ def get_disconnect_repo(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    return flask.render_template("publisher/disconnect-repo.html")
+    return flask.render_template(
+        "publisher/disconnect-repo.html", snap_name=snap_name
+    )
 
 
 @login_required

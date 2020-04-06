@@ -19,12 +19,13 @@ Builds for
     {% if github_repository %}
     <div class="snapcraft-p-sticky js-sticky-bar">
       <div class="row">
-        <p class="p-heading--four u-no-margin--bottom">
-          Your snap is linked to:
+        <p class="u-no-margin--bottom">
+          Your snap is linked to:<br class="u-hide--medium u-hide--large">
           <a href="https://github.com/{{ github_repository }}"
             class="p-link--external">
             {{ github_repository }}
-          </a>
+          </a><span style="color: #cdcdcd;">&nbsp;&VerticalLine;&nbsp;</span>
+          <a href="/{{ snap_name }}/builds/disconnect">Disconnect repo</a>
         </p>
       </div>
     </div>
