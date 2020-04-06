@@ -25,7 +25,7 @@ Builds for
             class="p-link--external">
             {{ github_repository }}
           </a><span style="color: #cdcdcd;">&nbsp;&VerticalLine;&nbsp;</span>
-          <a href="/{{ snap_name }}/builds/disconnect">Disconnect repo</a>
+          <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>
         </p>
       </div>
     </div>
@@ -205,6 +205,7 @@ Builds for
           <span class="p-button__text">Trigger new build</span>
         </button>
       </form>
+      {% include "publisher/_repo-disconnect-modal.html" %}
     </div>
     <div class="u-fixed-width">
       <div id="builds-wrapper">
@@ -251,6 +252,7 @@ Builds for
         {{ snap_builds | tojson }},
         {{ total_builds | tojson }}
       );
+      snapcraft.publisher.initRepoDisconnect();
       {% endif %}
 
       {% if github_orgs and github_user %}
