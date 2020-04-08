@@ -265,6 +265,17 @@ def post_snap_builds(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    # Don't allow changes from Admins that are no contributors
+    account_snaps = api.get_account_snaps(flask.session)
+
+    if snap_name not in account_snaps:
+        flask.flash(
+            "You do not have permissions to modify this Snap", "negative"
+        )
+        return flask.redirect(
+            flask.url_for(".get_snap_builds", snap_name=snap_name)
+        )
+
     redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
 
     # Get built snap in launchpad with this store name
