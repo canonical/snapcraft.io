@@ -19,7 +19,9 @@ jobs:
           command: yarn run build
       - run:
           name: Run the site server
-          command: ./entrypoint 0.0.0.0:80
+          command: |
+            export $(egrep -v '^#' .env | xargs)
+            ./entrypoint 0.0.0.0:80
           background: true
       - run:
           name: Check site is accessible
@@ -47,6 +49,7 @@ jobs:
       - run:
           name: Run tests with coverage
           command: |
+            export $(egrep -v '^#' .env | xargs)
             coverage run  --source=. -m unittest discover tests
             bash <(curl -s https://codecov.io/bash) -cF python
   lint-js:
