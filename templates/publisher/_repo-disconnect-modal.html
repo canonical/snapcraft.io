@@ -1,0 +1,26 @@
+<div class="p-modal is-fit-content" data-js="repo-disconnect-modal" id="repo-disconnect-modal" style="display: none;">
+  <div class="p-modal__dialog is-centered-mobile" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
+    <header class="p-modal__header">
+      <h4><i class="p-icon--warning"></i>&nbsp;&nbsp;Disconnecting your repository</h4>
+      <button class="p-modal__close" aria-label="Close active modal" aria-controls="repo-disconnect-modal">Close</button>
+    </header>
+    <p>By disconnecting this repository from your snap, the following will occur:</p>
+    <ul>
+      <li>Previous builds for this snap will disappear from the Builds page</li>
+      <li>You will be able to continue to release your previous revisions on the Releases tab</li>
+    </ul>
+    <p>Do you wish to <strong>continue disconnecting your repository?</strong></p>
+    <form class="p-form" method="POST" action="/{{ snap_name }}/builds/disconnect" name="repoDisconnectForm">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <p class="u-align--right u-no-margin--bottom">
+        <button aria-label="Close active modal" aria-controls="repo-disconnect-modal" class="p-button--neutral u-no-margin--bottom">Cancel</button>
+        <button class="p-button--positive p-button-spinner u-no-margin--right u-no-margin--bottom" data-js="repo-disconnect-confirm">
+          <span class="p-button__spinner vanilla-workaround--dark">
+            <i class="p-icon--spinner u-animation--spin"></i>
+          </span>
+          <span class="p-button__text">Confirm</span>
+        </button>
+      </p>
+    </form>
+  </div>
+</div>

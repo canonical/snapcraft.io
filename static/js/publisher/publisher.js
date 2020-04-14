@@ -12,6 +12,7 @@ import { preview } from "./preview";
 import submitEnabler from "./submitEnabler";
 import * as tour from "./tour";
 import { initBuilds } from "./builds";
+import { initRepoDisconnect } from "./builds/repoDisconnect";
 
 const settings = { enableInput, changeHandler };
 
@@ -29,5 +30,6 @@ export {
   preview,
   submitEnabler,
   tour,
-  initBuilds
+  initBuilds,
+  initRepoDisconnect
 };

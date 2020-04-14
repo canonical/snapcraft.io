@@ -334,9 +334,12 @@ def post_snap_builds(snap_name):
         launchpad.create_snap(snap_name, git_url, macaroon)
 
         # Create webhook in the repo, it should also trigger the first build
-        github.create_hook(
-            owner, repo, f"https://snapcraft.io/{snap_name}/webhook/notify"
-        )
+        github_hook_url = f"https://snapcraft.io/{snap_name}/webhook/notify"
+        hook = github.get_hook_by_url(owner, repo, github_hook_url)
+
+        # We create the webhook if doesn't exist already in this repo
+        if not hook:
+            github.create_hook(owner, repo, github_hook_url)
 
         flask.flash("The GitHub repository was linked correctly.", "positive")
     elif lp_snap["git_repository_url"] != git_url:
@@ -366,6 +369,42 @@ def post_build(snap_name):
     launchpad.build_snap(details["snap_name"])
 
     flask.flash("Build triggered", "positive")
+
+    return flask.redirect(
+        flask.url_for(".get_snap_builds", snap_name=snap_name)
+    )
+
+
+@login_required
+def post_disconnect_repo(snap_name):
+    try:
+        details = api.get_snap_info(snap_name, flask.session)
+    except ApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
+    lp_snap = launchpad.get_snap_by_store_name(snap_name)
+    launchpad.delete_snap(details["snap_name"])
+
+    # Try to remove the GitHub webhook if possible
+    if flask.session.get("github_auth_secret"):
+        github = GitHub(flask.session.get("github_auth_secret"))
+
+        gh_owner, gh_repo = lp_snap["git_repository_url"][19:].split("/")
+        old_hook = github.get_hook_by_url(
+            gh_owner,
+            gh_repo,
+            f"https://snapcraft.io/{snap_name}/webhook/notify",
+        )
+
+        if old_hook:
+            github.remove_hook(
+                gh_owner, gh_repo, old_hook["id"],
+            )
 
     return flask.redirect(
         flask.url_for(".get_snap_builds", snap_name=snap_name)

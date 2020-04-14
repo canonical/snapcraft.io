@@ -105,6 +105,11 @@ publisher_snaps.add_url_rule(
     view_func=build_views.post_update_gh_webhooks,
     methods=["POST"],
 )
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/disconnect/",
+    view_func=build_views.post_disconnect_repo,
+    methods=["POST"],
+)
 
 # Release views
 publisher_snaps.add_url_rule(
