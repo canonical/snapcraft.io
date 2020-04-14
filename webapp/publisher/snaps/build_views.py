@@ -265,6 +265,17 @@ def post_snap_builds(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    # Don't allow changes from Admins that are no contributors
+    account_snaps = api.get_account_snaps(flask.session)
+
+    if snap_name not in account_snaps:
+        flask.flash(
+            "You do not have permissions to modify this Snap", "negative"
+        )
+        return flask.redirect(
+            flask.url_for(".get_snap_builds", snap_name=snap_name)
+        )
+
     redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
 
     # Get built snap in launchpad with this store name
@@ -293,7 +304,7 @@ def post_snap_builds(snap_name):
         lp_snap_name = md5(git_url.encode("UTF-8")).hexdigest()
 
         try:
-            repo_exist = bool(launchpad.get_snap(lp_snap_name))
+            repo_exist = launchpad.get_snap(lp_snap_name)
         except HTTPError as e:
             if e.response.status_code == 404:
                 repo_exist = False
@@ -301,11 +312,20 @@ def post_snap_builds(snap_name):
                 raise e
 
         if repo_exist:
-            error_msg = (
-                "The specified GitHub repository is being used by another snap"
-            )
-            flask.flash(error_msg, "negative")
-            return flask.redirect(redirect_url)
+            # The user registered the repo in BSI but didn't register a name
+            # We can remove it and continue with the normal process
+            if not repo_exist["store_name"]:
+                # This conditional should be removed when issue 2657 is solved
+                launchpad._request(
+                    path=repo_exist["self_link"][32:], method="DELETE"
+                )
+            else:
+                flask.flash(
+                    "The specified repository is being used by another snap:"
+                    f" {repo_exist['store_name']}",
+                    "negative",
+                )
+                return flask.redirect(redirect_url)
 
         macaroon = api.get_package_upload_macaroon(
             session=flask.session, snap_name=snap_name, channels=["edge"]

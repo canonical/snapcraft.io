@@ -117,6 +117,10 @@ def get_account(session):
     return process_response(response)
 
 
+def get_account_snaps(session):
+    return get_account(session).get("snaps", {}).get("16", {})
+
+
 def get_agreement(session):
     headers = get_authorization_header(session)
 
