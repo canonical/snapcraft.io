@@ -1,6 +1,7 @@
 # App dependencies
 canonicalwebteam.flask_base==0.4.3
-gunicorn[gevent]
+gunicorn[gevent]==20.0.4
+gevent==1.4.0
 canonicalwebteam.discourse-docs==0.11.1
 canonicalwebteam.blog==4.0.2
 canonicalwebteam.search==0.1.0
