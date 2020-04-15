@@ -52,7 +52,7 @@ class ReleasesHeading extends Component {
             </Wrap>
           </h4>
         </div>
-        <div className="col-6">
+        <div className="col-6" style={{ marginTop: "0.25rem" }}>
           {tracks.length > 1 && <DefaultTrackModifier />}
         </div>
       </div>
