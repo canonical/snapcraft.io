@@ -94,7 +94,7 @@ class DefaultTrackModifier extends Component {
 
   renderClearLink() {
     return (
-      <p>
+      <p className="u-no-margin--bottom">
         This is the default track for the snap.&nbsp;
         <a
           className="p-tooltip p-tooltip--btm-right"
