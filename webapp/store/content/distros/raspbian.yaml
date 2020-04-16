@@ -1,0 +1,15 @@
+name: Raspberry Pi
+color-1: "#c05672"
+color-2: "#a22846"
+logo: https://assets.ubuntu.com/v1/a8a6238c-RGB+RPi.svg
+logo-mono: https://assets.ubuntu.com/v1/a31b1451-rpi-b-w.svg
+install:
+  - action: |
+      On a <a href="https://www.raspberrypi.org/" class="p-link--external">Raspberry Pi</a> running the latest version of <a href="https://www.raspberrypi.org/downloads/raspbian/" class="p-link--external">Raspbian</a> snap can be installed directly from the command line:
+    command: |
+      sudo apt update
+      sudo apt install snapd
+  - action: |
+      You will also need to reboot your device:
+    command: |
+      sudo reboot
