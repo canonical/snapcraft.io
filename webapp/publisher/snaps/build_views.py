@@ -28,24 +28,21 @@ launchpad = Launchpad(
 )
 
 
-def get_builds(lp_snap, context, selection):
-    # Git repository without GitHub hostname
-    context["github_repository"] = lp_snap["git_repository_url"][19:]
-
+def get_builds(lp_snap, selection):
     builds = launchpad.get_snap_builds(lp_snap["store_name"])
 
-    context["total_builds"] = len(builds)
+    total_builds = len(builds)
 
     builds = builds[selection]
 
-    context["snap_builds_enabled"] = bool(builds)
+    snap_builds = []
 
     for build in builds:
         status = map_build_and_upload_states(
             build["buildstate"], build["store_upload_status"]
         )
 
-        context["snap_builds"].append(
+        snap_builds.append(
             {
                 "id": build["self_link"].split("/")[-1],
                 "arch_tag": build["arch_tag"],
@@ -58,7 +55,10 @@ def get_builds(lp_snap, context, selection):
             }
         )
 
-    return context
+    return {
+        "total_builds": total_builds,
+        "snap_builds": snap_builds,
+    }
 
 
 @login_required
@@ -105,7 +105,9 @@ def get_snap_builds(snap_name):
             flask.flash(
                 "This repository doesn't contain a snapcraft.yaml", "negative"
             )
-        context = get_builds(lp_snap, context, slice(0, BUILDS_PER_PAGE))
+        context.update(get_builds(lp_snap, slice(0, BUILDS_PER_PAGE)))
+
+        context["snap_builds_enabled"] = bool(context["snap_builds"])
     else:
         try:
             context["github_user"] = github.get_user()
@@ -214,7 +216,7 @@ def get_snap_builds_json(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    context = {"snap_builds_enabled": False, "snap_builds": []}
+    context = {"snap_builds": []}
 
     start = flask.request.args.get("start", 0, type=int)
     size = flask.request.args.get("size", 15, type=int)
@@ -224,7 +226,7 @@ def get_snap_builds_json(snap_name):
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
-        context = get_builds(lp_snap, context, build_slice)
+        context.update(get_builds(lp_snap, build_slice))
 
     return flask.jsonify(context)
 
