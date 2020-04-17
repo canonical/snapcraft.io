@@ -157,66 +157,82 @@ class RepoConnect extends React.Component {
     this.checkRepo(this.state.selectedRepo);
   }
 
-  renderMessage() {
+  renderNameError() {
     const {
-      status,
-      selectedRepo,
-      selectedOrganization,
-      yamlFilePath,
+      yamlSnap,
       snapName,
-      yamlSnap
+      selectedOrganization,
+      selectedRepo,
+      yamlFilePath
     } = this.state;
-    if (status === SNAP_NAME_DOES_NOT_MATCH) {
-      return (
-        <div className="u-fixed-width">
-          <p>
-            <strong>Name mismatch: </strong>
-            {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
-            <a
-              className="p-link--external"
-              href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
-            >
-              Update your snapcraft.yaml to continue.
-            </a>
-          </p>
-        </div>
-      );
-    } else if (status === MISSING_YAML_FILE) {
-      return (
-        <div className="u-fixed-width">
-          <p>
-            <strong>Missing snapcraft.yaml: </strong>
-            this repo needs a snapcraft.yaml file, so that Snapcraft can make it
-            buildable, installable and runnable.
-          </p>
-          <p>
-            <a href="https://snapcraft.io/docs/creating-a-snap">
-              Learn the basics
-            </a>
-            , or{" "}
-            <a className="p-link--external" href={this.getTemplateUrl()}>
-              get started with a template.
-            </a>
-          </p>
-          <p>
-            Don’t have snapcraft?{" "}
-            <a href="https://snapcraft.io/docs/snapcraft-overview">
-              Install it on your own PC for testing.
-            </a>
-          </p>
-        </div>
-      );
-    } else if (status === ERROR) {
-      return (
-        <div className="u-fixed-width">
-          <p>
-            <strong>Error: </strong>
-            We were not able to check if your repository can be linked to{" "}
-            {snapName}. Please check your internet connection and{" "}
-            <a onClick={this.handleRefreshButtonClick}>try again</a>.
-          </p>
-        </div>
-      );
+
+    return (
+      <div className="u-fixed-width">
+        <p>
+          <strong>Name mismatch: </strong>
+          {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
+          <a
+            className="p-link--external"
+            href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
+          >
+            Update your snapcraft.yaml to continue.
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  renderMissingYamlError() {
+    return (
+      <div className="u-fixed-width">
+        <p>
+          <strong>Missing snapcraft.yaml: </strong>
+          this repo needs a snapcraft.yaml file, so that Snapcraft can make it
+          buildable, installable and runnable.
+        </p>
+        <p>
+          <a href="https://snapcraft.io/docs/creating-a-snap">
+            Learn the basics
+          </a>
+          , or{" "}
+          <a className="p-link--external" href={this.getTemplateUrl()}>
+            get started with a template.
+          </a>
+        </p>
+        <p>
+          Don’t have snapcraft?{" "}
+          <a href="https://snapcraft.io/docs/snapcraft-overview">
+            Install it on your own PC for testing.
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  renderError() {
+    const { snapName } = this.state;
+
+    return (
+      <div className="u-fixed-width">
+        <p>
+          <strong>Error: </strong>
+          We were not able to check if your repository can be linked to{" "}
+          {snapName}. Please check your internet connection and{" "}
+          <a onClick={this.handleRefreshButtonClick}>try again</a>.
+        </p>
+      </div>
+    );
+  }
+
+  renderMessage() {
+    const { status } = this.state;
+    switch (status) {
+      case SNAP_NAME_DOES_NOT_MATCH:
+        return this.renderNameError();
+      case MISSING_YAML_FILE:
+        return this.renderMissingYamlError();
+      case ERROR:
+        return this.renderError();
     }
   }
 
