@@ -27,7 +27,7 @@ class RepoConnect extends React.Component {
       status: null,
       snapName: this.props.snapName,
       yamlFilePath: null,
-      errorType: null
+      error: null
     };
 
     this.handleRepoSelect = this.handleRepoSelect.bind(this);
@@ -49,7 +49,8 @@ class RepoConnect extends React.Component {
     this.setState(
       {
         selectedRepo: selectedRepo,
-        status: null
+        status: null,
+        error: null
       },
       () => this.checkRepo(selectedRepo)
     );
@@ -132,7 +133,8 @@ class RepoConnect extends React.Component {
           } else {
             this.setState({
               isRepoListDisabled: false,
-              status: result.error.type,
+              error: result.error,
+              status: ERROR,
               yamlSnap: result.error.gh_snap_name
                 ? result.error.gh_snap_name
                 : null,
@@ -210,28 +212,39 @@ class RepoConnect extends React.Component {
   }
 
   renderError() {
-    const { snapName } = this.state;
+    const { snapName, error } = this.state;
 
-    return (
-      <div className="u-fixed-width">
-        <p>
-          <strong>Error: </strong>
-          We were not able to check if your repository can be linked to{" "}
-          {snapName}. Please check your internet connection and{" "}
-          <a onClick={this.handleRefreshButtonClick}>try again</a>.
-        </p>
-      </div>
-    );
+    if (error.message) {
+      return (
+        <div className="u-fixed-width">
+          <p>
+            <strong>Error: </strong>
+            {error.message}
+          </p>
+        </div>
+      );
+    } else {
+      return (
+        <div className="u-fixed-width">
+          <p>
+            <strong>Error: </strong>
+            We were not able to check if your repository can be linked to{" "}
+            {snapName}. Please check your internet connection and{" "}
+            <a onClick={this.handleRefreshButtonClick}>try again</a>.
+          </p>
+        </div>
+      );
+    }
   }
 
-  renderMessage() {
-    const { status } = this.state;
-    switch (status) {
+  renderErrorMessage() {
+    const { error } = this.state;
+    switch (error.type) {
       case SNAP_NAME_DOES_NOT_MATCH:
         return this.renderNameError();
       case MISSING_YAML_FILE:
         return this.renderMissingYamlError();
-      case ERROR:
+      default:
         return this.renderError();
     }
   }
@@ -243,11 +256,7 @@ class RepoConnect extends React.Component {
 
   renderButton() {
     const { status } = this.state;
-    if (
-      status === ERROR ||
-      status === SNAP_NAME_DOES_NOT_MATCH ||
-      status === MISSING_YAML_FILE
-    ) {
+    if (status === ERROR) {
       return (
         <button
           className="p-tooltip--btm-center"
@@ -277,8 +286,6 @@ class RepoConnect extends React.Component {
         icon = "";
         break;
       case ERROR:
-      case MISSING_YAML_FILE:
-      case SNAP_NAME_DOES_NOT_MATCH:
         icon = " is-error";
         break;
       case SUCCESS:
@@ -335,7 +342,7 @@ class RepoConnect extends React.Component {
           </div>
           <div className="col-2">{this.renderButton()}</div>
         </div>
-        {this.renderMessage()}
+        {status === ERROR && this.renderErrorMessage()}
       </Fragment>
     );
   }
