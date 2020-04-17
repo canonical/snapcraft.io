@@ -11,7 +11,7 @@ from requests.exceptions import HTTPError
 # Local
 from webapp.api import dashboard as api
 from webapp.api.exceptions import ApiError, ApiResponseErrorList
-from webapp.api.github import GitHub
+from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
@@ -183,22 +183,30 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
         }
     # The property name inside the yaml file doesn't match the snap
     else:
-        gh_snap_name = github.get_snapcraft_yaml_name(gh_owner, gh_repo)
+        try:
+            gh_snap_name = github.get_snapcraft_yaml_name(gh_owner, gh_repo)
 
-        if gh_snap_name != snap_name:
+            if gh_snap_name != snap_name:
+                result["success"] = False
+                result["error"] = {
+                    "type": "SNAP_NAME_DOES_NOT_MATCH",
+                    "message": (
+                        "Name mismatch: the snapcraft.yaml uses the snap "
+                        f'name "{gh_snap_name}", but you\'ve registered'
+                        f' the name "{snap_name}". Update your '
+                        "snapcraft.yaml to continue."
+                    ),
+                    "yaml_location": yaml_location,
+                    "gh_snap_name": gh_snap_name,
+                }
+        except InvalidYAML:
             result["success"] = False
             result["error"] = {
-                "type": "SNAP_NAME_DOES_NOT_MATCH",
+                "type": "INVALID_YAML_FILE",
                 "message": (
-                    'Name mismatch: the snapcraft.yaml uses the snap name "'
-                    + gh_snap_name
-                    + '", but you\'ve registered the name "'
-                    + snap_name
-                    + '". Update your '
-                    "snapcraft.yaml to continue."
+                    'Invalid snapcraft.yaml: there was an issue parsing the "'
+                    f"snapcraft.yaml for {snap_name}."
                 ),
-                "yaml_location": yaml_location,
-                "gh_snap_name": gh_snap_name,
             }
 
     return result
