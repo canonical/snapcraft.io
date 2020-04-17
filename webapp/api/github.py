@@ -10,6 +10,10 @@ from werkzeug.exceptions import Unauthorized
 GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
 
 
+class InvalidYAML(Exception):
+    pass
+
+
 class GitHub:
     """
     Provides authentication for GitHub users. Helper methods are also provided
@@ -283,7 +287,10 @@ class GitHub:
             )
 
             yaml = get_yaml_loader()
-            content = yaml.load(response.content)
+            try:
+                content = yaml.load(response.content)
+            except Exception:
+                raise InvalidYAML
 
             return content.get("name")
 
