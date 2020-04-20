@@ -204,7 +204,7 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
             result["error"] = {
                 "type": "INVALID_YAML_FILE",
                 "message": (
-                    'Invalid snapcraft.yaml: there was an issue parsing the "'
+                    "Invalid snapcraft.yaml: there was an issue parsing the "
                     f"snapcraft.yaml for {snap_name}."
                 ),
             }

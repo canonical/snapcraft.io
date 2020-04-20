@@ -27,7 +27,7 @@ class RepoConnect extends React.Component {
       status: null,
       snapName: this.props.snapName,
       yamlFilePath: null,
-      errorType: null
+      error: null
     };
 
     this.handleRepoSelect = this.handleRepoSelect.bind(this);
@@ -49,7 +49,8 @@ class RepoConnect extends React.Component {
     this.setState(
       {
         selectedRepo: selectedRepo,
-        status: null
+        status: null,
+        error: null
       },
       () => this.checkRepo(selectedRepo)
     );
@@ -132,7 +133,8 @@ class RepoConnect extends React.Component {
           } else {
             this.setState({
               isRepoListDisabled: false,
-              status: result.error.type,
+              error: result.error,
+              status: ERROR,
               yamlSnap: result.error.gh_snap_name
                 ? result.error.gh_snap_name
                 : null,
@@ -157,56 +159,71 @@ class RepoConnect extends React.Component {
     this.checkRepo(this.state.selectedRepo);
   }
 
-  renderMessage() {
+  renderNameError() {
     const {
-      status,
-      selectedRepo,
-      selectedOrganization,
-      yamlFilePath,
+      yamlSnap,
       snapName,
-      yamlSnap
+      selectedOrganization,
+      selectedRepo,
+      yamlFilePath
     } = this.state;
-    if (status === SNAP_NAME_DOES_NOT_MATCH) {
+
+    return (
+      <div className="u-fixed-width">
+        <p>
+          <strong>Name mismatch: </strong>
+          {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
+          <a
+            className="p-link--external"
+            href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
+          >
+            Update your snapcraft.yaml to continue.
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  renderMissingYamlError() {
+    return (
+      <div className="u-fixed-width">
+        <p>
+          <strong>Missing snapcraft.yaml: </strong>
+          this repo needs a snapcraft.yaml file, so that Snapcraft can make it
+          buildable, installable and runnable.
+        </p>
+        <p>
+          <a href="https://snapcraft.io/docs/creating-a-snap">
+            Learn the basics
+          </a>
+          , or{" "}
+          <a className="p-link--external" href={this.getTemplateUrl()}>
+            get started with a template.
+          </a>
+        </p>
+        <p>
+          Don’t have snapcraft?{" "}
+          <a href="https://snapcraft.io/docs/snapcraft-overview">
+            Install it on your own PC for testing.
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  renderError() {
+    const { snapName, error } = this.state;
+
+    if (error.message) {
       return (
         <div className="u-fixed-width">
           <p>
-            <strong>Name mismatch: </strong>
-            {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
-            <a
-              className="p-link--external"
-              href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
-            >
-              Update your snapcraft.yaml to continue.
-            </a>
+            <strong>Error: </strong>
+            {error.message}
           </p>
         </div>
       );
-    } else if (status === MISSING_YAML_FILE) {
-      return (
-        <div className="u-fixed-width">
-          <p>
-            <strong>Missing snapcraft.yaml: </strong>
-            this repo needs a snapcraft.yaml file, so that Snapcraft can make it
-            buildable, installable and runnable.
-          </p>
-          <p>
-            <a href="https://snapcraft.io/docs/creating-a-snap">
-              Learn the basics
-            </a>
-            , or{" "}
-            <a className="p-link--external" href={this.getTemplateUrl()}>
-              get started with a template.
-            </a>
-          </p>
-          <p>
-            Don’t have snapcraft?{" "}
-            <a href="https://snapcraft.io/docs/snapcraft-overview">
-              Install it on your own PC for testing.
-            </a>
-          </p>
-        </div>
-      );
-    } else if (status === ERROR) {
+    } else {
       return (
         <div className="u-fixed-width">
           <p>
@@ -220,6 +237,18 @@ class RepoConnect extends React.Component {
     }
   }
 
+  renderErrorMessage() {
+    const { error } = this.state;
+    switch (error.type) {
+      case SNAP_NAME_DOES_NOT_MATCH:
+        return this.renderNameError();
+      case MISSING_YAML_FILE:
+        return this.renderMissingYamlError();
+      default:
+        return this.renderError();
+    }
+  }
+
   getTemplateUrl() {
     const { selectedOrganization, selectedRepo, snapName } = this.state;
     return `https://github.com/${selectedOrganization}/${selectedRepo}/new/master?filename=snap%2Fsnapcraft.yaml&value=%0A%20%20%23%20After%20registering%20a%20name%20on%20build.snapcraft.io%2C%20commit%20an%20uncommented%20line%3A%0A%20%20%23%20name%3A%20${snapName}%0A%20%20version%3A%20%270.1%27%20%23%20just%20for%20humans%2C%20typically%20%271.2%2Bgit%27%20or%20%271.3.2%27%0A%20%20summary%3A%20Single-line%20elevator%20pitch%20for%20your%20amazing%20snap%20%23%2079%20char%20long%20summary%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20my-snap%27s%20description.%20You%20have%20a%20paragraph%20or%20two%20to%20tell%20the%0A%20%20%20%20most%20important%20story%20about%20your%20snap.%20Keep%20it%20under%20100%20words%20though%2C%0A%20%20%20%20we%20live%20in%20tweetspace%20and%20your%20description%20wants%20to%20look%20good%20in%20the%20snap%0A%20%20%20%20store.%0A%0A%20%20grade%3A%20devel%20%23%20must%20be%20%27stable%27%20to%20release%20into%20candidate%2Fstable%20channels%0A%20%20confinement%3A%20devmode%20%23%20use%20%27strict%27%20once%20you%20have%20the%20right%20plugs%20and%20slots%0A%0A%20%20parts%3A%0A%20%20%20%20my-part%3A%0A%20%20%20%20%20%20%23%20See%20%27snapcraft%20plugins%27%0A%20%20%20%20%20%20plugin%3A%20nil%0A%20%20`;
@@ -227,11 +256,7 @@ class RepoConnect extends React.Component {
 
   renderButton() {
     const { status } = this.state;
-    if (
-      status === ERROR ||
-      status === SNAP_NAME_DOES_NOT_MATCH ||
-      status === MISSING_YAML_FILE
-    ) {
+    if (status === ERROR) {
       return (
         <button
           className="p-tooltip--btm-center"
@@ -261,8 +286,6 @@ class RepoConnect extends React.Component {
         icon = "";
         break;
       case ERROR:
-      case MISSING_YAML_FILE:
-      case SNAP_NAME_DOES_NOT_MATCH:
         icon = " is-error";
         break;
       case SUCCESS:
@@ -319,7 +342,7 @@ class RepoConnect extends React.Component {
           </div>
           <div className="col-2">{this.renderButton()}</div>
         </div>
-        {this.renderMessage()}
+        {status === ERROR && this.renderErrorMessage()}
       </Fragment>
     );
   }
