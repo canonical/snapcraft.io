@@ -5,11 +5,16 @@ logo: https://assets.ubuntu.com/v1/be89e41a-red-hat-2019-primary-stacked.svg
 logo-mono: https://assets.ubuntu.com/v1/eb20b7c6-red-hat-mono.svg
 install:
   - action: |
-      Snap is available for <a href="https://www.redhat.com/" class="p-link--external">Red Hat Enterprise Linux (RHEL) 7</a>, from the 7.6 release onward, from the <a href="https://fedoraproject.org/wiki/EPEL" class="p-link--external">Extra Packages for Enterprise Linux (EPEL)</a> repository.
+      Snap is available for <a href="https://www.redhat.com/en/enterprise-linux-8" class="p-link--external">Red Hat Enterprise Linux (RHEL) 8</a> and RHEL 7, from the 7.6 release onward.
   - action: |
-      It is not yet available in the EPEL 8 repository, and consequently, not yet available for <a href="https://www.redhat.com/en/enterprise-linux-8" class="p-link--external">RHEL 8</a> unless you <a href="https://snapcraft.io/docs/building-snap-rpms-on-rhel">build the RPM yourself</a>.
+      The packages for RHEL 8 and RHEL 7 are in each distribution’s respective <a href="https://fedoraproject.org/wiki/EPEL" class="p-link--external">Extra Packages for Enterprise Linux</a> (EPEL) repository. The instructions for adding this repository diverge slightly between RHEL 8 and RHEL 7, which is why they’re listed separately below.
   - action: |
-      The EPEL repository can be added to your system with the following command:
+      The EPEL repository can be added to <b>RHEL 8</b> with the following command:
+    command: |
+      sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+      sudo dnf upgrade
+  - action: |
+      The EPEL repository can be added to <b>RHEL 7</b> with the following command:
     command: |
       sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   - action: |
