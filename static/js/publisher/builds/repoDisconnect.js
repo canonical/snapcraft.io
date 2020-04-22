@@ -38,9 +38,11 @@ function initRepoDisconnect() {
       });
     });
 
-    repoDisconnectForm.addEventListener("submit", () => {
+    repoDisconnectForm.addEventListener("submit", e => {
+      e.preventDefault();
       repoDisconnectConfirm.disabled = true;
       repoDisconnectConfirm.classList.add("has-spinner");
+      setTimeout(repoDisconnectForm.submit(), 400);
     });
   }
 }
