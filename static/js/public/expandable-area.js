@@ -25,7 +25,6 @@ export default function initExpandableArea(
           el.removeAttribute("data-js");
           el.classList.remove("p-show-more");
           el.removeChild(fadeEl);
-          el.removeChild(linkEl);
         }
       }
 
