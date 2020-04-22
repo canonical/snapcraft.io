@@ -373,10 +373,19 @@ def post_build(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
-    if launchpad.is_snap_building(details["snap_name"]):
-        launchpad.cancel_snap_builds(details["snap_name"])
+    try:
+        if launchpad.is_snap_building(details["snap_name"]):
+            launchpad.cancel_snap_builds(details["snap_name"])
 
-    launchpad.build_snap(details["snap_name"])
+        launchpad.build_snap(details["snap_name"])
+    except HTTPError as e:
+        # Timeout or not found from Launchpad
+        if e.response.status_code in [408, 404]:
+            flask.flash("An error occurred, please try again.", "negative")
+            return flask.redirect(
+                flask.url_for(".get_snap_builds", snap_name=snap_name)
+            )
+        raise e
 
     flask.flash("Build triggered", "positive")
 
