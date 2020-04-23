@@ -24,7 +24,6 @@ export default function initExpandableArea(
         if (overflowEl.scrollHeight <= heightMatchEl.scrollHeight) {
           el.removeAttribute("data-js");
           el.classList.remove("p-show-more");
-          el.removeChild(fadeEl);
         }
       }
 
