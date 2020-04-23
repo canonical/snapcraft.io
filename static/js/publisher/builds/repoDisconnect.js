@@ -38,11 +38,11 @@ function initRepoDisconnect() {
       });
     });
 
-    repoDisconnectForm.addEventListener("submit", e => {
-      e.preventDefault();
+    repoDisconnectConfirm.addEventListener("click", () => {
+      setTimeout(() => {
+        repoDisconnectConfirm.classList.add("has-spinner");
+      }, 400);
       repoDisconnectConfirm.disabled = true;
-      repoDisconnectConfirm.classList.add("has-spinner");
-      setTimeout(repoDisconnectForm.submit(), 400);
     });
   }
 }
