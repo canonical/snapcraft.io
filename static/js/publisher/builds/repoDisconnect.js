@@ -22,8 +22,14 @@ function initRepoDisconnect() {
   const repoDisconnectModal = document.querySelector(
     "[data-js='repo-disconnect-modal']"
   );
+  const repoDisconnectForm = document.repoDisconnectForm;
 
-  if (repoDisconnectButtons && repoDisconnectModal && repoDisconnectConfirm) {
+  if (
+    repoDisconnectButtons &&
+    repoDisconnectModal &&
+    repoDisconnectConfirm &&
+    repoDisconnectForm
+  ) {
     // Add click handler for clicks on elements with aria-controls for repo-disconnect-modal
     [].slice.call(repoDisconnectButtons).forEach(el => {
       el.addEventListener("click", event => {
@@ -32,11 +38,11 @@ function initRepoDisconnect() {
       });
     });
 
-    repoDisconnectConfirm.addEventListener("click", e => {
-      e.preventDefault();
+    repoDisconnectConfirm.addEventListener("click", () => {
+      setTimeout(() => {
+        repoDisconnectConfirm.classList.add("has-spinner");
+      }, 400);
       repoDisconnectConfirm.disabled = true;
-      repoDisconnectConfirm.classList.add("has-spinner");
-      document.repoDisconnectForm.submit();
     });
   }
 }
