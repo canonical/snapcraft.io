@@ -1,6 +1,10 @@
 @mixin snapcraft-show-more {
   $color-transparent-white: rgba(255, 255, 255, 0);
 
+  .p-show-more__fade {
+    display: none;
+  }
+
   .p-show-more {
     position: relative;
 
@@ -23,9 +27,10 @@
       }
     }
 
-    &__fade {
+    .p-show-more__fade {
       background: linear-gradient($color-transparent-white, $color-x-light 50%);
       bottom: -1.5rem;
+      display: block;
       padding-top: 3rem;
       position: absolute;
       width: 100%;
