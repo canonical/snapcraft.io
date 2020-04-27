@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
+import AccordionHelp from "./AccordionHelp";
 import FileInput from "./fileInput";
 
 class Icon extends React.Component {
@@ -80,6 +81,40 @@ class Icon extends React.Component {
     return false;
   }
 
+  renderRescrictions() {
+    return (
+      <AccordionHelp name="icon restrictions">
+        <ul>
+          <li>
+            <small>
+              Accepted image formats include: <b>PNG, JPEG & SVG files</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              Min resolution: <b>40 x 40 pixels</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              Max resolution: <b>512 x 512 pixels</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              Aspect ratio: <b>1:1</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              File size limit: <b>256kB</b>
+            </small>
+          </li>
+        </ul>
+      </AccordionHelp>
+    );
+  }
+
   render() {
     const { title, restrictions } = this.props;
     const { icon } = this.state;
@@ -114,6 +149,7 @@ class Icon extends React.Component {
             </div>
           )}
         </div>
+        {this.renderRescrictions()}
       </Fragment>
     );
   }
