@@ -40,7 +40,7 @@ const MEDIA_RESTRICTIONS = {
 };
 
 const ICON_RESTRICTIONS = {
-  accept: ["image/png", "image/jpeg", "image/svg"],
+  accept: ["image/png", "image/jpeg", "image/svg+xml"],
   width: {
     min: 40,
     max: 512
