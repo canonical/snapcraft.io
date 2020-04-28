@@ -1,3 +1,4 @@
+---
 android-studio:
 - Android
 - https://developer.android.com/android-studio
@@ -10,9 +11,6 @@ brackets:
 discord:
 - Discord
 - https://discordapp.com/
-eog:
-- GNOME
-- https://gnome.org/
 ffmpeg:
 - FFmpeg
 - https://www.ffmpeg.org/
@@ -115,3 +113,75 @@ wordpress-desktop:
 wormhole:
 - Brian Warner
 - https://github.com/warner
+eog:
+- GNOME
+- https://gnome.org/
+epiphany:
+- GNOME
+- https://gnome.org/
+evince:
+- GNOME
+- https://gnome.org/
+five-or-more:
+- GNOME
+- https://gnome.org/
+gedit:
+- GNOME
+- https://gnome.org/
+glade:
+- GNOME
+- https://gnome.org/
+gnome-2048:
+- GNOME
+- https://gnome.org/
+gnome-chess:
+- GNOME
+- https://gnome.org/
+gnome-klotski:
+- GNOME
+- https://gnome.org/
+gnome-font-viewer:
+- GNOME
+- https://gnome.org/
+gnome-logs:
+- GNOME
+- https://gnome.org/
+gnome-mahjongg:
+- GNOME
+- https://gnome.org/
+gnome-mines:
+- GNOME
+- https://gnome.org/
+gnome-nibbles:
+- GNOME
+- https://gnome.org/
+gnome-robots:
+- GNOME
+- https://gnome.org/
+gnome-recipes:
+- GNOME
+- https://gnome.org/
+gnome-taquin:
+- GNOME
+- https://gnome.org/
+gnome-tetravex:
+- GNOME
+- https://gnome.org/
+hitori:
+- GNOME
+- https://gnome.org/
+iagno:
+- GNOME
+- https://gnome.org/
+lightsoff:
+- GNOME
+- https://gnome.org/
+quadrapassel:
+- GNOME
+- https://gnome.org/
+swll-foop:
+- GNOME
+- https://gnome.org/
+tali:
+- GNOME
+- https://gnome.org/
