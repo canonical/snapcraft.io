@@ -89,10 +89,17 @@ def get_snap_builds(snap_name):
     }
 
     # Get built snap in launchpad with this store name
-    github = GitHub(flask.session.get("github_auth_secret"))
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 
     if lp_snap:
+        # In this case we can use the GitHub user account or
+        # the Snapcraft GitHub user to check the snapcraft.yaml
+        github = GitHub(
+            flask.session.get(
+                "github_auth_secret", GITHUB_SNAPCRAFT_USER_TOKEN
+            )
+        )
+
         # Git repository without GitHub hostname
         context["github_repository"] = lp_snap["git_repository_url"][19:]
         github_owner, github_repo = context["github_repository"].split("/")
@@ -109,6 +116,8 @@ def get_snap_builds(snap_name):
 
         context["snap_builds_enabled"] = bool(context["snap_builds"])
     else:
+        github = GitHub(flask.session.get("github_auth_secret"))
+
         try:
             context["github_user"] = github.get_user()
         except Unauthorized:
