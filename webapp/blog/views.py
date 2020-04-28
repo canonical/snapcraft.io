@@ -59,6 +59,7 @@ def init_blog(app, url_prefix):
                 blog_articles, total_pages = wordpress_api.get_articles(
                     blog_tags["id"], 3 - len(articles)
                 )
+                snapcraft_tag = wordpress_api.get_tag_by_name(f"snapcraft.io")
             except Exception:
                 blog_articles = []
 
@@ -82,9 +83,14 @@ def init_blog(app, url_prefix):
                     article, featured_image=featured_media, author=None
                 )
 
+                url = f"/blog/{transformed_article['slug']}"
+
+                if snapcraft_tag["id"] not in transformed_article["tags"]:
+                    url = f"https://ubuntu.com{url}"
+
                 articles.append(
                     {
-                        "slug": "/blog/" + transformed_article["slug"],
+                        "slug": url,
                         "title": transformed_article["title"]["rendered"],
                         "image": transformed_article["image"],
                     }
