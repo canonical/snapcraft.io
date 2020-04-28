@@ -26,12 +26,12 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
         <div class="col-5">
           <div class="u-align--right u-clearfix">
-            <button class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
+            <button class="js-listing-preview p-button--base p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
               Preview
               <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
             </button>
-            <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
-            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
+            <a class="p-button--neutral js-form-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
+            <button type="submit" class="p-button--positive u-no-margin--bottom p-button-spinner js-form-submit" name="submit_apply" value="Save">
               {#
               to force dark icon variant we need a fake --dark class name:
               https://github.com/vanilla-framework/vanilla-framework/issues/1817
