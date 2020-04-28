@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 import humanize
 from dateutil import parser
+from webapp import helpers
 
 
 def get_n_random_snaps(snaps, choice_number):
@@ -458,3 +459,21 @@ def promote_snap_with_icon(snaps):
         snaps.insert(0, snaps.pop(snap_with_icon_index))
 
     return snaps
+
+
+def get_snap_developer(snap_name):
+    """Is this a special snap published by Canonical?
+    Show some developer information
+
+    :param snap_name: The name of a snap
+
+    :returns: a list of [display_name, url]
+
+    """
+    filename = f"store/content/developers/snaps.yaml"
+    snaps = helpers.get_yaml(filename, typ="rt")
+
+    if snaps and snap_name in snaps:
+        return snaps[snap_name]
+
+    return None

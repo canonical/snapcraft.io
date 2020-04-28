@@ -25,7 +25,7 @@ def init_blog(app, url_prefix):
 
         third_party_blogs = get_yaml("blog/content/blog-posts.yaml")
 
-        if snap in third_party_blogs:
+        if third_party_blogs and snap in third_party_blogs:
             post = third_party_blogs[snap]
             cdn_image = "/".join(
                 [

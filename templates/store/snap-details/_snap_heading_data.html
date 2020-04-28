@@ -16,9 +16,17 @@
 <div class="p-snap-heading__title">
   <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
   <div class="u-hide u-show--small">
+    {% if developer %}
+    {% include 'store/_snap-header-developer-information.html' %}
+    {% endif %}
     {% include 'store/_snap-header-information.html' %}
   </div>
   <ul class="p-inline-list--middot">
+    {% if developer %}
+      <li class="p-inline-list__item u-hide--small">
+        {% include 'store/_snap-header-developer-information.html' %}
+      </li>
+    {% endif %}
     <li class="p-inline-list__item u-hide--small">
       {% include 'store/_snap-header-information.html' %}
     </li>
