@@ -123,7 +123,12 @@
     }
 
     [class*="p-button"]:not([class*="p-button__"]) {
+      margin-bottom: 0;
       margin-right: $sph-inner;
+
+      @media screen and (max-width: $breakpoint-x-small) {
+        margin-bottom: 1rem;
+      }
 
       &:last-child {
         margin-right: 0;
