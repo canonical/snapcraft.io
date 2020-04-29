@@ -73,6 +73,7 @@ def init_blog(app, url_prefix):
                         alt="",
                         width="346",
                         height="231",
+                        fill=True,
                         hi_def=True,
                         loading="auto",
                     )
