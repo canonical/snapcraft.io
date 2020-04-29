@@ -155,7 +155,6 @@ class GitHub:
                 repositories(
                     first: 100,
                     privacy: PUBLIC,
-                    ownerAffiliations: [OWNER],
                 """
             + (f'after: "{end_cursor}"' if end_cursor else "")
             + """
