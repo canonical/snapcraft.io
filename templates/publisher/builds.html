@@ -255,7 +255,7 @@ Builds for
       snapcraft.publisher.initRepoDisconnect();
       {% endif %}
 
-      {% if github_orgs and github_user %}
+      {% if github_orgs or github_user %}
         snapcraft.publisher.initRepoConnect('[data-js="repo-connect"]', {{ github_orgs | tojson }}, {{ github_user | tojson }}, {{ snap_name | tojson }});
       {% endif %}
     });
