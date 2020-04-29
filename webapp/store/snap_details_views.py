@@ -143,6 +143,8 @@ def snap_details_views(store, api, handle_errors):
         # build list of categories of a snap
         categories = logic.get_snap_categories(details["snap"]["categories"])
 
+        developer = logic.get_snap_developer(details["name"])
+
         context = {
             "snap-id": details.get("snap-id"),
             # Data direct from details API
@@ -177,6 +179,7 @@ def snap_details_views(store, api, handle_errors):
             "last_updated_raw": last_updated,
             "is_users_snap": is_users_snap,
             "unlisted": details["snap"]["unlisted"],
+            "developer": developer,
         }
 
         return context

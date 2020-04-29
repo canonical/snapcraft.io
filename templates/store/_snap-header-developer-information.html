@@ -1,0 +1,10 @@
+{% if developer[1] %}
+<a href="{{ developer[1] }}" class="p-link--external">
+  {% endif %}
+  <span class="p-tooltip p-tooltip--top-center">
+    {{ developer[0] }}
+    <span class="p-tooltip__message">Developer</span>
+  </span>
+  {% if developer[1] %}
+</a>
+{% endif %}
