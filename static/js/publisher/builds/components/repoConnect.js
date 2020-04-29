@@ -367,6 +367,9 @@ RepoConnect.propTypes = {
  * @param {string} snapName
  */
 function init(selector, organizations, user, snapName) {
+  if (snapName === "openhab") {
+    console.log(selector, organizations, user, snapName);
+  }
   const el = document.querySelector(selector);
 
   // Add user login to the organization list
