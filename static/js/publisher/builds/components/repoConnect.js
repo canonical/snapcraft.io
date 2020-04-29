@@ -90,7 +90,11 @@ class RepoConnect extends React.Component {
       .then(result => {
         let newRepoList = result
           .map(el => {
-            return { value: el.name };
+            if (el.nameWithOwner.indexOf(`${user.login}/`) === 0) {
+              return { value: el.nameWithOwner.replace(`${user.login}/`, "") };
+            } else {
+              return { value: el.nameWithOwner };
+            }
           })
           .sort(this.sortByValue);
         this.setState({
