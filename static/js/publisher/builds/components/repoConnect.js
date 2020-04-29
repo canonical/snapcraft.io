@@ -373,6 +373,7 @@ function init(selector, organizations, user, snapName) {
   let _organizations = organizations.map(item => {
     return { value: item.login };
   });
+
   _organizations = [
     { value: "Select organization", disabled: true },
     { value: user.login },
