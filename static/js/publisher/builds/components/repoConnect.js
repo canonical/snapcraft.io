@@ -392,6 +392,8 @@ function init(selector, organizations, user, snapName) {
       />,
       el
     );
+  } else {
+    throw new Error(`Builds ${selector} doesn't exist`);
   }
 }
 
