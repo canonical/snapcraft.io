@@ -1,6 +1,6 @@
 {% if has_publisher_page %}
   <a href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">{{ display_name(publisher, username) }}</a>
-  {% else %}
+{% else %}
   <span class="p-tooltip--top-center">
     {{ display_name(publisher, username) }}
     <span class="p-tooltip__message">Publisher</span>
