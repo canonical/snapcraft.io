@@ -18,8 +18,15 @@ class Builds extends React.Component {
       isLoading: false,
       fetchSize: 15,
       fetchStart: 0,
+      isTooSlow: false,
       builds: props.builds ? props.builds : []
     };
+
+    this.initTimer = setTimeout(() => {
+      this.setState({
+        isTooSlow: true
+      });
+    }, 35000);
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
 
@@ -55,13 +62,12 @@ class Builds extends React.Component {
     fetch(url)
       .then(res => res.json())
       .then(result => {
-        const newBuilds = builds;
-
         this.setState({
           isLoading: false,
+          isTooSlow: builds.length === 0 && result.snap_builds.length === 0,
           builds: fromStart
             ? result.snap_builds
-            : newBuilds.concat(result.snap_builds)
+            : builds.slice().concat(result.snap_builds)
         });
       })
       .catch(() => {
@@ -94,7 +100,7 @@ class Builds extends React.Component {
   }
 
   render() {
-    const { builds, isLoading } = this.state;
+    const { builds, isLoading, isTooSlow } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
 
     const remainingBuilds = totalBuilds - builds.length;
@@ -176,6 +182,16 @@ class Builds extends React.Component {
 
     return (
       <Fragment>
+        {isTooSlow && (
+          <div className="u-fixed-width">
+            <div className="p-notification--caution">
+              <div className="p-notification__response">
+                Builds seem to be taking a while, try refreshing the page. If
+                the issue persists, try triggering a new build.
+              </div>
+            </div>
+          </div>
+        )}
         <MainTable
           headers={[
             {

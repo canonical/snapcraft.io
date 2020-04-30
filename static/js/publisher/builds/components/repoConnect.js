@@ -31,13 +31,32 @@ class RepoConnect extends React.Component {
     };
 
     this.handleRepoSelect = this.handleRepoSelect.bind(this);
-    this.handleOrganiationSelect = this.handleOrganiationSelect.bind(this);
+    this.handleOrganizationSelect = this.handleOrganizationSelect.bind(this);
     this.fetchRepoList = this.fetchRepoList.bind(this);
     this.handleRefreshButtonClick = this.handleRefreshButtonClick.bind(this);
   }
 
   sortByValue(a, b) {
     return a.value.localeCompare(b.value);
+  }
+
+  /**
+   * Create a string from orgname/repo or username/orgname/repo
+   *
+   * @param {string} selectedOrganization
+   * @param {string} selectedRepo
+   *
+   * @returns {string}
+   */
+  static orgRepoString(selectedOrganization, selectedRepo) {
+    if (!selectedRepo) {
+      return selectedOrganization;
+    }
+    if (selectedRepo.indexOf("/") !== -1) {
+      return selectedRepo;
+    }
+
+    return `${selectedOrganization}/${selectedRepo}`;
   }
 
   /**
@@ -61,9 +80,10 @@ class RepoConnect extends React.Component {
    *
    * @param organization
    */
-  handleOrganiationSelect(selectedOrganization) {
-    this.setState({ selectedOrganization: selectedOrganization }, () =>
-      this.fetchRepoList()
+  handleOrganizationSelect(selectedOrganization) {
+    this.setState(
+      { selectedOrganization: selectedOrganization, selectedRepo: "" },
+      () => this.fetchRepoList()
     );
   }
 
@@ -90,7 +110,22 @@ class RepoConnect extends React.Component {
       .then(result => {
         let newRepoList = result
           .map(el => {
-            return { value: el.name };
+            // a user may have access to a repo in an org
+            // but they're not part of that org
+            // they may also have their own fork
+            // so we need to differentiate, this just shows
+            // the upstream org name in the repo list
+            if (el.nameWithOwner) {
+              if (el.nameWithOwner.indexOf(`${user.login}/`) === 0) {
+                return {
+                  value: el.nameWithOwner.replace(`${user.login}/`, "")
+                };
+              } else {
+                return { value: el.nameWithOwner };
+              }
+            } else {
+              return { value: el.name };
+            }
           })
           .sort(this.sortByValue);
         this.setState({
@@ -115,7 +150,11 @@ class RepoConnect extends React.Component {
   checkRepo(selectedRepo) {
     const { snapName, repoList, selectedOrganization } = this.state;
     if (selectedRepo && repoList.some(el => el.value === selectedRepo)) {
-      const url = `/${snapName}/builds/validate-repo?repo=${selectedOrganization}/${selectedRepo}`;
+      const orgRepo = RepoConnect.orgRepoString(
+        selectedOrganization,
+        selectedRepo
+      );
+      const url = `/${snapName}/builds/validate-repo?repo=${orgRepo}`;
 
       this.setState({
         isRepoListDisabled: true,
@@ -168,6 +207,11 @@ class RepoConnect extends React.Component {
       yamlFilePath
     } = this.state;
 
+    const orgRepo = RepoConnect.orgRepoString(
+      selectedOrganization,
+      selectedRepo
+    );
+
     return (
       <div className="u-fixed-width">
         <p>
@@ -175,7 +219,7 @@ class RepoConnect extends React.Component {
           {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
           <a
             className="p-link--external"
-            href={`https://github.com/${selectedOrganization}/${selectedRepo}/edit/master/${yamlFilePath}`}
+            href={`https://github.com/${orgRepo}/edit/master/${yamlFilePath}`}
           >
             Update your snapcraft.yaml to continue.
           </a>
@@ -251,7 +295,11 @@ class RepoConnect extends React.Component {
 
   getTemplateUrl() {
     const { selectedOrganization, selectedRepo, snapName } = this.state;
-    return `https://github.com/${selectedOrganization}/${selectedRepo}/new/master?filename=snap%2Fsnapcraft.yaml&value=%0A%20%20%23%20After%20registering%20a%20name%20on%20build.snapcraft.io%2C%20commit%20an%20uncommented%20line%3A%0A%20%20%23%20name%3A%20${snapName}%0A%20%20version%3A%20%270.1%27%20%23%20just%20for%20humans%2C%20typically%20%271.2%2Bgit%27%20or%20%271.3.2%27%0A%20%20summary%3A%20Single-line%20elevator%20pitch%20for%20your%20amazing%20snap%20%23%2079%20char%20long%20summary%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20my-snap%27s%20description.%20You%20have%20a%20paragraph%20or%20two%20to%20tell%20the%0A%20%20%20%20most%20important%20story%20about%20your%20snap.%20Keep%20it%20under%20100%20words%20though%2C%0A%20%20%20%20we%20live%20in%20tweetspace%20and%20your%20description%20wants%20to%20look%20good%20in%20the%20snap%0A%20%20%20%20store.%0A%0A%20%20grade%3A%20devel%20%23%20must%20be%20%27stable%27%20to%20release%20into%20candidate%2Fstable%20channels%0A%20%20confinement%3A%20devmode%20%23%20use%20%27strict%27%20once%20you%20have%20the%20right%20plugs%20and%20slots%0A%0A%20%20parts%3A%0A%20%20%20%20my-part%3A%0A%20%20%20%20%20%20%23%20See%20%27snapcraft%20plugins%27%0A%20%20%20%20%20%20plugin%3A%20nil%0A%20%20`;
+    const orgRepo = RepoConnect.orgRepoString(
+      selectedOrganization,
+      selectedRepo
+    );
+    return `https://github.com/${orgRepo}/new/master?filename=snap%2Fsnapcraft.yaml&value=%0A%20%20%23%20After%20registering%20a%20name%20on%20build.snapcraft.io%2C%20commit%20an%20uncommented%20line%3A%0A%20%20%23%20name%3A%20${snapName}%0A%20%20version%3A%20%270.1%27%20%23%20just%20for%20humans%2C%20typically%20%271.2%2Bgit%27%20or%20%271.3.2%27%0A%20%20summary%3A%20Single-line%20elevator%20pitch%20for%20your%20amazing%20snap%20%23%2079%20char%20long%20summary%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20my-snap%27s%20description.%20You%20have%20a%20paragraph%20or%20two%20to%20tell%20the%0A%20%20%20%20most%20important%20story%20about%20your%20snap.%20Keep%20it%20under%20100%20words%20though%2C%0A%20%20%20%20we%20live%20in%20tweetspace%20and%20your%20description%20wants%20to%20look%20good%20in%20the%20snap%0A%20%20%20%20store.%0A%0A%20%20grade%3A%20devel%20%23%20must%20be%20%27stable%27%20to%20release%20into%20candidate%2Fstable%20channels%0A%20%20confinement%3A%20devmode%20%23%20use%20%27strict%27%20once%20you%20have%20the%20right%20plugs%20and%20slots%0A%0A%20%20parts%3A%0A%20%20%20%20my-part%3A%0A%20%20%20%20%20%20%23%20See%20%27snapcraft%20plugins%27%0A%20%20%20%20%20%20plugin%3A%20nil%0A%20%20`;
   }
 
   renderButton() {
@@ -314,6 +362,12 @@ class RepoConnect extends React.Component {
       repoList,
       status
     } = this.state;
+
+    const orgRepo = RepoConnect.orgRepoString(
+      selectedOrganization,
+      selectedRepo
+    );
+
     return (
       <Fragment>
         <div className="row">
@@ -321,12 +375,12 @@ class RepoConnect extends React.Component {
             <input
               type="hidden"
               name="github_repository"
-              value={`${selectedOrganization}/${selectedRepo}`}
+              value={`${orgRepo}`}
             />
             <Select
               options={organizations}
               selectedOption={selectedOrganization}
-              updateSelection={this.handleOrganiationSelect}
+              updateSelection={this.handleOrganizationSelect}
             />
           </div>
           <div className={`col-6 p-form-validation${this.renderIcon()}`}>
@@ -373,6 +427,7 @@ function init(selector, organizations, user, snapName) {
   let _organizations = organizations.map(item => {
     return { value: item.login };
   });
+
   _organizations = [
     { value: "Select organization", disabled: true },
     { value: user.login },
