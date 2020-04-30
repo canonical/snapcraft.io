@@ -363,7 +363,7 @@ def post_snap_builds(snap_name):
             # We create the webhook if doesn't exist already in this repo
             if not hook:
                 github.create_hook(owner, repo, github_hook_url)
-        except ApiError:
+        except HTTPError:
             flask.flash(
                 "The GitHub Webhook could not be created. "
                 "Please trigger a new build manually.",
@@ -444,7 +444,7 @@ def post_disconnect_repo(snap_name):
                 github.remove_hook(
                     gh_owner, gh_repo, old_hook["id"],
                 )
-        except ApiError:
+        except HTTPError:
             pass
 
     return flask.redirect(
