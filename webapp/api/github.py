@@ -161,6 +161,7 @@ class GitHub:
                 ) {
               edges {
                 node {
+                  name
                   nameWithOwner
                 }
               }

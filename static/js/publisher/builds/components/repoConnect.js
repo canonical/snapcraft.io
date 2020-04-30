@@ -49,6 +49,9 @@ class RepoConnect extends React.Component {
    * @returns {string}
    */
   static orgRepoString(selectedOrganization, selectedRepo) {
+    if (!selectedRepo) {
+      return selectedOrganization;
+    }
     if (selectedRepo.indexOf("/") !== -1) {
       return selectedRepo;
     }
@@ -78,8 +81,9 @@ class RepoConnect extends React.Component {
    * @param organization
    */
   handleOrganizationSelect(selectedOrganization) {
-    this.setState({ selectedOrganization: selectedOrganization }, () =>
-      this.fetchRepoList()
+    this.setState(
+      { selectedOrganization: selectedOrganization, selectedRepo: "" },
+      () => this.fetchRepoList()
     );
   }
 
@@ -111,10 +115,16 @@ class RepoConnect extends React.Component {
             // they may also have their own fork
             // so we need to differentiate, this just shows
             // the upstream org name in the repo list
-            if (el.nameWithOwner.indexOf(`${user.login}/`) === 0) {
-              return { value: el.nameWithOwner.replace(`${user.login}/`, "") };
+            if (el.nameWithOwner) {
+              if (el.nameWithOwner.indexOf(`${user.login}/`) === 0) {
+                return {
+                  value: el.nameWithOwner.replace(`${user.login}/`, "")
+                };
+              } else {
+                return { value: el.nameWithOwner };
+              }
             } else {
-              return { value: el.nameWithOwner };
+              return { value: el.name };
             }
           })
           .sort(this.sortByValue);
