@@ -192,7 +192,7 @@ Builds for
 
   {% if github_repository %}
   <section class="p-strip is-shallow">
-    <div class="u-fixed-width">
+    <div class="u-fixed-width u-clearfix">
       <h4 class="u-float-left">Latest builds</h4>
       <form action="/{{ snap_name }}/builds/trigger-build" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
