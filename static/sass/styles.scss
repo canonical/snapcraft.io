@@ -187,7 +187,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-modal-snapcraft;
 
 @import 'patterns_strip_slanted';
-@include p-strip-slanted;
+@include snapcraft-p-strip;
 
 @import 'snapcraft_store';
 @include snapcraft-store;
