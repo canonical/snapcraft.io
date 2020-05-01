@@ -29,8 +29,9 @@ def snapcraft_blueprint():
                     [icon_host, "2018/08/mosquitto-logo-only.svg.png"]
                 ),
                 "title": "mosquitto",
-                "origin": "ralight",
-                "publisher": "Roger Light",
+                "origin": "mosquitto",
+                "publisher": "Mosquitto Team",
+                "developer_validation": "verified",
             },
             {
                 "package_name": "node-red",
