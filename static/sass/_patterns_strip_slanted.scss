@@ -1,6 +1,6 @@
 // based on https://github.com/vanilla-framework/vanilla-framework/pull/2051
 
-@mixin p-strip-slanted {
+@mixin snapcraft-p-strip {
   $horizontal-edge-padding: $spv-outer--regular-scaleable;
   $slanted-edge-padding: $horizontal-edge-padding * 2; // coloured area takes half the rectangle surface area; to visually compensate, we multiply it by 2
   $bleed: -3px; // stretch outside to compensate for aliasing; otherwise edge of image underneath becomes visible as you resize
@@ -42,7 +42,7 @@
       background-position: 100% 100%;
       background-repeat: no-repeat;
       bottom: $bleed;
-      content: '';
+      content: "";
       left: $bleed;
       pointer-events: none; // keep the content underneath it interactive
       position: absolute;
@@ -63,11 +63,32 @@
   .p-strip-slanted--snapcraft {
     @extend %vf-strip;
     @extend %vf-strip-slanted;
-    background-image: url('#{$assets-path}a3c29307-hero-bg-snapcraft-1--nowhite.svg');
+    background-image: url("#{$assets-path}a3c29307-hero-bg-snapcraft-1--nowhite.svg");
     color: $color-light;
 
     &::after {
-      background-image: url('#{$assets-path}077b5e59-hero-bg-mask-snapcraft--white-orange--bigger-accent.svg');
+      background-image: url("#{$assets-path}077b5e59-hero-bg-mask-snapcraft--white-orange--bigger-accent.svg");
+    }
+  }
+
+  .p-strip--suru-background {
+    @extend %vf-strip;
+    background-blend-mode: multiply, multiply;
+    background-image: linear-gradient(to bottom right, rgba(119, 41, 83, .16) 0, rgba(119, 41, 83, .16) 49.9%, transparent 50%), linear-gradient(to bottom left, rgba(130, 190, 160, .2) 0, rgba(130, 190, 160, .2) 49.9%, transparent 50%), linear-gradient($color-slanted-background 0, $color-slanted-background 100%);
+    background-position: left top, right top;
+    background-repeat: no-repeat;
+    background-size: 70% 80%, 75% 100%, 100% 100%;
+    padding-bottom: 6rem;
+    padding-top: 6rem;
+
+    @media screen and (max-width: $breakpoint-medium) {
+      background-size: 70% 30%, 75% 100%, 100% 100%;
+      padding-bottom: 3rem;
+      padding-top: 3rem;
+    }
+
+    &.is-dark {
+      color: $color-light;
     }
   }
 }
