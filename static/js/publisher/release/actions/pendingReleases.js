@@ -8,8 +8,6 @@ export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
 export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
 export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 export const CANCEL_PROGRESSIVE_RELEASE = "CANCEL_PROGRESSIVE_RELEASE";
-export const SET_TEMP_PROGRESSIVE_KEYS = "SET_TEMP_PROGRESSIVE_KEYS";
-export const REMOVE_TEMP_PROGRESSIVE_KEYS = "REMOVE_TEMP_PROGRESSIVE_KEYS";
 
 import { getPendingChannelMap, getReleases } from "../selectors";
 
@@ -41,11 +39,7 @@ export function releaseRevision(revision, channel, progressive) {
         Object.keys(pendingReleases[revision]).forEach(channel => {
           const release = pendingReleases[revision][channel];
 
-          if (
-            release.progressive &&
-            release.progressive.key === null &&
-            percentage === 100
-          ) {
+          if (release.progressive && percentage === 100) {
             percentage = release.progressive.percentage;
           }
         });
@@ -55,7 +49,6 @@ export function releaseRevision(revision, channel, progressive) {
       // of releases on release. In actions/releases.js the key is either
       // updated, or the progressive object is removed completely
       progressive = {
-        key: null,
         percentage: percentage,
         paused: false
       };
@@ -73,59 +66,42 @@ export function releaseRevision(revision, channel, progressive) {
   };
 }
 
-export function setProgressiveReleasePercentage(key, percentage) {
+export function setProgressiveReleasePercentage(percentage) {
   return {
     type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
-      key,
       percentage
     }
   };
 }
 
-export function updateProgressiveReleasePercentage(key, percentage) {
+export function updateProgressiveReleasePercentage(percentage) {
   return {
     type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
-      key,
       percentage
     }
   };
 }
 
-export function pauseProgressiveRelease(key) {
+export function pauseProgressiveRelease() {
   return {
-    type: PAUSE_PROGRESSIVE_RELEASE,
-    payload: key
+    type: PAUSE_PROGRESSIVE_RELEASE
   };
 }
 
-export function resumeProgressiveRelease(key) {
+export function resumeProgressiveRelease() {
   return {
-    type: RESUME_PROGRESSIVE_RELEASE,
-    payload: key
+    type: RESUME_PROGRESSIVE_RELEASE
   };
 }
 
-export function cancelProgressiveRelease(key, previousRevision) {
+export function cancelProgressiveRelease(previousRevision) {
   return {
     type: CANCEL_PROGRESSIVE_RELEASE,
     payload: {
-      key,
       previousRevision
     }
-  };
-}
-
-export function setTemporaryProgressiveReleaseKeys() {
-  return {
-    type: SET_TEMP_PROGRESSIVE_KEYS
-  };
-}
-
-export function removeTemporaryProgressiveReleaseKeys() {
-  return {
-    type: REMOVE_TEMP_PROGRESSIVE_KEYS
   };
 }
 

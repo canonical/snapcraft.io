@@ -16,8 +16,6 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
-  SET_TEMP_PROGRESSIVE_KEYS,
-  REMOVE_TEMP_PROGRESSIVE_KEYS,
   releaseRevision,
   promoteRevision,
   promoteChannel,
@@ -27,9 +25,7 @@ import {
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
-  cancelProgressiveRelease,
-  setTemporaryProgressiveReleaseKeys,
-  removeTemporaryProgressiveReleaseKeys
+  cancelProgressiveRelease
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
@@ -97,7 +93,6 @@ describe("pendingReleases actions", () => {
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toEqual({
-        key: null,
         percentage: 100,
         paused: false
       });
@@ -299,79 +294,50 @@ describe("pendingReleases actions", () => {
   });
 
   describe("setProgressiveReleasePercentage", () => {
-    const key = "progressive-test";
     const percentage = 42;
 
     it("should create an action to set release progressive percentage", () => {
-      expect(setProgressiveReleasePercentage(key, percentage).type).toBe(
+      expect(setProgressiveReleasePercentage(percentage).type).toBe(
         SET_PROGRESSIVE_RELEASE_PERCENTAGE
       );
     });
 
-    it("should supply a payload with key", () => {
-      expect(
-        setProgressiveReleasePercentage(key, percentage).payload.key
-      ).toEqual(key);
-    });
-
     it("should supply a payload with percentage", () => {
       expect(
-        setProgressiveReleasePercentage(key, percentage).payload.percentage
+        setProgressiveReleasePercentage(percentage).payload.percentage
       ).toEqual(percentage);
     });
   });
 
   describe("updateProgressiveReleasePercentage", () => {
-    const key = "progressive-test";
     const percentage = 50;
 
     it("should create an action to update release percentage", () => {
-      expect(updateProgressiveReleasePercentage(key, percentage).type).toBe(
+      expect(updateProgressiveReleasePercentage(percentage).type).toBe(
         UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE
       );
     });
 
-    it("should supply a payload with key", () => {
-      expect(
-        updateProgressiveReleasePercentage(key, percentage).payload.key
-      ).toEqual(key);
-    });
-
     it("should supply a payload with percentage", () => {
       expect(
-        updateProgressiveReleasePercentage(key, percentage).payload.percentage
+        updateProgressiveReleasePercentage(percentage).payload.percentage
       ).toEqual(percentage);
     });
   });
 
   describe("pauseProgressiveRelease", () => {
-    const key = "progressive-test";
-
     it("should create an action to pause a release", () => {
-      expect(pauseProgressiveRelease(key).type).toBe(PAUSE_PROGRESSIVE_RELEASE);
-    });
-
-    it("should supply a key as the payload", () => {
-      expect(pauseProgressiveRelease(key).payload).toBe(key);
+      expect(pauseProgressiveRelease().type).toBe(PAUSE_PROGRESSIVE_RELEASE);
     });
   });
 
   describe("resumeProgressiverelease", () => {
-    const key = "progressive-test";
-
     it("should create an action to resume a release", () => {
-      expect(resumeProgressiveRelease(key).type).toBe(
-        RESUME_PROGRESSIVE_RELEASE
-      );
-    });
-
-    it("should supply a key as the payload", () => {
-      expect(resumeProgressiveRelease(key).payload).toBe(key);
+      expect(resumeProgressiveRelease().type).toBe(RESUME_PROGRESSIVE_RELEASE);
     });
   });
 
   describe("cancelProgressiverelease", () => {
-    const key = "progressive-test";
     const previousRevision = {
       architectures: ["amd64"],
       attributes: {},
@@ -390,37 +356,15 @@ describe("pendingReleases actions", () => {
     };
 
     it("should create an action to cancel a release", () => {
-      expect(cancelProgressiveRelease(key, previousRevision).type).toBe(
+      expect(cancelProgressiveRelease(previousRevision).type).toBe(
         CANCEL_PROGRESSIVE_RELEASE
-      );
-    });
-
-    it("should supply a key in the payload", () => {
-      expect(cancelProgressiveRelease(key, previousRevision).payload.key).toBe(
-        key
       );
     });
 
     it("should supply a revision in the payload", () => {
       expect(
-        cancelProgressiveRelease(key, previousRevision).payload.previousRevision
+        cancelProgressiveRelease(previousRevision).payload.previousRevision
       ).toBe(previousRevision);
-    });
-  });
-
-  describe("setTemporaryprogressivereleasekeys", () => {
-    it("should create an action to set temporary progressive release keys", () => {
-      expect(setTemporaryProgressiveReleaseKeys().type).toBe(
-        SET_TEMP_PROGRESSIVE_KEYS
-      );
-    });
-  });
-
-  describe("removeTemporaryprogressivereleasekeys", () => {
-    it("should create an action to remove temporary progressive release keys", () => {
-      expect(removeTemporaryProgressiveReleaseKeys().type).toBe(
-        REMOVE_TEMP_PROGRESSIVE_KEYS
-      );
     });
   });
 });

@@ -298,12 +298,7 @@ export function getProgressiveState(state, channel, arch, isPending) {
   if (release && release.revision) {
     // If the release is pending we don't want to look up the previous state, as it will be
     // for an outdated release
-    if (
-      !isPending &&
-      release &&
-      release.progressive &&
-      release.progressive.key
-    ) {
+    if (!isPending && release && release.progressive) {
       progressiveStatus = jsonClone(release.progressive);
 
       previousRevision = allReleases[1];

@@ -52,19 +52,19 @@ const RevisionsListRowProgressive = ({
     if (!pendingProgressiveState) {
       releaseRevision(revision, channel, progressiveState);
     }
-    pauseProgressiveRelease(progressiveState.key);
+    pauseProgressiveRelease();
   };
 
   const handleResumeProgressiveRelease = () => {
     if (!pendingProgressiveState) {
       releaseRevision(revision, channel, progressiveState);
     }
-    resumeProgressiveRelease(progressiveState.key);
+    resumeProgressiveRelease();
   };
 
   const handleCancelProgressiveRelease = () => {
     releaseRevision(revision, channel, progressiveState);
-    cancelProgressiveRelease(progressiveState.key, previousRevision);
+    cancelProgressiveRelease(previousRevision);
     setDraggable(false);
   };
 
@@ -72,7 +72,7 @@ const RevisionsListRowProgressive = ({
     if (!pendingProgressiveState) {
       releaseRevision(revision, channel, progressiveState);
     }
-    updateProgressiveReleasePercentage(progressiveState.key, percentage);
+    updateProgressiveReleasePercentage(percentage);
   };
 
   if (progressiveState) {
@@ -186,12 +186,12 @@ const mapDispatchToProps = dispatch => {
   return {
     releaseRevision: (revision, channel, progressive) =>
       dispatch(releaseRevision(revision, channel, progressive)),
-    updateProgressiveReleasePercentage: (key, percentage) =>
-      dispatch(updateProgressiveReleasePercentage(key, percentage)),
-    pauseProgressiveRelease: key => dispatch(pauseProgressiveRelease(key)),
-    resumeProgressiveRelease: key => dispatch(resumeProgressiveRelease(key)),
-    cancelProgressiveRelease: (key, previousRevision) =>
-      dispatch(cancelProgressiveRelease(key, previousRevision))
+    updateProgressiveReleasePercentage: percentage =>
+      dispatch(updateProgressiveReleasePercentage(percentage)),
+    pauseProgressiveRelease: () => dispatch(pauseProgressiveRelease()),
+    resumeProgressiveRelease: () => dispatch(resumeProgressiveRelease()),
+    cancelProgressiveRelease: previousRevision =>
+      dispatch(cancelProgressiveRelease(previousRevision))
   };
 };
 

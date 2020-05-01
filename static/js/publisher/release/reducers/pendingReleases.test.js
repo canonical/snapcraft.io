@@ -7,9 +7,7 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE,
-  SET_TEMP_PROGRESSIVE_KEYS,
-  REMOVE_TEMP_PROGRESSIVE_KEYS
+  CANCEL_PROGRESSIVE_RELEASE
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
@@ -206,7 +204,6 @@ describe("pendingReleases", () => {
           revision: { revision: 1, architectures: ["abc42", "test64"] },
           channel: "test/edge",
           progressive: {
-            key: "progressive-test",
             percentage: 10,
             paused: false
           }
@@ -296,7 +293,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
             progressive: {
-              key: "progressive-test",
               percentage: 10,
               paused: false
             }
@@ -371,7 +367,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
             progressive: {
-              key: "progressive-test",
               percentage: 10,
               paused: true
             }
@@ -589,7 +584,6 @@ describe("pendingReleases", () => {
     let setProgressiveAction = {
       type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
       payload: {
-        key: "progressive-test",
         percentage: 50
       }
     };
@@ -667,7 +661,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
             progressive: {
-              key: "progressive-test",
               percentage: 20,
               paused: false
             }
@@ -690,7 +683,6 @@ describe("pendingReleases", () => {
     let updateProgressiveAction = {
       type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
       payload: {
-        key: "progressive-test",
         percentage: 50
       }
     };
@@ -732,7 +724,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
             progressive: {
-              key: "progressive-test",
               percentage: 20,
               paused: false
             }
@@ -743,7 +734,6 @@ describe("pendingReleases", () => {
             revision: { revision: 2, architectures: ["abc42", "test64"] },
             channel: "test/edge",
             progressive: {
-              key: "progressive-other",
               percentage: 20,
               paused: true
             },
@@ -768,15 +758,6 @@ describe("pendingReleases", () => {
           }
         });
       });
-
-      it("should not update progressive releases with different key", () => {
-        const result = pendingReleases(
-          stateWithProgressiveReleases,
-          updateProgressiveAction
-        );
-
-        expect(result[2]).toEqual(stateWithProgressiveReleases[2]);
-      });
     });
   });
 
@@ -784,7 +765,6 @@ describe("pendingReleases", () => {
     const cancelProgressiveReleaseAction = {
       type: CANCEL_PROGRESSIVE_RELEASE,
       payload: {
-        key: "progressive-test",
         previousRevision: {
           architectures: ["amd64"],
           revision: 2
@@ -832,7 +812,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
             progressive: {
-              key: "progressive-test",
               percentage: 10,
               paused: true
             }
@@ -868,7 +847,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
             progressive: {
-              key: "progressive-test",
               percentage: 10,
               paused: false
             }
@@ -877,7 +855,6 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/candidate",
             progressive: {
-              key: "progressive-test",
               percentage: 10,
               paused: false
             }
@@ -905,68 +882,6 @@ describe("pendingReleases", () => {
             }
           }
         });
-      });
-    });
-  });
-
-  describe("temp state", () => {
-    const stateWithoutTemp = {
-      "1": {
-        "latest/edge": {
-          progressive: {
-            key: null
-          }
-        },
-        "latest/candidate": {
-          progressive: {
-            key: null
-          }
-        },
-        "latest/stable": {
-          progressive: {
-            key: "progressive-test"
-          }
-        }
-      }
-    };
-
-    const stateWithTemp = {
-      "1": {
-        "latest/edge": {
-          progressive: {
-            key: "ui-temp-0"
-          }
-        },
-        "latest/candidate": {
-          progressive: {
-            key: "ui-temp-1"
-          }
-        },
-        "latest/stable": {
-          progressive: {
-            key: "progressive-test"
-          }
-        }
-      }
-    };
-
-    describe("on SET_TEMP_PROGRESSIVE_KEYS", () => {
-      it("should set a temporary key on any pendingReleases with a null key", () => {
-        const result = pendingReleases(stateWithoutTemp, {
-          type: SET_TEMP_PROGRESSIVE_KEYS
-        });
-
-        expect(result).toEqual(stateWithTemp);
-      });
-    });
-
-    describe("on REMOVE_TEMP_PROGRESSIVE_KEYS", () => {
-      it("should remove the temporary key for any pendingReleases", () => {
-        const result = pendingReleases(stateWithTemp, {
-          type: REMOVE_TEMP_PROGRESSIVE_KEYS
-        });
-
-        expect(result).toEqual(stateWithoutTemp);
       });
     });
   });

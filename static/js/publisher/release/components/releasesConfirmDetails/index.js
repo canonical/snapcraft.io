@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import {
-  updateProgressiveReleasePercentage,
-  setTemporaryProgressiveReleaseKeys,
-  removeTemporaryProgressiveReleaseKeys
-} from "../../actions/pendingReleases";
+import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
 import { isProgressiveReleaseEnabled } from "../../selectors";
 
 import progressiveTypes from "./types";
@@ -19,9 +15,7 @@ import CloseChannelsRow from "./closeChannelsRow";
 const ReleasesConfirmDetails = ({
   updates,
   isProgressiveReleaseEnabled,
-  updateProgressiveReleasePercentage,
-  setTemporaryProgressiveReleaseKeys,
-  removeTemporaryProgressiveReleaseKeys
+  updateProgressiveReleasePercentage
 }) => {
   const [useGlobal, setGlobal] = useState(true);
   const [globalPercentage, setGlobalPercentage] = useState(100);
@@ -45,16 +39,11 @@ const ReleasesConfirmDetails = ({
   const toggleGlobal = () => {
     const newUseGlobal = !useGlobal;
     setGlobal(newUseGlobal);
-    if (!newUseGlobal) {
-      setTemporaryProgressiveReleaseKeys();
-    } else {
-      removeTemporaryProgressiveReleaseKeys();
-    }
   };
 
   const updatePercentage = percentage => {
     setGlobalPercentage(percentage);
-    updateProgressiveReleasePercentage(null, percentage);
+    updateProgressiveReleasePercentage(percentage);
   };
 
   return (
@@ -111,9 +100,7 @@ const ReleasesConfirmDetails = ({
 ReleasesConfirmDetails.propTypes = {
   updates: PropTypes.object.isRequired,
   isProgressiveReleaseEnabled: PropTypes.bool,
-  updateProgressiveReleasePercentage: PropTypes.func,
-  setTemporaryProgressiveReleaseKeys: PropTypes.func,
-  removeTemporaryProgressiveReleaseKeys: PropTypes.func
+  updateProgressiveReleasePercentage: PropTypes.func
 };
 
 const mapStateToProps = state => ({
@@ -122,12 +109,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateProgressiveReleasePercentage: (key, percentage) =>
-      dispatch(updateProgressiveReleasePercentage(key, percentage)),
-    setTemporaryProgressiveReleaseKeys: () =>
-      dispatch(setTemporaryProgressiveReleaseKeys()),
-    removeTemporaryProgressiveReleaseKeys: () =>
-      dispatch(removeTemporaryProgressiveReleaseKeys())
+    updateProgressiveReleasePercentage: percentage =>
+      dispatch(updateProgressiveReleasePercentage(percentage))
   };
 };
 
