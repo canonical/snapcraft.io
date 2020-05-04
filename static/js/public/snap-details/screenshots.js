@@ -1,5 +1,4 @@
 import lightbox from "./../../publisher/market/lightbox";
-import { isMobile } from "../../libs/mobile";
 import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
 import { SCREENSHOTS_CONFIG } from "../../config/swiper.config";
 import iframeSize from "../../libs/iframeSize";
@@ -13,12 +12,7 @@ function clickCallback(event) {
   const images = filterImages();
 
   if (url) {
-    if (isMobile()) {
-      window.open(url, "_blank");
-      window.focus();
-    } else {
-      lightbox.openLightbox(url, images);
-    }
+    lightbox.openLightbox(url, images);
   }
 }
 
