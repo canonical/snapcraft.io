@@ -6,14 +6,11 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE,
-  SET_TEMP_PROGRESSIVE_KEYS,
-  REMOVE_TEMP_PROGRESSIVE_KEYS
+  CANCEL_PROGRESSIVE_RELEASE
 } from "../actions/pendingReleases";
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
-import { TEMP_KEY } from "../constants";
 import { jsonClone } from "../helpers";
 
 function removePendingRelease(state, revision, channel) {
@@ -123,7 +120,7 @@ function updateProgressiveRelease(state, progressive) {
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
-      if (channel.progressive && channel.progressive.key === progressive.key) {
+      if (channel.progressive) {
         channel.progressive.percentage = progressive.percentage;
       }
     });
@@ -132,12 +129,12 @@ function updateProgressiveRelease(state, progressive) {
   return nextState;
 }
 
-function pauseProgressiveRelease(state, key) {
+function pauseProgressiveRelease(state) {
   const nextState = jsonClone(state);
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
-      if (channel.progressive && channel.progressive.key === key) {
+      if (channel.progressive) {
         channel.progressive.paused = true;
       }
     });
@@ -146,12 +143,12 @@ function pauseProgressiveRelease(state, key) {
   return nextState;
 }
 
-function resumeProgressiveRelease(state, key) {
+function resumeProgressiveRelease(state) {
   const nextState = jsonClone(state);
 
   Object.values(nextState).forEach(pendingRelease => {
     Object.values(pendingRelease).forEach(channel => {
-      if (channel.progressive && channel.progressive.key === key) {
+      if (channel.progressive) {
         channel.progressive.paused = false;
       }
     });
@@ -164,7 +161,7 @@ function resumeProgressiveRelease(state, key) {
 // because we're using the previousRevision from that specific combo.
 // That means the progressive.key is ignored and other releases with the
 // same key are not affected.
-function cancelProgressiveRelease(state, key, previousRevision) {
+function cancelProgressiveRelease(state, previousRevision) {
   let nextState = jsonClone(state);
 
   Object.keys(nextState).forEach(revision => {
@@ -172,54 +169,9 @@ function cancelProgressiveRelease(state, key, previousRevision) {
     Object.keys(pendingReleaseChannels).forEach(channel => {
       const pendingRelease = pendingReleaseChannels[channel];
 
-      if (
-        pendingRelease.progressive &&
-        pendingRelease.progressive.key === key
-      ) {
+      if (pendingRelease.progressive) {
         nextState = releaseRevision(state, previousRevision, channel, null);
         nextState[previousRevision.revision][channel].replaces = pendingRelease;
-      }
-    });
-  });
-
-  return nextState;
-}
-
-function setTempProgressiveKeys(state) {
-  const nextState = jsonClone(state);
-
-  let index = 0;
-  Object.keys(nextState).forEach(revision => {
-    const pendingReleaseChannels = nextState[revision];
-    Object.keys(pendingReleaseChannels).forEach(channel => {
-      const pendingRelease = pendingReleaseChannels[channel];
-
-      if (
-        pendingRelease.progressive &&
-        pendingRelease.progressive.key === null
-      ) {
-        pendingRelease.progressive.key = `${TEMP_KEY}${index}`;
-      }
-      index = index + 1;
-    });
-  });
-
-  return nextState;
-}
-
-function removeTempProgressiveKeys(state) {
-  const nextState = jsonClone(state);
-
-  Object.keys(nextState).forEach(revision => {
-    const pendingReleaseChannels = nextState[revision];
-    Object.keys(pendingReleaseChannels).forEach(channel => {
-      const pendingRelease = pendingReleaseChannels[channel];
-
-      if (
-        pendingRelease.progressive &&
-        pendingRelease.progressive.key.indexOf(TEMP_KEY) === 0
-      ) {
-        pendingRelease.progressive.key = null;
       }
     });
   });
@@ -274,15 +226,7 @@ export default function pendingReleases(state = {}, action) {
     case RESUME_PROGRESSIVE_RELEASE:
       return resumeProgressiveRelease(state, action.payload);
     case CANCEL_PROGRESSIVE_RELEASE:
-      return cancelProgressiveRelease(
-        state,
-        action.payload.key,
-        action.payload.previousRevision
-      );
-    case SET_TEMP_PROGRESSIVE_KEYS:
-      return setTempProgressiveKeys(state);
-    case REMOVE_TEMP_PROGRESSIVE_KEYS:
-      return removeTempProgressiveKeys(state);
+      return cancelProgressiveRelease(state, action.payload.previousRevision);
     default:
       return state;
   }

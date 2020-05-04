@@ -1,7 +1,6 @@
 import {
   RISKS_WITH_AVAILABLE as RISKS,
-  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE,
-  TEMP_KEY
+  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE
 } from "../constants";
 
 import { hideNotification, showNotification } from "./globalNotification";
@@ -119,7 +118,6 @@ export function handleReleaseResponse(
 }
 
 export function releaseRevisions() {
-  const progressiveKey = `ui-progressive-release-${new Date().getTime()}`;
   const mapToRelease = pendingRelease => {
     let progressive = null;
 
@@ -128,10 +126,6 @@ export function releaseRevisions() {
       pendingRelease.progressive.percentage < 100
     ) {
       progressive = pendingRelease.progressive;
-
-      if (progressive.key === null || progressive.key.indexOf(TEMP_KEY) === 0) {
-        progressive.key = progressiveKey;
-      }
     }
 
     return {

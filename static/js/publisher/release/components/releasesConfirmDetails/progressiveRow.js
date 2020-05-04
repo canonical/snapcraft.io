@@ -19,14 +19,13 @@ class ProgressiveRow extends React.Component {
   onChangeHandler(percentage) {
     const {
       updateProgressiveReleasePercentage,
-      updateGlobalPercentage,
-      release
+      updateGlobalPercentage
     } = this.props;
 
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
     }
-    updateProgressiveReleasePercentage(release.progressive.key, percentage);
+    updateProgressiveReleasePercentage(percentage);
   }
 
   render() {
@@ -146,8 +145,8 @@ ProgressiveRow.propTypes = {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateProgressiveReleasePercentage: (key, percentage) =>
-      dispatch(updateProgressiveReleasePercentage(key, percentage))
+    updateProgressiveReleasePercentage: percentage =>
+      dispatch(updateProgressiveReleasePercentage(percentage))
   };
 };
 

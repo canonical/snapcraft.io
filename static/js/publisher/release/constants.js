@@ -19,8 +19,6 @@ const AVAILABLE_REVISIONS_SELECT_LAUNCHPAD =
 const DEFAULT_ERROR_MESSAGE =
   "There was an error while processing your request, please try again later.";
 
-const TEMP_KEY = "ui-temp-";
-
 const REVISION_STATUS = {
   PUBLISHED: "Published",
   UNPUBLISHED: "Unpublished",
@@ -44,6 +42,5 @@ export {
   BUILD,
   RISKS,
   RISKS_WITH_AVAILABLE,
-  TEMP_KEY,
   REVISION_STATUS
 };

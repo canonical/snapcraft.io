@@ -39,12 +39,7 @@ class ReleasesConfirm extends Component {
     });
 
     if (this.state.percentage && +this.state.percentage !== 100) {
-      const timestamp = new Date().getTime();
-
-      this.props.setProgressiveReleasePercentage(
-        `progressive-release-${timestamp}`,
-        +this.state.percentage
-      );
+      this.props.setProgressiveReleasePercentage(+this.state.percentage);
     }
 
     this.props.releaseRevisions().then(() => {
@@ -152,8 +147,8 @@ const mapDispatchToProps = dispatch => {
   return {
     releaseRevisions: () => dispatch(releaseRevisions()),
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
-    setProgressiveReleasePercentage: (key, percentage) =>
-      dispatch(setProgressiveReleasePercentage(key, percentage)),
+    setProgressiveReleasePercentage: percentage =>
+      dispatch(setProgressiveReleasePercentage(percentage)),
     triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
   };
 };
