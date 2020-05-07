@@ -38,10 +38,7 @@ function initRepoDisconnect() {
       });
     });
 
-    repoDisconnectConfirm.addEventListener("click", () => {
-      setTimeout(() => {
-        repoDisconnectConfirm.classList.add("has-spinner");
-      }, 400);
+    repoDisconnectForm.addEventListener("submit", () => {
       repoDisconnectConfirm.disabled = true;
     });
   }

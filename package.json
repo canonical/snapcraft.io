@@ -13,7 +13,7 @@
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-bundle",
     "copy-3rd-party-js": "mkdir -p static/js/modules && cp node_modules/d3/build/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
     "build-js-bundle": "webpack",
-    "serve": "./entrypoint $(hostname -I | awk '{print $1;}'):${PORT}",
+    "serve": "./entrypoint 0.0.0.0:${PORT}",
     "start": "yarn run build && concurrently --raw 'yarn run watch-scss' 'yarn run watch-js' 'yarn run serve'",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
