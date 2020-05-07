@@ -129,6 +129,7 @@
         </span>
       </a>
     </div>
+    {% if ("arm64" in channel_map) or ("armhf" in channel_map) %}
     <div class="col-3 col-medium-3">
       <a class="p-media-object" href="/install/{{package_name}}/raspbian">
         <span class="p-media-object__image">
@@ -139,5 +140,6 @@
         </span>
       </a>
     </div>
+    {% endif %}
   </div>
 </div>
