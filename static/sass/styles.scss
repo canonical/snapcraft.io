@@ -44,6 +44,12 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-tabs;
 @include vf-p-subnav;
 
+// FIXME
+// temporary local implementation of side navigation discourse styles
+// this will come from Vanilla when released
+@import 'vanilla_side-navigation';
+@include snapcraft-p-side-navigation;
+
 // vanilla utilities
 @include vf-u-floats;
 @include vf-u-off-screen;

@@ -1,0 +1,540 @@
+// FIXME
+// temporary local implementation of side navigation discourse styles
+// this will come from Vanilla when released
+
+@mixin snapcraft-p-side-navigation {
+  // STYLING OF SIDE NAVIGATION RESPONSIVE DRAWER
+
+  @keyframes vf-p-side-navigation-expand {
+    0% {
+      transform: translate(-100%);
+    }
+
+    100% {
+      transform: translate(0);
+    }
+  }
+
+  @keyframes vf-p-side-navigation-collapse {
+    0% {
+      transform: translate(0);
+    }
+
+    100% {
+      transform: translate(-100%);
+    }
+  }
+
+  .p-side-navigation__drawer {
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    top: 0;
+    transform: translateX(-100%);
+    width: 100%;
+    z-index: 12;
+
+    .p-side-navigation.is-expanded &,
+    [class*='p-side-navigation--'].is-expanded & {
+      @extend %vf-has-box-shadow;
+
+      animation: vf-p-side-navigation-expand map-get($animation-duration, brisk);
+      transform: translateX(0);
+    }
+
+    .p-side-navigation.is-collapsed &,
+    [class*='p-side-navigation--'].is-collapsed & {
+      animation: vf-p-side-navigation-collapse map-get($animation-duration, brisk);
+    }
+
+    @media (min-width: $breakpoint-x-small) {
+      max-width: 20rem;
+    }
+  }
+
+  .p-side-navigation__overlay {
+    @include vf-animation(opacity);
+
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 11;
+
+    .p-side-navigation.is-expanded &,
+    [class*='p-side-navigation--'].is-expanded & {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
+  .p-side-navigation__drawer-header {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding-bottom: $spv-inner--small;
+    padding-left: $sph-inner--small;
+    padding-top: $spv-inner--small;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .p-side-navigation__toggle,
+  .p-side-navigation__toggle--in-drawer {
+    // override base button styles that extend button to full width on mobile
+    width: auto;
+
+    &::before {
+      @extend %icon;
+
+      content: '';
+      margin-left: -#{$sph-inner--small};
+      margin-right: $sph-inner--small;
+    }
+  }
+
+  .p-side-navigation__toggle {
+    &::before {
+      transform: rotate(-90deg);
+    }
+  }
+
+  .p-side-navigation__toggle--in-drawer {
+    margin-bottom: 0;
+
+    &::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    // make whole navigation sticky on large screens
+    .p-side-navigation,
+    [class*='p-side-navigation--'] {
+      max-height: 100vh;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+    }
+
+    .p-side-navigation__toggle,
+    .p-side-navigation__toggle--in-drawer,
+    .p-side-navigation__drawer-header {
+      display: none;
+    }
+
+    .p-side-navigation__drawer,
+    // fight specificity of expanded version
+    .p-side-navigation.is-expanded .p-side-navigation__drawer,
+    [class*='p-side-navigation--'].is-expanded .p-side-navigation__drawer {
+      box-shadow: none;
+      display: block;
+      max-width: none;
+      overflow: visible;
+      position: static;
+      transform: translateX(0);
+    }
+
+    .p-side-navigation__overlay {
+      display: none;
+    }
+  }
+
+  // STYLING OF SIDE NAVIGATION LINKS LIST
+
+  // space for the right hand icon with default inner spacing on the left
+  $sp-sidenav--icon-spacing-width: map-get($icon-sizes, default) + $sph-inner;
+
+  %side-navigation__list {
+    @extend %vf-list;
+    @extend %vf-pseudo-border--bottom;
+
+    &::after {
+      @include vf-side-navigation-spacing-left($prop: left);
+
+      bottom: -0.5 * $spv-outer--scaleable; // place border in the middle of the margin
+    }
+
+    .p-side-navigation--icons &::after {
+      @include vf-side-navigation-spacing-left($prop: left, $offset: $sp-sidenav--icon-spacing-width);
+    }
+
+    &:last-of-type::after {
+      content: none;
+    }
+  }
+
+  .p-side-navigation__list {
+    @extend %side-navigation__list;
+  }
+
+  .p-side-navigation > .p-side-navigation__list:first-of-type,
+  .p-side-navigation__drawer > .p-side-navigation__list:first-of-type {
+    // nudge from top to put text on baseline grid
+    padding-top: 0.5 * $spv-inner--x-small;
+  }
+
+  .p-side-navigation__item--title {
+    font-weight: $font-weight-bold;
+  }
+
+  %side-navigation__text {
+    @include vf-side-navigation-spacing-left;
+
+    display: flex;
+    padding-bottom: $spv-inner--x-small;
+    padding-right: $sph-inner;
+    padding-top: $spv-inner--x-small;
+  }
+
+  %side-navigation__link {
+    @include vf-focus;
+
+    // vf-highlight-bar is rendered above focus outline
+    // so we need to hide it on focus
+    &:focus::before {
+      display: none;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .p-side-navigation__link {
+    @extend %side-navigation__link;
+  }
+
+  .p-side-navigation__text,
+  .p-side-navigation__link {
+    @extend %side-navigation__text;
+
+    .p-side-navigation--icons & {
+      @include vf-side-navigation-spacing-left($offset: $sp-sidenav--icon-spacing-width);
+
+      position: relative;
+    }
+
+    // nested 2nd level of navigation
+    .p-side-navigation__item .p-side-navigation__item & {
+      @include vf-side-navigation-spacing-left($multiplier: 2);
+
+      // add spacing for variant with right side icons
+      .p-side-navigation--icons & {
+        @include vf-side-navigation-spacing-left($multiplier: 2, $offset: $sp-sidenav--icon-spacing-width);
+      }
+    }
+
+    // nested 3rd level of navigation
+    .p-side-navigation__item .p-side-navigation__item .p-side-navigation__item & {
+      @include vf-side-navigation-spacing-left($multiplier: 3);
+
+      // add spacing for variant with right side icons
+      .p-side-navigation--icons & {
+        @include vf-side-navigation-spacing-left($multiplier: 3, $offset: $sp-sidenav--icon-spacing-width);
+      }
+    }
+  }
+
+  .p-side-navigation--icons {
+    .p-side-navigation__icon {
+      @include vf-side-navigation-spacing-left($prop: left);
+
+      position: absolute;
+      top: $sph-inner--small;
+    }
+  }
+
+  .p-side-navigation__status {
+    margin-left: auto;
+    padding-left: $spv-inner--small;
+  }
+
+  // Styles for markup in Discourse docs variant
+  .p-side-navigation--discourse {
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @extend %side-navigation__text;
+
+      // reset heading styles
+      font-size: map-get($base-font-sizes, base);
+      font-weight: $font-weight-bold;
+      line-height: 1.5rem;
+      margin: 0;
+    }
+
+    ul {
+      @extend %side-navigation__list;
+    }
+
+    li > a {
+      @extend %side-navigation__link;
+    }
+
+    li > span,
+    li > strong,
+    li > a {
+      @extend %side-navigation__text;
+    }
+
+    li li > span,
+    li li > strong,
+    li li > a {
+      @include vf-side-navigation-spacing-left($multiplier: 2);
+    }
+
+    li li li > span,
+    li li li > strong,
+    li li li > a {
+      @include vf-side-navigation-spacing-left($multiplier: 3);
+    }
+  }
+
+  // Theming
+  @if ($theme-default-p-side-navigation == 'dark') {
+    .p-side-navigation,
+    [class*='p-side-navigation--'] {
+      @include vf-side-navigation-theme-dark;
+
+      &.is-light {
+        @include vf-side-navigation-theme-light;
+      }
+    }
+
+    .p-side-navigation--discourse {
+      @include vf-side-navigation-discourse-theme-dark;
+
+      &.is-light {
+        @include vf-side-navigation-discourse-theme-light;
+      }
+    }
+  } @else {
+    .p-side-navigation,
+    [class*='p-side-navigation--'] {
+      @include vf-side-navigation-theme-light;
+
+      &.is-dark {
+        @include vf-side-navigation-theme-dark;
+      }
+    }
+
+    .p-side-navigation--discourse {
+      @include vf-side-navigation-discourse-theme-light;
+
+      &.is-light {
+        @include vf-side-navigation-discourse-theme-dark;
+      }
+    }
+  }
+}
+
+// helper
+
+// elements in side nav should be aligned from left based on grid margin for given screen size
+// additional offset is added when icons are used or for nested navigation levels
+@mixin vf-side-navigation-spacing-left(
+  // property to adjust spacing, defaults to `padding-left`
+    $prop: padding-left,
+  // how many times grid margin width should be multiplied (for nested navigation levels)
+    $multiplier: 1,
+  // offset to use for additional spacing (for icons)
+    $offset: 0
+) {
+  @media (max-width: $threshold-4-6-col) {
+    #{$prop}: $multiplier * map-get($grid-margin-widths, small) + $offset;
+  }
+
+  @media (min-width: $threshold-4-6-col) and (max-width: $threshold-6-12-col) {
+    #{$prop}: $multiplier * map-get($grid-margin-widths, medium) + $offset;
+  }
+
+  @media (min-width: $threshold-6-12-col) {
+    #{$prop}: $multiplier * map-get($grid-margin-widths, large) + $offset;
+  }
+}
+
+// theme
+@mixin vf-side-navigation-theme(
+  // default text color in sidebar
+    $color-sidenav-text-default,
+  // default background color (for the drawer)
+    $color-sidenav-background-default,
+  // background color the overlay
+    $color-sidenav-background-overlay,
+  // text color of highlighted items
+    $color-sidenav-text-active,
+  // background color of active/hovered items
+    $color-sidenav-item-background-highlight,
+  // border color of active item
+    $color-sidenav-item-border-highlight,
+  // border color of items list
+    $color-sidenav-list-border,
+  // color of toggle icon - needed because of lack of rgba support in icon mixin
+    $color-sidenav-toggle-icon
+) {
+  & {
+    color: $color-sidenav-text-default;
+  }
+
+  // toggle to open side navigation is supposed to be in main content (on light background)
+  // it's using default 'neutral' button look regardless of the theme used by side navigation
+  .p-side-navigation__toggle {
+    @include vf-button-pattern;
+
+    &::before {
+      @include vf-icon-chevron;
+    }
+  }
+
+  .p-side-navigation__toggle--in-drawer {
+    @include vf-button-pattern(
+      $button-background-color: $color-transparent,
+      $button-border-color: $color-transparent,
+      $button-text-color: $color-sidenav-text-default,
+      $button-hover-background-color: $color-sidenav-item-background-highlight,
+      $button-hover-border-color: $color-transparent,
+      $button-active-background-color: $color-sidenav-item-background-highlight,
+      $button-active-border-color: $color-transparent
+    );
+
+    &::before {
+      @include vf-icon-chevron($color-sidenav-toggle-icon);
+    }
+  }
+
+  .p-side-navigation__drawer {
+    background: $color-sidenav-background-default;
+  }
+
+  .p-side-navigation__overlay {
+    background: $color-sidenav-background-overlay;
+  }
+
+  .p-side-navigation__drawer-header {
+    background: $color-sidenav-background-default;
+    border-color: $color-sidenav-list-border;
+  }
+
+  %theme-side-navigation__list {
+    background: $color-sidenav-list-border;
+  }
+
+  %theme-side-navigation__link {
+    &,
+    &:visited {
+      color: $color-sidenav-text-default;
+    }
+
+    &:hover,
+    &.is-active {
+      background: $color-sidenav-item-background-highlight;
+      color: $color-sidenav-text-active;
+    }
+
+    &.is-active {
+      @include vf-highlight-bar($color-sidenav-item-border-highlight, left);
+    }
+  }
+
+  .p-side-navigation__list::after {
+    @extend %theme-side-navigation__list;
+  }
+
+  .p-side-navigation__link {
+    @extend %theme-side-navigation__link;
+  }
+}
+
+@mixin vf-side-navigation-theme-light {
+  @include vf-side-navigation-theme(
+    $color-sidenav-text-default: $colors--light-theme--text-muted,
+    $color-sidenav-background-default: $colors--light-theme--background-default,
+    $color-sidenav-background-overlay: $colors--light-theme--background-overlay,
+    $color-sidenav-text-active: $colors--light-theme--text-default,
+    $color-sidenav-item-background-highlight: $colors--light-theme--background-highlight,
+    $color-sidenav-item-border-highlight: $colors--light-theme--text-default,
+    $color-sidenav-list-border: $colors--light-theme--border-low-contrast,
+    $color-sidenav-toggle-icon: $colors--light-theme--text-muted
+  );
+}
+
+@mixin vf-side-navigation-theme-dark {
+  // FIXME:
+  // $color-sidenav-toggle-icon color should be same as $color-sidenav-text-default,
+  // but vf-url-friendly-color doesn't support rgba(),
+  // so we are using #999 as fallback for now
+  @include vf-side-navigation-theme(
+    $color-sidenav-text-default: $colors--dark-theme--text-muted,
+    $color-sidenav-background-default: $colors--dark-theme--background-default,
+    $color-sidenav-background-overlay: $colors--dark-theme--background-overlay,
+    $color-sidenav-text-active: $colors--dark-theme--text-default,
+    $color-sidenav-item-background-highlight: $colors--dark-theme--background-highlight,
+    $color-sidenav-item-border-highlight: $colors--dark-theme--text-default,
+    $color-sidenav-list-border: $colors--dark-theme--border-low-contrast,
+    $color-sidenav-toggle-icon: #999
+  );
+}
+
+// Theme for markup in Discourse docs variant
+@mixin vf-side-navigation-discourse-theme(
+  // default text color in sidebar
+    $color-sidenav-text-default,
+  // text color of highlighted items
+    $color-sidenav-text-active,
+  // background color of active/hovered items
+    $color-sidenav-item-background-highlight,
+  // border color of active item
+    $color-sidenav-item-border-highlight,
+  // border color of items list
+    $color-sidenav-list-border
+) {
+  // stylelint-disable selector-no-qualifying-type
+  ul::after {
+    background: $color-sidenav-list-border;
+  }
+
+  li > a {
+    &,
+    &:visited {
+      color: $color-sidenav-text-default;
+    }
+
+    &:hover,
+    &.is-active {
+      background: $color-sidenav-item-background-highlight;
+      color: $color-sidenav-text-active;
+    }
+
+    &.is-active {
+      @include vf-highlight-bar($color-sidenav-item-border-highlight, left);
+    }
+  }
+  // stylelint-enable selector-no-qualifying-type
+}
+
+@mixin vf-side-navigation-discourse-theme-light {
+  @include vf-side-navigation-discourse-theme(
+    $color-sidenav-text-default: $colors--light-theme--text-muted,
+    $color-sidenav-text-active: $colors--light-theme--text-default,
+    $color-sidenav-item-background-highlight: $colors--light-theme--background-highlight,
+    $color-sidenav-item-border-highlight: $colors--light-theme--text-default,
+    $color-sidenav-list-border: $colors--light-theme--border-low-contrast
+  );
+}
+
+@mixin vf-side-navigation-discourse-theme-dark {
+  @include vf-side-navigation-discourse-theme(
+    $color-sidenav-text-default: $colors--dark-theme--text-muted,
+    $color-sidenav-text-active: $colors--dark-theme--text-default,
+    $color-sidenav-item-background-highlight: $colors--dark-theme--background-highlight,
+    $color-sidenav-item-border-highlight: $colors--dark-theme--text-default,
+    $color-sidenav-list-border: $colors--dark-theme--border-low-contrast
+  );
+}
