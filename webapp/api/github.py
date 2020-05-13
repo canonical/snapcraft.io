@@ -215,17 +215,21 @@ class GitHub:
           }
         }"""
         )
-        response = self._gql_request(gql)["viewer"]["organization"][
-            "repositories"
-        ]
-        page_info = response["pageInfo"]
-        repositories = self._get_nodes(response["edges"])
+        repositories = []
+        try:
+            response = self._gql_request(gql)["viewer"]["organization"][
+                "repositories"
+            ]
+            page_info = response["pageInfo"]
+            repositories = self._get_nodes(response["edges"])
 
-        if page_info["hasNextPage"]:
-            next_page = self.get_org_repositories(
-                org_login, page_info["endCursor"]
-            )
-            repositories.extend(next_page)
+            if page_info["hasNextPage"]:
+                next_page = self.get_org_repositories(
+                    org_login, page_info["endCursor"]
+                )
+                repositories.extend(next_page)
+        except Exception as e:
+            raise Exception(e)
 
         return repositories
 
