@@ -11,6 +11,7 @@ const ERROR = "ERROR";
 const SNAP_NAME_DOES_NOT_MATCH = "SNAP_NAME_DOES_NOT_MATCH";
 const MISSING_YAML_FILE = "MISSING_YAML_FILE";
 const SUCCESS = "SUCCESS";
+const NO_REPOS = "NO_REPOS";
 
 class RepoConnect extends React.Component {
   constructor(props) {
@@ -137,7 +138,8 @@ class RepoConnect extends React.Component {
       .catch(() => {
         this.setState({
           isRepoListDisabled: false,
-          status: ERROR
+          status: ERROR,
+          error: { type: NO_REPOS }
         });
       });
   }
@@ -255,6 +257,28 @@ class RepoConnect extends React.Component {
     );
   }
 
+  renderNoReposError() {
+    const { selectedOrganization } = this.state;
+    return (
+      <div className="u-fixed-width">
+        <p>
+          <strong>Can’t list repos: </strong>
+          We were not able to find or access any repos in {selectedOrganization}
+          . If you are an admin of the organization please check the{" "}
+          <a
+            href={`https://github.com/orgs/${selectedOrganization}/policies/applications/1231227`}
+            className="p-link-external"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            application access policy
+          </a>{" "}
+          for Snapcraft .
+        </p>
+      </div>
+    );
+  }
+
   renderError() {
     const { snapName, error } = this.state;
 
@@ -283,11 +307,16 @@ class RepoConnect extends React.Component {
 
   renderErrorMessage() {
     const { error } = this.state;
+    if (!error) {
+      return this.renderError();
+    }
     switch (error.type) {
       case SNAP_NAME_DOES_NOT_MATCH:
         return this.renderNameError();
       case MISSING_YAML_FILE:
         return this.renderMissingYamlError();
+      case NO_REPOS:
+        return this.renderNoReposError();
       default:
         return this.renderError();
     }

@@ -218,6 +218,7 @@ class GitHub:
         response = self._gql_request(gql)["viewer"]["organization"][
             "repositories"
         ]
+
         page_info = response["pageInfo"]
         repositories = self._get_nodes(response["edges"])
 
@@ -239,7 +240,7 @@ class GitHub:
         response = self._request(
             "GET",
             f"repos/{owner}/{repo}/collaborators/{username}/permission",
-            raise_exceptions=False,
+            raise_exceptions=True,
         )
         return response.json().get("permission") in permissions
 
