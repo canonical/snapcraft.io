@@ -381,35 +381,33 @@ def post_snap_builds(snap_name):
 
 @login_required
 def post_build(snap_name):
-    try:
-        details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_error(api_error)
+    # Don't allow builds from no contributors
+    account_snaps = api.get_account_snaps(flask.session)
+
+    if snap_name not in account_snaps:
+        return flask.jsonify(
+            {
+                "success": False,
+                "error": {
+                    "type": "FORBIDDEN",
+                    "message": "You are not allowed to request "
+                    "builds for this snap",
+                },
+            }
+        )
 
     try:
-        if launchpad.is_snap_building(details["snap_name"]):
-            launchpad.cancel_snap_builds(details["snap_name"])
+        if launchpad.is_snap_building(snap_name):
+            launchpad.cancel_snap_builds(snap_name)
 
-        launchpad.build_snap(details["snap_name"])
+        launchpad.build_snap(snap_name)
     except HTTPError as e:
         # Timeout or not found from Launchpad
         if e.response.status_code in [408, 404]:
-            flask.flash("An error occurred, please try again.", "negative")
-            return flask.redirect(
-                flask.url_for(".get_snap_builds", snap_name=snap_name)
-            )
+            return flask.jsonify({"success": False})
         raise e
 
-    flask.flash("Build triggered", "positive")
-
-    return flask.redirect(
-        flask.url_for(".get_snap_builds", snap_name=snap_name)
-    )
+    return flask.jsonify({"success": True})
 
 
 @login_required
