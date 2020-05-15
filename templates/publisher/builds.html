@@ -193,18 +193,6 @@ Builds for
   {% if github_repository %}
   <section class="p-strip is-shallow">
     <div class="u-fixed-width u-clearfix">
-      <h4 class="u-float-left">Latest builds</h4>
-      <form action="/{{ snap_name }}/builds/trigger-build" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit"
-          class="u-float-right p-button-spinner js-form-submit"
-          name="submit_apply" value="Save">
-          <span class="p-button__spinner vanilla-workaround--dark">
-            <i class="p-icon--spinner u-animation--spin"></i>
-          </span>
-          <span class="p-button__text">Trigger new build</span>
-        </button>
-      </form>
       {% include "publisher/_repo-disconnect-modal.html" %}
     </div>
     <div class="u-fixed-width">
@@ -249,6 +237,7 @@ Builds for
       {% if github_repository %}
       snapcraft.publisher.initBuilds('#builds-wrapper',
         {{ snap_name | tojson }},
+        {{ csrf_token() | tojson }},
         {{ snap_builds | tojson }},
         {{ total_builds | tojson }}
       );

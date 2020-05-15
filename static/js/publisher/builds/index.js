@@ -15,6 +15,7 @@ class Builds extends React.Component {
     this.fetchTimer = null;
 
     this.state = {
+      isBuildLoading: false,
       isLoading: false,
       fetchSize: 15,
       fetchStart: 0,
@@ -29,7 +30,7 @@ class Builds extends React.Component {
     }, 35000);
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
-
+    this.triggerBuildHandler = this.triggerBuildHandler.bind(this);
     const { builds, updateFreq } = props;
     if (!builds) {
       this.fetchBuilds();
@@ -99,8 +100,33 @@ class Builds extends React.Component {
     );
   }
 
+  triggerNewBuild() {
+    const { csrf_token, snapName } = this.props;
+    const url = `/${snapName}/builds/trigger-build`;
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ csrf_token: csrf_token })
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert("Success:", data);
+      })
+      .catch(error => {
+        alert("Error:", error);
+      });
+  }
+
+  triggerBuildHandler() {
+    this.setState({ isBuildLoading: true });
+    this.triggerNewBuild();
+  }
+
   render() {
-    const { builds, isLoading, isTooSlow } = this.state;
+    const { builds, isLoading, isTooSlow, isBuildLoading } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
 
     const remainingBuilds = totalBuilds - builds.length;
@@ -182,6 +208,25 @@ class Builds extends React.Component {
 
     return (
       <Fragment>
+        <div className="u-fixed-width u-clearfix">
+          <h4 className="u-float-left">Latest builds</h4>
+          {isBuildLoading ? (
+            <button
+              className="p-button--neutral u-float-right has-icon"
+              disabled
+            >
+              <i className="p-icon--spinner u-animation--spin" />
+              <span>Requesting</span>
+            </button>
+          ) : (
+            <button
+              className="p-button--neutral u-float-right"
+              onClick={this.triggerBuildHandler}
+            >
+              Trigger new build
+            </button>
+          )}
+        </div>
         {isTooSlow && (
           <div className="u-fixed-width">
             <div className="p-notification--caution">
@@ -194,24 +239,11 @@ class Builds extends React.Component {
         )}
         <MainTable
           headers={[
-            {
-              content: "ID"
-            },
-            {
-              content: "Architecture"
-            },
-            {
-              content: "Build Duration",
-              className: "u-hide--small"
-            },
-            {
-              content: "Result",
-              className: "has-icon"
-            },
-            {
-              content: "Build Finished",
-              className: "u-align-text--right"
-            }
+            { content: "ID" },
+            { content: "Architecture" },
+            { content: "Build Duration", className: "u-hide--small" },
+            { content: "Result", className: "has-icon" },
+            { content: "Build Finished", className: "u-align-text--right" }
           ]}
           rows={rows}
         />
@@ -235,6 +267,7 @@ class Builds extends React.Component {
 }
 
 Builds.propTypes = {
+  csrf_token: PropTypes.string,
   snapName: PropTypes.string,
   builds: PropTypes.array,
   totalBuilds: PropTypes.number,
@@ -246,10 +279,18 @@ Builds.defaultProps = {
   singleBuild: false
 };
 
-export function initBuilds(id, snapName, builds, totalBuilds, singleBuild) {
+export function initBuilds(
+  id,
+  snapName,
+  csrf_token,
+  builds,
+  totalBuilds,
+  singleBuild
+) {
   ReactDOM.render(
     <Builds
       snapName={snapName}
+      csrf_token={csrf_token}
       builds={builds}
       totalBuilds={totalBuilds}
       updateFreq={singleBuild ? null : 30000}
