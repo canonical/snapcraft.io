@@ -6,7 +6,13 @@ import distanceInWords from "date-fns/distance_in_words_strict";
 
 import MainTable from "@canonical/react-components/dist/components/MainTable";
 
-import { UserFacingStatus, createDuration } from "./helpers";
+import {
+  UserFacingStatus,
+  createDuration,
+  TriggerBuildStatus
+} from "./helpers";
+
+import TriggerBuild from "./components/triggerBuild";
 
 class Builds extends React.Component {
   constructor(props) {
@@ -15,7 +21,8 @@ class Builds extends React.Component {
     this.fetchTimer = null;
 
     this.state = {
-      isBuildLoading: false,
+      triggerBuildLoading: false,
+      triggerBuildStatus: TriggerBuildStatus.IDLE,
       isLoading: false,
       fetchSize: 15,
       fetchStart: 0,
@@ -31,6 +38,7 @@ class Builds extends React.Component {
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
     this.triggerBuildHandler = this.triggerBuildHandler.bind(this);
+
     const { builds, updateFreq } = props;
     if (!builds) {
       this.fetchBuilds();
@@ -42,8 +50,15 @@ class Builds extends React.Component {
   }
 
   fetchBuilds(fromStart) {
-    const { fetchSize, fetchStart, builds } = this.state;
+    const {
+      fetchSize,
+      fetchStart,
+      builds,
+      triggerBuildStatus,
+      triggerBuildLoading
+    } = this.state;
     const { snapName, updateFreq } = this.props;
+    const { SUCCESS, IDLE } = TriggerBuildStatus;
 
     let url = `/${snapName}/builds.json`;
     let params = [];
@@ -64,6 +79,10 @@ class Builds extends React.Component {
       .then(res => res.json())
       .then(result => {
         this.setState({
+          triggerBuildLoading:
+            triggerBuildStatus === SUCCESS ? !SUCCESS : triggerBuildLoading,
+          triggerBuildStatus:
+            triggerBuildStatus === SUCCESS ? IDLE : triggerBuildStatus,
           isLoading: false,
           isTooSlow: builds.length === 0 && result.snap_builds.length === 0,
           builds: fromStart
@@ -85,6 +104,33 @@ class Builds extends React.Component {
     }
   }
 
+  triggerBuildHandler() {
+    const { csrf_token, snapName } = this.props;
+    const { ERROR, SUCCESS } = TriggerBuildStatus;
+    const url = `/${snapName}/builds/trigger-build`;
+
+    this.setState({ triggerBuildLoading: true });
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrf_token
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          this.setState({ triggerBuildStatus: SUCCESS });
+        } else {
+          this.setState({ triggerBuildStatus: ERROR });
+        }
+      })
+      .catch(() => {
+        this.setState({ triggerBuildStatus: ERROR });
+      });
+  }
+
   showMoreHandler(e) {
     const { fetchStart, fetchSize } = this.state;
     e.preventDefault();
@@ -100,34 +146,17 @@ class Builds extends React.Component {
     );
   }
 
-  triggerNewBuild() {
-    const { csrf_token, snapName } = this.props;
-    const url = `/${snapName}/builds/trigger-build`;
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ csrf_token: csrf_token })
-    })
-      .then(res => res.json())
-      .then(data => {
-        alert("Success:", data);
-      })
-      .catch(error => {
-        alert("Error:", error);
-      });
-  }
-
-  triggerBuildHandler() {
-    this.setState({ isBuildLoading: true });
-    this.triggerNewBuild();
-  }
-
   render() {
-    const { builds, isLoading, isTooSlow, isBuildLoading } = this.state;
+    const {
+      builds,
+      isLoading,
+      isTooSlow,
+      triggerBuildStatus,
+      triggerBuildLoading
+    } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
+
+    const { ERROR } = TriggerBuildStatus;
 
     const remainingBuilds = totalBuilds - builds.length;
 
@@ -208,25 +237,11 @@ class Builds extends React.Component {
 
     return (
       <Fragment>
-        <div className="u-fixed-width u-clearfix">
-          <h4 className="u-float-left">Latest builds</h4>
-          {isBuildLoading ? (
-            <button
-              className="p-button--neutral u-float-right has-icon"
-              disabled
-            >
-              <i className="p-icon--spinner u-animation--spin" />
-              <span>Requesting</span>
-            </button>
-          ) : (
-            <button
-              className="p-button--neutral u-float-right"
-              onClick={this.triggerBuildHandler}
-            >
-              Trigger new build
-            </button>
-          )}
-        </div>
+        <TriggerBuild
+          hasError={triggerBuildStatus === ERROR ? true : false}
+          isLoading={triggerBuildLoading}
+          onClick={this.triggerBuildHandler}
+        />
         {isTooSlow && (
           <div className="u-fixed-width">
             <div className="p-notification--caution">
