@@ -402,6 +402,14 @@ def snap_details_views(store, api, handle_errors):
             flask.abort(404)
 
         context = _get_context_snap_details(snap_name)
+
+        if distro == "raspbian":
+            if (
+                "armhf" not in context["channel_map"]
+                and "arm64" not in context["channel_map"]
+            ):
+                return flask.render_template("404.html"), 404
+
         context.update(
             {
                 "distro": distro,
