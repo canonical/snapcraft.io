@@ -2,6 +2,7 @@
   $box-shadow-color: rgba(0, 0, 0, .12);
 
   .p-multiselect__wrapper {
+    margin-bottom: $input-margin-bottom;
     margin-top: .5rem;
   }
 
@@ -20,6 +21,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     line-height: 1.5rem;
+    margin-bottom: $input-margin-bottom;
     margin-top: $spv-outer--small;
     min-width: 10em;
     padding: 0 .5rem;
@@ -49,6 +51,7 @@
       .p-multiselect__item-remove {
         cursor: pointer;
         height: .75em;
+        margin-bottom: .125rem;
         margin-left: .5rem;
         width: .75em;
       }

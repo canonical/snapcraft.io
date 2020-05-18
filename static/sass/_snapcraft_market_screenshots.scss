@@ -30,6 +30,11 @@
     position: relative;
     width: $screenshot-thumb-size;
 
+    &:focus {
+      outline: $bar-thickness solid $color-focus;
+      outline-offset: -$bar-thickness;
+    }
+
     .p-listing-images__delete-image {
       background: $color-x-light;
       border-radius: 0 .125rem 0 0;
@@ -62,7 +67,8 @@
 
     &:not(.is-empty):hover,
     &:not(.is-empty):focus {
-      border: 1px solid $color-link;
+      outline: $bar-thickness solid $color-focus;
+      outline-offset: -$bar-thickness;
 
       .p-listing-images__delete-image {
         opacity: 1;

@@ -407,7 +407,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               <p class="p-form-help-text u-no-margin">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
             </div>
             <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
-            <label for="license-custom-option">Custom SPDX expression</label>
+            <label for="license-custom-option" style="margin-bottom: 1.2rem;">Custom SPDX expression</label>
             <textarea
               type="text"
               id="license-custom-input"

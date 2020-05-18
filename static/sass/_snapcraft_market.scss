@@ -65,6 +65,11 @@
       &:hover img:not([src=""]) + .p-editable-icon__change {
         opacity: 1;
       }
+
+      &:focus {
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
+      }
     }
 
     &:hover {
@@ -182,7 +187,8 @@
     .p-market-banner__image-holder:hover,
     .p-market-banner__image-holder.is-focused {
       .p-market-banner__image {
-        border: 1px solid $color-link;
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
       }
 
       .p-market-banner__remove {
@@ -190,8 +196,9 @@
       }
 
       .p-market-banner__change {
-        border: 1px solid $color-link;
         border-radius: $border-radius;
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
         opacity: 1;
       }
     }
