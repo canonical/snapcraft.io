@@ -9,6 +9,10 @@ const FAILED_TO_BUILD = "failed_to_build";
 const CANCELLED = "cancelled";
 const UNKNOWN = "unknown";
 
+const ERROR = "ERROR";
+const SUCCESS = "SUCCESS";
+const IDLE = "IDLE";
+
 export const UserFacingStatus = {
   // Used only when there is no build returned from LP.
   // When build is returned from LP (scheduled) it's 'Building soon' for BSI.
@@ -80,3 +84,9 @@ export function createDuration(duration) {
   }
   return "";
 }
+
+export const TriggerBuildStatus = {
+  ERROR,
+  SUCCESS,
+  IDLE
+};
