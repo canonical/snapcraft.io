@@ -1,10 +1,10 @@
 import flask
 
-from canonicalwebteam.blog import BlogViews, logic, wordpress_api
-from canonicalwebteam.blog.flask import build_blueprint
+from requests.exceptions import RequestException
 
 from canonicalwebteam import image_template
-
+from canonicalwebteam.blog import BlogViews, logic, wordpress_api
+from canonicalwebteam.blog.flask import build_blueprint
 from webapp.helpers import get_yaml
 
 
@@ -15,11 +15,7 @@ def init_blog(app, url_prefix):
 
     @blog.route("/api/snap-posts/<snap>")
     def snap_posts(snap):
-        try:
-            blog_tags = wordpress_api.get_tag_by_name(f"sc:snap:{snap}")
-        except Exception:
-            blog_tags = None
-
+        blog_tags = wordpress_api.get_tag_by_name(f"sc:snap:{snap}")
         blog_articles = None
         articles = []
 
@@ -55,12 +51,13 @@ def init_blog(app, url_prefix):
             )
 
         if blog_tags:
+            snapcraft_tag = wordpress_api.get_tag_by_name(f"snapcraft.io")
+
             try:
                 blog_articles, total_pages = wordpress_api.get_articles(
                     blog_tags["id"], 3 - len(articles)
                 )
-                snapcraft_tag = wordpress_api.get_tag_by_name(f"snapcraft.io")
-            except Exception:
+            except RequestException:
                 blog_articles = []
 
             for article in blog_articles:
@@ -77,7 +74,7 @@ def init_blog(app, url_prefix):
                         hi_def=True,
                         loading="auto",
                     )
-                except Exception:
+                except RequestException:
                     featured_media = None
 
                 transformed_article = logic.transform_article(
@@ -106,7 +103,7 @@ def init_blog(app, url_prefix):
 
         try:
             blog_articles, total_pages = wordpress_api.get_articles(series)
-        except Exception:
+        except RequestException:
             blog_articles = []
 
         for article in blog_articles:
