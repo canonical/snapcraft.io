@@ -2,7 +2,6 @@ from os import getenv
 from vcr_unittest import VCRTestCase
 from webapp.api.github import GitHub
 from werkzeug.exceptions import Unauthorized
-from requests.exceptions import HTTPError
 
 
 class GitHubTest(VCRTestCase):
@@ -51,18 +50,15 @@ class GitHubTest(VCRTestCase):
     def test_check_permissions_over_repo(self):
         # The user is the owner of the repo
         case1 = self.client.check_permissions_over_repo(
-            "build-staging-snapcraft-io", "test1", ["admin", "write"]
+            "build-staging-snapcraft-io", "test1"
         )
         self.assertEqual(True, case1)
 
         # The user doesn't have permissions for this repo
-        self.assertRaises(
-            HTTPError,
-            self.client.check_permissions_over_repo,
-            "canonical-web-and-design",
-            "snapcraft.io",
-            ["write"],
+        case2 = self.client.check_permissions_over_repo(
+            "canonical-web-and-design", "snapcraft.io"
         )
+        self.assertEqual(False, case2)
 
     def test_get_snapcraft_yaml_location(self):
         # /snapcraft.yaml is present
