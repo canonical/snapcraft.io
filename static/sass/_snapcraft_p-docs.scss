@@ -1,26 +1,11 @@
 @mixin snapcraft-pattern-docs {
   $banner-background: #106363;
 
-  .emoji {
-    height: 1rem;
-  }
-
   #search-docs.snapcraft-banner-background { //sass-lint:disable-line no-ids
     background: $banner-background;
   }
 
-  .p-docs-search {
-    display: flex;
-    width: 100%;
-
-    .p-search-box__input {
-      flex-grow: 1;
-      margin-bottom: 0;
-      margin-right: 2rem;
-    }
-
-    button {
-      flex-grow: 0;
-    }
+  .emoji {
+    height: 1rem;
   }
 }
