@@ -230,19 +230,20 @@ class GitHub:
 
         return repositories
 
-    def check_permissions_over_repo(
-        self, owner, repo, permissions=["admin", "write"]
-    ):
+    def check_permissions_over_repo(self, owner, repo, permission="push"):
         """
         Return True when the current user has the requested permissions
+        Possible values: "admin", "push" or "pull"
         """
-        username = self.get_user()["login"]
         response = self._request(
-            "GET",
-            f"repos/{owner}/{repo}/collaborators/{username}/permission",
-            raise_exceptions=True,
+            "GET", f"repos/{owner}/{repo}", raise_exceptions=True,
         )
-        return response.json().get("permission") in permissions
+        response_permissions = response.json()["permissions"]
+        user_permissions = [
+            p for p in response_permissions if response_permissions[p]
+        ]
+
+        return permission in user_permissions
 
     def get_snapcraft_yaml_location(self, owner, repo):
         """

@@ -1,7 +1,6 @@
 interactions:
 - request:
-    body: '{"query": "\n        {\n          viewer {\n            login\n            name\n            avatarUrl(size:
-      100)\n          }\n        }\n        "}'
+    body: '{}'
     headers:
       Accept:
       - application/json
@@ -10,103 +9,44 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '149'
+      - '2'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
-    method: POST
-    uri: https://api.github.com/graphql
-  response:
-    body:
-      string: !!binary |
-        H4sIAAAAAAAAAzWMQQrCMBREryJ/IQq2iaGgDRQPIR7gt41poE1K8hMXJXc3ou5m3jxmgxEJQW6Q
-        jHop/0mz08aChD6aeawCYam6ChbXweOTKuPgBBYXVZz7n+4OP/FYRkzl1D/8XIyJaA2SsS8LotaG
-        ptjHoPzgLClL9eAWFploLlzwa3sL3ZnzfeoayDm/AbHk/8ShAAAA
-    headers:
-      Access-Control-Allow-Origin:
-      - '*'
-      Access-Control-Expose-Headers:
-      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
-        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
-        X-GitHub-Media-Type
-      Cache-Control:
-      - no-cache
-      Content-Encoding:
-      - gzip
-      Content-Security-Policy:
-      - default-src 'none'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Fri, 14 Feb 2020 15:26:42 GMT
-      Referrer-Policy:
-      - origin-when-cross-origin, strict-origin-when-cross-origin
-      Server:
-      - GitHub.com
-      Status:
-      - 200 OK
-      Strict-Transport-Security:
-      - max-age=31536000; includeSubdomains; preload
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Accept-Encoding, Accept, X-Requested-With
-      X-Accepted-OAuth-Scopes:
-      - repo
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - deny
-      X-GitHub-Media-Type:
-      - github.v4
-      X-GitHub-Request-Id:
-      - BA00:757F:78DC19:935603:5E46BC31
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
-      X-OAuth-Scopes:
-      - read:org, repo
-      X-RateLimit-Limit:
-      - '5000'
-      X-RateLimit-Remaining:
-      - '4998'
-      X-RateLimit-Reset:
-      - '1581697499'
-      X-XSS-Protection:
-      - 1; mode=block
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
+      - storefront (commit_id;devel)
     method: GET
-    uri: https://api.github.com/repos/build-staging-snapcraft-io/test1/collaborators/build-staging-snapcraft-io/permission
+    uri: https://api.github.com/repos/build-staging-snapcraft-io/test1
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA62US2vDMAyA/4vPbd2V7hUYY9DLDi3ssLFbcR030XBsIyspbeh/n5x0g/YwGOkp
-        sZE/fZIfrQgGK4gRvBOZUHkFToxEHQ2KrBXWFzzOxKYGm48jKR4W4+hU0Ki2NAbPwZCLbDa/n86m
-        D48j4Xxu1mlKLBdvdx+fK6u/Xqerw8t+uShuOVw1ihSua7QcUxKFmEnZT8abSQFU1puUX3tHxtFE
-        +0rW8ifBc/M0Z0iBJ0yXKRmf4wKcSP1yxkX5ZxElVfbCqVfpAH8u3Xpr/Y4zXNb0Pwn5y+Fy+n9u
-        9lWYzGmlp9Jw27kVx9RAiDRUuGO0Mn14xxOVTwiiyQdKnyisvHNs20o0wXf4ehM1QiA+rUPlz1jM
-        9lgoBwd1DTazIiOT9lDNjsEs0/BdGArrIa0MCI3S+9RSNNpAw1t2lQQXNObTPhi+oe/pQeENBDLr
-        /pHJtspGczx+Awrj8Q6CBAAA
+        H4sIAAAAAAAAA62YbW/bNhDHv4vfLgnt1MkaA0U3oMPQAWmwIR2KvTEoiZbYUKRAUvZsId+9f5J6
+        soEkSsM3tkRQPx6Pd8e7a2Y8m60u371f3Fxe3VydzaTK2NqNzW4//bG7E3+J9M+bA/32zzaVD/vb
+        Q/7/3f3nxd391w8zTKYlw0zLjF3gdVMLsW7HkpqL7NxYmnOZnxtJq1TTjT3ninTTK8231AKwocKw
+        s5naSaZnq2YmFD4C92kGFvNyL3+dX87f3xyL/ff1v9++iPT75/mXw+/720/5FaZTLEX1utYC4MLa
+        yqwICYNmcZFzW9RJbZhOlbRM2otUlaQm3QIftx+WgOS6xXgFYeAEV/GWFD4HzpBnN1HYUpzIFETx
+        gGc/3Sgh1A4rnO7pdUKQnuMO0DNxYFGY4DRE2YJB7VDFo1MgN/atAntGQ9wfDNVRYWVas+yNQrcU
+        iOzs8LEhmlXK4+vEpJpXliv5VuGPWGArnVPJDzQGGywDpBP7rWJ6BlhsC194KyxAGuL9Pd07lWqW
+        Mr7FkUVZ4IQGvt1XLjB9hdm5A+SWrWlWuqDiY83jGULAz3leH70y1hvFbCUR+Zz76Ic+mj0bGrx+
+        n/HvfhWHfEH/01jwc5CgjAe2jwN0oIbgt/XCFMGDJkpTq14KShNFPiI2ZPzqjMgyWsbZiieBWCgV
+        SdueBCI3pmaTrHyiTjzQkM6nZF0mIbRO8aSJawQUpKfG8FwyFkfLPa0h3X2QaCrTIhK/gzUkPHkb
+        oXkc4R0IvESoJA4Q9zzxtIaYgobL0a6jyevwDnZE12wTT3gH6+lWx7ISL7ij9WxczBYGE0fyDkaa
+        VuuCyrymeSR8T3PXDtKSnB5eTNEmeuWAA9ulqZondcRYOwCd7CHnQWyJpPaBN9B9RvV81jZVN6MU
+        zWunLPlLectEdMs68qOYfGfvp2u495cTr1dswMEaMlwW4Vpql4lyAu291Ek+XqwtqeIYUgcjzS8V
+        tYWLm1izoppF2UbLIk1CkSZeXFw0BaO+yCiZjhUkAgpMqtMCaXAUyZsOhkSvpNbXLxsneIZ6Riia
+        xdF/TwM5nHkU6QNqbDUVUuo4InvSGF1ygY6FkpFi/oAbLyKV5RueTqnsJjryEbH5aLhM2RlF4QHr
+        tzzl8AeU3O7IkYezSMoLKGwMrZ5QuQkG14hzMpoFWENCIZ+xSqh9vNA34rk4oRnaTdmaWpSGl2gc
+        nc8vz+fL+8VitXy3Wi7/w5y6yp6cc726unZzqtoUT2AwxWMQ1Fu3wBMaTZOaOqHocx0kEIwpBsJv
+        w/erp5tCR9+nAvZ94po/IcX29H5+BQO7KFTJKiRXXYVs+AHP86PcKFW1xIlgcEctigFkHMNQl091
+        gIKadYgVs5XVNbqGbqTS6jtLrRmPDYFqNHHHH/jRhy7x60v2UGwPi5dca9X2DEOF38ZYdP/anmXG
+        DU0EGwZUxWQr4XgbPGXS9GoItbjb8mj6kQr8S8Y2tBZ2HcoZGG1JjfUdjYrpEmpwDSnXMG17G0Eh
+        zjy7PbrQF57R8rCsrNbBLqx6YK7DCpRkdofWwEjYce7XKmPx+AO4PmJeKRYAAA==
     headers:
       Access-Control-Allow-Origin:
       - '*'
       Access-Control-Expose-Headers:
       - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
         X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
-        X-GitHub-Media-Type
+        X-GitHub-Media-Type, Deprecation, Sunset
       Cache-Control:
       - private, max-age=60, s-maxage=60
       Content-Encoding:
@@ -116,9 +56,11 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 14 Feb 2020 15:26:42 GMT
+      - Tue, 19 May 2020 14:01:19 GMT
       ETag:
-      - W/"56fb55f774f4e683dea594bbc1a39feb"
+      - W/"7019ad208a84180fcfc0f7a794e9e34f"
+      Last-Modified:
+      - Tue, 04 Feb 2020 11:46:56 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -133,7 +75,7 @@ interactions:
       - Accept, Authorization, Cookie, X-GitHub-OTP
       - Accept-Encoding, Accept, X-Requested-With
       X-Accepted-OAuth-Scopes:
-      - ''
+      - repo
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -141,25 +83,22 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - BA00:757F:78DC7E:935672:5E46BC32
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - D976:668F:740F42:CB6628:5EC3E6AE
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4998'
+      - '4999'
       X-RateLimit-Reset:
-      - '1581697499'
+      - '1589900479'
       X-XSS-Protection:
       - 1; mode=block
     status:
       code: 200
       message: OK
 - request:
-    body: '{"query": "\n        {\n          viewer {\n            login\n            name\n            avatarUrl(size:
-      100)\n          }\n        }\n        "}'
+    body: '{}'
     headers:
       Accept:
       - application/json
@@ -168,28 +107,48 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '149'
+      - '2'
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
-    method: POST
-    uri: https://api.github.com/graphql
+      - storefront (commit_id;devel)
+    method: GET
+    uri: https://api.github.com/repos/canonical-web-and-design/snapcraft.io
   response:
     body:
       string: !!binary |
-        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
+        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
+        tkjbB7vH3aYJT2aPPwCnCP1IhxsAAA==
     headers:
       Access-Control-Allow-Origin:
       - '*'
       Access-Control-Expose-Headers:
       - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
         X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
-        X-GitHub-Media-Type
+        X-GitHub-Media-Type, Deprecation, Sunset
       Cache-Control:
-      - no-cache
+      - private, max-age=60, s-maxage=60
       Content-Encoding:
       - gzip
       Content-Security-Policy:
@@ -197,7 +156,11 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 14 Feb 2020 15:26:42 GMT
+      - Tue, 19 May 2020 14:01:19 GMT
+      ETag:
+      - W/"f34542b16ec135005d9a41a14aaac96d"
+      Last-Modified:
+      - Tue, 19 May 2020 13:40:45 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -209,6 +172,7 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
       - Accept-Encoding, Accept, X-Requested-With
       X-Accepted-OAuth-Scopes:
       - repo
@@ -217,93 +181,20 @@ interactions:
       X-Frame-Options:
       - deny
       X-GitHub-Media-Type:
-      - github.v4
+      - github.v3
       X-GitHub-Request-Id:
-      - BA00:757F:78DCD5:9356DE:5E46BC32
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - D976:668F:740F63:CB6642:5EC3E6AF
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4997'
+      - '4998'
       X-RateLimit-Reset:
-      - '1581697499'
+      - '1589900479'
       X-XSS-Protection:
       - 1; mode=block
     status:
       code: 200
       message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - storefront (469f25fe2afb22022e652f4d3fd250e74bac3b51;devel)
-    method: GET
-    uri: https://api.github.com/repos/canonical-web-and-design/snapcraft.io/collaborators/build-staging-snapcraft-io/permission
-  response:
-    body:
-      string: !!binary |
-        H4sIAAAAAAAAA02NMQ7CMAxFr2KFlTQDW+/AGZAbrCZSUke2EwbE3UknWP/7eu/tKqniTm51964G
-        CQdB65oAY5wIjGFkekHkUnBjQWOBRlKzauZjcVf35NgrHYY2h0eXMmXJrOkawpMGFZ7/Zc+W+rZE
-        rmHcglBjDf9SDRehM+XRdyVR/6v4cmrc5wt5KpKLrwAAAA==
-    headers:
-      Access-Control-Allow-Origin:
-      - '*'
-      Access-Control-Expose-Headers:
-      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
-        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
-        X-GitHub-Media-Type
-      Content-Encoding:
-      - gzip
-      Content-Security-Policy:
-      - default-src 'none'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Fri, 14 Feb 2020 15:26:42 GMT
-      Referrer-Policy:
-      - origin-when-cross-origin, strict-origin-when-cross-origin
-      Server:
-      - GitHub.com
-      Status:
-      - 403 Forbidden
-      Strict-Transport-Security:
-      - max-age=31536000; includeSubdomains; preload
-      Transfer-Encoding:
-      - chunked
-      Vary:
-      - Accept-Encoding, Accept, X-Requested-With
-      X-Accepted-OAuth-Scopes:
-      - ''
-      X-Content-Type-Options:
-      - nosniff
-      X-Frame-Options:
-      - deny
-      X-GitHub-Media-Type:
-      - github.v3
-      X-GitHub-Request-Id:
-      - BA00:757F:78DD4D:935768:5E46BC32
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
-      X-OAuth-Scopes:
-      - read:org, repo
-      X-RateLimit-Limit:
-      - '5000'
-      X-RateLimit-Remaining:
-      - '4997'
-      X-RateLimit-Reset:
-      - '1581697499'
-      X-XSS-Protection:
-      - 1; mode=block
-    status:
-      code: 403
-      message: Forbidden
 version: 1
