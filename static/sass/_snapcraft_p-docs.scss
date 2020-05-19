@@ -8,4 +8,11 @@
   .emoji {
     height: 1rem;
   }
+
+  // workaround z-index issue between side nav and global nav
+  // https://github.com/canonical-web-and-design/vanilla-framework/issues/3075
+  .p-side-navigation__drawer,
+  .p-side-navigation__overlay {
+    z-index: 100;
+  }
 }
