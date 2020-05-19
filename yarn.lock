@@ -112,10 +112,12 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@canonical/global-nav@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.1.0.tgz#67b6a499a39ff8135e15fcc6a275cd1e29b504fa"
-  integrity sha512-/bQ5C36/9GbP29mhKqNuGHq44Xqv33H1hYTn7U5bSZQKiN2hdYN5AsM5J4Kl/88w9xMqvNOCt3vZs9XmK+j1AQ==
+"@canonical/global-nav@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.4.1.tgz#c30c2c8e6e1b81a037ee9ff566f5ef7c07803435"
+  integrity sha512-NLtlv8ODbPrGK14FaBoFj2Hmr9EKfwnvcwu6kHatel+osDs1IIL6TwhEwqWeufEGdfPQdCAFhS7oX24gdBGVwA==
+  dependencies:
+    vanilla-framework "2.8.0"
 
 "@canonical/react-components@^0.2.1":
   version "0.2.1"
@@ -7872,6 +7874,11 @@ vanilla-framework@2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.4.1.tgz#36ef374e90b8457a07e55cf33be1bcfd07092c84"
   integrity sha512-St8LdmoMpWSFWvFRDBNjFcdfWo/nOMwrkRPJN+dR0vOHP/Jb1UqOSxw+wDxkiGrpeRb0VPFwCuz/2u0RWb0xuQ==
+
+vanilla-framework@2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.8.0.tgz#ec20ed3bf4fc2f1ce2d42075edb7a58c26f56982"
+  integrity sha512-fIxO7/BtCmj7aMAFCxxk19fqRB9HVZBv1typ7YL4AEiJhq8Za3qDCLuxjiSP0tFvKzXUtrI7y4KGHYMrFIevKg==
 
 vanilla-framework@^2.11.0:
   version "2.11.0"
