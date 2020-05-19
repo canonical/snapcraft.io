@@ -36,24 +36,34 @@ def get_builds(lp_snap, selection):
     builds = builds[selection]
 
     snap_builds = []
+    builders_status = None
 
     for build in builds:
         status = map_build_and_upload_states(
             build["buildstate"], build["store_upload_status"]
         )
 
-        snap_builds.append(
-            {
-                "id": build["self_link"].split("/")[-1],
-                "arch_tag": build["arch_tag"],
-                "datebuilt": build["datebuilt"],
-                "duration": build["duration"],
-                "logs": build["build_log_url"],
-                "revision_id": build["revision_id"],
-                "status": status,
-                "title": build["title"],
-            }
-        )
+        snap_build = {
+            "id": build["self_link"].split("/")[-1],
+            "arch_tag": build["arch_tag"],
+            "datebuilt": build["datebuilt"],
+            "duration": build["duration"],
+            "logs": build["build_log_url"],
+            "revision_id": build["revision_id"],
+            "status": status,
+            "title": build["title"],
+            "queue_time": None,
+        }
+
+        if status == "building_soon":
+            if not builders_status:
+                builders_status = launchpad.get_builders_status()
+
+            snap_build["queue_time"] = builders_status[build["arch_tag"]][
+                "estimated_duration"
+            ]
+
+        snap_builds.append(snap_build)
 
     return {
         "total_builds": total_builds,
@@ -335,8 +345,8 @@ def post_snap_builds(snap_name):
             # We can remove it and continue with the normal process
             if not repo_exist["store_name"]:
                 # This conditional should be removed when issue 2657 is solved
-                launchpad._request(
-                    path=repo_exist["self_link"][32:], method="DELETE"
+                launchpad.request(
+                    path=repo_exist["self_link"], method="DELETE"
                 )
             else:
                 flask.flash(
