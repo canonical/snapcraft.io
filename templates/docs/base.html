@@ -34,10 +34,12 @@
 <script>
   window.addEventListener("DOMContentLoaded", function() {
     Raven.context(function() {
-      const path = window.location.pathname;
-      const active = document.querySelector(`.p-side-navigation--raw-html a[href="${path}"]`);
+      var sideNav = document.getElementById("side-nav-drawer");
+      var path = window.location.pathname;
+      var active = sideNav.querySelector(`a[href="${path}"]`);
+
       if (active) {
-        active.classList.add("is-active");
+        active.setAttribute("aria-current", "page");
       }
 
       /**
@@ -77,7 +79,21 @@
         });
       }
 
-      setupSideNavigation(document.getElementById("side-nav-drawer"));
+      setupSideNavigation(sideNav);
+
+      // scroll active side navigation item into view (without scrolling whole page)
+      var currentItem = sideNav.querySelector('[aria-current="page"]');
+
+      if (sideNav && currentItem) {
+        // calculate scroll by comparing top of side nav and top of active item
+        var currentItemOffset = currentItem.getBoundingClientRect().top;
+        var offset = currentItemOffset - sideNav.getBoundingClientRect().top;
+
+        // only scroll if active link is off screen or close to bottom of the window
+        setTimeout(function () {
+          sideNav.scrollTop = offset;
+        }, 0);
+      }
     });
   });
 </script>
