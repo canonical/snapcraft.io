@@ -59,30 +59,6 @@ function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
   return releasedChannels;
 }
 
-// The same as getReleaseDataFromChannelMap but using the v2 API channel-map endpoint
-// https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMapV2(channelMap, revisionsMap) {
-  const releasedChannels = {};
-
-  channelMap["channel-map"].forEach(mapInfo => {
-    if (!releasedChannels[mapInfo.channel]) {
-      releasedChannels[mapInfo.channel] = {};
-    }
-
-    if (
-      !releasedChannels[mapInfo.channel][mapInfo.architecture] &&
-      revisionsMap[mapInfo.revision]
-    ) {
-      releasedChannels[mapInfo.channel][mapInfo.architecture] =
-        revisionsMap[mapInfo.revision];
-      releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
-        mapInfo["expiration-date"];
-    }
-  });
-
-  return releasedChannels;
-}
-
 // for channel without release get next (less risk) channel with a release
 function getTrackingChannel(releasedChannels, track, risk, arch) {
   let tracking = null;
@@ -128,6 +104,5 @@ export {
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap,
-  getReleaseDataFromChannelMapV2
+  getReleaseDataFromChannelMap
 };
