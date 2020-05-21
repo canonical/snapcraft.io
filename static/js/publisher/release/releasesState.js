@@ -36,49 +36,8 @@ function initReleasesData(revisionsMap, releases) {
 }
 
 // transforming channel map list data into format used by this component
-function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
-  const releasedChannels = {};
-  const releasedArchs = {};
-
-  channelMapsList.forEach(mapInfo => {
-    const { track, architecture, map } = mapInfo;
-    map.forEach(channelInfo => {
-      if (channelInfo.info === "released" || channelInfo.info === "branch") {
-        const channel =
-          track === "latest"
-            ? `${track}/${channelInfo.channel}`
-            : channelInfo.channel;
-
-        if (!releasedChannels[channel]) {
-          releasedChannels[channel] = {};
-        }
-
-        // XXX bartaz
-        // this may possibly lead to issues with revisions in multiple architectures
-        // if we have data about given revision in revision history we can store it
-        if (revisionsMap[channelInfo.revision]) {
-          releasedChannels[channel][architecture] =
-            revisionsMap[channelInfo.revision];
-          // but if for some reason we don't have full data about revision in channel map
-          // we need to ducktype it from channel info
-        } else {
-          releasedChannels[channel][architecture] = channelInfo;
-          releasedChannels[channel][architecture].architectures = [
-            architecture
-          ];
-        }
-
-        releasedArchs[architecture] = true;
-      }
-    });
-  });
-
-  return releasedChannels;
-}
-
-// The same as getReleaseDataFromChannelMap but using the v2 API channel-map endpoint
 // https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMapV2(channelMap, revisionsMap) {
+function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
   const releasedChannels = {};
 
   channelMap["channel-map"].forEach(mapInfo => {
@@ -145,6 +104,5 @@ export {
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap,
-  getReleaseDataFromChannelMapV2
+  getReleaseDataFromChannelMap
 };

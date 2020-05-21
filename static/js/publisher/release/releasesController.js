@@ -16,7 +16,7 @@ import { initChannelMap } from "./actions/channelMap";
 import {
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMapV2
+  getReleaseDataFromChannelMap
 } from "./releasesState";
 
 class ReleasesController extends Component {
@@ -35,7 +35,7 @@ class ReleasesController extends Component {
     this.props.updateRevisions(revisionsMap);
     this.props.updateReleases(releasesData.releases);
     this.props.initChannelMap(
-      getReleaseDataFromChannelMapV2(channelMap, revisionsMap)
+      getReleaseDataFromChannelMap(channelMap, revisionsMap)
     );
   }
 
