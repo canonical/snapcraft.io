@@ -198,34 +198,37 @@ export function getTracks(state) {
 
 export function getBranches(state) {
   let branches = [];
-  const { currentTrack } = state;
+  const { currentTrack, releases } = state;
 
   const now = parse(Date.now());
 
-  state.releases
+  releases
     .filter(t => t.branch && t.track === currentTrack)
     .sort((a, b) => {
       return isAfter(parse(b.when), parse(a.when));
     })
-    .forEach(({ track, risk, branch, when, revision }) => {
+    .forEach(item => {
+      const { track, risk, branch, when, revision } = item;
       const exists =
         branches.filter(
           b => b.track === track && b.risk === risk && b.branch === branch
         ).length > 0;
+
       if (!exists) {
         branches.push({
           track,
           risk,
           branch,
           revision,
-          when
+          when,
+          expiration: item["expiration-date"]
         });
       }
     });
 
   return branches
     .filter(b => {
-      return differenceInDays(now, parse(b.when)) <= 30;
+      return differenceInDays(parse(b.expiration), now) > 0;
     })
     .reverse();
 }

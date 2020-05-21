@@ -24,6 +24,8 @@ def get_release_history(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    # XXX: Luke - This can be removed onse the channel_map endpoint is updated
+    # to include "title" and "publisher"
     try:
         info = api.get_snap_info(snap_name, flask.session)
     except ApiResponseErrorList as api_response_error_list:
@@ -34,14 +36,23 @@ def get_release_history(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    try:
+        channel_map = api.snap_channel_map(flask.session, snap_name)
+    except ApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except ApiError as api_error:
+        return _handle_error(api_error)
+
     context = {
         "snap_name": snap_name,
-        "snap_title": info["title"],
-        "publisher_name": info["publisher"]["display-name"],
+        "snap_title": info["title"],  # missing from channel-map endpoint
+        "publisher_name": info["publisher"][
+            "display-name"
+        ],  # missing from channel-map endpoint
         "release_history": release_history,
-        "private": info.get("private"),
-        "channel_maps_list": info.get("channel_maps_list"),
-        "default_track": info.get("default_track"),
+        "private": channel_map.get("private"),
+        "default_track": channel_map.get("default_track"),
+        "channel_map": channel_map,
     }
 
     return flask.render_template("publisher/release-history.html", **context)

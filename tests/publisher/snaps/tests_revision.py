@@ -64,9 +64,16 @@ class GetRevisionHistory(BaseTestCases.EndpointLoggedInErrorHandling):
 
         responses.add(responses.GET, self.api_url, json={}, status=200)
 
+        channel_map_url = (
+            "https://dashboard.snapcraft.io/api/v2/snaps/{}/channel-map"
+        )
+        channel_map_url = channel_map_url.format(self.snap_name)
+
+        responses.add(responses.GET, channel_map_url, json={}, status=200)
+
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -81,3 +88,4 @@ class GetRevisionHistory(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_template_used("publisher/release-history.html")
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("release_history", {})
+        self.assert_context("channel_map", {})

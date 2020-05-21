@@ -16,14 +16,14 @@ import { initChannelMap } from "./actions/channelMap";
 import {
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMapV2
 } from "./releasesState";
 
 class ReleasesController extends Component {
   constructor(props) {
     super(props);
 
-    const { releasesData, channelMapsList } = this.props;
+    const { releasesData, channelMap } = this.props;
 
     // init channel data in revisions list
     // TODO: should be done in reducers?
@@ -35,7 +35,7 @@ class ReleasesController extends Component {
     this.props.updateRevisions(revisionsMap);
     this.props.updateReleases(releasesData.releases);
     this.props.initChannelMap(
-      getReleaseDataFromChannelMap(channelMapsList, revisionsMap)
+      getReleaseDataFromChannelMapV2(channelMap, revisionsMap)
     );
   }
 
@@ -57,8 +57,8 @@ class ReleasesController extends Component {
 }
 
 ReleasesController.propTypes = {
-  channelMapsList: PropTypes.array.isRequired,
   releasesData: PropTypes.object.isRequired,
+  channelMap: PropTypes.object.isRequired,
 
   notification: PropTypes.object,
   showModal: PropTypes.bool,

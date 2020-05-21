@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { format, parse, distanceInWordsToNow, addDays } from "date-fns";
+import { format, parse, distanceInWordsToNow } from "date-fns";
 
 import { sortChannels } from "../../../../libs/channels";
 
@@ -291,7 +291,7 @@ const ReleasesTableChannelHeading = props => {
 
   let timeUntilExpiration;
   if (branch) {
-    const end = addDays(parse(branch.when), 30);
+    const end = parse(branch.expiration);
     timeUntilExpiration = distanceInWordsToNow(end);
   }
 
@@ -360,7 +360,7 @@ const ReleasesTableChannelHeading = props => {
 
       {timeUntilExpiration && (
         <span className="p-releases-table__branch-timeleft" title={branch.when}>
-          {timeUntilExpiration} left
+          {timeUntilExpiration}
         </span>
       )}
     </div>
