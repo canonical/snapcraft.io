@@ -40,7 +40,7 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
           snapcraft.release.initReleases('#release-history',
             {{ snap_name|tojson }},
             {{ release_history|tojson }},
-            {{ channel_maps_list|tojson }},
+            {{ channel_map|tojson }},
             {
               defaultTrack: {% if default_track %}{{ default_track|tojson }}{% else %}"latest"{% endif %},
               csrfToken: {{ csrf_token()|tojson }},

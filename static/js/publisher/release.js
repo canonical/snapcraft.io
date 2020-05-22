@@ -13,7 +13,7 @@ import releases from "./release/reducers";
 // https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
+const initReleases = (id, snapName, releasesData, channelMap, options) => {
   const store = createStore(
     releases,
     {
@@ -32,8 +32,8 @@ const initReleases = (id, snapName, releasesData, channelMapsList, options) => {
       <DndProvider backend={HTML5Backend}>
         <ReleasesController
           snapName={snapName}
-          channelMapsList={channelMapsList}
           releasesData={releasesData}
+          channelMap={channelMap}
           options={options}
         />
       </DndProvider>

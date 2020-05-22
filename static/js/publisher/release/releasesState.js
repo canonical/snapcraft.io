@@ -36,41 +36,24 @@ function initReleasesData(revisionsMap, releases) {
 }
 
 // transforming channel map list data into format used by this component
-function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
+// https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
+function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
   const releasedChannels = {};
-  const releasedArchs = {};
 
-  channelMapsList.forEach(mapInfo => {
-    const { track, architecture, map } = mapInfo;
-    map.forEach(channelInfo => {
-      if (channelInfo.info === "released" || channelInfo.info === "branch") {
-        const channel =
-          track === "latest"
-            ? `${track}/${channelInfo.channel}`
-            : channelInfo.channel;
+  channelMap["channel-map"].forEach(mapInfo => {
+    if (!releasedChannels[mapInfo.channel]) {
+      releasedChannels[mapInfo.channel] = {};
+    }
 
-        if (!releasedChannels[channel]) {
-          releasedChannels[channel] = {};
-        }
-
-        // XXX bartaz
-        // this may possibly lead to issues with revisions in multiple architectures
-        // if we have data about given revision in revision history we can store it
-        if (revisionsMap[channelInfo.revision]) {
-          releasedChannels[channel][architecture] =
-            revisionsMap[channelInfo.revision];
-          // but if for some reason we don't have full data about revision in channel map
-          // we need to ducktype it from channel info
-        } else {
-          releasedChannels[channel][architecture] = channelInfo;
-          releasedChannels[channel][architecture].architectures = [
-            architecture
-          ];
-        }
-
-        releasedArchs[architecture] = true;
-      }
-    });
+    if (
+      !releasedChannels[mapInfo.channel][mapInfo.architecture] &&
+      revisionsMap[mapInfo.revision]
+    ) {
+      releasedChannels[mapInfo.channel][mapInfo.architecture] =
+        revisionsMap[mapInfo.revision];
+      releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
+        mapInfo["expiration-date"];
+    }
   });
 
   return releasedChannels;

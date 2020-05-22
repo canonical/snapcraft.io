@@ -61,6 +61,10 @@ SNAP_RELEASE_HISTORY_URL = "".join(
     [DASHBOARD_API_V2, "snaps/{snap_name}/releases?page={page}"]
 )
 
+SNAP_CHANNEL_MAP_URL = "".join(
+    [DASHBOARD_API_V2, "snaps/{snap_name}/channel-map"]
+)
+
 
 SNAP_RELEASE = "".join([DASHBOARD_API, "snap-release/"])
 
@@ -320,6 +324,18 @@ def snap_revision_history(session, snap_id):
 def snap_release_history(session, snap_name, page=1):
     response = api_session.get(
         url=SNAP_RELEASE_HISTORY_URL.format(snap_name=snap_name, page=page),
+        headers=get_authorization_header(session),
+    )
+
+    if authentication.is_macaroon_expired(response.headers):
+        raise MacaroonRefreshRequired
+
+    return process_response(response)
+
+
+def snap_channel_map(session, snap_name):
+    response = api_session.get(
+        url=SNAP_CHANNEL_MAP_URL.format(snap_name=snap_name),
         headers=get_authorization_header(session),
     )
 

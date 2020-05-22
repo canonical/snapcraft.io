@@ -662,8 +662,11 @@ describe("getTrackRevisions", () => {
 describe("getBranches", () => {
   it("should return branches on the currentTrack, ordered by oldest first", () => {
     const today = new Date();
-    const lessThan30DaysAgo = new Date(
-      new Date().setDate(today.getDate() - 30)
+    const expired = new Date(
+      new Date().setDate(today.getDate() - 1)
+    ).toISOString();
+    const notExpired = new Date(
+      new Date().setDate(today.getDate() + 24)
     ).toISOString();
 
     const state = {
@@ -674,28 +677,32 @@ describe("getBranches", () => {
           track: "latest",
           risk: "stable",
           revision: "1",
-          when: "2019-07-12T10:00:00Z"
+          when: today.toISOString(),
+          "expiration-date": notExpired
         },
         {
           branch: "test",
           track: "latest",
           risk: "stable",
           revision: "2",
-          when: lessThan30DaysAgo
+          when: today.toISOString(),
+          "expiration-date": notExpired
         },
         {
           branch: "test2",
           track: "latest",
           risk: "stable",
           revision: "3",
-          when: lessThan30DaysAgo
+          when: today.toISOString(),
+          "expiration-date": notExpired
         },
         {
           branch: "test",
           track: "test",
           risk: "stable",
           revision: "4",
-          when: "2019-07-12T09:30:00Z"
+          when: today.toISOString(),
+          "expiration-date": expired
         }
       ]
     };
@@ -706,14 +713,16 @@ describe("getBranches", () => {
         track: "latest",
         risk: "stable",
         revision: "3",
-        when: lessThan30DaysAgo
+        when: today.toISOString(),
+        expiration: notExpired
       },
       {
         branch: "test",
         track: "latest",
         risk: "stable",
         revision: "2",
-        when: lessThan30DaysAgo
+        when: today.toISOString(),
+        expiration: notExpired
       }
     ]);
   });
