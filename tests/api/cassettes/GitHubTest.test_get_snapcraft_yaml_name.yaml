@@ -13,7 +13,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test1/contents/snapcraft.yaml
   response:
@@ -43,7 +43,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:55 GMT
+      - Fri, 22 May 2020 08:55:52 GMT
       ETag:
       - W/"0813b93202a22a03987a904b7f0a5602f2c3962a"
       Last-Modified:
@@ -61,6 +61,7 @@ interactions:
       Vary:
       - Accept, Authorization, Cookie, X-GitHub-OTP
       - Accept-Encoding, Accept, X-Requested-With
+      - Accept-Encoding
       X-Accepted-OAuth-Scopes:
       - ''
       X-Content-Type-Options:
@@ -70,17 +71,15 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - D540:2F767:49EC213:56F627C:5E58F71F
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - CA5A:14D77:D52435:F5F0EE:5EC79397
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
       - '4999'
       X-RateLimit-Reset:
-      - '1582892335'
+      - '1590141352'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -100,7 +99,106 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
+    method: GET
+    uri: https://api.github.com/repos/build-staging-snapcraft-io/test1
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA62YbW/bNhDHv4vfLgnt1MkaA0U3oMPQAWmwIR2KvTEoiZbYUKRAUvZsId+9f5J6
+        soEkSsM3tkRQPx6Pd8e7a2Y8m60u371f3Fxe3VydzaTK2NqNzW4//bG7E3+J9M+bA/32zzaVD/vb
+        Q/7/3f3nxd391w8zTKYlw0zLjF3gdVMLsW7HkpqL7NxYmnOZnxtJq1TTjT3ninTTK8231AKwocKw
+        s5naSaZnq2YmFD4C92kGFvNyL3+dX87f3xyL/ff1v9++iPT75/mXw+/720/5FaZTLEX1utYC4MLa
+        yqwICYNmcZFzW9RJbZhOlbRM2otUlaQm3QIftx+WgOS6xXgFYeAEV/GWFD4HzpBnN1HYUpzIFETx
+        gGc/3Sgh1A4rnO7pdUKQnuMO0DNxYFGY4DRE2YJB7VDFo1MgN/atAntGQ9wfDNVRYWVas+yNQrcU
+        iOzs8LEhmlXK4+vEpJpXliv5VuGPWGArnVPJDzQGGywDpBP7rWJ6BlhsC194KyxAGuL9Pd07lWqW
+        Mr7FkUVZ4IQGvt1XLjB9hdm5A+SWrWlWuqDiY83jGULAz3leH70y1hvFbCUR+Zz76Ic+mj0bGrx+
+        n/HvfhWHfEH/01jwc5CgjAe2jwN0oIbgt/XCFMGDJkpTq14KShNFPiI2ZPzqjMgyWsbZiieBWCgV
+        SdueBCI3pmaTrHyiTjzQkM6nZF0mIbRO8aSJawQUpKfG8FwyFkfLPa0h3X2QaCrTIhK/gzUkPHkb
+        oXkc4R0IvESoJA4Q9zzxtIaYgobL0a6jyevwDnZE12wTT3gH6+lWx7ISL7ij9WxczBYGE0fyDkaa
+        VuuCyrymeSR8T3PXDtKSnB5eTNEmeuWAA9ulqZondcRYOwCd7CHnQWyJpPaBN9B9RvV81jZVN6MU
+        zWunLPlLectEdMs68qOYfGfvp2u495cTr1dswMEaMlwW4Vpql4lyAu291Ek+XqwtqeIYUgcjzS8V
+        tYWLm1izoppF2UbLIk1CkSZeXFw0BaO+yCiZjhUkAgpMqtMCaXAUyZsOhkSvpNbXLxsneIZ6Riia
+        xdF/TwM5nHkU6QNqbDUVUuo4InvSGF1ygY6FkpFi/oAbLyKV5RueTqnsJjryEbH5aLhM2RlF4QHr
+        tzzl8AeU3O7IkYezSMoLKGwMrZ5QuQkG14hzMpoFWENCIZ+xSqh9vNA34rk4oRnaTdmaWpSGl2gc
+        nc8vz+fL+8VitXy3Wi7/w5y6yp6cc726unZzqtoUT2AwxWMQ1Fu3wBMaTZOaOqHocx0kEIwpBsJv
+        w/erp5tCR9+nAvZ94po/IcX29H5+BQO7KFTJKiRXXYVs+AHP86PcKFW1xIlgcEctigFkHMNQl091
+        gIKadYgVs5XVNbqGbqTS6jtLrRmPDYFqNHHHH/jRhy7x60v2UGwPi5dca9X2DEOF38ZYdP/anmXG
+        DU0EGwZUxWQr4XgbPGXS9GoItbjb8mj6kQr8S8Y2tBZ2HcoZGG1JjfUdjYrpEmpwDSnXMG17G0Eh
+        zjy7PbrQF57R8rCsrNbBLqx6YK7DCpRkdofWwEjYce7XKmPx+AO4PmJeKRYAAA==
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 22 May 2020 08:55:52 GMT
+      ETag:
+      - W/"7019ad208a84180fcfc0f7a794e9e34f"
+      Last-Modified:
+      - Tue, 04 Feb 2020 11:46:56 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      - Accept-Encoding
+      X-Accepted-OAuth-Scopes:
+      - repo
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3
+      X-GitHub-Request-Id:
+      - CA5A:14D77:D524CD:F5F163:5EC79398
+      X-OAuth-Scopes:
+      - ''
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4998'
+      X-RateLimit-Reset:
+      - '1590141351'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '2'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (commit_id;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test1/commits/master
   response:
@@ -149,9 +247,9 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:56 GMT
+      - Fri, 22 May 2020 08:55:53 GMT
       ETag:
-      - W/"c1ce53f5c9dcc870186f7644c64a6a74"
+      - W/"e03b4a9da92e64273a95c8386cc57e3c"
       Last-Modified:
       - Tue, 04 Feb 2020 11:46:53 GMT
       Referrer-Policy:
@@ -167,6 +265,7 @@ interactions:
       Vary:
       - Accept, Authorization, Cookie, X-GitHub-OTP
       - Accept-Encoding, Accept, X-Requested-With
+      - Accept-Encoding
       X-Accepted-OAuth-Scopes:
       - ''
       X-Content-Type-Options:
@@ -176,17 +275,15 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - D540:2F767:49EC29A:56F6305:5E58F71F
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - CA5A:14D77:D5259A:F5F27E:5EC79398
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4998'
+      - '4997'
       X-RateLimit-Reset:
-      - '1582892336'
+      - '1590141352'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -202,7 +299,7 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
     method: GET
     uri: https://raw.githubusercontent.com/build-staging-snapcraft-io/test1/5a2f7dd9afaf7aa2becff00d20ac2b99fb7b2ecd/snapcraft.yaml
   response:
@@ -228,11 +325,11 @@ interactions:
       Content-Type:
       - text/plain; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:56 GMT
+      - Fri, 22 May 2020 08:55:53 GMT
       ETag:
       - W/"3566826b499cdf1170492fbbadc1437769a1e735aa06baa88cd4192976ff986d"
       Expires:
-      - Fri, 28 Feb 2020 11:23:56 GMT
+      - Fri, 22 May 2020 09:00:53 GMT
       Source-Age:
       - '0'
       Strict-Transport-Security:
@@ -249,17 +346,15 @@ interactions:
       X-Content-Type-Options:
       - nosniff
       X-Fastly-Request-ID:
-      - 1e3a2396a6c221d65e6b21f53494e8d56adffb0f
+      - d91bf486506e0b1cf674e8c8efa6ef0a4ffe9514
       X-Frame-Options:
       - deny
-      X-Geo-Block-List:
-      - ''
       X-GitHub-Request-Id:
-      - 2FFC:0CB7:6ED70:90739:5E58F71F
+      - 99DA:0B8A:88E4:A767:5EC79399
       X-Served-By:
-      - cache-lcy19272-LCY
+      - cache-lcy19231-LCY
       X-Timer:
-      - S1582888736.167516,VS0,VE166
+      - S1590137753.307222,VS0,VE248
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -279,7 +374,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/snapcraft.yaml
   response:
@@ -302,7 +397,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:56 GMT
+      - Fri, 22 May 2020 08:55:54 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -324,17 +419,15 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - D540:2F767:49EC3A2:56F63CC:5E58F720
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - CA5A:14D77:D526EA:F5F317:5EC79399
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4997'
+      - '4996'
       X-RateLimit-Reset:
-      - '1582892335'
+      - '1590141351'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -354,7 +447,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/.snapcraft.yaml
   response:
@@ -377,7 +470,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:56 GMT
+      - Fri, 22 May 2020 08:55:54 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -399,17 +492,15 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - D540:2F767:49EC3FC:56F64A8:5E58F720
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - CA5A:14D77:D527D6:F5F502:5EC7939A
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4996'
+      - '4995'
       X-RateLimit-Reset:
-      - '1582892335'
+      - '1590141352'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -429,7 +520,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/snap/snapcraft.yaml
   response:
@@ -452,7 +543,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:56 GMT
+      - Fri, 22 May 2020 08:55:54 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -474,17 +565,15 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - D540:2F767:49EC462:56F652D:5E58F720
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - CA5A:14D77:D52866:F5F595:5EC7939A
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4995'
+      - '4994'
       X-RateLimit-Reset:
-      - '1582892335'
+      - '1590141352'
       X-XSS-Protection:
       - 1; mode=block
     status:
@@ -504,7 +593,7 @@ interactions:
       Content-Type:
       - application/json
       User-Agent:
-      - storefront (078d05a5e9867471b1e95ef2f1e4fa018e042d30;devel)
+      - storefront (commit_id;devel)
     method: GET
     uri: https://api.github.com/repos/build-staging-snapcraft-io/test5/contents/build-aux/snap/snapcraft.yaml
   response:
@@ -527,7 +616,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 28 Feb 2020 11:18:57 GMT
+      - Fri, 22 May 2020 08:55:54 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
@@ -549,17 +638,15 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3
       X-GitHub-Request-Id:
-      - D540:2F767:49EC4B7:56F659B:5E58F720
-      X-OAuth-Client-Id:
-      - cdeb3a60fecee4208395
+      - CA5A:14D77:D528B0:F5F623:5EC7939A
       X-OAuth-Scopes:
-      - read:org, repo
+      - ''
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4994'
+      - '4993'
       X-RateLimit-Reset:
-      - '1582892336'
+      - '1590141351'
       X-XSS-Protection:
       - 1; mode=block
     status:

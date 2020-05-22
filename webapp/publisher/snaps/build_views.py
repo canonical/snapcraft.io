@@ -465,6 +465,12 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
     repo_url = flask.request.json["repository"]["html_url"]
     gh_owner = flask.request.json["repository"]["owner"]["login"]
     gh_repo = flask.request.json["repository"]["name"]
+    gh_default_branch = flask.request.json["repository"]["default_branch"]
+    gh_event_branch = flask.request.json["ref"][11:]
+
+    # Check the push event is in the default branch
+    if gh_default_branch != gh_event_branch:
+        return ("The push event is not for the default branch", 200)
 
     if snap_name:
         lp_snap = launchpad.get_snap_by_store_name(snap_name)

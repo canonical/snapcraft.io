@@ -267,7 +267,14 @@ class GitHub:
 
         return False
 
-    def get_last_commit(self, owner, repo, branch="master"):
+    def get_default_branch(self, owner, repo):
+        response = self._request("GET", f"repos/{owner}/{repo}")
+        return response.json()["default_branch"]
+
+    def get_last_commit(self, owner, repo, branch=None):
+        if not branch:
+            branch = self.get_default_branch(owner, repo)
+
         response = self._request(
             "GET", f"repos/{owner}/{repo}/commits/{branch}"
         )
