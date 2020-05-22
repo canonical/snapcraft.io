@@ -26,7 +26,9 @@ class Builds extends React.Component {
       isLoading: false,
       fetchSize: 15,
       fetchStart: 0,
-      builds: props.builds ? props.builds : []
+      builds: props.builds ? props.builds : [],
+      queueTime: props.builds ? this.getInitialQueueTime(props.builds) : {},
+      shouldUpdateQueueTime: true
     };
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
@@ -42,13 +44,46 @@ class Builds extends React.Component {
     }
   }
 
+  getInitialQueueTime(builds) {
+    let newQueueTime = {};
+
+    builds.forEach(build => {
+      if (build.status === "building_soon" && build.queue_time) {
+        newQueueTime[build.arch_tag] = build.queue_time;
+      }
+    });
+
+    return newQueueTime;
+  }
+
+  updateQueueTime() {
+    const { queueTime, builds } = this.state;
+    let newQueueTime = {};
+
+    builds.forEach(build => {
+      const isBuildingSoon =
+        build.status === "building_soon" && build.queue_time;
+      if (isBuildingSoon) {
+        newQueueTime = queueTime[build.arch_tag]
+          ? queueTime[build.arch_tag]
+          : build.queue_time;
+      }
+    });
+
+    this.setState({
+      queueTime: newQueueTime,
+      shouldUpdateQueueTime: newQueueTime ? true : false
+    });
+  }
+
   fetchBuilds(fromStart) {
     const {
       fetchSize,
       fetchStart,
       builds,
       triggerBuildStatus,
-      triggerBuildLoading
+      triggerBuildLoading,
+      shouldUpdateQueueTime
     } = this.state;
     const { snapName, updateFreq } = this.props;
     const { SUCCESS, IDLE } = TriggerBuildStatus;
@@ -71,16 +106,23 @@ class Builds extends React.Component {
     fetch(url)
       .then(res => res.json())
       .then(result => {
-        this.setState({
-          triggerBuildLoading:
-            triggerBuildStatus === SUCCESS ? !SUCCESS : triggerBuildLoading,
-          triggerBuildStatus:
-            triggerBuildStatus === SUCCESS ? IDLE : triggerBuildStatus,
-          isLoading: false,
-          builds: fromStart
-            ? result.snap_builds
-            : builds.slice().concat(result.snap_builds)
-        });
+        this.setState(
+          {
+            triggerBuildLoading:
+              triggerBuildStatus === SUCCESS ? !SUCCESS : triggerBuildLoading,
+            triggerBuildStatus:
+              triggerBuildStatus === SUCCESS ? IDLE : triggerBuildStatus,
+            isLoading: false,
+            builds: fromStart
+              ? result.snap_builds
+              : builds.slice().concat(result.snap_builds)
+          },
+          () => {
+            if (shouldUpdateQueueTime) {
+              this.updateQueueTime();
+            }
+          }
+        );
       })
       .catch(() => {
         this.setState({
@@ -143,7 +185,8 @@ class Builds extends React.Component {
       builds,
       isLoading,
       triggerBuildStatus,
-      triggerBuildLoading
+      triggerBuildLoading,
+      queueTime
     } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
 
@@ -201,7 +244,10 @@ class Builds extends React.Component {
                   </span>
                 </Fragment>
               ),
-              className: "has-icon"
+              className: "has-icon",
+              title: queueTime[build.arch_tag]
+                ? `Queue time: up to ${queueTime[build.arch_tag]}`
+                : null
             },
             {
               content: build.datebuilt
