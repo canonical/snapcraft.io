@@ -55,7 +55,7 @@ def get_builds(lp_snap, selection):
             "queue_time": None,
         }
 
-        if status == "building_soon":
+        if build["buildstate"] == "Needs building":
             if not builders_status:
                 builders_status = launchpad.get_builders_status()
 
@@ -247,7 +247,7 @@ def get_snap_builds_json(snap_name):
 
     start = flask.request.args.get("start", 0, type=int)
     size = flask.request.args.get("size", 15, type=int)
-    build_slice = slice(start, start + size)
+    build_slice = slice(start, size)
 
     # Get built snap in launchpad with this store name
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
