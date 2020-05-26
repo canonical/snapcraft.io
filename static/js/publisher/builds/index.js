@@ -333,7 +333,7 @@ export function initBuilds(
   ReactDOM.render(
     <Builds
       snapName={snapName}
-      csrf_token={singleBuild ? null : csrf_token}
+      csrf_token={csrf_token}
       builds={builds}
       totalBuilds={totalBuilds}
       updateFreq={singleBuild ? null : 30000}
