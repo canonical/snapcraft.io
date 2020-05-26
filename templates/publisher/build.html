@@ -71,6 +71,7 @@ Builds for
       {% if snap_build %}
         snapcraft.publisher.initBuilds('#builds-wrapper',
           {{ snap_name | tojson }},
+          null,
           [{{ snap_build | tojson }}],
           1,
           true

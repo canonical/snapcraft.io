@@ -26,8 +26,9 @@ class Builds extends React.Component {
       isLoading: false,
       fetchSize: 15,
       fetchStart: 0,
-      builds: props.builds ? props.builds : [],
-      queueTime: props.builds ? this.getInitialQueueTime(props.builds) : {},
+      builds: props.builds,
+      queueTime:
+        props.builds.length > 0 ? this.getInitialQueueTime(props.builds) : {},
       shouldUpdateQueueTime: true
     };
 
@@ -332,7 +333,7 @@ export function initBuilds(
   ReactDOM.render(
     <Builds
       snapName={snapName}
-      csrf_token={csrf_token}
+      csrf_token={singleBuild ? null : csrf_token}
       builds={builds}
       totalBuilds={totalBuilds}
       updateFreq={singleBuild ? null : 30000}
