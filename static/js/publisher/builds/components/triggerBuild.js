@@ -8,18 +8,20 @@ class TriggerBuild extends React.Component {
     super(props);
   }
 
-  renderError() {
+  renderError(errorMessage) {
     return (
       <div className="u-fixed-width">
         <Notification type="negative" status="Error:">
-          There was an error triggering a new build. Please try again.
+          {errorMessage
+            ? errorMessage
+            : "There was an error triggering a new build. Please try again."}
         </Notification>
       </div>
     );
   }
 
   render() {
-    const { hasError, isLoading, onClick } = this.props;
+    const { hasError, errorMessage, isLoading, onClick } = this.props;
 
     return (
       <Fragment>
@@ -42,7 +44,7 @@ class TriggerBuild extends React.Component {
             </button>
           )}
         </div>
-        {hasError && this.renderError()}
+        {hasError && this.renderError(errorMessage)}
       </Fragment>
     );
   }
@@ -50,6 +52,7 @@ class TriggerBuild extends React.Component {
 
 TriggerBuild.propTypes = {
   hasError: PropTypes.bool,
+  errorMessage: PropTypes.string,
   isLoading: PropTypes.bool,
   onClick: PropTypes.func
 };

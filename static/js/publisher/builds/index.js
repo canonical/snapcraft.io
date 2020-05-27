@@ -23,6 +23,7 @@ class Builds extends React.Component {
     this.state = {
       triggerBuildLoading: false,
       triggerBuildStatus: TriggerBuildStatus.IDLE,
+      triggerBuildErrorMessage: "",
       isLoading: false,
       fetchSize: 15,
       fetchStart: 0,
@@ -157,11 +158,19 @@ class Builds extends React.Component {
         if (result.success) {
           this.setState({ triggerBuildStatus: SUCCESS });
         } else {
-          this.setState({ triggerBuildStatus: ERROR });
+          this.setState({
+            triggerBuildStatus: ERROR,
+            triggerBuildErrorMessage: result.error.message
+              ? result.error.message
+              : ""
+          });
         }
       })
-      .catch(() => {
-        this.setState({ triggerBuildStatus: ERROR });
+      .catch(error => {
+        this.setState({
+          triggerBuildStatus: ERROR,
+          triggerBuildErrorMessage: error.message ? error.message : ""
+        });
       });
   }
 
@@ -185,6 +194,7 @@ class Builds extends React.Component {
       builds,
       isLoading,
       triggerBuildStatus,
+      triggerBuildErrorMessage,
       triggerBuildLoading,
       queueTime
     } = this.state;
@@ -276,6 +286,7 @@ class Builds extends React.Component {
       <Fragment>
         <TriggerBuild
           hasError={triggerBuildStatus === ERROR ? true : false}
+          errorMessage={triggerBuildErrorMessage}
           isLoading={triggerBuildLoading}
           onClick={this.triggerBuildHandler}
         />
