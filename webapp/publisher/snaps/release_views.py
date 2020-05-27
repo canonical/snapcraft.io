@@ -43,6 +43,8 @@ def get_release_history(snap_name):
     except ApiError as api_error:
         return _handle_error(api_error)
 
+    snap = channel_map.get("snap", {})
+
     context = {
         "snap_name": snap_name,
         "snap_title": info["title"],  # missing from channel-map endpoint
@@ -50,8 +52,8 @@ def get_release_history(snap_name):
             "display-name"
         ],  # missing from channel-map endpoint
         "release_history": release_history,
-        "private": channel_map.get("private"),
-        "default_track": channel_map.get("default_track"),
+        "private": snap.get("private"),
+        "default_track": snap.get("default-track"),
         "channel_map": channel_map,
     }
 
