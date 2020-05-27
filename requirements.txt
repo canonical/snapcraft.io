@@ -5,7 +5,7 @@ canonicalwebteam.blog==4.0.2
 canonicalwebteam.search==0.1.0
 canonicalwebteam.image-template==1.1.0
 canonicalwebteam.store-api==2.0.1
-canonicalwebteam.launchpad==0.7.5
+canonicalwebteam.launchpad==0.7.6
 django-openid-auth==0.15
 Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.3
