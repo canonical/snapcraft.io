@@ -66,7 +66,7 @@ class Builds extends React.Component {
       const isBuildingSoon =
         build.status === "building_soon" && build.queue_time;
       if (isBuildingSoon) {
-        newQueueTime = queueTime[build.arch_tag]
+        newQueueTime[build.arch_tag] = queueTime[build.arch_tag]
           ? queueTime[build.arch_tag]
           : build.queue_time;
       }
