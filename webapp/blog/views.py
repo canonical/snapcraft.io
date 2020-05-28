@@ -64,16 +64,17 @@ def init_blog(app, url_prefix):
                 try:
                     featured_media = wordpress_api.get_media(
                         article["featured_media"]
-                    )["source_url"]
-                    featured_media = image_template(
-                        url=featured_media,
-                        alt="",
-                        width="346",
-                        height="231",
-                        fill=True,
-                        hi_def=True,
-                        loading="auto",
                     )
+                    if featured_media:
+                        featured_media = image_template(
+                            url=featured_media["source_url"],
+                            alt="",
+                            width="346",
+                            height="231",
+                            fill=True,
+                            hi_def=True,
+                            loading="auto",
+                        )
                 except RequestException:
                     featured_media = None
 
