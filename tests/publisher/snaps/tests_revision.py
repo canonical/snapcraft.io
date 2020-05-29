@@ -51,29 +51,25 @@ class GetRevisionHistory(BaseTestCases.EndpointLoggedInErrorHandling):
 
     @responses.activate
     def test_get_revision(self):
-        info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
+        info_url = "https://dashboard.snapcraft.io/api/v2/snaps/{}/channel-map"
         self.info_url = info_url.format(self.snap_name)
 
         payload = {
-            "snap_id": "id",
-            "title": "Test Snap",
-            "publisher": {"display-name": "test"},
+            "snap": {
+                "snap_id": "id",
+                "title": "Test Snap",
+                "publisher": {"display-name": "test"},
+            },
+            "channel-map": {},
         }
-
-        responses.add(responses.GET, self.info_url, json=payload, status=200)
 
         responses.add(responses.GET, self.api_url, json={}, status=200)
 
-        channel_map_url = (
-            "https://dashboard.snapcraft.io/api/v2/snaps/{}/channel-map"
-        )
-        channel_map_url = channel_map_url.format(self.snap_name)
-
-        responses.add(responses.GET, channel_map_url, json={}, status=200)
+        responses.add(responses.GET, self.info_url, json=payload, status=200)
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(3, len(responses.calls))
+        self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(

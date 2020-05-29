@@ -40,7 +40,7 @@ function initReleasesData(revisionsMap, releases) {
 function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
   const releasedChannels = {};
 
-  channelMap["channel-map"].forEach(mapInfo => {
+  channelMap.forEach(mapInfo => {
     if (!releasedChannels[mapInfo.channel]) {
       releasedChannels[mapInfo.channel] = {};
     }
