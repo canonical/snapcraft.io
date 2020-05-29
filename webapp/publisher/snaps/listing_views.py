@@ -96,7 +96,7 @@ def get_listing_snap(snap_name):
         category["name"] for category in snap_categories["categories"]
     ]
 
-    filename = f"publisher/content/listing_tour.yaml"
+    filename = "publisher/content/listing_tour.yaml"
     tour_steps = helpers.get_yaml(filename, typ="rt")
 
     context = {
@@ -270,7 +270,7 @@ def post_listing_snap(snap_name):
 
             snap_categories = logic.filter_categories(snap_categories)
 
-            filename = f"publisher/content/listing_tour.yaml"
+            filename = "publisher/content/listing_tour.yaml"
             tour_steps = helpers.get_yaml(filename, typ="rt")
 
             context = {

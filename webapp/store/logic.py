@@ -470,7 +470,7 @@ def get_snap_developer(snap_name):
     :returns: a list of [display_name, url]
 
     """
-    filename = f"store/content/developers/snaps.yaml"
+    filename = "store/content/developers/snaps.yaml"
     snaps = helpers.get_yaml(filename, typ="rt")
 
     if snaps and snap_name in snaps:

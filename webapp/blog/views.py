@@ -51,7 +51,7 @@ def init_blog(app, url_prefix):
             )
 
         if blog_tags:
-            snapcraft_tag = wordpress_api.get_tag_by_name(f"snapcraft.io")
+            snapcraft_tag = wordpress_api.get_tag_by_name("snapcraft.io")
 
             try:
                 blog_articles, total_pages = wordpress_api.get_articles(
