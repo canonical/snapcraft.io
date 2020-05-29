@@ -35,10 +35,8 @@ def get_release_history(snap_name):
 
     context = {
         "snap_name": snap_name,
-        "snap_title": snap.get("title"),  # missing from channel-map endpoint
-        "publisher_name": snap.get("publisher", {}).get(
-            "display-name", {}
-        ),  # missing from channel-map endpoint
+        "snap_title": snap.get("title"),
+        "publisher_name": snap.get("publisher", {}).get("display-name", {}),
         "release_history": release_history,
         "private": snap.get("private"),
         "default_track": snap.get("default-track"),
