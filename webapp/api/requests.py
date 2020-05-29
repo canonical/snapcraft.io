@@ -45,7 +45,9 @@ class BaseSession:
             )
         except CircuitBreakerError:
             raise ApiCircuitBreaker(
-                "Requests are closed because of too many failures".format(url)
+                "Requests are closed because of too many failures {}".format(
+                    url
+                )
             )
 
         return request
