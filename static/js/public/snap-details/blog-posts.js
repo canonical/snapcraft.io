@@ -32,8 +32,7 @@ class BlogPosts {
     this.modifiers = modifiers;
   }
 
-  fetch(callback) {
-    const _callback = callback || null;
+  fetch() {
     return fetch(`${this.url}${this.path}`)
       .then(response => response.json())
       .then(posts => {
@@ -56,7 +55,11 @@ class BlogPosts {
           }
           let postHTML = this.template.innerHTML;
           Object.keys(post).forEach(key => {
-            postHTML = postHTML.split("${" + key + "}").join(post[key]);
+            if (post[key]) {
+              postHTML = postHTML.split("${" + key + "}").join(post[key]);
+            } else {
+              postHTML = postHTML.split("${" + key + "}").join("");
+            }
           });
           const containerClasses = [`col-${cols}`];
           if (post.slug.indexOf("http") === 0) {
@@ -74,7 +77,6 @@ class BlogPosts {
 
         return posts;
       })
-      .then(_callback)
       .catch(error => {
         throw new Error(error);
       });
@@ -103,7 +105,7 @@ function snapDetailsPosts(
 
   blogPosts.path = snap;
 
-  blogPosts.fetch(function(posts) {
+  blogPosts.fetch().then(posts => {
     if (posts.length > 0 && showOnSuccessSelector) {
       const showOnSuccess = document.querySelector(showOnSuccessSelector);
       if (showOnSuccess) {
