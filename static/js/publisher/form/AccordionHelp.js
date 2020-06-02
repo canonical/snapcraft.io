@@ -12,9 +12,10 @@ class AccordionHelp extends React.Component {
     };
   }
 
-  toggleHelp() {
+  toggleHelp(e) {
     const { open } = this.state;
 
+    e.preventDefault();
     this.setState({
       open: !open
     });
@@ -32,7 +33,7 @@ class AccordionHelp extends React.Component {
     return (
       <Fragment>
         <p className="p-form-help-text">
-          <a role="button" onClick={this.toggleHelp}>
+          <a href="#" role="button" tabIndex="0" onClick={this.toggleHelp}>
             {label}
           </a>
         </p>

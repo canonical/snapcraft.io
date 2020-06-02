@@ -17,8 +17,9 @@ class Icon extends React.Component {
     };
   }
 
-  removeIconHandler() {
+  removeIconHandler(e) {
     const { updateIcon } = this.props;
+    e.preventDefault();
     this.setState({
       icon: {}
     });
@@ -140,12 +141,15 @@ class Icon extends React.Component {
           </div>
           {iconUrl && (
             <div className="p-editable-icon__actions">
-              <span
+              <a
+                href="#"
+                role="button"
+                tabIndex="0"
                 className="p-editable-icon__delete"
                 onClick={this.removeIconHandler}
               >
                 <i className="p-icon--delete" />
-              </span>
+              </a>
             </div>
           )}
         </div>
