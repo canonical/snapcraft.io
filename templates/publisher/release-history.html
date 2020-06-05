@@ -41,6 +41,7 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
             {{ snap_name|tojson }},
             {{ release_history|tojson }},
             {{ channel_map|tojson }},
+            {{ tracks|tojson }},
             {
               defaultTrack: {% if default_track %}{{ default_track|tojson }}{% else %}"latest"{% endif %},
               csrfToken: {{ csrf_token()|tojson }},

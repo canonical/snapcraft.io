@@ -186,14 +186,9 @@ export function getArchitectures(state) {
 export function getTracks(state) {
   let tracks = [];
 
-  state.releases.map(t => t.track).forEach(track => {
-    // if we haven't saved it yet
-    if (tracks.indexOf(track) === -1) {
-      tracks.push(track);
-    }
-  });
+  tracks = state.options.tracks.map(track => track.name);
 
-  return sortAlphaNum(tracks, "latest");
+  return sortAlphaNum([...new Set(tracks)], "latest");
 }
 
 export function getBranches(state) {

@@ -41,6 +41,7 @@ def get_release_history(snap_name):
         "private": snap.get("private"),
         "default_track": snap.get("default-track"),
         "channel_map": channel_map.get("channel-map"),
+        "tracks": snap.get("tracks"),
     }
 
     return flask.render_template("publisher/release-history.html", **context)
