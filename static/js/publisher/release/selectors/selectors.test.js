@@ -544,12 +544,14 @@ describe("getTracks", () => {
   const initialState = reducers(undefined, {});
   const stateWithReleases = {
     ...initialState,
-    releases: [
-      { track: "latest" },
-      { track: "test" },
-      { track: "latest" },
-      { track: "12" }
-    ]
+    options: {
+      tracks: [
+        { name: "latest" },
+        { name: "test" },
+        { name: "latest" },
+        { name: "12" }
+      ]
+    }
   };
 
   it("should return list of all tracks", () => {

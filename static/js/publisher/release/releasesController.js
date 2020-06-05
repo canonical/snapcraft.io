@@ -58,7 +58,7 @@ class ReleasesController extends Component {
 
 ReleasesController.propTypes = {
   releasesData: PropTypes.object.isRequired,
-  channelMap: PropTypes.object.isRequired,
+  channelMap: PropTypes.array.isRequired,
 
   notification: PropTypes.object,
   showModal: PropTypes.bool,

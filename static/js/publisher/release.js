@@ -13,7 +13,14 @@ import releases from "./release/reducers";
 // https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const initReleases = (id, snapName, releasesData, channelMap, options) => {
+const initReleases = (
+  id,
+  snapName,
+  releasesData,
+  channelMap,
+  tracks,
+  options
+) => {
   const store = createStore(
     releases,
     {
@@ -21,7 +28,8 @@ const initReleases = (id, snapName, releasesData, channelMap, options) => {
       defaultTrack: options.defaultTrack,
       options: {
         ...options,
-        snapName
+        snapName,
+        tracks
       }
     },
     composeEnhancers(applyMiddleware(thunk))
