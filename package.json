@@ -41,11 +41,19 @@
   "license": "LGPL-3.0-or-later",
   "dependencies": {
     "@canonical/global-nav": "2.4.1",
+<<<<<<< HEAD
     "@canonical/react-components": "0.3.0",
     "@testing-library/react": "^10.2.1",
     "autoprefixer": "9.8.0",
     "babel-core": "6.26.3",
     "babel-eslint": "10.1.0",
+=======
+    "@canonical/react-components": "0.2.1",
+    "@testing-library/react": "10.2.0",
+    "autoprefixer": "6.7.7",
+    "babel-core": "6.26.0",
+    "babel-eslint": "10.0.1",
+>>>>>>> Update react-testing-library
     "babel-loader": "7.1.5",
     "babel-plugin-external-helpers": "6.22.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",

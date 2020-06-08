@@ -48,7 +48,12 @@ export const UserFacingStatus = {
   [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT),
 };
 
-function createStatus(statusMessage, shortStatusMessage, priority, badge) {
+export function createStatus(
+  statusMessage,
+  shortStatusMessage,
+  priority,
+  badge
+) {
   const loadingStatus = [IN_PROGRESS, RELEASING_SOON];
   let icon;
   if (badge.indexOf("failed") > -1) {

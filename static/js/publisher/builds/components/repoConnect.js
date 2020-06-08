@@ -92,8 +92,7 @@ class RepoConnect extends React.Component {
    * Fetch repo list of the selected organization
    *
    */
-  fetchRepoList() {
-    const { selectedOrganization, user } = this.state;
+  fetchRepoList(selectedOrganization, user) {
     let url = "";
 
     if (selectedOrganization === user.login) {
@@ -105,7 +104,6 @@ class RepoConnect extends React.Component {
       isRepoListDisabled: true,
       status: LOADING,
     });
-
     fetch(url)
       .then((res) => res.json())
       .then((result) => {
