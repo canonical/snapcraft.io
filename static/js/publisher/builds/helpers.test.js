@@ -28,7 +28,7 @@ describe("createStatus", () => {
       icon: "spinner u-animation--spin",
       priority: 3,
       shortStatusMessage: "Releasing",
-      statusMessage: "Built, releasing soon"
+      statusMessage: "Built, releasing soon",
     };
     expect(
       createStatus("Built, releasing soon", "Releasing", 3, "releasing_soon")
@@ -41,7 +41,7 @@ describe("createStatus", () => {
       icon: undefined,
       priority: 8,
       shortStatusMessage: "Cancelled",
-      statusMessage: "Cancelled"
+      statusMessage: "Cancelled",
     };
     expect(createStatus("Cancelled", "Cancelled", 8, "cancelled")).toEqual(
       statusObject

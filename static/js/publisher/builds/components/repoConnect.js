@@ -92,7 +92,8 @@ class RepoConnect extends React.Component {
    * Fetch repo list of the selected organization
    *
    */
-  fetchRepoList(selectedOrganization, user) {
+  fetchRepoList() {
+    const { selectedOrganization, user } = this.state;
     let url = "";
 
     if (selectedOrganization === user.login) {
