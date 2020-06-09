@@ -5,14 +5,18 @@ from json import loads
 import bleach
 import flask
 import talisker.requests
-from canonicalwebteam.store_api.exceptions import StoreApiError
-from canonicalwebteam.store_api.stores.snapstore import SnapStore
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapPublisher,
+    SnapStore,
+)
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiResponseErrorList,
+)
 
 # Local
 from webapp import helpers
-from webapp.api import dashboard as api
 from webapp.api import requests
-from webapp.api.exceptions import ApiError, ApiResponseErrorList
 from webapp.decorators import login_required
 from webapp.markdown import parse_markdown_description
 from webapp.publisher.snaps import logic, preview_data
@@ -25,6 +29,7 @@ from webapp.store.logic import (
 )
 
 store_api = SnapStore(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
 
 
 def get_market_snap(snap_name):
@@ -42,13 +47,13 @@ def redirect_post_market_snap(snap_name):
 @login_required
 def get_listing_snap(snap_name):
     try:
-        snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_error(api_error)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
@@ -145,17 +150,17 @@ def post_listing_snap(snap_name):
         if "images" in changes:
             # Add existing screenshots
             try:
-                current_screenshots = api.snap_screenshots(
+                current_screenshots = publisher_api.snap_screenshots(
                     snap_id, flask.session
                 )
-            except ApiResponseErrorList as api_response_error_list:
+            except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
                         404, "No snap named {}".format(snap_name)
                     )
                 else:
                     return _handle_error_list(api_response_error_list.errors)
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 return _handle_error(api_error)
 
             icon_input = (
@@ -182,17 +187,17 @@ def post_listing_snap(snap_name):
             )
 
             try:
-                api.snap_screenshots(
+                publisher_api.snap_screenshots(
                     snap_id, flask.session, images_json, images_files
                 )
-            except ApiResponseErrorList as api_response_error_list:
+            except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
                         404, "No snap named {}".format(snap_name)
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 return _handle_error(api_error)
 
         body_json = logic.filter_changes_data(changes)
@@ -204,28 +209,30 @@ def post_listing_snap(snap_name):
                 )
 
             try:
-                api.snap_metadata(snap_id, flask.session, body_json)
-            except ApiResponseErrorList as api_response_error_list:
+                publisher_api.snap_metadata(snap_id, flask.session, body_json)
+            except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
                         404, "No snap named {}".format(snap_name)
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 return _handle_error(api_error)
 
         if error_list:
             try:
-                snap_details = api.get_snap_info(snap_name, flask.session)
-            except ApiResponseErrorList as api_response_error_list:
+                snap_details = publisher_api.get_snap_info(
+                    snap_name, flask.session
+                )
+            except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
                         404, "No snap named {}".format(snap_name)
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
@@ -344,13 +351,13 @@ def post_listing_snap(snap_name):
 @login_required
 def post_preview(snap_name):
     try:
-        snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_error(api_error)
 
     context = {

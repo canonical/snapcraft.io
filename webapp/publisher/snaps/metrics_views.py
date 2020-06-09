@@ -3,16 +3,23 @@ from json import loads
 
 # Packages
 import flask
+import talisker.requests
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiResponseErrorList,
+)
 
 # Local
 from webapp import helpers
-from webapp.api import dashboard as api
-from webapp.api.exceptions import ApiError, ApiResponseErrorList
+from webapp.api import requests
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
+
+publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
 
 
 @login_required
@@ -28,7 +35,7 @@ def get_account_snaps_metrics():
         metrics_query = metrics_helper.build_snap_installs_metrics_query(snaps)
 
         if metrics_query:
-            snap_metrics = api.get_publisher_metrics(
+            snap_metrics = publisher_api.get_publisher_metrics(
                 flask.session, json=metrics_query
             )
             metrics = metrics_helper.transform_metrics(
@@ -57,13 +64,13 @@ def publisher_snap_metrics(snap_name):
     with appropriate sanitation.
     """
     try:
-        details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_error(api_error)
 
     metric_requested = logic.extract_metrics_period(
@@ -83,15 +90,15 @@ def publisher_snap_metrics(snap_name):
     )
 
     try:
-        metrics_response = api.get_publisher_metrics(
+        metrics_response = publisher_api.get_publisher_metrics(
             flask.session, json=metrics_query_json
         )
-    except ApiResponseErrorList as api_response_error_list:
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_error(api_error)
 
     try:
@@ -103,12 +110,12 @@ def publisher_snap_metrics(snap_name):
             metric_period=latest_day_period["int"],
             metric_bucket=latest_day_period["bucket"],
         )
-        latest_day_response = api.get_publisher_metrics(
+        latest_day_response = publisher_api.get_publisher_metrics(
             flask.session, json=latest_day_query_json
         )
-    except ApiResponseErrorList as api_response_error_list:
+    except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_error(api_error)
 
     active_metrics = metrics_helper.find_metric(

@@ -4,13 +4,17 @@ from json import loads
 
 # Packages
 import flask
-import talisker.requests
 import pycountry
+import talisker.requests
 from canonicalwebteam.launchpad import Launchpad
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiResponseErrorList,
+)
 
 # Local
-from webapp.api import dashboard as api
-from webapp.api.exceptions import ApiError, ApiResponseErrorList
+from webapp.api import requests
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
@@ -21,18 +25,19 @@ launchpad = Launchpad(
     secret=os.getenv("LP_API_TOKEN_SECRET"),
     session=talisker.requests.get_session(),
 )
+publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
 
 
 @login_required
 def get_settings(snap_name):
     try:
-        snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except StoreApiError as api_error:
         return _handle_error(api_error)
 
     if "whitelist_country_codes" in snap_details:
@@ -99,28 +104,30 @@ def post_settings(snap_name):
 
         if body_json:
             try:
-                api.snap_metadata(snap_id, flask.session, body_json)
-            except ApiResponseErrorList as api_response_error_list:
+                publisher_api.snap_metadata(snap_id, flask.session, body_json)
+            except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
                         404, "No snap named {}".format(snap_name)
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 return _handle_error(api_error)
 
         if error_list:
             try:
-                snap_details = api.get_snap_info(snap_name, flask.session)
-            except ApiResponseErrorList as api_response_error_list:
+                snap_details = publisher_api.get_snap_info(
+                    snap_name, flask.session
+                )
+            except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
                         404, "No snap named {}".format(snap_name)
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except ApiError as api_error:
+            except StoreApiError as api_error:
                 return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
