@@ -6,5 +6,5 @@ module.exports = {
   // TODO:
   // publisher bundle is big (webpack warning) - try to chunk it down
   // https://github.com/canonical-web-and-design/snapcraft.io/issues/1246
-  publisher: "./static/js/publisher/publisher.js",
+  publisher: "./static/js/publisher/publisher.js"
 };
