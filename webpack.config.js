@@ -1,7 +1,7 @@
 /* eslint-env node */
 
-const entry = require("./.webpack/entry.js");
-const rules = require("./.webpack/rules.js");
+const entry = require("./webpack.config.entry.js");
+const rules = require("./webpack.config.rules.js");
 
 const TerserPlugin = require("terser-webpack-plugin");
 
