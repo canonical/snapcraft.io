@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const CancelProgressiveRow = ({ release }) => {
   const revisionInfo = release.revision;
 
-  return revisionInfo.architectures.map(arch => {
+  return revisionInfo.architectures.map((arch) => {
     const previousRevision = release.previousRevisions[0];
     return (
       <div
@@ -22,7 +22,7 @@ const CancelProgressiveRow = ({ release }) => {
 };
 
 CancelProgressiveRow.propTypes = {
-  release: PropTypes.object
+  release: PropTypes.object,
 };
 
 export default CancelProgressiveRow;

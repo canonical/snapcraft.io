@@ -45,7 +45,7 @@ export const UserFacingStatus = {
     FAILED_TO_BUILD
   ),
   [CANCELLED]: createStatus("Cancelled", "Cancelled", 8, CANCELLED),
-  [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT)
+  [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT),
 };
 
 function createStatus(statusMessage, shortStatusMessage, priority, badge) {
@@ -62,7 +62,7 @@ function createStatus(statusMessage, shortStatusMessage, priority, badge) {
     shortStatusMessage,
     icon: icon,
     priority,
-    badge
+    badge,
   };
 }
 
@@ -88,5 +88,5 @@ export function createDuration(duration) {
 export const TriggerBuildStatus = {
   ERROR,
   SUCCESS,
-  IDLE
+  IDLE,
 };

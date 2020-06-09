@@ -6,12 +6,12 @@ export default function modal(state = { visible: false }, action) {
       return {
         ...state,
         visible: true,
-        ...action.payload
+        ...action.payload,
       };
     case CLOSE_MODAL:
       return {
         ...state,
-        visible: false
+        visible: false,
       };
     default:
       return state;

@@ -2,7 +2,7 @@ import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
   showNotification,
-  hideNotification
+  hideNotification,
 } from "./globalNotification";
 
 describe("notification actions", () => {
@@ -12,7 +12,7 @@ describe("notification actions", () => {
 
       expect(showNotificationAction.type).toBe(SHOW_NOTIFICATION);
       expect(showNotificationAction.payload).toEqual({
-        status: "success"
+        status: "success",
       });
     });
   });

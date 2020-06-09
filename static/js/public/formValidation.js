@@ -12,7 +12,7 @@ function formValidation() {
   spamCheck.id = "grecaptcharesponse";
   spamCheck.type = "hidden";
 
-  const timer = setInterval(function() {
+  const timer = setInterval(function () {
     delta = Date.now() - startTime; // milliseconds elapsed since start
     // if the form is submitted after more than 3 seconds, it means it was not a bot
     if (delta / 1000 > 3) {

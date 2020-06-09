@@ -10,7 +10,7 @@ function install(language) {
 
   function select(selectedOs) {
     if (osWrappers) {
-      osWrappers.forEach(function(wrapper) {
+      osWrappers.forEach(function (wrapper) {
         wrapper.classList.add("u-hide");
       });
     }
@@ -34,18 +34,18 @@ function install(language) {
     const isLinux = !!userAgent.match(/(Linux)|(X11)/);
     const userOS = isMac ? "macos" : isLinux ? "linux" : null;
 
-    osPickers.forEach(function(os) {
+    osPickers.forEach(function (os) {
       if (os.dataset.os === userOS) {
         os.classList.add("is-selected");
       }
 
-      os.addEventListener("click", function(e) {
+      os.addEventListener("click", function (e) {
         const osSelect = e.target.closest(".js-os-select");
         if (!osSelect) {
           return;
         }
 
-        osPickers.forEach(function(picker) {
+        osPickers.forEach(function (picker) {
           picker.classList.remove("is-selected");
         });
         osSelect.classList.add("is-selected");
@@ -71,10 +71,10 @@ function install(language) {
     }
 
     if (osWrappers) {
-      osWrappers.forEach(function(wrapper) {
+      osWrappers.forEach(function (wrapper) {
         const rows = Array.from(wrapper.querySelectorAll(".js-os-type"));
         if (rows) {
-          rows.forEach(function(row) {
+          rows.forEach(function (row) {
             row.classList.add("u-hide");
           });
         }
@@ -100,8 +100,8 @@ function install(language) {
 
 function getSnapCount(cb) {
   fetch("/snaps/api/snap-count")
-    .then(r => r.json())
-    .then(data => {
+    .then((r) => r.json())
+    .then((data) => {
       cb(data);
     });
 }
@@ -123,7 +123,7 @@ function getArrayDiff(arr1, arr2) {
 
   let newValues = [];
 
-  newArr.forEach(item => {
+  newArr.forEach((item) => {
     if (!oldArr.includes(item)) {
       newValues.push(item);
     }
@@ -141,7 +141,7 @@ function push() {
   function getCount(cb) {
     clearTimeout(timer);
 
-    getSnapCount(data => {
+    getSnapCount((data) => {
       if (initialCount === null) {
         initialCount = data.count;
         initialSnaps = data.snaps;
@@ -153,7 +153,7 @@ function push() {
             hitType: "event",
             eventCategory: "First Snap Flow",
             eventAction: "Snap pushed",
-            eventLabel: `${newSnaps.join(",")}`
+            eventLabel: `${newSnaps.join(",")}`,
           });
         }
 
@@ -167,7 +167,7 @@ function push() {
     }
   }
 
-  getCount(snapName => {
+  getCount((snapName) => {
     // Enable "Continue" button
     const continueBtn = document.querySelector(".js-continue");
     if (continueBtn) {
@@ -218,7 +218,7 @@ function initChooseName(formEl, language) {
     }
   });
 
-  formEl.addEventListener("submit", event => {
+  formEl.addEventListener("submit", (event) => {
     event.preventDefault();
 
     // set value in cookie an reload (to render with a new name)
@@ -255,7 +255,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
     errorNotification(notificationEl, message);
   }
 
-  formEl.addEventListener("submit", event => {
+  formEl.addEventListener("submit", (event) => {
     event.preventDefault();
     let formData = new FormData(formEl);
     const submitButton = formEl.querySelector(
@@ -295,10 +295,10 @@ function initRegisterName(formEl, notificationEl, successEl) {
 
     fetch("/register-snap/json", {
       method: "POST",
-      body: formData
+      body: formData,
     })
-      .then(response => response.json())
-      .then(json => {
+      .then((response) => response.json())
+      .then((json) => {
         clearTimeout(timer);
         let message;
         if (json.errors) {
@@ -336,5 +336,5 @@ export default {
   initChooseName,
   initRegisterName,
   install,
-  push
+  push,
 };

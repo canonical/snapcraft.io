@@ -1,5 +1,3 @@
-/* global global, jest */
-
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -10,7 +8,7 @@ import {
   CLOSE_HISTORY,
   openHistory,
   closeHistory,
-  toggleHistory
+  toggleHistory,
 } from "./history";
 
 describe("history actions", () => {
@@ -18,7 +16,7 @@ describe("history actions", () => {
     arch: "abc42",
     track: "latest",
     risk: "stable",
-    branch: null
+    branch: null,
   };
 
   beforeEach(() => {
@@ -54,14 +52,14 @@ describe("history actions", () => {
       it("should dispatch action to close history panel", () => {
         const store = mockStore({
           options: {
-            snapName: "test"
+            snapName: "test",
           },
           history: {
             isOpen: true,
             filters: {
-              ...dummyFilters
-            }
-          }
+              ...dummyFilters,
+            },
+          },
         });
 
         store.dispatch(toggleHistory(dummyFilters));
@@ -77,8 +75,8 @@ describe("history actions", () => {
         const store = mockStore({
           history: {
             isOpen: true,
-            filters: null
-          }
+            filters: null,
+          },
         });
 
         store.dispatch(toggleHistory());
@@ -93,18 +91,18 @@ describe("history actions", () => {
       it("should dispatch action to open history panel with new filters", () => {
         const store = mockStore({
           options: {
-            snapName: "test"
+            snapName: "test",
           },
           history: {
             isOpen: true,
             filters: {
-              ...dummyFilters
-            }
-          }
+              ...dummyFilters,
+            },
+          },
         });
         const testFilters = {
           ...dummyFilters,
-          arch: "test321"
+          arch: "test321",
         };
         store.dispatch(toggleHistory(testFilters));
 
@@ -118,12 +116,12 @@ describe("history actions", () => {
       it("should dispatch action to open history panel", () => {
         const store = mockStore({
           options: {
-            snapName: "test"
+            snapName: "test",
           },
           history: {
             isOpen: false,
-            filters: null
-          }
+            filters: null,
+          },
         });
 
         store.dispatch(toggleHistory(dummyFilters));

@@ -54,7 +54,7 @@ TriggerBuild.propTypes = {
   hasError: PropTypes.bool,
   errorMessage: PropTypes.string,
   isLoading: PropTypes.bool,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
 export { TriggerBuild as default };

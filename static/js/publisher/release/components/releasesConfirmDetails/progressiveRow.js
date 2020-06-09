@@ -19,7 +19,7 @@ class ProgressiveRow extends React.Component {
   onChangeHandler(percentage) {
     const {
       updateProgressiveReleasePercentage,
-      updateGlobalPercentage
+      updateGlobalPercentage,
     } = this.props;
 
     if (updateGlobalPercentage) {
@@ -33,7 +33,7 @@ class ProgressiveRow extends React.Component {
       release,
       type,
       globalPercentage,
-      updateGlobalPercentage
+      updateGlobalPercentage,
     } = this.props;
 
     if (!release.progressive) {
@@ -67,10 +67,10 @@ class ProgressiveRow extends React.Component {
     let progress;
     if (
       type === progressiveTypes.UPDATE &&
-      release.progressive.changes.some(change => change.key === "paused")
+      release.progressive.changes.some((change) => change.key === "paused")
     ) {
       const paused = release.progressive.changes.find(
-        change => change.key === "paused"
+        (change) => change.key === "paused"
       ).value;
       progress = (
         <Fragment>
@@ -117,8 +117,9 @@ class ProgressiveRow extends React.Component {
       const prevRev = release.previousRevisions[0].revision;
       const prevVer = release.previousRevisions[0].version;
 
-      notes = `${100 -
-        targetPercentage}% of devices will stay on ${prevRev} (${prevVer})`;
+      notes = `${
+        100 - targetPercentage
+      }% of devices will stay on ${prevRev} (${prevVer})`;
     }
 
     const displayType = type.charAt(0).toUpperCase() + type.slice(1);
@@ -140,17 +141,14 @@ ProgressiveRow.propTypes = {
   type: PropTypes.string,
   globalPercentage: PropTypes.number,
   updateGlobalPercentage: PropTypes.func,
-  updateProgressiveReleasePercentage: PropTypes.func
+  updateProgressiveReleasePercentage: PropTypes.func,
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    updateProgressiveReleasePercentage: percentage =>
-      dispatch(updateProgressiveReleasePercentage(percentage))
+    updateProgressiveReleasePercentage: (percentage) =>
+      dispatch(updateProgressiveReleasePercentage(percentage)),
   };
 };
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(ProgressiveRow);
+export default connect(null, mapDispatchToProps)(ProgressiveRow);

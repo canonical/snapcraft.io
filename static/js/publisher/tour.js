@@ -7,7 +7,7 @@ import { toggleShadowWhenSticky } from "./market/stickyListingBar";
 
 // returns true if % of truthy values in the array is above the threshold
 function isCompleted(fields, threshold = 0.5) {
-  const completed = fields.filter(isCompleted => isCompleted);
+  const completed = fields.filter((isCompleted) => isCompleted);
 
   return completed.length / fields.length >= threshold;
 }
@@ -17,7 +17,7 @@ export function initTour({
   steps,
   onTourStarted,
   onTourClosed,
-  startTour
+  startTour,
 }) {
   if (!document.contains(container)) {
     throw Error("initTour container element not found in document.");
@@ -50,15 +50,15 @@ export function initListingTour({ snapName, container, steps, formFields }) {
     // video
     formFields.video_urls.length,
     // icon
-    formFields.images.filter(i => i.type === "icon").length,
+    formFields.images.filter((i) => i.type === "icon").length,
     // images
-    formFields.images.filter(i => i.type === "screenshot").length,
+    formFields.images.filter((i) => i.type === "screenshot").length,
     // banner
-    formFields.images.filter(i => i.type === "banner").length,
+    formFields.images.filter((i) => i.type === "banner").length,
     // summary is completed if it is different from the title
     formFields.summary !== formFields.title,
     // if one of website or contact is filled we consider it completed
-    formFields.website || formFields.contact
+    formFields.website || formFields.contact,
   ];
 
   const isFormCompleted = isCompleted(completedFields);

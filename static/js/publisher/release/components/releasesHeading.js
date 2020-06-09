@@ -21,7 +21,7 @@ class ReleasesHeading extends Component {
           onChange={this.onTrackChange.bind(this)}
           value={currentTrack}
         >
-          {tracks.map(track => (
+          {tracks.map((track) => (
             <option key={`${track}`} value={track}>
               {track}{" "}
               {defaultTrack === track && track !== "latest" && "(default)"}
@@ -64,24 +64,21 @@ ReleasesHeading.propTypes = {
   tracks: PropTypes.array.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
   currentTrack: PropTypes.string.isRequired,
-  defaultTrack: PropTypes.string
+  defaultTrack: PropTypes.string,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     tracks: getTracks(state),
     currentTrack: state.currentTrack,
-    defaultTrack: state.defaultTrack
+    defaultTrack: state.defaultTrack,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    setCurrentTrack: track => dispatch(setCurrentTrack(track))
+    setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReleasesHeading);
+export default connect(mapStateToProps, mapDispatchToProps)(ReleasesHeading);

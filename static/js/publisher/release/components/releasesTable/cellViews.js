@@ -6,7 +6,7 @@ import RevisionLabel from "../revisionLabel";
 import {
   isInDevmode,
   isRevisionBuiltOnLauchpad,
-  canBeReleased
+  canBeReleased,
 } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
 
@@ -27,7 +27,7 @@ export const UnassignedInfo = ({ availableCount }) => (
 );
 
 UnassignedInfo.propTypes = {
-  availableCount: PropTypes.number
+  availableCount: PropTypes.number,
 };
 
 // content of empty cell in channel row (nothing released or tracking channel)
@@ -48,14 +48,14 @@ export const EmptyInfo = ({ trackingChannel }) => {
 };
 
 EmptyInfo.propTypes = {
-  trackingChannel: PropTypes.string
+  trackingChannel: PropTypes.string,
 };
 
 const ProgressiveTooltip = ({
   revision,
   previousRevision,
   progressiveState,
-  pendingProgressiveState
+  pendingProgressiveState,
 }) => {
   let previousRevisionInfo = "";
   let revisionInfo = "";
@@ -63,8 +63,9 @@ const ProgressiveTooltip = ({
     previousRevisionInfo = ` (${100 - progressiveState.percentage}%`;
     revisionInfo = ` (${progressiveState.percentage}%`;
     if (pendingProgressiveState) {
-      previousRevisionInfo = `${previousRevisionInfo} → ${100 -
-        pendingProgressiveState.percentage}%`;
+      previousRevisionInfo = `${previousRevisionInfo} → ${
+        100 - pendingProgressiveState.percentage
+      }%`;
       revisionInfo = `${revisionInfo} → ${pendingProgressiveState.percentage}%`;
     }
     previousRevisionInfo = `${previousRevisionInfo} of devices)`;
@@ -100,7 +101,7 @@ ProgressiveTooltip.propTypes = {
   revision: PropTypes.number,
   previousRevision: PropTypes.number,
   progressiveState: PropTypes.object,
-  pendingProgressiveState: PropTypes.object
+  pendingProgressiveState: PropTypes.object,
 };
 
 // contents of a cell with a revision
@@ -110,7 +111,7 @@ export const RevisionInfo = ({
   showVersion,
   progressiveState,
   previousRevision,
-  pendingProgressiveState
+  pendingProgressiveState,
 }) => {
   let buildIcon = null;
 
@@ -120,7 +121,7 @@ export const RevisionInfo = ({
 
   const releasable = canBeReleased(revision);
 
-  const blockedMessage = revision => (
+  const blockedMessage = (revision) => (
     <Fragment>
       Can’t be released: <b>{revision.status}.</b>
       <br />
@@ -149,14 +150,13 @@ export const RevisionInfo = ({
           Revision: <b>{revision.revision}</b>
           <br />
           Version: <b>{revision.version}</b>
-          {revision.attributes &&
-            revision.attributes["build-request-id"] && (
-              <Fragment>
-                <br />
-                Build: {buildIcon}{" "}
-                <b>{revision.attributes["build-request-id"]}</b>
-              </Fragment>
-            )}
+          {revision.attributes && revision.attributes["build-request-id"] && (
+            <Fragment>
+              <br />
+              Build: {buildIcon}{" "}
+              <b>{revision.attributes["build-request-id"]}</b>
+            </Fragment>
+          )}
           {isInDevmode(revision) && (
             <Fragment>
               <br />
@@ -200,23 +200,23 @@ RevisionInfo.propTypes = {
   showVersion: PropTypes.bool,
   progressiveState: PropTypes.object,
   previousRevision: PropTypes.number,
-  pendingProgressiveState: PropTypes.object
+  pendingProgressiveState: PropTypes.object,
 };
 
 // generic draggable view of releases table cell
-export const ReleasesTableCellView = props => {
+export const ReleasesTableCellView = (props) => {
   const { item, canDrag, children, actions } = props;
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item,
-    canDrag
+    canDrag,
   });
 
   const classNames = [
     "p-releases-table__cell",
     isGrabbing ? "is-grabbing" : "",
     isDragging ? "is-dragging" : "",
-    canDrag ? "is-draggable" : ""
+    canDrag ? "is-draggable" : "",
   ].join(" ");
 
   const className = `${classNames} ${props.className}`;
@@ -241,5 +241,5 @@ ReleasesTableCellView.propTypes = {
   canDrag: PropTypes.bool,
   className: PropTypes.string,
   children: PropTypes.node,
-  actions: PropTypes.node
+  actions: PropTypes.node,
 };

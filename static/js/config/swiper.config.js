@@ -6,13 +6,13 @@ const SCREENSHOTS = {
   spaceBetween: 32,
   breakpoints: {
     620: {
-      spaceBetween: 16
-    }
+      spaceBetween: 16,
+    },
   },
   navigation: {
     nextEl: `.swiper-button__next`,
-    prevEl: `.swiper-button__prev`
-  }
+    prevEl: `.swiper-button__prev`,
+  },
 };
 
 export { SCREENSHOTS as SCREENSHOTS_CONFIG };

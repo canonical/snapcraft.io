@@ -13,7 +13,7 @@ export function getChannelName(track, risk, branch) {
   return getChannelString({
     track,
     risk,
-    branch
+    branch,
   });
 }
 
@@ -32,7 +32,7 @@ export function getRevisionsArchitectures(revisions) {
   let archs = [];
 
   // get all architectures from all revisions
-  revisions.forEach(revision => {
+  revisions.forEach((revision) => {
     archs = archs.concat(revision.architectures);
   });
 

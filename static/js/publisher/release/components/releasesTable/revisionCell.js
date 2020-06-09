@@ -7,13 +7,13 @@ import { canBeReleased } from "../../helpers";
 import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
 
 // releases table cell with data for a specific revision (unrelated to channel map)
-const ReleasesTableRevisionCell = props => {
+const ReleasesTableRevisionCell = (props) => {
   const { revision, showVersion } = props;
 
   const item = {
     revisions: [revision],
     architectures: revision ? revision.architectures : [],
-    type: DND_ITEM_REVISIONS
+    type: DND_ITEM_REVISIONS,
   };
 
   return (
@@ -32,7 +32,7 @@ const ReleasesTableRevisionCell = props => {
 
 ReleasesTableRevisionCell.propTypes = {
   revision: PropTypes.object,
-  showVersion: PropTypes.bool
+  showVersion: PropTypes.bool,
 };
 
 export default ReleasesTableRevisionCell;

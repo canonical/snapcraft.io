@@ -11,7 +11,7 @@ import TourStepCard from "./tourStepCard";
 // <button><i>Text</i></button>
 //
 // getByText(textContentEquals("Text"), { selector: "button" })
-const textContentEquals = textContent => {
+const textContentEquals = (textContent) => {
   return (_, node) => node.textContent === textContent;
 };
 
@@ -20,14 +20,14 @@ describe("TourStepCard", () => {
     id: "test-step",
     position: "bottom-left",
     title: "Test step title",
-    content: "Test step content"
+    content: "Test step content",
   };
 
   const dummyMask = {
     top: 10,
     bottom: 20,
     left: 30,
-    right: 40
+    right: 40,
   };
 
   let onFinishClick;
@@ -70,9 +70,9 @@ describe("TourStepCard", () => {
       {
         ...dummyStep,
         id: "test-step-first",
-        position: "bottom-right"
+        position: "bottom-right",
       },
-      dummyStep
+      dummyStep,
     ];
 
     it("should not show Finish button", () => {
@@ -84,7 +84,7 @@ describe("TourStepCard", () => {
     it("should show disabled Previous button", () => {
       const { getByText } = renderTourStepCard(steps);
       const prevButton = getByText(textContentEquals("Previous step"), {
-        selector: "button"
+        selector: "button",
       });
 
       expect(prevButton.disabled).toBe(true);
@@ -113,12 +113,12 @@ describe("TourStepCard", () => {
       {
         ...dummyStep,
         id: "test-step-middle",
-        position: "top-left"
+        position: "top-left",
       },
       {
         ...dummyStep,
-        id: "test-step-last"
-      }
+        id: "test-step-last",
+      },
     ];
 
     it("should not show Finish button", () => {
@@ -157,8 +157,8 @@ describe("TourStepCard", () => {
       dummyStep,
       {
         id: "test-step-last",
-        position: "top-right"
-      }
+        position: "top-right",
+      },
     ];
 
     it("should not show skip tour link", () => {

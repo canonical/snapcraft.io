@@ -1,13 +1,13 @@
 import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
-  AVAILABLE_REVISIONS_SELECT_ALL
+  AVAILABLE_REVISIONS_SELECT_ALL,
 } from "../constants";
 import { selectRevision, clearSelectedRevisions } from "./channelMap";
 import {
   getArchitectures,
   getFilteredAvailableRevisions,
-  getFilteredAvailableRevisionsForArch
+  getFilteredAvailableRevisionsForArch,
 } from "../selectors";
 import { getBuildId } from "../helpers";
 
@@ -16,7 +16,7 @@ export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 export function setAvailableRevisionsSelect(value) {
   return {
     type: SET_AVAILABLE_REVISIONS_SELECT,
-    payload: { value }
+    payload: { value },
   };
 }
 
@@ -42,7 +42,7 @@ export function selectAvailableRevisions(value) {
         // find most recent version
         const recentVersion = recentRevisions[0].version;
         // filter most recent revision with given version
-        revisionsFilter = revision => revision.version === recentVersion;
+        revisionsFilter = (revision) => revision.version === recentVersion;
       }
     }
 
@@ -52,12 +52,12 @@ export function selectAvailableRevisions(value) {
       if (lpRevisions.length > 0) {
         const recentBuild = getBuildId(lpRevisions[0]);
 
-        revisionsFilter = revision => getBuildId(revision) === recentBuild;
+        revisionsFilter = (revision) => getBuildId(revision) === recentBuild;
       }
     }
 
     // get latest revision to select
-    archs.forEach(arch => {
+    archs.forEach((arch) => {
       const revisions = getFilteredAvailableRevisionsForArch(state, arch);
 
       const revisionToSelect = revisions.filter(revisionsFilter)[0];

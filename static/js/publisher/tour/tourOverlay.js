@@ -10,7 +10,7 @@ import { getMaskFromElements, prepareSteps } from "./helpers";
 import {
   SCROLL_MARGIN,
   SCROLL_OFFSET_TOP,
-  SCROLL_OFFSET_BOTTOM
+  SCROLL_OFFSET_BOTTOM,
 } from "./constants";
 
 import { animateScrollTo } from "../../public/scroll-to";
@@ -131,7 +131,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
   // treat as 'finished' on last step and as 'skipped' on any other step
   useEffect(
     () => {
-      const escClick = event => {
+      const escClick = (event) => {
         if (event.keyCode === 27) {
           if (currentStepIndex === steps.length - 1) {
             onFinishClick();
@@ -168,5 +168,5 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
 TourOverlay.propTypes = {
   steps: PropTypes.array,
   currentStepIndex: PropTypes.number,
-  hideTour: PropTypes.func
+  hideTour: PropTypes.func,
 };

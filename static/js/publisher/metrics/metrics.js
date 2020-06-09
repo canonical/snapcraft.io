@@ -10,16 +10,16 @@ function renderMetrics(metrics) {
   // Active devices
   let activeDevices = {
     series: [],
-    buckets: metrics.activeDevices.metrics.buckets
+    buckets: metrics.activeDevices.metrics.buckets,
   };
 
-  metrics.activeDevices.metrics.series.forEach(series => {
-    let fullSeries = series.values.map(value => {
+  metrics.activeDevices.metrics.series.forEach((series) => {
+    let fullSeries = series.values.map((value) => {
       return value === null ? 0 : value;
     });
     activeDevices.series.push({
       name: series.name,
-      values: fullSeries
+      values: fullSeries,
     });
   });
 
@@ -31,7 +31,7 @@ function renderMetrics(metrics) {
       area: true,
       graphType: metrics.activeDevices.type,
       defaultTrack: metrics.defaultTrack,
-      annotations: metrics.activeDevices.annotations
+      annotations: metrics.activeDevices.annotations,
     }
   )
     .render()
@@ -41,7 +41,7 @@ function renderMetrics(metrics) {
   // Add hovers for category annotations
   const categories = document.querySelector(`[data-js="annotations-hover"]`);
   if (categories) {
-    categories.addEventListener("mouseover", e => {
+    categories.addEventListener("mouseover", (e) => {
       const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
       if (annotationHover) {
         const category = annotationHover.dataset.id;
@@ -49,7 +49,7 @@ function renderMetrics(metrics) {
       }
     });
 
-    categories.addEventListener("mouseout", e => {
+    categories.addEventListener("mouseout", (e) => {
       const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
       if (annotationHover) {
         const category = annotationHover.dataset.id;
@@ -75,7 +75,7 @@ function renderPublisherMetrics(options) {
     {},
     {
       stacked: false,
-      area: false
+      area: false,
     }
   );
 
@@ -88,28 +88,28 @@ function renderPublisherMetrics(options) {
         body: JSON.stringify(snapList),
         headers: {
           "Content-Type": "application/json",
-          "X-CSRFToken": options.token
-        }
+          "X-CSRFToken": options.token,
+        },
       })
-        .then(response => {
+        .then((response) => {
           if (!response.ok) {
             reject("Could not fetch data.");
           } else {
             return response.json();
           }
         })
-        .then(json => {
+        .then((json) => {
           const snaps = {
             series: [],
-            buckets: json.buckets
+            buckets: json.buckets,
           };
 
-          json.snaps.forEach(snap => {
+          json.snaps.forEach((snap) => {
             const continuedDevices = snap.series.filter(
-              singleSeries => singleSeries.name === "continued"
+              (singleSeries) => singleSeries.name === "continued"
             )[0].values;
             const newDevices = snap.series.filter(
-              singleSeries => singleSeries.name === "new"
+              (singleSeries) => singleSeries.name === "new"
             )[0].values;
 
             const totalSeries = continuedDevices.map(
@@ -120,7 +120,7 @@ function renderPublisherMetrics(options) {
 
             snaps.series.push({
               name: snap.name,
-              values: totalSeries
+              values: totalSeries,
             });
           });
 
@@ -130,17 +130,17 @@ function renderPublisherMetrics(options) {
     });
   }
 
-  const snaps_arr = Object.keys(options.snaps).map(key => {
+  const snaps_arr = Object.keys(options.snaps).map((key) => {
     return {
       name: key,
-      id: options.snaps[key]
+      id: options.snaps[key],
     };
   });
 
-  const chunkedSnaps = arrayChunk(snaps_arr, chunkSize).map(chunk => {
+  const chunkedSnaps = arrayChunk(snaps_arr, chunkSize).map((chunk) => {
     const chunkObj = {};
 
-    chunk.forEach(item => {
+    chunk.forEach((item) => {
       chunkObj[item.name] = item.id;
     });
 
@@ -176,18 +176,15 @@ function renderPublisherMetrics(options) {
     loaderText.innerText = `${loaded * chunkSize} / ${toLoad * chunkSize}`;
 
     getSnapDevices(chunk)
-      .then(snaps => {
+      .then((snaps) => {
         if (!first && _graph.rawData) {
           _graph.updateData(snaps).render();
         } else {
-          _graph
-            .updateData(snaps)
-            .render()
-            .show();
+          _graph.updateData(snaps).render().show();
           first = false;
         }
       })
-      .catch(error => {
+      .catch((error) => {
         throw new Error(error);
       })
       .finally(() => {

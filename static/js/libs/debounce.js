@@ -7,10 +7,10 @@
 export default function debounce(func, wait, immediate) {
   let timeout;
 
-  const debounced = function() {
+  const debounced = function () {
     const context = this,
       args = arguments;
-    let later = function() {
+    let later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };
@@ -20,7 +20,7 @@ export default function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 
-  debounced.clear = function() {
+  debounced.clear = function () {
     clearTimeout(timeout);
   };
 

@@ -3,23 +3,23 @@ import PropTypes from "prop-types";
 
 import {
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
-  AVAILABLE_REVISIONS_SELECT_ALL
+  AVAILABLE_REVISIONS_SELECT_ALL,
 } from "../../constants";
 
 const menuLabels = {
   [AVAILABLE_REVISIONS_SELECT_ALL]: {
-    label: "Most recent"
+    label: "Most recent",
   },
   [AVAILABLE_REVISIONS_SELECT_LAUNCHPAD]: {
     label: "Launchpad",
-    description: "Revisions built on Launchpad"
-  }
+    description: "Revisions built on Launchpad",
+  },
 };
 
 const AvailableRevisionsTabs = ({ children, onChange }) => {
   const [currentTab, setCurrentTab] = useState(AVAILABLE_REVISIONS_SELECT_ALL);
 
-  const onTabClick = tab => {
+  const onTabClick = (tab) => {
     if (tab !== currentTab) {
       setCurrentTab(tab);
       if (onChange) {
@@ -27,7 +27,7 @@ const AvailableRevisionsTabs = ({ children, onChange }) => {
       }
     }
   };
-  const renderItem = item => {
+  const renderItem = (item) => {
     return (
       <li
         key={`available-menu-item-${item}`}
@@ -65,7 +65,7 @@ const AvailableRevisionsTabs = ({ children, onChange }) => {
 
 AvailableRevisionsTabs.propTypes = {
   children: PropTypes.func,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 export default AvailableRevisionsTabs;

@@ -23,7 +23,7 @@ GlobalRow.propTypes = {
   useGlobal: PropTypes.bool,
   toggleGlobal: PropTypes.func,
   globalPercentage: PropTypes.number,
-  updatePercentage: PropTypes.func
+  updatePercentage: PropTypes.func,
 };
 
 export default GlobalRow;

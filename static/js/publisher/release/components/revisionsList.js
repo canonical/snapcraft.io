@@ -8,7 +8,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_RECENT,
-  AVAILABLE_REVISIONS_SELECT_ALL
+  AVAILABLE_REVISIONS_SELECT_ALL,
 } from "../constants";
 import { getBuildId, getChannelName, isInDevmode } from "../helpers";
 
@@ -24,7 +24,7 @@ import {
   getFilteredAvailableRevisions,
   getFilteredAvailableRevisionsForArch,
   isProgressiveReleaseEnabled,
-  getPendingRelease
+  getPendingRelease,
 } from "../selectors";
 
 class RevisionsList extends Component {
@@ -35,7 +35,7 @@ class RevisionsList extends Component {
   }
 
   selectVersionClick(revisions) {
-    revisions.forEach(revision => this.props.toggleRevision(revision));
+    revisions.forEach((revision) => this.props.toggleRevision(revision));
   }
 
   renderRow(
@@ -107,7 +107,7 @@ class RevisionsList extends Component {
 
   showAllRevisions(key) {
     this.setState({
-      [key]: true
+      [key]: true,
     });
   }
 
@@ -118,7 +118,7 @@ class RevisionsList extends Component {
       filteredAvailableRevisions,
       pendingChannelMap,
       isProgressiveReleaseEnabled,
-      getPendingRelease
+      getPendingRelease,
     } = this.props;
     let filteredRevisions = filteredAvailableRevisions;
     let title = "Latest revisions";
@@ -198,11 +198,11 @@ class RevisionsList extends Component {
       if (selectedRevision) {
         // find all revisions with same version as selected revision
         // but only one (latest) per architecture
-        filteredAvailableRevisions.forEach(revision => {
+        filteredAvailableRevisions.forEach((revision) => {
           if (
             revision.version === selectedRevision.version &&
             revision.architectures.some(
-              arch => selectedVersionRevisionsArchs.indexOf(arch) === -1
+              (arch) => selectedVersionRevisionsArchs.indexOf(arch) === -1
             )
           ) {
             selectedVersionRevisions.push(revision);
@@ -214,19 +214,19 @@ class RevisionsList extends Component {
 
         // filter out revisions that are already selected
         selectedVersionRevisions = selectedVersionRevisions.filter(
-          revision =>
+          (revision) =>
             this.props.selectedRevisions.indexOf(revision.revision) === -1
         );
 
         // filter out current architecture
         selectedVersionRevisions = selectedVersionRevisions.filter(
-          revision => revision.architectures.indexOf(filters.arch) === -1
+          (revision) => revision.architectures.indexOf(filters.arch) === -1
         );
 
         // recalculate list of architectures from current list of revisions
         selectedVersionRevisionsArchs = [];
 
-        selectedVersionRevisions.forEach(revision => {
+        selectedVersionRevisions.forEach((revision) => {
           selectedVersionRevisionsArchs = selectedVersionRevisionsArchs.concat(
             revision.architectures
           );
@@ -257,7 +257,7 @@ class RevisionsList extends Component {
         : null;
     }
 
-    const showBuildRequest = filteredRevisions.some(revision =>
+    const showBuildRequest = filteredRevisions.some((revision) =>
       getBuildId(revision)
     );
 
@@ -300,32 +300,31 @@ class RevisionsList extends Component {
             .
           </Notification>
         )}
-        {!isReleaseHistory &&
-          selectedVersionRevisions.length > 0 && (
-            <div className="p-releases-confirm">
-              <b>{selectedRevision.version}</b> is available in{" "}
-              <span className="p-tooltip">
-                <span className="p-help">
-                  {selectedVersionRevisionsArchs.length} other architecture
-                  {selectedVersionRevisionsArchs.length > 1 ? "s" : ""}
-                </span>
-                <span className="p-tooltip__message" role="tooltip">
-                  {selectedVersionRevisionsArchs.join(", ")}
-                </span>
+        {!isReleaseHistory && selectedVersionRevisions.length > 0 && (
+          <div className="p-releases-confirm">
+            <b>{selectedRevision.version}</b> is available in{" "}
+            <span className="p-tooltip">
+              <span className="p-help">
+                {selectedVersionRevisionsArchs.length} other architecture
+                {selectedVersionRevisionsArchs.length > 1 ? "s" : ""}
               </span>
-              <div className="p-releases-confirm__buttons">
-                <button
-                  className="p-button--positive is-inline u-no-margin--bottom"
-                  onClick={this.selectVersionClick.bind(
-                    this,
-                    selectedVersionRevisions
-                  )}
-                >
-                  {"Select in available architectures"}
-                </button>
-              </div>
+              <span className="p-tooltip__message" role="tooltip">
+                {selectedVersionRevisionsArchs.join(", ")}
+              </span>
+            </span>
+            <div className="p-releases-confirm__buttons">
+              <button
+                className="p-button--positive is-inline u-no-margin--bottom"
+                onClick={this.selectVersionClick.bind(
+                  this,
+                  selectedVersionRevisions
+                )}
+              >
+                {"Select in available architectures"}
+              </button>
             </div>
-          )}
+          </div>
+        )}
         <table className="p-revisions-list">
           <thead>
             <tr>
@@ -378,16 +377,15 @@ class RevisionsList extends Component {
                 </td>
               </tr>
             )}
-            {!showAllRevisions &&
-              filteredRevisions.length > 10 && (
-                <tr>
-                  <td colSpan={4}>
-                    <a onClick={this.showAllRevisions.bind(this, key)}>
-                      Show all {filteredRevisions.length} revisions
-                    </a>
-                  </td>
-                </tr>
-              )}
+            {!showAllRevisions && filteredRevisions.length > 10 && (
+              <tr>
+                <td colSpan={4}>
+                  <a onClick={this.showAllRevisions.bind(this, key)}>
+                    Show all {filteredRevisions.length} revisions
+                  </a>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </Fragment>
@@ -416,10 +414,10 @@ RevisionsList.propTypes = {
 
   // actions
   closeHistoryPanel: PropTypes.func.isRequired,
-  toggleRevision: PropTypes.func.isRequired
+  toggleRevision: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     availableRevisionsSelect: state.availableRevisionsSelect,
     showChannels:
@@ -432,26 +430,23 @@ const mapStateToProps = state => {
     pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state),
     selectedRevisions: getSelectedRevisions(state),
-    getSelectedRevision: arch => getSelectedRevision(state, arch),
+    getSelectedRevision: (arch) => getSelectedRevision(state, arch),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
     selectedArchitectures: getSelectedArchitectures(state),
     filteredAvailableRevisions: getFilteredAvailableRevisions(state),
-    getFilteredAvailableRevisionsForArch: arch =>
+    getFilteredAvailableRevisionsForArch: (arch) =>
       getFilteredAvailableRevisionsForArch(state, arch),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
     getPendingRelease: (channel, arch) =>
-      getPendingRelease(state, channel, arch)
+      getPendingRelease(state, channel, arch),
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
-    toggleRevision: revision => dispatch(toggleRevision(revision))
+    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RevisionsList);
+export default connect(mapStateToProps, mapDispatchToProps)(RevisionsList);

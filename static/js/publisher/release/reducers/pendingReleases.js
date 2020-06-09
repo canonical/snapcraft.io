@@ -6,7 +6,7 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE
+  CANCEL_PROGRESSIVE_RELEASE,
 } from "../actions/pendingReleases";
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
@@ -39,8 +39,8 @@ function releaseRevision(
 
   // cancel any other pending release for the same channel in same architectures
   // if it's a different revision
-  revision.architectures.forEach(arch => {
-    Object.keys(state).forEach(revId => {
+  revision.architectures.forEach((arch) => {
+    Object.keys(state).forEach((revId) => {
       const pendingRelease = state[revId];
 
       if (
@@ -64,7 +64,7 @@ function releaseRevision(
   if (!state[revision.revision][channel]) {
     state[revision.revision][channel] = {
       revision,
-      channel
+      channel,
     };
   }
 
@@ -80,7 +80,7 @@ function releaseRevision(
 }
 
 function closeChannel(state, channel) {
-  Object.values(state).forEach(pendingRelease => {
+  Object.values(state).forEach((pendingRelease) => {
     if (pendingRelease[channel]) {
       state = removePendingRelease(
         state,
@@ -96,8 +96,8 @@ function closeChannel(state, channel) {
 function setProgressiveRelease(state, progressive) {
   const nextState = jsonClone(state);
 
-  Object.values(nextState).forEach(pendingRelease => {
-    Object.values(pendingRelease).forEach(channel => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       const hasPreviousRevisions =
         channel.previousRevisions &&
         Object.keys(channel.previousRevisions).length > 0;
@@ -118,8 +118,8 @@ function setProgressiveRelease(state, progressive) {
 function updateProgressiveRelease(state, progressive) {
   const nextState = jsonClone(state);
 
-  Object.values(nextState).forEach(pendingRelease => {
-    Object.values(pendingRelease).forEach(channel => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       if (channel.progressive) {
         channel.progressive.percentage = progressive.percentage;
       }
@@ -132,8 +132,8 @@ function updateProgressiveRelease(state, progressive) {
 function pauseProgressiveRelease(state) {
   const nextState = jsonClone(state);
 
-  Object.values(nextState).forEach(pendingRelease => {
-    Object.values(pendingRelease).forEach(channel => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       if (channel.progressive) {
         channel.progressive.paused = true;
       }
@@ -146,8 +146,8 @@ function pauseProgressiveRelease(state) {
 function resumeProgressiveRelease(state) {
   const nextState = jsonClone(state);
 
-  Object.values(nextState).forEach(pendingRelease => {
-    Object.values(pendingRelease).forEach(channel => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       if (channel.progressive) {
         channel.progressive.paused = false;
       }
@@ -164,9 +164,9 @@ function resumeProgressiveRelease(state) {
 function cancelProgressiveRelease(state, previousRevision) {
   let nextState = jsonClone(state);
 
-  Object.keys(nextState).forEach(revision => {
+  Object.keys(nextState).forEach((revision) => {
     const pendingReleaseChannels = nextState[revision];
-    Object.keys(pendingReleaseChannels).forEach(channel => {
+    Object.keys(pendingReleaseChannels).forEach((channel) => {
       const pendingRelease = pendingReleaseChannels[channel];
 
       if (pendingRelease.progressive) {

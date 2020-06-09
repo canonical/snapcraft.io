@@ -8,13 +8,13 @@ import ReleasesTableRevisionCell from "./revisionCell";
 import ReleasesTableRow from "./row";
 
 // releases table row based on list of revisions (unrelated to channel map)
-const ReleasesTableRevisionsRow = props => {
+const ReleasesTableRevisionsRow = (props) => {
   const { currentTrack, risk, revisions, archs } = props;
   const showVersion = !isSameVersion(revisions);
 
   return (
     <ReleasesTableRow risk={risk} revisions={revisions}>
-      {archs.map(arch => {
+      {archs.map((arch) => {
         return (
           <ReleasesTableRevisionCell
             key={`${currentTrack}/${risk}/${arch}`}
@@ -34,13 +34,13 @@ ReleasesTableRevisionsRow.propTypes = {
 
   // state
   currentTrack: PropTypes.string.isRequired,
-  archs: PropTypes.array.isRequired
+  archs: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     currentTrack: state.currentTrack,
-    archs: getArchitectures(state)
+    archs: getArchitectures(state),
   };
 };
 

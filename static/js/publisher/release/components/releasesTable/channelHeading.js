@@ -9,7 +9,7 @@ import {
   getArchitectures,
   getPendingChannelMap,
   hasPendingRelease,
-  getBranches
+  getBranches,
 } from "../../selectors";
 import { Handle } from "../dnd";
 
@@ -27,7 +27,7 @@ import {
   STABLE,
   CANDIDATE,
   BETA,
-  EDGE
+  EDGE,
 } from "../../constants";
 
 import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
@@ -50,7 +50,7 @@ const compareRevisionsPerArch = (
   targetRevisionsByArch
 ) => {
   if (currentRevisionsByArch) {
-    return Object.keys(currentRevisionsByArch).every(arch => {
+    return Object.keys(currentRevisionsByArch).every((arch) => {
       return (
         targetRevisionsByArch &&
         targetRevisionsByArch[arch] &&
@@ -64,7 +64,7 @@ const compareRevisionsPerArch = (
 };
 
 // heading cell of releases table rows
-const ReleasesTableChannelHeading = props => {
+const ReleasesTableChannelHeading = (props) => {
   const {
     currentTrack,
     risk,
@@ -75,7 +75,7 @@ const ReleasesTableChannelHeading = props => {
     openBranches,
     availableBranches,
     drag,
-    revisions
+    revisions,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -123,7 +123,7 @@ const ReleasesTableChannelHeading = props => {
       targetChannelRisks = RISKS.slice(0, RISKS.indexOf(risk));
     }
 
-    targetChannels = targetChannelRisks.map(risk => {
+    targetChannels = targetChannelRisks.map((risk) => {
       return { channel: getChannelName(currentTrack, risk) };
     });
 
@@ -145,7 +145,7 @@ const ReleasesTableChannelHeading = props => {
     const branchRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
     let isParent = false;
     const targetChannelBranches = availableBranches
-      .filter(b => {
+      .filter((b) => {
         return (
           b.track === currentTrack &&
           channel !== getChannelName(currentTrack, b.risk, b.branch) &&
@@ -153,12 +153,12 @@ const ReleasesTableChannelHeading = props => {
             RISKS.indexOf(branchRisks[branchRisks.length - 1])
         );
       })
-      .map(b => {
+      .map((b) => {
         const channelName = getChannelName(currentTrack, b.risk, b.branch);
         isParent = channelName.indexOf(channel) > -1;
         return {
           channel: channelName,
-          display: ` ↳/${b.branch}`
+          display: ` ↳/${b.branch}`,
         };
       });
 
@@ -167,13 +167,13 @@ const ReleasesTableChannelHeading = props => {
     if (isParent) {
       targetChannels.push({
         channel: channel,
-        isDisabled: true
+        isDisabled: true,
       });
     }
     targetChannels = targetChannels.concat(targetChannelBranches);
 
     // filter out channels that have the same revisions already released
-    targetChannels.forEach(targetChannel => {
+    targetChannels.forEach((targetChannel) => {
       if (
         compareRevisionsPerArch(
           rowRevisions,
@@ -190,12 +190,12 @@ const ReleasesTableChannelHeading = props => {
     } else {
       // order the channel names
       const channelOrder = sortChannels(
-        targetChannels.map(channel => channel.channel)
+        targetChannels.map((channel) => channel.channel)
       ).list;
 
       // remap targetchannels to this new order
-      targetChannels = channelOrder.map(name => {
-        return targetChannels.find(t => t.channel === name);
+      targetChannels = channelOrder.map((name) => {
+        return targetChannels.find((t) => t.channel === name);
       });
     }
   }
@@ -251,7 +251,7 @@ const ReleasesTableChannelHeading = props => {
 
   const channelVersionTooltip = (
     <Fragment>
-      {Object.keys(versionsMap).map(version => {
+      {Object.keys(versionsMap).map((version) => {
         return (
           <span key={`tooltip-${channel}-${version}`}>
             {version}:{" "}
@@ -295,9 +295,9 @@ const ReleasesTableChannelHeading = props => {
     timeUntilExpiration = distanceInWordsToNow(end);
   }
 
-  const promoteRevisions = targetChannel => {
+  const promoteRevisions = (targetChannel) => {
     Object.values(rowRevisions).forEach(
-      revision =>
+      (revision) =>
         canBeReleased(revision) &&
         props.promoteRevision(revision, targetChannel)
     );
@@ -393,7 +393,7 @@ ReleasesTableChannelHeading.propTypes = {
   closeChannel: PropTypes.func.isRequired,
   promoteRevision: PropTypes.func.isRequired,
   toggleBranches: PropTypes.func.isRequired,
-  triggerGAEvent: PropTypes.func.isRequired
+  triggerGAEvent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, props) => {
@@ -401,7 +401,7 @@ const mapStateToProps = (state, props) => {
 
   const numberOfBranches = props.branch
     ? null
-    : availableBranches.filter(branch => branch.risk === props.risk).length;
+    : availableBranches.filter((branch) => branch.risk === props.risk).length;
 
   return {
     availableBranches,
@@ -413,17 +413,17 @@ const mapStateToProps = (state, props) => {
     pendingChannelMap: getPendingChannelMap(state),
     hasPendingRelease: (channel, arch) =>
       hasPendingRelease(state, channel, arch),
-    openBranches: state.branches
+    openBranches: state.branches,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     promoteRevision: (revision, targetChannel) =>
       dispatch(promoteRevision(revision, targetChannel)),
-    closeChannel: channel => dispatch(closeChannel(channel)),
-    toggleBranches: channel => dispatch(toggleBranches(channel)),
-    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
+    closeChannel: (channel) => dispatch(closeChannel(channel)),
+    toggleBranches: (channel) => dispatch(toggleBranches(channel)),
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps)),
   };
 };
 

@@ -8,7 +8,7 @@ function vimeo() {
 
   const vimeoReady = () => {
     const player = new window.Vimeo.Player(frame);
-    player.on("play", function() {
+    player.on("play", function () {
       player.setVolume(0);
     });
     player.play();

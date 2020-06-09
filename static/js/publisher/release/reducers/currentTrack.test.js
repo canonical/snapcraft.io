@@ -11,7 +11,7 @@ describe("currentTrack", () => {
     const track = "test";
     const setCurrentTrackAction = {
       type: SET_CURRENT_TRACK,
-      payload: { track }
+      payload: { track },
     };
 
     it("should set current track to given name", () => {

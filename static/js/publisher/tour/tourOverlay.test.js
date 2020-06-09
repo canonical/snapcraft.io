@@ -12,7 +12,7 @@ jest.mock("../../public/scroll-to");
 import {
   prepareSteps,
   isVisibleInDocument,
-  getMaskFromElements
+  getMaskFromElements,
 } from "./helpers";
 import { tourSkipped, tourFinished } from "./metricsEvents";
 import { animateScrollTo } from "../../public/scroll-to";
@@ -23,23 +23,23 @@ getMaskFromElements.mockReturnValue({
   top: 10,
   left: 20,
   bottom: 30,
-  right: 40
+  right: 40,
 });
 
-prepareSteps.mockImplementation(steps => steps);
+prepareSteps.mockImplementation((steps) => steps);
 
 describe("TourOverlay", () => {
   const steps = [
     {
       id: "test-step-1",
       title: "Test step 1",
-      position: "bottom-left"
+      position: "bottom-left",
     },
     {
       id: "test-step-2",
       title: "Test step 2",
-      position: "top-left"
-    }
+      position: "top-left",
+    },
   ];
 
   afterEach(() => {

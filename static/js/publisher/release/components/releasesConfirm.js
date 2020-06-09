@@ -7,7 +7,7 @@ import ReleasesConfirmActions from "./releasesConfirmActions";
 
 import {
   cancelPendingReleases,
-  setProgressiveReleasePercentage
+  setProgressiveReleasePercentage,
 } from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
 import { triggerGAEvent } from "../actions/gaEventTracking";
@@ -19,7 +19,7 @@ class ReleasesConfirm extends Component {
 
     this.state = {
       isLoading: false,
-      showDetails: false
+      showDetails: false,
     };
   }
 
@@ -27,7 +27,7 @@ class ReleasesConfirm extends Component {
     this.props.triggerGAEvent("click-revert");
     this.props.cancelPendingReleases();
     this.setState({
-      showDetails: false
+      showDetails: false,
     });
   }
 
@@ -35,7 +35,7 @@ class ReleasesConfirm extends Component {
     this.props.triggerGAEvent("click-save");
 
     this.setState({
-      isLoading: true
+      isLoading: true,
     });
 
     if (this.state.percentage && +this.state.percentage !== 100) {
@@ -45,14 +45,14 @@ class ReleasesConfirm extends Component {
     this.props.releaseRevisions().then(() => {
       this.setState({
         isLoading: false,
-        showDetails: false
+        showDetails: false,
       });
     });
   }
 
   onPercentageChange(event) {
     this.setState({
-      percentage: event.target.value
+      percentage: event.target.value,
     });
   }
 
@@ -61,7 +61,7 @@ class ReleasesConfirm extends Component {
       `click-${this.state.showDetails ? "hide" : "show"}-details`
     );
     this.setState({
-      showDetails: !this.state.showDetails
+      showDetails: !this.state.showDetails,
     });
   }
 
@@ -131,29 +131,26 @@ ReleasesConfirm.propTypes = {
   releaseRevisions: PropTypes.func.isRequired,
   cancelPendingReleases: PropTypes.func.isRequired,
   setProgressiveReleasePercentage: PropTypes.func.isRequired,
-  triggerGAEvent: PropTypes.func.isRequired
+  triggerGAEvent: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     updates: {
       ...getSeparatePendingReleases(state),
-      pendingCloses: state.pendingCloses
-    }
+      pendingCloses: state.pendingCloses,
+    },
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     releaseRevisions: () => dispatch(releaseRevisions()),
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
-    setProgressiveReleasePercentage: percentage =>
+    setProgressiveReleasePercentage: (percentage) =>
       dispatch(setProgressiveReleasePercentage(percentage)),
-    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReleasesConfirm);
+export default connect(mapStateToProps, mapDispatchToProps)(ReleasesConfirm);

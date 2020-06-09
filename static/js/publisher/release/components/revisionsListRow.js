@@ -12,13 +12,13 @@ import { toggleRevision } from "../actions/channelMap";
 
 import {
   getSelectedRevisions,
-  isProgressiveReleaseEnabled
+  isProgressiveReleaseEnabled,
 } from "../selectors";
 
 import RevisionLabel from "./revisionLabel";
 import RevisionsListRowProgressive from "./revisionsListRowProgressive";
 
-const RevisionsListRow = props => {
+const RevisionsListRow = (props) => {
   const {
     revision,
     isSelectable,
@@ -28,7 +28,7 @@ const RevisionsListRow = props => {
     isActive,
     isProgressiveReleaseEnabled,
     showProgressive,
-    progressiveBeingCancelled
+    progressiveBeingCancelled,
   } = props;
 
   const releasable = canBeReleased(revision);
@@ -56,9 +56,9 @@ const RevisionsListRow = props => {
     item: {
       revisions: [revision],
       architectures: revision.architectures,
-      type: DND_ITEM_REVISIONS
+      type: DND_ITEM_REVISIONS,
     },
-    canDrag: canDrag
+    canDrag: canDrag,
   });
 
   const id = `revision-check-${revision.revision}`;
@@ -119,15 +119,14 @@ const RevisionsListRow = props => {
       )}
       {canShowProgressiveReleases && (
         <td>
-          {revision.release &&
-            showProgressive && (
-              <RevisionsListRowProgressive
-                setDraggable={setDraggable}
-                channel={channel}
-                architecture={revision.release.architecture}
-                revision={revision}
-              />
-            )}
+          {revision.release && showProgressive && (
+            <RevisionsListRowProgressive
+              setDraggable={setDraggable}
+              channel={channel}
+              architecture={revision.release.architecture}
+              revision={revision}
+            />
+          )}
         </td>
       )}
       {progressiveBeingCancelled && (
@@ -138,22 +137,21 @@ const RevisionsListRow = props => {
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
         {isPending && <em>pending release</em>}
-        {!isPending &&
-          !progressiveBeingCancelled && (
+        {!isPending && !progressiveBeingCancelled && (
+          <span
+            className="p-tooltip p-tooltip--btm-center"
+            aria-describedby={`revision-uploaded-${revision.revision}`}
+          >
+            {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
             <span
-              className="p-tooltip p-tooltip--btm-center"
-              aria-describedby={`revision-uploaded-${revision.revision}`}
+              className="p-tooltip__message u-align--center"
+              role="tooltip"
+              id={`revision-uploaded-${revision.revision}`}
             >
-              {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
-              <span
-                className="p-tooltip__message u-align--center"
-                role="tooltip"
-                id={`revision-uploaded-${revision.revision}`}
-              >
-                {format(revisionDate, "YYYY-MM-DD HH:mm")}
-              </span>
+              {format(revisionDate, "YYYY-MM-DD HH:mm")}
             </span>
-          )}
+          </span>
+        )}
       </td>
     </tr>
   );
@@ -175,23 +173,20 @@ RevisionsListRow.propTypes = {
   isProgressiveReleaseEnabled: PropTypes.bool,
 
   // actions
-  toggleRevision: PropTypes.func.isRequired
+  toggleRevision: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     selectedRevisions: getSelectedRevisions(state),
-    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state)
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    toggleRevision: revision => dispatch(toggleRevision(revision))
+    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RevisionsListRow);
+export default connect(mapStateToProps, mapDispatchToProps)(RevisionsListRow);

@@ -6,7 +6,7 @@ function license(form) {
 function initLicenses(inputs) {
   function licenseTypeChange() {
     var type = this.value;
-    inputs.forEach(item => {
+    inputs.forEach((item) => {
       if (item.id.includes(type)) {
         item.style.display = "block";
       } else {

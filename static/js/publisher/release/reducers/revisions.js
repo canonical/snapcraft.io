@@ -5,7 +5,7 @@ export default function revisions(state = {}, action) {
     case UPDATE_REVISIONS:
       return {
         ...state,
-        ...action.payload.revisions
+        ...action.payload.revisions,
       };
     default:
       return state;

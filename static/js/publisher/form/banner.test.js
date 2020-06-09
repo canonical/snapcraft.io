@@ -25,24 +25,24 @@ describe("Banner", () => {
       ).toEqual("banner.png");
     });
 
-    it("should set the background if image added", done => {
+    it("should set the background if image added", (done) => {
       const { container } = render(<Banner />);
 
       window.URL = {
         createObjectURL: () => {
           return "banner.png";
-        }
+        },
       };
 
       const fileContents = "test";
       const file = new File([fileContents], "banner.png", {
-        type: "image/png"
+        type: "image/png",
       });
 
       const input = container.querySelector(`[name="banner-image"]`);
 
       Object.defineProperty(input, "files", {
-        value: [file]
+        value: [file],
       });
 
       fireEvent.change(input);
@@ -58,11 +58,11 @@ describe("Banner", () => {
       }, 500);
     });
 
-    it("should show an error if a restriction isn't met", done => {
+    it("should show an error if a restriction isn't met", (done) => {
       const { container } = render(
         <Banner
           restrictions={{
-            accept: ["image/jpeg"]
+            accept: ["image/jpeg"],
           }}
         />
       );
@@ -70,18 +70,18 @@ describe("Banner", () => {
       window.URL = {
         createObjectURL: () => {
           return "banner.png";
-        }
+        },
       };
 
       const fileContents = "test";
       const file = new File([fileContents], "banner.png", {
-        type: "text/html"
+        type: "text/html",
       });
 
       const input = container.querySelector(`[name="banner-image"]`);
 
       Object.defineProperty(input, "files", {
-        value: [file]
+        value: [file],
       });
 
       fireEvent.change(input);
@@ -99,7 +99,7 @@ describe("Banner", () => {
       const { container } = render(
         <Banner
           bannerImage={{
-            url: "banner.png"
+            url: "banner.png",
           }}
           updateImageState={cb}
         />
@@ -118,7 +118,7 @@ describe("Banner", () => {
       const { container } = render(
         <Banner
           bannerImage={{
-            url: "banner.png"
+            url: "banner.png",
           }}
           updateImageState={cb}
         />
@@ -127,7 +127,7 @@ describe("Banner", () => {
       const backgroundImage = container.querySelector(backgroundSelector);
 
       fireEvent.keyDown(backgroundImage, {
-        key: "Backspace"
+        key: "Backspace",
       });
 
       expect(cb.mock.calls.length).toEqual(1);

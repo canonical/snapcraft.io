@@ -28,7 +28,7 @@ class MediaItem extends React.Component {
         className={classes.join(" ")}
         tabIndex="0"
         onKeyDown={this.keyboardEvent}
-        ref={item => (this.mediaItem = item)}
+        ref={(item) => (this.mediaItem = item)}
       >
         <span
           role="button"
@@ -47,7 +47,7 @@ MediaItem.propTypes = {
   url: PropTypes.string,
   status: PropTypes.string,
   overflow: PropTypes.bool,
-  markForDeletion: PropTypes.func
+  markForDeletion: PropTypes.func,
 };
 
 MediaItem.displayName = "MediaItem";

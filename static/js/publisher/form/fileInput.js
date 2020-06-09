@@ -21,7 +21,7 @@ class FileInput extends React.Component {
     this.state = {
       isDragging: false,
       canDrop: false,
-      overLimit: false
+      overLimit: false,
     };
   }
 
@@ -77,11 +77,11 @@ class FileInput extends React.Component {
 
   fileChangedHandler() {
     const { fileChangedCallback, restrictions } = this.props;
-    const files = Array.from(this.input.files).map(file =>
+    const files = Array.from(this.input.files).map((file) =>
       validateRestrictions(file, restrictions)
     );
 
-    Promise.all(files).then(values => {
+    Promise.all(files).then((values) => {
       fileChangedCallback(values);
     });
   }
@@ -100,18 +100,18 @@ class FileInput extends React.Component {
       if (dataTransfer.items.length > 1) {
         this.setState({
           isDragging: true,
-          overLimit: true
+          overLimit: true,
         });
       } else {
         this.setState({
           isDragging: true,
           canDrop: false,
-          overLimit: false
+          overLimit: false,
         });
 
         if (e.target === this.holder) {
           this.setState({
-            canDrop: true
+            canDrop: true,
           });
         }
       }
@@ -122,7 +122,7 @@ class FileInput extends React.Component {
     this.setState({
       isDragging: false,
       canDrop: false,
-      overLimit: false
+      overLimit: false,
     });
   }
 
@@ -148,7 +148,7 @@ class FileInput extends React.Component {
     if (dataTransfer.items.length === 1) {
       this.setState({
         isDragging: false,
-        canDrop: false
+        canDrop: false,
       });
 
       if (e.target === this.holder) {
@@ -184,7 +184,7 @@ class FileInput extends React.Component {
 
     return (
       <div
-        ref={el => (this.holder = el)}
+        ref={(el) => (this.holder = el)}
         className={localClassName.join(" ")}
         onClick={this.fileClickHandler}
         onKeyDown={this.keyboardEventHandler}
@@ -202,11 +202,11 @@ FileInput.defaultProps = {
   inputId: "file-upload",
   fileChangedCallback: () => {},
   restrictions: {
-    accept: []
+    accept: [],
   },
   active: true,
   isSmall: false,
-  noFocus: false
+  noFocus: false,
 };
 
 FileInput.propTypes = {
@@ -216,11 +216,11 @@ FileInput.propTypes = {
   inputId: PropTypes.string,
   fileChangedCallback: PropTypes.func,
   restrictions: PropTypes.shape({
-    accept: PropTypes.arrayOf(PropTypes.string)
+    accept: PropTypes.arrayOf(PropTypes.string),
   }),
   active: PropTypes.bool,
   isSmall: PropTypes.bool,
-  noFocus: PropTypes.bool
+  noFocus: PropTypes.bool,
 };
 
 export { FileInput as default };

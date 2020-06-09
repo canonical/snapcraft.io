@@ -29,7 +29,7 @@ function initSnapButtonsPicker() {
   }
 
   if (languagePicker) {
-    languagePicker.addEventListener("change", function() {
+    languagePicker.addEventListener("change", function () {
       showLanguage(this.elements["language"].value);
     });
   }
@@ -78,13 +78,13 @@ const getCurrentFormState = (buttonRadios, optionButtons) => {
   const state = {};
 
   // get state of store button radio
-  let checked = buttonRadios.filter(b => b.checked);
+  let checked = buttonRadios.filter((b) => b.checked);
   if (checked.length > 0) {
     state.button = checked[0].value;
   }
 
   // get state of options checkboxes
-  optionButtons.forEach(checkbox => {
+  optionButtons.forEach((checkbox) => {
     state[checkbox.name] = checkbox.checked;
   });
 
@@ -98,14 +98,14 @@ function initEmbeddedCardPicker(options) {
 
   let state = {
     ...getCurrentFormState(buttonRadios, optionButtons),
-    frameHeight: 320
+    frameHeight: 320,
   };
 
-  const renderCode = state => {
+  const renderCode = (state) => {
     codeElement.innerHTML = getCardEmbedHTML(snapName, state);
   };
 
-  const render = state => {
+  const render = (state) => {
     previewFrame.src = getCardPath(snapName, state);
     renderCode(state);
   };
@@ -117,27 +117,27 @@ function initEmbeddedCardPicker(options) {
   const updateState = () => {
     state = {
       ...state,
-      ...getFormState()
+      ...getFormState(),
     };
     render(state);
   };
 
-  buttonRadios.forEach(radio => {
-    radio.addEventListener("change", e => {
+  buttonRadios.forEach((radio) => {
+    radio.addEventListener("change", (e) => {
       if (e.target.checked) {
         updateState();
       }
     });
   });
 
-  optionButtons.forEach(checkbox => {
+  optionButtons.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       updateState();
     });
   });
 
   if (buttonRadios.length > 0) {
-    buttonRadios.filter(r => r.value === "black")[0].checked = true;
+    buttonRadios.filter((r) => r.value === "black")[0].checked = true;
   }
 
   // update the frame (but only if it's visible)
@@ -158,7 +158,7 @@ function initEmbeddedCardPicker(options) {
       if (height !== state.frameHeight) {
         state = {
           ...state,
-          frameHeight: height
+          frameHeight: height,
         };
         // don't re-render the iframe not to trigger load again
         previewFrame.style.height = height + "px";
@@ -262,15 +262,15 @@ function initGitHubBadgePicker(options) {
     notificationElement,
     badgeCodeElement,
     optionsUncheckedElement,
-    isTrending
+    isTrending,
   } = options;
   const optionButtons = [].slice.call(options.optionButtons);
 
   let state = {
-    ...getCurrentFormState([], optionButtons)
+    ...getCurrentFormState([], optionButtons),
   };
 
-  const render = state => {
+  const render = (state) => {
     if (state["show-trending"] && !isTrending) {
       notificationElement.classList.remove("u-hide");
     } else {
@@ -297,12 +297,12 @@ function initGitHubBadgePicker(options) {
   const updateState = () => {
     state = {
       ...state,
-      ...getFormState()
+      ...getFormState(),
     };
     render(state);
   };
 
-  optionButtons.forEach(checkbox => {
+  optionButtons.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       updateState();
     });

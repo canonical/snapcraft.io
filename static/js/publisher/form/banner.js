@@ -17,7 +17,7 @@ class Banner extends React.Component {
     this.state = {
       bannerImage: this.props.bannerImage,
       focused: false,
-      errors: {}
+      errors: {},
     };
   }
 
@@ -28,8 +28,8 @@ class Banner extends React.Component {
     if (file.errors) {
       this.setState({
         errors: {
-          [file.name]: file.errors
-        }
+          [file.name]: file.errors,
+        },
       });
     } else {
       const url = URL.createObjectURL(file);
@@ -37,8 +37,8 @@ class Banner extends React.Component {
       this.setState({
         errors: {},
         bannerImage: {
-          url: url
-        }
+          url: url,
+        },
       });
 
       updateImageState({
@@ -46,7 +46,7 @@ class Banner extends React.Component {
         file,
         name: file.name,
         status: "new",
-        type: "banner"
+        type: "banner",
       });
     }
   }
@@ -55,7 +55,7 @@ class Banner extends React.Component {
     const { updateImageState } = this.props;
 
     this.setState({
-      bannerImage: {}
+      bannerImage: {},
     });
 
     updateImageState(null);
@@ -70,7 +70,7 @@ class Banner extends React.Component {
   toggleFocus() {
     const { focused } = this.state;
     this.setState({
-      focused: !focused
+      focused: !focused,
     });
   }
 
@@ -80,7 +80,7 @@ class Banner extends React.Component {
       return (
         <div className="p-notification--negative">
           <p className="p-notification__response">
-            {Object.keys(errors).map(fileName => (
+            {Object.keys(errors).map((fileName) => (
               <Fragment key={`errors-${fileName}`}>
                 {fileName}
                 &nbsp;
@@ -217,15 +217,15 @@ class Banner extends React.Component {
 Banner.defaultProps = {
   bannerImage: {},
   restrictions: {},
-  updateImageState: () => {}
+  updateImageState: () => {},
 };
 
 Banner.propTypes = {
   bannerImage: PropTypes.shape({
-    url: PropTypes.string
+    url: PropTypes.string,
   }),
   restrictions: PropTypes.object,
-  updateImageState: PropTypes.func
+  updateImageState: PropTypes.func,
 };
 
 export { Banner as default };

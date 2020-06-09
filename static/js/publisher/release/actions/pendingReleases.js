@@ -23,8 +23,8 @@ export function releaseRevision(revision, channel, progressive) {
       revision.architectures,
       channel
     )
-      .filter(release => release.revision !== revision.revision)
-      .map(release => revisions[release.revision]);
+      .filter((release) => release.revision !== revision.revision)
+      .map((release) => revisions[release.revision]);
 
     let revisionToRelease = revision;
 
@@ -35,8 +35,8 @@ export function releaseRevision(revision, channel, progressive) {
 
       // If there's already a "null" release in staging that is progressive
       // assign that value to subsequent progressive releases
-      Object.keys(pendingReleases).forEach(revision => {
-        Object.keys(pendingReleases[revision]).forEach(channel => {
+      Object.keys(pendingReleases).forEach((revision) => {
+        Object.keys(pendingReleases[revision]).forEach((channel) => {
           const release = pendingReleases[revision][channel];
 
           if (release.progressive && percentage === 100) {
@@ -50,7 +50,7 @@ export function releaseRevision(revision, channel, progressive) {
       // updated, or the progressive object is removed completely
       progressive = {
         percentage: percentage,
-        paused: false
+        paused: false,
       };
     }
 
@@ -60,8 +60,8 @@ export function releaseRevision(revision, channel, progressive) {
         revision: revisionToRelease,
         channel,
         progressive,
-        previousRevisions
-      }
+        previousRevisions,
+      },
     });
   };
 }
@@ -70,8 +70,8 @@ export function setProgressiveReleasePercentage(percentage) {
   return {
     type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
-      percentage
-    }
+      percentage,
+    },
   };
 }
 
@@ -79,20 +79,20 @@ export function updateProgressiveReleasePercentage(percentage) {
   return {
     type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
-      percentage
-    }
+      percentage,
+    },
   };
 }
 
 export function pauseProgressiveRelease() {
   return {
-    type: PAUSE_PROGRESSIVE_RELEASE
+    type: PAUSE_PROGRESSIVE_RELEASE,
   };
 }
 
 export function resumeProgressiveRelease() {
   return {
-    type: RESUME_PROGRESSIVE_RELEASE
+    type: RESUME_PROGRESSIVE_RELEASE,
   };
 }
 
@@ -100,8 +100,8 @@ export function cancelProgressiveRelease(previousRevision) {
   return {
     type: CANCEL_PROGRESSIVE_RELEASE,
     payload: {
-      previousRevision
-    }
+      previousRevision,
+    },
   };
 }
 
@@ -110,7 +110,7 @@ export function promoteRevision(revision, channel) {
     const pendingChannelMap = getPendingChannelMap(getState());
 
     // compare given revision with released revisions in this arch and channel
-    const isAlreadyReleased = revision.architectures.every(arch => {
+    const isAlreadyReleased = revision.architectures.every((arch) => {
       const releasedRevision =
         pendingChannelMap[channel] && pendingChannelMap[channel][arch];
 
@@ -131,7 +131,7 @@ export function promoteChannel(channel, targetChannel) {
     const pendingInChannel = pendingChannelMap[channel];
 
     if (pendingInChannel) {
-      Object.values(pendingInChannel).forEach(revision => {
+      Object.values(pendingInChannel).forEach((revision) => {
         dispatch(promoteRevision(revision, targetChannel));
       });
     }
@@ -139,7 +139,7 @@ export function promoteChannel(channel, targetChannel) {
 }
 
 export function undoRelease(revision, channel) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(
       triggerGAEvent(
         "click-cancel-promotion",
@@ -148,13 +148,13 @@ export function undoRelease(revision, channel) {
     );
     return dispatch({
       type: UNDO_RELEASE,
-      payload: { revision, channel }
+      payload: { revision, channel },
     });
   };
 }
 
 export function cancelPendingReleases() {
   return {
-    type: CANCEL_PENDING_RELEASES
+    type: CANCEL_PENDING_RELEASES,
   };
 }

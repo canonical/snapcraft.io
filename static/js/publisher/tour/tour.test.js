@@ -13,8 +13,8 @@ jest.mock("./tourOverlay", () => jest.fn().mockReturnValue(null));
 describe("Tour", () => {
   const steps = [
     {
-      id: "test-step"
-    }
+      id: "test-step",
+    },
   ];
 
   afterEach(cleanup);
@@ -37,7 +37,7 @@ describe("Tour", () => {
 
       expect(TourOverlay).toBeCalledWith(
         expect.objectContaining({
-          steps
+          steps,
         }),
         expect.any(Object)
       );
@@ -50,7 +50,7 @@ describe("Tour", () => {
 
       expect(TourOverlay).toBeCalledWith(
         expect.objectContaining({
-          steps
+          steps,
         }),
         expect.any(Object)
       );

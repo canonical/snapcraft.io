@@ -9,14 +9,14 @@ import {
   prepareLineData,
   prepareScales,
   prepareAnnotationsData,
-  prepareAxis
+  prepareAxis,
 } from "./dataProcessing";
 import {
   renderXAxis,
   renderYAxis,
   renderArea,
   renderLines,
-  renderAnnotations
+  renderAnnotations,
 } from "./rendering";
 import { tooltips } from "./tooltips";
 
@@ -50,7 +50,7 @@ class ActiveDevicesGraph {
         top: 20,
         right: 0,
         bottom: 30,
-        left: 50
+        left: 50,
       },
       options.margin || {}
     );
@@ -60,7 +60,7 @@ class ActiveDevicesGraph {
         top: 0,
         right: 0,
         bottom: 16,
-        left: 16
+        left: 16,
       },
       options.padding || {}
     );
@@ -89,16 +89,16 @@ class ActiveDevicesGraph {
 
     this.lines = line()
       .curve(curveMonotoneX)
-      .x(d => this.xScale(d.date))
-      .y(d => this.yScale(d.value));
+      .x((d) => this.xScale(d.date))
+      .y((d) => this.yScale(d.value));
 
     this.areas = area()
       .curve(curveMonotoneX)
-      .x(d => this.xScale(d.data.date))
-      .y0(d => this.yScale(d[0]))
-      .y1(d => this.yScale(d[1]));
+      .x((d) => this.xScale(d.data.date))
+      .y0((d) => this.yScale(d[0]))
+      .y1((d) => this.yScale(d[1]));
 
-    this.shortValue = number =>
+    this.shortValue = (number) =>
       number < 1000 ? number : format(".2s")(number);
 
     this._prepareSVG();
@@ -112,10 +112,7 @@ class ActiveDevicesGraph {
 
     const resize = debounce(() => {
       if (this.hasRendered) {
-        this._prepareSVG()
-          ._prepareData()
-          .render()
-          .enableTooltip();
+        this._prepareSVG()._prepareData().render().enableTooltip();
       }
     }, 100);
 

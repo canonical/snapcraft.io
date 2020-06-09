@@ -9,19 +9,19 @@ class MultiSelect extends React.Component {
     // The available values should be the full list minus the current values
     // sorted by name
     const values = this.props.values
-      .filter(value => !this.props.value.includes(value.key))
+      .filter((value) => !this.props.value.includes(value.key))
       .sort(this.sortByName);
 
     this.state = {
       // Get the correct objects for the currentValues as selected
-      selected: this.props.values.filter(value =>
+      selected: this.props.values.filter((value) =>
         this.props.value.includes(value.key)
       ),
       values: values,
       searchTerm: "",
       searchResults: values,
       showSearch: false,
-      highlightedOption: null
+      highlightedOption: null,
     };
 
     // Bind all the things
@@ -46,18 +46,18 @@ class MultiSelect extends React.Component {
    * Add it back into the 'values' list.
    */
   removeItem(key) {
-    const toRemove = this.state.selected.filter(item => item.key === key)[0];
+    const toRemove = this.state.selected.filter((item) => item.key === key)[0];
     const newValues = this.state.values.slice(0);
     newValues.push(toRemove);
     newValues.sort(this.sortByName);
-    const newSelected = this.state.selected.filter(item => item.key !== key);
+    const newSelected = this.state.selected.filter((item) => item.key !== key);
 
     this.setState(
       {
         values: newValues,
         selected: newSelected,
         // Preserve the filtered list in the dropdown
-        searchResults: this.filterByTerm(newValues)
+        searchResults: this.filterByTerm(newValues),
       },
       this.props.updateHandler.bind(this, this.state.selected)
     );
@@ -71,7 +71,7 @@ class MultiSelect extends React.Component {
    */
   clickItem(key) {
     this.setState({
-      highlightedOption: null
+      highlightedOption: null,
     });
     this.addItem(key);
   }
@@ -82,10 +82,10 @@ class MultiSelect extends React.Component {
    */
   addItem(key) {
     // Get the object based on the key
-    const toAdd = this.state.values.filter(item => item.key === key)[0];
+    const toAdd = this.state.values.filter((item) => item.key === key)[0];
     const newSelected = this.state.selected.slice(0);
     newSelected.push(toAdd);
-    const newValues = this.state.values.filter(item => item.key !== key);
+    const newValues = this.state.values.filter((item) => item.key !== key);
     this.searchInput.value = "";
 
     this.setState(
@@ -94,7 +94,7 @@ class MultiSelect extends React.Component {
         selected: newSelected,
         searchTerm: "",
         // Preserve the filtered list in the dropdown
-        searchResults: newValues
+        searchResults: newValues,
       },
       this.props.updateHandler.bind(this, this.state.selected)
     );
@@ -110,7 +110,7 @@ class MultiSelect extends React.Component {
   filterByTerm(values, searchTerm) {
     searchTerm = searchTerm || this.state.searchTerm;
     return values.filter(
-      item =>
+      (item) =>
         item.name.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
         item.key.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
@@ -133,7 +133,7 @@ class MultiSelect extends React.Component {
       searchResults: searchResults,
       searchTerm: searchTerm,
       showSearch: true,
-      highlightedOption: highlighted
+      highlightedOption: highlighted,
     });
   }
 
@@ -144,7 +144,7 @@ class MultiSelect extends React.Component {
     this.searchInput.focus();
     this.setState({
       showSearch: true,
-      highlightedOption: this.state.highlightedOption || 0
+      highlightedOption: this.state.highlightedOption || 0,
     });
   }
 
@@ -200,7 +200,7 @@ class MultiSelect extends React.Component {
       }
 
       this.setState({
-        highlightedOption: highlighted
+        highlightedOption: highlighted,
       });
     }
   }
@@ -219,7 +219,7 @@ class MultiSelect extends React.Component {
         values: newValues,
         selected: [],
         // Preserve the filtered list in the dropdown
-        searchResults: newValues
+        searchResults: newValues,
       },
       () => {
         this.props.updateHandler.bind(this, this.state.selected);
@@ -230,7 +230,7 @@ class MultiSelect extends React.Component {
 
   blur() {
     this.setState({
-      showSearch: false
+      showSearch: false,
     });
 
     this.props.updateHandler(this.state.selected);
@@ -322,7 +322,7 @@ class MultiSelect extends React.Component {
   }
 
   renderItems() {
-    const items = this.state.selected.map(value => (
+    const items = this.state.selected.map((value) => (
       <span
         className="p-multiselect__item"
         data-key={value.key}
@@ -345,7 +345,7 @@ class MultiSelect extends React.Component {
         type="text"
         className="p-multiselect__input"
         onKeyUp={this.search}
-        ref={input => {
+        ref={(input) => {
           this.searchInput = input;
         }}
       />
@@ -355,7 +355,7 @@ class MultiSelect extends React.Component {
   render() {
     return (
       <div
-        ref={el => {
+        ref={(el) => {
           this.wrapperEl = el;
         }}
       >
@@ -379,7 +379,7 @@ class MultiSelect extends React.Component {
 MultiSelect.propTypes = {
   value: PropTypes.array,
   values: PropTypes.array,
-  updateHandler: PropTypes.func
+  updateHandler: PropTypes.func,
 };
 
 /**
@@ -388,8 +388,8 @@ MultiSelect.propTypes = {
 function updateHandler(input, delimiter) {
   const _input = input;
   const _delimiter = delimiter;
-  return function(values) {
-    _input.value = values.map(item => item.key).join(_delimiter);
+  return function (values) {
+    _input.value = values.map((item) => item.key).join(_delimiter);
     const changeEvent = new Event("change", { bubbles: true });
 
     _input.dispatchEvent(changeEvent);
@@ -425,7 +425,7 @@ function init(selector, values, delimiter = ",") {
 
     // If a currentValue exists, trim the whitespace
     if (currentValue.length > 0) {
-      currentValue = currentValue.map(val => val.trim());
+      currentValue = currentValue.map((val) => val.trim());
     } else {
       currentValue = null;
     }

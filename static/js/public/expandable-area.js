@@ -13,7 +13,7 @@ export default function initExpandableArea(
   );
 
   if (showMoreContainer && showMoreContainer.length > 0) {
-    showMoreContainer.forEach(el => {
+    showMoreContainer.forEach((el) => {
       const fadeEl = el.querySelector(".p-show-more__fade");
       const linkEl = el.querySelector(".p-show-more__link");
 
@@ -28,7 +28,7 @@ export default function initExpandableArea(
       }
 
       if (fadeEl && linkEl) {
-        linkEl.addEventListener("click", function(event) {
+        linkEl.addEventListener("click", function (event) {
           event.preventDefault();
 
           fadeEl.classList.add("u-hide");

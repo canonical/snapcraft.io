@@ -10,7 +10,7 @@ describe("FileInput", () => {
         className="test"
         inputName="test-input"
         restrictions={{
-          accept: ["image/jpeg"]
+          accept: ["image/jpeg"],
         }}
       >
         <span>bewton</span>
@@ -33,7 +33,7 @@ describe("FileInput", () => {
         className="test"
         inputName="test-input"
         restrictions={{
-          accept: ["image/jpeg"]
+          accept: ["image/jpeg"],
         }}
       >
         <span>bewton</span>
@@ -49,8 +49,8 @@ describe("FileInput", () => {
 
     fireEvent.change(input, {
       target: {
-        files: [file]
-      }
+        files: [file],
+      },
     });
 
     expect(mock.mock.calls.length).toEqual(1);
@@ -77,7 +77,7 @@ describe("FileInput", () => {
     render(<FileInput />);
 
     const dragRelatedCalls = addEventListener.mock.calls.filter(
-      call => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1
+      (call) => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1
     );
 
     expect(dragRelatedCalls.length).toEqual(3);
@@ -91,7 +91,7 @@ describe("FileInput", () => {
     unmount();
 
     const dragRelatedCalls = removeEventListener.mock.calls.filter(
-      call => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1
+      (call) => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1
     );
 
     expect(dragRelatedCalls.length).toEqual(3);
@@ -105,9 +105,9 @@ describe("FileInput", () => {
       target: {
         dataTransfer: {
           types: ["Files"],
-          items: [1]
-        }
-      }
+          items: [1],
+        },
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(true);
   });
@@ -120,17 +120,17 @@ describe("FileInput", () => {
       target: {
         dataTransfer: {
           types: ["Files"],
-          items: [1]
-        }
-      }
+          items: [1],
+        },
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(true);
     fireEvent.drop(container, {
       target: {
         dataTransfer: {
-          items: [1]
-        }
-      }
+          items: [1],
+        },
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(false);
   });
@@ -143,20 +143,20 @@ describe("FileInput", () => {
       target: {
         dataTransfer: {
           types: ["Files"],
-          items: [1]
-        }
-      }
+          items: [1],
+        },
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(true);
     const target = input.parentNode;
     Object.defineProperties(target, {
       dataTransfer: {
         items: [1],
-        files: [new File(["test"], "test.jpg", { type: "image/jpeg" })]
-      }
+        files: [new File(["test"], "test.jpg", { type: "image/jpeg" })],
+      },
     });
     fireEvent.dragOver(input, {
-      target: target
+      target: target,
     });
     expect(input.classList.contains("is-dragging")).toEqual(true);
     expect(input.classList.contains("can-drop")).toEqual(true);
@@ -170,15 +170,15 @@ describe("FileInput", () => {
       target: {
         dataTransfer: {
           types: ["Files"],
-          items: [1]
-        }
-      }
+          items: [1],
+        },
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(true);
     fireEvent.dragExit(input, {
       target: {
-        relatedTarget: null
-      }
+        relatedTarget: null,
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(false);
     expect(input.classList.contains("can-drop")).toEqual(false);
@@ -192,9 +192,9 @@ describe("FileInput", () => {
       target: {
         dataTransfer: {
           types: ["Files"],
-          items: [1, 2]
-        }
-      }
+          items: [1, 2],
+        },
+      },
     });
     expect(input.classList.contains("is-dragging")).toEqual(true);
     expect(input.classList.contains("over-limit")).toEqual(true);

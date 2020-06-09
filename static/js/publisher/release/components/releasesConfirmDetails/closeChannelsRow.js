@@ -12,7 +12,7 @@ const CloseChannelsRow = ({ channels }) => {
       <span>Close</span>
       <span>
         {group
-          .map(channel => <b key={channel}>{channel}</b>)
+          .map((channel) => <b key={channel}>{channel}</b>)
           .reduce((acc, el) => {
             return acc === null ? [el] : [...acc, ", ", el];
           }, null)}
@@ -30,7 +30,7 @@ const CloseChannelsRow = ({ channels }) => {
 };
 
 CloseChannelsRow.propTypes = {
-  channels: PropTypes.array
+  channels: PropTypes.array,
 };
 
 export default CloseChannelsRow;

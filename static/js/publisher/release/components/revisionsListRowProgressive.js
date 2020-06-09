@@ -7,7 +7,7 @@ import {
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
-  cancelProgressiveRelease
+  cancelProgressiveRelease,
 } from "../actions/pendingReleases";
 
 import { getProgressiveState } from "../selectors";
@@ -25,7 +25,7 @@ const RevisionsListRowProgressive = ({
   cancelProgressiveRelease,
   progressiveState,
   previousRevision,
-  pendingProgressiveState
+  pendingProgressiveState,
 }) => {
   let showProgressivePause = false;
   let showProgressiveResume = false;
@@ -68,7 +68,7 @@ const RevisionsListRowProgressive = ({
     setDraggable(false);
   };
 
-  const handleProgressiveChange = percentage => {
+  const handleProgressiveChange = (percentage) => {
     if (!pendingProgressiveState) {
       releaseRevision(revision, channel, progressiveState);
     }
@@ -165,33 +165,33 @@ RevisionsListRowProgressive.propTypes = {
   updateProgressiveReleasePercentage: PropTypes.func.isRequired,
   pauseProgressiveRelease: PropTypes.func.isRequired,
   resumeProgressiveRelease: PropTypes.func.isRequired,
-  cancelProgressiveRelease: PropTypes.func.isRequired
+  cancelProgressiveRelease: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, { channel, architecture }) => {
   const [
     progressiveState,
     previousRevision,
-    pendingProgressiveState
+    pendingProgressiveState,
   ] = getProgressiveState(state, channel, architecture);
 
   return {
     progressiveState,
     previousRevision,
-    pendingProgressiveState
+    pendingProgressiveState,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     releaseRevision: (revision, channel, progressive) =>
       dispatch(releaseRevision(revision, channel, progressive)),
-    updateProgressiveReleasePercentage: percentage =>
+    updateProgressiveReleasePercentage: (percentage) =>
       dispatch(updateProgressiveReleasePercentage(percentage)),
     pauseProgressiveRelease: () => dispatch(pauseProgressiveRelease()),
     resumeProgressiveRelease: () => dispatch(resumeProgressiveRelease()),
-    cancelProgressiveRelease: previousRevision =>
-      dispatch(cancelProgressiveRelease(previousRevision))
+    cancelProgressiveRelease: (previousRevision) =>
+      dispatch(cancelProgressiveRelease(previousRevision)),
   };
 };
 

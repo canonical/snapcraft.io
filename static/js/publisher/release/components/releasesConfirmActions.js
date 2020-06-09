@@ -6,7 +6,7 @@ const ReleasesConfirmActions = ({
   cancelPendingReleases,
   isApplyEnabled,
   applyPendingReleases,
-  isLoading
+  isLoading,
 }) => (
   <div className="p-releases-confirm__buttons">
     <button
@@ -31,7 +31,7 @@ ReleasesConfirmActions.propTypes = {
   cancelPendingReleases: PropTypes.func,
   isApplyEnabled: PropTypes.bool,
   applyPendingReleases: PropTypes.func,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
 };
 
 export default ReleasesConfirmActions;

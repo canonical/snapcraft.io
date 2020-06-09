@@ -10,7 +10,7 @@ function parseChannel(channelString, options) {
   const format = {
     track: false,
     risk: false,
-    branch: false
+    branch: false,
   };
   const channelArr = ["latest", undefined, "_base"];
 
@@ -49,7 +49,7 @@ function parseChannel(channelString, options) {
     track: channelArr[0],
     risk: channelArr[1],
     branch: channelArr[2],
-    format: format
+    format: format,
   };
 }
 
@@ -75,11 +75,11 @@ function parseChannel(channelString, options) {
 function createChannelTree(channelList) {
   const tracks = {};
 
-  channelList.forEach(channel => {
+  channelList.forEach((channel) => {
     if (!tracks[channel.track]) {
       tracks[channel.track] = {
         name: channel.track,
-        risks: {}
+        risks: {},
       };
     }
 
@@ -87,7 +87,7 @@ function createChannelTree(channelList) {
 
     if (!level.risks[channel.risk]) {
       level.risks[channel.risk] = {
-        name: channel.risk
+        name: channel.risk,
       };
     }
 
@@ -98,7 +98,7 @@ function createChannelTree(channelList) {
     }
 
     level.branches[channel.branch] = {
-      name: channel.branch
+      name: channel.branch,
     };
   });
 
@@ -121,7 +121,7 @@ function sortAlphaNum(list, hoistValue) {
   let numbers = [];
   let strings = [];
   let hoistList = [];
-  list.forEach(item => {
+  list.forEach((item) => {
     // numbers are defined by any string starting any of the following patterns:
     //   just a number – 1,2,3,4,
     //   numbers on the left in a pattern – 2018.3 , 1.1, 1.1.23 ...
@@ -136,7 +136,7 @@ function sortAlphaNum(list, hoistValue) {
   });
 
   // Ignore case
-  strings.sort(function(a, b) {
+  strings.sort(function (a, b) {
     return a.toLowerCase().localeCompare(b.toLowerCase());
   });
 
@@ -146,7 +146,7 @@ function sortAlphaNum(list, hoistValue) {
   numbers.sort((a, b) => {
     return b.localeCompare(a, undefined, {
       numeric: true,
-      sensitivity: "base"
+      sensitivity: "base",
     });
   });
 
@@ -173,7 +173,7 @@ function sortAlphaNum(list, hoistValue) {
  * @returns {{tree: Array, list: Array}}
  */
 function sortChannels(channels, options) {
-  const channelList = channels.map(channel => parseChannel(channel, options));
+  const channelList = channels.map((channel) => parseChannel(channel, options));
   const channelTree = createChannelTree(channelList);
 
   const sortedByTrack = [];
@@ -185,21 +185,21 @@ function sortChannels(channels, options) {
 
   const trackOrder = sortAlphaNum(Object.keys(channelTree), track);
 
-  trackOrder.forEach(track => {
+  trackOrder.forEach((track) => {
     sortedByTrack.push(channelTree[track]);
   });
 
-  sortedByTrack.map(track => {
+  sortedByTrack.map((track) => {
     const riskOrder = Object.keys(track.risks).sort((a, b) => {
       return RISKS.indexOf(a) - RISKS.indexOf(b);
     });
 
-    track.risks = riskOrder.map(risk => track.risks[risk]);
+    track.risks = riskOrder.map((risk) => track.risks[risk]);
 
-    track.risks.map(risk => {
+    track.risks.map((risk) => {
       const branchOrder = sortAlphaNum(Object.keys(risk.branches), "_base");
 
-      risk.branches = branchOrder.map(branch => risk.branches[branch]);
+      risk.branches = branchOrder.map((branch) => risk.branches[branch]);
 
       return risk;
     });
@@ -209,13 +209,13 @@ function sortChannels(channels, options) {
 
   const toArray = () => {
     const list = [];
-    sortedByTrack.forEach(track => {
+    sortedByTrack.forEach((track) => {
       if (track.risks) {
-        track.risks.forEach(risk => {
+        track.risks.forEach((risk) => {
           if (risk.branches.length > 1 || risk.branches[0].name !== "_base") {
-            risk.branches.forEach(branch => {
+            risk.branches.forEach((branch) => {
               const format = channelList.filter(
-                item =>
+                (item) =>
                   item.track === track.name &&
                   item.risk === risk.name &&
                   item.branch === branch.name
@@ -233,7 +233,7 @@ function sortChannels(channels, options) {
               list.push(str.join("/"));
             });
           } else {
-            const format = channelList.filter(item => {
+            const format = channelList.filter((item) => {
               return item.track === track.name && item.risk === risk.name;
             })[0].format;
             const str = [];
@@ -254,7 +254,7 @@ function sortChannels(channels, options) {
 
   return {
     tree: sortedByTrack,
-    list: toArray()
+    list: toArray(),
   };
 }
 
@@ -275,5 +275,5 @@ export {
   parseChannel,
   createChannelTree,
   sortAlphaNum,
-  getChannelString
+  getChannelString,
 };

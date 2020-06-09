@@ -7,8 +7,8 @@ function initFSFLanguageSelect(rootEl) {
   );
 
   const closeDetails = () => {
-    flowDetails.forEach(e => e.classList.add("u-hide"));
-    flowLinks.forEach(l => l.classList.remove("is-open"));
+    flowDetails.forEach((e) => e.classList.add("u-hide"));
+    flowLinks.forEach((l) => l.classList.remove("is-open"));
     if (window.history.pushState) {
       window.history.pushState(null, null, "#");
     } else {
@@ -23,7 +23,7 @@ function initFSFLanguageSelect(rootEl) {
     );
 
     if (showMoreContainer && showMoreContainer.length > 0) {
-      showMoreContainer.forEach(el => {
+      showMoreContainer.forEach((el) => {
         const fadeEL = el.querySelector(".p-show-more__fade");
 
         if (fadeEL) {
@@ -34,7 +34,7 @@ function initFSFLanguageSelect(rootEl) {
     }
   };
 
-  const openDetails = link => {
+  const openDetails = (link) => {
     if (link && link.dataset.flowLink) {
       // find where the next row of links starts to insert details panel before
       var top = link.offsetTop;
@@ -79,12 +79,12 @@ function initFSFLanguageSelect(rootEl) {
 
       window.scrollTo({
         top: viewportOffset + window.scrollY,
-        behaviour: "smooth"
+        behaviour: "smooth",
       });
     }
   };
 
-  rootEl.addEventListener("click", event => {
+  rootEl.addEventListener("click", (event) => {
     var link = event.target.closest(".p-flow-link");
 
     if (link) {
