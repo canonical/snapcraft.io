@@ -1,6 +1,6 @@
 import Media from "./media";
 import React from "react";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 
 describe("Media", () => {
   const imageSelector = ".js-media-item-holder:not(.is-empty)";

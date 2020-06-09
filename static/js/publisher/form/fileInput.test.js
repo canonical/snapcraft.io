@@ -1,6 +1,6 @@
 import FileInput from "./fileInput";
 import React from "react";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 import * as fileValidation from "../../libs/fileValidation";
 
 describe("FileInput", () => {
