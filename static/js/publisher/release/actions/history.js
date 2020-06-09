@@ -6,13 +6,13 @@ import { triggerGAEvent } from "../actions/gaEventTracking";
 export function openHistory(filters) {
   return {
     type: OPEN_HISTORY,
-    payload: { filters }
+    payload: { filters },
   };
 }
 
 export function closeHistory() {
   return {
-    type: CLOSE_HISTORY
+    type: CLOSE_HISTORY,
   };
 }
 

@@ -7,7 +7,7 @@ const getClipPathFromMask = ({ top, bottom, left, right }) => {
     `${left}px ${bottom}px`,
     `${right}px ${bottom}px`,
     `${right}px ${top}px`,
-    `${left}px ${top}px`
+    `${left}px ${top}px`,
   ].join(",");
 
   return `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${mask})`;
@@ -20,7 +20,7 @@ export default function TourOverlayMask({ mask }) {
     const clipPath = getClipPathFromMask(mask);
     maskStyle = {
       clipPath,
-      WebkitClipPath: clipPath
+      WebkitClipPath: clipPath,
     };
   }
 
@@ -32,6 +32,6 @@ TourOverlayMask.propTypes = {
     top: PropTypes.number,
     bottom: PropTypes.number,
     left: PropTypes.number,
-    right: PropTypes.number
-  })
+    right: PropTypes.number,
+  }),
 };

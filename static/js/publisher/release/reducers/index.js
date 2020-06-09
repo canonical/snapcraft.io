@@ -27,7 +27,7 @@ const releasesReducers = combineReducers({
   pendingCloses,
   pendingReleases,
   revisions,
-  releases
+  releases,
 });
 
 export default releasesReducers;

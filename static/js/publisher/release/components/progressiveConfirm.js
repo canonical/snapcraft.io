@@ -15,7 +15,7 @@ const ProgressiveConfirm = ({ percentage, newReleases, onChange }) => {
           <span className="p-tooltip__message" role="tooltip">
             Release revisions:
             <br />
-            {Object.keys(newReleases).map(revId => {
+            {Object.keys(newReleases).map((revId) => {
               const release = newReleases[revId];
 
               return (
@@ -48,7 +48,7 @@ const ProgressiveConfirm = ({ percentage, newReleases, onChange }) => {
 ProgressiveConfirm.propTypes = {
   percentage: PropTypes.string,
   newReleases: PropTypes.object,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 export default ProgressiveConfirm;

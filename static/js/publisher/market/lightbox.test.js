@@ -13,9 +13,9 @@ describe("lightbox", () => {
 
   describe("standard images", () => {
     const urls = [
-      "https://dashboard.snapcraft.io/site_media/appmedia/2018/12/space_06hkcxJ.png"
+      "https://dashboard.snapcraft.io/site_media/appmedia/2018/12/space_06hkcxJ.png",
     ];
-    const images = urls.map(src => {
+    const images = urls.map((src) => {
       const img = new Image();
       img.src = src;
     });
@@ -38,7 +38,7 @@ describe("lightbox", () => {
 
   describe("gifs", () => {
     const urls = ["https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif"];
-    const images = urls.map(src => {
+    const images = urls.map((src) => {
       const img = new Image();
       img.src = src;
     });

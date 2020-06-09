@@ -8,7 +8,7 @@ export default function TourStepCard({
   onFinishClick,
   onSkipClick,
   onNextClick,
-  onPrevClick
+  onPrevClick,
 }) {
   const step = steps[currentStepIndex];
 
@@ -23,25 +23,25 @@ export default function TourStepCard({
     case "bottom-left":
       tooltipStyle = {
         top: mask.bottom,
-        left: mask.left
+        left: mask.left,
       };
       break;
     case "bottom-right":
       tooltipStyle = {
         top: mask.bottom,
-        right: overlayWidth - mask.right
+        right: overlayWidth - mask.right,
       };
       break;
     case "top-left":
       tooltipStyle = {
         bottom: overlayHeight - mask.top,
-        left: mask.left
+        left: mask.left,
       };
       break;
     case "top-right":
       tooltipStyle = {
         bottom: overlayHeight - mask.top,
-        right: overlayWidth - mask.right
+        right: overlayWidth - mask.right,
       };
       break;
   }
@@ -104,12 +104,12 @@ TourStepCard.propTypes = {
     top: PropTypes.number,
     bottom: PropTypes.number,
     left: PropTypes.number,
-    right: PropTypes.number
+    right: PropTypes.number,
   }).isRequired,
   steps: PropTypes.array.isRequired,
   currentStepIndex: PropTypes.number.isRequired,
   onFinishClick: PropTypes.func.isRequired,
   onSkipClick: PropTypes.func.isRequired,
   onNextClick: PropTypes.func.isRequired,
-  onPrevClick: PropTypes.func.isRequired
+  onPrevClick: PropTypes.func.isRequired,
 };

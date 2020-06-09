@@ -1,4 +1,4 @@
-(function() {
+(function () {
   /**
    * Toggle target elements with aria controls, hidden and expanded.
    *
@@ -15,7 +15,7 @@
     var toggles = document.querySelectorAll(toggleCtrl);
 
     for (var i = 0, ii = toggles.length; i < ii; i += 1) {
-      toggles[i].addEventListener("click", function(evt) {
+      toggles[i].addEventListener("click", function (evt) {
         evt.preventDefault();
         evt.stopPropagation();
 
@@ -23,7 +23,7 @@
       });
     }
 
-    document.body.addEventListener("click", function() {
+    document.body.addEventListener("click", function () {
       for (var i = 0, ii = toggles.length; i < ii; i += 1) {
         toggles[i].setAttribute("aria-expanded", false);
 

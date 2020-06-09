@@ -55,7 +55,7 @@ describe("initChooseName", () => {
 
   it("should set cookie on submit", () => {
     Object.defineProperty(window.location, "reload", {
-      configurable: true
+      configurable: true,
     });
     window.location.reload = jest.fn();
 

@@ -2,7 +2,7 @@ import {
   tourStartedByUser,
   tourStartedAutomatically,
   tourFinished,
-  tourSkipped
+  tourSkipped,
 } from "./metricsEvents";
 import { triggerEvent } from "../../base/ga";
 

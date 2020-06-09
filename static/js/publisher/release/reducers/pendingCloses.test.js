@@ -3,7 +3,7 @@ import pendingCloses from "./pendingCloses";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 import {
   RELEASE_REVISION,
-  CANCEL_PENDING_RELEASES
+  CANCEL_PENDING_RELEASES,
 } from "../actions/pendingReleases";
 
 describe("pendingCloses", () => {
@@ -15,7 +15,7 @@ describe("pendingCloses", () => {
     const channel = "test/edge";
     const closeChannelAction = {
       type: CLOSE_CHANNEL,
-      payload: { channel }
+      payload: { channel },
     };
 
     describe("when state is empty", () => {
@@ -60,8 +60,8 @@ describe("pendingCloses", () => {
       type: RELEASE_REVISION,
       payload: {
         revision: { revision: 1, architectures: ["test64"] },
-        channel: "test/edge"
-      }
+        channel: "test/edge",
+      },
     };
 
     describe("when there are no closed channels", () => {
@@ -103,7 +103,7 @@ describe("pendingCloses", () => {
 
   describe("on CANCEL_PENDING_RELEASES action", () => {
     let cancelPendingReleasesAction = {
-      type: CANCEL_PENDING_RELEASES
+      type: CANCEL_PENDING_RELEASES,
     };
 
     describe("when state is empty", () => {

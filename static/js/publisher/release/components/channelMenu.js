@@ -6,7 +6,7 @@ import ContextualMenu from "./contextualMenu";
 export default class ChannelMenu extends Component {
   constructor(props) {
     super(props);
-    this.setMenuRef = menu => (this.menu = menu);
+    this.setMenuRef = (menu) => (this.menu = menu);
   }
 
   promoteToChannelClick(targetChannel, event) {
@@ -23,7 +23,7 @@ export default class ChannelMenu extends Component {
     const { channel, display, isDisabled, reason } = targetChannel;
     const className = [
       "p-contextual-menu__link is-indented",
-      isDisabled ? "is-disabled" : ""
+      isDisabled ? "is-disabled" : "",
     ].join(" ");
 
     return (
@@ -89,7 +89,7 @@ export default class ChannelMenu extends Component {
 
   render() {
     const canBePromoted = !this.props.targetChannels.every(
-      targetChannel => targetChannel.isDisabled
+      (targetChannel) => targetChannel.isDisabled
     );
 
     const isDisabled = !canBePromoted && !this.props.closeChannel;
@@ -130,5 +130,5 @@ ChannelMenu.propTypes = {
   tooltip: PropTypes.string,
   promoteToChannel: PropTypes.func.isRequired,
   closeChannel: PropTypes.func,
-  gaEvent: PropTypes.func.isRequired
+  gaEvent: PropTypes.func.isRequired,
 };

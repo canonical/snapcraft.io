@@ -17,7 +17,7 @@ const events = {
   "#main-content .p-media-object--snap": "content-card-snap",
   ".p-strip .p-media-object--snap": "content-card-snap",
   "#main-content a": "content-link",
-  ".p-strip a": "content-link"
+  ".p-strip a": "content-link",
 };
 
 function triggerEvent(category, from, to, label) {
@@ -27,7 +27,7 @@ function triggerEvent(category, from, to, label) {
       eventCategory: `${categoryPrefix}${category}`,
       eventAction: `from:${origin} to:${to}`,
       eventLabel: label,
-      eventValue: undefined
+      eventValue: undefined,
     });
   }
 }
@@ -39,7 +39,7 @@ function triggerEventReleaseUI(action, label) {
       eventCategory: `Release UI`,
       eventAction: action,
       eventLabel: label,
-      eventValue: undefined
+      eventValue: undefined,
     });
   }
 }
@@ -65,7 +65,7 @@ function triggerCopyEvent(category, clipboardTarget) {
 }
 
 if (typeof dataLayer !== "undefined") {
-  window.addEventListener("click", function(e) {
+  window.addEventListener("click", function (e) {
     let target = e.target;
     if (!target || !e.target.closest) {
       return;

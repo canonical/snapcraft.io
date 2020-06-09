@@ -1,6 +1,6 @@
 import Icon from "./icon";
 import React from "react";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 
 describe("Icon", () => {
   it("should render without an icon", () => {
@@ -23,9 +23,9 @@ describe("Icon", () => {
     ).toEqual(1);
   });
 
-  it("should add a new icon when iconChanged is called", done => {
+  it("should add a new icon when iconChanged is called", (done) => {
     window.URL = {
-      createObjectURL: () => "test"
+      createObjectURL: () => "test",
     };
     const changeCB = jest.fn();
     const { container } = render(<Icon updateIcon={changeCB} />);
@@ -34,7 +34,7 @@ describe("Icon", () => {
     const input = container.querySelector(`[name="icon"]`);
 
     Object.defineProperty(input, "files", {
-      value: [file]
+      value: [file],
     });
 
     fireEvent.change(input);
@@ -47,23 +47,23 @@ describe("Icon", () => {
           name: "test",
           url: "test",
           status: "new",
-          type: "icon"
-        }
+          type: "icon",
+        },
       ]);
       done();
     }, 500);
   });
 
-  it("should render an error when file doesn't validate", done => {
+  it("should render an error when file doesn't validate", (done) => {
     window.URL = {
-      createObjectURL: () => "test"
+      createObjectURL: () => "test",
     };
     const changeCB = jest.fn();
     const { container } = render(
       <Icon
         updateIcon={changeCB}
         restrictions={{
-          accept: ["text/plain"]
+          accept: ["text/plain"],
         }}
       />
     );
@@ -72,7 +72,7 @@ describe("Icon", () => {
     const input = container.querySelector(`[name="icon"]`);
 
     Object.defineProperty(input, "files", {
-      value: [file]
+      value: [file],
     });
 
     fireEvent.change(input);
@@ -85,7 +85,7 @@ describe("Icon", () => {
     }, 500);
   });
 
-  it("should remove the icon when removeIcon is called", done => {
+  it("should remove the icon when removeIcon is called", (done) => {
     const changeCB = jest.fn();
     const { container } = render(
       <Icon icon={{ url: "test" }} updateIcon={changeCB} />

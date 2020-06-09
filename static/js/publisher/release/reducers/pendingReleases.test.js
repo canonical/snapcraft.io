@@ -7,7 +7,7 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE
+  CANCEL_PROGRESSIVE_RELEASE,
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
@@ -21,8 +21,8 @@ describe("pendingReleases", () => {
       type: RELEASE_REVISION,
       payload: {
         revision: { revision: 1, architectures: ["abc42", "test64"] },
-        channel: "test/edge"
-      }
+        channel: "test/edge",
+      },
     };
 
     describe("when state is empty", () => {
@@ -35,9 +35,9 @@ describe("pendingReleases", () => {
           "1": {
             [releaseRevisionAction.payload.channel]: {
               revision: releaseRevisionAction.payload.revision,
-              channel: releaseRevisionAction.payload.channel
-            }
-          }
+              channel: releaseRevisionAction.payload.channel,
+            },
+          },
         });
       });
     });
@@ -48,9 +48,9 @@ describe("pendingReleases", () => {
         "1": {
           "other/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
-            channel: "other/edge"
-          }
-        }
+            channel: "other/edge",
+          },
+        },
       };
 
       it("should add new release to list of pending releases", () => {
@@ -63,8 +63,8 @@ describe("pendingReleases", () => {
           ...stateWithSamePendingRevision[1],
           [releaseRevisionAction.payload.channel]: {
             revision: releaseRevisionAction.payload.revision,
-            channel: releaseRevisionAction.payload.channel
-          }
+            channel: releaseRevisionAction.payload.channel,
+          },
         });
       });
     });
@@ -75,16 +75,16 @@ describe("pendingReleases", () => {
         "2": {
           "other/edge": {
             revision: { revision: 2, architectures: ["test64"] },
-            channel: "other/edge"
-          }
+            channel: "other/edge",
+          },
         },
         // same channel different architacture
         "3": {
           "test/edge": {
             revision: { revision: 3, architectures: ["armf"] },
-            channel: "test/edge"
-          }
-        }
+            channel: "test/edge",
+          },
+        },
       };
 
       it("should add promoted revision to state", () => {
@@ -98,9 +98,9 @@ describe("pendingReleases", () => {
           "1": {
             [releaseRevisionAction.payload.channel]: {
               revision: releaseRevisionAction.payload.revision,
-              channel: releaseRevisionAction.payload.channel
-            }
-          }
+              channel: releaseRevisionAction.payload.channel,
+            },
+          },
         });
       });
     });
@@ -111,23 +111,23 @@ describe("pendingReleases", () => {
         "2": {
           "other/edge": {
             revision: { revision: 2, architectures: ["test64"] },
-            channel: "other/edge"
-          }
+            channel: "other/edge",
+          },
         },
         // same channel different architacture
         "3": {
           "test/edge": {
             revision: { revision: 3, architectures: ["armf"] },
-            channel: "test/edge"
-          }
+            channel: "test/edge",
+          },
         },
         // same architecture, same channel
         "4": {
           "test/edge": {
             revision: { revision: 4, architectures: ["test64"] },
-            channel: "test/edge"
-          }
-        }
+            channel: "test/edge",
+          },
+        },
       };
 
       it("should add promoted revision to state", () => {
@@ -140,9 +140,9 @@ describe("pendingReleases", () => {
           "1": {
             [releaseRevisionAction.payload.channel]: {
               revision: releaseRevisionAction.payload.revision,
-              channel: releaseRevisionAction.payload.channel
-            }
-          }
+              channel: releaseRevisionAction.payload.channel,
+            },
+          },
         });
       });
 
@@ -163,9 +163,9 @@ describe("pendingReleases", () => {
           revision: { revision: 1, architectures: ["abc42", "test64"] },
           channel: "test/edge",
           previousRevisions: {
-            abc42: { revision: 0, architectures: ["abc42"] }
-          }
-        }
+            abc42: { revision: 0, architectures: ["abc42"] },
+          },
+        },
       };
 
       it("should save previous revisions in release object", () => {
@@ -173,9 +173,9 @@ describe("pendingReleases", () => {
           "1": {
             "test/edge": {
               revision: releaseRevisionPreviousRevisionsAction.payload.revision,
-              channel: "test/edge"
-            }
-          }
+              channel: "test/edge",
+            },
+          },
         };
 
         const result = pendingReleases(
@@ -189,10 +189,10 @@ describe("pendingReleases", () => {
               revision: releaseRevisionPreviousRevisionsAction.payload.revision,
               channel: "test/edge",
               previousRevisions: {
-                abc42: { revision: 0, architectures: ["abc42"] }
-              }
-            }
-          }
+                abc42: { revision: 0, architectures: ["abc42"] },
+              },
+            },
+          },
         });
       });
     });
@@ -205,9 +205,9 @@ describe("pendingReleases", () => {
           channel: "test/edge",
           progressive: {
             percentage: 10,
-            paused: false
-          }
-        }
+            paused: false,
+          },
+        },
       };
 
       it("should add a pending release with progressive state", () => {
@@ -219,14 +219,14 @@ describe("pendingReleases", () => {
         expect(result).toEqual({
           "1": {
             "test/edge": {
-              ...releaseRevisionActionWithProgressive.payload
-            }
-          }
+              ...releaseRevisionActionWithProgressive.payload,
+            },
+          },
         });
       });
       it("should not add progressive state if progressive percentage is 100%", () => {
         const releaseRevisionActionWith100Progressive = {
-          ...releaseRevisionActionWithProgressive
+          ...releaseRevisionActionWithProgressive,
         };
 
         releaseRevisionActionWith100Progressive.payload.progressive.percentage = 100;
@@ -239,9 +239,9 @@ describe("pendingReleases", () => {
         expect(result).toEqual({
           "1": {
             "test/edge": {
-              ...releaseRevisionActionWithProgressive.payload
-            }
-          }
+              ...releaseRevisionActionWithProgressive.payload,
+            },
+          },
         });
       });
     });
@@ -250,7 +250,7 @@ describe("pendingReleases", () => {
   describe("on PAUSE_PROGRESSIVE_RELEASE action", () => {
     const pauseProgressiveReleaseAction = {
       type: PAUSE_PROGRESSIVE_RELEASE,
-      payload: "progressive-test"
+      payload: "progressive-test",
     };
 
     describe("when state is empty", () => {
@@ -271,9 +271,9 @@ describe("pendingReleases", () => {
         "1": {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
-            channel: "latest/stable"
-          }
-        }
+            channel: "latest/stable",
+          },
+        },
       };
 
       it("should not change the pendingRelease", () => {
@@ -294,10 +294,10 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
             progressive: {
               percentage: 10,
-              paused: false
-            }
-          }
-        }
+              paused: false,
+            },
+          },
+        },
       };
 
       it("should pause a key matching progressive release", () => {
@@ -312,10 +312,10 @@ describe("pendingReleases", () => {
               ...progressiveReleaseState["1"]["latest/stable"],
               progressive: {
                 ...progressiveReleaseState["1"]["latest/stable"].progressive,
-                paused: true
-              }
-            }
-          }
+                paused: true,
+              },
+            },
+          },
         });
       });
     });
@@ -324,7 +324,7 @@ describe("pendingReleases", () => {
   describe("on RESUME_PROGRESSIVE_RELEASE action", () => {
     const resumeProgressiveReleaseAction = {
       type: RESUME_PROGRESSIVE_RELEASE,
-      payload: "progressive-test"
+      payload: "progressive-test",
     };
 
     describe("when state is empty", () => {
@@ -345,9 +345,9 @@ describe("pendingReleases", () => {
         "1": {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
-            channel: "latest/stable"
-          }
-        }
+            channel: "latest/stable",
+          },
+        },
       };
 
       it("should not change the pendingRelease", () => {
@@ -368,10 +368,10 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
             progressive: {
               percentage: 10,
-              paused: true
-            }
-          }
-        }
+              paused: true,
+            },
+          },
+        },
       };
 
       it("should resume a key matching progressive release", () => {
@@ -386,10 +386,10 @@ describe("pendingReleases", () => {
               ...progressiveReleaseState["1"]["latest/stable"],
               progressive: {
                 ...progressiveReleaseState["1"]["latest/stable"].progressive,
-                paused: false
-              }
-            }
-          }
+                paused: false,
+              },
+            },
+          },
         });
       });
     });
@@ -400,8 +400,8 @@ describe("pendingReleases", () => {
       type: UNDO_RELEASE,
       payload: {
         revision: { revision: 1, architectures: ["abc42", "test64"] },
-        channel: "test/edge"
-      }
+        channel: "test/edge",
+      },
     };
 
     describe("when state is empty", () => {
@@ -419,13 +419,13 @@ describe("pendingReleases", () => {
         "1": {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
-            channel: "test/edge"
+            channel: "test/edge",
           },
           "latest/beta": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
-            channel: "latest/beta"
-          }
-        }
+            channel: "latest/beta",
+          },
+        },
       };
 
       it("should remove given channel from pending releases", () => {
@@ -436,8 +436,8 @@ describe("pendingReleases", () => {
 
         expect(result).toEqual({
           "1": {
-            "latest/beta": stateWithRevisionInChannel["1"]["latest/beta"]
-          }
+            "latest/beta": stateWithRevisionInChannel["1"]["latest/beta"],
+          },
         });
       });
     });
@@ -447,9 +447,9 @@ describe("pendingReleases", () => {
         "1": {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
-            channel: "test/edge"
-          }
-        }
+            channel: "test/edge",
+          },
+        },
       };
 
       it("should remove revision from the state", () => {
@@ -465,7 +465,7 @@ describe("pendingReleases", () => {
 
   describe("on CANCEL_PENDING_RELEASES action", () => {
     let cancelPendingReleasesAction = {
-      type: CANCEL_PENDING_RELEASES
+      type: CANCEL_PENDING_RELEASES,
     };
 
     describe("when state is empty", () => {
@@ -483,19 +483,19 @@ describe("pendingReleases", () => {
         "1": {
           "latest/beta": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
-            channel: "latest/beta"
+            channel: "latest/beta",
           },
           "latest/stable": {
             revision: { revision: 1, architectures: ["abc42"] },
-            channel: "latest/stable"
-          }
+            channel: "latest/stable",
+          },
         },
         "2": {
           "latest/stable": {
             revision: { revision: 2, architectures: ["abc42"] },
-            channel: "latest/stable"
-          }
-        }
+            channel: "latest/stable",
+          },
+        },
       };
 
       it("should remove all pending releases", () => {
@@ -513,7 +513,7 @@ describe("pendingReleases", () => {
     const channel = "test/edge";
     const closeChannelAction = {
       type: CLOSE_CHANNEL,
-      payload: { channel }
+      payload: { channel },
     };
 
     describe("when state is empty", () => {
@@ -531,9 +531,9 @@ describe("pendingReleases", () => {
         "1": {
           "latest/candidate": {
             revision: { revision: 1 },
-            channel: "latest/candidate"
-          }
-        }
+            channel: "latest/candidate",
+          },
+        },
       };
 
       it("should not change the state", () => {
@@ -551,21 +551,21 @@ describe("pendingReleases", () => {
         "1": {
           "latest/candidate": {
             revision: { revision: 1 },
-            channel: "latest/candidate"
-          }
+            channel: "latest/candidate",
+          },
         },
         "2": {
           "test/edge": {
             revision: { revision: 2 },
-            channel: "test/edge"
-          }
+            channel: "test/edge",
+          },
         },
         "3": {
           "test/edge": {
             revision: { revision: 3 },
-            channel: "test/edge"
-          }
-        }
+            channel: "test/edge",
+          },
+        },
       };
 
       it("should remove pending releases from closed channel", () => {
@@ -584,8 +584,8 @@ describe("pendingReleases", () => {
     let setProgressiveAction = {
       type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
       payload: {
-        percentage: 50
-      }
+        percentage: 50,
+      },
     };
 
     describe("when state is empty", () => {
@@ -603,9 +603,9 @@ describe("pendingReleases", () => {
         "1": {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42"] },
-            channel: "test/edge"
-          }
-        }
+            channel: "test/edge",
+          },
+        },
       };
 
       it("should not add progressive state", () => {
@@ -615,7 +615,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": stateWithPendingRevision["1"]
+          "1": stateWithPendingRevision["1"],
         });
       });
     });
@@ -627,10 +627,10 @@ describe("pendingReleases", () => {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
             previousRevisions: {
-              abc42: { revision: 0, architectures: ["abc42"] }
-            }
-          }
-        }
+              abc42: { revision: 0, architectures: ["abc42"] },
+            },
+          },
+        },
       };
 
       it("should add progressive state to pending revision", () => {
@@ -646,10 +646,10 @@ describe("pendingReleases", () => {
               ...stateWithPendingRevision["1"]["test/edge"],
               progressive: {
                 ...setProgressiveAction.payload,
-                paused: false
-              }
-            }
-          }
+                paused: false,
+              },
+            },
+          },
         });
       });
     });
@@ -662,10 +662,10 @@ describe("pendingReleases", () => {
             channel: "test/edge",
             progressive: {
               percentage: 20,
-              paused: false
-            }
-          }
-        }
+              paused: false,
+            },
+          },
+        },
       };
 
       it("should not update progressive state", () => {
@@ -683,8 +683,8 @@ describe("pendingReleases", () => {
     let updateProgressiveAction = {
       type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
       payload: {
-        percentage: 50
-      }
+        percentage: 50,
+      },
     };
 
     describe("when state is empty", () => {
@@ -702,9 +702,9 @@ describe("pendingReleases", () => {
         "1": {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
-            channel: "test/edge"
-          }
-        }
+            channel: "test/edge",
+          },
+        },
       };
 
       it("should not affect the pending releases", () => {
@@ -725,9 +725,9 @@ describe("pendingReleases", () => {
             channel: "test/edge",
             progressive: {
               percentage: 20,
-              paused: false
-            }
-          }
+              paused: false,
+            },
+          },
         },
         "2": {
           "test/edge": {
@@ -735,13 +735,13 @@ describe("pendingReleases", () => {
             channel: "test/edge",
             progressive: {
               percentage: 20,
-              paused: true
+              paused: true,
             },
             previousRevisions: {
-              abc42: { revision: 0, architectures: ["abc42"] }
-            }
-          }
-        }
+              abc42: { revision: 0, architectures: ["abc42"] },
+            },
+          },
+        },
       };
 
       it("should update progressive releases with same key", () => {
@@ -754,8 +754,8 @@ describe("pendingReleases", () => {
           ...stateWithProgressiveReleases["1"]["test/edge"],
           progressive: {
             ...stateWithProgressiveReleases["1"]["test/edge"].progressive,
-            ...updateProgressiveAction.payload
-          }
+            ...updateProgressiveAction.payload,
+          },
         });
       });
     });
@@ -767,9 +767,9 @@ describe("pendingReleases", () => {
       payload: {
         previousRevision: {
           architectures: ["amd64"],
-          revision: 2
-        }
-      }
+          revision: 2,
+        },
+      },
     };
 
     describe("when state is empty", () => {
@@ -790,9 +790,9 @@ describe("pendingReleases", () => {
         "1": {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
-            channel: "latest/stable"
-          }
-        }
+            channel: "latest/stable",
+          },
+        },
       };
 
       it("should not change the pendingRelease", () => {
@@ -813,10 +813,10 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
             progressive: {
               percentage: 10,
-              paused: true
-            }
-          }
-        }
+              paused: true,
+            },
+          },
+        },
       };
 
       it("should replace a key matching progressive release with the new release", () => {
@@ -832,10 +832,10 @@ describe("pendingReleases", () => {
               replaces: progressiveReleaseState["1"]["latest/stable"],
               revision: {
                 architectures: ["amd64"],
-                revision: 2
-              }
-            }
-          }
+                revision: 2,
+              },
+            },
+          },
         });
       });
     });
@@ -848,18 +848,18 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
             progressive: {
               percentage: 10,
-              paused: false
-            }
+              paused: false,
+            },
           },
           "latest/candidate": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/candidate",
             progressive: {
               percentage: 10,
-              paused: false
-            }
-          }
-        }
+              paused: false,
+            },
+          },
+        },
       };
 
       it("should replace only the release in the specified channel", () => {
@@ -871,16 +871,16 @@ describe("pendingReleases", () => {
         expect(result).toEqual({
           "1": {
             "latest/stable": {
-              ...progressiveReleasesState["1"]["latest/stable"]
-            }
+              ...progressiveReleasesState["1"]["latest/stable"],
+            },
           },
           "2": {
             "latest/candidate": {
               channel: "latest/candidate",
               replaces: progressiveReleasesState["1"]["latest/candidate"],
-              revision: { architectures: ["amd64"], revision: 2 }
-            }
-          }
+              revision: { architectures: ["amd64"], revision: 2 },
+            },
+          },
         });
       });
     });

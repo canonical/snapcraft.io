@@ -7,13 +7,13 @@ import {
   AVAILABLE,
   RISKS,
   AVAILABLE_REVISIONS_SELECT_ALL,
-  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../../constants";
 import {
   getArchitectures,
   getBranches,
   getLaunchpadRevisions,
-  getRevisionsFromBuild
+  getRevisionsFromBuild,
 } from "../../selectors";
 import { selectAvailableRevisions, closeHistory } from "../../actions";
 
@@ -32,7 +32,7 @@ class ReleasesTable extends Component {
 
     this.state = {
       showAllRisksBranches: [],
-      showAllBuilds: false
+      showAllBuilds: false,
     };
   }
 
@@ -51,7 +51,7 @@ class ReleasesTable extends Component {
     }
 
     this.setState({
-      showAllRisksBranches: newList
+      showAllRisksBranches: newList,
     });
   }
 
@@ -59,7 +59,7 @@ class ReleasesTable extends Component {
     const { showAllBuilds } = this.state;
 
     this.setState({
-      showAllBuilds: !showAllBuilds
+      showAllBuilds: !showAllBuilds,
     });
   }
 
@@ -125,13 +125,13 @@ class ReleasesTable extends Component {
     const builds = lpRevisions
       .map(getBuildId)
       .filter((item, i, ar) => ar.indexOf(item) === i)
-      .map(buildId => {
+      .map((buildId) => {
         const revs = this.props.getRevisionsFromBuild(buildId);
 
         const revsMap = {};
 
-        revs.forEach(r => {
-          r.architectures.forEach(arch => {
+        revs.forEach((r) => {
+          r.architectures.forEach((arch) => {
             revsMap[arch] = r;
           });
         });
@@ -149,7 +149,7 @@ class ReleasesTable extends Component {
       return (
         <Fragment>
           <h5>Promote from recent Launchpad builds</h5>
-          {buildsToShow.map(revisions => this.renderBuildRow(revisions))}
+          {buildsToShow.map((revisions) => this.renderBuildRow(revisions))}
 
           {builds.length > MAX_BUILDS && (
             <div className="p-releases-table__row--show-all">
@@ -178,7 +178,7 @@ class ReleasesTable extends Component {
         <Fragment>
           <h4>Revisions available to release</h4>
           <AvailableRevisionsTabs onChange={closeHistory}>
-            {item => {
+            {(item) => {
               if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
                 return this.renderAvailableRevisions();
               }
@@ -206,24 +206,24 @@ class ReleasesTable extends Component {
       isHistoryOpen,
       filters,
       openBranches,
-      currentTrack
+      currentTrack,
     } = this.props;
     const { showAllRisksBranches } = this.state;
 
     // rows can consist of a channel row or expanded history panel
     const rows = [];
 
-    RISKS.forEach(risk => {
-      const risksBranches = branches.filter(branch => branch.risk === risk);
+    RISKS.forEach((risk) => {
+      const risksBranches = branches.filter((branch) => branch.risk === risk);
       const showAllBranches = showAllRisksBranches.includes(risk);
       const currentChannel = getChannelName(currentTrack, risk);
       const isBranchesPanelOpen = openBranches.includes(currentChannel);
 
       rows.push({
         data: {
-          risk
+          risk,
         },
-        node: this.renderChannelRow(risk)
+        node: this.renderChannelRow(risk),
       });
 
       risksBranches.forEach((branch, i) => {
@@ -234,9 +234,9 @@ class ReleasesTable extends Component {
           rows.push({
             data: {
               risk: branch.risk,
-              branch: branch.branch
+              branch: branch.branch,
             },
-            node: this.renderChannelRow(branch.risk, branch)
+            node: this.renderChannelRow(branch.risk, branch),
           });
         }
       });
@@ -244,7 +244,7 @@ class ReleasesTable extends Component {
       if (risksBranches.length > MAX_BRANCHES && isBranchesPanelOpen) {
         rows.push({
           data: {
-            risk
+            risk,
           },
           node: (
             <div
@@ -264,7 +264,7 @@ class ReleasesTable extends Component {
                 </a>
               </div>
             </div>
-          )
+          ),
         });
       }
     });
@@ -273,10 +273,10 @@ class ReleasesTable extends Component {
     // inject history panel after that channel row
     if (isHistoryOpen && filters && filters.risk) {
       const historyPanelRow = {
-        node: this.renderHistoryPanel()
+        node: this.renderHistoryPanel(),
       };
 
-      const rowIndex = rows.findIndex(r => {
+      const rowIndex = rows.findIndex((r) => {
         if (filters.branch) {
           return (
             r.data.risk === filters.risk && r.data.branch === filters.branch
@@ -290,7 +290,7 @@ class ReleasesTable extends Component {
       }
     }
 
-    return rows.map(r => r.node);
+    return rows.map((r) => r.node);
   }
 
   render() {
@@ -306,7 +306,7 @@ class ReleasesTable extends Component {
         <div className={className}>
           <div className="p-releases-table__row p-releases-table__row--heading">
             <div className="p-releases-channel is-placeholder" />
-            {archs.map(arch => (
+            {archs.map((arch) => (
               <div
                 className={`p-releases-table__cell p-releases-table__arch ${
                   filteredArch === arch ? "is-active" : ""
@@ -339,10 +339,10 @@ ReleasesTable.propTypes = {
 
   // actions
   selectAvailableRevisions: PropTypes.func,
-  closeHistory: PropTypes.func
+  closeHistory: PropTypes.func,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     filters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
@@ -351,19 +351,16 @@ const mapStateToProps = state => {
     openBranches: state.branches,
     currentTrack: state.currentTrack,
     launchpadRevisions: getLaunchpadRevisions(state),
-    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId)
+    getRevisionsFromBuild: (buildId) => getRevisionsFromBuild(state, buildId),
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    selectAvailableRevisions: value =>
+    selectAvailableRevisions: (value) =>
       dispatch(selectAvailableRevisions(value)),
-    closeHistory: () => dispatch(closeHistory())
+    closeHistory: () => dispatch(closeHistory()),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReleasesTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ReleasesTable);

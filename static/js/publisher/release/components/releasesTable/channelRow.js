@@ -9,14 +9,14 @@ import ReleasesTableReleaseCell from "./releaseCell";
 import ReleasesTableRow from "./row";
 
 // releases table row based on channel data
-const ReleasesTableChannelRow = props => {
+const ReleasesTableChannelRow = (props) => {
   const {
     currentTrack,
     risk,
     branch,
     pendingChannelMap,
     pendingCloses,
-    archs
+    archs,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -40,7 +40,7 @@ const ReleasesTableChannelRow = props => {
       draggedItem={draggedItem}
       canDrop={canDrop}
     >
-      {archs.map(arch => {
+      {archs.map((arch) => {
         return (
           <ReleasesTableReleaseCell
             key={`${currentTrack}/${risk}/${arch}`}
@@ -74,15 +74,15 @@ ReleasesTableChannelRow.propTypes = {
   currentTrack: PropTypes.string.isRequired,
   pendingCloses: PropTypes.array.isRequired,
   pendingChannelMap: PropTypes.object,
-  archs: PropTypes.array
+  archs: PropTypes.array,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     currentTrack: state.currentTrack,
     pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state),
-    archs: getArchitectures(state)
+    archs: getArchitectures(state),
   };
 };
 

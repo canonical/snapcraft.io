@@ -3,7 +3,7 @@
 import {
   formatAxis,
   formatXAxisTickLabels,
-  formatYAxisTickLabels
+  formatYAxisTickLabels,
 } from "../axis";
 import debounce from "../../../libs/debounce";
 import { snapcraftGraphTooltip, positionTooltip } from "../tooltips";
@@ -20,45 +20,45 @@ export default function installsMetrics(days, installs) {
   const installsMetrics = bb.generate({
     bindto: "#installs_metrics",
     legend: {
-      hide: true
+      hide: true,
     },
     padding: PADDING,
     tooltip: {
       contents: snapcraftGraphTooltip.bind(this, COLORS),
-      position: positionTooltip.bind(this, el)
+      position: positionTooltip.bind(this, el),
     },
     transition: {
-      duration: 0
+      duration: 0,
     },
     point: {
-      focus: false
+      focus: false,
     },
     axis: {
       x: {
         tick: {
           culling: false,
           outer: true,
-          format: formatXAxisTickLabels
-        }
+          format: formatXAxisTickLabels,
+        },
       },
       y: {
         tick: {
-          format: formatYAxisTickLabels
-        }
-      }
+          format: formatYAxisTickLabels,
+        },
+      },
     },
     bar: {
-      width: 4
+      width: 4,
     },
     resize: {
-      auto: false
+      auto: false,
     },
     data: {
       colors: COLORS,
       type: "bar",
       x: "x",
-      columns: [days, installs]
-    }
+      columns: [days, installs],
+    },
   });
 
   showGraph(el);
@@ -66,10 +66,10 @@ export default function installsMetrics(days, installs) {
   // Extra events
   let elWidth = el.clientWidth;
 
-  const resize = debounce(function() {
+  const resize = debounce(function () {
     if (el.clientWidth !== elWidth) {
       el.style.opacity = 0;
-      debounce(function() {
+      debounce(function () {
         installsMetrics.resize();
         showGraph(el);
         elWidth = el.clientWidth;

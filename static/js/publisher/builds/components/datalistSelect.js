@@ -8,13 +8,13 @@ const DatalistSelect = ({
   disabled,
   selectedOption,
   listId,
-  isLoading
+  isLoading,
 }) => (
   <Fragment>
     <input
       type="text"
       list={listId}
-      onChange={e => updateSelection(e.target.value)}
+      onChange={(e) => updateSelection(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}
       value={selectedOption}
@@ -43,7 +43,7 @@ DatalistSelect.propTypes = {
   disabled: PropTypes.bool,
   isLoading: PropTypes.bool,
   listId: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
 };
 
 export default DatalistSelect;

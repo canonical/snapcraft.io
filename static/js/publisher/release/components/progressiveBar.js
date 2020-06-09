@@ -5,7 +5,7 @@ const ProgressiveBar = ({
   percentage,
   targetPercentage,
   readonly,
-  disabled
+  disabled,
 }) => {
   let current = percentage;
 
@@ -19,7 +19,7 @@ const ProgressiveBar = ({
   const classes = [
     "progressive-bar",
     "p-tooltip--btm-center",
-    disabled ? "is-disabled" : ""
+    disabled ? "is-disabled" : "",
   ];
 
   return (
@@ -37,7 +37,7 @@ const ProgressiveBar = ({
       <div
         className="progressive-bar__target-value"
         style={{
-          left: `${targetPercentage ? targetPercentage : percentage}%`
+          left: `${targetPercentage ? targetPercentage : percentage}%`,
         }}
       >
         <span className="p-tooltip__message" role="tooltip">
@@ -55,14 +55,14 @@ const ProgressiveBar = ({
 };
 
 ProgressiveBar.defaultProps = {
-  readonly: true
+  readonly: true,
 };
 
 ProgressiveBar.propTypes = {
   percentage: PropTypes.number,
   targetPercentage: PropTypes.number,
   readonly: PropTypes.bool,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 class InteractiveProgressiveBar extends React.Component {
@@ -75,7 +75,7 @@ class InteractiveProgressiveBar extends React.Component {
       current: props.percentage,
       scrubTarget: props.targetPercentage || props.percentage,
       scrubStart: null,
-      mousePosition: 0
+      mousePosition: 0,
     };
 
     this.onMouseUpHandler = this.onMouseUpHandler.bind(this);
@@ -167,7 +167,7 @@ class InteractiveProgressiveBar extends React.Component {
     }
 
     const newState = {
-      scrubTarget: target
+      scrubTarget: target,
     };
 
     this.setState(newState);
@@ -179,7 +179,7 @@ class InteractiveProgressiveBar extends React.Component {
   onMouseDownHandler(e) {
     this.setState({
       mousePosition: e.clientX,
-      scrubStart: this.state.scrubTarget
+      scrubStart: this.state.scrubTarget,
     });
   }
 
@@ -202,7 +202,7 @@ class InteractiveProgressiveBar extends React.Component {
       return;
     }
     this.setState({
-      scrubStart: null
+      scrubStart: null,
     });
   }
 
@@ -255,7 +255,7 @@ InteractiveProgressiveBar.propTypes = {
   onChange: PropTypes.func,
   targetPercentage: PropTypes.number,
   disabled: PropTypes.bool,
-  minPercentage: PropTypes.number
+  minPercentage: PropTypes.number,
 };
 
 export { ProgressiveBar, InteractiveProgressiveBar };

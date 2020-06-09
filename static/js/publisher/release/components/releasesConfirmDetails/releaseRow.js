@@ -9,7 +9,7 @@ const ReleaseRow = ({
   channel,
   progress,
   notes,
-  showProgressiveReleases
+  showProgressiveReleases,
 }) => (
   <div className="p-release-details-row">
     <span className="p-release-details-row__type">{type}</span>
@@ -28,19 +28,18 @@ const ReleaseRow = ({
         <span className="p-release-details-row__progress">{progress}</span>
       </Fragment>
     )}
-    {!progress &&
-      showProgressiveReleases && (
-        <Fragment>
-          <span className="p-release-details-row__join">to</span>
-          <span className="p-release-details-row__progress">
-            <ProgressiveBar percentage={100} disabled={true} />
-            <span>100% of devices</span>
-          </span>
-          <span className="p-release-details-row__notes">
-            Cannot progressively release to an empty channel
-          </span>
-        </Fragment>
-      )}
+    {!progress && showProgressiveReleases && (
+      <Fragment>
+        <span className="p-release-details-row__join">to</span>
+        <span className="p-release-details-row__progress">
+          <ProgressiveBar percentage={100} disabled={true} />
+          <span>100% of devices</span>
+        </span>
+        <span className="p-release-details-row__notes">
+          Cannot progressively release to an empty channel
+        </span>
+      </Fragment>
+    )}
     {notes && (
       <span className="p-release-details-row__notes">
         <small>{notes}</small>
@@ -55,7 +54,7 @@ ReleaseRow.propTypes = {
   channel: PropTypes.node,
   progress: PropTypes.node,
   notes: PropTypes.node,
-  showProgressiveReleases: PropTypes.bool
+  showProgressiveReleases: PropTypes.bool,
 };
 
 export default ReleaseRow;

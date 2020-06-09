@@ -17,15 +17,15 @@ function nps() {
 
   commentHolder.appendChild(fakeForm);
 
-  form.addEventListener("submit", e => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
   });
 
-  fakeForm.addEventListener("submit", e => {
+  fakeForm.addEventListener("submit", (e) => {
     e.preventDefault();
   });
 
-  toggle.addEventListener("click", e => {
+  toggle.addEventListener("click", (e) => {
     e.preventDefault();
     commentHolder.classList.toggle("u-hide");
   });
@@ -33,18 +33,18 @@ function nps() {
     "//app-sjg.marketo.com",
     "066-EOV-335",
     MARKETO_FORM_ID,
-    mktoForm => {
+    (mktoForm) => {
       mktoForm.onSuccess(() => {
         commentHolder.classList.add("u-hide");
         toggle.classList.add("u-hide");
         return false;
       });
-      form.addEventListener("change", e => {
+      form.addEventListener("change", (e) => {
         const name = e.target.name;
         const value = e.target.value;
 
         mktoForm.setValues({
-          [name]: value
+          [name]: value,
         });
       });
 

@@ -6,7 +6,7 @@ describe("history", () => {
   it("should return the initial state", () => {
     expect(history(undefined, {})).toEqual({
       isOpen: false,
-      filters: null
+      filters: null,
     });
   });
 
@@ -16,9 +16,9 @@ describe("history", () => {
       payload: {
         filters: {
           track: "latest",
-          arch: "abc42"
-        }
-      }
+          arch: "abc42",
+        },
+      },
     };
 
     it("should mark history panel open", () => {
@@ -36,7 +36,7 @@ describe("history", () => {
 
   describe("on CLOSE_HISTORY action", () => {
     let closeHistoryAction = {
-      type: CLOSE_HISTORY
+      type: CLOSE_HISTORY,
     };
 
     it("should mark history panel closed", () => {
@@ -54,7 +54,7 @@ describe("history", () => {
 
   describe("on CLOSE_CHANNEL action", () => {
     let closeChanneAction = {
-      type: CLOSE_CHANNEL
+      type: CLOSE_CHANNEL,
     };
 
     it("should mark history panel closed", () => {

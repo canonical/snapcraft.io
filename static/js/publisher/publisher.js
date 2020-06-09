@@ -31,5 +31,5 @@ export {
   submitEnabler,
   tour,
   initBuilds,
-  initRepoDisconnect
+  initRepoDisconnect,
 };

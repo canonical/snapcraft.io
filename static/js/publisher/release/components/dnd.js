@@ -40,8 +40,8 @@ export const useDragging = ({ item, canDrag }) => {
   const [{ isDragging }, drag, preview] = useDrag({
     item: item,
     canDrag: () => canDrag,
-    collect: monitor => ({
-      isDragging: !!monitor.isDragging()
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
     }),
 
     begin: () => {
@@ -51,7 +51,7 @@ export const useDragging = ({ item, canDrag }) => {
       if (isRendered) {
         setIsGrabbing(false);
       }
-    }
+    },
   });
 
   return [isDragging, isGrabbing, drag, preview];

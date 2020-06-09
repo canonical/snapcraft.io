@@ -16,7 +16,7 @@ import { initChannelMap } from "./actions/channelMap";
 import {
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMap,
 } from "./releasesState";
 
 class ReleasesController extends Component {
@@ -65,25 +65,22 @@ ReleasesController.propTypes = {
 
   initChannelMap: PropTypes.func,
   updateReleases: PropTypes.func,
-  updateRevisions: PropTypes.func
+  updateRevisions: PropTypes.func,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     showModal: state.modal.visible,
-    notification: state.notification
+    notification: state.notification,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    initChannelMap: channelMap => dispatch(initChannelMap(channelMap)),
-    updateRevisions: revisions => dispatch(updateRevisions(revisions)),
-    updateReleases: releases => dispatch(updateReleases(releases))
+    initChannelMap: (channelMap) => dispatch(initChannelMap(channelMap)),
+    updateRevisions: (revisions) => dispatch(updateRevisions(revisions)),
+    updateReleases: (releases) => dispatch(updateReleases(releases)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReleasesController);
+export default connect(mapStateToProps, mapDispatchToProps)(ReleasesController);

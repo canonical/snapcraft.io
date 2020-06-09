@@ -1,5 +1,3 @@
-/* global global, jest */
-
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -41,9 +39,9 @@ describe("triggerGAEvent", () => {
           eventAction: "test",
           eventCategory: "Release UI",
           eventLabel: "testSnap/test",
-          eventValue: undefined
-        }
-      ]
+          eventValue: undefined,
+        },
+      ],
     ]);
   });
 });

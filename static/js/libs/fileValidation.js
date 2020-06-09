@@ -43,7 +43,7 @@ function baseRestrictions(file, restrictions) {
 }
 
 function imageWhitelistHandler(file, image, whitelist) {
-  const errors = whitelist.filter(whitelistItem => {
+  const errors = whitelist.filter((whitelistItem) => {
     if (whitelistItem.fileName) {
       let fileName = file.name.split(".");
       fileName = fileName.slice(0, fileName.length - 1).join(".");
@@ -113,11 +113,7 @@ function imageRestrictions(file, restrictions) {
 
       if (hasDimensionError) {
         reject([
-          `has dimensions ${width} x ${height} pixels. It needs to be at least ${
-            restrictions.width.min
-          } x ${restrictions.height.min} and at most ${
-            restrictions.width.max
-          } x ${restrictions.height.max} pixels.`
+          `has dimensions ${width} x ${height} pixels. It needs to be at least ${restrictions.width.min} x ${restrictions.height.min} and at most ${restrictions.width.max} x ${restrictions.height.max} pixels.`,
         ]);
         return;
       }
@@ -140,7 +136,8 @@ function imageRestrictions(file, restrictions) {
 
         if (
           (allowedRatios.length === 1 && aspectRatio !== allowedRatios[0]) ||
-          (aspectRatio > allowedRatios[1] || aspectRatio < allowedRatios[0])
+          aspectRatio > allowedRatios[1] ||
+          aspectRatio < allowedRatios[0]
         ) {
           hasAspectError = true;
         }
@@ -150,7 +147,7 @@ function imageRestrictions(file, restrictions) {
           const max = aspectRatioMax[1] / aspectRatioMax[0];
 
           const message = [
-            `(${width} x ${height} pixels) does not have the correct aspect ratio:`
+            `(${width} x ${height} pixels) does not have the correct aspect ratio:`,
           ];
 
           // If the min and max are the same we only accept 1 aspect ratio
@@ -178,9 +175,7 @@ function imageRestrictions(file, restrictions) {
             // Otherwise it's a range
           } else {
             message.push(
-              `it needs to be between ${aspectRatioMin[0]}:${
-                aspectRatioMin[1]
-              } and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`
+              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`
             );
           }
 
@@ -196,11 +191,11 @@ function imageRestrictions(file, restrictions) {
 }
 
 function validateRestrictions(file, restrictions) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     baseRestrictions(file, restrictions)
-      .then(file => imageRestrictions(file, restrictions))
+      .then((file) => imageRestrictions(file, restrictions))
       .then(resolve)
-      .catch(errors => {
+      .catch((errors) => {
         file.errors = errors;
         resolve(file);
       });

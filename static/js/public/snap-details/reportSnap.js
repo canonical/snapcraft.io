@@ -1,8 +1,8 @@
 import "whatwg-fetch";
 import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
 
-const showEl = el => el.classList.remove("u-hide");
-const hideEl = el => el.classList.add("u-hide");
+const showEl = (el) => el.classList.remove("u-hide");
+const hideEl = (el) => el.classList.add("u-hide");
 
 function toggleModal(modal, show) {
   if (typeof show === "undefined") {
@@ -47,12 +47,12 @@ export default function initReportSnap(
   const modal = document.querySelector(modalSelector);
   const reportForm = modal.querySelector("form");
 
-  toggle.addEventListener("click", event => {
+  toggle.addEventListener("click", (event) => {
     event.preventDefault();
     toggleModal(modal);
   });
 
-  modal.addEventListener("click", event => {
+  modal.addEventListener("click", (event) => {
     const target = event.target;
 
     if (target.closest(".js-modal-close") || target === modal) {
@@ -60,7 +60,7 @@ export default function initReportSnap(
     }
   });
 
-  reportForm.addEventListener("submit", e => {
+  reportForm.addEventListener("submit", (e) => {
     e.preventDefault();
     buttonLoading(
       reportForm.querySelector("button[type=submit]"),
@@ -70,14 +70,14 @@ export default function initReportSnap(
     fetch(formURL, {
       method: "POST",
       body: new FormData(reportForm),
-      mode: "no-cors"
+      mode: "no-cors",
     })
       .then(() => showSuccess(modal))
       .catch(() => showError(modal));
   });
 
   // close modal on ESC
-  window.addEventListener("keyup", event => {
+  window.addEventListener("keyup", (event) => {
     if (event.keyCode === 27) {
       toggleModal(modal, false);
     }

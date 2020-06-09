@@ -1,5 +1,3 @@
-/* global global, jest */
-
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -25,17 +23,17 @@ import {
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
-  cancelProgressiveRelease
+  cancelProgressiveRelease,
 } from "./pendingReleases";
 
 describe("pendingReleases actions", () => {
   const revision = {
     revision: 1,
-    architectures: ["test64"]
+    architectures: ["test64"],
   };
   const revision2 = {
     revision: 2,
-    architectures: ["test64"]
+    architectures: ["test64"],
   };
   const channel = "test/edge";
   const previousRevisions = [];
@@ -44,8 +42,8 @@ describe("pendingReleases actions", () => {
     ...initialState,
     revisions: {
       [revision.revision]: revision,
-      [revision2.revision]: revision2
-    }
+      [revision2.revision]: revision2,
+    },
   };
 
   beforeEach(() => {
@@ -85,16 +83,16 @@ describe("pendingReleases actions", () => {
           {
             architecture: "test64",
             channel: channel,
-            revision: 2
-          }
-        ]
+            revision: 2,
+          },
+        ],
       };
       const store = mockStore(stateWithPreviousReleases);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toEqual({
         percentage: 100,
-        paused: false
+        paused: false,
       });
     });
 
@@ -123,15 +121,15 @@ describe("pendingReleases actions", () => {
             channel: "test/edge",
             revision: 2,
             risk: "edge",
-            track: "test"
-          }
+            track: "test",
+          },
         ],
         revisions: {
           "2": {
             revision: 2,
-            achitectures: ["test64"]
-          }
-        }
+            achitectures: ["test64"],
+          },
+        },
       };
 
       it("should return previous revisions, if available", () => {
@@ -140,8 +138,8 @@ describe("pendingReleases actions", () => {
         const revisionWithRelease = {
           ...revision,
           release: {
-            architecture: "test64"
-          }
+            architecture: "test64",
+          },
         };
 
         const dispatch = store.dispatch(
@@ -153,8 +151,8 @@ describe("pendingReleases actions", () => {
 
         expect(dispatch.payload.previousRevisions).toEqual([
           {
-            ...stateWithPreviousRevisions.revisions["2"]
-          }
+            ...stateWithPreviousRevisions.revisions["2"],
+          },
         ]);
       });
     });
@@ -182,9 +180,9 @@ describe("pendingReleases actions", () => {
         ...initialState,
         channelMap: {
           "test/edge": {
-            test64: { ...revision }
-          }
-        }
+            test64: { ...revision },
+          },
+        },
       };
 
       it("should not dispatch RELEASE_REVISION action", () => {
@@ -219,13 +217,13 @@ describe("pendingReleases actions", () => {
         channelMap: {
           "test/edge": {
             test64: { ...revision },
-            abc42: { ...revision2 }
-          }
+            abc42: { ...revision2 },
+          },
         },
         revisions: {
           [revision.revision]: revision,
-          [revision2.revision]: revision2
-        }
+          [revision2.revision]: revision2,
+        },
       };
 
       it("should dispatch RELEASE_REVISION for each revision to promote", () => {
@@ -241,24 +239,24 @@ describe("pendingReleases actions", () => {
             channel: targetChannel,
             previousRevisions,
             progressive: actions.find(
-              action =>
+              (action) =>
                 action.payload.revision.revision === revision.revision &&
                 action.payload.channel === targetChannel
-            ).payload.progressive
-          }
+            ).payload.progressive,
+          },
         });
         expect(actions).toContainEqual({
           type: RELEASE_REVISION,
           payload: {
             progressive: actions.find(
-              action =>
+              (action) =>
                 action.payload.revision.revision === revision2.revision &&
                 action.payload.channel === targetChannel
             ).payload.progressive,
             revision: revision2,
             channel: targetChannel,
-            previousRevisions: []
-          }
+            previousRevisions: [],
+          },
         });
       });
     });
@@ -352,7 +350,7 @@ describe("pendingReleases actions", () => {
       "sha3-384": "test",
       size: 4096,
       status: "Published",
-      version: "1.8.0"
+      version: "1.8.0",
     };
 
     it("should create an action to cancel a release", () => {

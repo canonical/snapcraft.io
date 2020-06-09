@@ -31,8 +31,8 @@ function initRepoDisconnect() {
     repoDisconnectForm
   ) {
     // Add click handler for clicks on elements with aria-controls for repo-disconnect-modal
-    [].slice.call(repoDisconnectButtons).forEach(el => {
-      el.addEventListener("click", event => {
+    [].slice.call(repoDisconnectButtons).forEach((el) => {
+      el.addEventListener("click", (event) => {
         event.preventDefault();
         toggleModal(repoDisconnectModal);
       });

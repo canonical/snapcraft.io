@@ -1,4 +1,4 @@
-(function() {
+(function () {
   /**
    * Find notification dismiss elements and make them interactive
    *
@@ -40,8 +40,8 @@
       notificationHolder.parentNode.removeChild(notificationHolder);
     }
 
-    const removeNotification = (function() {
-      return function(e) {
+    const removeNotification = (function () {
+      return function (e) {
         e.preventDefault();
         if (isPermanent) {
           if (window.localStorage) {

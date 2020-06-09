@@ -25,7 +25,7 @@ const REVISION_STATUS = {
   MANUAL_REVIEW_PENDING: "ManualReviewPending",
   NEEDS_INFORMATION: "NeedsInformation",
   AUTOMATICALLY_REJECTED: "AutomaticallyRejected",
-  REJECTED: "Rejected"
+  REJECTED: "Rejected",
 };
 
 export {
@@ -42,5 +42,5 @@ export {
   BUILD,
   RISKS,
   RISKS_WITH_AVAILABLE,
-  REVISION_STATUS
+  REVISION_STATUS,
 };

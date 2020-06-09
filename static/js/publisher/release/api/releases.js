@@ -6,7 +6,7 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
   let queue = Promise.resolve(); // Q() in q
 
   // handle releases as a queue
-  releases.forEach(release => {
+  releases.forEach((release) => {
     return (queue = queue.then(() => {
       return fetchRelease(
         csrfToken,
@@ -14,7 +14,7 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
         release.id,
         release.channels,
         release.progressive
-      ).then(json => onComplete(json, release));
+      ).then((json) => onComplete(json, release));
     }));
   });
 
@@ -29,12 +29,12 @@ export function fetchReleasesHistory(csrfToken, snapName) {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken
+      "X-CSRFToken": csrfToken,
     },
     redirect: "follow",
-    referrer: "no-referrer"
+    referrer: "no-referrer",
   })
-    .then(response => response.json())
+    .then((response) => response.json())
     .catch(() => {
       throw new Error(ERROR_MESSAGE);
     });
@@ -50,7 +50,7 @@ export function fetchRelease(
   const body = {
     name: snapName,
     revision,
-    channels
+    channels,
   };
 
   if (progressive) {
@@ -64,13 +64,13 @@ export function fetchRelease(
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken
+      "X-CSRFToken": csrfToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   })
-    .then(response => response.json())
+    .then((response) => response.json())
     .catch(() => {
       throw new Error(ERROR_MESSAGE);
     });
@@ -78,7 +78,7 @@ export function fetchRelease(
 
 export function fetchCloses(onComplete, csrfToken, snapName, channels) {
   if (channels && channels.length) {
-    return fetchClose(csrfToken, snapName, channels).then(json => {
+    return fetchClose(csrfToken, snapName, channels).then((json) => {
       onComplete(json, channels);
     });
   } else {
@@ -94,13 +94,13 @@ export function fetchClose(csrfToken, snapName, channels) {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken
+      "X-CSRFToken": csrfToken,
     },
     redirect: "follow",
     referrer: "no-referrer",
-    body: JSON.stringify({ channels })
+    body: JSON.stringify({ channels }),
   })
-    .then(response => response.json())
+    .then((response) => response.json())
     .catch(() => {
       throw new Error(ERROR_MESSAGE);
     });

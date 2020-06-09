@@ -9,7 +9,7 @@ import MainTable from "@canonical/react-components/dist/components/MainTable";
 import {
   UserFacingStatus,
   createDuration,
-  TriggerBuildStatus
+  TriggerBuildStatus,
 } from "./helpers";
 
 import TriggerBuild from "./components/triggerBuild";
@@ -30,7 +30,7 @@ class Builds extends React.Component {
       builds: props.builds,
       queueTime:
         props.builds.length > 0 ? this.getInitialQueueTime(props.builds) : {},
-      shouldUpdateQueueTime: true
+      shouldUpdateQueueTime: true,
     };
 
     this.showMoreHandler = this.showMoreHandler.bind(this);
@@ -49,7 +49,7 @@ class Builds extends React.Component {
   getInitialQueueTime(builds) {
     let newQueueTime = {};
 
-    builds.forEach(build => {
+    builds.forEach((build) => {
       if (build.status === "building_soon" && build.queue_time) {
         newQueueTime[build.arch_tag] = build.queue_time;
       }
@@ -62,7 +62,7 @@ class Builds extends React.Component {
     const { queueTime, builds } = this.state;
     let newQueueTime = {};
 
-    builds.forEach(build => {
+    builds.forEach((build) => {
       const isBuildingSoon =
         build.status === "building_soon" && build.queue_time;
       if (isBuildingSoon) {
@@ -74,7 +74,7 @@ class Builds extends React.Component {
 
     this.setState({
       queueTime: newQueueTime,
-      shouldUpdateQueueTime: newQueueTime ? true : false
+      shouldUpdateQueueTime: newQueueTime ? true : false,
     });
   }
 
@@ -85,7 +85,7 @@ class Builds extends React.Component {
       builds,
       triggerBuildStatus,
       triggerBuildLoading,
-      shouldUpdateQueueTime
+      shouldUpdateQueueTime,
     } = this.state;
     const { snapName, updateFreq } = this.props;
     const { SUCCESS, IDLE } = TriggerBuildStatus;
@@ -106,8 +106,8 @@ class Builds extends React.Component {
     }
 
     fetch(url)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         this.setState(
           {
             triggerBuildLoading:
@@ -117,7 +117,7 @@ class Builds extends React.Component {
             isLoading: false,
             builds: fromStart
               ? result.snap_builds
-              : builds.slice().concat(result.snap_builds)
+              : builds.slice().concat(result.snap_builds),
           },
           () => {
             if (shouldUpdateQueueTime) {
@@ -128,7 +128,7 @@ class Builds extends React.Component {
       })
       .catch(() => {
         this.setState({
-          isLoading: false
+          isLoading: false,
         });
       });
 
@@ -151,11 +151,11 @@ class Builds extends React.Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": csrf_token
-      }
+        "X-CSRFToken": csrf_token,
+      },
     })
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         if (result.success) {
           this.setState({ triggerBuildStatus: SUCCESS });
         } else {
@@ -163,14 +163,14 @@ class Builds extends React.Component {
             triggerBuildStatus: ERROR,
             triggerBuildErrorMessage: result.error.message
               ? result.error.message
-              : ""
+              : "",
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           triggerBuildStatus: ERROR,
-          triggerBuildErrorMessage: error.message ? error.message : ""
+          triggerBuildErrorMessage: error.message ? error.message : "",
         });
       });
   }
@@ -182,7 +182,7 @@ class Builds extends React.Component {
       {
         fetchStart: fetchStart + 15,
         fetchSize: fetchSize + 15,
-        isLoading: true
+        isLoading: true,
       },
       () => {
         this.fetchBuilds();
@@ -197,7 +197,7 @@ class Builds extends React.Component {
       triggerBuildStatus,
       triggerBuildErrorMessage,
       triggerBuildLoading,
-      queueTime
+      queueTime,
     } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
 
@@ -210,7 +210,7 @@ class Builds extends React.Component {
     let rows;
 
     if (builds.length > 0) {
-      rows = builds.map(build => {
+      rows = builds.map((build) => {
         let buildStatus = build.status;
         if (build.status === "in_progress" && build.duration) {
           buildStatus = "releasing_soon";
@@ -233,14 +233,14 @@ class Builds extends React.Component {
                 )
               ) : (
                 ""
-              )
+              ),
             },
             {
-              content: build.arch_tag
+              content: build.arch_tag,
             },
             {
               content: createDuration(build.duration),
-              className: "u-hide--small"
+              className: "u-hide--small",
             },
             {
               content: (
@@ -258,17 +258,17 @@ class Builds extends React.Component {
               className: "has-icon",
               title: queueTime[build.arch_tag]
                 ? `Queue time: up to ${queueTime[build.arch_tag]}`
-                : null
+                : null,
             },
             {
               content: build.datebuilt
                 ? distanceInWords(new Date(), build.datebuilt, {
-                    addSuffix: true
+                    addSuffix: true,
                   })
                 : "",
-              className: "u-align-text--right"
-            }
-          ]
+              className: "u-align-text--right",
+            },
+          ],
         };
       });
     } else {
@@ -276,10 +276,10 @@ class Builds extends React.Component {
         {
           columns: [
             {
-              content: "Waiting for builds..."
-            }
-          ]
-        }
+              content: "Waiting for builds...",
+            },
+          ],
+        },
       ];
     }
 
@@ -297,7 +297,7 @@ class Builds extends React.Component {
             { content: "Architecture" },
             { content: "Build Duration", className: "u-hide--small" },
             { content: "Result", className: "has-icon" },
-            { content: "Build Finished", className: "u-align-text--right" }
+            { content: "Build Finished", className: "u-align-text--right" },
           ]}
           rows={rows}
         />
@@ -326,11 +326,11 @@ Builds.propTypes = {
   builds: PropTypes.array,
   totalBuilds: PropTypes.number,
   updateFreq: PropTypes.number,
-  singleBuild: PropTypes.bool
+  singleBuild: PropTypes.bool,
 };
 
 Builds.defaultProps = {
-  singleBuild: false
+  singleBuild: false,
 };
 
 export function initBuilds(

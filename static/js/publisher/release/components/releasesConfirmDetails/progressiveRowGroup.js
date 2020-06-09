@@ -10,7 +10,7 @@ const ProgressiveRowGroup = ({
   useGlobal,
   globalPercentage,
   toggleGlobal,
-  updatePercentage
+  updatePercentage,
 }) => {
   return (
     <div className="p-release-details-group">
@@ -51,7 +51,7 @@ ProgressiveRowGroup.propTypes = {
   useGlobal: PropTypes.bool,
   globalPercentage: PropTypes.number,
   toggleGlobal: PropTypes.func,
-  updatePercentage: PropTypes.func
+  updatePercentage: PropTypes.func,
 };
 
 export default ProgressiveRowGroup;

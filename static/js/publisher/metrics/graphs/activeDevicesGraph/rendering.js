@@ -45,10 +45,7 @@ function renderYAxis() {
   if (yAxis.size() > 0) {
     yAxis.call(this.yAxis);
   } else {
-    yAxis = this.g
-      .append("g")
-      .attr("class", "axis axis--y")
-      .call(this.yAxis);
+    yAxis = this.g.append("g").attr("class", "axis axis--y").call(this.yAxis);
   }
 
   yAxis.selectAll(".tick").each((d, i, nodes) => {
@@ -80,7 +77,7 @@ function renderArea() {
     .append("path")
     .attr("class", "area")
     .attr("pointer-events", "none")
-    .attr("fill", d => this.colorScale(d.key))
+    .attr("fill", (d) => this.colorScale(d.key))
     .attr("d", this.areas);
 }
 
@@ -100,19 +97,19 @@ function renderLines() {
     .append("path")
     .attr("class", "path")
     .attr("pointer-events", "none")
-    .attr("data-name", d => d.name)
-    .style("stroke", d => this.colorScale(d.name))
+    .attr("data-name", (d) => d.name)
+    .style("stroke", (d) => this.colorScale(d.name))
     .style("fill", "none")
     .merge(paths)
-    .attr("d", d => this.lines(d.values));
+    .attr("d", (d) => this.lines(d.values));
 }
 
 function renderAnnotations() {
   if (this.annotationsData && this.annotationsData.length > 0) {
-    this.annotationsData.forEach(annotation => {
+    this.annotationsData.forEach((annotation) => {
       const annotationKey = Object.keys(annotation.data)
-        .filter(key => key !== "date")
-        .filter(key => annotation.data[key] !== 0)[0];
+        .filter((key) => key !== "date")
+        .filter((key) => annotation.data[key] !== 0)[0];
 
       // Add annotations
       const annotationsLayer = this.g

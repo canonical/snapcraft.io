@@ -2,7 +2,7 @@ import { initMedia } from "./initMedia";
 
 describe("initMedia", () => {
   it("should throw if there is no media holder", () => {
-    expect(function() {
+    expect(function () {
       initMedia();
     }).toThrow();
   });

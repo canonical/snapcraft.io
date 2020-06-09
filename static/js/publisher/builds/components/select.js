@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const Select = ({ options, updateSelection, disabled, selectedOption }) => (
   <select
-    onChange={e => updateSelection(e.target.value)}
+    onChange={(e) => updateSelection(e.target.value)}
     disabled={disabled}
     value={selectedOption}
   >
@@ -23,7 +23,7 @@ Select.propTypes = {
   options: PropTypes.array.isRequired,
   selectedOption: PropTypes.string,
   updateSelection: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 export default Select;

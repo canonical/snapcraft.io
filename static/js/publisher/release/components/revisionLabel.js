@@ -6,7 +6,7 @@ import { isInDevmode } from "../helpers";
 export default function RevisionLabel({
   revision,
   showTooltip,
-  isProgressive
+  isProgressive,
 }) {
   let revisionLabel = revision.revision;
 
@@ -46,5 +46,5 @@ export default function RevisionLabel({
 RevisionLabel.propTypes = {
   revision: PropTypes.object.isRequired,
   showTooltip: PropTypes.bool,
-  isProgressive: PropTypes.bool
+  isProgressive: PropTypes.bool,
 };

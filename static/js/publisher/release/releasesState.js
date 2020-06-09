@@ -2,7 +2,7 @@ import { RISKS } from "./constants";
 
 function getRevisionsMap(revisions) {
   const revisionsMap = {};
-  revisions.forEach(rev => {
+  revisions.forEach((rev) => {
     rev.channels = [];
     revisionsMap[rev.revision] = rev;
   });
@@ -16,7 +16,7 @@ function initReleasesData(revisionsMap, releases) {
   releases
     .slice()
     .reverse()
-    .forEach(release => {
+    .forEach((release) => {
       if (release.revision) {
         const rev = revisionsMap[release.revision];
 
@@ -40,7 +40,7 @@ function initReleasesData(revisionsMap, releases) {
 function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
   const releasedChannels = {};
 
-  channelMap.forEach(mapInfo => {
+  channelMap.forEach((mapInfo) => {
     if (!releasedChannels[mapInfo.channel]) {
       releasedChannels[mapInfo.channel] = {};
     }
@@ -89,7 +89,7 @@ function getTrackingChannel(releasedChannels, track, risk, arch) {
 function getUnassignedRevisions(revisionsMap, arch) {
   let filteredRevisions = Object.values(revisionsMap).reverse();
   if (arch) {
-    filteredRevisions = filteredRevisions.filter(revision => {
+    filteredRevisions = filteredRevisions.filter((revision) => {
       return (
         revision.architectures.includes(arch) &&
         (!revision.channels || revision.channels.length === 0)
@@ -104,5 +104,5 @@ export {
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMap,
 };

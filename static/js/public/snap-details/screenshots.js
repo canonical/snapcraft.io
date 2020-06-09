@@ -20,8 +20,8 @@ function filterImages() {
   return Array.from(
     screenshotsEl.querySelectorAll("img, video, .js-video-slide")
   )
-    .filter(image => image.dataset.original)
-    .map(image => image.dataset.original);
+    .filter((image) => image.dataset.original)
+    .map((image) => image.dataset.original);
 }
 
 function initScreenshots(screenshotsId) {
@@ -43,8 +43,8 @@ function initScreenshots(screenshotsId) {
         setTimeout(() => {
           window.dispatchEvent(new Event("resize"));
         }, 200);
-      }
-    }
+      },
+    },
   });
 
   // We need to resize the iframe on window resize

@@ -28,7 +28,7 @@ class RepoConnect extends React.Component {
       status: null,
       snapName: this.props.snapName,
       yamlFilePath: null,
-      error: null
+      error: null,
     };
 
     this.handleRepoSelect = this.handleRepoSelect.bind(this);
@@ -70,7 +70,7 @@ class RepoConnect extends React.Component {
       {
         selectedRepo: selectedRepo,
         status: null,
-        error: null
+        error: null,
       },
       () => this.checkRepo(selectedRepo)
     );
@@ -103,14 +103,14 @@ class RepoConnect extends React.Component {
     }
     this.setState({
       isRepoListDisabled: true,
-      status: LOADING
+      status: LOADING,
     });
 
     fetch(url)
-      .then(res => res.json())
-      .then(result => {
+      .then((res) => res.json())
+      .then((result) => {
         let newRepoList = result
-          .map(el => {
+          .map((el) => {
             // a user may have access to a repo in an org
             // but they're not part of that org
             // they may also have their own fork
@@ -119,7 +119,7 @@ class RepoConnect extends React.Component {
             if (el.nameWithOwner) {
               if (el.nameWithOwner.indexOf(`${user.login}/`) === 0) {
                 return {
-                  value: el.nameWithOwner.replace(`${user.login}/`, "")
+                  value: el.nameWithOwner.replace(`${user.login}/`, ""),
                 };
               } else {
                 return { value: el.nameWithOwner };
@@ -132,14 +132,14 @@ class RepoConnect extends React.Component {
         this.setState({
           repoList: newRepoList,
           isRepoListDisabled: false,
-          status: null
+          status: null,
         });
       })
       .catch(() => {
         this.setState({
           isRepoListDisabled: false,
           status: ERROR,
-          error: { type: NO_REPOS }
+          error: { type: NO_REPOS },
         });
       });
   }
@@ -151,7 +151,7 @@ class RepoConnect extends React.Component {
    */
   checkRepo(selectedRepo) {
     const { snapName, repoList, selectedOrganization } = this.state;
-    if (selectedRepo && repoList.some(el => el.value === selectedRepo)) {
+    if (selectedRepo && repoList.some((el) => el.value === selectedRepo)) {
       const orgRepo = RepoConnect.orgRepoString(
         selectedOrganization,
         selectedRepo
@@ -160,16 +160,16 @@ class RepoConnect extends React.Component {
 
       this.setState({
         isRepoListDisabled: true,
-        status: LOADING
+        status: LOADING,
       });
 
       fetch(url)
-        .then(res => res.json())
-        .then(result => {
+        .then((res) => res.json())
+        .then((result) => {
           if (result.success) {
             this.setState({
               isRepoListDisabled: false,
-              status: SUCCESS
+              status: SUCCESS,
             });
           } else {
             this.setState({
@@ -181,14 +181,14 @@ class RepoConnect extends React.Component {
                 : null,
               yamlFilePath: result.error.yaml_location
                 ? result.error.yaml_location
-                : null
+                : null,
             });
           }
         })
         .catch(() => {
           this.setState({
             isRepoListDisabled: false,
-            status: ERROR
+            status: ERROR,
           });
         });
     }
@@ -206,7 +206,7 @@ class RepoConnect extends React.Component {
       snapName,
       selectedOrganization,
       selectedRepo,
-      yamlFilePath
+      yamlFilePath,
     } = this.state;
 
     const orgRepo = RepoConnect.orgRepoString(
@@ -389,7 +389,7 @@ class RepoConnect extends React.Component {
       selectedRepo,
       isRepoListDisabled,
       repoList,
-      status
+      status,
     } = this.state;
 
     const orgRepo = RepoConnect.orgRepoString(
@@ -434,7 +434,7 @@ class RepoConnect extends React.Component {
 RepoConnect.propTypes = {
   organizations: PropTypes.array,
   user: PropTypes.object,
-  snapName: PropTypes.string
+  snapName: PropTypes.string,
 };
 
 /**
@@ -453,14 +453,14 @@ function init(selector, organizations, user, snapName) {
   const el = document.querySelector(selector);
 
   // Add user login to the organization list
-  let _organizations = organizations.map(item => {
+  let _organizations = organizations.map((item) => {
     return { value: item.login };
   });
 
   _organizations = [
     { value: "Select organization", disabled: true },
     { value: user.login },
-    ..._organizations
+    ..._organizations,
   ];
 
   if (el) {

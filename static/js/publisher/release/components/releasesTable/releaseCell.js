@@ -17,7 +17,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   getRevisionsFromBuild,
   getProgressiveState,
-  hasPendingRelease
+  hasPendingRelease,
 } from "../../selectors";
 
 import {
@@ -25,11 +25,11 @@ import {
   RevisionInfo,
   EmptyInfo,
   CloseChannelInfo,
-  UnassignedInfo
+  UnassignedInfo,
 } from "./cellViews";
 
 // releases table cell with data from channel map release
-const ReleasesTableReleaseCell = props => {
+const ReleasesTableReleaseCell = (props) => {
   const {
     track,
     risk,
@@ -45,7 +45,7 @@ const ReleasesTableReleaseCell = props => {
     hasPendingRelease,
     undoRelease,
     toggleHistoryPanel,
-    getProgressiveState
+    getProgressiveState,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -67,7 +67,7 @@ const ReleasesTableReleaseCell = props => {
     [
       progressiveState,
       previousRevision,
-      pendingProgressiveState
+      pendingProgressiveState,
     ] = getProgressiveState(channel, arch, pendingRelease);
   }
 
@@ -90,7 +90,7 @@ const ReleasesTableReleaseCell = props => {
     architectures: currentRevision ? currentRevision.architectures : [],
     risk,
     branch,
-    type: DND_ITEM_REVISIONS
+    type: DND_ITEM_REVISIONS,
   };
 
   function handleHistoryIconClick(arch, risk, track, branchName) {
@@ -107,7 +107,7 @@ const ReleasesTableReleaseCell = props => {
     isActive ? "is-active" : "",
     isHighlighted ? "is-highlighted" : "",
     isPending ? "is-pending" : "",
-    isOverParent ? "is-over" : ""
+    isOverParent ? "is-over" : "",
   ].join(" ");
 
   const actionsNode = pendingRelease ? (
@@ -172,7 +172,7 @@ const ReleasesTableReleaseCell = props => {
           <span
             className="p-release__progressive-pending-percentage"
             style={{
-              width: `${pendingProgressiveState.percentage}%`
+              width: `${pendingProgressiveState.percentage}%`,
             }}
           />
         )}
@@ -210,29 +210,30 @@ ReleasesTableReleaseCell.propTypes = {
   branch: PropTypes.object,
   isOverParent: PropTypes.bool,
 
-  revision: PropTypes.object
+  revision: PropTypes.object,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     channelMap: state.channelMap,
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
     pendingChannelMap: getPendingChannelMap(state),
-    getAvailableCount: arch =>
+    getAvailableCount: (arch) =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
-    getRevisionsFromBuild: buildId => getRevisionsFromBuild(state, buildId),
+    getRevisionsFromBuild: (buildId) => getRevisionsFromBuild(state, buildId),
     getProgressiveState: (channel, arch, isPending) =>
       getProgressiveState(state, channel, arch, isPending),
     hasPendingRelease: (channel, arch) =>
-      hasPendingRelease(state, channel, arch)
+      hasPendingRelease(state, channel, arch),
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    toggleHistoryPanel: filters => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) => dispatch(undoRelease(revision, channel))
+    toggleHistoryPanel: (filters) => dispatch(toggleHistory(filters)),
+    undoRelease: (revision, channel) =>
+      dispatch(undoRelease(revision, channel)),
   };
 };
 

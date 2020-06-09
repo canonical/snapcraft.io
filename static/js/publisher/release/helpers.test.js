@@ -4,7 +4,7 @@ import {
   isRevisionBuiltOnLauchpad,
   getRevisionsArchitectures,
   isSameVersion,
-  jsonClone
+  jsonClone,
 } from "./helpers";
 
 describe("getChannelName", () => {
@@ -32,7 +32,7 @@ describe("isRevisionBuiltOnLauchpad", () => {
     expect(
       isRevisionBuiltOnLauchpad({
         revision: 1,
-        attributes: { "build-request-id": "something-else" }
+        attributes: { "build-request-id": "something-else" },
       })
     ).toBe(false);
   });
@@ -42,7 +42,7 @@ describe("isRevisionBuiltOnLauchpad", () => {
       isRevisionBuiltOnLauchpad({
         revision: 1,
         version: "1",
-        attributes: { "build-request-id": "lp-123" }
+        attributes: { "build-request-id": "lp-123" },
       })
     ).toBe(true);
   });
@@ -54,13 +54,13 @@ describe("getRevisionsArchitectures", () => {
       { architectures: ["test4"] },
       { architectures: ["test2"] },
       { architectures: ["test3", "test2", "test1"] },
-      { architectures: ["test3", "test4"] }
+      { architectures: ["test3", "test4"] },
     ];
     expect(getRevisionsArchitectures(revisions)).toEqual([
       "test1",
       "test2",
       "test3",
-      "test4"
+      "test4",
     ]);
   });
 });
@@ -71,7 +71,7 @@ describe("isSameVersion", () => {
       { version: "test" },
       { version: "test" },
       { version: "test" },
-      { version: "test" }
+      { version: "test" },
     ];
     expect(isSameVersion(revisions)).toBe(true);
   });
@@ -81,7 +81,7 @@ describe("isSameVersion", () => {
       { version: "test" },
       { version: "test2" },
       { version: "test" },
-      { version: "test2" }
+      { version: "test2" },
     ];
     expect(isSameVersion(revisions)).toBe(false);
   });
@@ -93,7 +93,7 @@ describe("jsonClone", () => {
       string: "string",
       number: 12,
       boolean: true,
-      array: ["string", 12, true]
+      array: ["string", 12, true],
     };
     const result = jsonClone(testJson);
     expect(result).toEqual(testJson);
@@ -103,9 +103,9 @@ describe("jsonClone", () => {
   it("should remove methods", () => {
     const testJson = {
       string: "string",
-      function: function() {
+      function: function () {
         return "test";
-      }
+      },
     };
 
     expect(jsonClone(testJson)).toEqual({ string: "string" });

@@ -1,6 +1,6 @@
 import {
   RISKS_WITH_AVAILABLE as RISKS,
-  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE
+  DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE,
 } from "../constants";
 
 import { hideNotification, showNotification } from "./globalNotification";
@@ -12,7 +12,7 @@ import { closeHistory } from "./history";
 import {
   fetchReleasesHistory,
   fetchReleases,
-  fetchCloses
+  fetchCloses,
 } from "../api/releases";
 
 import { getRevisionsMap, initReleasesData } from "../releasesState";
@@ -20,7 +20,7 @@ import { getRevisionsMap, initReleasesData } from "../releasesState";
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
 function updateReleasesData(releasesData) {
-  return dispatch => {
+  return (dispatch) => {
     // init channel data in revisions list
     const revisionsMap = getRevisionsMap(releasesData.revisions);
     initReleasesData(revisionsMap, releasesData.releases);
@@ -32,7 +32,7 @@ function updateReleasesData(releasesData) {
 export function handleCloseResponse(dispatch, json, channels) {
   if (json.success) {
     if (json.closed_channels && json.closed_channels.length > 0) {
-      json.closed_channels.forEach(channel => {
+      json.closed_channels.forEach((channel) => {
         // make sure channels without track name get prefixed with 'latest'
         if (RISKS.indexOf(channel.split("/")[0]) !== -1) {
           // TODO: This should be the default track, not latest
@@ -61,8 +61,8 @@ export function getErrorMessage(error) {
 
     if (errors.length) {
       message = `${message} ${errors
-        .map(e => e.message)
-        .filter(m => m)
+        .map((e) => e.message)
+        .filter((m) => m)
         .join(" ")}`;
     }
   }
@@ -80,13 +80,13 @@ export function handleReleaseResponse(
   if (json.success) {
     // Update channel map based on the response
     // We need to use channel_map_tree to get branches
-    Object.keys(json.channel_map_tree).forEach(trackKey => {
+    Object.keys(json.channel_map_tree).forEach((trackKey) => {
       const track = json.channel_map_tree[trackKey];
-      Object.keys(track).forEach(seriesKey => {
+      Object.keys(track).forEach((seriesKey) => {
         const series = track[seriesKey];
-        Object.keys(series).forEach(archKey => {
+        Object.keys(series).forEach((archKey) => {
           const arch = series[archKey];
-          arch.forEach(map => {
+          arch.forEach((map) => {
             if (map.revision) {
               let revision;
 
@@ -99,7 +99,7 @@ export function handleReleaseResponse(
                 revision = {
                   revision: map.revision,
                   version: map.version,
-                  architectures: release.revision.architectures
+                  architectures: release.revision.architectures,
                 };
               }
 
@@ -118,7 +118,7 @@ export function handleReleaseResponse(
 }
 
 export function releaseRevisions() {
-  const mapToRelease = pendingRelease => {
+  const mapToRelease = (pendingRelease) => {
     let progressive = null;
 
     if (
@@ -132,7 +132,7 @@ export function releaseRevisions() {
       id: pendingRelease.revision.revision,
       revision: pendingRelease.revision,
       channels: [pendingRelease.channel],
-      progressive: progressive
+      progressive: progressive,
     };
   };
 
@@ -143,8 +143,8 @@ export function releaseRevisions() {
     // To dedupe releases
     const progressiveReleases = [];
     const regularReleases = [];
-    Object.keys(pendingReleases).forEach(revId => {
-      Object.keys(pendingReleases[revId]).forEach(channel => {
+    Object.keys(pendingReleases).forEach((revId) => {
+      Object.keys(pendingReleases[revId]).forEach((channel) => {
         const pendingRelease = pendingReleases[revId][channel];
 
         if (pendingRelease.progressive) {
@@ -153,7 +153,7 @@ export function releaseRevisions() {
           progressiveReleases.push(mapToRelease(pendingRelease));
         } else {
           const releaseIndex = regularReleases.findIndex(
-            release => release.revision.revision === parseInt(revId)
+            (release) => release.revision.revision === parseInt(revId)
           );
           if (releaseIndex === -1) {
             regularReleases.push(mapToRelease(pendingRelease));
@@ -176,7 +176,7 @@ export function releaseRevisions() {
       );
     };
 
-    const _handleCloseResponse = json => {
+    const _handleCloseResponse = (json) => {
       return handleCloseResponse(dispatch, json, pendingCloses);
     };
 
@@ -186,13 +186,13 @@ export function releaseRevisions() {
         fetchCloses(_handleCloseResponse, csrfToken, snapName, pendingCloses)
       )
       .then(() => fetchReleasesHistory(csrfToken, snapName))
-      .then(json => dispatch(updateReleasesData(json)))
-      .catch(error =>
+      .then((json) => dispatch(updateReleasesData(json)))
+      .catch((error) =>
         dispatch(
           showNotification({
             status: "error",
             appearance: "negative",
-            content: getErrorMessage(error)
+            content: getErrorMessage(error),
           })
         )
       )
@@ -204,6 +204,6 @@ export function releaseRevisions() {
 export function updateReleases(releases) {
   return {
     type: UPDATE_RELEASES,
-    payload: { releases }
+    payload: { releases },
   };
 }

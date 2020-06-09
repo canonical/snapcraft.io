@@ -13,7 +13,7 @@ class Icon extends React.Component {
 
     this.state = {
       icon: props.icon,
-      errors: {}
+      errors: {},
     };
   }
 
@@ -21,7 +21,7 @@ class Icon extends React.Component {
     const { updateIcon } = this.props;
     e.preventDefault();
     this.setState({
-      icon: {}
+      icon: {},
     });
 
     updateIcon(null);
@@ -34,8 +34,8 @@ class Icon extends React.Component {
     if (iconFile.errors) {
       this.setState({
         errors: {
-          [iconFile.name]: iconFile.errors
-        }
+          [iconFile.name]: iconFile.errors,
+        },
       });
     } else {
       const iconURL = URL.createObjectURL(iconFile);
@@ -43,8 +43,8 @@ class Icon extends React.Component {
       this.setState({
         errors: {},
         icon: {
-          url: iconURL
-        }
+          url: iconURL,
+        },
       });
 
       updateIcon({
@@ -52,7 +52,7 @@ class Icon extends React.Component {
         file: iconFile,
         name: iconFile.name,
         status: "new",
-        type: "icon"
+        type: "icon",
       });
     }
   }
@@ -63,7 +63,7 @@ class Icon extends React.Component {
       return (
         <div className="p-notification--negative">
           <p className="p-notification__response">
-            {Object.keys(errors).map(fileName => (
+            {Object.keys(errors).map((fileName) => (
               <Fragment key={`errors-${fileName}`}>
                 {fileName}
                 &nbsp;
@@ -162,14 +162,14 @@ class Icon extends React.Component {
 Icon.defaultProps = {
   icon: {},
   title: "Snap icon",
-  restrictions: {}
+  restrictions: {},
 };
 
 Icon.propTypes = {
   icon: PropTypes.object,
   title: PropTypes.string,
   updateIcon: PropTypes.func.isRequired,
-  restrictions: PropTypes.object
+  restrictions: PropTypes.object,
 };
 
 export { Icon as default };

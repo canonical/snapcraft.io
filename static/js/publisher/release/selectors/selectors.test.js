@@ -3,7 +3,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_ALL,
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
-  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../constants";
 import {
   getFilteredReleaseHistory,
@@ -27,7 +27,7 @@ import {
   hasRelease,
   getSeparatePendingReleases,
   getPendingRelease,
-  getReleases
+  getReleases,
 } from "./index";
 
 import reducers from "../reducers";
@@ -39,8 +39,8 @@ describe("getFilteredReleaseHistory", () => {
     revisions: {
       1: { revision: 1, version: "1" },
       2: { revision: 2, version: "2" },
-      3: { revision: 3, version: "3" }
-    }
+      3: { revision: 3, version: "3" },
+    },
   };
 
   it("should return empty list for initial state", () => {
@@ -53,12 +53,12 @@ describe("getFilteredReleaseHistory", () => {
       releases: [
         { risk: "test", revision: 1 },
         { risk: "test" },
-        { risk: "test", revision: 2 }
-      ]
+        { risk: "test", revision: 2 },
+      ],
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
-    expect(filteredHistory.every(r => r.revision)).toBe(true);
+    expect(filteredHistory.every((r) => r.revision)).toBe(true);
   });
 
   it("should return only releases in given architecture", () => {
@@ -68,18 +68,18 @@ describe("getFilteredReleaseHistory", () => {
         { architecture: "test", revision: 1 },
         { architecture: "test", revision: 2 },
         { architecture: "abcd", revision: 2 },
-        { architecture: "test", revision: 3 }
+        { architecture: "test", revision: 3 },
       ],
       history: {
         filters: {
-          arch: "test"
-        }
-      }
+          arch: "test",
+        },
+      },
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestArch = filteredHistory.every(
-      r => r.release.architecture === "test"
+      (r) => r.release.architecture === "test"
     );
     expect(isEveryReleaseInTestArch).toBe(true);
   });
@@ -91,18 +91,18 @@ describe("getFilteredReleaseHistory", () => {
         { track: "test", revision: 1 },
         { track: "test", revision: 2 },
         { track: "abcd", revision: 2 },
-        { track: "test", revision: 3 }
+        { track: "test", revision: 3 },
       ],
       history: {
         filters: {
-          track: "test"
-        }
-      }
+          track: "test",
+        },
+      },
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestTrack = filteredHistory.every(
-      r => r.release.track === "test"
+      (r) => r.release.track === "test"
     );
     expect(isEveryReleaseInTestTrack).toBe(true);
   });
@@ -114,18 +114,18 @@ describe("getFilteredReleaseHistory", () => {
         { risk: "test", revision: 1 },
         { risk: "test", revision: 2 },
         { risk: "abcd", revision: 2 },
-        { risk: "test", revision: 3 }
+        { risk: "test", revision: 3 },
       ],
       history: {
         filters: {
-          risk: "test"
-        }
-      }
+          risk: "test",
+        },
+      },
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestRisk = filteredHistory.every(
-      r => r.release.risk === "test"
+      (r) => r.release.risk === "test"
     );
     expect(isEveryReleaseInTestRisk).toBe(true);
   });
@@ -136,18 +136,18 @@ describe("getFilteredReleaseHistory", () => {
       releases: [
         { branch: "test", revision: 1 },
         { revision: 1 },
-        { revision: 2 }
+        { revision: 2 },
       ],
       history: {
         filters: {
-          branch: "test"
-        }
-      }
+          branch: "test",
+        },
+      },
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestBranch = filteredHistory.every(
-      r => r.release.branch === "test"
+      (r) => r.release.branch === "test"
     );
     expect(isEveryReleaseInTestBranch).toBe(true);
   });
@@ -159,12 +159,12 @@ describe("getFilteredReleaseHistory", () => {
         { revision: 1 },
         { revision: 2 },
         { revision: 1 },
-        { revision: 3 }
-      ]
+        { revision: 3 },
+      ],
     };
 
     const filteredRevisions = getFilteredReleaseHistory(state).map(
-      r => r.revision
+      (r) => r.revision
     );
 
     const isUnique =
@@ -182,9 +182,9 @@ describe("getSelectedRevisions", () => {
     channelMap: {
       [AVAILABLE]: {
         abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" }
-      }
-    }
+        test64: { revision: 2, version: "2" },
+      },
+    },
   };
 
   it("should be empty for initial state", () => {
@@ -204,9 +204,9 @@ describe("getSelectedRevision", () => {
     channelMap: {
       [AVAILABLE]: {
         abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" }
-      }
-    }
+        test64: { revision: 2, version: "2" },
+      },
+    },
   };
 
   it("should be empty for initial state", () => {
@@ -228,9 +228,9 @@ describe("getSelectedArchitectures", () => {
     channelMap: {
       [AVAILABLE]: {
         abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" }
-      }
-    }
+        test64: { revision: 2, version: "2" },
+      },
+    },
   };
 
   it("should be empty for initial state", () => {
@@ -240,7 +240,7 @@ describe("getSelectedArchitectures", () => {
   it("should return list of selected revision ids", () => {
     expect(getSelectedArchitectures(stateWithSelectedRevisions)).toEqual([
       "abc42",
-      "test64"
+      "test64",
     ]);
   });
 });
@@ -253,9 +253,9 @@ describe("hasDevmodeRevisions", () => {
       "test/edge": {
         abc42: { revision: 1, version: "1" },
         test64: { revision: 2, version: "2" },
-        armf: { revision: 3, version: "3" }
-      }
-    }
+        armf: { revision: 3, version: "3" },
+      },
+    },
   };
 
   const stateWithConfinementDevmode = {
@@ -264,9 +264,9 @@ describe("hasDevmodeRevisions", () => {
       "test/edge": {
         abc42: { revision: 1, version: "1" },
         test64: { revision: 2, version: "2", confinement: "devmode" },
-        armf: { revision: 3, version: "3" }
-      }
-    }
+        armf: { revision: 3, version: "3" },
+      },
+    },
   };
 
   const stateWithGradeDevel = {
@@ -275,9 +275,9 @@ describe("hasDevmodeRevisions", () => {
       "test/edge": {
         abc42: { revision: 1, version: "1" },
         test64: { revision: 2, version: "2", grade: "devel" },
-        armf: { revision: 3, version: "3" }
-      }
-    }
+        armf: { revision: 3, version: "3" },
+      },
+    },
   };
 
   it("should be false for initial empty state", () => {
@@ -302,10 +302,10 @@ describe("getPendingChannelMap", () => {
     const stateWithNoPendingReleases = {
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 }
-        }
+          test64: { revision: 1 },
+        },
       },
-      pendingReleases: {}
+      pendingReleases: {},
     };
 
     it("should return channel map as it is", () => {
@@ -319,17 +319,17 @@ describe("getPendingChannelMap", () => {
     const stateWithPendingReleases = {
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 }
-        }
+          test64: { revision: 1 },
+        },
       },
       pendingReleases: {
         2: {
           "latest/stable": {
             revision: { revision: 2, architectures: ["test64"] },
-            channel: "latest/stable"
-          }
-        }
-      }
+            channel: "latest/stable",
+          },
+        },
+      },
     };
 
     it("should return channel map with pending revisions added", () => {
@@ -338,9 +338,9 @@ describe("getPendingChannelMap", () => {
         "latest/stable": {
           test64: {
             ...stateWithPendingReleases.pendingReleases["2"]["latest/stable"]
-              .revision
-          }
-        }
+              .revision,
+          },
+        },
       });
     });
   });
@@ -349,17 +349,17 @@ describe("getPendingChannelMap", () => {
     const stateWithPendingReleases = {
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 }
-        }
+          test64: { revision: 1 },
+        },
       },
       pendingReleases: {
         2: {
           "test/edge": {
             revision: { revision: 2, architectures: ["test64"] },
-            channel: "test/edge"
-          }
-        }
-      }
+            channel: "test/edge",
+          },
+        },
+      },
     };
 
     it("should return channel map with pending revisions", () => {
@@ -368,9 +368,9 @@ describe("getPendingChannelMap", () => {
         "test/edge": {
           test64: {
             ...stateWithPendingReleases.pendingReleases["2"]["test/edge"]
-              .revision
-          }
-        }
+              .revision,
+          },
+        },
       });
     });
   });
@@ -393,22 +393,22 @@ describe("getFilteredAvailableRevisions", () => {
         revision: 2,
         version: "2",
         channels: [],
-        created_at: moreThenWeekAgo
+        created_at: moreThenWeekAgo,
       },
       3: {
         revision: 3,
         version: "3",
         channels: ["test/edge"],
-        created_at: dayAgo
+        created_at: dayAgo,
       },
       4: {
         revision: 4,
         version: "4",
         channels: ["test/edge"],
         created_at: moreThenWeekAgo,
-        attributes: { "build-request-id": "lp-1234" }
-      }
-    }
+        attributes: { "build-request-id": "lp-1234" },
+      },
+    },
   };
 
   describe("when there are no revisions", () => {
@@ -421,7 +421,7 @@ describe("getFilteredAvailableRevisions", () => {
     describe("when 'All' is selected in available revisions select", () => {
       const stateWithAllSelected = {
         ...stateWithRevisions,
-        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL,
       };
 
       it("should return all revisions by default", () => {
@@ -429,7 +429,7 @@ describe("getFilteredAvailableRevisions", () => {
           stateWithAllSelected.revisions[4],
           stateWithAllSelected.revisions[3],
           stateWithAllSelected.revisions[2],
-          stateWithAllSelected.revisions[1]
+          stateWithAllSelected.revisions[1],
         ]);
       });
     });
@@ -437,7 +437,7 @@ describe("getFilteredAvailableRevisions", () => {
     describe("when 'Unreleased' are selected in available revisions select", () => {
       const stateWithUnreleasedSelected = {
         ...stateWithRevisions,
-        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED,
       };
 
       it("should return only unreleased revisions", () => {
@@ -445,7 +445,7 @@ describe("getFilteredAvailableRevisions", () => {
           getFilteredAvailableRevisions(stateWithUnreleasedSelected)
         ).toEqual([
           stateWithUnreleasedSelected.revisions[2],
-          stateWithUnreleasedSelected.revisions[1]
+          stateWithUnreleasedSelected.revisions[1],
         ]);
       });
     });
@@ -453,12 +453,12 @@ describe("getFilteredAvailableRevisions", () => {
     describe("when 'Recent' are selected in available revisions select", () => {
       const stateWithRecentSelected = {
         ...stateWithRevisions,
-        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
       };
 
       it("should return unreleased revisions not older then a week", () => {
         expect(getFilteredAvailableRevisions(stateWithRecentSelected)).toEqual([
-          stateWithRecentSelected.revisions[1]
+          stateWithRecentSelected.revisions[1],
         ]);
       });
     });
@@ -466,7 +466,7 @@ describe("getFilteredAvailableRevisions", () => {
     describe("when 'Lauchpad' is selected in available revisions select", () => {
       const stateWithLaunchpadSelected = {
         ...stateWithRevisions,
-        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
+        availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
       };
 
       it("should return unreleased revisions not older then a week", () => {
@@ -490,9 +490,9 @@ describe("getFilteredAvailableRevisionsByArch", () => {
         revision: 3,
         architectures: [arch, "amd42"],
         version: "3",
-        channels: ["test/edge"]
-      }
-    }
+        channels: ["test/edge"],
+      },
+    },
   };
 
   describe("when there are no revisions", () => {
@@ -506,7 +506,7 @@ describe("getFilteredAvailableRevisionsByArch", () => {
   describe("when there are some revisions in state", () => {
     const stateWithAllSelected = {
       ...stateWithRevisions,
-      availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL
+      availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL,
     };
 
     it("should return selected revisions by for given architecture", () => {
@@ -514,7 +514,7 @@ describe("getFilteredAvailableRevisionsByArch", () => {
         getFilteredAvailableRevisionsForArch(stateWithAllSelected, arch)
       ).toEqual([
         stateWithAllSelected.revisions[3],
-        stateWithAllSelected.revisions[1]
+        stateWithAllSelected.revisions[1],
       ]);
     });
   });
@@ -527,15 +527,15 @@ describe("getArchitectures", () => {
     revisions: {
       1: { revision: 1, architectures: ["test64"] },
       2: { revision: 2, architectures: ["amd42", "abc64"] },
-      3: { revision: 3, architectures: ["test64", "amd42"] }
-    }
+      3: { revision: 3, architectures: ["test64", "amd42"] },
+    },
   };
 
   it("should return alphabetical list of all architectures", () => {
     expect(getArchitectures(stateWithRevisions)).toEqual([
       "abc64",
       "amd42",
-      "test64"
+      "test64",
     ]);
   });
 });
@@ -549,9 +549,9 @@ describe("getTracks", () => {
         { name: "latest" },
         { name: "test" },
         { name: "latest" },
-        { name: "12" }
-      ]
-    }
+        { name: "12" },
+      ],
+    },
   };
 
   it("should return list of all tracks", () => {
@@ -564,10 +564,10 @@ describe("hasPendingRelease", () => {
     const stateWithNoPendingReleases = {
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 }
-        }
+          test64: { revision: 1 },
+        },
       },
-      pendingReleases: {}
+      pendingReleases: {},
     };
 
     it("should return false", () => {
@@ -581,17 +581,17 @@ describe("hasPendingRelease", () => {
     const stateWithPendingReleases = {
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 }
-        }
+          test64: { revision: 1 },
+        },
       },
       pendingReleases: {
         2: {
           "latest/stable": {
             revision: { revision: 2, architectures: ["test64"] },
-            channel: "latest/stable"
-          }
-        }
-      }
+            channel: "latest/stable",
+          },
+        },
+      },
     };
 
     it("should return false for channel/arch without pending release", () => {
@@ -611,17 +611,17 @@ describe("hasPendingRelease", () => {
     const stateWithPendingReleases = {
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 }
-        }
+          test64: { revision: 1 },
+        },
       },
       pendingReleases: {
         2: {
           "test/edge": {
             revision: { revision: 2, architectures: ["test64"] },
-            channel: "test/edge"
-          }
-        }
-      }
+            channel: "test/edge",
+          },
+        },
+      },
     };
 
     it("should return true for channel/arch with pending release", () => {
@@ -636,27 +636,27 @@ describe("getTrackRevisions", () => {
   it("should return revisions in a given track", () => {
     const channelMap = {
       "test/edge": {
-        test64: { revision: 1 }
+        test64: { revision: 1 },
       },
       stable: {
-        test64: { revision: 1 }
+        test64: { revision: 1 },
       },
       "test/stable": {
-        test64: { revision: 2 }
-      }
+        test64: { revision: 2 },
+      },
     };
 
     expect(getTrackRevisions({ channelMap }, "test")).toEqual([
       {
         test64: {
-          revision: 1
-        }
+          revision: 1,
+        },
       },
       {
         test64: {
-          revision: 2
-        }
-      }
+          revision: 2,
+        },
+      },
     ]);
   });
 });
@@ -680,7 +680,7 @@ describe("getBranches", () => {
           risk: "stable",
           revision: "1",
           when: today.toISOString(),
-          "expiration-date": notExpired
+          "expiration-date": notExpired,
         },
         {
           branch: "test",
@@ -688,7 +688,7 @@ describe("getBranches", () => {
           risk: "stable",
           revision: "2",
           when: today.toISOString(),
-          "expiration-date": notExpired
+          "expiration-date": notExpired,
         },
         {
           branch: "test2",
@@ -696,7 +696,7 @@ describe("getBranches", () => {
           risk: "stable",
           revision: "3",
           when: today.toISOString(),
-          "expiration-date": notExpired
+          "expiration-date": notExpired,
         },
         {
           branch: "test",
@@ -704,9 +704,9 @@ describe("getBranches", () => {
           risk: "stable",
           revision: "4",
           when: today.toISOString(),
-          "expiration-date": expired
-        }
-      ]
+          "expiration-date": expired,
+        },
+      ],
     };
 
     expect(getBranches(state)).toEqual([
@@ -716,7 +716,7 @@ describe("getBranches", () => {
         risk: "stable",
         revision: "3",
         when: today.toISOString(),
-        expiration: notExpired
+        expiration: notExpired,
       },
       {
         branch: "test",
@@ -724,8 +724,8 @@ describe("getBranches", () => {
         risk: "stable",
         revision: "2",
         when: today.toISOString(),
-        expiration: notExpired
-      }
+        expiration: notExpired,
+      },
     ]);
   });
 });
@@ -737,8 +737,8 @@ describe("hasBuildRequestId", () => {
     revisions: {
       1: { revision: 1, version: "1" },
       2: { revision: 2, version: "2" },
-      3: { revision: 3, version: "3" }
-    }
+      3: { revision: 3, version: "3" },
+    },
   };
   const stateWithBuildRequestId = {
     ...stateWithoutBuildRequestId,
@@ -747,9 +747,9 @@ describe("hasBuildRequestId", () => {
       4: {
         revision: 4,
         version: "4",
-        attributes: { "build-request-id": "test-1234" }
-      }
-    }
+        attributes: { "build-request-id": "test-1234" },
+      },
+    },
   };
   it("should return false if none of the revisions have build-request-id attribute", () => {
     expect(hasBuildRequestId(stateWithoutBuildRequestId)).toBe(false);
@@ -770,14 +770,14 @@ describe("getLaunchpadRevisions", () => {
       3: {
         revision: 3,
         version: "3",
-        attributes: { "build-request-id": "lp-1234" }
+        attributes: { "build-request-id": "lp-1234" },
       },
       4: {
         revision: 4,
         version: "4",
-        attributes: { "build-request-id": "lp-1234" }
-      }
-    }
+        attributes: { "build-request-id": "lp-1234" },
+      },
+    },
   };
 
   it("should return only revisions with Lauchpad builds", () => {
@@ -803,19 +803,19 @@ describe("getRevisionsFromBuild", () => {
       3: {
         revision: 3,
         version: "3",
-        attributes: { "build-request-id": "lp-1234" }
+        attributes: { "build-request-id": "lp-1234" },
       },
       4: {
         revision: 4,
         version: "4",
-        attributes: { "build-request-id": "lp-1234" }
+        attributes: { "build-request-id": "lp-1234" },
       },
       5: {
         revision: 5,
         version: "5",
-        attributes: { "build-request-id": "lp-5432" }
-      }
-    }
+        attributes: { "build-request-id": "lp-5432" },
+      },
+    },
   };
 
   it("should return only revisions with given build id", () => {
@@ -840,8 +840,8 @@ describe("getProgressiveState", () => {
     options: {
       ...initialState.options,
       flags: {
-        isProgressiveReleaseEnabled: true
-      }
+        isProgressiveReleaseEnabled: true,
+      },
     },
     releases: [
       {
@@ -850,7 +850,7 @@ describe("getProgressiveState", () => {
         track: "latest",
         risk: "stable",
         revision: "1",
-        progressive: null
+        progressive: null,
       },
       {
         architecture: "arch2",
@@ -861,8 +861,8 @@ describe("getProgressiveState", () => {
         progressive: {
           key: "test",
           percentage: 60,
-          paused: false
-        }
+          paused: false,
+        },
       },
       {
         architecture: "arch2",
@@ -873,14 +873,14 @@ describe("getProgressiveState", () => {
         progressive: {
           key: "test",
           percentage: 50,
-          paused: false
-        }
-      }
+          paused: false,
+        },
+      },
     ],
     revisions: {
       "3": "revision3",
-      "2": "revision2"
-    }
+      "2": "revision2",
+    },
   };
 
   const stateWithProgressiveDisabled = {
@@ -888,9 +888,9 @@ describe("getProgressiveState", () => {
     options: {
       ...initialState.options,
       flags: {
-        isProgressiveReleaseEnabled: false
-      }
-    }
+        isProgressiveReleaseEnabled: false,
+      },
+    },
   };
 
   const stateWithProgressiveEnabledAndPendingRelease = {
@@ -903,11 +903,11 @@ describe("getProgressiveState", () => {
           progressive: {
             key: "progressive-test",
             percentage: 40,
-            paused: false
-          }
-        }
-      }
-    }
+            paused: false,
+          },
+        },
+      },
+    },
   };
 
   it("should return the progressive release state of a channel and arch", () => {
@@ -917,10 +917,10 @@ describe("getProgressiveState", () => {
       {
         key: "test",
         paused: false,
-        percentage: 60
+        percentage: 60,
       },
       "revision2",
-      null
+      null,
     ]);
   });
 
@@ -934,7 +934,7 @@ describe("getProgressiveState", () => {
     ).toEqual([
       { key: "test", paused: false, percentage: 60 },
       "revision2",
-      { key: "progressive-test", paused: false, percentage: 40 }
+      { key: "progressive-test", paused: false, percentage: 40 },
     ]);
   });
 
@@ -956,9 +956,9 @@ describe("isProgressiveReleaseEnabled", () => {
     options: {
       ...initialState.options,
       flags: {
-        isProgressiveReleaseEnabled: true
-      }
-    }
+        isProgressiveReleaseEnabled: true,
+      },
+    },
   };
 
   const stateWithProgressiveDisabled = {
@@ -966,9 +966,9 @@ describe("isProgressiveReleaseEnabled", () => {
     options: {
       ...initialState.options,
       flags: {
-        isProgressiveReleaseEnabled: false
-      }
-    }
+        isProgressiveReleaseEnabled: false,
+      },
+    },
   };
 
   it("should be true with isProgressiveReleaseEnabled flag turned on", () => {
@@ -987,14 +987,14 @@ describe("hasRelease", () => {
   const stateWithARelease = {
     ...initialState,
     releases: [
-      { architecture: "arm64", risk: "beta", track: "latest", revision: 1 }
-    ]
+      { architecture: "arm64", risk: "beta", track: "latest", revision: 1 },
+    ],
   };
   const stateWithAClose = {
     ...initialState,
     releases: [
-      { architecture: "arm64", risk: "beta", track: "latest", revision: null }
-    ]
+      { architecture: "arm64", risk: "beta", track: "latest", revision: null },
+    ],
   };
   const stateWithMultipleArchAndChannels = {
     ...initialState,
@@ -1004,16 +1004,16 @@ describe("hasRelease", () => {
         architecture: "arm64",
         risk: "candidate",
         track: "latest",
-        revision: 2
+        revision: 2,
       },
       {
         architecture: "arm64",
         risk: "stable",
         track: "latest",
-        revision: null
+        revision: null,
       },
-      { architecture: "arm64", risk: "beta", track: "latest", revision: 3 }
-    ]
+      { architecture: "arm64", risk: "beta", track: "latest", revision: 3 },
+    ],
   };
 
   it("should return false if there are no releases", () => {
@@ -1044,18 +1044,18 @@ describe("hasRelease", () => {
           "1": {
             "latest/stable": {
               revision: { revision: 1, architectures: ["amd64"] },
-              channel: "latest/stable"
-            }
-          }
+              channel: "latest/stable",
+            },
+          },
         },
         releases: [
           {
             architecture: "amd64",
             track: "latest",
             risk: "stable",
-            revision: { revision: 2, architectures: ["amd64"] }
-          }
-        ]
+            revision: { revision: 2, architectures: ["amd64"] },
+          },
+        ],
       };
 
       it("should return new releases and ignore releases to progress", () => {
@@ -1066,11 +1066,11 @@ describe("hasRelease", () => {
             "1-latest/stable":
               stateWithPendingReleaseToProgress.pendingReleases["1"][
                 "latest/stable"
-              ]
+              ],
           },
           newReleasesToProgress: {},
           progressiveUpdates: {},
-          cancelProgressive: {}
+          cancelProgressive: {},
         });
       });
     });
@@ -1081,9 +1081,9 @@ describe("hasRelease", () => {
         options: {
           ...initialState.options,
           flags: {
-            isProgressiveReleaseEnabled: true
-          }
-        }
+            isProgressiveReleaseEnabled: true,
+          },
+        },
       };
 
       const stateWithPendingRelease = {
@@ -1092,10 +1092,10 @@ describe("hasRelease", () => {
           "1": {
             "latest/stable": {
               revision: { revision: 1, architectures: ["amd64"] },
-              channel: "latest/stable"
-            }
-          }
-        }
+              channel: "latest/stable",
+            },
+          },
+        },
       };
 
       const stateWithPendingReleaseToProgress = {
@@ -1108,20 +1108,20 @@ describe("hasRelease", () => {
               progressive: {
                 key: "progressive-test",
                 percentage: 100,
-                paused: false
+                paused: false,
               },
-              previousRevisions: [{ revision: 2 }]
-            }
-          }
+              previousRevisions: [{ revision: 2 }],
+            },
+          },
         },
         releases: [
           {
             architecture: "amd64",
             track: "latest",
             risk: "stable",
-            revision: { revision: 2, architectures: ["amd64"] }
-          }
-        ]
+            revision: { revision: 2, architectures: ["amd64"] },
+          },
+        ],
       };
 
       const stateWithPendingReleaseToUpdate = {
@@ -1136,24 +1136,24 @@ describe("hasRelease", () => {
                   progressive: {
                     key: "progressive-test",
                     percentage: 20,
-                    paused: false
-                  }
-                }
+                    paused: false,
+                  },
+                },
               },
               channel: "latest/stable",
               progressive: {
                 key: "progressive-test",
                 percentage: 40,
-                paused: false
+                paused: false,
               },
               previousRevisions: [
                 {
-                  revision: 2
-                }
-              ]
-            }
-          }
-        }
+                  revision: 2,
+                },
+              ],
+            },
+          },
+        },
       };
 
       const stateWithPendingReleaseToCancel = {
@@ -1163,19 +1163,19 @@ describe("hasRelease", () => {
             "latest/stable": {
               revision: {
                 revision: 2,
-                architectures: ["amd64"]
+                architectures: ["amd64"],
               },
               channel: "latest/stable",
               replaces: {
                 revision: {
                   architectures: ["amd64"],
-                  revision: 1
+                  revision: 1,
                 },
-                channel: "latest/stable"
-              }
-            }
-          }
-        }
+                channel: "latest/stable",
+              },
+            },
+          },
+        },
       };
 
       it("should return nothing if there are no pending releases", () => {
@@ -1183,7 +1183,7 @@ describe("hasRelease", () => {
           newReleases: {},
           newReleasesToProgress: {},
           progressiveUpdates: {},
-          cancelProgressive: {}
+          cancelProgressive: {},
         });
       });
 
@@ -1191,11 +1191,11 @@ describe("hasRelease", () => {
         expect(getSeparatePendingReleases(stateWithPendingRelease)).toEqual({
           newReleases: {
             "1-latest/stable":
-              stateWithPendingRelease.pendingReleases["1"]["latest/stable"]
+              stateWithPendingRelease.pendingReleases["1"]["latest/stable"],
           },
           newReleasesToProgress: {},
           progressiveUpdates: {},
-          cancelProgressive: {}
+          cancelProgressive: {},
         });
       });
 
@@ -1208,10 +1208,10 @@ describe("hasRelease", () => {
             "1-latest/stable":
               stateWithPendingReleaseToProgress.pendingReleases["1"][
                 "latest/stable"
-              ]
+              ],
           },
           progressiveUpdates: {},
-          cancelProgressive: {}
+          cancelProgressive: {},
         });
       });
 
@@ -1230,11 +1230,11 @@ describe("hasRelease", () => {
                 changes: [{ key: "percentage", value: 40 }],
                 key: "progressive-test",
                 paused: false,
-                percentage: 40
-              }
-            }
+                percentage: 40,
+              },
+            },
           },
-          cancelProgressive: {}
+          cancelProgressive: {},
         });
       });
 
@@ -1250,10 +1250,10 @@ describe("hasRelease", () => {
               channel: "latest/stable",
               revision: {
                 architectures: ["amd64"],
-                revision: 1
-              }
-            }
-          }
+                revision: 1,
+              },
+            },
+          },
         });
       });
     });
@@ -1270,25 +1270,25 @@ describe("getPendingRelease", () => {
           channel: "latest/stable",
           revision: {
             revision: 1,
-            architectures: ["amd64"]
-          }
+            architectures: ["amd64"],
+          },
         },
         "latest/candidate": {
           channel: "latest/candidate",
           revision: {
             revision: 1,
-            architectures: ["amd64"]
-          }
-        }
-      }
-    }
+            architectures: ["amd64"],
+          },
+        },
+      },
+    },
   };
 
   it("should return the correct release", () => {
     const result = getPendingRelease(state, "latest/stable", "amd64");
 
     expect(result).toEqual({
-      ...state.pendingReleases["1"]["latest/stable"]
+      ...state.pendingReleases["1"]["latest/stable"],
     });
   });
 
@@ -1303,7 +1303,7 @@ describe("getReleases", () => {
   it("should return nothing if there are no releases", () => {
     const result = getReleases(
       {
-        releases: []
+        releases: [],
       },
       "amd64",
       "latest/stable"
@@ -1316,16 +1316,16 @@ describe("getReleases", () => {
     const releases = [
       {
         architecture: "amd64",
-        channel: "latest/stable"
+        channel: "latest/stable",
       },
       {
         architecture: "arm64",
-        channel: "latest/stable"
-      }
+        channel: "latest/stable",
+      },
     ];
     const result = getReleases(
       {
-        releases
+        releases,
       },
       ["amd64"],
       "latest/stable"

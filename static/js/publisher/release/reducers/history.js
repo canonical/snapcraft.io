@@ -4,7 +4,7 @@ import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 export default function history(
   state = {
     filters: null,
-    isOpen: false
+    isOpen: false,
   },
   action
 ) {
@@ -13,14 +13,14 @@ export default function history(
       return {
         ...state,
         isOpen: true,
-        ...action.payload
+        ...action.payload,
       };
     case CLOSE_HISTORY:
     case CLOSE_CHANNEL:
       return {
         ...state,
         isOpen: false,
-        filters: null
+        filters: null,
       };
     default:
       return state;

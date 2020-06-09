@@ -8,7 +8,7 @@ class AccordionHelp extends React.Component {
     this.toggleHelp = this.toggleHelp.bind(this);
 
     this.state = {
-      open: false
+      open: false,
     };
   }
 
@@ -17,7 +17,7 @@ class AccordionHelp extends React.Component {
 
     e.preventDefault();
     this.setState({
-      open: !open
+      open: !open,
     });
   }
 
@@ -44,12 +44,12 @@ class AccordionHelp extends React.Component {
 }
 
 AccordionHelp.defaultProps = {
-  name: "help"
+  name: "help",
 };
 
 AccordionHelp.propTypes = {
   name: PropTypes.string,
-  children: PropTypes.element
+  children: PropTypes.element,
 };
 
 export { AccordionHelp as default };

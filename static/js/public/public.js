@@ -37,5 +37,5 @@ export {
   videos,
   nps,
   newsletter,
-  formValidation
+  formValidation,
 };

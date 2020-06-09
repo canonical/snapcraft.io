@@ -1,5 +1,3 @@
-/* global global */
-
 import configureStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -14,7 +12,7 @@ import {
   getErrorMessage,
   handleReleaseResponse,
   updateReleases,
-  releaseRevisions
+  releaseRevisions,
 } from "./releases";
 
 describe("releases actions", () => {
@@ -38,7 +36,7 @@ describe("releases actions", () => {
 
       const apiResponse = {
         success: true,
-        closed_channels: ["edge"]
+        closed_channels: ["edge"],
       };
 
       handleCloseResponse(dispatch, apiResponse, ["latest/edge"]);
@@ -47,16 +45,16 @@ describe("releases actions", () => {
 
       expect(actions[0]).toEqual({
         payload: {
-          channel: "latest/edge"
+          channel: "latest/edge",
         },
-        type: "CLOSE_CHANNEL_SUCCESS"
+        type: "CLOSE_CHANNEL_SUCCESS",
       });
     });
 
     it("should throw an error if the API responds with an error", () => {
       expect(() => {
         handleCloseResponse(() => {}, { error: true, json: "nope" }, [
-          "latest/edge"
+          "latest/edge",
         ]);
       }).toThrow();
     });
@@ -75,7 +73,7 @@ describe("releases actions", () => {
       expect(
         getErrorMessage({
           message: "error!",
-          json: [{ message: "error1" }, { message: "error2" }]
+          json: [{ message: "error1" }, { message: "error2" }],
         })
       ).toEqual("error! error1 error2");
     });
@@ -84,7 +82,7 @@ describe("releases actions", () => {
       expect(
         getErrorMessage({
           message: "error!",
-          json: { errors: [{ message: "error1" }, { message: "error2" }] }
+          json: { errors: [{ message: "error1" }, { message: "error2" }] },
         })
       ).toEqual("error! error1 error2");
     });
@@ -106,29 +104,29 @@ describe("releases actions", () => {
                     channel: "edge",
                     info: "specific",
                     revision: 3,
-                    version: "test"
-                  }
-                ]
-              }
-            }
-          }
+                    version: "test",
+                  },
+                ],
+              },
+            },
+          },
         };
 
         const release = [
           {
             id: 3,
             revision: 3,
-            channels: ["latest/edge"]
-          }
+            channels: ["latest/edge"],
+          },
         ];
 
         const revision = {
           architectures: ["amd64"],
-          revision: 3
+          revision: 3,
         };
 
         const revisions = {
-          "3": revision
+          "3": revision,
         };
 
         handleReleaseResponse(dispatch, json, release, revisions, "latest");
@@ -138,9 +136,9 @@ describe("releases actions", () => {
         expect(actions[0]).toEqual({
           payload: {
             channel: "latest/edge",
-            revision: revision
+            revision: revision,
           },
-          type: "RELEASE_REVISION_SUCCESS"
+          type: "RELEASE_REVISION_SUCCESS",
         });
       });
 
@@ -158,24 +156,24 @@ describe("releases actions", () => {
                     channel: "edge",
                     info: "specific",
                     revision: 3,
-                    version: "test"
-                  }
-                ]
-              }
-            }
-          }
+                    version: "test",
+                  },
+                ],
+              },
+            },
+          },
         };
 
         const revision = {
           architectures: ["amd64"],
           revision: 3,
-          version: "test"
+          version: "test",
         };
 
         const release = {
           id: 4,
           revision: revision,
-          channels: ["latest/edge"]
+          channels: ["latest/edge"],
         };
 
         handleReleaseResponse(dispatch, json, release, {}, "latest");
@@ -185,9 +183,9 @@ describe("releases actions", () => {
         expect(actions[0]).toEqual({
           payload: {
             channel: "latest/edge",
-            revision: revision
+            revision: revision,
           },
-          type: "RELEASE_REVISION_SUCCESS"
+          type: "RELEASE_REVISION_SUCCESS",
         });
       });
     });
@@ -204,7 +202,7 @@ describe("releases actions", () => {
         options: {
           snapName: "test",
           csrfToken: "test",
-          defaultTrack: "latest"
+          defaultTrack: "latest",
         },
         pendingReleases: {
           "1": {
@@ -214,11 +212,11 @@ describe("releases actions", () => {
               progressive: {
                 key: null,
                 percentage: 50,
-                paused: false
-              }
-            }
-          }
-        }
+                paused: false,
+              },
+            },
+          },
+        },
       });
 
       global.fetch = jest
@@ -238,7 +236,7 @@ describe("releases actions", () => {
         options: {
           snapName: "test",
           csrfToken: "test",
-          defaultTrack: "latest"
+          defaultTrack: "latest",
         },
         pendingReleases: {
           "1": {
@@ -248,19 +246,19 @@ describe("releases actions", () => {
               progressive: {
                 key: "test",
                 percentage: 50,
-                paused: false
-              }
+                paused: false,
+              },
             },
             "latest/beta": {
               revision: revision,
-              channel: "latest/beta"
+              channel: "latest/beta",
             },
             "latest/candidate": {
               revision: revision,
-              channel: "latest/candidate"
-            }
-          }
-        }
+              channel: "latest/candidate",
+            },
+          },
+        },
       });
 
       global.fetch = jest
@@ -279,14 +277,14 @@ describe("releases actions", () => {
           progressive: {
             key: "test",
             percentage: 50,
-            paused: false
-          }
+            paused: false,
+          },
         });
 
         expect(JSON.parse(calls[1][1].body)).toEqual({
           name: "test",
           revision: 1,
-          channels: ["latest/beta", "latest/candidate"]
+          channels: ["latest/beta", "latest/candidate"],
         });
       });
     });
@@ -294,7 +292,7 @@ describe("releases actions", () => {
     it("should remove progressive release if percentage is 100", () => {
       const revision = {
         architectures: ["amd64"],
-        revision: 3
+        revision: 3,
       };
 
       const release = {
@@ -302,13 +300,13 @@ describe("releases actions", () => {
         branch: null,
         revision: 3,
         risk: "edge",
-        track: "latest"
+        track: "latest",
       };
       const store = mockStore({
         options: {
           snapName: "test",
           csrfToken: "test",
-          defaultTrack: "latest"
+          defaultTrack: "latest",
         },
         pendingReleases: {
           "3": {
@@ -318,14 +316,14 @@ describe("releases actions", () => {
               progressive: {
                 key: "test",
                 percentage: 100,
-                paused: false
-              }
-            }
-          }
+                paused: false,
+              },
+            },
+          },
         },
         revisions: {
-          "3": revision
-        }
+          "3": revision,
+        },
       });
 
       global.fetch = jest
@@ -342,55 +340,55 @@ describe("releases actions", () => {
                       channel: "edge",
                       info: "specific",
                       revision: 3,
-                      version: "test"
-                    }
-                  ]
-                }
-              }
-            }
-          })
+                      version: "test",
+                    },
+                  ],
+                },
+              },
+            },
+          }),
         })
         // fetchReleasesHistory API Response
         .mockResolvedValueOnce({
           json: () => ({
             releases: [release],
-            revisions: [revision]
-          })
+            revisions: [revision],
+          }),
         });
 
       return store.dispatch(releaseRevisions()).then(() => {
         const actions = store.getActions();
         expect(actions).toEqual([
           {
-            type: "HIDE_NOTIFICATION"
+            type: "HIDE_NOTIFICATION",
           },
           {
             payload: {
               channel: "latest/edge",
-              revision: revision
+              revision: revision,
             },
-            type: "RELEASE_REVISION_SUCCESS"
+            type: "RELEASE_REVISION_SUCCESS",
           },
           {
             payload: {
               revisions: {
-                3: revision
-              }
+                3: revision,
+              },
             },
-            type: "UPDATE_REVISIONS"
+            type: "UPDATE_REVISIONS",
           },
           {
             payload: {
-              releases: [release]
+              releases: [release],
             },
-            type: "UPDATE_RELEASES"
+            type: "UPDATE_RELEASES",
           },
           {
-            type: "CANCEL_PENDING_RELEASES"
+            type: "CANCEL_PENDING_RELEASES",
           },
           {
-            type: "CLOSE_HISTORY"
-          }
+            type: "CLOSE_HISTORY",
+          },
         ]);
       });
     });
@@ -400,9 +398,9 @@ describe("releases actions", () => {
         options: {
           snapName: "test",
           csrfToken: "test",
-          defaultTrack: "latest"
+          defaultTrack: "latest",
         },
-        pendingReleases: {}
+        pendingReleases: {},
       });
 
       global.fetch = jest
@@ -410,30 +408,30 @@ describe("releases actions", () => {
         // fetchReleases API Response
         .mockResolvedValueOnce({
           json: () => ({
-            success: true
-          })
+            success: true,
+          }),
         });
 
       return store.dispatch(releaseRevisions()).then(() => {
         const actions = store.getActions();
         expect(actions).toEqual([
           {
-            type: "HIDE_NOTIFICATION"
+            type: "HIDE_NOTIFICATION",
           },
           {
             type: "SHOW_NOTIFICATION",
             payload: {
               appearance: "negative",
               content: "Cannot read property 'forEach' of undefined",
-              status: "error"
-            }
+              status: "error",
+            },
           },
           {
-            type: "CANCEL_PENDING_RELEASES"
+            type: "CANCEL_PENDING_RELEASES",
           },
           {
-            type: "CLOSE_HISTORY"
-          }
+            type: "CLOSE_HISTORY",
+          },
         ]);
       });
     });
@@ -441,7 +439,7 @@ describe("releases actions", () => {
     it("should dispatch all the actions", () => {
       const revision = {
         architectures: ["amd64"],
-        revision: 3
+        revision: 3,
       };
 
       const release = {
@@ -453,14 +451,14 @@ describe("releases actions", () => {
         progressive: {
           key: "test",
           percentage: 50,
-          paused: false
-        }
+          paused: false,
+        },
       };
       const store = mockStore({
         options: {
           snapName: "test",
           csrfToken: "test",
-          defaultTrack: "latest"
+          defaultTrack: "latest",
         },
         pendingReleases: {
           "3": {
@@ -470,15 +468,15 @@ describe("releases actions", () => {
               progressive: {
                 key: "test",
                 percentage: 50,
-                paused: false
-              }
-            }
-          }
+                paused: false,
+              },
+            },
+          },
         },
         pendingCloses: ["latest/edge"],
         revisions: {
-          "3": revision
-        }
+          "3": revision,
+        },
       });
 
       global.fetch = jest
@@ -495,68 +493,68 @@ describe("releases actions", () => {
                       channel: "edge",
                       info: "specific",
                       revision: 3,
-                      version: "test"
-                    }
-                  ]
-                }
-              }
-            }
-          })
+                      version: "test",
+                    },
+                  ],
+                },
+              },
+            },
+          }),
         })
         // fetchCloses API Response
         .mockResolvedValueOnce({
           json: () => ({
             success: true,
-            closed_channels: ["edge"]
-          })
+            closed_channels: ["edge"],
+          }),
         })
         // fetchReleasesHistory API Response
         .mockResolvedValueOnce({
           json: () => ({
             releases: [release],
-            revisions: [revision]
-          })
+            revisions: [revision],
+          }),
         });
 
       return store.dispatch(releaseRevisions()).then(() => {
         const actions = store.getActions();
         expect(actions).toEqual([
           {
-            type: "HIDE_NOTIFICATION"
+            type: "HIDE_NOTIFICATION",
           },
           {
             payload: {
               channel: "latest/edge",
-              revision: revision
+              revision: revision,
             },
-            type: "RELEASE_REVISION_SUCCESS"
+            type: "RELEASE_REVISION_SUCCESS",
           },
           {
             payload: {
-              channel: "latest/edge"
+              channel: "latest/edge",
             },
-            type: "CLOSE_CHANNEL_SUCCESS"
+            type: "CLOSE_CHANNEL_SUCCESS",
           },
           {
             payload: {
               revisions: {
-                3: revision
-              }
+                3: revision,
+              },
             },
-            type: "UPDATE_REVISIONS"
+            type: "UPDATE_REVISIONS",
           },
           {
             payload: {
-              releases: [release]
+              releases: [release],
             },
-            type: "UPDATE_RELEASES"
+            type: "UPDATE_RELEASES",
           },
           {
-            type: "CANCEL_PENDING_RELEASES"
+            type: "CANCEL_PENDING_RELEASES",
           },
           {
-            type: "CLOSE_HISTORY"
-          }
+            type: "CLOSE_HISTORY",
+          },
         ]);
       });
     });

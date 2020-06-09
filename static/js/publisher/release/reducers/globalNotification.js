@@ -1,6 +1,6 @@
 import {
   SHOW_NOTIFICATION,
-  HIDE_NOTIFICATION
+  HIDE_NOTIFICATION,
 } from "../actions/globalNotification";
 
 export default function notification(state = { visible: false }, action) {
@@ -9,12 +9,12 @@ export default function notification(state = { visible: false }, action) {
       return {
         ...state,
         visible: true,
-        ...action.payload
+        ...action.payload,
       };
     case HIDE_NOTIFICATION:
       return {
         ...state,
-        visible: false
+        visible: false,
       };
     default:
       return state;
