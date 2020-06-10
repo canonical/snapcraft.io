@@ -1,6 +1,5 @@
 # Packages
 import flask
-import talisker.requests
 from canonicalwebteam.store_api.exceptions import (
     PublisherAgreementNotSigned,
     PublisherMacaroonRefreshRequired,
@@ -16,9 +15,9 @@ from canonicalwebteam.store_api.exceptions import (
 
 
 # Local
-from webapp.api import requests
 import webapp.api.marketo as marketo_api
 from webapp import authentication
+from webapp.helpers import api_session
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiError,
@@ -32,7 +31,7 @@ account = flask.Blueprint(
 )
 
 marketo = marketo_api.Marketo()
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(api_session)
 
 
 def refresh_redirect(path):
@@ -100,7 +99,7 @@ def get_account_details():
         publisher_api.get_account(flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     flask_user = flask.session["openid"]
@@ -169,7 +168,7 @@ def post_agreement():
             codes = [error["code"] for error in api_response_error_list.errors]
             error_messages = ", ".join(codes)
             flask.abort(502, error_messages)
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             return _handle_error(api_error)
 
         return flask.redirect(flask.url_for(".get_account"))
@@ -194,7 +193,7 @@ def post_account_name():
             publisher_api.post_username(flask.session, username)
         except StoreApiResponseErrorList as api_response_error_list:
             errors = errors + api_response_error_list.errors
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             return _handle_error(api_error)
 
         if errors:

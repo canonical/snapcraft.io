@@ -4,7 +4,6 @@ from hashlib import md5
 
 # Packages
 import flask
-import talisker.requests
 from canonicalwebteam.launchpad import Launchpad
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
@@ -14,8 +13,9 @@ from canonicalwebteam.store_api.exceptions import (
 from requests.exceptions import HTTPError
 
 # Local
-from webapp.api import requests
+from webapp.helpers import api_session
 from webapp.api.github import GitHub, InvalidYAML
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
@@ -28,9 +28,9 @@ launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
     token=os.getenv("LP_API_TOKEN"),
     secret=os.getenv("LP_API_TOKEN_SECRET"),
-    session=talisker.requests.get_session(),
+    session=api_session,
 )
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(api_session)
 
 
 def get_builds(lp_snap, selection):
@@ -91,7 +91,7 @@ def get_snap_builds(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     context = {
@@ -153,7 +153,7 @@ def get_snap_build(snap_name, build_id):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     context = {
@@ -245,7 +245,7 @@ def get_snap_builds_json(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     context = {"snap_builds": []}
@@ -272,7 +272,7 @@ def get_validate_repo(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     owner, repo = flask.request.args.get("repo").split("/")
@@ -296,7 +296,7 @@ def post_snap_builds(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     # Don't allow changes from Admins that are no contributors
@@ -517,7 +517,7 @@ def post_update_gh_webhooks(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])

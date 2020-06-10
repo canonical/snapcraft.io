@@ -1,7 +1,6 @@
 # Packages
 import bleach
 import flask
-import talisker.requests
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
@@ -9,7 +8,8 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.api import requests
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import (
     build_views,
@@ -22,7 +22,7 @@ from webapp.publisher.snaps import (
 )
 from webapp.publisher.views import _handle_error, _handle_error_list
 
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(api_session)
 
 
 publisher_snaps = flask.Blueprint(
@@ -220,7 +220,7 @@ def get_account_snaps():
         account_info = publisher_api.get_account(flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
@@ -246,7 +246,7 @@ def redirect_get_register_name():
 def get_register_name():
     try:
         user = publisher_api.get_account(flask.session)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     available_stores = logic.filter_available_stores(user["stores"])
@@ -314,7 +314,7 @@ def post_register_name():
     except StoreApiResponseErrorList as api_response_error_list:
         try:
             user = publisher_api.get_account(flask.session)
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             return _handle_error(api_error)
 
         available_stores = logic.filter_available_stores(user["stores"])
@@ -364,7 +364,7 @@ def post_register_name():
         }
 
         return flask.render_template("publisher/register-snap.html", **context)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     flask.flash(
@@ -408,7 +408,7 @@ def post_register_name_json():
             flask.jsonify({"errors": api_response_error_list.errors}),
             api_response_error_list.status_code,
         )
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     response["code"] = "created"
@@ -447,7 +447,7 @@ def post_register_name_dispute():
             )
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     return flask.render_template(
@@ -475,7 +475,7 @@ def snap_count():
         account_info = publisher_api.get_account(flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)

@@ -1,6 +1,5 @@
 # Packages
 import flask
-import talisker.requests
 from canonicalwebteam.store_api.stores.snapstore import (
     SnapStore,
     SnapPublisher,
@@ -11,13 +10,14 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.api import requests
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.views import _handle_error, _handle_error_list
 from webapp.store.logic import filter_screenshots
 
-store_api = SnapStore(talisker.requests.get_session(requests.Session))
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+store_api = SnapStore(api_session)
+publisher_api = SnapPublisher(api_session)
 
 
 @login_required
@@ -29,7 +29,7 @@ def get_publicise(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     available_languages = {
@@ -75,7 +75,7 @@ def get_publicise_badges(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     if snap_details["private"]:
@@ -85,7 +85,7 @@ def get_publicise_badges(snap_name):
         snap_public_details = store_api.get_item_details(
             snap_name, api_version=2
         )
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     context = {
@@ -110,7 +110,7 @@ def get_publicise_cards(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     if snap_details["private"]:

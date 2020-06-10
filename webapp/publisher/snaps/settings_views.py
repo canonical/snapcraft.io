@@ -5,7 +5,6 @@ from json import loads
 # Packages
 import flask
 import pycountry
-import talisker.requests
 from canonicalwebteam.launchpad import Launchpad
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
@@ -14,7 +13,8 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.api import requests
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
@@ -23,9 +23,9 @@ launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
     token=os.getenv("LP_API_TOKEN"),
     secret=os.getenv("LP_API_TOKEN_SECRET"),
-    session=talisker.requests.get_session(),
+    session=api_session,
 )
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(api_session)
 
 
 @login_required
@@ -37,7 +37,7 @@ def get_settings(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     if "whitelist_country_codes" in snap_details:
@@ -112,7 +112,7 @@ def post_settings(snap_name):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 return _handle_error(api_error)
 
         if error_list:
@@ -127,7 +127,7 @@ def post_settings(snap_name):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)

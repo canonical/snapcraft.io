@@ -4,7 +4,6 @@ from json import loads
 # Packages
 import bleach
 import flask
-import talisker.requests
 from canonicalwebteam.store_api.stores.snapstore import (
     SnapPublisher,
     SnapStore,
@@ -16,7 +15,8 @@ from canonicalwebteam.store_api.exceptions import (
 
 # Local
 from webapp import helpers
-from webapp.api import requests
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.markdown import parse_markdown_description
 from webapp.publisher.snaps import logic, preview_data
@@ -28,8 +28,8 @@ from webapp.store.logic import (
     get_videos,
 )
 
-store_api = SnapStore(talisker.requests.get_session(requests.Session))
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+store_api = SnapStore(api_session)
+publisher_api = SnapPublisher(api_session)
 
 
 def get_market_snap(snap_name):
@@ -53,7 +53,7 @@ def get_listing_snap(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
@@ -160,7 +160,7 @@ def post_listing_snap(snap_name):
                     )
                 else:
                     return _handle_error_list(api_response_error_list.errors)
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 return _handle_error(api_error)
 
             icon_input = (
@@ -197,7 +197,7 @@ def post_listing_snap(snap_name):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 return _handle_error(api_error)
 
         body_json = logic.filter_changes_data(changes)
@@ -217,7 +217,7 @@ def post_listing_snap(snap_name):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 return _handle_error(api_error)
 
         if error_list:
@@ -232,7 +232,7 @@ def post_listing_snap(snap_name):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
@@ -357,7 +357,7 @@ def post_preview(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     context = {

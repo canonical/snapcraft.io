@@ -37,6 +37,7 @@ def create_app(testing=False):
     if not testing:
         init_extensions(app)
         talisker.requests.configure(webapp.api.sso.api_session)
+        talisker.requests.configure(webapp.helpers.api_session)
 
     app.config.from_object("webapp.configs." + app.config["WEBAPP"])
     set_handlers(app)

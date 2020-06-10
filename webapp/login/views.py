@@ -2,12 +2,11 @@ import os
 from urllib.parse import quote
 
 import flask
-import talisker.requests
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 from webapp import authentication
-from webapp.api import requests
+from webapp.helpers import api_session
 from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
@@ -29,7 +28,7 @@ open_id = OpenID(
     extension_responses=[MacaroonResponse, TeamsResponse],
 )
 
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(api_session)
 
 
 @login.route("/login", methods=["GET", "POST"])

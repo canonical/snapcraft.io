@@ -3,7 +3,6 @@ from json import loads
 
 # Packages
 import flask
-import talisker.requests
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
@@ -14,12 +13,13 @@ from canonicalwebteam.store_api.exceptions import (
 
 # Local
 from webapp import helpers
-from webapp.api import requests
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
 
-publisher_api = SnapPublisher(talisker.requests.get_session(requests.Session))
+publisher_api = SnapPublisher(api_session)
 
 
 @login_required
@@ -70,7 +70,7 @@ def publisher_snap_metrics(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     metric_requested = logic.extract_metrics_period(
@@ -98,7 +98,7 @@ def publisher_snap_metrics(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     try:
@@ -115,7 +115,7 @@ def publisher_snap_metrics(snap_name):
         )
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     active_metrics = metrics_helper.find_metric(
