@@ -15,6 +15,7 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiResponseErrorList,
     StoreApiTimeoutError,
 )
+from webapp.api.exceptions import ApiError
 from webapp.markdown import parse_markdown_description
 
 
@@ -45,7 +46,7 @@ def snap_details_views(store, api, handle_errors):
             flask.abort(502, str(api_response_error))
         except StoreApiCircuitBreaker:
             flask.abort(503)
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             flask.abort(502, str(api_error))
 
         # When removing all the channel maps of an existing snap the API,
@@ -226,7 +227,7 @@ def snap_details_views(store, api, handle_errors):
 
             try:
                 metrics_response = api.get_public_metrics(metrics_query_json)
-            except StoreApiError as api_error:
+            except (StoreApiError, ApiError) as api_error:
                 status_code, error_info = handle_errors(api_error)
                 metrics_response = None
 

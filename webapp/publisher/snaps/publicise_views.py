@@ -1,30 +1,35 @@
 # Packages
 import flask
-import talisker.requests
-from canonicalwebteam.store_api.exceptions import StoreApiError
-from canonicalwebteam.store_api.stores.snapstore import SnapStore
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapStore,
+    SnapPublisher,
+)
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiResponseErrorList,
+)
 
 # Local
-from webapp.api import dashboard as api
-from webapp.api import requests
-from webapp.api.exceptions import ApiError, ApiResponseErrorList
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.views import _handle_error, _handle_error_list
 from webapp.store.logic import filter_screenshots
 
-store_api = SnapStore(talisker.requests.get_session(requests.Session))
+store_api = SnapStore(api_session)
+publisher_api = SnapPublisher(api_session)
 
 
 @login_required
 def get_publicise(snap_name):
     try:
-        snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     available_languages = {
@@ -64,13 +69,13 @@ def get_publicise(snap_name):
 @login_required
 def get_publicise_badges(snap_name):
     try:
-        snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     if snap_details["private"]:
@@ -80,7 +85,7 @@ def get_publicise_badges(snap_name):
         snap_public_details = store_api.get_item_details(
             snap_name, api_version=2
         )
-    except StoreApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     context = {
@@ -99,13 +104,13 @@ def get_publicise_badges(snap_name):
 @login_required
 def get_publicise_cards(snap_name):
     try:
-        snap_details = api.get_snap_info(snap_name, flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     if snap_details["private"]:

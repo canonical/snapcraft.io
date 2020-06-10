@@ -1,13 +1,13 @@
 import json
-
-import flask
 import os
 
+import flask
 from ruamel.yaml import YAML
-
+from webapp.api.requests import Session
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
+api_session = Session()
 
 
 def get_yaml_loader(typ="safe"):

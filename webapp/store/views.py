@@ -15,6 +15,7 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiResponseErrorList,
     StoreApiTimeoutError,
 )
+from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 
@@ -75,7 +76,7 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             featured_snaps_results = api.get_featured_items()
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
             return flask.abort(status_code)
 
@@ -114,7 +115,7 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             snaps_results = api.get_all_items(size=16)
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             snaps_results = []
             status_code, error_info = _handle_error(api_error)
 
@@ -161,7 +162,7 @@ def store_blueprint(store_query=None, testing=False):
                 size=size,
                 page=page,
             )
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
 
         total_pages = None
@@ -264,7 +265,7 @@ def store_blueprint(store_query=None, testing=False):
             searched_results = api.search(
                 quote_plus(snap_searched), size=size, page=page
             )
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
 
         snaps_results = logic.get_searched_snaps(searched_results)
@@ -351,7 +352,7 @@ def store_blueprint(store_query=None, testing=False):
             category_results = api.get_category_items(
                 category=category, size=10, page=1
             )
-        except StoreApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
 
         snaps_results = logic.get_searched_snaps(category_results)

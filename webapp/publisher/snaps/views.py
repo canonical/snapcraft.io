@@ -1,13 +1,15 @@
 # Packages
 import bleach
 import flask
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiResponseErrorList,
+)
 
 # Local
-import webapp.api.dashboard as api
-from webapp.api.exceptions import (
-    ApiError,
-    ApiResponseErrorList,
-)
+from webapp.helpers import api_session
+from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import (
     build_views,
@@ -19,6 +21,9 @@ from webapp.publisher.snaps import (
     settings_views,
 )
 from webapp.publisher.views import _handle_error, _handle_error_list
+
+publisher_api = SnapPublisher(api_session)
+
 
 publisher_snaps = flask.Blueprint(
     "publisher_snaps",
@@ -212,10 +217,10 @@ def redirect_get_account_snaps():
 @login_required
 def get_account_snaps():
     try:
-        account_info = api.get_account(flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        account_info = publisher_api.get_account(flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
@@ -240,8 +245,8 @@ def redirect_get_register_name():
 @login_required
 def get_register_name():
     try:
-        user = api.get_account(flask.session)
-    except ApiError as api_error:
+        user = publisher_api.get_account(flask.session)
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     available_stores = logic.filter_available_stores(user["stores"])
@@ -299,17 +304,17 @@ def post_register_name():
     registrant_comment = flask.request.form.get("registrant_comment")
 
     try:
-        api.post_register_name(
+        publisher_api.post_register_name(
             session=flask.session,
             snap_name=snap_name,
             is_private=is_private,
             store=store,
             registrant_comment=registrant_comment,
         )
-    except ApiResponseErrorList as api_response_error_list:
+    except StoreApiResponseErrorList as api_response_error_list:
         try:
-            user = api.get_account(flask.session)
-        except ApiError as api_error:
+            user = publisher_api.get_account(flask.session)
+        except (StoreApiError, ApiError) as api_error:
             return _handle_error(api_error)
 
         available_stores = logic.filter_available_stores(user["stores"])
@@ -359,7 +364,7 @@ def post_register_name():
         }
 
         return flask.render_template("publisher/register-snap.html", **context)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     flask.flash(
@@ -389,10 +394,10 @@ def post_register_name_json():
         )
 
     try:
-        response = api.post_register_name(
+        response = publisher_api.post_register_name(
             session=flask.session, snap_name=snap_name
         )
-    except ApiResponseErrorList as api_response_error_list:
+    except StoreApiResponseErrorList as api_response_error_list:
         for error in api_response_error_list.errors:
             # if snap name is already owned treat it as success
             if error["code"] == "already_owned":
@@ -403,7 +408,7 @@ def post_register_name_json():
             flask.jsonify({"errors": api_response_error_list.errors}),
             api_response_error_list.status_code,
         )
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     response["code"] = "created"
@@ -430,10 +435,10 @@ def post_register_name_dispute():
     try:
         snap_name = flask.request.form.get("snap-name", "")
         claim_comment = flask.request.form.get("claim-comment", "")
-        api.post_register_name_dispute(
+        publisher_api.post_register_name_dispute(
             flask.session, bleach.clean(snap_name), bleach.clean(claim_comment)
         )
-    except ApiResponseErrorList as api_response_error_list:
+    except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code in [400, 409]:
             return flask.render_template(
                 "publisher/register-name-dispute.html",
@@ -442,7 +447,7 @@ def post_register_name_dispute():
             )
         else:
             return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     return flask.render_template(
@@ -467,10 +472,10 @@ def get_request_reserved_name():
 @login_required
 def snap_count():
     try:
-        account_info = api.get_account(flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        account_info = publisher_api.get_account(flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
+    except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)

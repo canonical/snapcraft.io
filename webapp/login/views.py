@@ -2,10 +2,11 @@ import os
 from urllib.parse import quote
 
 import flask
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 from webapp import authentication
-from webapp.api import dashboard
+from webapp.helpers import api_session
 from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
@@ -26,6 +27,8 @@ open_id = OpenID(
     safe_roots=[],
     extension_responses=[MacaroonResponse, TeamsResponse],
 )
+
+publisher_api = SnapPublisher(api_session)
 
 
 @login.route("/login", methods=["GET", "POST"])
@@ -69,7 +72,7 @@ def after_login(resp):
         return flask.redirect(LOGIN_URL)
 
     try:
-        account = dashboard.get_account(flask.session)
+        account = publisher_api.get_account(flask.session)
         flask.session["openid"] = {
             "identity_url": resp.identity_url,
             "nickname": account["username"],
