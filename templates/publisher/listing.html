@@ -108,7 +108,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
         <div class="col-8">
           <div class="p-form__control">
-            <input data-tour="listing-title" class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
+            <input data-tour="listing-title" class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="40"/>
             {% if field_errors and field_errors['title'] %}
             <p class="p-form-validation__message">
               <strong>Error:</strong> {{ field_errors['title'] }}

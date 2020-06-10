@@ -334,7 +334,9 @@ function initForm(config, initialState, errors) {
         const count = validation[input.name].maxLength - input.value.length;
 
         if (count < 0) {
-          inputValidation.counterEl.innerHTML = count;
+          inputValidation.counterEl.innerHTML = `The maximum number of characters in the title is ${
+            validation[input.name].maxLength
+          }.`;
           isValid = false;
           showCounter = true;
         } else {

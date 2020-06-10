@@ -71,8 +71,8 @@
       .p-media-object__content {
         p {
           color: transparent;
-          position: relative;
           display: -webkit-box;
+          position: relative;
 
           &::before {
             background: $color-mid-light;

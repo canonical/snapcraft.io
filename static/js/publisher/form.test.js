@@ -40,7 +40,7 @@ describe("initForm", () => {
     titleInput.name = "title";
     titleInput.value = initialState.title;
     titleInput.required = "true";
-    titleInput.maxlength = "64";
+    titleInput.maxlength = "40";
 
     categoriesInput = document.createElement("input");
     categoriesInput.type = "text";
