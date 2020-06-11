@@ -197,9 +197,9 @@
 
       .p-market-banner__change {
         border-radius: $border-radius;
+        opacity: 1;
         outline: $bar-thickness solid $color-focus;
         outline-offset: -$bar-thickness;
-        opacity: 1;
       }
     }
 

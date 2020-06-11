@@ -331,11 +331,10 @@ function initForm(config, initialState, errors) {
       }
 
       if (inputValidation.maxLength) {
-        const count = validation[input.name].maxLength - input.value.length;
-
-        if (count < 0) {
-          inputValidation.counterEl.innerHTML = count;
-          isValid = false;
+        if (validation[input.name].maxLength === input.value.length) {
+          inputValidation.counterEl.innerHTML = `The maximum number of characters for this field is ${
+            validation[input.name].maxLength
+          }.`;
           showCounter = true;
         } else {
           inputValidation.counterEl.innerHTML = "";
@@ -382,11 +381,10 @@ function initForm(config, initialState, errors) {
     if (input.maxLength > 0) {
       // save max length, but remove it from input so more chars can be entered
       inputValidation.maxLength = input.maxLength;
-      input.removeAttribute("maxlength");
 
       // prepare counter element to show how many chars need to be removed
-      const counter = document.createElement("span");
-      counter.className = "p-form-validation__counter";
+      const counter = document.createElement("p");
+      counter.className = "p-form-help-text";
       inputValidation.counterEl = counter;
       input.parentNode.appendChild(counter);
     }
