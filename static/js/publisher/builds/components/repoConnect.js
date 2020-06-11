@@ -105,7 +105,6 @@ class RepoConnect extends React.Component {
       isRepoListDisabled: true,
       status: LOADING,
     });
-
     fetch(url)
       .then((res) => res.json())
       .then((result) => {

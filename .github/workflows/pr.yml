@@ -102,10 +102,10 @@ jobs:
       - name: Build resources
         run: /snap/bin/dotrun build
 
-      - name: Run tests
+      - name: Run python tests with coverage
         run: |
-          /snap/bin/dotrun test-python
-          bash <(curl -s https://codecov.io/bash) -cF javascript
+          /snap/bin/dotrun exec coverage run --source=. -m unittest discover tests
+          bash <(curl -s https://codecov.io/bash) -cF python
 
   test-js:
     runs-on: ubuntu-latest
@@ -116,7 +116,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Test JS
+      - name: Run JS tests with coverage
         run: |
           yarn test-js
           bash <(curl -s https://codecov.io/bash) -cF javascript
