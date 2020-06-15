@@ -25,8 +25,8 @@
     <div class="p-accordion" role="tablist" aria-multiselect="true">
       <ol class="p-accordion__list">
         <li class="p-accordion__group">
-          <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" >
-            <h4 class="u-no-margin--bottom">
+          <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab--with-title" id="tab1" role="tab" aria-controls="#tab1-section" >
+            <h4 class="p-accordion__title">
               Step 1: Create an Ubuntu One account
               {% if user %}<i class="p-icon--success"></i>{% endif %}
             </h4>
@@ -48,8 +48,8 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
-            <h4 class="u-no-margin--bottom">
+          <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab--with-title" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
+            <h4 class="p-accordion__title">
               Step 2: Register your snap name
               <i id="register-name-success" class="p-icon--success u-hide"></i>
             </h4>
@@ -86,8 +86,8 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
-            <h4 class="u-no-margin--bottom">
+          <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab--with-title" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
+            <h4 class="p-accordion__title">
               Step 3: Push to the Snap store
             </h4>
           </button>
