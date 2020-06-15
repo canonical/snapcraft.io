@@ -263,9 +263,11 @@ function initRegisterName(formEl, notificationEl, successEl) {
     );
 
     const currentPanel = formEl.closest(".p-accordion__group");
-    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+    const currentToggle = currentPanel.querySelector(
+      ".p-accordion__tab--with-title"
+    );
     const nextPanel = currentPanel.nextElementSibling;
-    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab--with-title");
 
     const enableButton = () => {
       if (submitButton.disabled) {
