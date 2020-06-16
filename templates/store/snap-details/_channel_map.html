@@ -61,6 +61,9 @@
               </div>
             </div>
           </form>
+          {% if not has_stable %}
+          <p><i class="p-icon--warning"></i> {{ snap_title }} is only available at the unstable {{lowest_risk_available}} channel. It could break and change often.</p>
+          {% endif %}
         </div>
         <div class="u-fixed-width" data-js="channel-map-tabs">
           <nav class="p-tabs">
@@ -115,6 +118,7 @@
   </div>
   <div class="u-fixed-width">
     <p class="p-heading--4">Install ${channel} of {{ snap_title }}</p>
+    ${warning}
     <label>Ubuntu 16.04 or later?</label>
     <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop">View in Desktop store</button>
     <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
