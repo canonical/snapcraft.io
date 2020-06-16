@@ -1,0 +1,90 @@
+domain: snapcraft.io
+
+image: prod-comms.docker-registry.canonical.com/snapcraft.io
+
+env:
+  - name: SENTRY_DSN
+    value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
+
+  - name: ENVIRONMENT
+    configMapKeyRef:
+      key: environment
+      name: environment
+
+  - name: MARKETO_CLIENT_ID
+    secretKeyRef:
+      key: marketo_client_id
+      name: snapcraft-io
+
+  - name: MARKETO_CLIENT_SECRET
+    secretKeyRef:
+      key: marketo_client_secret
+      name: snapcraft-io
+
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
+  - name: GITHUB_CLIENT_ID
+    secretKeyRef:
+      key: github-client-id
+      name: snapcraft-io
+
+  - name: GITHUB_CLIENT_SECRET
+    secretKeyRef:
+      key: github-client-secret
+      name: snapcraft-io
+
+  - name: GITHUB_SNAPCRAFT_USER_TOKEN
+    secretKeyRef:
+      key: github-snapcraft-user-token
+      name: snapcraft-io
+
+  - name: GITHUB_WEBHOOK_SECRET
+    secretKeyRef:
+      key: github-webhook-secret
+      name: snapcraft-io
+
+  - name: LP_API_USERNAME
+    secretKeyRef:
+      key: lp-api-username
+      name: snapcraft-io
+
+  - name: LP_API_TOKEN
+    secretKeyRef:
+      key: lp-api-token
+      name: snapcraft-io
+
+  - name: LP_API_TOKEN_SECRET
+    secretKeyRef:
+      key: lp-api-token-secret
+      name: snapcraft-io
+
+memoryLimit: 1Gi
+
+extraHosts:
+  - domain: docs.snapcraft.io
+  - domain: snapstore.io
+
+# Overrides for production
+production:
+  replicas: 5
+  nginxConfigurationSnippet: |
+    if ($host = 'docs.snapcraft.io' ) {
+      rewrite ^ https://snapcraft.io/docs$request_uri? permanent;
+    }
+    if ($host != 'snapcraft.io' ) {
+      rewrite ^ https://snapcraft.io$request_uri? permanent;
+    }
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
+
+# Overrides for staging
+staging:
+  replicas: 3
+  nginxConfigurationSnippet: |
+    if ($host = 'docs.staging.snapcraft.io' ) {
+      rewrite ^ https://staging.snapcraft.io/docs$request_uri? permanent;
+    }
+    more_set_headers "X-Robots-Tag: noindex";
+    more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";

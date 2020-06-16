@@ -42,6 +42,8 @@ This codebase can be modified to setup branded stores that represent specific br
 )
 - For developers to learn more about developomg a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
 
+# Deploy
+You can find the deployment config in the deploy folder.
 
 ## License
 
