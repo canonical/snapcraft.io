@@ -39,6 +39,16 @@
           Don't have snapd? <a href="/docs/installing-snapd">Get set up for snaps</a>.
         </p>
       </div>
+      {% if package_name in appliances %}
+      <div class="u-fixed-width">
+        <hr />
+      </div>
+      <div class="u-fixed-width">
+        <p class="u-no-margin--bottom">
+          Also available as: <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" class="p-link--external">Ubuntu Appliance</a>
+        </p>
+      </div>
+      {% endif %}
     </div>
   </div>
   <div id="channel-map-versions" class="p-channel-map__tab">
