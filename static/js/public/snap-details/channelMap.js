@@ -322,10 +322,18 @@ class ChannelMap {
       paramString += ` --classic`;
     }
 
+    let warning = "";
+    if (channel.indexOf("stable") === -1) {
+      warning = `Snaps on the ${channel} channel can break and change often.`;
+    }
+
     const template = this.INSTALL_TEMPLATE.split("${channel}")
       .join(channel)
       .split("${paramString}")
-      .join(paramString);
+      .join(paramString)
+      .split("${warning}")
+      .join(warning);
+
     const holder = document.querySelector(
       '[data-js="channel-map-install-details"]'
     );
