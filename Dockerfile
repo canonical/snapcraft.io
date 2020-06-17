@@ -33,7 +33,6 @@ RUN yarn run build-js
 # ===
 FROM ubuntu:focal
 
-ADD . .
 # Install python and import python dependencies
 RUN apt-get update && apt-get install --no-install-recommends --yes python3-lib2to3 python3-setuptools python3-pkg-resources ca-certificates libsodium-dev
 COPY --from=python-dependencies /root/.local/lib/python3.8/site-packages /root/.local/lib/python3.8/site-packages
