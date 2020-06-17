@@ -39,6 +39,16 @@
           Don't have snapd? <a href="/docs/installing-snapd">Get set up for snaps</a>.
         </p>
       </div>
+      {% if package_name in appliances %}
+      <div class="u-fixed-width">
+        <hr />
+      </div>
+      <div class="u-fixed-width">
+        <p class="u-no-margin--bottom">
+          Available as an <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" class="p-link--external">Ubuntu Appliance</a>
+        </p>
+      </div>
+      {% endif %}
     </div>
   </div>
   <div id="channel-map-versions" class="p-channel-map__tab">
@@ -62,7 +72,7 @@
             </div>
           </form>
           {% if not has_stable %}
-          <p><i class="p-icon--warning"></i> {{ snap_title }} is only available at the unstable {{lowest_risk_available}} channel. It could break and change often.</p>
+          <p><i class="p-icon--warning"></i> {{ snap_title }} is only available on the unstable {{lowest_risk_available}} channel. It could break and change often.</p>
           {% endif %}
         </div>
         <div class="u-fixed-width" data-js="channel-map-tabs">

@@ -181,6 +181,14 @@ def snap_details_views(store, api, handle_errors):
             "is_users_snap": is_users_snap,
             "unlisted": details["snap"]["unlisted"],
             "developer": developer,
+            # TODO: This is horrible and hacky
+            "appliances": {
+                "adguard-home": "adguard",
+                "mosquitto": "mosquitto",
+                "nextcloud": "nextcloud",
+                "plexmediaserver": "plex",
+                "openhab": "openhab",
+            },
         }
 
         return context

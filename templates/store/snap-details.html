@@ -114,10 +114,19 @@
               aria-controls="channel-map-install">
                 Install
                 {% if is_preview %}
-                  <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
-                {% endif %}
+              <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
+              {% endif %}
             </button>
-          {% endif %}
+            {% endif %}
+            {% if package_name in appliances %}
+            <p class="u-no-margin--bottom">
+              Available as an
+              <span class="p-tooltip--btm-center" style="z-index: 2">
+                <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" class="p-link--external">Ubuntu Appliance</a>
+                <span class="p-tooltip__message">Install a ready-made {{snap_title}} image<br />on a Raspberry Pi, an Intel NUC or try<br />it in a VM and get started.</span>
+              </span>
+            </p>
+            {% endif %}
         </div>
       {% else %}
         <div class="p-snap-install-buttons">
