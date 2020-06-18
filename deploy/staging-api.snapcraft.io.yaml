@@ -1,0 +1,53 @@
+domain: staging-api.snapcraft.io
+
+image: prod-comms.docker-registry.canonical.com/snapcraft.io
+
+env:
+  - name: DASHBOARD_API
+    value: https://dashboard.staging.snapcraft.io/dev/api/
+
+  - name: DASHBOARD_API_V2
+    value: https://dashboard.staging.snapcraft.io/api/v2/
+
+  - name: LOGIN_URL
+    value: https://login.staging.ubuntu.com
+
+  - name: SNAPSTORE_API_URL
+    value: https://api.staging.snapcraft.io/
+
+  - name: SENTRY_DSN
+    value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
+
+  - name: ENVIRONMENT
+    configMapKeyRef:
+      key: environment
+      name: environment
+
+  - name: MARKETO_CLIENT_ID
+    secretKeyRef:
+      key: marketo_client_id
+      name: snapcraft-io
+
+  - name: MARKETO_CLIENT_SECRET
+    secretKeyRef:
+      key: marketo_client_secret
+      name: snapcraft-io
+
+  - name: SEARCH_API_KEY
+    secretKeyRef:
+      key: google-custom-search-key
+      name: google-api
+
+memoryLimit: "512Mi"
+
+nginxConfigurationSnippet: |
+  more_set_headers "X-Robots-Tag: noindex";
+  more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect";
+
+production:
+  replicas: 3
+
+staging:
+  replicas: 3
+  name: staging-api-snapcraft-io
+  domain: staging-api.snapcraft.io
