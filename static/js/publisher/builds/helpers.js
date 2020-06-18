@@ -24,19 +24,14 @@ export const UserFacingStatus = {
     6,
     WONT_RELEASE
   ),
-  [RELEASED]: createStatus("Built and released", "Released", 5, "released"),
+  [RELEASED]: createStatus("Released", "Released", 5, "released"),
   [RELEASE_FAILED]: createStatus(
     "Built, failed to release",
     "Failed",
     4,
     RELEASE_FAILED
   ),
-  [RELEASING_SOON]: createStatus(
-    "Built, releasing soon",
-    "Releasing",
-    3,
-    RELEASING_SOON
-  ),
+  [RELEASING_SOON]: createStatus("Releasing", "Releasing", 3, RELEASING_SOON),
   [IN_PROGRESS]: createStatus("In progress", "In progress", 2, IN_PROGRESS),
   [FAILED_TO_BUILD]: createStatus(
     "Failed to build",
