@@ -395,7 +395,7 @@ class ChannelMap {
 
     let rows = [];
 
-    // If we're not filtering, pass through all the data...
+    // If we're not filtering, pass through all the data....
     let trackList = filtered ? {} : archData;
 
     // ...and don't do the expensive bit
