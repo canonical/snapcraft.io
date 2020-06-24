@@ -164,6 +164,10 @@ publisher_snaps.add_url_rule(
     view_func=release_views.post_default_track,
     methods=["POST"],
 )
+publisher_snaps.add_url_rule(
+    "/<snap_name>/releases/revision/<revision>",
+    view_func=release_views.get_snap_revision_json,
+)
 
 # Metrics views
 publisher_snaps.add_url_rule(
