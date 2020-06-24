@@ -17,8 +17,8 @@ import ReleasesTableChannelRow from "./channelRow";
 const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
   const targetChannelArchs = channelMap[targetChannel];
 
-  return revisions.filter((revision) => {
-    return revision.architectures.some((arch) => {
+  return revisions.filter(revision => {
+    return revision.architectures.some(arch => {
       // if nothing released to target channel in this arch
       if (!targetChannelArchs || !targetChannelArchs[arch]) {
         return true;
@@ -34,7 +34,7 @@ const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
 };
 
 // releases table row with channel data that can be a drop target for revisions
-const ReleasesTableDroppableRow = (props) => {
+const ReleasesTableDroppableRow = props => {
   const {
     currentTrack,
     risk,
@@ -42,7 +42,7 @@ const ReleasesTableDroppableRow = (props) => {
     revisions,
     promoteRevision,
     pendingChannelMap,
-    triggerGAEvent,
+    triggerGAEvent
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -51,9 +51,9 @@ const ReleasesTableDroppableRow = (props) => {
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
-    drop: (item) => {
+    drop: item => {
       item.revisions.forEach(
-        (r) => canBeReleased(r) && promoteRevision(r, channel)
+        r => canBeReleased(r) && promoteRevision(r, channel)
       );
 
       if (item.revisions.length > 1) {
@@ -72,7 +72,7 @@ const ReleasesTableDroppableRow = (props) => {
         );
       }
     },
-    canDrop: (item) => {
+    canDrop: item => {
       const draggedRevisions = item.revisions;
 
       const branchName = branch ? branch.branch : null;
@@ -123,11 +123,11 @@ const ReleasesTableDroppableRow = (props) => {
 
       return true;
     },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
-      item: monitor.getItem(),
-    }),
+      item: monitor.getItem()
+    })
   });
 
   return (
@@ -156,21 +156,21 @@ ReleasesTableDroppableRow.propTypes = {
 
   // actions
   promoteRevision: PropTypes.func.isRequired,
-  triggerGAEvent: PropTypes.func.isRequired,
+  triggerGAEvent: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     currentTrack: state.currentTrack,
-    pendingChannelMap: getPendingChannelMap(state),
+    pendingChannelMap: getPendingChannelMap(state)
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     promoteRevision: (revision, targetChannel) =>
       dispatch(promoteRevision(revision, targetChannel)),
-    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps)),
+    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps))
   };
 };
 

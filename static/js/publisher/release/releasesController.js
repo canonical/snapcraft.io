@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "whatwg-fetch";
@@ -16,47 +16,98 @@ import { initChannelMap } from "./actions/channelMap";
 import {
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap,
+  getReleaseDataFromChannelMap
 } from "./releasesState";
 
-class ReleasesController extends Component {
-  constructor(props) {
-    super(props);
+const ReleasesController = ({
+  snapName,
+  releasesData,
+  channelMap,
+  updateRevisions,
+  updateReleases,
+  initChannelMap,
+  notification,
+  showModal
+}) => {
+  const [loading, setLoading] = useState(true);
+  // init channel data in revisions list
+  // TODO: should be done in reducers?
+  const revisionsMap = getRevisionsMap(releasesData.revisions);
+  initReleasesData(revisionsMap, releasesData.releases);
 
-    const { releasesData, channelMap } = this.props;
+  // init redux store
+  // TODO: should be done outside component as initial state?
+  updateRevisions(revisionsMap);
+  updateReleases(releasesData.releases);
 
-    // init channel data in revisions list
-    // TODO: should be done in reducers?
-    const revisionsMap = getRevisionsMap(releasesData.revisions);
-    initReleasesData(revisionsMap, releasesData.releases);
-
-    // init redux store
-    // TODO: should be done outside component as initial state?
-    this.props.updateRevisions(revisionsMap);
-    this.props.updateReleases(releasesData.releases);
-    this.props.initChannelMap(
-      getReleaseDataFromChannelMap(channelMap, revisionsMap)
+  useEffect(() => {
+    getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName).then(
+      newChannelMap => {
+        initChannelMap(newChannelMap);
+        setLoading(false);
+      }
     );
-  }
+  }, []);
 
-  render() {
-    const { notification, showModal } = this.props;
-    const { visible } = notification;
-    return (
-      <Fragment>
-        <div className="row">
-          <ReleasesConfirm />
-          {visible && <Notification />}
-        </div>
-        <ReleasesHeading />
-        <ReleasesTable />
-        {showModal && <Modal />}
-      </Fragment>
-    );
-  }
-}
+  const { visible } = notification;
+  return (
+    <Fragment>
+      {loading && <i className="p-icon--spinner" />}
+      {!loading && (
+        <Fragment>
+          <div className="row">
+            <ReleasesConfirm />
+            {visible && <Notification />}
+          </div>
+          <ReleasesHeading />
+          <ReleasesTable />
+          {showModal && <Modal />}
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
+
+// class ReleasesController extends Component {
+//   constructor(props) {
+//     super(props);
+
+//     const { releasesData, channelMap } = this.props;
+
+//     // init channel data in revisions list
+//     // TODO: should be done in reducers?
+//     const revisionsMap = getRevisionsMap(releasesData.revisions);
+//     initReleasesData(revisionsMap, releasesData.releases);
+
+//     // init redux store
+//     // TODO: should be done outside component as initial state?
+//     this.props.updateRevisions(revisionsMap);
+//     this.props.updateReleases(releasesData.releases);
+
+//     this.props.initChannelMap(
+//       getReleaseDataFromChannelMap(channelMap, revisionsMap)
+//     );
+//   }
+
+//   render() {
+//     const { notification, showModal } = this.props;
+//     const { visible } = notification;
+//     return (
+//       <Fragment>
+//         <div className="row">
+//           <ReleasesConfirm />
+//           {visible && <Notification />}
+//         </div>
+//         <ReleasesHeading />
+//         <ReleasesTable />
+//         {showModal && <Modal />}
+//       </Fragment>
+//     );
+//   }
+// }
 
 ReleasesController.propTypes = {
+  snapName: PropTypes.string.isRequired,
   releasesData: PropTypes.object.isRequired,
   channelMap: PropTypes.array.isRequired,
 
@@ -65,21 +116,21 @@ ReleasesController.propTypes = {
 
   initChannelMap: PropTypes.func,
   updateReleases: PropTypes.func,
-  updateRevisions: PropTypes.func,
+  updateRevisions: PropTypes.func
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     showModal: state.modal.visible,
-    notification: state.notification,
+    notification: state.notification
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    initChannelMap: (channelMap) => dispatch(initChannelMap(channelMap)),
-    updateRevisions: (revisions) => dispatch(updateRevisions(revisions)),
-    updateReleases: (releases) => dispatch(updateReleases(releases)),
+    initChannelMap: channelMap => dispatch(initChannelMap(channelMap)),
+    updateRevisions: revisions => dispatch(updateRevisions(revisions)),
+    updateReleases: releases => dispatch(updateReleases(releases))
   };
 };
 

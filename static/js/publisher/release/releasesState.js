@@ -2,7 +2,7 @@ import { RISKS } from "./constants";
 
 function getRevisionsMap(revisions) {
   const revisionsMap = {};
-  revisions.forEach((rev) => {
+  revisions.forEach(rev => {
     rev.channels = [];
     revisionsMap[rev.revision] = rev;
   });
@@ -16,7 +16,7 @@ function initReleasesData(revisionsMap, releases) {
   releases
     .slice()
     .reverse()
-    .forEach((release) => {
+    .forEach(release => {
       if (release.revision) {
         const rev = revisionsMap[release.revision];
 
@@ -37,26 +37,41 @@ function initReleasesData(revisionsMap, releases) {
 
 // transforming channel map list data into format used by this component
 // https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
-  const releasedChannels = {};
+function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
+  return new Promise(resolve => {
+    const releasedChannels = {};
 
-  channelMap.forEach((mapInfo) => {
-    if (!releasedChannels[mapInfo.channel]) {
-      releasedChannels[mapInfo.channel] = {};
+    console.log(revisionsMap);
+
+    const extraRevisions = [];
+
+    channelMap.forEach(mapInfo => {
+      if (!releasedChannels[mapInfo.channel]) {
+        releasedChannels[mapInfo.channel] = {};
+      }
+
+      if (!releasedChannels[mapInfo.channel][mapInfo.architecture]) {
+        if (revisionsMap[mapInfo.revision]) {
+          releasedChannels[mapInfo.channel][mapInfo.architecture] =
+            revisionsMap[mapInfo.revision];
+          releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
+            mapInfo["expiration-date"];
+        } else {
+          extraRevisions.push(mapInfo.revision);
+        }
+      }
+    });
+
+    if (extraRevisions.length > 0) {
+      Promise.all(
+        extraRevisions.map(url => fetch(`${url}`).then(resp => resp.json()))
+      ).then(results => {
+        console.log(results);
+      });
     }
 
-    if (
-      !releasedChannels[mapInfo.channel][mapInfo.architecture] &&
-      revisionsMap[mapInfo.revision]
-    ) {
-      releasedChannels[mapInfo.channel][mapInfo.architecture] =
-        revisionsMap[mapInfo.revision];
-      releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
-        mapInfo["expiration-date"];
-    }
+    resolve(releasedChannels);
   });
-
-  return releasedChannels;
 }
 
 // for channel without release get next (less risk) channel with a release
@@ -89,7 +104,7 @@ function getTrackingChannel(releasedChannels, track, risk, arch) {
 function getUnassignedRevisions(revisionsMap, arch) {
   let filteredRevisions = Object.values(revisionsMap).reverse();
   if (arch) {
-    filteredRevisions = filteredRevisions.filter((revision) => {
+    filteredRevisions = filteredRevisions.filter(revision => {
       return (
         revision.architectures.includes(arch) &&
         (!revision.channels || revision.channels.length === 0)
@@ -104,5 +119,5 @@ export {
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap,
+  getReleaseDataFromChannelMap
 };

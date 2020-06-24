@@ -29,8 +29,8 @@ const initReleases = (
       options: {
         ...options,
         snapName,
-        tracks,
-      },
+        tracks
+      }
     },
     composeEnhancers(applyMiddleware(thunk))
   );
