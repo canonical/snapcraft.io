@@ -3,7 +3,7 @@
     <div class="p-strip--light is-shallow">
       <div class="u-fixed-width">
         <p class="p-heading--4">Install {{ default_track }}/{{ lowest_risk_available }} of {{ snap_title }}</p>
-        <label>Ubuntu 16.04 or later?</label>
+        <p>Ubuntu 16.04 or later?</p>
         <button
           data-snap="{{ package_name }}
             {% if lowest_risk_available != 'stable' %}
@@ -129,7 +129,7 @@
   <div class="u-fixed-width">
   <p class="p-heading--4">Install ${channel} of {{ snap_title }}</p>
   <span data-js="warning"></span>
-    <label>Ubuntu 16.04 or later?</label>
+    <p>Ubuntu 16.04 or later?</p>
     <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop">View in Desktop store</button>
     <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
   </div>
