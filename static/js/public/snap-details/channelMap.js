@@ -323,22 +323,34 @@ class ChannelMap {
     }
 
     let warning = "";
-    if (channel.indexOf("stable") === -1) {
-      warning = `Snaps on the ${channel} channel can break and change often.`;
+    if (channel.indexOf("edge") > -1) {
+      warning = "Snaps on the edge channel can break and change often.";
+    } else if (channel.indexOf("beta") > -1) {
+      warning =
+        "Snaps on the beta channel may have unfinished parts, breaking changes may occur.";
+    } else if (channel.indexOf("candidate") > -1) {
+      warning =
+        "Snaps on the candidate channel need additional real world experimentation before the move to stable.";
     }
 
     const template = this.INSTALL_TEMPLATE.split("${channel}")
       .join(channel)
       .split("${paramString}")
-      .join(paramString)
-      .split("${warning}")
-      .join(warning);
+      .join(paramString);
+
+    const newDiv = document.createElement("div");
+    newDiv.innerHTML = template;
+
+    const warningEl = newDiv.querySelector("[data-js='warning']");
+    if (warningEl) {
+      warningEl.innerHTML = warning;
+    }
 
     const holder = document.querySelector(
       '[data-js="channel-map-install-details"]'
     );
 
-    holder.innerHTML = template;
+    holder.innerHTML = newDiv.innerHTML;
   }
 
   writeTable(el, data) {
