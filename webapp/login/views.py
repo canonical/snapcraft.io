@@ -1,5 +1,4 @@
 import os
-from urllib.parse import quote
 
 import flask
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
@@ -17,8 +16,6 @@ login = flask.Blueprint(
 )
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
-
-BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
 
 LP_CANONICAL_TEAM = "canonical"
 
@@ -101,13 +98,6 @@ def after_login(resp):
 
 @login.route("/logout")
 def logout():
-    no_redirect = flask.request.args.get("no_redirect", default="false")
     authentication.empty_session(flask.session)
 
-    if no_redirect == "true":
-        return flask.redirect("/")
-    else:
-        redirect_url = quote(flask.request.url_root, safe="")
-        return flask.redirect(
-            f"{LOGIN_URL}/+logout?return_to={redirect_url}&return_now=True"
-        )
+    return flask.redirect("/")
