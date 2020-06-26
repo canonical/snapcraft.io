@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import "whatwg-fetch";
 
 import ReleasesTable from "./components/releasesTable";
 import Notification from "./components/globalNotification";
@@ -19,44 +18,69 @@ import {
   getReleaseDataFromChannelMap,
 } from "./releasesState";
 
-class ReleasesController extends Component {
-  constructor(props) {
-    super(props);
+const ReleasesController = ({
+  snapName,
+  releasesData,
+  channelMap,
+  updateReleases,
+  updateRevisions,
+  initChannelMap,
+  notification,
+  showModal,
+}) => {
+  const [ready, setReady] = useState(false);
+  const revisionsList = releasesData.revisions;
 
-    const { releasesData, channelMap } = this.props;
+  useEffect(() => {
+    getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
+      ([transformedChannelMap, revisionsListAdditions]) => {
+        Array.prototype.push.apply(revisionsList, revisionsListAdditions);
+        const revisionsMap = getRevisionsMap(revisionsList);
 
-    // init channel data in revisions list
-    // TODO: should be done in reducers?
-    const revisionsMap = getRevisionsMap(releasesData.revisions);
-    initReleasesData(revisionsMap, releasesData.releases);
+        initReleasesData(revisionsMap, releasesData.releases);
+        updateRevisions(revisionsMap);
+        updateReleases(releasesData.releases);
 
-    // init redux store
-    // TODO: should be done outside component as initial state?
-    this.props.updateRevisions(revisionsMap);
-    this.props.updateReleases(releasesData.releases);
-    this.props.initChannelMap(
-      getReleaseDataFromChannelMap(channelMap, revisionsMap)
+        initChannelMap(transformedChannelMap);
+        setReady(true);
+      }
     );
-  }
+  }, []);
 
-  render() {
-    const { notification, showModal } = this.props;
-    const { visible } = notification;
-    return (
-      <Fragment>
-        <div className="row">
-          <ReleasesConfirm />
-          {visible && <Notification />}
+  const { visible } = notification;
+  return (
+    <Fragment>
+      {!ready && (
+        <div className="p-strip">
+          <div className="row">
+            <div className="col-4 col-start-large-5">
+              <div className="p-card u-align--center">
+                <div>Loading... Please wait</div>
+                <div>
+                  <i className="p-icon--spinner u-animation--spin" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <ReleasesHeading />
-        <ReleasesTable />
-        {showModal && <Modal />}
-      </Fragment>
-    );
-  }
-}
+      )}
+      {ready && (
+        <Fragment>
+          <div className="row">
+            <ReleasesConfirm />
+            {visible && <Notification />}
+          </div>
+          <ReleasesHeading />
+          <ReleasesTable />
+          {showModal && <Modal />}
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
 
 ReleasesController.propTypes = {
+  snapName: PropTypes.string.isRequired,
   releasesData: PropTypes.object.isRequired,
   channelMap: PropTypes.array.isRequired,
 

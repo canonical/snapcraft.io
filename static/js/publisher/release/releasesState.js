@@ -35,28 +35,65 @@ function initReleasesData(revisionsMap, releases) {
   return releases;
 }
 
+// Get specific revision based on snapName and a channelMap object
+function fetchMissingRevision(snapName, info) {
+  return fetch(`/${snapName}/releases/revision/${info.revision}`)
+    .then((res) => res.json())
+    .then((revision) => ({
+      info,
+      revision: revision.revision,
+    }));
+}
+
 // transforming channel map list data into format used by this component
 // https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMap(channelMap, revisionsMap) {
-  const releasedChannels = {};
+function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
+  return new Promise((resolve) => {
+    const releasedChannels = {};
+    const missingRevisions = [];
 
-  channelMap.forEach((mapInfo) => {
-    if (!releasedChannels[mapInfo.channel]) {
-      releasedChannels[mapInfo.channel] = {};
-    }
+    channelMap.forEach((mapInfo) => {
+      if (!releasedChannels[mapInfo.channel]) {
+        releasedChannels[mapInfo.channel] = {};
+      }
 
-    if (
-      !releasedChannels[mapInfo.channel][mapInfo.architecture] &&
-      revisionsMap[mapInfo.revision]
-    ) {
-      releasedChannels[mapInfo.channel][mapInfo.architecture] =
-        revisionsMap[mapInfo.revision];
-      releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
-        mapInfo["expiration-date"];
+      if (!releasedChannels[mapInfo.channel][mapInfo.architecture]) {
+        const revisionInfo = revisionsMap.find(
+          (r) => r.revision === mapInfo.revision
+        );
+        console.log(revisionInfo);
+        if (revisionInfo) {
+          releasedChannels[mapInfo.channel][
+            mapInfo.architecture
+          ] = revisionInfo;
+          releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
+            mapInfo["expiration-date"];
+        } else {
+          missingRevisions.push(fetchMissingRevision(snapName, mapInfo));
+        }
+      }
+    });
+
+    if (missingRevisions.length > 0) {
+      Promise.all(missingRevisions)
+        .then((revs) => {
+          revs.forEach((rev) => {
+            const { info, revision } = rev;
+            releasedChannels[info.channel][info.architecture] = revision;
+            releasedChannels[info.channel][info.architecture].expiration =
+              revision["expiration-date"];
+          });
+
+          resolve([releasedChannels, revs.map((r) => r.revision)]);
+        })
+        .catch(() => {
+          // if a call doesn't work for whatever reason
+          resolve([releasedChannels, []]);
+        });
+    } else {
+      resolve([releasedChannels, []]);
     }
   });
-
-  return releasedChannels;
 }
 
 // for channel without release get next (less risk) channel with a release
