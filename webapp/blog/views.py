@@ -1,16 +1,24 @@
 import flask
-
-from requests.exceptions import RequestException
+import talisker
 
 from canonicalwebteam import image_template
-from canonicalwebteam.blog import BlogViews, logic, wordpress_api
-from canonicalwebteam.blog.flask import build_blueprint
+from canonicalwebteam.blog import (
+    BlogViews,
+    Wordpress,
+    build_blueprint,
+    helpers,
+)
+from requests.exceptions import RequestException
+
 from webapp.helpers import get_yaml
 
 
 def init_blog(app, url_prefix):
+    wordpress_api = Wordpress(session=talisker.requests.get_session())
     blog = build_blueprint(
-        BlogViews(blog_title="Snapcraft Blog", tag_ids=[2996])
+        BlogViews(
+            api=wordpress_api, blog_title="Snapcraft Blog", tag_ids=[2996]
+        )
     )
 
     @blog.route("/api/snap-posts/<snap>")
@@ -61,26 +69,20 @@ def init_blog(app, url_prefix):
                 blog_articles = []
 
             for article in blog_articles:
-                try:
-                    featured_media = wordpress_api.get_media(
-                        article["featured_media"]
-                    )
-                    if featured_media:
-                        featured_media = image_template(
-                            url=featured_media["source_url"],
-                            alt="",
-                            width="346",
-                            height="231",
-                            fill=True,
-                            hi_def=True,
-                            loading="auto",
-                        )
-                except RequestException:
-                    featured_media = None
+                transformed_article = helpers.transform_article(article)
 
-                transformed_article = logic.transform_article(
-                    article, featured_image=featured_media, author=None
-                )
+                if transformed_article["image"]:
+                    featured_media = image_template(
+                        url=transformed_article["image"]["source_url"],
+                        alt="",
+                        width="346",
+                        height="231",
+                        fill=True,
+                        hi_def=True,
+                        loading="auto",
+                    )
+                else:
+                    featured_media = None
 
                 url = f"/blog/{transformed_article['slug']}"
 
@@ -91,7 +93,7 @@ def init_blog(app, url_prefix):
                     {
                         "slug": url,
                         "title": transformed_article["title"]["rendered"],
-                        "image": transformed_article["image"],
+                        "image": featured_media,
                     }
                 )
 
@@ -108,9 +110,7 @@ def init_blog(app, url_prefix):
             blog_articles = []
 
         for article in blog_articles:
-            transformed_article = logic.transform_article(
-                article, featured_image=None, author=None
-            )
+            transformed_article = helpers.transform_article(article)
             articles.append(
                 {
                     "slug": transformed_article["slug"],
