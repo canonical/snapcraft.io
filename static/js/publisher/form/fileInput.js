@@ -82,6 +82,10 @@ class FileInput extends React.Component {
     );
 
     Promise.all(files).then((values) => {
+      // Remove the new file from input if is not valid
+      if (values[0].errors) {
+        this.input.value = "";
+      }
       fileChangedCallback(values);
     });
   }

@@ -55,6 +55,7 @@ class Banner extends React.Component {
     const { updateImageState } = this.props;
 
     this.setState({
+      errors: {},
       bannerImage: {},
     });
 
