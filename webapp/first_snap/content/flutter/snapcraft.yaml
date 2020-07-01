@@ -1,0 +1,21 @@
+name: ${name}
+version: '1.0'
+summary: Flutter Gallery
+description: |
+  A demo app for Flutter's material design and cupertino widgets, as well 
+  as many other features of the Flutter SDK.
+
+confinement: stable
+base: core18
+
+parts:
+  ${name}:
+    plugin: flutter
+    source: https://github.com/flutter/gallery.git
+    flutter-channel: dev
+    flutter-target: lib/main.dart
+
+apps:
+  ${name}:
+    command: gallery
+    extensions: [flutter]
