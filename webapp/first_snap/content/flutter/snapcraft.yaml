@@ -12,10 +12,9 @@ parts:
   ${name}:
     plugin: flutter
     source: https://github.com/flutter/gallery.git
-    flutter-channel: dev
     flutter-target: lib/main.dart
 
 apps:
   ${name}:
     command: gallery
-    extensions: [flutter]
+    extensions: [flutter-master]
