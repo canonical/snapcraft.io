@@ -5,7 +5,7 @@ description: |
   A demo app for Flutter's material design and cupertino widgets, as well 
   as many other features of the Flutter SDK.
 
-confinement: stable
+confinement: devmode
 base: core18
 
 parts:
