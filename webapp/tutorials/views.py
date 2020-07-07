@@ -1,5 +1,7 @@
-import flask
 import math
+
+import flask
+import talisker
 
 from canonicalwebteam.discourse_docs import (
     DiscourseAPI,
@@ -9,21 +11,23 @@ from canonicalwebteam.discourse_docs import (
 
 
 def init_tutorials(app, url_prefix):
-    discourse_parser = DocParser(
-        api=DiscourseAPI(base_url="https://forum.snapcraft.io/"),
-        index_topic_id=15409,
-        category_id=20,
-        url_prefix=url_prefix,
-    )
     discourse_docs = DiscourseDocs(
-        parser=discourse_parser,
+        parser=DocParser(
+            api=DiscourseAPI(
+                base_url="https://forum.snapcraft.io/",
+                session=talisker.requests.get_session(),
+            ),
+            index_topic_id=15409,
+            category_id=20,
+            url_prefix=url_prefix,
+        ),
         document_template="tutorials/tutorial.html",
         url_prefix=url_prefix,
         blueprint_name="tutorials",
     )
 
     @app.route(url_prefix)
-    def index():
+    def tutorials():
         page = flask.request.args.get("page", default=1, type=int)
         posts_per_page = 12
         discourse_docs.parser.parse()
