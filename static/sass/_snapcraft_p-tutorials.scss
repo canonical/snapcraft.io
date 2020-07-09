@@ -1,4 +1,8 @@
 @mixin snapcraft-pattern-tutorials {
+  .p-tutorial__sidenav {
+    padding-block-start: $spv-inner--small;
+  }
+
   .p-tutorial__nav {
     margin-left: 0;
     padding-top: $sp-medium;
@@ -43,16 +47,21 @@
     }
   }
 
+  .p-tutorial-content {
+    margin-top: -20rem; // ensure header is visible when navigating between steps (pt. 1 of 2)
+  }
+
   .p-tutorial-section {
     display: none;
 
     &:target {
       display: block;
+      padding-top: 20rem; // ensure header is visible when navigating between steps (pt. 2 of 2)
     }
   }
 
   .p-tutorials-meter {
-    background-image: url('#{$assets-path}3b601b5d-snapcraft_difficulty_tutorials.svg');
+    background-image: url("#{$assets-path}3b601b5d-snapcraft_difficulty_tutorials.svg");
     background-position-x: -75px;
     background-position-y: center;
     background-repeat: no-repeat;
@@ -143,7 +152,6 @@
   }
 
   .p-tutorial__feedback-options {
-
     .p-inline-list__item {
       .has-color {
         display: none;
