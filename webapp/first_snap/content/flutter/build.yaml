@@ -1,4 +1,4 @@
-name: test-flutter-gallery-{name}
+name: test-super-cool-app-{name}
 linux:
   auto:
     - action: "Create a directory, move the downloaded snapcraft.yaml file into the new directory and navigate there:"

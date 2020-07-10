@@ -1,2 +1,2 @@
-name: test-flutter-gallery-{name}
-download: git clone https://github.com/flutter/gallery
+name: test-super-cool-app-{name}
+download: git clone https://github.com/kenvandine/super-cool-app
