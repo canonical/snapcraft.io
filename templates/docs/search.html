@@ -33,23 +33,19 @@
     </div>
   </div>
   {% endfor %}
-  <div class="p-strip p-pagination">
-    {% if  results.queries and results.queries.previousPage %}
-    <a
-      class="p-pagination__link--previous"
-      href="/docs/search?q={{ query }}&amp;start={{ results.queries.previousPage.0.startIndex }}{% if siteSearch %}&amp;siteSearch={{ siteSearch }}{% endif %}"
-      >
-      <span class="p-pagination__label">Previous</span>
-    </a>
-    {% endif %}
-    {% if results.queries and results.queries.nextPage %}
-    <a
-      class="p-pagination__link--next"
-      href="/docs/search?q={{ query }}&amp;start={{ results.queries.nextPage.0.startIndex }}{% if siteSearch %}&amp;siteSearch={{ siteSearch }}{% endif %}"
-      >
-      <span class="p-pagination__label">Next</span>
-    </a>
-    {% endif %}
+  <div class="p-strip">
+    <ul class="p-pagination">
+      {% if  results.queries and results.queries.previousPage %}
+        <li class="p-pagination__item">
+          <a class="p-pagination__link--previous" href="/docs/search?q={{ query }}&amp;start={{ results.queries.previousPage.0.startIndex }}{% if siteSearch %}&amp;siteSearch={{ siteSearch }}{% endif %}" title="Previous page"><i class="p-icon--contextual-menu">Previous page</i>Previous</a>
+        </li>
+      {% endif %}
+      {% if results.queries and results.queries.nextPage %}
+        <li class="p-inline-list__item">
+          <a class="p-pagination__link--next" href="/docs/search?q={{ query }}&amp;start={{ results.queries.nextPage.0.startIndex }}{% if siteSearch %}&amp;siteSearch={{ siteSearch }}{% endif %}" title="Next page">Next<i class="p-icon--contextual-menu">Next page</i></a>
+        </li>
+      {% endif %}
+    </ul>
   </div>
   {% else %}
   <div class="p-strip">
@@ -73,5 +69,5 @@
     </div>
   </div>
   {% endif %}
-  </div>
+</div>
 {% endblock %}
