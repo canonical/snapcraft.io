@@ -7,6 +7,7 @@ from canonicalwebteam.blog import (
     Wordpress,
     build_blueprint,
     helpers,
+    NotFoundError,
 )
 from requests.exceptions import RequestException
 
@@ -23,7 +24,11 @@ def init_blog(app, url_prefix):
 
     @blog.route("/api/snap-posts/<snap>")
     def snap_posts(snap):
-        blog_tags = wordpress_api.get_tag_by_name(f"sc:snap:{snap}")
+        try:
+            blog_tags = wordpress_api.get_tag_by_name(f"sc:snap:{snap}")
+        except NotFoundError:
+            blog_tags = None
+
         blog_articles = None
         articles = []
 
