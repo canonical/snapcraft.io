@@ -16,28 +16,27 @@
   </div>
 
   <div class="col-6">
-    <h4>Here's how <a href="https://snapcraft.io/flutter-gallery">flutter-gallery</a> defines snapcraft.yaml:</h4>
+    <h4>Here's how <a href="https://snapcraft.io/super-cool-app">super-cool-app</a> defines snapcraft.yaml:</h4>
     <div class ="p-show-more is-collapsed" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: flutter-gallery
+      <pre class="p-code-yaml"><b>name</b>: super-cool-app
 <b>version</b>: "1.0"
-<b>summary</b>: Flutter Gallery
+<b>summary</b>: Super Cool App
 <b>description</b>: |
-    A demo app for Flutter's material design [&hellip;]
-    as many other features of the Flutter SDK.[&hellip;]
+    Super Cool App that does everything! [&hellip;]
 
 <b>confinement</b>: strict
 <b>base</b>: core18
 
 <b>parts</b>:
-  <b>flutter-gallery</b>:
+  <b>super-cool-app</b>:
     <b>plugin</b>: flutter
-    <b>source</b>: https://github.com/flutter/gallery.git
+    <b>source</b>: https://github.com/kenvandine/super-cool-app.git
     <b>flutter-target</b>: lib/main.dart
 
  <b>apps</b>:
-   <b>flutter-gallery</b>:
-      <b>command</b>: gallery
-      <b>extensions</b>: [flutter-master]</pre>
+   <b>super-cool-app</b>:
+      <b>command</b>: super_cool_app
+      <b>extensions</b>: [flutter-dev]</pre>
 
       {% include "home/_fsf_yaml_show_more.html" %}
 

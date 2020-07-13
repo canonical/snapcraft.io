@@ -1,4 +1,4 @@
-name: test-flutter-gallery-{name}
+name: test-super-cool-app-{name}
 linux:
   - action: "Install the snap:"
     command: sudo snap install --dangerous *.snap
