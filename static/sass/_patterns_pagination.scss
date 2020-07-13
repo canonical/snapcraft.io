@@ -17,4 +17,9 @@
       }
     }
   }
+
+  // 10.07.2020 - Ovi: This can be remove once this issue is closed
+  .p-pagination__link--previous {
+    margin-inline-end: .5rem;
+  }
 }
