@@ -74,14 +74,6 @@ class TemplateUtilsTest(unittest.TestCase):
         )
         self.assertTrue(result, "sudo snap install skype --classic")
 
-    def test_install_snippet_with_classic_and_default_track(self):
-        result = template_utils.install_snippet(
-            "node", "10", "stable", "classic"
-        )
-        self.assertTrue(
-            result, "sudo snap install node --channel=10/stable --classic"
-        )
-
     def test_install_snippet_with_non_stable_risk_level(self):
         result = template_utils.install_snippet("test", "latest", "edge", "")
         self.assertTrue(result, "sudo snap install test --edge")

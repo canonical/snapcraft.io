@@ -12,7 +12,6 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp import helpers
 from webapp.helpers import api_session
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
@@ -174,11 +173,13 @@ def publisher_snap_metrics(snap_name):
 
     nodata = not any([country_devices, active_devices])
 
-    # until default tracks are supported by the API we special case node
-    # to use 10, rather then latest
-    default_track = helpers.get_default_track(snap_name)
-
     annotations = {"name": "annotations", "series": [], "buckets": []}
+
+    default_track = (
+        details.get("default-track")
+        if details.get("default-track")
+        else "latest"
+    )
 
     for category in details["categories"]["items"]:
         date = category["since"].split("T")[0]

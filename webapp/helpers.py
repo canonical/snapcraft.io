@@ -51,14 +51,6 @@ def get_licenses():
     return licenses
 
 
-def get_default_track(snap_name):
-    # until default tracks are supported by the API we special case node
-    # to use 10, rather then latest
-    default_track = "10" if snap_name == "node" else None
-
-    return default_track
-
-
 def get_file(filename, replaces={}):
     """
     Reads a file, replaces occurences of all the keys in `replaces` with
