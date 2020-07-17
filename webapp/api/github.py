@@ -245,6 +245,18 @@ class GitHub:
 
         return permission in user_permissions
 
+    def check_if_repo_exists(self, owner, repo):
+        """
+        Return True if GitHub repo exists
+        """
+        response = self._request(
+            "GET", f"repos/{owner}/{repo}", raise_exceptions=False,
+        )
+        if response.status_code == 404:
+            return False
+        elif response.status_code == 200:
+            return True
+
     def get_snapcraft_yaml_location(self, owner, repo):
         """
         Return the snapcraft.yaml file location in the GitHub repo

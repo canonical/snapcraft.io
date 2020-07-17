@@ -63,6 +63,22 @@ Builds for
     </div>
     {% endif %}
 
+    {% if not github_repository_exists or not yaml_file_exists %}
+    <section class="p-strip is-shallow">
+      <div class="u-fixed-width">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            {% if not github_repository_exists %}
+            Your snap is linked to <a href="https://github.com/{{ github_repository }}" class="p-link--external">{{ github_repository }}</a>, but this repository doesn&rsquo;t exist. <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>.
+            {% elif not yaml_file_exists %}
+            This repository doesn&rsquo;t contain snapcraft.yaml. More on <a href="https://snapcraft.io/docs/creating-snapcraft-yaml">how to create it</a>.
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
