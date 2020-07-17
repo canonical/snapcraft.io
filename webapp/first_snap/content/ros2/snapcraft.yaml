@@ -10,12 +10,12 @@ parts:
   ros-demos:
     plugin: colcon
     source: https://github.com/ros2/demos.git
-    source-branch: crystal
-    colcon-rosdistro: crystal
+    source-branch: dashing
+    colcon-rosdistro: dashing
     colcon-source-space: demo_nodes_cpp
     build-packages: [make, gcc, g++]
-    stage-packages: [ros-crystal-ros2launch]
+    stage-packages: [ros-dashing-ros2launch]
 
 apps:
-  run:
-    command: opt/ros/crystal/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py
+  ${name}:
+    command: opt/ros/dashing/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py
