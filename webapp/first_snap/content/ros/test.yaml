@@ -5,7 +5,9 @@ linux:
   - action: "List your installed snaps to confirm:"
     command: snap list
   - action: "Run the snap:"
-    command: ${name} -h
+    command: ${name}
+  - action: "Stop it when you tire of seeing the nodes communicate:"
+    command: ctrl-c
 macos:
   - action: "Create a Linux virtual machine for testing snaps:"
     command: multipass launch -n testvm
@@ -18,6 +20,8 @@ macos:
   - action: "Confirm the snap is installed by listing your installed snaps:"
     command: snap list
   - action: "Run the snap inside the virtual machine:"
-    command: ${name} -h
+    command: ${name}
+  - action: "Stop it when you tire of seeing the nodes communicate:"
+    command: ctrl-c
   - action: "Exit the virtual machine:"
     command: exit

@@ -15,5 +15,5 @@ parts:
     source-space: roscpp_tutorials/
 
 apps:
-  run:
+  ${name}:
     command: roslaunch roscpp_tutorials talker_listener.launch
