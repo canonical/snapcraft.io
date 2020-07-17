@@ -419,6 +419,19 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
       </div>
 
+      <div class="row p-form__group p-form-validation">
+        <div class="col-2">
+          <label for="donation-website" class="p-form__input">Donation website:</label>
+        </div>
+        <div class="col-8">
+          <div class="p-form__control" >
+            <input id="donation-website"
+              type="url"
+              name="donation-website" class="p-form-validation__input" maxlength="256" placeholder="https://snapcraft.io" />
+          </div>
+        </div>
+      </div>
+
       <div class="row p-form__group">
         <div class="col-2">
           <label class="p-form__input">Metrics:</label>
