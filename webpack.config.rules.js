@@ -7,8 +7,8 @@ module.exports = [
     // and also react-dnd related
     exclude: /node_modules\/(?!(dom7|ssr-window|swiper|dnd-core|react-dnd|react-dnd-html5-backend)\/).*/,
     use: {
-      loader: "babel-loader"
-    }
+      loader: "babel-loader",
+    },
   },
   // TODO:
   // we should get rid of using globals making expose-loader unnecessary
@@ -18,18 +18,18 @@ module.exports = [
   // so first transpile via babel, then expose as global
   {
     test: require.resolve(__dirname + "/static/js/base/base.js"),
-    use: ["expose-loader?snapcraft.base", "babel-loader"]
+    use: ["expose-loader?exposes=snapcraft.base", "babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/publisher/release.js"),
-    use: ["expose-loader?snapcraft.release", "babel-loader"]
+    use: ["expose-loader?exposes=snapcraft.release", "babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/publisher/publisher.js"),
-    use: ["expose-loader?snapcraft.publisher", "babel-loader"]
+    use: ["expose-loader?exposes=snapcraft.publisher", "babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/public.js"),
-    use: ["expose-loader?snapcraft.public", "babel-loader"]
-  }
+    use: ["expose-loader?exposes=snapcraft.public", "babel-loader"],
+  },
 ];
