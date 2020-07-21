@@ -57,7 +57,7 @@ export default class ContextualMenu extends Component {
       "p-promote-button",
       buttonClass,
       menuClass,
-      isDisabled ? "is--disabled" : "",
+      isDisabled ? "is-disabled" : "",
       this.props.className || "",
     ].join(" ");
 

@@ -30,7 +30,7 @@ function submitEnabler(formSelector, buttonSelectors) {
   buttonEls.forEach((button) => {
     if (button) {
       button.setAttribute("disabled", "disabled");
-      button.classList.add("is--disabled");
+      button.classList.add("is-disabled");
     }
   });
 
@@ -46,10 +46,10 @@ function submitEnabler(formSelector, buttonSelectors) {
     buttonEls.forEach((button) => {
       if (diff) {
         button.removeAttribute("disabled");
-        button.classList.remove("is--disabled");
+        button.classList.remove("is-disabled");
       } else {
         button.setAttribute("disabled", "disabled");
-        button.classList.add("is--disabled");
+        button.classList.add("is-disabled");
       }
     });
   });

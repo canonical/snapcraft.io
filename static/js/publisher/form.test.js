@@ -162,7 +162,7 @@ describe("initForm", () => {
   });
 
   test("should disable the revert button", () => {
-    expect(revertButton.classList.contains("is--disabled")).toEqual(true);
+    expect(revertButton.classList.contains("is-disabled")).toEqual(true);
     expect(revertButton.href).toEqual("javascript:void(0);");
   });
 
@@ -178,7 +178,7 @@ describe("initForm", () => {
     });
 
     test("should enable revert button", () => {
-      expect(revertButton.classList.contains("is--disabled")).toEqual(false);
+      expect(revertButton.classList.contains("is-disabled")).toEqual(false);
       expect(revertButton.getAttribute("href")).toEqual("/test");
     });
   });
