@@ -329,6 +329,22 @@ class GitHub:
 
         return hmac.compare_digest(digest, signature)
 
+    def validate_bsi_webhook_secret(self, owner, name, payload, signature):
+        """
+        Return True if the webhook contain a valid secret in BSI
+        """
+        key = bytes(GITHUB_WEBHOOK_SECRET, "UTF-8")
+        hmac_gen = hmac.new(key, None, sha1)
+        hmac_gen.update(bytes(owner, "UTF-8"))
+        hmac_gen.update(bytes(name, "UTF-8"))
+        final_key = bytes(hmac_gen.hexdigest(), "UTF-8")
+        final_hmac = hmac.new(final_key, payload, sha1)
+
+        # Add append prefix to match the GitHub request format
+        digest = f"sha1={final_hmac.hexdigest()}"
+
+        return hmac.compare_digest(digest, signature)
+
     def get_hooks(self, owner, repo, page=1):
         """
         Return all the webhooks in the repo
