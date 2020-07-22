@@ -346,20 +346,12 @@ def post_snap_builds(snap_name):
                 raise e
 
         if repo_exist:
-            # The user registered the repo in BSI but didn't register a name
-            # We can remove it and continue with the normal process
-            if not repo_exist["store_name"]:
-                # This conditional should be removed when issue 2657 is solved
-                launchpad.request(
-                    path=repo_exist["self_link"], method="DELETE"
-                )
-            else:
-                flask.flash(
-                    "The specified repository is being used by another snap:"
-                    f" {repo_exist['store_name']}",
-                    "negative",
-                )
-                return flask.redirect(redirect_url)
+            flask.flash(
+                "The specified repository is being used by another snap:"
+                f" {repo_exist['store_name']}",
+                "negative",
+            )
+            return flask.redirect(redirect_url)
 
         macaroon = publisher_api.get_package_upload_macaroon(
             session=flask.session, snap_name=snap_name, channels=["edge"]
