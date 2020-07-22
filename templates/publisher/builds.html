@@ -63,7 +63,7 @@ Builds for
     </div>
     {% endif %}
 
-    {% if not github_repository_exists or not yaml_file_exists %}
+    {% if github_repository and (not github_repository_exists or not yaml_file_exists) %}
     <section class="p-strip is-shallow">
       <div class="u-fixed-width">
         <div class="p-notification--negative">
