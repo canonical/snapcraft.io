@@ -480,10 +480,13 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
 
     github = GitHub()
 
-    if not github.validate_webhook_signature(
-        flask.request.data, flask.request.headers.get("X-Hub-Signature")
-    ):
-        return ("Invalid secret", 403)
+    signature = flask.request.headers.get("X-Hub-Signature")
+
+    if not github.validate_webhook_signature(flask.request.data, signature):
+        if not github.validate_bsi_webhook_secret(
+            gh_owner, gh_repo, flask.request.data, signature
+        ):
+            return ("Invalid secret", 403)
 
     validation = validate_repo(
         GITHUB_SNAPCRAFT_USER_TOKEN, lp_snap["store_name"], gh_owner, gh_repo
