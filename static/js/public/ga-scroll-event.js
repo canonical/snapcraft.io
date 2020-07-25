@@ -1,7 +1,7 @@
 import { triggerEvent } from "../base/ga";
 import debounce from "../libs/debounce";
 
-const isInViewport = el => {
+const isInViewport = (el) => {
   var bounding = el.getBoundingClientRect();
   return (
     bounding.top >= 0 &&

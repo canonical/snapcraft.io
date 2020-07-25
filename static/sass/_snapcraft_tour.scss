@@ -1,5 +1,5 @@
 @mixin snapcraft-tour {
-  $color-overlay: transparentize($color-dark, .15);
+  $color-overlay: transparentize($color-dark, .35);
   $triangle-height: $sp-unit;
   $triangle-spacing: 2 * $triangle-height;
 
@@ -253,11 +253,6 @@
       @extend %triangle--pointing-left;
       @extend %triangle--on-bottom;
     }
-  }
-
-  .p-card--tour__content {
-    // compensate spacing for content being wrapped in div instead of being directly after heading
-    @extend %sp--hp;
   }
 
   .p-tour-controls {

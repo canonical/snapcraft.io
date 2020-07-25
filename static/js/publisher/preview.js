@@ -1,7 +1,7 @@
 import * as MarkdownIt from "markdown-it";
 import {
   default as initScreenshots,
-  terminateScreenshots
+  terminateScreenshots,
 } from "../public/snap-details/screenshots";
 import { diffState } from "./state";
 
@@ -9,7 +9,7 @@ import { diffState } from "./state";
 // doesn't include the custom ascii bullet-point (as this is legacy
 // and shouldn't be promoted).
 const md = new MarkdownIt({
-  linkify: true
+  linkify: true,
 }).disable([
   "table",
   "blockquote",
@@ -24,7 +24,7 @@ const md = new MarkdownIt({
   "strikethrough",
   "image",
   "html_inline",
-  "fence"
+  "fence",
 ]);
 
 // For the different elements we might need to change different properties
@@ -43,20 +43,20 @@ const functionMap = {
       el.src =
         "https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg";
     }
-  }
+  },
 };
 
 // For some elements we want to hide/ show a different element to the one
 // being targeted.
 const hideMap = {
-  screenshots: el => el.parentNode,
-  website: el => el.parentNode,
-  contact: el => el.parentNode
+  screenshots: (el) => el.parentNode,
+  website: (el) => el.parentNode,
+  contact: (el) => el.parentNode,
 };
 
 // For some fields we need to transform the data.
 const transformMap = {
-  description: md.render.bind(md)
+  description: md.render.bind(md),
 };
 
 /**
@@ -67,11 +67,11 @@ const transformMap = {
 function transformStateImages(state) {
   const newState = {
     icon: null,
-    screenshots: []
+    screenshots: [],
   };
 
   if (state.images) {
-    state.images.forEach(image => {
+    state.images.forEach((image) => {
       if (image.type === "icon") {
         newState.icon = image.url;
       } else if (image.type === "screenshot") {
@@ -80,7 +80,7 @@ function transformStateImages(state) {
     });
   }
 
-  Object.keys(state).forEach(key => {
+  Object.keys(state).forEach((key) => {
     newState[key] = state[key];
   });
 
@@ -97,14 +97,14 @@ function getVideoDetails(url) {
     return {
       type: "youtube",
       url: url.replace("watch?v=", "embed/"),
-      id: url.split("v=")[1].split("&")[0]
+      id: url.split("v=")[1].split("&")[0],
     };
   }
   if (url.indexOf("youtu.be") > -1) {
     return {
       type: "youtube",
       url: url.replace("youtu.be/", "youtube.com/embed/"),
-      id: url.split("/")[1].split("?")[0]
+      id: url.split("/")[1].split("?")[0],
     };
   }
   if (url.indexOf("vimeo") > -1) {
@@ -112,7 +112,7 @@ function getVideoDetails(url) {
     return {
       type: "vimeo",
       url: url.replace("vimeo.com/", "player.vimeo.com/video/"),
-      id: splitUrl[splitUrl.length - 1]
+      id: splitUrl[splitUrl.length - 1],
     };
   }
   if (url.indexOf("asciinema") > -1) {
@@ -120,7 +120,7 @@ function getVideoDetails(url) {
     return {
       type: "asciinema",
       url: `${url}.js`,
-      id: splitUrl[splitUrl.length - 1]
+      id: splitUrl[splitUrl.length - 1],
     };
   }
 }
@@ -177,7 +177,7 @@ function screenshotsAndVideos(screenshots, video) {
       fakeHolder.innerHTML = videoHTML;
       const fakeScript = fakeHolder.children[0];
       const scriptTag = document.createElement("script");
-      fakeScript.getAttributeNames().forEach(attr => {
+      fakeScript.getAttributeNames().forEach((attr) => {
         scriptTag.setAttribute(attr, fakeScript.getAttribute(attr));
       });
 
@@ -195,7 +195,7 @@ function screenshotsAndVideos(screenshots, video) {
         col2.classList.add("p-snap-details__media-items--distributed");
       }
 
-      screenshots.map(screenshot).forEach(image => {
+      screenshots.map(screenshot).forEach((image) => {
         col2.appendChild(image);
       });
 
@@ -223,7 +223,7 @@ function screenshotsAndVideos(screenshots, video) {
   prev.className = "p-carousel__prev swiper-button__prev";
   prev.innerText = "Previous";
   holder.appendChild(prev);
-  screenshots.map(screenshot).forEach(image => {
+  screenshots.map(screenshot).forEach((image) => {
     wrapper.appendChild(image);
   });
 
@@ -266,7 +266,7 @@ function render(packageName) {
   }
 
   // For basic content, loop through and update the content
-  Object.keys(transformedState).forEach(function(key) {
+  Object.keys(transformedState).forEach(function (key) {
     if (key === "screenshots") {
       return;
     }
@@ -437,7 +437,7 @@ function preview(packageName) {
     }
   };
 
-  window.addEventListener("storage", e => {
+  window.addEventListener("storage", (e) => {
     if (e.key === packageName) {
       // Slight delay to ensure the state has fully updated
       // There was an issue with images when it was immediate.
@@ -489,21 +489,21 @@ function preview(packageName) {
     }, RESPONSE_TIMEOUT);
   };
 
-  editButton.addEventListener("click", e => {
+  editButton.addEventListener("click", (e) => {
     e.preventDefault();
     timeoutTimer();
     sendCommand(packageName, "edit");
     editButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
     window.close();
   });
-  revertButton.addEventListener("click", e => {
+  revertButton.addEventListener("click", (e) => {
     e.preventDefault();
     disableButtons();
     timeoutTimer();
     sendCommand(packageName, "revert");
     revertButton.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
   });
-  saveButton.addEventListener("click", e => {
+  saveButton.addEventListener("click", (e) => {
     e.preventDefault();
     disableButtons();
     timeoutTimer();

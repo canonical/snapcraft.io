@@ -1,6 +1,6 @@
 import Media from "./media";
 import React from "react";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 
 describe("Media", () => {
   const imageSelector = ".js-media-item-holder:not(.is-empty)";
@@ -17,8 +17,8 @@ describe("Media", () => {
         mediaData={[
           {
             url: "test",
-            status: "uploaded"
-          }
+            status: "uploaded",
+          },
         ]}
       />
     );
@@ -32,8 +32,8 @@ describe("Media", () => {
         mediaData={[
           {
             url: "test",
-            status: "uploaded"
-          }
+            status: "uploaded",
+          },
         ]}
       />
     );
@@ -50,8 +50,8 @@ describe("Media", () => {
         mediaData={[
           {
             url: "test",
-            status: "uploaded"
-          }
+            status: "uploaded",
+          },
         ]}
       />
     );
@@ -71,7 +71,7 @@ describe("Media", () => {
       <Media
         mediaData={[
           { url: "test", status: "uploaded" },
-          { url: "test-2", status: "uploaded" }
+          { url: "test-2", status: "uploaded" },
         ]}
         mediaLimit={1}
       />
@@ -93,8 +93,8 @@ describe("Media", () => {
           mediaData={[
             {
               url: "test",
-              status: "uploaded"
-            }
+              status: "uploaded",
+            },
           ]}
           updateState={updateState}
         />
@@ -106,12 +106,12 @@ describe("Media", () => {
       cont = container;
     });
 
-    it("should add a new image when mediaChanged called", done => {
+    it("should add a new image when mediaChanged called", (done) => {
       // Setup
       window.URL = {
         createObjectURL: () => {
           return "test-upload";
-        }
+        },
       };
       const fileContents = "testymctestface";
       const file = new File([fileContents], "test", { type: "image/png" });
@@ -119,7 +119,7 @@ describe("Media", () => {
       const input = cont.querySelector(`[name="screenshots"]`);
 
       Object.defineProperty(input, "files", {
-        value: [file]
+        value: [file],
       });
 
       // Start functional bit
@@ -138,16 +138,16 @@ describe("Media", () => {
           [
             {
               status: "uploaded",
-              url: "test"
+              url: "test",
             },
             {
               file,
               name: "test",
               status: "new",
               type: "screenshot",
-              url: "test-upload"
-            }
-          ]
+              url: "test-upload",
+            },
+          ],
         ]);
         done();
       }, 500);
@@ -165,16 +165,16 @@ describe("Media", () => {
           mediaData={[
             {
               url: "test",
-              status: "uploaded"
+              status: "uploaded",
             },
             {
               url: "test-2",
-              status: "uploaded"
+              status: "uploaded",
             },
             {
               url: "test-3",
-              status: "uploaded"
-            }
+              status: "uploaded",
+            },
           ]}
           updateState={updateState}
         />
@@ -195,12 +195,12 @@ describe("Media", () => {
       expect(updateState.mock.calls[0][0]).toEqual([
         {
           status: "uploaded",
-          url: "test-2"
+          url: "test-2",
         },
         {
           status: "uploaded",
-          url: "test-3"
-        }
+          url: "test-3",
+        },
       ]);
 
       const newDeleteImages = cont.querySelectorAll(
@@ -211,12 +211,12 @@ describe("Media", () => {
     });
   });
 
-  it("should error when restrictions aren't met", done => {
+  it("should error when restrictions aren't met", (done) => {
     const { container } = render(
       <Media
         mediaData={[]}
         restrictions={{
-          size: { max: 0.00001 }
+          size: { max: 0.00001 },
         }}
       />
     );
@@ -229,7 +229,7 @@ describe("Media", () => {
     window.URL = {
       createObjectURL: () => {
         return "test-upload";
-      }
+      },
     };
     const fileContents = "testymctestface";
     const file = new File([fileContents], "test", { type: "image/png" });
@@ -237,7 +237,7 @@ describe("Media", () => {
     const input = container.querySelector(`[name="screenshots"]`);
 
     Object.defineProperty(input, "files", {
-      value: [file]
+      value: [file],
     });
 
     fireEvent.change(input);

@@ -1,7 +1,7 @@
 {# templates #}
 {% set article_title = {'rendered': '${title}'} %}
-{% set article = {'slug': '${slug}', 'title': article_title} %}
-{% set size = "${size}" %}
+{% set article = {'slug': '${slug}', 'title': article_title, 'image': '${image}'} %}
+{% set container_class = "${container_class}" %}
 <script type="text/template" id="blog-article-template">
   {% include 'partials/blog-card--minimal.html' %}
 </script>

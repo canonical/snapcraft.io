@@ -2,40 +2,106 @@
 
 {% block content %}
 {% include "docs/_search-bar.html" %}
-<div class="docs-container u-fixed-width">
-  <aside class="p-sidebar" id="navigation">
-    <div class="p-sidebar__banner u-hide--medium u-hide--large">
-      <i class="p-sidebar__toggle p-icon--menu"></i>
-    </div>
-    <div class="p-sidebar__content u-hide--small">
-      <nav class="p-sidebar-nav">
-        {{ navigation | safe }}
-      </nav>
-    </div>
-  </aside>
+<div class="p-strip">
+  <div class="row">
+    <div class="col-3">
+      <aside class="p-side-navigation--raw-html" id="side-nav-drawer">
 
-  <div class="p-content">
-    {% block content_docs %}{% endblock %}
+        <a href="#side-nav-drawer" class="p-side-navigation__toggle js-drawer-toggle" aria-controls="side-nav-drawer">
+          Toggle side navigation
+        </a>
+
+        <div class="p-side-navigation__overlay js-drawer-toggle" aria-controls="side-nav-drawer"></div>
+        <nav class="p-side-navigation__drawer">
+          <div class="p-side-navigation__drawer-header">
+            <a href="#" class="p-side-navigation__toggle--in-drawer js-drawer-toggle" aria-controls="side-nav-drawer">
+              Toggle side navigation
+            </a>
+          </div>
+          {{ navigation | safe }}
+        </nav>
+      </aside>
+    </div>
+
+    <div class="col-9">
+      {% block content_docs %}{% endblock %}
+    </div>
   </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  const path = window.location.pathname;
-  const active = document.querySelector(`.p-sidebar a[href="${path}"]`);
-  if (active) {
-    active.classList.add("is-active");
-  }
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function() {
+      var sideNav = document.getElementById("side-nav-drawer");
+      var path = window.location.pathname;
+      var active = sideNav.querySelector(`a[href="${path}"]`);
 
-  const toggleSidebar = document.querySelector(".p-sidebar__toggle");
-  const sidebar = document.querySelector(".p-sidebar__content");
-  if (toggleSidebar) {
-    toggleSidebar.addEventListener("click", function(e) {
-      sidebar.classList.toggle("u-hide--small");
-      toggleSidebar.classList.toggle("p-icon--close");
-      toggleSidebar.classList.toggle("p-icon--menu");
+      if (active) {
+        active.setAttribute("aria-current", "page");
+      }
+
+      /**
+        Toggles the expanded/collapsed classed on side navigation element.
+
+        @param {HTMLElement} sideNavigation The side navigation element.
+        @param {Boolean} show Whether to show or hide the drawer.
+      */
+      function toggleDrawer(sideNavigation, show) {
+        if (sideNavigation) {
+          if (show) {
+            sideNavigation.classList.remove('is-collapsed');
+            sideNavigation.classList.add('is-expanded');
+          } else {
+            sideNavigation.classList.remove('is-expanded');
+            sideNavigation.classList.add('is-collapsed');
+          }
+        }
+      }
+
+      /**
+        Attaches event listeners for the side navigation toggles
+        @param {HTMLElement} sideNavigation The side navigation element.
+      */
+      function setupSideNavigation(sideNavigation) {
+        var toggles = [].slice.call(sideNavigation.querySelectorAll('.js-drawer-toggle'));
+
+        toggles.forEach(function (toggle) {
+          toggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            var sideNav = document.getElementById(toggle.getAttribute('aria-controls'));
+
+            if (sideNav) {
+              toggleDrawer(sideNav, !sideNav.classList.contains('is-expanded'));
+            }
+          });
+        });
+      }
+
+      setupSideNavigation(sideNav);
+
+      // scroll active side navigation item into view (without scrolling whole page)
+      var currentItem = sideNav.querySelector('[aria-current="page"]');
+
+      if (sideNav && currentItem) {
+        // calculate scroll by comparing top of side nav and top of active item
+        var currentItemOffset = currentItem.getBoundingClientRect().top;
+        var offset = currentItemOffset - sideNav.getBoundingClientRect().top;
+
+        // only scroll if active link is off screen or close to bottom of the window
+        setTimeout(function () {
+          sideNav.scrollTop = offset;
+        }, 0);
+      }
     });
-  }
+  });
 </script>
+
+<!-- begin usabilla live embed code -->
+<script type="text/javascript">/*{literal}<![CDATA[*/window.lightningjs||function(c){function g(b,d){d&&(d+=(/\?/.test(d)?"&":"?")+"lv=1");c[b]||function(){var i=window,h=document,j=b,g=h.location.protocol,l="load",k=0;(function(){function b(){a.P(l);a.w=1;c[j]("_load")}c[j]=function(){function m(){m.id=e;return c[j].apply(m,arguments)}var b,e=++k;b=this&&this!=i?this.id||0:0;(a.s=a.s||[]).push([e,b,arguments]);m.then=function(b,c,h){var d=a.fh[e]=a.fh[e]||[],j=a.eh[e]=a.eh[e]||[],f=a.ph[e]=a.ph[e]||[];b&&d.push(b);c&&j.push(c);h&&f.push(h);return m};return m};var a=c[j]._={};a.fh={};a.eh={};a.ph={};a.l=d?d.replace(/^\/\//,(g=="https:"?g:"http:")+"//"):d;a.p={0:+new Date};a.P=function(b){a.p[b]=new Date-a.p[0]};a.w&&b();i.addEventListener?i.addEventListener(l,b,!1):i.attachEvent("on"+l,b);var q=function(){function b(){return["<head></head><",c,' onload="var d=',n,";d.getElementsByTagName('head')[0].",d,"(d.",g,"('script')).",i,"='",a.l,"'\"></",c,">"].join("")}var c="body",e=h[c];if(!e)return setTimeout(q,100);a.P(1);var d="appendChild",g="createElement",i="src",k=h[g]("div"),l=k[d](h[g]("div")),f=h[g]("iframe"),n="document",p;k.style.display="none";e.insertBefore(k,e.firstChild).id=o+"-"+j;f.frameBorder="0";f.id=o+"-frame-"+j;/MSIE[ ]+6/.test(navigator.userAgent)&&(f[i]="javascript:false");f.allowTransparency="true";l[d](f);try{f.contentWindow[n].open()}catch(s){a.domain=h.domain,p="javascript:var d="+n+".open();d.domain='"+h.domain+"';",f[i]=p+"void(0);"}try{var r=f.contentWindow[n];r.write(b());r.close()}catch(t){f[i]=p+'d.write("'+b().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};a.l&&setTimeout(q,0)})()}();c[b].lv="1";return c[b]}var o="lightningjs",k=window[o]=g(o);k.require=g;k.modules=c}({});
+window.usabilla_live = lightningjs.require("usabilla_live", "//w.usabilla.com/ff524ff92f63.js");
+/*]]>{/literal}*/</script>
+<!-- end usabilla live embed code -->
+
 {% endblock %}

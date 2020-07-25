@@ -6,7 +6,7 @@ logo-mono: https://assets.ubuntu.com/v1/dc7be4e8-Distro_Logo_Debian_White.svg
 install:
   -
     action: |
-      On Debian 9 (Stretch), snap can be installed directly from the command line:
+      On Debian 9 (Stretch) and newer, snap can be installed directly from the command line:
     command: |
       sudo apt update
       sudo apt install snapd

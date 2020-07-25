@@ -118,11 +118,16 @@
   {% endif %}
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
-    Raven.context(function () {
-      snapcraft.public.storeCategories();
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        snapcraft.public.storeCategories();
+      });
     });
   </script>
 {% endblock %}

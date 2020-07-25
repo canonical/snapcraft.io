@@ -11,15 +11,12 @@ const mapStateToProps = ({ notification }) => {
     children,
     appearance,
     status,
-    canDismiss
+    canDismiss,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  hideNotification: () => dispatch(hideNotification())
+const mapDispatchToProps = (dispatch) => ({
+  hideNotification: () => dispatch(hideNotification()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Notification);
+export default connect(mapStateToProps, mapDispatchToProps)(Notification);

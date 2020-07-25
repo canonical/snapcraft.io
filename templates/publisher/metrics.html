@@ -13,7 +13,7 @@ Publisher metrics for {{ snap_title }}
       <section class="p-strip--light is-shallow">
         <div class="row">
           <div class="col-6">
-            <h2 class="p-heading--four">Measure your snap's performance</h2>
+            <h2 class="p-heading--4">Measure your snap's performance</h2>
           </div>
           <div class="col-6">
             <p>You'll be able to see active devices and territories when people start using your snap.</p>
@@ -25,7 +25,7 @@ Publisher metrics for {{ snap_title }}
       <div class="row">
         <div class="col-12">
           <h4 class="u-float-left">Weekly active devices</h4>
-          <div class="p-heading--four u-float-right u-no-margin--top">
+          <div class="p-heading--4 u-float-right u-no-margin--top">
             <strong>{{ format_number(latest_active_devices) }}</strong>
           </div>
         </div>
@@ -41,6 +41,7 @@ Publisher metrics for {{ snap_title }}
             <option value="6m"{% if metric_period == '6m' %} selected="selected"{% endif %}>Past 6 months</option>
             <option value="1y"{% if metric_period == '1y' %} selected="selected"{% endif %}>Past year</option>
             <option value="2y"{% if metric_period == '2y' %} selected="selected"{% endif %}>Past 2 years</option>
+            <option value="5y"{% if metric_period == '5y' %} selected="selected"{% endif %}>Past 5 years</option>
           </select>
         </div>
         <div class="col-3">
@@ -75,8 +76,8 @@ Publisher metrics for {{ snap_title }}
     <section class="p-strip is-shallow{% if nodata %} is-empty{% endif %}">
       <div class="row">
         <div class="col-12">
-          <h1 class="u-float-left p-heading--four">Territories</h1>
-          <div class="p-heading--four u-float-right u-no-margin--top">
+          <h1 class="u-float-left p-heading--4">Territories</h1>
+          <div class="p-heading--4 u-float-right u-no-margin--top">
             <strong>{{ territories_total }}</strong>
           </div>
         </div>
@@ -92,24 +93,29 @@ Publisher metrics for {{ snap_title }}
   </div>
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
-  <script src="{{ static_url('js/dist/publisher.js') }}"></script>
   <script>
-    Raven.context(function () {
-      snapcraft.publisher.selector('.metrics-period', 'period');
-      snapcraft.publisher.selector('.active-devices', 'active-devices');
-      snapcraft.publisher.metrics.renderMetrics({
-        defaultTrack: {{ default_track|tojson }},
-        activeDevices: {
-          selector: '#activeDevices',
-          metrics: {{ active_devices|safe }},
-          annotations: {{ active_devices_annotations|safe }},
-          type: '{{ active_device_metric }}'
-        },
-        territories: {
-          selector: '#territories',
-          metrics: {{ territories|safe }}
-        }
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        snapcraft.publisher.selector('.metrics-period', 'period');
+        snapcraft.publisher.selector('.active-devices', 'active-devices');
+        snapcraft.publisher.metrics.renderMetrics({
+          defaultTrack: {{ default_track|tojson }},
+          activeDevices: {
+            selector: '#activeDevices',
+            metrics: {{ active_devices|safe }},
+            annotations: {{ active_devices_annotations|safe }},
+            type: '{{ active_device_metric }}'
+          },
+          territories: {
+            selector: '#territories',
+            metrics: {{ territories|safe }}
+          }
+        });
       });
     });
   </script>

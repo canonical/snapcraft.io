@@ -24,7 +24,7 @@ const IS_CHROMIUM =
 function initFormNotification(formElId, notificationElId) {
   var form = document.getElementById(formElId);
 
-  form.addEventListener("change", function() {
+  form.addEventListener("change", function () {
     var notification = document.getElementById(notificationElId);
 
     if (notification && notification.parentNode) {
@@ -34,7 +34,7 @@ function initFormNotification(formElId, notificationElId) {
   var notification = document.getElementById(notificationElId);
 
   if (notification) {
-    setTimeout(function() {
+    setTimeout(function () {
       if (notification && notification.parentNode) {
         notification.parentNode.removeChild(notification);
       }
@@ -54,7 +54,10 @@ function initForm(config, initialState, errors) {
       errorInput.focus();
 
       if (errorInput.scrollIntoView) {
+        const stickyHeight = document.querySelector(".snapcraft-p-sticky")
+          .scrollHeight;
         errorInput.scrollIntoView();
+        window.scrollBy(0, -(stickyHeight + 16));
       }
     }
   }
@@ -65,7 +68,7 @@ function initForm(config, initialState, errors) {
   const revertButton = formEl.querySelector(".js-form-revert");
   const previewButton = formEl.querySelector(".js-listing-preview");
   const revertURL = revertButton.getAttribute("href");
-  const disabledRevertClass = "is--disabled";
+  const disabledRevertClass = "is-disabled";
 
   function disableSubmit() {
     submitButton.disabled = "disabled";
@@ -99,9 +102,9 @@ function initForm(config, initialState, errors) {
   formEl.appendChild(diffInput);
 
   if (config.snapIconHolder) {
-    const icons = state.images.filter(image => image.type === "icon");
-    initIcon(config.snapIconHolder, icons[0], state.title, newIcon => {
-      let noneIcons = state.images.filter(image => image.type !== "icon");
+    const icons = state.images.filter((image) => image.type === "icon");
+    initIcon(config.snapIconHolder, icons[0], state.title, (newIcon) => {
+      let noneIcons = state.images.filter((image) => image.type !== "icon");
 
       if (newIcon) {
         noneIcons = noneIcons.concat([newIcon]);
@@ -109,7 +112,7 @@ function initForm(config, initialState, errors) {
 
       const newState = {
         ...state,
-        images: noneIcons
+        images: noneIcons,
       };
 
       updateState(state, newState);
@@ -121,15 +124,15 @@ function initForm(config, initialState, errors) {
 
   if (config.mediaHolder) {
     const screenshots = state.images.filter(
-      image => image.type === "screenshot"
+      (image) => image.type === "screenshot"
     );
-    initMedia(config.mediaHolder, screenshots, newImages => {
+    initMedia(config.mediaHolder, screenshots, (newImages) => {
       const noneScreenshots = state.images.filter(
-        item => item.type !== "screenshot"
+        (item) => item.type !== "screenshot"
       );
       const newState = {
         ...state,
-        images: noneScreenshots.concat(newImages)
+        images: noneScreenshots.concat(newImages),
       };
       updateState(state, newState);
       updateFormState();
@@ -137,9 +140,9 @@ function initForm(config, initialState, errors) {
   }
 
   if (config.bannerHolder) {
-    let banners = state.images.filter(image => image.type === "banner");
-    initBanner(config.bannerHolder, banners, image => {
-      let newImages = state.images.filter(image => image.type !== "banner");
+    let banners = state.images.filter((image) => image.type === "banner");
+    initBanner(config.bannerHolder, banners, (image) => {
+      let newImages = state.images.filter((image) => image.type !== "banner");
 
       if (image) {
         newImages = newImages.concat([image]);
@@ -147,7 +150,7 @@ function initForm(config, initialState, errors) {
 
       const newState = {
         ...state,
-        images: newImages
+        images: newImages,
       };
       updateState(state, newState);
       updateFormState();
@@ -160,7 +163,7 @@ function initForm(config, initialState, errors) {
 
   let ignoreChangesOnUnload = false;
 
-  window.addEventListener("beforeunload", function(event) {
+  window.addEventListener("beforeunload", function (event) {
     const diff = diffState(initialState, state);
 
     if (!ignoreChangesOnUnload && diff) {
@@ -236,13 +239,13 @@ function initForm(config, initialState, errors) {
       //   "private": private is true, unlisted is false
       updateState(state, {
         private: formEl["private"].value === "private",
-        unlisted: formEl["private"].value === "unlisted"
+        unlisted: formEl["private"].value === "unlisted",
       });
     }
 
     if (formEl["public_metrics_enabled"]) {
       updateState(state, {
-        public_metrics_enabled: formEl["public_metrics_enabled"].checked
+        public_metrics_enabled: formEl["public_metrics_enabled"].checked,
       });
     }
 
@@ -252,7 +255,7 @@ function initForm(config, initialState, errors) {
 
   function receiveCommands() {
     if (window.localStorage) {
-      window.addEventListener("storage", e => {
+      window.addEventListener("storage", (e) => {
         storageCommands(e, formEl, state["snap_name"], () => {
           ignoreChangesOnUnload = true;
         });
@@ -271,11 +274,11 @@ function initForm(config, initialState, errors) {
   }
 
   // when anything is changed update the state
-  formEl.addEventListener("change", function() {
+  formEl.addEventListener("change", function () {
     updateFormState();
   });
 
-  formEl.addEventListener("submit", function(event) {
+  formEl.addEventListener("submit", function (event) {
     const diff = diffState(initialState, state);
 
     // if anything was changed, update state inputs and submit
@@ -303,7 +306,7 @@ function initForm(config, initialState, errors) {
 
   function isFormValid() {
     // form is valid if every validated input is valid
-    return Object.keys(validation).every(name => validation[name].isValid);
+    return Object.keys(validation).every((name) => validation[name].isValid);
   }
 
   function validateInput(input) {
@@ -328,11 +331,10 @@ function initForm(config, initialState, errors) {
       }
 
       if (inputValidation.maxLength) {
-        const count = validation[input.name].maxLength - input.value.length;
-
-        if (count < 0) {
-          inputValidation.counterEl.innerHTML = count;
-          isValid = false;
+        if (validation[input.name].maxLength === input.value.length) {
+          inputValidation.counterEl.innerHTML = `The maximum number of characters for this field is ${
+            validation[input.name].maxLength
+          }.`;
           showCounter = true;
         } else {
           inputValidation.counterEl.innerHTML = "";
@@ -373,17 +375,16 @@ function initForm(config, initialState, errors) {
   }
 
   // prepare validation of inputs based on their HTML attributes
-  validateInputs.forEach(input => {
+  validateInputs.forEach((input) => {
     const inputValidation = { isValid: true };
 
     if (input.maxLength > 0) {
       // save max length, but remove it from input so more chars can be entered
       inputValidation.maxLength = input.maxLength;
-      input.removeAttribute("maxlength");
 
       // prepare counter element to show how many chars need to be removed
-      const counter = document.createElement("span");
-      counter.className = "p-form-validation__counter";
+      const counter = document.createElement("p");
+      counter.className = "p-form-help-text";
       inputValidation.counterEl = counter;
       input.parentNode.appendChild(counter);
     }
@@ -405,7 +406,7 @@ function initForm(config, initialState, errors) {
   });
 
   // validate inputs on change
-  formEl.addEventListener("input", function(event) {
+  formEl.addEventListener("input", function (event) {
     validateInput(event.target);
     updateFormState();
   });
@@ -444,10 +445,10 @@ function initForm(config, initialState, errors) {
   }
 
   const prefixableFields = ["website", "contact"];
-  prefixableFields.forEach(inputName => {
+  prefixableFields.forEach((inputName) => {
     const input = formEl[inputName];
     if (input) {
-      input.addEventListener("blur", function(event) {
+      input.addEventListener("blur", function (event) {
         prefixInput(event.target);
       });
     }

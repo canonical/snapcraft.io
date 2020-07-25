@@ -1,11 +1,14 @@
 import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
+from canonicalwebteam import image_template
 import flask
 
 import prometheus_client
 import webapp.template_utils as template_utils
 from webapp import authentication
+
+from datetime import datetime
 
 badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
@@ -28,8 +31,12 @@ def set_handlers(app):
 
         if authentication.is_authenticated(flask.session):
             user_name = flask.session["openid"]["fullname"]
+            user_is_canonical = flask.session["openid"].get(
+                "is_canonical", False
+            )
         else:
             user_name = None
+            user_is_canonical = False
 
         page_slug = template_utils.generate_slug(flask.request.path)
 
@@ -41,7 +48,7 @@ def set_handlers(app):
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
-            "SENTRY_PUBLIC_DSN": app.config["SENTRY_PUBLIC_DSN"],
+            "SENTRY_DSN": app.config["SENTRY_DSN"],
             "COMMIT_ID": app.config["COMMIT_ID"],
             "ENVIRONMENT": app.config["ENVIRONMENT"],
             "host_url": flask.request.host_url,
@@ -52,6 +59,8 @@ def set_handlers(app):
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
             "IS_BRAND_STORE": is_brand_store,
+            "now": datetime.now(),
+            "user_is_canonical": user_is_canonical,
             # Functions
             "contains": template_utils.contains,
             "join": template_utils.join,
@@ -59,19 +68,11 @@ def set_handlers(app):
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
             "install_snippet": template_utils.install_snippet,
+            "image": image_template,
         }
 
     # Error handlers
     # ===
-    @app.errorhandler(404)
-    def page_not_found(error):
-        """
-        For 404 pages, display the 404.html template,
-        passing through the error description.
-        """
-
-        return flask.render_template("404.html", error=error.description), 404
-
     @app.errorhandler(500)
     @app.errorhandler(501)
     @app.errorhandler(502)

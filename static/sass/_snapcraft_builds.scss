@@ -1,0 +1,12 @@
+@mixin snapcraft-builds {
+  table {
+    .has-icon {
+      padding-left: 1.5rem;
+
+      [class^="p-icon"] {
+        margin-left: -1.5rem;
+        margin-right: .5rem;
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -14,8 +15,15 @@ class GetStoreViewTest(TestCase):
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?confinement=strict,classic&section=featured&scope=wide",
-                "&fields=package_name,title,icon_url",
+                "?",
+                urlencode(
+                    {
+                        "confinement": "strict,classic",
+                        "section": "featured",
+                        "scope": "wide",
+                        "fields": "package_name,title,icon_url",
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/store"
@@ -30,7 +38,17 @@ class GetStoreViewTest(TestCase):
     @responses.activate
     def test_get_store_view(self):
         payload_categories = {}
-        payload_featured_snaps = {}
+        payload_featured_snaps = {
+            "_embedded": {
+                "clickindex:package": [
+                    {
+                        "media": [{"type": "icon", "url": "test.png"}],
+                        "package_name": "featured_test",
+                    }
+                ]
+            },
+            "total": 1,
+        }
 
         responses.add(
             responses.Response(
@@ -52,8 +70,8 @@ class GetStoreViewTest(TestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 2
-        assert response.status_code == 200
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(response.status_code, 200)
 
         self.assert_template_used("store/store.html")
 
@@ -92,15 +110,25 @@ class GetStoreViewTest(TestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 2
-        assert response.status_code == 200
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(response.status_code, 200)
 
         self.assert_template_used("store/store.html")
 
     @responses.activate
     def test_get_store_view_fail_categories(self):
         payload_categories = {}
-        payload_featured_snaps = {}
+        payload_featured_snaps = {
+            "_embedded": {
+                "clickindex:package": [
+                    {
+                        "media": [{"type": "icon", "url": "test.png"}],
+                        "package_name": "featured_test",
+                    }
+                ]
+            },
+            "total": 1,
+        }
 
         responses.add(
             responses.Response(
@@ -122,8 +150,8 @@ class GetStoreViewTest(TestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 2
-        assert response.status_code == 502
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(response.status_code, 200)
 
         self.assert_template_used("store/store.html")
 
@@ -152,8 +180,7 @@ class GetStoreViewTest(TestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 2
-        assert response.status_code == 200
+        self.assertEqual(len(responses.calls), 2)
+        self.assertEqual(response.status_code, 502)
 
-        self.assert_template_used("store/store.html")
-        self.assert_context("featured_snaps", [])
+        self.assert_template_used("50X.html")

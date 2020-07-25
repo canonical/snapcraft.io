@@ -52,9 +52,26 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "store": "stotore",
             "keywords": [],
             "status": "published",
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+
+        launchpad_url = "".join(
+            [
+                "https://api.launchpad.net",
+                "/devel/+snaps" "?ws.op=findByStoreName",
+                "&owner=%2F~build.snapcraft.io",
+                "&store_name=",
+                snap_name,
+            ]
+        )
+
+        launchpad_payload = {"snaps": [{"store_name": snap_name}]}
+
+        responses.add(
+            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+        )
 
         response = self.client.get(self.endpoint_url)
 

@@ -7,54 +7,36 @@ from webapp.api.exceptions import (
     ApiResponseErrorList,
 )
 
-MARKETO_URL = os.getenv("MARKETO_URL", "test.com/")
-MARKETO_CLIENT_ID = os.getenv("MARKETO_CLIENT_ID", "123")
-MARKETO_CLIENT_SECRET = os.getenv("MARKETO_CLIENT_SECRET", "321")
+BASE_URL = "https://066-EOV-335.mktorest.com/"
 
-AUTH_URL = "".join(
-    [
-        "https://",
-        MARKETO_URL,
-        "identity/oauth/token?grant_type=client_credentials&client_id=",
-        MARKETO_CLIENT_ID,
-        "&client_secret=",
-        MARKETO_CLIENT_SECRET,
-    ]
+LEAD_BY_EMAIL = BASE_URL + (
+    "rest/v1/leads.json?access_token={token}"
+    "&filterType=email&filterValues={email}&fields=id"
 )
 
-LEAD_BY_EMAIL = "".join(
-    [
-        "https://",
-        MARKETO_URL,
-        "rest/v1/leads.json?access_token={token}",
-        "&filterType=email&filterValues={email}&fields=id",
-    ]
+LEAD_NEWSLETTER_SUBSCRIPTION = BASE_URL + (
+    "rest/v1/lead/{lead_id}.json?access_token={token}"
+    "&fields=id,email,snapcraftnewsletter"
 )
 
-LEAD_NEWSLETTER_SUBSCRIPTION = "".join(
-    [
-        "https://",
-        MARKETO_URL,
-        "rest/v1/",
-        "lead/{lead_id}.json?access_token={token}",
-        "&fields=id,email,snapcraftnewsletter",
-    ]
-)
-
-LEADS = "".join(
-    ["https://", MARKETO_URL, "rest/v1/", "leads.json?access_token={token}"]
-)
+LEADS = BASE_URL + "rest/v1/leads.json?access_token={token}"
 
 
-class MarketoApi:
+class Marketo:
     # Marketo isn't fast, so give it plenty of time to make a connection,
     # and respond
-    def __init__(self, api_session=api.requests.Session(timeout=(2, 12))):
+    def __init__(self, api_session=api.requests.Session()):
         self.api_session = api_session
         self.token = None
 
     def _authenticate(self):
-        request = self.api_session.get(AUTH_URL)
+        client_id = os.environ["MARKETO_CLIENT_ID"]
+        client_secret = os.environ["MARKETO_CLIENT_SECRET"]
+        auth_url = BASE_URL + (
+            "identity/oauth/token?grant_type=client_credentials&"
+            f"client_id={client_id}&client_secret={client_secret}"
+        )
+        request = self.api_session.get(auth_url)
         response = self._process_response(request)
         self.token = response["access_token"]
 
@@ -102,7 +84,11 @@ class MarketoApi:
         response = self.request(
             method="GET", url=LEAD_BY_EMAIL, url_args=dict(email=email)
         )
-        return response["result"][0]
+        if "result" in response and len(response["result"]) > 0:
+            return response["result"][0]
+
+        else:
+            return None
 
     def get_newsletter_subscription(self, lead_id):
         response = self.request(

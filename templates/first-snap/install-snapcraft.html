@@ -15,7 +15,7 @@
         <span>Linux</span>
       </span>
     </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">  
+    <div class="col-small-2 col-medium-2 col-2 col-logo">
       <span class="p-logo-link p-card u-align-text--center js-os-select" data-os="macos">
         <header class="p-card__header">
           <img src="https://assets.ubuntu.com/v1/236f314d-macos.svg" alt="">
@@ -43,16 +43,17 @@
     &lsaquo; Previous: Select language
   </a>
 
-  <a class="p-button--positive is--disabled u-float-right" id="js-pagination-next">
+  <a class="p-button--positive is-disabled u-float-right u-no-margin--right" id="js-pagination-next">
     Next: Package snap &rsaquo;
   </a>
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
-    Raven.context(function() {
-      snapcraft.public.firstSnapFlow.install({{ language|tojson }});
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function() {
+        snapcraft.public.firstSnapFlow.install({{ language|tojson }});
+      });
     });
   </script>
   {{ super() }}

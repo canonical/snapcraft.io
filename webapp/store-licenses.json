@@ -1,0 +1,1310 @@
+[
+  {
+    "licenseId": "Glide",
+    "name": "3dfx Glide License"
+  },
+  {
+    "licenseId": "Abstyles",
+    "name": "Abstyles License"
+  },
+  {
+    "licenseId": "AFL-1.1",
+    "name": "Academic Free License v1.1"
+  },
+  {
+    "licenseId": "AFL-1.2",
+    "name": "Academic Free License v1.2"
+  },
+  {
+    "licenseId": "AFL-2.0",
+    "name": "Academic Free License v2.0"
+  },
+  {
+    "licenseId": "AFL-2.1",
+    "name": "Academic Free License v2.1"
+  },
+  {
+    "licenseId": "AFL-3.0",
+    "name": "Academic Free License v3.0"
+  },
+  {
+    "licenseId": "AMPAS",
+    "name": "Academy of Motion Picture Arts and Sciences BSD"
+  },
+  {
+    "licenseId": "APL-1.0",
+    "name": "Adaptive Public License 1.0"
+  },
+  {
+    "licenseId": "Adobe-Glyph",
+    "name": "Adobe Glyph List License"
+  },
+  {
+    "licenseId": "APAFML",
+    "name": "Adobe Postscript AFM License"
+  },
+  {
+    "licenseId": "Adobe-2006",
+    "name": "Adobe Systems Incorporated Source Code License Agreement"
+  },
+  {
+    "licenseId": "AGPL-1.0",
+    "name": "Affero General Public License v1.0"
+  },
+  {
+    "licenseId": "Afmparse",
+    "name": "Afmparse License"
+  },
+  {
+    "licenseId": "Aladdin",
+    "name": "Aladdin Free Public License"
+  },
+  {
+    "licenseId": "ADSL",
+    "name": "Amazon Digital Services License"
+  },
+  {
+    "licenseId": "AMDPLPA",
+    "name": "AMD's plpa_map.c License"
+  },
+  {
+    "licenseId": "ANTLR-PD",
+    "name": "ANTLR Software Rights Notice"
+  },
+  {
+    "licenseId": "Apache-1.0",
+    "name": "Apache License 1.0"
+  },
+  {
+    "licenseId": "Apache-1.1",
+    "name": "Apache License 1.1"
+  },
+  {
+    "licenseId": "Apache-2.0",
+    "name": "Apache License 2.0"
+  },
+  {
+    "licenseId": "AML",
+    "name": "Apple MIT License"
+  },
+  {
+    "licenseId": "APSL-1.0",
+    "name": "Apple Public Source License 1.0"
+  },
+  {
+    "licenseId": "APSL-1.1",
+    "name": "Apple Public Source License 1.1"
+  },
+  {
+    "licenseId": "APSL-1.2",
+    "name": "Apple Public Source License 1.2"
+  },
+  {
+    "licenseId": "APSL-2.0",
+    "name": "Apple Public Source License 2.0"
+  },
+  {
+    "licenseId": "Artistic-1.0",
+    "name": "Artistic License 1.0"
+  },
+  {
+    "licenseId": "Artistic-1.0-Perl",
+    "name": "Artistic License 1.0 (Perl)"
+  },
+  {
+    "licenseId": "Artistic-1.0-cl8",
+    "name": "Artistic License 1.0 w/clause 8"
+  },
+  {
+    "licenseId": "Artistic-2.0",
+    "name": "Artistic License 2.0"
+  },
+  {
+    "licenseId": "AAL",
+    "name": "Attribution Assurance License"
+  },
+  {
+    "licenseId": "Bahyph",
+    "name": "Bahyph License"
+  },
+  {
+    "licenseId": "Barr",
+    "name": "Barr License"
+  },
+  {
+    "licenseId": "Beerware",
+    "name": "Beerware License"
+  },
+  {
+    "licenseId": "BitTorrent-1.0",
+    "name": "BitTorrent Open Source License v1.0"
+  },
+  {
+    "licenseId": "BitTorrent-1.1",
+    "name": "BitTorrent Open Source License v1.1"
+  },
+  {
+    "licenseId": "BSL-1.0",
+    "name": "Boost Software License 1.0"
+  },
+  {
+    "licenseId": "Borceux",
+    "name": "Borceux license"
+  },
+  {
+    "licenseId": "BSD-2-Clause",
+    "name": "BSD 2-clause \"Simplified\" License"
+  },
+  {
+    "licenseId": "BSD-2-Clause-FreeBSD",
+    "name": "BSD 2-clause FreeBSD License"
+  },
+  {
+    "licenseId": "BSD-2-Clause-NetBSD",
+    "name": "BSD 2-clause NetBSD License"
+  },
+  {
+    "licenseId": "BSD-3-Clause",
+    "name": "BSD 3-clause \"New\" or \"Revised\" License"
+  },
+  {
+    "licenseId": "BSD-3-Clause-Clear",
+    "name": "BSD 3-clause Clear License"
+  },
+  {
+    "licenseId": "BSD-3-Clause-No-Nuclear-License",
+    "name": "BSD 3-Clause No Nuclear License"
+  },
+  {
+    "licenseId": "BSD-3-Clause-No-Nuclear-License-2014",
+    "name": "BSD 3-Clause No Nuclear License 2014"
+  },
+  {
+    "licenseId": "BSD-3-Clause-No-Nuclear-Warranty",
+    "name": "BSD 3-Clause No Nuclear Warranty"
+  },
+  {
+    "licenseId": "BSD-4-Clause",
+    "name": "BSD 4-clause \"Original\" or \"Old\" License"
+  },
+  {
+    "licenseId": "BSD-Protection",
+    "name": "BSD Protection License"
+  },
+  {
+    "licenseId": "BSD-Source-Code",
+    "name": "BSD Source Code Attribution"
+  },
+  {
+    "licenseId": "BSD-3-Clause-Attribution",
+    "name": "BSD with attribution"
+  },
+  {
+    "licenseId": "0BSD",
+    "name": "BSD Zero Clause License"
+  },
+  {
+    "licenseId": "BSD-4-Clause-UC",
+    "name": "BSD-4-Clause (University of California-Specific)"
+  },
+  {
+    "licenseId": "bzip2-1.0.5",
+    "name": "bzip2 and libbzip2 License v1.0.5"
+  },
+  {
+    "licenseId": "bzip2-1.0.6",
+    "name": "bzip2 and libbzip2 License v1.0.6"
+  },
+  {
+    "licenseId": "Caldera",
+    "name": "Caldera License"
+  },
+  {
+    "licenseId": "CECILL-1.0",
+    "name": "CeCILL Free Software License Agreement v1.0"
+  },
+  {
+    "licenseId": "CECILL-1.1",
+    "name": "CeCILL Free Software License Agreement v1.1"
+  },
+  {
+    "licenseId": "CECILL-2.0",
+    "name": "CeCILL Free Software License Agreement v2.0"
+  },
+  {
+    "licenseId": "CECILL-2.1",
+    "name": "CeCILL Free Software License Agreement v2.1"
+  },
+  {
+    "licenseId": "CECILL-B",
+    "name": "CeCILL-B Free Software License Agreement"
+  },
+  {
+    "licenseId": "CECILL-C",
+    "name": "CeCILL-C Free Software License Agreement"
+  },
+  {
+    "licenseId": "ClArtistic",
+    "name": "Clarified Artistic License"
+  },
+  {
+    "licenseId": "MIT-CMU",
+    "name": "CMU License"
+  },
+  {
+    "licenseId": "CNRI-Jython",
+    "name": "CNRI Jython License"
+  },
+  {
+    "licenseId": "CNRI-Python",
+    "name": "CNRI Python License"
+  },
+  {
+    "licenseId": "CNRI-Python-GPL-Compatible",
+    "name": "CNRI Python Open Source GPL Compatible License Agreement"
+  },
+  {
+    "licenseId": "CPOL-1.02",
+    "name": "Code Project Open License 1.02"
+  },
+  {
+    "licenseId": "CDDL-1.0",
+    "name": "Common Development and Distribution License 1.0"
+  },
+  {
+    "licenseId": "CDDL-1.1",
+    "name": "Common Development and Distribution License 1.1"
+  },
+  {
+    "licenseId": "CPAL-1.0",
+    "name": "Common Public Attribution License 1.0"
+  },
+  {
+    "licenseId": "CPL-1.0",
+    "name": "Common Public License 1.0"
+  },
+  {
+    "licenseId": "CATOSL-1.1",
+    "name": "Computer Associates Trusted Open Source License 1.1"
+  },
+  {
+    "licenseId": "Condor-1.1",
+    "name": "Condor Public License v1.1"
+  },
+  {
+    "licenseId": "CC-BY-1.0",
+    "name": "Creative Commons Attribution 1.0"
+  },
+  {
+    "licenseId": "CC-BY-2.0",
+    "name": "Creative Commons Attribution 2.0"
+  },
+  {
+    "licenseId": "CC-BY-2.5",
+    "name": "Creative Commons Attribution 2.5"
+  },
+  {
+    "licenseId": "CC-BY-3.0",
+    "name": "Creative Commons Attribution 3.0"
+  },
+  {
+    "licenseId": "CC-BY-4.0",
+    "name": "Creative Commons Attribution 4.0"
+  },
+  {
+    "licenseId": "CC-BY-ND-1.0",
+    "name": "Creative Commons Attribution No Derivatives 1.0"
+  },
+  {
+    "licenseId": "CC-BY-ND-2.0",
+    "name": "Creative Commons Attribution No Derivatives 2.0"
+  },
+  {
+    "licenseId": "CC-BY-ND-2.5",
+    "name": "Creative Commons Attribution No Derivatives 2.5"
+  },
+  {
+    "licenseId": "CC-BY-ND-3.0",
+    "name": "Creative Commons Attribution No Derivatives 3.0"
+  },
+  {
+    "licenseId": "CC-BY-ND-4.0",
+    "name": "Creative Commons Attribution No Derivatives 4.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-1.0",
+    "name": "Creative Commons Attribution Non Commercial 1.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-2.0",
+    "name": "Creative Commons Attribution Non Commercial 2.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-2.5",
+    "name": "Creative Commons Attribution Non Commercial 2.5"
+  },
+  {
+    "licenseId": "CC-BY-NC-3.0",
+    "name": "Creative Commons Attribution Non Commercial 3.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-4.0",
+    "name": "Creative Commons Attribution Non Commercial 4.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-ND-1.0",
+    "name": "Creative Commons Attribution Non Commercial No Derivatives 1.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-ND-2.0",
+    "name": "Creative Commons Attribution Non Commercial No Derivatives 2.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-ND-2.5",
+    "name": "Creative Commons Attribution Non Commercial No Derivatives 2.5"
+  },
+  {
+    "licenseId": "CC-BY-NC-ND-3.0",
+    "name": "Creative Commons Attribution Non Commercial No Derivatives 3.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-ND-4.0",
+    "name": "Creative Commons Attribution Non Commercial No Derivatives 4.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-SA-1.0",
+    "name": "Creative Commons Attribution Non Commercial Share Alike 1.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-SA-2.0",
+    "name": "Creative Commons Attribution Non Commercial Share Alike 2.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-SA-2.5",
+    "name": "Creative Commons Attribution Non Commercial Share Alike 2.5"
+  },
+  {
+    "licenseId": "CC-BY-NC-SA-3.0",
+    "name": "Creative Commons Attribution Non Commercial Share Alike 3.0"
+  },
+  {
+    "licenseId": "CC-BY-NC-SA-4.0",
+    "name": "Creative Commons Attribution Non Commercial Share Alike 4.0"
+  },
+  {
+    "licenseId": "CC-BY-SA-1.0",
+    "name": "Creative Commons Attribution Share Alike 1.0"
+  },
+  {
+    "licenseId": "CC-BY-SA-2.0",
+    "name": "Creative Commons Attribution Share Alike 2.0"
+  },
+  {
+    "licenseId": "CC-BY-SA-2.5",
+    "name": "Creative Commons Attribution Share Alike 2.5"
+  },
+  {
+    "licenseId": "CC-BY-SA-3.0",
+    "name": "Creative Commons Attribution Share Alike 3.0"
+  },
+  {
+    "licenseId": "CC-BY-SA-4.0",
+    "name": "Creative Commons Attribution Share Alike 4.0"
+  },
+  {
+    "licenseId": "CC0-1.0",
+    "name": "Creative Commons Zero v1.0 Universal"
+  },
+  {
+    "licenseId": "Crossword",
+    "name": "Crossword License"
+  },
+  {
+    "licenseId": "CrystalStacker",
+    "name": "CrystalStacker License"
+  },
+  {
+    "licenseId": "CUA-OPL-1.0",
+    "name": "CUA Office Public License v1.0"
+  },
+  {
+    "licenseId": "Cube",
+    "name": "Cube License"
+  },
+  {
+    "licenseId": "curl",
+    "name": "curl License"
+  },
+  {
+    "licenseId": "D-FSL-1.0",
+    "name": "Deutsche Freie Software Lizenz"
+  },
+  {
+    "licenseId": "diffmark",
+    "name": "diffmark license"
+  },
+  {
+    "licenseId": "WTFPL",
+    "name": "Do What The F*ck You Want To Public License"
+  },
+  {
+    "licenseId": "DOC",
+    "name": "DOC License"
+  },
+  {
+    "licenseId": "Dotseqn",
+    "name": "Dotseqn License"
+  },
+  {
+    "licenseId": "DSDP",
+    "name": "DSDP License"
+  },
+  {
+    "licenseId": "dvipdfm",
+    "name": "dvipdfm License"
+  },
+  {
+    "licenseId": "EPL-1.0",
+    "name": "Eclipse Public License 1.0"
+  },
+  {
+    "licenseId": "ECL-1.0",
+    "name": "Educational Community License v1.0"
+  },
+  {
+    "licenseId": "ECL-2.0",
+    "name": "Educational Community License v2.0"
+  },
+  {
+    "licenseId": "eGenix",
+    "name": "eGenix.com Public License 1.1.0"
+  },
+  {
+    "licenseId": "EFL-1.0",
+    "name": "Eiffel Forum License v1.0"
+  },
+  {
+    "licenseId": "EFL-2.0",
+    "name": "Eiffel Forum License v2.0"
+  },
+  {
+    "licenseId": "MIT-advertising",
+    "name": "Enlightenment License (e16)"
+  },
+  {
+    "licenseId": "MIT-enna",
+    "name": "enna License"
+  },
+  {
+    "licenseId": "Entessa",
+    "name": "Entessa Public License v1.0"
+  },
+  {
+    "licenseId": "ErlPL-1.1",
+    "name": "Erlang Public License v1.1"
+  },
+  {
+    "licenseId": "EUDatagrid",
+    "name": "EU DataGrid Software License"
+  },
+  {
+    "licenseId": "EUPL-1.0",
+    "name": "European Union Public License 1.0"
+  },
+  {
+    "licenseId": "EUPL-1.1",
+    "name": "European Union Public License 1.1"
+  },
+  {
+    "licenseId": "Eurosym",
+    "name": "Eurosym License"
+  },
+  {
+    "licenseId": "Fair",
+    "name": "Fair License"
+  },
+  {
+    "licenseId": "MIT-feh",
+    "name": "feh License"
+  },
+  {
+    "licenseId": "Frameworx-1.0",
+    "name": "Frameworx Open License 1.0"
+  },
+  {
+    "licenseId": "FreeImage",
+    "name": "FreeImage Public License v1.0"
+  },
+  {
+    "licenseId": "FTL",
+    "name": "Freetype Project License"
+  },
+  {
+    "licenseId": "FSFAP",
+    "name": "FSF All Permissive License"
+  },
+  {
+    "licenseId": "FSFUL",
+    "name": "FSF Unlimited License"
+  },
+  {
+    "licenseId": "FSFULLR",
+    "name": "FSF Unlimited License (with License Retention)"
+  },
+  {
+    "licenseId": "Giftware",
+    "name": "Giftware License"
+  },
+  {
+    "licenseId": "GL2PS",
+    "name": "GL2PS License"
+  },
+  {
+    "licenseId": "Glulxe",
+    "name": "Glulxe License"
+  },
+  {
+    "licenseId": "AGPL-3.0",
+    "name": "GNU Affero General Public License v3.0"
+  },
+  {
+    "licenseId": "GFDL-1.1",
+    "name": "GNU Free Documentation License v1.1"
+  },
+  {
+    "licenseId": "GFDL-1.2",
+    "name": "GNU Free Documentation License v1.2"
+  },
+  {
+    "licenseId": "GFDL-1.3",
+    "name": "GNU Free Documentation License v1.3"
+  },
+  {
+    "licenseId": "GPL-1.0",
+    "name": "GNU General Public License v1.0 only"
+  },
+  {
+    "licenseId": "GPL-2.0",
+    "name": "GNU General Public License v2.0 only"
+  },
+  {
+    "licenseId": "GPL-3.0",
+    "name": "GNU General Public License v3.0 only"
+  },
+  {
+    "licenseId": "LGPL-2.1",
+    "name": "GNU Lesser General Public License v2.1 only"
+  },
+  {
+    "licenseId": "LGPL-3.0",
+    "name": "GNU Lesser General Public License v3.0 only"
+  },
+  {
+    "licenseId": "LGPL-2.0",
+    "name": "GNU Library General Public License v2 only"
+  },
+  {
+    "licenseId": "gnuplot",
+    "name": "gnuplot License"
+  },
+  {
+    "licenseId": "gSOAP-1.3b",
+    "name": "gSOAP Public License v1.3b"
+  },
+  {
+    "licenseId": "HaskellReport",
+    "name": "Haskell Language Report License"
+  },
+  {
+    "licenseId": "HPND",
+    "name": "Historic Permission Notice and Disclaimer"
+  },
+  {
+    "licenseId": "IBM-pibs",
+    "name": "IBM PowerPC Initialization and Boot Software"
+  },
+  {
+    "licenseId": "IPL-1.0",
+    "name": "IBM Public License v1.0"
+  },
+  {
+    "licenseId": "ICU",
+    "name": "ICU License"
+  },
+  {
+    "licenseId": "ImageMagick",
+    "name": "ImageMagick License"
+  },
+  {
+    "licenseId": "iMatix",
+    "name": "iMatix Standard Function Library Agreement"
+  },
+  {
+    "licenseId": "Imlib2",
+    "name": "Imlib2 License"
+  },
+  {
+    "licenseId": "IJG",
+    "name": "Independent JPEG Group License"
+  },
+  {
+    "licenseId": "Info-ZIP",
+    "name": "Info-ZIP License"
+  },
+  {
+    "licenseId": "Intel-ACPI",
+    "name": "Intel ACPI Software License Agreement"
+  },
+  {
+    "licenseId": "Intel",
+    "name": "Intel Open Source License"
+  },
+  {
+    "licenseId": "Interbase-1.0",
+    "name": "Interbase Public License v1.0"
+  },
+  {
+    "licenseId": "IPA",
+    "name": "IPA Font License"
+  },
+  {
+    "licenseId": "ISC",
+    "name": "ISC License"
+  },
+  {
+    "licenseId": "JasPer-2.0",
+    "name": "JasPer License"
+  },
+  {
+    "licenseId": "JSON",
+    "name": "JSON License"
+  },
+  {
+    "licenseId": "LPPL-1.0",
+    "name": "LaTeX Project Public License v1.0"
+  },
+  {
+    "licenseId": "LPPL-1.1",
+    "name": "LaTeX Project Public License v1.1"
+  },
+  {
+    "licenseId": "LPPL-1.2",
+    "name": "LaTeX Project Public License v1.2"
+  },
+  {
+    "licenseId": "LPPL-1.3a",
+    "name": "LaTeX Project Public License v1.3a"
+  },
+  {
+    "licenseId": "LPPL-1.3c",
+    "name": "LaTeX Project Public License v1.3c"
+  },
+  {
+    "licenseId": "Latex2e",
+    "name": "Latex2e License"
+  },
+  {
+    "licenseId": "BSD-3-Clause-LBNL",
+    "name": "Lawrence Berkeley National Labs BSD variant license"
+  },
+  {
+    "licenseId": "Leptonica",
+    "name": "Leptonica License"
+  },
+  {
+    "licenseId": "LGPLLR",
+    "name": "Lesser General Public License For Linguistic Resources"
+  },
+  {
+    "licenseId": "Libpng",
+    "name": "libpng License"
+  },
+  {
+    "licenseId": "libtiff",
+    "name": "libtiff License"
+  },
+  {
+    "licenseId": "LAL-1.2",
+    "name": "Licence Art Libre 1.2"
+  },
+  {
+    "licenseId": "LAL-1.3",
+    "name": "Licence Art Libre 1.3"
+  },
+  {
+    "licenseId": "LiLiQ-P-1.1",
+    "name": "Licence Libre du Québec – Permissive version 1.1"
+  },
+  {
+    "licenseId": "LiLiQ-Rplus-1.1",
+    "name": "Licence Libre du Québec – Réciprocité forte version 1.1"
+  },
+  {
+    "licenseId": "LiLiQ-R-1.1",
+    "name": "Licence Libre du Québec – Réciprocité version 1.1"
+  },
+  {
+    "licenseId": "LPL-1.02",
+    "name": "Lucent Public License v1.02"
+  },
+  {
+    "licenseId": "LPL-1.0",
+    "name": "Lucent Public License Version 1.0"
+  },
+  {
+    "licenseId": "MakeIndex",
+    "name": "MakeIndex License"
+  },
+  {
+    "licenseId": "MTLL",
+    "name": "Matrix Template Library License"
+  },
+  {
+    "licenseId": "MS-PL",
+    "name": "Microsoft Public License"
+  },
+  {
+    "licenseId": "MS-RL",
+    "name": "Microsoft Reciprocal License"
+  },
+  {
+    "licenseId": "MirOS",
+    "name": "MirOS Licence"
+  },
+  {
+    "licenseId": "MITNFA",
+    "name": "MIT +no-false-attribs license"
+  },
+  {
+    "licenseId": "MIT",
+    "name": "MIT License"
+  },
+  {
+    "licenseId": "Motosoto",
+    "name": "Motosoto License"
+  },
+  {
+    "licenseId": "MPL-1.0",
+    "name": "Mozilla Public License 1.0"
+  },
+  {
+    "licenseId": "MPL-1.1",
+    "name": "Mozilla Public License 1.1"
+  },
+  {
+    "licenseId": "MPL-2.0",
+    "name": "Mozilla Public License 2.0"
+  },
+  {
+    "licenseId": "MPL-2.0-no-copyleft-exception",
+    "name": "Mozilla Public License 2.0 (no copyleft exception)"
+  },
+  {
+    "licenseId": "mpich2",
+    "name": "mpich2 License"
+  },
+  {
+    "licenseId": "Multics",
+    "name": "Multics License"
+  },
+  {
+    "licenseId": "Mup",
+    "name": "Mup License"
+  },
+  {
+    "licenseId": "NASA-1.3",
+    "name": "NASA Open Source Agreement 1.3"
+  },
+  {
+    "licenseId": "Naumen",
+    "name": "Naumen Public License"
+  },
+  {
+    "licenseId": "NBPL-1.0",
+    "name": "Net Boolean Public License v1"
+  },
+  {
+    "licenseId": "Net-SNMP",
+    "name": "Net-SNMP License"
+  },
+  {
+    "licenseId": "NetCDF",
+    "name": "NetCDF license"
+  },
+  {
+    "licenseId": "NGPL",
+    "name": "Nethack General Public License"
+  },
+  {
+    "licenseId": "NOSL",
+    "name": "Netizen Open Source License"
+  },
+  {
+    "licenseId": "NPL-1.0",
+    "name": "Netscape Public License v1.0"
+  },
+  {
+    "licenseId": "NPL-1.1",
+    "name": "Netscape Public License v1.1"
+  },
+  {
+    "licenseId": "Newsletr",
+    "name": "Newsletr License"
+  },
+  {
+    "licenseId": "NLPL",
+    "name": "No Limit Public License"
+  },
+  {
+    "licenseId": "Nokia",
+    "name": "Nokia Open Source License"
+  },
+  {
+    "licenseId": "NPOSL-3.0",
+    "name": "Non-Profit Open Software License 3.0"
+  },
+  {
+    "licenseId": "NLOD-1.0",
+    "name": "Norwegian Licence for Open Government Data"
+  },
+  {
+    "licenseId": "Noweb",
+    "name": "Noweb License"
+  },
+  {
+    "licenseId": "NRL",
+    "name": "NRL License"
+  },
+  {
+    "licenseId": "NTP",
+    "name": "NTP License"
+  },
+  {
+    "licenseId": "Nunit",
+    "name": "Nunit License"
+  },
+  {
+    "licenseId": "OCLC-2.0",
+    "name": "OCLC Research Public License 2.0"
+  },
+  {
+    "licenseId": "ODbL-1.0",
+    "name": "ODC Open Database License v1.0"
+  },
+  {
+    "licenseId": "PDDL-1.0",
+    "name": "ODC Public Domain Dedication & License 1.0"
+  },
+  {
+    "licenseId": "OCCT-PL",
+    "name": "Open CASCADE Technology Public License"
+  },
+  {
+    "licenseId": "OGTSL",
+    "name": "Open Group Test Suite License"
+  },
+  {
+    "licenseId": "OLDAP-2.2.2",
+    "name": "Open LDAP Public License  2.2.2"
+  },
+  {
+    "licenseId": "OLDAP-1.1",
+    "name": "Open LDAP Public License v1.1"
+  },
+  {
+    "licenseId": "OLDAP-1.2",
+    "name": "Open LDAP Public License v1.2"
+  },
+  {
+    "licenseId": "OLDAP-1.3",
+    "name": "Open LDAP Public License v1.3"
+  },
+  {
+    "licenseId": "OLDAP-1.4",
+    "name": "Open LDAP Public License v1.4"
+  },
+  {
+    "licenseId": "OLDAP-2.0",
+    "name": "Open LDAP Public License v2.0 (or possibly 2.0A and 2.0B)"
+  },
+  {
+    "licenseId": "OLDAP-2.0.1",
+    "name": "Open LDAP Public License v2.0.1"
+  },
+  {
+    "licenseId": "OLDAP-2.1",
+    "name": "Open LDAP Public License v2.1"
+  },
+  {
+    "licenseId": "OLDAP-2.2",
+    "name": "Open LDAP Public License v2.2"
+  },
+  {
+    "licenseId": "OLDAP-2.2.1",
+    "name": "Open LDAP Public License v2.2.1"
+  },
+  {
+    "licenseId": "OLDAP-2.3",
+    "name": "Open LDAP Public License v2.3"
+  },
+  {
+    "licenseId": "OLDAP-2.4",
+    "name": "Open LDAP Public License v2.4"
+  },
+  {
+    "licenseId": "OLDAP-2.5",
+    "name": "Open LDAP Public License v2.5"
+  },
+  {
+    "licenseId": "OLDAP-2.6",
+    "name": "Open LDAP Public License v2.6"
+  },
+  {
+    "licenseId": "OLDAP-2.7",
+    "name": "Open LDAP Public License v2.7"
+  },
+  {
+    "licenseId": "OLDAP-2.8",
+    "name": "Open LDAP Public License v2.8"
+  },
+  {
+    "licenseId": "OML",
+    "name": "Open Market License"
+  },
+  {
+    "licenseId": "OPL-1.0",
+    "name": "Open Public License v1.0"
+  },
+  {
+    "licenseId": "OSL-1.0",
+    "name": "Open Software License 1.0"
+  },
+  {
+    "licenseId": "OSL-1.1",
+    "name": "Open Software License 1.1"
+  },
+  {
+    "licenseId": "OSL-2.0",
+    "name": "Open Software License 2.0"
+  },
+  {
+    "licenseId": "OSL-2.1",
+    "name": "Open Software License 2.1"
+  },
+  {
+    "licenseId": "OSL-3.0",
+    "name": "Open Software License 3.0"
+  },
+  {
+    "licenseId": "OpenSSL",
+    "name": "OpenSSL License"
+  },
+  {
+    "licenseId": "OSET-PL-2.1",
+    "name": "OSET Public License version 2.1"
+  },
+  {
+    "licenseId": "PHP-3.0",
+    "name": "PHP License v3.0"
+  },
+  {
+    "licenseId": "PHP-3.01",
+    "name": "PHP License v3.01"
+  },
+  {
+    "licenseId": "Plexus",
+    "name": "Plexus Classworlds License"
+  },
+  {
+    "licenseId": "PostgreSQL",
+    "name": "PostgreSQL License"
+  },
+  {
+    "licenseId": "psfrag",
+    "name": "psfrag License"
+  },
+  {
+    "licenseId": "psutils",
+    "name": "psutils License"
+  },
+  {
+    "licenseId": "Python-2.0",
+    "name": "Python License 2.0"
+  },
+  {
+    "licenseId": "QPL-1.0",
+    "name": "Q Public License 1.0"
+  },
+  {
+    "licenseId": "Qhull",
+    "name": "Qhull License"
+  },
+  {
+    "licenseId": "Rdisc",
+    "name": "Rdisc License"
+  },
+  {
+    "licenseId": "RPSL-1.0",
+    "name": "RealNetworks Public Source License v1.0"
+  },
+  {
+    "licenseId": "RPL-1.1",
+    "name": "Reciprocal Public License 1.1"
+  },
+  {
+    "licenseId": "RPL-1.5",
+    "name": "Reciprocal Public License 1.5"
+  },
+  {
+    "licenseId": "RHeCos-1.1",
+    "name": "Red Hat eCos Public License v1.1"
+  },
+  {
+    "licenseId": "RSCPL",
+    "name": "Ricoh Source Code Public License"
+  },
+  {
+    "licenseId": "RSA-MD",
+    "name": "RSA Message-Digest License "
+  },
+  {
+    "licenseId": "Ruby",
+    "name": "Ruby License"
+  },
+  {
+    "licenseId": "SAX-PD",
+    "name": "Sax Public Domain Notice"
+  },
+  {
+    "licenseId": "Saxpath",
+    "name": "Saxpath License"
+  },
+  {
+    "licenseId": "SCEA",
+    "name": "SCEA Shared Source License"
+  },
+  {
+    "licenseId": "SWL",
+    "name": "Scheme Widget Library (SWL) Software License Agreement"
+  },
+  {
+    "licenseId": "SMPPL",
+    "name": "Secure Messaging Protocol Public License"
+  },
+  {
+    "licenseId": "Sendmail",
+    "name": "Sendmail License"
+  },
+  {
+    "licenseId": "SGI-B-1.0",
+    "name": "SGI Free Software License B v1.0"
+  },
+  {
+    "licenseId": "SGI-B-1.1",
+    "name": "SGI Free Software License B v1.1"
+  },
+  {
+    "licenseId": "SGI-B-2.0",
+    "name": "SGI Free Software License B v2.0"
+  },
+  {
+    "licenseId": "OFL-1.0",
+    "name": "SIL Open Font License 1.0"
+  },
+  {
+    "licenseId": "OFL-1.1",
+    "name": "SIL Open Font License 1.1"
+  },
+  {
+    "licenseId": "SimPL-2.0",
+    "name": "Simple Public License 2.0"
+  },
+  {
+    "licenseId": "Sleepycat",
+    "name": "Sleepycat License"
+  },
+  {
+    "licenseId": "SNIA",
+    "name": "SNIA Public License 1.1"
+  },
+  {
+    "licenseId": "Spencer-86",
+    "name": "Spencer License 86"
+  },
+  {
+    "licenseId": "Spencer-94",
+    "name": "Spencer License 94"
+  },
+  {
+    "licenseId": "Spencer-99",
+    "name": "Spencer License 99"
+  },
+  {
+    "licenseId": "SMLNJ",
+    "name": "Standard ML of New Jersey License"
+  },
+  {
+    "licenseId": "SugarCRM-1.1.3",
+    "name": "SugarCRM Public License v1.1.3"
+  },
+  {
+    "licenseId": "SISSL",
+    "name": "Sun Industry Standards Source License v1.1"
+  },
+  {
+    "licenseId": "SISSL-1.2",
+    "name": "Sun Industry Standards Source License v1.2"
+  },
+  {
+    "licenseId": "SPL-1.0",
+    "name": "Sun Public License v1.0"
+  },
+  {
+    "licenseId": "Watcom-1.0",
+    "name": "Sybase Open Watcom Public License 1.0"
+  },
+  {
+    "licenseId": "TCL",
+    "name": "TCL/TK License"
+  },
+  {
+    "licenseId": "TCP-wrappers",
+    "name": "TCP Wrappers License"
+  },
+  {
+    "licenseId": "Unlicense",
+    "name": "The Unlicense"
+  },
+  {
+    "licenseId": "TMate",
+    "name": "TMate Open Source License"
+  },
+  {
+    "licenseId": "TORQUE-1.1",
+    "name": "TORQUE v2.5+ Software License v1.1"
+  },
+  {
+    "licenseId": "TOSL",
+    "name": "Trusster Open Source License"
+  },
+  {
+    "licenseId": "Unicode-DFS-2015",
+    "name": "Unicode License Agreement - Data Files and Software (2015)"
+  },
+  {
+    "licenseId": "Unicode-DFS-2016",
+    "name": "Unicode License Agreement - Data Files and Software (2016)"
+  },
+  {
+    "licenseId": "Unicode-TOU",
+    "name": "Unicode Terms of Use"
+  },
+  {
+    "licenseId": "UPL-1.0",
+    "name": "Universal Permissive License v1.0"
+  },
+  {
+    "licenseId": "NCSA",
+    "name": "University of Illinois/NCSA Open Source License"
+  },
+  {
+    "licenseId": "Vim",
+    "name": "Vim License"
+  },
+  {
+    "licenseId": "VOSTROM",
+    "name": "VOSTROM Public License for Open Source"
+  },
+  {
+    "licenseId": "VSL-1.0",
+    "name": "Vovida Software License v1.0"
+  },
+  {
+    "licenseId": "W3C-20150513",
+    "name": "W3C Software Notice and Document License (2015-05-13)"
+  },
+  {
+    "licenseId": "W3C-19980720",
+    "name": "W3C Software Notice and License (1998-07-20)"
+  },
+  {
+    "licenseId": "W3C",
+    "name": "W3C Software Notice and License (2002-12-31)"
+  },
+  {
+    "licenseId": "Wsuipa",
+    "name": "Wsuipa License"
+  },
+  {
+    "licenseId": "Xnet",
+    "name": "X.Net License"
+  },
+  {
+    "licenseId": "X11",
+    "name": "X11 License"
+  },
+  {
+    "licenseId": "Xerox",
+    "name": "Xerox License"
+  },
+  {
+    "licenseId": "XFree86-1.1",
+    "name": "XFree86 License 1.1"
+  },
+  {
+    "licenseId": "xinetd",
+    "name": "xinetd License"
+  },
+  {
+    "licenseId": "xpp",
+    "name": "XPP License"
+  },
+  {
+    "licenseId": "XSkat",
+    "name": "XSkat License"
+  },
+  {
+    "licenseId": "YPL-1.0",
+    "name": "Yahoo! Public License v1.0"
+  },
+  {
+    "licenseId": "YPL-1.1",
+    "name": "Yahoo! Public License v1.1"
+  },
+  {
+    "licenseId": "Zed",
+    "name": "Zed License"
+  },
+  {
+    "licenseId": "Zend-2.0",
+    "name": "Zend License v2.0"
+  },
+  {
+    "licenseId": "Zimbra-1.3",
+    "name": "Zimbra Public License v1.3"
+  },
+  {
+    "licenseId": "Zimbra-1.4",
+    "name": "Zimbra Public License v1.4"
+  },
+  {
+    "licenseId": "Zlib",
+    "name": "zlib License"
+  },
+  {
+    "licenseId": "zlib-acknowledgement",
+    "name": "zlib/libpng License with Acknowledgement"
+  },
+  {
+    "licenseId": "ZPL-1.1",
+    "name": "Zope Public License 1.1"
+  },
+  {
+    "licenseId": "ZPL-2.0",
+    "name": "Zope Public License 2.0"
+  },
+  {
+    "licenseId": "ZPL-2.1",
+    "name": "Zope Public License 2.1"
+  }
+]

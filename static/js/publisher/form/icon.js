@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
+import AccordionHelp from "./AccordionHelp";
 import FileInput from "./fileInput";
 
 class Icon extends React.Component {
@@ -12,14 +13,15 @@ class Icon extends React.Component {
 
     this.state = {
       icon: props.icon,
-      errors: {}
+      errors: {},
     };
   }
 
-  removeIconHandler() {
+  removeIconHandler(e) {
     const { updateIcon } = this.props;
+    e.preventDefault();
     this.setState({
-      icon: {}
+      icon: {},
     });
 
     updateIcon(null);
@@ -32,8 +34,8 @@ class Icon extends React.Component {
     if (iconFile.errors) {
       this.setState({
         errors: {
-          [iconFile.name]: iconFile.errors
-        }
+          [iconFile.name]: iconFile.errors,
+        },
       });
     } else {
       const iconURL = URL.createObjectURL(iconFile);
@@ -41,8 +43,8 @@ class Icon extends React.Component {
       this.setState({
         errors: {},
         icon: {
-          url: iconURL
-        }
+          url: iconURL,
+        },
       });
 
       updateIcon({
@@ -50,7 +52,7 @@ class Icon extends React.Component {
         file: iconFile,
         name: iconFile.name,
         status: "new",
-        type: "icon"
+        type: "icon",
       });
     }
   }
@@ -61,7 +63,7 @@ class Icon extends React.Component {
       return (
         <div className="p-notification--negative">
           <p className="p-notification__response">
-            {Object.keys(errors).map(fileName => (
+            {Object.keys(errors).map((fileName) => (
               <Fragment key={`errors-${fileName}`}>
                 {fileName}
                 &nbsp;
@@ -78,6 +80,40 @@ class Icon extends React.Component {
       );
     }
     return false;
+  }
+
+  renderRescrictions() {
+    return (
+      <AccordionHelp name="icon restrictions">
+        <ul>
+          <li>
+            <small>
+              Accepted image formats include: <b>PNG, JPEG & SVG files</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              Min resolution: <b>40 x 40 pixels</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              Max resolution: <b>512 x 512 pixels</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              Aspect ratio: <b>1:1</b>
+            </small>
+          </li>
+          <li>
+            <small>
+              File size limit: <b>256kB</b>
+            </small>
+          </li>
+        </ul>
+      </AccordionHelp>
+    );
   }
 
   render() {
@@ -105,15 +141,19 @@ class Icon extends React.Component {
           </div>
           {iconUrl && (
             <div className="p-editable-icon__actions">
-              <span
+              <a
+                href="#"
+                role="button"
+                tabIndex="0"
                 className="p-editable-icon__delete"
                 onClick={this.removeIconHandler}
               >
                 <i className="p-icon--delete" />
-              </span>
+              </a>
             </div>
           )}
         </div>
+        {this.renderRescrictions()}
       </Fragment>
     );
   }
@@ -122,14 +162,14 @@ class Icon extends React.Component {
 Icon.defaultProps = {
   icon: {},
   title: "Snap icon",
-  restrictions: {}
+  restrictions: {},
 };
 
 Icon.propTypes = {
   icon: PropTypes.object,
   title: PropTypes.string,
   updateIcon: PropTypes.func.isRequired,
-  restrictions: PropTypes.object
+  restrictions: PropTypes.object,
 };
 
 export { Icon as default };

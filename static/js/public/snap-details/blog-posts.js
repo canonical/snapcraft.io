@@ -32,18 +32,17 @@ class BlogPosts {
     this.modifiers = modifiers;
   }
 
-  fetch(callback) {
-    const _callback = callback || null;
+  fetch() {
     return fetch(`${this.url}${this.path}`)
-      .then(response => response.json())
-      .then(posts => {
+      .then((response) => response.json())
+      .then((posts) => {
         if (posts.length === 0) {
           return false;
         }
         const postsHTML = [];
 
         if (this.modifiers) {
-          this.modifiers.forEach(modifier => {
+          this.modifiers.forEach((modifier) => {
             posts = modifier(posts);
           });
         }
@@ -55,10 +54,20 @@ class BlogPosts {
             return;
           }
           let postHTML = this.template.innerHTML;
-          Object.keys(post).forEach(key => {
-            postHTML = postHTML.split("${" + key + "}").join(post[key]);
+          Object.keys(post).forEach((key) => {
+            if (post[key]) {
+              postHTML = postHTML.split("${" + key + "}").join(post[key]);
+            } else {
+              postHTML = postHTML.split("${" + key + "}").join("");
+            }
           });
-          postHTML = postHTML.split("${size}").join(`col-${cols}`);
+          const containerClasses = [`col-${cols}`];
+          if (post.slug.indexOf("http") === 0) {
+            containerClasses.push(`p-blog-post--guest-post`);
+          }
+          postHTML = postHTML
+            .split("${container_class}")
+            .join(containerClasses.join(" "));
           postsHTML.push(postHTML);
         });
 
@@ -68,8 +77,7 @@ class BlogPosts {
 
         return posts;
       })
-      .then(_callback)
-      .catch(error => {
+      .catch((error) => {
         throw new Error(error);
       });
   }
@@ -97,7 +105,7 @@ function snapDetailsPosts(
 
   blogPosts.path = snap;
 
-  blogPosts.fetch(function(posts) {
+  blogPosts.fetch().then((posts) => {
     if (posts.length > 0 && showOnSuccessSelector) {
       const showOnSuccess = document.querySelector(showOnSuccessSelector);
       if (showOnSuccess) {
@@ -124,7 +132,7 @@ function seriesPosts(holderSelector, templateSelector) {
       return posts.reverse();
     },
     function filter(posts) {
-      return posts.map(post => {
+      return posts.map((post) => {
         if (post.slug === currentSlug) {
           post.className = "is-current";
         } else {
@@ -132,7 +140,7 @@ function seriesPosts(holderSelector, templateSelector) {
         }
         return post;
       });
-    }
+    },
   ]);
 
   blogPosts.fetch();

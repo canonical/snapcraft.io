@@ -12,19 +12,17 @@ function prepareStackedData() {
   let max = 0;
 
   const getStackedData = (keys, data) => {
-    const stackFunc = stack()
-      .order(stackOrderReverse)
-      .keys(keys);
+    const stackFunc = stack().order(stackOrderReverse).keys(keys);
 
     return stackFunc(data);
   };
 
   this.rawData.buckets.forEach((bucket, i) => {
     let obj = {
-      date: utcParse("%Y-%m-%d")(bucket)
+      date: utcParse("%Y-%m-%d")(bucket),
     };
 
-    this.rawData.series.forEach(series => {
+    this.rawData.series.forEach((series) => {
       obj[series.name] = series.values[i];
       if (_keys.indexOf(series.name) < 0) {
         _keys.push(series.name);
@@ -34,9 +32,9 @@ function prepareStackedData() {
     _data.push(obj);
   });
 
-  _data.forEach(date => {
+  _data.forEach((date) => {
     const _max = Object.keys(date)
-      .filter(key => key !== "date")
+      .filter((key) => key !== "date")
       .reduce((previous, key) => previous + date[key], 0);
 
     if (_max > max) {
@@ -55,16 +53,16 @@ function prepareLineData() {
   const _keys = [];
   const data = [];
 
-  this.rawData.series.forEach(series => {
+  this.rawData.series.forEach((series) => {
     _keys.push(series.name);
     const obj = {
       name: series.name,
-      values: []
+      values: [],
     };
     series.values.forEach((value, index) => {
       obj.values.push({
         date: utcParse("%Y-%m-%d")(this.rawData.buckets[index]),
-        value: value
+        value: value,
       });
     });
     data.push(obj);
@@ -72,10 +70,10 @@ function prepareLineData() {
 
   this.rawData.buckets.forEach((bucket, i) => {
     const obj = {
-      date: utcParse("%Y-%m-%d")(bucket)
+      date: utcParse("%Y-%m-%d")(bucket),
     };
 
-    data.forEach(series => {
+    data.forEach((series) => {
       obj[series.name] = series.values[i].value;
     });
 
@@ -110,13 +108,13 @@ function prepareScales() {
   this.xScale = scaleLinear()
     .rangeRound([
       this.padding.left,
-      this.width - this.padding.left - this.padding.right
+      this.width - this.padding.left - this.padding.right,
     ])
-    .domain(extent(this.data, d => d.date));
+    .domain(extent(this.data, (d) => d.date));
   this.yScale = scaleLinear()
     .rangeRound([
       this.height - this.padding.top - this.padding.bottom,
-      this.padding.top
+      this.padding.top,
     ])
     .nice()
     .domain([0, this.maxYValue + Math.ceil(this.maxYValue * 0.1)]);
@@ -127,10 +125,10 @@ function prepareAnnotationsData() {
   annotationsData = [];
   this.options.annotations.buckets.forEach((bucket, i) => {
     let obj = {
-      date: utcParse("%Y-%m-%d")(bucket)
+      date: utcParse("%Y-%m-%d")(bucket),
     };
 
-    this.options.annotations.series.forEach(series => {
+    this.options.annotations.series.forEach((series) => {
       obj[series.name] = series.values[i];
       if (this.keys.indexOf(series.name) < 0) {
         this.keys.push(series.name);
@@ -148,7 +146,7 @@ function prepareAnnotationsData() {
 
   if (annotationsData) {
     annotationsData = annotationsData
-      .map(annotation => {
+      .map((annotation) => {
         let x = this.xScale(annotation.date);
 
         if (x < 0 + this.padding.left) {
@@ -157,13 +155,13 @@ function prepareAnnotationsData() {
         return {
           x,
           y1: this.yScale(1),
-          data: annotation
+          data: annotation,
         };
       })
-      .filter(item => item !== false);
+      .filter((item) => item !== false);
   }
 
-  this.annotationsData = annotationsData.filter(item => item !== false);
+  this.annotationsData = annotationsData.filter((item) => item !== false);
 }
 
 function prepareAxis() {
@@ -180,31 +178,29 @@ function prepareAxis() {
       .filter((item, i) => {
         return i % 14 === 0;
       })
-      .map(item => item.date);
+      .map((item) => item.date);
     this.xAxisTickFormat = "%b %e %Y";
   } else if (isMobile() && this.data.length > 90) {
     // This restricts anything over 3 months and if viewing on a mobile
     // Get the first day of each month
     let monthCache = false;
     tickValues = this.data
-      .filter(item => {
+      .filter((item) => {
         if (!monthCache || item.date.getMonth() !== monthCache) {
           monthCache = item.date.getMonth();
           return true;
         }
         return false;
       })
-      .map(item => item.date);
+      .map((item) => item.date);
   } else {
-    tickValues = this.data.map(item => item.date);
+    tickValues = this.data.map((item) => item.date);
   }
 
-  this.xAxis = axisBottom(this.xScale)
-    .tickValues(tickValues)
-    .tickPadding(16);
+  this.xAxis = axisBottom(this.xScale).tickValues(tickValues).tickPadding(16);
 
-  this.yAxis = axisLeft(this.yScale).tickFormat(
-    d => (d === 0 ? "0" : this.shortValue(d))
+  this.yAxis = axisLeft(this.yScale).tickFormat((d) =>
+    d === 0 ? "0" : this.shortValue(d)
   );
 }
 
@@ -213,5 +209,5 @@ export {
   prepareLineData,
   prepareScales,
   prepareAnnotationsData,
-  prepareAxis
+  prepareAxis,
 };

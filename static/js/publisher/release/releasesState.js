@@ -2,7 +2,7 @@ import { RISKS } from "./constants";
 
 function getRevisionsMap(revisions) {
   const revisionsMap = {};
-  revisions.forEach(rev => {
+  revisions.forEach((rev) => {
     rev.channels = [];
     revisionsMap[rev.revision] = rev;
   });
@@ -16,7 +16,7 @@ function initReleasesData(revisionsMap, releases) {
   releases
     .slice()
     .reverse()
-    .forEach(release => {
+    .forEach((release) => {
       if (release.revision) {
         const rev = revisionsMap[release.revision];
 
@@ -35,45 +35,65 @@ function initReleasesData(revisionsMap, releases) {
   return releases;
 }
 
+// Get specific revision based on snapName and a channelMap object
+function fetchMissingRevision(snapName, info) {
+  return fetch(`/${snapName}/releases/revision/${info.revision}`)
+    .then((res) => res.json())
+    .then((revision) => ({
+      info,
+      revision: revision.revision,
+    }));
+}
+
 // transforming channel map list data into format used by this component
-function getReleaseDataFromChannelMap(channelMapsList, revisionsMap) {
-  const releasedChannels = {};
-  const releasedArchs = {};
+// https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
+function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
+  return new Promise((resolve) => {
+    const releasedChannels = {};
+    const missingRevisions = [];
 
-  channelMapsList.forEach(mapInfo => {
-    const { track, architecture, map } = mapInfo;
-    map.forEach(channelInfo => {
-      if (channelInfo.info === "released" || channelInfo.info === "branch") {
-        const channel =
-          track === "latest"
-            ? `${track}/${channelInfo.channel}`
-            : channelInfo.channel;
+    channelMap.forEach((mapInfo) => {
+      if (!releasedChannels[mapInfo.channel]) {
+        releasedChannels[mapInfo.channel] = {};
+      }
 
-        if (!releasedChannels[channel]) {
-          releasedChannels[channel] = {};
-        }
-
-        // XXX bartaz
-        // this may possibly lead to issues with revisions in multiple architectures
-        // if we have data about given revision in revision history we can store it
-        if (revisionsMap[channelInfo.revision]) {
-          releasedChannels[channel][architecture] =
-            revisionsMap[channelInfo.revision];
-          // but if for some reason we don't have full data about revision in channel map
-          // we need to ducktype it from channel info
+      if (!releasedChannels[mapInfo.channel][mapInfo.architecture]) {
+        const revisionInfo = revisionsMap.find(
+          (r) => r.revision === mapInfo.revision
+        );
+        console.log(revisionInfo);
+        if (revisionInfo) {
+          releasedChannels[mapInfo.channel][
+            mapInfo.architecture
+          ] = revisionInfo;
+          releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
+            mapInfo["expiration-date"];
         } else {
-          releasedChannels[channel][architecture] = channelInfo;
-          releasedChannels[channel][architecture].architectures = [
-            architecture
-          ];
+          missingRevisions.push(fetchMissingRevision(snapName, mapInfo));
         }
-
-        releasedArchs[architecture] = true;
       }
     });
-  });
 
-  return releasedChannels;
+    if (missingRevisions.length > 0) {
+      Promise.all(missingRevisions)
+        .then((revs) => {
+          revs.forEach((rev) => {
+            const { info, revision } = rev;
+            releasedChannels[info.channel][info.architecture] = revision;
+            releasedChannels[info.channel][info.architecture].expiration =
+              revision["expiration-date"];
+          });
+
+          resolve([releasedChannels, revs.map((r) => r.revision)]);
+        })
+        .catch(() => {
+          // if a call doesn't work for whatever reason
+          resolve([releasedChannels, []]);
+        });
+    } else {
+      resolve([releasedChannels, []]);
+    }
+  });
 }
 
 // for channel without release get next (less risk) channel with a release
@@ -106,7 +126,7 @@ function getTrackingChannel(releasedChannels, track, risk, arch) {
 function getUnassignedRevisions(revisionsMap, arch) {
   let filteredRevisions = Object.values(revisionsMap).reverse();
   if (arch) {
-    filteredRevisions = filteredRevisions.filter(revision => {
+    filteredRevisions = filteredRevisions.filter((revision) => {
       return (
         revision.architectures.includes(arch) &&
         (!revision.channels || revision.channels.length === 0)
@@ -116,30 +136,10 @@ function getUnassignedRevisions(revisionsMap, arch) {
   return filteredRevisions;
 }
 
-function getPendingRelease(pendingReleases, arch, channel) {
-  let pendingRelease = null;
-  // for each release
-  Object.keys(pendingReleases).forEach(releasedRevision => {
-    const isSameChannel = pendingReleases[releasedRevision].channels.includes(
-      channel
-    );
-    const isSameArch = pendingReleases[
-      releasedRevision
-    ].revision.architectures.includes(arch);
-
-    if (isSameArch && isSameChannel) {
-      pendingRelease = releasedRevision;
-    }
-  });
-
-  return pendingRelease;
-}
-
 export {
-  getPendingRelease,
   getUnassignedRevisions,
   getTrackingChannel,
   getRevisionsMap,
   initReleasesData,
-  getReleaseDataFromChannelMap
+  getReleaseDataFromChannelMap,
 };

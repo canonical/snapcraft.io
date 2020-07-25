@@ -8,15 +8,24 @@ import {
   CLOSE_HISTORY,
   openHistory,
   closeHistory,
-  toggleHistory
+  toggleHistory,
 } from "./history";
 
 describe("history actions", () => {
   const dummyFilters = {
     arch: "abc42",
     track: "latest",
-    risk: "stable"
+    risk: "stable",
+    branch: null,
   };
+
+  beforeEach(() => {
+    global.dataLayer = { push: jest.fn() };
+  });
+
+  afterEach(() => {
+    global.dataLayer = undefined;
+  });
 
   describe("openHistory", () => {
     it("should create an action to open history panel", () => {
@@ -42,12 +51,15 @@ describe("history actions", () => {
     describe("when history with same filters is open", () => {
       it("should dispatch action to close history panel", () => {
         const store = mockStore({
+          options: {
+            snapName: "test",
+          },
           history: {
             isOpen: true,
             filters: {
-              ...dummyFilters
-            }
-          }
+              ...dummyFilters,
+            },
+          },
         });
 
         store.dispatch(toggleHistory(dummyFilters));
@@ -63,8 +75,8 @@ describe("history actions", () => {
         const store = mockStore({
           history: {
             isOpen: true,
-            filters: null
-          }
+            filters: null,
+          },
         });
 
         store.dispatch(toggleHistory());
@@ -78,16 +90,19 @@ describe("history actions", () => {
     describe("when history with different filters is open", () => {
       it("should dispatch action to open history panel with new filters", () => {
         const store = mockStore({
+          options: {
+            snapName: "test",
+          },
           history: {
             isOpen: true,
             filters: {
-              ...dummyFilters
-            }
-          }
+              ...dummyFilters,
+            },
+          },
         });
         const testFilters = {
           ...dummyFilters,
-          arch: "test321"
+          arch: "test321",
         };
         store.dispatch(toggleHistory(testFilters));
 
@@ -100,10 +115,13 @@ describe("history actions", () => {
     describe("when history is closed", () => {
       it("should dispatch action to open history panel", () => {
         const store = mockStore({
+          options: {
+            snapName: "test",
+          },
           history: {
             isOpen: false,
-            filters: null
-          }
+            filters: null,
+          },
         });
 
         store.dispatch(toggleHistory(dummyFilters));

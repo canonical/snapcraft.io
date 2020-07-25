@@ -29,13 +29,16 @@ def snapcraft_blueprint():
                     [icon_host, "2018/08/mosquitto-logo-only.svg.png"]
                 ),
                 "title": "mosquitto",
-                "origin": "ralight",
+                "origin": "mosquitto",
+                "publisher": "Mosquitto Team",
+                "developer_validation": "verified",
             },
             {
                 "package_name": "node-red",
                 "icon_url": "/".join([icon_host, "2017/01/nr-hex_1.png"]),
                 "title": "Node-RED",
                 "origin": "noderedteam",
+                "publisher": "Node-RED-Team",
                 "developer_validation": "verified",
             },
             {
@@ -43,12 +46,14 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2017/02/logo-256_1.png"]),
                 "title": "soracom-console",
                 "origin": "soracom",
+                "publisher": "SORACOM Snap Administrator",
             },
             {
                 "package_name": "thinger-maker-server",
                 "icon_url": "/".join([icon_host, "2017/03/thinger_256.png"]),
                 "title": "Thinger.io Maker Server",
                 "origin": "thinger",
+                "publisher": "Alvaro Luis Bustamante",
             },
             {
                 "package_name": "nymea",
@@ -57,6 +62,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "nymea",
                 "origin": "guh GmbH developer",
+                "publisher": "guh GmbH developer",
             },
             {
                 "package_name": "domotzpro-agent-publicstore",
@@ -70,6 +76,7 @@ def snapcraft_blueprint():
                     ]
                 ),
                 "origin": "domotzpublicstore",
+                "publisher": "Domotz",
             },
         ]
 
@@ -79,6 +86,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2018/07/icon_8BAXEYq.png"]),
                 "title": "Kura™",
                 "origin": "ondra",
+                "publisher": "Ondrej Kubik",
             },
             {
                 "package_name": "hunt-r",
@@ -87,6 +95,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "Lantern Tech - Hunt-R Series Gateway Firmware",
                 "origin": "kmorales019",
+                "publisher": "Lantern Technologies",
             },
             {
                 "package_name": "ammp-edge",
@@ -95,6 +104,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "ammp-edge",
                 "origin": "ammp",
+                "publisher": "AMMP Technologies",
             },
             {
                 "package_name": "lantern-water-iot",
@@ -103,6 +113,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "Lantern Tech - Smart Water Gateway Firmware",
                 "origin": "kmorales019",
+                "publisher": "Lantern Technologies",
             },
             {
                 "package_name": "bl-gateway",
@@ -111,6 +122,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "bl-gateway",
                 "origin": "jessegrant",
+                "publisher": "Jesse Grant",
             },
             {
                 "package_name": "ixagent",
@@ -119,6 +131,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "ixagent",
                 "origin": "ixot",
+                "publisher": "Michael Hathaway",
             },
         ]
 
@@ -127,31 +140,36 @@ def snapcraft_blueprint():
                 "package_name": "flexran",
                 "icon_url": "/".join([icon_host, "2018/04/m5g-flexran.png"]),
                 "title": "flexran",
-                "origin": "Mosaic 5G",
+                "origin": "mosaic-5g",
+                "publisher": "Mosaic 5G",
             },
             {
                 "package_name": "oai-cn",
                 "icon_url": "/".join([icon_host, "2018/04/m5g-oai-cn.png"]),
                 "title": "oai-cn",
-                "origin": "Mosaic 5G",
+                "origin": "mosaic-5g",
+                "publisher": "Mosaic 5G",
             },
             {
                 "package_name": "oai-ran",
                 "icon_url": "/".join([icon_host, "2018/04/m5g-oai-ran.png"]),
                 "title": "oai-ran",
-                "origin": "Mosaic 5G",
+                "origin": "mosaic-5g",
+                "publisher": "Mosaic 5G",
             },
             {
                 "package_name": "ll-mec",
                 "icon_url": "/".join([icon_host, "2018/03/m5g-llmec.png"]),
                 "title": "ll-mec",
-                "origin": "Mosaic 5G",
+                "origin": "mosaic-5g",
+                "publisher": "Mosaic 5G",
             },
             {
                 "package_name": "wifi-ap",
                 "icon_url": "/".join([icon_host, "2016/08/icon_16.png"]),
                 "title": "wifi-ap",
                 "origin": "Canonical",
+                "publisher": "Canonical",
                 "developer_validation": "verified",
             },
         ]
@@ -162,6 +180,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2017/11/favicon.png"]),
                 "title": "openHAB",
                 "origin": "openhab",
+                "publisher": "openHAB Foundation e.V.",
             },
             {
                 "package_name": "homebridge",
@@ -174,6 +193,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "HOMEbridge",
                 "origin": "ondra",
+                "publisher": "Ondrej Kubik",
             },
         ]
 
@@ -183,6 +203,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2015/04/berry.jpg.png"]),
                 "title": "pi2",
                 "origin": "Canonical",
+                "publisher": "Canonical",
                 "developer_validation": "verified",
             },
             {
@@ -190,6 +211,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2016/07/icon_32.png"]),
                 "title": "dragonboard",
                 "origin": "Canonical",
+                "publisher": "Canonical",
                 "developer_validation": "verified",
             },
             {
@@ -197,6 +219,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2016/07/icon_30.png"]),
                 "title": "PC",
                 "origin": "Canonical",
+                "publisher": "Canonical",
                 "developer_validation": "verified",
             },
         ]
@@ -222,28 +245,10 @@ def snapcraft_blueprint():
     def create_redirect():
         return flask.redirect("https://docs.snapcraft.io/build-snaps")
 
-    @snapcraft.route("/favicon.ico")
-    def favicon():
-        return flask.redirect(
-            "https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png"
-        )
-
     @snapcraft.route("/build")
     def build():
         status_code = 200
 
         return flask.render_template("snapcraft/build.html"), status_code
-
-    @snapcraft.route("/robots.txt")
-    def robots():
-        return flask.Response("", mimetype="text/plain")
-
-    @snapcraft.route("/humans.txt")
-    def humans():
-        return flask.send_file("../static/humans.txt")
-
-    @snapcraft.route("/_status/check")
-    def check():
-        return "OK"
 
     return snapcraft

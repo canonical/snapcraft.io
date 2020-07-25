@@ -21,15 +21,12 @@
 
   <div class="col-6">
     <h4>How <a href="https://www.geekbench.com/">geekbench4</a> defines snapcraft.yaml</h4>
-    <pre class="p-code-yaml"><b>name</b>: geekbench4
+    <div class ="p-show-more is-collapsed" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: geekbench4
 <b>version</b>: 4.2.0
 <b>summary</b>: Cross-Platform Benchmark
 <b>description</b>: |
-  Geekbench 4 measures your system's power and tells
-  you whether your computer is ready to roar. How
-  strong is your mobile device or desktop computer?
-  How will it perform when push comes to crunch?
-  These are the questions that Geekbench can answer.
+  Geekbench 4 measures your system's power [&hellip;]
 
 <b>confinement</b>: devmode
 <b>base</b>: core18
@@ -42,5 +39,9 @@
 <b>apps</b>:
   <b>geekbench4</b>:
     <b>command</b>: geekbench4</pre>
+
+      {% include "home/_fsf_yaml_show_more.html" %}
+
+    </div>
   </div>
 </div>

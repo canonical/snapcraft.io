@@ -9,4 +9,36 @@
     position: sticky;
     top: 1rem;
   }
+
+  .p-blog-post--guest-post {
+
+    $inner-box-shadow-color: rgba(205, 205, 205, .2);
+
+    & > a {
+      border: 1px solid $color-mid-light;
+      border-radius: 2px;
+      box-shadow: inset 0 0 5px 1px $inner-box-shadow-color;
+      display: block;
+      overflow: hidden;
+
+      img:first-of-type {
+        border-radius: 0;
+        display: block;
+        height: auto;
+        position: relative;
+        width: 100%;
+        z-index: -1;
+      }
+    }
+  }
+
+  .p-blog-post__source {
+    border-radius: 0;
+    display: block;
+    height: 39px;
+    margin-bottom: -39px;
+    position: relative;
+    top: -39px;
+    width: 143px;
+  }
 }

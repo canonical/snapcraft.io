@@ -6,7 +6,7 @@ import { format } from "d3-format";
 
 export function tooltips() {
   const tooltipTimeFormat = utcFormat("%Y-%m-%d");
-  const commaValue = number => format(",")(number);
+  const commaValue = (number) => format(",")(number);
 
   this.showTooltips = false;
 
@@ -16,23 +16,23 @@ export function tooltips() {
       let other = {
         key: "other",
         value: 0,
-        count: 0
+        count: 0,
       };
 
-      let keys = Object.keys(dateData).filter(key => key !== "date");
+      let keys = Object.keys(dateData).filter((key) => key !== "date");
 
       if (this.options.graphType && this.options.graphType === "channel") {
         keys = sortChannels(keys, {
           defaultTrack: this.options.metricsDefaultTrack
             ? this.options.metricsDefaultTrack
-            : "latest"
+            : "latest",
         }).list;
       }
 
-      keys.forEach(key => {
+      keys.forEach((key) => {
         dataArr.push({
           key: key,
-          value: dateData[key]
+          value: dateData[key],
         });
       });
 
@@ -61,15 +61,13 @@ export function tooltips() {
       }
 
       return dataArr
-        .map(item => {
+        .map((item) => {
           if (!item.skip) {
             return [
               `<span class="snapcraft-graph-tooltip__series${
                 item.key === currentHoverKey ? " is-hovered" : ""
               }" title="${item.key}">`,
-              `<span class="snapcraft-graph-tooltip__series-name">${
-                item.key
-              }</span>`,
+              `<span class="snapcraft-graph-tooltip__series-name">${item.key}</span>`,
               `<span class="snapcraft-graph-tooltip__series-color"${
                 !item.count
                   ? `style="background:${this.colorScale(item.key)};"`
@@ -78,7 +76,7 @@ export function tooltips() {
               `<span class="snapcraft-graph-tooltip__series-value">${commaValue(
                 item.value
               )}</span>`,
-              `</span>`
+              `</span>`,
             ].join("");
           }
         })
@@ -93,7 +91,7 @@ export function tooltips() {
       )}</span>`,
       tooltipRows(dateData, currentHoverKey),
       `</span>`,
-      `</div>`
+      `</div>`,
     ].join("");
   };
 
@@ -101,7 +99,7 @@ export function tooltips() {
     if (!this.showTooltips) {
       return;
     }
-    const bisectDate = bisector(d => d.date).left;
+    const bisectDate = bisector((d) => d.date).left;
 
     const node = nodes[index];
     const mousePosition = mouse(node);
@@ -123,9 +121,9 @@ export function tooltips() {
     } else {
       let matchFilter;
       if (this.options.stacked) {
-        matchFilter = item => item[i][0] <= value && item[i][1] >= value;
+        matchFilter = (item) => item[i][0] <= value && item[i][1] >= value;
       } else {
-        matchFilter = item => {
+        matchFilter = (item) => {
           const matchValue = item.values[i].value;
           const range = [matchValue / 1.05, matchValue * 1.05];
           return value >= range[0] && value <= range[1];
@@ -134,7 +132,7 @@ export function tooltips() {
 
       const match = this.transformedData
         .filter(matchFilter)
-        .map(item => item.key || item.name)
+        .map((item) => item.key || item.name)
         .pop();
       currentHoverKey = match;
     }

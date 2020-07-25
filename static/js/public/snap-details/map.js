@@ -10,7 +10,7 @@ export default function renderMap(el, snapData) {
 
   json("/static/js/world-110m.v1.json")
     .then(ready)
-    .catch(error => {
+    .catch((error) => {
       throw new Error(error);
     });
 
@@ -33,10 +33,7 @@ export default function renderMap(el, snapData) {
     // clean up HTML before rendering map
     mapEl.html("");
 
-    const svg = mapEl
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+    const svg = mapEl.append("svg").attr("width", width).attr("height", height);
 
     const tooltip = mapEl
       .append("div")
@@ -56,7 +53,7 @@ export default function renderMap(el, snapData) {
     country
       .enter()
       .insert("path")
-      .attr("class", countryData => {
+      .attr("class", (countryData) => {
         const countrySnapData = snapData[countryData.id];
 
         if (countrySnapData) {
@@ -65,7 +62,7 @@ export default function renderMap(el, snapData) {
 
         return "snapcraft-territories__country";
       })
-      .attr("style", countryData => {
+      .attr("style", (countryData) => {
         const countrySnapData = snapData[countryData.id];
 
         if (countrySnapData) {
@@ -83,13 +80,13 @@ export default function renderMap(el, snapData) {
         }
       })
       .attr("d", path)
-      .attr("id", function(d) {
+      .attr("id", function (d) {
         return d.id;
       })
-      .attr("title", function(d) {
+      .attr("title", function (d) {
         return d.properties.name;
       })
-      .on("mousemove", countryData => {
+      .on("mousemove", (countryData) => {
         const pos = mouse(mapEl.node());
         const countrySnapData = snapData[countryData.id];
 
@@ -101,7 +98,7 @@ export default function renderMap(el, snapData) {
 
           let content = [
             '<span class="u-no-margin--top">',
-            countrySnapData.name
+            countrySnapData.name,
           ];
           if (countrySnapData["number_of_users"] !== undefined) {
             content.push(`<br />${countrySnapData["number_of_users"]} active`);
@@ -117,13 +114,13 @@ export default function renderMap(el, snapData) {
           );
         }
       })
-      .on("mouseout", function() {
+      .on("mouseout", function () {
         tooltip.style("display", "none");
       });
 
     g.append("path")
       .datum(
-        mesh(world, world.objects.countries, function(a, b) {
+        mesh(world, world.objects.countries, function (a, b) {
           return a !== b;
         })
       )
@@ -140,7 +137,7 @@ export default function renderMap(el, snapData) {
 
     events.addEvent("resize", window, () => {
       clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(function() {
+      resizeTimeout = setTimeout(function () {
         render(mapEl, snapData, world);
       }, 100);
     });

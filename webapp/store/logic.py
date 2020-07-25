@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 import humanize
 from dateutil import parser
+from webapp import helpers
 
 
 def get_n_random_snaps(snaps, choice_number):
@@ -230,6 +231,20 @@ categories_list = [
 blacklist = ["featured"]
 
 
+def format_category_name(slug):
+    """Format category name into a standard title format
+
+    :param slug: The hypen spaced, lowercase slug to be formatted
+    :return: The formatted string
+    """
+    return (
+        slug.title()
+        .replace("-", " ")
+        .replace("And", "and")
+        .replace("Iot", "IoT")
+    )
+
+
 def get_categories(categories_json):
     """Retrieve and flatten the nested array from the legacy API response.
 
@@ -249,10 +264,7 @@ def get_categories(categories_json):
 
         for category in categories_list:
             categories.append(
-                {
-                    "slug": category,
-                    "name": category.capitalize().replace("-", " "),
-                }
+                {"slug": category, "name": format_category_name(category)}
             )
 
     return categories
@@ -271,7 +283,7 @@ def get_snap_categories(snap_categories):
             categories.append(
                 {
                     "slug": cat["name"],
-                    "name": cat["name"].capitalize().replace("-", " "),
+                    "name": format_category_name(cat["name"]),
                 }
             )
 
@@ -416,7 +428,7 @@ def filter_screenshots(media):
     banner_regex = r"/banner(\-icon)?(_.*)?\.(png|jpg)"
 
     return [
-        m["url"]
+        m
         for m in media
         if m["type"] == "screenshot" and not re.search(banner_regex, m["url"])
     ][:5]
@@ -447,3 +459,21 @@ def promote_snap_with_icon(snaps):
         snaps.insert(0, snaps.pop(snap_with_icon_index))
 
     return snaps
+
+
+def get_snap_developer(snap_name):
+    """Is this a special snap published by Canonical?
+    Show some developer information
+
+    :param snap_name: The name of a snap
+
+    :returns: a list of [display_name, url]
+
+    """
+    filename = "store/content/developers/snaps.yaml"
+    snaps = helpers.get_yaml(filename, typ="rt")
+
+    if snaps and snap_name in snaps:
+        return snaps[snap_name]
+
+    return None

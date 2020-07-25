@@ -8,7 +8,7 @@ class Mouse {
   updatePosition(e) {
     this.position = {
       x: e.x,
-      y: e.y
+      y: e.y,
     };
   }
 }

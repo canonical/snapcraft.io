@@ -17,8 +17,8 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
       <div class="row">
         <div class="col-5 col-start-large-8">
           <div class="u-align--right u-clearfix">
-            <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/{{ snap_name }}/settings">Revert</a>
-            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
+            <a class="p-button--neutral js-form-revert" href="/{{ snap_name }}/settings">Revert</a>
+            <button type="submit" class="p-button--positive u-no-margin--bottom p-button-spinner js-form-submit" name="submit_apply" value="Save">
               {#
               to force dark icon variant we need a fake --dark class name:
               https://github.com/vanilla-framework/vanilla-framework/issues/1817
@@ -216,47 +216,70 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
           </div>
         </div>
       </div>
+
+      {% if is_on_lp %}
+      <div class="row p-form__group">
+        <hr class="u-no-margin--bottom" />
+      </div>
+
+      <div class="row p-form__group">
+        <div class="col-2">
+          GitHub Webhook:
+        </div>
+        <div class="col-8">
+          <div class="p-form__control">
+            <input type="text"
+                   value="https://snapcraft.io/{{snap_name}}/webhook/notify" />
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </section>
   </form>
 </div>
 {% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
-    snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
+      snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
 
-    snapcraft.publisher.market.initForm({
-      form: "settings-form",
-      formNotification: "settings-form-status",
-    }, {
-      'private': {{ private|tojson }},
-      'unlisted': {{ unlisted|tojson }},
-      'whitelist_countries': {{ whitelist_country_codes|tojson }},
-      'blacklist_countries': {{ blacklist_country_codes|tojson }}
-    },
-    {% if error_list %}
-      {{ error_list|tojson}}
-    {% else %}
-      null
-    {% endif %}
-    );
-
-    document
-      .getElementById('settings-form')
-      .addEventListener(
-        'change',
-        snapcraft.publisher.settings.changeHandler
+      snapcraft.publisher.market.initForm({
+        form: "settings-form",
+        formNotification: "settings-form-status",
+      }, {
+        'private': {{ private|tojson }},
+        'unlisted': {{ unlisted|tojson }},
+        'whitelist_countries': {{ whitelist_country_codes|tojson }},
+        'blacklist_countries': {{ blacklist_country_codes|tojson }}
+      },
+      {% if error_list %}
+        {{ error_list|tojson}}
+      {% else %}
+        null
+      {% endif %}
       );
 
-    snapcraft.publisher.stickyListingBar();
-    {% if whitelist_country_codes or not blacklist_country_codes %}
-      snapcraft.publisher.settings.enableInput('whitelist');
-    {% elif blacklist_country_codes %}
-      snapcraft.publisher.settings.enableInput('blacklist');
-    {% endif %}
+      document
+        .getElementById('settings-form')
+        .addEventListener(
+          'change',
+          snapcraft.publisher.settings.changeHandler
+        );
+
+      snapcraft.publisher.stickyListingBar();
+      {% if whitelist_country_codes or not blacklist_country_codes %}
+        snapcraft.publisher.settings.enableInput('whitelist');
+      {% elif blacklist_country_codes %}
+        snapcraft.publisher.settings.enableInput('blacklist');
+      {% endif %}
+    });
   });
 </script>
 {% endblock %}

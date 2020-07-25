@@ -16,7 +16,6 @@
 
     &__title {
       flex-grow: 1;
-      flex-shrink: 0;
       margin: 0;
       margin-bottom: $sp-large;
 
@@ -32,13 +31,11 @@
 
     &__name {
       margin-bottom: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     &__publisher {
-      margin-top: -.5rem;
       margin-bottom: 0;
+      margin-top: -.5rem;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
@@ -64,7 +61,7 @@
       margin-top: $sp-unit; // align with snap name baseline
     }
 
-    button:last-child {
+    button:last-of-type {
       margin-right: 0;
     }
 
@@ -89,7 +86,7 @@
   .p-channel-map {
     background: $color-x-light;
     box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
-    max-width: 700px;
+    max-width: 45rem;
     overflow: hidden;
     position: absolute;
     right: 0;

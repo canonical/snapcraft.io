@@ -69,11 +69,21 @@
     <div class="p-strip">
       <div class="row">
         <div class="col-8">
-           <h1 class="p-heading--two u-no-margin is-light">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
+           <h1 class="p-heading--2 u-no-margin is-light">How to install {{ snap_title }}<br/> on <b>{{ distro_name }}</b></h1>
         </div>
         {% if distro_logo_mono %}
         <div class="col-4 u-hide--small">
-          <img class="distro-banner__logo u-vertically-center" src="{{ distro_logo_mono }}" />
+          {{
+            image(
+              url=distro_logo_mono,
+              alt="",
+              width="126",
+              height="126",
+              hi_def=True,
+              loading="eager",
+              attrs={"class": "distro-banner__logo u-vertically-center"}
+            ) | safe
+          }}
        </div>
        {% endif %}
       </div>
@@ -100,21 +110,25 @@
             {% include "store/snap-details/_screenshots.html" %}
           </div>
         {% endif %}
-
-        <div class="row">
-          <div class="col-8 js-snap-description-text">
-            {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
-            <div data-live="description">{{ description | safe }}</div>
-          </div>
-          <div class="col-4">
-            <div class="js-snap-description-details">
-              {% include "store/snap-details/_details.html" %}
+        <div class="p-show-more is-shallow is-collapsed" data-js="js-show-more">
+          <div class="row">
+            <div class="col-8">
+              <div class="js-snap-description-text">
+                {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
+                <div data-live="description">{{ description | safe }}</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class=" js-snap-description-details">
+                {% include "store/snap-details/_details.html" %}
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="snap-description-more u-hide">
-          <a href="/{{ package_name }}" class="js-show-more-description">Show more</a>
+          <div class="p-show-more__fade">
+            <div class="p-show-more__link-container">
+              <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -126,7 +140,15 @@
           <p>Snaps are discoverable and installable from the <a href="/store">Snap Store</a>, an app store with an audience of millions.</p>
           </div>
           <div class="u-hide--small col-2">
-            <img src="{{ distro_logo }}" />
+            {{
+              image(
+                url=distro_logo,
+                alt="",
+                width="169",
+                height="159",
+                hi_def=True,
+              ) | safe
+            }}
           </div>
         </div>
         <div class="row">
@@ -197,8 +219,16 @@
     <div class="row">
       <div class="col-6">
         <div class="p-card--highlighted">
-          <a href="/snap-store">
-            <img src="https://assets.ubuntu.com/v1/2b48f98d-distro_img_01.svg" width="100%" alt="" />
+          <a href="/snap-store">            
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/2b48f98d-distro_img_01.svg",
+                alt="",
+                width="567",
+                height="228",
+                hi_def=True,
+              ) | safe
+            }}
           </a>
           <h4 class="p-card__title">
             <a href="/snap-store">Get the snap store</a>
@@ -209,7 +239,15 @@
       <div class="col-6">
         <div class="p-card--highlighted">
           <a href="/docs">
-            <img src="https://assets.ubuntu.com/v1/8d00f749-distro_img_02.svg" width="100%" alt="" />
+            {{
+              image(
+                url="https://assets.ubuntu.com/v1/8d00f749-distro_img_02.svg",
+                alt="",
+                width="567",
+                height="228",
+                hi_def=True,
+              ) | safe
+            }}
           </a>
           <h4 class="p-card__title">
             <a href="/docs">Learn more about snaps</a>
@@ -224,46 +262,53 @@
 {% endblock %}
 
 {% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+  <script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
+{% endblock %}
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
   <script>
-    Raven.context(function () {
-      try {
-        snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
-      } catch(e) {
-        Raven.captureException(e);
-      }
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
+        try {
+          snapcraft.public.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.triggerEventWhenVisible("#snippet-snap-install-stable")
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.triggerEventWhenVisible("#snippet-snap-install-stable")
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.initExpandableSnapDetails();
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.initExpandableArea(
+            ".js-snap-description-text",
+            ".js-snap-description-details"
+          );
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.screenshots('#js-snap-screenshots');
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.screenshots('#js-snap-screenshots');
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      try {
-        snapcraft.public.videos('.js-video-slide');
-      } catch(e) {
-        Raven.captureException(e);
-      }
+        try {
+          snapcraft.public.videos('.js-video-slide');
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+        if (typeof ClipboardJS !== 'undefined') {
+          new ClipboardJS('.js-clipboard-copy');
+        }
+      });
     });
   </script>
 {% endblock %}

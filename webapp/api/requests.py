@@ -11,27 +11,14 @@ from webapp.api.exceptions import (
 )
 
 
-class TimeoutHTTPAdapter(requests.adapters.HTTPAdapter):
-    def __init__(self, timeout=None, *args, **kwargs):
-        self.timeout = timeout
-        super().__init__(*args, **kwargs)
-
-    def send(self, *args, **kwargs):
-        kwargs["timeout"] = self.timeout
-        return super().send(*args, **kwargs)
-
-
 class BaseSession:
     """A base session interface to implement common functionality
 
     Create an interface to manage exceptions and return API exceptions
     """
 
-    def __init__(self, timeout=(0.5, 3), *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.mount("http://", TimeoutHTTPAdapter(timeout=timeout))
-        self.mount("https://", TimeoutHTTPAdapter(timeout=timeout))
 
         # TODO allow user to choose it's own user agent
         storefront_header = "storefront ({commit_hash};{environment})".format(
@@ -58,7 +45,9 @@ class BaseSession:
             )
         except CircuitBreakerError:
             raise ApiCircuitBreaker(
-                "Requests are closed because of too many failures".format(url)
+                "Requests are closed because of too many failures {}".format(
+                    url
+                )
             )
 
         return request

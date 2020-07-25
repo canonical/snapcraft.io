@@ -1,21 +1,27 @@
 @mixin snapcraft-p-navigation {
-  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2480
-  .p-navigation__links:last-child {
-    margin-right: $grid-margin-width;
+  // https://github.com/canonical-web-and-design/vanilla-framework/pull/2708
+  .p-subnav__item {
+    &,
+    &:active,
+    &:focus,
+    &:visited {
+      color: $colors--dark-theme--text-default;
+    }
 
-    // https://github.com/canonical-web-and-design/vanilla-framework/issues/2479
-    .p-subnav__items {
-      right: 0;
+    &:hover {
+      color: $colors--dark-theme--text-hover;
     }
   }
 
-  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2478
-  .p-subnav__items {
-    border-color: $color-navigation-border;
+  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2752
+  .p-subnav__item {
+    background-color: #333;
   }
 
-  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2483
-  .p-navigation .row {
-    grid-gap: 0;
+  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2753
+  .p-subnav__item {
+    @media screen and (max-width: 800px) {
+      padding-left: 0;
+    }
   }
 }

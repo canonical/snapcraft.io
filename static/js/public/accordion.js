@@ -24,31 +24,59 @@ export default function initAccordion(accordionContainerSelector) {
   // and removed and events do not need to be managed separately.
   document
     .querySelector(accordionContainerSelector)
-    .addEventListener("click", e => {
-      const target = e.target.closest(".p-accordion__tab");
+    .addEventListener("click", (e) => {
+      const target = e.target.closest("[class*='p-accordion__tab']");
       if (target && !target.disabled) {
         // Find any open panels within the container and close them.
         Array.from(
           e.currentTarget.querySelectorAll("[aria-expanded=true]")
-        ).forEach(element => toggleAccordion(element, false));
+        ).forEach((element) => toggleAccordion(element, false));
         // Open the target.
         toggleAccordion(target, true);
       }
     });
+
+  // Add event listeners to buttons that expand the next section of the accordion
+  const nextButtons = [].slice.call(
+    document.querySelectorAll("[data-js='js-accordion-next-button']")
+  );
+  if (nextButtons) {
+    nextButtons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const currentPanel = button.closest(".p-accordion__group");
+        const currentToggle = currentPanel.querySelector(
+          "[class*='p-accordion__tab']"
+        );
+        const nextPanel = currentPanel.nextElementSibling;
+        const nextToggle = nextPanel.querySelector(
+          "[class*='p-accordion__tab']"
+        );
+
+        if (currentPanel && nextPanel) {
+          toggleAccordion(currentToggle, false);
+          toggleAccordion(nextToggle, true);
+        }
+      });
+    });
+  }
 }
 
 /**
   Attaches click event to a button to close current accordion tab and open next one.
 */
 export function initAccordionButtons(continueButton) {
-  continueButton.addEventListener("click", event => {
+  continueButton.addEventListener("click", (event) => {
     event.preventDefault();
 
     const currentPanel = continueButton.closest(".p-accordion__group");
-    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
+    const currentToggle = currentPanel.querySelector(
+      "[class*='p-accordion__tab']"
+    );
     const currentSuccess = currentPanel.querySelector(".p-icon--success");
     const nextPanel = currentPanel.nextElementSibling;
-    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+    const nextToggle = nextPanel.querySelector("[class*='p-accordion__tab']");
 
     toggleAccordion(currentToggle, false);
     if (currentSuccess) {

@@ -29,7 +29,7 @@ function initSnapButtonsPicker() {
   }
 
   if (languagePicker) {
-    languagePicker.addEventListener("change", function() {
+    languagePicker.addEventListener("change", function () {
       showLanguage(this.elements["language"].value);
     });
   }
@@ -78,13 +78,13 @@ const getCurrentFormState = (buttonRadios, optionButtons) => {
   const state = {};
 
   // get state of store button radio
-  let checked = buttonRadios.filter(b => b.checked);
+  let checked = buttonRadios.filter((b) => b.checked);
   if (checked.length > 0) {
     state.button = checked[0].value;
   }
 
   // get state of options checkboxes
-  optionButtons.forEach(checkbox => {
+  optionButtons.forEach((checkbox) => {
     state[checkbox.name] = checkbox.checked;
   });
 
@@ -98,14 +98,14 @@ function initEmbeddedCardPicker(options) {
 
   let state = {
     ...getCurrentFormState(buttonRadios, optionButtons),
-    frameHeight: 320
+    frameHeight: 320,
   };
 
-  const renderCode = state => {
+  const renderCode = (state) => {
     codeElement.innerHTML = getCardEmbedHTML(snapName, state);
   };
 
-  const render = state => {
+  const render = (state) => {
     previewFrame.src = getCardPath(snapName, state);
     renderCode(state);
   };
@@ -117,27 +117,27 @@ function initEmbeddedCardPicker(options) {
   const updateState = () => {
     state = {
       ...state,
-      ...getFormState()
+      ...getFormState(),
     };
     render(state);
   };
 
-  buttonRadios.forEach(radio => {
-    radio.addEventListener("change", e => {
+  buttonRadios.forEach((radio) => {
+    radio.addEventListener("change", (e) => {
       if (e.target.checked) {
         updateState();
       }
     });
   });
 
-  optionButtons.forEach(checkbox => {
+  optionButtons.forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
       updateState();
     });
   });
 
   if (buttonRadios.length > 0) {
-    buttonRadios.filter(r => r.value === "black")[0].checked = true;
+    buttonRadios.filter((r) => r.value === "black")[0].checked = true;
   }
 
   // update the frame (but only if it's visible)
@@ -152,13 +152,13 @@ function initEmbeddedCardPicker(options) {
     if (previewFrame.offsetParent) {
       const height =
         Math.floor(
-          (previewFrame.contentWindow.document.body.clientHeight + 10) / 10
+          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10
         ) * 10;
 
       if (height !== state.frameHeight) {
         state = {
           ...state,
-          frameHeight: height
+          frameHeight: height,
         };
         // don't re-render the iframe not to trigger load again
         previewFrame.style.height = height + "px";
@@ -179,4 +179,136 @@ function initEmbeddedCardPicker(options) {
   return () => render(state);
 }
 
-export { initSnapButtonsPicker, initEmbeddedCardPicker };
+// GITHUB BADGES
+
+const getBadgePath = (
+  snapName,
+  badgeName = "badge",
+  showName = true,
+  isPreview = false
+) => {
+  const params = [];
+  if (!showName) {
+    params.push("name=0");
+  }
+
+  if (isPreview) {
+    params.push("preview=1");
+  }
+
+  return `/${snapName}/${badgeName}.svg${
+    params.length ? `?${params.join("&")}` : ""
+  }`;
+};
+
+const getBadgePreview = (snapName, badgeName, showName) => {
+  return `<a href="/${snapName}">
+  <img alt="${snapName}" src="${getBadgePath(
+    snapName,
+    badgeName,
+    showName,
+    badgeName === "trending"
+  )}" />
+  </a>`;
+};
+
+const getBadgeHTML = (snapName, badgeName, showName) => {
+  return `&lt;a href="https://snapcraft.io/${snapName}"&gt;
+  &lt;img alt="${snapName}" src="https://snapcraft.io${getBadgePath(
+    snapName,
+    badgeName,
+    showName
+  )}" /&gt;
+  &lt;/a&gt;`;
+};
+
+const getBadgeMarkdown = (snapName, badgeName, showName) => {
+  return `[![${snapName}](https://snapcraft.io/${getBadgePath(
+    snapName,
+    badgeName,
+    showName
+  )})](https://snapcraft.io/${snapName})`;
+};
+
+const getBadgesCode = (snapName, options, badgeGenerator) => {
+  const badges = [];
+  if (options["show-channel"]) {
+    badges.push(badgeGenerator(snapName));
+  }
+  if (options["show-trending"]) {
+    badges.push(badgeGenerator(snapName, "trending", badges.length === 0));
+  }
+  return badges.join("\n");
+};
+
+const getBadgesHTML = (snapName, options) => {
+  return getBadgesCode(snapName, options, getBadgeHTML);
+};
+
+const getBadgesPreviewHTML = (snapName, options) => {
+  return getBadgesCode(snapName, options, getBadgePreview);
+};
+
+const getBadgesMarkdown = (snapName, options) => {
+  return getBadgesCode(snapName, options, getBadgeMarkdown);
+};
+
+function initGitHubBadgePicker(options) {
+  const {
+    snapName,
+    htmlElement,
+    previewElement,
+    markdownElement,
+    notificationElement,
+    badgeCodeElement,
+    optionsUncheckedElement,
+    isTrending,
+  } = options;
+  const optionButtons = [].slice.call(options.optionButtons);
+
+  let state = {
+    ...getCurrentFormState([], optionButtons),
+  };
+
+  const render = (state) => {
+    if (state["show-trending"] && !isTrending) {
+      notificationElement.classList.remove("u-hide");
+    } else {
+      notificationElement.classList.add("u-hide");
+    }
+
+    if (state["show-channel"] || state["show-trending"]) {
+      optionsUncheckedElement.classList.add("u-hide");
+      badgeCodeElement.classList.remove("u-hide");
+    } else {
+      optionsUncheckedElement.classList.remove("u-hide");
+      badgeCodeElement.classList.add("u-hide");
+    }
+
+    previewElement.innerHTML = getBadgesPreviewHTML(snapName, state);
+    htmlElement.innerHTML = getBadgesHTML(snapName, state);
+    markdownElement.innerHTML = getBadgesMarkdown(snapName, state);
+  };
+
+  const getFormState = () => {
+    return getCurrentFormState([], optionButtons);
+  };
+
+  const updateState = () => {
+    state = {
+      ...state,
+      ...getFormState(),
+    };
+    render(state);
+  };
+
+  optionButtons.forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      updateState();
+    });
+  });
+
+  render(state);
+}
+
+export { initSnapButtonsPicker, initEmbeddedCardPicker, initGitHubBadgePicker };

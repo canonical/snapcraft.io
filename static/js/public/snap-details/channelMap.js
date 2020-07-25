@@ -31,7 +31,7 @@ class ChannelMap {
     let numberTracks = [];
     let stringTracks = [];
     let latestTracks = [];
-    rows.forEach(row => {
+    rows.forEach((row) => {
       // numbers are defined by any string starting any of the following patterns:
       //   just a number – 1,2,3,4,
       //   numbers on the left in a pattern – 2018.3 , 1.1, 1.1.23 ...
@@ -46,7 +46,7 @@ class ChannelMap {
     });
 
     // Ignore case
-    stringTracks.sort(function(a, b) {
+    stringTracks.sort(function (a, b) {
       return a[0].toLowerCase().localeCompare(b[0].toLowerCase());
     });
 
@@ -56,7 +56,7 @@ class ChannelMap {
     numberTracks.sort((a, b) => {
       return b[0].localeCompare(a[0], undefined, {
         numeric: true,
-        sensitivity: "base"
+        sensitivity: "base",
       });
     });
 
@@ -98,7 +98,7 @@ class ChannelMap {
     const archSelect = document.querySelector('[data-js="arch-select"]');
 
     archSelect.innerHTML = architectures
-      .map(arch => `<option value="${arch}">${arch}</option>`)
+      .map((arch) => `<option value="${arch}">${arch}</option>`)
       .join("");
 
     this.arch = this.channelMapData["amd64"] ? "amd64" : architectures[0];
@@ -126,7 +126,7 @@ class ChannelMap {
           }
         },
 
-        '[data-js="close-channel-map"]': event => {
+        '[data-js="close-channel-map"]': (event) => {
           event.preventDefault();
 
           this.closeChannelMap();
@@ -157,17 +157,17 @@ class ChannelMap {
         '[data-js="slide-install-instructions"]': (event, target) => {
           event.preventDefault();
           this.slideToInstructions(target);
-        }
+        },
       },
 
       change: {
         '[data-js="arch-select"]': (event, target) => {
           this.prepareTable(this.channelMapData[target.value]);
-        }
-      }
+        },
+      },
     });
 
-    this.events.addEvent("keyup", window, event => {
+    this.events.addEvent("keyup", window, (event) => {
       this._closeOnEscape.call(this, event);
     });
 
@@ -184,7 +184,7 @@ class ChannelMap {
     const buttonRect = this.openButton.getBoundingClientRect();
     const channelMapPosition = [
       windowWidth - buttonRect.right,
-      buttonRect.y + buttonRect.height + 16 + window.scrollY
+      buttonRect.y + buttonRect.height + 16 + window.scrollY,
     ];
 
     this.channelMapEl.style.right = `${channelMapPosition[0]}px`;
@@ -322,15 +322,35 @@ class ChannelMap {
       paramString += ` --classic`;
     }
 
+    let warning = "";
+    if (channel.indexOf("edge") > -1) {
+      warning = "Snaps on the edge channel can break and change often.";
+    } else if (channel.indexOf("beta") > -1) {
+      warning =
+        "Snaps on the beta channel may have unfinished parts, breaking changes may occur.";
+    } else if (channel.indexOf("candidate") > -1) {
+      warning =
+        "Snaps on the candidate channel need additional real world experimentation before the move to stable.";
+    }
+
     const template = this.INSTALL_TEMPLATE.split("${channel}")
       .join(channel)
       .split("${paramString}")
       .join(paramString);
+
+    const newDiv = document.createElement("div");
+    newDiv.innerHTML = template;
+
+    const warningEl = newDiv.querySelector("[data-js='warning']");
+    if (warningEl) {
+      warningEl.innerHTML = warning;
+    }
+
     const holder = document.querySelector(
       '[data-js="channel-map-install-details"]'
     );
 
-    holder.innerHTML = template;
+    holder.innerHTML = newDiv.innerHTML;
   }
 
   writeTable(el, data) {
@@ -381,18 +401,18 @@ class ChannelMap {
     let trimmedNumberOfTracks = 0;
 
     // Get a total number of tracks
-    Object.keys(archData).forEach(arch => {
+    Object.keys(archData).forEach((arch) => {
       numberOfTracks += archData[arch].length;
     });
 
     let rows = [];
 
-    // If we're not filtering, pass through all the data...
+    // If we're not filtering, pass through all the data....
     let trackList = filtered ? {} : archData;
 
     // ...and don't do the expensive bit
     if (filtered) {
-      Object.keys(archData).forEach(track => {
+      Object.keys(archData).forEach((track) => {
         // Sort by risk
         archData[track].sort((a, b) => {
           return (
@@ -420,15 +440,15 @@ class ChannelMap {
     }
 
     // Create an array of columns
-    Object.keys(trackList).forEach(track => {
-      trackList[track].forEach(trackInfo => {
+    Object.keys(trackList).forEach((track) => {
+      trackList[track].forEach((trackInfo) => {
         const trackName = track.split("/")[0];
         rows.push([
           trackName,
           trackInfo["risk"],
           trackInfo["version"],
           trackInfo["created-at"],
-          trackInfo["confinement"]
+          trackInfo["confinement"],
         ]);
       });
     });

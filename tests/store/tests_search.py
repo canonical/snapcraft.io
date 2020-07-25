@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -14,10 +15,28 @@ class GetSearchViewTest(TestCase):
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?q={snap_name}&page={page}&size={size}&scope=wide&arch=wide",
-                "&confinement=strict,classic",
-                "&fields=package_name,title,summary,icon_url,publisher,",
-                "developer_validation,origin",
+                "?",
+                urlencode(
+                    {
+                        "q": "{snap_name}",
+                        "page": "{page}",
+                        "size": "{size}",
+                        "scope": "wide",
+                        "arch": "wide",
+                        "confinement": "strict,classic",
+                        "fields": ",".join(
+                            [
+                                "package_name",
+                                "title",
+                                "summary",
+                                "icon_url",
+                                "publisher",
+                                "developer_validation",
+                                "origin",
+                            ]
+                        ),
+                    }
+                ),
             ]
         )
 
@@ -192,17 +211,17 @@ class GetSearchViewTest(TestCase):
     @responses.activate
     def test_search_q_with_category(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "icon_url": "", "media": []},
+            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
+            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 144):
             snap_list.append({"package_name": "toto" + str(i), "icon_url": ""})
 
         payload = {
-            "_embedded": {"clickindex:package": snap_list[:47]},
+            "_embedded": {"clickindex:package": snap_list[:44]},
             "total": 144,
             "_links": {
                 "last": {"href": "http://url.c?q=snap&size=1&page=1"},
@@ -212,7 +231,7 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="47"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -229,9 +248,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context("category", "toto")
         self.assert_context("category_display", "Toto")
         self.assert_context(
-            "featured_snaps", [snap_list[1], snap_list[0]] + snap_list[2:19]
+            "featured_snaps", [snap_list[1], snap_list[0]] + snap_list[2:16]
         )
-        self.assert_context("searched_snaps", snap_list[19:47])
+        self.assert_context("searched_snaps", snap_list[16:44])
         self.assert_context("page", 1)
         self.assert_context("total", 144)
         self.assert_context(
@@ -302,10 +321,10 @@ class GetSearchViewTest(TestCase):
     @responses.activate
     def test_search_q_with_category_featured(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "icon_url": "", "media": []},
+            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
+            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 44):

@@ -212,17 +212,20 @@ def build_changed_images(
                 info.append(current_screenshot)
                 break
         for new_screenshot in new_screenshots:
-            is_same = (
-                changed_screenshot["status"] == "new"
-                and changed_screenshot["name"] == new_screenshot.filename
-            )
+            if new_screenshot:
+                is_same = (
+                    changed_screenshot["status"] == "new"
+                    and changed_screenshot["name"] == new_screenshot.filename
+                )
 
-            if is_same:
-                image_built = build_image_info(new_screenshot, "screenshot")
-                if image_built not in info:
-                    info.append(image_built)
-                    images_files.append(new_screenshot)
-                    break
+                if is_same:
+                    image_built = build_image_info(
+                        new_screenshot, "screenshot"
+                    )
+                    if image_built not in info:
+                        info.append(image_built)
+                        images_files.append(new_screenshot)
+                        break
 
     # Add new icon
     if icon is not None:

@@ -19,19 +19,19 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           <p class="snapcraft-p-market-message u-no-margin--bottom">
             {% if private %}
             This listing is not public because the snap is set to private.
-            {% else %}
+            {% elif status == "published" %}
             Updates to this information will appear immediately on the <a href="/{{ snap_name }}">snap listing page</a>.
             {% endif %}
           </p>
         </div>
         <div class="col-5">
           <div class="u-align--right u-clearfix">
-            <button class="js-listing-preview p-button--base u-no-margin--bottom p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
+            <button class="js-listing-preview p-button--base p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
               Preview
               <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
             </button>
-            <a class="p-button--neutral js-form-revert u-no-margin--bottom" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
-            <button type="submit" class="p-button--positive p-button-spinner js-form-submit u-no-margin--bottom" name="submit_apply" value="Save">
+            <a class="p-button--neutral js-form-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
+            <button type="submit" class="p-button--positive u-no-margin--bottom p-button-spinner js-form-submit" name="submit_apply" value="Save">
               {#
               to force dark icon variant we need a fake --dark class name:
               https://github.com/vanilla-framework/vanilla-framework/issues/1817
@@ -77,7 +77,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       {% endif %}
 
       <div class="u-fixed-width">
-        <h2 class="p-heading--four">
+        <h2 class="p-heading--4">
           Listing details
         </h2>
       </div>
@@ -108,7 +108,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
         </div>
         <div class="col-8">
           <div class="p-form__control">
-            <input data-tour="listing-title" class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="64"/>
+            <input data-tour="listing-title" class="p-form-validation__input" id="snap-title" type="text" name="title" value="{{ snap_title }}" required maxlength="40"/>
             {% if field_errors and field_errors['title'] %}
             <p class="p-form-validation__message">
               <strong>Error:</strong> {{ field_errors['title'] }}
@@ -127,15 +127,15 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
             <select
               name="primary_category"
               {% if snap_categories.categories[0] %}
-              value="{{ snap_categories.categories[0].name }}"
+              value="{{ snap_categories.categories[0] }}"
               {% endif %}
-              {% if snap_categories.locked %} disabled="disabled"{% endif %}
+              {% if snap_categories.locked or not categories %} disabled="disabled"{% endif %}
               >
               <option value="">Select category</option>
               {% for category in categories %}
               <option
                 value="{{ category.slug }}"
-                {% if snap_categories.categories[0] and (snap_categories.categories[0].name == category.slug) %}
+                {% if snap_categories.categories[0] and (snap_categories.categories[0] == category.slug) %}
                 selected="selected"
                 {% endif %}
                 >{{ category.name }}</option>
@@ -148,8 +148,13 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
           <div class="js-categories-category1-help-text row {% if snap_categories.categories[0] %}u-hide{% endif %}">
             <div class="col-8 col-start-large-3">
               <p class="p-form-help-text">
+                {% if not categories %}
+                <i class="p-icon--warning"></i>
+                There has been a problem obtaining the available categories, please try again later.
+                {% else %}
                 Include a category and your snap will be better ranked within the Snap Store.
                 It will also allow users to discover your snap via browsing the available categories.
+                {% endif %}
               </p>
             </div>
           </div>
@@ -171,7 +176,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               <select
                 name="secondary_category"
                 {% if snap_categories.categories[1] %}
-                value="{{ snap_categories.categories[1].name }}"
+                value="{{ snap_categories.categories[1] }}"
                 {% endif %}
                 {% if snap_categories.locked %} disabled="disabled"{% endif %}
                 >
@@ -179,10 +184,10 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
                 {% for category in categories %}
                 <option
                   value="{{ category.slug }}"
-                  {% if snap_categories.categories[1] and (snap_categories.categories[1].name == category.slug) %}
+                  {% if snap_categories.categories[1] and (snap_categories.categories[1] == category.slug) %}
                   selected="selected"
                   {% endif %}
-                  {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0].name %}
+                  {% if snap_categories.categories[0] and category.slug == snap_categories.categories[0] %}
                   disabled="disabled"
                   {% endif %}
                   >{{ category.name }}</option>
@@ -322,7 +327,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       </div>
 
       <div class="row">
-        <h2 class="p-heading--four">Contact information</h2>
+        <h2 class="p-heading--4">Contact information</h2>
       </div>
 
       <div class="row p-form__group p-form-validation {% if field_errors and field_errors['website'] %}is-error{% endif %}">
@@ -384,7 +389,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       </div>
 
       <div class="row">
-        <h2 class="p-heading--four">Additional information</h2>
+        <h2 class="p-heading--4">Additional information</h2>
       </div>
 
       <div class="row p-form__group">
@@ -402,7 +407,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
               <p class="p-form-help-text u-no-margin">The license(s) under which you will release your snap.<br />Multiple licenses can be selected to indicate alternative choices.</p>
             </div>
             <input type="radio" name="license-type" value="custom" id="license-custom-option" {% if license_type == 'custom' %}checked="checked"{% endif %} />
-            <label for="license-custom-option">Custom SPDX expression</label>
+            <label for="license-custom-option" style="margin-bottom: 1.2rem;">Custom SPDX expression</label>
             <textarea
               type="text"
               id="license-custom-input"
@@ -478,64 +483,69 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
 <div id="tour-container"></div>
 {% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
 
-    const formFields = {
-      snap_name: {{ snap_name|tojson }},
-      title: {{ snap_title|tojson }},
-      summary: {{ summary|tojson }},
-      description: {{ description|tojson }},
-      website: {{ website|tojson }},
-      contact: {{ contact|tojson }},
-      categories: {{ snap_categories.categories|tojson }},
-      images: [
-        {% if icon_url %}
-        { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
-        {% endif %}
-        {% for screenshot_url in screenshot_urls %}
-        { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
-        {% endfor %}
-        {% if banner_urls[0] %}
-        { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
-        {% endif %}
-      ],
-      'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
-      'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
-      'license': {{ license|tojson }},
-      'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
-    };
-
-    const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
-
-    snapcraft.publisher.market.initForm(
-      {
-        snapIconHolder: ".js-icon-holder",
-        bannerHolder: ".js-banner",
-        form: "market-form",
-        formNotification: "market-form-status",
-        licenseRadioContent: [
-          document.getElementById('license-simple-input'),
-          document.getElementById('license-custom-input')
+      const formFields = {
+        snap_name: {{ snap_name|tojson }},
+        title: {{ snap_title|tojson }},
+        summary: {{ summary|tojson }},
+        description: {{ description|tojson }},
+        website: {{ website|tojson }},
+        contact: {{ contact|tojson }},
+        categories: {{ snap_categories.categories|tojson }},
+        images: [
+          {% if icon_url %}
+          { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
+          {% endif %}
+          {% for screenshot_url in screenshot_urls %}
+          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+          {% endfor %}
+          {% if banner_urls[0] %}
+          { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
+          {% endif %}
         ],
-        mediaHolder: ".js-media-holder",
-      },
-      formFields,
-      formErrors
-    );
+        'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
+        'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
+        'license': {{ license|tojson }},
+        'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
+      };
 
-    snapcraft.publisher.stickyListingBar();
-    snapcraft.publisher.markdownToggle();
-    snapcraft.publisher.initCategories();
+      const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
 
-    snapcraft.publisher.tour.initListingTour({
-      snapName: {{ snap_name|tojson }},
-      container: document.getElementById("tour-container"),
-      steps: {{ tour_steps|tojson }},
-      formFields: formFields
+      snapcraft.publisher.market.initForm(
+        {
+          snapIconHolder: ".js-icon-holder",
+          bannerHolder: ".js-banner",
+          form: "market-form",
+          formNotification: "market-form-status",
+          licenseRadioContent: [
+            document.getElementById('license-simple-input'),
+            document.getElementById('license-custom-input')
+          ],
+          mediaHolder: ".js-media-holder",
+        },
+        formFields,
+        formErrors
+      );
+
+      snapcraft.publisher.stickyListingBar();
+      snapcraft.publisher.markdownToggle();
+      snapcraft.publisher.initCategories();
+
+      snapcraft.publisher.tour.initListingTour({
+        snapName: {{ snap_name|tojson }},
+        container: document.getElementById("tour-container"),
+        steps: {{ tour_steps|tojson }},
+        formFields: formFields
+      });
     });
   });
 </script>

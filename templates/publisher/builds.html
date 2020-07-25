@@ -1,0 +1,269 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+Builds for
+{% if snap_title %}{{ snap_title }}{% else %}{{ snap_name }}{% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="main-content" class="u-no-margin--top">
+  {% set selected_tab='builds' %}
+  {% include "publisher/_header.html" %}
+
+  <form class="p-form p-form--stacked" method="POST"
+    enctype='multipart/form-data'
+    action="/{{ snap_name }}/builds"
+    data-js="js-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    {% if github_repository %}
+    <div class="snapcraft-p-sticky js-sticky-bar">
+      <div class="row">
+        <p class="u-no-margin--bottom">
+          Your snap is linked to:<br class="u-hide--medium u-hide--large">
+          <a href="https://github.com/{{ github_repository }}"
+            class="p-link--external">
+            {{ github_repository }}
+          </a><span style="color: #cdcdcd;">&nbsp;&VerticalLine;&nbsp;</span>
+          <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>
+        </p>
+      </div>
+    </div>
+    {% else %}
+    <div class="snapcraft-p-sticky js-sticky-bar">
+      <div class="row">
+        <ul class="p-inline-list u-no-margin--bottom">
+          <li class="p-inline-list__item u-no-margin--right">
+            {% if not github_user %}
+            Login to your GitHub account to start building.
+            {% else %}
+            Your GitHub account is connected.
+            {% endif %}
+          </li>
+          <li class="p-inline-list__item">
+            {% if github_user %}
+            <a href="https://github.com/{{ github_user['login'] }}"
+              class="p-link--soft u-float-right">
+              <img src="{{ github_user['avatarUrl'] }}"
+                alt="@{{ github_user['login'] }}" class="p-build__avatar">
+              {{ github_user["login"] }}
+            </a>
+            {% else %}
+            <a href="/github/auth?back=1"
+              class="p-button--positive u-no-margin--bottom u-float-right">
+              <span>Log in </span><i class="p-icon--github-white"></i>
+            </a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="u-fixed-width">
+      <hr class="u-no-margin--bottom" />
+    </div>
+    {% endif %}
+
+    {% if github_repository and (not github_repository_exists or not yaml_file_exists) %}
+    <section class="p-strip is-shallow">
+      <div class="u-fixed-width">
+        <div class="p-notification--negative">
+          <p class="p-notification__response">
+            {% if not github_repository_exists %}
+            Your snap is linked to <a href="https://github.com/{{ github_repository }}" class="p-link--external">{{ github_repository }}</a>, but this repository doesn&rsquo;t exist. <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>.
+            {% elif not yaml_file_exists %}
+            This repository doesn&rsquo;t contain snapcraft.yaml. More on <a href="https://snapcraft.io/docs/creating-snapcraft-yaml">how to create it</a>.
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <section class="p-strip is-shallow">
+      <div class="u-fixed-width">
+        {% for category, message in messages %}
+        <div class="p-notification--{{ category }}">
+          <p class="p-notification__response">
+            {{ message }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+    {% endwith %}
+
+
+    {% if not github_repository %}
+    <section class="p-strip is-shallow">
+      {% if not github_user %}
+      <div class="u-fixed-width u-align--center u-hide--small">
+        <img
+          src="https://assets.ubuntu.com/v1/ed6d1c5b-build.snapcraft.hero.svg"
+          alt="" width="100%">
+      </div>
+      <div class="row">
+        <div class="col-4 u-align-text--center">
+          <img
+            src="https://assets.ubuntu.com/v1/82de77b0-build.snapcraft.hero-01.svg"
+            alt="" width="343" height="288" class="u-hide u-show--small">
+          <p>
+            Start by creating a repo and pushing your code to GitHub. Make
+            sure that your repo includes a snapcraft.yaml file.
+          </p>
+        </div>
+        <div class="col-4 u-align-text--center">
+          <img
+            src="https://assets.ubuntu.com/v1/275ddbf9-build.snapcraft.hero-02.svg"
+            alt="" width="343" height="288" class="u-hide u-show--small">
+          <p>
+            Register a name on Snapcraft and attach it to your repo to start
+            building. Your snap will be built automatically for all the
+            distros.
+          </p>
+        </div>
+        <div class="col-4 u-align-text--center">
+          <img
+            src="https://assets.ubuntu.com/v1/e708bab9-build.snapcraft.hero-03.svg"
+            alt="" width="343" height="288" class="u-hide u-show--small">
+          <p>
+            Release your snap to your users. From here on, all the updates you
+            do to your code will trigger automatic builds.
+          </p>
+        </div>
+      </div>
+      {% else %}
+      <div class="u-fixed-width">
+        <p>Your repo needs a snapcraft.yaml file, so that Snapcraft can make it
+          buildable,
+          installable, and runnable.</p>
+        <label class="p-form__label">Select a
+          repository:</label>
+      </div>
+      <noscript>
+        <div class="row">
+          <div class="col-10 p-form--inline">
+            <label>https://github.com/</label>
+            <input type="text" name="github_repository"
+              placeholder="e.g. organization_name/repo_name">
+          </div>
+          <div class="col-2">
+            <button type="submit" class="p-button--positive">Start
+              building</button>
+          </div>
+        </div>
+      </noscript>
+      <div data-js="repo-connect"></div>
+      {% endif %}
+    </section>
+    {% endif %}
+
+    {% if not github_repository and github_user %}
+    <div class="p-strip is-shallow u-no-padding--top">
+      <div class="u-fixed-width">
+        <hr />
+      </div>
+    </div>
+    <section class="p-strip is-shallow u-no-padding--top">
+      <div class="u-fixed-width">
+        <h4>If you can't find a repository &hellip;</h4>
+        <p>Want to <strong>use a private repo</strong>? We're working hard on
+          making
+          these buildable.</p>
+      </div>
+      <div class="u-fixed-width">
+        <p><strong>Don't have admin permission</strong>? Ask a repo admin to
+          add it instead, and it will show up in your repo list too.
+          {{github_repositories}}</p>
+        <p><strong>Missing an organization</strong>?
+          {% if github_orgs|length == 0%}
+            Snapcraft doesn't have access to any organizations.
+          {% else %}
+            Snapcraft has access to
+            {{ github_orgs|length }} organizations you're a member of
+            {% if github_orgs|length == 1 %}
+              <i>{{ github_orgs[0].name }}</i>)
+            {% else %}
+              {% for github_org in github_orgs %}
+                {% if loop.index < github_orgs|length-1 %}
+                  <i>{{ github_org.name }}</i>,
+                {% elif loop.index < github_orgs|length %}
+                  <i>{{ github_org.name }}</i>
+                {% else %}
+                  and <i>{{ github_org.name }}</i>.
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+        </p>
+        <a href="https://github.com/settings/applications"
+          class="p-button--neutral">Review organization access</a>
+      </div>
+    </section>
+    {% endif %}
+  </form>
+
+  {% if github_repository %}
+  <section class="p-strip is-shallow">
+    <div class="u-fixed-width u-clearfix">
+      {% include "publisher/_repo-disconnect-modal.html" %}
+    </div>
+    <div class="u-fixed-width">
+      <div id="builds-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Architecture</th>
+              <th class="u-hide--small">Duration</th>
+              <th class="has-icon">Result</th>
+              <th></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Waiting for builds...</td>
+              <td></td>
+              <td class="u-hide--small"></td>
+              <td class="has-icon"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      snapcraft.publisher.stickyListingBar();
+
+      {% if github_repository %}
+      snapcraft.publisher.initBuilds('#builds-wrapper',
+        {{ snap_name | tojson }},
+        {{ csrf_token() | tojson }},
+        {{ snap_builds | tojson }},
+        {{ total_builds | tojson }}
+      );
+      snapcraft.publisher.initRepoDisconnect();
+      {% endif %}
+
+      {% if github_user %}
+        snapcraft.publisher.initRepoConnect('[data-js="repo-connect"]', {{ github_orgs | tojson }}, {{ github_user | tojson }}, {{ snap_name | tojson }});
+      {% endif %}
+    });
+  });
+</script>
+{% endblock %}

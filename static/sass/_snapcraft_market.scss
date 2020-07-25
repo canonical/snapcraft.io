@@ -25,7 +25,7 @@
   .p-editable-icon {
     cursor: pointer;
     display: inline-block;
-    margin-bottom: .7rem;
+    margin-bottom: 1.5rem;
     margin-right: 3.2877%;
     position: relative;
 
@@ -36,10 +36,10 @@
       background-size: 1rem;
       border: 1px solid $color-mid-light;
       border-radius: $border-radius;
-      height: 60px;
+      height: 3.75rem;
       overflow: hidden;
       position: relative;
-      width: 60px;
+      width: 3.75rem;
 
       img {
         background: $color-x-light;
@@ -65,6 +65,11 @@
       &:hover img:not([src=""]) + .p-editable-icon__change {
         opacity: 1;
       }
+
+      &:focus {
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
+      }
     }
 
     &:hover {
@@ -87,7 +92,7 @@
     display: flex;
     height: 2rem;
     justify-content: center;
-    margin-bottom: .5rem;
+    margin-bottom: 1.3rem;
     width: 2rem;
   }
 
@@ -123,7 +128,12 @@
     }
 
     [class*="p-button"]:not([class*="p-button__"]) {
+      margin-bottom: 0;
       margin-right: $sph-inner;
+
+      @media screen and (max-width: $breakpoint-x-small) {
+        margin-bottom: 1rem;
+      }
 
       &:last-child {
         margin-right: 0;
@@ -177,7 +187,8 @@
     .p-market-banner__image-holder:hover,
     .p-market-banner__image-holder.is-focused {
       .p-market-banner__image {
-        border: 1px solid $color-link;
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
       }
 
       .p-market-banner__remove {
@@ -185,9 +196,10 @@
       }
 
       .p-market-banner__change {
-        border: 1px solid $color-link;
         border-radius: $border-radius;
         opacity: 1;
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
       }
     }
 

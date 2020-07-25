@@ -1,0 +1,7 @@
+@mixin snapcraft-p-table-mobile-card {
+  .p-table--mobile-card {
+    .p-table--mobile-card__header {
+      padding-left: 0;
+    }
+  }
+}

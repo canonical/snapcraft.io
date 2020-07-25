@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-export const DND_ITEM_REVISION = "DND_ITEM_REVISION";
-export const DND_ITEM_CHANNEL = "DND_ITEM_CHANNEL";
+export const DND_ITEM_REVISIONS = "DND_ITEM_REVISIONS";
 
 export const Handle = () => (
   <span className="p-drag-handle">
@@ -12,7 +11,14 @@ export const Handle = () => (
 
 // it's a wrapper around react-dnd useDrag hook
 // with some added functionality and workaround for a bug
-export const useDragging = options => {
+export const useDragging = ({ item, canDrag }) => {
+  // default canDrag to true, make sure it's boolean
+  if (typeof canDrag === "undefined") {
+    canDrag = true;
+  } else {
+    canDrag = !!canDrag;
+  }
+
   const [isGrabbing, setIsGrabbing] = useState(false);
 
   // Calling useDrag end callback after history is closed (because promoting revisions closes history panel)
@@ -32,10 +38,10 @@ export const useDragging = options => {
   });
 
   const [{ isDragging }, drag, preview] = useDrag({
-    item: options.item,
-    canDrag: () => options.canDrag || true,
-    collect: monitor => ({
-      isDragging: !!monitor.isDragging()
+    item: item,
+    canDrag: () => canDrag,
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
     }),
 
     begin: () => {
@@ -45,7 +51,7 @@ export const useDragging = options => {
       if (isRendered) {
         setIsGrabbing(false);
       }
-    }
+    },
   });
 
   return [isDragging, isGrabbing, drag, preview];

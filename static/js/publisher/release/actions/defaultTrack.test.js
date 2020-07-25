@@ -1,5 +1,3 @@
-/* global global, jest */
-
 import configureStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
@@ -9,15 +7,15 @@ const mockStore = configureStore(middlewares);
 import {
   SET_DEFAULT_TRACK_SUCCESS,
   clearDefaultTrack,
-  setDefaultTrack
+  setDefaultTrack,
 } from "./defaultTrack";
 
 describe("defaultTrack actions", () => {
   beforeEach(() => {
     global.fetch = jest.fn().mockResolvedValue({
       json: () => ({
-        success: true
-      })
+        success: true,
+      }),
     });
   });
 
@@ -31,17 +29,17 @@ describe("defaultTrack actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-            csrfToken: "test"
+            csrfToken: "test",
           },
           currentTrack: "test",
-          defaultTrack: "nope"
+          defaultTrack: "nope",
         });
 
         return store.dispatch(setDefaultTrack()).then(() => {
           const actions = store.getActions();
           expect(actions[0]).toEqual({
             type: SET_DEFAULT_TRACK_SUCCESS,
-            payload: "test"
+            payload: "test",
           });
         });
       });
@@ -52,15 +50,15 @@ describe("defaultTrack actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-            csrfToken: "test"
-          }
+            csrfToken: "test",
+          },
         });
 
         return store.dispatch(clearDefaultTrack()).then(() => {
           const actions = store.getActions();
           expect(actions[0]).toEqual({
             type: SET_DEFAULT_TRACK_SUCCESS,
-            payload: null
+            payload: null,
           });
         });
       });

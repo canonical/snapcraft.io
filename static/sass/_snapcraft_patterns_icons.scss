@@ -17,7 +17,7 @@
   .p-icon--top {
     @extend %icon;
     background-image: url('#{$assets-path}9ec2c354-icon-arrow-up.svg');
-    background-size: 12px 12px;
+    background-size: .75rem .75rem;
     margin-left: $sp-x-small;
   }
 }

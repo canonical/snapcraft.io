@@ -5,7 +5,7 @@ describe("updateState", () => {
 
   beforeEach(() => {
     state = {
-      title: "Default test title"
+      title: "Default test title",
     };
   });
 
@@ -41,7 +41,7 @@ describe("updateState", () => {
   describe("when passing object with values", () => {
     test("should add value from allowed keys", () => {
       updateState(state, {
-        summary: "Test summary"
+        summary: "Test summary",
       });
 
       expect(state.summary).toBe("Test summary");
@@ -49,7 +49,7 @@ describe("updateState", () => {
 
     test("should update value from allowed keys", () => {
       updateState(state, {
-        title: "Test title"
+        title: "Test title",
       });
 
       expect(state.title).toBe("Test title");
@@ -57,7 +57,7 @@ describe("updateState", () => {
 
     test("should not add value not from allowed keys", () => {
       updateState(state, {
-        something: "Test something"
+        something: "Test something",
       });
 
       expect(state.something).toBeUndefined();
@@ -70,10 +70,10 @@ describe("diffState", () => {
     expect(
       diffState(
         {
-          title: "Test title"
+          title: "Test title",
         },
         {
-          title: "Test title"
+          title: "Test title",
         }
       )
     ).toBeNull();
@@ -84,16 +84,16 @@ describe("diffState", () => {
       diffState(
         {
           title: "Test title",
-          summary: "Test summary"
+          summary: "Test summary",
         },
         {
           title: "Test title",
           summary: "Test summary changed",
-          something: "Test something"
+          something: "Test something",
         }
       )
     ).toEqual({
-      summary: "Test summary changed"
+      summary: "Test summary changed",
     });
   });
 
@@ -105,14 +105,14 @@ describe("diffState", () => {
           {
             images: [
               { url: "test1.png", status: "uploaded" },
-              { url: "test2.png", status: "uploaded" }
-            ]
+              { url: "test2.png", status: "uploaded" },
+            ],
           },
           {
             images: [
               { url: "test1.png", status: "uploaded", selected: false },
-              { url: "test2.png", status: "uploaded", selected: true }
-            ]
+              { url: "test2.png", status: "uploaded", selected: true },
+            ],
           }
         )
       ).toBeNull();
@@ -136,7 +136,7 @@ describe("commaSeperatedStringToArray", () => {
   test("should return an array if multiple values are not blank", () => {
     expect(commaSeperatedStringToArray("test, test2")).toEqual([
       "test",
-      "test2"
+      "test2",
     ]);
   });
 
@@ -148,14 +148,14 @@ describe("commaSeperatedStringToArray", () => {
   test("should return multiple elements with comma and space", () => {
     expect(commaSeperatedStringToArray("test, test2")).toEqual([
       "test",
-      "test2"
+      "test2",
     ]);
   });
 
   test("should return multuple elements with comma and no space", () => {
     expect(commaSeperatedStringToArray("test,test2")).toEqual([
       "test",
-      "test2"
+      "test2",
     ]);
   });
 });

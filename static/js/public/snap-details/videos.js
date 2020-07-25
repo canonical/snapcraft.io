@@ -8,7 +8,7 @@ function vimeo() {
 
   const vimeoReady = () => {
     const player = new window.Vimeo.Player(frame);
-    player.on("play", function() {
+    player.on("play", function () {
       player.setVolume(0);
     });
     player.play();
@@ -44,7 +44,7 @@ function videos(holderSelector) {
   const videoType = holderEl.dataset.videoType;
 
   const iframe = holderEl.querySelector("iframe");
-  if (iframe && iframe.src.indexOf("http://") !== -1) {
+  if (iframe && iframe.src && iframe.src.indexOf("http://") !== -1) {
     iframe.src = iframe.src.replace("http://", "https://");
   }
 

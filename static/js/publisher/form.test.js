@@ -40,7 +40,7 @@ describe("initForm", () => {
     titleInput.name = "title";
     titleInput.value = initialState.title;
     titleInput.required = "true";
-    titleInput.maxlength = "64";
+    titleInput.maxlength = "40";
 
     categoriesInput = document.createElement("input");
     categoriesInput.type = "text";
@@ -130,7 +130,7 @@ describe("initForm", () => {
   }
 
   const config = {
-    form: "market-form"
+    form: "market-form",
   };
 
   const initialState = {
@@ -141,7 +141,7 @@ describe("initForm", () => {
     description: "Description",
     website: "https://example.com",
     contact: "mailto:test@example.com",
-    images: []
+    images: [],
   };
 
   beforeEach(() => {
@@ -162,7 +162,7 @@ describe("initForm", () => {
   });
 
   test("should disable the revert button", () => {
-    expect(revertButton.classList.contains("is--disabled")).toEqual(true);
+    expect(revertButton.classList.contains("is-disabled")).toEqual(true);
     expect(revertButton.href).toEqual("javascript:void(0);");
   });
 
@@ -178,7 +178,7 @@ describe("initForm", () => {
     });
 
     test("should enable revert button", () => {
-      expect(revertButton.classList.contains("is--disabled")).toEqual(false);
+      expect(revertButton.classList.contains("is-disabled")).toEqual(false);
       expect(revertButton.getAttribute("href")).toEqual("/test");
     });
   });
@@ -196,7 +196,7 @@ describe("initForm", () => {
         expect(stateInput.value).toEqual(
           JSON.stringify(
             Object.assign(initialState, {
-              title: "test"
+              title: "test",
             })
           )
         );
@@ -205,7 +205,7 @@ describe("initForm", () => {
         expect(diffInput.value).toEqual(
           JSON.stringify({
             title: "test3",
-            categories: ""
+            categories: "",
           })
         );
       });
@@ -227,7 +227,7 @@ describe("initForm", () => {
     test("should update the state", () => {
       previewButton.dispatchEvent(
         new Event("click", {
-          bubbles: true
+          bubbles: true,
         })
       );
 

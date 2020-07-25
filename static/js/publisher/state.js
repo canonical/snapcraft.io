@@ -15,19 +15,13 @@ const allowedKeys = [
   "blacklist_countries",
   "video_urls",
   "license",
-  "categories"
+  "categories",
 ];
 
 function commaSeperatedStringToArray(str) {
-  if (
-    str !== "" &&
-    str
-      .split(",")
-      .join("")
-      .trim() !== ""
-  ) {
+  if (str !== "" && str.split(",").join("").trim() !== "") {
     const split = str.split(",");
-    return split.map(item => item.trim()).filter(item => item !== "");
+    return split.map((item) => item.trim()).filter((item) => item !== "");
   } else {
     return [];
   }
@@ -36,8 +30,8 @@ function commaSeperatedStringToArray(str) {
 const transform = {
   whitelist_countries: commaSeperatedStringToArray,
   blacklist_countries: commaSeperatedStringToArray,
-  private: value => value === "private",
-  public_metrics_enabled: value => value === "on"
+  private: (value) => value === "private",
+  public_metrics_enabled: (value) => value === "on",
 };
 
 function updateState(state, values) {
@@ -77,7 +71,7 @@ function diffState(initialState, state) {
     if (key === "images" && state[key]) {
       const images = state[key]
         // ignore selected status when comparing
-        .map(image => {
+        .map((image) => {
           delete image.selected;
           return image;
         });

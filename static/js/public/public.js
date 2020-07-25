@@ -12,7 +12,8 @@ import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
 import { newsletter } from "./newsletter";
-import initExpandableSnapDetails from "./expandable-details";
+import { formValidation } from "./formValidation";
+import initExpandableArea from "./expandable-area";
 import triggerEventWhenVisible from "./ga-scroll-event";
 import { initLinkScroll } from "./scroll-to";
 
@@ -27,7 +28,7 @@ export {
   initAccordion,
   initAccordionButtons,
   initEmbeddedCardModal,
-  initExpandableSnapDetails,
+  initExpandableArea,
   initFSFLanguageSelect,
   initReportSnap,
   firstSnapFlow,
@@ -35,5 +36,6 @@ export {
   initLinkScroll,
   videos,
   nps,
-  newsletter
+  newsletter,
+  formValidation,
 };

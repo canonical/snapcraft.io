@@ -8,15 +8,16 @@ class AccordionHelp extends React.Component {
     this.toggleHelp = this.toggleHelp.bind(this);
 
     this.state = {
-      open: false
+      open: false,
     };
   }
 
-  toggleHelp() {
+  toggleHelp(e) {
     const { open } = this.state;
 
+    e.preventDefault();
     this.setState({
-      open: !open
+      open: !open,
     });
   }
 
@@ -32,7 +33,7 @@ class AccordionHelp extends React.Component {
     return (
       <Fragment>
         <p className="p-form-help-text">
-          <a role="button" onClick={this.toggleHelp}>
+          <a href="#" role="button" tabIndex="0" onClick={this.toggleHelp}>
             {label}
           </a>
         </p>
@@ -43,12 +44,12 @@ class AccordionHelp extends React.Component {
 }
 
 AccordionHelp.defaultProps = {
-  name: "help"
+  name: "help",
 };
 
 AccordionHelp.propTypes = {
   name: PropTypes.string,
-  children: PropTypes.element
+  children: PropTypes.element,
 };
 
 export { AccordionHelp as default };

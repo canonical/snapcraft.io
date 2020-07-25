@@ -7,14 +7,15 @@ import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from pybadges import badge
 from webapp import authentication
-from webapp.api.exceptions import (
-    ApiCircuitBreaker,
-    ApiError,
-    ApiResponseDecodeError,
-    ApiResponseError,
-    ApiResponseErrorList,
-    ApiTimeoutError,
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiCircuitBreaker,
+    StoreApiError,
+    StoreApiResponseDecodeError,
+    StoreApiResponseError,
+    StoreApiResponseErrorList,
+    StoreApiTimeoutError,
 )
+from webapp.api.exceptions import ApiError
 from webapp.markdown import parse_markdown_description
 
 
@@ -25,12 +26,12 @@ def snap_details_views(store, api, handle_errors):
 
     def _get_context_snap_details(snap_name):
         try:
-            details = api.get_snap_details(snap_name)
-        except ApiTimeoutError as api_timeout_error:
+            details = api.get_item_details(snap_name, api_version=2)
+        except StoreApiTimeoutError as api_timeout_error:
             flask.abort(504, str(api_timeout_error))
-        except ApiResponseDecodeError as api_response_decode_error:
+        except StoreApiResponseDecodeError as api_response_decode_error:
             flask.abort(502, str(api_response_decode_error))
-        except ApiResponseErrorList as api_response_error_list:
+        except StoreApiResponseErrorList as api_response_error_list:
             if api_response_error_list.status_code == 404:
                 flask.abort(404, "No snap named {}".format(snap_name))
             else:
@@ -41,11 +42,11 @@ def snap_details_views(store, api, handle_errors):
                 else:
                     error_messages = "An error occurred."
                 flask.abort(502, error_messages)
-        except ApiResponseError as api_response_error:
+        except StoreApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
-        except ApiCircuitBreaker:
+        except StoreApiCircuitBreaker:
             flask.abort(503)
-        except ApiError as api_error:
+        except (StoreApiError, ApiError) as api_error:
             flask.abort(502, str(api_error))
 
         # When removing all the channel maps of an existing snap the API,
@@ -77,7 +78,7 @@ def snap_details_views(store, api, handle_errors):
 
         icons = logic.get_icon(details["snap"]["media"])
 
-        publisher_info_and_snaps = helpers.get_yaml(
+        publisher_info = helpers.get_yaml(
             "{}{}.yaml".format(
                 flask.current_app.config["CONTENT_DIRECTORY"][
                     "PUBLISHER_PAGES"
@@ -87,28 +88,31 @@ def snap_details_views(store, api, handle_errors):
             typ="safe",
         )
 
-        publisher_featured_snaps = None
-        publisher_snaps = None
+        publisher_snaps = helpers.get_yaml(
+            "{}{}-snaps.yaml".format(
+                flask.current_app.config["CONTENT_DIRECTORY"][
+                    "PUBLISHER_PAGES"
+                ],
+                details["snap"]["publisher"]["username"],
+            ),
+            typ="safe",
+        )
 
-        if publisher_info_and_snaps:
-            publisher_featured_snaps = publisher_info_and_snaps.get(
-                "featured_snaps"
-            )
+        publisher_featured_snaps = None
+
+        if publisher_info:
+            publisher_featured_snaps = publisher_info.get("featured_snaps")
             publisher_snaps = logic.get_n_random_snaps(
-                publisher_info_and_snaps["snaps"], 4
+                publisher_snaps["snaps"], 4
             )
 
         videos = logic.get_videos(details["snap"]["media"])
 
-        # until default tracks are supported by the API we special case node
-        # to use 10, rather then latest
-        default_track = helpers.get_default_track(details["name"])
-        if not default_track:
-            default_track = (
-                details.get("default-track")
-                if details.get("default-track")
-                else "latest"
-            )
+        default_track = (
+            details.get("default-track")
+            if details.get("default-track")
+            else "latest"
+        )
 
         lowest_risk_available = logic.get_lowest_available_risk(
             channel_maps_list, default_track
@@ -136,6 +140,8 @@ def snap_details_views(store, api, handle_errors):
         # build list of categories of a snap
         categories = logic.get_snap_categories(details["snap"]["categories"])
 
+        developer = logic.get_snap_developer(details["name"])
+
         context = {
             "snap-id": details.get("snap-id"),
             # Data direct from details API
@@ -151,7 +157,7 @@ def snap_details_views(store, api, handle_errors):
             "videos": videos,
             "publisher_snaps": publisher_snaps,
             "publisher_featured_snaps": publisher_featured_snaps,
-            "has_publisher_page": publisher_info_and_snaps is not None,
+            "has_publisher_page": publisher_info is not None,
             "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),
@@ -163,11 +169,22 @@ def snap_details_views(store, api, handle_errors):
             "default_track": default_track,
             "lowest_risk_available": lowest_risk_available,
             "confinement": confinement,
+            "trending": details["snap"]["trending"],
             # Transformed API data
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
             "is_users_snap": is_users_snap,
+            "unlisted": details["snap"]["unlisted"],
+            "developer": developer,
+            # TODO: This is horrible and hacky
+            "appliances": {
+                "adguard-home": "adguard",
+                "mosquitto": "mosquitto",
+                "nextcloud": "nextcloud",
+                "plexmediaserver": "plex",
+                "openhab": "openhab",
+            },
         }
 
         return context
@@ -238,10 +255,8 @@ def snap_details_views(store, api, handle_errors):
             ]
 
             try:
-                metrics_response = api.get_public_metrics(
-                    snap_name, metrics_query_json
-                )
-            except ApiError as api_error:
+                metrics_response = api.get_public_metrics(metrics_query_json)
+            except (StoreApiError, ApiError) as api_error:
                 status_code, error_info = handle_errors(api_error)
                 metrics_response = None
 
@@ -336,21 +351,14 @@ def snap_details_views(store, api, handle_errors):
             flask.url_for(".snap_details", snap_name=snap_name.lower())
         )
 
-    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge.svg')
-    def snap_details_badge(snap_name):
-        context = _get_context_snap_details(snap_name)
-
-        snap_link = flask.request.url_root + context["package_name"]
-
-        # channel with safest risk available in default track
-        snap_channel = "".join(
-            [context["default_track"], "/", context["lowest_risk_available"]]
-        )
+    def get_badge_svg(snap_name, left_text, right_text, color="#0e8420"):
+        show_name = flask.request.args.get("name", default=1, type=int)
+        snap_link = flask.request.url_root + snap_name
 
         svg = badge(
-            left_text=context["snap_title"],
-            right_text=snap_channel + " " + context["version"],
-            right_color="#0e8420",  # Vanilla $color-positive
+            left_text=left_text if show_name else "",
+            right_text=right_text,
+            right_color=color,
             left_link=snap_link,
             right_link=snap_link,
             logo=(
@@ -362,6 +370,56 @@ def snap_details_views(store, api, handle_errors):
                 "5l11.12 4.95-2.47-4.95z'/%3E%3C/svg%3E"
             ),
         )
+        return svg
+
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/badge.svg')
+    def snap_details_badge(snap_name):
+        context = _get_context_snap_details(snap_name)
+
+        # channel with safest risk available in default track
+        snap_channel = "".join(
+            [context["default_track"], "/", context["lowest_risk_available"]]
+        )
+
+        svg = get_badge_svg(
+            snap_name=snap_name,
+            left_text=context["snap_title"],
+            right_text=snap_channel + " " + context["version"],
+        )
+
+        return svg, 200, {"Content-Type": "image/svg+xml"}
+
+    @store.route('/<regex("' + snap_regex + '"):snap_name>/trending.svg')
+    def snap_details_badge_trending(snap_name):
+        is_preview = flask.request.args.get("preview", default=0, type=int)
+        context = _get_context_snap_details(snap_name)
+
+        # default to empty SVG
+        svg = (
+            '<svg height="20" width="1" xmlns="http://www.w3.org/2000/svg" '
+            'xmlns:xlink="http://www.w3.org/1999/xlink"></svg>'
+        )
+
+        # publishers can see preview of trending badge of their own snaps
+        # on Publicise page
+        show_as_preview = False
+        if is_preview and authentication.is_authenticated(flask.session):
+            if (
+                flask.session.get("openid").get("nickname")
+                == context["username"]
+            ) or (
+                "user_shared_snaps" in flask.session
+                and snap_name in flask.session.get("user_shared_snaps")
+            ):
+                show_as_preview = True
+
+        if context["trending"] or show_as_preview:
+            svg = get_badge_svg(
+                snap_name=snap_name,
+                left_text=context["snap_title"],
+                right_text="Trending this week",
+                color="#FA7041",
+            )
 
         return svg, 200, {"Content-Type": "image/svg+xml"}
 
@@ -374,6 +432,14 @@ def snap_details_views(store, api, handle_errors):
             flask.abort(404)
 
         context = _get_context_snap_details(snap_name)
+
+        if distro == "raspbian":
+            if (
+                "armhf" not in context["channel_map"]
+                and "arm64" not in context["channel_map"]
+            ):
+                return flask.render_template("404.html"), 404
+
         context.update(
             {
                 "distro": distro,
@@ -387,10 +453,8 @@ def snap_details_views(store, api, handle_errors):
         )
 
         try:
-            featured_snaps_results = api.get_searched_snaps(
-                snap_searched="", category="featured", size=13, page=1
-            )
-        except ApiError:
+            featured_snaps_results = api.get_featured_items(size=13, page=1)
+        except StoreApiError:
             featured_snaps_results = []
 
         featured_snaps = [

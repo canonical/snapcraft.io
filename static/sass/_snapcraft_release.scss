@@ -6,16 +6,46 @@
   // RELEASES CONFIRM
 
   .p-releases-confirm {
-    background: $color-light;
-    margin-bottom: 1em;
-    padding: 1em;
+    border-bottom: 1px solid $color-mid-light;
+    margin-bottom: 1rem;
+    padding: .5em 0;
     position: relative;
   }
 
   .p-releases-confirm__buttons {
-    position: absolute;
-    right: 1em;
-    top: 10px;
+    justify-self: end;
+    margin-left: auto;
+  }
+
+  .p-releases-confirm__details-toggle {
+    cursor: pointer;
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    margin-right: 1rem;
+
+    .p-icon--contextual-menu {
+      transform: rotate(0deg);
+    }
+
+    &.is-open {
+      .p-icon--contextual-menu {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .p-releases-confirm__actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .p-releases-confirm__details {
+    border-bottom: 1px solid $color-mid-light;
+    margin: .5rem 0 1rem;
+    padding-bottom: .5rem;
+    position: relative;
+    top: -1rem;
   }
 
   // RELEASES TABLE
@@ -37,9 +67,9 @@
 
   .p-releases-table__row--branch {
     height: 4rem;
-    margin-left: 2rem;
 
     .p-releases-channel {
+      margin-left: 2rem;
       width: calc(280px - 2rem);
     }
   }
@@ -47,7 +77,7 @@
   .p-releases-table__row--show-all {
     height: 3rem;
     line-height: 2rem;
-    margin-left: 4rem;
+    margin-left: 2rem;
   }
 
   .p-releases-table__row--heading {
@@ -91,8 +121,8 @@
   }
 
   .p-releases-table__branch-timeleft {
-    bottom: $spv-inner--small;
-    right: $sph-inner--small;
+    bottom: .8rem;
+    right: .8rem;
   }
 
   // This is to have different width items depending on
@@ -238,8 +268,8 @@
 
   .p-release-buttons {
     position: absolute;
-    right: 6px;
-    top: 10px;
+    right: .375rem;
+    top: .625rem;
   }
 
   .p-release-data {
@@ -287,7 +317,7 @@
 
   .is-pending {
     .p-release-data__icon {
-      margin-right: 20px;
+      margin-right: 1.25rem;
     }
   }
 
@@ -312,9 +342,54 @@
     font-size: .8rem;
   }
 
+  .p-release__progressive-percentage,
+  .p-release__progressive-pending-percentage {
+    @include vf-animation (#{transform}, fast, in);
+    border-radius: 0 4px 4px 0;
+    bottom: 0;
+    height: 3px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .is-highlighted {
+    .p-release__progressive-percentage,
+    .p-release__progressive-pending-percentage {
+      height: 5px;
+    }
+  }
+
+  .p-release__progressive-percentage {
+    background: $color-link;
+  }
+
+  .p-release__progressive-pending-percentage {
+    background: scale-color($color-link, $lightness: -20%);
+  }
+
+  .p-release__progressive-pending-percentage + .p-release__progressive-percentage {
+    border-radius: 0;
+    border-right: 1px solid $color-x-light;
+  }
+
+  .p-releases-table__cell.is-active {
+    .p-release__progressive-percentage,
+    .p-release__progressive-pending-percentage {
+      transform: scaleX(0);
+    }
+  }
+
   // REVISIONS LIST
 
   .p-revisions-list {
+
+    td,
+    th {
+      overflow: visible;
+    }
+
     .col-checkbox-spacer {
       padding-left: 2rem;
     }
@@ -346,6 +421,22 @@
 
         &:hover {
           background-color: $color-x-light;
+        }
+      }
+
+      .p-revisions-list__revision-progressive {
+        cursor: default;
+        display: flex;
+        flex-direction: row;
+
+        .p-progressive__pause,
+        .p-progressive__cancel {
+          cursor: pointer;
+        }
+
+        .progressive-bar__interactive-wrapper {
+          flex-grow: 1;
+          margin: 0 1rem;
         }
       }
     }
@@ -426,24 +517,25 @@
 
   .p-text-icon {
     display: inline-block;
-    width: 14px;
+    width: .875rem;
   }
 
   .p-action-button {
     background: none;
     border: 0;
     display: block;
-    line-height: 14px;
+    line-height: .875rem;
     padding: 2px 4px;
 
     .p-icon--close {
-      height: 14px;
-      width: 14px;
+      height: .875rem;
+      width: .875rem;
     }
   }
 
   .p-contextual-menu__dropdown {
     overflow: visible; // allow tooltips inside menu
+    z-index: 2; // workaround for https://github.com/canonical-web-and-design/vanilla-framework/issues/2577
 
     .p-tooltip {
       display: block;
@@ -495,17 +587,9 @@
     margin-top: $sp-x-small;
   }
 
-  .p-select-button {
-    @extend %vf-input-elements;
-    // based on vanilla select styles from  _base_forms.scss
-    background: $color-x-light url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxuczpza2V0Y2g9Imh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaC9ucyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBoZWlnaHQ9IjRweCIgd2lkdGg9IjEwcHgiIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZpZXdCb3g9IjAgMCAxMCA0Ij4gPHRpdGxlPmFjY29yZGlvbi1vcGVuPC90aXRsZT4gPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+IDxnIGlkPSJmaWx0ZXItcGFuZWwiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc2tldGNoOnR5cGU9Ik1TUGFnZSIgZmlsbD0ibm9uZSI+ICA8ZyBpZD0iYWNjb3JkaW9uLW9wZW4iIGZpbGw9IiM4ODgiIHNrZXRjaDp0eXBlPSJNU0FydGJvYXJkR3JvdXAiPiAgIDxwYXRoIGlkPSJjaGV2cm9uIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIiBkPSJtNi4zNjEgMC44NjIzYzAuNTE4IDAuMzY1IDEuMDUyIDAuNzc4MSAxLjYwMSAxLjIzOCAwLjU0OSAwLjQ1ODUgMS4wODkgMC45NTE4IDEuNjIxIDEuNDc3MiAwLjE0MiAwLjE0MDQgMC4yODEgMC4yODIxIDAuNDE1IDAuNDIyNWgtMS41NDFjLTAuMzA0LTAuMjg4OC0wLjYyLTAuNTcwOS0wLjk0Ny0wLjg0NjMtMC4xMzc5LTAuMTE2MS0wLjI3NjgtMC4yMjk3LTAuNDE2OC0wLjM0MDgtMC4xNjM2LTAuMTI5Ny0wLjMyODYtMC4yNTU4LTAuNDk1NC0wLjM3ODMtMC4wODUyLTAuMDYyNS0wLjE3MDgtMC4xMjQxLTAuMjU2OC0wLjE4NDYtMC4zOTctMC4yODIxLTAuOTM1LTAuNjI1Ny0xLjMxNS0wLjg0NzZoLTAuMDU0Yy0wLjM4IDAuMjIxOS0wLjkxOCAwLjU2NTUtMS4zMTUgMC44NDc2LTAuMzk4IDAuMjgwNy0wLjc4OCAwLjU4MjktMS4xNjkgMC45MDM3LTAuMzI3IDAuMjc1NC0wLjY0MyAwLjU1NzUtMC45NDcgMC44NDYzaC0xLjU0MWMwLjEzNS0wLjE0MDQgMC4yNzMtMC4yODIxIDAuNDE1LTAuNDIyNSAwLjUzMi0wLjUyNTQgMS4wNzItMS4wMTg3IDEuNjIxLTEuNDc3MiAwLjU1LTAuNDU5OSAxLjA4My0wLjg3MyAxLjYwMS0xLjIzOCAwLjUxOS0wLjM2NDk3IDAuOTczLTAuNjUyNDEgMS4zNjItMC44NjIzIDAuMzkgMC4yMDk4OSAwLjg0NCAwLjQ5NzMzIDEuMzYyIDAuODYyM3oiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQuOTk5IDIpIHJvdGF0ZSgxODApIHRyYW5zbGF0ZSgtNC45OTkgLTIpIi8+ICA8L2c+IDwvZz48L3N2Zz4=') no-repeat;
-    background-position: right $sph-inner--small center;
-    background-size: map-get($icon-sizes, accordion);
-    color: $color-dark;
-    min-height: 24px;
-    min-width: 100px; // smaller then normal
-    padding-right: $sph-inner--large;
-    text-align: left;
+  .p-icon--lp {
+    @extend %icon;
+    background-image: url("#{$assets-path}ddb379a6-launchpad-logo.svg");
   }
 
   .p-icon--settings {
@@ -527,5 +611,15 @@
     @extend %icon;
     @include snapcraft-icon-branch($color-dark, "8px", "11px");
     top: 2px;
+  }
+
+  .p-icon--pause {
+    @extend %icon;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Crect width='4' height='16' fill='%23666'/%3E %3Crect x='8' width='4' height='16' fill='%23666'/%3E %3C/svg%3E ");
+  }
+
+  .p-icon--resume {
+    @extend %icon;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg%3E %3Cpath d='M14 8L2 14.9282L2 1.0718L14 8Z' fill='%23666'/%3E %3C/g%3E%3C/svg%3E");
   }
 }

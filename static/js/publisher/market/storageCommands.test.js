@@ -13,7 +13,7 @@ describe("storage commands", () => {
     storageCommands(
       {
         key: "test-command",
-        newValue: "edit"
+        newValue: "edit",
       },
       document.createElement("form"),
       "test",
@@ -27,7 +27,7 @@ describe("storage commands", () => {
         storageCommands(
           {
             key: "test2-command",
-            newValue: "edit"
+            newValue: "edit",
           },
           document.createElement("form"),
           "test",
@@ -43,7 +43,7 @@ describe("storage commands", () => {
         storageCommands(
           {
             key: "test-command",
-            newValue: "green"
+            newValue: "green",
           },
           document.createElement("form"),
           "test",
@@ -60,7 +60,7 @@ describe("storage commands", () => {
       storageCommands(
         {
           key: "test-command",
-          newValue: "edit"
+          newValue: "edit",
         },
         document.createElement("form"),
         "test",
@@ -83,7 +83,7 @@ describe("storage commands", () => {
       storageCommands(
         {
           key: "test-command",
-          newValue: "revert"
+          newValue: "revert",
         },
         document.createElement("form"),
         "test",
@@ -118,7 +118,7 @@ describe("storage commands", () => {
       storageCommands(
         {
           key: "test-command",
-          newValue: "save"
+          newValue: "save",
         },
         form,
         "test",

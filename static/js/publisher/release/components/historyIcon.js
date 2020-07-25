@@ -10,5 +10,5 @@ export default function HistoryIcon({ onClick }) {
 }
 
 HistoryIcon.propTypes = {
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 };

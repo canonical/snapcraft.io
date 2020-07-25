@@ -1,10 +1,11 @@
 import os
-from urllib.parse import quote
 
 import flask
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 from webapp import authentication
-from webapp.api import dashboard
+from webapp.helpers import api_session
 from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
@@ -16,11 +17,15 @@ login = flask.Blueprint(
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
-BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
+LP_CANONICAL_TEAM = "canonical"
 
 open_id = OpenID(
-    stateless=True, safe_roots=[], extension_responses=[MacaroonResponse]
+    stateless=True,
+    safe_roots=[],
+    extension_responses=[MacaroonResponse, TeamsResponse],
 )
+
+publisher_api = SnapPublisher(api_session)
 
 
 @login.route("/login", methods=["GET", "POST"])
@@ -47,29 +52,32 @@ def login_handler():
     )
     flask.session["macaroon_root"] = root
 
+    lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
+
     return open_id.try_login(
         LOGIN_URL,
         ask_for=["email", "nickname", "image"],
         ask_for_optional=["fullname"],
-        extensions=[openid_macaroon],
+        extensions=[openid_macaroon, lp_teams],
     )
 
 
 @open_id.after_login
 def after_login(resp):
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
-
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
     try:
-        account = dashboard.get_account(flask.session)
+        account = publisher_api.get_account(flask.session)
         flask.session["openid"] = {
             "identity_url": resp.identity_url,
             "nickname": account["username"],
             "fullname": account["displayname"],
             "image": resp.image,
             "email": account["email"],
+            "is_canonical": LP_CANONICAL_TEAM
+            in resp.extensions["lp"].is_member,
         }
         owned, shared = logic.get_snap_names_by_ownership(account)
         flask.session["user_shared_snaps"] = shared
@@ -90,15 +98,6 @@ def after_login(resp):
 
 @login.route("/logout")
 def logout():
-    no_redirect = flask.request.args.get("no_redirect", default="false")
+    authentication.empty_session(flask.session)
 
-    if authentication.is_authenticated(flask.session):
-        authentication.empty_session(flask.session)
-
-    if no_redirect == "true":
-        return flask.redirect("/")
-    else:
-        redirect_url = quote(flask.request.url_root, safe="")
-        return flask.redirect(
-            f"{LOGIN_URL}/+logout?return_to={redirect_url}&return_now=True"
-        )
+    return flask.redirect("/")

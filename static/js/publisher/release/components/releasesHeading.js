@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { setCurrentTrack } from "../actions/currentTrack";
 import { getTracks } from "../selectors";
 
-//import DefaultTrackModifier from "./defaultTrackModifier";
+import DefaultTrackModifier from "./defaultTrackModifier";
 
 class ReleasesHeading extends Component {
   onTrackChange(event) {
@@ -21,7 +21,7 @@ class ReleasesHeading extends Component {
           onChange={this.onTrackChange.bind(this)}
           value={currentTrack}
         >
-          {tracks.map(track => (
+          {tracks.map((track) => (
             <option key={`${track}`} value={track}>
               {track}{" "}
               {defaultTrack === track && track !== "latest" && "(default)"}
@@ -52,9 +52,9 @@ class ReleasesHeading extends Component {
             </Wrap>
           </h4>
         </div>
-        {/*<div className="col-6">
+        <div className="col-6" style={{ marginTop: "0.25rem" }}>
           {tracks.length > 1 && <DefaultTrackModifier />}
-      </div>*/}
+        </div>
       </div>
     );
   }
@@ -64,24 +64,21 @@ ReleasesHeading.propTypes = {
   tracks: PropTypes.array.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
   currentTrack: PropTypes.string.isRequired,
-  defaultTrack: PropTypes.string
+  defaultTrack: PropTypes.string,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     tracks: getTracks(state),
     currentTrack: state.currentTrack,
-    defaultTrack: state.defaultTrack
+    defaultTrack: state.defaultTrack,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    setCurrentTrack: track => dispatch(setCurrentTrack(track))
+    setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReleasesHeading);
+export default connect(mapStateToProps, mapDispatchToProps)(ReleasesHeading);

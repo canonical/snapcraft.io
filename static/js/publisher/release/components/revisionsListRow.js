@@ -1,18 +1,41 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import distanceInWords from "date-fns/distance_in_words_strict";
 import format from "date-fns/format";
 
-import { useDragging, DND_ITEM_REVISION, Handle } from "./dnd";
+import { canBeReleased } from "../helpers";
+import { getChannelString } from "../../../libs/channels";
+import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
-import { getSelectedRevisions } from "../selectors";
 
-import DevmodeRevision from "./devmodeRevision";
+import {
+  getSelectedRevisions,
+  isProgressiveReleaseEnabled,
+} from "../selectors";
 
-const RevisionsListRow = props => {
-  const { revision, isSelectable, showAllColumns, isPending, isActive } = props;
+import RevisionLabel from "./revisionLabel";
+import RevisionsListRowProgressive from "./revisionsListRowProgressive";
+
+const RevisionsListRow = (props) => {
+  const {
+    revision,
+    isSelectable,
+    showChannels,
+    showBuildRequest,
+    isPending,
+    isActive,
+    isProgressiveReleaseEnabled,
+    showProgressive,
+    progressiveBeingCancelled,
+  } = props;
+
+  const releasable = canBeReleased(revision);
+
+  const [canDrag, setDraggable] = useState(
+    !progressiveBeingCancelled && releasable
+  );
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -20,66 +43,101 @@ const RevisionsListRow = props => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
+  let channel;
+  if (revision.release) {
+    channel = getChannelString(revision.release);
+  }
+
   function revisionSelectChange() {
     props.toggleRevision(revision);
   }
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item: {
-      revision: revision,
-      // TODO:
-      // we are assuming single arcitecture here,
-      // this may be trickier for revisions in multiple architectures
-      arch: revision.architectures[0],
-      type: DND_ITEM_REVISION
-    }
+      revisions: [revision],
+      architectures: revision.architectures,
+      type: DND_ITEM_REVISIONS,
+    },
+    canDrag: canDrag,
   });
 
   const id = `revision-check-${revision.revision}`;
-  const className = `p-revisions-list__row is-draggable ${
-    isActive ? "is-active" : ""
-  } ${isSelectable ? "is-clickable" : ""} ${
-    isPending || isSelected ? "is-pending" : ""
+  const className = `p-revisions-list__row ${
+    progressiveBeingCancelled ? "" : "is-draggable"
+  } ${isActive ? "is-active" : ""} ${
+    isSelectable && releasable ? "is-clickable" : ""
+  } ${
+    isPending || isSelected || progressiveBeingCancelled ? "is-pending" : ""
   } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
+
+  const buildRequestId =
+    revision.attributes && revision.attributes["build-request-id"];
+
+  const canShowProgressiveReleases =
+    isProgressiveReleaseEnabled && !showChannels && !progressiveBeingCancelled;
 
   return (
     <tr
       ref={drag}
       key={id}
       className={className}
-      onClick={isSelectable ? revisionSelectChange : null}
+      onClick={isSelectable && releasable ? revisionSelectChange : null}
     >
-      <td>
-        <Handle />
-      </td>
+      <td>{!progressiveBeingCancelled && releasable && <Handle />}</td>
       <td>
         {isSelectable ? (
           <Fragment>
             <input
               type="checkbox"
-              checked={isSelected}
+              checked={isSelected && releasable}
               id={id}
               onChange={revisionSelectChange}
+              disabled={!releasable}
             />
             <label
               className="p-revisions-list__revision is-inline-label"
               htmlFor={id}
             >
-              <DevmodeRevision revision={revision} showTooltip={true} />
+              <RevisionLabel revision={revision} showTooltip={true} />
             </label>
           </Fragment>
         ) : (
           <span className="p-revisions-list__revision">
-            <DevmodeRevision revision={revision} showTooltip={true} />
+            <RevisionLabel revision={revision} showTooltip={true} />
           </span>
         )}
       </td>
       <td>{revision.version}</td>
-      {showAllColumns && <td>{revision.channels.join(", ")}</td>}
+      {showBuildRequest && (
+        <td>
+          {buildRequestId && (
+            <Fragment>
+              <i className="p-icon--lp" /> {buildRequestId}
+            </Fragment>
+          )}
+        </td>
+      )}
+      {canShowProgressiveReleases && (
+        <td>
+          {revision.release && showProgressive && (
+            <RevisionsListRowProgressive
+              setDraggable={setDraggable}
+              channel={channel}
+              architecture={revision.release.architecture}
+              revision={revision}
+            />
+          )}
+        </td>
+      )}
+      {progressiveBeingCancelled && (
+        <td>
+          <em>Cancel progressive release</em>
+        </td>
+      )}
+      {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td className="u-align--right">
-        {isPending ? (
-          <em>pending release</em>
-        ) : (
+        {isPending && <em>pending release</em>}
+        {!isPending && !progressiveBeingCancelled && (
           <span
             className="p-tooltip p-tooltip--btm-center"
             aria-describedby={`revision-uploaded-${revision.revision}`}
@@ -101,32 +159,34 @@ const RevisionsListRow = props => {
 
 RevisionsListRow.propTypes = {
   // props
+  showProgressive: PropTypes.bool.isRequired,
   revision: PropTypes.object.isRequired,
   isSelectable: PropTypes.bool,
-  showAllColumns: PropTypes.bool,
+  showChannels: PropTypes.bool,
   isPending: PropTypes.bool,
   isActive: PropTypes.bool,
+  showBuildRequest: PropTypes.bool.isRequired,
+  progressiveBeingCancelled: PropTypes.bool,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,
+  isProgressiveReleaseEnabled: PropTypes.bool,
 
   // actions
-  toggleRevision: PropTypes.func.isRequired
+  toggleRevision: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    selectedRevisions: getSelectedRevisions(state)
+    selectedRevisions: getSelectedRevisions(state),
+    isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    toggleRevision: revision => dispatch(toggleRevision(revision))
+    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RevisionsListRow);
+export default connect(mapStateToProps, mapDispatchToProps)(RevisionsListRow);

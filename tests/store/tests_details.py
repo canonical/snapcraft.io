@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -13,9 +14,31 @@ class GetDetailsPageTest(TestCase):
                 "https://api.snapcraft.io/v2/",
                 "snaps/info/",
                 self.snap_name,
-                "?fields=title,summary,description,license,contact,website,",
-                "publisher,prices,media,download,version,created-at,"
-                "confinement,categories",
+                "?",
+                urlencode(
+                    {
+                        "fields": ",".join(
+                            [
+                                "title",
+                                "summary",
+                                "description",
+                                "license",
+                                "contact",
+                                "website",
+                                "publisher",
+                                "prices",
+                                "media",
+                                "download",
+                                "version",
+                                "created-at",
+                                "confinement",
+                                "categories",
+                                "trending",
+                                "unlisted",
+                            ]
+                        )
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/" + self.snap_name
@@ -94,6 +117,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
         }
 
@@ -126,6 +151,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -188,6 +215,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -242,6 +271,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {

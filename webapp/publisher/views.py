@@ -1,16 +1,28 @@
+# Packages
 import flask
-import webapp.api.dashboard as api
+from canonicalwebteam.store_api.exceptions import (
+    PublisherAgreementNotSigned,
+    PublisherMacaroonRefreshRequired,
+    PublisherMissingUsername,
+    StoreApiCircuitBreaker,
+    StoreApiTimeoutError,
+)
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiError,
+    StoreApiResponseErrorList,
+)
+
+
+# Local
 import webapp.api.marketo as marketo_api
 from webapp import authentication
+from webapp.helpers import api_session
 from webapp.api.exceptions import (
-    AgreementNotSigned,
     ApiCircuitBreaker,
     ApiError,
     ApiResponseError,
-    ApiResponseErrorList,
     ApiTimeoutError,
-    MacaroonRefreshRequired,
-    MissingUsername,
 )
 from webapp.decorators import login_required
 
@@ -18,7 +30,8 @@ account = flask.Blueprint(
     "account", __name__, template_folder="/templates", static_folder="/static"
 )
 
-marketo = marketo_api.MarketoApi()
+marketo = marketo_api.Marketo()
+publisher_api = SnapPublisher(api_session)
 
 
 def refresh_redirect(path):
@@ -38,23 +51,33 @@ def refresh_redirect(path):
     return flask.redirect(path)
 
 
-def _handle_errors(api_error: ApiError):
-    if type(api_error) is ApiTimeoutError:
+def _handle_error(api_error: ApiError):
+    if type(api_error) in [ApiTimeoutError, StoreApiTimeoutError]:
         return flask.abort(504, str(api_error))
-    elif type(api_error) is MissingUsername:
-        return flask.redirect(flask.url_for(".get_account_name"))
-    elif type(api_error) is AgreementNotSigned:
-        return flask.redirect(flask.url_for(".get_agreement"))
-    elif type(api_error) is MacaroonRefreshRequired:
+    elif type(api_error) is PublisherMissingUsername:
+        return flask.redirect(flask.url_for("account.get_account_name"))
+    elif type(api_error) is PublisherAgreementNotSigned:
+        return flask.redirect(flask.url_for("account.get_agreement"))
+    elif type(api_error) is PublisherMacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
-    elif type(api_error) is ApiCircuitBreaker:
+    elif type(api_error) in [ApiCircuitBreaker, StoreApiCircuitBreaker]:
         return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
 
 
 def _handle_error_list(errors):
-    codes = [error["code"] for error in errors]
+    if len(errors) == 1 and errors[0]["code"] in [
+        "macaroon-permission-required",
+        "macaroon-authorization-required",
+    ]:
+        authentication.empty_session(flask.session)
+        return flask.redirect("/login?next=" + flask.request.path)
+
+    codes = [
+        f"{error['code']}: {error.get('message', 'No message')}"
+        for error in errors
+    ]
 
     error_messages = ", ".join(codes)
     return flask.abort(502, error_messages)
@@ -73,11 +96,11 @@ def get_account_details():
         # We don't use the data from this endpoint.
         # It is mostly used to make sure the user has signed
         # the terms and conditions.
-        api.get_account(flask.session)
-    except ApiResponseErrorList as api_response_error_list:
+        publisher_api.get_account(flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
-    except ApiError as api_error:
-        return _handle_errors(api_error)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
 
     flask_user = flask.session["openid"]
 
@@ -87,13 +110,14 @@ def get_account_details():
     # if anything fails, just continue and don't show
     # this section
     try:
-        marketo_user = marketo.get_user(flask_user["email"])
-        marketo_subscribed = marketo.get_newsletter_subscription(
-            marketo_user["id"]
-        )
         subscribed_to_newsletter = False
-        if marketo_subscribed.get("snapcraftnewsletter"):
-            subscribed_to_newsletter = True
+        marketo_user = marketo.get_user(flask_user["email"])
+        if marketo_user:
+            marketo_subscribed = marketo.get_newsletter_subscription(
+                marketo_user["id"]
+            )
+            if marketo_subscribed.get("snapcraftnewsletter"):
+                subscribed_to_newsletter = True
 
         subscriptions = {"newsletter": subscribed_to_newsletter}
     except Exception:
@@ -139,13 +163,13 @@ def post_agreement():
     agreed = flask.request.form.get("i_agree")
     if agreed == "on":
         try:
-            api.post_agreement(flask.session, True)
-        except ApiResponseErrorList as api_response_error_list:
+            publisher_api.post_agreement(flask.session, True)
+        except StoreApiResponseErrorList as api_response_error_list:
             codes = [error["code"] for error in api_response_error_list.errors]
             error_messages = ", ".join(codes)
             flask.abort(502, error_messages)
-        except ApiError as api_error:
-            return _handle_errors(api_error)
+        except (StoreApiError, ApiError) as api_error:
+            return _handle_error(api_error)
 
         return flask.redirect(flask.url_for(".get_account"))
     else:
@@ -166,11 +190,11 @@ def post_account_name():
     if username:
         errors = []
         try:
-            api.post_username(flask.session, username)
-        except ApiResponseErrorList as api_response_error_list:
+            publisher_api.post_username(flask.session, username)
+        except StoreApiResponseErrorList as api_response_error_list:
             errors = errors + api_response_error_list.errors
-        except ApiError as api_error:
-            return _handle_errors(api_error)
+        except (StoreApiError, ApiError) as api_error:
+            return _handle_error(api_error)
 
         if errors:
             return flask.render_template(
