@@ -2,10 +2,13 @@ import { storageCommands } from "./storageCommands";
 
 describe("storage commands", () => {
   let ignoreChangeOnUnload;
+  const _window = window;
+  window.location = _window.location;
 
   beforeEach(() => {
+    delete window.location;
+    window.location = { reload: jest.fn() };
     window.focus = jest.fn();
-    window.location.reload = jest.fn();
     ignoreChangeOnUnload = jest.fn();
   });
 

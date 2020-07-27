@@ -6,6 +6,9 @@ describe("initChooseName", () => {
   let nameInput;
   let submitButton;
 
+  var _window = window,
+    location = _window.location;
+
   function setupForm() {
     formEl = document.createElement("form");
     formEl.id = "test-form";
@@ -33,6 +36,7 @@ describe("initChooseName", () => {
 
   afterEach(() => {
     formEl.parentNode.removeChild(formEl);
+    window.location = location;
   });
 
   it("should mark field invalid", () => {
@@ -54,10 +58,8 @@ describe("initChooseName", () => {
   });
 
   it("should set cookie on submit", () => {
-    Object.defineProperty(window.location, "reload", {
-      configurable: true,
-    });
-    window.location.reload = jest.fn();
+    delete window.location;
+    window.location = { reload: jest.fn() };
 
     nameInput.click();
     nameInput.value = "valid-name";
