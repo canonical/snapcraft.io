@@ -144,7 +144,7 @@ class MultiSelect extends React.Component {
     this.searchInput.focus();
     this.setState({
       showSearch: true,
-      highlightedOption: this.state.highlightedOption || 0,
+      highlightedOption: this.state.highlightedOption,
     });
   }
 
@@ -155,7 +155,7 @@ class MultiSelect extends React.Component {
    */
   handleKeypress(event) {
     if (this.state.showSearch) {
-      let highlighted = this.state.highlightedOption;
+      let highlighted = this.state.highlightedOption || 0;
       let results = this.state.searchResults;
 
       switch (event.key) {
@@ -186,6 +186,7 @@ class MultiSelect extends React.Component {
           break;
         case "Tab":
           this.blur();
+          highlighted = null;
           break;
         default:
           break;
@@ -231,6 +232,7 @@ class MultiSelect extends React.Component {
   blur() {
     this.setState({
       showSearch: false,
+      highlightedOption: null,
     });
 
     this.props.updateHandler(this.state.selected);
