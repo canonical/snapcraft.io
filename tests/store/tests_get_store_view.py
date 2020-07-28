@@ -8,8 +8,8 @@ class GetStoreViewTest(TestCase):
     render_templates = False
 
     def setUp(self):
-        self.categories_api_url = "".join(
-            ["https://api.snapcraft.io/api/v1/", "snaps/sections"]
+        self.categories_api_url = (
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared"
         )
         self.featured_snaps_api_url = "".join(
             [

@@ -9,7 +9,7 @@ class GetSearchViewTest(TestCase):
 
     def setUp(self):
         self.categories_api_url = (
-            "https://api.snapcraft.io/api/v1/snaps/sections"
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared"
         )
         self.search_snap_api_url = "".join(
             [

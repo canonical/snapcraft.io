@@ -239,13 +239,11 @@ class StoreLogicTest(unittest.TestCase):
 
     def test_get_categories(self):
         categories = {
-            "_embedded": {
-                "clickindex:sections": [
-                    {"name": "featured"},
-                    {"name": "test"},
-                    {"name": "development"},
-                ]
-            }
+            "categories": [
+                {"name": "featured"},
+                {"name": "test"},
+                {"name": "development"},
+            ]
         }
         category_list = logic.get_categories(categories)
         self.assertTrue(

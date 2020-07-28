@@ -65,7 +65,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -122,7 +122,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -161,7 +161,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -206,7 +206,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -245,7 +245,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -284,7 +284,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=500,
         )
