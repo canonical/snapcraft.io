@@ -138,7 +138,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.GET, info_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -223,7 +223,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.GET, info_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -323,7 +323,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.GET, info_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -387,7 +387,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         responses.add(responses.GET, info_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=500,
         )
