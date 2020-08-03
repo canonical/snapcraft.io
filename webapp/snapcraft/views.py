@@ -49,13 +49,6 @@ def snapcraft_blueprint():
                 "publisher": "SORACOM Snap Administrator",
             },
             {
-                "package_name": "thinger-maker-server",
-                "icon_url": "/".join([icon_host, "2017/03/thinger_256.png"]),
-                "title": "Thinger.io Maker Server",
-                "origin": "thinger",
-                "publisher": "Alvaro Luis Bustamante",
-            },
-            {
                 "package_name": "nymea",
                 "icon_url": "/".join(
                     [icon_host, "2018/03/icon.svg_UYFdU9y.png"]
