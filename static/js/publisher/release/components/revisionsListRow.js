@@ -2,8 +2,7 @@ import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import distanceInWords from "date-fns/distance_in_words_strict";
-import format from "date-fns/format";
+import { format, formatDistance } from "date-fns";
 
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../libs/channels";
@@ -142,13 +141,15 @@ const RevisionsListRow = (props) => {
             className="p-tooltip p-tooltip--btm-center"
             aria-describedby={`revision-uploaded-${revision.revision}`}
           >
-            {distanceInWords(new Date(), revisionDate, { addSuffix: true })}
+            {formatDistance(revisionDate, new Date(), {
+              addSuffix: true,
+            })}
             <span
               className="p-tooltip__message u-align--center"
               role="tooltip"
               id={`revision-uploaded-${revision.revision}`}
             >
-              {format(revisionDate, "YYYY-MM-DD HH:mm")}
+              {format(revisionDate, "yyyy-MM-dd HH:mm")}
             </span>
           </span>
         )}

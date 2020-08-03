@@ -3,7 +3,7 @@ canonicalwebteam.flask_base==0.6.3
 canonicalwebteam.discourse-docs==1.0.1
 canonicalwebteam.blog==6.0.0
 canonicalwebteam.search==0.2.1
-canonicalwebteam.image-template==1.1.0
+canonicalwebteam.image-template==1.2.0
 canonicalwebteam.store-api==2.3.3
 canonicalwebteam.launchpad==0.7.6
 django-openid-auth==0.15
