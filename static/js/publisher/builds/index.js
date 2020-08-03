@@ -256,9 +256,10 @@ class Builds extends React.Component {
                 </Fragment>
               ),
               className: "has-icon",
-              title: queueTime[build.arch_tag]
-                ? `Queue time: up to ${queueTime[build.arch_tag]}`
-                : null,
+              title:
+                build.queue_time && queueTime[build.arch_tag]
+                  ? `Queue time: up to ${queueTime[build.arch_tag]}`
+                  : null,
             },
             {
               content: build.datebuilt
