@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { format, parse, distanceInWordsToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 import { sortChannels } from "../../../../libs/channels";
 
@@ -243,9 +243,11 @@ const ReleasesTableChannelHeading = (props) => {
     isLaunchpadBuild = Object.keys(buildMap).length === 1;
     if (isLaunchpadBuild) {
       channelBuild = Object.keys(buildMap)[0];
-      channelBuildDate = new Date(
-        Object.values(revisions)[0].attributes["build-request-timestamp"]
-      );
+      channelBuildDate =
+        Object.values(revisions)[0].attributes["build-request-timestamp"] &&
+        new Date(
+          Object.values(revisions)[0].attributes["build-request-timestamp"]
+        );
     }
   }
 
@@ -265,7 +267,11 @@ const ReleasesTableChannelHeading = (props) => {
               <Fragment>
                 Build: <i className="p-icon--lp" /> <b>{channelBuild}</b>
                 <br />
-                Built at: <b>{format(channelBuildDate, "YYYY-MM-DD HH:mm")}</b>
+                Built at:{" "}
+                <b>
+                  {channelBuildDate &&
+                    format(channelBuildDate, "yyyy-MM-dd HH:mm")}
+                </b>
               </Fragment>
             )}
           </span>
@@ -280,7 +286,7 @@ const ReleasesTableChannelHeading = (props) => {
     rowTitle = (
       <Fragment>
         <i className="p-icon--lp" />{" "}
-        {distanceInWordsToNow(channelBuildDate, { addSuffix: true })}
+        {formatDistanceToNow(channelBuildDate, { addSuffix: true })}
       </Fragment>
     );
   }
@@ -291,8 +297,7 @@ const ReleasesTableChannelHeading = (props) => {
 
   let timeUntilExpiration;
   if (branch) {
-    const end = parse(branch.expiration);
-    timeUntilExpiration = distanceInWordsToNow(end);
+    timeUntilExpiration = formatDistanceToNow(branch.expiration);
   }
 
   const promoteRevisions = (targetChannel) => {

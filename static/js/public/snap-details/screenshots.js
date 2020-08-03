@@ -1,5 +1,5 @@
 import lightbox from "./../../publisher/market/lightbox";
-import { Swiper, Navigation } from "swiper/dist/js/swiper.esm";
+import { Swiper, Navigation } from "swiper";
 import { SCREENSHOTS_CONFIG } from "../../config/swiper.config";
 import iframeSize from "../../libs/iframeSize";
 

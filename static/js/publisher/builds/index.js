@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import ReactDOM from "react-dom";
 
-import distanceInWords from "date-fns/distance_in_words_strict";
+import { formatDistance, parseISO } from "date-fns";
 
 import MainTable from "@canonical/react-components/dist/components/MainTable";
 
@@ -262,7 +262,7 @@ class Builds extends React.Component {
             },
             {
               content: build.datebuilt
-                ? distanceInWords(new Date(), build.datebuilt, {
+                ? formatDistance(parseISO(build.datebuilt), new Date(), {
                     addSuffix: true,
                   })
                 : "",

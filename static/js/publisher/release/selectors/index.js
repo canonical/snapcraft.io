@@ -1,4 +1,4 @@
-import { parse, isAfter, differenceInDays } from "date-fns";
+import { isAfter, differenceInDays, parseISO } from "date-fns";
 import {
   AVAILABLE,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
@@ -195,12 +195,12 @@ export function getBranches(state) {
   let branches = [];
   const { currentTrack, releases } = state;
 
-  const now = parse(Date.now());
+  const now = Date.now();
 
   releases
     .filter((t) => t.branch && t.track === currentTrack)
     .sort((a, b) => {
-      return isAfter(parse(b.when), parse(a.when));
+      return isAfter(parseISO(b.when), parseISO(a.when));
     })
     .forEach((item) => {
       const { track, risk, branch, when, revision } = item;
@@ -223,7 +223,7 @@ export function getBranches(state) {
 
   return branches
     .filter((b) => {
-      return differenceInDays(parse(b.expiration), now) > 0;
+      return differenceInDays(parseISO(b.expiration), now) > 0;
     })
     .reverse();
 }
