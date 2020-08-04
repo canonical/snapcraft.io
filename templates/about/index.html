@@ -1,0 +1,121 @@
+{% extends 'about/_about_layout.html' %}
+
+{% block meta_copydoc %}https://docs.google.com/document/d/1mNCqEBZCv9SAprALkSjlwNVyP52ivsQ-fnDQuIS6kBk{% endblock meta_copydoc %}
+
+{% block meta_description %}Snaps are app packages for desktop, cloud and IoT that are easy to install, secure, cross&dash;platform and dependency&dash;free.{% endblock %}
+
+{% block meta_title %}About Snaps | Snapcraft{% endblock %}
+
+{% block about_content %}
+  <h1 class="p-heading--2">About Snaps</h1>
+  <p>
+    Snaps are app packages for desktop, cloud and IoT that are easy to install, secure, cross&dash;platform and dependency&dash;free. Snaps are discoverable and installable from the Snap Store, the app store for Linux with an audience of millions.
+  </p>
+  <div class="p-strip is-shallow">
+    <div class="row">
+      <div class="col-4">
+        <h4>Snap</h4>
+        <p>
+          A snap is a bundle of an app and its dependencies that works without modification across Linux distributions.
+        </p>
+      </div>
+      <div class="col-4">
+        <h4>Snapd</h4>
+        <p>
+          Snapd is the background service that manages and maintains your snaps, automatically.
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <h4>Snap Store</h4>
+        <p>
+          The Snap Store provides a place to upload snaps, and for users to browse and install the software they want.
+        </p>
+      </div>
+      <div class="col-4">
+        <h4>Snapcraft</h4>
+        <p>
+          Snapcraft is the command and the framework used to build and publish snaps.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="p-strip is-shallow">
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <h2>
+      A universal store
+    </h2>
+    <h3 class="p-heading--4">
+      Snaps run not only on desktops but also on IoT devices, servers and clouds
+    </h3>
+    <p>
+      Snaps work across Linux on many distributions and versions. Bundle your dependencies and assets, to simplify installs to a single standard command.
+    </p>
+    <a href="/iot" class="p-button--neutral">Learn more about snaps in IoT</a>
+  </div>
+  <div class="p-strip is-shallow">
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <h2>Built, published and hosted for free</h2>
+    <h3 class="p-heading--4">
+      Our build infrastructure and the Snap Store makes building and publishing snaps a breeze
+    </h3>
+    <p>
+      Whether your project is hosted on GitHub or not, you can leverage our build system to both build and release to the edge channel, ensuring users always stay up&dash;to&dash;date.
+    </p>
+    <a href="/build" class="p-button--neutral">Learn more about our Build service</a>
+  </div>
+  <div class="p-strip is-shallow">
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <h2>Software distribution in your hands</h2>
+    <h3 class="p-heading--4">
+      With Snapcraft, you are in control of when and how you publish your Snap
+    </h3>
+    <p>
+      With channels users can find their preferred balance between stability and the latest features. Though nothing is enforced, users expect the “Stable” channel to be well tested and updated less frequently, whereas the “Edge” channel is where they&rsquo;ll get the latest release as soon as it&rsquo;s available.
+    </p>
+    <a href="/docs/channels" class="p-button--neutral">Learn more about channels</a>
+  </div>
+  <div class="p-strip is-shallow">
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <h2>Open source, but not only</h2>
+    <h3 class="p-heading--4">
+      Snaps can bundle both proprietary applications and open source
+    </h3>
+    <p>
+      If you build proprietary software you can use the “Proprietary” license. For open source projects we support SPDX expressions so you can let your users know exactly what license your project uses.
+    </p>
+  </div>
+{% endblock %}
