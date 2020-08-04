@@ -18,7 +18,10 @@ def init_blog(app, url_prefix):
     wordpress_api = Wordpress(session=talisker.requests.get_session())
     blog = build_blueprint(
         BlogViews(
-            api=wordpress_api, blog_title="Snapcraft Blog", tag_ids=[2996]
+            api=wordpress_api,
+            blog_title="Snapcraft Blog",
+            tag_ids=[2996],
+            excluded_tags=[3184, 3265, 3408],
         )
     )
 
@@ -68,7 +71,9 @@ def init_blog(app, url_prefix):
 
             try:
                 blog_articles, total_pages = wordpress_api.get_articles(
-                    blog_tags["id"], 3 - len(articles)
+                    tags=blog_tags["id"],
+                    tags_exclude=[3184, 3265, 3408],
+                    per_page=3 - len(articles),
                 )
             except RequestException:
                 blog_articles = []
