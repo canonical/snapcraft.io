@@ -4,9 +4,8 @@ import talisker
 from canonicalwebteam import image_template
 from canonicalwebteam.blog import (
     BlogViews,
-    Wordpress,
+    BlogAPI,
     build_blueprint,
-    helpers,
     NotFoundError,
 )
 from requests.exceptions import RequestException
@@ -15,10 +14,10 @@ from webapp.helpers import get_yaml
 
 
 def init_blog(app, url_prefix):
-    wordpress_api = Wordpress(session=talisker.requests.get_session())
+    blog_api = BlogAPI(session=talisker.requests.get_session())
     blog = build_blueprint(
         BlogViews(
-            api=wordpress_api,
+            api=blog_api,
             blog_title="Snapcraft Blog",
             tag_ids=[2996],
             excluded_tags=[3184, 3265, 3408],
@@ -28,7 +27,7 @@ def init_blog(app, url_prefix):
     @blog.route("/api/snap-posts/<snap>")
     def snap_posts(snap):
         try:
-            blog_tags = wordpress_api.get_tag_by_name(f"sc:snap:{snap}")
+            blog_tags = blog_api.get_tag_by_name(f"sc:snap:{snap}")
         except NotFoundError:
             blog_tags = None
 
@@ -67,10 +66,10 @@ def init_blog(app, url_prefix):
             )
 
         if blog_tags:
-            snapcraft_tag = wordpress_api.get_tag_by_name("snapcraft.io")
+            snapcraft_tag = blog_api.get_tag_by_name("snapcraft.io")
 
             try:
-                blog_articles, total_pages = wordpress_api.get_articles(
+                blog_articles, total_pages = blog_api.get_articles(
                     tags=blog_tags["id"],
                     tags_exclude=[3184, 3265, 3408],
                     per_page=3 - len(articles),
@@ -79,11 +78,9 @@ def init_blog(app, url_prefix):
                 blog_articles = []
 
             for article in blog_articles:
-                transformed_article = helpers.transform_article(article)
-
-                if transformed_article["image"]:
+                if article["image"]:
                     featured_media = image_template(
-                        url=transformed_article["image"]["source_url"],
+                        url=article["image"]["source_url"],
                         alt="",
                         width="346",
                         height="231",
@@ -94,15 +91,15 @@ def init_blog(app, url_prefix):
                 else:
                     featured_media = None
 
-                url = f"/blog/{transformed_article['slug']}"
+                url = f"/blog/{article['slug']}"
 
-                if snapcraft_tag["id"] not in transformed_article["tags"]:
+                if snapcraft_tag["id"] not in article["tags"]:
                     url = f"https://ubuntu.com{url}"
 
                 articles.append(
                     {
                         "slug": url,
-                        "title": transformed_article["title"]["rendered"],
+                        "title": article["title"]["rendered"],
                         "image": featured_media,
                     }
                 )
@@ -115,16 +112,15 @@ def init_blog(app, url_prefix):
         articles = []
 
         try:
-            blog_articles, total_pages = wordpress_api.get_articles(series)
+            blog_articles, total_pages = blog_api.get_articles(series)
         except RequestException:
             blog_articles = []
 
         for article in blog_articles:
-            transformed_article = helpers.transform_article(article)
             articles.append(
                 {
-                    "slug": transformed_article["slug"],
-                    "title": transformed_article["title"]["rendered"],
+                    "slug": article["slug"],
+                    "title": article["title"]["rendered"],
                 }
             )
 
