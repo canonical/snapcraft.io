@@ -1,47 +1,49 @@
-<div class="row u-hide u-no-padding" data-flow-details="pre-built">
-  <div class="col-6">
-    <h4>Why are snaps good for pre-built apps?</h4>
-    <ul>
-      <li>Easy to discover and install by millions using the Snap Store or command-line every day</li>
-      <li>Automatically updated to the latest stable version of your app</li>
-      <li>Revert to the previous version if an update fails, preserving data</li>
-      <li>Isolation ensures no conflicts between applications</li>
-      <li>Identical behaviour across Linux distributions, even with library dependencies</li>
-    </ul>
-    <p>
-      Distributing the Linux build of your app as a zip lets you provide one download and set of instructions for all of Linux.
-      However, end user discovery and update management remain a challenge.
-      Snaps fill this gap, letting you wrap your existing Linux build in an app store experience for end users.
-    </p>
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example pre-built app in the Snap Store.</p>
-      <a class="p-button--positive" href="/first-snap/pre-built">Continue &rsaquo;</a>
+<div class="col-{{ columns }} u-hide" data-flow-details="pre-built">
+  <div class="row">
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Why are snaps good for pre-built apps?</h4>
+      <ul>
+        <li>Easy to discover and install by millions using the Snap Store or command-line every day</li>
+        <li>Automatically updated to the latest stable version of your app</li>
+        <li>Revert to the previous version if an update fails, preserving data</li>
+        <li>Isolation ensures no conflicts between applications</li>
+        <li>Identical behaviour across Linux distributions, even with library dependencies</li>
+      </ul>
+      <p>
+        Distributing the Linux build of your app as a zip lets you provide one download and set of instructions for all of Linux.
+        However, end user discovery and update management remain a challenge.
+        Snaps fill this gap, letting you wrap your existing Linux build in an app store experience for end users.
+      </p>
+      <div class="p-flow-details__continue">
+        <p>In just a few steps, you’ll have an example pre-built app in the Snap Store.</p>
+        <a class="p-button--positive" href="/first-snap/pre-built">Continue &rsaquo;</a>
+      </div>
     </div>
-  </div>
 
-  <div class="col-6">
-    <h4>How <a href="https://www.geekbench.com/">geekbench4</a> defines snapcraft.yaml</h4>
-    <div class ="p-show-more is-collapsed" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: geekbench4
-<b>version</b>: 4.2.0
-<b>summary</b>: Cross-Platform Benchmark
-<b>description</b>: |
-  Geekbench 4 measures your system's power [&hellip;]
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>How <a href="https://www.geekbench.com/">geekbench4</a> defines snapcraft.yaml</h4>
+      <div class ="p-show-more is-collapsed" data-js="js-show-more">
+        <pre class="p-code-yaml"><b>name</b>: geekbench4
+  <b>version</b>: 4.2.0
+  <b>summary</b>: Cross-Platform Benchmark
+  <b>description</b>: |
+    Geekbench 4 measures your system's power [&hellip;]
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
+  <b>confinement</b>: devmode
+  <b>base</b>: core18
 
-<b>parts</b>:
-  <b>geekbench4</b>:
-    <b>plugin</b>: dump
-    <b>source</b>: http://cdn.geekbench.com/Geekbench-$SNAPCRAFT_PROJECT_VERSION-Linux.tar.gz
+  <b>parts</b>:
+    <b>geekbench4</b>:
+      <b>plugin</b>: dump
+      <b>source</b>: http://cdn.geekbench.com/Geekbench-$SNAPCRAFT_PROJECT_VERSION-Linux.tar.gz
 
-<b>apps</b>:
-  <b>geekbench4</b>:
-    <b>command</b>: geekbench4</pre>
+  <b>apps</b>:
+    <b>geekbench4</b>:
+      <b>command</b>: geekbench4</pre>
 
-      {% include "home/_fsf_yaml_show_more.html" %}
+        {% include "home/_fsf_yaml_show_more.html" %}
 
+      </div>
     </div>
   </div>
 </div>
