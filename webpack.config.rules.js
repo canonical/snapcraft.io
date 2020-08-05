@@ -29,6 +29,10 @@ module.exports = [
     use: ["expose-loader?exposes=snapcraft.publisher", "babel-loader"],
   },
   {
+    test: require.resolve(__dirname + "/static/js/public/about/index.js"),
+    use: ["expose-loader?exposes=snapcraft.about", "babel-loader"],
+  },
+  {
     test: require.resolve(__dirname + "/static/js/public/public.js"),
     use: ["expose-loader?exposes=snapcraft.public", "babel-loader"],
   },

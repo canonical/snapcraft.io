@@ -230,6 +230,26 @@ def snapcraft_blueprint():
             status_code,
         )
 
+    @snapcraft.route("/about")
+    def about():
+        return flask.render_template("about/index.html")
+
+    @snapcraft.route("/about/publish")
+    def about_publish():
+        return flask.render_template("about/publish.html")
+
+    @snapcraft.route("/about/listing")
+    def about_listing():
+        return flask.render_template("about/listing.html")
+
+    @snapcraft.route("/about/release")
+    def about_release():
+        return flask.render_template("about/release.html")
+
+    @snapcraft.route("/about/publicise")
+    def about_publicise():
+        return flask.render_template("about/publicise.html")
+
     @snapcraft.route("/community")
     def community_redirect():
         return flask.redirect("/")
