@@ -2,10 +2,110 @@
 
 {% block meta_copydoc %}https://docs.google.com/document/d/1xDFNtlpV8pKcYixVrri-h0LF_1OoRXTK40CYpvRLwe4{% endblock meta_copydoc %}
 
-{% block meta_description %}{% endblock %}
+{% block meta_description %}Here is how to track how well your snap is doing in the community, a few tips on how to release snap updates and communicate them to your users, and some tools to help you publicise your snap.
+{% endblock %}
 
 {% block meta_title %}About Publicising | Snapcraft{% endblock %}
 
 {% block about_content %}
-
+  <h1 class="p-heading--2">Track and share your snap</h1>
+  <p>
+    Here is how to track how well your snap is doing in the community, a few tips on how to release snap updates and communicate them to your users, and some tools to help you publicise your snap.
+  </p>
+  <div class="p-strip is-shallow">
+    <h2>
+      Measure your snap&rsquo;s performance
+    </h2>
+    <p>To see how your snap is performing, go to the “Metrics” tab on your snap publishing pages. Here are the metrics available to you right now:</p>
+    <h3 class="p-heading--4">
+      Weekly active devices
+    </h3>
+    <p>
+      As the name indicates, this graph shows you how many devices have used your snap over time. This is a good measure of how often your users engage with it.
+    </p>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+  </div>
+  <div class="p-strip is-shallow">
+    <h3 class="p-heading--4">Snap users by OS, channel or version</h3>
+    <p>If you open the dropdown above this chart in the Metrics page, you will be able to select different options to segment your users. These include the OS they are running your snaps with, what channel they are using (stable, candidate, beta or edge) and what version of your software they are on. This will help you visualise the rhythm at which your software updates are being adopted.</p>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+  </div>
+  <div class="p-strip is-shallow">
+    <h3 class="p-heading--4">
+      Snap users by territory
+    </h3>
+    <p>
+      This map shows you how many users are using your snap all around the world.
+    </p>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+  </div>
+  <div class="p-strip is-shallow">
+    <h2>Publicise your snap</h2>
+    <div class="row">
+      <div class="col-4">
+        <h3 class="p-heading--4">
+          Snap Store buttons
+        </h3>
+        <p>
+          Use the “Get it from the snap store” badge on your marketing communications and pages to let your audience know about your snap. You can choose between a light and a dark button.
+        </p>
+      </div>
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+            alt="",
+            width="344",
+            height="208",
+            hi_def=True
+          ) | safe
+        }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <h3 class="p-heading--4">
+          GitHub badges
+        </h3>
+        <p>
+          Use the snap store GitHub badges to let your users know that they are able to get your app from Snapcraft. When your snap is flagged as trending you can also add a badge that signals this to your users.
+        </p>
+      </div>
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+            alt="",
+            width="344",
+            height="208",
+            hi_def=True
+          ) | safe
+        }}
+      </div>
+    </div>
+  </div>
 {% endblock %}
