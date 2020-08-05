@@ -1,50 +1,52 @@
-<div class="row u-hide u-no-padding" data-flow-details="python">
-  <div class="col-6">
-    <h4>Why are snaps good for Python projects?</h4>
-    <ul>
-      <li>Easy to discover and install by millions using the Snap Store or command-line every day</li>
-      <li>Automatically updated to the latest stable version of your app</li>
-      <li>Revert to the previous version if an update fails, preserving data</li>
-      <li>Isolation ensures no conflicts between applications</li>
-      <li>Identical behaviour across Linux distributions, even with library dependencies</li>
-    </ul>
-    <p>
-      With PyPI you can distribute apps to other developers, but it’s not tailored to end users.
-      Virtualenv lets you install an app’s dependencies in isolation, but it’s not automatically used for installs from PyPI.
-      Snaps let you distribute a dependency-isolated Python app in an app store experience for end users.
-    </p>
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example Python app in the Snap Store.</p>
-      <a class="p-button--positive" href="/first-snap/python">Continue &rsaquo;</a>
+<div class="col-{{ columns }} u-hide" data-flow-details="python">
+  <div class="row">
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Why are snaps good for Python projects?</h4>
+      <ul>
+        <li>Easy to discover and install by millions using the Snap Store or command-line every day</li>
+        <li>Automatically updated to the latest stable version of your app</li>
+        <li>Revert to the previous version if an update fails, preserving data</li>
+        <li>Isolation ensures no conflicts between applications</li>
+        <li>Identical behaviour across Linux distributions, even with library dependencies</li>
+      </ul>
+      <p>
+        With PyPI you can distribute apps to other developers, but it’s not tailored to end users.
+        Virtualenv lets you install an app’s dependencies in isolation, but it’s not automatically used for installs from PyPI.
+        Snaps let you distribute a dependency-isolated Python app in an app store experience for end users.
+      </p>
+      <div class="p-flow-details__continue">
+        <p>In just a few steps, you’ll have an example Python app in the Snap Store.</p>
+        <a class="p-button--positive" href="/first-snap/python">Continue &rsaquo;</a>
+      </div>
     </div>
-  </div>
 
-  <div class="col-6">
-    <h4>Here's how <a href="https://snapcraft.io/offlineimap">offlineimap</a> defines snapcraft.yaml:</h4>
-    <div class ="p-show-more is-collapsed" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: offlineimap
-<b>version</b>: '1.0'
-<b>summary</b>: OfflineIMAP
-<b>description</b>: |
-  OfflineIMAP is software that downloads [&hellip;]
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Here's how <a href="https://snapcraft.io/offlineimap">offlineimap</a> defines snapcraft.yaml:</h4>
+      <div class ="p-show-more is-collapsed" data-js="js-show-more">
+        <pre class="p-code-yaml"><b>name</b>: offlineimap
+  <b>version</b>: '1.0'
+  <b>summary</b>: OfflineIMAP
+  <b>description</b>: |
+    OfflineIMAP is software that downloads [&hellip;]
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
+  <b>confinement</b>: devmode
+  <b>base</b>: core18
 
-<b>parts</b>:
-  <b>offlineimap</b>:
-    <b>plugin</b>: python
-    <b>python-version</b>: python2
-    <b>source</b>: https://github.com/snapcraft-docs/offlineimap.git
-    <b>stage-packages</b>:
-      - python-six
+  <b>parts</b>:
+    <b>offlineimap</b>:
+      <b>plugin</b>: python
+      <b>python-version</b>: python2
+      <b>source</b>: https://github.com/snapcraft-docs/offlineimap.git
+      <b>stage-packages</b>:
+        - python-six
 
-<b>apps</b>:
-  <b>offlineimap</b>:
-    <b>command</b>: bin/offlineimap</pre>
+  <b>apps</b>:
+    <b>offlineimap</b>:
+      <b>command</b>: bin/offlineimap</pre>
 
-    {% include "home/_fsf_yaml_show_more.html" %}
+      {% include "home/_fsf_yaml_show_more.html" %}
 
+      </div>
     </div>
   </div>
 </div>

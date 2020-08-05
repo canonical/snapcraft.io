@@ -1,5 +1,11 @@
+{# The "layout_no_of_columns" variable can be set to suit the required design. If not set it defaults to 12 columns. Set the value using {% with %}{% endwith%} syntax when you include this partial #}
+
+{% if not layout_no_of_columns %}
+  {% set layout_no_of_columns=12 %}
+{% endif%}
+
 <div class="row js-fsf-language-select" id="language">
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif%}">
     <a class="p-card p-logo-link p-flow-link" href="/first-snap/python" data-flow-link="python">
       <header class="p-card__header">
         {{
@@ -15,7 +21,7 @@
       <span>Python</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/pre-built" data-flow-link="pre-built">
       <header class="p-card__header">
         {{
@@ -31,7 +37,7 @@
       <span>Pre-built apps</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/c" data-flow-link="c">
       <header class="p-card__header">
         {{
@@ -47,7 +53,7 @@
       <span>C/C++</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/golang" data-flow-link="go">
       <header class="p-card__header">
         {{
@@ -63,7 +69,7 @@
       <span>Go</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/java" data-flow-link="java">
       <header class="p-card__header">
         {{
@@ -79,7 +85,7 @@
       <span>Java</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/node" data-flow-link="node">
       <header class="p-card__header">
         {{
@@ -95,7 +101,7 @@
       <span>Node.js</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/docs/build-snaps/electron" data-flow-link="electron">
       <header class="p-card__header">
         {{
@@ -111,7 +117,7 @@
       <span>Electron</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/flutter" data-flow-link="flutter">
       <header class="p-card__header">
         {{
@@ -127,7 +133,7 @@
       <span>Flutter</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/ruby" data-flow-link="ruby">
       <header class="p-card__header">
         {{
@@ -143,7 +149,7 @@
       <span>Ruby</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/rust" data-flow-link="rust">
       <header class="p-card__header">
         {{
@@ -159,7 +165,7 @@
       <span>Rust</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/moos" data-flow-link="moos">
       <header class="p-card__header">
         {{
@@ -175,7 +181,7 @@
       <span>MOOS</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/ros" data-flow-link="ros">
       <header class="p-card__header">
         {{
@@ -191,7 +197,7 @@
       <span>ROS</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
     <a class="p-logo-link p-card p-flow-link" href="/first-snap/ros2" data-flow-link="ros2">
       <header class="p-card__header">
         {{
@@ -207,17 +213,19 @@
       <span>ROS 2</span>
     </a>
   </div>
-  {% include "home/_fsf_c.html" %}
-  {% include "home/_fsf_electron.html" %}
-  {% include "home/_fsf_flutter.html" %}
-  {% include "home/_fsf_go.html" %}
-  {% include "home/_fsf_java.html" %}
-  {% include "home/_fsf_moos.html" %}
-  {% include "home/_fsf_node.html" %}
-  {% include "home/_fsf_pre-built.html" %}
-  {% include "home/_fsf_python.html" %}
-  {% include "home/_fsf_ros.html" %}
-  {% include "home/_fsf_ros2.html" %}
-  {% include "home/_fsf_ruby.html" %}
-  {% include "home/_fsf_rust.html" %}
+  {% with columns=layout_no_of_columns %}
+    {% include "home/_fsf_c.html" %}
+    {% include "home/_fsf_electron.html" %}
+    {% include "home/_fsf_flutter.html" %}
+    {% include "home/_fsf_go.html" %}
+    {% include "home/_fsf_java.html" %}
+    {% include "home/_fsf_moos.html" %}
+    {% include "home/_fsf_node.html" %}
+    {% include "home/_fsf_pre-built.html" %}
+    {% include "home/_fsf_python.html" %}
+    {% include "home/_fsf_ros.html" %}
+    {% include "home/_fsf_ros2.html" %}
+    {% include "home/_fsf_ruby.html" %}
+    {% include "home/_fsf_rust.html" %}
+  {% endwith %}
 </div>

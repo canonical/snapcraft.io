@@ -1,3 +1,4 @@
-import { SideNavigation } from "./side-navigation";
+import { initFSFLanguageSelect } from "../fsf-language-select";
+import initExpandableArea from "../expandable-area";
 
-export { SideNavigation };
+export { initFSFLanguageSelect, initExpandableArea };
