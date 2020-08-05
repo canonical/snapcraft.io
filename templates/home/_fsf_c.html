@@ -1,60 +1,62 @@
-<div class="row u-hide u-no-padding" data-flow-details="c">
-  <div class="col-6">
-    <h4>Why are snaps good for C/C++ projects?</h4>
-    <ul>
-      <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
-      <li>Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
-      <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
-      <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
-      <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
-    </ul>
+<div class="col-{{ columns }} u-hide" data-flow-details="c">
+  <div class="row">
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Why are snaps good for C/C++ projects?</h4>
+      <ul>
+        <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+        <li>Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
+        <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+        <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+        <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      </ul>
 
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example C/C++ app in the Snap Store.</p>
-      <a class="p-button--positive" href="first-snap/c">Continue &rsaquo;</a>
+      <div class="p-flow-details__continue">
+        <p>In just a few steps, you’ll have an example C/C++ app in the Snap Store.</p>
+        <a class="p-button--positive" href="first-snap/c">Continue &rsaquo;</a>
+      </div>
     </div>
-  </div>
 
-  <div class="col-6">
-    <h4>Here's how <a href="https://snapcraft.io/dosbox-x">dosbox</a> defines snapcraft.yaml:</h4>
-    <div class ="p-show-more is-collapsed" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: dosbox
-<b>version</b>: "0.74-svn"
-<b>summary</b>: DOS emulator
-<b>description</b>: |
-    DOSBox is a x86 emulator with Tandy/Hercules/[&hellip;]
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Here's how <a href="https://snapcraft.io/dosbox-x">dosbox</a> defines snapcraft.yaml:</h4>
+      <div class ="p-show-more is-collapsed" data-js="js-show-more">
+        <pre class="p-code-yaml"><b>name</b>: dosbox
+  <b>version</b>: "0.74-svn"
+  <b>summary</b>: DOS emulator
+  <b>description</b>: |
+      DOSBox is a x86 emulator with Tandy/Hercules/[&hellip;]
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
+  <b>confinement</b>: devmode
+  <b>base</b>: core18
 
-<b>parts</b>:
-  <b>dosbox</b>:
-    <b>plugin</b>: autotools
-    <b>source-type</b>: tar
-    <b>source</b>: http://source.dosbox.com/dosboxsvn.tgz
-    <b>build-packages</b>:
-    - g++
-    - make
-    - libsdl1.2-dev
-    [&hellip;]
-    - libasound2-dev
-    <b>stage-packages</b>:
-    - libsdl-sound1.2
-    - libsdl-net1.2
-    - libxcursor1
-    [&hellip;]
-    - zlib1g
+  <b>parts</b>:
+    <b>dosbox</b>:
+      <b>plugin</b>: autotools
+      <b>source-type</b>: tar
+      <b>source</b>: http://source.dosbox.com/dosboxsvn.tgz
+      <b>build-packages</b>:
+      - g++
+      - make
+      - libsdl1.2-dev
+      [&hellip;]
+      - libasound2-dev
+      <b>stage-packages</b>:
+      - libsdl-sound1.2
+      - libsdl-net1.2
+      - libxcursor1
+      [&hellip;]
+      - zlib1g
 
- <b>apps</b>:
-   <b>dosbox</b>:
-      <b>command</b>: dosbox
-      <b>environment</b>:
-        "LD_LIBRARY_PATH": "$SNAP/usr/lib/
-        $SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
-        "DISABLE_WAYLAND": "1"</pre>
+   <b>apps</b>:
+     <b>dosbox</b>:
+        <b>command</b>: dosbox
+        <b>environment</b>:
+          "LD_LIBRARY_PATH": "$SNAP/usr/lib/
+          $SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
+          "DISABLE_WAYLAND": "1"</pre>
 
-      {% include "home/_fsf_yaml_show_more.html" %}
+        {% include "home/_fsf_yaml_show_more.html" %}
 
+      </div>
     </div>
   </div>
 </div>

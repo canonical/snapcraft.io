@@ -1,59 +1,61 @@
-<div class="row u-hide u-no-padding" data-flow-details="java">
-  <div class="col-6">
-    <h4>Why are snaps good for Java projects?</h4>
-    <ul>
-      <li>Simplify installation instructions, regardless of distribution, to snap install myjavaapp.</li>
-      <li>Directly control the delivery of automatic application updates.</li>
-    </ul>
-    <p>Distributing a Java application for Linux and reaching the widest possible audience is complicated. Typically, the user has to make sure the JRE/SDK version and their environment are configured correctly. When a Linux distribution changes the delivered JRE, this can be problematic for applications. Snapcraft ensures the correct JRE is shipped alongside the application at all times.</p>
+<div class="col-{{ columns }} u-hide" data-flow-details="java">
+  <div class="row">
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Why are snaps good for Java projects?</h4>
+      <ul>
+        <li>Simplify installation instructions, regardless of distribution, to snap install myjavaapp.</li>
+        <li>Directly control the delivery of automatic application updates.</li>
+      </ul>
+      <p>Distributing a Java application for Linux and reaching the widest possible audience is complicated. Typically, the user has to make sure the JRE/SDK version and their environment are configured correctly. When a Linux distribution changes the delivered JRE, this can be problematic for applications. Snapcraft ensures the correct JRE is shipped alongside the application at all times.</p>
 
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example Java app in the Snap Store.</p>
-      <a class="p-button--positive" href="/first-snap/java">Continue &rsaquo;</a>
+      <div class="p-flow-details__continue">
+        <p>In just a few steps, you’ll have an example Java app in the Snap Store.</p>
+        <a class="p-button--positive" href="/first-snap/java">Continue &rsaquo;</a>
+      </div>
     </div>
-  </div>
 
-  <div class="col-6">
-    <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
-    <div class ="p-show-more is-collapsed" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: freeplane
-<b>version</b>: '1.8.1'
-<b>summary</b>: Application for Mind Mapping [&hellip;]
-<b>description</b>: |
-  Freeplane is a free and open source software [&hellip;]
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h4>
+      <div class ="p-show-more is-collapsed" data-js="js-show-more">
+        <pre class="p-code-yaml"><b>name</b>: freeplane
+  <b>version</b>: '1.8.1'
+  <b>summary</b>: Application for Mind Mapping [&hellip;]
+  <b>description</b>: |
+    Freeplane is a free and open source software [&hellip;]
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
+  <b>confinement</b>: devmode
+  <b>base</b>: core18
 
-<b>parts</b>:
-  <b>freeplane</b>:
-    <b>plugin</b>: gradle
-    <b>source</b>: https://github.com/freeplane/freeplane.git
-    <b>source-tag</b>: release-$SNAPCRAFT_PROJECT_VERSION
-    <b>gradle-version</b>: '5.1.1'
-    <b>gradle-output-dir</b>: BIN
-    <b>gradle-options</b>: [binZip, -xtest, -xcreateGitTag]
-    <b>override-build</b>: |
-      snapcraftctl build
-      unzip -o DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
-    <b>build-packages</b>:
-      - unzip
+  <b>parts</b>:
+    <b>freeplane</b>:
+      <b>plugin</b>: gradle
+      <b>source</b>: https://github.com/freeplane/freeplane.git
+      <b>source-tag</b>: release-$SNAPCRAFT_PROJECT_VERSION
+      <b>gradle-version</b>: '5.1.1'
+      <b>gradle-output-dir</b>: BIN
+      <b>gradle-options</b>: [binZip, -xtest, -xcreateGitTag]
+      <b>override-build</b>: |
+        snapcraftctl build
+        unzip -o DIST/freeplane_bin-*.zip -d $SNAPCRAFT_PART_INSTALL/
+      <b>build-packages</b>:
+        - unzip
 
-<b>apps</b>:
-  <b>freeplane</b>:
-    <b>extensions</b>:
-      - gnome-3-28
-    <b>command</b>: freeplane-$SNAPCRAFT_PROJECT_VERSION/freeplane.sh
-    <b>environment</b>:
-      JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
-      PATH: $JAVA_HOME/jre/bin:$PATH
-    <b>plugs</b>:
-      - home
-      - network
-      - cups-control</pre>
+  <b>apps</b>:
+    <b>freeplane</b>:
+      <b>extensions</b>:
+        - gnome-3-28
+      <b>command</b>: freeplane-$SNAPCRAFT_PROJECT_VERSION/freeplane.sh
+      <b>environment</b>:
+        JAVA_HOME: $SNAP/usr/lib/jvm/java-11-openjdk-amd64
+        PATH: $JAVA_HOME/jre/bin:$PATH
+      <b>plugs</b>:
+        - home
+        - network
+        - cups-control</pre>
 
-      {% include "home/_fsf_yaml_show_more.html" %}
+        {% include "home/_fsf_yaml_show_more.html" %}
 
+      </div>
     </div>
   </div>
 </div>

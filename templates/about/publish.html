@@ -7,5 +7,99 @@
 {% block meta_title %}About Publishing | Snapcraft{% endblock %}
 
 {% block about_content %}
+  <div class="p-strip is-shallow u-no-padding--top">
+    <h1 class="p-heading--2">Snapcraft lets you build with the tools you already use</h1>
+    <p>
+      With support for many languages out of the box, getting started with Snapcraft can be as simple as <a href="/docs/snapcraft-overview">installing and running snapcraft</a>.
+    </p>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+  </div>
+  <div class="p-strip is-shallow">
+    <h2>
+      Publish from your developer workstation
+    </h2>
+    <h3 class="p-heading--4">
+      Linux, macOS or Windows
+    </h3>
+    <p>
+      To develop snaps you have <a href="/snapcraft">Linux support via Snaps</a>, <a href="/docs/install-snapcraft-on-macos">macOS support via homebrew</a> and <a href="/docs/t/building-the-snap-on-windows/6829">Windows support via WSL</a>. With whichever OS you’re comfortable with, you can develop and publish snaps.
+    </p>
+    <p>
+      If you already have an Electron app for Windows and macOS, you only need to make minimal changes to your package.json to build a snap that’s ready to release. <a href="/docs/electron-apps">Get started with an Electron app</a>.
+    </p>
+    <h3 class="p-heading--4">Learn how to snap an app in 30 minutes</h3>
+    <p>What language or framework does your app use?</p>
+    {% with layout_no_of_columns=8 %}
+      {% include "partials/fsf_language.html" %}
+    {% endwith %}
+  </div>
+  <div class="p-strip is-shallow">
+    <h2>Publish with our Build service</h2>
+    <h3 class="p-heading--4">Build for multiple architectures from a single GitHub commit</h3>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <p>Building your snap locally limits you to your development architecture. Let us do the heavy lifting and build it for multiple architectures including AMD64, i386, ARM and ARM64.</p>
+    <p>Behind the scenes, snaps are built by <a href="https://launchpad.net" class="p-link--external">Launchpad</a> the tool used to build all Ubuntu images. When your builds are ready, you can release them together, as a set, ensuring everyone on all architectures receive the same version at the same time.</p>
+    <a href="https://snapcraft.io/build" class="p-button--neutral">Find out more</a>
+  </div>
+  <div class="p-strip is-shallow">
+    <h2>Publish with a third party CI system</h2>
+    <h3 class="p-heading--4">Travis CI, Circle CI and GitHub Actions are all supported</h3>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <p>If you&rsquo;re already comfortable with a third party CI workflow Snaps are supported there too. You don&rsquo;t need to change or modify anything if you don&rsquo;t want to.</p>
+    <a href="https://snapcraft.io/https://snapcraft.io/tutorials/continuous-snap-delivery-from-travis-ci" class="p-button--neutral"><span class="p-link--external">Publish with Travis CI</span></a>
+    <a href="https://snapcraft.io/tutorials/continuous-snap-delivery-from-circle-ci" class="p-button--neutral"><span class="p-link--external">Publish with Circle CI</span></a>
+    <a href="https://github.com/marketplace/actions/snapcraft-action" class="p-button--neutral"><span class="p-link--external">Publish with GitHub Actions</span></a>
+  </div>
+  <div class="p-strip is-shallow">
+    <h2>Publish with your own infrastructure</h2>
+    {{
+      image(
+        url="https://assets.ubuntu.com/v1/143fff51-DO+NOT+USE%21.jpg",
+        alt="",
+        width="725",
+        height="240",
+        hi_def=True
+      ) | safe
+    }}
+    <p>Already have a build farm, for all the architectures you need? The <a href="https://dashboard.snapcraft.io/docs/" class="p-link--external">Publisher Gateway APIs</a> let you automate everything from uploading and releasing a Snap, to adding screenshots to display in the <a href="/store">Storefront</a>.</p>
+  </div>
+{% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/about.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      snapcraft.about.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+      snapcraft.about.initExpandableArea();
+    });
+  });
+</script>
 {% endblock %}
