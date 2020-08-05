@@ -11,8 +11,8 @@ const production = process.env.ENVIRONMENT !== "devel";
 const minimizer = production
   ? [
       new TerserPlugin({
-        sourceMap: true
-      })
+        sourceMap: true,
+      }),
     ]
   : [];
 
@@ -20,15 +20,15 @@ module.exports = {
   entry: entry,
   output: {
     filename: "[name].js",
-    path: __dirname + "/static/js/dist"
+    path: __dirname + "/static/js/dist",
   },
   mode: production ? "production" : "development",
   devtool: production ? "source-map" : "eval-source-map",
   module: {
-    rules: rules
+    rules: rules,
   },
   optimization: {
     minimize: true,
-    minimizer
-  }
+    minimizer,
+  },
 };

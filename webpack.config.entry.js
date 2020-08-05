@@ -3,8 +3,9 @@ module.exports = {
   base: "./static/js/base/base.js",
   release: "./static/js/publisher/release.js",
   public: "./static/js/public/public.js",
+  about: "./static/js/public/about/index.js",
   // TODO:
   // publisher bundle is big (webpack warning) - try to chunk it down
   // https://github.com/canonical-web-and-design/snapcraft.io/issues/1246
-  publisher: "./static/js/publisher/publisher.js"
+  publisher: "./static/js/publisher/publisher.js",
 };
