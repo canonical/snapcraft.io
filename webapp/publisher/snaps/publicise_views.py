@@ -33,6 +33,7 @@ def get_publicise(snap_name):
         return _handle_error(api_error)
 
     available_languages = {
+        "ar": {"title": "العربية", "text": "احصل عليه من Snap Store"},
         "bg": {"title": "български", "text": "Инсталирайте го от Snap Store"},
         "bn": {"title": "বাংলা", "text": "থেকে ইনস্টল করুন"},
         "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
@@ -58,7 +59,7 @@ def get_publicise(snap_name):
         "publisher_name": snap_details["publisher"]["display-name"],
         "snap_id": snap_details["snap_id"],
         "available": available_languages,
-        "download_version": "v1.4.1",
+        "download_version": "v1.4.2",
     }
 
     return flask.render_template(
