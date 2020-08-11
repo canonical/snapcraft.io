@@ -379,6 +379,25 @@ def store_blueprint(store_query=None, testing=False):
             status_code,
         )
 
+    @store.route("/store/featured-snaps/<category>")
+    def featured_snaps_in_category(category):
+        category_results = []
+
+        try:
+            category_results = api.get_category_items(
+                category=category, size=3, page=1
+            )
+        except (StoreApiError, ApiError) as api_error:
+            status_code, error_info = _handle_error(api_error)
+            return (
+                flask.jsonify({"error": error_info}),
+                status_code,
+            )
+
+        snaps_results = logic.get_searched_snaps(category_results)
+
+        return flask.jsonify(snaps_results)
+
     if store_query:
         store.add_url_rule("/", "homepage", brand_store_view)
         store.add_url_rule("/search", "search", brand_search_snap)

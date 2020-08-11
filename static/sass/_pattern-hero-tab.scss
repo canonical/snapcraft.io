@@ -1,0 +1,89 @@
+@mixin snapcraft-hero-tab {
+  .p-hero-panel {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease-in;
+  }
+
+  .p-hero-tab {
+    margin-top: 2rem;
+
+    &__item {
+      background: transparent;
+      border: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      color: $color-x-light;
+      display: inline-block;
+      flex: 1;
+      padding: 0;
+      text-align: left;
+      width: calc(25% - 1rem);
+
+      @media only screen and (max-width: $breakpoint-small) {
+        width: 100%;
+      }
+
+      * {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        background: transparent;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+        * {
+          opacity: 1;
+        }
+      }
+
+      &:active,
+      &:focus,
+      &:active:hover {
+        background: transparent;
+        outline: 0;
+      }
+
+      &[aria-selected="false"] {
+        .before {
+          background-color: transparent;
+          content: "";
+          display: block;
+          height: 2px;
+          position: relative;
+          top: -1px;
+          width: 100%;
+        }
+      }
+
+      &[aria-selected="true"] {
+        * {
+          opacity: 1;
+        }
+
+        .before {
+          background-color: $color-navigation-active-bar;
+          content: "";
+          display: block;
+          height: 2px;
+          position: relative;
+          top: -1px;
+          width: 0%;
+
+          @media only screen and (max-width: $breakpoint-small) {
+            top: 0;
+          }
+        }
+      }
+    }
+
+    .p-hero-tab__title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .p-hero-tab__description {
+      font-style: italic;
+    }
+  }
+}

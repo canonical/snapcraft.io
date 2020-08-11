@@ -2,7 +2,7 @@ import flask
 from webapp.snapcraft import logic
 
 
-def snapcraft_blueprint():
+def snapcraft_blueprint(store_query=None):
     snapcraft = flask.Blueprint("snapcraft", __name__)
 
     @snapcraft.route("/")
@@ -12,7 +12,7 @@ def snapcraft_blueprint():
         livestream = logic.get_livestreams()
 
         return flask.render_template(
-            "index.html", nps=nps, livestream=livestream
+            "index.html", nps=nps, livestream=livestream,
         )
 
     @snapcraft.route("/iot")

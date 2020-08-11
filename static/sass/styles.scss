@@ -1,6 +1,8 @@
 // colour definitions
+$ubuntu-orange: #e95420;
 $color-brand: #00302f;
 $color-accent: $color-brand;
+$color-navigation-active-bar: $ubuntu-orange;
 
 // navigation variables
 $theme-default-nav: dark;
@@ -233,6 +235,9 @@ $color-social-icon-foreground: $color-light;
 @import 'snapcraft_tour';
 @include snapcraft-tour;
 
+@import 'pattern-hero-tab';
+@include snapcraft-hero-tab;
+
 @import 'snapcraft_p-tutorials';
 @include snapcraft-pattern-tutorials;
 
@@ -255,4 +260,12 @@ $color-social-icon-foreground: $color-light;
 
 dl {
   margin-bottom: $spv-outer--scaleable;
+}
+
+
+// Fades in content when class is added
+.u-animate--reveal {
+  height: auto !important;
+  opacity: 1 !important;
+  transition: opacity 0.5s ease-in;
 }
