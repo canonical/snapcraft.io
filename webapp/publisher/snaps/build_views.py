@@ -359,7 +359,9 @@ def post_snap_builds(snap_name):
 
         launchpad.create_snap(snap_name, git_url, macaroon)
 
-        flask.flash("The GitHub repository was linked correctly.", "positive")
+        flask.flash(
+            "The GitHub repository was linked successfully.", "positive"
+        )
 
         # Create webhook in the repo, it should also trigger the first build
         github_hook_url = f"https://snapcraft.io/{snap_name}/webhook/notify"
