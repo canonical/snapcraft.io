@@ -297,7 +297,7 @@ const ReleasesTableChannelHeading = (props) => {
 
   let timeUntilExpiration;
   if (branch) {
-    timeUntilExpiration = formatDistanceToNow(branch.expiration);
+    timeUntilExpiration = formatDistanceToNow(Date.parse(branch.expiration));
   }
 
   const promoteRevisions = (targetChannel) => {
