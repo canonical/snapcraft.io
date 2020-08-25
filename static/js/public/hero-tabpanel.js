@@ -1,4 +1,4 @@
-class HeroTabpanels {
+class HeroTabPanels {
   constructor(mainContainerSelector, categoryList) {
     this.timer = null;
     this.mainContainer = document.querySelector(mainContainerSelector);
@@ -9,23 +9,17 @@ class HeroTabpanels {
       this.panelContainer = this.mainContainer.querySelector(
         "[data-js='panels-container']"
       );
-      this.tabs = this.mainContainer.querySelectorAll(".p-hero-tab__item");
+      this.tabs = this.mainContainer.querySelectorAll(
+        "[data-js='carousel-tab']"
+      );
 
       if (this.panelContainer) {
         this.initPanels();
       }
 
-      if (this.tabs) {
-        this.initEvents(this.tabs);
-      }
+      this.initEvents();
     } else {
       throw new Error(`${mainContainerSelector} does not exist`);
-    }
-  }
-
-  removeAllChildNodes(parent) {
-    while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
     }
   }
 
@@ -42,7 +36,7 @@ class HeroTabpanels {
     panel.setAttribute("aria-labelledby", `${categoryName}-snaps`);
     snaps.forEach((snap) => {
       const columnDiv = document.createElement("div");
-      columnDiv.setAttribute("class", "col-4");
+      columnDiv.setAttribute("class", "col-4 u-equal-height");
       columnDiv.innerHTML = `
         <a class="p-media-object p-media-object--snap p-card" href="/${
           snap.package_name
@@ -103,7 +97,9 @@ class HeroTabpanels {
   triggerNextTab(tab) {
     let nextTab = tab.nextElementSibling;
     if (!nextTab) {
-      nextTab = this.mainContainer.querySelectorAll(".p-hero-tab__item")[0];
+      nextTab = this.mainContainer.querySelectorAll(
+        "[data-js='carousel-tab']"
+      )[0];
     }
     this.currentTab = nextTab.getAttribute("id");
     this.changeTabs(nextTab);
@@ -143,14 +139,15 @@ class HeroTabpanels {
 
   initPanels() {
     // Fetch the first category
-    fetch(`/store/featured-snaps/${this.categoryList[0].toLowerCase()}`)
+    const firstCategoryLowerCased = this.categoryList[0].toLowerCase();
+    fetch(`/store/featured-snaps/${firstCategoryLowerCased}`)
       .then((res) => res.json())
       .then((results) => {
         this.categories.push({
-          name: this.categoryList[0].toLowerCase(),
+          name: firstCategoryLowerCased,
           snaps: results,
         });
-        this.removeAllChildNodes(this.panelContainer);
+        this.panelContainer.innerHTML = "";
         this.panelContainer.appendChild(
           this.createPanel(
             this.categories[0].name,
@@ -158,11 +155,11 @@ class HeroTabpanels {
             false
           )
         );
-        // Set crrent tab
+        // Set current tab
         this.currentTab = `${this.categories[0].name}-snaps`;
         // Select the inital active tab
         const initalActiveTab = this.mainContainer.querySelector(
-          `.p-hero-tab__item[aria-selected="true"]`
+          `[data-js='carousel-tab'][aria-selected="true"]`
         );
         this.playTab(initalActiveTab);
       })
@@ -191,12 +188,12 @@ class HeroTabpanels {
     });
   }
 
-  initEvents(tabs) {
+  initEvents() {
     const that = this;
     // Add a click event handler to each tab
-    tabs.forEach((tab) => {
+    this.tabs.forEach((tab) => {
       tab.addEventListener("click", function (e) {
-        const target = e.target.closest(".p-hero-tab__item");
+        const target = e.target.closest("[data-js='carousel-tab']");
         that.recordEvent(that.currentTab, target.getAttribute("id"));
         that.changeTabs(target);
       });
@@ -205,7 +202,7 @@ class HeroTabpanels {
 }
 
 function init(mainContainerSelector, categoryList) {
-  new HeroTabpanels(mainContainerSelector, categoryList);
+  new HeroTabPanels(mainContainerSelector, categoryList);
 }
 
 export { init };

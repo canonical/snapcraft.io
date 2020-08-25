@@ -3,16 +3,16 @@
     height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: opacity 0.5s ease-in;
+    transition: opacity .5s ease-in;
   }
 
   .p-hero-tab {
     margin-top: 2rem;
 
-    &__item {
+    .p-hero-tab__item {
       background: transparent;
       border: 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, .2);
       color: $color-x-light;
       display: inline-block;
       flex: 1;
@@ -25,12 +25,12 @@
       }
 
       * {
-        opacity: 0.5;
+        opacity: .5;
       }
 
       &:hover {
         background: transparent;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-top: 1px solid rgba(255, 255, 255, .2);
 
         * {
           opacity: 1;
@@ -79,7 +79,7 @@
 
     .p-hero-tab__title {
       font-weight: 500;
-      margin-bottom: 0.25rem;
+      margin-bottom: .25rem;
     }
 
     .p-hero-tab__description {

@@ -63,8 +63,21 @@
   .p-strip-slanted--snapcraft {
     @extend %vf-strip;
     @extend %vf-strip-slanted;
-    // background-image: url("#{$assets-path}a3c29307-hero-bg-snapcraft-1--nowhite.svg");
-    background-image: linear-gradient(to bottom left, rgba(225,225,225,0.03) 0%, rgba(225,225,225,0.03) 49.9%, rgba(225,225,225,0) 50%, rgba(225,225,225,0) 100%),linear-gradient(to top left, rgba(225,225,225,0.03) 0%, rgba(225,225,225,0.03) 49.9%, rgba(225,225,225,0) 50%, rgba(225,225,225,0) 100%),linear-gradient(10deg, $color-brand, lighten($color-brand, 10%));
+    background-image: linear-gradient(
+      to bottom left,
+      rgba(225, 225, 225, .03) 0%,
+      rgba(225, 225, 225, .03) 49.9%,
+      rgba(225, 225, 225, 0) 50%,
+      rgba(225, 225, 225, 0) 100%
+      ),
+    linear-gradient(
+      to top left,
+      rgba(225, 225, 225, .03) 0%,
+      rgba(225, 225, 225, .03) 49.9%,
+      rgba(225, 225, 225, 0) 50%,
+      rgba(225, 225, 225, 0) 100%
+    ),
+    linear-gradient(10deg, $color-brand, lighten($color-brand, 10%));
     background-position: top right, bottom right;
     background-repeat: no-repeat;
     background-size: 80% 70%, 80% 75%, 100% auto;
@@ -78,7 +91,22 @@
   .p-strip--suru-background {
     @extend %vf-strip;
     background-blend-mode: multiply, multiply;
-    background-image: linear-gradient(to bottom right, rgba(119, 41, 83, .16) 0, rgba(119, 41, 83, .16) 49.9%, transparent 50%), linear-gradient(to bottom left, rgba(130, 190, 160, .2) 0, rgba(130, 190, 160, .2) 49.9%, transparent 50%), linear-gradient($color-slanted-background 0, $color-slanted-background 100%);
+    background-image: linear-gradient(
+      to bottom right,
+      rgba(119, 41, 83, .16) 0,
+      rgba(119, 41, 83, .16) 49.9%,
+      transparent 50%
+    ),
+    linear-gradient(
+      to bottom left,
+      rgba(130, 190, 160, .2) 0,
+      rgba(130, 190, 160, .2) 49.9%,
+      transparent 50%
+    ),
+    linear-gradient(
+      $color-slanted-background 0,
+      $color-slanted-background 100%
+    );
     background-position: left top, right top;
     background-repeat: no-repeat;
     background-size: 70% 80%, 75% 100%, 100% 100%;

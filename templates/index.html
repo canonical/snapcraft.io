@@ -78,7 +78,7 @@
       <div class="u-fixed-width p-hero-tab">
         <div role="tablist" aria-label="Fatured snaps" class="p-hero-tab__list">
           {% for category in hero_categories %}
-          <button role="tab" aria-selected="{% if loop.index == 1 %}true{% else %}false{% endif %}" aria-controls="panel-{{ category|lower }}-snaps" id="{{ category|lower }}-snaps" class="p-hero-tab__item">
+          <button role="tab" aria-selected="{% if loop.index == 1 %}true{% else %}false{% endif %}" aria-controls="panel-{{ category|lower }}-snaps" id="{{ category|lower }}-snaps" class="p-hero-tab__item" data-js="carousel-tab">
             <i class="before"></i>
             <p class="p-hero-tab__title">{{ category }}</p>
           </button>
