@@ -1,22 +1,23 @@
-<div class="row u-hide u-no-padding" data-flow-details="node">
-  <div class="col-6">
-    <h4>Why are snaps good for Node.js projects?</h4>
-    <ul>
-      <li>Easy to discover and install by millions using the Snap Store or command-line every day.</li>
-      <li>Automatically updated to the latest stable version of your app.</li>
-      <li>Revert to the previous version if an update fails, preserving data.</li>
-    </ul>
-    <p>With npm you can distribute apps to other developers, but it’s not tailored to end users. Snaps let you distribute your Node app in an app store experience.</p>
-    <div class="p-flow-details__continue">
-      <p>In just a few steps, you’ll have an example Node.js app in the Snap Store.</p>
-      <a class="p-button--positive" href="/first-snap/node">Continue &rsaquo;</a>
+<div class="col-{{ columns }} u-hide" data-flow-details="node">
+  <div class="row">
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Why are snaps good for Node.js projects?</h4>
+      <ul>
+        <li>Easy to discover and install by millions using the Snap Store or command-line every day.</li>
+        <li>Automatically updated to the latest stable version of your app.</li>
+        <li>Revert to the previous version if an update fails, preserving data.</li>
+      </ul>
+      <p>With npm you can distribute apps to other developers, but it’s not tailored to end users. Snaps let you distribute your Node app in an app store experience.</p>
+      <div class="p-flow-details__continue">
+        <p>In just a few steps, you’ll have an example Node.js app in the Snap Store.</p>
+        <a class="p-button--positive" href="/first-snap/node">Continue &rsaquo;</a>
+      </div>
     </div>
-  </div>
 
-  <div class="col-6">
-    <h4>Here's how <a href="https://snapcraft.io/wethr">wethr</a> defines snapcraft.yaml:</h4>
-    <div class ="p-show-more is-collapsed" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: wethr
+    <div class="col-{{ (columns/2) | int }}">
+      <h4>Here's how <a href="https://snapcraft.io/wethr">wethr</a> defines snapcraft.yaml:</h4>
+      <div class ="p-show-more is-collapsed" data-js="js-show-more">
+        <pre class="p-code-yaml"><b>name</b>: wethr
 <b>version</b>: '1.0'
 <b>summary</b>: Command line weather tool.
 <b>description</b>: |
@@ -34,8 +35,9 @@
   <b>wethr</b>:
     <b>command</b>: wethr</pre>
 
-      {% include "home/_fsf_yaml_show_more.html" %}
+        {% include "home/_fsf_yaml_show_more.html" %}
 
+      </div>
     </div>
   </div>
 </div>

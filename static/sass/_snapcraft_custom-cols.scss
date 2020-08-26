@@ -11,10 +11,17 @@
     }
   }
 
-  .col-lang-select {
+  .col-lang-select--3 {
     // As above but 6 across by col-2 width
     @media(min-width: 772px) and (max-width: 1152px) {
       grid-column-end: span 3;
+    }
+  }
+
+  .col-lang-select--4 {
+    // As above but 8 across by col-2 width
+    @media(min-width: 772px) and (max-width: 1152px) {
+      grid-column-end: span 4;
     }
   }
 }
