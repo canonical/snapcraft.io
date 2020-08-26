@@ -38,7 +38,7 @@ class HeroTabPanels {
       const columnDiv = document.createElement("div");
       columnDiv.setAttribute("class", "col-4 u-equal-height");
       columnDiv.innerHTML = `
-        <a class="p-media-object p-media-object--snap p-card" href="/${
+        <a class="p-media-object p-media-object--snap p-card u-no-margin--bottom" href="/${
           snap.package_name
         }" title="${snap.title}${snap.summary ? " – " : ""}${snap.summary}">
           <img src="${snap.icon_url}" alt="${
