@@ -95,7 +95,11 @@ class TestBuildStateMapper(unittest.TestCase):
             ("Cancelled build", "Unscheduled", "cancelled"),
             ("Cancelled build", "Pending", "cancelled"),
             ("Cancelled build", "Cancelled build", "cancelled"),
-            ("Cancelled build", "Failed to release to channels", "cancelled",),
+            (
+                "Cancelled build",
+                "Failed to release to channels",
+                "cancelled",
+            ),
             ("Cancelled build", "Uploaded", "cancelled"),
             ("Failed to upload", "Unscheduled", "failed_to_build"),
             ("Failed to upload", "Pending", "failed_to_build"),

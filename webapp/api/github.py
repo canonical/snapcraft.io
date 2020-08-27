@@ -236,7 +236,9 @@ class GitHub:
         Possible values: "admin", "push" or "pull"
         """
         response = self._request(
-            "GET", f"repos/{owner}/{repo}", raise_exceptions=True,
+            "GET",
+            f"repos/{owner}/{repo}",
+            raise_exceptions=True,
         )
         response_permissions = response.json()["permissions"]
         user_permissions = [
@@ -250,7 +252,9 @@ class GitHub:
         Return True if GitHub repo exists
         """
         response = self._request(
-            "GET", f"repos/{owner}/{repo}", raise_exceptions=False,
+            "GET",
+            f"repos/{owner}/{repo}",
+            raise_exceptions=False,
         )
         if response.status_code == 404:
             return False

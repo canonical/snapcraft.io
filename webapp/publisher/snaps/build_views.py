@@ -449,7 +449,9 @@ def post_disconnect_repo(snap_name):
 
             if old_hook:
                 github.remove_hook(
-                    gh_owner, gh_repo, old_hook["id"],
+                    gh_owner,
+                    gh_repo,
+                    old_hook["id"],
                 )
         except HTTPError:
             pass

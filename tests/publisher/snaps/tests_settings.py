@@ -70,7 +70,10 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         launchpad_payload = {"snaps": [{"store_name": snap_name}]}
 
         responses.add(
-            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+            responses.GET,
+            launchpad_url,
+            json=launchpad_payload,
+            status=200,
         )
 
         response = self.client.get(self.endpoint_url)

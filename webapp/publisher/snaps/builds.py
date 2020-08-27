@@ -37,8 +37,7 @@ class LaunchpadStoreUploadState(Enum):
 
 
 def build_link(bsi_url, snap, build):
-    """ Builds the link to the build page
-    """
+    """Builds the link to the build page"""
     build_id = build["self_link"].split("/")[-1]
 
     # Remove GitHub hostname & split owner/repo
@@ -48,8 +47,8 @@ def build_link(bsi_url, snap, build):
 
 
 def _map_upload_state(upload_state):
-    """ Returns a user facing status based on
-        the status of the snap's upload to the store.
+    """Returns a user facing status based on
+    the status of the snap's upload to the store.
     """
     upload_state = LaunchpadStoreUploadState(upload_state)
     if upload_state == LaunchpadStoreUploadState.UNSCHEDULED:
@@ -71,9 +70,9 @@ def _map_upload_state(upload_state):
 
 
 def map_build_and_upload_states(build_state, upload_state):
-    """ Returns a user facing status based on the LP
-        build state and the status of the snap's
-        upload to the store.
+    """Returns a user facing status based on the LP
+    build state and the status of the snap's
+    upload to the store.
     """
     build_state = LaunchpadBuildState(build_state)
 

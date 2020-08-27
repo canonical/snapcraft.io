@@ -57,7 +57,9 @@ class FirstSnap(TestCase):
         self.client.set_cookie(
             "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
         )
-        response = self.client.get("/first-snap/python/linux-auto/package",)
+        response = self.client.get(
+            "/first-snap/python/linux-auto/package",
+        )
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("snap_name", "test-snap-name-python")
@@ -127,7 +129,9 @@ class FirstSnap(TestCase):
         self.client.set_cookie(
             "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
         )
-        response = self.client.get("/first-snap/python/linux/push",)
+        response = self.client.get(
+            "/first-snap/python/linux/push",
+        )
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux")

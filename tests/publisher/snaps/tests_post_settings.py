@@ -120,7 +120,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         launchpad_payload = {"snaps": [{"store_name": self.snap_name}]}
 
         responses.add(
-            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+            responses.GET,
+            launchpad_url,
+            json=launchpad_payload,
+            status=200,
         )
 
         changes = {"private": True}
@@ -198,7 +201,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         launchpad_payload = {"snaps": [{"store_name": self.snap_name}]}
 
         responses.add(
-            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+            responses.GET,
+            launchpad_url,
+            json=launchpad_payload,
+            status=200,
         )
 
         changes = {"license": "newLicense", "private": False}
@@ -286,7 +292,10 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         launchpad_payload = {"snaps": [{"store_name": self.snap_name}]}
 
         responses.add(
-            responses.GET, launchpad_url, json=launchpad_payload, status=200,
+            responses.GET,
+            launchpad_url,
+            json=launchpad_payload,
+            status=200,
         )
 
         changes = {"description": "This is an updated description"}
