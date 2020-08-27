@@ -184,12 +184,14 @@ publisher_snaps.add_url_rule(
     view_func=metrics_views.get_measure_snap,
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/metrics", view_func=metrics_views.publisher_snap_metrics,
+    "/<snap_name>/metrics",
+    view_func=metrics_views.publisher_snap_metrics,
 )
 
 # Publice views
 publisher_snaps.add_url_rule(
-    "/<snap_name>/publicise", view_func=publicise_views.get_publicise,
+    "/<snap_name>/publicise",
+    view_func=publicise_views.get_publicise,
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/badges",
@@ -202,7 +204,8 @@ publisher_snaps.add_url_rule(
 
 # Settings views
 publisher_snaps.add_url_rule(
-    "/<snap_name>/settings", view_func=settings_views.get_settings,
+    "/<snap_name>/settings",
+    view_func=settings_views.get_settings,
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/settings",

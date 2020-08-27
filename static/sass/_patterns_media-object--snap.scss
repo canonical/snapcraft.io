@@ -1,5 +1,7 @@
 @mixin snapcraft-p-media-object--snap {
   .p-media-object--snap {
+    width: 100%;
+
     .p-media-object__details {
       overflow: hidden;
     }
