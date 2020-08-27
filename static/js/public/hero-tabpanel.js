@@ -23,17 +23,11 @@ class HeroTabPanels {
     }
   }
 
-  createPanel(categoryName, snaps, hidden = true) {
-    const panel = document.createElement("div");
-    panel.setAttribute(
-      "class",
-      `p-hero-panel row u-no-padding--left u-no-padding--right${
-        hidden ? "" : " u-animate--reveal"
-      }`
+  updatePanel(categoryName, snaps) {
+    const panel = this.panelContainer.querySelector(
+      `[aria-labelledby='${categoryName}-snaps']`
     );
-    panel.setAttribute("id", `panel-${categoryName}-snaps`);
-    panel.setAttribute("role", "tabpanel");
-    panel.setAttribute("aria-labelledby", `${categoryName}-snaps`);
+    panel.innerHTML = "";
     snaps.forEach((snap) => {
       const columnDiv = document.createElement("div");
       columnDiv.setAttribute("class", "col-4 u-equal-height");
@@ -62,7 +56,6 @@ class HeroTabPanels {
       `;
       panel.appendChild(columnDiv);
     });
-    return panel;
   }
 
   changeTabs(target) {
@@ -138,53 +131,28 @@ class HeroTabPanels {
   }
 
   initPanels() {
-    // Fetch the first category
-    const firstCategoryLowerCased = this.categoryList[0].toLowerCase();
-    fetch(`/store/featured-snaps/${firstCategoryLowerCased}`)
-      .then((res) => res.json())
-      .then((results) => {
-        this.categories.push({
-          name: firstCategoryLowerCased,
-          snaps: results,
-        });
-        this.panelContainer.innerHTML = "";
-        this.panelContainer.appendChild(
-          this.createPanel(
-            this.categories[0].name,
-            this.categories[0].snaps,
-            false
-          )
-        );
-        // Set current tab
-        this.currentTab = `${this.categories[0].name}-snaps`;
-        // Select the inital active tab
-        const initalActiveTab = this.mainContainer.querySelector(
-          `[data-js='carousel-tab'][aria-selected="true"]`
-        );
-        this.playTab(initalActiveTab);
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+    // Set current tab
+    this.currentTab = `${this.categoryList[0].name}-snaps`;
+    // Select the inital active tab
+    const initalActiveTab = this.mainContainer.querySelector(
+      `[data-js='carousel-tab'][aria-selected="true"]`
+    );
+    this.playTab(initalActiveTab);
 
-    // Fetch the rest of categories
-    this.categoryList.forEach((category, i) => {
-      if (i > 0) {
-        fetch(`/store/featured-snaps/${category.toLowerCase()}`)
-          .then((res) => res.json())
-          .then((results) => {
-            this.categories.push({
-              name: category.toLowerCase(),
-              snaps: results,
-            });
-            this.panelContainer.appendChild(
-              this.createPanel(category.toLowerCase(), results)
-            );
-          })
-          .catch((error) => {
-            throw new Error(error);
+    // Fetch the category data
+    this.categoryList.forEach((category) => {
+      fetch(`/store/featured-snaps/${category.toLowerCase()}`)
+        .then((res) => res.json())
+        .then((results) => {
+          this.categories.push({
+            name: category.toLowerCase(),
+            snaps: results,
           });
-      }
+          this.updatePanel(category.toLowerCase(), results);
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     });
   }
 

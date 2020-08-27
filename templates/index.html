@@ -54,7 +54,8 @@
 
     <div data-js="hero-snaps-container">
       <div data-js="panels-container">
-        <div class="p-hero-panel u-animate--reveal row u-no-padding--left u-no-padding--right">
+        {% for category in hero_categories %}
+        <div class="p-hero-panel row u-no-padding--left u-no-padding--right{% if loop.index == 1 %} u-animate--reveal{% endif%}" id="panel-{{ category|lower }}-snaps" role="tabpanel" aria-labelledby="{{ category|lower }}-snaps">
           {% for _ in range(0, 3) %}
           <div class="col-4">
             <div class="p-card p-media-object p-media-object--snap is-placeholder u-no-margin--bottom">
@@ -73,6 +74,7 @@
           </div>
           {% endfor %}
         </div>
+        {% endfor %}
       </div>
 
       <div class="u-fixed-width p-hero-tab">
