@@ -32,7 +32,7 @@ class HeroTabPanels {
       const columnDiv = document.createElement("div");
       columnDiv.setAttribute("class", "col-4 u-equal-height");
       columnDiv.innerHTML = `
-        <a class="p-media-object p-media-object--snap p-card u-no-margin--bottom" href="/${
+        <a class="p-media-object p-media-object--snap p-card" href="/${
           snap.package_name
         }" title="${snap.title}${snap.summary ? " – " : ""}${snap.summary}">
           <img src="${snap.icon_url}" alt="${
@@ -60,6 +60,19 @@ class HeroTabPanels {
 
   changeTabs(target) {
     clearInterval(this.timer);
+
+    const nextCategoryName = target.getAttribute("aria-controls").split("-")[1];
+    const viewAllLinkList = this.mainContainer.querySelectorAll(
+      "[data-js='view-all']"
+    );
+    // Show the appropriate 'View all' link
+    viewAllLinkList.forEach((el) => {
+      if (el.getAttribute("id") === `view-all-${nextCategoryName}`) {
+        el.classList.remove("u-hide");
+      } else {
+        el.classList.add("u-hide");
+      }
+    });
 
     // Remove all current selected tabs
     this.tabs.forEach((tab) => {

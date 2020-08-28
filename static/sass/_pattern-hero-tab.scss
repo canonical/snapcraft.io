@@ -4,6 +4,17 @@
     opacity: 0;
     overflow: hidden;
     transition: opacity .5s ease-in;
+
+    .p-card {
+      @media screen and(min-width: $breakpoint-medium) {
+        margin-block-end: 0;
+      }
+    }
+  }
+
+  .p-hero-tab__link,
+  .p-hero-tab__link:visited {
+    color: $color-light;
   }
 
   .p-hero-tab {
