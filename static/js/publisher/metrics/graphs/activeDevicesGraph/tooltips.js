@@ -1,5 +1,5 @@
 import { bisector } from "d3-array";
-import { mouse, select } from "d3-selection";
+import { pointer, select } from "d3-selection";
 import { sortChannels } from "../../../../libs/channels";
 import { utcFormat } from "d3-time-format";
 import { format } from "d3-format";
@@ -95,14 +95,13 @@ export function tooltips() {
     ].join("");
   };
 
-  const mouseMove = (d, index, nodes) => {
+  const mouseMove = (event, d) => {
     if (!this.showTooltips) {
       return;
     }
-    const bisectDate = bisector((d) => d.date).left;
 
-    const node = nodes[index];
-    const mousePosition = mouse(node);
+    const bisectDate = bisector((d) => d.date).left;
+    const mousePosition = pointer(event, event.currentTarget);
 
     const x0 = this.xScale.invert(mousePosition[0]);
     const _date = new Date(x0);

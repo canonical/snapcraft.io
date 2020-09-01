@@ -32,7 +32,7 @@ describe("pendingReleases", () => {
         const result = pendingReleases(emptyState, releaseRevisionAction);
 
         expect(result).toEqual({
-          "1": {
+          1: {
             [releaseRevisionAction.payload.channel]: {
               revision: releaseRevisionAction.payload.revision,
               channel: releaseRevisionAction.payload.channel,
@@ -45,7 +45,7 @@ describe("pendingReleases", () => {
     describe("when this revision is pending release to different channel", () => {
       const stateWithSamePendingRevision = {
         // same revision in different channel
-        "1": {
+        1: {
           "other/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "other/edge",
@@ -72,14 +72,14 @@ describe("pendingReleases", () => {
     describe("when other revisions have pending releases", () => {
       const stateWithPendingReleases = {
         // same architecture different channel
-        "2": {
+        2: {
           "other/edge": {
             revision: { revision: 2, architectures: ["test64"] },
             channel: "other/edge",
           },
         },
         // same channel different architacture
-        "3": {
+        3: {
           "test/edge": {
             revision: { revision: 3, architectures: ["armf"] },
             channel: "test/edge",
@@ -95,7 +95,7 @@ describe("pendingReleases", () => {
 
         expect(result).toEqual({
           ...stateWithPendingReleases,
-          "1": {
+          1: {
             [releaseRevisionAction.payload.channel]: {
               revision: releaseRevisionAction.payload.revision,
               channel: releaseRevisionAction.payload.channel,
@@ -108,21 +108,21 @@ describe("pendingReleases", () => {
     describe("when other release is pending in same arch and channel", () => {
       const stateWithPendingReleases = {
         // same architecture different channel
-        "2": {
+        2: {
           "other/edge": {
             revision: { revision: 2, architectures: ["test64"] },
             channel: "other/edge",
           },
         },
         // same channel different architacture
-        "3": {
+        3: {
           "test/edge": {
             revision: { revision: 3, architectures: ["armf"] },
             channel: "test/edge",
           },
         },
         // same architecture, same channel
-        "4": {
+        4: {
           "test/edge": {
             revision: { revision: 4, architectures: ["test64"] },
             channel: "test/edge",
@@ -137,7 +137,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toMatchObject({
-          "1": {
+          1: {
             [releaseRevisionAction.payload.channel]: {
               revision: releaseRevisionAction.payload.revision,
               channel: releaseRevisionAction.payload.channel,
@@ -170,7 +170,7 @@ describe("pendingReleases", () => {
 
       it("should save previous revisions in release object", () => {
         const state = {
-          "1": {
+          1: {
             "test/edge": {
               revision: releaseRevisionPreviousRevisionsAction.payload.revision,
               channel: "test/edge",
@@ -184,7 +184,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "test/edge": {
               revision: releaseRevisionPreviousRevisionsAction.payload.revision,
               channel: "test/edge",
@@ -217,7 +217,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "test/edge": {
               ...releaseRevisionActionWithProgressive.payload,
             },
@@ -237,7 +237,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "test/edge": {
               ...releaseRevisionActionWithProgressive.payload,
             },
@@ -268,7 +268,7 @@ describe("pendingReleases", () => {
 
     describe("when there is a non-progressive pendingRelease", () => {
       const nonProgressiveState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -288,7 +288,7 @@ describe("pendingReleases", () => {
 
     describe("when there is a progressive pendingRelease", () => {
       const progressiveReleaseState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -307,7 +307,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "latest/stable": {
               ...progressiveReleaseState["1"]["latest/stable"],
               progressive: {
@@ -342,7 +342,7 @@ describe("pendingReleases", () => {
 
     describe("when there is a non-progressive pendingRelease", () => {
       const nonProgressiveState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -362,7 +362,7 @@ describe("pendingReleases", () => {
 
     describe("when there is a progressive pendingRelease", () => {
       const progressiveReleaseState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -381,7 +381,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "latest/stable": {
               ...progressiveReleaseState["1"]["latest/stable"],
               progressive: {
@@ -416,7 +416,7 @@ describe("pendingReleases", () => {
 
     describe("when revision has pending release into given channel", () => {
       const stateWithRevisionInChannel = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -435,7 +435,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "latest/beta": stateWithRevisionInChannel["1"]["latest/beta"],
           },
         });
@@ -444,7 +444,7 @@ describe("pendingReleases", () => {
 
     describe("when revision has pending release only into given channel", () => {
       const stateWithRevisionInChannel = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -480,7 +480,7 @@ describe("pendingReleases", () => {
 
     describe("when there are pending releases", () => {
       const stateWithPendingReleases = {
-        "1": {
+        1: {
           "latest/beta": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "latest/beta",
@@ -490,7 +490,7 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
           },
         },
-        "2": {
+        2: {
           "latest/stable": {
             revision: { revision: 2, architectures: ["abc42"] },
             channel: "latest/stable",
@@ -528,7 +528,7 @@ describe("pendingReleases", () => {
 
     describe("when there are pending releases to other channels", () => {
       const stateWithOtherPendingReleases = {
-        "1": {
+        1: {
           "latest/candidate": {
             revision: { revision: 1 },
             channel: "latest/candidate",
@@ -548,19 +548,19 @@ describe("pendingReleases", () => {
 
     describe("when there are pending releases to same channel", () => {
       const stateWithPendingReleases = {
-        "1": {
+        1: {
           "latest/candidate": {
             revision: { revision: 1 },
             channel: "latest/candidate",
           },
         },
-        "2": {
+        2: {
           "test/edge": {
             revision: { revision: 2 },
             channel: "test/edge",
           },
         },
-        "3": {
+        3: {
           "test/edge": {
             revision: { revision: 3 },
             channel: "test/edge",
@@ -600,7 +600,7 @@ describe("pendingReleases", () => {
 
     describe("when there are non-progressive pending revisions, that can't be progressive", () => {
       const stateWithPendingRevision = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42"] },
             channel: "test/edge",
@@ -615,14 +615,14 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": stateWithPendingRevision["1"],
+          1: stateWithPendingRevision["1"],
         });
       });
     });
 
     describe("when there are non-progressive pending revisions, that can be progressive", () => {
       const stateWithPendingRevision = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -641,7 +641,7 @@ describe("pendingReleases", () => {
 
         expect(result).toEqual({
           ...stateWithPendingRevision,
-          "1": {
+          1: {
             "test/edge": {
               ...stateWithPendingRevision["1"]["test/edge"],
               progressive: {
@@ -656,7 +656,7 @@ describe("pendingReleases", () => {
 
     describe("when there are progressive pending revisions, with progressive state", () => {
       const stateWithPendingRevision = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -699,7 +699,7 @@ describe("pendingReleases", () => {
 
     describe("when pending releases exist without progressive status", () => {
       const stateWithoutProgressiveReleases = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -719,7 +719,7 @@ describe("pendingReleases", () => {
 
     describe("when there are progressive pending revisions", () => {
       const stateWithProgressiveReleases = {
-        "1": {
+        1: {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -729,7 +729,7 @@ describe("pendingReleases", () => {
             },
           },
         },
-        "2": {
+        2: {
           "test/edge": {
             revision: { revision: 2, architectures: ["abc42", "test64"] },
             channel: "test/edge",
@@ -787,7 +787,7 @@ describe("pendingReleases", () => {
 
     describe("when there is a non-progressive pendingRelease", () => {
       const nonProgressiveState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -807,7 +807,7 @@ describe("pendingReleases", () => {
 
     describe("when there is a progressive pendingRelease", () => {
       const progressiveReleaseState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -826,7 +826,7 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "2": {
+          2: {
             "latest/stable": {
               channel: "latest/stable",
               replaces: progressiveReleaseState["1"]["latest/stable"],
@@ -842,7 +842,7 @@ describe("pendingReleases", () => {
 
     describe("when there are multiple progressive pendingReleases with the same key", () => {
       const progressiveReleasesState = {
-        "1": {
+        1: {
           "latest/stable": {
             revision: { revision: 1, architectures: ["amd64"] },
             channel: "latest/stable",
@@ -869,12 +869,12 @@ describe("pendingReleases", () => {
         );
 
         expect(result).toEqual({
-          "1": {
+          1: {
             "latest/stable": {
               ...progressiveReleasesState["1"]["latest/stable"],
             },
           },
-          "2": {
+          2: {
             "latest/candidate": {
               channel: "latest/candidate",
               replaces: progressiveReleasesState["1"]["latest/candidate"],

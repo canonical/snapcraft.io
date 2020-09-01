@@ -125,7 +125,7 @@ describe("pendingReleases actions", () => {
           },
         ],
         revisions: {
-          "2": {
+          2: {
             revision: 2,
             achitectures: ["test64"],
           },

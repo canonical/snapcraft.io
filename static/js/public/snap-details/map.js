@@ -1,4 +1,4 @@
-import { select, mouse } from "d3-selection";
+import { select, pointer } from "d3-selection";
 import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature, mesh } from "topojson-client";
@@ -86,9 +86,9 @@ export default function renderMap(el, snapData) {
       .attr("title", function (d) {
         return d.properties.name;
       })
-      .on("mousemove", (countryData) => {
-        const pos = mouse(mapEl.node());
-        const countrySnapData = snapData[countryData.id];
+      .on("mousemove", (event) => {
+        const pos = pointer(event, event.currentTarget);
+        const countrySnapData = snapData[event.currentTarget.id];
 
         if (countrySnapData) {
           tooltip
