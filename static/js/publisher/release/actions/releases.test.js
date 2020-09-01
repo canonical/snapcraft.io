@@ -126,7 +126,7 @@ describe("releases actions", () => {
         };
 
         const revisions = {
-          "3": revision,
+          3: revision,
         };
 
         handleReleaseResponse(dispatch, json, release, revisions, "latest");
@@ -205,7 +205,7 @@ describe("releases actions", () => {
           defaultTrack: "latest",
         },
         pendingReleases: {
-          "1": {
+          1: {
             "latest/edge": {
               revision: revision,
               channel: "latest/edge",
@@ -239,7 +239,7 @@ describe("releases actions", () => {
           defaultTrack: "latest",
         },
         pendingReleases: {
-          "1": {
+          1: {
             "latest/edge": {
               revision: revision,
               channel: "latest/edge",
@@ -309,7 +309,7 @@ describe("releases actions", () => {
           defaultTrack: "latest",
         },
         pendingReleases: {
-          "3": {
+          3: {
             "latest/edge": {
               revision: revision,
               channel: "latest/edge",
@@ -322,7 +322,7 @@ describe("releases actions", () => {
           },
         },
         revisions: {
-          "3": revision,
+          3: revision,
         },
       });
 
@@ -461,7 +461,7 @@ describe("releases actions", () => {
           defaultTrack: "latest",
         },
         pendingReleases: {
-          "3": {
+          3: {
             "latest/edge": {
               revision: revision,
               channel: "latest/edge",
@@ -475,7 +475,7 @@ describe("releases actions", () => {
         },
         pendingCloses: ["latest/edge"],
         revisions: {
-          "3": revision,
+          3: revision,
         },
       });
 

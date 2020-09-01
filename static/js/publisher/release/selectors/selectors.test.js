@@ -878,8 +878,8 @@ describe("getProgressiveState", () => {
       },
     ],
     revisions: {
-      "3": "revision3",
-      "2": "revision2",
+      3: "revision3",
+      2: "revision2",
     },
   };
 
@@ -896,7 +896,7 @@ describe("getProgressiveState", () => {
   const stateWithProgressiveEnabledAndPendingRelease = {
     ...stateWithProgressiveEnabled,
     pendingReleases: {
-      "3": {
+      3: {
         "latest/stable": {
           revision: { revision: "3", architectures: ["arch2"] },
           channel: "latest/stable",
@@ -1041,7 +1041,7 @@ describe("hasRelease", () => {
       const stateWithPendingReleaseToProgress = {
         ...initialState,
         pendingReleases: {
-          "1": {
+          1: {
             "latest/stable": {
               revision: { revision: 1, architectures: ["amd64"] },
               channel: "latest/stable",
@@ -1089,7 +1089,7 @@ describe("hasRelease", () => {
       const stateWithPendingRelease = {
         ...stateWithFlagEnabled,
         pendingReleases: {
-          "1": {
+          1: {
             "latest/stable": {
               revision: { revision: 1, architectures: ["amd64"] },
               channel: "latest/stable",
@@ -1101,7 +1101,7 @@ describe("hasRelease", () => {
       const stateWithPendingReleaseToProgress = {
         ...stateWithFlagEnabled,
         pendingReleases: {
-          "1": {
+          1: {
             "latest/stable": {
               revision: { revision: 1, architectures: ["amd64"] },
               channel: "latest/stable",
@@ -1127,7 +1127,7 @@ describe("hasRelease", () => {
       const stateWithPendingReleaseToUpdate = {
         ...stateWithFlagEnabled,
         pendingReleases: {
-          "1": {
+          1: {
             "latest/stable": {
               revision: {
                 revision: 1,
@@ -1159,7 +1159,7 @@ describe("hasRelease", () => {
       const stateWithPendingReleaseToCancel = {
         ...stateWithFlagEnabled,
         pendingReleases: {
-          "2": {
+          2: {
             "latest/stable": {
               revision: {
                 revision: 2,
@@ -1265,7 +1265,7 @@ describe("getPendingRelease", () => {
   const state = {
     ...initialState,
     pendingReleases: {
-      "1": {
+      1: {
         "latest/stable": {
           channel: "latest/stable",
           revision: {
