@@ -45,7 +45,7 @@
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "7.10.4",
     "@canonical/global-nav": "2.4.3",
-    "@canonical/react-components": "0.3.0",
+    "@canonical/react-components": "0.9.0",
     "@testing-library/react": "10.4.9",
     "autoprefixer": "9.8.6",
     "babel-eslint": "10.1.0",
