@@ -6,15 +6,15 @@ logo-mono: https://assets.ubuntu.com/v1/e4e63887-Distro_Logo_OpenSUSE_White.svg
 install:
   -
     action: |
-      Snap can be installed from the command line on openSUSE Leap 42.3, Leap 15 and Tumbleweed.
+      Snap can be installed from the command line on openSUSE Leap 15.x and Tumbleweed.
   -
     action: |
-      You need first add the <em>snappy</em> repository from the terminal. Leap 15 users, for example, can do this with the following command:
+      You need first add the <em>snappy</em> repository from the terminal. Leap 15.2 users, for example, can do this with the following command:
     command: |
-      sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.0 snappy
+      sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_15.2 snappy
   -
     action: |
-      Swap out <code>openSUSE_Leap_15.0</code> for either <code>openSUSE_Leap_42.3</code> or <code>openSUSE_Tumbleweed</code> if you’re using a different version of openSUSE.
+      Swap out <code>openSUSE_Leap_15.2</code> for <code>openSUSE_Leap_15.1</code>, <code>openSUSE_Leap_15.0</code>, or <code>openSUSE_Tumbleweed</code> if you’re using a different version of openSUSE.
   -
     action: |
       With the repository added, import its GPG key:
