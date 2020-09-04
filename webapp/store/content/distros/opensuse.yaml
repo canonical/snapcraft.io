@@ -6,7 +6,7 @@ logo-mono: https://assets.ubuntu.com/v1/e4e63887-Distro_Logo_OpenSUSE_White.svg
 install:
   -
     action: |
-      Snap can be installed from the command line on openSUSE Leap 15 and Tumbleweed.
+      Snap can be installed from the command line on openSUSE Leap 15.x and Tumbleweed.
   -
     action: |
       You need first add the <em>snappy</em> repository from the terminal. Leap 15.2 users, for example, can do this with the following command:
