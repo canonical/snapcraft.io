@@ -27,6 +27,11 @@ class HeroTabPanels {
     const panel = this.panelContainer.querySelector(
       `[aria-labelledby='${categoryName}-snaps']`
     );
+    const verifiedAccountBadge = `
+      <span class="p-verified" title="Verified account">
+        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
+      </span>
+    `;
     panel.innerHTML = "";
     snaps.forEach((snap) => {
       const columnDiv = document.createElement("div");
@@ -45,9 +50,12 @@ class HeroTabPanels {
             <div class="p-media-object__content">
               <p>
                 <span class="u-off-screen">Publisher: </span>${snap.publisher}
-                <span class="p-verified" title="Verified account">
-                  <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
-                </span>
+                ${
+                  snap.developer_validation &&
+                  snap.developer_validation === "verified"
+                    ? verifiedAccountBadge
+                    : ""
+                }
               </p>
               <p>${snap.summary}</p>
             </div>
