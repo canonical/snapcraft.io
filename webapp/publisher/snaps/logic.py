@@ -82,7 +82,7 @@ def verify_base_metrics(active_devices):
 
     :return: The base metric if it's available, 'version' if not
     """
-    if active_devices not in ("version", "os", "channel"):
+    if active_devices not in ("version", "os", "channel", "architecture"):
         return "version"
 
     return active_devices
@@ -131,6 +131,8 @@ def get_installed_based_metric(installed_base_metric):
         return "weekly_installed_base_by_operating_system"
     elif installed_base_metric == "channel":
         return "weekly_installed_base_by_channel"
+    elif installed_base_metric == "architecture":
+        return "weekly_installed_base_by_architecture"
 
 
 def is_snap_on_stable(channel_maps_list):
