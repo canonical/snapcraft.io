@@ -1,5 +1,4 @@
 from math import ceil, floor
-from urllib.parse import quote_plus
 import talisker.requests
 import flask
 import webapp.helpers as helpers
@@ -157,7 +156,7 @@ def store_blueprint(store_query=None, testing=False):
 
         try:
             searched_results = api.search(
-                quote_plus(snap_searched),
+                snap_searched,
                 category=snap_category,
                 size=size,
                 page=page,
@@ -262,9 +261,7 @@ def store_blueprint(store_query=None, testing=False):
         searched_results = []
 
         try:
-            searched_results = api.search(
-                quote_plus(snap_searched), size=size, page=page
-            )
+            searched_results = api.search(snap_searched, size=size, page=page)
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
 
