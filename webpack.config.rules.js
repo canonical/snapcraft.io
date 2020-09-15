@@ -10,6 +10,10 @@ module.exports = [
       loader: "babel-loader",
     },
   },
+  {
+    test: /\.s[ac]ss$/i,
+    use: ["style-loader", "css-loader", "sass-loader"],
+  },
   // TODO:
   // we should get rid of using globals making expose-loader unnecessary
   // https://github.com/canonical-web-and-design/snapcraft.io/issues/1245
