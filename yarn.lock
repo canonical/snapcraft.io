@@ -9412,6 +9412,11 @@ vanilla-framework@2.18.0:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.18.0.tgz#75039937c6d53ec9b237b9cdc7ecad8046725ad5"
   integrity sha512-hipKgpp7/kMQbln2NbX5qP6TotTNRhVmiHbgniGEqBsDXFz96vvZoetDp8fBBdgutaVKLQiaINth1yis7Q1jaQ==
 
+vanilla-framework@2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.0.tgz#c499d5ca59818595732733e45ef4c9e7fea71302"
+  integrity sha512-0qtFmzDBdgZ5JmKysBbIjQ224CDBtVWSdHvCzay3udBHlcbfJJTXIozLvOFk6zt78GClrNN2dwLLIpYPDWcaZQ==
+
 verbalize@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/verbalize/-/verbalize-0.1.2.tgz#165fda4640331548f8e990b1d7e14395eb720207"
