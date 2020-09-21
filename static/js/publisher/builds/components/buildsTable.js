@@ -15,13 +15,11 @@ const StatusCell = ({ build, queueTime }) => {
     icon = `p-icon--${status.icon}`;
   }
 
-  // TODO result cell title should include queue time
-  // title:
-
   const title =
     build.queue_time && queueTime[build.arch_tag]
       ? `Queue time: up to ${queueTime[build.arch_tag]}`
       : null;
+
   return (
     <Fragment>
       <span className="u-hide u-show--small">
@@ -80,7 +78,7 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
       },
       {
         Header: "Result",
-        className: "has-icon",
+        className: "p-table__cell--icon-placeholder",
         accessor: (build) =>
           build.status === "in_progress" && build.duration
             ? "releasing_soon"
@@ -88,11 +86,11 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
         // this function is technically an inline React component,
         // but we don't want to define a name and props for it
         // eslint-disable-next-line react/display-name, react/prop-types
-        Cell: ({ row }) => {
+        Cell: ({ row }) => (
           // get the raw build object from the row data
-          const build = row.original; // eslint-disable-line react/prop-types
-          return <StatusCell queueTime={queueTime} build={build} />;
-        },
+          // eslint-disable-next-line react/prop-types
+          <StatusCell queueTime={queueTime} build={row.original} />
+        ),
       },
       {
         Header: "Build Finished",
