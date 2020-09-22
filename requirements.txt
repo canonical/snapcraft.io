@@ -1,5 +1,5 @@
 # App dependencies
-canonicalwebteam.flask_base==0.6.3
+canonicalwebteam.flask_base==0.6.4
 canonicalwebteam.discourse-docs==1.0.1
 canonicalwebteam.blog==6.2.3
 canonicalwebteam.search==0.2.1
