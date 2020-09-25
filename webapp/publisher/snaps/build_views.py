@@ -463,11 +463,18 @@ def post_disconnect_repo(snap_name):
 
 @csrf.exempt
 def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
-    repo_url = flask.request.json["repository"]["html_url"]
-    gh_owner = flask.request.json["repository"]["owner"]["login"]
-    gh_repo = flask.request.json["repository"]["name"]
-    gh_default_branch = flask.request.json["repository"]["default_branch"]
-    gh_event_branch = flask.request.json["ref"][11:]
+    payload = flask.request.json
+    repo_url = payload["repository"]["html_url"]
+    gh_owner = payload["repository"]["owner"]["login"]
+    gh_repo = payload["repository"]["name"]
+    gh_default_branch = payload["repository"]["default_branch"]
+
+    # The first payload after the webhook creation
+    # doesn't contain a "ref" key
+    if "ref" in payload:
+        gh_event_branch = payload["ref"][11:]
+    else:
+        gh_event_branch = gh_default_branch
 
     # Check the push event is in the default branch
     if gh_default_branch != gh_event_branch:
@@ -477,6 +484,9 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
         lp_snap = launchpad.get_snap_by_store_name(snap_name)
     else:
         lp_snap = launchpad.get_snap(md5(repo_url.encode("UTF-8")).hexdigest())
+
+    if not lp_snap:
+        return ("This repository is not linked with any Snap", 403)
 
     # Check that this is the repo for this snap
     if lp_snap["git_repository_url"] != repo_url:

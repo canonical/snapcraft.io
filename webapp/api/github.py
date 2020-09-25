@@ -321,6 +321,13 @@ class GitHub:
 
         return False
 
+    def generate_webhook_secret_for_repo(self, owner, name):
+        key = bytes(GITHUB_WEBHOOK_SECRET, "UTF-8")
+        hmac_gen = hmac.new(key, None, sha1)
+        hmac_gen.update(bytes(owner, "UTF-8"))
+        hmac_gen.update(bytes(name, "UTF-8"))
+        return hmac_gen.hexdigest()
+
     def validate_webhook_signature(self, payload, signature):
         """
         Generate the payload signature and compare with the given one
@@ -337,11 +344,8 @@ class GitHub:
         """
         Return True if the webhook contain a valid secret in BSI
         """
-        key = bytes(GITHUB_WEBHOOK_SECRET, "UTF-8")
-        hmac_gen = hmac.new(key, None, sha1)
-        hmac_gen.update(bytes(owner, "UTF-8"))
-        hmac_gen.update(bytes(name, "UTF-8"))
-        final_key = bytes(hmac_gen.hexdigest(), "UTF-8")
+        secret = self.generate_webhook_secret_for_repo(owner, name)
+        final_key = bytes(secret, "UTF-8")
         final_hmac = hmac.new(final_key, payload, sha1)
 
         # Add append prefix to match the GitHub request format
@@ -400,11 +404,12 @@ class GitHub:
         """
         Create the webhook in the repo
         """
+        secret = self.generate_webhook_secret_for_repo(owner, repo)
         data = {
             "config": {
                 "url": hook_url,
                 "content_type": "json",
-                "secret": GITHUB_WEBHOOK_SECRET,
+                "secret": secret,
             },
         }
 
