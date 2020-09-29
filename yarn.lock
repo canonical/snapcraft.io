@@ -1094,10 +1094,10 @@
   dependencies:
     vanilla-framework "2.13.0"
 
-"@canonical/react-components@0.11.1":
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.11.1.tgz#d2e58a4e6d21b7c765192f230c2aad5e12a044b4"
-  integrity sha512-dC4J4F42jLqzYu0N5owoWX1yQCSH3TYHk2VkJWr/zcbs4fe8DYXgRhX8FH7CdLCSp9einkabTJgrxMi0oOq59w==
+"@canonical/react-components@0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.12.0.tgz#64f94828bdd85ce1f4ca81eba2f35015bf9a7215"
+  integrity sha512-2ClE9O1J0wCNVFXMJgIuK1i741MeKqydguFVlzy948SuDpL7+LJPZe08oO1ZmshiMeaX4J+2WKRv7Jz5Wzkmaw==
   dependencies:
     "@types/jest" "26.0.14"
     "@types/node" "14.11.2"
