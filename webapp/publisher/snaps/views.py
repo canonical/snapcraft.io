@@ -107,8 +107,8 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/update-webhook",
-    view_func=build_views.post_update_gh_webhooks,
-    methods=["POST"],
+    view_func=build_views.get_update_gh_webhooks,
+    methods=["GET"],
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/disconnect/",

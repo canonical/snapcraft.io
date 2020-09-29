@@ -23,6 +23,7 @@ from webapp.publisher.views import _handle_error, _handle_error_list
 from werkzeug.exceptions import Unauthorized
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
+GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
 BUILDS_PER_PAGE = 15
 launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
@@ -364,8 +365,9 @@ def post_snap_builds(snap_name):
         )
 
         # Create webhook in the repo, it should also trigger the first build
-        github_hook_url = f"https://snapcraft.io/{snap_name}/webhook/notify"
-
+        github_hook_url = (
+            f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify"
+        )
         try:
             hook = github.get_hook_by_url(owner, repo, github_hook_url)
 
@@ -444,7 +446,7 @@ def post_disconnect_repo(snap_name):
             old_hook = github.get_hook_by_url(
                 gh_owner,
                 gh_repo,
-                f"https://snapcraft.io/{snap_name}/webhook/notify",
+                f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify",
             )
 
             if old_hook:
@@ -518,7 +520,7 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
 
 
 @login_required
-def post_update_gh_webhooks(snap_name):
+def get_update_gh_webhooks(snap_name):
     try:
         details = publisher_api.get_snap_info(snap_name, flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
@@ -530,21 +532,51 @@ def post_update_gh_webhooks(snap_name):
         return _handle_error(api_error)
 
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+
+    if not lp_snap:
+        flask.flash(
+            "This snap is not linked with a GitHub repository", "negative"
+        )
+
+        return flask.redirect(
+            flask.url_for(".get_settings", snap_name=snap_name)
+        )
+
+    github = GitHub(flask.session.get("github_auth_secret"))
+
+    try:
+        github.get_user()
+    except Unauthorized:
+        return flask.redirect(f"/github/auth?back={flask.request.path}")
+
     gh_link = lp_snap["git_repository_url"][19:]
     gh_owner, gh_repo = gh_link.split("/")
 
-    github = GitHub(flask.session.get("github_auth_secret"))
+    # Remove old BSI webhook if present
     old_url = f"https://build.snapcraft.io/{gh_owner}/{gh_repo}/webhook/notify"
     old_hook = github.get_hook_by_url(gh_owner, gh_repo, old_url)
 
     if old_hook:
-        github.update_hook_url(
+        github.remove_hook(
             gh_owner,
             gh_repo,
             old_hook["id"],
-            f"https://snapcraft.io/{snap_name}/webhook/notify",
         )
 
-    return flask.redirect(
-        flask.url_for(".get_snap_builds", snap_name=snap_name)
-    )
+    # Remove current hook
+    github_hook_url = f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify"
+    snapcraft_hook = github.get_hook_by_url(gh_owner, gh_repo, github_hook_url)
+
+    if snapcraft_hook:
+        github.remove_hook(
+            gh_owner,
+            gh_repo,
+            snapcraft_hook["id"],
+        )
+
+    # Create webhook in the repo
+    github.create_hook(gh_owner, gh_repo, github_hook_url)
+
+    flask.flash("The webhook has been created successfully", "positive")
+
+    return flask.redirect(flask.url_for(".get_settings", snap_name=snap_name))

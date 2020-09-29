@@ -13,6 +13,14 @@ DASHBOARD_API_V2=https://dashboard.staging.snapcraft.io/api/v2/
 LOGIN_URL=https://login.staging.ubuntu.com
 ```
 
+## Use custom GitHub Webhook URL
+
+When you run the project locally you probably want to link GitHub repos with your local environment. We recomend using something like [ngrok](https://ngrok.com/) to proxy your machine and update the following variable in your .env.local file:
+
+```bash
+GITHUB_WEBHOOK_HOST_URL=https://hash-id.ngrok.io/
+```
+
 ## Using Sentry error tracker
 
 For development purposes, visit https://sentry.io/signup/, signup and setup a project. By then you will have a sentry DSN string like:

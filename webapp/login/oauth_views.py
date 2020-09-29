@@ -19,11 +19,10 @@ def github_auth():
     Redirect to authorize our Github application and request
     access to the user's data.
     """
+    redirect_path = flask.request.args.get("back")
 
-    if flask.request.args.get("back"):
-        flask.session["github_auth_redirect"] = flask.request.headers.get(
-            "Referer"
-        )
+    if redirect_path and redirect_path.startswith("/"):
+        flask.session["github_auth_redirect"] = redirect_path
 
     params = {
         "client_id": os.getenv("GITHUB_CLIENT_ID"),

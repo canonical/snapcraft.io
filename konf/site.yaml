@@ -46,6 +46,11 @@ env:
       key: github-webhook-secret
       name: snapcraft-io
 
+  - name: GITHUB_WEBHOOK_HOST_URL
+    secretKeyRef:
+      key: github-webhook-host-url
+      name: snapcraft-io
+
   - name: LP_API_USERNAME
     secretKeyRef:
       key: lp-api-username
