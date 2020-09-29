@@ -9,12 +9,6 @@ import { UserFacingStatus, createDuration } from "../helpers";
 const StatusCell = ({ build, queueTime }) => {
   const status = UserFacingStatus[build.status];
 
-  let icon;
-
-  if (status.icon) {
-    icon = `p-icon--${status.icon}`;
-  }
-
   const title =
     build.queue_time && queueTime[build.arch_tag]
       ? `Queue time: up to ${queueTime[build.arch_tag]}`
@@ -22,12 +16,8 @@ const StatusCell = ({ build, queueTime }) => {
 
   return (
     <Fragment>
-      <span className="u-hide u-show--small">
-        {icon && <i className={icon} />}
-        {status.shortStatusMessage}
-      </span>
+      <span className="u-hide u-show--small">{status.shortStatusMessage}</span>
       <span className="u-hide--small" title={title}>
-        {icon && <i className={icon} />}
         {status.statusMessage}
       </span>
     </Fragment>
@@ -44,22 +34,13 @@ StatusCell.propTypes = {
 };
 
 const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
-  const isWaiting = !builds || builds.length === 0;
-
-  if (isWaiting) {
-    // create a dummy row to show "Waiting..." message
-    builds = [{ status: "unknown" }];
-  }
-
   const columns = React.useMemo(
     () => [
       {
         Header: "ID",
         accessor: "id",
         Cell: ({ value }) =>
-          isWaiting ? (
-            "Waiting for builds..."
-          ) : value ? (
+          value ? (
             singleBuild ? (
               `#${value}`
             ) : (
@@ -91,6 +72,10 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
           // eslint-disable-next-line react/prop-types
           <StatusCell queueTime={queueTime} build={row.original} />
         ),
+        getCellIcon: ({ row }) => {
+          const status = UserFacingStatus[row.original.status];
+          return status.icon ? status.icon : false;
+        },
       },
       {
         Header: "Build Finished",
@@ -109,7 +94,15 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
 
   const data = React.useMemo(() => builds, [builds]);
 
-  return <ModularTable columns={columns} data={data} />;
+  return (
+    <React.Fragment>
+      <ModularTable
+        columns={columns}
+        data={data}
+        emptyMsg="Waiting for builds..."
+      />
+    </React.Fragment>
+  );
 };
 
 BuildsTable.propTypes = {
