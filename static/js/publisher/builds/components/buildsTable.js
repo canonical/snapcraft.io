@@ -59,7 +59,7 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
       },
       {
         Header: "Result",
-        className: "p-table__cell--icon-placeholder",
+        className: "p-table__cell--icon-placeholder u-truncate",
         accessor: (build) =>
           build.status === "in_progress" && build.duration
             ? "releasing_soon"
@@ -89,7 +89,8 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
             : "",
       },
     ],
-    []
+    // updates to builds and queueTime affect columns, so they should be recalculated when they change
+    [builds, queueTime]
   );
 
   const data = React.useMemo(() => builds, [builds]);
