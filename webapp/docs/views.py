@@ -16,7 +16,6 @@ def init_docs(app, url_prefix):
                 session=talisker.requests.get_session(),
             ),
             index_topic_id=11127,
-            category_id=15,
             url_prefix=url_prefix,
         ),
         document_template="docs/document.html",
