@@ -65,7 +65,7 @@
     "date-fns": "2.16.1",
     "eslint": "7.8.0",
     "eslint-config-prettier": "6.11.0",
-    "eslint-plugin-jest": "23.20.0",
+    "eslint-plugin-jest": "24.0.2",
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.20.6",
     "expose-loader": "1.0.0",
