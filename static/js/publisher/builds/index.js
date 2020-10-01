@@ -81,7 +81,7 @@ class Builds extends React.Component {
       triggerBuildLoading,
       shouldUpdateQueueTime,
     } = this.state;
-    const { snapName, updateFreq } = this.props;
+    const { snapName } = this.props;
     const { SUCCESS, IDLE } = TriggerBuildStatus;
 
     let url = `/${snapName}/builds.json`;
@@ -117,6 +117,7 @@ class Builds extends React.Component {
             if (shouldUpdateQueueTime) {
               this.updateQueueTime();
             }
+            this.triggerFetchBuilds();
           }
         );
       })
@@ -124,7 +125,12 @@ class Builds extends React.Component {
         this.setState({
           isLoading: false,
         });
+        this.triggerFetchBuilds();
       });
+  }
+
+  triggerFetchBuilds() {
+    const { updateFreq } = this.props;
 
     if (this.fetchTimer) {
       clearTimeout(this.fetchTimer);
