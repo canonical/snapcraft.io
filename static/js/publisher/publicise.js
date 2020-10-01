@@ -223,7 +223,7 @@ const getBadgeHTML = (snapName, badgeName, showName) => {
 };
 
 const getBadgeMarkdown = (snapName, badgeName, showName) => {
-  return `[![${snapName}](https://snapcraft.io/${getBadgePath(
+  return `[![${snapName}](https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
     showName
