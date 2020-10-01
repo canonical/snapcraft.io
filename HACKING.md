@@ -30,7 +30,7 @@ GITHUB_CLIENT_SECRET=<Your client secret>
 
 #### Use custom GitHub Webhook URL
 
-When you run the project locally, you probably want to link GitHub repos with your local environment; however, GitHub wouldn't be able to reach your localhost. You can use something like [ngrok](https://ngrok.com/) to proxy your machine and update the following variable in your `.env.local` file:
+When you run the project locally, you probably want to link GitHub repos with your local environment; otherwise GitHub won't be able to reach your localhost. You can use a tool like [ngrok](https://ngrok.com/) to proxy to your machine and update the following variable in your `.env.local` file:
 
 ```bash
 GITHUB_WEBHOOK_HOST_URL=https://hash-id.ngrok.io/
