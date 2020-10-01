@@ -13,12 +13,50 @@ DASHBOARD_API_V2=https://dashboard.staging.snapcraft.io/api/v2/
 LOGIN_URL=https://login.staging.ubuntu.com
 ```
 
-## Use custom GitHub Webhook URL
+## Snap automated builds
 
-When you run the project locally you probably want to link GitHub repos with your local environment. We recomend using something like [ngrok](https://ngrok.com/) to proxy your machine and update the following variable in your .env.local file:
+To use this functionality, you need to set up test accounts with **GitHub** and **Launchpad** to test.
+
+### GitHub
+
+Go and [register a new OAuth application](https://github.com/settings/applications/new) in your GitHub account. You can fill in the form however you want, and the only important detail is that you set the "Authorization callback URL" to `http://localhost:8004/github/auth/verify`.
+
+Once you've created the application, you should be given the client id and the client secret. Update your `.env.local` file with the your secrets:
+
+```bash
+GITHUB_CLIENT_ID=<Your client id>
+GITHUB_CLIENT_SECRET=<Your client secret>
+```
+
+#### Use custom GitHub Webhook URL
+
+When you run the project locally, you probably want to link GitHub repos with your local environment; however, GitHub wouldn't be able to reach your localhost. You can use something like [ngrok](https://ngrok.com/) to proxy your machine and update the following variable in your `.env.local` file:
 
 ```bash
 GITHUB_WEBHOOK_HOST_URL=https://hash-id.ngrok.io/
+```
+
+### Launchpad
+
+To connect to Launchpad, you need to set up a **username**, a **consumer key** and obtain an **API token** and an **API token secret**:
+
+Download [this Python script](https://github.com/canonical-web-and-design/build.snapcraft.io/blob/master/scripts/create-launchpad-credentials).
+
+Run:
+
+```bash
+$ sudo apt install python-launchpadlib
+$ ./create-launchpad-credentials
+```
+
+It will print the details needed. If you need complete instructions for obtaining these details, they can be found [here](https://help.launchpad.net/API/SigningRequests).
+
+Update your `.env.local` file:
+
+```bash
+LP_API_USERNAME=<Your Launchpad username>
+LP_API_TOKEN=<Your Launchpad API token>
+LP_API_TOKEN_SECRET=<Your Launchpad API secret>
 ```
 
 ## Using Sentry error tracker
