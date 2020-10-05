@@ -19,8 +19,8 @@ class Marketo(unittest.TestCase):
             [
                 "https://066-eov-335.mktorest.com/",
                 "identity/oauth/token?",
-                "grant_type=client_credentials&client_id=123",
-                "&client_secret=321",
+                "grant_type=client_credentials&client_id=fake_id",
+                "&client_secret=fake_secret",
             ]
         )
 
@@ -140,13 +140,15 @@ class Marketo(unittest.TestCase):
             [
                 "https://066-eov-335.mktorest.com/",
                 "rest/v1/leads.json?",
-                "access_token=test&filterType=email",
-                "&filterValues=testing@testing.com&fields=id",
+                "access_token=test",
             ]
         )
 
         responses.add(
-            responses.POST, marketo_set_subscription_url, json={}, status=200
+            responses.POST,
+            marketo_set_subscription_url,
+            json={},
+            status=200,
         )
 
         marketo = marketo_api.Marketo()
@@ -174,8 +176,8 @@ class Marketo(unittest.TestCase):
             [
                 "https://066-eov-335.mktorest.com/",
                 "identity/oauth/token?",
-                "grant_type=client_credentials&client_id=123",
-                "&client_secret=321",
+                "grant_type=client_credentials&client_id=fake_id",
+                "&client_secret=fake_secret",
             ]
         )
 
@@ -196,7 +198,7 @@ class Marketo(unittest.TestCase):
         )
 
         marketo = marketo_api.Marketo()
-        marketo.token = "expired_token"
+        marketo.token = "test"
         marketo.get_user("testing@testing.com")
 
         self.assertEqual(marketo.token, "refreshed_token")

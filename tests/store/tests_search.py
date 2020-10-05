@@ -16,13 +16,12 @@ class GetSearchViewTest(TestCase):
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
                 "?",
+                "q={snap_name}&",
+                "size={size}&",
+                "page={page}&",
                 urlencode(
                     {
-                        "q": "{snap_name}",
-                        "page": "{page}",
-                        "size": "{size}",
                         "scope": "wide",
-                        "arch": "wide",
                         "confinement": "strict,classic",
                         "fields": ",".join(
                             [
@@ -30,11 +29,16 @@ class GetSearchViewTest(TestCase):
                                 "title",
                                 "summary",
                                 "icon_url",
+                                "architecture",
+                                "media",
                                 "publisher",
                                 "developer_validation",
                                 "origin",
+                                "apps",
+                                "sections",
                             ]
                         ),
+                        "arch": "wide",
                     }
                 ),
             ]
@@ -61,7 +65,7 @@ class GetSearchViewTest(TestCase):
         payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -88,7 +92,7 @@ class GetSearchViewTest(TestCase):
         payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -130,7 +134,7 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -178,7 +182,7 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -231,8 +235,9 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="44"
+            snap_name="", page="1", size="44"
         )
+        search_api_formated += "&section=toto"
         responses.add(
             responses.Response(
                 method="GET", url=search_api_formated, json=payload, status=200
@@ -286,8 +291,9 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="2", size="48"
+            snap_name="", page="2", size="44"
         )
+        search_api_formated += "&section=toto"
         responses.add(
             responses.Response(
                 method="GET", url=search_api_formated, json=payload, status=200
@@ -341,8 +347,9 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="2", size="48"
+            snap_name="", page="1", size="44"
         )
+        search_api_formated += "&section=featured"
         responses.add(
             responses.Response(
                 method="GET", url=search_api_formated, json=payload, status=200

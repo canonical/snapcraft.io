@@ -26,6 +26,14 @@ class TestCache(BaseTestCases.EndpointLoggedInErrorHandling):
 
     @responses.activate
     def test_cache_disabled(self):
+        responses.add(
+            responses.GET,
+            url="https://066-eov-335.mktorest.com/identity/oauth/token"
+            "?grant_type=client_credentials&client_id=fake_id&"
+            "client_secret=fake_secret",
+            json={},
+            status=200,
+        )
         responses.add(responses.GET, self.api_url, json={}, status=200)
 
         response = self.client.get(self.endpoint_url)

@@ -61,7 +61,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             [
                 "https://api.launchpad.net",
                 "/devel/+snaps" "?ws.op=findByStoreName",
-                "&owner=%2F~build.snapcraft.io",
+                "&owner=%2F~build.staging.snapcraft.io",
                 "&store_name=",
                 snap_name,
             ]
