@@ -30,7 +30,7 @@ class BaseSession:
         self.headers.update(headers)
         self.api_breaker = CircuitBreaker(fail_max=5, reset_timeout=60)
 
-    def request(self, method, url, timeout=6, **kwargs):
+    def request(self, method, url, timeout=12, **kwargs):
         try:
             request = self.api_breaker.call(
                 super().request,
