@@ -13,7 +13,7 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.helpers import api_session
+from webapp.helpers import api_publisher_session
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
@@ -23,9 +23,9 @@ launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
     token=os.getenv("LP_API_TOKEN"),
     secret=os.getenv("LP_API_TOKEN_SECRET"),
-    session=api_session,
+    session=api_publisher_session,
 )
-publisher_api = SnapPublisher(api_session)
+publisher_api = SnapPublisher(api_publisher_session)
 
 
 @login_required

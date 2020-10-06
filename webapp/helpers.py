@@ -3,11 +3,12 @@ import os
 
 import flask
 from ruamel.yaml import YAML
-from webapp.api.requests import Session
+from webapp.api.requests import Session, PublisherSession
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
 api_session = Session()
+api_publisher_session = PublisherSession()
 
 
 def get_yaml_loader(typ="safe"):

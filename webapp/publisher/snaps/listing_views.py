@@ -15,7 +15,7 @@ from canonicalwebteam.store_api.exceptions import (
 
 # Local
 from webapp import helpers
-from webapp.helpers import api_session
+from webapp.helpers import api_publisher_session
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.markdown import parse_markdown_description
@@ -28,8 +28,8 @@ from webapp.store.logic import (
     get_videos,
 )
 
-store_api = SnapStore(api_session)
-publisher_api = SnapPublisher(api_session)
+store_api = SnapStore(api_publisher_session)
+publisher_api = SnapPublisher(api_publisher_session)
 
 
 def get_market_snap(snap_name):
