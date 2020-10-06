@@ -71,7 +71,7 @@
     "expose-loader": "1.0.0",
     "fast-average-color": "6.1.0",
     "husky": "4.3.0",
-    "jest": "26.5.0",
+    "jest": "26.5.2",
     "lint-staged": "10.4.0",
     "markdown-it": "11.0.1",
     "node-sass": "4.14.1",
