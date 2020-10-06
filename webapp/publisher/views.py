@@ -17,7 +17,7 @@ from canonicalwebteam.store_api.exceptions import (
 # Local
 import webapp.api.marketo as marketo_api
 from webapp import authentication
-from webapp.helpers import api_session
+from webapp.helpers import api_publisher_session
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
     ApiError,
@@ -31,7 +31,7 @@ account = flask.Blueprint(
 )
 
 marketo = marketo_api.Marketo()
-publisher_api = SnapPublisher(api_session)
+publisher_api = SnapPublisher(api_publisher_session)
 
 
 def refresh_redirect(path):

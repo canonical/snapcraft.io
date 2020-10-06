@@ -61,6 +61,11 @@ class Session(BaseSession, requests.Session):
     pass
 
 
+class PublisherSession(BaseSession, requests.Session):
+    def request(self, method, url, timeout=None, **kwargs):
+        return super().request(method, url, timeout, **kwargs)
+
+
 class CachedSession(BaseSession, requests_cache.CachedSession):
     def __init__(self, *args, **kwargs):
         # Set cache defaults

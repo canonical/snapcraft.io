@@ -10,14 +10,14 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.helpers import api_session
+from webapp.helpers import api_publisher_session
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.views import _handle_error, _handle_error_list
 from webapp.store.logic import filter_screenshots
 
-store_api = SnapStore(api_session)
-publisher_api = SnapPublisher(api_session)
+store_api = SnapStore(api_publisher_session)
+publisher_api = SnapPublisher(api_publisher_session)
 
 
 @login_required

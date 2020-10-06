@@ -13,7 +13,7 @@ from canonicalwebteam.store_api.exceptions import (
 from requests.exceptions import HTTPError
 
 # Local
-from webapp.helpers import api_session
+from webapp.helpers import api_publisher_session
 from webapp.api.github import GitHub, InvalidYAML
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
@@ -29,9 +29,9 @@ launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
     token=os.getenv("LP_API_TOKEN"),
     secret=os.getenv("LP_API_TOKEN_SECRET"),
-    session=api_session,
+    session=api_publisher_session,
 )
-publisher_api = SnapPublisher(api_session)
+publisher_api = SnapPublisher(api_publisher_session)
 
 
 def get_builds(lp_snap, selection):
