@@ -17,10 +17,9 @@ class GetPublisherPageTest(TestCase):
                 urlencode(
                     {
                         "q": "publisher:28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
-                        "page": "1",
                         "size": "500",
+                        "page": "1",
                         "scope": "wide",
-                        "arch": "wide",
                         "confinement": "strict,classic",
                         "fields": ",".join(
                             [
@@ -28,13 +27,16 @@ class GetPublisherPageTest(TestCase):
                                 "title",
                                 "summary",
                                 "icon_url",
+                                "architecture",
                                 "media",
                                 "publisher",
                                 "developer_validation",
                                 "origin",
                                 "apps",
+                                "sections",
                             ]
                         ),
+                        "arch": "wide",
                     }
                 ),
             ]

@@ -84,10 +84,16 @@ class GetDistroPageTest(TestCase):
                 "?",
                 urlencode(
                     {
-                        "confinement": "strict,classic",
-                        "section": "featured",
+                        "q": "",
+                        "size": "13",
+                        "page": "1",
                         "scope": "wide",
-                        "fields": "package_name,title,icon_url",
+                        "confinement": "strict,classic",
+                        "fields": "package_name,title,summary,icon_url,"
+                        "architecture,media,publisher,"
+                        "developer_validation,origin,apps,sections",
+                        "arch": "wide",
+                        "section": "featured",
                     }
                 ),
             ]

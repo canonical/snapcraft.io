@@ -43,9 +43,9 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "https://api.snapcraft.io/v2/",
                 "snaps/info/",
                 snap_name,
-                "?fields=title,summary,description,license,contact,website,",
-                "publisher,prices,media,download,version,created-at,"
-                "confinement,categories,trending",
+                "?fields=title%2Csummary%2Cdescription%2Clicense%2Ccontact%2C",
+                "website%2Cpublisher%2Cprices%2Cmedia%2Cdownload%2Cversion%2C",
+                "created-at%2Cconfinement%2Ccategories%2Ctrending%2Cunlisted",
             ]
         )
 

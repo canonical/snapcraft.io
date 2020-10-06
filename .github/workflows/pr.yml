@@ -3,6 +3,7 @@ on: pull_request
 
 env:
   SECRET_KEY: insecure_test_key
+  LP_API_USERNAME: test_lp_user
 
 jobs:
   run-image:

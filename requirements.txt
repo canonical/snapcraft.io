@@ -20,7 +20,7 @@ pymacaroons==0.13.0
 python-dateutil==2.8.1
 requests==2.24.0
 requests-cache==0.5.2
-responses==0.9.0
+responses==0.12.0
 ruamel.yaml==0.16.12
 vcrpy-unittest==0.1.7
 
