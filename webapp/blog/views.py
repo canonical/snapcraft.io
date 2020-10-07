@@ -14,7 +14,11 @@ from webapp.helpers import get_yaml
 
 
 def init_blog(app, url_prefix):
-    blog_api = BlogAPI(session=talisker.requests.get_session())
+    blog_api = BlogAPI(
+        session=talisker.requests.get_session(),
+        thumbnail_width=354,
+        thumbnail_height=199,
+    )
     blog = build_blueprint(
         BlogViews(
             api=blog_api,
