@@ -11,7 +11,6 @@ Flask-OpenID-Stateless==1.2.6
 Flask-WTF==0.14.3
 bleach==3.2.1
 humanize==3.0.1
-Markdown==3.2.2
 mistune==0.8.4
 pybadges==2.2.1
 pybreaker==0.6.0
