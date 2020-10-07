@@ -1,7 +1,11 @@
+import os
 import json
 
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
+
+
+LP_API_USERNAME = os.getenv("LP_API_USERNAME")
 
 
 class PostSettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
@@ -111,7 +115,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             [
                 "https://api.launchpad.net",
                 "/devel/+snaps" "?ws.op=findByStoreName",
-                "&owner=%2F~test_lp_user",
+                f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
                 self.snap_name,
             ]
@@ -192,7 +196,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             [
                 "https://api.launchpad.net",
                 "/devel/+snaps" "?ws.op=findByStoreName",
-                "&owner=%2F~test_lp_user",
+                f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
                 self.snap_name,
             ]
@@ -283,7 +287,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             [
                 "https://api.launchpad.net",
                 "/devel/+snaps" "?ws.op=findByStoreName",
-                "&owner=%2F~test_lp_user",
+                f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
                 self.snap_name,
             ]
