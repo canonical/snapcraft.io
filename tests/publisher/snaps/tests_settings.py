@@ -1,5 +1,10 @@
+import os
+
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
+
+
+LP_API_USERNAME = os.getenv("LP_API_USERNAME")
 
 
 class SettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
@@ -60,8 +65,8 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         launchpad_url = "".join(
             [
                 "https://api.launchpad.net",
-                "/devel/+snaps" "?ws.op=findByStoreName",
-                "&owner=%2F~test_lp_user",
+                "/devel/+snaps?ws.op=findByStoreName",
+                f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
                 snap_name,
             ]
