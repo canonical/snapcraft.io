@@ -200,12 +200,7 @@ class Builds extends React.Component {
       queueTime,
     } = this.state;
     const { totalBuilds, singleBuild, snapName } = this.props;
-
     const { ERROR } = TriggerBuildStatus;
-
-    const remainingBuilds = totalBuilds - builds.length;
-
-    const showMoreCount = remainingBuilds > 15 ? 15 : remainingBuilds;
 
     return (
       <Fragment>
@@ -220,21 +215,10 @@ class Builds extends React.Component {
           singleBuild={singleBuild}
           snapName={snapName}
           queueTime={queueTime}
+          totalBuilds={totalBuilds}
+          isLoading={isLoading}
+          showMoreHandler={this.showMoreHandler}
         />
-        {builds.length < totalBuilds && (
-          <div className="p-show-more__link-container">
-            {isLoading && (
-              <span className="p-show-more__link">
-                <i className="p-icon--spinner u-animation--spin" />
-              </span>
-            )}
-            {!isLoading && (
-              <a className="p-show-more__link" onClick={this.showMoreHandler}>
-                Show {showMoreCount} more
-              </a>
-            )}
-          </div>
-        )}
       </Fragment>
     );
   }

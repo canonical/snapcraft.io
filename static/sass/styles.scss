@@ -63,6 +63,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-u-hide;
 @include vf-u-show;
 @include vf-u-layout;
+@include vf-u-text-muted;
 @include vf-u-truncate;
 
 @import "snapcraft_custom-cols";
