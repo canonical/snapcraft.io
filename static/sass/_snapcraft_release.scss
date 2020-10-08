@@ -520,7 +520,9 @@
     width: .875rem;
   }
 
-  .p-action-button {
+  // .p-action-button is a class name used by ActionButton from react-components
+  // TODO: rename release UI p-action-button here to something else to avoid collisions
+  .p-release-buttons .p-action-button {
     background: none;
     border: 0;
     display: block;

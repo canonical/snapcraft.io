@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { formatDistance, parseISO } from "date-fns";
 
 import ModularTable from "@canonical/react-components/dist/components/ModularTable";
+import SummaryButton from "@canonical/react-components/dist/components/SummaryButton";
 
 import { UserFacingStatus, createDuration } from "../helpers";
 
@@ -33,7 +34,15 @@ StatusCell.propTypes = {
   queueTime: PropTypes.object,
 };
 
-const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
+const BuildsTable = ({
+  builds,
+  singleBuild,
+  snapName,
+  queueTime,
+  totalBuilds,
+  isLoading,
+  showMoreHandler,
+}) => {
   const columns = React.useMemo(
     () => [
       {
@@ -95,12 +104,28 @@ const BuildsTable = ({ builds, singleBuild, snapName, queueTime }) => {
 
   const data = React.useMemo(() => builds, [builds]);
 
+  const remainingBuilds = totalBuilds - builds.length;
+  const showMoreCount = remainingBuilds > 15 ? 15 : remainingBuilds;
+
+  const footer =
+    remainingBuilds > 0 ? (
+      <div className="u-align--right">
+        <SummaryButton
+          summary={`Showing ${builds.length} out of ${totalBuilds} builds.`}
+          label={`Show ${showMoreCount} more`}
+          isLoading={isLoading}
+          onClick={showMoreHandler}
+        />
+      </div>
+    ) : null;
+
   return (
     <React.Fragment>
       <ModularTable
         columns={columns}
         data={data}
         emptyMsg="Waiting for builds..."
+        footer={footer}
       />
     </React.Fragment>
   );
@@ -111,6 +136,9 @@ BuildsTable.propTypes = {
   snapName: PropTypes.string,
   singleBuild: PropTypes.bool,
   queueTime: PropTypes.object,
+  totalBuilds: PropTypes.number,
+  isLoading: PropTypes.bool,
+  showMoreHandler: PropTypes.func,
 };
 
 export default BuildsTable;
