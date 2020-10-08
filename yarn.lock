@@ -1103,23 +1103,23 @@
   dependencies:
     vanilla-framework "2.13.0"
 
-"@canonical/react-components@0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.12.0.tgz#64f94828bdd85ce1f4ca81eba2f35015bf9a7215"
-  integrity sha512-2ClE9O1J0wCNVFXMJgIuK1i741MeKqydguFVlzy948SuDpL7+LJPZe08oO1ZmshiMeaX4J+2WKRv7Jz5Wzkmaw==
+"@canonical/react-components@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.13.0.tgz#52e45616798f994658b35159ff8ab144a7901dc4"
+  integrity sha512-IKfhfJzsTKdikZMnxy0CAzbpFJ90e9uV+Fk6O6fPkWtxJbkV5xgpn4VK72j+NM4dWumRs29pJoaVDy+LPfCmsw==
   dependencies:
     "@types/jest" "26.0.14"
-    "@types/node" "14.11.2"
-    "@types/react" "16.9.49"
+    "@types/node" "14.11.4"
+    "@types/react" "16.9.51"
     "@types/react-dom" "16.9.8"
     "@types/react-table" "7.0.23"
     "@types/react-transition-group" "4.4.0"
     classnames "2.2.6"
     prop-types "15.7.2"
-    react-table "7.5.1"
+    react-table "7.5.2"
     react-transition-group "4.4.1"
     react-useportal "1.0.13"
-    vanilla-framework "2.19.0"
+    vanilla-framework "2.19.1"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
@@ -1546,10 +1546,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.25.tgz#7ad8b00a1206d6c9e94810e49f3115f0bcc30456"
   integrity sha512-okMqUHqrMlGOxfDZliX1yFX5MV6qcd5PpRz96XYtjkM0Ws/hwg23FMUqt6pETrVRZS+EKUB5HY19mmo54EuQbA==
 
-"@types/node@14.11.2":
-  version "14.11.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
-  integrity sha512-jiE3QIxJ8JLNcb1Ps6rDbysDhN4xa8DJJvuC9prr6w+1tIh+QAbYyNF3tyiZNLDBIuBCf4KEcV2UvQm/V60xfA==
+"@types/node@14.11.4":
+  version "14.11.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.4.tgz#bf6ea3d5f7b1504232b11acbc40e1ac4c750d3b9"
+  integrity sha512-KmoLCUeW2cWKkEOQ0gQcECuqOc0g7B7zcmRPQNMT4ntNm0luKv3BTLcqIyWpTxkhLDzLTdMus11j/6DROaZdPw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -1600,10 +1600,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@16.9.49":
-  version "16.9.49"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.49.tgz#09db021cf8089aba0cdb12a49f8021a69cce4872"
-  integrity sha512-DtLFjSj0OYAdVLBbyjhuV9CdGVHCkHn2R+xr3XkBvK2rS1Y1tkc14XSGjYgm5Fjjr90AxH9tiSzc1pCFMGO06g==
+"@types/react@16.9.51":
+  version "16.9.51"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.51.tgz#f8aa51ffa9996f1387f63686696d9b59713d2b60"
+  integrity sha512-lQa12IyO+DMlnSZ3+AGHRUiUcpK47aakMMoBG8f7HGxJT8Yfe+WE128HIXaHOHVPReAW0oDS3KAI0JI2DDe1PQ==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
@@ -7853,10 +7853,10 @@ react-sortable-hoc@1.11.0:
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
-react-table@7.5.1:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.5.1.tgz#b6a9b46e52c0f37ff91717ac478f430c6a357e41"
-  integrity sha512-rprrUElCqvj79lyY2XbUoYLzwA5Mm4CGS8ElQ8OyzocvmkvCcmunvvfbpIg9Jm9HnMBjVZcVyPFPZ1BFelIBKw==
+react-table@7.5.2:
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.5.2.tgz#d82ceee3d4d40b119159bce1708f084a95d3435c"
+  integrity sha512-qiceR/gQUOBsO/q1z1wZ3RbRvkRt39Gbzo631HiPuWmo+eTmTgaXDqLGzCmU+bOr81PB6kDxXhoWQR8hiWaUJA==
 
 react-transition-group@4.4.1:
   version "4.4.1"
@@ -9620,11 +9620,6 @@ vanilla-framework@2.13.0:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.13.0.tgz#ac73e745150bcef183eb35e3ee47f3fd079ddd3e"
   integrity sha512-EuxlGxO4SmCGL4GVzcye5aas2HGVqRhPxlTHg84Lfw1e1E4F/Coxs78i3xxkPGw3LOcfea0KU096ar1PnLNuXQ==
-
-vanilla-framework@2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.0.tgz#c499d5ca59818595732733e45ef4c9e7fea71302"
-  integrity sha512-0qtFmzDBdgZ5JmKysBbIjQ224CDBtVWSdHvCzay3udBHlcbfJJTXIozLvOFk6zt78GClrNN2dwLLIpYPDWcaZQ==
 
 vanilla-framework@2.19.1:
   version "2.19.1"
