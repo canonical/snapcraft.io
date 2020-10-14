@@ -1,4 +1,5 @@
 module.exports = {
+  "cookie-policy": "./static/js/base/cookie-policy.js",
   "global-nav": "./static/js/base/global-nav.js",
   base: "./static/js/base/base.js",
   release: "./static/js/publisher/release.js",
