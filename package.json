@@ -97,7 +97,7 @@
     "vanilla-framework": "2.19.1",
     "watch-cli": "0.2.3",
     "webpack": "4.44.2",
-    "webpack-cli": "3.3.12",
+    "webpack-cli": "4.0.0",
     "whatwg-fetch": "3.4.1"
   },
   "devDependencies": {
