@@ -28,9 +28,9 @@
       &-name {
         display: inline-block;
         overflow: hidden;
-        text-align: right;
+        text-align: left;
         text-overflow: ellipsis;
-        width: calc(50% - .5rem);
+        width: calc(70% - .5rem);
       }
 
       &-color {
@@ -48,7 +48,7 @@
       &-value {
         display: inline-block;
         margin-top: 0;
-        width: calc(50% - .5rem);
+        width: calc(30% - .5rem);
       }
     }
   }
