@@ -168,10 +168,12 @@ My published snaps — Linux software in the Snap Store
             </a>
           </td>
           <td role="gridcell" aria-label="Visibility">
-            {% if snaps[snap].private %}
-            Private
+            {% if snaps[snap].unlisted %}
+              Unlisted
+            {% elif snaps[snap].private %}
+              Private
             {% else %}
-            Public
+              Public
             {% endif %}
           </td>
           <td role="gridcell" aria-label="Owner">
