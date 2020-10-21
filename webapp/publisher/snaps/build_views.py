@@ -552,31 +552,44 @@ def get_update_gh_webhooks(snap_name):
     gh_link = lp_snap["git_repository_url"][19:]
     gh_owner, gh_repo = gh_link.split("/")
 
-    # Remove old BSI webhook if present
-    old_url = f"https://build.snapcraft.io/{gh_owner}/{gh_repo}/webhook/notify"
-    old_hook = github.get_hook_by_url(gh_owner, gh_repo, old_url)
+    try:
+        # Remove old BSI webhook if present
+        old_url = (
+            f"https://build.snapcraft.io/{gh_owner}/{gh_repo}/webhook/notify"
+        )
+        old_hook = github.get_hook_by_url(gh_owner, gh_repo, old_url)
 
-    if old_hook:
-        github.remove_hook(
-            gh_owner,
-            gh_repo,
-            old_hook["id"],
+        if old_hook:
+            github.remove_hook(
+                gh_owner,
+                gh_repo,
+                old_hook["id"],
+            )
+
+        # Remove current hook
+        github_hook_url = (
+            f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify"
+        )
+        snapcraft_hook = github.get_hook_by_url(
+            gh_owner, gh_repo, github_hook_url
         )
 
-    # Remove current hook
-    github_hook_url = f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify"
-    snapcraft_hook = github.get_hook_by_url(gh_owner, gh_repo, github_hook_url)
+        if snapcraft_hook:
+            github.remove_hook(
+                gh_owner,
+                gh_repo,
+                snapcraft_hook["id"],
+            )
 
-    if snapcraft_hook:
-        github.remove_hook(
-            gh_owner,
-            gh_repo,
-            snapcraft_hook["id"],
+        # Create webhook in the repo
+        github.create_hook(gh_owner, gh_repo, github_hook_url)
+    except HTTPError:
+        flask.flash(
+            "The GitHub Webhook could not be created. "
+            "Please try again or check your permissions over the repository.",
+            "caution",
         )
-
-    # Create webhook in the repo
-    github.create_hook(gh_owner, gh_repo, github_hook_url)
-
-    flask.flash("The webhook has been created successfully", "positive")
+    else:
+        flask.flash("The webhook has been created successfully", "positive")
 
     return flask.redirect(flask.url_for(".get_settings", snap_name=snap_name))
