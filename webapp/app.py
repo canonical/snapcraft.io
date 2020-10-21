@@ -43,7 +43,7 @@ def create_app(testing=False):
     set_handlers(app)
 
     if app.config["WEBAPP"] == "snapcraft":
-        init_snapcraft(app, testing)
+        init_snapcraft(app)
     else:
         init_brandstore(app)
 
@@ -55,12 +55,12 @@ def init_brandstore(app):
     app.register_blueprint(store_blueprint(store))
 
 
-def init_snapcraft(app, testing=False):
+def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
     app.register_blueprint(oauth)
-    app.register_blueprint(store_blueprint(testing=testing))
+    app.register_blueprint(store_blueprint())
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)
     app.register_blueprint(publisher_github)

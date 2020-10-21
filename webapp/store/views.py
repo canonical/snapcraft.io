@@ -18,13 +18,10 @@ from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 
+session = talisker.requests.get_session(requests.Session)
 
-def store_blueprint(store_query=None, testing=False):
-    if testing:
-        session = talisker.requests.get_session(requests.Session)
-    else:
-        session = talisker.requests.get_session(requests.CachedSession)
 
+def store_blueprint(store_query=None):
     api = SnapStore(session, store_query)
 
     store = flask.Blueprint(
