@@ -2,7 +2,6 @@ import os
 
 import requests
 
-import requests_cache
 from pybreaker import CircuitBreaker, CircuitBreakerError
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
@@ -64,19 +63,3 @@ class Session(BaseSession, requests.Session):
 class PublisherSession(BaseSession, requests.Session):
     def request(self, method, url, timeout=None, **kwargs):
         return super().request(method, url, timeout, **kwargs)
-
-
-class CachedSession(BaseSession, requests_cache.CachedSession):
-    def __init__(self, *args, **kwargs):
-        # Set cache defaults
-        options = {
-            "backend": "sqlite",
-            "expire_after": 5,
-            # Include headers in cache key
-            "include_get_headers": True,
-            "old_data_on_error": True,
-        }
-
-        options.update(kwargs)
-
-        super().__init__(*args, **options)
