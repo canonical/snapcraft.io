@@ -67,12 +67,12 @@ export function tooltips() {
               `<span class="snapcraft-graph-tooltip__series${
                 item.key === currentHoverKey ? " is-hovered" : ""
               }" title="${item.key}">`,
-              `<span class="snapcraft-graph-tooltip__series-name">${item.key}</span>`,
               `<span class="snapcraft-graph-tooltip__series-color"${
                 !item.count
                   ? `style="background:${this.colorScale(item.key)};"`
                   : ""
               }></span>`,
+              `<span class="snapcraft-graph-tooltip__series-name">${item.key}</span>`,
               `<span class="snapcraft-graph-tooltip__series-value">${commaValue(
                 item.value
               )}</span>`,
