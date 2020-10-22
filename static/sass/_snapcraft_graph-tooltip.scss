@@ -38,7 +38,6 @@
         display: inline-block;
         height: .75rem;
         margin: {
-          left: .25rem;
           right: .25rem;
           top: 0;
         }
@@ -48,6 +47,7 @@
       &-value {
         display: inline-block;
         margin-top: 0;
+        text-align: right;
         width: calc(30% - .5rem);
       }
     }
