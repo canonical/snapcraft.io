@@ -26,12 +26,9 @@
     }
   },
   "lint-staged": {
-    "linters": {
-      "**/*.py": "./run exec yarn lint-python",
-      "**/*.js": "./run exec yarn lint-js",
-      "**/*.scss": "./run exec yarn lint-scss"
-    },
-    "relative": true
+    "**/*.py": "dotrun exec yarn lint-python",
+    "**/*.js": "dotrun exec yarn lint-js",
+    "**/*.scss": "dotrun exec yarn lint-scss"
   },
   "jest": {
     "testURL": "http://localhost.test",

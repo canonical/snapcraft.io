@@ -43,11 +43,11 @@ const ICON_RESTRICTIONS = {
   accept: ["image/png", "image/jpeg", "image/svg+xml"],
   width: {
     min: 40,
-    max: 512,
+    max: 480,
   },
   height: {
     min: 40,
-    max: 512,
+    max: 480,
   },
   aspectRatio: {
     min: [1, 1],

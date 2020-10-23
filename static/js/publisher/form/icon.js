@@ -98,7 +98,7 @@ class Icon extends React.Component {
           </li>
           <li>
             <small>
-              Max resolution: <b>512 x 512 pixels</b>
+              Max resolution: <b>480 x 480 pixels</b>
             </small>
           </li>
           <li>
