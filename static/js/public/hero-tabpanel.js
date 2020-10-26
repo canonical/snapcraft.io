@@ -9,8 +9,8 @@ class HeroTabPanels {
       this.panelContainer = this.mainContainer.querySelector(
         "[data-js='panels-container']"
       );
-      this.tabs = this.mainContainer.querySelectorAll(
-        "[data-js='carousel-tab']"
+      this.tabs = [].slice.call(
+        this.mainContainer.querySelectorAll("[data-js='carousel-tab']")
       );
 
       if (this.panelContainer) {
@@ -70,8 +70,8 @@ class HeroTabPanels {
     clearInterval(this.timer);
 
     const nextCategoryName = target.getAttribute("aria-controls").split("-")[1];
-    const viewAllLinkList = this.mainContainer.querySelectorAll(
-      "[data-js='view-all']"
+    const viewAllLinkList = [].slice.call(
+      this.mainContainer.querySelectorAll("[data-js='view-all']")
     );
     // Show the appropriate 'View all' link
     viewAllLinkList.forEach((el) => {
