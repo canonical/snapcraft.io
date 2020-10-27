@@ -9,7 +9,7 @@
     "test-python": "yarn run lint-python && FLASK_DEBUG=0 python3 -m unittest discover tests",
     "get-licenses": "if [ ! -f webapp/licenses.json ] ; then curl https://raw.githubusercontent.com/spdx/license-list-data/master/json/licenses.json -o webapp/licenses.json; fi",
     "build": "yarn run get-licenses && yarn run build-js && yarn run build-css",
-    "build-css": "node-sass --include-path node_modules static/sass --output-style compressed --output static/css && postcss --use autoprefixer --no-map --replace 'static/css/**/*.css'",
+    "build-css": "sass static/sass/styles.scss static/css/styles.css --load-path=node_modules --style=compressed && postcss --use autoprefixer --no-map --replace 'static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-bundle",
     "copy-3rd-party-js": "mkdir -p static/js/modules && cp node_modules/d3/dist/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
     "build-js-bundle": "webpack",
@@ -75,7 +75,6 @@
     "jest": "26.5.3",
     "lint-staged": "10.4.2",
     "markdown-it": "11.0.1",
-    "node-sass": "4.14.1",
     "polylabel": "1.1.0",
     "postcss": "8.1.2",
     "postcss-cli": "8.1.0",
@@ -91,6 +90,7 @@
     "redux": "4.0.5",
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.3.0",
+    "sass": "1.27.0",
     "sass-lint": "1.13.1",
     "swiper": "6.3.3",
     "topojson-client": "3.1.0",
@@ -103,7 +103,6 @@
   "devDependencies": {
     "concurrently": "5.3.0",
     "css-loader": "4.3.0",
-    "sass": "1.27.0",
     "sass-loader": "10.0.3",
     "style-loader": "2.0.0",
     "terser-webpack-plugin": "4.2.3"
