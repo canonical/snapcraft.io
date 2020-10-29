@@ -1771,30 +1771,30 @@
   resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.0.4.tgz#c2d6d990dc0993344a9bf5c244374e3f51fe34f1"
   integrity sha512-pI65cRFh9xU2xo3d9R8ifGbQoH72tk3p8xh/4ANuj9kREeh9G/gcim/iHQS7IffSocHT9l6ZtUXBcQ12m/CBMw==
 
-"@canonical/global-nav@2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.4.3.tgz#9d552bad1968537c4b952747b27d5d3db21cf327"
-  integrity sha512-8ttxoViIlE16dKBIcuVsvBF2GhsJbC/c7fxLf93EXmn5DKoUYf+rjyhXvEDaRGCtTAnS4finwBwMMo7nQFOSEA==
+"@canonical/global-nav@2.4.5":
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.4.5.tgz#e300d2995aaccf9b35c83cdf8c37b1c9b9d2559a"
+  integrity sha512-OoSfKtD86QDbj9zcOrRg1je3CDQQRPm8Erq+yfDuR5jnN0eB8NfsT7JjAEDcANkzyJues3gMDDmv+cjN3Tu5KQ==
   dependencies:
-    vanilla-framework "2.13.0"
+    vanilla-framework "2.19.1"
 
-"@canonical/react-components@0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.13.0.tgz#52e45616798f994658b35159ff8ab144a7901dc4"
-  integrity sha512-IKfhfJzsTKdikZMnxy0CAzbpFJ90e9uV+Fk6O6fPkWtxJbkV5xgpn4VK72j+NM4dWumRs29pJoaVDy+LPfCmsw==
+"@canonical/react-components@0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.14.0.tgz#7ec4fc3de31909fefc363bf3eec584237904fd40"
+  integrity sha512-tPgGYzcIfmy27PwMped/VxavPh7xDiJW93UD3QqcEvSHxoc22E5GKmUaVOMtVFcPdgIJ6WhcU/JLG4YdSzHg9g==
   dependencies:
     "@types/jest" "26.0.14"
-    "@types/node" "14.11.4"
-    "@types/react" "16.9.51"
+    "@types/node" "14.11.10"
+    "@types/react" "16.9.53"
     "@types/react-dom" "16.9.8"
-    "@types/react-table" "7.0.23"
+    "@types/react-table" "7.0.24"
     "@types/react-transition-group" "4.4.0"
     classnames "2.2.6"
     prop-types "15.7.2"
-    react-table "7.5.2"
+    react-table "7.6.0"
     react-transition-group "4.4.1"
     react-useportal "1.0.13"
-    vanilla-framework "2.19.1"
+    vanilla-framework "2.19.2"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
@@ -2282,10 +2282,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.25.tgz#7ad8b00a1206d6c9e94810e49f3115f0bcc30456"
   integrity sha512-okMqUHqrMlGOxfDZliX1yFX5MV6qcd5PpRz96XYtjkM0Ws/hwg23FMUqt6pETrVRZS+EKUB5HY19mmo54EuQbA==
 
-"@types/node@14.11.4":
-  version "14.11.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.4.tgz#bf6ea3d5f7b1504232b11acbc40e1ac4c750d3b9"
-  integrity sha512-KmoLCUeW2cWKkEOQ0gQcECuqOc0g7B7zcmRPQNMT4ntNm0luKv3BTLcqIyWpTxkhLDzLTdMus11j/6DROaZdPw==
+"@types/node@14.11.10":
+  version "14.11.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.10.tgz#8c102aba13bf5253f35146affbf8b26275069bef"
+  integrity sha512-yV1nWZPlMFpoXyoknm4S56y2nlTAuFYaJuQtYRAOU7xA/FJ9RY0Xm7QOkaYMMmr8ESdHIuUb6oQgR/0+2NqlyA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -2314,10 +2314,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-table@7.0.23":
-  version "7.0.23"
-  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.0.23.tgz#77d10ac36be759f6598f2b185865905425b47833"
-  integrity sha512-1L2wFQVm6QcrSUbAdTUpk2PTYX5Wqx11Kh+wuN/kYYRWNI4OGpj3sIn3QAQ1jOwXKpyLMTL6lpEcUfKw2ZEieQ==
+"@types/react-table@7.0.24":
+  version "7.0.24"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.0.24.tgz#ef27334f8da55d7890dc8dbec63a3f873f8d97fe"
+  integrity sha512-71JT+7R+Av1mF249SUAyAvH0Y8ZiI/8Rbbei3ka3ofPtD2yHUhm6XC68WHPoHSwQ71wkscKZfI3EcuxepWC7Mw==
   dependencies:
     "@types/react" "*"
 
@@ -2336,10 +2336,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/react@16.9.51":
-  version "16.9.51"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.51.tgz#f8aa51ffa9996f1387f63686696d9b59713d2b60"
-  integrity sha512-lQa12IyO+DMlnSZ3+AGHRUiUcpK47aakMMoBG8f7HGxJT8Yfe+WE128HIXaHOHVPReAW0oDS3KAI0JI2DDe1PQ==
+"@types/react@16.9.53":
+  version "16.9.53"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.53.tgz#40cd4f8b8d6b9528aedd1fff8fcffe7a112a3d23"
+  integrity sha512-4nW60Sd4L7+WMXH1D6jCdVftuW7j4Za6zdp6tJ33Rqv0nk1ZAmQKML9ZLD4H0dehA3FZxXR/GM8gXplf82oNGw==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
@@ -9125,10 +9125,10 @@ react-sortable-hoc@1.11.0:
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
-react-table@7.5.2:
-  version "7.5.2"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.5.2.tgz#d82ceee3d4d40b119159bce1708f084a95d3435c"
-  integrity sha512-qiceR/gQUOBsO/q1z1wZ3RbRvkRt39Gbzo631HiPuWmo+eTmTgaXDqLGzCmU+bOr81PB6kDxXhoWQR8hiWaUJA==
+react-table@7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.6.0.tgz#83d765b96505b5332d108a2e0c27ab653f5a78c3"
+  integrity sha512-16kRTypBWz9ZwLnPWA8hc3eIC64POzO9GaMBiKaCcVM+0QOQzt0G7ebzGUM8SW0CYUpVM+glv1kMXrWj9tr3Sw==
 
 react-transition-group@4.4.1:
   version "4.4.1"
@@ -11000,11 +11000,6 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
-
-vanilla-framework@2.13.0:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.13.0.tgz#ac73e745150bcef183eb35e3ee47f3fd079ddd3e"
-  integrity sha512-EuxlGxO4SmCGL4GVzcye5aas2HGVqRhPxlTHg84Lfw1e1E4F/Coxs78i3xxkPGw3LOcfea0KU096ar1PnLNuXQ==
 
 vanilla-framework@2.19.1:
   version "2.19.1"
