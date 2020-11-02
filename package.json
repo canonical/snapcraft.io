@@ -44,7 +44,7 @@
     "@babel/plugin-transform-runtime": "7.12.1",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.1",
-    "@canonical/cookie-policy": "3.0.4",
+    "@canonical/cookie-policy": "3.0.5",
     "@canonical/global-nav": "2.4.5",
     "@canonical/react-components": "0.14.0",
     "@testing-library/react": "11.1.0",
