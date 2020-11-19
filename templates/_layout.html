@@ -52,10 +52,10 @@
       <meta property="og:image:height" content="{% block meta_image_height %}772{% endblock %}" />
       <meta property="og:image:alt" content="{% block meta_image_alt %}Snapcraft banner{% endblock %}" />
       <meta property="og:url" content="https://snapcraft.io{% block meta_path %}{{ path }}{% endblock %}" />
-      <meta property="twitter:card" content="{% block meta_twitter_card %}summary_large_image{% endblock %}">
+      <meta property="twitter:card" content="{% block meta_twitter_card %}summary_large_image{% endblock %}" />
       <meta property="twitter:site" content="@snapcraftio" />
       <meta property="twitter:creator" content="@snapcraftio" />
-      <meta property="twitter:image" content="{{ self.meta_image() }}">
+      <meta property="twitter:image" content="{{ self.meta_image() }}" />
       <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
     {% endblock %}
 
