@@ -1016,10 +1016,10 @@
   dependencies:
     vanilla-framework "2.19.1"
 
-"@canonical/react-components@0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.14.1.tgz#c1b5e1063eb95edd1b3a9097fab3313340ca73d2"
-  integrity sha512-x8Pjdu8kaX8fc3nBK4TEUOkVqmnuwm37ApeyDWFtScTlI6iVdSdOwqHlohbLD5fp+qNbuZ4kyCr+oG6MHQ424w==
+"@canonical/react-components@0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.14.2.tgz#ea6cc6e7768cc2e6377cede33c5850e888a973ed"
+  integrity sha512-Z/+VvG013Yo2wpd8hkf3RwBcGco8c4VTzVLB8UITeOPi6j7UjO1B5ZWzMtkcIBAt9D+EvEQ8dyImd2vdNrLJgg==
   dependencies:
     "@types/jest" "26.0.14"
     "@types/node" "14.11.10"

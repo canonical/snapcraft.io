@@ -46,7 +46,7 @@
     "@babel/preset-react": "7.12.1",
     "@canonical/cookie-policy": "3.0.6",
     "@canonical/global-nav": "2.4.5",
-    "@canonical/react-components": "0.14.1",
+    "@canonical/react-components": "0.14.2",
     "@testing-library/react": "11.1.0",
     "autoprefixer": "10.0.1",
     "babel-eslint": "10.1.0",
