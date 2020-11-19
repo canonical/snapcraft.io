@@ -270,9 +270,9 @@ def snapcraft_blueprint():
     @snapcraft.route("/sitemap.xml")
     def sitemap():
         snaps = []
-        for page in range(34):
-            url = f"https://api.snapcraft.io/api/v1/snaps/search?page={page}"
-
+        page = 0
+        url = f"https://api.snapcraft.io/api/v1/snaps/search?page={page}"
+        while url:
             response = requests.get(url)
             try:
                 snaps_response = response.json()
@@ -294,9 +294,14 @@ def snapcraft_blueprint():
                     )
                 except Exception:
                     continue
+            if "next" in snaps_response["_links"]:
+                url = snaps_response["_links"]["next"]["href"]
+            else:
+                url = None
 
         blog_posts = []
-        for page in range(1, 3):
+        page = 1
+        while True:
             url = (
                 f"https://ubuntu.com/blog/wp-json/wp/v2/posts?"
                 f"tags=2996&per_page=100&page={page}"
@@ -304,6 +309,9 @@ def snapcraft_blueprint():
             )
 
             response = requests.get(url)
+            if response.status_code == 400:
+                break
+
             try:
                 blog_response = response.json()
             except Exception:
@@ -321,6 +329,8 @@ def snapcraft_blueprint():
                     )
                 except Exception:
                     continue
+
+            page = page + 1
 
         links = [
             "/store",
