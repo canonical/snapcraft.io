@@ -40,7 +40,7 @@ This codebase can be modified to setup branded stores that represent specific br
 
 - [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://docs.ubuntu.com/core/en/build-store/create.html
 )
-- For developers to learn more about developomg a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
+- For developers to learn more about developing a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
 
 # Deploy
 You can find the deployment config in the deploy folder.
