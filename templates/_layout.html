@@ -48,14 +48,19 @@
       <meta property="og:type" content="{% block meta_type %}website{% endblock %}"/>
       <meta property="og:description" content="{{ self.meta_description() }}"/>
       <meta property="og:image" content="{% block meta_image %}https://assets.ubuntu.com/v1/e635d1ef-snapcraft_green-red_hex.png{% endblock %}" />
+      <meta property="og:image:width" content="{% block meta_image_width %}1080{% endblock %}" />
+      <meta property="og:image:height" content="{% block meta_image_height %}772{% endblock %}" />
+      <meta property="og:image:alt" content="{% block meta_image_alt %}Snapcraft banner{% endblock %}" />
       <meta property="og:url" content="https://snapcraft.io{% block meta_path %}{{ path }}{% endblock %}" />
-      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:card" content="{% block meta_twitter_card %}summary_large_image{% endblock %}">
       <meta property="twitter:site" content="@snapcraftio" />
       <meta property="twitter:creator" content="@snapcraftio" />
+      <meta property="twitter:image" content="{{ self.meta_image() }}">
       <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
     {% endblock %}
 
     {% block extra_meta %}{% endblock %}
+    <link rel="canonical" href="https://snapcraft.io{{ request.path }}" />
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
