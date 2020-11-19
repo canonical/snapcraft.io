@@ -361,10 +361,18 @@ def snapcraft_blueprint():
 
             page = page + 1
 
-        response = requests.get("https://snapcraft.io/docs/sitemap.txt")
-        docs = response.content.decode("utf-8").splitlines()
-        response = requests.get("https://snapcraft.io/tutorials/sitemap.txt")
-        tutorials = response.content.decode("utf-8").splitlines()
+        docs = []
+        tutorials = []
+        try:
+            response = requests.get("https://snapcraft.io/docs/sitemap.txt")
+            docs = response.content.decode("utf-8").splitlines()
+
+            response = requests.get(
+                "https://snapcraft.io/tutorials/sitemap.txt"
+            )
+            tutorials = response.content.decode("utf-8").splitlines()
+        except Exception:
+            pass
 
         xml_sitemap = flask.render_template(
             "sitemap.xml",
