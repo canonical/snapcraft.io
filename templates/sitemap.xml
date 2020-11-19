@@ -21,6 +21,15 @@
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
+
+  {% for distro in distros %}
+  <url>
+    <loc>{{ base_url }}/install/{{ snap["name"] }}/{{ distro }}</loc>
+    <lastmod>{{ snap["last_udpated"] }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  {% endfor %}
   {% endfor %}
 
   {% for post in blog_posts %}
@@ -28,7 +37,23 @@
     <loc>{{ base_url }}/blog/{{ post["slug"] }}</loc>
     <lastmod>{{ post["last_udpated"] }}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <priority>0.2</priority>
+  </url>
+  {% endfor %}
+
+  {% for doc in docs %}
+  <url>
+    <loc>{{ doc }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  {% endfor %}
+
+  {% for tutorial in tutorials %}
+  <url>
+    <loc>{{ tutorial }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
   </url>
   {% endfor %}
 </urlset>

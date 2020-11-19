@@ -269,6 +269,19 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/sitemap.xml")
     def sitemap():
+        links = [
+            "/store",
+            "/about",
+            "/about/publish",
+            "/about/listing",
+            "/about/release",
+            "/about/publicise",
+            "/blog",
+            "/iot",
+            "/docs",
+            "/tutorials",
+        ]
+
         snaps = []
         page = 0
         url = f"https://api.snapcraft.io/api/v1/snaps/search?page={page}"
@@ -298,6 +311,22 @@ def snapcraft_blueprint():
                 url = snaps_response["_links"]["next"]["href"]
             else:
                 url = None
+
+        distros = [
+            "arch",
+            "centos",
+            "debian",
+            "elementary",
+            "fedora",
+            "kde-neon",
+            "kubuntu",
+            "manjaro",
+            "mint",
+            "opensuse",
+            "raspbian",
+            "rhel",
+            "ubuntu",
+        ]
 
         blog_posts = []
         page = 1
@@ -332,18 +361,10 @@ def snapcraft_blueprint():
 
             page = page + 1
 
-        links = [
-            "/store",
-            "/about",
-            "/about/publish",
-            "/about/listing",
-            "/about/release",
-            "/about/publicise",
-            "/blog",
-            "/iot",
-            "/docs",
-            "/tutorials",
-        ]
+        response = requests.get("https://snapcraft.io/docs/sitemap.txt")
+        docs = response.content.decode("utf-8").splitlines()
+        response = requests.get("https://snapcraft.io/tutorials/sitemap.txt")
+        tutorials = response.content.decode("utf-8").splitlines()
 
         xml_sitemap = flask.render_template(
             "sitemap.xml",
@@ -351,11 +372,13 @@ def snapcraft_blueprint():
             snaps=snaps,
             links=links,
             blog_posts=blog_posts,
+            distros=distros,
+            docs=docs,
+            tutorials=tutorials,
         )
         response = flask.make_response(xml_sitemap)
         response.headers["Content-Type"] = "application/xml"
         response.headers["Cache-Control"] = "public, max-age=43200"
-
         return response
 
     return snapcraft
