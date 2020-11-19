@@ -1,4 +1,7 @@
 import flask
+import requests
+from dateutil import parser
+
 from webapp.snapcraft import logic
 
 
@@ -263,5 +266,96 @@ def snapcraft_blueprint():
         status_code = 200
 
         return flask.render_template("snapcraft/build.html"), status_code
+
+    @snapcraft.route("/sitemap.xml")
+    def sitemap():
+        snaps = []
+        page = 0
+        url = f"https://api.snapcraft.io/api/v1/snaps/search?page={page}"
+        while url:
+            response = requests.get(url)
+            try:
+                snaps_response = response.json()
+            except Exception:
+                continue
+
+            for snap in snaps_response["_embedded"]["clickindex:package"]:
+                try:
+                    last_udpated = (
+                        parser.parse(snap["last_updated"])
+                        .replace(tzinfo=None)
+                        .strftime("%Y-%m-%d")
+                    )
+                    snaps.append(
+                        {
+                            "name": snap["package_name"],
+                            "last_udpated": last_udpated,
+                        }
+                    )
+                except Exception:
+                    continue
+            if "next" in snaps_response["_links"]:
+                url = snaps_response["_links"]["next"]["href"]
+            else:
+                url = None
+
+        blog_posts = []
+        page = 1
+        while True:
+            url = (
+                f"https://ubuntu.com/blog/wp-json/wp/v2/posts?"
+                f"tags=2996&per_page=100&page={page}"
+                f"&tags_exclude=3184%2C3265%2C3408"
+            )
+
+            response = requests.get(url)
+            if response.status_code == 400:
+                break
+
+            try:
+                blog_response = response.json()
+            except Exception:
+                continue
+
+            for post in blog_response:
+                try:
+                    date = (
+                        parser.parse(post["date"])
+                        .replace(tzinfo=None)
+                        .strftime("%Y-%m-%d")
+                    )
+                    blog_posts.append(
+                        {"slug": post["slug"], "last_udpated": date}
+                    )
+                except Exception:
+                    continue
+
+            page = page + 1
+
+        links = [
+            "/store",
+            "/about",
+            "/about/publish",
+            "/about/listing",
+            "/about/release",
+            "/about/publicise",
+            "/blog",
+            "/iot",
+            "/docs",
+            "/tutorials",
+        ]
+
+        xml_sitemap = flask.render_template(
+            "sitemap.xml",
+            base_url="https://snapcraft.io",
+            snaps=snaps,
+            links=links,
+            blog_posts=blog_posts,
+        )
+        response = flask.make_response(xml_sitemap)
+        response.headers["Content-Type"] = "application/xml"
+        response.headers["Cache-Control"] = "public, max-age=43200"
+
+        return response
 
     return snapcraft
