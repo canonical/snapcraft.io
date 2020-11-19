@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>{{ base_url }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  {% for link in links %}
+  <url>
+    <loc>{{ base_url }}{{ link }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  {% endfor %}
+
+  {% for snap in snaps %}
+  <url>
+    <loc>{{ base_url }}/{{ snap["name"] }}</loc>
+    <lastmod>{{ snap["last_udpated"] }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  {% endfor %}
+
+  {% for post in blog_posts %}
+  <url>
+    <loc>{{ base_url }}/blog/{{ post["slug"] }}</loc>
+    <lastmod>{{ post["last_udpated"] }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  {% endfor %}
+</urlset>

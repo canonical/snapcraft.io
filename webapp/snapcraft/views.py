@@ -264,4 +264,12 @@ def snapcraft_blueprint():
 
         return flask.render_template("snapcraft/build.html"), status_code
 
+    @snapcraft.route("/sitemap.xml")
+    def sitemap():
+        response = flask.make_response(
+            flask.render_template("sitemap/sitemap.xml"))
+        response.headers["Content-Type"] = "application/xml"
+        return response
+
     return snapcraft
+
