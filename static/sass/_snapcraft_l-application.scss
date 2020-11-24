@@ -10,7 +10,8 @@
       opacity: .5;
 
       &:hover,
-      &:focus {
+      &:focus,
+      &.is-active {
         opacity: 1;
       }
     }

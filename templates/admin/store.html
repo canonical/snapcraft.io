@@ -20,10 +20,10 @@
           <span class="p-side-navigation__text">My stores</span>
         </li>
         <li class="p-side-navigation__item">
-          <a class="p-side-navigation__link" href="/admin/store-a1">Store A1</a>
-          <ul class="p-side-navigation__list u-hide">
+          <a class="p-side-navigation__link {% if store_id == 'store-a1' %}is-active{% endif %}" href="/admin/store-a1">Store A1</a>
+          <ul class="p-side-navigation__list {% if store_id != 'store-a1' %}u-hide{% endif %}">
             <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Snaps</a>
+              <a class="p-side-navigation__link {% if store_id == 'store-a1' %}is-active{% endif %}" href="/">Snaps</a>
             </li>
             <li class="p-side-navigation__item">
               <a class="p-side-navigation__link" href="/">Models</a>
@@ -43,10 +43,10 @@
           </ul>
         </li>
         <li class="p-side-navigation__item">
-          <a class="p-side-navigation__link" href="/admin/store-a2">Store A2</a>
-          <ul class="p-side-navigation__list u-hide">
+          <a class="p-side-navigation__link {% if store_id == 'store-a2' %}is-active{% endif %}" href="/admin/store-a2">Store A2</a>
+          <ul class="p-side-navigation__list {% if store_id != 'store-a2' %}u-hide{% endif %}">
             <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Snaps</a>
+              <a class="p-side-navigation__link {% if store_id == 'store-a2' %}is-active{% endif %}" href="/">Snaps</a>
             </li>
             <li class="p-side-navigation__item">
               <a class="p-side-navigation__link" href="/">Models</a>
@@ -70,7 +70,7 @@
   </header>
 
   <main class="l-main">
-    <h4>Snaps in Store A2</h4>
+    <h4>Snaps in {{ store_id }}</h4>
     <table aria-label="Table with demo content">
       <thead>
         <tr>
