@@ -15,57 +15,9 @@
       <div class="demo-controls u-hide--large u-align--right">
         <button class="js-menu-close is-dense u-no-margin u-hide--medium">Close</button>
       </div>
-      <ul class="p-side-navigation__list">
-        <li class="p-side-navigation__item--title">
-          <span class="p-side-navigation__text">My stores</span>
-        </li>
-        <li class="p-side-navigation__item">
-          <a class="p-side-navigation__link {% if store_id == 'store-a1' %}is-active{% endif %}" href="/admin/store-a1">Store A1</a>
-          <ul class="p-side-navigation__list {% if store_id != 'store-a1' %}u-hide{% endif %}">
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link {% if store_id == 'store-a1' %}is-active{% endif %}" href="/">Snaps</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Models</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Devices</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Reviews</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Members</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Settings</a>
-            </li>
-          </ul>
-        </li>
-        <li class="p-side-navigation__item">
-          <a class="p-side-navigation__link {% if store_id == 'store-a2' %}is-active{% endif %}" href="/admin/store-a2">Store A2</a>
-          <ul class="p-side-navigation__list {% if store_id != 'store-a2' %}u-hide{% endif %}">
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link {% if store_id == 'store-a2' %}is-active{% endif %}" href="/">Snaps</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Models</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Devices</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Reviews</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Members</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Settings</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      {% with store_id=store_id %}
+       {% include "admin/_navigation.html" %}
+      {% endwith %}
     </div>
   </header>
 
