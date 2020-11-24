@@ -55,10 +55,6 @@ def store_blueprint(store_query=None):
 
     snap_details_views(store, api, _handle_error)
 
-    @store.route("/admin")
-    def admin():
-        return flask.render_template("admin/admin.html")
-
     @store.route("/discover")
     def discover():
         return flask.redirect(flask.url_for(".homepage"))
