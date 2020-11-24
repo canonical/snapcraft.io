@@ -1,10 +1,65 @@
 {% extends webapp_config['LAYOUT'] %}
 
-{% block meta_title %}Install Linux apps using the Snap Store | Snapcraft{% endblock %}
-
-{% block meta_description %}Find and install the best Linux software for all major Linux distributions.{% endblock %}
+{% block meta_title %}Admin | Snapcraft{% endblock %}
 
 {% block content %}
-  <h1>Hello, world!</h1>
+<div class="l-application" role="presentation">
+  <div class="l-navigation-bar">
+    <div class="u-clearfix">
+      <button class="u-float-right js-menu-toggle is-dense u-no-margin">Menu</button>
+    </div>
+  </div>
+
+  <header class="l-navigation">
+    <div class="l-navigation__drawer">
+      <div class="demo-controls u-hide--large u-align--right">
+        <button class="js-menu-close is-dense u-no-margin u-hide--medium">Close</button>
+      </div>
+      <h4>My stores</h4>
+    </div>
+  </header>
+
+  <main class="l-main">
+    <h4>Snaps in Store A2</h4>
+    <table aria-label="Table with demo content">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Demo content</th>
+          <th>Demo content</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Demo content</th>
+          <td>Demo content</td>
+          <td>Demo content</td>
+        </tr>
+        <tr>
+          <th>Demo content</th>
+          <td>Demo content</td>
+          <td>Demo content</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>Demo content</th>
+          <td>Demo content</td>
+          <td>Demo content</td>
+        </tr>
+      </tfoot>
+    </table>
+  </main>
+</div>
+
+<script>
+  document.querySelector(".js-menu-toggle").addEventListener("click", function() {
+    document.querySelector(".l-navigation").classList.toggle("is-collapsed");
+  });
+
+  document.querySelector(".js-menu-close").addEventListener("click", function() {
+    document.querySelector(".l-navigation").classList.add("is-collapsed");
+  });
+</script>
 {% endblock %}
 
