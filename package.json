@@ -22,16 +22,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged --relative"
     }
   },
   "lint-staged": {
-    "linters": {
-      "**/*.py": "./run exec yarn lint-python",
-      "**/*.js": "./run exec yarn lint-js",
-      "**/*.scss": "./run exec yarn lint-scss"
-    },
-    "relative": true
+    "**/*.py": "./run exec yarn lint-python",
+    "**/*.js": "./run exec yarn lint-js",
+    "**/*.scss": "./run exec yarn lint-scss"
   },
   "jest": {
     "testURL": "http://localhost.test",
