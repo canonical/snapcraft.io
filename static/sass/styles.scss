@@ -68,6 +68,9 @@ $color-social-icon-foreground: $color-light;
 @include vf-u-text-muted;
 @include vf-u-truncate;
 
+// vanilla layouts
+@include vf-l-application;
+
 @import "snapcraft_custom-cols";
 
 @include snapcraft-custom-cols;
@@ -314,6 +317,9 @@ $color-social-icon-foreground: $color-light;
 @import "snapcraft_p-release-details-row";
 
 @include snapcraft-p-release-details-row;
+
+@import "snapcraft_l-application";
+@include snapcraft-l-application;
 
 // **** Vanilla overrides & temporary bug fixes ****
 
