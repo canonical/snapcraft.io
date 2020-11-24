@@ -15,90 +15,64 @@
       <div class="demo-controls u-hide--large u-align--right">
         <button class="js-menu-close is-dense u-no-margin u-hide--medium">Close</button>
       </div>
-      <ul class="p-side-navigation__list">
-        <li class="p-side-navigation__item--title">
-          <span class="p-side-navigation__text">My stores</span>
-        </li>
-        <li class="p-side-navigation__item">
-          <a class="p-side-navigation__link" href="/admin/store-a1">Store A1</a>
-          <ul class="p-side-navigation__list u-hide">
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Snaps</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Models</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Devices</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Reviews</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Members</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Settings</a>
-            </li>
-          </ul>
-        </li>
-        <li class="p-side-navigation__item">
-          <a class="p-side-navigation__link" href="/admin/store-a2">Store A2</a>
-          <ul class="p-side-navigation__list u-hide">
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Snaps</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Models</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Devices</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Reviews</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Members</a>
-            </li>
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link" href="/">Settings</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      {% with store_id=store_id %}
+        {% include "admin/_navigation.html" %}
+      {% endwith %}
     </div>
   </header>
 
-  <main class="l-main">
-    <h4>Snaps in Store A2</h4>
-    <table aria-label="Table with demo content">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Demo content</th>
-          <th>Demo content</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Demo content</th>
-          <td>Demo content</td>
-          <td>Demo content</td>
-        </tr>
-        <tr>
-          <th>Demo content</th>
-          <td>Demo content</td>
-          <td>Demo content</td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>Demo content</th>
-          <td>Demo content</td>
-          <td>Demo content</td>
-        </tr>
-      </tfoot>
-    </table>
+  <main class="l-main p-snapcraft-admin">
+    <div class="p-snapcraft-admin__section" id="snaps">
+      <h4>Snaps in {{ store_id }}</h4>
+      <table aria-label="Table with demo content">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Demo content</th>
+            <th>Demo content</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Demo content</th>
+            <td>Demo content</td>
+            <td>Demo content</td>
+          </tr>
+          <tr>
+            <th>Demo content</th>
+            <td>Demo content</td>
+            <td>Demo content</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Demo content</th>
+            <td>Demo content</td>
+            <td>Demo content</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="p-snapcraft-admin__section" id="models">
+      <h4>Models in {{ store_id }}</h4>
+    </div>
+
+    <div class="p-snapcraft-admin__section" id="devices">
+      <h4>Devices in {{ store_id }}</h4>
+    </div>
+
+    <div class="p-snapcraft-admin__section" id="reviews">
+      <h4>Reviews in {{ store_id }}</h4>
+    </div>
+
+    <div class="p-snapcraft-admin__section" id="members">
+      <h4>Members in {{ store_id }}</h4>
+    </div>
+
+    <div class="p-snapcraft-admin__section" id="settings">
+      <h4>Settings in {{ store_id }}</h4>
+    </div>
   </main>
 </div>
 
