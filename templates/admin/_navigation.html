@@ -1,0 +1,51 @@
+<ul class="p-side-navigation__list">
+  <li class="p-side-navigation__item--title">
+    <span class="p-side-navigation__text">My stores</span>
+  </li>
+  <li class="p-side-navigation__item">
+    <a class="p-side-navigation__link {% if store_id == 'store-a1' %}is-active{% endif %}" href="/admin/store-a1#snaps">Store A1</a>
+    <ul class="p-side-navigation__list {% if store_id != 'store-a1' %}u-hide{% endif %}">
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a1#snaps">Snaps</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a1#models">Models</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a1#devices">Devices</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a1#reviews">Reviews</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a1#members">Members</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a1#settings">Settings</a>
+      </li>
+    </ul>
+  </li>
+  <li class="p-side-navigation__item">
+    <a class="p-side-navigation__link {% if store_id == 'store-a2' %}is-active{% endif %}" href="/admin/store-a2#snaps">Store A2</a>
+    <ul class="p-side-navigation__list {% if store_id != 'store-a2' %}u-hide{% endif %}">
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a2#snaps">Snaps</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a2#models">Models</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a2#devices">Devices</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a2#reviews">Reviews</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a2#members">Members</a>
+      </li>
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link" href="/admin/store-a2#settings">Settings</a>
+      </li>
+    </ul>
+  </li>
+</ul>
