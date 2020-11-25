@@ -7,22 +7,7 @@
     <a class="p-side-navigation__link {% if store_id == store.id %}is-active{% endif %}" href="/admin/{{ store.id }}/snaps">{{ store.name }}</a>
     <ul class="p-side-navigation__list {% if store_id != store.id %}u-hide{% endif %}">
       <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link" href="/admin/{{ store.id }}/snaps">Snaps</a>
-      </li>
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link" href="/admin/{{ store.id }}/models">Models</a>
-      </li>
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link" href="/admin/{{ store.id }}/devices">Devices</a>
-      </li>
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link" href="/admin/{{ store.id }}/reviews">Reviews</a>
-      </li>
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link" href="/admin/{{ store.id }}/members">Members</a>
-      </li>
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link" href="/admin/{{ store.id }}/settings">Settings</a>
+        <a class="p-side-navigation__link {% if current_tab == 'snaps' %}is-active{% endif %}" href="/admin/{{ store.id }}/snaps">Snaps</a>
       </li>
     </ul>
   </li>
