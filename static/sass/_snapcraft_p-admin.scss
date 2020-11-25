@@ -1,0 +1,16 @@
+@mixin snapcraft-p-admin {
+  $header-offset: 96px !default;
+
+  .p-snapcraft-admin {
+    margin-top: -$header-offset;
+
+    .p-snapcraft-admin__section {
+      display: none;
+
+      &:target {
+        display: block;
+        padding-top: $header-offset;
+      }
+    }
+  }
+}

@@ -5,6 +5,17 @@
       color: $color-x-light;
     }
 
+    .l-navigation__drawer a {
+      color: $color-x-light;
+      opacity: .5;
+
+      &:hover,
+      &:focus,
+      &.is-active {
+        opacity: 1;
+      }
+    }
+
     .l-navigation-bar {
       background-color: $color-brand;
       padding: $sp-medium;
