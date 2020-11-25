@@ -25,6 +25,11 @@
       "name": "{{ snap_title }}",
       "description": "{{ summary }}",
       "datePublished": "{{ last_updated_raw }}",
+      {% if categories|length > 0 %}
+      "applicationCategory": "{{ categories[0]['name'] }}",
+      {% else %}
+      "applicationCategory": "other",
+      {% endif %}
       {% if screenhots and screenshots|length > 0 %}
       "screenshot": "{{ screenshots[0] }}",
       {% endif %}
