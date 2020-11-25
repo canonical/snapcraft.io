@@ -1,5 +1,7 @@
 @mixin snapcraft-l-application {
   .l-application {
+    width: auto;
+
     .l-navigation__drawer {
       background-color: $color-brand;
       color: $color-x-light;

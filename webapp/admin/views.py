@@ -20,9 +20,7 @@ admin = flask.Blueprint(
 )
 
 
-@admin.route("/admin")
-@login_required
-def get_stores():
+def fetch_stores():
     try:
         account_info = publisher_api.get_account(flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
@@ -35,8 +33,26 @@ def get_stores():
     if not stores:
         flask.abort(403)
 
+    return stores
+
+
+def fetch_store(store_id):
+    stores = fetch_stores()
+    store = next((s for s in stores if s["id"] == store_id), None)
+
+    return store
+
+
+@admin.route("/admin")
+@login_required
+def get_stores():
+    stores = fetch_stores()
+
     return flask.render_template(
-        "admin/admin.html", stores=stores, store_id=stores[0]["id"]
+        "admin/admin.html",
+        stores=stores,
+        store=stores[0],
+        store_id=stores[0]["id"],
     )
 
 
@@ -44,4 +60,9 @@ def get_stores():
 @login_required
 def get_store(store_id):
 
-    return flask.render_template("admin/admin.html", store_id=store_id)
+    stores = fetch_stores()
+    store = fetch_store(store_id)
+
+    return flask.render_template(
+        "admin/snaps.html", stores=stores, store=store, store_id=store_id
+    )
