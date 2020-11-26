@@ -64,11 +64,12 @@ def get_members(store_id):
     try:
         stores = admin_api.get_stores(flask.session)
         store = admin_api.get_store(flask.session, store_id, stores)
+        members = admin_api.get_store_members(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
     return flask.render_template(
-        "admin/members.html", stores=stores, store=store, store_id=store_id
+        "admin/members.html", stores=stores, store=store, members=members
     )

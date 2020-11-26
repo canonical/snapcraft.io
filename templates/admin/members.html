@@ -21,63 +21,15 @@
     </tr>
   </thead>
   <tbody>
+    {% for member in members %}
     <tr>
-      <td rowspan="2">Lilyana Videnova</td>
-      <td rowspan="2">lilyana.videnova@canonical.com</td>
-      <td><a href="#">3</a></td>
-      <td>Admin, Reviewer, Publisher, Viewer</td>
-      <td><a href="#">Store A1</a></td>
+      <td rowspan="1">{{ member.displayname }}</td>
+      <td rowspan="1">{{ member.email }}</td>
+      <td><a href="#">-</a></td>
+      <td>{% for r in member.roles %}{{ r | capitalize }}{{ ", " if not loop.last }}{% endfor %}</td>
+      <td><a href="/admin/{{ store.id }}/snaps">{{ store.name }}</a></td>
     </tr>
-    <tr>
-      <td></td>
-      <td>Admin, Viewer</td>
-      <td><a href="#">Device store 1</a></td>
-    </tr>
-    <tr>
-      <td>Claudio Gomboli</td>
-      <td>claudio.gomboli@canonical.com</td>
-      <td>-</td>
-      <td>Admin, Reviewer</td>
-      <td><a href="#">Store A1</a></td>
-    </tr>
-    <tr>
-      <td>Toto Bille</td>
-      <td>toto@canonical.com</td>
-      <td><a href="#">12</a></td>
-      <td>Admin, Publisher</td>
-      <td><a href="#">Store A1</a></td>
-    </tr>
-    <tr>
-      <td rowspan="2">Daniel Mutis</td>
-      <td rowspan="2">daniel.mutis@canonical.com</td>
-      <td><a href="#">4</a></td>
-      <td>Reviewer, Publisher, Viewer</td>
-      <td><a href="#">Store A1</a></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>Admin, Viewer</td>
-      <td><a href="#">Device store 1</a></td>
-    </tr>
-    <tr>
-      <td>Fran Cabrera</td>
-      <td>francisco.jimenez.cabrera@canonical.com</td>
-      <td><a href="#">3</a></td>
-      <td>Publisher, Viewer</td>
-      <td><a href="#">Store A1</a></td>
-    </tr>
-    <tr>
-      <td rowspan="2">Ovidiu Sucio</td>
-      <td rowspan="2">ovidiu.suciu@canonical.com</td>
-      <td>-</td>
-      <td>Viewer</td>
-      <td><a href="#">Store A1</a></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td>Admin, Viewer</td>
-      <td><a href="#">Device store 1</a></td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
 
