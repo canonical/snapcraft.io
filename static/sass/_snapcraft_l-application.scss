@@ -9,7 +9,7 @@
 
     .l-navigation__drawer a {
       color: $color-x-light;
-      opacity: .5;
+      opacity: 0.5;
 
       &:hover,
       &:focus,
@@ -26,6 +26,12 @@
     .l-main,
     .l-navigation__drawer {
       padding: $sp-medium;
+    }
+
+    .l-application__header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
     }
   }
 }

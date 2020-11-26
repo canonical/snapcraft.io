@@ -1,0 +1,85 @@
+{% set current_tab = "members" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}Admin | Snapcraft{% endblock %}
+
+{% block admin_content %}
+
+<div class="l-application__header">
+  <h2 class="p-heading--4">Members</h2>
+  <a class="p-button" href="/members/manage">Manage members</a>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Snaps in {{ store.name }}</th>
+      <th>Access</th>
+      <th>Store</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2">Lilyana Videnova</td>
+      <td rowspan="2">lilyana.videnova@canonical.com</td>
+      <td><a href="#">3</a></td>
+      <td>Admin, Reviewer, Publisher, Viewer</td>
+      <td><a href="#">Store A1</a></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Admin, Viewer</td>
+      <td><a href="#">Device store 1</a></td>
+    </tr>
+    <tr>
+      <td>Claudio Gomboli</td>
+      <td>claudio.gomboli@canonical.com</td>
+      <td>-</td>
+      <td>Admin, Reviewer</td>
+      <td><a href="#">Store A1</a></td>
+    </tr>
+    <tr>
+      <td>Toto Bille</td>
+      <td>toto@canonical.com</td>
+      <td><a href="#">12</a></td>
+      <td>Admin, Publisher</td>
+      <td><a href="#">Store A1</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Daniel Mutis</td>
+      <td rowspan="2">daniel.mutis@canonical.com</td>
+      <td><a href="#">4</a></td>
+      <td>Reviewer, Publisher, Viewer</td>
+      <td><a href="#">Store A1</a></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Admin, Viewer</td>
+      <td><a href="#">Device store 1</a></td>
+    </tr>
+    <tr>
+      <td>Fran Cabrera</td>
+      <td>francisco.jimenez.cabrera@canonical.com</td>
+      <td><a href="#">3</a></td>
+      <td>Publisher, Viewer</td>
+      <td><a href="#">Store A1</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Ovidiu Sucio</td>
+      <td rowspan="2">ovidiu.suciu@canonical.com</td>
+      <td>-</td>
+      <td>Viewer</td>
+      <td><a href="#">Store A1</a></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Admin, Viewer</td>
+      <td><a href="#">Device store 1</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+
