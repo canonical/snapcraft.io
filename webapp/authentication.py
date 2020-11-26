@@ -64,13 +64,14 @@ def request_macaroon():
     response = sso.post_macaroon(
         {
             "permissions": [
+                "edit_account",
                 "package_access",
                 "package_metrics",
-                "package_update",
                 "package_register",
                 "package_release",
+                "package_update",
                 "package_upload_request",
-                "edit_account",
+                "store_admin",
             ]
         }
     )
