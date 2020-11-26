@@ -319,6 +319,7 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-release-details-row;
 
 @import "snapcraft_l-application";
+
 @include snapcraft-l-application;
 
 // **** Vanilla overrides & temporary bug fixes ****
