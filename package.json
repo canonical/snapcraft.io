@@ -1,7 +1,7 @@
 {
   "scripts": {
     "lint-js": "eslint static/js",
-    "lint-scss": "sass-lint 'static/**/*.scss' --verbose --no-exit",
+    "lint-scss": "stylelint static/**/*.scss",
     "lint-python": "flake8 webapp tests && black --check --line-length 79 webapp tests",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
     "test-js": "jest",
@@ -22,16 +22,13 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged --relative"
     }
   },
   "lint-staged": {
-    "linters": {
-      "**/*.py": "./run exec yarn lint-python",
-      "**/*.js": "./run exec yarn lint-js",
-      "**/*.scss": "./run exec yarn lint-scss"
-    },
-    "relative": true
+    "**/*.py": "./run exec yarn lint-python",
+    "**/*.js": "./run exec yarn lint-js",
+    "**/*.scss": "./run exec yarn lint-scss"
   },
   "jest": {
     "testURL": "http://localhost.test",
@@ -91,7 +88,9 @@
     "redux-mock-store": "1.5.4",
     "redux-thunk": "2.3.0",
     "sass": "1.27.0",
-    "sass-lint": "1.13.1",
+    "stylelint": "13.8.0",
+    "stylelint-config-standard": "20.0.0",
+    "stylelint-order": "4.1.0",
     "swiper": "6.3.3",
     "topojson-client": "3.1.0",
     "vanilla-framework": "2.19.3",
