@@ -18,6 +18,7 @@
 
     &__tooltip {
       @extend .p-tooltip--top-center; // sass-lint:disable-line placeholder-in-extend
+
       display: none;
       pointer-events: none; // little hack to make sure tooltip doesn't dissapear when it's hovered
       position: absolute;

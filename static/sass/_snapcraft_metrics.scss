@@ -1,10 +1,10 @@
 @mixin snapcraft-metrics {
-  $semi-transparent-white: rgba(255, 255, 255, .8);
+  $semi-transparent-white: rgba(255, 255, 255, 0.8);
 
   .snapcraft-metrics__graph {
     opacity: 0;
     position: relative;
-    transition: opacity .333s;
+    transition: opacity 0.333s;
 
     .p-tooltip {
       position: absolute;
@@ -32,7 +32,6 @@
     }
   }
 
-
   .is-empty {
     h3,
     hr,
@@ -41,25 +40,25 @@
     }
 
     svg {
-      opacity: .4;
+      opacity: 0.4;
       pointer-events: none;
     }
   }
 
   .snapcraft-metrics__loader {
     background: $semi-transparent-white;
-    font-size: .75rem;
+    font-size: 0.75rem;
     left: 50%;
     line-height: 2rem;
-    margin-left: -.5rem;
-    margin-top: -.5rem;
-    padding: 0 .5rem;
+    margin-left: -0.5rem;
+    margin-top: -0.5rem;
+    padding: 0 0.5rem;
     position: absolute;
     top: 50%;
 
     .p-icon--spinner {
-      margin-right: .5rem;
+      margin-right: 0.5rem;
       vertical-align: middle;
     }
   }
- }
+}

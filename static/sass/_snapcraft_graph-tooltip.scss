@@ -3,22 +3,24 @@
     &__title {
       border-bottom: 1px solid $color-mid-dark;
       display: block;
-      font: 12px "Ubuntu";
-      margin-bottom: .5rem;
-      padding-bottom: .25rem;
+      font-family: "Ubuntu", sans-serif;
+      font-size: 12px;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.25rem;
       text-align: center;
     }
 
     &__series {
       align-items: center;
       display: flex;
-      font: 12px "Ubuntu";
+      font-family: "Ubuntu", sans-serif;
+      font-size: 12px;
       justify-content: center;
-      margin-top: .25rem;
+      margin-top: 0.25rem;
       width: 215px;
 
       &:last-child {
-        margin-bottom: .25rem;
+        margin-bottom: 0.25rem;
       }
 
       &.is-hovered {
@@ -30,25 +32,25 @@
         overflow: hidden;
         text-align: left;
         text-overflow: ellipsis;
-        width: calc(70% - .5rem);
+        width: calc(70% - 0.5rem);
       }
 
       &-color {
-        border-radius: .75rem;
+        border-radius: 0.75rem;
         display: inline-block;
-        height: .75rem;
+        height: 0.75rem;
+        width: 0.75rem;
         margin: {
-          right: .25rem;
+          right: 0.25rem;
           top: 0;
         }
-        width: .75rem;
       }
 
       &-value {
         display: inline-block;
         margin-top: 0;
         text-align: right;
-        width: calc(30% - .5rem);
+        width: calc(30% - 0.5rem);
       }
     }
   }

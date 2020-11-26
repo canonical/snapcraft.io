@@ -7,14 +7,14 @@
     }
 
     .p-code-copyable__input {
-      padding-left: .5rem;
+      padding-left: 0.5rem;
     }
   }
 
   // TODO: Remove this if and when https://github.com/canonical-web-and-design/vanilla-framework/issues/2453
   // is implemented
   textarea.p-code-copyable__input { // sass-lint:disable-line no-qualifying-elements
-    background-position: 0 .25rem;
+    background-position: 0 0.25rem;
     box-shadow: none;
     color: $color-mid-dark;
     margin-bottom: 0;

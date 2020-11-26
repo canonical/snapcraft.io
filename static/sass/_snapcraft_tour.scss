@@ -1,5 +1,5 @@
 @mixin snapcraft-tour {
-  $color-overlay: transparentize($color-dark, .35);
+  $color-overlay: transparentize($color-dark, 0.35);
   $triangle-height: $sp-unit;
   $triangle-spacing: 2 * $triangle-height;
 
@@ -56,6 +56,7 @@
         right: $triangle-height solid transparent;
         top: $triangle-height solid transparent;
       }
+
       content: '';
       height: 0;
       pointer-events: none;
@@ -67,6 +68,7 @@
   // for tooltips below element
   %triangle--pointing-up {
     @extend %triangle;
+
     margin-top: $triangle-spacing;
 
     &::before,
@@ -84,6 +86,7 @@
   // for tooltips above element
   %triangle--pointing-down {
     @extend %triangle;
+
     margin-bottom: $triangle-spacing;
 
     &::before,
@@ -124,6 +127,7 @@
   // for tooltips on the left of element
   %triangle--pointing-right {
     @extend %triangle;
+
     margin-right: $triangle-spacing;
 
     &::before,
@@ -141,6 +145,7 @@
   // for tooltips on the right of element
   %triangle--pointing-left {
     @extend %triangle;
+
     margin-left: $triangle-spacing;
 
     &::before,
@@ -258,7 +263,6 @@
   .p-tour-controls {
     display: flex;
     justify-content: space-between;
-
     margin-top: $spv-inner--large;
 
     // based on pagination pattern from Vanilla this turns contextual menu

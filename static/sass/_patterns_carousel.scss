@@ -42,7 +42,7 @@
           background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
           background-position: 50% 50%;
           background-repeat: no-repeat;
-          background-size: .75rem .75rem;
+          background-size: 0.75rem 0.75rem;
           border: 1px solid $color-light;
           border-radius: 2px;
           content: '';
@@ -50,8 +50,8 @@
           height: 1.5rem;
           pointer-events: none;
           position: absolute;
-          right: .625rem;
-          top: .625rem;
+          right: 0.625rem;
+          top: 0.625rem;
           width: 1.5rem;
         }
       }
@@ -66,12 +66,21 @@
       color: $color-x-light;
       position: center;
       repeat: no-repeat;
-      size: .25rem;
+      size: 0.25rem;
     }
+
     border-radius: 3rem;
     box-sizing: content-box;
     cursor: pointer;
     height: 3rem;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    text-indent: -999px;
+    top: 50%;
+    transition: opacity 0.165s;
+    width: 3rem;
+    z-index: 10;
     margin: {
       bottom: 0;
       left: 0;
@@ -79,14 +88,6 @@
       right: 0 !important;
       top: -1.5rem;
     }
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    text-indent: -999px;
-    top: 50%;
-    transition: opacity .165s;
-    width: 3rem;
-    z-index: 10;
 
     &.swiper-button-disabled {
       cursor: default;
@@ -128,14 +129,17 @@
     z-index: 1;
   }
 
+  .swiper-slide {
+    flex-shrink: 0;
+    height: 100%;
+    position: relative;
+    transition-property: transform;
+  }
+
   .swiper-container-no-flexbox {
     .swiper-slide {
       float: left;
     }
-  }
-
-  .swiper-container-vertical > .swiper-wrapper {
-    flex-direction: column;
   }
 
   .swiper-wrapper {
@@ -154,6 +158,10 @@
     transform: translate3d(0, 0, 0);
   }
 
+  .swiper-container-vertical > .swiper-wrapper {
+    flex-direction: column;
+  }
+
   .swiper-container-multirow > .swiper-wrapper {
     flex-wrap: wrap;
   }
@@ -161,13 +169,6 @@
   .swiper-container-free-mode > .swiper-wrapper {
     margin: 0 auto;
     transition-timing-function: ease-out;
-  }
-
-  .swiper-slide {
-    flex-shrink: 0;
-    height: 100%;
-    position: relative;
-    transition-property: transform;
   }
 
   .swiper-slide-invisible-blank {

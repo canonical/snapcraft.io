@@ -3,7 +3,6 @@
     display: flex;
     flex-wrap: wrap;
 
-
     &__icon {
       align-self: flex-start;
       flex-shrink: 0;
@@ -26,7 +25,6 @@
       @media screen and (min-width: $breakpoint-medium) {
         margin-bottom: 0;
       }
-
     }
 
     &__name {
@@ -35,11 +33,10 @@
 
     &__publisher {
       margin-bottom: 0;
-      margin-top: -.5rem;
+      margin-top: -0.5rem;
     }
 
     @media screen and (min-width: $breakpoint-medium) {
-
       &__title {
         margin-top: -2 * $sp-x-small;
       }
@@ -85,7 +82,7 @@
 
   .p-channel-map {
     background: $color-x-light;
-    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, .8);
+    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, 0.8);
     max-width: 45rem;
     overflow: hidden;
     position: absolute;
@@ -98,6 +95,7 @@
         bottom: 1px solid $color-mid-light;
         top: 1px solid $color-mid-light;
       }
+
       box-shadow: none;
       margin-top: -$spv-outer--shallow-scaleable;
       max-width: 100%;
@@ -124,6 +122,7 @@
 
     &__row {
       @extend %vf-clearfix;
+
       margin: 0;
       padding-bottom: $sp-x-large;
 
@@ -218,7 +217,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     position: relative;
-    transition: transform .333s;
+    transition: transform 0.333s;
 
     &.show-right {
       transform: translateX(-100%);
@@ -250,6 +249,11 @@
     tbody tr {
       cursor: pointer;
 
+      td {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
       &:hover {
         background-color: $color-light;
 
@@ -277,11 +281,6 @@
       .p-channel-map__version-table-install {
         display: block;
       }
-    }
-
-    td {
-      overflow: hidden;
-      white-space: nowrap;
     }
   }
 }

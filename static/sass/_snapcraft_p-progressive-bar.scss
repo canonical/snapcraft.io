@@ -28,6 +28,18 @@
     }
   }
 
+  .progressive-bar__current {
+    @extend %bar;
+
+    background: $active;
+  }
+
+  .progressive-bar__target {
+    @extend %bar;
+
+    background: $target;
+  }
+
   .progressive-bar.is-disabled {
     cursor: not-allowed;
     pointer-events: none;
@@ -41,13 +53,9 @@
     }
   }
 
-  .progressive-bar__current {
-    @extend %bar;
-    background: $active;
-  }
-
   .progressive-bar__target-value {
     @include vf-animation(opacity, snap, in);
+
     pointer-events: none;
     position: absolute;
     transform: translate(-50%, 1rem);
@@ -59,13 +67,9 @@
     display: inline;
   }
 
-  .progressive-bar__target {
-    @extend %bar;
-    background: $target;
-  }
-
   .progressive-bar__target-adjust {
     @include vf-animation(all, snap, in);
+
     background: $color-dark;
     border-radius: 3px;
     bottom: -4px;

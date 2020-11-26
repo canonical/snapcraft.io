@@ -1,8 +1,29 @@
 @mixin p-annotated-code {
+  .p-annotated-code__block {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    padding: 0.25rem 1rem;
+  }
+
+  .p-annotated-code__block:first-child {
+    border-top: 0;
+    padding-top: 0.5rem;
+  }
+
+  .p-annotated-code__block:last-child {
+    border-bottom: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .p-annotated-code__block:hover {
+    background: $color-x-light;
+    border-color: $color-mid-light;
+  }
+
   .p-annotated-code {
     background-color: $color-light;
     border: 1px solid $color-mid-light;
-    border-radius: .125rem;
+    border-radius: 0.125rem;
     color: $color-dark;
     display: block;
     margin-bottom: 1.5rem;
@@ -31,32 +52,11 @@
     }
 
     &:hover .p-annotated-code__block {
-      opacity: .5;
+      opacity: 0.5;
 
       &:hover {
         opacity: 1;
       }
     }
-  }
-
-  .p-annotated-code__block {
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
-    padding: .25rem 1rem;
-  }
-
-  .p-annotated-code__block:first-child {
-    border-top: 0;
-    padding-top: .5rem;
-  }
-
-  .p-annotated-code__block:last-child {
-    border-bottom: 0;
-    padding-bottom: .5rem;
-  }
-
-  .p-annotated-code__block:hover {
-    background: $color-x-light;
-    border-color: $color-mid-light;
   }
 }
