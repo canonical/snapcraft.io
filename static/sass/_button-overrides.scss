@@ -11,7 +11,7 @@
 
     &:hover,
     &:active:hover {
-      background-color: rgba($color-mid-x-light, .2);
+      background-color: rgba($color-mid-x-light, 0.2);
     }
   }
 
@@ -21,6 +21,7 @@
 
   .p-icon--github {
     @extend %icon;
+
     background-image: url('#{$assets-path}61d83c7e-icon-github.svg');
   }
 
@@ -38,7 +39,7 @@
       margin-top: 0;
 
       &:hover {
-        background-color: transparentize($color-x-light, .8);
+        background-color: transparentize($color-x-light, 0.8);
       }
     }
   }

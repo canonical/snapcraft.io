@@ -6,23 +6,23 @@ $color-navigation-background: #252525;
 // vanilla patterns
 @import 'vanilla-framework/scss/vanilla';
 
-@include vf-base;;
-
+@include vf-base;
 @include vf-p-grid;
 @include vf-p-grid-modifications;
 @include vf-p-headings;
 @include vf-p-lists;
 @include vf-p-strip;
 @include vf-p-tooltips;
-
 @include vf-u-align;
 @include vf-u-floats;
 @include vf-u-margin-collapse;
 
 @import 'snapcraft_banner';
+
 @include snapcraft-banner;
 
 @import 'snapcraft_details_heading';
+
 @include snapcraft-details-heading;
 
 // CUSTOM STYLES FOR EMBEDDED CARD

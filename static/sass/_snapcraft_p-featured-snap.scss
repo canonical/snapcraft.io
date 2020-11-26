@@ -1,14 +1,15 @@
 @mixin snapcraft-p-featured-snap {
   $light-transparent: rgba(255, 255, 255, 0);
-  $light-semi-opaque: rgba(255, 255, 255, .65);
-  $light-opaque: rgba(255, 255, 255, .8);
+  $light-semi-opaque: rgba(255, 255, 255, 0.65);
+  $light-opaque: rgba(255, 255, 255, 0.8);
   $dark-transparent: rgba(0, 0, 0, 0);
-  $dark-semi-opaque: rgba(0, 0, 0, .65);
-  $dark-opaque: rgba(0, 0, 0, .8);
+  $dark-semi-opaque: rgba(0, 0, 0, 0.65);
+  $dark-opaque: rgba(0, 0, 0, 0.8);
   $default-color: rgba(238, 238, 238, 1);
 
   .p-featured-snap {
     @extend %vf-card;
+
     background-color: $color-dark;
     color: $color-light;
     margin-bottom: $sp-large;

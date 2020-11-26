@@ -1,10 +1,10 @@
 @import 'snapcraft_patterns_icons';
 
 @mixin snapcraft-market {
-  $white-overlay-color: rgba(255, 255, 255, .5);
-  $black-overlay-color: rgba(0, 0, 0, .5);
-  $black-overlay-light-color: rgba(0, 0, 0, .2);
-  $white-overlay-strong-color: rgba(255, 255, 255, .9);
+  $white-overlay-color: rgba(255, 255, 255, 0.5);
+  $black-overlay-color: rgba(0, 0, 0, 0.5);
+  $black-overlay-light-color: rgba(0, 0, 0, 0.2);
+  $white-overlay-strong-color: rgba(255, 255, 255, 0.9);
 
   // Override baseline alignment
   .p-form--stacked .p-form__group--top {
@@ -13,9 +13,8 @@
 
   // hack to make anchor link behave like a button
   .js-market-revert.is-disabled {
-
     cursor: not-allowed;
-    opacity: .5;
+    opacity: 0.5;
 
     &:hover {
       background-color: transparent;
@@ -31,6 +30,7 @@
 
     .p-editable-icon__icon {
       @include vf-icon-plus($color-mid-dark);
+
       background-position: center;
       background-repeat: no-repeat;
       background-size: 1rem;
@@ -78,7 +78,7 @@
 
     &__label {
       line-height: 55px;
-      padding-top: .25rem;
+      padding-top: 0.25rem;
     }
   }
 
@@ -141,8 +141,15 @@
     }
   }
 
-  .p-market-banner {
+  .p-icon--delete {
+    @include snapcraft-icon-delete($color-mid-dark);
 
+    &:hover {
+      @include snapcraft-icon-delete($color-negative);
+    }
+  }
+
+  .p-market-banner {
     .p-market-banner__image-holder {
       cursor: pointer;
       position: relative;
@@ -184,25 +191,6 @@
       }
     }
 
-    .p-market-banner__image-holder:hover,
-    .p-market-banner__image-holder.is-focused {
-      .p-market-banner__image {
-        outline: $bar-thickness solid $color-focus;
-        outline-offset: -$bar-thickness;
-      }
-
-      .p-market-banner__remove {
-        opacity: 1;
-      }
-
-      .p-market-banner__change {
-        border-radius: $border-radius;
-        opacity: 1;
-        outline: $bar-thickness solid $color-focus;
-        outline-offset: -$bar-thickness;
-      }
-    }
-
     .p-market-banner__remove {
       right: 1px;
       top: 1px;
@@ -227,13 +215,24 @@
       right: 0;
       top: 0;
     }
-  }
 
-  .p-icon--delete {
-    @include snapcraft-icon-delete($color-mid-dark);
+    .p-market-banner__image-holder:hover,
+    .p-market-banner__image-holder.is-focused {
+      .p-market-banner__image {
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
+      }
 
-    &:hover {
-      @include snapcraft-icon-delete($color-negative);
+      .p-market-banner__remove {
+        opacity: 1;
+      }
+
+      .p-market-banner__change {
+        border-radius: $border-radius;
+        opacity: 1;
+        outline: $bar-thickness solid $color-focus;
+        outline-offset: -$bar-thickness;
+      }
     }
   }
 
@@ -242,7 +241,7 @@
     box-sizing: content-box;
     cursor: pointer;
     opacity: 0;
-    padding: .25rem;
+    padding: 0.25rem;
     position: absolute;
     width: 1rem;
     z-index: 1;

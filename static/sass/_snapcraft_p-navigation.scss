@@ -1,6 +1,14 @@
 @mixin snapcraft-p-navigation {
-  // https://github.com/canonical-web-and-design/vanilla-framework/pull/2708
   .p-subnav__item {
+    // https://github.com/canonical-web-and-design/vanilla-framework/issues/2752
+    background-color: #333;
+
+    // https://github.com/canonical-web-and-design/vanilla-framework/issues/2753
+    @media screen and (max-width: 800px) {
+      padding-left: 0;
+    }
+
+    // https://github.com/canonical-web-and-design/vanilla-framework/pull/2708
     &,
     &:active,
     &:focus,
@@ -10,18 +18,6 @@
 
     &:hover {
       color: $colors--dark-theme--text-hover;
-    }
-  }
-
-  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2752
-  .p-subnav__item {
-    background-color: #333;
-  }
-
-  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2753
-  .p-subnav__item {
-    @media screen and (max-width: 800px) {
-      padding-left: 0;
     }
   }
 }

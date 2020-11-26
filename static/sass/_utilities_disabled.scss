@@ -2,7 +2,7 @@
   // make anything look disabled (grayed out and not interactive)
   .u-disabled {
     filter: grayscale(1);
-    opacity: .6;
+    opacity: 0.6;
     pointer-events: none;
   }
 }

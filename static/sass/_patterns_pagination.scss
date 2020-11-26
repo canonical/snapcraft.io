@@ -1,7 +1,12 @@
 @mixin snapcraft-p-pagination {
+  // 10.07.2020 - Ovi: This can be remove once this issue is closed
+  .p-pagination__link--previous {
+    margin-inline-end: 0.5rem;
+  }
+
   .p-pagination__link--previous,
   .p-pagination__link--next {
-    $color-darken-transparent: rgba(0, 0, 0, .1);
+    $color-darken-transparent: rgba(0, 0, 0, 0.1);
 
     &:hover {
       background-color: $color-darken-transparent;
@@ -9,17 +14,12 @@
 
     &.is-disabled {
       cursor: default;
-      opacity: .5;
+      opacity: 0.5;
       pointer-events: none;
 
       &:hover {
         background-color: transparent;
       }
     }
-  }
-
-  // 10.07.2020 - Ovi: This can be remove once this issue is closed
-  .p-pagination__link--previous {
-    margin-inline-end: .5rem;
   }
 }

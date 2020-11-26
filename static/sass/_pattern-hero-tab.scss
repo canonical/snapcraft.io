@@ -3,7 +3,7 @@
     height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: opacity .5s ease-in;
+    transition: opacity 0.5s ease-in;
 
     .p-card {
       @media screen and(min-width: $breakpoint-medium) {
@@ -23,7 +23,7 @@
     .p-hero-tab__item {
       background: transparent;
       border: 0;
-      border-top: 1px solid rgba(255, 255, 255, .2);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
       color: $color-x-light;
       display: inline-block;
       flex: 1;
@@ -36,12 +36,12 @@
       }
 
       * {
-        opacity: .5;
+        opacity: 0.5;
       }
 
       &:hover {
         background: transparent;
-        border-top: 1px solid rgba(255, 255, 255, .2);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
 
         * {
           opacity: 1;
@@ -90,7 +90,7 @@
 
     .p-hero-tab__title {
       font-weight: 500;
-      margin-bottom: .25rem;
+      margin-bottom: 0.25rem;
     }
 
     .p-hero-tab__description {

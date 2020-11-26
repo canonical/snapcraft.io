@@ -3,14 +3,12 @@
     position: relative;
   }
 
-
   // fighting with Vanilla specificity
   [class*="p-button-"] .p-button__spinner {
     display: none;
-    left: calc(50% - .5rem);
+    left: calc(50% - 0.5rem);
     position: absolute;
-    top: calc(50% -11px);
-
+    top: calc(50% - 11px);
   }
 
   .has-spinner .p-button__spinner {

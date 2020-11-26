@@ -1,9 +1,9 @@
 @mixin snapcraft-p-multiselect {
-  $box-shadow-color: rgba(0, 0, 0, .12);
+  $box-shadow-color: rgba(0, 0, 0, 0.12);
 
   .p-multiselect__wrapper {
     margin-bottom: $input-margin-bottom;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
 
   .p-multiselect__clear {
@@ -13,6 +13,7 @@
 
   .p-multiselect {
     @extend %vf-clearfix;
+
     align-content: flex-start;
     align-items: flex-start;
     border: 1px solid $colors--light-theme--border-high-contrast;
@@ -24,13 +25,13 @@
     margin-bottom: $input-margin-bottom;
     margin-top: $spv-outer--small;
     min-width: 10em;
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
     position: relative;
     width: 100%;
 
     &.is-disabled {
       cursor: not-allowed;
-      opacity: .6;
+      opacity: 0.6;
       pointer-events: none;
     }
 
@@ -43,17 +44,17 @@
       border: 1px solid $color-mid-light;
       border-radius: 2em;
       display: block;
-      font-size: .875rem;
-      margin-right: .5rem;
-      margin-top: .3rem;
-      padding: 0 .5rem;
+      font-size: 0.875rem;
+      margin-right: 0.5rem;
+      margin-top: 0.3rem;
+      padding: 0 0.5rem;
 
       .p-multiselect__item-remove {
         cursor: pointer;
-        height: .75em;
-        margin-bottom: .125rem;
-        margin-left: .5rem;
-        width: .75em;
+        height: 0.75em;
+        margin-bottom: 0.125rem;
+        margin-left: 0.5rem;
+        width: 0.75em;
       }
     }
 
@@ -71,6 +72,7 @@
 
     .p-multiselect__options {
       @extend %vf-has-box-shadow;
+
       background: $color-x-light;
       left: 0;
       list-style-type: none;
@@ -89,7 +91,7 @@
         content: 'No matches';
         font-size: $sp-medium;
         left: 0;
-        padding: .5rem;
+        padding: 0.5rem;
         position: absolute;
         top: 0;
       }
@@ -98,7 +100,7 @@
     .p-multiselect__option {
       background: $color-x-light;
       cursor: pointer;
-      padding: .5rem;
+      padding: 0.5rem;
       position: relative;
 
       &.is-highlighted,

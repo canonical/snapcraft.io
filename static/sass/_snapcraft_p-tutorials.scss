@@ -151,6 +151,10 @@
     }
   }
 
+  .p-tutorial__feedback-icon {
+    cursor: pointer;
+  }
+
   .p-tutorial__feedback-options {
     .p-inline-list__item {
       .has-color {
@@ -167,9 +171,5 @@
         }
       }
     }
-  }
-
-  .p-tutorial__feedback-icon {
-    cursor: pointer;
   }
 }

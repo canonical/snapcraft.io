@@ -14,13 +14,13 @@
     }
 
     .p-media-object__content {
-      margin-top: -.5rem;
+      margin-top: -0.5rem;
 
       p {
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
         color: $color-mid-dark;
         display: -webkit-box;
+        -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
         text-decoration: none;
@@ -28,9 +28,9 @@
 
       p + p {
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
         color: $color-dark;
         display: -webkit-box;
+        -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
       }

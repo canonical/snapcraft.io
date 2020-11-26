@@ -12,7 +12,7 @@
 
   .p-blog-post--guest-post {
 
-    $inner-box-shadow-color: rgba(205, 205, 205, .2);
+    $inner-box-shadow-color: rgba(205, 205, 205, 0.2);
 
     & > a {
       border: 1px solid $color-mid-light;

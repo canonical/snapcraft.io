@@ -16,8 +16,9 @@
 @mixin snapcraft-p-icon-top {
   .p-icon--top {
     @extend %icon;
+
     background-image: url('#{$assets-path}9ec2c354-icon-arrow-up.svg');
-    background-size: .75rem .75rem;
+    background-size: 0.75rem 0.75rem;
     margin-left: $sp-x-small;
   }
 }
