@@ -10,5 +10,15 @@
       <th>Collaborators</th>
     </tr>
   </thead>
-  <tbody></tbody>
+  <tbody>
+  {% for snap in snaps %}
+    <tr>
+      <td>-</td>
+      <td>{{ snap.name }}</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  {% endfor %}
+  </tbody>
 </table>
