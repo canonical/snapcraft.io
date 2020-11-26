@@ -66,3 +66,15 @@ def get_store(store_id):
     return flask.render_template(
         "admin/snaps.html", stores=stores, store=store, store_id=store_id
     )
+
+
+@admin.route("/admin/<store_id>/members")
+@login_required
+def get_members(store_id):
+
+    stores = fetch_stores()
+    store = fetch_store(store_id)
+
+    return flask.render_template(
+        "admin/members.html", stores=stores, store=store, store_id=store_id
+    )
