@@ -1,6 +1,7 @@
 from math import ceil, floor
 import talisker.requests
 import flask
+from dateutil import parser
 import webapp.helpers as helpers
 import webapp.store.logic as logic
 from webapp.api import requests
@@ -391,6 +392,53 @@ def store_blueprint(store_query=None):
         snaps_results = logic.get_searched_snaps(category_results)
 
         return flask.jsonify(snaps_results)
+
+    @store.route("/store/sitemap.xml")
+    def sitemap():
+        base_url = "https://snapcraft.io/store"
+
+        snaps = []
+        page = 0
+        url = f"https://api.snapcraft.io/api/v1/snaps/search?page={page}"
+        while url:
+            response = session.get(url)
+            try:
+                snaps_response = response.json()
+            except Exception:
+                continue
+
+            for snap in snaps_response["_embedded"]["clickindex:package"]:
+                try:
+                    last_udpated = (
+                        parser.parse(snap["last_updated"])
+                        .replace(tzinfo=None)
+                        .strftime("%Y-%m-%d")
+                    )
+                    snaps.append(
+                        {
+                            "url": "https://snapcraft.io/"
+                            + snap["package_name"],
+                            "last_udpated": last_udpated,
+                        }
+                    )
+                except Exception:
+                    continue
+            if "next" in snaps_response["_links"]:
+                url = snaps_response["_links"]["next"]["href"]
+            else:
+                url = None
+
+        xml_sitemap = flask.render_template(
+            "sitemap/sitemap.xml",
+            base_url=base_url,
+            links=snaps,
+        )
+
+        response = flask.make_response(xml_sitemap)
+        response.headers["Content-Type"] = "application/xml"
+        response.headers["Cache-Control"] = "public, max-age=43200"
+
+        return response
 
     if store_query:
         store.add_url_rule("/", "homepage", brand_store_view)
