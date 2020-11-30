@@ -12,6 +12,9 @@
       <li class="p-side-navigation__item">
         <a class="p-side-navigation__link {% if current_tab == 'members' %}is-active{% endif %}" href="/admin/{{ s.id }}/members">Members</a>
       </li>
+      <div class="p-side-navigation__item">
+        <a class="p-side-navigation__link {% if current_tab == 'settings' %}is-active{% endif %}" href="/admin/{{ s.id }}/settings">Settings</a>
+      </div>
     </ul>
   </li>
   {% endfor %}
