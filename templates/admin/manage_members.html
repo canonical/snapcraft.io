@@ -1,0 +1,44 @@
+{% set current_tab = "members" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}Admin | Snapcraft{% endblock %}
+
+{% block admin_content %}
+
+<div class="l-application__header">
+  <h2 class="p-heading--4">Manage members</h2>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      {% for role in store.roles %}
+      <th>{{ role.label }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for member in members %}
+    <tr>
+      <td>{{ member.displayname }}</td>
+      {% for role in store.roles %}
+      <td>
+        <label class="p-checkbox">
+          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input" {% if role.role in member.roles %}checked{% endif %}>
+          <span class="p-checkbox__label u-hide" id="role-{{ role.role }}">{{ role.label }}</span>
+        </label>
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  <button type="submit" alt="save" class="p-button--positive">Save</button>
+</form>
+
+{% endblock %}
+

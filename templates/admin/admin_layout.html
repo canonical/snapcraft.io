@@ -18,6 +18,20 @@
   </header>
 
   <main class="l-main p-snapcraft-admin">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="u-fixed-width">
+        {% for category, message in messages %}
+        <div class="p-notification--{{ category }}">
+          <p class="p-notification__response">
+            {{ message }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
     {% block admin_content %}{% endblock %}
   </main>
 </div>
