@@ -1064,10 +1064,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@canonical/cookie-policy@3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.0.6.tgz#2e55298f14b30b3759e1ffb63995dea298c0573b"
-  integrity sha512-UutegWhs6ecmuwUxo5x0MJiyM5hcMiKj6HZzaAg3aeHTr8Mcn3/y8mAgAwpMkBcTHCgJExczrOiGeMSaKHzuHQ==
+"@canonical/cookie-policy@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.1.0.tgz#352a1b44000b91774f9f057e00bd76a21dff384f"
+  integrity sha512-DiFTS7sBCjrcESsb1Qocgd1ArTH01ePDGfqqp5Yizv0S5OpICyP8DCkkae3mAXBQrBxUK5LcrVU5p3slXOzQcA==
 
 "@canonical/global-nav@2.4.5":
   version "2.4.5"
@@ -8976,10 +8976,10 @@ vanilla-framework@2.19.1:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.1.tgz#f071deed5504a5fe2104d6d9b087ce654e190881"
   integrity sha512-y79SKAwertvgHVAf1PbGxiq6QvVxNI78txilSgESx80HUWBrooT1nXCDUuHC/ySGEq+JUpmVIv0PrmXXilYWdg==
 
-vanilla-framework@2.19.3:
-  version "2.19.3"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.3.tgz#e66362304e90a9da566373f9c3b274137323b0cd"
-  integrity sha512-0JCRYDTdUKwIQk0Cvbl0Af8LBPT0PiYrCH6Nw+uJHaloy9ZStYZ0vyCPwiqYQK1/4OKTtMOs/ntuUowTJB0gVw==
+vanilla-framework@2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.20.0.tgz#e3cc831fc1cf49e0863c286d61443f35ac43ba43"
+  integrity sha512-wN+R94p4dzrWSGa5F0H8ki+bRsoADVdVyyX5GKIk3Ecl3KO6XXvLFhknLx6jh8E3MEF/xOtiJxv3nb8PxYPB2g==
 
 verbalize@^0.1.2:
   version "0.1.2"
