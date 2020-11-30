@@ -322,9 +322,9 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-l-application;
 
-// **** Vanilla overrides & temporary bug fixes ****
+@import "snapcraft_p-form-help-text";
 
-// Temporary bug fix for https://github.com/canonical-web-and-design/vanilla-framework/issues/2791
+@include snapcraft-p-form-help-text;
 
 dl {
   margin-bottom: $spv-outer--scaleable;

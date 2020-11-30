@@ -1,0 +1,68 @@
+{% set current_tab = "settings" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}{{ store.name }} settings | Snapcraft{% endblock %}
+
+{% block admin_content %}
+
+{{ form }}
+
+<div class="row">
+  <div class="col-7">
+
+    <!-- IF FORM HAS SUCCESSFULLY SAVED ON POST -->
+    <div class="p-notification--positive">
+      <p class="p-notification__response" role="status">
+        <span class="p-notification__status">Success:</span>Your changes have been saved
+      </p>
+    </div>
+    <!-- ENDIF -->
+
+    <form action="/admin/{{ store.id }}/settings" method="POST">
+      <div class="p-form__group">
+        <label class="checkbox">
+          <input class="p-checkbox__input" type="checkbox" aria-labelledby="public-list-option-label">
+          <span class="p-checkbox__label" id="public-list-option-label">
+            Include this store in public lists
+        </label>
+        <div class="p-form-help-text--nudge">This store will not be listed in the store dropdowns like the one in the snap name registration form.</div>
+      </div>
+      <h2 class="p-heading--4">Manual review policy</h2>
+      <div class="p-form__group">
+        <label class="p-radio">
+          <input type="radio" class="p-radio__input" name="manual-review-policy" aria-labelledby="manual-review-policy-label-allow">
+          <span class="p-radio__label" id="manual-review-policy-label-allow">
+            Allow
+          </span>
+        </label>
+        <div class="p-form-help-text--nudge">Normal review behaviour will be applied, using the result from the automatic review tool checks.</div>
+      </div>
+      <div class="p-form__group">
+        <label class="p-radio">
+          <input type="radio" class="p-radio__input" name="manual-review-policy" aria-labelledby="manual-review-policy-label-avoid">
+          <span class="p-radio__label" id="manual-review-policy-label-avoid">
+            Avoid
+          </span>
+        </label>
+        <div class="p-form-help-text--nudge">No snap will be left in the manual review queue, even if the automatic review tool found no issues.</div>
+      </div>
+      <div class="p-form__group">
+        <label class="p-radio">
+          <input type="radio" class="p-radio__input" name="manual-review-policy" aria-labelledby="manual-review-policy-label-require">
+          <span class="p-radio__label" id="manual-review-policy-label-require">
+            Require
+          </span>
+        </label>
+        <div class="p-form-help-text--nudge">Every snap will be moved to the review queue, even if the automatic review tool found no issues.</div>
+      </div>
+      <hr>
+      <div class="u-align--right">
+        <button class="p-button--positive" type="submit">Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
