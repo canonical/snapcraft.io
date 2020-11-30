@@ -341,8 +341,6 @@ def snapcraft_blueprint():
             "/about/publicise",
             "/blog",
             "/iot",
-            "/docs",
-            "/tutorials",
         ]
 
         xml_sitemap = flask.render_template(

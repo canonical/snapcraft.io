@@ -3,15 +3,15 @@ import math
 import flask
 import talisker
 
-from canonicalwebteam.discourse_docs import (
+from canonicalwebteam.discourse import (
     DiscourseAPI,
-    DiscourseDocs,
+    Docs,
     DocParser,
 )
 
 
 def init_tutorials(app, url_prefix):
-    discourse_docs = DiscourseDocs(
+    discourse_docs = Docs(
         parser=DocParser(
             api=DiscourseAPI(
                 base_url="https://forum.snapcraft.io/",
