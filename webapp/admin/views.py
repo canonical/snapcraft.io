@@ -73,3 +73,19 @@ def get_members(store_id):
     return flask.render_template(
         "admin/members.html", stores=stores, store=store, members=members
     )
+
+
+@admin.route("/admin/<store_id>/settings")
+@login_required
+def get_settings(store_id):
+    try:
+        stores = admin_api.get_stores(flask.session)
+        store = admin_api.get_store(flask.session, store_id, stores)
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.render_template(
+        "admin/settings.html", stores=stores, store=store
+    )
