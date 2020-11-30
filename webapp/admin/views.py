@@ -46,8 +46,8 @@ def get_stores():
 def get_store_snaps(store_id):
     try:
         stores = admin_api.get_stores(flask.session)
-        store = admin_api.get_store(flask.session, store_id, stores)
-        snaps = admin_api.get_store_snaps(flask.session, store["id"])
+        store = admin_api.get_store(flask.session, store_id)
+        snaps = admin_api.get_store_snaps(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
@@ -63,7 +63,7 @@ def get_store_snaps(store_id):
 def get_members(store_id):
     try:
         stores = admin_api.get_stores(flask.session)
-        store = admin_api.get_store(flask.session, store_id, stores)
+        store = admin_api.get_store(flask.session, store_id)
         members = admin_api.get_store_members(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
@@ -72,6 +72,72 @@ def get_members(store_id):
 
     return flask.render_template(
         "admin/members.html", stores=stores, store=store, members=members
+    )
+
+
+@admin.route("/admin/<store_id>/members/manage")
+@login_required
+def get_manage_members(store_id):
+    try:
+        stores = admin_api.get_stores(flask.session)
+        store = admin_api.get_store(flask.session, store_id)
+        members = admin_api.get_store_members(flask.session, store_id)
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.render_template(
+        "admin/manage_members.html",
+        stores=stores,
+        store=store,
+        members=members,
+    )
+
+
+@admin.route("/admin/<store_id>/members/manage", methods=["POST"])
+@login_required
+def post_manage_members(store_id):
+    members = flask.request.form["members"]
+
+    try:
+        admin_api.update_store_members(flask.session, store_id, members)
+        flask.flash("Changes saved", "positive")
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        flask.flash(", ".join(msgs), "negative")
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.redirect(
+        flask.url_for(".get_manage_members", store_id=store_id)
+    )
+
+
+@admin.route("/admin/<store_id>/members/invite", methods=["POST"])
+@login_required
+def post_invite_members(store_id):
+    members = flask.request.form["members"]
+
+    try:
+        admin_api.invite_store_members(flask.session, store_id, members)
+        flask.flash("Changes saved", "positive")
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        flask.flash(", ".join(msgs), "negative")
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.redirect(
+        flask.url_for(".get_manage_members", store_id=store_id)
     )
 
 
