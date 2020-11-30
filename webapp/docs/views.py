@@ -1,15 +1,15 @@
 import talisker
 
-from canonicalwebteam.discourse_docs import (
+from canonicalwebteam.discourse import (
     DiscourseAPI,
-    DiscourseDocs,
+    Docs,
     DocParser,
 )
 from canonicalwebteam.search import build_search_view
 
 
 def init_docs(app, url_prefix):
-    discourse_docs = DiscourseDocs(
+    discourse_docs = Docs(
         parser=DocParser(
             api=DiscourseAPI(
                 base_url="https://forum.snapcraft.io/",
