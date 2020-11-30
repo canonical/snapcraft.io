@@ -1,18 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>{{ base_url }}/sitemap-links.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>{{ base_url }}/blog/sitemap.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>{{ base_url }}/store/sitemap.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>{{ base_url }}/docs/sitemap.xml</loc>
-  </sitemap>
-  <sitemap>
-    <loc>{{ base_url }}/tutorials/sitemap.xml</loc>
-  </sitemap>
-</sitemapindex>
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>{{ base_url }}</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  {% for link in links %}
+  <url>
+    <loc>{{ link["url"] }}</loc>
+    {% if "last_udpated" in link %}
+    <lastmod>{{ link["last_udpated"] }}</lastmod>
+    {% endif %}
+    <changefreq>monthly</changefreq>
+  </url>
+  {% endfor %}
+</urlset>

@@ -278,13 +278,14 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/sitemap-links.xml")
     def sitemap_links():
+        base_url = "https://snapcraft.io"
         links = [
-            {"url": "/about"},
-            {"url": "/about/publish"},
-            {"url": "/about/listing"},
-            {"url": "/about/release"},
-            {"url": "/about/publicise"},
-            {"url": "/iot"},
+            {"url": f"{base_url}/about"},
+            {"url": f"{base_url}/about/publish"},
+            {"url": f"{base_url}/about/listing"},
+            {"url": f"{base_url}/about/release"},
+            {"url": f"{base_url}/about/publicise"},
+            {"url": f"{base_url}/iot"},
         ]
 
         xml_sitemap = flask.render_template(
