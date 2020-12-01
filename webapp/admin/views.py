@@ -1,15 +1,16 @@
 # Packages
+import json
 import flask
-from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
 )
+from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
+from webapp.api.exceptions import ApiError
+from webapp.decorators import login_required
 
 # Local
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import ApiError
-from webapp.decorators import login_required
 from webapp.publisher.views import _handle_error, _handle_error_list
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -98,7 +99,7 @@ def get_manage_members(store_id):
 @admin.route("/admin/<store_id>/members/manage", methods=["POST"])
 @login_required
 def post_manage_members(store_id):
-    members = flask.request.form["members"]
+    members = json.loads(flask.request.form.get("members"))
 
     try:
         admin_api.update_store_members(flask.session, store_id, members)
@@ -109,7 +110,8 @@ def post_manage_members(store_id):
             for error in api_response_error_list.errors
         ]
 
-        flask.flash(", ".join(msgs), "negative")
+        for msg in msgs:
+            flask.flash(msg, "negative")
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
@@ -121,7 +123,7 @@ def post_manage_members(store_id):
 @admin.route("/admin/<store_id>/members/invite", methods=["POST"])
 @login_required
 def post_invite_members(store_id):
-    members = flask.request.form["members"]
+    members = json.loads(flask.request.form.get("members"))
 
     try:
         admin_api.invite_store_members(flask.session, store_id, members)
@@ -132,7 +134,8 @@ def post_invite_members(store_id):
             for error in api_response_error_list.errors
         ]
 
-        flask.flash(", ".join(msgs), "negative")
+        for msg in msgs:
+            flask.flash(msg, "negative")
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
