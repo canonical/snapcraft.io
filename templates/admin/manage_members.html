@@ -52,7 +52,7 @@
   const manageMembersForm = document.getElementById("manage-members-form");
   const membersField = manageMembersForm.querySelector("#members");
   const roleCheckboxs = Array.prototype.slice.call(
-    querySelectorAll(".js-role-checkbox")
+    manageMembersForm.querySelectorAll(".js-role-checkbox")
   );
 
   roleCheckboxs.forEach(function(roleCheckbox) {
