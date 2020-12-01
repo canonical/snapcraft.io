@@ -9,36 +9,86 @@
 <div class="l-application__header">
   <h2 class="p-heading--4">Manage members</h2>
 </div>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      {% for role in store.roles %}
-      <th>{{ role.label }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for member in members %}
-    <tr>
-      <td>{{ member.displayname }}</td>
-      {% for role in store.roles %}
-      <td>
-        <label class="p-checkbox">
-          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input" {% if role.role in member.roles %}checked{% endif %}>
-          <span class="p-checkbox__label u-hide" id="role-{{ role.role }}">{{ role.label }}</span>
-        </label>
-      </td>
-      {% endfor %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
-<form method="post">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+<form id="manage-members-form" method="post">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        {% for role in store.roles %}
+        <th>
+          {{ role.label }}
+          <span class="p-tooltip--top-right" aria-describedby="{{ role.role }}-tooltip">
+            <i class="p-icon--information" title="{{ role.description }}">Role description</i>
+          </span>
+        </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in members %}
+      <tr>
+        <td>{{ member.displayname }}</td>
+        {% for role in store.roles %}
+        <td>
+          <label class="p-checkbox u-no-padding--top">
+            <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
+            <span class="p-checkbox__label u-hide">{{ role.label }}</span>
+          </label>
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <input type="hidden" name="members" id="members" value="">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <button type="submit" alt="save" class="p-button--positive">Save</button>
 </form>
+
+<script>
+  const membersData = {{ members | safe }};
+  const manageMembersForm = document.getElementById("manage-members-form");
+  const membersField = manageMembersForm.querySelector("#members");
+  const roleCheckboxs = Array.prototype.slice.call(
+    querySelectorAll(".js-role-checkbox")
+  );
+
+  roleCheckboxs.forEach(function(roleCheckbox) {
+    roleCheckbox.addEventListener("change", function(e) {
+      const target = e.target;
+      const memberEmail = target.dataset.memberEmail;
+      const role = target.name;
+      const currentMember = membersData.find(function(member) {
+        return member.email === memberEmail;
+      });
+
+      if (target.checked && !currentMember.roles.includes(role)) {
+        currentMember.roles.push(role);
+      } else if (currentMember.roles.includes(role)) {
+        currentMember.roles = currentMember.roles.filter(function(memberRole) {
+          return memberRole !== role;
+        });
+      }
+    });
+  });
+
+  manageMembersForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+
+    membersField.value = JSON.stringify(membersData.map(function(member) {
+      return {
+        email: member.email,
+        roles: member.roles
+      };
+    }));
+
+    form.submit();
+  });
+</script>
 
 {% endblock %}
 
