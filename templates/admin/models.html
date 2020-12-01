@@ -1,0 +1,43 @@
+{% set current_tab = "models" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}Models in {{ store.name }} | Snapcraft{% endblock %}
+
+{% block admin_content %}
+
+<div class="l-application__header">
+  <h2 class="p-heading--4">Models</h2>
+  <a class="p-button" href="/admin/{{ store.id }}/models/upload">Upload a model</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Gadget</th>
+      <th>Snaps</th>
+      <th>Device store</th>
+      <th>Weekly active devices</th>
+      <th style="width: 10%;">Base</th>
+      <th style="width: 10%;">Architecture</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#">Robo Vac 2K</a></td>
+      <td>robotvac2k-gadget</td>
+      <td>
+        <a href="#">core20</a>,
+        <a href="#">plexmediaserver</a>
+      </td>
+      <td><a href="#">Device Store 1</a></td>
+      <td>-</td>
+      <td>amd64</td>
+      <td>amd64</td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+
