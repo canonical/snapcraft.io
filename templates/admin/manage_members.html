@@ -44,33 +44,58 @@
 
   <input type="hidden" name="members" id="members" value="">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit" alt="save" class="p-button--positive">Save</button>
+  <button type="submit" class="p-button--positive js-save-button" disabled>Save</button>
 </form>
 
 <script>
   const membersData = {{ members | safe }};
   const manageMembersForm = document.getElementById("manage-members-form");
-  const membersField = manageMembersForm.querySelector("#members");
-  const roleCheckboxs = Array.prototype.slice.call(
+  const saveButton = manageMembersForm.querySelector(".js-save-button")
+  const roleCheckboxes = Array.prototype.slice.call(
     manageMembersForm.querySelectorAll(".js-role-checkbox")
   );
 
-  roleCheckboxs.forEach(function(roleCheckbox) {
-    roleCheckbox.addEventListener("change", function(e) {
+  const newData = membersData.map(function(data) {
+    return Object.assign({}, data);
+  });
+
+  roleCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener("change", function(e) {
       const target = e.target;
-      const memberEmail = target.dataset.memberEmail;
-      const role = target.name;
-      const currentMember = membersData.find(function(member) {
-        return member.email === memberEmail;
+      const role = e.target.name;
+
+      const member = newData.find(function(data) {
+        return data.email === target.dataset.memberEmail;
       });
 
-      if (target.checked && !currentMember.roles.includes(role)) {
-        currentMember.roles.push(role);
-      } else if (currentMember.roles.includes(role)) {
-        currentMember.roles = currentMember.roles.filter(function(memberRole) {
-          return memberRole !== role;
+      const originalMember = membersData.find(function(data) {
+        return data.email === target.dataset.memberEmail;
+      });
+
+      if (checkbox.checked && !member.roles.includes(role)) {
+        member.roles = member.roles.concat(role);
+      }
+
+      if (!checkbox.checked && member.roles.includes(role)) {
+        member.roles = member.roles.filter(function(data) {
+          return data !== role;
         });
       }
+
+      if (
+        JSON.stringify(member.roles.sort()) !==
+        JSON.stringify(originalMember.roles.sort()))
+      {
+        member.dirty = true;
+      } else {
+        member.dirty = false;
+      }
+
+      const dirtyState = newData.filter(function(data) {
+        return data.dirty;
+      });
+
+      saveButton.disabled = !dirtyState.length;
     });
   });
 
@@ -78,11 +103,15 @@
     e.preventDefault();
 
     const form = e.target;
+    const membersField = manageMembersForm.querySelector("#members");
+    const dirtyData = newData.filter(function(data) {
+      return data.dirty;
+    });
 
-    membersField.value = JSON.stringify(membersData.map(function(member) {
+    membersField.value = JSON.stringify(dirtyData.map(function(data) {
       return {
-        email: member.email,
-        roles: member.roles
+        email: data.email,
+        roles: data.roles
       };
     }));
 
