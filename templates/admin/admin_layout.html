@@ -20,7 +20,7 @@
   <main class="l-main p-snapcraft-admin">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-      <div class="u-fixed-width">
+      <div class="u-fixed-width u-no-padding--left u-no-padding--right">
         {% for category, message in messages %}
         <div class="p-notification--{{ category }}">
           <p class="p-notification__response">

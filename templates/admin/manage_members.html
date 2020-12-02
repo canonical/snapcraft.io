@@ -2,122 +2,132 @@
 
 {% extends "/admin/admin_layout.html" %}
 
-{% block meta_title %}Admin | Snapcraft{% endblock %}
+{% block meta_title %}Manage members in {{ store.name }} | Snapcraft{% endblock %}
 
 {% block admin_content %}
 
 <div class="l-application__header">
-  <h2 class="p-heading--4">Manage members</h2>
+  <h2 class="p-heading--4 u-no-margin--bottom">Manage members</h2>
+  <a href="/admin/{{ store.id }}/members">Back to members</a>
 </div>
 
-<form id="manage-members-form" method="post">
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        {% for role in store.roles %}
-        <th>
-          {{ role.label }}
-          <span class="p-tooltip--top-right" aria-describedby="{{ role.role }}-tooltip">
-            <i class="p-icon--information" title="{{ role.description }}">Role description</i>
-          </span>
-        </th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for member in members %}
-      <tr>
-        <td>{{ member.displayname }}</td>
-        {% for role in store.roles %}
-        <td>
-          <label class="p-checkbox u-no-padding--top">
-            <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
-            <span class="p-checkbox__label u-hide">{{ role.label }}</span>
-          </label>
-        </td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="p-modal" id="invite-modal" style="display: none; z-index: 110;">
+  <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title">
+    <header class="p-modal__header">
+      <h2 class="p-modal__title" id="invite-modal-title">Invite member</h2>
+      <button class="p-modal__close" aria-label="Close active modal" aria-controls="invite-modal">Close</button>
+    </header>
+    <div>
+      <form id="invite-member-form" action="/admin/{{ store.id }}/members/invite" method="post">
+        <input type="hidden" name="members" id="invite-members" value="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
+        <div class="p-form__group">
+          <label for="invite-member-email" class="p-form__label">Email</label>
+          <div class="p-form__control">
+            <input type="email" name="invite-member-email" id="invite-member-email">
+          </div>
+        </div>
+
+        <div class="p-form__group" style="margin-bottom: 1rem;">
+          {% for role in store.roles %}
+            <label class="p-checkbox">
+              <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input" name="{{ role.role }}">
+              <span class="p-checkbox__label">{{ role.label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+
+        <hr>
+
+        <div class="u-align--right">
+          <button class="p-button--positive u-no-margin--bottom" id="invite-member-button" type="submit" disabled>Send invite</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 15%;">Stores</th>
+      <th>
+        <div style=" align-items: center; display: flex; justify-content: space-between;">
+        Users ({{ members | length }})
+        <button class="is-dense" style="margin-left: 0.5rem;" id="show-invite-modal" aria-controls="invite-modal">
+          <i class="p-icon--plus"></i>&nbsp;Add
+        </button>
+        </div>
+      </th>
+      {% for role in store.roles %}
+      <!-- required for the layout -->
+      <th>&nbsp;</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ store.name }}</td>
+      <td colspan="{{ store.roles | length + 1 }}">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              {% for role in store.roles %}
+              <th>
+                {{ role.label }}
+                <span class="p-tooltip--top-right" aria-describedby="{{ role.role }}-tooltip">
+                  <i class="p-icon--information" title="{{ role.description }}">Role description</i>
+                </span>
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in members %}
+            <tr>
+              <td><i class="p-icon--user"></i> {{ member.displayname }}</td>
+              {% for role in store.roles %}
+              <td>
+                <label class="p-checkbox u-no-padding--top">
+                  <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
+                  <span class="p-checkbox__label u-hide">{{ role.label }}</span>
+                </label>
+              </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<form id="manage-members-form" method="post">
   <input type="hidden" name="members" id="members" value="">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit" class="p-button--positive js-save-button" disabled>Save</button>
+  <div class="u-align--right">
+    <button type="submit" class="p-button--positive js-save-button" disabled>Save changes</button>
+  </div>
 </form>
-
-<script>
-  const membersData = {{ members | safe }};
-  const manageMembersForm = document.getElementById("manage-members-form");
-  const saveButton = manageMembersForm.querySelector(".js-save-button")
-  const roleCheckboxes = Array.prototype.slice.call(
-    manageMembersForm.querySelectorAll(".js-role-checkbox")
-  );
-
-  const newData = membersData.map(function(data) {
-    return Object.assign({}, data);
-  });
-
-  roleCheckboxes.forEach(function(checkbox) {
-    checkbox.addEventListener("change", function(e) {
-      const target = e.target;
-      const role = e.target.name;
-
-      const member = newData.find(function(data) {
-        return data.email === target.dataset.memberEmail;
-      });
-
-      const originalMember = membersData.find(function(data) {
-        return data.email === target.dataset.memberEmail;
-      });
-
-      if (checkbox.checked && !member.roles.includes(role)) {
-        member.roles = member.roles.concat(role);
-      }
-
-      if (!checkbox.checked && member.roles.includes(role)) {
-        member.roles = member.roles.filter(function(data) {
-          return data !== role;
-        });
-      }
-
-      if (
-        JSON.stringify(member.roles.sort()) !==
-        JSON.stringify(originalMember.roles.sort()))
-      {
-        member.dirty = true;
-      } else {
-        member.dirty = false;
-      }
-
-      const dirtyState = newData.filter(function(data) {
-        return data.dirty;
-      });
-
-      saveButton.disabled = !dirtyState.length;
-    });
-  });
-
-  manageMembersForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const membersField = manageMembersForm.querySelector("#members");
-    const dirtyData = newData.filter(function(data) {
-      return data.dirty;
-    });
-
-    membersField.value = JSON.stringify(dirtyData.map(function(data) {
-      return {
-        email: data.email,
-        roles: data.roles
-      };
-    }));
-
-    form.submit();
-  });
-</script>
 
 {% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/modal.js') }}" defer></script>
+<script src="{{ static_url('js/dist/manage-members.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    snapcraft.public.modal.init("invite-modal");
+    snapcraft.public.manageMembers.inviteMember();
+    snapcraft.public.manageMembers.updateMembers({{ members | safe }});
+  });
+</script>
+{% endblock %}
