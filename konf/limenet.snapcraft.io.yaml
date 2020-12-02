@@ -8,7 +8,7 @@ env:
 
 useProxy: false
 
-memoryLimit: 512Mi
+memoryLimit: 256Mi
 
 production:
   replicas: 5
