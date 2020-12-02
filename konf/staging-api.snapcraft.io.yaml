@@ -38,7 +38,7 @@ env:
       key: google-custom-search-key
       name: google-api
 
-memoryLimit: "512Mi"
+memoryLimit: 256Mi
 
 nginxConfigurationSnippet: |
   more_set_headers "X-Robots-Tag: noindex";
