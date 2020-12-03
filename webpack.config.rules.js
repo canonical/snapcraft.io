@@ -44,4 +44,15 @@ module.exports = [
     test: require.resolve(__dirname + "/static/js/public/hero-tabpanel.js"),
     use: ["expose-loader?exposes=snapcraft.public.tabpanel", "babel-loader"],
   },
+  {
+    test: require.resolve(__dirname + "/static/js/public/manage-members.js"),
+    use: [
+      "expose-loader?exposes=snapcraft.public.manageMembers",
+      "babel-loader",
+    ],
+  },
+  {
+    test: require.resolve(__dirname + "/static/js/public/modal.js"),
+    use: ["expose-loader?exposes=snapcraft.public.modal", "babel-loader"],
+  },
 ];
