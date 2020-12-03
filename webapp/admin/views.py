@@ -149,7 +149,7 @@ def post_invite_members(store_id):
 def get_settings(store_id):
     try:
         stores = admin_api.get_stores(flask.session)
-        store = admin_api.get_store(flask.session, store_id, stores)
+        store = admin_api.get_store(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
@@ -158,6 +158,32 @@ def get_settings(store_id):
     return flask.render_template(
         "admin/settings.html", stores=stores, store=store
     )
+
+
+@admin.route("/admin/<store_id>/settings", methods=["POST"])
+@login_required
+def post_settings(store_id):
+    settings = {}
+    settings["private"] = not flask.request.form.get("is_public")
+    settings["manual-review-policy"] = flask.request.form.get(
+        "manual-review-policy"
+    )
+
+    try:
+        admin_api.change_store_settings(flask.session, store_id, settings)
+        flask.flash("Changes saved", "positive")
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        for msg in msgs:
+            flask.flash(msg, "negative")
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.redirect(flask.url_for(".get_settings", store_id=store_id))
 
 
 @admin.route("/admin/<store_id>/models")
