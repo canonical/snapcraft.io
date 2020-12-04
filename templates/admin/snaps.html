@@ -1,0 +1,10 @@
+{% set current_tab = "snaps" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}Admin | Snapcraft{% endblock %}
+
+{% block admin_content %}
+{% include "/admin/_snaps_section.html" %}
+{% endblock %}
+

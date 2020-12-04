@@ -68,6 +68,9 @@ $color-social-icon-foreground: $color-light;
 @include vf-u-text-muted;
 @include vf-u-truncate;
 
+// vanilla layouts
+@include vf-l-application;
+
 @import "snapcraft_custom-cols";
 
 @include snapcraft-custom-cols;
@@ -315,9 +318,13 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-p-release-details-row;
 
-// **** Vanilla overrides & temporary bug fixes ****
+@import "snapcraft_l-application";
 
-// Temporary bug fix for https://github.com/canonical-web-and-design/vanilla-framework/issues/2791
+@include snapcraft-l-application;
+
+@import "snapcraft_p-form-help-text";
+
+@include snapcraft-p-form-help-text;
 
 dl {
   margin-bottom: $spv-outer--scaleable;

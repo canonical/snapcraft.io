@@ -1,0 +1,48 @@
+{% set page_slug = "admin" %}
+{% extends webapp_config['LAYOUT'] %}
+{% block content %}
+<div class="l-application" role="presentation">
+  <div class="l-navigation-bar">
+    <div class="u-clearfix">
+      <button class="u-float-right js-menu-toggle is-dense u-no-margin">Menu</button>
+    </div>
+  </div>
+
+  <header class="l-navigation">
+    <div class="l-navigation__drawer">
+      <div class="demo-controls u-hide--large u-align--right">
+        <button class="js-menu-close is-dense u-no-margin u-hide--medium">Close</button>
+      </div>
+      {% include "admin/_navigation.html" %}
+    </div>
+  </header>
+
+  <main class="l-main p-snapcraft-admin">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="u-fixed-width u-no-padding--left u-no-padding--right">
+        {% for category, message in messages %}
+        <div class="p-notification--{{ category }}">
+          <p class="p-notification__response">
+            {{ message }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block admin_content %}{% endblock %}
+  </main>
+</div>
+
+<script>
+  document.querySelector(".js-menu-toggle").addEventListener("click", function() {
+    document.querySelector(".l-navigation").classList.toggle("is-collapsed");
+  });
+
+  document.querySelector(".js-menu-close").addEventListener("click", function() {
+    document.querySelector(".l-navigation").classList.add("is-collapsed");
+  });
+</script>
+{% endblock %}

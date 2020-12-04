@@ -16,6 +16,7 @@ from webapp.login.views import login
 from webapp.login.oauth_views import oauth
 from webapp.publisher.snaps.views import publisher_snaps
 from webapp.publisher.github.views import publisher_github
+from webapp.admin.views import admin
 from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
@@ -65,6 +66,7 @@ def init_snapcraft(app):
     app.register_blueprint(account, url_prefix="/account")
     app.register_blueprint(publisher_snaps)
     app.register_blueprint(publisher_github)
+    app.register_blueprint(admin)
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")

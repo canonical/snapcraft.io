@@ -1,0 +1,38 @@
+@mixin snapcraft-l-application {
+  .l-application {
+    width: auto;
+
+    .l-navigation__drawer {
+      background-color: $color-brand;
+      color: $color-x-light;
+    }
+
+    .l-navigation__drawer a {
+      color: $color-x-light;
+      opacity: 0.5;
+
+      &:hover,
+      &:focus,
+      &.is-active {
+        opacity: 1;
+      }
+    }
+
+    .l-navigation-bar {
+      background-color: $color-brand;
+      padding: $sp-medium;
+    }
+
+    .l-main,
+    .l-navigation__drawer {
+      padding: $sp-medium;
+    }
+
+    .l-application__header {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $sp-medium;
+    }
+  }
+}

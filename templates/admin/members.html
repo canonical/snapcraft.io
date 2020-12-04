@@ -1,0 +1,37 @@
+{% set current_tab = "members" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}Admin | Snapcraft{% endblock %}
+
+{% block admin_content %}
+
+<div class="l-application__header">
+  <h2 class="p-heading--4">Members</h2>
+  <a class="p-button" href="/admin/{{ store.id }}/members/manage">Manage members</a>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Snaps in {{ store.name }}</th>
+      <th>Access</th>
+      <th>Store</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for member in members %}
+    <tr>
+      <td rowspan="1">{{ member.displayname }}</td>
+      <td rowspan="1">{{ member.email }}</td>
+      <td><a href="#">-</a></td>
+      <td>{% for r in member.roles %}{{ r | capitalize }}{{ ", " if not loop.last }}{% endfor %}</td>
+      <td><a href="/admin/{{ store.id }}/snaps">{{ store.name }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
