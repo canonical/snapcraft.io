@@ -353,42 +353,31 @@ def get_lowest_available_risk(channel_map, track):
     return lowest_available_risk
 
 
-def get_confinement(channel_map, track, risk):
-    """Get the confinement for a channel
+def extract_info_channel_map(channel_map, track, risk):
+    """Get the confinement and version for a channel
 
     :param channel_map: Channel map list
     :param track: The track of the channel
     :param risk: The risk of the channel
 
-    :returns: The confinement
+    :returns: Dict containing confinement and version
     """
+    context = {
+        "confinement": None,
+        "version": None,
+    }
+
     for arch in channel_map:
         if track in channel_map[arch]:
             releases = channel_map[arch][track]
             for release in releases:
                 if release["risk"] == risk:
-                    return release["confinement"]
+                    context["confinement"] = release.get("confinement")
+                    context["version"] = release.get("version")
 
-    return None
+                    return context
 
-
-def get_version(channel_map, track, risk):
-    """Get the version for a channel
-
-    :param channel_map: Channel map list
-    :param track: The track of the channel
-    :param risk: The risk of the channel
-
-    :returns: The version
-    """
-    for arch in channel_map:
-        if track in channel_map[arch]:
-            releases = channel_map[arch][track]
-            for release in releases:
-                if release["risk"] == risk:
-                    return release["version"]
-
-    return None
+    return context
 
 
 def get_video_embed_code(url):
