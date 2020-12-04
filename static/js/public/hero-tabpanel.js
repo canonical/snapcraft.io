@@ -42,7 +42,15 @@ class HeroTabPanels {
         }" title="${snap.title}${snap.summary ? " – " : ""}${snap.summary}">
 
 
-          <img src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_48,h_48/${snap.icon_url}" srcset="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_120,h_120/${snap.icon_url} 2x" alt="${snap.title}" loading="eager" class="p-snap-heading__icon" data-live="icon" width="48" height="48">
+          <img
+            src="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_48,h_48/${snap.icon_url}"
+            srcset="https://res.cloudinary.com/canonical/image/fetch/f_auto,q_auto,fl_sanitize,w_120,h_120/${snap.icon_url} 2x"
+            alt="${snap.title}"
+            loading="eager"
+            class="p-snap-heading__icon"
+            data-live="icon"
+            width="48"
+            height="48">
 
           <div class="p-media-object__details">
             <h4 class="p-media-object__title p-heading--5 u-no-margin--bottom">
