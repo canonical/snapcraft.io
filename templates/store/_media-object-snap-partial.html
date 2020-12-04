@@ -32,9 +32,8 @@
         <p>
           <span class="u-off-screen">Publisher: </span>{{ snap.publisher}}
           {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
-          <span class="p-verified" title="Verified account">
-            <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
-          </span>
+            {% set package_name = snap.package_name %}
+            {% include "partials/_verified_developer.html" %}
           {% endif %}
         </p>
       {% endif %}
