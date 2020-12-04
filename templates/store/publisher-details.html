@@ -27,10 +27,7 @@
           <p class="p-snap-heading__publisher">
             ({{ username }})
             {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
-            <span class="p-verified p-tooltip p-tooltip--top-center" aria-describedby="{{ username }}-tooltip">
-              <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" />
-              <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ username }}-tooltip">Verified account</span>
-            </span>
+              {% include "partials/_verified_developer.html" %}
             {% endif %}
           </p>
         </div>
