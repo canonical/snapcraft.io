@@ -67,8 +67,21 @@ def snap_details_views(store, api, handle_errors):
             details.get("channel-map")
         )
 
+        default_track = (
+            details.get("default-track")
+            if details.get("default-track")
+            else "latest"
+        )
+
+        lowest_risk_available = logic.get_lowest_available_risk(
+            channel_maps_list, default_track
+        )
+
+        extracted_info = logic.extract_info_channel_map(
+            channel_maps_list, default_track, lowest_risk_available
+        )
+
         last_updated = latest_channel["created-at"]
-        last_version = latest_channel["version"]
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
@@ -106,24 +119,6 @@ def snap_details_views(store, api, handle_errors):
 
         videos = logic.get_videos(details["snap"]["media"])
 
-        default_track = (
-            details.get("default-track")
-            if details.get("default-track")
-            else "latest"
-        )
-
-        lowest_risk_available = logic.get_lowest_available_risk(
-            channel_maps_list, default_track
-        )
-
-        confinement = logic.get_confinement(
-            channel_maps_list, default_track, lowest_risk_available
-        )
-
-        last_version = logic.get_version(
-            channel_maps_list, default_track, lowest_risk_available
-        )
-
         is_users_snap = False
         if authentication.is_authenticated(flask.session):
             if (
@@ -147,7 +142,7 @@ def snap_details_views(store, api, handle_errors):
             "package_name": details["name"],
             "categories": categories,
             "icon_url": icons[0] if icons else None,
-            "version": last_version,
+            "version": extracted_info["version"],
             "license": details["snap"]["license"],
             "publisher": details["snap"]["publisher"]["display-name"],
             "username": details["snap"]["publisher"]["username"],
@@ -166,7 +161,7 @@ def snap_details_views(store, api, handle_errors):
             "developer_validation": details["snap"]["publisher"]["validation"],
             "default_track": default_track,
             "lowest_risk_available": lowest_risk_available,
-            "confinement": confinement,
+            "confinement": extracted_info["confinement"],
             "trending": details["snap"]["trending"],
             # Transformed API data
             "filesize": humanize.naturalsize(binary_filesize),
