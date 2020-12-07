@@ -15,4 +15,5 @@ module.exports = {
   homepage: "./static/js/public/homepage.js",
   blog: "./static/js/public/blog.js",
   store: "./static/js/public/store.js",
+  "store-details": "./static/js/public/store-details.js",
 };
