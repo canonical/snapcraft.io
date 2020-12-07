@@ -3,7 +3,6 @@ module.exports = {
   "global-nav": "./static/js/base/global-nav.js",
   base: "./static/js/base/base.js",
   release: "./static/js/publisher/release.js",
-  public: "./static/js/public/public.js",
   about: "./static/js/public/about/index.js",
   tabpanel: "./static/js/public/hero-tabpanel.js",
   modal: "./static/js/public/modal.js",
@@ -20,4 +19,5 @@ module.exports = {
   search: "./static/js/public/search.js",
   "distro-install": "./static/js/public/distro-install.js",
   "publisher-details": "./static/js/public/publisher-details.js",
+  "brand-store": "./static/js/public/brand-store.js",
 };
