@@ -11,8 +11,6 @@ import { getColour } from "../libs/colours";
 import { initFSFLanguageSelect } from "./fsf-language-select";
 import firstSnapFlow from "./first-snap-flow";
 import nps from "./nps";
-import { newsletter } from "./newsletter";
-import { formValidation } from "./formValidation";
 import initExpandableArea from "./expandable-area";
 import triggerEventWhenVisible from "./ga-scroll-event";
 import { initLinkScroll } from "./scroll-to";
@@ -36,6 +34,4 @@ export {
   initLinkScroll,
   videos,
   nps,
-  newsletter,
-  formValidation,
 };
