@@ -14,4 +14,5 @@ module.exports = {
   publisher: "./static/js/publisher/publisher.js",
   homepage: "./static/js/public/homepage.js",
   blog: "./static/js/public/blog.js",
+  store: "./static/js/public/store.js",
 };
