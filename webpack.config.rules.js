@@ -82,4 +82,11 @@ module.exports = [
     test: require.resolve(__dirname + "/static/js/public/search.js"),
     use: ["expose-loader?exposes=snapcraft.public.search", "babel-loader"],
   },
+  {
+    test: require.resolve(__dirname + "/static/js/public/distro-install.js"),
+    use: [
+      "expose-loader?exposes=snapcraft.public.distroInstall",
+      "babel-loader",
+    ],
+  },
 ];
