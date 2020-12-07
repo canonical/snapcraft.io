@@ -37,10 +37,6 @@ module.exports = [
     use: ["expose-loader?exposes=snapcraft.about", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/public.js"),
-    use: ["expose-loader?exposes=snapcraft.public", "babel-loader"],
-  },
-  {
     test: require.resolve(__dirname + "/static/js/public/hero-tabpanel.js"),
     use: ["expose-loader?exposes=snapcraft.public.tabpanel", "babel-loader"],
   },
@@ -95,5 +91,9 @@ module.exports = [
       "expose-loader?exposes=snapcraft.public.publisherDetails",
       "babel-loader",
     ],
+  },
+  {
+    test: require.resolve(__dirname + "/static/js/public/brand-store.js"),
+    use: ["expose-loader?exposes=snapcraft.public.brandStore", "babel-loader"],
   },
 ];
