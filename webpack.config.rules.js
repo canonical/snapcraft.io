@@ -59,4 +59,8 @@ module.exports = [
     test: require.resolve(__dirname + "/static/js/public/homepage.js"),
     use: ["expose-loader?exposes=snapcraft.public.homepage", "babel-loader"],
   },
+  {
+    test: require.resolve(__dirname + "/static/js/public/blog.js"),
+    use: ["expose-loader?exposes=snapcraft.public.blog", "babel-loader"],
+  },
 ];
