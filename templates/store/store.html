@@ -96,14 +96,14 @@
 {% endblock %}
 
 {% block scripts_includes %}
-  <script src="{{ static_url('js/dist/public.js') }}" defer></script>
+  <script src="{{ static_url('js/dist/store.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
   <script>
     window.addEventListener("load", function() {
       Raven.context(function () {
-        snapcraft.public.storeCategories();
+        snapcraft.public.store.storeCategories();
       });
     });
   </script>
