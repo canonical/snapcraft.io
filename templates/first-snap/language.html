@@ -13,8 +13,8 @@
 <script>
   window.addEventListener("DOMContentLoaded", function() {
     Raven.context(function () {
-      snapcraft.public.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
-      snapcraft.public.initExpandableArea();
+      snapcraft.public.fsf.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+      snapcraft.public.fsf.initExpandableArea();
     });
   });
 </script>

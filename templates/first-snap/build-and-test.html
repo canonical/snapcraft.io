@@ -124,7 +124,7 @@
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
-      snapcraft.public.initAccordion('.p-accordion__list');
+      snapcraft.public.fsf.initAccordion('.p-accordion__list');
 
       if (typeof ClipboardJS !== 'undefined') {
           new ClipboardJS('.js-clipboard-copy');
