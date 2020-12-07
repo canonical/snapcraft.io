@@ -17,4 +17,5 @@ module.exports = {
   store: "./static/js/public/store.js",
   "store-details": "./static/js/public/store-details.js",
   fsf: "./static/js/public/fsf.js",
+  search: "./static/js/public/search.js",
 };
