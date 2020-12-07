@@ -74,4 +74,8 @@ module.exports = [
       "babel-loader",
     ],
   },
+  {
+    test: require.resolve(__dirname + "/static/js/public/fsf.js"),
+    use: ["expose-loader?exposes=snapcraft.public.fsf", "babel-loader"],
+  },
 ];

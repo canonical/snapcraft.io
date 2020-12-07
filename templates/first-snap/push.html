@@ -138,14 +138,14 @@
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function() {
         {% if user %}
-          snapcraft.public.firstSnapFlow.initRegisterName(
+          snapcraft.public.fsf.firstSnapFlow.initRegisterName(
             document.getElementById("register-name-form"),
             document.getElementById("register-name-notification"),
             document.getElementById("register-name-success")
           );
-          snapcraft.public.firstSnapFlow.push({{ language|tojson }});
+          snapcraft.public.fsf.firstSnapFlow.push({{ language|tojson }});
         {% endif %}
-        snapcraft.public.initAccordion('.p-accordion__list');
+        snapcraft.public.fsf.initAccordion('.p-accordion__list');
       });
     });
   </script>

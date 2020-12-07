@@ -79,11 +79,11 @@
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function() {
-        snapcraft.public.firstSnapFlow.initChooseName(
+        snapcraft.public.fsf.firstSnapFlow.initChooseName(
           document.getElementById("choose-name-form"),
            "{{language}}"
         );
-        snapcraft.public.initAccordion('.p-accordion__list');
+        snapcraft.public.fsf.initAccordion('.p-accordion__list');
       });
     });
   </script>
