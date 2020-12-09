@@ -11,14 +11,22 @@
     </tr>
   </thead>
   <tbody>
-  {% for snap in snaps %}
     <tr>
-      <td>-</td>
-      <td>{{ snap.name }}</td>
+      <td rowspan="{{ snaps | length }}">{{ store.name }}</td>
+      <td>{{ snaps[0].name }}</td>
       <td>-</td>
       <td>-</td>
       <td>-</td>
     </tr>
-  {% endfor %}
+    {% for snap in snaps %}
+      {% if loop.index > 1 %}
+        <tr>
+          <td>{{ snap.name }}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
   </tbody>
 </table>
