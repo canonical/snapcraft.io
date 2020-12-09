@@ -1,8 +1,8 @@
 {% set current_tab = "snaps" %}
 
-{% extends "/admin/admin_layout.html" %}
+{% block meta_title %}Manage snaps in {{ store.name }} | Snapcraft{% endblock %}
 
-{% block meta_title %}Admin | Snapcraft{% endblock %}
+{% extends "/admin/admin_layout.html" %}
 
 {% block admin_content %}
 {% include "/admin/_snaps_section.html" %}
