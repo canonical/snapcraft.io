@@ -204,12 +204,14 @@ class Builds extends React.Component {
 
     return (
       <Fragment>
-        <TriggerBuild
-          hasError={triggerBuildStatus === ERROR ? true : false}
-          errorMessage={triggerBuildErrorMessage}
-          isLoading={triggerBuildLoading}
-          onClick={this.triggerBuildHandler}
-        />
+        {!singleBuild && (
+          <TriggerBuild
+            hasError={triggerBuildStatus === ERROR ? true : false}
+            errorMessage={triggerBuildErrorMessage}
+            isLoading={triggerBuildLoading}
+            onClick={this.triggerBuildHandler}
+          />
+        )}
         <BuildsTable
           builds={builds}
           singleBuild={singleBuild}
