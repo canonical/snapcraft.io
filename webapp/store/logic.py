@@ -256,11 +256,9 @@ def get_categories(categories_json):
 
     if "categories" in categories_json:
         for cat in categories_json["categories"]:
-            if (
-                cat["name"] not in categories_list
-                and cat["name"] not in blacklist
-            ):
-                categories_list.append(cat["name"])
+            if cat["name"] not in categories_list:
+                if cat["name"] not in blacklist:
+                    categories_list.append(cat["name"])
 
         for category in categories_list:
             categories.append(
@@ -427,10 +425,13 @@ def get_icon(media):
     return [m["url"] for m in media if m["type"] == "icon"]
 
 
-def get_videos(media):
-    return [
-        get_video_embed_code(m["url"]) for m in media if m["type"] == "video"
-    ]
+def get_video(media):
+    video = None
+    for m in media:
+        if m["type"] == "video":
+            video = get_video_embed_code(m["url"])
+            break
+    return video
 
 
 def promote_snap_with_icon(snaps):
