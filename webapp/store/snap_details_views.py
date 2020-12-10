@@ -117,7 +117,7 @@ def snap_details_views(store, api, handle_errors):
                 publisher_snaps["snaps"], 4
             )
 
-        videos = logic.get_videos(details["snap"]["media"])
+        video = logic.get_video(details["snap"]["media"])
 
         is_users_snap = False
         if authentication.is_authenticated(flask.session):
@@ -147,7 +147,7 @@ def snap_details_views(store, api, handle_errors):
             "publisher": details["snap"]["publisher"]["display-name"],
             "username": details["snap"]["publisher"]["username"],
             "screenshots": screenshots,
-            "videos": videos,
+            "video": video,
             "publisher_snaps": publisher_snaps,
             "publisher_featured_snaps": publisher_featured_snaps,
             "has_publisher_page": publisher_info is not None,

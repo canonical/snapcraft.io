@@ -25,7 +25,7 @@ from webapp.store.logic import (
     filter_screenshots,
     get_categories,
     get_icon,
-    get_videos,
+    get_video,
 )
 
 store_api = SnapStore(api_publisher_session)
@@ -384,7 +384,7 @@ def post_preview(snap_name):
     icons = get_icon(context["images"])
     context["screenshots"] = filter_screenshots(context["images"])
     context["icon_url"] = icons[0] if icons else None
-    context["videos"] = get_videos(context["images"])
+    context["video"] = get_video(context["images"])
 
     # Channel map
     context["default_track"] = "latest"

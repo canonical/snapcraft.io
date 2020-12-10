@@ -1,10 +1,35 @@
 {% if video.type == "youtube" %}
   <iframe id="ytplayer" type="text/html" width="818" height="460"
-          src="{{ video.url }}?autoplay=1&mute=1&cc_load_policy=1&modestbranding=1&rel=0" frameborder="0"></iframe>
+          src="" frameborder="0" data-src="{{ video.url }}?autoplay=0&cc_load_policy=1&modestbranding=1&rel=0"></iframe>
 {% elif video.type == "vimeo" %}
   <iframe id="vimeoplayer" width="818" height="460" frameborder="0"
           webkitallowfullscreen mozallowfullscreen allowfullscreen
-          src="{{ video.url }}?title=0&byline=0&portrait=0&transparent=0"></iframe>
+          src="" data-src="{{ video.url }}?title=0&byline=0&portrait=0&transparent=0"></iframe>
 {% elif video.type == "asciinema" %}
-  <script src="{{ video.url }}" id="asciicast-{{ video.id }}" async data-autoplay="1" data-preload="0"></script>
+  <div id="asciicastplayer"></div>
 {% endif %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const youtubeVideoFrame = document.getElementById("ytplayer");
+    const vimeoplayerFrame = document.getElementById("vimeoplayer");
+    const asciicastplayerFrame = document.getElementById("asciicastplayer");
+
+    if (youtubeVideoFrame) {
+      youtubeVideoFrame.src = youtubeVideoFrame.dataset.src;
+    }
+
+    if (vimeoplayerFrame) {
+      vimeoplayerFrame.src = vimeoplayerFrame.dataset.src;
+    }
+
+    if (asciicastplayerFrame) {
+      const script = document.createElement("script");
+      script.id = "asciicast-{{ video.id }}";
+      script.dataset.autoplay = 0;
+      script.src = "{{ video.url }}";
+
+      asciicastplayerFrame.appendChild(script);
+    }
+  });
+</script>
