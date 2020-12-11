@@ -203,15 +203,14 @@
   <div class="u-fixed-width">
     <h3>Latest  news from <a href="/blog">our blog&nbsp;&rsaquo;</a></h3>
   </div>
-  <div id="horizontal-latest-articles" class="row" style="min-height: 350px;">
+  <div id="horizontal-latest-articles" class="row" style="min-height: 84px;">
     <div class="u-align--center" style="min-height: 9.1rem;"><i class="p-icon--spinner u-animation--spin">Loading...</i></div>
   </div>
 
   <template style="display: none;" id="horizontal-articles-template">
     <div class="col-4">
-      <p class="p-muted-heading"><time datetime="" class="article-time"></time></p>
-      <div class="article-image"></div>
-      <h3 class="p-heading--four u-line-clamp--2"><a class="article-link article-title"></a></h3>
+      <p class="p-muted-heading u-no-margin--bottom"><time datetime="" class="article-time"></time></p>
+      <h3 class="p-heading--five u-line-clamp--2"><a class="article-link article-title"></a></h3>
     </div>
   </template>
 
@@ -222,7 +221,6 @@
       articleTemplateSelector: "#horizontal-articles-template",
       tagId: "2996",
       limit: 3,
-      linkImage: true,
     });
   </script>
 </section>
