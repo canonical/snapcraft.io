@@ -77,7 +77,7 @@ The application will be reporting errors to your `sentry.io` project from now on
 
 ## Testing
 
-Install the [`dotrun`](https://github.com/canonical-web-and-design/dotrun/) snap.
+Install the [`dotrun`](https://snapcraft.io/dotrun) snap.
 
 ``` bash
 dotrun test
