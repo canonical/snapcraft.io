@@ -24,13 +24,13 @@ If you have found a bug elsewhere in the snap world:
 
 ## Local development
 
-The simplest way to run the site locally is to first [install Docker](https://docs.docker.com/engine/installation/) (on Linux you may need to [add your user to the `docker` group](https://docs.docker.com/engine/installation/linux/linux-postinstall/)), and then use the `./run` script:
+The simplest way to run the site locally is using the [`dotrun`](https://snapcraft.io/dotrun) snap:
 
-``` bash
-./run
+```bash
+dotrun
 ```
 
-Once the containers are setup, you can visit <http://127.0.0.1:8004> in your browser.
+Once the server has started, you can visit <http://127.0.0.1:8004> in your browser. You stop the server using `<ctrl>+c`.
 
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 

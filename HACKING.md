@@ -75,30 +75,17 @@ SENTRY_DSN=<DSN_FROM_ABOVE>
 
 The application will be reporting errors to your `sentry.io` project from now on.
 
-
-## Building CSS
-
-For working on [Sass files](static/css), you may want to dynamically watch for changes to rebuild the CSS whenever something changes.
-
-To setup the watcher, open a new terminal window and run:
-
-``` bash
-./run watch
-```
-
 ## Testing
 
+Install the [`dotrun`](https://snapcraft.io/dotrun) snap.
+
 ``` bash
-./run test
+dotrun test
 ```
 
 ## Status checks and prometheus metrics
 
-[Talisker](https://talisker.readthedocs.io/en/latest/) provides a bunch of useful status checks and metrics about the running application. Some of this information is sensitive and so to access it you need to run the site with your IP address mentioned in the `TALISKER_NETWORKS` variable:
-
-``` bash
-./run --env TALISKER_NETWORKS=172.16.0.0/12
-```
+[Talisker](https://talisker.readthedocs.io/en/latest/) provides a bunch of useful status checks and metrics about the running application. Some of this information is sensitive and so to access it you need to run the site with your IP address mentioned in the `TALISKER_NETWORKS` variable.
 
 Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Talisker. Useful ones include:
 
