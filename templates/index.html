@@ -193,7 +193,38 @@
       </a>
     </div>
   </div>
+</section>
+
+<div class="u-fixed-width">
+  <hr>
+</div>
+
+<section class="p-strip" data-js="latest-news">
+  <div class="u-fixed-width">
+    <h3 class="p-heading--2">Latest  news from <a href="/blog">our blog&nbsp;&rsaquo;</a></h3>
   </div>
+  <div id="horizontal-latest-articles" class="row" style="min-height: 84px;">
+    <div class="u-align--center" style="min-height: 9.1rem;"><i class="p-icon--spinner u-animation--spin">Loading...</i></div>
+  </div>
+
+  <template style="display: none;" id="horizontal-articles-template">
+    <div class="col-4">
+      <h3 class="p-heading--four u-line-clamp--3"><a class="article-link article-title"></a></h3>
+      <footer>
+        <time pubdate datetime="POST_UPDATED" class="article-time"></time> &ndash; <span class="article-author"></span>
+      </footer>
+    </div>
+  </template>
+
+  <script src="/static/js/dist/latest-news.js"></script>
+  <script>
+    canonicalLatestNews.fetchLatestNews({
+      articlesContainerSelector: "#horizontal-latest-articles",
+      articleTemplateSelector: "#horizontal-articles-template",
+      tagId: "2996",
+      limit: 3,
+    });
+  </script>
 </section>
 
 <div class="row">
