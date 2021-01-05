@@ -131,10 +131,11 @@ My published snaps — Linux software in the Snap Store
     <table class="p-table--mobile-card" role="grid">
       <thead>
         <tr role="row">
-          <th width="30%">Name</th>
+          <th width="20%">Name</th>
           <th width="10%">Visibility</th>
-          <th width="20%">Owner</th>
-          <th width="20%">Latest release</th>
+          <th width="10%">Owner</th>
+          <th width="10%">Status</th>
+          <th width="10%">Latest release</th>
           <th width="10%">Version</th>
         </tr>
       </thead>
@@ -147,7 +148,7 @@ My published snaps — Linux software in the Snap Store
         {% else %}
         {% set published = False %}
         {% endif %}
-        <tr role="row">
+        <tr role="row" data-js="snap-list-row" data-snap-name="{{snap}}">
           <td role="rowheader" class="p-table--mobile-card__header">
             <a href="/{{snap}}/listing" class="p-heading-icon--small">
               <span class="p-heading-icon__header">
@@ -186,6 +187,9 @@ My published snaps — Linux software in the Snap Store
             {% endif %}
           </td>
           {% if published %}
+          <td role="gridcell" aria-label="Status" data-js="snap-build-status" data-status="{% if snaps[snap].latest_release.status == 'Published' %}Released{% else %}{{ snaps[snap].latest_release.status }}{% endif %}">
+            -
+          </td>
           <td role="gridcell" aria-label="Latest release">{{ snaps[snap].latest_release.channels[0] }}</td>
           <td role="gridcell" aria-label="Version">
             <a href="/{{snap}}/releases">
@@ -193,6 +197,7 @@ My published snaps — Linux software in the Snap Store
             </a>
           </td>
           {% else %}
+          <td role="gridcell" aria-label="Status" data-js="snap-build-status" data-status="Not released">-</td>
           <td role="gridcell" aria-label="Latest release"><a href="/{{snap}}/releases">Not released</a></td>
           <td role="gridcell" aria-label="Version"></td>
           {% endif %}
@@ -253,6 +258,7 @@ My published snaps — Linux software in the Snap Store
         token: {{ csrf_token()|tojson }},
       };
       snapcraft.publisher.metrics.renderPublisherMetrics(options);
+      snapcraft.publisher.buildStatus();
     });
   });
 </script>
