@@ -104,3 +104,46 @@ def map_build_and_upload_states(build_state, upload_state):
         return StoreFrontBuildState.FAILED_TO_BUILD.value
 
     return StoreFrontBuildState.UNKNOWN.value
+
+
+def map_snap_build_status(snap_build_statuses):
+    """Returns a user facing status based on the LP
+    build state and the status of the snap's
+    upload to the store.
+    """
+    mapped_arch_statuses = set()
+
+    for arch_statuses in snap_build_statuses.values():
+        mapped_status = map_build_and_upload_states(
+            arch_statuses["buildstate"], arch_statuses["store_upload_status"]
+        )
+
+        # Return instantly a failure status if one arch is failing
+        if mapped_status in [
+            StoreFrontBuildState.NEVER_BUILT.value,
+            StoreFrontBuildState.WONT_RELEASE.value,
+            StoreFrontBuildState.RELEASE_FAILED.value,
+            StoreFrontBuildState.FAILED_TO_BUILD.value,
+            StoreFrontBuildState.CANCELLED.value,
+        ]:
+            return mapped_status
+
+        mapped_arch_statuses.add(mapped_status)
+
+    # All the archs have the same status
+    if len(mapped_arch_statuses) == 1:
+        return mapped_arch_statuses.pop()
+
+    # List of the non-failure status in the preferred order to return
+    positive_statuses = [
+        StoreFrontBuildState.BUILDING_SOON.value,
+        StoreFrontBuildState.IN_PROGRESS.value,
+        StoreFrontBuildState.RELEASING_SOON.value,
+        StoreFrontBuildState.RELEASED.value,
+    ]
+
+    for status in positive_statuses:
+        if status in mapped_arch_statuses:
+            return status
+
+    return StoreFrontBuildState.UNKNOWN.value

@@ -8,7 +8,7 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import (
@@ -20,6 +20,7 @@ from webapp.publisher.snaps import (
     release_views,
     settings_views,
 )
+from webapp.publisher.snaps.builds import map_snap_build_status
 from webapp.publisher.views import _handle_error, _handle_error_list
 
 publisher_api = SnapPublisher(api_publisher_session)
@@ -241,6 +242,26 @@ def get_account_snaps():
     }
 
     return flask.render_template("publisher/account-snaps.html", **context)
+
+
+@publisher_snaps.route("/snap-builds.json")
+@login_required
+def get_snap_build_status():
+    try:
+        account_info = publisher_api.get_account(flask.session)
+    except (StoreApiError, ApiError) as api_error:
+        return flask.jsonify(api_error), 400
+
+    response = []
+    user_snaps, _ = logic.get_snaps_account_info(account_info)
+
+    for snap_name in user_snaps:
+        snap_build_statuses = launchpad.get_snap_build_status(snap_name)
+        status = map_snap_build_status(snap_build_statuses)
+
+        response.append({"name": snap_name, "status": status})
+
+    return flask.jsonify(response)
 
 
 @publisher_snaps.route("/account/register-snap")
