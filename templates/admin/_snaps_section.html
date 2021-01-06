@@ -6,7 +6,6 @@
       <th>Published in</th>
       <th>Name</th>
       <th>Latest release</th>
-      <th>Weekly active devices</th>
       <th>Collaborators</th>
     </tr>
   </thead>
@@ -16,13 +15,11 @@
       <td>{{ snaps[0].name }}</td>
       <td>-</td>
       <td>-</td>
-      <td>-</td>
     </tr>
     {% for snap in snaps %}
       {% if loop.index > 1 %}
         <tr>
           <td>{{ snap.name }}</td>
-          <td>-</td>
           <td>-</td>
           <td>-</td>
         </tr>
