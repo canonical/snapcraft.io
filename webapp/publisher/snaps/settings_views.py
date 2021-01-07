@@ -1,11 +1,9 @@
 # Standard library
-import os
 from json import loads
 
 # Packages
 import flask
 import pycountry
-from canonicalwebteam.launchpad import Launchpad
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
@@ -13,18 +11,12 @@ from canonicalwebteam.store_api.exceptions import (
 )
 
 # Local
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
 
-launchpad = Launchpad(
-    username=os.getenv("LP_API_USERNAME"),
-    token=os.getenv("LP_API_TOKEN"),
-    secret=os.getenv("LP_API_TOKEN_SECRET"),
-    session=api_publisher_session,
-)
 publisher_api = SnapPublisher(api_publisher_session)
 
 

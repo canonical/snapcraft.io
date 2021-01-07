@@ -2,13 +2,21 @@ import json
 import os
 
 import flask
+from canonicalwebteam.launchpad import Launchpad
 from ruamel.yaml import YAML
-from webapp.api.requests import Session, PublisherSession
+from webapp.api.requests import PublisherSession, Session
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
 api_session = Session()
 api_publisher_session = PublisherSession()
+
+launchpad = Launchpad(
+    username=os.getenv("LP_API_USERNAME"),
+    token=os.getenv("LP_API_TOKEN"),
+    secret=os.getenv("LP_API_TOKEN_SECRET"),
+    session=api_publisher_session,
+)
 
 
 def get_yaml_loader(typ="safe"):

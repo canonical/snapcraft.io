@@ -4,7 +4,6 @@ from hashlib import md5
 
 # Packages
 import flask
-from canonicalwebteam.launchpad import Launchpad
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
@@ -13,7 +12,7 @@ from canonicalwebteam.store_api.exceptions import (
 from requests.exceptions import HTTPError
 
 # Local
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub, InvalidYAML
 from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
@@ -25,12 +24,6 @@ from werkzeug.exceptions import Unauthorized
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
 BUILDS_PER_PAGE = 15
-launchpad = Launchpad(
-    username=os.getenv("LP_API_USERNAME"),
-    token=os.getenv("LP_API_TOKEN"),
-    secret=os.getenv("LP_API_TOKEN_SECRET"),
-    session=api_publisher_session,
-)
 publisher_api = SnapPublisher(api_publisher_session)
 
 
