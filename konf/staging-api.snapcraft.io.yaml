@@ -3,11 +3,8 @@ domain: staging-api.snapcraft.io
 image: prod-comms.docker-registry.canonical.com/staging-api.snapcraft.io
 
 env:
-  - name: DASHBOARD_API
-    value: https://dashboard.staging.snapcraft.io/dev/api/
-
-  - name: DASHBOARD_API_V2
-    value: https://dashboard.staging.snapcraft.io/api/v2/
+  - name: SNAPSTORE_DASHBOARD_API_URL
+    value: https://dashboard.staging.snapcraft.io/
 
   - name: LOGIN_URL
     value: https://login.staging.ubuntu.com
