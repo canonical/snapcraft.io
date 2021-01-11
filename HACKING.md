@@ -6,10 +6,8 @@
 To use staging APIs locally you can add the following lines to an `.env.local` file:
 
 ```bash
-SNAPCRAFT_IO_API=https://api.staging.snapcraft.io/api/v1/
-SNAPCRAFT_IO_API_V2=https://api.staging.snapcraft.io/v2/
-DASHBOARD_API=https://dashboard.staging.snapcraft.io/dev/api/
-DASHBOARD_API_V2=https://dashboard.staging.snapcraft.io/api/v2/
+SNAPSTORE_API_URL=https://api.staging.snapcraft.io/
+SNAPSTORE_DASHBOARD_API_URL=https://dashboard.staging.snapcraft.io/
 LOGIN_URL=https://login.staging.ubuntu.com
 ```
 

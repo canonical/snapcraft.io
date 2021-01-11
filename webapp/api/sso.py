@@ -4,8 +4,8 @@ from webapp.api.exceptions import ApiResponseError, ApiResponseDecodeError
 
 api_session = api.requests.Session()
 
-DASHBOARD_API = os.getenv(
-    "DASHBOARD_API", "https://dashboard.snapcraft.io/dev/api/"
+SNAPSTORE_DASHBOARD_API_URL = os.getenv(
+    "SNAPSTORE_DASHBOARD_API_URL", "https://dashboard.snapcraft.io/"
 )
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
@@ -34,7 +34,7 @@ def process_response(response):
 
 
 def post_macaroon(json):
-    url = "".join([DASHBOARD_API, "acl/"])
+    url = "".join([SNAPSTORE_DASHBOARD_API_URL, "dev/api/acl/"])
     response = api_session.post(url=url, headers=HEADERS, json=json)
 
     return process_response(response)
