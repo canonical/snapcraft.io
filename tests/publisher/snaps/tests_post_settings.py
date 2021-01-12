@@ -117,7 +117,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
                 "/devel/+snaps" "?ws.op=findByStoreName",
                 f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
-                self.snap_name,
+                f'"{self.snap_name}"',
             ]
         )
 
@@ -198,7 +198,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
                 "/devel/+snaps" "?ws.op=findByStoreName",
                 f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
-                self.snap_name,
+                f'"{self.snap_name}"',
             ]
         )
 
@@ -289,7 +289,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
                 "/devel/+snaps" "?ws.op=findByStoreName",
                 f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
-                self.snap_name,
+                f'"{self.snap_name}"',
             ]
         )
 

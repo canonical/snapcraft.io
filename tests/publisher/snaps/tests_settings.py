@@ -68,7 +68,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "/devel/+snaps?ws.op=findByStoreName",
                 f"&owner=%2F~{LP_API_USERNAME}",
                 "&store_name=",
-                snap_name,
+                f'"{snap_name}"',
             ]
         )
 
