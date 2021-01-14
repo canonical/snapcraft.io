@@ -1,11 +1,17 @@
 import flask
 import humanize
+
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
-from pybadges import badge
 from webapp import authentication
+from webapp.api.exceptions import ApiError
+from webapp.markdown import parse_markdown_description
+
+from canonicalwebteam.flask_base.decorators import (
+    exclude_xframe_options_header,
+)
 from canonicalwebteam.store_api.exceptions import (
     StoreApiCircuitBreaker,
     StoreApiError,
@@ -14,8 +20,7 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiResponseErrorList,
     StoreApiTimeoutError,
 )
-from webapp.api.exceptions import ApiError
-from webapp.markdown import parse_markdown_description
+from pybadges import badge
 
 
 def snap_details_views(store, api, handle_errors):
@@ -277,6 +282,7 @@ def snap_details_views(store, api, handle_errors):
         )
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>/embedded')
+    @exclude_xframe_options_header
     def snap_details_embedded(snap_name):
         """
         A view to display the snap embedded card for specific snaps.
