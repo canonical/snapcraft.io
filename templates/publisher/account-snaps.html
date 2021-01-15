@@ -134,7 +134,7 @@ My published snaps — Linux software in the Snap Store
           <th width="20%">Name</th>
           <th width="10%">Visibility</th>
           <th width="10%">Owner</th>
-          <th width="10%">Status</th>
+          <th width="10%" class="p-table__cell--icon-placeholder u-truncate p-table__cell--icon-placeholder">Status</th>
           <th width="10%">Latest release</th>
           <th width="10%">Version</th>
         </tr>
@@ -187,7 +187,7 @@ My published snaps — Linux software in the Snap Store
             {% endif %}
           </td>
           {% if published %}
-          <td role="gridcell" aria-label="Status" data-js="snap-build-status" data-status="{% if snaps[snap].latest_release.status == 'Published' %}Released{% else %}{{ snaps[snap].latest_release.status }}{% endif %}">
+          <td role="gridcell" aria-label="Status" data-js="snap-build-status" data-status="{% if snaps[snap].latest_release.status == 'Published' %}Released{% else %}{{ snaps[snap].latest_release.status }}{% endif %}" class="p-table__cell--icon-placeholder p-table__cell--icon-placeholder">
             -
           </td>
           <td role="gridcell" aria-label="Latest release">{{ snaps[snap].latest_release.channels[0] }}</td>
@@ -197,7 +197,9 @@ My published snaps — Linux software in the Snap Store
             </a>
           </td>
           {% else %}
-          <td role="gridcell" aria-label="Status" data-js="snap-build-status" data-status="Not released">-</td>
+          <td role="gridcell" aria-label="Status" data-js="snap-build-status" data-status="Not released" class="p-table__cell--icon-placeholder p-table__cell--icon-placeholder">
+            -
+          </td>
           <td role="gridcell" aria-label="Latest release"><a href="/{{snap}}/releases">Not released</a></td>
           <td role="gridcell" aria-label="Version"></td>
           {% endif %}
