@@ -10,8 +10,23 @@ function addBuildStatus(row, data) {
   const buildStatus = UserFacingStatus[releaseData.status].statusMessage;
   const buildColumn = row.querySelector("[data-js='snap-build-status']");
 
+  const failedStatuses = ["failed_to_build", "release_failed"];
+
+  const errorIcon = document.createElement("i");
+  errorIcon.classList.add("p-icon--error");
+
+  const buildLink = document.createElement("a");
+  buildLink.href = `/${snapName}/builds`;
+
   if (buildColumn && buildStatus && buildStatus.toLowerCase() !== "unknown") {
-    buildColumn.innerText = buildStatus;
+    if (failedStatuses.includes(releaseData.status)) {
+      buildColumn.innerText = "";
+      buildColumn.appendChild(errorIcon);
+      buildLink.innerText = buildStatus;
+      buildColumn.appendChild(buildLink);
+    } else {
+      buildColumn.innerText = buildStatus;
+    }
   } else {
     buildColumn.innerText = buildColumn.dataset.status;
   }
