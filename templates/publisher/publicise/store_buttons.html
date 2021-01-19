@@ -51,12 +51,9 @@
           <label>HTML:</label>
         </div>
         <div class="col-7">
-          <div class="p-code-copyable not-cli">
-            <code class="p-code-copyable__input" id="snippet-{{ lang }}-black-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
+          <pre><code id="snippet-{{ lang }}-black-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
   &lt;img alt="{{ data.text }}" src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg" /&gt;
-&lt;/a&gt;</code>
-            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-{{ lang }}-black-html">Copy to clipboard</button>
-          </div>
+&lt;/a&gt;</code></pre>
         </div>
       </div>
 
@@ -65,10 +62,7 @@
           <label>Markdown:</label>
         </div>
         <div class="col-7">
-          <div class="p-code-copyable not-cli">
-            <code class="p-code-copyable__input" id="snippet-{{ lang }}-black-md">[![{{ data.text }}](https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg)](https://snapcraft.io/{{ snap_name }})</code>
-            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-{{ lang }}-black-md">Copy to clipboard</button>
-          </div>
+          <pre style="white-space: pre-line;"><code id="snippet-{{ lang }}-black-md">[![{{ data.text }}](https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-black.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
         </div>
       </div>
 
@@ -98,12 +92,9 @@
           <label>HTML:</label>
         </div>
         <div class="col-7">
-          <div class="p-code-copyable not-cli">
-            <code class="p-code-copyable__input" id="snippet-{{ lang }}-white-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
+          <pre><code id="snippet-{{ lang }}-white-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
   &lt;img alt="{{ data.text }}" src="https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg" /&gt;
-&lt;/a&gt;</code>
-            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-{{ lang }}-white-html">Copy to clipboard</button>
-          </div>
+&lt;/a&gt;</code></pre>
         </div>
       </div>
 
@@ -112,10 +103,7 @@
           <label>Markdown:</label>
         </div>
         <div class="col-7">
-          <div class="p-code-copyable not-cli">
-            <code class="p-code-copyable__input" id="snippet-{{ lang }}-white-md">[![{{ data.text }}](https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg)](https://snapcraft.io/{{ snap_name }})</code>
-            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-{{ lang }}-white-md">Copy to clipboard</button>
-          </div>
+          <pre style="white-space: pre-line;"><code id="snippet-{{ lang }}-white-md">[![{{ data.text }}](https://snapcraft.io/static/images/badges/{{ lang }}/snap-store-white.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
         </div>
       </div>
     </div>
@@ -137,10 +125,6 @@
   </div>
 {% endblock %}
 
-{% block scripts_modules %}
-<script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
-{% endblock %}
-
 {% block scripts_includes %}
   <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
 {% endblock %}
@@ -150,10 +134,6 @@
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function () {
         snapcraft.publisher.publicise.initSnapButtonsPicker();
-
-        if (typeof ClipboardJS !== 'undefined') {
-          new ClipboardJS('.js-clipboard-copy');
-        }
       });
     });
   </script>

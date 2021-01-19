@@ -7713,10 +7713,10 @@ vanilla-framework@2.19.1:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.1.tgz#f071deed5504a5fe2104d6d9b087ce654e190881"
   integrity sha512-y79SKAwertvgHVAf1PbGxiq6QvVxNI78txilSgESx80HUWBrooT1nXCDUuHC/ySGEq+JUpmVIv0PrmXXilYWdg==
 
-vanilla-framework@2.22.0:
-  version "2.22.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.22.0.tgz#c8fe06d4a635a18ed0a20d3d0a29939bb90663f7"
-  integrity sha512-ju7NwuW4OAArSgMQXFJo+Iod8+q07nEtxwcrhs1LuHV7og2mU3SijoBwo3euzELught6/bz08NetEvQo2gHWag==
+vanilla-framework@2.22.1:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.22.1.tgz#cfd811b6b162e69b74a80e809437477b5777a305"
+  integrity sha512-tyFmDHcRuOOWAasNTpeq5hiOsPniFrgOp39lAZE7/WFLIxGoyCz9IkoAtom0wZ1sPGPLBX7XUMGyx3ZV6uTfgg==
 
 verbalize@^0.1.2:
   version "0.1.2"

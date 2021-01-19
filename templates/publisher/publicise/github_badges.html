@@ -49,12 +49,7 @@
         <label>HTML:</label>
       </div>
       <div class="col-7">
-        <div class="p-code-copyable not-cli">
-          <code class="p-code-copyable__input" id="snippet-badge-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;
-    &lt;img alt="{{ snap_title }}" src="https://snapcraft.io/{{ snap_name }}/badge.svg" /&gt;
-  &lt;/a&gt;</code>
-          <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-badge-html">Copy to clipboard</button>
-        </div>
+        <pre><code id="snippet-badge-html">&lt;a href="https://snapcraft.io/{{ snap_name }}"&gt;&lt;img alt="{{ snap_title }}" src="https://snapcraft.io/{{ snap_name }}/badge.svg" /&gt;&lt;/a&gt;</code></pre>
       </div>
     </div>
 
@@ -63,17 +58,10 @@
         <label>Markdown:</label>
       </div>
       <div class="col-7">
-        <div class="p-code-copyable not-cli">
-          <code class="p-code-copyable__input" id="snippet-badge-markdown">[![{{ snap_title }}](https://snapcraft.io/{{ snap_name }}/badge.svg)](https://snapcraft.io/{{ snap_name }})</code>
-          <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snippet-badge-markdown">Copy to clipboard</button>
-        </div>
+        <pre style="white-space: pre-line;"><code id="snippet-badge-markdown">[![{{ snap_title }}](https://snapcraft.io/{{ snap_name }}/badge.svg)](https://snapcraft.io/{{ snap_name }})</code></pre>
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block scripts_modules %}
-<script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts_includes %}
@@ -95,10 +83,6 @@
         badgeCodeElement: document.getElementById("badge-code-wrapper"),
         optionsUncheckedElement: document.getElementById("options-unchecked-warning")
       });
-
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
     });
   });
 </script>
