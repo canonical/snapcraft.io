@@ -54,7 +54,7 @@
                       </div>
                     {% endfor %}
                   </div>
-                  <p><a class="p-button--positive" href="/{{ fsf_version }}/{{ language }}/snapcraft.yaml" download>Download snapcraft.yaml file</a>
+                  <p><a class="p-button--positive" href="/first-snap/{{ language }}/snapcraft.yaml" download>Download snapcraft.yaml file</a>
                 </div>
               </div>
             </div>
@@ -66,11 +66,11 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/{{ fsf_version }}/{{ language }}">
+  <a class="p-button--neutral" href="/first-snap/{{ language }}">
     &lsaquo; Previous: Install Snapcraft
   </a>
 
-  <a class="p-button--positive u-float-right u-no-margin--right" href="/{{ fsf_version }}/{{ language }}/{{ os }}/build-and-test">
+  <a class="p-button--positive u-float-right u-no-margin--right" href="/first-snap/{{ language }}/{{ os }}/build-and-test">
     Next: Build &amp; test snap &rsaquo;
   </a>
 {% endblock %}

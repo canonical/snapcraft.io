@@ -3,14 +3,14 @@
     <ul class="p-breadcrumbs p-heading--4" style="max-width: 100%;">
       <li class="p-breadcrumbs__item">
         {% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build_and_test' or fsf_step == 'push' %}
-          <a href="/{{ fsf_version }}/">Select language</a>
+          <a href="/first-snap/">Select language</a>
         {% else %}
           Select language
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' %} is-disabled{% endif %}">
         {% if fsf_step == 'package' or fsf_step == 'build_and_test' or fsf_step == 'push' %}
-          <a href="/{{ fsf_version }}/{{ language }}">Install Snapcraft</a>
+          <a href="/first-snap/{{ language }}">Install Snapcraft</a>
         {% else %}
           Install Snapcraft
         {% endif %}
@@ -19,21 +19,21 @@
         {% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'package' %}
           Package snap
         {% else %}
-          <a href="/{{ fsf_version }}/{{ language }}/{{ os }}/package">Package snap</a>
+          <a href="/first-snap/{{ language }}/{{ os }}/package">Package snap</a>
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' %} is-disabled{% endif %}">
         {% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'build_and_test' %}
           Build & test snap
         {% else %}
-          <a href="/{{ fsf_version }}/{{ language }}/{{ os }}/build-and-test">Build & test snap</a>
+          <a href="/first-snap/{{ language }}/{{ os }}/build-and-test">Build & test snap</a>
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' %} is-disabled{% endif %}">
         {% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'push' %}
           Publish to store
         {% else %}
-          <a href="/{{ fsf_version }}/{{ language }}/{{ os }}/push">Publish to store</a>
+          <a href="/first-snap/{{ language }}/{{ os }}/push">Publish to store</a>
         {% endif %}
       </li>
     </ul>

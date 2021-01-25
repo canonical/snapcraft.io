@@ -70,7 +70,7 @@
               <div class="row">
                 <div class="col-8">
                   <p>Whilst we do encourage testing your snaps, it is not required for this
-                  tutorial. If you wish you can <a href="/{{ fsf_version }}{{ language }}/{{ os }}/push">skip this section</a> and move on to the next step.</p>
+                  tutorial. If you wish you can <a href="/first-snap/{{ language }}/{{ os }}/push">skip this section</a> and move on to the next step.</p>
                   <ol class="p-stepped-list has-margin">
                     {% for step in test_steps %}
                     <li class="p-stepped-list__item">
@@ -111,11 +111,11 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/{{ fsf_version }}/{{ language }}/{{ os }}/package">
+  <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/package">
     &lsaquo; Previous: Package snap
   </a>
 
-  <a class="p-button--positive u-float-right u-no-margin--right" href="/{{ fsf_version }}/{{ language }}/{{ os }}/push">
+  <a class="p-button--positive u-float-right u-no-margin--right" href="/first-snap/{{ language }}/{{ os }}/push">
     Next: Publish to store &rsaquo;
   </a>
 {% endblock %}

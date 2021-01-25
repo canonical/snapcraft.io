@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/{{ fsf_version }}/">
+  <a class="p-button--neutral" href="/first-snap/">
     &lsaquo; Previous: Select language
   </a>
 
@@ -52,7 +52,7 @@
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function() {
-        snapcraft.public.fsf.firstSnapFlow.install({{ language|tojson }}, "{{ fsf_version }}");
+        snapcraft.public.fsf.firstSnapFlow.install({{ language|tojson }});
       });
     });
   </script>
