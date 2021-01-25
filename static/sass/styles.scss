@@ -8,6 +8,8 @@ $color-navigation-active-bar: $ubuntu-orange;
 $theme-default-nav: dark;
 $breakpoint-navigation-threshold: 800px;
 
+$font-display-option: swap;
+
 // vanilla patterns
 @import "vanilla-framework/scss/vanilla";
 
