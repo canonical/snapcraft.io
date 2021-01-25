@@ -4,14 +4,15 @@ from io import StringIO
 
 import flask
 from webapp import helpers
+from webapp.decorators import login_required
 
 YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
 # this variable can be removed once we have a result for the ABC test
-FSF_VERSION = "first-snap"
+FSF_VERSION = "first-snap-3"
 
 
-first_snap = flask.Blueprint(
-    "fist_snap_flow",
+first_snap_3 = flask.Blueprint(
+    "fist_snap_flow_3",
     __name__,
     template_folder="/templates",
     static_folder="/static",
@@ -45,14 +46,16 @@ def directory_exists(file):
     return os.path.isdir(os.path.join(flask.current_app.root_path, file))
 
 
-@first_snap.route("/")
+@first_snap_3.route("/")
+@login_required
 def get_pick_language():
     return flask.render_template(
         "first-snap/language.html", fsf_version=FSF_VERSION
     )
 
 
-@first_snap.route("/<language>")
+@first_snap_3.route("/<language>")
+@login_required
 def get_language(language):
     filename = f"first_snap/content/{language}"
     if not directory_exists(filename):
@@ -64,7 +67,8 @@ def get_language(language):
     )
 
 
-@first_snap.route("/<language>/snapcraft.yaml")
+@first_snap_3.route("/<language>/snapcraft.yaml")
+@login_required
 def get_language_snapcraft_yaml(language):
     filename = f"first_snap/content/{language}/package.yaml"
     snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
@@ -93,7 +97,8 @@ def get_language_snapcraft_yaml(language):
     )
 
 
-@first_snap.route("/<language>/<operating_system>/package")
+@first_snap_3.route("/<language>/<operating_system>/package")
+@login_required
 def get_package(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
@@ -138,7 +143,8 @@ def get_package(language, operating_system):
         return flask.abort(404)
 
 
-@first_snap.route("/<language>/<operating_system>/build-and-test")
+@first_snap_3.route("/<language>/<operating_system>/build-and-test")
+@login_required
 def get_build(language, operating_system):
     build_filename = f"first_snap/content/{language}/build.yaml"
     test_filename = f"first_snap/content/{language}/test.yaml"
@@ -185,7 +191,8 @@ def get_build(language, operating_system):
     return flask.render_template("first-snap/build-and-test.html", **context)
 
 
-@first_snap.route("/<language>/<operating_system>/push")
+@first_snap_3.route("/<language>/<operating_system>/push")
+@login_required
 def get_push(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"

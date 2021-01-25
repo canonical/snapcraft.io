@@ -4,7 +4,7 @@ import "whatwg-fetch";
 
 import { toggleAccordion } from "./accordion";
 
-function install(language) {
+function install(language, fsfVersion) {
   const osPickers = Array.from(document.querySelectorAll(".js-os-select"));
   const osWrappers = Array.from(document.querySelectorAll(".js-os-wrapper"));
 
@@ -23,7 +23,7 @@ function install(language) {
       const paginationBtn = document.querySelector(`#js-pagination-next`);
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
-        paginationBtn.href = `/first-snap/${language}/${selectedOs}/package`;
+        paginationBtn.href = `/${fsfVersion}/${language}/${selectedOs}/package`;
       }
     }
   }
@@ -87,7 +87,7 @@ function install(language) {
     const paginationBtn = document.querySelector(`#js-pagination-next`);
     if (paginationBtn) {
       paginationBtn.classList.remove("is-disabled");
-      paginationBtn.href = `/first-snap/${language}/${type}/package`;
+      paginationBtn.href = `/${fsfVersion}/${language}/${type}/package`;
     }
   }
 
