@@ -1,6 +1,10 @@
 {% if video.type == "youtube" %}
-  <iframe id="ytplayer" type="text/html" width="818" height="460"
-          src="" frameborder="0" data-src="{{ video.url }}?autoplay=0&cc_load_policy=1&modestbranding=1&rel=0"></iframe>
+  <div class="youtube-container" data-youtube>
+    <div class="youtube-thumbnail">
+      <img src="https://i3.ytimg.com/vi/{{ video.id }}/maxresdefault.jpg" alt="" width="1029" height="588">
+      <img src="{{ static_url('images/yt_play_btn.svg') }}" alt="" width="68" height="48" class="youtube-play-button">
+    </div>
+  </div>
 {% elif video.type == "vimeo" %}
   <iframe id="vimeoplayer" width="818" height="460" frameborder="0"
           webkitallowfullscreen mozallowfullscreen allowfullscreen
@@ -11,13 +15,8 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const youtubeVideoFrame = document.getElementById("ytplayer");
     const vimeoplayerFrame = document.getElementById("vimeoplayer");
     const asciicastplayerFrame = document.getElementById("asciicastplayer");
-
-    if (youtubeVideoFrame) {
-      youtubeVideoFrame.src = youtubeVideoFrame.dataset.src;
-    }
 
     if (vimeoplayerFrame) {
       vimeoplayerFrame.src = vimeoplayerFrame.dataset.src;
@@ -30,6 +29,27 @@
       script.src = "{{ video.url }}";
 
       asciicastplayerFrame.appendChild(script);
+    }
+
+    const videoWrapper = document.querySelector("[data-youtube]");
+
+    if (videoWrapper) {
+      const videoFrame = document.createElement("iframe");
+      videoFrame.id = "ytplayer";
+      videoFrame.type = "text/html";
+      videoFrame.width = "1029";
+      videoFrame.height = "588";
+      videoFrame.src = "{{ video.url }}?autoplay=0&cc_load_policy=1&modestbranding=1&rel=0";
+      videoFrame.onload = function() {
+        videoWrapper.querySelector(".youtube-thumbnail").classList.add("fade-out");
+      };
+
+      videoWrapper.addEventListener("mouseenter", function() {
+        const innerFrame = videoWrapper.querySelectorAll("iframe");
+        if (!innerFrame.length) {
+          videoWrapper.appendChild(videoFrame);
+        }
+      });
     }
   });
 </script>

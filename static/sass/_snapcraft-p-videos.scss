@@ -1,0 +1,25 @@
+@mixin snapcraft_p-videos {
+  .youtube-container {
+    position: relative;
+  }
+
+  .youtube-thumbnail {
+    left: 0;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+
+    &.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .youtube-play-button {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+  }
+}
