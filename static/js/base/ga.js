@@ -44,26 +44,6 @@ function triggerEventReleaseUI(action, label) {
   }
 }
 
-function triggerCopyEvent(category, clipboardTarget) {
-  const clipboardTargetEl = document.querySelector(clipboardTarget);
-
-  let copiedValue = "";
-  if (clipboardTargetEl.value) {
-    copiedValue = clipboardTargetEl.value.trim();
-  } else if (clipboardTargetEl.text) {
-    clipboardTargetEl.text.trim();
-  } else if (clipboardTargetEl.innerText) {
-    clipboardTargetEl.innerText.trim();
-  }
-
-  triggerEvent(
-    category,
-    origin,
-    clipboardTarget,
-    `Copied code: ${copiedValue}`
-  );
-}
-
 if (typeof dataLayer !== "undefined") {
   window.addEventListener("click", function (e) {
     let target = e.target;
@@ -74,10 +54,6 @@ if (typeof dataLayer !== "undefined") {
     target = e.target.closest("a");
     if (!target) {
       target = e.target.closest("button");
-    }
-
-    if (!target) {
-      target = e.target.closest(".p-code-copyable");
     }
 
     if (!target) {
@@ -107,23 +83,6 @@ if (typeof dataLayer !== "undefined") {
 
         break;
       }
-    }
-
-    // clicking on copy clipboard button
-    if (target.matches(".js-clipboard-copy")) {
-      e.stopImmediatePropagation();
-      triggerCopyEvent("clipboard-copy", target.dataset.clipboardTarget);
-    }
-
-    // clicking on code snippet
-    if (target.matches(".p-code-copyable")) {
-      e.stopImmediatePropagation();
-      const copyButton = target.querySelector(".js-clipboard-copy");
-
-      triggerCopyEvent(
-        "clipboard-copy-click",
-        copyButton.dataset.clipboardTarget
-      );
     }
   });
 }

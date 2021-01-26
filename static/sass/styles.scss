@@ -222,10 +222,6 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-p-breadcrumbs;
 
-@import "snapcraft_p-code-copyable";
-
-@include snapcraft-p-code-copyable;
-
 @import "snapcraft-publicise";
 
 @include snapcraft-publicise;
@@ -355,4 +351,11 @@ dl {
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// This should be removed once vanilla is upgraded to v2.22.2
+.p-code-snippet__block--icon.is-wrapped,
+.p-code-snippet__block--numbered.is-wrapped,
+.p-code-snippet__block.is-wrapped {
+  white-space: pre-wrap;
 }

@@ -29,7 +29,6 @@
                       {% if step.command %}
                       <span class="p-stepped-list__content">
                         {% set snippet_value = step.command|replace("${name}", snap_name) %}
-                        {% set snippet_id = 10 + loop.index %}
                         {% include "/partials/_code-snippet.html" %}
                       </span>
                       {% endif %}
@@ -76,7 +75,6 @@
                       {% if step.command %}
                       <span class="p-stepped-list__content">
                         {% set snippet_value = step.command|replace("${name}", snap_name) %}
-                        {% set snippet_id = 20 + loop.index %}
                         {% include "/partials/_code-snippet.html" %}
                       </span>
                       {% endif %}
