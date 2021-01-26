@@ -162,12 +162,7 @@
             {% if step.command %}
               <div class="col-5 distro-code-snippet">
                 {% set snippet_value = step.command %}
-                {% set snippet_id = "distro-install-command-" + loop.index|string %}
-                {% if (step.command|trim).count('\n') == 0 %}
-                  {% include "/partials/_code-snippet.html" %}
-                {% else %}
-                  {% include "/partials/_code-snippet-multi.html" %}
-                {% endif %}
+                {% include "/partials/_code-snippet.html" %}
               </div>
             {% endif %}
           </div>
@@ -186,7 +181,6 @@
                   default_track,
                   lowest_risk_available,
                   confinement) %}
-            {% set snippet_id =  "snap-install-stable" %}
             {% include "/partials/_code-snippet.html" %}
           </div>
         </div>
@@ -261,10 +255,6 @@
   {% include "store/snap-details/_templates.html" %}
 {% endblock %}
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
-{% endblock %}
-
 {% block scripts_includes %}
   <script src="{{ static_url('js/dist/distro-install.js') }}" defer></script>
 {% endblock %}
@@ -303,10 +293,6 @@
           snapcraft.public.distroInstall.videos('.js-video-slide');
         } catch(e) {
           Raven.captureException(e);
-        }
-
-        if (typeof ClipboardJS !== 'undefined') {
-          new ClipboardJS('.js-clipboard-copy');
         }
       });
     });

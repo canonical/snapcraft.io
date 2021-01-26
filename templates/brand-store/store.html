@@ -29,8 +29,10 @@
       <div class="row">
         <h3>Installing apps</h3>
         <p>To configure a snap enabled system to use {{ webapp_config['STORE_QUERY'] }}:</p>
-        <pre><code>echo "UBUNTU_STORE_ID={{ webapp_config['STORE_QUERY'] }}" | sudo tee -a /etc/environment
-sudo service snapd restart</code></pre>
+        <div class="p-code-snippet">
+          <pre class="p-code-snippet__block"><code>echo "UBUNTU_STORE_ID={{ webapp_config['STORE_QUERY'] }}" | sudo tee -a /etc/environment
+  sudo service snapd restart</code></pre>
+        </div>
       </div>
       <div class="row">
         <hr />

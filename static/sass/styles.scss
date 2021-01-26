@@ -46,7 +46,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-contextual-menu;
 @include vf-p-breadcrumbs;
 @include vf-p-pagination;
-@include vf-p-code-copyable;
+@include vf-p-code-snippet;
 @include vf-p-tabs;
 @include vf-p-table-icons;
 @include vf-p-subnav;
@@ -224,10 +224,6 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-p-breadcrumbs;
 
-@import "snapcraft_p-code-copyable";
-
-@include snapcraft-p-code-copyable;
-
 @import "snapcraft-publicise";
 
 @include snapcraft-publicise;
@@ -357,4 +353,11 @@ dl {
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// This should be removed once vanilla is upgraded to v2.22.2
+.p-code-snippet__block--icon.is-wrapped,
+.p-code-snippet__block--numbered.is-wrapped,
+.p-code-snippet__block.is-wrapped {
+  white-space: pre-wrap;
 }

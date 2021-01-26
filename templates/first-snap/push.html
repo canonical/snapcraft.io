@@ -97,14 +97,12 @@
                 <div class="col-8">
                   <p>Log in to snapcraft using your Ubuntu One account credentials:</p>
                   {% set snippet_value = "snapcraft login" %}
-                  {% set snippet_id = "snapcraft-login" %}
                   {% include "/partials/_code-snippet.html" %}
 
                   <p>
                     Once logged, you can push your snap to the store with following command:
                   </p>
                   {% set snippet_value = "snapcraft push --release edge *.snap" %}
-                  {% set snippet_id = "snapcraft-push" %}
                   {% include "/partials/_code-snippet.html" %}
 
                   <p>

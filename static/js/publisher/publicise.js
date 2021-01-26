@@ -219,7 +219,7 @@ const getBadgeHTML = (snapName, badgeName, showName) => {
     badgeName,
     showName
   )}" /&gt;
-  &lt;/a&gt;`;
+&lt;/a&gt;`;
 };
 
 const getBadgeMarkdown = (snapName, badgeName, showName) => {

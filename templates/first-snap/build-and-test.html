@@ -29,12 +29,7 @@
                       {% if step.command %}
                       <span class="p-stepped-list__content">
                         {% set snippet_value = step.command|replace("${name}", snap_name) %}
-                        {% set snippet_id = 10 + loop.index %}
-                        {% if snippet_value.count('\n') == 0 %}
                         {% include "/partials/_code-snippet.html" %}
-                        {% else %}
-                        {% include "/partials/_code-snippet-multi.html" %}
-                        {% endif %}
                       </span>
                       {% endif %}
                     </li>
@@ -80,12 +75,7 @@
                       {% if step.command %}
                       <span class="p-stepped-list__content">
                         {% set snippet_value = step.command|replace("${name}", snap_name) %}
-                        {% set snippet_id = 20 + loop.index %}
-                        {% if snippet_value.count('\n') == 0 %}
                         {% include "/partials/_code-snippet.html" %}
-                        {% else %}
-                        {% include "/partials/_code-snippet-multi.html" %}
-                        {% endif %}
                       </span>
                       {% endif %}
                       {% if step.warning %}
@@ -125,10 +115,6 @@
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
       snapcraft.public.fsf.initAccordion('.p-accordion__list');
-
-      if (typeof ClipboardJS !== 'undefined') {
-          new ClipboardJS('.js-clipboard-copy');
-        }
     });
   });
 </script>
