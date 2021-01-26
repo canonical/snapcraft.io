@@ -16,22 +16,6 @@
   {% endif %}
 {% endblock %}
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}" defer></script>
-{% endblock %}
-
 {% block scripts_includes %}
   <script src="{{ static_url('js/dist/fsf.js') }}" defer></script>
-{% endblock %}
-
-{% block scripts %}
-  <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      Raven.context(function() {
-        if (typeof ClipboardJS !== 'undefined') {
-          new ClipboardJS('.js-clipboard-copy');
-        }
-      });
-    });
-  </script>
 {% endblock %}
