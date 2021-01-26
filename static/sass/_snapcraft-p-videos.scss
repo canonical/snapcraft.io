@@ -1,10 +1,9 @@
 @mixin snapcraft_p-videos {
-  .youtube-container {
-    position: relative;
-  }
-
   .youtube-thumbnail {
+    border: none;
     left: 0;
+    margin-bottom: 0;
+    padding: 0;
     position: absolute;
     top: 0;
     z-index: 1;

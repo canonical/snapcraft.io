@@ -1,10 +1,9 @@
 {% if video.type == "youtube" %}
-  <div class="youtube-container" data-youtube>
-    <div class="youtube-thumbnail">
-      <img src="https://i3.ytimg.com/vi/{{ video.id }}/maxresdefault.jpg" alt="" width="1029" height="588">
-      <img src="{{ static_url('images/yt_play_btn.svg') }}" alt="" width="68" height="48" class="youtube-play-button">
-    </div>
-  </div>
+  <iframe id="ytplayer" type="text/html" width="818" height="460" allow="autoplay"></iframe>
+  <button class="youtube-thumbnail" id="youtube-thumbnail">
+    <img src="https://i3.ytimg.com/vi/{{ video.id }}/maxresdefault.jpg" alt="" width="1029" height="588">
+    <img src="{{ static_url('images/yt_play_btn.svg') }}" alt="" width="68" height="48" class="youtube-play-button">
+  </button>
 {% elif video.type == "vimeo" %}
   <iframe id="vimeoplayer" width="818" height="460" frameborder="0"
           webkitallowfullscreen mozallowfullscreen allowfullscreen
@@ -31,25 +30,15 @@
       asciicastplayerFrame.appendChild(script);
     }
 
-    const videoWrapper = document.querySelector("[data-youtube]");
+    const youtubeFrame = document.getElementById("ytplayer");
+    const youtubeThumbnail = document.getElementById("youtube-thumbnail");
+    const videoUrl = "{{ video.url }}?autoplay=1&cc_load_policy=1&modestbranding=1&rel=0";
 
-    if (videoWrapper) {
-      const videoFrame = document.createElement("iframe");
-      videoFrame.id = "ytplayer";
-      videoFrame.type = "text/html";
-      videoFrame.width = "1029";
-      videoFrame.height = "588";
-      videoFrame.src = "{{ video.url }}?autoplay=0&cc_load_policy=1&modestbranding=1&rel=0";
-      videoFrame.onload = function() {
-        videoWrapper.querySelector(".youtube-thumbnail").classList.add("fade-out");
-      };
-
-      videoWrapper.addEventListener("mouseenter", function() {
-        const innerFrame = videoWrapper.querySelectorAll("iframe");
-        if (!innerFrame.length) {
-          videoWrapper.appendChild(videoFrame);
-        }
-      });
-    }
+    youtubeThumbnail.addEventListener("click", function() {
+      youtubeFrame.src = videoUrl;
+      setTimeout(function() {
+        youtubeThumbnail.classList.add("fade-out");
+      }, 300);
+    });
   });
 </script>
