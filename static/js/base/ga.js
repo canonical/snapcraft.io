@@ -25,7 +25,7 @@ function triggerEvent(category, from, to, label) {
     dataLayer.push({
       event: "GAEvent",
       eventCategory: `${categoryPrefix}${category}`,
-      eventAction: `from:${origin} to:${to}`,
+      eventAction: `from:${from} to:${to}`,
       eventLabel: label,
       eventValue: undefined,
     });
