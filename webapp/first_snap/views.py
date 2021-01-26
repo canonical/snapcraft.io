@@ -60,6 +60,11 @@ def get_language(language):
     )
 
 
+@first_snap.route("/<language>/create-account")
+def create_account(language):
+    return flask.redirect(f"/first-snap/{language}")
+
+
 @first_snap.route("/<language>/snapcraft.yaml")
 def get_language_snapcraft_yaml(language):
     filename = f"first_snap/content/{language}/package.yaml"

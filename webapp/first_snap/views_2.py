@@ -45,13 +45,11 @@ def directory_exists(file):
 
 
 @first_snap_2.route("/")
-@login_required
 def get_pick_language():
     return flask.render_template("first-snap/language.html")
 
 
 @first_snap_2.route("/<language>")
-@login_required
 def get_language(language):
     filename = f"first_snap/content/{language}"
     if not directory_exists(filename):
@@ -61,6 +59,13 @@ def get_language(language):
     return flask.render_template(
         "first-snap/install-snapcraft.html", **context
     )
+
+
+@first_snap_2.route("/<language>/create-account")
+@login_required
+def create_account(language):
+    context = {"language": language}
+    return flask.render_template("first-snap/create-account.html", **context)
 
 
 @first_snap_2.route("/<language>/snapcraft.yaml")

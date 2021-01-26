@@ -2,12 +2,90 @@
 {% extends "first-snap/_layout_fsf.html" %}
 
 {% block fsf_content %}
+  {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
+  <div class="row">
+    <div class="p-accordion" role="tablist" aria-multiselect="true">
+      <ol class="p-accordion__list">
+        <li class="p-accordion__group">
+          <button {% if not user %}disabled aria-expanded="false" {% else %}aria-expanded="true" {% endif %} type="button" class="p-accordion__tab--with-title" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
+            <h4 class="p-accordion__title">
+              Step 1: Register your snap name
+              <i id="register-name-success" class="p-icon--success u-hide"></i>
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if not user %}aria-hidden="true" {% else %}aria-hidden="false" {% endif %} aria-labelledby="tab2-section">
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <form id="register-name-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <label>You must register snap name to be able to push your snap to the store.</label>
+                    <div class="p-form-validation">
+                      <input class="p-form-validation__input" type="text" name="snap-name" value="{{ snap_name }}" />
+                      <p class="p-form-validation__message" id="input-error-message-inline" role="alert">
+                        Name should only have lowercase letters, numbers, and hyphens, must have at least one letter, and cannot start or end with a hyphen.
+                      </p>
+                    </div>
+                    <div id="register-name-notification" class="p-notification--caution u-hide">
+                      <p class="p-notification__response">
+                        <span class="p-notification__status"></span>
+                        Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
+                      </p>
+                    </div>
+                    <button class="p-button--positive p-button-spinner" data-js="js-snap-name-register">
+                      <span class="p-button__spinner vanilla-workaround--dark">
+                        <i class="p-icon--spinner u-animation--spin"></i>
+                      </span>
+                      <span class="p-button__text">Register snap name</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
+        </li>
+        <li class="p-accordion__group">
+          <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab--with-title" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
+            <h4 class="p-accordion__title">
+              Step 2: Push to the Snap store
+            </h4>
+          </button>
+          <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
+            <div class="p-strip is-shallow">
+              <div class="row">
+                <div class="col-8">
+                  <p>Log in to snapcraft using your Ubuntu One account credentials:</p>
+                  {% set snippet_value = "snapcraft login" %}
+                  {% set snippet_id = "snapcraft-login" %}
+                  {% include "/partials/_code-snippet.html" %}
+
+                  <p>
+                    Once logged, you can push your snap to the store with following command:
+                  </p>
+                  {% set snippet_value = "snapcraft push --release edge *.snap" %}
+                  {% set snippet_id = "snapcraft-push" %}
+                  {% include "/partials/_code-snippet.html" %}
+
+                  <p>
+                    Once you've pushed to the Snap store, edit your snap public presentation.
+                  </p>
+                  <a class="p-button--neutral js-continue is-disabled">
+                    <i class="p-icon--spinner u-animation--spin"></i>
+                    &nbsp;Waiting for push...</a>
+                </div>
+              </div>
+            </div>
+          </section>
+        </li>
+      </ol>
+    </div>
+  </div>
+  {% else %}
   <div class="p-strip is-shallow u-no-padding--top">
     <div class="row">
       <h4>Before you publish your snap, you'll need an Ubuntu One account</h4>
       <p>Gain access to a host of great features within snapcraft.io such as your very own store listing page, publisher dashboard and snap usage metrics.</p>
     </div>
-
     <div class="row">
       <div class="col-4 col-small-1 col-medium-2">
         <img height="193" width="308" src="https://assets.ubuntu.com/v1/e3eacb56-fsf-publisher-listing.png" />
@@ -20,7 +98,6 @@
       </div>
     </div>
   </div>
-
   <div class="row">
     <div class="p-accordion" role="tablist" aria-multiselect="true">
       <ol class="p-accordion__list">
@@ -121,6 +198,7 @@
       </ol>
     </div>
   </div>
+  {% endif %}
 {% endblock %}
 
 {% block fsf_pagination %}

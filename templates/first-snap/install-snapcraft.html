@@ -39,9 +39,15 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/first-snap/">
-    &lsaquo; Previous: Select language
-  </a>
+  {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
+    <a class="p-button--neutral" href="/first-snap/{{ language }}/create-account">
+      &lsaquo; Previous: Create account
+    </a>
+  {% else %}
+    <a class="p-button--neutral" href="/first-snap/">
+      &lsaquo; Previous: Select language
+    </a>
+  {% endif %}
 
   <a class="p-button--positive is-disabled u-float-right u-no-margin--right" id="js-pagination-next">
     Next: Package snap &rsaquo;
