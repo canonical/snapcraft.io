@@ -17,28 +17,32 @@ export default function triggerEventWhenVisible(selector) {
   const el = document.querySelector(selector);
   const origin = window.location.href;
 
-  if (isInViewport(el)) {
-    triggerEvent(
-      "element-visible",
-      origin,
-      selector,
-      `Element visible on screen: ${selector}`
-    );
+  if (el) {
+    if (isInViewport(el)) {
+      triggerEvent(
+        "element-visible",
+        origin,
+        selector,
+        `Element visible on screen: ${selector}`
+      );
+    } else {
+      let triggered = false;
+      window.addEventListener(
+        "scroll",
+        debounce(() => {
+          if (!triggered && isInViewport(el)) {
+            triggerEvent(
+              "element-visible",
+              origin,
+              selector,
+              `Element visible on screen: ${selector}`
+            );
+            triggered = true;
+          }
+        }, 500)
+      );
+    }
   } else {
-    let triggered = false;
-    window.addEventListener(
-      "scroll",
-      debounce(() => {
-        if (!triggered && isInViewport(el)) {
-          triggerEvent(
-            "element-visible",
-            origin,
-            selector,
-            `Element visible on screen: ${selector}`
-          );
-          triggered = true;
-        }
-      }, 500)
-    );
+    throw new Error(`${selector} does not exist`);
   }
 }
