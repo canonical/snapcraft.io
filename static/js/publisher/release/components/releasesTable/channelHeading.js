@@ -240,7 +240,7 @@ const ReleasesTableChannelHeading = (props) => {
       channelVersion = "Multiple versions";
     }
 
-    isLaunchpadBuild = Object.keys(buildMap).length === 1;
+    isLaunchpadBuild = Object.keys(buildMap).length > 0;
     if (isLaunchpadBuild) {
       channelBuild = Object.keys(buildMap)[0];
       channelBuildDate =
