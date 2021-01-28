@@ -16,20 +16,6 @@ def get_n_random_snaps(snaps, choice_number):
     return snaps
 
 
-def get_searched_snaps(search_results):
-    """Get search snaps from API response
-
-    :param search_results: the body responsed by the API
-
-    :returns: The list of the searched snaps
-    """
-    return (
-        search_results["_embedded"]["clickindex:package"]
-        if "_embedded" in search_results
-        else []
-    )
-
-
 def get_snap_banner_url(snap_result):
     """Get snaps banner url from media object
 

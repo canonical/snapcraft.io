@@ -433,7 +433,7 @@ def snap_details_views(store, api, handle_errors):
 
         featured_snaps = [
             snap
-            for snap in logic.get_searched_snaps(featured_snaps_results)
+            for snap in featured_snaps_results["results"]
             if snap["package_name"] != snap_name
         ][:12]
 

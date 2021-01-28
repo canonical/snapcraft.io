@@ -72,12 +72,10 @@ def store_blueprint(store_query=None):
         categories = logic.get_categories(categories_results)
 
         try:
-            featured_snaps_results = api.get_featured_items()
+            featured_snaps = api.get_featured_items()["results"]
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
             return flask.abort(status_code)
-
-        featured_snaps = logic.get_searched_snaps(featured_snaps_results)
 
         if not featured_snaps:
             return flask.abort(503)
@@ -111,12 +109,10 @@ def store_blueprint(store_query=None):
         status_code = 200
 
         try:
-            snaps_results = api.get_all_items(size=16)
+            snaps = api.get_all_items(size=16)["results"]
         except (StoreApiError, ApiError) as api_error:
-            snaps_results = []
+            snaps = []
             status_code, error_info = _handle_error(api_error)
-
-        snaps = logic.get_searched_snaps(snaps_results)
 
         return (
             flask.render_template(
@@ -170,7 +166,7 @@ def store_blueprint(store_query=None):
         else:
             total_results_count = None
 
-        snaps_results = logic.get_searched_snaps(searched_results)
+        snaps_results = searched_results["results"]
 
         links = {}
 
@@ -263,7 +259,7 @@ def store_blueprint(store_query=None):
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
 
-        snaps_results = logic.get_searched_snaps(searched_results)
+        snaps_results = searched_results["results"]
         links = logic.get_pages_details(
             flask.request.base_url,
             (
@@ -305,15 +301,14 @@ def store_blueprint(store_query=None):
         if "publishers" in context:
             context["snaps"] = []
             for publisher in context["publishers"]:
-                searched_results = []
+                snaps_results = []
                 try:
-                    searched_results = api.get_publisher_items(
+                    snaps_results = api.get_publisher_items(
                         publisher, size=500, page=1
-                    )
+                    )["results"]
                 except StoreApiError:
                     pass
 
-                snaps_results = logic.get_searched_snaps(searched_results)
                 context["snaps"].extend(
                     [snap for snap in snaps_results if snap["apps"]]
                 )
@@ -341,16 +336,14 @@ def store_blueprint(store_query=None):
     def store_category(category):
         status_code = 200
         error_info = {}
-        category_results = []
+        snaps_results = []
 
         try:
-            category_results = api.get_category_items(
+            snaps_results = api.get_category_items(
                 category=category, size=10, page=1
-            )
+            )["results"]
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
-
-        snaps_results = logic.get_searched_snaps(category_results)
 
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
@@ -376,20 +369,18 @@ def store_blueprint(store_query=None):
 
     @store.route("/store/featured-snaps/<category>")
     def featured_snaps_in_category(category):
-        category_results = []
+        snaps_results = []
 
         try:
-            category_results = api.get_category_items(
+            snaps_results = api.get_category_items(
                 category=category, size=3, page=1
-            )
+            )["results"]
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
             return (
                 flask.jsonify({"error": error_info}),
                 status_code,
             )
-
-        snaps_results = logic.get_searched_snaps(category_results)
 
         return flask.jsonify(snaps_results)
 
