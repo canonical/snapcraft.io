@@ -159,6 +159,7 @@ def convert_channel_maps(channel_map):
     :returns: The channel maps reshaped
     """
     channel_map_restruct = {}
+
     for channel in channel_map:
         arch = channel.get("channel").get("architecture")
         track = channel.get("channel").get("track")
@@ -168,13 +169,14 @@ def convert_channel_maps(channel_map):
             channel_map_restruct[arch][track] = []
 
         info = {
-            "created-at": convert_date(channel.get("created-at")),
+            "released-at": convert_date(channel["channel"].get("released-at")),
             "version": channel.get("version"),
-            "channel": channel.get("channel").get("name"),
-            "risk": channel.get("channel").get("risk"),
+            "channel": channel["channel"].get("name"),
+            "risk": channel["channel"].get("risk"),
             "confinement": channel.get("confinement"),
-            "size": channel.get("download").get("size"),
+            "size": channel["download"].get("size"),
         }
+
         channel_map_restruct[arch][track].append(info)
 
     return channel_map_restruct

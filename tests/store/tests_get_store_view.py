@@ -45,14 +45,12 @@ class GetStoreViewTest(TestCase):
     def test_get_store_view(self):
         payload_categories = {}
         payload_featured_snaps = {
-            "_embedded": {
-                "clickindex:package": [
-                    {
-                        "media": [{"type": "icon", "url": "test.png"}],
-                        "package_name": "featured_test",
-                    }
-                ]
-            },
+            "results": [
+                {
+                    "media": [{"type": "icon", "url": "test.png"}],
+                    "package_name": "featured_test",
+                }
+            ],
             "total": 1,
         }
 
@@ -85,14 +83,12 @@ class GetStoreViewTest(TestCase):
     def test_get_store_view_with_featured(self):
         payload_categories = {}
         payload_featured_snaps = {
-            "_embedded": {
-                "clickindex:package": [
-                    {
-                        "media": [{"type": "icon", "url": "test.png"}],
-                        "package_name": "featured_test",
-                    }
-                ]
-            },
+            "results": [
+                {
+                    "media": [{"type": "icon", "url": "test.png"}],
+                    "package_name": "featured_test",
+                }
+            ],
             "total": 1,
         }
 
@@ -125,14 +121,12 @@ class GetStoreViewTest(TestCase):
     def test_get_store_view_fail_categories(self):
         payload_categories = {}
         payload_featured_snaps = {
-            "_embedded": {
-                "clickindex:package": [
-                    {
-                        "media": [{"type": "icon", "url": "test.png"}],
-                        "package_name": "featured_test",
-                    }
-                ]
-            },
+            "results": [
+                {
+                    "media": [{"type": "icon", "url": "test.png"}],
+                    "package_name": "featured_test",
+                }
+            ],
             "total": 1,
         }
 
