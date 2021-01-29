@@ -80,7 +80,7 @@
             <tr>
               <td>{% if track == "latest"%}{{ track }}/{% endif %}{{ release.channel }}</td>
               <td class="u-ellipsis">{{ release.version }}</td>
-              <td>{{ release["created-at"] }}</td>
+              <td>{{ release["released-at"] }}</td>
             </tr>
             {% endfor %}
           {% endfor %}

@@ -386,7 +386,7 @@ class ChannelMap {
    * Prepare the channel map tables
    *
    * @param {Object} archData
-   * @param {Array.<{channel: string, confinement: string, 'created-at': string, risk: string, size: number, version: string}>} archData.track
+   * @param {Array.<{channel: string, confinement: string, 'released-at': string, risk: string, size: number, version: string}>} archData.track
    */
   prepareTable(archData) {
     const tbodyEl = this.channelMapEl.querySelector(
@@ -447,7 +447,7 @@ class ChannelMap {
           trackName,
           trackInfo["risk"],
           trackInfo["version"],
-          trackInfo["created-at"],
+          trackInfo["released-at"],
           trackInfo["confinement"],
         ]);
       });

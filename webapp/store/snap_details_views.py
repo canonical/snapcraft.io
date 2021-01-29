@@ -86,7 +86,7 @@ def snap_details_views(store, api, handle_errors):
             channel_maps_list, default_track, lowest_risk_available
         )
 
-        last_updated = latest_channel["created-at"]
+        last_updated = latest_channel["channel"]["released-at"]
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
@@ -427,13 +427,15 @@ def snap_details_views(store, api, handle_errors):
         )
 
         try:
-            featured_snaps_results = api.get_featured_items(size=13, page=1)
+            featured_snaps_results = api.get_featured_items(
+                size=13, page=1
+            ).get("results", [])
         except StoreApiError:
             featured_snaps_results = []
 
         featured_snaps = [
             snap
-            for snap in logic.get_searched_snaps(featured_snaps_results)
+            for snap in featured_snaps_results
             if snap["package_name"] != snap_name
         ][:12]
 

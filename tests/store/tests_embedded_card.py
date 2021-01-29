@@ -34,6 +34,7 @@ class GetEmbeddedCardTest(TestCase):
                     "name": "stable",
                     "risk": "stable",
                     "track": "latest",
+                    "released-at": "2018-09-18T14:45:28.064633+00:00",
                 },
                 "created-at": "2018-09-18T14:45:28.064633+00:00",
                 "version": "1.0",

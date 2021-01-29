@@ -22,6 +22,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -36,7 +37,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -56,6 +57,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -68,6 +70,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track1",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -81,7 +84,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -91,7 +94,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track1": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -111,6 +114,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -123,6 +127,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch1",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -137,7 +142,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -149,7 +154,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
