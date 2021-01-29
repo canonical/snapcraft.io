@@ -2,35 +2,44 @@
   <div class="row">
     <ul class="p-breadcrumbs p-heading--4" style="max-width: 100%;">
       <li class="p-breadcrumbs__item">
-        {% if fsf_step == 'install' or fsf_step == 'package' or fsf_step == 'build_and_test' or fsf_step == 'push' %}
+        {% if fsf_step in ['create_account', 'install', 'package', 'build_and_test', 'push']  %}
           <a href="/first-snap/">Select language</a>
         {% else %}
           Select language
         {% endif %}
       </li>
-      <li class="p-breadcrumbs__item{% if fsf_step == 'language' %} is-disabled{% endif %}">
-        {% if fsf_step == 'package' or fsf_step == 'build_and_test' or fsf_step == 'push' %}
+      {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
+        <li class="p-breadcrumbs__item">
+          {% if fsf_step in ['install', 'package', 'build_and_test', 'push']  %}
+            <a href="/first-snap/{{ language }}/create-account">Create an account</a>
+          {% else %}
+            Create an account
+          {% endif %}
+        </li>
+      {% endif %}
+      <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account'] %} is-disabled{% endif %}">
+        {% if fsf_step in ['package', 'build_and_test', 'push'] %}
           <a href="/first-snap/{{ language }}">Install Snapcraft</a>
         {% else %}
           Install Snapcraft
         {% endif %}
       </li>
-      <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' %} is-disabled{% endif %}">
-        {% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'package' %}
+      <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account', 'install'] %} is-disabled{% endif %}">
+        {% if fsf_step in ['language', 'create_account', 'install', 'package'] %}
           Package snap
         {% else %}
           <a href="/first-snap/{{ language }}/{{ os }}/package">Package snap</a>
         {% endif %}
       </li>
-      <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' %} is-disabled{% endif %}">
-        {% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'build_and_test' %}
+      <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account', 'install'] %} is-disabled{% endif %}">
+        {% if fsf_step in ['language', 'create_account', 'install', 'build_and_test'] %}
           Build & test snap
         {% else %}
           <a href="/first-snap/{{ language }}/{{ os }}/build-and-test">Build & test snap</a>
         {% endif %}
       </li>
-      <li class="p-breadcrumbs__item{% if fsf_step == 'language' or fsf_step == 'install' %} is-disabled{% endif %}">
-        {% if fsf_step == 'language' or fsf_step == 'install' or fsf_step == 'push' %}
+      <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account', 'install'] %} is-disabled{% endif %}">
+        {% if fsf_step in ['language', 'create_account', 'install', 'push'] %}
           Publish to store
         {% else %}
           <a href="/first-snap/{{ language }}/{{ os }}/push">Publish to store</a>

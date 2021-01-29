@@ -1,0 +1,108 @@
+{% set fsf_step = "create_account" %}
+{% extends "first-snap/_layout_fsf.html" %}
+
+{% block fsf_content %}
+<div class="row">
+  {% if path.startswith("/first-snap-2") %}
+    <h4>Before you start, you'll need an ubuntu One account.</h4>
+    <p>Publish snaps to the store, gain access to a host of great features within <a href="/">snapcraft.io</a> such as your very own store listing page, publisher dashboard and snap usage metrics.</p>
+    <p class="u-no-margin--bottom"><a class="p-button--positive" href="/first-snap/{{ language }}/"><span class="p-link--external">Register/Sign in&hellip;</span></a></p>
+    <div class="row p-strip is-shallow">
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/890afaac-2.jpg",
+            alt="",
+            width="257",
+            height="200",
+            hi_def=True,
+            loading="eager"
+          ) | safe
+        }}
+      </div>
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/3220411b-fsf-publisher-dashboard.png",
+            alt="",
+            width="277",
+            height="200",
+            hi_def=True,
+            loading="eager"
+          ) | safe
+        }}
+      </div>
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/f38dc980-3.jpg",
+            alt="",
+            width="284",
+            height="200",
+            hi_def=True,
+            loading="eager"
+          ) | safe
+        }}
+      </div>
+    </div>
+    <p>
+      {{ image (
+          url="https://assets.ubuntu.com/v1/a27e36a1-Screenshot+from+2021-01-26+13-45-29.png",
+          alt="",
+          width="479",
+          height="250",
+          hi_def=True,
+          loading="eager"
+          ) | safe
+      }}
+    </p>
+  {% elif path.startswith("/first-snap-3")%}
+    <h4>Let's build a snap together</h4>
+    <p>The next few steps will guide you to create a snap and publish it to the store. To get started, first create a developer account.</p>
+    <p>Creating a developer account enables you to publish a snap. Your account lets you trigger automatic builds, customize and see the popularity of your snap.</p>
+    <div class="row p-strip is-shallow">
+      <div class="col-4">
+        {{
+        image(
+          url="https://assets.ubuntu.com/v1/88571033-1.jpg",
+          alt="",
+          width="257",
+          height="200",
+          hi_def=True,
+          loading="eager"
+          ) | safe
+        }}
+        <p><small>Craft your snap’s yaml</small></p>
+      </div>
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/890afaac-2.jpg",
+            alt="",
+            width="277",
+            height="200",
+            hi_def=True,
+            loading="eager"
+          ) | safe
+        }}
+        <p><small>Upload it to the store</small></p>
+      </div>
+      <div class="col-4">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/f38dc980-3.jpg",
+            alt="",
+            width="284",
+            height="200",
+            hi_def=True,
+            loading="eager"
+          ) | safe
+        }}
+        <p><small>Monitor your snap’s growth</small></p>
+      </div>
+    </div>
+    <p class="u-no-margin--bottom"><a class="p-button--positive" href="/first-snap/{{ language }}/"><span class="p-link--external">Register/Sign in&hellip;</span></a></p>
+  {% endif %}
+</div>
+{% endblock %}
+
