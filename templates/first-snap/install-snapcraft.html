@@ -40,11 +40,11 @@
 
 {% block fsf_pagination %}
   {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
-    <a class="p-button--neutral" href="/first-snap/{{ language }}/create-account">
+    <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}/create-account">
       &lsaquo; Previous: Create account
     </a>
   {% else %}
-    <a class="p-button--neutral" href="/first-snap/">
+    <a class="p-button--neutral" href="/{{ fsf_flow }}/">
       &lsaquo; Previous: Select language
     </a>
   {% endif %}
@@ -58,7 +58,7 @@
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function() {
-        snapcraft.public.fsf.firstSnapFlow.install({{ language|tojson }});
+        snapcraft.public.fsf.firstSnapFlow.install({{ language|tojson }}, "{{ fsf_flow }}");
       });
     });
   </script>

@@ -101,11 +101,11 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/first-snap/{{ language }}/{{ os }}/package">
+  <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/package">
     &lsaquo; Previous: Package snap
   </a>
 
-  <a class="p-button--positive u-float-right u-no-margin--right" href="/first-snap/{{ language }}/{{ os }}/push">
+  <a class="p-button--positive u-float-right u-no-margin--right" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/push">
     Next: Publish to store &rsaquo;
   </a>
 {% endblock %}
