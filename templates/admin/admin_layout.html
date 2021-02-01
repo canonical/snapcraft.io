@@ -43,6 +43,7 @@
 
   document.querySelector(".js-menu-close").addEventListener("click", function(e) {
     document.querySelector(".l-navigation").classList.add("is-collapsed");
+    document.activeElement.blur();
   });
 </script>
 {% endblock %}
