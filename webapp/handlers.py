@@ -68,6 +68,7 @@ def set_handlers(app):
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
             "install_snippet": template_utils.install_snippet,
+            "format_date": template_utils.format_date,
             "image": image_template,
         }
 

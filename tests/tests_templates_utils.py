@@ -96,3 +96,9 @@ class TemplateUtilsTest(unittest.TestCase):
     def test_static_url(self):
         result = template_utils.static_url("images/rocket.png")
         self.assertEqual(result, "/static/images/rocket.png?v=7d7c26f")
+
+    def test_format_date(self):
+        result = template_utils.format_date(
+            "2019-09-02T09:27:58.930567+00:00", "%d %B %Y"
+        )
+        self.assertEquals(result, "02 September 2019")
