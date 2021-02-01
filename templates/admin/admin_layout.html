@@ -4,14 +4,14 @@
 <div class="l-application" role="presentation">
   <div class="l-navigation-bar">
     <div class="u-clearfix">
-      <button class="u-float-right js-menu-toggle is-dense u-no-margin">Menu</button>
+      <button class="u-float-right js-menu-open is-dense u-no-margin">Menu</button>
     </div>
   </div>
 
-  <header class="l-navigation">
+  <header class="l-navigation is-collapsed">
     <div class="l-navigation__drawer">
-      <div class="demo-controls u-hide--large u-align--right">
-        <button class="js-menu-close is-dense u-no-margin u-hide--medium">Close</button>
+      <div class="u-hide--large u-align--right">
+        <button class="js-menu-close is-dense u-no-margin">Close</button>
       </div>
       {% include "admin/_navigation.html" %}
     </div>
@@ -37,11 +37,11 @@
 </div>
 
 <script>
-  document.querySelector(".js-menu-toggle").addEventListener("click", function() {
-    document.querySelector(".l-navigation").classList.toggle("is-collapsed");
+  document.querySelector(".js-menu-open").addEventListener("click", function() {
+    document.querySelector(".l-navigation").classList.remove("is-collapsed");
   });
 
-  document.querySelector(".js-menu-close").addEventListener("click", function() {
+  document.querySelector(".js-menu-close").addEventListener("click", function(e) {
     document.querySelector(".l-navigation").classList.add("is-collapsed");
   });
 </script>
