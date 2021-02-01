@@ -365,3 +365,9 @@ dl {
 .p-code-snippet__block.is-wrapped {
   white-space: pre-wrap;
 }
+
+// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3526
+code {
+  white-space: pre;
+  word-break: normal;
+}
