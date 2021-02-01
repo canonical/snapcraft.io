@@ -14,14 +14,22 @@
       <td rowspan="{{ snaps | length }}">{{ store.name }}</td>
       <td>{{ snaps[0].name }}</td>
       <td>-</td>
-      <td>-</td>
+      <td>
+        {% for user in snaps[0].users %}
+          {{ user.displayname }}
+        {% endfor %}
+      </td>
     </tr>
     {% for snap in snaps %}
       {% if loop.index > 1 %}
         <tr>
           <td>{{ snap.name }}</td>
           <td>-</td>
-          <td>-</td>
+          <td>
+            {% for user in snap.users %}
+              {{ user.displayname }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          </td>
         </tr>
       {% endif %}
     {% endfor %}
