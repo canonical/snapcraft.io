@@ -66,11 +66,11 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/first-snap/{{ language }}">
+  <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}">
     &lsaquo; Previous: Install Snapcraft
   </a>
 
-  <a class="p-button--positive u-float-right u-no-margin--right" href="/first-snap/{{ language }}/{{ os }}/build-and-test">
+  <a class="p-button--positive u-float-right u-no-margin--right" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/build-and-test">
     Next: Build &amp; test snap &rsaquo;
   </a>
 {% endblock %}

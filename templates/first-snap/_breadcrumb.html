@@ -11,7 +11,7 @@
       {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
         <li class="p-breadcrumbs__item">
           {% if fsf_step in ['install', 'package', 'build_and_test', 'push']  %}
-            <a href="/first-snap/{{ language }}/create-account">Create an account</a>
+            <a href="/{{ fsf_flow }}/{{ language }}/create-account">Create an account</a>
           {% else %}
             Create an account
           {% endif %}
@@ -19,7 +19,7 @@
       {% endif %}
       <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account'] %} is-disabled{% endif %}">
         {% if fsf_step in ['package', 'build_and_test', 'push'] %}
-          <a href="/first-snap/{{ language }}">Install Snapcraft</a>
+          <a href="/{{ fsf_flow }}/{{ language }}">Install Snapcraft</a>
         {% else %}
           Install Snapcraft
         {% endif %}
@@ -28,21 +28,21 @@
         {% if fsf_step in ['language', 'create_account', 'install', 'package'] %}
           Package snap
         {% else %}
-          <a href="/first-snap/{{ language }}/{{ os }}/package">Package snap</a>
+          <a href="/{{ fsf_flow }}/{{ language }}/{{ os }}/package">Package snap</a>
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account', 'install'] %} is-disabled{% endif %}">
         {% if fsf_step in ['language', 'create_account', 'install', 'build_and_test'] %}
           Build & test snap
         {% else %}
-          <a href="/first-snap/{{ language }}/{{ os }}/build-and-test">Build & test snap</a>
+          <a href="/{{ fsf_flow }}/{{ language }}/{{ os }}/build-and-test">Build & test snap</a>
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account', 'install'] %} is-disabled{% endif %}">
         {% if fsf_step in ['language', 'create_account', 'install', 'push'] %}
           Publish to store
         {% else %}
-          <a href="/first-snap/{{ language }}/{{ os }}/push">Publish to store</a>
+          <a href="/{{ fsf_flow }}/{{ language }}/{{ os }}/push">Publish to store</a>
         {% endif %}
       </li>
     </ul>

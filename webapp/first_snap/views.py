@@ -6,6 +6,7 @@ import flask
 from webapp import helpers
 
 YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
+FSF_FLOW = "first-snap"
 
 
 first_snap = flask.Blueprint(
@@ -54,15 +55,10 @@ def get_language(language):
     if not directory_exists(filename):
         return flask.abort(404)
 
-    context = {"language": language}
+    context = {"language": language, "fsf_flow": FSF_FLOW}
     return flask.render_template(
         "first-snap/install-snapcraft.html", **context
     )
-
-
-@first_snap.route("/<language>/create-account")
-def create_account(language):
-    return flask.redirect(f"/first-snap/{language}")
 
 
 @first_snap.route("/<language>/snapcraft.yaml")
@@ -123,6 +119,7 @@ def get_package(language, operating_system):
         "steps": steps,
         "snap_name": snap_name,
         "has_user_chosen_name": has_user_chosen_name,
+        "fsf_flow": FSF_FLOW,
     }
 
     snapcraft_yaml = helpers.get_yaml(
@@ -179,6 +176,7 @@ def get_build(language, operating_system):
         "build_steps": build_steps[operating_system_only][install_type],
         "test_steps": test_steps[operating_system_only],
         "snap_name": snap_name,
+        "fsf_flow": FSF_FLOW,
     }
 
     return flask.render_template("first-snap/build-and-test.html", **context)
@@ -223,6 +221,7 @@ def get_push(language, operating_system):
         "user": user,
         "snap_name": snap_name,
         "has_user_chosen_name": has_user_chosen_name,
+        "fsf_flow": FSF_FLOW,
     }
 
     return flask.render_template("first-snap/push.html", **context)
