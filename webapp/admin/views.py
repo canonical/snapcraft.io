@@ -76,6 +76,30 @@ def get_manage_store_snaps(store_id):
     )
 
 
+@admin.route("/admin/<store_id>/snaps/manage", methods=["POST"])
+@login_required
+def post_manage_store_snaps(store_id):
+    snaps = json.loads(flask.request.form.get("snaps"))
+
+    try:
+        admin_api.update_store_snaps(flask.session, store_id, snaps)
+        flask.flash("Changes saved", "positive")
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        for msg in msgs:
+            flask.flash(msg, "negative")
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.redirect(
+        flask.url_for(".get_manage_store_snaps", store_id=store_id)
+    )
+
+
 @admin.route("/admin/<store_id>/members")
 @login_required
 def get_members(store_id):
