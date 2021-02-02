@@ -12,7 +12,15 @@
   <tbody>
     <tr>
       <td rowspan="{{ snaps | length }}" aria-label="Published in">{{ store.name }}</td>
-      <td aria-label="Name">{{ snaps[0].name }}</td>
+      <td aria-label="Name">
+        {% if snaps[0].store == 'ubuntu' and not snap.private %}
+          <a href="/{{ snaps[0].name }}">
+        {% endif %}
+        {{ snaps[0].name }}
+        {% if snaps[0].store == 'ubuntu' and not snap.private %}
+          </a>
+        {% endif %}
+      </td>
       <td aria-label="Latest release">
         {% if snaps[0]["latest-release"].channel %}
           <div>
@@ -34,7 +42,15 @@
     {% for snap in snaps %}
       {% if loop.index > 1 %}
         <tr>
-          <td aria-label="Name">{{ snap.name }}</td>
+          <td aria-label="Name">
+            {% if snap.store == 'ubuntu' and not snap.private %}
+              <a href="/{{ snap.name }}">
+            {% endif %}
+            {{ snap.name }}
+            {% if snap.store == 'ubuntu' and not snap.private %}
+              </a>
+            {% endif %}
+          </td>
           <td aria-label="Latest release">
             {% if snap["latest-release"].channel %}
               <div>
