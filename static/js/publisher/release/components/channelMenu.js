@@ -29,7 +29,7 @@ export default class ChannelMenu extends Component {
     return (
       <span
         key={`promote-to-${channel}`}
-        className="p-tooltip p-tooltip--btm-center"
+        className="p-tooltip p-tooltip--right"
       >
         <span
           className={className}
