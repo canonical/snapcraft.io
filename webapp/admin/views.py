@@ -59,6 +59,23 @@ def get_store_snaps(store_id):
     )
 
 
+@admin.route("/admin/<store_id>/snaps/manage")
+@login_required
+def get_manage_store_snaps(store_id):
+    try:
+        stores = admin_api.get_stores(flask.session)
+        store = admin_api.get_store(flask.session, store_id)
+        snaps = admin_api.get_store_snaps(flask.session, store_id)
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.render_template(
+        "admin/manage_snaps.html", stores=stores, store=store, snaps=snaps
+    )
+
+
 @admin.route("/admin/<store_id>/members")
 @login_required
 def get_members(store_id):
