@@ -70,10 +70,15 @@
     <tr>
       <td>{{ store.name }}</td>
       <td colspan="{{ store.roles | length + 1 }}">
-        <table>
+        <table id="members-table" class="p-table--mobile-card">
           <thead>
             <tr>
-              <th>Name</th>
+              <th style="padding-top: 5px;">
+                <div class="u-hide--small">
+                  <label for="filter-members" class="u-hide">Filter members</label>
+                  <input type="text" name="filter-members" id="filter-members" class="is-dense" placeholder="Filter" style="min-width: 0;">
+                </div>
+              </th>
               {% for role in store.roles %}
               <th>
                 {{ role.label }}
@@ -87,9 +92,9 @@
           <tbody>
             {% for member in members %}
             <tr>
-              <td><i class="p-icon--user"></i> {{ member.displayname }}</td>
+              <td aria-label="Name"><i class="p-icon--user u-hide--small"></i> {{ member.displayname }}</td>
               {% for role in store.roles %}
-              <td>
+              <td aria-label="{{ role.role }}">
                 <label class="p-checkbox u-no-padding--top">
                   <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
                   <span class="p-checkbox__label u-hide">{{ role.label }}</span>
@@ -128,6 +133,7 @@
     snapcraft.public.modal.init("invite-modal");
     snapcraft.public.manageMembers.inviteMember();
     snapcraft.public.manageMembers.updateMembers({{ members | safe }});
+    snapcraft.public.manageMembers.filterMembers({{ members | safe }}, {{ store.roles | safe }});
   });
 </script>
 {% endblock %}

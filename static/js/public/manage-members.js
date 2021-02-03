@@ -1,3 +1,5 @@
+import debounce from "../libs/debounce";
+
 function inviteMember() {
   const inviteMemberForm = document.querySelector("#invite-member-form");
   const emailField = inviteMemberForm.querySelector("#invite-member-email");
@@ -138,4 +140,77 @@ function updateMembers(membersData) {
   });
 }
 
-export { inviteMember, updateMembers };
+function filterMembers(members, roles) {
+  members = members || [];
+  roles = roles || [];
+
+  const ROLES = {
+    admin: "admin",
+    reviewer: "review",
+    viewer: "view",
+    publisher: "access",
+  };
+
+  const membersTableBody = document.querySelector("#members-table tbody");
+  const filterMembersField = document.querySelector("#filter-members");
+
+  filterMembersField.addEventListener(
+    "keyup",
+    debounce((e) => {
+      const query = e.target.value.toLowerCase();
+      let filteredMembers = members.filter((member) => {
+        return (
+          member.displayname.toLowerCase().includes(query) ||
+          member.email.toLowerCase().includes(query) ||
+          member.username.toLowerCase().includes(query) ||
+          member.roles.includes(ROLES[query])
+        );
+      });
+
+      if (!query) {
+        filteredMembers = members;
+      }
+
+      membersTableBody.innerHTML = "";
+
+      filteredMembers.forEach((member) => {
+        membersTableBody.appendChild(buildMemberRow(member, roles));
+      });
+
+      updateMembers(filteredMembers);
+    }),
+    100
+  );
+}
+
+function buildMemberRow(member, roles) {
+  const tr = document.createElement("tr");
+
+  let rowContent = `
+    <td><i class="p-icon--user u-hide--small"></i> ${member.displayname}</td>
+  `;
+
+  roles.forEach((role) => {
+    rowContent += `<td aria-label="${role.role}">`;
+    rowContent += "<label class='p-checkbox u-no-padding--top'>";
+    rowContent += `
+      <input
+        type="checkbox"
+        aria-labelledby="role-${role.role}"
+        class="p-checkbox__input js-role-checkbox"
+        name="${role.role}"
+        data-member-email="${member.email}"
+        ${member.roles.includes(role.role) ? "checked" : ""}
+      >
+      <span class="p-checkbox__label u-hide">${role.label}</span>
+    `;
+    rowContent += "</label>";
+    rowContent += "</td>";
+  });
+
+  tr.innerHTML = rowContent;
+
+  return tr;
+}
+
+export { inviteMember, updateMembers, filterMembers };
