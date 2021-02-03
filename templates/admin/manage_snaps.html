@@ -11,10 +11,11 @@
   <a href="/admin/{{ store.id }}/snaps">Back to snaps</a>
 </div>
 
-<table class="p-table--mobile-card">
+<table class="p-table--mobile-card" id="snaps-table">
   <thead>
     <tr>
       <th>Published in</th>
+      <th width="34">&nbsp;</th>
       <th>Name</th>
       <th>Latest release</th>
       <th>Collaborators</th>
@@ -23,6 +24,12 @@
   <tbody>
     <tr>
       <td rowspan="{{ snaps | length }}" aria-label="Published in">{{ store.name }}</td>
+      <td aria-label="Add or remove">
+        <label class="p-checkbox">
+          <input type="checkbox" aria-labelledby="add-or-remove" class="p-checkbox__input u-no-margin--top" data-snap-name="{{ snaps[0].name }}" checked>
+          <span class="p-checkbox__label u-hide" id="add-or-remove">Add or remove snap</span>
+        </label>
+      </td>
       <td aria-label="Name">{{ snaps[0].name }}</td>
       <td aria-label="Latest release">
         {% if snaps[0]["latest-release"].channel %}
@@ -45,6 +52,12 @@
     {% for snap in snaps %}
       {% if loop.index > 1 %}
         <tr>
+          <td aria-label="Add or remove">
+            <label class="p-checkbox">
+              <input type="checkbox" aria-labelledby="add-or-remove" class="p-checkbox__input u-no-margin--top" data-snap-name="{{ snap.name }}" checked>
+              <span class="p-checkbox__label u-hide" id="add-or-remove">Add or remove snap</span>
+            </label>
+          </td>
           <td aria-label="Name">{{ snap.name }}</td>
           <td aria-label="Latest release">
             {% if snap["latest-release"].channel %}
@@ -71,4 +84,26 @@
   </tbody>
 </table>
 
+<hr>
+
+<form id="manage-snaps-form" method="post">
+  <input type="hidden" name="snaps" id="snaps" value="">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="u-align--right">
+    <button type="submit" class="p-button--positive js-save-button" disabled>Save changes</button>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/manage-snaps.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    snapcraft.public.manageSnaps.updateSnaps();
+  });
+</script>
 {% endblock %}

@@ -48,6 +48,10 @@ module.exports = [
     ],
   },
   {
+    test: require.resolve(__dirname + "/static/js/public/manage-snaps.js"),
+    use: ["expose-loader?exposes=snapcraft.public.manageSnaps", "babel-loader"],
+  },
+  {
     test: require.resolve(__dirname + "/static/js/public/modal.js"),
     use: ["expose-loader?exposes=snapcraft.public.modal", "babel-loader"],
   },
