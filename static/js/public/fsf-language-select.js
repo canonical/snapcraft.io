@@ -36,6 +36,12 @@ function initFSFLanguageSelect(rootEl) {
 
   const openDetails = (link) => {
     if (link && link.dataset.flowLink) {
+      // Trigger the first snap flow ABC test. Can be removed once the test is finished
+      const { dataLayer } = window;
+      if (dataLayer) {
+        dataLayer.push({ event: "optimize.activate" });
+      }
+
       // find where the next row of links starts to insert details panel before
       var top = link.offsetTop;
 
