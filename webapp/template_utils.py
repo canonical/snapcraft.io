@@ -129,3 +129,17 @@ def format_date(timestamp, format):
     datestring = parser.parse(timestamp)
 
     return datestring.strftime(format)
+
+
+def format_member_role(role):
+    """Template function that returns the
+    correct label for a members role
+    """
+    roles = {
+        "admin": "admin",
+        "review": "reviewer",
+        "view": "viewer",
+        "access": "publisher",
+    }
+
+    return roles[role]

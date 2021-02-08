@@ -1,0 +1,74 @@
+@mixin p-snapcraft-button-group {
+  .p-button-group {
+    align-content: center;
+    column-gap: 1rem;
+    display: flex;
+
+    button:hover {
+      border-color: $color-mid-light;
+    }
+
+    a:visited {
+      color: $color-dark;
+    }
+
+    a:hover {
+      @include vf-animation(#{background-color, border-color}, fast, in);
+
+      background-color: #f2f2f2;
+      text-decoration: none;
+    }
+
+    &__label {
+      margin-right: 0.5rem;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
+    }
+
+    &__buttons {
+      border: 1px solid $color-mid-dark;
+      border-radius: 0.125rem;
+      display: flex;
+      margin-bottom: 1rem;
+      width: auto;
+    }
+
+    &__inner {
+      display: flex;
+      width: 100%;
+    }
+
+    &__button {
+      align-items: center;
+      border: none;
+      border-right: 1px solid $color-mid-dark;
+      color: $color-dark;
+      display: flex;
+      flex: 1;
+      height: 100%;
+      line-height: 1.5;
+      margin: 0 !important; // Required to override Vanilla button:not(:last-of-type):not(:only-of-type)
+      padding: calc(0.4rem - 1px) 1rem;
+      text-align: center;
+      white-space: nowrap;
+
+      &.is-smaller {
+        padding: 0.25rem 0.5rem;
+      }
+
+      &.is-selected {
+        background: $color-mid-x-light;
+      }
+
+      &:last-child {
+        border: 0;
+      }
+
+      [class^="p-icon"] {
+        margin-inline-end: 0.5rem;
+      }
+    }
+  }
+}

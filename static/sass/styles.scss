@@ -329,6 +329,14 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-p-videos;
 
+@import "pattern_p-button-group";
+
+@include p-snapcraft-button-group;
+
+@import "snapcraft_p-action-form";
+
+@include snapcraft-action-form;
+
 dl {
   margin-bottom: $spv-outer--scaleable;
 }

@@ -102,3 +102,16 @@ class TemplateUtilsTest(unittest.TestCase):
             "2019-09-02T09:27:58.930567+00:00", "%d %B %Y"
         )
         self.assertEquals(result, "02 September 2019")
+
+    def test_format_member_role(self):
+        result = template_utils.format_member_role("admin")
+        self.assertEquals(result, "admin")
+
+        result = template_utils.format_member_role("review")
+        self.assertEquals(result, "reviewer")
+
+        result = template_utils.format_member_role("view")
+        self.assertEquals(result, "viewer")
+
+        result = template_utils.format_member_role("access")
+        self.assertEquals(result, "publisher")

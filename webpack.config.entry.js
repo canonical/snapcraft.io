@@ -21,4 +21,5 @@ module.exports = {
   "distro-install": "./static/js/public/distro-install.js",
   "publisher-details": "./static/js/public/publisher-details.js",
   "brand-store": "./static/js/public/brand-store.js",
+  "manage-invites": "./static/js/public/manage-invites.js",
 };
