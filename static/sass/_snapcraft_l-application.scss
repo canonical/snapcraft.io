@@ -29,10 +29,27 @@
     }
 
     .l-application__header {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
       margin-bottom: $sp-medium;
+
+      @media screen and (min-width: $breakpoint-medium) {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .l-application__back-link {
+      display: inline-block;
+
+      @media screen and (max-width: $breakpoint-medium) {
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .l-application__heading {
+      @media screen and (min-width: $breakpoint-medium) {
+        margin-bottom: 0 !important;
+      }
     }
   }
 }
