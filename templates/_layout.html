@@ -70,7 +70,7 @@
   <body class="has-sticky-footer">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KCGXHQS"
-      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      height="0" width="0" style="display: none; visibility: hidden;"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     {% block header %}
@@ -117,5 +117,10 @@
     </script>
 
     {% block meta_schema %}{% endblock %}
+
+    <noscript>
+      <img src="/snapcraft-no-js.png" alt="" width="1" height="1">
+    </noscript>
+    <img src="/snapcraft-with-js.png" alt="" width="1" height="1">
   </body>
 </html>
