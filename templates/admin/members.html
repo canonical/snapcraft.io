@@ -10,22 +10,20 @@
   <h2 class="p-heading--4">Members</h2>
   <a class="p-button" href="/admin/{{ store.id }}/members/manage">Manage members</a>
 </div>
-<table>
+<table class="p-table--mobile-card">
   <thead>
     <tr>
       <th>Name</th>
       <th>Email</th>
       <th>Access</th>
-      <th>Store</th>
     </tr>
   </thead>
   <tbody>
     {% for member in members %}
     <tr>
-      <td rowspan="1">{{ member.displayname }}</td>
-      <td rowspan="1">{{ member.email }}</td>
-      <td>{% for r in member.roles %}{{ r | capitalize }}{{ ", " if not loop.last }}{% endfor %}</td>
-      <td><a href="/admin/{{ store.id }}/snaps">{{ store.name }}</a></td>
+      <td aria-label="Name" rowspan="1">{{ member.displayname }}</td>
+      <td aria-label="Email" rowspan="1">{{ member.email }}</td>
+      <td aria-label="Access">{% for r in member.roles %}{{ r | capitalize }}{{ ", " if not loop.last }}{% endfor %}</td>
     </tr>
     {% endfor %}
   </tbody>
