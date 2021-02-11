@@ -1,11 +1,11 @@
 import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
-from canonicalwebteam import image_template
 import flask
-
 import prometheus_client
+import user_agents
 import webapp.template_utils as template_utils
+from canonicalwebteam import image_template
 from webapp import authentication
 
 from datetime import datetime
@@ -17,6 +17,12 @@ badge_counter = prometheus_client.Counter(
 badge_logged_in_counter = prometheus_client.Counter(
     "badge_logged_in_counter",
     "A counter of badges requests of logged in users",
+)
+
+accept_encoding_counter = prometheus_client.Counter(
+    "accept_encoding_counter",
+    "A counter for Accept-Encoding headers, split by browser",
+    ["accept_encoding", "browser_family"],
 )
 
 
@@ -114,6 +120,21 @@ def set_handlers(app):
 
     @app.before_request
     def prometheus_metrics():
+        # Accept-encoding counter
+        # ===
+        agent_string = flask.request.headers.get("User-Agent")
+
+        # Exclude probes, which happen behind the cache
+        if not agent_string.startswith(("kube-probe", "Prometheus")):
+            agent = user_agents.parse(agent_string or "")
+
+            accept_encoding_counter.labels(
+                accept_encoding=flask.request.headers.get("Accept-Encoding"),
+                browser_family=agent.browser.family,
+            ).inc()
+
+        # Badge counters
+        # ===
         if "/static/images/badges" in flask.request.url:
             if flask.session:
                 badge_logged_in_counter.inc()

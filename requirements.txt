@@ -21,6 +21,7 @@ requests==2.25.1
 responses==0.12.1
 ruamel.yaml==0.16.12
 vcrpy-unittest==0.1.7
+user-agents==2.2.0
 
 # Development dependencies
 Flask-Testing==0.8.1
