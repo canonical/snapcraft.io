@@ -144,13 +144,6 @@ function filterMembers(members, roles) {
   members = members || [];
   roles = roles || [];
 
-  const ROLES = {
-    admin: "admin",
-    reviewer: "review",
-    viewer: "view",
-    publisher: "access",
-  };
-
   const membersTableBody = document.querySelector("#members-table tbody");
   const filterMembersField = document.querySelector("#filter-members");
 
@@ -162,8 +155,7 @@ function filterMembers(members, roles) {
         return (
           member.displayname.toLowerCase().includes(query) ||
           member.email.toLowerCase().includes(query) ||
-          member.username.toLowerCase().includes(query) ||
-          member.roles.includes(ROLES[query])
+          member.username.toLowerCase().includes(query)
         );
       });
 

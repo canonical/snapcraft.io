@@ -6,7 +6,6 @@
 <table class="p-table--mobile-card">
   <thead>
     <tr>
-      <th>Published in</th>
       <th>Name</th>
       <th>Latest release</th>
       <th>Collaborators</th>
@@ -14,7 +13,6 @@
   </thead>
   <tbody>
     <tr>
-      <td rowspan="{{ snaps | length }}" aria-label="Published in">{{ store.name }}</td>
       <td aria-label="Name">
         {% if snaps[0].store == 'ubuntu' and not snap.private %}
           <a href="/{{ snaps[0].name }}">

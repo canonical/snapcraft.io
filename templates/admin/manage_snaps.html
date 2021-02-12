@@ -14,7 +14,6 @@
 <table class="p-table--mobile-card" id="snaps-table">
   <thead>
     <tr>
-      <th>Published in</th>
       <th width="34">&nbsp;</th>
       <th>Name</th>
       <th>Latest release</th>
@@ -23,7 +22,6 @@
   </thead>
   <tbody>
     <tr>
-      <td rowspan="{{ snaps | length }}" aria-label="Published in">{{ store.name }}</td>
       <td aria-label="Add or remove">
         <label class="p-checkbox">
           <input type="checkbox" aria-labelledby="add-or-remove" class="p-checkbox__input u-no-margin--top" data-snap-name="{{ snaps[0].name }}" checked>
