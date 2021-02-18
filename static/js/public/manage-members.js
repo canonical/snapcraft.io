@@ -82,6 +82,7 @@ function updateMembers(membersData) {
     checkbox.addEventListener("change", function (e) {
       const target = e.target;
       const role = e.target.name;
+      const stateBox = target.nextElementSibling;
 
       const member = newData.find(function (data) {
         return data.email === target.dataset.memberEmail;
@@ -99,6 +100,23 @@ function updateMembers(membersData) {
         member.roles = member.roles.filter(function (data) {
           return data !== role;
         });
+      }
+
+      if (checkbox.checked && !originalMember.roles.includes(role)) {
+        stateBox.classList.add("add");
+        stateBox.classList.remove("remove");
+      }
+
+      if (!checkbox.checked && originalMember.roles.includes(role)) {
+        stateBox.classList.add("remove");
+        stateBox.classList.remove("add");
+      }
+
+      if (
+        (checkbox.checked && originalMember.roles.includes(role)) ||
+        (!checkbox.checked && !originalMember.roles.includes(role))
+      ) {
+        stateBox.classList.remove("add", "remove");
       }
 
       if (
