@@ -110,9 +110,37 @@ function updateMembers(membersData) {
         member.dirty = false;
       }
 
-      const dirtyState = newData.filter(function (data) {
-        return data.dirty;
+      const dirtyState = newData.filter((data) => data.dirty);
+
+      let changeCount = 0;
+
+      dirtyState.forEach((member) => {
+        const oldMember = membersData.find((data) => data.id === member.id);
+
+        let numberOfChanges = 0;
+
+        if (member.roles.length >= oldMember.roles.length) {
+          numberOfChanges = member.roles.filter((x) => {
+            return oldMember.roles.indexOf(x) === -1;
+          }).length;
+        } else {
+          numberOfChanges = oldMember.roles.filter((x) => {
+            return member.roles.indexOf(x) === -1;
+          }).length;
+        }
+
+        changeCount += numberOfChanges;
       });
+
+      if (dirtyState.length) {
+        if (changeCount === 1) {
+          saveButton.innerText = "Save 1 change";
+        } else {
+          saveButton.innerText = `Save ${changeCount} changes`;
+        }
+      } else {
+        saveButton.innerText = "Save changes";
+      }
 
       saveButton.disabled = !dirtyState.length;
     });
