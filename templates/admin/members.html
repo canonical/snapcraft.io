@@ -6,10 +6,22 @@
 
 {% block admin_content %}
 
-<div class="l-application__header">
-  <h2 class="p-heading--4">Members</h2>
-  <a class="p-button" href="/admin/{{ store.id }}/members/manage">Manage members</a>
-</div>
+<ul class="p-inline-list--stretch">
+  <li class="p-inline-list__item u-no-margin--right">
+    <div class="p-button-group">
+      <div class="p-button-group__inner">
+        <div class="p-button-group__buttons">
+          <a href="/admin/{{ store.id }}/members" class="p-button-group__button is-selected">Members</a>
+          <a href="/admin/{{ store.id }}/members/invites" class="p-button-group__button">Invites</a>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li class="p-inline-list__item u-align--right">
+    <a class="p-button" href="/admin/{{ store.id }}/members/manage">Manage members</a>
+  </li>
+</ul>
+
 <table class="p-table--mobile-card">
   <thead>
     <tr>

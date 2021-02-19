@@ -233,4 +233,9 @@ function buildMemberRow(member, roles) {
   return tr;
 }
 
-export { inviteMember, updateMembers, filterMembers };
+function initManageMembersTable(members, roles) {
+  updateMembers(members);
+  filterMembers(members, roles);
+}
+
+export { inviteMember, initManageMembersTable };

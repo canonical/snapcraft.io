@@ -6,16 +6,23 @@
 
 {% block admin_content %}
 
-<a class="l-application__back-link" href="/admin/{{ store.id }}/members">&lsaquo;&nbsp;Back to members</a>
-<div class="l-application__header">
-  <h2 class="l-application__heading p-heading--4">Manage members</h2>
-  <button id="show-invite-modal" aria-controls="invite-modal">
-    <i class="p-icon--plus"></i>&nbsp;Invite member
-  </button>
-</div>
+<ul class="p-inline-list--stretch u-no-margin--bottom">
+  <li class="p-inline-list__item u-no-margin--right">
+    <p class="u-no-margin--bottom">
+      <a href="/admin/{{ store.id }}/members">&lsaquo;&nbsp;Back to members</a>
+    </p>
+  </li>
+  <li class="p-inline-list__item u-align--right">
+    <button id="show-invite-modal" style="margin-bottom: 0;" aria-controls="invite-modal">
+      <i class="p-icon--plus"></i>&nbsp;Invite member
+    </button>
+  </li>
+</ul>
+
+<h1 class="p-heading--4">Manage members</h1>
 
 <div class="p-modal" id="invite-modal" style="display: none; z-index: 110;">
-  <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title" style="overflow: auto;">
+  <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title">
     <header class="p-modal__header">
       <h2 class="p-modal__title" id="invite-modal-title">Invite member</h2>
       <button class="p-modal__close" aria-label="Close active modal" aria-controls="invite-modal">Close</button>
@@ -56,8 +63,8 @@
     <tr>
       <th style="padding-top: 5px; width: 40%;">
         <div class="u-hide--small">
-          <label for="filter-members" class="u-hide">Filter members</label>
-          <input type="text" name="filter-members" id="filter-members" class="is-dense" placeholder="Filter" style="min-width: 0;">
+          <label for="filter-members" class="u-hide">Search for user</label>
+          <input type="text" name="filter-members" id="filter-members" class="is-dense" placeholder="Search for user" style="min-width: 0;">
         </div>
       </th>
       {% for role in store.roles %}
@@ -98,7 +105,6 @@
     <button type="submit" class="p-button--positive js-save-button" disabled>Save changes</button>
   </div>
 </form>
-
 {% endblock %}
 
 {% block scripts_includes %}
@@ -111,8 +117,7 @@
   window.addEventListener("DOMContentLoaded", function () {
     snapcraft.public.modal.init("invite-modal");
     snapcraft.public.manageMembers.inviteMember();
-    snapcraft.public.manageMembers.updateMembers({{ members | safe }});
-    snapcraft.public.manageMembers.filterMembers({{ members | safe }}, {{ store.roles | safe }});
+    snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }}, {{ store.roles | safe }});
   });
 </script>
 {% endblock %}

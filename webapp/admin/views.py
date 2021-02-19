@@ -124,6 +124,7 @@ def get_manage_members(store_id):
         stores = admin_api.get_stores(flask.session)
         store = admin_api.get_store(flask.session, store_id)
         members = admin_api.get_store_members(flask.session, store_id)
+        invites = admin_api.get_store_invites(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
@@ -134,6 +135,7 @@ def get_manage_members(store_id):
         stores=stores,
         store=store,
         members=members,
+        invites=invites,
     )
 
 
@@ -182,6 +184,76 @@ def post_invite_members(store_id):
 
     return flask.redirect(
         flask.url_for(".get_manage_members", store_id=store_id)
+    )
+
+
+@admin.route("/admin/<store_id>/members/invite/update", methods=["POST"])
+@login_required
+def post_update_invites(store_id):
+    invites = json.loads(flask.request.form.get("invites"))
+
+    try:
+        admin_api.update_store_invites(flask.session, store_id, invites)
+        flask.flash("Changes saved", "positive")
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        for msg in msgs:
+            flask.flash(msg, "negative")
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return flask.redirect(flask.url_for(".get_invites", store_id=store_id))
+
+
+@admin.route("/admin/<store_id>/members/invites")
+@login_required
+def get_invites(store_id):
+    try:
+        stores = admin_api.get_stores(flask.session)
+        store = admin_api.get_store(flask.session, store_id)
+        invites = admin_api.get_store_invites(flask.session, store_id)
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    pending_invites = []
+    expired_invites = []
+    revoked_invites = []
+
+    for invite in invites:
+        if invite["status"] == "Pending":
+            pending_invites.append(invite)
+
+        if invite["status"] == "Expired":
+            expired_invites.append(invite)
+
+        if invite["status"] == "Revoked":
+            revoked_invites.append(invite)
+
+    sorted_pending_invites = sorted(
+        pending_invites, key=lambda item: item["expiration-date"]
+    )
+
+    sorted_expired_invites = sorted(
+        expired_invites, key=lambda item: item["expiration-date"]
+    )
+
+    sorted_revoked_invites = sorted(
+        revoked_invites, key=lambda item: item["expiration-date"]
+    )
+
+    return flask.render_template(
+        "admin/invites.html",
+        stores=stores,
+        store=store,
+        pending_invites=sorted_pending_invites,
+        expired_invites=sorted_expired_invites,
+        revoked_invites=sorted_revoked_invites,
     )
 
 

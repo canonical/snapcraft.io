@@ -1,0 +1,198 @@
+{% set current_tab = "invites" %}
+
+{% extends "/admin/admin_layout.html" %}
+
+{% block meta_title %}Manage invites in {{ store.name }} | Snapcraft{% endblock %}
+
+{% block admin_content %}
+
+<ul class="p-inline-list--stretch">
+  <li class="p-inline-list__item u-no-margin--right">
+    <div class="p-button-group">
+      <div class="p-button-group__inner">
+        <div class="p-button-group__buttons">
+          <a href="/admin/{{ store.id }}/members" class="p-button-group__button">Members</a>
+          <a href="/admin/{{ store.id }}/members/invites" class="p-button-group__button is-selected">Invites</a>
+        </div>
+      </div>
+    </div>
+  </li>
+  <li class="p-inline-list__item u-align--right">
+    <label for="filter-invites" class="u-hide">Search for user</label>
+    <input type="text" name="filter-invites" id="filter-invites" placeholder="Search for user" style=" max-width: 320px; min-width: 0;">
+  </li>
+</ul>
+
+<table id="invites-table" class="p-table--mobile-card">
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>User</th>
+      <th>Expires</th>
+      <th>Roles</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% if pending_invites %}
+      <tr>
+        <td aria-label="Status" rowspan="{{ pending_invites|length }}">Pending</td>
+        <td aria-label="User">{{ pending_invites[0]["email"] }}</td>
+        <td aria-label="Expires">{{ format_date(pending_invites[0]["expiration-date"], "%d %B %Y") }}</td>
+        <td aria-label="Roles">
+          <div>
+            {% for role in pending_invites[0]["roles"] %}
+              {{ format_member_role(role) }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          </div>
+        </td>
+        <td aria-label="Actions" class="u-align--right">
+          <div>
+            {% with email=pending_invites[0]["email"], action="resend", action_label="Resend" %}
+              {% include "admin/_manage_invites_form.html" %}
+            {% endwith %}
+
+            {% with email=pending_invites[0]["email"], action="revoke", action_label="Revoke" %}
+              {% include "admin/_manage_invites_form.html" %}
+            {% endwith %}
+          </div>
+        </td>
+      </tr>
+      {% for invite in pending_invites %}
+        {% if not loop.first %}
+          <tr>
+            <td aria-label="User">{{ invite["email"] }}</td>
+            <td aria-label="Expires">{{ format_date(invite["expiration-date"], "%d %B %Y") }}</td>
+            <td aria-label="Roles">
+              {% for role in invite["roles"] %}
+                {{ format_member_role(role) }}{% if not loop.last %},{% endif %}
+              {% endfor %}
+            </td>
+            <td aria-label="Actions" class="u-align--right">
+              <div>
+                {% with email=invite["email"], action="resend", action_label="Resend" %}
+                  {% include "admin/_manage_invites_form.html" %}
+                {% endwith %}
+
+                {% with email=invite["email"], action="revoke", action_label="Revoke" %}
+                  {% include "admin/_manage_invites_form.html" %}
+                {% endwith %}
+              </div>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if expired_invites %}
+      <tr>
+        <td aria-label="Status" rowspan="{{ expired_invites|length }}">Expired</td>
+        <td aria-label="User">{{ expired_invites[0]["email"] }}</td>
+        <td aria-label="Expires">{{ format_date(expired_invites[0]["expiration-date"], "%d %B %Y") }}</td>
+        <td aria-label="Roles">
+          {% for role in expired_invites[0]["roles"] %}
+            {{ format_member_role(role) }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+        </td>
+        <td aria-label="Actions" class="u-align--right">
+          <div>
+            {% with email=expired_invites[0]["email"], action="open", action_label="Reopen" %}
+              {% include "admin/_manage_invites_form.html" %}
+            {% endwith %}
+          </div>
+        </td>
+      </tr>
+      {% for invite in expired_invites %}
+        {% if not loop.first %}
+          <tr>
+            <td aria-label="User">{{ invite["email"] }}</td>
+            <td aria-label="Expires">{{ format_date(invite["expiration-date"], "%d %B %Y") }}</td>
+            <td aria-label="Roles">
+              {% for role in invite["roles"] %}
+                {{ format_member_role(role) }}{% if not loop.last %},{% endif %}
+              {% endfor %}
+            </td>
+            <td aria-label="Actions" class="u-align--right">
+              <div>
+                {% with email=invite["email"], action="open", action_label="Reopen" %}
+                  {% include "admin/_manage_invites_form.html" %}
+                {% endwith %}
+              </div>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if revoked_invites %}
+      <tr>
+        <td aria-label="Status" rowspan="{{ revoked_invites|length }}">Revoked</td>
+        <td aria-label="User">{{ revoked_invites[0]["email"] }}</td>
+        <td aria-label="Expires">{{ format_date(revoked_invites[0]["expiration-date"], "%d %B %Y") }}</td>
+        <td aria-label="Roles">
+          {% for role in revoked_invites[0]["roles"] %}
+            {{ format_member_role(role) }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+        </td>
+        <td aria-label="Actions" class="u-align--right">
+          {% with email=revoked_invites[0]["email"], action="open", action_label="Reopen" %}
+            {% include "admin/_manage_invites_form.html" %}
+          {% endwith %}
+        </td>
+      </tr>
+      {% for invite in revoked_invites %}
+        {% if not loop.first %}
+          <tr>
+            <td aria-label="User">{{ invite["email"] }}</td>
+            <td aria-label="Expires">{{ format_date(invite["expiration-date"], "%d %B %Y") }}</td>
+            <td aria-label="Roles">
+              {% for role in invite["roles"] %}
+                {{ format_member_role(role) }}{% if not loop.last %},{% endif %}
+              {% endfor %}
+            </td>
+            <td aria-label="Actions" class="u-align--right">
+              {% with email=invite["email"], action="open", action_label="Reopen" %}
+                {% include "admin/_manage_invites_form.html" %}
+              {% endwith %}
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+
+<div class="p-modal" id="invite-modal" style="display: none; z-index: 110;">
+  <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title" style="max-width: 480px;">
+    <header class="p-modal__header">
+      <h2 class="p-modal__title" id="invite-modal-title">Manage invite</h2>
+      <button class="p-modal__close" aria-label="Close active modal" aria-controls="invite-modal">Close</button>
+    </header>
+    <div>
+      <p data-js-action-confirmation-message>Do you really want to perform this action?</p>
+      <div class="u-align--right">
+        <button aria-controls="invite-modal">Cancel</button>
+        <button class="p-button--positive" data-js-submit-invite-action>Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/modal.js') }}" defer></script>
+<script src="{{ static_url('js/dist/manage-invites.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      snapcraft.public.modal.init("invite-modal");
+      snapcraft.public.manageInvites.initUpdateInvitesTable({{ pending_invites | safe }}, {{ expired_invites | safe }}, {{ revoked_invites | safe }}, "{{ store.id }}", "{{ csrf_token() }}");
+    });
+  });
+</script>
+{% endblock %}

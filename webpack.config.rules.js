@@ -41,6 +41,13 @@ module.exports = [
     use: ["expose-loader?exposes=snapcraft.public.tabpanel", "babel-loader"],
   },
   {
+    test: require.resolve(__dirname + "/static/js/public/manage-invites.js"),
+    use: [
+      "expose-loader?exposes=snapcraft.public.manageInvites",
+      "babel-loader",
+    ],
+  },
+  {
     test: require.resolve(__dirname + "/static/js/public/manage-members.js"),
     use: [
       "expose-loader?exposes=snapcraft.public.manageMembers",
