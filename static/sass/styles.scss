@@ -337,6 +337,10 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-action-form;
 
+@import "snapcraft_custom-checkboxes";
+
+@include snapcraft-custom-checkboxes;
+
 dl {
   margin-bottom: $spv-outer--scaleable;
 }

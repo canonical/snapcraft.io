@@ -85,9 +85,10 @@
       </td>
       {% for role in store.roles %}
       <td aria-label="{{ role.role }}">
-        <label class="p-checkbox u-no-padding--top">
-          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
-          <span class="p-checkbox__label u-hide">{{ role.label }}</span>
+        <label class="custom-checkbox">
+          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="custom-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
+          <span class="custom-checkbox__box"></span>
+          <span class="custom-checkbox__label u-hide">{{ role.label }}</span>
         </label>
       </td>
       {% endfor %}
