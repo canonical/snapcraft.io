@@ -102,7 +102,7 @@ def get_account_details():
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    flask_user = flask.session["openid"]
+    flask_user = flask.session["publisher"]
 
     subscriptions = None
 

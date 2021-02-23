@@ -233,7 +233,7 @@ def get_account_snaps():
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
-    flask_user = flask.session["openid"]
+    flask_user = flask.session["publisher"]
 
     context = {
         "snaps": user_snaps,

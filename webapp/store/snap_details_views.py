@@ -127,7 +127,7 @@ def snap_details_views(store, api, handle_errors):
         is_users_snap = False
         if authentication.is_authenticated(flask.session):
             if (
-                flask.session.get("openid").get("nickname")
+                flask.session.get("publisher").get("nickname")
                 == details["snap"]["publisher"]["username"]
             ) or (
                 "user_shared_snaps" in flask.session
@@ -379,7 +379,7 @@ def snap_details_views(store, api, handle_errors):
         show_as_preview = False
         if is_preview and authentication.is_authenticated(flask.session):
             if (
-                flask.session.get("openid").get("nickname")
+                flask.session.get("publisher").get("nickname")
                 == context["username"]
             ) or (
                 "user_shared_snaps" in flask.session
