@@ -12,51 +12,9 @@
       <a href="/admin/{{ store.id }}/members">&lsaquo;&nbsp;Back to members</a>
     </p>
   </li>
-  <li class="p-inline-list__item u-align--right">
-    <button id="show-invite-modal" style="margin-bottom: 0;" aria-controls="invite-modal">
-      <i class="p-icon--plus"></i>&nbsp;Invite member
-    </button>
-  </li>
 </ul>
 
 <h1 class="p-heading--4">Manage members</h1>
-
-<div class="p-modal" id="invite-modal" style="display: none; z-index: 110;">
-  <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title">
-    <header class="p-modal__header">
-      <h2 class="p-modal__title" id="invite-modal-title">Invite member</h2>
-      <button class="p-modal__close" aria-label="Close active modal" aria-controls="invite-modal">Close</button>
-    </header>
-    <div>
-      <form id="invite-member-form" action="/admin/{{ store.id }}/members/invite" method="post">
-        <input type="hidden" name="members" id="invite-members" value="">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-        <div class="p-form__group">
-          <label for="invite-member-email" class="p-form__label">Email</label>
-          <div class="p-form__control">
-            <input type="email" name="invite-member-email" id="invite-member-email">
-          </div>
-        </div>
-
-        <div class="p-form__group" style="margin-bottom: 1rem;">
-          {% for role in store.roles %}
-            <label class="p-checkbox">
-              <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input" name="{{ role.role }}">
-              <span class="p-checkbox__label">{{ role.label }}</span>
-            </label>
-          {% endfor %}
-        </div>
-
-        <hr>
-
-        <div class="u-align--right">
-          <button class="p-button--positive u-no-margin--bottom" id="invite-member-button" type="submit" disabled>Send invite</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <table id="members-table" class="p-table--mobile-card">
   <thead>
@@ -109,15 +67,12 @@
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/modal.js') }}" defer></script>
 <script src="{{ static_url('js/dist/manage-members.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    snapcraft.public.modal.init("invite-modal");
-    snapcraft.public.manageMembers.inviteMember();
     snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }}, {{ store.roles | safe }});
   });
 </script>

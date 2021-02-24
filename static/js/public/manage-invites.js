@@ -131,7 +131,7 @@ function getInviteForm(storeId, token, action) {
     <form action="/admin/${storeId}/members/invite/update" method="post" class="p-action-form" data-js-action-form>
       <input type="hidden" name="invites" value="">
       <input type="hidden" name="csrf_token" value="${token}">
-      <button type="submit" class="is-dense u-no-margin--bottom" data-invite-email="${action.email}" data-invite-action="${action.type}" data-invite-action-label="${action.label}" aria-controls="invite-modal">${action.label}</button>
+      <button type="submit" class="is-dense u-no-margin--bottom" data-invite-email="${action.email}" data-invite-action="${action.type}" data-invite-action-label="${action.label}" aria-controls="invite-modal" data-js-toggle-modal>${action.label}</button>
     </form>
   `;
 }

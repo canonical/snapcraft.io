@@ -10,31 +10,20 @@ function toggleModal(modal) {
   }
 }
 
-function init(modalId) {
+function init() {
   document.addEventListener("click", (e) => {
-    const targetControls = e.target.getAttribute("aria-controls");
+    const target = e.target;
+    const modalId = target.getAttribute("aria-controls");
+    const modal = document.getElementById(modalId);
 
-    if (targetControls) {
-      toggleModal(document.getElementById(targetControls));
+    if (Object.keys(target.dataset).includes("jsToggleModal")) {
+      toggleModal(modal);
+    }
+
+    if (target.classList.contains("p-modal")) {
+      toggleModal(target);
     }
   });
-
-  if (modalId) {
-    const modal = document.getElementById(modalId);
-    const modalBody = modal.querySelector(".p-modal__dialog");
-
-    modal.addEventListener("click", () => {
-      toggleModal(modal);
-    });
-
-    modalBody.addEventListener("click", (e) => {
-      if (!e.target.getAttribute("aria-controls") === modalId) {
-        e.stopPropagation();
-      } else {
-        toggleModal(modal);
-      }
-    });
-  }
 }
 
 export { init };
