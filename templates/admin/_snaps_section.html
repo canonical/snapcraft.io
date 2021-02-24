@@ -12,67 +12,37 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td aria-label="Name">
-        {% if snaps[0].store == 'ubuntu' and not snap.private %}
-          <a href="/{{ snaps[0].name }}">
-        {% endif %}
-        {{ snaps[0].name }}
-        {% if snaps[0].store == 'ubuntu' and not snap.private %}
-          </a>
-        {% endif %}
-      </td>
-      <td aria-label="Latest release">
-        {% if snaps[0]["latest-release"].channel %}
-          <div>
-            <div>
-              latest/{{ snaps[0]["latest-release"].channel }} {{ snaps[0]["latest-release"].version }}
-            </div>
-            <div>
-              <small>{{ format_date(snaps[0]["latest-release"].timestamp, "%d %B %Y") }}</small>
-            </div>
-          </div>
-        {% endif %}
-      </td>
-      <td aria-label="Collaborators">
-        {% for user in snaps[0].users %}
-          {{ user.displayname }}
-        {% endfor %}
-      </td>
-    </tr>
     {% for snap in snaps %}
-      {% if loop.index > 1 %}
-        <tr>
-          <td aria-label="Name">
-            {% if snap.store == 'ubuntu' and not snap.private %}
-              <a href="/{{ snap.name }}">
-            {% endif %}
-            {{ snap.name }}
-            {% if snap.store == 'ubuntu' and not snap.private %}
-              </a>
-            {% endif %}
-          </td>
-          <td aria-label="Latest release">
-            {% if snap["latest-release"].channel %}
+      <tr>
+        <td aria-label="Name">
+          {% if snap.store == 'ubuntu' and not snap.private %}
+            <a href="/{{ snap.name }}">
+          {% endif %}
+          {{ snap.name }}
+          {% if snap.store == 'ubuntu' and not snap.private %}
+            </a>
+          {% endif %}
+        </td>
+        <td aria-label="Latest release">
+          {% if snap["latest-release"].channel %}
+            <div>
               <div>
-                <div>
-                  latest/{{ snap["latest-release"].channel }} {{ snap["latest-release"].version }}
-                </div>
-                <div>
-                  <small>{{ format_date(snap["latest-release"].timestamp, "%d %B %Y") }}</small>
-                </div>
+                latest/{{ snap["latest-release"].channel }} {{ snap["latest-release"].version }}
               </div>
-            {% else %}
-              -
-            {% endif %}
-          </td>
-          <td aria-label="Collaborators">
-            {% for user in snap.users %}
-              {{ user.displayname }}{% if not loop.last %},{% endif %}
-            {% endfor %}
-          </td>
-        </tr>
-      {% endif %}
+              <div>
+                <small>{{ format_date(snap["latest-release"].timestamp, "%d %B %Y") }}</small>
+              </div>
+            </div>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td aria-label="Collaborators">
+          {% for user in snap.users %}
+            {{ user.displayname }}{% if not loop.last %},{% endif %}
+          {% endfor %}
+        </td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
