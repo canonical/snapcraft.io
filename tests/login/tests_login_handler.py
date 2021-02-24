@@ -23,7 +23,7 @@ class LoginHandlerTest(TestCase):
 
     def test_redirect_user_logged_in(self):
         with self.client.session_transaction() as s:
-            s["openid"] = "openid"
+            s["publisher"] = "openid"
             s["macaroon_root"] = "macaroon_root"
             s["macaroon_discharge"] = "macaroon_discharge"
 
@@ -33,7 +33,7 @@ class LoginHandlerTest(TestCase):
 
     def test_redirect_user_logged_in_next_url(self):
         with self.client.session_transaction() as s:
-            s["openid"] = "openid"
+            s["publisher"] = "openid"
             s["macaroon_root"] = "macaroon_root"
             s["macaroon_discharge"] = "macaroon_discharge"
 

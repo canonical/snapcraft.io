@@ -229,7 +229,7 @@ class GetGitHubBadgeTest(TestCase):
 
         with self.client.session_transaction() as s:
             # make test session 'authenticated'
-            s["openid"] = {"nickname": "toto", "fullname": "Totinio"}
+            s["publisher"] = {"nickname": "toto", "fullname": "Totinio"}
             s["macaroon_root"] = "test"
             s["macaroon_discharge"] = "test"
             # mock test user snaps list

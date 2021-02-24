@@ -148,7 +148,7 @@ class FirstSnap(TestCase):
             "email": "testing@testing.com",
         }
         with self.client.session_transaction() as s:
-            s["openid"] = {
+            s["publisher"] = {
                 "image": None,
                 "nickname": "Toto",
                 "fullname": "El Toto",
