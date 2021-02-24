@@ -105,7 +105,7 @@ def after_login(resp):
     return flask.redirect(open_id.get_next_url())
 
 
-@login.route("/login-candid", methods=["GET"])
+@login.route("/login-beta", methods=["GET"])
 @csrf.exempt
 def login_candid():
     # Get a bakery v2 macaroon from the publisher API to be discharged
