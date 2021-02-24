@@ -5,6 +5,12 @@
 {% block meta_title %}Manage snaps in {{ store.name }} | Snapcraft{% endblock %}
 
 {% block admin_content %}
-{% include "/admin/_snaps_section.html" %}
+
+{% if snaps %}
+  {% include "/admin/_snaps_section.html" %}
+{% else %}
+  <h1>Sorry, you seem to have no snaps</h1>
+{% endif %}
+
 {% endblock %}
 
