@@ -6,6 +6,17 @@ from webapp.api import sso
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
+PERMISSIONS = [
+    "edit_account",
+    "package_access",
+    "package_metrics",
+    "package_register",
+    "package_release",
+    "package_update",
+    "package_upload_request",
+    "store_admin",
+]
+
 
 def get_authorization_header(root, discharge):
     """
@@ -25,19 +36,20 @@ def is_authenticated(session):
     Returns True if the user is authenticated
     """
     return (
-        "openid" in session
+        "publisher" in session
         and "macaroon_discharge" in session
         and "macaroon_root" in session
-    )
+    ) or ("publisher" in session and "macaroons" in session)
 
 
 def empty_session(session):
     """
     Empty the session, used to logout.
     """
+    session.pop("macaroons", None)
     session.pop("macaroon_root", None)
     session.pop("macaroon_discharge", None)
-    session.pop("openid", None)
+    session.pop("publisher", None)
     session.pop("user_shared_snaps", None)
     session.pop("github_auth_secret", None)
 
@@ -61,20 +73,7 @@ def request_macaroon():
     Request a macaroon from dashboard.
     Returns the macaroon.
     """
-    response = sso.post_macaroon(
-        {
-            "permissions": [
-                "edit_account",
-                "package_access",
-                "package_metrics",
-                "package_register",
-                "package_release",
-                "package_update",
-                "package_upload_request",
-                "store_admin",
-            ]
-        }
-    )
+    response = sso.post_macaroon({"permissions": PERMISSIONS})
 
     return response["macaroon"]
 

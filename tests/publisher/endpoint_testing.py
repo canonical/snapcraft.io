@@ -54,7 +54,7 @@ class BaseTestCases:
             discharge = pymacaroons.Macaroon("3rd", "a_ident", "a_caveat_key")
 
             with client.session_transaction() as s:
-                s["openid"] = {
+                s["publisher"] = {
                     "image": None,
                     "nickname": "Toto",
                     "fullname": "El Toto",
