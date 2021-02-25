@@ -12,6 +12,9 @@ env:
   - name: SNAPSTORE_API_URL
     value: https://api.staging.snapcraft.io/
 
+  - name: CANDID_API_URL
+    value: https://api.staging.jujucharms.com/identity/
+
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 

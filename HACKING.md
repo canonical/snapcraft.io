@@ -9,6 +9,7 @@ To use staging APIs locally you can add the following lines to an `.env.local` f
 SNAPSTORE_API_URL=https://api.staging.snapcraft.io/
 SNAPSTORE_DASHBOARD_API_URL=https://dashboard.staging.snapcraft.io/
 LOGIN_URL=https://login.staging.ubuntu.com
+CANDID_API_URL=https://api.staging.jujucharms.com/identity/
 ```
 
 ## Snap automated builds
