@@ -19,12 +19,16 @@ function updateSnaps() {
   );
 
   const originalSnapState = formatSelectedSnapData(snapCheckboxes);
-  let currentSnaps = formatSelectedSnapData(originalSnapState);
+  let currentSnaps = originalSnapState;
   let dirtyData = false;
 
   snapCheckboxes.forEach((snap) => {
     snap.addEventListener("change", () => {
-      currentSnaps = formatSelectedSnapData(snapCheckboxes);
+      const currentSnapCheckboxes = Array.prototype.slice.call(
+        snapsTable.querySelectorAll(":checked")
+      );
+
+      currentSnaps = formatSelectedSnapData(currentSnapCheckboxes);
 
       if (
         JSON.stringify(originalSnapState.sort()) !==
