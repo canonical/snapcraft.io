@@ -1,0 +1,37 @@
+<div class="p-modal" id="invite-member-modal" style="display: none; z-index: 110;">
+  <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title">
+    <header class="p-modal__header">
+      <h2 class="p-modal__title" id="invite-modal-title">Invite member</h2>
+      <button class="p-modal__close" aria-label="Close active modal" aria-controls="invite-member-modal" data-js-toggle-modal>Close</button>
+    </header>
+    <div>
+      <form id="invite-member-form" action="/admin/{{ store.id }}/members/invite" method="post">
+        <input type="hidden" name="members" id="invite-members" value="">
+        {% if source %}<input type="hidden" name="source" value="{{ source }}">{% endif %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="p-form__group">
+          <label for="invite-member-email" class="p-form__label">Email</label>
+          <div class="p-form__control">
+            <input type="email" name="invite-member-email" id="invite-member-email" required>
+          </div>
+        </div>
+
+        <div class="p-form__group" style="margin-bottom: 1rem;">
+          {% for role in store.roles %}
+            <label class="p-checkbox">
+              <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input" name="{{ role.role }}">
+              <span class="p-checkbox__label">{{ role.label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+
+        <hr>
+
+        <div class="u-align--right">
+          <button class="p-button--positive u-no-margin--bottom" id="invite-member-button" type="submit" disabled>Send invite</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

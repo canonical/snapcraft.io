@@ -107,4 +107,11 @@ module.exports = [
     test: require.resolve(__dirname + "/static/js/public/brand-store.js"),
     use: ["expose-loader?exposes=snapcraft.public.brandStore", "babel-loader"],
   },
+  {
+    test: require.resolve(__dirname + "/static/js/public/invite-members.js"),
+    use: [
+      "expose-loader?exposes=snapcraft.public.inviteMembers",
+      "babel-loader",
+    ],
+  },
 ];

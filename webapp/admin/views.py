@@ -182,9 +182,12 @@ def post_invite_members(store_id):
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    return flask.redirect(
-        flask.url_for(".get_manage_members", store_id=store_id)
-    )
+    return_url = flask.url_for(".get_manage_members", store_id=store_id)
+
+    if flask.request.form.get("source") == "invites":
+        return_url = flask.url_for(".get_invites", store_id=store_id)
+
+    return flask.redirect(return_url)
 
 
 @admin.route("/admin/<store_id>/members/invite/update", methods=["POST"])

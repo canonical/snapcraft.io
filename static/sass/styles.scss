@@ -383,3 +383,9 @@ code {
   white-space: pre;
   word-break: normal;
 }
+
+.p-modal__dialog {
+  @media only screen and (min-width: $breakpoint-medium) {
+    min-width: 400px;
+  }
+}
