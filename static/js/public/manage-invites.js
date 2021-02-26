@@ -1,14 +1,15 @@
 import { format } from "date-fns";
 import debounce from "../libs/debounce";
 
-const ACTION_MESSAGES = {
-  open:
-    "Reopening your invite will send a new invite to this email. Do you still want to do it?",
-  resend:
-    "Resending your invite will send a reminder email to this user. Do you still want to do it?",
-  revoke:
-    "Revoking your invite will prevent this user from accepting your invite. Do you still want to do it?",
-};
+function getActionMessage(action, email) {
+  const ACTION_MESSAGES = {
+    open: `Reopening your invite will send a new invite to <strong>${email}</strong>. Do you still want to do it?`,
+    resend: `Resending your invite will send a reminder email to <strong>${email}</strong>. Do you still want to do it?`,
+    revoke: `Revoking your invite will prevent <strong>${email}</strong> from accepting your invite. Do you still want to do it?`,
+  };
+
+  return ACTION_MESSAGES[action];
+}
 
 function updateInvites() {
   const inviteActionForms = document.querySelectorAll("[data-js-action-form]");
@@ -41,7 +42,10 @@ function updateInvites() {
       inviteModalHeading.innerText = `${inviteActionLabel} invite`;
       inviteModalSubmitButton.innerText = `${inviteActionLabel} invite`;
       inviteModalSubmitButton.dataset.currentForm = actionForm;
-      actionConfirmationMessage.innerText = ACTION_MESSAGES[inviteAction];
+      actionConfirmationMessage.innerHTML = getActionMessage(
+        inviteAction,
+        inviteEmail
+      );
 
       const handleModalSubmit = () => {
         inviteModalSubmitButton.disabled = true;
