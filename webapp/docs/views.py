@@ -28,6 +28,8 @@ def init_docs(app, url_prefix):
         "/docs/search",
         "docs-search",
         build_search_view(
-            site="snapcraft.io/docs", template_path="docs/search.html"
+            session=talisker.requests.get_session(),
+            site="snapcraft.io/docs",
+            template_path="docs/search.html",
         ),
     )
