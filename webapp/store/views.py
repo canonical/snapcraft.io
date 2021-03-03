@@ -18,8 +18,11 @@ from canonicalwebteam.store_api.exceptions import (
 from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
+import os
 
 session = talisker.requests.get_session(requests.Session)
+
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 
 
 def store_blueprint(store_query=None):
@@ -273,6 +276,18 @@ def store_blueprint(store_query=None):
             flask.render_template("brand-store/search.html", **context),
             status_code,
         )
+
+    @store.route("/youtube/<video_id>")
+    def get_video_thumbnail_data(video_id):
+        thumbnail_url = "https://www.googleapis.com/youtube/v3/videos"
+        thumbnail_data = session.get(
+            f"{thumbnail_url}?id={video_id}&part=snippet&key={YOUTUBE_API_KEY}"
+        )
+
+        if thumbnail_data:
+            return thumbnail_data.json()
+
+        return {}
 
     @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
     def publisher_details(publisher):

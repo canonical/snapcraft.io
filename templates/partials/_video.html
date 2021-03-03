@@ -1,7 +1,7 @@
 {% if video.type == "youtube" %}
-  <iframe id="ytplayer" type="text/html" width="818" height="460" allow="autoplay"></iframe>
-  <button class="youtube-thumbnail" id="youtube-thumbnail">
-    <img src="https://i3.ytimg.com/vi/{{ video.id }}/maxresdefault.jpg" alt="" width="1029" height="588">
+  <iframe id="youtubeplayer" type="text/html" width="818" height="460" allow="autoplay"></iframe>
+  <button class="youtube-thumbnail-button" id="youtube-thumbnail-button">
+    <img src="https://i3.ytimg.com/vi/{{ video.id }}/maxresdefault.jpg" alt="" width="1280" height="720" id="youtube-thumbnail-image">
     <img src="{{ static_url('images/yt_play_btn.svg') }}" alt="" width="68" height="48" class="youtube-play-button">
   </button>
 {% elif video.type == "vimeo" %}
@@ -16,6 +16,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     const vimeoplayerFrame = document.getElementById("vimeoplayer");
     const asciicastplayerFrame = document.getElementById("asciicastplayer");
+    const youtubeFrame = document.getElementById("youtubeplayer");
 
     if (vimeoplayerFrame) {
       vimeoplayerFrame.src = vimeoplayerFrame.dataset.src;
@@ -30,15 +31,55 @@
       asciicastplayerFrame.appendChild(script);
     }
 
-    const youtubeFrame = document.getElementById("ytplayer");
-    const youtubeThumbnail = document.getElementById("youtube-thumbnail");
-    const videoUrl = "{{ video.url }}?autoplay=1&cc_load_policy=1&modestbranding=1&rel=0";
+    if (youtubeFrame) {
+      const videoId = "{{ video.id }}";
+      const thumbnailUrl = `/youtube/${videoId}`;
+      const thumbnailImage = document.querySelector("#youtube-thumbnail-image");
+      const thumbnailButton = document.querySelector("#youtube-thumbnail-button");
+      const videoUrl = "{{ video.url }}?autoplay=1&cc_load_policy=1&modestbranding=1&rel=0";
 
-    youtubeThumbnail.addEventListener("click", function() {
-      youtubeFrame.src = videoUrl;
-      setTimeout(function() {
-        youtubeThumbnail.classList.add("fade-out");
-      }, 300);
-    });
+      fetch(thumbnailUrl)
+        .then(function(r) {
+          if (r.ok === true) {
+            return r.json();
+          }
+        })
+        .then(function(res) {
+          if (!res.items) {
+            return;
+          }
+
+          const thumbnails = res.items[0].snippet.thumbnails;
+
+          if (thumbnails.maxres) {
+            thumbnailImage.src = thumbnails.maxres.url;
+            thumbnailImage.width = thumbnails.maxres.width;
+            thumbnailImage.height = thumbnails.maxres.height;
+          } else if (thumbnails.standard) {
+            thumbnailImage.src = thumbnails.standard.url;
+            thumbnailImage.width = thumbnails.standard.width;
+            thumbnailImage.height = thumbnails.standard.height;
+          } else if (thumbnails.high) {
+            thumbnailImage.src = thumbnails.high.url;
+            thumbnailImage.width = thumbnails.high.width;
+            thumbnailImage.height = thumbnails.high.height;
+          } else if (thumbnails.medium) {
+            thumbnailImage.src = thumbnails.medium.url;
+            thumbnailImage.width = thumbnails.medium.width;
+            thumbnailImage.height = thumbnails.medium.height;
+          } else {
+            thumbnailImage.src = thumbnails.default.url;
+            thumbnailImage.width = thumbnails.default.width;
+            thumbnailImage.height = thumbnails.default.height;
+          }
+        });
+
+      thumbnailButton.addEventListener("click", function() {
+        youtubeFrame.src = videoUrl;
+        setTimeout(function() {
+          thumbnailButton.classList.add("fade-out");
+        }, 300);
+      });
+    }
   });
 </script>
