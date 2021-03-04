@@ -122,7 +122,6 @@ def store_blueprint(store_query=None):
         )
 
     def search_snap():
-        status_code = 200
         snap_searched = flask.request.args.get("q", default="", type=str)
         snap_category = flask.request.args.get(
             "category", default="", type=str
@@ -145,9 +144,6 @@ def store_blueprint(store_query=None):
 
         size = 44
 
-        error_info = {}
-        searched_results = []
-
         try:
             searched_results = api.search(
                 snap_searched,
@@ -157,6 +153,7 @@ def store_blueprint(store_query=None):
             )
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
+            return flask.abort(status_code)
 
         total_pages = None
 
@@ -227,13 +224,9 @@ def store_blueprint(store_query=None):
             "total": total_results_count,
             "links": links,
             "page": page,
-            "error_info": error_info,
         }
 
-        return (
-            flask.render_template("store/search.html", **context),
-            status_code,
-        )
+        return flask.render_template("store/search.html", **context)
 
     def brand_search_snap():
         status_code = 200
