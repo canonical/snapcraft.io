@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { setCurrentTrack } from "../actions/currentTrack";
+import { closeHistory } from "../actions/history";
 import { getTracks } from "../selectors";
 
 import DefaultTrackModifier from "./defaultTrackModifier";
@@ -10,6 +11,7 @@ import DefaultTrackModifier from "./defaultTrackModifier";
 class ReleasesHeading extends Component {
   onTrackChange(event) {
     this.props.setCurrentTrack(event.target.value);
+    this.props.closeHistoryPanel();
   }
 
   renderTrackDropdown(tracks) {
@@ -63,6 +65,7 @@ class ReleasesHeading extends Component {
 ReleasesHeading.propTypes = {
   tracks: PropTypes.array.isRequired,
   setCurrentTrack: PropTypes.func.isRequired,
+  closeHistoryPanel: PropTypes.func.isRequired,
   currentTrack: PropTypes.string.isRequired,
   defaultTrack: PropTypes.string,
 };
@@ -78,6 +81,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
+    closeHistoryPanel: () => dispatch(closeHistory()),
   };
 };
 
