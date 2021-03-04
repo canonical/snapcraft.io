@@ -85,7 +85,6 @@ class GetSearchViewTest(TestCase):
         self.assert_context("featured_snaps", [])
         self.assert_context("total", 0)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
-        self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_zero_as_page(self):
@@ -113,7 +112,6 @@ class GetSearchViewTest(TestCase):
         self.assert_context("searched_snaps", {})
         self.assert_context("total", 0)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
-        self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_results(self):
@@ -162,8 +160,6 @@ class GetSearchViewTest(TestCase):
         self.assert_context("total", 3)
         self.assert_context("links", {})
 
-        self.assert_context("error_info", {})
-
     @responses.activate
     def test_search_q_with_results_but_no_total(self):
         payload = {
@@ -209,8 +205,6 @@ class GetSearchViewTest(TestCase):
         )
         self.assert_context("total", None)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
-
-        self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_category(self):
@@ -266,8 +260,6 @@ class GetSearchViewTest(TestCase):
             },
         )
 
-        self.assert_context("error_info", {})
-
     @responses.activate
     def test_search_q_with_category_page_2(self):
         snap_list = [
@@ -322,8 +314,6 @@ class GetSearchViewTest(TestCase):
             },
         )
 
-        self.assert_context("error_info", {})
-
     @responses.activate
     def test_search_q_with_category_featured(self):
         snap_list = [
@@ -373,5 +363,3 @@ class GetSearchViewTest(TestCase):
         self.assert_context("page", 1)
         self.assert_context("total", 44)
         self.assert_context("links", {})
-
-        self.assert_context("error_info", {})
