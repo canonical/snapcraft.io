@@ -126,7 +126,9 @@ def set_handlers(app):
         agent_string = flask.request.headers.get("User-Agent")
 
         # Exclude probes, which happen behind the cache
-        if not agent_string.startswith(("kube-probe", "Prometheus")):
+        if agent_string and not agent_string.startswith(
+            ("kube-probe", "Prometheus")
+        ):
             agent = user_agents.parse(agent_string or "")
 
             accept_encoding_counter.labels(
