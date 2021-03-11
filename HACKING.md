@@ -93,7 +93,7 @@ Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Taliske
 
 ## Update the list of licenses
 
-The licenses that we use are based on the [SPDX Specification](https://spdx.github.io/license-list-data/). In order to have all the products supporting the same set of licenses, the list needs to be syncronised between snapcraft.io, snapd and the snap store.
+The licenses that we use are based on the [SPDX Specification](https://spdx.github.io/license-list-data/). In order to have all the products supporting the same set of licenses, the list needs to be synchronised between snapcraft.io, snapd and the snap store.
 
 In case you need to udpate the license list:
 - all the teams need to agree on the version of the list
