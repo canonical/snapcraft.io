@@ -107,16 +107,25 @@ function renderPublisherMetrics(options) {
           json.snaps.forEach((snap) => {
             const continuedDevices = snap.series.filter(
               (singleSeries) => singleSeries.name === "continued"
-            )[0].values;
+            )[0];
             const newDevices = snap.series.filter(
               (singleSeries) => singleSeries.name === "new"
-            )[0].values;
+            )[0];
 
-            const totalSeries = continuedDevices.map(
-              (continuedValue, index) => {
-                return continuedValue + newDevices[index];
-              }
-            );
+            let totalSeries = [];
+
+            if (continuedDevices && newDevices) {
+              totalSeries = continuedDevices.values.map(
+                (continuedValue, index) => {
+                  return continuedValue + newDevices.values[index];
+                }
+              );
+            } else {
+              console.log(
+                "There is no information available for continued or new devices.",
+                snap.series
+              );
+            }
 
             snaps.series.push({
               name: snap.name,
