@@ -90,3 +90,14 @@ Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Taliske
 
 - http://127.0.0.1:8004/_status/check - A basic check that the site is running
 - http://127.0.0.1:8004/_status/metrics - The prometheus metrics for the application
+
+## Update the list of licenses
+
+The licenses that we use are based on the [SPDX Specification](https://spdx.github.io/license-list-data/). In order to have all the products supporting the same set of licenses, the list needs to be syncronised between snapcraft.io, snapd and the snap store.
+
+In case you need to udpate the license list:
+- all the teams need to agree on the version of the list
+- once agreed you can copy the list in the file: [./webapp/licenses.json](./webapp/licenses.json)
+- Make sure the function `get_licenses()` in the [./webapp/helpers.py](./webapp/helpers.py) is still working
+
+We are supporting some custom licenses (like the Proprietary license). On update of the list, make sure that they have not been included since. This will avoid having duplicate licenses.

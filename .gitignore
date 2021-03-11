@@ -65,7 +65,6 @@ env[23]/
 static/js/modules
 static/js/dist
 cache.tmp/
-webapp/licenses.json
 coverage/
 .webcache/
 .webcache_blog/

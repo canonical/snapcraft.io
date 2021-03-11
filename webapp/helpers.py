@@ -27,8 +27,8 @@ def get_yaml_loader(typ="safe"):
 
 def get_licenses():
     try:
-        with open("webapp/store-licenses.json") as f:
-            licenses = json.load(f)
+        with open("webapp/licenses.json") as f:
+            licenses = json.load(f)["licenses"]
 
         def _build_custom_license(license_id, license_name):
             return {"licenseId": license_id, "name": license_name}
@@ -38,18 +38,6 @@ def get_licenses():
             _build_custom_license("Other Open Source", "Other Open Source"),
             _build_custom_license(
                 "AGPL-3.0+", "GNU Affero General Public License v3.0 or later"
-            ),
-            _build_custom_license(
-                "GPL-2.0+", "GNU General Public License v2.0 or later"
-            ),
-            _build_custom_license(
-                "GPL-3.0+", "GNU General Public License v3.0 or later"
-            ),
-            _build_custom_license(
-                "LGPL-2.1+", "GNU Lesser General Public License v2.1 or later"
-            ),
-            _build_custom_license(
-                "LGPL-3.0+", "GNU Lesser General Public License v3.0 or later"
             ),
         ]
 
