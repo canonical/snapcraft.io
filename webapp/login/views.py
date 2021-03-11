@@ -108,6 +108,11 @@ def after_login(resp):
 @login.route("/login-beta", methods=["GET"])
 @csrf.exempt
 def login_candid():
+    if authentication.is_authenticated(flask.session):
+        return flask.redirect(
+            flask.url_for("publisher_snaps.get_account_snaps")
+        )
+
     # Get a bakery v2 macaroon from the publisher API to be discharged
     # and save it in the session
     flask.session["publisher-macaroon"] = publisher_api.get_macaroon(
@@ -158,17 +163,21 @@ def login_callback():
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    # whoami is the only Dashboard API endpoint
-    # that support Candid.
-    return publisher
+    flask.session["publisher"] = {
+        "account_id": publisher["account"]["id"],
+        "nickname": publisher["account"]["username"],
+        "fullname": publisher["account"]["name"],
+        "image": None,
+        "email": publisher["account"]["email"],
+    }
 
-    # return flask.redirect(
-    #     flask.session.pop(
-    #         "next_url",
-    #         flask.url_for("publisher_snaps.get_account_snaps"),
-    #     ),
-    #     302,
-    # )
+    return flask.redirect(
+        flask.session.pop(
+            "next_url",
+            flask.url_for("publisher_snaps.get_account_snaps"),
+        ),
+        302,
+    )
 
 
 @login.route("/logout")
