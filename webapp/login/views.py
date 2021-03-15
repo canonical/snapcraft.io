@@ -74,8 +74,6 @@ def login_handler():
 @open_id.after_login
 def after_login(resp):
     flask.session.pop("macaroons", None)
-    flask.session.pop("macaroon_root", None)
-    flask.session.pop("macaroon_discharge", None)
 
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
     if not resp.nickname:
@@ -147,7 +145,6 @@ def login_callback():
     code = flask.request.args["code"]
     state = flask.request.args["state"]
 
-    flask.session.pop("macaroons", None)
     flask.session.pop("macaroon_root", None)
     flask.session.pop("macaroon_discharge", None)
 
