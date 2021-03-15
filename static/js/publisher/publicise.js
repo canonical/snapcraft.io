@@ -149,7 +149,7 @@ function initEmbeddedCardPicker(options) {
   function updateCardSize() {
     // calulate frame height to be a bit bigger then content itself
     // to have some spare room for responsiveness
-    if (previewFrame.offsetParent) {
+    if (previewFrame.offsetParent && previewFrame.contentWindow.document.body) {
       const height =
         Math.floor(
           (previewFrame.contentWindow.document.body.clientHeight + 20) / 10
