@@ -90,7 +90,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -169,7 +169,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -256,7 +256,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
