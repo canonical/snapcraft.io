@@ -66,6 +66,11 @@ env:
       key: lp-api-token-secret
       name: snapcraft-io
 
+  - name: YOUTUBE_API_KEY
+    secretKeyRef:
+      key: youtube-api-key
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 extraHosts:
