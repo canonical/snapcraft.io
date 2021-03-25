@@ -110,7 +110,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -195,7 +195,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -295,7 +295,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -359,7 +359,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         }
 
         responses.add(
-            responses.PUT, self.api_url, json=metadata_payload, status=500
+            responses.PUT, self.api_url, json=metadata_payload, status=400
         )
 
         info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
@@ -389,7 +389,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             responses.GET,
             "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
-            status=500,
+            status=400,
         )
 
         changes = {"description": "This is an updated description"}

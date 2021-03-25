@@ -233,7 +233,7 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     json={},
-                    status=500,
+                    status=401,
                     headers={"WWW-Authenticate": "Macaroon needs_refresh=1"},
                 )
             )
