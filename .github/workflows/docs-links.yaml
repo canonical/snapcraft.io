@@ -15,7 +15,7 @@ jobs:
         run: sudo pip install LinkChecker
 
       - name: Run linkchecker
-        run: linkchecker --threads 2 --ignore-url "https://munchkin.marketo.net" --ignore-url "https://www.gstatic.com" --ignore-url "https://assets.ubuntu.com$" --check-extern --no-warnings https://snapcraft.io/docs
+        run: linkchecker --no-follow-url '!https:\/\/snapcraft.io\/docs\/' --ignore-url "https://munchkin.marketo.net" --ignore-url "https://www.gstatic.com" --ignore-url "https://assets.ubuntu.com$" --ignore-url https://snapcraft.io/static/css/styles.css* --check-extern --no-warnings -v https://snapcraft.io/docs
 
       - name: Send message on failure
         if: failure()
