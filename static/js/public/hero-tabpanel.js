@@ -176,7 +176,13 @@ class HeroTabPanels {
     // Fetch the category data
     this.categoryList.forEach((category) => {
       fetch(`/store/featured-snaps/${category.toLowerCase()}`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            throw new Error(`${res.status} Failed Fetch`);
+          }
+        })
         .then((results) => {
           this.categories.push({
             name: category.toLowerCase(),
