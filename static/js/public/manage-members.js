@@ -160,6 +160,7 @@ function buildMemberRow(member, roles) {
 
   let rowContent = `
     <td><i class="p-icon--user u-hide--small"></i> ${member.displayname}</td>
+    <td>${member.email}</td>
   `;
 
   roles.forEach((role) => {

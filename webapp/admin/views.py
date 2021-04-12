@@ -102,23 +102,6 @@ def post_manage_store_snaps(store_id):
 
 @admin.route("/admin/<store_id>/members")
 @login_required
-def get_members(store_id):
-    try:
-        stores = admin_api.get_stores(flask.session)
-        store = admin_api.get_store(flask.session, store_id)
-        members = admin_api.get_store_members(flask.session, store_id)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
-
-    return flask.render_template(
-        "admin/members.html", stores=stores, store=store, members=members
-    )
-
-
-@admin.route("/admin/<store_id>/members/manage")
-@login_required
 def get_manage_members(store_id):
     try:
         stores = admin_api.get_stores(flask.session)
@@ -139,7 +122,7 @@ def get_manage_members(store_id):
     )
 
 
-@admin.route("/admin/<store_id>/members/manage", methods=["POST"])
+@admin.route("/admin/<store_id>/members", methods=["POST"])
 @login_required
 def post_manage_members(store_id):
     members = json.loads(flask.request.form.get("members"))
