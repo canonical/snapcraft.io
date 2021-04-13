@@ -1098,10 +1098,10 @@
   resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.2.0.tgz#8716c71d6d6b5d44a6aff3951053b4c26b2985f5"
   integrity sha512-c6KeUI5DSmUjP8W3L+6hvEAsYktWvQiHWqUXw0xcYcmW/8nFiT5o6HcwZmipaM3zDt0aFuDTBXHmc4rbaz6XGw==
 
-"@canonical/react-components@0.16.2":
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.16.2.tgz#20178c434ae1d8c566b771f8150436836864dfb1"
-  integrity sha512-UPo9p0pE8lWci8rJdMr4Ci1T7vUPHPfm5Cv0ke7ShH2xH8+XvnGCwf1FNjg9M3YAJr3mbRi+lHHda7O31gU99A==
+"@canonical/react-components@0.16.3":
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.16.3.tgz#0557309af3a2de179de89c509b5ee7a2498be8c8"
+  integrity sha512-WLg0lbjPh0NXwKJ1O+Rz3k4El+uz5cPi/7a2wcZ+ei7k2qxff7tCFsFVuADf7FkoewxaHEnVbEoi3VLl1/5V/w==
   dependencies:
     "@types/jest" "26.0.21"
     "@types/node" "14.14.35"
@@ -7663,10 +7663,10 @@ vanilla-framework@2.19.1:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.1.tgz#f071deed5504a5fe2104d6d9b087ce654e190881"
   integrity sha512-y79SKAwertvgHVAf1PbGxiq6QvVxNI78txilSgESx80HUWBrooT1nXCDUuHC/ySGEq+JUpmVIv0PrmXXilYWdg==
 
-vanilla-framework@2.27.0:
-  version "2.27.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.27.0.tgz#4091a50aaae1de23c3345441ccad8de778208150"
-  integrity sha512-/j+ocFSrjxkr2QTxogFM8WXKIg718RMBfU/l14nLq290//n1vf1SCeO6kApMkbEUmijjSBCiAhemQ5IhVzwJdA==
+vanilla-framework@2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.28.0.tgz#45f729d0e2d863e0aeceab4589a8e0d310f8c9df"
+  integrity sha512-EjrPn1sBFRZ+e6OyVgDIl8Nvdb3xxihodTD+L/FgQSiJJREGLmLjC+NZhq4xziNgHedzDZbIC8Qlx8B4SIo41g==
 
 verbalize@^0.1.2:
   version "0.1.2"
