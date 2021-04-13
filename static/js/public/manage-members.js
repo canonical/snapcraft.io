@@ -1,114 +1,238 @@
 import debounce from "../libs/debounce";
 
-function updateMembers(membersData) {
-  membersData = membersData || [];
-  const manageMembersForm = document.getElementById("manage-members-form");
-  const saveButton = manageMembersForm.querySelector(".js-save-button");
-  const roleCheckboxes = Array.prototype.slice.call(
-    document.querySelectorAll(".js-role-checkbox")
+function filterMembers(STATE) {
+  const filterMembersField = document.querySelector("#filter-members");
+
+  filterMembersField.addEventListener(
+    "keyup",
+    debounce((e) => {
+      const query = e.target.value.toLowerCase();
+      let filteredMembers = STATE.updatedMembers.filter((member) => {
+        return (
+          member.displayname.toLowerCase().includes(query) ||
+          member.email.toLowerCase().includes(query) ||
+          member.username.toLowerCase().includes(query)
+        );
+      });
+
+      if (!query) {
+        filteredMembers = STATE.updatedMembers;
+      }
+
+      buildTable(filteredMembers, STATE);
+    }),
+    100
+  );
+}
+
+function handleCheckboxChangeState(checkbox, originalMember, currentMember) {
+  const role = checkbox.name;
+  const stateBox = checkbox.nextElementSibling;
+
+  if (checkbox.checked && !currentMember.roles.includes(role)) {
+    currentMember.roles = currentMember.roles.concat(role);
+  }
+
+  if (!checkbox.checked && currentMember.roles.includes(role)) {
+    currentMember.roles = currentMember.roles.filter((data) => {
+      return data !== role;
+    });
+  }
+
+  if (checkbox.checked && !originalMember.roles.includes(role)) {
+    stateBox.classList.add("add");
+    stateBox.classList.remove("remove");
+  }
+
+  if (!checkbox.checked && originalMember.roles.includes(role)) {
+    stateBox.classList.add("remove");
+    stateBox.classList.remove("add");
+  }
+
+  if (
+    (checkbox.checked && originalMember.roles.includes(role)) ||
+    (!checkbox.checked && !originalMember.roles.includes(role))
+  ) {
+    stateBox.classList.remove("add", "remove");
+  }
+}
+
+function checkDirtyData(currentMember, originalMember) {
+  return (
+    JSON.stringify(currentMember.roles.sort()) !==
+    JSON.stringify(originalMember.roles.sort())
+  );
+}
+
+function getChangeCount(member, members) {
+  const oldMember = members.find((data) => data.id === member.id);
+
+  let numberOfChanges = 0;
+
+  if (member.roles.length >= oldMember.roles.length) {
+    numberOfChanges = member.roles.filter((x) => {
+      return oldMember.roles.indexOf(x) === -1;
+    }).length;
+  } else {
+    numberOfChanges = oldMember.roles.filter((x) => {
+      return member.roles.indexOf(x) === -1;
+    }).length;
+  }
+
+  return numberOfChanges;
+}
+
+function getChangesToggleText(changeCount) {
+  if (!changeCount) {
+    return "No changes";
+  } else if (changeCount === 1) {
+    return "1 change";
+  } else {
+    return `${changeCount} changes`;
+  }
+}
+
+function buildTable(updatedMembers, STATE) {
+  const tbody = document.querySelector("[data-js-members-table-body]");
+  const template = document.querySelector(
+    "[data-js-members-table-row-template]"
   );
 
-  const newData = membersData.map(function (data) {
-    return Object.assign({}, data);
+  tbody.innerHTML = "";
+
+  updatedMembers.forEach((member) => {
+    const clone = template.content.cloneNode(true);
+    const memberDisplayNameField = clone.querySelector(
+      "[data-js-member-display-name]"
+    );
+    const memberEmailField = clone.querySelector("[data-js-member-email]");
+
+    memberDisplayNameField.innerText = member.displayname;
+    memberEmailField.innerText = member.email;
+
+    const roleCheckboxes = clone.querySelectorAll("[data-js-role-checkbox]");
+    roleCheckboxes.forEach((checkbox) => {
+      checkbox.dataset.memberEmail = member.email;
+      const role = checkbox.dataset.role;
+      if (member.roles.includes(role)) {
+        checkbox.checked = true;
+      }
+
+      const originalMember = STATE.members.find((data) => {
+        return data.email === checkbox.dataset.memberEmail;
+      });
+
+      const currentMember = updatedMembers.find((data) => {
+        return data.email === checkbox.dataset.memberEmail;
+      });
+
+      handleCheckboxChangeState(checkbox, originalMember, currentMember);
+    });
+
+    tbody.appendChild(clone);
   });
 
-  roleCheckboxes.forEach(function (checkbox) {
-    checkbox.addEventListener("change", function (e) {
-      const target = e.target;
-      const role = e.target.name;
-      const stateBox = target.nextElementSibling;
+  handleEvents(STATE);
+}
 
-      const member = newData.find(function (data) {
-        return data.email === target.dataset.memberEmail;
+function handleEvents(STATE) {
+  const roleCheckboxes = document.querySelectorAll("[data-js-role-checkbox]");
+  const changesContainer = document.querySelector(
+    "[data-js-changes-container]"
+  );
+  const revertChangesButton = changesContainer.querySelector(
+    "[data-js-revert-change-button]"
+  );
+
+  roleCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      const originalMember = STATE.members.find((data) => {
+        return data.email === checkbox.dataset.memberEmail;
       });
 
-      const originalMember = membersData.find(function (data) {
-        return data.email === target.dataset.memberEmail;
+      const currentMember = STATE.updatedMembers.find((data) => {
+        return data.email === checkbox.dataset.memberEmail;
       });
 
-      if (checkbox.checked && !member.roles.includes(role)) {
-        member.roles = member.roles.concat(role);
-      }
+      handleCheckboxChangeState(checkbox, originalMember, currentMember);
 
-      if (!checkbox.checked && member.roles.includes(role)) {
-        member.roles = member.roles.filter(function (data) {
-          return data !== role;
-        });
-      }
+      currentMember.isDirty = checkDirtyData(originalMember, currentMember);
+      STATE.dirtyData = STATE.updatedMembers.filter((data) => data.isDirty);
+      STATE.changeCount = 0;
 
-      if (checkbox.checked && !originalMember.roles.includes(role)) {
-        stateBox.classList.add("add");
-        stateBox.classList.remove("remove");
-      }
-
-      if (!checkbox.checked && originalMember.roles.includes(role)) {
-        stateBox.classList.add("remove");
-        stateBox.classList.remove("add");
-      }
-
-      if (
-        (checkbox.checked && originalMember.roles.includes(role)) ||
-        (!checkbox.checked && !originalMember.roles.includes(role))
-      ) {
-        stateBox.classList.remove("add", "remove");
-      }
-
-      if (
-        JSON.stringify(member.roles.sort()) !==
-        JSON.stringify(originalMember.roles.sort())
-      ) {
-        member.dirty = true;
-      } else {
-        member.dirty = false;
-      }
-
-      const dirtyState = newData.filter((data) => data.dirty);
-
-      let changeCount = 0;
-
-      dirtyState.forEach((member) => {
-        const oldMember = membersData.find((data) => data.id === member.id);
-
-        let numberOfChanges = 0;
-
-        if (member.roles.length >= oldMember.roles.length) {
-          numberOfChanges = member.roles.filter((x) => {
-            return oldMember.roles.indexOf(x) === -1;
-          }).length;
-        } else {
-          numberOfChanges = oldMember.roles.filter((x) => {
-            return member.roles.indexOf(x) === -1;
-          }).length;
-        }
-
-        changeCount += numberOfChanges;
+      STATE.dirtyData.forEach((member) => {
+        STATE.changeCount += getChangeCount(member, STATE.members);
       });
 
-      if (dirtyState.length) {
-        if (changeCount === 1) {
-          saveButton.innerText = "Save 1 change";
-        } else {
-          saveButton.innerText = `Save ${changeCount} changes`;
-        }
-      } else {
-        saveButton.innerText = "Save changes";
-      }
-
-      saveButton.disabled = !dirtyState.length;
+      handleSaveChangesBar(STATE);
     });
   });
 
-  manageMembersForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const membersField = manageMembersForm.querySelector("#members");
-    const dirtyData = newData.filter(function (data) {
-      return data.dirty;
+  revertChangesButton.addEventListener("click", () => {
+    STATE.updatedMembers = STATE.members.map((member) => {
+      return Object.assign({}, member);
     });
+    STATE.dirtyData = [];
+    STATE.changeCount = 0;
+    buildTable(STATE.members, STATE);
+    handleSaveChangesBar(STATE);
+  });
+}
+
+function handleSaveChangesBar(STATE) {
+  const changesContainer = document.querySelector(
+    "[data-js-changes-container]"
+  );
+  const changesToggleText = document.querySelector(
+    "[data-js-changes-toggle] span"
+  );
+  const saveChangesButton = changesContainer.querySelector(
+    "[data-js-save-changes-button]"
+  );
+  const revertChangesButton = changesContainer.querySelector(
+    "[data-js-revert-change-button]"
+  );
+
+  changesToggleText.innerText = getChangesToggleText(STATE.changeCount);
+  saveChangesButton.disabled = STATE.changeCount < 1;
+  revertChangesButton.disabled = STATE.changeCount < 1;
+  saveChangesButton.disabled = STATE.changeCount < 1;
+  revertChangesButton.disabled = STATE.changeCount < 1;
+
+  if (STATE.changeCount > 0) {
+    changesContainer.classList.add("p-sticky-admin-footer");
+    changesContainer.classList.remove("p-sticky-admin-footer--hidden");
+  } else {
+    changesContainer.classList.add("p-sticky-admin-footer--hidden");
+    changesContainer.classList.remove("p-sticky-admin-footer");
+  }
+}
+
+function initManageMembersTable(members) {
+  const STATE = {
+    members,
+    updatedMembers: members.map((member) => {
+      return Object.assign({}, member);
+    }),
+    dirtyData: [],
+    changeCount: 0,
+  };
+
+  const manageMembersForm = document.getElementById("manage-members-form");
+
+  buildTable(STATE.updatedMembers, STATE);
+  filterMembers(STATE);
+
+  manageMembersForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const form = event.target;
+    const membersField = manageMembersForm.querySelector(
+      "[data-js-members-hidden-field]"
+    );
 
     membersField.value = JSON.stringify(
-      dirtyData.map(function (data) {
+      STATE.dirtyData.map((data) => {
         return {
           email: data.email,
           roles: data.roles,
@@ -118,77 +242,6 @@ function updateMembers(membersData) {
 
     form.submit();
   });
-}
-
-function filterMembers(members, roles) {
-  members = members || [];
-  roles = roles || [];
-
-  const membersTableBody = document.querySelector("#members-table tbody");
-  const filterMembersField = document.querySelector("#filter-members");
-
-  filterMembersField.addEventListener(
-    "keyup",
-    debounce((e) => {
-      const query = e.target.value.toLowerCase();
-      let filteredMembers = members.filter((member) => {
-        return (
-          member.displayname.toLowerCase().includes(query) ||
-          member.email.toLowerCase().includes(query) ||
-          member.username.toLowerCase().includes(query)
-        );
-      });
-
-      if (!query) {
-        filteredMembers = members;
-      }
-
-      membersTableBody.innerHTML = "";
-
-      filteredMembers.forEach((member) => {
-        membersTableBody.appendChild(buildMemberRow(member, roles));
-      });
-
-      updateMembers(filteredMembers);
-    }),
-    100
-  );
-}
-
-function buildMemberRow(member, roles) {
-  const tr = document.createElement("tr");
-
-  let rowContent = `
-    <td><i class="p-icon--user u-hide--small"></i> ${member.displayname}</td>
-    <td>${member.email}</td>
-  `;
-
-  roles.forEach((role) => {
-    rowContent += `<td aria-label="${role.role}">`;
-    rowContent += "<label class='p-checkbox u-no-padding--top'>";
-    rowContent += `
-      <input
-        type="checkbox"
-        aria-labelledby="role-${role.role}"
-        class="p-checkbox__input js-role-checkbox"
-        name="${role.role}"
-        data-member-email="${member.email}"
-        ${member.roles.includes(role.role) ? "checked" : ""}
-      >
-      <span class="p-checkbox__label u-hide">${role.label}</span>
-    `;
-    rowContent += "</label>";
-    rowContent += "</td>";
-  });
-
-  tr.innerHTML = rowContent;
-
-  return tr;
-}
-
-function initManageMembersTable(members, roles) {
-  updateMembers(members);
-  filterMembers(members, roles);
 }
 
 export { initManageMembersTable };

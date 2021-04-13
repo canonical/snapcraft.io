@@ -15,6 +15,11 @@
         }
       }
 
+      @media (min-width: $breakpoint-large) {
+        position: sticky;
+        top: 0;
+      }
+
       &:focus-within {
         box-shadow: none;
       }
