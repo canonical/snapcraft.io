@@ -6,25 +6,34 @@
 
 {% block admin_content %}
 
-<ul class="p-inline-list--stretch">
-  <li class="p-inline-list__item u-no-margin--right">
-    <div class="p-button-group">
-      <div class="p-button-group__inner">
-        <div class="p-button-group__buttons">
-          <a href="/admin/{{ store.id }}/members" class="p-button-group__button">Members</a>
-          <a href="/admin/{{ store.id }}/members/invites" class="p-button-group__button is-selected">Invites</a>
-        </div>
-      </div>
-    </div>
-  </li>
-  <li class="p-inline-list__item u-align--right">
-    <label for="filter-invites" class="u-hide">Search for user</label>
-    <input type="text" name="filter-invites" id="filter-invites" placeholder="Search for user" style=" margin-right: 0.5rem; max-width: 320px; min-width: 0;">
-    <button id="show-invite-modal" class="u-no-margin--bottom" aria-controls="invite-member-modal" data-js-toggle-modal>
-      <i class="p-icon--plus"></i>&nbsp;Invite member
+<div class="row u-no-padding--left u-no-padding--right" style="margin-bottom: 1.2rem; max-width: 100%;">
+  <div class="col-8">
+    <nav class="p-tabs">
+      <ul class="p-tabs__list u-no-margin--bottom">
+        <li class="p-tabs__item" role="presentation">
+          <a href="/admin/{{ store.id }}/members" class="p-tabs__link" role="tab">
+            Members
+          </a>
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a href="/admin/{{ store.id }}/members/invites" class="p-tabs__link" role="tab" aria-selected="true">
+            Invites
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="col-4 u-align--right">
+    <button id="show-invite-modal" class="u-no-margin--bottom" aria-controls="invite-member-modal" data-js-toggle-modal style="position: relative; top: 0.75rem;">
+      <i class="p-icon--plus"></i>&nbsp;Add new member
     </button>
-  </li>
-</ul>
+  </div>
+</div>
+
+<p style="max-width: 320px;">
+  <label for="filter-invites" class="u-off-screen">Search for user</label>
+    <input type="text" name="filter-invites" id="filter-invites" placeholder="Search" style="min-width: 0;">
+</p>
 
 <table id="invites-table" class="p-table--mobile-card">
   <thead>

@@ -6,25 +6,36 @@
 
 {% block admin_content %}
 
-<ul class="p-inline-list--stretch u-no-margin--bottom">
-  <li class="p-inline-list__item u-no-margin--right">
-    <p class="u-no-margin--bottom">
-      <a href="/admin/{{ store.id }}/members">&lsaquo;&nbsp;Back to members</a>
-    </p>
-  </li>
-</ul>
+<div class="row u-no-padding--left u-no-padding--right" style="margin-bottom: 1.2rem; max-width: 100%;">
+  <div class="col-8
+  ">
+    <nav class="p-tabs">
+      <ul class="p-tabs__list u-no-margin--bottom">
+        <li class="p-tabs__item" role="presentation">
+          <a href="/admin/{{ store.id }}/members" class="p-tabs__link" role="tab" aria-selected="true">
+            Members
+          </a>
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a href="/admin/{{ store.id }}/members/invites" class="p-tabs__link" role="tab">
+            Invites
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
 
-<h1 class="p-heading--4">Manage members</h1>
+<p style="max-width: 320px;">
+  <label for="filter-members" class="u-off-screen">Search for user</label>
+  <input type="text" name="filter-members" id="filter-members" placeholder="Search" style="min-width: 0;">
+</p>
 
 <table id="members-table" class="p-table--mobile-card">
   <thead>
     <tr>
-      <th style="padding-top: 5px; width: 40%;">
-        <div class="u-hide--small">
-          <label for="filter-members" class="u-hide">Search for user</label>
-          <input type="text" name="filter-members" id="filter-members" class="is-dense" placeholder="Search for user" style="min-width: 0;">
-        </div>
-      </th>
+      <th style="width: 25%;">Users ({{ members|length }})</th>
+      <th style="width: 35%;">Email</th>
       {% for role in store.roles %}
       <th>
         {{ role.label }}
@@ -41,6 +52,7 @@
       <td aria-label="Name" class="p-table__cell--icon-placeholder u-truncate p-table__cell--icon-placeholder">
         <i class="p-icon--user u-hide--small"></i> {{ member.displayname }}
       </td>
+      <td aria-label="Email">{{ member.email }}</td>
       {% for role in store.roles %}
       <td aria-label="{{ role.role }}">
         <label class="custom-checkbox">
