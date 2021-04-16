@@ -19,7 +19,7 @@ function filterMembers(STATE) {
         filteredMembers = STATE.updatedMembers;
       }
 
-      buildTable(filteredMembers, STATE);
+      buildMembersTable(filteredMembers, STATE);
     }),
     100
   );
@@ -92,7 +92,7 @@ function getChangesToggleText(changeCount) {
   }
 }
 
-function buildTable(updatedMembers, STATE) {
+function buildMembersTable(updatedMembers, STATE) {
   const tbody = document.querySelector("[data-js-members-table-body]");
   const template = document.querySelector(
     "[data-js-members-table-row-template]"
@@ -164,6 +164,10 @@ function handleEvents(STATE) {
         STATE.changeCount += getChangeCount(member, STATE.members);
       });
 
+      if (STATE.changeCount === 0) {
+        resetChangesTable();
+      }
+
       handleSaveChangesBar(STATE);
     });
   });
@@ -174,16 +178,44 @@ function handleEvents(STATE) {
     });
     STATE.dirtyData = [];
     STATE.changeCount = 0;
-    buildTable(STATE.members, STATE);
+    buildMembersTable(STATE.members, STATE);
     handleSaveChangesBar(STATE);
+    resetChangesTable();
   });
+}
+
+function resetChangesTable() {
+  const memberChangesTable = document.querySelector(
+    "[data-js-member-changes-table]"
+  );
+  const memberChangesToggleIcon = document.querySelector(
+    "[data-js-changes-toggle] i"
+  );
+
+  memberChangesTable.classList.add("u-hide");
+  memberChangesToggleIcon.classList.add("p-icon--chevron-up");
+  memberChangesToggleIcon.classList.remove("p-icon--chevron-down");
+}
+
+function toggleChangesTable() {
+  const toggleButtonIcon = document.querySelector("[data-js-changes-toggle] i");
+  const memberChangesTable = document.querySelector(
+    "[data-js-member-changes-table]"
+  );
+
+  memberChangesTable.classList.toggle("u-hide");
+  toggleButtonIcon.classList.toggle("p-icon--chevron-up");
+  toggleButtonIcon.classList.toggle("p-icon--chevron-down");
 }
 
 function handleSaveChangesBar(STATE) {
   const changesContainer = document.querySelector(
     "[data-js-changes-container]"
   );
-  const changesToggleText = document.querySelector(
+  const toggleChangesButton = document.querySelector(
+    "[data-js-changes-toggle]"
+  );
+  const changesToggleText = toggleChangesButton.querySelector(
     "[data-js-changes-toggle] span"
   );
   const saveChangesButton = changesContainer.querySelector(
@@ -193,9 +225,9 @@ function handleSaveChangesBar(STATE) {
     "[data-js-revert-change-button]"
   );
 
+  toggleChangesButton.removeEventListener("click", toggleChangesTable);
+
   changesToggleText.innerText = getChangesToggleText(STATE.changeCount);
-  saveChangesButton.disabled = STATE.changeCount < 1;
-  revertChangesButton.disabled = STATE.changeCount < 1;
   saveChangesButton.disabled = STATE.changeCount < 1;
   revertChangesButton.disabled = STATE.changeCount < 1;
 
@@ -206,9 +238,92 @@ function handleSaveChangesBar(STATE) {
     changesContainer.classList.add("p-sticky-admin-footer--hidden");
     changesContainer.classList.remove("p-sticky-admin-footer");
   }
+
+  buildChangesTable(STATE);
+
+  toggleChangesButton.addEventListener("click", toggleChangesTable);
 }
 
-function initManageMembersTable(members) {
+function buildChangesTable(STATE) {
+  const tbody = document.querySelector("[data-js-member-changes-table-body]");
+  const template = document.querySelector(
+    "[data-js-member-changes-table-row-template]"
+  );
+
+  tbody.innerHTML = "";
+
+  STATE.dirtyData.forEach((member) => {
+    const clone = template.content.cloneNode(true);
+    const memberDisplayNameField = clone.querySelector(
+      "[data-js-member-display-name]"
+    );
+    const memberEmailField = clone.querySelector("[data-js-member-email]");
+    const memberChangeActionField = clone.querySelector(
+      "[data-js-member-change-action]"
+    );
+    const memberRolesField = clone.querySelector("[data-js-member-roles]");
+
+    memberDisplayNameField.innerText = member.displayname;
+    memberEmailField.innerText = member.email;
+
+    const originalMember = STATE.members.find((data) => {
+      return data.email === member.email;
+    });
+
+    const newRoles = [];
+    const oldRoles = [];
+
+    member.roles.forEach((role) => {
+      if (!originalMember.roles.includes(role) && !newRoles.includes(role)) {
+        newRoles.push(role);
+      }
+    });
+
+    originalMember.roles.forEach((role) => {
+      if (!member.roles.includes(role) && !oldRoles.includes(role)) {
+        oldRoles.push(role);
+      }
+    });
+
+    if (newRoles.length && oldRoles.length) {
+      memberChangeActionField.innerText = "Add and remove";
+    } else if (newRoles.length && !oldRoles.length) {
+      memberChangeActionField.innerText = "Add";
+    } else if (!newRoles.length && oldRoles.length) {
+      memberChangeActionField.innerText = "Remove";
+    }
+
+    // revert changes should reset the table and button hide states
+
+    const ROLES = {};
+
+    STATE.roles.forEach((role) => {
+      ROLES[role.role] = role.label;
+    });
+
+    let roleText = "";
+
+    if (!member.roles.length) {
+      roleText = "-";
+    }
+
+    member.roles.forEach((role, index) => {
+      if (index === member.roles.length - 1) {
+        roleText += ` ${ROLES[role]}`;
+      } else {
+        roleText += ` ${ROLES[role]},`;
+      }
+    });
+
+    memberRolesField.innerText = roleText;
+    tbody.appendChild(clone);
+  });
+}
+
+function initManageMembersTable(members, roles) {
+  members = members || [];
+  roles = roles || [];
+
   const STATE = {
     members,
     updatedMembers: members.map((member) => {
@@ -216,11 +331,12 @@ function initManageMembersTable(members) {
     }),
     dirtyData: [],
     changeCount: 0,
+    roles: roles,
   };
 
   const manageMembersForm = document.getElementById("manage-members-form");
 
-  buildTable(STATE.updatedMembers, STATE);
+  buildMembersTable(STATE.updatedMembers, STATE);
   filterMembers(STATE);
 
   manageMembersForm.addEventListener("submit", (event) => {
