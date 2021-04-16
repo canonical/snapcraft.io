@@ -105,4 +105,9 @@
       top: -6px;
     }
   }
+
+  .custom-checkbox .custom-checkbox__input:focus + .custom-checkbox__box::before {
+    outline: 0.1875rem solid #2e96ff;
+    outline-offset: -0.1875rem;
+  }
 }
