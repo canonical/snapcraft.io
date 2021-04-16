@@ -46,36 +46,41 @@
       {% endfor %}
     </tr>
   </thead>
-  <tbody>
-    {% for member in members %}
-    <tr>
-      <td aria-label="Name" class="p-table__cell--icon-placeholder u-truncate p-table__cell--icon-placeholder">
-        <i class="p-icon--user u-hide--small"></i> {{ member.displayname }}
-      </td>
-      <td aria-label="Email">{{ member.email }}</td>
-      {% for role in store.roles %}
+  <tbody data-js-members-table-body></tbody>
+</table>
+
+<template data-js-members-table-row-template>
+  <tr>
+    <td aria-label="Name" class="p-table__cell--icon-placeholder u-truncate p-table__cell--icon-placeholder">
+      <i class="p-icon--user u-hide--small"></i> <span data-js-member-display-name></span>
+    </td>
+    <td aria-label="Email"><span data-js-member-email></span></td>
+    {% for role in store.roles %}
       <td aria-label="{{ role.role }}">
         <label class="custom-checkbox">
-          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="custom-checkbox__input js-role-checkbox" {% if role.role in member.roles %}checked{% endif %} name="{{ role.role }}" data-member-email="{{ member.email }}">
+          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="custom-checkbox__input" name="{{ role.role }}" data-role="{{ role.role }}" data-js-role-checkbox>
           <span class="custom-checkbox__box"></span>
           <span class="custom-checkbox__label u-hide">{{ role.label }}</span>
         </label>
       </td>
-      {% endfor %}
-    </tr>
     {% endfor %}
-  </tbody>
-</table>
+  </tr>
+</template>
 
-<hr>
-
-<form id="manage-members-form" method="post">
-  <input type="hidden" name="members" id="members" value="">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <div class="u-align--right">
-    <button type="submit" class="p-button--positive js-save-button" disabled>Save changes</button>
+<div class="p-sticky-admin-footer--hidden" data-js-changes-container>
+  <div class="p-sticky-admin-footer__inner">
+    <button type="button" class="p-button--base" data-js-changes-toggle>
+      <i class="p-icon--chevron-up"></i>&nbsp;<span>No changes</span>
+    </button>
+    <form id="manage-members-form" method="post">
+      <input type="hidden" name="members" id="members" data-js-members-hidden-field value="">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="button" class="p-button--neutral" data-js-revert-change-button disabled>Revert</button>
+      <button type="submit" class="p-button--positive u-no-margin--right" data-js-save-changes-button disabled>Save changes</button>
+    </form>
   </div>
-</form>
+</div>
+
 {% endblock %}
 
 {% block scripts_includes %}
@@ -85,7 +90,7 @@
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }}, {{ store.roles | safe }});
+    snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }});
   });
 </script>
 {% endblock %}

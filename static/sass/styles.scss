@@ -341,6 +341,10 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-custom-checkboxes;
 
+@import "snapcraft_p-sticky-admin-footer";
+
+@include snapcraft-sticky-admin-footer;
+
 dl {
   margin-bottom: $spv-outer--scaleable;
 }
