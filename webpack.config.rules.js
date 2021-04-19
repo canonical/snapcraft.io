@@ -55,6 +55,15 @@ module.exports = [
     ],
   },
   {
+    test: require.resolve(
+      __dirname + "/static/js/public/manage-member-roles.js"
+    ),
+    use: [
+      "expose-loader?exposes=snapcraft.public.manageMemberRoles",
+      "babel-loader",
+    ],
+  },
+  {
     test: require.resolve(__dirname + "/static/js/public/manage-snaps.js"),
     use: ["expose-loader?exposes=snapcraft.public.manageSnaps", "babel-loader"],
   },

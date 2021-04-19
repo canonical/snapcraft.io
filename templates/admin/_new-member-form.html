@@ -1,0 +1,54 @@
+<h4>Add new member</h4>
+
+{% if request.args.get("multi_user") %}
+  <div class="p-notification--caution">
+    <p class="p-notification__response" role="status">
+      There is more than one user with this email. Please add an account ID to disambiguate.
+    </p>
+  </div>
+{% endif %}
+
+<form id="manage-member-roles-form" action="/admin/{{ store.id }}/members" method="post">
+  <input type="hidden" name="members" id="member-roles" value="" data-js-member-roles-hidden-field>
+  {% if source %}<input type="hidden" name="source" value="{{ source }}">{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="p-form__group">
+    <label for="invite-member-email" class="p-form__label">Email</label>
+    <div class="p-form__control">
+      <input type="email" name="invite-member-email" {% if request.args.get("email_address") != None %}value="{{ request.args.get('email_address') }}"{% endif %} data-js-manage-roles-email-field required>
+      <p class="p-form-help-text">The primary email for the Ubuntu One account</p>
+    </div>
+  </div>
+
+  {% if request.args.get("multi_user") or request.args.get("account_id_error") %}
+    <div class="p-form__group {% if request.args.get('account_id_error') %}p-form-validation is-error{% endif %}">
+      <label for="member-account-id" class="p-form__label">Account ID</label>
+      <div class="p-form__control">
+        <input type="text" name="member-account-id" class="p-form-validation__input" data-js-account-id-field>
+        <p class="p-form-validation__message" role="alert">
+          <strong>Error:</strong> ID does not match any account with this email.
+        </p>
+      </div>
+    </div>
+  {% endif %}
+
+  <p>Roles:</p>
+
+  <div class="p-form__group" style="margin-bottom: 2rem;">
+    {% for role in store.roles %}
+      <label class="p-checkbox">
+        <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="p-checkbox__input" name="{{ role.role }}" data-js-role-field {% if request.args.get(role.role) %}checked{% endif %}>
+        <span class="p-checkbox__label">{{ role.label }}</span>
+      </label>
+      <p class="p-form-help-text" style="padding-left: 32px;">{{ role.description }}</p>
+    {% endfor %}
+  </div>
+
+  <div class="u-align--right">
+    <button type="button" class="p-button--neutral" data-js-close-side-panel-btn>Cancel</button>
+    <button class="p-button--positive u-no-margin--right" id="invite-member-button" type="submit">
+      Add member
+    </button>
+  </div>
+</form>

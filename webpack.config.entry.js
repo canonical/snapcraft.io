@@ -23,4 +23,5 @@ module.exports = {
   "brand-store": "./static/js/public/brand-store.js",
   "manage-invites": "./static/js/public/manage-invites.js",
   "invite-members": "./static/js/public/invite-members.js",
+  "manage-member-roles": "./static/js/public/manage-member-roles.js",
 };

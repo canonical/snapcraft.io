@@ -1,6 +1,17 @@
 @mixin snapcraft-l-application {
   .l-application {
+    position: sticky;
+    top: 0;
     width: auto;
+
+    .l-navigation {
+      top: 80px;
+      z-index: 10;
+
+      @media (min-width: $breakpoint-large) {
+        top: 0;
+      }
+    }
 
     .l-navigation.is-collapsed {
       @media (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
@@ -89,6 +100,32 @@
     .l-application__heading {
       @media screen and (min-width: $breakpoint-medium) {
         margin-bottom: 0 !important;
+      }
+    }
+
+    .l-application__panel-header-nav {
+      margin-bottom: 1rem;
+
+      @media (min-width: $breakpoint-small) {
+        float: left;
+        width: calc(100% - 240px);
+      }
+    }
+
+    .l-application__panel-header-actions {
+      @media (min-width: $breakpoint-small) {
+        float: right;
+        margin-top: 0.75rem;
+      }
+    }
+
+    .admin-notification {
+      justify-content: space-between;
+    }
+
+    .close-notification {
+      i {
+        margin: 0.5rem 0 0 !important;
       }
     }
   }

@@ -339,25 +339,28 @@ function initManageMembersTable(members, roles) {
   buildMembersTable(STATE.updatedMembers, STATE);
   filterMembers(STATE);
 
-  manageMembersForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+  if (manageMembersForm) {
+    manageMembersForm.addEventListener("submit", (event) => {
+      event.preventDefault();
 
-    const form = event.target;
-    const membersField = manageMembersForm.querySelector(
-      "[data-js-members-hidden-field]"
-    );
+      const form = event.target;
+      const membersField = manageMembersForm.querySelector(
+        "[data-js-members-hidden-field]"
+      );
 
-    membersField.value = JSON.stringify(
-      STATE.dirtyData.map((data) => {
-        return {
-          email: data.email,
-          roles: data.roles,
-        };
-      })
-    );
+      membersField.value = JSON.stringify(
+        STATE.dirtyData.map((data) => {
+          return {
+            email: data.email,
+            roles: data.roles,
+            id: data.id,
+          };
+        })
+      );
 
-    form.submit();
-  });
+      form.submit();
+    });
+  }
 }
 
 export { initManageMembersTable };

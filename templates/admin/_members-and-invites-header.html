@@ -1,0 +1,23 @@
+<div class="l-application__panel-header u-clearfix">
+  <div class="l-application__panel-header-nav">
+    <nav class="p-tabs">
+      <ul class="p-tabs__list u-no-margin--bottom">
+        <li class="p-tabs__item" role="presentation">
+          <a href="/admin/{{ store.id }}/members" class="p-tabs__link" role="tab" {% if view == "members" %}aria-selected="true"{% endif %}>
+            Members
+          </a>
+        </li>
+        <li class="p-tabs__item" role="presentation">
+          <a href="/admin/{{ store.id }}/members/invites" class="p-tabs__link" role="tab" {% if view == "invites" %}aria-selected="true"{% endif %}>
+            Invites
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="l-application__panel-header-actions">
+    <button class="p-button--neutral u-no-margin--bottom" data-js-open-side-panel-btn>
+      <i class="p-icon--plus"></i>&nbsp;Add new member
+    </button>
+  </div>
+</div>

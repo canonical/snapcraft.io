@@ -119,6 +119,12 @@ def get_manage_members(store_id):
         store=store,
         members=members,
         invites=invites,
+        confirm_invite=False,
+        email_address=None,
+        admin=False,
+        review=False,
+        view=False,
+        access=False,
     )
 
 
@@ -127,38 +133,102 @@ def get_manage_members(store_id):
 def post_manage_members(store_id):
     members = json.loads(flask.request.form.get("members"))
 
+    redirect_url = ".get_manage_members"
+
+    if flask.request.form.get("source") == "invites":
+        redirect_url = ".get_invites"
+
     try:
         admin_api.update_store_members(flask.session, store_id, members)
         flask.flash("Changes saved", "positive")
     except StoreApiResponseErrorList as api_response_error_list:
+
+        codes = [error.get("code") for error in api_response_error_list.errors]
+
         msgs = [
             f"{error.get('message', 'An error occurred')}"
             for error in api_response_error_list.errors
         ]
 
-        for msg in msgs:
-            flask.flash(msg, "negative")
+        for code in codes:
+            admin = (flask.request.form.get("admin"),)
+            review = (flask.request.form.get("review"),)
+            view = (flask.request.form.get("view"),)
+            access = flask.request.form.get("access")
+            email_address = flask.request.form.get("invite-member-email")
+            account_id = flask.request.form.get("member-account-id")
+
+            if code == "store-users-no-match":
+                if account_id:
+                    return flask.redirect(
+                        flask.url_for(
+                            redirect_url,
+                            store_id=store_id,
+                            email_address=email_address,
+                            admin=admin,
+                            review=review,
+                            view=view,
+                            access=access,
+                            account_id_error=True,
+                        )
+                    )
+                else:
+                    return flask.redirect(
+                        flask.url_for(
+                            redirect_url,
+                            store_id=store_id,
+                            confirm_invite=True,
+                            email_address=email_address,
+                            admin=admin,
+                            review=review,
+                            view=view,
+                            access=access,
+                        )
+                    )
+            elif code == "store-users-multiple-matches":
+                return flask.redirect(
+                    flask.url_for(
+                        redirect_url,
+                        store_id=store_id,
+                        multi_user=True,
+                        email_address=email_address,
+                        admin=admin,
+                        review=review,
+                        view=view,
+                        access=access,
+                    )
+                )
+            else:
+                for msg in msgs:
+                    flask.flash(msg, "negative")
+
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    return flask.redirect(
-        flask.url_for(".get_manage_members", store_id=store_id)
-    )
+    return_url = flask.url_for(".get_manage_members", store_id=store_id)
+
+    if flask.request.form.get("source") == "invites":
+        return_url = flask.url_for(".get_invites", store_id=store_id)
+
+    return flask.redirect(return_url)
 
 
 @admin.route("/admin/<store_id>/members/invite", methods=["POST"])
 @login_required
 def post_invite_members(store_id):
     members = json.loads(flask.request.form.get("members"))
+    email_address = flask.request.form.get("invite-member-email")
 
     try:
         admin_api.invite_store_members(flask.session, store_id, members)
-        flask.flash("Changes saved", "positive")
+        flask.flash(f"Invite sent to {email_address}", "positive")
     except StoreApiResponseErrorList as api_response_error_list:
         msgs = [
             f"{error.get('message', 'An error occurred')}"
             for error in api_response_error_list.errors
         ]
+
+        msgs = list(dict.fromkeys(msgs))
 
         for msg in msgs:
             flask.flash(msg, "negative")

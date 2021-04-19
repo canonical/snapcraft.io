@@ -345,6 +345,10 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-sticky-admin-footer;
 
+@import "snapcraft_p-side-panel";
+
+@include snapcraft-p-side-panel;
+
 dl {
   margin-bottom: $spv-outer--scaleable;
 }
@@ -392,4 +396,8 @@ code {
   @media only screen and (min-width: $breakpoint-medium) {
     min-width: 400px;
   }
+}
+
+.u-text-muted {
+  color: $color-mid-dark;
 }
