@@ -71,8 +71,10 @@ def _handle_error_list(errors):
         "macaroon-permission-required",
         "macaroon-authorization-required",
     ]:
+        last_login_method = flask.request.cookies.get("last_login_method")
+        login_path = "login-beta" if last_login_method == "candid" else "login"
         authentication.empty_session(flask.session)
-        return flask.redirect("/login?next=" + flask.request.path)
+        return flask.redirect(f"/{login_path}?next={flask.request.path}")
 
     codes = [
         f"{error['code']}: {error.get('message', 'No message')}"
