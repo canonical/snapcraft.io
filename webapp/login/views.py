@@ -1,4 +1,5 @@
 import os
+import datetime
 
 import flask
 from canonicalwebteam.candid import CandidClient
@@ -104,7 +105,21 @@ def after_login(resp):
             "email": resp.email,
         }
 
-    return flask.redirect(open_id.get_next_url())
+    response = flask.make_response(
+        flask.redirect(
+            open_id.get_next_url(),
+            302,
+        ),
+    )
+
+    # Set cookie to know where to redirect users for re-auth
+    response.set_cookie(
+        "last_login_method",
+        "sso",
+        expires=datetime.datetime.now() + datetime.timedelta(days=365),
+    )
+
+    return response
 
 
 @login.route("/login-beta", methods=["GET"])
@@ -131,9 +146,9 @@ def login_candid():
     next_url = flask.request.args.get("next")
 
     if next_url:
-        if not next_url.startswith(
+        if not next_url.startswith("/") and not next_url.startswith(
             flask.request.url_root
-        ) or next_url.startswith("/"):
+        ):
             return flask.abort(400)
         flask.session["next_url"] = next_url
 
@@ -176,13 +191,24 @@ def login_callback():
         "email": publisher["account"]["email"],
     }
 
-    return flask.redirect(
-        flask.session.pop(
-            "next_url",
-            flask.url_for("publisher_snaps.get_account_snaps"),
+    response = flask.make_response(
+        flask.redirect(
+            flask.session.pop(
+                "next_url",
+                flask.url_for("publisher_snaps.get_account_snaps"),
+            ),
+            302,
         ),
-        302,
     )
+
+    # Set cookie to know where to redirect users for re-auth
+    response.set_cookie(
+        "last_login_method",
+        "candid",
+        expires=datetime.datetime.now() + datetime.timedelta(days=365),
+    )
+
+    return response
 
 
 @login.route("/logout")
