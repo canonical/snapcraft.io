@@ -68,6 +68,32 @@
 </template>
 
 <div class="p-sticky-admin-footer--hidden" data-js-changes-container>
+  <div class="u-hide" data-js-member-changes-table>
+    <table class="p-table--mobile-card">
+      <thead>
+        <tr>
+          <th style="width: 25%;">User</th>
+          <th style="width: 35%;">Email</th>
+          <th style="width: 15%;">Action</th>
+          <th>Roles</th>
+        </tr>
+      </thead>
+      <tbody data-js-member-changes-table-body></tbody>
+    </table>
+
+    <template data-js-member-changes-table-row-template>
+      <tr>
+        <td aria-label="Name" class="p-table__cell--icon-placeholder u-truncate p-table__cell--icon-placeholder">
+          <i class="p-icon--user u-hide--small"></i> <span data-js-member-display-name></span>
+        </td>
+        <td aria-label="Email"><span data-js-member-email></span></td>
+        <td aria-label="Action"><span data-js-member-change-action></span></td>
+        <td aria-label="Roles"><span data-js-member-roles></span></td>
+      </tr>
+    </template>
+    <hr style="margin-bottom: 0.75rem;">
+  </div>
+
   <div class="p-sticky-admin-footer__inner">
     <button type="button" class="p-button--base" data-js-changes-toggle>
       <i class="p-icon--chevron-up"></i>&nbsp;<span>No changes</span>
@@ -90,7 +116,7 @@
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }});
+    snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }}, {{ store.roles | safe }});
   });
 </script>
 {% endblock %}
