@@ -6,43 +6,39 @@
 
 {% block admin_content %}
 
-<div class="row u-no-padding--left u-no-padding--right" style="margin-bottom: 1.2rem; max-width: 100%;">
-  <div class="col-8">
-    <nav class="p-tabs">
-      <ul class="p-tabs__list u-no-margin--bottom">
-        <li class="p-tabs__item" role="presentation">
-          <a href="/admin/{{ store.id }}/members" class="p-tabs__link" role="tab">
-            Members
-          </a>
-        </li>
-        <li class="p-tabs__item" role="presentation">
-          <a href="/admin/{{ store.id }}/members/invites" class="p-tabs__link" role="tab" aria-selected="true">
-            Invites
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  <div class="col-4 u-align--right">
-    <button id="show-invite-modal" class="u-no-margin--bottom" aria-controls="invite-member-modal" data-js-toggle-modal style="position: relative; top: 0.75rem;">
-      <i class="p-icon--plus"></i>&nbsp;Add new member
-    </button>
+{% with view = "invites" %}
+  {% include "admin/_members-and-invites-header.html" %}
+{% endwith %}
+
+<div class="p-side-panel {% if request.args.get('confirm_invite') or request.args.get('multi_user') or request.args.get('account_id_error') %}p-side-panel--open{% endif %}" data-js-side-panel>
+  <div class="p-side-panel__inner">
+    {% if request.args.get("confirm_invite") %}
+      {% with source = "invites" %}
+        {% include "admin/_invite-member-form.html" %}
+      {% endwith %}
+    {% endif %}
+
+    {% if not request.args.get("confirm_invite") %}
+      {% with source = "invites" %}
+        {% include "admin/_new-member-form.html" %}
+      {% endwith %}
+    {% endif %}
   </div>
 </div>
 
 <p style="max-width: 320px;">
   <label for="filter-invites" class="u-off-screen">Search for user</label>
-    <input type="text" name="filter-invites" id="filter-invites" placeholder="Search" style="min-width: 0;">
+    <input type="text" name="filter-invites" id="filter-invites" placeholder="Search" style="min-width: 0;" class="u-no-margin--bottom">
 </p>
 
 <table id="invites-table" class="p-table--mobile-card">
   <thead>
     <tr>
-      <th>Status</th>
+      <th style="width: 10%;">Status</th>
       <th>User</th>
-      <th>Expires</th>
-      <th>Roles</th>
-      <th>&nbsp;</th>
+      <th style="width: 15%;">Expires</th>
+      <th style="width: 20%;">Roles</th>
+      <th style="width: 20%;">&nbsp;</th>
     </tr>
   </thead>
   <tbody>
@@ -191,16 +187,13 @@
   </div>
 </div>
 
-{% with source="invites" %}
-  {% include "admin/_invites_modal.html" %}
-{% endwith %}
-
 {% endblock %}
 
 {% block scripts_includes %}
 <script src="{{ static_url('js/dist/modal.js') }}" defer></script>
 <script src="{{ static_url('js/dist/manage-invites.js') }}" defer></script>
 <script src="{{ static_url('js/dist/invite-members.js') }}" defer></script>
+<script src="{{ static_url('js/dist/manage-member-roles.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
@@ -210,6 +203,7 @@
       snapcraft.public.modal.init();
       snapcraft.public.inviteMembers.init();
       snapcraft.public.manageInvites.initUpdateInvitesTable({{ pending_invites | safe }}, {{ expired_invites | safe }}, {{ revoked_invites | safe }}, "{{ store.id }}", "{{ csrf_token() }}");
+      snapcraft.public.manageMemberRoles.initManageMemberRoles();
     });
   });
 </script>

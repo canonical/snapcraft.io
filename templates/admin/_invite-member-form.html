@@ -1,0 +1,65 @@
+<h4>Send invitation to join this store</h4>
+<p>We couldn't find an existing user for the email <strong style="word-break: break-all;">{{ request.args.get("email_address") }}</strong></p>
+<p>Would you like to send an email inviting them to join <strong>{{ store.name }}</strong>?</p>
+<p>When they accept they will be granted the following permissions:</p>
+<ul>
+  {% for role in store.roles %}
+    {% if role.role == "admin" and request.args.get("admin") %}
+      <li>
+        {{ role.label }}<br>
+        <small class="u-text-muted">{{ role.description }}</small>
+      </li>
+    {% endif %}
+
+    {% if role.role == "review" and request.args.get("review") %}
+      <li>
+        {{ role.label }}<br>
+        <small class="u-text-muted">{{ role.description }}</small>
+      </li>
+    {% endif %}
+
+    {% if role.role == "view" and request.args.get("view") %}
+      <li>
+        {{ role.label }}<br>
+        <small class="u-text-muted">{{ role.description }}</small>
+      </li>
+    {% endif %}
+
+    {% if role.role == "access" and request.args.get("access") %}
+      <li>
+        {{ role.label }}<br>
+        <small class="u-text-muted">{{ role.description }}</small>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<form action="/admin/{{ store.id }}/members/invite" id="invite-member-form" method="post">
+  <input type="hidden" name="members" id="invite-members" value="">
+  {% if source %}<input type="hidden" name="source" value="{{ source }}">{% endif %}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="invite-member-email" id="invite-member-email" value="{{ request.args.get('email_address') }}">
+
+  {% for role in store.roles %}
+    {% if role.role == "admin" and request.args.get("admin") %}
+      <input type="hidden" name="{{ role.role }}" data-js-role-field>
+    {% endif %}
+
+    {% if role.role == "review" and request.args.get("review") %}
+      <input type="hidden" name="{{ role.role }}" data-js-role-field>
+    {% endif %}
+
+    {% if role.role == "view" and request.args.get("view") %}
+      <input type="hidden" name="{{ role.role }}" data-js-role-field>
+    {% endif %}
+
+    {% if role.role == "access" and request.args.get("access") %}
+      <input type="hidden" name="{{ role.role }}" data-js-role-field>
+    {% endif %}
+  {% endfor %}
+
+  <div class="u-align--right">
+    <button type="button" class="p-button--neutral" data-js-close-side-panel-btn>Cancel</button>
+    <button type="submit" class="p-button--positive u-no-margin--right">Send invite</button>
+  </div>
+</form>

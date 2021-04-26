@@ -6,29 +6,25 @@
 
 {% block admin_content %}
 
-<div class="row u-no-padding--left u-no-padding--right" style="margin-bottom: 1.2rem; max-width: 100%;">
-  <div class="col-8
-  ">
-    <nav class="p-tabs">
-      <ul class="p-tabs__list u-no-margin--bottom">
-        <li class="p-tabs__item" role="presentation">
-          <a href="/admin/{{ store.id }}/members" class="p-tabs__link" role="tab" aria-selected="true">
-            Members
-          </a>
-        </li>
-        <li class="p-tabs__item" role="presentation">
-          <a href="/admin/{{ store.id }}/members/invites" class="p-tabs__link" role="tab">
-            Invites
-          </a>
-        </li>
-      </ul>
-    </nav>
+{% with view = "members" %}
+  {% include "admin/_members-and-invites-header.html" %}
+{% endwith %}
+
+<div class="p-side-panel {% if request.args.get('confirm_invite') or request.args.get('multi_user') or request.args.get('account_id_error') %}p-side-panel--open{% endif %}" data-js-side-panel>
+  <div class="p-side-panel__inner">
+    {% if request.args.get("confirm_invite") %}
+      {% include "admin/_invite-member-form.html" %}
+    {% endif %}
+
+    {% if not request.args.get("confirm_invite") %}
+      {% include "admin/_new-member-form.html" %}
+    {% endif %}
   </div>
 </div>
 
 <p style="max-width: 320px;">
   <label for="filter-members" class="u-off-screen">Search for user</label>
-  <input type="text" name="filter-members" id="filter-members" placeholder="Search" style="min-width: 0;">
+  <input type="text" name="filter-members" id="filter-members" placeholder="Search" style="min-width: 0;" class="u-no-margin--bottom">
 </p>
 
 <table id="members-table" class="p-table--mobile-card">
@@ -110,13 +106,19 @@
 {% endblock %}
 
 {% block scripts_includes %}
+<script src="{{ static_url('js/dist/invite-members.js') }}" defer></script>
 <script src="{{ static_url('js/dist/manage-members.js') }}" defer></script>
+<script src="{{ static_url('js/dist/manage-member-roles.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }}, {{ store.roles | safe }});
+    Raven.context(function () {
+      snapcraft.public.inviteMembers.init();
+      snapcraft.public.manageMembers.initManageMembersTable({{ members | safe }}, {{ store.roles | safe }});
+      snapcraft.public.manageMemberRoles.initManageMemberRoles();
+    });
   });
 </script>
 {% endblock %}
