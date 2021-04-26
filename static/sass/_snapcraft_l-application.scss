@@ -1,8 +1,13 @@
 @mixin snapcraft-l-application {
   .l-application {
+    height: calc(100vh - 80px);
     position: sticky;
     top: 0;
     width: auto;
+
+    @media (min-width: $breakpoint-medium) {
+      height: calc(100vh - 92px);
+    }
 
     .l-navigation {
       top: 80px;
