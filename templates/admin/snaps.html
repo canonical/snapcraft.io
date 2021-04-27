@@ -5,6 +5,61 @@
 {% block meta_title %}Manage snaps in {{ store.name }} | Snapcraft{% endblock %}
 
 {% block admin_content %}
-{% include "/admin/_snaps_section.html" %}
+<div class="l-application__header">
+  <h2 class="p-heading--four">Snaps in {{ store.name }}</h2>
+</div>
+
+<table class="p-table--mobile-card" data-js-snaps-table>
+  <thead>
+    <tr>
+      <th style="width: 15%;">Published in</th>
+      <th style="width: 25%;">Name</th>
+      <th style="width: 20%;">Latest release</th>
+      <th>Collaborators</th>
+      <th style="width: 5%;">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody data-js-snaps-table-body>
+  </tbody>
+</table>
+
+<template data-js-snaps-table-row>
+  <tr>
+    <td aria-label="Published in" class="u-truncate" data-js-published-store></td>
+    <td aria-label="Name" class="u-truncate" data-js-store-name></td>
+    <td aria-label="Latest release" class="u-truncate">
+      <div data-js-latest-release-version></div>
+      <div><small data-js-latest-release-date></small></div>
+    </td>
+    <td aria-label="Collaborators" data-js-collaborators></td>
+    <td aria-label="Actions" class="u-align--right" style="overflow: visible;" data-js-actions>
+      <span class="p-tooltip--left" aria-describedby="">
+        <button class="p-button--base u-no-margin--bottom u-no-margin--right u-no-padding" disabled>
+          <i class="p-icon--delete">Delete</i>
+        </button>
+        <span class="p-tooltip__message" role="tooltip" id="">You can only remove snaps from other stores</span>
+      </span>
+    </td>
+  </tr>
+</template>
 {% endblock %}
+
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/manage-snaps.js') }}" defer></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      snapcraft.public.manageSnaps.init(
+        {{ snaps | safe}},
+        {{ store_json | safe }},
+        {{ other_stores_data | safe }}
+      );
+    });
+  });
+</script>
+{% endblock %}
+
 
