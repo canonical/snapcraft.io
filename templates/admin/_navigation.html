@@ -4,7 +4,7 @@
   </li>
   {% for s in stores %}
   <li class="p-side-navigation__item">
-    <a class="p-side-navigation__link" href="/admin/{{ s.id }}/snaps">{{ s.name }}</a>
+    <a class="p-side-navigation__link" href="/admin/{{ s.id }}/settings">{{ s.name }}</a>
     <ul class="p-side-navigation__list {% if store.id != s.id %}u-hide{% endif %}">
       <li class="p-side-navigation__item">
         <a class="p-side-navigation__link {% if current_tab == 'snaps' %}is-active{% endif %}" href="/admin/{{ s.id }}/snaps">Snaps</a>
