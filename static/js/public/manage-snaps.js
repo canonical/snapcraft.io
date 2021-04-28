@@ -1,61 +1,22 @@
-function formatSelectedSnapData(snapCheckboxes) {
-  let snaps = [];
+import buildSnapsTableRow from "./build-snaps-table-row";
 
-  snapCheckboxes.forEach((snap) => {
-    snaps.push({
-      name: snap.dataset.snapName,
-    });
-  });
+function init(snaps, store, otherStores) {
+  const STATE = {
+    snaps,
+    store,
+    otherStores: otherStores.sort((a, b) => (a.store > b.store ? 1 : -1)),
+    snapsInStore: snaps.filter((snap) => snap.store === store.id),
+  };
 
-  return snaps;
-}
+  buildSnapsTableRow(STATE.snapsInStore, STATE.store);
 
-function updateSnaps() {
-  const manageSnapsForm = document.querySelector("#manage-snaps-form");
-  const saveButton = document.querySelector(".js-save-button");
-  const snapsTable = document.querySelector("#snaps-table");
-  const snapCheckboxes = Array.prototype.slice.call(
-    snapsTable.querySelectorAll(":checked")
-  );
+  STATE.otherStores.forEach((otherStore) => {
+    const snapsInStore = STATE.snaps.filter(
+      (snap) => snap.store === otherStore.id
+    );
 
-  const originalSnapState = formatSelectedSnapData(snapCheckboxes);
-  let currentSnaps = originalSnapState;
-  let dirtyData = false;
-
-  snapCheckboxes.forEach((snap) => {
-    snap.addEventListener("change", () => {
-      const currentSnapCheckboxes = Array.prototype.slice.call(
-        snapsTable.querySelectorAll(":checked")
-      );
-
-      currentSnaps = formatSelectedSnapData(currentSnapCheckboxes);
-
-      if (
-        JSON.stringify(originalSnapState.sort()) !==
-        JSON.stringify(currentSnaps.sort())
-      ) {
-        dirtyData = true;
-      } else {
-        dirtyData = false;
-      }
-
-      saveButton.disabled = !dirtyData;
-    });
-  });
-
-  manageSnapsForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    const updateSnapsField = form.querySelector("#snaps");
-
-    updateSnapsField.value = JSON.stringify({
-      add: [],
-      remove: [],
-    });
-
-    form.submit();
+    buildSnapsTableRow(snapsInStore, otherStore);
   });
 }
 
-export { updateSnaps };
+export { init };
