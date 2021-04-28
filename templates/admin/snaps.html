@@ -7,6 +7,10 @@
 {% block admin_content %}
 <div class="l-application__header">
   <h2 class="p-heading--four">Snaps in {{ store.name }}</h2>
+  <div>
+    <label for="snaps-filter" class="u-off-screen">Filter snaps</label>
+    <input type="search" name="snaps-filter" placeholder="Search" data-js-snaps-filter>
+  </div>
 </div>
 
 <table class="p-table--mobile-card" data-js-snaps-table>

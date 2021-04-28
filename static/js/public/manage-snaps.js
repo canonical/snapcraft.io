@@ -1,4 +1,33 @@
-import buildSnapsTableRow from "./build-snaps-table-row";
+import debounce from "../libs/debounce";
+import { buildSnapsTableRow, getFilteredSnaps } from "./utilities";
+
+function handleSnapsFilter(STATE) {
+  const snapsFilter = document.querySelector("[data-js-snaps-filter]");
+  const tableBody = document.querySelector("[data-js-snaps-table-body");
+
+  snapsFilter.addEventListener(
+    "keyup",
+    debounce((e) => {
+      const query = e.target.value.toLowerCase();
+
+      tableBody.innerHTML = "";
+
+      buildSnapsTableRow(
+        getFilteredSnaps(STATE.snapsInStore, query),
+        STATE.store
+      );
+
+      STATE.otherStores.forEach((otherStore) => {
+        const snapsInStore = STATE.snaps.filter(
+          (snap) => snap.store === otherStore.id
+        );
+
+        buildSnapsTableRow(getFilteredSnaps(snapsInStore, query), otherStore);
+      });
+    }),
+    100
+  );
+}
 
 function init(snaps, store, otherStores) {
   const STATE = {
@@ -17,6 +46,8 @@ function init(snaps, store, otherStores) {
 
     buildSnapsTableRow(snapsInStore, otherStore);
   });
+
+  handleSnapsFilter(STATE);
 }
 
 export { init };
