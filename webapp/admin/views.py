@@ -38,7 +38,7 @@ def get_stores():
 
     # We redirect to the first store snap list
     return flask.redirect(
-        flask.url_for(".get_store_snaps", store_id=stores[0]["id"])
+        flask.url_for(".get_settings", store_id=stores[0]["id"])
     )
 
 
