@@ -7,9 +7,25 @@
 {% block admin_content %}
 <div class="l-application__header">
   <h2 class="p-heading--four">Snaps in {{ store.name }}</h2>
-  <div>
-    <label for="snaps-filter" class="u-off-screen">Filter snaps</label>
-    <input type="search" name="snaps-filter" placeholder="Search" data-js-snaps-filter>
+  <div style=" align-items: space-between; display: flex;">
+    <div style="margin-right: 1rem;">
+      <label for="snaps-filter" class="u-off-screen">Filter snaps</label>
+      <input type="search" class="u-no-margin--bottom" name="snaps-filter" placeholder="Search" data-js-snaps-filter>
+    </div>
+    <button class="p-button--neutral u-no-margin--bottom" data-js-open-side-panel-btn>
+      <i class="p-icon--plus"></i>
+      <span>Add snap</span>
+    </button>
+  </div>
+</div>
+
+<div class="p-side-panel" data-js-side-panel>
+  <div class="p-side-panel__inner">
+    <h4>Add a snap to {{ store.name }}</h4>
+    <div class="u-align--right">
+      <button type="button" class="p-button--neutral" data-js-close-side-panel-btn>Cancel</button>
+      <button type="button" class="p-button--positive" disabled>Add snap</button>
+    </div>
   </div>
 </div>
 
@@ -57,10 +73,22 @@
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
       snapcraft.public.manageSnaps.init(
-        {{ snaps | safe}},
+        {{ snaps | safe }},
         {{ store_json | safe }},
         {{ other_stores_data | safe }}
       );
+
+      const sidePanel = document.querySelector("[data-js-side-panel]");
+      const openSidePanelButton = document.querySelector("[data-js-open-side-panel-btn]");
+      const closeSidePanelButton = document.querySelector("[data-js-close-side-panel-btn]");
+
+      openSidePanelButton.addEventListener("click", () => {
+        sidePanel.classList.add("p-side-panel--open");
+      });
+
+      closeSidePanelButton.addEventListener("click", () => {
+        sidePanel.classList.remove("p-side-panel--open");
+      });
     });
   });
 </script>
