@@ -53,8 +53,8 @@
     <td aria-label="Email"><span data-js-member-email></span></td>
     {% for role in store.roles %}
       <td aria-label="{{ role.role }}">
-        <label class="custom-checkbox">
-          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="custom-checkbox__input" name="{{ role.role }}" data-role="{{ role.role }}" data-js-role-checkbox>
+        <label class="custom-checkbox" data-js-role-checkbox data-js-logged-in-member="{{ session['publisher']['email'] }}">
+          <input type="checkbox" aria-labelledby="role-{{ role.role }}" class="custom-checkbox__input" name="{{ role.role }}" data-role="{{ role.role }}">
           <span class="custom-checkbox__box"></span>
           <span class="custom-checkbox__label u-hide">{{ role.label }}</span>
         </label>
