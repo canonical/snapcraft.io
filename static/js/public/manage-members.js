@@ -112,21 +112,30 @@ function buildMembersTable(updatedMembers, STATE) {
 
     const roleCheckboxes = clone.querySelectorAll("[data-js-role-checkbox]");
     roleCheckboxes.forEach((checkbox) => {
-      checkbox.dataset.memberEmail = member.email;
-      const role = checkbox.dataset.role;
+      const checkboxInput = checkbox.querySelector("[type='checkbox']");
+      const loggedInMemberEmail = checkbox.dataset.jsLoggedInMember;
+
+      checkboxInput.dataset.memberEmail = member.email;
+
+      const role = checkboxInput.dataset.role;
       if (member.roles.includes(role)) {
-        checkbox.checked = true;
+        checkboxInput.checked = true;
+      }
+
+      if (role === "admin" && member.email === loggedInMemberEmail) {
+        checkbox.classList.add("is-disabled");
+        checkboxInput.disabled = true;
       }
 
       const originalMember = STATE.members.find((data) => {
-        return data.email === checkbox.dataset.memberEmail;
+        return data.email === checkboxInput.dataset.memberEmail;
       });
 
       const currentMember = updatedMembers.find((data) => {
-        return data.email === checkbox.dataset.memberEmail;
+        return data.email === checkboxInput.dataset.memberEmail;
       });
 
-      handleCheckboxChangeState(checkbox, originalMember, currentMember);
+      handleCheckboxChangeState(checkboxInput, originalMember, currentMember);
     });
 
     tbody.appendChild(clone);
@@ -145,16 +154,17 @@ function handleEvents(STATE) {
   );
 
   roleCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", () => {
+    const checkboxInput = checkbox.querySelector("[type='checkbox']");
+    checkboxInput.addEventListener("change", () => {
       const originalMember = STATE.members.find((data) => {
-        return data.email === checkbox.dataset.memberEmail;
+        return data.email === checkboxInput.dataset.memberEmail;
       });
 
       const currentMember = STATE.updatedMembers.find((data) => {
-        return data.email === checkbox.dataset.memberEmail;
+        return data.email === checkboxInput.dataset.memberEmail;
       });
 
-      handleCheckboxChangeState(checkbox, originalMember, currentMember);
+      handleCheckboxChangeState(checkboxInput, originalMember, currentMember);
 
       currentMember.isDirty = checkDirtyData(originalMember, currentMember);
       STATE.dirtyData = STATE.updatedMembers.filter((data) => data.isDirty);

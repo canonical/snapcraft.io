@@ -6,6 +6,11 @@
     padding-left: 0.5rem;
     padding-top: 0.1rem;
     position: relative;
+
+    &.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.33;
+    }
   }
 
   .custom-checkbox .custom-checkbox__input {
