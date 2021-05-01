@@ -38,8 +38,7 @@ For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
 This codebase can be modified to setup branded stores that represent specific brand or devices, giving the brand full control over the store content, reviewing process and identity.
 
-- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://docs.ubuntu.com/core/en/build-store/create.html
-)
+- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://ubuntu.com/core/docs/store-overview)
 - For developers to learn more about developing a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
 
 # Deploy
