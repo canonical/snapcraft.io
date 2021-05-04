@@ -173,6 +173,29 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
       </div>
 
       <div class="row p-form__group">
+        <hr class="u-no-margin--bottom">
+      </div>
+
+      <div class="row p-form__group">
+        <div class="col-2">
+          <label class="p-form__label">Upload metadata on release:</label>
+        </div>
+        <div class="col-8">
+          <div class="p-form__control">
+            <input
+              type="checkbox"
+              name="update_metadata_on_release"
+              id="update_metadata_on_release"
+              {% if update_metadata_on_release|tojson == "true" %}checked{% endif %}
+            />
+            <label for="update_metadata_on_release">
+              <span class="p-form-help-text">The information on the Listing page of this snap will be automatically updated to the version in snapcraft.yaml of the latest revision pushed to the stable channel. If you manually edit the Listing page, the automatic updates will be turned off. <a class="p-link--external" href="/docs/snapcraft-top-level-metadata">Learn more</a>.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row p-form__group">
         <hr class="u-no-margin--bottom" />
       </div>
 
@@ -256,7 +279,8 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
         'private': {{ private|tojson }},
         'unlisted': {{ unlisted|tojson }},
         'whitelist_countries': {{ whitelist_country_codes|tojson }},
-        'blacklist_countries': {{ blacklist_country_codes|tojson }}
+        'blacklist_countries': {{ blacklist_country_codes|tojson }},
+        'update_metadata_on_release': {{ update_metadata_on_release|tojson }},
       },
       {% if error_list %}
         {{ error_list|tojson}}

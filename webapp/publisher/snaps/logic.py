@@ -270,6 +270,7 @@ def filter_changes_data(changes):
         "license",
         "video_urls",
         "categories",
+        "update_metadata_on_release",
     ]
 
     return {key: changes[key] for key in whitelist if key in changes}

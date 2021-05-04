@@ -130,6 +130,9 @@ def get_listing_snap(snap_name):
         "categories": categories,
         "tour_steps": tour_steps,
         "status": snap_details["status"],
+        "update_metadata_on_release": snap_details[
+            "update_metadata_on_release"
+        ],
     }
 
     return flask.render_template("publisher/listing.html", **context)
