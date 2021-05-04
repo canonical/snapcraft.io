@@ -6,7 +6,7 @@ Snaps are applications packaged with all their dependencies to run on all popula
 
 If you are interested in Snaps, Snapping and Snapcraft, there is an active [discourse forum](https://forum.snapcraft.io/) that we encourage developers to join.
 
-The site is largely maintained by the [Web and Design team](https://ubuntu.com/blog/topics/design) at [Canonical](https://www.canonical.com). It is a stateless website project based on [Flask](https://flask.palletsprojects.com/en/1.1.x/) and hosted on a [Charmed Kubernetes](https://ubuntu.com/kubernetes) cluster.
+The site is largely maintained by the [Web and Design team](https://ubuntu.com/blog/topics/design) at [Canonical](https://canonical.com/). It is a stateless website project based on [Flask](https://flask.palletsprojects.com/en/1.1.x/) and hosted on a [Charmed Kubernetes](https://ubuntu.com/kubernetes) cluster.
 
 
 ## Bugs and issues
@@ -30,7 +30,7 @@ The simplest way to run the site locally is using the [`dotrun`](https://snapcra
 dotrun
 ```
 
-Once the server has started, you can visit <http://127.0.0.1:8004> in your browser. You stop the server using `<ctrl>+c`.
+Once the server has started, you can visit `http://127.0.0.1:8004` in your browser. You stop the server using `<ctrl>+c`.
 
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
@@ -38,8 +38,7 @@ For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
 This codebase can be modified to setup branded stores that represent specific brand or devices, giving the brand full control over the store content, reviewing process and identity.
 
-- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://docs.ubuntu.com/core/en/build-store/create.html
-)
+- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://snapcraft.io/docs/store-brand-accounts)
 - For developers to learn more about developing a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
 
 # Deploy
@@ -47,7 +46,7 @@ You can find the deployment config in the deploy folder.
 
 ## License
 
-The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](http://opensource.org/licenses/lgpl-3.0.html) by [Canonical Ltd](http://www.canonical.com/).
+The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](https://opensource.org/licenses/lgpl-3.0.html) by [Canonical Ltd](https://canonical.com/).
 
 
 With ♥ from Canonical
