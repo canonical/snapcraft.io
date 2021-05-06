@@ -83,12 +83,9 @@
               <li>
                 <a href="/account/snaps" class="p-subnav__item">My published snaps</a>
               </li>
-              {# We don't show it for Candid users #}
-              {% if not "macaroons" in session %}
               <li>
                 <a href="/account/details" class="p-subnav__item">Account details</a>
               </li>
-              {% endif %}
               <li>
                 <a href="/logout" class="p-subnav__item">Sign out</a>
               </li>
