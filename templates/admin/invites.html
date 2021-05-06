@@ -171,6 +171,12 @@
   </tbody>
 </table>
 
+{% if not pending_invites and not expired_invites and not revoked_invites %}
+  <div class="p-notification--information">
+    <p class="p-notification__response">There are currently no pending, expired or revoked invites.</p>
+  </div>
+{% endif %}
+
 <div class="p-modal" id="invite-modal" style="display: none; z-index: 110;">
   <div class="p-modal__dialog" role="dialog" aria-labelledby="invite-modal-title" style="max-width: 480px;">
     <header class="p-modal__header">
