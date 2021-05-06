@@ -22,7 +22,10 @@ Account details — Linux software in the Snap Store
   {% endwith %}
   <div class="u-fixed-width u-clearfix">
     <h3 class="u-float-left">Publisher account details</h3>
+    {# We don't show it for Candid users #}
+    {% if not "macaroons" in session %}
     <a href="{{ LOGIN_URL }}" class="p-link--external u-float-right">Edit details</a>
+    {% endif %}
   </div>
   {% if errors %}
   <div class="row">
