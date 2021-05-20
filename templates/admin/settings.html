@@ -8,6 +8,10 @@
 
 {{ form }}
 
+<div class="l-application__header">
+  <h2 class="p-heading--four">Settings</h2>
+</div>
+
 <div class="row">
   <div class="col-7">
     <form action="/admin/{{ store.id }}/settings" method="POST">
@@ -20,6 +24,18 @@
         </label>
         <div class="p-form-help-text--nudge">This store will not be listed in the store dropdowns like the one in the snap name registration form.</div>
       </div>
+      <hr>
+      <h2 class="p-heading--4" id="store-id-label">Store ID</h2>
+      <div class="p-form__group">
+        <div class="p-password-toggle-input">
+          <input type="password" name="store-id" id="store-id" aria-labelledby="store-id-label" value="{{ store.id }}" readonly style="color: inherit;" data-js-store-id-field>
+          <button type="button" class="p-password-toggle-input__button p-button--base" data-js-toggle-store-id-visibility-button>
+            <span class="show-store-id-text">Show</span>
+            <span class="hide-store-id-text u-hide">Hide</span>
+          </button>
+        </div>
+      </div>
+      <hr>
       <h2 class="p-heading--4">Manual review policy</h2>
       <div class="p-form__group">
         <label class="p-radio">
@@ -55,6 +71,36 @@
     </form>
   </div>
 </div>
-
 {% endblock %}
 
+{% block scripts %}
+<script>
+  const storeIdField = document.querySelector(
+    "[data-js-store-id-field]"
+  );
+
+  const toggleStoreIdVisibilityButton = document.querySelector(
+    "[data-js-toggle-store-id-visibility-button]"
+  );
+
+  const showStoreIdText = toggleStoreIdVisibilityButton.querySelector(
+    ".show-store-id-text"
+  );
+
+  const hideStoreIdText = toggleStoreIdVisibilityButton.querySelector(
+    ".hide-store-id-text"
+  );
+
+  toggleStoreIdVisibilityButton.addEventListener("click", function() {
+    if (storeIdField.type === "password") {
+      storeIdField.type = "text";
+      showStoreIdText.classList.add("u-hide");
+      hideStoreIdText.classList.remove("u-hide");
+    } else {
+      storeIdField.type = "password";
+      showStoreIdText.classList.remove("u-hide");
+      hideStoreIdText.classList.add("u-hide");
+    }
+  });
+</script>
+{% endblock %}
