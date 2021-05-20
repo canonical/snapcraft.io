@@ -44,7 +44,7 @@ function handleSnapsSearch(STATE) {
     data: {
       src: async () => {
         const source = await fetch(
-          `/admin/${STATE.store.id}/snaps/search?q=${searchField.value}&allowed_for_inclusion=${STATE.store.id}`
+          `/admin/${STATE.store.id}/snaps/search.json?q=${searchField.value}&allowed_for_inclusion=${STATE.store.id}`
         );
 
         return await source.json();
@@ -67,7 +67,12 @@ function handleSnapsSearch(STATE) {
     resultItem: {
       content: (data, element) => {
         const subContent = document.createElement("div");
+        const owner = data.value.users.find((user) =>
+          user.roles.includes("owner")
+        );
         const subContentInner = `
+          <small class="u-text-muted">${owner.displayname}</small>
+          <small class="u-text-muted">|</small>
           <small class="u-text-muted">${data.value.store}</small>
         `;
         subContent.innerHTML = subContentInner;
@@ -95,10 +100,14 @@ function updateSnapsToInclude(snaps, STATE) {
     const clone = template.content.cloneNode(true);
     const snapNameContainer = clone.querySelector("[data-js-snap-name]");
     const snapStoreContainer = clone.querySelector("[data-js-snap-store]");
+    const snapOwnerContainer = clone.querySelector("[data-js-snap-owner]");
     const removeSnapButton = clone.querySelector("[data-js-remove-snap]");
+
+    const snapOwner = snap.users.find((user) => user.roles.includes("owner"));
 
     snapNameContainer.innerText = snap.name;
     snapStoreContainer.innerText = snap.store;
+    snapOwnerContainer.innerText = snapOwner.displayname;
     removeSnapButton.dataset.jsRemoveSnap = snap.name;
     removeSnapButton.addEventListener("click", (event) => {
       removeSnapToInclude(event.target, snaps, STATE);
