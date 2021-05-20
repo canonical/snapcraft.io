@@ -43,7 +43,7 @@ def get_stores():
     )
 
 
-@admin.route("/admin/<store_id>/snaps/search")
+@admin.route("/admin/<store_id>/snaps/search.json")
 @login_required
 def get_snaps_search(store_id):
     try:
