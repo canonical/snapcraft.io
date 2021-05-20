@@ -13,3 +13,7 @@ install:
       You will also need to reboot your device:
     command: |
       sudo reboot
+  - action: |
+      After this, install the core snap in order to get the latest snapd:
+    command: |
+      sudo snap install core
