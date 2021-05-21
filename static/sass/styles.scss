@@ -349,6 +349,10 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-p-side-panel;
 
+@import "patterns_p-password-toggle-input";
+
+@include p-password-toggle-input;
+
 dl {
   margin-bottom: $spv-outer--scaleable;
 }
