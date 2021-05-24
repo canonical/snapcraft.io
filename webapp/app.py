@@ -11,8 +11,6 @@ from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf
 from webapp.first_snap.views import first_snap
-from webapp.first_snap.views_2 import first_snap_2
-from webapp.first_snap.views_3 import first_snap_3
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.login.oauth_views import oauth
@@ -62,8 +60,6 @@ def init_brandstore(app):
 def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
-    app.register_blueprint(first_snap_2, url_prefix="/first-snap-2")
-    app.register_blueprint(first_snap_3, url_prefix="/first-snap-3")
     app.register_blueprint(login)
     app.register_blueprint(oauth)
     app.register_blueprint(store_blueprint())
