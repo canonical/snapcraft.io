@@ -184,6 +184,11 @@ def get_build(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
+    return flask.redirect(f"/first-snap/{language}/{operating_system}/upload")
+
+
+@first_snap.route("/<language>/<operating_system>/upload")
+def get_upload(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
 
@@ -224,4 +229,4 @@ def get_push(language, operating_system):
         "fsf_flow": FSF_FLOW,
     }
 
-    return flask.render_template("first-snap/push.html", **context)
+    return flask.render_template("first-snap/upload.html", **context)
