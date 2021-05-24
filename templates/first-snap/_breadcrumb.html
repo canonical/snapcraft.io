@@ -2,7 +2,7 @@
   <div class="row">
     <ul class="p-breadcrumbs p-heading--4" style="max-width: 100%;">
       <li class="p-breadcrumbs__item">
-        {% if fsf_step in ['create_account', 'install', 'package', 'build_and_test', 'push']  %}
+        {% if fsf_step in ['create_account', 'install', 'package', 'build_and_test', 'upload']  %}
           <a href="/first-snap/">Select language</a>
         {% else %}
           Select language
@@ -10,7 +10,7 @@
       </li>
       {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
         <li class="p-breadcrumbs__item">
-          {% if fsf_step in ['install', 'package', 'build_and_test', 'push']  %}
+          {% if fsf_step in ['install', 'package', 'build_and_test', 'upload']  %}
             <a href="/{{ fsf_flow }}/{{ language }}/create-account">Create an account</a>
           {% else %}
             Create an account
@@ -18,7 +18,7 @@
         </li>
       {% endif %}
       <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account'] %} is-disabled{% endif %}">
-        {% if fsf_step in ['package', 'build_and_test', 'push'] %}
+        {% if fsf_step in ['package', 'build_and_test', 'upload'] %}
           <a href="/{{ fsf_flow }}/{{ language }}">Install Snapcraft</a>
         {% else %}
           Install Snapcraft
@@ -39,10 +39,10 @@
         {% endif %}
       </li>
       <li class="p-breadcrumbs__item{% if fsf_step in ['language', 'create_account', 'install'] %} is-disabled{% endif %}">
-        {% if fsf_step in ['language', 'create_account', 'install', 'push'] %}
+        {% if fsf_step in ['language', 'create_account', 'install', 'upload'] %}
           Publish to store
         {% else %}
-          <a href="/{{ fsf_flow }}/{{ language }}/{{ os }}/push">Publish to store</a>
+          <a href="/{{ fsf_flow }}/{{ language }}/{{ os }}/upload">Publish to store</a>
         {% endif %}
       </li>
     </ul>
