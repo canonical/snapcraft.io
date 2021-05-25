@@ -11,8 +11,6 @@ from canonicalwebteam.blog import (
 from dateutil import parser
 from requests.exceptions import RequestException
 
-from webapp.helpers import get_yaml
-
 
 def init_blog(app, url_prefix):
     session = talisker.requests.get_session()
@@ -39,37 +37,6 @@ def init_blog(app, url_prefix):
 
         blog_articles = None
         articles = []
-
-        third_party_blogs = get_yaml("blog/content/blog-posts.yaml")
-
-        if third_party_blogs and snap in third_party_blogs:
-            post = third_party_blogs[snap]
-            cdn_image = "/".join(
-                [
-                    "https://res.cloudinary.com",
-                    "canonical",
-                    "image",
-                    "fetch",
-                    "f_auto,q_auto,fl_sanitize,w_346,h_231,c_fill",
-                    post["image"],
-                ]
-            )
-            brand_image = "https://assets.ubuntu.com/v1/aae0f33a-omgubuntu.svg"
-            image_element = "".join(
-                [
-                    f'<img src="{cdn_image}" ',
-                    'style="display:block">',
-                    f'<img src="{brand_image}" ',
-                    'class="p-blog-post__source" />',
-                ]
-            )
-            articles.append(
-                {
-                    "slug": post["uri"],
-                    "title": post["title"],
-                    "image": image_element,
-                }
-            )
 
         if blog_tags:
             snapcraft_tag = blog_api.get_tag_by_name("snapcraft.io")
