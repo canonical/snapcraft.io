@@ -38,6 +38,21 @@ env:
       key: google-custom-search-key
       name: google-api
 
+  - name: LP_API_USERNAME
+    secretKeyRef:
+      key: lp-api-username
+      name: snapcraft-io
+
+  - name: LP_API_TOKEN
+    secretKeyRef:
+      key: lp-api-token
+      name: snapcraft-io
+
+  - name: LP_API_TOKEN_SECRET
+    secretKeyRef:
+      key: lp-api-token-secret
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 nginxConfigurationSnippet: |
