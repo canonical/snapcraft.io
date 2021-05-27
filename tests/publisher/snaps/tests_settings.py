@@ -58,6 +58,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "keywords": [],
             "status": "published",
             "publisher": {"display-name": "test"},
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -96,3 +97,4 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("store", "stotore")
         self.assert_context("keywords", [])
         self.assert_context("status", "published")
+        self.assert_context("update_metadata_on_release", True)

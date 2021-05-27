@@ -160,10 +160,11 @@ def post_settings(snap_name):
 
             update_metadata_on_release = True
 
-            if snap_details["update_metadata_on_release"] == "on":
-                update_metadata_on_release = True
-            else:
-                update_metadata_on_release = False
+            if "update_metadata_on_release" in snap_details:
+                if snap_details["update_metadata_on_release"] == "on":
+                    update_metadata_on_release = True
+                else:
+                    update_metadata_on_release = False
 
             context = {
                 # read-only values from details API
