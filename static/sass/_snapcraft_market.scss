@@ -1,4 +1,4 @@
-@import 'snapcraft_patterns_icons';
+@import "snapcraft_patterns_icons";
 
 @mixin snapcraft-market {
   $white-overlay-color: rgba(255, 255, 255, 0.5);
@@ -141,14 +141,6 @@
     }
   }
 
-  .p-icon--delete {
-    @include snapcraft-icon-delete($color-mid-dark);
-
-    &:hover {
-      @include snapcraft-icon-delete($color-negative);
-    }
-  }
-
   .p-market-banner {
     .p-market-banner__image-holder {
       cursor: pointer;
@@ -248,10 +240,6 @@
 
     &:hover {
       opacity: 1;
-
-      .p-icon--delete {
-        @include snapcraft-icon-delete($color-negative);
-      }
     }
   }
 }
