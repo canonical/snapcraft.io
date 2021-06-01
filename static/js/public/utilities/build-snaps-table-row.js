@@ -8,7 +8,7 @@ function buildSnapsTableRow(snaps, store, currentStore) {
     const clone = tableRowTemplate.content.cloneNode(true);
     const publishedIn = clone.querySelector("[data-js-published-store]");
     const removeSnapForm = clone.querySelector("[data-js-remove-snap-form]");
-    const removeSnapButton = clone.querySelector(
+    const removeSnapButtons = clone.querySelectorAll(
       "[data-js-remove-snap-button]"
     );
 
@@ -31,9 +31,14 @@ function buildSnapsTableRow(snaps, store, currentStore) {
     }
 
     if (store.id !== currentStore.id) {
-      removeSnapButton.disabled = false;
+      removeSnapButtons.forEach((button) => {
+        button.disabled = false;
+      });
 
-      const parent = removeSnapButton.closest("[data-js-remove-snap-tooltip]");
+      const parent = removeSnapButtons[0].closest(
+        "[data-js-remove-snap-tooltip]"
+      );
+
       const child = clone.querySelector(".p-tooltip__message");
       parent.removeChild(child);
 
