@@ -65,8 +65,11 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="snaps" value="">
         <span class="p-tooltip--left" data-js-remove-snap-tooltip>
-          <button class="p-button--base u-no-margin--bottom u-no-margin--right u-no-padding" data-js-remove-snap-button disabled>
+          <button class="p-button--base u-no-margin--bottom u-no-margin--right u-no-padding u-hide--small" data-js-remove-snap-button disabled>
             <i class="p-icon--delete">Delete</i>
+          </button>
+          <button class="p-button--neutral u-no-margin--bottom u-no-margin--right u-hide--medium u-hide--large" style="display: block; width: 100%;" data-js-remove-snap-button disabled>
+            Delete
           </button>
           <span class="p-tooltip__message" role="tooltip">You can only remove snaps from other stores</span>
         </span>
