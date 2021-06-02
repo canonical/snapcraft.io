@@ -1086,12 +1086,12 @@
   resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.2.0.tgz#87b1bc210ada00542d6d42fe06801339b4e9eaae"
   integrity sha512-7353+uyTR5b5UcqomsVimH+JJqlNqOmj+GKQN9cVQ7m8OsUHcLzNjwCt/txjKt0o6Hw5I/DRS+fLMsmmP0Iokg==
 
-"@canonical/global-nav@2.4.5":
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.4.5.tgz#e300d2995aaccf9b35c83cdf8c37b1c9b9d2559a"
-  integrity sha512-OoSfKtD86QDbj9zcOrRg1je3CDQQRPm8Erq+yfDuR5jnN0eB8NfsT7JjAEDcANkzyJues3gMDDmv+cjN3Tu5KQ==
+"@canonical/global-nav@2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-2.5.0.tgz#f1cff4474ebbc435381a22fee353e123df870bda"
+  integrity sha512-emgBRHl9pDswbpg2/UvGRLZcclMs9EP09xWc3PdxC9NKlHr5dr9OeU/OEYsQ1+/VA2NmLLioVmqVe63TNRQW4w==
   dependencies:
-    vanilla-framework "2.19.1"
+    vanilla-framework "2.25.1"
 
 "@canonical/latest-news@1.2.0":
   version "1.2.0"
@@ -7610,10 +7610,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vanilla-framework@2.19.1:
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.19.1.tgz#f071deed5504a5fe2104d6d9b087ce654e190881"
-  integrity sha512-y79SKAwertvgHVAf1PbGxiq6QvVxNI78txilSgESx80HUWBrooT1nXCDUuHC/ySGEq+JUpmVIv0PrmXXilYWdg==
+vanilla-framework@2.25.1:
+  version "2.25.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-2.25.1.tgz#fb3a30bc832d1ffc3b1b909a87dbe8f7a03b8618"
+  integrity sha512-jZeyUsjNqUI9LW5A5UUS8X/asMOlKwMbD/HoSnxegAUH0fil7XUzB+F1A1IqRSGdgonWxFehAZA2qIzmKtOnIA==
 
 vanilla-framework@2.30.0:
   version "2.30.0"

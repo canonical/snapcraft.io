@@ -32,7 +32,7 @@
     "@babel/preset-env": "7.12.11",
     "@babel/preset-react": "7.12.10",
     "@canonical/cookie-policy": "3.2.0",
-    "@canonical/global-nav": "2.4.5",
+    "@canonical/global-nav": "2.5.0",
     "@canonical/latest-news": "1.2.0",
     "@canonical/react-components": "0.17.2",
     "@tarekraafat/autocomplete.js": "9.1.1",
