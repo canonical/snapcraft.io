@@ -47,7 +47,12 @@ function handleSnapsSearch(STATE) {
           `/admin/${STATE.store.id}/snaps/search.json?q=${searchField.value}&allowed_for_inclusion=${STATE.store.id}`
         );
 
-        return await source.json();
+        const data = await source.json();
+
+        return data.filter((d) => {
+          const snap = STATE.snaps.find((s) => s.id === d.id);
+          return !snap;
+        });
       },
       key: ["name"],
       trigger: {
