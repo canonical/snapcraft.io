@@ -379,6 +379,7 @@ def post_preview(snap_name):
     context["is_preview"] = True
     context["package_name"] = context["snap_name"]
     context["snap_title"] = context["title"]
+    context["appliances"] = []
 
     # Images
     icons = get_icon(context["images"])
@@ -387,6 +388,7 @@ def post_preview(snap_name):
     context["video"] = get_video(context["images"])
 
     # Channel map
+    context["channel_map"] = []
     context["default_track"] = "latest"
     context["lowest_risk_available"] = "stable"
     context["version"] = "test"
