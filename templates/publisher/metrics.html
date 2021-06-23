@@ -108,13 +108,13 @@ Publisher metrics for {{ snap_title }}
           defaultTrack: {{ default_track|tojson }},
           activeDevices: {
             selector: '#activeDevices',
-            metrics: {{ active_devices|safe }},
-            annotations: {{ active_devices_annotations|safe }},
+            metrics: {{ active_devices|tojson }},
+            annotations: {{ active_devices_annotations|tojson }},
             type: '{{ active_device_metric }}'
           },
           territories: {
             selector: '#territories',
-            metrics: {{ territories|safe }}
+            metrics: {{ territories|tojson }}
           }
         });
       });
