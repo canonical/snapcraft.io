@@ -409,3 +409,9 @@ code {
 .u-text-muted {
   color: $color-mid-dark;
 }
+
+.p-navigation {
+  .p-navigation__link.is-selected > a::before {
+    background-color: $ubuntu-orange;
+  }
+}
