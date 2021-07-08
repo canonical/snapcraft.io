@@ -60,6 +60,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "video_urls": [],
             "categories": {"items": []},
             "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -117,6 +118,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "video_urls": [],
             "categories": {"items": []},
             "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -156,6 +158,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "video_urls": [],
             "categories": {"items": []},
             "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -201,6 +204,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "video_urls": [],
             "categories": {"items": []},
             "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -240,6 +244,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "video_urls": ["https://youtube.com/watch?v=1234"],
             "categories": {"items": []},
             "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -279,6 +284,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "video_urls": ["https://youtube.com/watch?v=1234"],
             "categories": {"items": []},
             "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)

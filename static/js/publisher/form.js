@@ -209,6 +209,10 @@ function initForm(config, initialState, errors) {
     }
   }
 
+  function metadata(field, state) {
+    state["update_metadata_on_release"] = field.checked;
+  }
+
   function updateFormState() {
     // Some extra modifications need to happen for the checkboxes
     if (formEl["public_metrics_enabled"]) {
@@ -222,6 +226,10 @@ function initForm(config, initialState, errors) {
     }
     if (formEl.elements["primary_category"]) {
       categories(formEl, state);
+    }
+
+    if (formEl.elements["update_metadata_on_release"]) {
+      metadata(formEl.elements["update_metadata_on_release"], state);
     }
 
     let formData = new FormData(formEl);

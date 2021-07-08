@@ -75,6 +75,9 @@ def get_settings(snap_name):
         "keywords": snap_details["keywords"],
         "status": snap_details["status"],
         "is_on_lp": is_on_lp,
+        "update_metadata_on_release": snap_details[
+            "update_metadata_on_release"
+        ],
     }
 
     return flask.render_template("publisher/settings.html", **context)
@@ -155,6 +158,14 @@ def post_settings(snap_name):
             else:
                 blacklist_country_codes = []
 
+            update_metadata_on_release = True
+
+            if "update_metadata_on_release" in snap_details:
+                if snap_details["update_metadata_on_release"] == "on":
+                    update_metadata_on_release = True
+                else:
+                    update_metadata_on_release = False
+
             context = {
                 # read-only values from details API
                 "snap_name": snap_details["snap_name"],
@@ -171,6 +182,7 @@ def post_settings(snap_name):
                 "keywords": snap_details["keywords"],
                 "status": snap_details["status"],
                 "is_on_lp": is_on_lp,
+                "update_metadata_on_release": update_metadata_on_release,
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,

@@ -16,6 +16,7 @@ const allowedKeys = [
   "video_urls",
   "license",
   "categories",
+  "update_metadata_on_release",
 ];
 
 function commaSeperatedStringToArray(str) {
