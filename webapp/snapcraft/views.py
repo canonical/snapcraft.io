@@ -103,6 +103,7 @@ def snapcraft_blueprint():
                 "title": "edgexfoundry",
                 "origin": "Canonical",
                 "publisher": "Canonical",
+                "developer_validation": "verified",
             },
             {
                 "package_name": "mir-kiosk",
@@ -112,6 +113,7 @@ def snapcraft_blueprint():
                 "title": "mir-kiosk",
                 "origin": "Canonical",
                 "publisher": "Canonical",
+                "developer_validation": "verified",
             },
         ]
 
