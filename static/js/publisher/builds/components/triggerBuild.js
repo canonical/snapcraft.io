@@ -11,7 +11,7 @@ class TriggerBuild extends React.Component {
   renderError(errorMessage) {
     return (
       <div className="u-fixed-width">
-        <Notification type="negative" status="Error:">
+        <Notification type="negative" title="Error:">
           {errorMessage
             ? errorMessage
             : "There was an error triggering a new build. Please try again."}
