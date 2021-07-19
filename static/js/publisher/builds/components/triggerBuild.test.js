@@ -16,9 +16,9 @@ describe("TriggerBuild", () => {
 
   it("renders with an error", () => {
     const { container } = render(<TriggerBuild hasError={true} />);
-    expect(
-      container.querySelector(".p-notification__status").innerHTML
-    ).toEqual("Error:");
+    expect(container.querySelector(".p-notification__title").innerHTML).toEqual(
+      "Error:"
+    );
   });
 
   it("renders the requesting button with an icon", () => {
