@@ -1,24 +1,26 @@
-import math
+from os import getenv
 
 import flask
 import talisker
 
-from canonicalwebteam.discourse import (
-    DiscourseAPI,
-    Docs,
-    DocParser,
-)
+from canonicalwebteam.discourse import DiscourseAPI, TutorialParser, Tutorials
+
+DISCOURSE_API_KEY = getenv("DISCOURSE_API_KEY")
+DISCOURSE_API_USERNAME = getenv("DISCOURSE_API_USERNAME")
 
 
 def init_tutorials(app, url_prefix):
-    discourse_docs = Docs(
-        parser=DocParser(
+    session = talisker.requests.get_session()
+    tutorials_discourse = Tutorials(
+        parser=TutorialParser(
             api=DiscourseAPI(
                 base_url="https://forum.snapcraft.io/",
-                session=talisker.requests.get_session(),
+                session=session,
+                api_key=DISCOURSE_API_KEY,
+                api_username=DISCOURSE_API_USERNAME,
+                get_topics_query_id=2,
             ),
             index_topic_id=15409,
-            category_id=20,
             url_prefix=url_prefix,
         ),
         document_template="tutorials/tutorial.html",
@@ -27,22 +29,45 @@ def init_tutorials(app, url_prefix):
     )
 
     @app.route(url_prefix)
-    def tutorials():
-        page = flask.request.args.get("page", default=1, type=int)
-        posts_per_page = 12
-        discourse_docs.parser.parse()
-        metadata = discourse_docs.parser.metadata
-        total_pages = math.ceil(len(metadata) / posts_per_page)
+    def index():
+        tutorials_discourse.parser.parse()
+        tutorials_discourse.parser.parse_topic(
+            tutorials_discourse.parser.index_topic
+        )
+
+        tutorials = tutorials_discourse.parser.tutorials
+        topic_list = []
+
+        for item in tutorials:
+            if item["categories"] not in topic_list:
+                topic_list.append(item["categories"])
+            item["categories"] = {
+                "slug": item["categories"],
+                "name": " ".join(
+                    [
+                        word.capitalize()
+                        for word in item["categories"].split("-")
+                    ]
+                ),
+            }
+
+        topic_list.sort()
+        topics = []
+
+        for topic in topic_list:
+            topics.append(
+                {
+                    "slug": topic,
+                    "name": " ".join(
+                        [word.capitalize() for word in topic.split("-")]
+                    ),
+                }
+            )
 
         return flask.render_template(
             "tutorials/index.html",
-            navigation=discourse_docs.parser.navigation,
-            forum_url=discourse_docs.parser.api.base_url,
-            metadata=metadata,
-            page=page,
-            posts_per_page=posts_per_page,
-            total_pages=total_pages,
-            page_slug="tutorials",
+            tutorials=tutorials,
+            topics=topics,
         )
 
-    discourse_docs.init_app(app)
+    tutorials_discourse.init_app(app)
