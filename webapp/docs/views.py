@@ -15,7 +15,7 @@ def init_docs(app, url_prefix):
             api=DiscourseAPI(
                 base_url="https://forum.snapcraft.io/", session=session
             ),
-            index_topic_id=25750,
+            index_topic_id=11127,
             url_prefix=url_prefix,
         ),
         document_template="docs/document.html",
