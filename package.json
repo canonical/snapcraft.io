@@ -34,7 +34,7 @@
     "@canonical/cookie-policy": "3.3.0",
     "@canonical/global-nav": "2.5.0",
     "@canonical/latest-news": "1.2.0",
-    "@canonical/react-components": "0.19.0",
+    "@canonical/react-components": "0.20.0",
     "@tarekraafat/autocomplete.js": "9.1.1",
     "@testing-library/react": "11.2.3",
     "autoprefixer": "10.2.1",
