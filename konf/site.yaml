@@ -71,6 +71,16 @@ env:
       key: youtube-api-key
       name: snapcraft-io
 
+  - name: DISCOURSE_API_KEY
+    secretKeyRef:
+      key: discourse-api-key
+      name: snapcraft-io
+
+  - name: DISCOURSE_API_USERNAME
+    secretKeyRef:
+      key: discourse-api-username
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 extraHosts:
