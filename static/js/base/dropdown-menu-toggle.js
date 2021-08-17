@@ -1,62 +1,70 @@
 (function () {
-  /**
-   * Toggle target elements with aria controls, hidden and expanded.
-   *
-   * @param {String} toggleCtrl A css selector to use as the control.
-   *
-   * @example
-   * <button class="p-contextual-menu__toggle" aria-controls="#menu" aria-expanded="false">Toggle</button>
-   * <div id="menu" aria-hidden="true">
-   *  <p>Example menu</p>
-   * </div>
-   *
-   */
-  function toggle(toggleCtrl) {
-    var toggles = document.querySelectorAll(toggleCtrl);
+  function toggleDropdown(toggle, open) {
+    var parentElement = toggle.parentNode;
+    var dropdown = document.getElementById(
+      toggle.getAttribute("aria-controls")
+    );
+    dropdown.setAttribute("aria-hidden", !open);
 
-    for (var i = 0, ii = toggles.length; i < ii; i += 1) {
-      toggles[i].addEventListener("click", function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-
-        toggleDropdown(this, this.getAttribute("aria-expanded") === "false");
-      });
+    if (open) {
+      parentElement.classList.add("is-active");
+    } else {
+      parentElement.classList.remove("is-active");
     }
+  }
 
-    document.body.addEventListener("click", function () {
-      for (var i = 0, ii = toggles.length; i < ii; i += 1) {
-        toggles[i].setAttribute("aria-expanded", false);
+  function closeAllDropdowns(toggles) {
+    toggles.forEach(function (toggle) {
+      toggleDropdown(toggle, false);
+    });
+  }
 
-        toggleDropdown(toggles[i], false);
+  function handleClickOutside(toggles, containerClass) {
+    document.addEventListener("click", function (event) {
+      var target = event.target;
+
+      if (target.closest) {
+        if (!target.closest(containerClass)) {
+          closeAllDropdowns(toggles);
+        }
+      } else if (target.msMatchesSelector) {
+        // IE friendly `Element.closest` equivalent
+        // as in https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
+        do {
+          if (target.msMatchesSelector(containerClass)) {
+            return;
+          }
+          target = target.parentElement || target.parentNode;
+        } while (target !== null && target.nodeType === 1);
+
+        closeAllDropdowns(toggles);
       }
     });
   }
 
-  // helper function to toggle dropdown
-  function toggleDropdown(toggle, show) {
-    var targetMenu = document.getElementById(
-      toggle.getAttribute("aria-controls")
+  function initNavDropdowns(containerClass) {
+    var toggles = [].slice.call(
+      document.querySelectorAll(containerClass + " [aria-controls]")
     );
-    var parentMenu = toggle.closest(".p-subnav");
 
-    if (targetMenu) {
-      if (show) {
-        toggle.setAttribute("aria-expanded", true);
-        targetMenu.setAttribute("aria-hidden", false);
-        if (parentMenu) {
-          parentMenu.classList.add("is-active");
+    handleClickOutside(toggles, containerClass);
+
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        var parentElement = toggle.parentNode;
+        if (parentElement.classList.contains("is-active")) {
+          toggleDropdown(toggle, false);
+        } else {
+          closeAllDropdowns(toggles);
+          toggleDropdown(toggle, true);
         }
-      } else {
-        toggle.setAttribute("aria-expanded", false);
-        targetMenu.setAttribute("aria-hidden", true);
-        if (parentMenu) {
-          parentMenu.classList.remove("is-active");
-        }
-      }
-    }
+      });
+    });
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
-    toggle(".p-subnav__toggle");
+  window.addEventListener("DOMContentLoaded", function () {
+    initNavDropdowns(".p-navigation__item--dropdown-toggle");
   });
 })();
