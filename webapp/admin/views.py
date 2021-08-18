@@ -35,7 +35,7 @@ def get_stores():
         return _handle_error(api_error)
 
     if not stores:
-        flask.abort(403)
+        return flask.render_template("admin/no-stores.html")
 
     # We redirect to the first store snap list
     return flask.redirect(
