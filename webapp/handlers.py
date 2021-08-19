@@ -40,9 +40,11 @@ def set_handlers(app):
             user_is_canonical = flask.session["publisher"].get(
                 "is_canonical", False
             )
+            stores = flask.session["publisher"].get("stores")
         else:
             user_name = None
             user_is_canonical = False
+            stores = []
 
         page_slug = template_utils.generate_slug(flask.request.path)
 
@@ -77,6 +79,7 @@ def set_handlers(app):
             "format_date": template_utils.format_date,
             "format_member_role": template_utils.format_member_role,
             "image": image_template,
+            "stores": stores,
         }
 
     # Error handlers

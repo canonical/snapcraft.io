@@ -93,6 +93,9 @@ def after_login(resp):
         }
         owned, shared = logic.get_snap_names_by_ownership(account)
         flask.session["user_shared_snaps"] = shared
+        flask.session["publisher"]["stores"] = logic.get_stores(
+            account["stores"], roles=["admin", "review", "view"]
+        )
 
     except ApiCircuitBreaker:
         flask.abort(503)
@@ -178,6 +181,7 @@ def login_callback():
 
     try:
         publisher = publisher_api.whoami(flask.session)
+        account = publisher_api.get_account(flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
@@ -190,6 +194,10 @@ def login_callback():
         "image": None,
         "email": publisher["account"]["email"],
     }
+
+    flask.session["publisher"]["stores"] = logic.get_stores(
+        account["stores"], roles=["admin", "review", "view"]
+    )
 
     response = flask.make_response(
         flask.redirect(
