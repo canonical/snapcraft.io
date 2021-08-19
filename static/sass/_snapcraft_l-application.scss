@@ -122,6 +122,15 @@
       }
     }
 
+    // this stops the navigation items jumping on hover
+    .p-side-navigation__link:hover {
+      font-weight: 300 !important;
+
+      &.is-active {
+        font-weight: 400 !important;
+      }
+    }
+
     .p-side-navigation__icon {
       top: 0.25rem;
 
@@ -130,8 +139,17 @@
         border-radius: 50%;
         font-size: 14px;
         height: 24px;
+        line-height: 1.5;
         text-align: center;
         width: 24px;
+      }
+    }
+
+    .is-active {
+      .p-side-navigation__icon {
+        background-color: #82bfa1;
+        border-color: #82bfa1;
+        font-weight: bold;
       }
     }
   }

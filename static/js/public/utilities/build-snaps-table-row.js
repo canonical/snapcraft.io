@@ -35,26 +35,28 @@ function buildSnapsTableRow(snaps, store, currentStore) {
         button.disabled = false;
       });
 
-      const parent = removeSnapButtons[0].closest(
-        "[data-js-remove-snap-tooltip]"
-      );
+      if (removeSnapButtons.length) {
+        const parent = removeSnapButtons[0].closest(
+          "[data-js-remove-snap-tooltip]"
+        );
 
-      const child = clone.querySelector(".p-tooltip__message");
-      parent.removeChild(child);
+        const child = clone.querySelector(".p-tooltip__message");
+        parent.removeChild(child);
 
-      removeSnapForm.addEventListener("submit", (event) => {
-        event.preventDefault();
+        removeSnapForm.addEventListener("submit", (event) => {
+          event.preventDefault();
 
-        const form = event.target;
-        const snapData = {
-          remove: [{ name: snap.name }],
-        };
+          const form = event.target;
+          const snapData = {
+            remove: [{ name: snap.name }],
+          };
 
-        const snapsHiddenField = form.querySelector("[name='snaps']");
-        snapsHiddenField.value = JSON.stringify(snapData);
+          const snapsHiddenField = form.querySelector("[name='snaps']");
+          snapsHiddenField.value = JSON.stringify(snapData);
 
-        form.submit();
-      });
+          form.submit();
+        });
+      }
     }
 
     const latestReleaseVersion = clone.querySelector(

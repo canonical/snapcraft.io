@@ -12,13 +12,16 @@
       <label for="snaps-filter" class="u-off-screen">Filter snaps</label>
       <input type="text" class="u-no-margin--bottom" name="snaps-filter" placeholder="Filter snaps" data-js-snaps-filter autocomplete="off">
     </div>
+    {% if "admin" in member["roles"] %}
     <button class="p-button--neutral u-no-margin--bottom" data-js-open-side-panel-btn>
       <i class="p-icon--plus"></i>
       <span>Add snap</span>
     </button>
+    {% endif %}
   </div>
 </div>
 
+{% if "admin" in member["roles"] %}
 <div class="p-side-panel" data-js-side-panel>
   <div class="p-side-panel__inner">
     <h4>Add a snap to {{ store.name }}</h4>
@@ -36,6 +39,7 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 <table class="p-table--mobile-card" data-js-snaps-table>
   <thead>
@@ -45,7 +49,9 @@
       <th style="width: 20%;">Latest release</th>
       <th>Release date</th>
       <th>Publisher</th>
+      {% if "admin" in member["roles"] %}
       <th style="width: 5%;">&nbsp;</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody data-js-snaps-table-body>
@@ -63,6 +69,7 @@
       <div data-js-latest-release-date></div>
     </td>
     <td aria-label="Publisher" data-js-collaborators></td>
+    {% if "admin" in member["roles"] %}
     <td aria-label="Actions" class="u-align--right" style="overflow: visible;" data-js-actions>
       <form action="/admin/{{ store.id }}/snaps/manage" method="post" data-js-remove-snap-form>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -78,6 +85,7 @@
         </span>
       </form>
     </td>
+    {% endif %}
   </tr>
 </template>
 
@@ -107,27 +115,31 @@
       snapcraft.public.manageSnaps.init(
         {{ snaps | safe }},
         {{ store_json | safe }},
-        {{ other_stores_data | safe }}
+        {{ other_stores_data | safe }},
+        {% if "admin" in member["roles"] %}true{% endif %}
       );
 
       const sidePanel = document.querySelector("[data-js-side-panel]");
-      const openSidePanelButton = document.querySelector("[data-js-open-side-panel-btn]");
-      const closeSidePanelButton = document.querySelector("[data-js-close-side-panel-btn]");
 
-      const snapsSearchField = document.querySelector("[data-js-snaps-search]");
-      const snapsToAdd = document.querySelector("[data-js-snaps-to-add]");
-      const addSnapsSubmitButton = document.querySelector("[data-js-add-snaps-button]")
+      if (sidePanel) {
+        const openSidePanelButton = document.querySelector("[data-js-open-side-panel-btn]");
+        const closeSidePanelButton = document.querySelector("[data-js-close-side-panel-btn]");
 
-      openSidePanelButton.addEventListener("click", () => {
-        sidePanel.classList.add("p-side-panel--open");
-      });
+        const snapsSearchField = document.querySelector("[data-js-snaps-search]");
+        const snapsToAdd = document.querySelector("[data-js-snaps-to-add]");
+        const addSnapsSubmitButton = document.querySelector("[data-js-add-snaps-button]")
 
-      closeSidePanelButton.addEventListener("click", () => {
-        sidePanel.classList.remove("p-side-panel--open");
-        snapsSearchField.value = "";
-        snapsToAdd.innerHTML = "";
-        addSnapsSubmitButton.disabled = true;
-      });
+        openSidePanelButton.addEventListener("click", () => {
+          sidePanel.classList.add("p-side-panel--open");
+        });
+
+        closeSidePanelButton.addEventListener("click", () => {
+          sidePanel.classList.remove("p-side-panel--open");
+          snapsSearchField.value = "";
+          snapsToAdd.innerHTML = "";
+          addSnapsSubmitButton.disabled = true;
+        });
+      }
     });
   });
 </script>

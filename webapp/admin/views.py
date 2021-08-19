@@ -79,8 +79,12 @@ def get_store_snaps(store_id):
         )
 
         member = next(
-            (item for item in members if item["email"] == flask.session["publisher"]["email"]),
-            None
+            (
+                item
+                for item in members
+                if item["email"] == flask.session["publisher"]["email"]
+            ),
+            None,
         )
 
         # store data for each store ID
@@ -106,7 +110,7 @@ def get_store_snaps(store_id):
         store_json=json.dumps(store),
         snaps=json.dumps(snaps),
         other_stores_data=json.dumps(other_stores_data),
-        member=member
+        member=member,
     )
 
 
@@ -146,9 +150,13 @@ def get_manage_members(store_id):
         return _handle_error(api_error)
 
     member = next(
-            (item for item in members if item["email"] == flask.session["publisher"]["email"]),
-            None
-        )
+        (
+            item
+            for item in members
+            if item["email"] == flask.session["publisher"]["email"]
+        ),
+        None,
+    )
 
     return flask.render_template(
         "admin/manage_members.html",
@@ -364,9 +372,13 @@ def get_settings(store_id):
         return _handle_error(api_error)
 
     member = next(
-            (item for item in members if item["email"] == flask.session["publisher"]["email"]),
-            None
-        )
+        (
+            item
+            for item in members
+            if item["email"] == flask.session["publisher"]["email"]
+        ),
+        None,
+    )
 
     return flask.render_template(
         "admin/settings.html", stores=stores, store=store, member=member
