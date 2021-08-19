@@ -37,9 +37,11 @@ def get_stores():
     if not stores:
         return flask.render_template("admin/no-stores.html")
 
+    stores = list(filter(lambda d: d["id"] != "ubuntu", stores))
+
     # We redirect to the first store snap list
     return flask.redirect(
-        flask.url_for(".get_settings", store_id=stores[0]["id"])
+        flask.url_for(".get_store_snaps", store_id=stores[0]["id"])
     )
 
 
@@ -68,11 +70,17 @@ def get_store_snaps(store_id):
         stores = admin_api.get_stores(flask.session)
         store = admin_api.get_store(flask.session, store_id)
         snaps = admin_api.get_store_snaps(flask.session, store_id)
+        members = admin_api.get_store_members(flask.session, store_id)
 
         # list of all deduped store IDs that are not current store
         other_store_ids = list(dict.fromkeys([d["store"] for d in snaps]))
         other_stores = list(
             filter(lambda id: id != store["id"], other_store_ids)
+        )
+
+        member = next(
+            (item for item in members if item["email"] == flask.session["publisher"]["email"]),
+            None
         )
 
         # store data for each store ID
@@ -98,6 +106,7 @@ def get_store_snaps(store_id):
         store_json=json.dumps(store),
         snaps=json.dumps(snaps),
         other_stores_data=json.dumps(other_stores_data),
+        member=member
     )
 
 
@@ -136,11 +145,17 @@ def get_manage_members(store_id):
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
+    member = next(
+            (item for item in members if item["email"] == flask.session["publisher"]["email"]),
+            None
+        )
+
     return flask.render_template(
         "admin/manage_members.html",
         stores=stores,
         store=store,
         members=members,
+        member=member,
         invites=invites,
         confirm_invite=False,
         email_address=None,
@@ -342,13 +357,19 @@ def get_settings(store_id):
     try:
         stores = admin_api.get_stores(flask.session)
         store = admin_api.get_store(flask.session, store_id)
+        members = admin_api.get_store_members(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
+    member = next(
+            (item for item in members if item["email"] == flask.session["publisher"]["email"]),
+            None
+        )
+
     return flask.render_template(
-        "admin/settings.html", stores=stores, store=store
+        "admin/settings.html", stores=stores, store=store, member=member
     )
 
 
@@ -375,7 +396,7 @@ def post_settings(store_id):
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    return flask.redirect(flask.url_for(".get_settings", store_id=store_id))
+    return flask.redirect(flask.url_for(".get_store_snaps", store_id=store_id))
 
 
 @admin.route("/admin/<store_id>/models")
