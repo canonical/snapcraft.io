@@ -19,18 +19,6 @@
     }
 
     .l-navigation.is-collapsed {
-      @media (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
-        .p-side-navigation__list {
-          display: none;
-        }
-
-        &:hover {
-          .p-side-navigation__list {
-            display: block;
-          }
-        }
-      }
-
       @media (min-width: $breakpoint-large) {
         position: sticky;
         top: 0;
@@ -131,6 +119,19 @@
     .close-notification {
       i {
         margin: 0.5rem 0 0 !important;
+      }
+    }
+
+    .p-side-navigation__icon {
+      top: 0.25rem;
+
+      &.is-text {
+        border: 1px solid $color-mid-light;
+        border-radius: 50%;
+        font-size: 14px;
+        height: 24px;
+        text-align: center;
+        width: 24px;
       }
     }
   }
