@@ -123,4 +123,13 @@ module.exports = [
       "babel-loader",
     ],
   },
+  {
+    test: require.resolve(
+      __dirname + "/static/js/public/brand-store-search.js"
+    ),
+    use: [
+      "expose-loader?exposes=snapcraft.public.brandStoreSearch",
+      "babel-loader",
+    ],
+  },
 ];

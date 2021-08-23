@@ -7,6 +7,16 @@
       </li>
     </ul>
     <ul class="p-side-navigation__list">
+      <li class="p-side-navigation__item--title">
+        <div class="p-side-navigation__icon" style="padding-left: 0.2rem;">
+          <i class="p-icon--search"></i>
+        </div>
+        <div class="p-search-box p-side-navigation__label">
+          <input type="search" class="p-search-box__input js-store-search-input" name="store-search" placeholder="Search stores" title="Search stores" autocomplete="off" aria-label="Search stores">
+        </div>
+      </li>
+    </ul>
+    <ul class="p-side-navigation__list js-store-list">
       {% for s in stores %}
       <li class="p-side-navigation__item">
         <a class="p-side-navigation__link {% if s['id'] == store['id'] %}is-active{% endif %}" href="/admin/{{ s.id }}/snaps">
@@ -31,3 +41,21 @@
     </ul>
   </nav>
 </div>
+
+<template id="store-list-item-template">
+  <li class="p-side-navigation__item">
+    <a class="p-side-navigation__link" href="">
+      <span class="p-side-navigation__icon is-text"></span>
+      <span class="p-side-navigation__label"></span>
+    </a>
+  </li>
+</template>
+
+<script src="{{ static_url('js/dist/brand-store-search.js') }}" defer></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    Raven.context(function () {
+      snapcraft.public.brandStoreSearch.init({{ stores | safe}});
+    });
+  });
+</script>

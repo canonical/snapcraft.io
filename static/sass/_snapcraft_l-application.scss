@@ -153,4 +153,24 @@
       }
     }
   }
+
+  .p-side-navigation--icons .p-search-box {
+    display: block;
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    .p-search-box__input {
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.964 1a5.964 5.964 0 014.709 9.623l4.303 4.305-1.06 1.06-4.306-4.305A5.964 5.964 0 116.963 1zm0 1.5a4.464 4.464 0 100 8.927 4.464 4.464 0 000-8.927z' fill='%23666' fill-rule='nonzero'/%3E%3C/svg%3E");
+      background-position: center right 0.5rem;
+      background-repeat: no-repeat;
+      padding-right: 2rem;
+      position: relative;
+    }
+  }
+
+  .p-side-navigation__list {
+    &::after {
+      display: none !important;
+    }
+  }
 }
