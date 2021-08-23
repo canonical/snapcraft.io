@@ -156,7 +156,7 @@ function setSubmitDisabledState(disabled) {
   addSnapsButton.disabled = disabled;
 }
 
-function init(snaps, store, otherStores) {
+function init(snaps, store, otherStores, isAdmin) {
   const STATE = {
     snaps,
     store,
@@ -176,7 +176,10 @@ function init(snaps, store, otherStores) {
   });
 
   handleSnapsFilter(STATE);
-  handleSnapsSearch(STATE);
+
+  if (isAdmin) {
+    handleSnapsSearch(STATE);
+  }
 }
 
 export { init };

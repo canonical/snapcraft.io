@@ -1,21 +1,33 @@
-<ul class="p-side-navigation__list">
-  <li class="p-side-navigation__item--title">
-    <span class="p-side-navigation__text">My stores</span>
-  </li>
-  {% for s in stores %}
-  <li class="p-side-navigation__item">
-    <a class="p-side-navigation__link" href="/admin/{{ s.id }}/settings">{{ s.name }}</a>
-    <ul class="p-side-navigation__list {% if store.id != s.id %}u-hide{% endif %}">
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link {% if current_tab == 'snaps' %}is-active{% endif %}" href="/admin/{{ s.id }}/snaps">Snaps</a>
+<div class="p-side-navigation--icons">
+  <nav aria-label="Store navigation">
+    <ul class="p-side-navigation__list">
+      <li class="p-side-navigation__item--title">
+        <img class="p-side-navigation__icon" src="https://assets.ubuntu.com/v1/89bd150a-cube-icon.svg" alt="" width="24" height="24">
+        <span class="p-side-navigation__text">My stores</span>
       </li>
-      <li class="p-side-navigation__item">
-        <a class="p-side-navigation__link {% if current_tab == 'members' or current_tab == 'invites' %}is-active{% endif %}" href="/admin/{{ s.id }}/members">Members</a>
-      </li>
-      <div class="p-side-navigation__item">
-        <a class="p-side-navigation__link {% if current_tab == 'settings' %}is-active{% endif %}" href="/admin/{{ s.id }}/settings">Settings</a>
-      </div>
     </ul>
-  </li>
-  {% endfor %}
-</ul>
+    <ul class="p-side-navigation__list">
+      {% for s in stores %}
+      <li class="p-side-navigation__item">
+        <a class="p-side-navigation__link {% if s['id'] == store['id'] %}is-active{% endif %}" href="/admin/{{ s.id }}/snaps">
+          <span class="p-side-navigation__icon is-text">{{ s.name|first }}</span>
+          <span class="p-side-navigation__label">{{ s.name }}</span>
+        </a>
+        {% if "admin" in member["roles"] %}
+        <ul class="p-side-navigation__list {% if store.id != s.id %}u-hide{% endif %}">
+          <li class="p-side-navigation__item">
+            <a class="p-side-navigation__link" href="/admin/{{ s.id }}/snaps">Snaps</a>
+          </li>
+          <li class="p-side-navigation__item">
+            <a class="p-side-navigation__link" href="/admin/{{ s.id }}/members">Members</a>
+          </li>
+          <div class="p-side-navigation__item">
+            <a class="p-side-navigation__link" href="/admin/{{ s.id }}/settings">Settings</a>
+          </div>
+        </ul>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>
