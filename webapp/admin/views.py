@@ -318,6 +318,7 @@ def get_invites(store_id):
         stores = admin_api.get_stores(flask.session)
         store = admin_api.get_store(flask.session, store_id)
         invites = admin_api.get_store_invites(flask.session, store_id)
+        members = admin_api.get_store_members(flask.session, store_id)
     except StoreApiResponseErrorList as api_response_error_list:
         return _handle_error_list(api_response_error_list.errors)
     except (StoreApiError, ApiError) as api_error:
@@ -349,6 +350,15 @@ def get_invites(store_id):
         revoked_invites, key=lambda item: item["expiration-date"]
     )
 
+    member = next(
+        (
+            item
+            for item in members
+            if item["email"] == flask.session["publisher"]["email"]
+        ),
+        None,
+    )
+
     return flask.render_template(
         "admin/invites.html",
         stores=stores,
@@ -356,6 +366,7 @@ def get_invites(store_id):
         pending_invites=sorted_pending_invites,
         expired_invites=sorted_expired_invites,
         revoked_invites=sorted_revoked_invites,
+        member=member,
     )
 
 
