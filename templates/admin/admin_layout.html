@@ -22,13 +22,9 @@
       {% if messages %}
         {% for category, message in messages %}
           <div class="p-notification--{{ category }} admin-notification">
-            <p class="p-notification__response">
-              {{ message }}
-            </p>
-            <div>
-              <button type="button" class="p-button--base u-no-margin--bottom close-notification" data-js-dismiss-notification>
-                <i class="p-icon--close">Close notification</i>
-              </button>
+            <div class="p-notification__content">
+              <p class="p-notification__message">{{ message }}</p>
+              <button type="button" class="p-notification__close close-notification" data-js-dismiss-notification>Close notification</button>
             </div>
           </div>
         {% endfor %}

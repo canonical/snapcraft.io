@@ -173,7 +173,9 @@
 
 {% if not pending_invites and not expired_invites and not revoked_invites %}
   <div class="p-notification--information">
-    <p class="p-notification__response">There are currently no pending, expired or revoked invites.</p>
+    <div class="p-notification__content">
+      <p class="p-notification__message">There are currently no pending, expired or revoked invites.</p>
+    </div>
   </div>
 {% endif %}
 
