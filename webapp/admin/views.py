@@ -21,7 +21,14 @@ admin = flask.Blueprint(
 )
 
 
-@admin.route("/admin")
+@admin.route("/admin", defaults={"path": ""})
+@admin.route("/admin/<path:path>")
+@login_required
+def get_admin(path):
+    return flask.render_template("admin/admin.html")
+
+
+@admin.route("/admin/stores.json")
 @login_required
 def get_stores():
     """
@@ -34,15 +41,7 @@ def get_stores():
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    if not stores:
-        return flask.render_template("admin/no-stores.html")
-
-    stores = list(filter(lambda d: d["id"] != "ubuntu", stores))
-
-    # We redirect to the first store snap list
-    return flask.redirect(
-        flask.url_for(".get_store_snaps", store_id=stores[0]["id"])
-    )
+    return jsonify(stores)
 
 
 @admin.route("/admin/<store_id>/snaps/search.json")
@@ -61,57 +60,6 @@ def get_snaps_search(store_id):
         return _handle_error(api_error)
 
     return jsonify(snaps)
-
-
-@admin.route("/admin/<store_id>/snaps")
-@login_required
-def get_store_snaps(store_id):
-    try:
-        stores = admin_api.get_stores(flask.session)
-        store = admin_api.get_store(flask.session, store_id)
-        snaps = admin_api.get_store_snaps(flask.session, store_id)
-        members = admin_api.get_store_members(flask.session, store_id)
-
-        # list of all deduped store IDs that are not current store
-        other_store_ids = list(dict.fromkeys([d["store"] for d in snaps]))
-        other_stores = list(
-            filter(lambda id: id != store["id"], other_store_ids)
-        )
-
-        member = next(
-            (
-                item
-                for item in members
-                if item["email"] == flask.session["publisher"]["email"]
-            ),
-            None,
-        )
-
-        # store data for each store ID
-        other_stores_data = []
-        for other_store_id in other_stores:
-            if other_store_id == "ubuntu":
-                other_stores_data.append(
-                    {"id": "ubuntu", "name": "Global store"}
-                )
-            else:
-                store_data = admin_api.get_store(flask.session, other_store_id)
-                other_stores_data.append(store_data)
-
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
-
-    return flask.render_template(
-        "admin/snaps.html",
-        stores=stores,
-        store=store,
-        store_json=json.dumps(store),
-        snaps=json.dumps(snaps),
-        other_stores_data=json.dumps(other_stores_data),
-        member=member,
-    )
 
 
 @admin.route("/admin/<store_id>/snaps/manage", methods=["POST"])
