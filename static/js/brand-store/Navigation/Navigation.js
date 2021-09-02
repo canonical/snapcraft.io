@@ -64,15 +64,14 @@ function Navigation() {
                         <NavLink
                           activeClassName="is-active"
                           className="p-side-navigation__link"
-                          to={`/admin/${item.id}/snaps`}
+                          to={`/admin/${item.id}/settings`}
                           isActive={(match, location) => {
                             return location.pathname.includes(item.id);
                           }}
                         >
-                          <i
-                            className="p-side-navigation__icon p-icon--initial"
-                            data-initial={item.name.charAt(0)}
-                          ></i>
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
                           <span className="p-side-navigation__label u-truncate">
                             {item.name}
                           </span>
