@@ -85,9 +85,6 @@
     }
 
     .p-side-navigation__link {
-      padding-bottom: $spv-inner--small;
-      padding-top: $spv-inner--small;
-
       &.is-active,
       &[aria-current="page"],
       &[aria-current="true"] {
@@ -96,50 +93,9 @@
     }
 
     .p-side-navigation--icons {
-      $initial-icon-size: 1.5rem;
-
-      .p-icon--initial {
-        @extend %vf-is-bordered;
-        @extend %vf-bg--x-light;
-        @extend %small-text;
-
-        border-radius: 100%;
-        height: $initial-icon-size;
-        margin-bottom: 0;
-        width: $initial-icon-size;
-
-        &::before {
-          content: attr(data-initial);
-          display: table-cell;
-          font-style: normal;
-          height: $initial-icon-size;
-          text-align: center;
-          text-transform: uppercase;
-          width: $initial-icon-size;
-        }
-      }
-
       .p-side-navigation__icon {
-        // To align this icon, we need to get total height of the nav item
-        // (line height + vertical padding), subtract the height
-        // of the icon from that number, then halve the result.
-        $nav-item-line-height: map-get($line-heights, default-text);
-        $nav-item-vertical-padding: $spv-inner--small * 2;
-        $nav-item-height: $nav-item-line-height + $nav-item-vertical-padding;
-        $icon-height-delta: $nav-item-height - $initial-icon-size;
-
         left: 1.25rem;
-        top: $icon-height-delta * 0.5;
-
-        @media (min-width: $breakpoint-x-large) {
-          $nav-item-line-height--xl: map-get($line-heights, default-text) *
-            $font-size-ratio--largescreen;
-          $nav-item-height--xl: $nav-item-line-height--xl +
-            $nav-item-vertical-padding;
-          $icon-height-delta--xl: $nav-item-height--xl - $initial-icon-size;
-
-          top: $icon-height-delta--xl * 0.5;
-        }
+        top: 0.25rem;
       }
 
       .p-side-navigation__link {
