@@ -1,0 +1,15 @@
+@mixin snapcraft-p-icons {
+  .p-icon--initial {
+    @extend %vf-is-bordered;
+    @extend %vf-bg--x-light;
+    @extend %small-text;
+
+    border-radius: 100%;
+    font-style: normal;
+    height: 1.5rem;
+    margin-bottom: 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 1.5rem;
+  }
+}

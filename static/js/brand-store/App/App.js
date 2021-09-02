@@ -28,8 +28,8 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div>
-      <Router>
+    <Router>
+      <div className="l-application" role="presentation">
         <Navigation />
         <Switch>
           <Route exact path="/admin">
@@ -64,8 +64,8 @@ function App() {
             <Settings />
           </Route>
         </Switch>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 
