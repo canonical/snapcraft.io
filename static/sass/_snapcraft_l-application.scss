@@ -36,6 +36,17 @@
     }
   }
 
+  .l-navigation-bar {
+    .p-panel {
+      background-color: $color-light;
+      border-bottom: $border;
+    }
+
+    .p-panel__controls {
+      margin-left: 0;
+    }
+  }
+
   .l-navigation {
     height: $layout-height;
     position: absolute;
