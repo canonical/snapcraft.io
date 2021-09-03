@@ -1,38 +1,38 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { brandStoresListSelector } from "../selectors";
 
 function Navigation() {
   const brandStoresList = useSelector(brandStoresListSelector);
+  const [collapsed, setCollapsedState] = useState(true);
+  const openSideNavButton = useRef(null);
+  const hideSideNav = (hide) => {
+    setCollapsedState(hide);
+
+    if (hide) {
+      openSideNavButton.current.focus();
+    }
+  };
 
   return (
     <>
       <div className="l-navigation-bar">
-        <div className="p-panel is-dark is-jaas-background">
+        <div className="p-panel">
           <div className="p-panel__header">
-            {/* <a className="p-panel__logo" href="#">
-              <img
-                className="p-panel__logo-icon"
-                src="https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg"
-                alt=""
-                width="24"
-                height="24"
-              />
-              <img
-                className="p-panel__logo-name is-fading-when-collapsed"
-                src="https://assets.ubuntu.com/v1/2e04d794-logo-jaas.svg"
-                alt="JAAS"
-                height="16"
-              />
-            </a>
             <div className="p-panel__controls">
-              <span className="p-panel__toggle js-menu-toggle">Menu</span>
-            </div> */}
+              <button
+                className="p-panel__toggle"
+                onClick={() => hideSideNav(false)}
+                ref={openSideNavButton}
+              >
+                Open side navigation
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <header className="l-navigation">
+      <header className={`l-navigation ${collapsed ? "is-collapsed" : ""}`}>
         <div className="l-navigation__drawer">
           <div className="p-panel">
             <div className="p-panel__header is-sticky">
@@ -47,10 +47,16 @@ function Navigation() {
                 </h2>
               </span>
               <div className="p-panel__controls u-hide--large">
-                <button className="p-button--base has-icon u-no-margin u-hide--medium js-menu-close">
+                <button
+                  onClick={() => hideSideNav(true)}
+                  className="p-button--base has-icon u-no-margin u-hide--medium"
+                >
                   <i className="p-icon--close"></i>
                 </button>
-                <button className="p-button--base has-icon u-no-margin u-hide--small js-menu-pin">
+                <button
+                  onClick={() => hideSideNav(true)}
+                  className="p-button--base has-icon u-no-margin u-hide--small"
+                >
                   <i className="p-icon--close p-icon--pin"></i>
                 </button>
               </div>
