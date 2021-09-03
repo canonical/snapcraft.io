@@ -123,6 +123,9 @@ def publisher_snap_metrics(snap_name):
 
     series = active_metrics["series"]
 
+    # Temp fix (https://forum.snapcraft.io/t/metrics-by-channel-broken/26188/3)
+    series = [s for s in series if s["name"] != "latest/stable"]
+
     if installed_base_metric == "os":
         capitalized_series = active_metrics["series"]
         for item in capitalized_series:
