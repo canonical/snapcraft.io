@@ -12,4 +12,10 @@
     text-transform: uppercase;
     width: 1.5rem;
   }
+
+  .p-icon--snapcraft-cube {
+    @extend %icon;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cpath stroke='%23111' stroke-width='1.5' d='m12.124.935 9.5 5.428a.251.251 0 0 1 .126.217v10.84a.25.25 0 0 1-.126.217l-9.5 5.428a.25.25 0 0 1-.248 0l-9.5-5.428-.371.65.371-.65a.251.251 0 0 1-.126-.217V6.58a.25.25 0 0 1 .126-.217l9.5-5.428a.25.25 0 0 1 .248 0z'/%3E%3Cpath stroke='%23111' stroke-width='1.5' d='m3 6.75 8.496 4.956a.999.999 0 0 0 1.008 0L21 6.75M12 22.5V12'/%3E%3C/svg%3E");
+  }
 }

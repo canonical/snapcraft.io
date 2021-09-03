@@ -37,10 +37,8 @@ function Navigation() {
           <div className="p-panel">
             <div className="p-panel__header is-sticky">
               <span className="p-panel__logo">
-                <img
-                  className="p-panel__logo-icon"
-                  src="https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg"
-                  alt=""
+                <i
+                  className="p-panel__logo-icon p-icon--snapcraft-cube"
                   width="24"
                   height="24"
                 />

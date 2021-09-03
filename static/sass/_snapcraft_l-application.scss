@@ -1,5 +1,17 @@
 @mixin snapcraft-l-application {
+  // main navigation height is based on padding and line height of a nav link
+  $main-nav-height: map-get($line-heights, default-text) + $spv-inner--large * 2;
+  $global-nav-height: 2rem;
+  // application layout is typically 100vh, but we need to also accommodate the main nav
+  $layout-height: calc(100vh - #{$main-nav-height} - #{$global-nav-height});
+
+  .l-application {
+    height: $layout-height;
+  }
+
   .l-navigation {
+    height: $layout-height;
+
     position: absolute;
     top: auto;
 
@@ -7,8 +19,21 @@
       position: static;
     }
 
+    .l-navigation__drawer {
+      height: $layout-height;
+    }
+
     .p-panel {
       background: $color-light;
+    }
+
+    .p-panel__header {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .p-panel__logo-icon {
+      width: 1.5rem;
     }
 
     .p-side-navigation__link {
