@@ -65,6 +65,9 @@ function Navigation() {
                           activeClassName="is-active"
                           className="p-side-navigation__link"
                           to={`/admin/${item.id}/snaps`}
+                          isActive={(match, location) => {
+                            return location.pathname.includes(item.id);
+                          }}
                         >
                           <i className="p-side-navigation__icon p-icon--initial">
                             <span>{item.name.charAt(0)}</span>
