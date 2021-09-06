@@ -76,7 +76,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-l-application;
 
 @import "patterns_icons";
-
 @import "snapcraft_custom-cols";
 
 @include snapcraft-custom-cols;
@@ -359,7 +358,6 @@ $color-social-icon-foreground: $color-light;
 @import "snapcraft_p-search-results";
 
 @include snapcraft-p-search-results;
-
 @include snapcraft-p-icons;
 
 dl {
