@@ -7,6 +7,22 @@
 
   .l-application {
     height: $layout-height;
+
+    .p-side-navigation__toggle--dense {
+      background: $color-mid-dark;
+      border: 0;
+      line-height: 1rem;
+      padding: 0.5rem;
+      width: auto;
+
+      &:hover {
+        background: #333;
+      }
+
+      &:active {
+        background: #000;
+      }
+    }
   }
 
   .l-navigation-bar {
@@ -36,11 +52,33 @@
 
     .p-panel {
       background: $color-light;
+
+      // side nav tablet view with fixed footer
+      &.is-flex-column--medium {
+        @media (min-width: $application-layout--breakpoint-side-nav-collapsed) and (max-width: $application-layout--breakpoint-side-nav-expanded - 1px) {
+          .l-navigation & {
+            @content;
+          }
+
+          display: flex;
+          flex-direction: column;
+
+          .p-panel__content {
+            flex: 1 1 0;
+            overflow-y: scroll;
+          }
+        }
+      }
     }
 
     .p-panel__header {
+      background-color: $color-light;
       padding-left: 1.5rem;
       padding-right: 1.5rem;
+    }
+
+    .p-panel__footer {
+      padding: 1rem;
     }
 
     .p-panel__logo-icon {

@@ -6,12 +6,11 @@ import { brandStoresListSelector } from "../selectors";
 function Navigation() {
   const brandStoresList = useSelector(brandStoresListSelector);
   const [collapsed, setCollapsedState] = useState(true);
-  const openSideNavButton = useRef(null);
   const hideSideNav = (hide) => {
     setCollapsedState(hide);
 
     if (hide) {
-      openSideNavButton.current.focus();
+      document.activeElement.blur();
     }
   };
 
@@ -22,19 +21,19 @@ function Navigation() {
           <div className="p-panel__header">
             <div className="p-panel__controls">
               <button
-                className="p-panel__toggle"
+                className="p-side-navigation__toggle--dense"
                 onClick={() => hideSideNav(false)}
-                ref={openSideNavButton}
               >
-                Open side navigation
+                <i className="p-icon--right-chevrons"></i>
               </button>
+              &emsp;Open side navigation
             </div>
           </div>
         </div>
       </div>
       <header className={`l-navigation ${collapsed ? "is-collapsed" : ""}`}>
         <div className="l-navigation__drawer">
-          <div className="p-panel">
+          <div className="p-panel is-flex-column--medium">
             <div className="p-panel__header is-sticky">
               <span className="p-panel__logo">
                 <i
@@ -49,15 +48,9 @@ function Navigation() {
               <div className="p-panel__controls u-hide--large">
                 <button
                   onClick={() => hideSideNav(true)}
-                  className="p-button--base has-icon u-no-margin u-hide--medium"
+                  className="p-side-navigation__toggle--dense has-icon u-no-margin u-hide--medium"
                 >
-                  <i className="p-icon--close"></i>
-                </button>
-                <button
-                  onClick={() => hideSideNav(true)}
-                  className="p-button--base has-icon u-no-margin u-hide--small"
-                >
-                  <i className="p-icon--close p-icon--pin"></i>
+                  <i className="p-icon--left-chevrons">Close side navigation</i>
                 </button>
               </div>
             </div>
@@ -82,9 +75,267 @@ function Navigation() {
                         </NavLink>
                       </li>
                     ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
+                    {brandStoresList.map((item) => (
+                      <li className="p-side-navigation__item" key={item.id}>
+                        <NavLink
+                          activeClassName="is-active"
+                          className="p-side-navigation__link"
+                          to={`/admin/${item.id}/snaps`}
+                        >
+                          <i className="p-side-navigation__icon p-icon--initial">
+                            <span>{item.name.charAt(0)}</span>
+                          </i>
+                          <span className="p-side-navigation__label u-truncate">
+                            {item.name}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ))}
                   </ul>
                 </nav>
               </div>
+            </div>
+
+            <div className="p-panel__footer u-hide--small u-hide--large">
+              {collapsed ? (
+                <button
+                  onClick={() => hideSideNav(false)}
+                  className="p-side-navigation__toggle--dense has-icon u-no-margin"
+                >
+                  <i className="p-icon--right-chevrons">Open side navigation</i>
+                </button>
+              ) : (
+                <button
+                  onClick={() => hideSideNav(true)}
+                  className="p-side-navigation__toggle--dense has-icon u-no-margin"
+                >
+                  <i className="p-icon--left-chevrons">Close side navigation</i>
+                </button>
+              )}
             </div>
           </div>
         </div>
