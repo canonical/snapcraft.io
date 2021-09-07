@@ -104,12 +104,19 @@
         @extend %small-text;
 
         border-radius: 100%;
-        font-style: normal;
         height: $initial-icon-size;
         margin-bottom: 0;
-        text-align: center;
-        text-transform: uppercase;
         width: $initial-icon-size;
+
+        &::before {
+          content: attr(data-initial);
+          display: table-cell;
+          font-style: normal;
+          height: $initial-icon-size;
+          text-align: center;
+          text-transform: uppercase;
+          width: $initial-icon-size;
+        }
       }
 
       .p-side-navigation__icon {
