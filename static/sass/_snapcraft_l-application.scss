@@ -1,170 +1,150 @@
 @mixin snapcraft-l-application {
+  // main navigation height is based on padding and line height of a nav link
+  $main-nav-height: map-get($line-heights, default-text) + $spv-inner--large * 2;
+  $global-nav-height: 2rem;
+  // application layout is typically 100vh, but we need to also accommodate the main nav
+  $layout-height: calc(100vh - #{$main-nav-height} - #{$global-nav-height});
+
   .l-application {
-    height: calc(100vh - 80px);
-    position: sticky;
-    top: 0;
-    width: auto;
+    height: $layout-height;
 
-    @media (min-width: $breakpoint-medium) {
-      height: calc(100vh - 92px);
-    }
+    .p-side-navigation__toggle--dense {
+      background: $color-mid-dark;
+      border: 0;
+      line-height: 1rem;
+      padding: 0.5rem;
+      width: auto;
 
-    .l-navigation {
-      top: 80px;
-      z-index: 10;
+      &:hover {
+        background: #333;
+      }
 
-      @media (min-width: $breakpoint-large) {
-        top: 0;
+      &:active {
+        background: #000;
       }
     }
+  }
 
-    .l-navigation.is-collapsed {
-      @media (min-width: $breakpoint-large) {
-        position: sticky;
-        top: 0;
-      }
+  .l-navigation-bar {
+    .p-panel {
+      background-color: $color-light;
+      border-bottom: $border;
+    }
 
-      &:focus-within {
-        box-shadow: none;
-      }
+    .p-panel__controls {
+      margin-left: 0;
+    }
+  }
+
+  .l-navigation {
+    height: $layout-height;
+    position: absolute;
+    top: auto;
+
+    @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
+      position: static;
     }
 
     .l-navigation__drawer {
-      background-color: $color-light;
-      color: $color-dark;
-      padding: $sp-medium 0 $sp-medium 3px;
+      height: $layout-height;
     }
 
-    .l-navigation__drawer a {
-      color: inherit;
+    .p-panel {
+      background: $color-light;
 
-      &:hover,
-      &:focus,
-      &.is-active {
-        background-color: $color-mid-x-light;
-        color: $color-dark;
-        font-weight: 400;
-        position: relative;
+      // side nav tablet view with fixed footer
+      &.is-flex-column--medium {
+        @media (min-width: $application-layout--breakpoint-side-nav-collapsed) and (max-width: $application-layout--breakpoint-side-nav-expanded - 1px) {
+          .l-navigation & {
+            @content;
+          }
+
+          display: flex;
+          flex-direction: column;
+
+          .p-panel__content {
+            flex: 1 1 0;
+            overflow-y: scroll;
+          }
+        }
+      }
+    }
+
+    .p-panel__header {
+      background-color: $color-light;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .p-panel__footer {
+      padding: 1rem;
+    }
+
+    .p-panel__logo-icon {
+      width: 1.5rem;
+    }
+
+    .p-side-navigation__link {
+      padding-bottom: $spv-inner--small;
+      padding-top: $spv-inner--small;
+
+      &.is-active,
+      &[aria-current="page"],
+      &[aria-current="true"] {
+        @include vf-highlight-bar(#82bfa1, left);
+      }
+    }
+
+    .p-side-navigation--icons {
+      $initial-icon-size: 1.5rem;
+
+      .p-icon--initial {
+        @extend %vf-is-bordered;
+        @extend %vf-bg--x-light;
+        @extend %small-text;
+
+        border-radius: 100%;
+        height: $initial-icon-size;
+        margin-bottom: 0;
+        width: $initial-icon-size;
 
         &::before {
-          background-color: $color-mid-x-light;
-          content: "";
-          display: block;
-          height: 100%;
-          left: -3px;
-          position: absolute;
-          top: 0;
-          width: 3px;
+          content: attr(data-initial);
+          display: table-cell;
+          font-style: normal;
+          height: $initial-icon-size;
+          text-align: center;
+          text-transform: uppercase;
+          width: $initial-icon-size;
         }
       }
 
-      &.is-active::before {
-        background-color: $color-mid-dark;
-      }
-    }
-
-    .l-navigation-bar {
-      background-color: $color-light;
-      padding: $sp-medium;
-    }
-
-    .l-main {
-      padding: $sp-medium;
-    }
-
-    .l-application__header {
-      margin-bottom: $sp-medium;
-
-      @media screen and (min-width: $breakpoint-medium) {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-
-    .l-application__back-link {
-      display: inline-block;
-
-      @media screen and (max-width: $breakpoint-medium) {
-        margin-bottom: 0.25rem;
-      }
-    }
-
-    .l-application__heading {
-      @media screen and (min-width: $breakpoint-medium) {
-        margin-bottom: 0 !important;
-      }
-    }
-
-    .l-application__panel-header-nav {
-      margin-bottom: 1rem;
-
-      @media (min-width: $breakpoint-small) {
-        float: left;
-        width: calc(100% - 240px);
-      }
-    }
-
-    .l-application__panel-header-actions {
-      @media (min-width: $breakpoint-small) {
-        float: right;
-        margin-top: 0.75rem;
-      }
-    }
-
-    .admin-notification {
-      justify-content: space-between;
-    }
-
-    // this stops the navigation items jumping on hover
-    .p-side-navigation__link:hover {
-      font-weight: 300 !important;
-
-      &.is-active {
-        font-weight: 400 !important;
-      }
-    }
-
-    .p-side-navigation__icon {
-      top: 0.25rem;
-
-      &.is-text {
-        border: 1px solid $color-mid-light;
-        border-radius: 50%;
-        font-size: 14px;
-        height: 24px;
-        line-height: 1.5;
-        text-align: center;
-        width: 24px;
-      }
-    }
-
-    .is-active {
       .p-side-navigation__icon {
-        background-color: #82bfa1;
-        border-color: #82bfa1;
-        font-weight: bold;
+        // To align this icon, we need to get total height of the nav item
+        // (line height + vertical padding), subtract the height
+        // of the icon from that number, then halve the result.
+        $nav-item-line-height: map-get($line-heights, default-text);
+        $nav-item-vertical-padding: $spv-inner--small * 2;
+        $nav-item-height: $nav-item-line-height + $nav-item-vertical-padding;
+        $icon-height-delta: $nav-item-height - $initial-icon-size;
+
+        left: 1.25rem;
+        top: $icon-height-delta * 0.5;
+
+        @media (min-width: $breakpoint-x-large) {
+          $nav-item-line-height--xl: map-get($line-heights, default-text) *
+            $font-size-ratio--largescreen;
+          $nav-item-height--xl: $nav-item-line-height--xl +
+            $nav-item-vertical-padding;
+          $icon-height-delta--xl: $nav-item-height--xl - $initial-icon-size;
+
+          top: $icon-height-delta--xl * 0.5;
+        }
       }
-    }
-  }
 
-  .p-side-navigation--icons .p-search-box {
-    display: block;
-    margin-left: 1rem;
-    margin-right: 1rem;
-
-    .p-search-box__input {
-      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.964 1a5.964 5.964 0 014.709 9.623l4.303 4.305-1.06 1.06-4.306-4.305A5.964 5.964 0 116.963 1zm0 1.5a4.464 4.464 0 100 8.927 4.464 4.464 0 000-8.927z' fill='%23666' fill-rule='nonzero'/%3E%3C/svg%3E");
-      background-position: center right 0.5rem;
-      background-repeat: no-repeat;
-      padding-right: 2rem;
-      position: relative;
-    }
-  }
-
-  .p-side-navigation__list {
-    &::after {
-      display: none !important;
+      .p-side-navigation__link {
+        padding-left: 3.25rem;
+      }
     }
   }
 }
