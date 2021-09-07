@@ -3,6 +3,7 @@ $ubuntu-orange: #e95420;
 $color-brand: #00302f;
 $color-accent: $color-brand;
 $color-navigation-active-bar: $ubuntu-orange;
+$color-sidenav-item-border-highlight: #82bfa1;
 
 // navigation variables
 $theme-default-nav: dark;
@@ -74,6 +75,7 @@ $color-social-icon-foreground: $color-light;
 // vanilla layouts
 @include vf-l-application;
 
+@import "patterns_icons";
 @import "snapcraft_custom-cols";
 
 @include snapcraft-custom-cols;
@@ -356,6 +358,7 @@ $color-social-icon-foreground: $color-light;
 @import "snapcraft_p-search-results";
 
 @include snapcraft-p-search-results;
+@include snapcraft-p-icons;
 
 dl {
   margin-bottom: $spv-outer--scaleable;

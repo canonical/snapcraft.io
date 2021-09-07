@@ -349,22 +349,4 @@ def snapcraft_blueprint():
 
         return response
 
-    @snapcraft.route("/snapcraft-no-js.png")
-    def pixel_no_js():
-        users_without_js.inc()
-        response = flask.make_response(
-            flask.send_file("snapcraft/snapcraft.png", mimetype="image/png")
-        )
-        response.headers["Cache-Control"] = "private"
-        return response
-
-    @snapcraft.route("/snapcraft-with-js.png")
-    def pixel_with_js():
-        users_with_js.inc()
-        response = flask.make_response(
-            flask.send_file("snapcraft/snapcraft.png", mimetype="image/png")
-        )
-        response.headers["Cache-Control"] = "private"
-        return response
-
     return snapcraft
