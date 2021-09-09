@@ -1,4 +1,3 @@
-const brandStoresListSelector = (state) => state.brandStores.brandStoresList;
-const currentStoreSelector = (state) => state.currentStore.currentStore;
-
-export { brandStoresListSelector, currentStoreSelector };
+export const brandStoresListSelector = (state) =>
+  state.brandStores.brandStoresList;
+export const currentStoreSelector = (state) => state.currentStore.currentStore;
