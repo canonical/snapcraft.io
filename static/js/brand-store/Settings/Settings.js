@@ -47,7 +47,7 @@ function Settings() {
         if (response.status === 200) {
           return response.json();
         } else {
-          throw Error(response.statusText);
+          throw Error();
         }
       })
       .then((data) => {
@@ -66,6 +66,9 @@ function Settings() {
             setShowErrorNotification(true);
           }
         }, 1500);
+      })
+      .catch(() => {
+        setShowErrorNotification(true);
       });
   };
 
@@ -86,12 +89,12 @@ function Settings() {
 
   useEffect(() => {
     dispatch(fetchStore(id));
-  }, [dispatch, id]);
+  }, [id]);
 
   useEffect(() => {
     setIsPrivateStore(currentStore.private);
     setManualReviewPolicy(currentStore["manual-review-policy"]);
-  }, [currentStore]);
+  }, [currentStore.private, currentStore["manual-review-policy"]]);
 
   return (
     <main className="l-main">
