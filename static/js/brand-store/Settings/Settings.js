@@ -69,6 +69,7 @@ function Settings() {
       })
       .catch(() => {
         setShowErrorNotification(true);
+        setIsSaving(false);
       });
   };
 
