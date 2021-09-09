@@ -4,12 +4,16 @@ import "@testing-library/jest-dom";
 
 import PasswordToggle from "./PasswordToggle";
 
-const testProps = {
-  id: "foo",
-  label: "Password",
-  value: "asdfasdfsdafsda",
-  readOnly: false,
-};
+let testProps = {};
+
+beforeEach(() => {
+  testProps = {
+    id: "foo",
+    label: "Password",
+    value: "asdfasdfsdafsda",
+    readOnly: false,
+  };
+});
 
 test("it renders the label", () => {
   render(<PasswordToggle {...testProps} />);
