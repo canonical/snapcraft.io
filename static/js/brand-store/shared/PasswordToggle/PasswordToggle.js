@@ -14,7 +14,6 @@ function PasswordToggle({ id, value, label, readOnly }) {
           aria-live="polite"
           aria-controls="password"
           type="button"
-          data-testid={isPassword ? "show-button" : "hide-button"}
           onClick={() => {
             if (isPassword) {
               setFieldType("text");
@@ -26,10 +25,7 @@ function PasswordToggle({ id, value, label, readOnly }) {
           <span className="p-form-password-toggle__label">
             {isPassword ? "Show" : "Hide"}
           </span>
-          <i
-            data-testid={isPassword ? "show-icon" : "hide-icon"}
-            className={isPassword ? "p-icon--show" : "p-icon--hide"}
-          ></i>
+          <i className={isPassword ? "p-icon--show" : "p-icon--hide"}></i>
         </button>
       </div>
       <input

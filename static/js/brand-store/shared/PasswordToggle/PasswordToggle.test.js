@@ -27,28 +27,26 @@ test("it has the correct value in the password field", () => {
 
 test("it shows the correct button text when password is hidden", () => {
   render(<PasswordToggle {...testProps} />);
-  expect(screen.getByTestId("show-button")).toBeInTheDocument();
-  expect(screen.queryByTestId("hide-button")).not.toBeInTheDocument();
+  expect(screen.getByRole("button")).toHaveTextContent("Show");
 });
 
 test("it shows the correct button text when password is visible", () => {
   render(<PasswordToggle {...testProps} />);
-  fireEvent.click(screen.getByTestId("show-button"));
-  expect(screen.getByTestId("hide-button")).toBeInTheDocument();
-  expect(screen.queryByTestId("show-button")).not.toBeInTheDocument();
-});
-
-test("it shows the hide icon when the password is visible", () => {
-  render(<PasswordToggle {...testProps} />);
-  expect(screen.getByTestId("show-icon")).toBeInTheDocument();
-  expect(screen.queryByTestId("hide-icon")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button"));
+  expect(screen.getByRole("button")).toHaveTextContent("Hide");
 });
 
 test("it shows the show icon when the password is hidden", () => {
   render(<PasswordToggle {...testProps} />);
-  fireEvent.click(screen.getByTestId("show-button"));
-  expect(screen.getByTestId("hide-icon")).toBeInTheDocument();
-  expect(screen.queryByTestId("show-icon")).not.toBeInTheDocument();
+  expect(document.querySelector(".p-icon--show")).toBeInTheDocument();
+  expect(document.querySelector(".p-icon--hide")).not.toBeInTheDocument();
+});
+
+test("it shows the hide icon when the password is visible", () => {
+  render(<PasswordToggle {...testProps} />);
+  fireEvent.click(screen.getByRole("button"));
+  expect(document.querySelector(".p-icon--hide")).toBeInTheDocument();
+  expect(document.querySelector(".p-icon--show")).not.toBeInTheDocument();
 });
 
 test("it has the correct input type when password is hidden", () => {
@@ -58,13 +56,13 @@ test("it has the correct input type when password is hidden", () => {
 
 test("it has the correct input type when password is visible", () => {
   render(<PasswordToggle {...testProps} />);
-  fireEvent.click(screen.getByTestId("show-button"));
+  fireEvent.click(screen.getByRole("button"));
   expect(screen.getByLabelText(testProps.label).type).toEqual("text");
 });
 
 test("it has the correct input type when toggled back to hidden", () => {
   render(<PasswordToggle {...testProps} />);
-  fireEvent.click(screen.getByTestId("show-button"));
-  fireEvent.click(screen.getByTestId("hide-button"));
+  fireEvent.click(screen.getByRole("button"));
+  fireEvent.click(screen.getByRole("button"));
   expect(screen.getByLabelText(testProps.label).type).toEqual("password");
 });
