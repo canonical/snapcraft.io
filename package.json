@@ -37,6 +37,8 @@
     "@canonical/latest-news": "1.2.0",
     "@canonical/react-components": "0.21.0",
     "@reduxjs/toolkit": "1.6.1",
+    "@sentry/react": "^6.12.0",
+    "@sentry/tracing": "^6.12.0",
     "@tarekraafat/autocomplete.js": "9.1.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "11.2.3",
