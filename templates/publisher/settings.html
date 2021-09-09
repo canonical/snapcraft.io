@@ -178,36 +178,6 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
 
       <div class="row p-form__group">
         <div class="col-2">
-          <label class="p-form__label">Upload metadata on release:</label>
-        </div>
-        <div class="col-8">
-          <div class="p-form__control">
-            <input
-              type="checkbox"
-              name="update_metadata_on_release"
-              id="update_metadata_on_release"
-              {% if update_metadata_on_release|tojson == "true" %}checked{% endif %}
-            />
-            <label for="update_metadata_on_release">
-              <span class="p-form-help-text">The information on the Listing page of this snap will be automatically updated to the version in snapcraft.yaml of the latest revision pushed to the stable channel. If you manually edit the Listing page, the automatic updates will be turned off. <a class="p-link--external" href="/docs/snapcraft-top-level-metadata">Learn more</a>.</span>
-            </label>
-          </div>
-          {% if update_metadata_on_release %}
-            <div class="p-notification--caution" id="metadata-edit-warning">
-          {% else %}
-            <div class="p-notification--caution u-hide" id="metadata-edit-warning" aria-hidden="true">
-          {% endif %}
-            <p class="p-notification__response">Warning: This snap is set to have its metadata updated when a new revision is published in the stable channel. Any changes you make here will be overwritten by the contents of any snap published. If this is not desirable, please disable &ldquo;Update metadata on release&rdquo; for this snap.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="row p-form__group">
-        <hr class="u-no-margin--bottom" />
-      </div>
-
-      <div class="row p-form__group">
-        <div class="col-2">
           <label class="p-form__label">Collaboration:</label>
         </div>
         <div class="col-8">
