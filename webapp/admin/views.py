@@ -56,6 +56,7 @@ def get_settings(store_id):
 
     return jsonify(store)
 
+
 @admin.route("/admin/store/<store_id>/settings", methods=["POST"])
 @login_required
 def post_settings(store_id):
@@ -71,11 +72,11 @@ def post_settings(store_id):
         admin_api.change_store_settings(flask.session, store_id, settings)
         res["msg"] = "Changes saved"
     except StoreApiResponseErrorList as api_response_error_list:
-        return jsonify({ "error": True })
+        return jsonify({"error": True})
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
-    return jsonify({ "success": True })
+    return jsonify({"success": True})
 
 
 @admin.route("/admin/<store_id>/snaps/search.json")
