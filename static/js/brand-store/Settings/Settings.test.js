@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider, useSelector } from "react-redux";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Settings from "./Settings";
 import store from "../stores/store";
@@ -15,59 +15,105 @@ jest.mock("react-router-dom", () => ({
   useParams: jest.fn().mockReturnValue({ id: "test" }),
 }));
 
-describe("<Settings />", () => {
-  const testState = {
+let initialState = {};
+
+const setupMockSelector = (state) => {
+  useSelector.mockImplementation((callback) => {
+    return callback(state);
+  });
+};
+
+beforeEach(() => {
+  initialState = {
     currentStore: {
       currentStore: {
-        id: "test",
+        id: "test-id",
         private: true,
         "manual-review-policy": "allow",
       },
     },
   };
+});
 
-  beforeEach(() => {
-    useSelector.mockImplementation((callback) => {
-      return callback(testState);
-    });
-  });
+test("the 'is public' checkbox should not be checked when the current store is set to private", () => {
+  setupMockSelector(initialState);
 
-  it("should render the Settings view", () => {
-    render(
-      <Provider store={store}>
-        <Settings />
-      </Provider>
-    );
-    expect(document.querySelector("#is_public")).toBeInTheDocument();
-  });
+  render(
+    <Provider store={store}>
+      <Settings />
+    </Provider>
+  );
 
-  test("the 'is public' checkbox should not be checked when the current store is set to private", () => {
-    render(
-      <Provider store={store}>
-        <Settings />
-      </Provider>
-    );
-    expect(document.querySelector("#is_public").checked).toEqual(false);
-  });
+  expect(document.querySelector("#is_public")).not.toBeChecked();
+});
 
-  test("the 'is public' checkbox should be checked when the current store is not set to private", () => {
-    useSelector.mockImplementation((callback) => {
-      return callback({
-        currentStore: {
-          currentStore: {
-            id: "test",
-            private: false,
-            "manual-review-policy": "allow",
-          },
-        },
-      });
-    });
+test("the 'is public' checkbox should be checked when the current store is not set to private", () => {
+  initialState.currentStore.currentStore.private = false;
+  setupMockSelector(initialState);
 
-    render(
-      <Provider store={store}>
-        <Settings />
-      </Provider>
-    );
-    expect(document.querySelector("#is_public").checked).toEqual(true);
-  });
+  render(
+    <Provider store={store}>
+      <Settings />
+    </Provider>
+  );
+
+  expect(document.querySelector("#is_public")).toBeChecked();
+});
+
+test("the correct value is given to the store ID field", () => {
+  setupMockSelector(initialState);
+
+  render(
+    <Provider store={store}>
+      <Settings />
+    </Provider>
+  );
+
+  expect(screen.getByLabelText("Store ID").value).toEqual(
+    initialState.currentStore.currentStore.id
+  );
+});
+
+test("the correct radio button is checked by default for manual review policy", () => {
+  setupMockSelector(initialState);
+
+  render(
+    <Provider store={store}>
+      <Settings />
+    </Provider>
+  );
+
+  const radioButtons = screen.getAllByRole("radio");
+  const checkedRadioButton = radioButtons.find(
+    (button) => button.checked === true
+  );
+
+  expect(checkedRadioButton.value).toEqual(
+    initialState.currentStore.currentStore["manual-review-policy"]
+  );
+});
+
+test("the save button is disabled by default", () => {
+  setupMockSelector(initialState);
+
+  render(
+    <Provider store={store}>
+      <Settings />
+    </Provider>
+  );
+
+  expect(screen.getByText("Save changes")).toBeDisabled();
+});
+
+test("the save button is enabled when the data changes", () => {
+  setupMockSelector(initialState);
+
+  render(
+    <Provider store={store}>
+      <Settings />
+    </Provider>
+  );
+
+  screen.getByRole("checkbox").click();
+  expect(screen.getByText("Save changes")).not.toBeDisabled();
 });
