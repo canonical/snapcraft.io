@@ -323,10 +323,6 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-l-application;
 
-@import "snapcraft_p-form-help-text";
-
-@include snapcraft-p-form-help-text;
-
 @import "snapcraft-p-videos";
 
 @include snapcraft-p-videos;
@@ -359,6 +355,7 @@ $color-social-icon-foreground: $color-light;
 
 @include snapcraft-p-search-results;
 @include snapcraft-p-icons;
+@include vf-p-form-password-toggle;
 
 dl {
   margin-bottom: $spv-outer--scaleable;
@@ -421,4 +418,9 @@ code {
 
 .u-overflow-visible {
   overflow: visible !important;
+}
+
+// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3975
+.p-form-password-toggle + [readonly] {
+  color: $color-dark;
 }

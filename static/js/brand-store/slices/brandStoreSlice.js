@@ -31,7 +31,7 @@ export function fetchStores() {
     dispatch(getBrandStoresLoading());
 
     try {
-      const response = await fetch("/admin/stores.json");
+      const response = await fetch("/admin/stores");
       const data = await response.json();
 
       dispatch(getBrandStoresSuccess(data));
