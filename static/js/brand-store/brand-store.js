@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import App from "./App";
-import store from "./stores/store";
+import store from "./store";
 import { Provider } from "react-redux";
 
 Sentry.init({

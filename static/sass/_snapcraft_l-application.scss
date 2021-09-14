@@ -23,6 +23,13 @@
         background: #000;
       }
     }
+
+    .p-tabs__link:active,
+    .p-tabs__link[aria-pressed="true"],
+    .p-tabs__link[aria-selected="true"],
+    .p-tabs__link[aria-expanded="true"] {
+      background-color: $color-x-light;
+    }
   }
 
   .l-navigation-bar {
