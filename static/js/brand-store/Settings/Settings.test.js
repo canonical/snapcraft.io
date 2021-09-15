@@ -1,9 +1,10 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import { Provider, useSelector } from "react-redux";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Settings from "./Settings";
-import store from "../stores/store";
+import store from "../store";
 
 jest.mock("react-redux", () => ({
   ...jest.requireActual("react-redux"),
@@ -40,7 +41,9 @@ test("the 'is public' checkbox should not be checked when the current store is s
 
   render(
     <Provider store={store}>
-      <Settings />
+      <Router>
+        <Settings />
+      </Router>
     </Provider>
   );
 
@@ -55,7 +58,9 @@ test("the 'is public' checkbox should be checked when the current store is not s
 
   render(
     <Provider store={store}>
-      <Settings />
+      <Router>
+        <Settings />
+      </Router>
     </Provider>
   );
 
@@ -69,7 +74,9 @@ test("the correct value is given to the store ID field", () => {
 
   render(
     <Provider store={store}>
-      <Settings />
+      <Router>
+        <Settings />
+      </Router>
     </Provider>
   );
 
@@ -83,7 +90,9 @@ test("the correct radio button is checked by default for manual review policy", 
 
   render(
     <Provider store={store}>
-      <Settings />
+      <Router>
+        <Settings />
+      </Router>
     </Provider>
   );
 
@@ -102,7 +111,9 @@ test("the save button is disabled by default", () => {
 
   render(
     <Provider store={store}>
-      <Settings />
+      <Router>
+        <Settings />
+      </Router>
     </Provider>
   );
 
@@ -114,7 +125,9 @@ test("the save button is enabled when the data changes", () => {
 
   render(
     <Provider store={store}>
-      <Settings />
+      <Router>
+        <Settings />
+      </Router>
     </Provider>
   );
 
