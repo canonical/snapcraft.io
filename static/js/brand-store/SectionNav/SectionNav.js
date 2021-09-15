@@ -13,6 +13,7 @@ function SectionNav({ sectionName }) {
             to={`/admin/${id}/snaps`}
             className="p-tabs__link"
             aria-selected={sectionName === "snaps"}
+            role="tab"
           >
             Snaps
           </Link>
@@ -22,6 +23,7 @@ function SectionNav({ sectionName }) {
             to={`/admin/${id}/members`}
             className="p-tabs__link"
             aria-selected={sectionName === "members"}
+            role="tab"
           >
             Members
           </Link>
@@ -31,6 +33,7 @@ function SectionNav({ sectionName }) {
             to={`/admin/${id}/settings`}
             className="p-tabs__link"
             aria-selected={sectionName === "settings"}
+            role="tab"
           >
             Settings
           </Link>
