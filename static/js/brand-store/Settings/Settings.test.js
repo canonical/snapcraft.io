@@ -44,7 +44,9 @@ test("the 'is public' checkbox should not be checked when the current store is s
     </Provider>
   );
 
-  expect(document.querySelector("#is_public")).not.toBeChecked();
+  expect(
+    screen.getByLabelText("Include this store in public lists")
+  ).not.toBeChecked();
 });
 
 test("the 'is public' checkbox should be checked when the current store is not set to private", () => {
@@ -57,7 +59,9 @@ test("the 'is public' checkbox should be checked when the current store is not s
     </Provider>
   );
 
-  expect(document.querySelector("#is_public")).toBeChecked();
+  expect(
+    screen.getByLabelText("Include this store in public lists")
+  ).toBeChecked();
 });
 
 test("the correct value is given to the store ID field", () => {
