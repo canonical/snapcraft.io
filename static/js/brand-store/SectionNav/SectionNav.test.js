@@ -16,9 +16,9 @@ test("active state is set on snaps when on snaps section", () => {
     </Router>
   );
 
-  expect(screen.getByText("Snaps").getAttribute("aria-selected")).toEqual(
-    "true"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Snaps" }).getAttribute("aria-selected")
+  ).toEqual("true");
 });
 
 test("active state is not set on members or settings when on snaps section", () => {
@@ -28,13 +28,13 @@ test("active state is not set on members or settings when on snaps section", () 
     </Router>
   );
 
-  expect(screen.getByText("Members").getAttribute("aria-selected")).toEqual(
-    "false"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Members" }).getAttribute("aria-selected")
+  ).toEqual("false");
 
-  expect(screen.getByText("Settings").getAttribute("aria-selected")).toEqual(
-    "false"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Settings" }).getAttribute("aria-selected")
+  ).toEqual("false");
 });
 
 test("active state is set on snaps when on members section", () => {
@@ -44,9 +44,9 @@ test("active state is set on snaps when on members section", () => {
     </Router>
   );
 
-  expect(screen.getByText("Members").getAttribute("aria-selected")).toEqual(
-    "true"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Members" }).getAttribute("aria-selected")
+  ).toEqual("true");
 });
 
 test("active state is not set on snaps or settings when on members section", () => {
@@ -56,13 +56,13 @@ test("active state is not set on snaps or settings when on members section", () 
     </Router>
   );
 
-  expect(screen.getByText("Snaps").getAttribute("aria-selected")).toEqual(
-    "false"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Snaps" }).getAttribute("aria-selected")
+  ).toEqual("false");
 
-  expect(screen.getByText("Settings").getAttribute("aria-selected")).toEqual(
-    "false"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Settings" }).getAttribute("aria-selected")
+  ).toEqual("false");
 });
 
 test("active state is set on snaps when on settings section", () => {
@@ -72,9 +72,9 @@ test("active state is set on snaps when on settings section", () => {
     </Router>
   );
 
-  expect(screen.getByText("Settings").getAttribute("aria-selected")).toEqual(
-    "true"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Settings" }).getAttribute("aria-selected")
+  ).toEqual("true");
 });
 
 test("active state is not set on members or settings when on settings section", () => {
@@ -84,11 +84,11 @@ test("active state is not set on members or settings when on settings section", 
     </Router>
   );
 
-  expect(screen.getByText("Snaps").getAttribute("aria-selected")).toEqual(
-    "false"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Snaps" }).getAttribute("aria-selected")
+  ).toEqual("false");
 
-  expect(screen.getByText("Members").getAttribute("aria-selected")).toEqual(
-    "false"
-  );
+  expect(
+    screen.getByRole("tab", { name: "Members" }).getAttribute("aria-selected")
+  ).toEqual("false");
 });
