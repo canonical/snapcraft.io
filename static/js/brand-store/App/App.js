@@ -21,7 +21,6 @@ function App() {
   const isLoading = useSelector((state) => state.brandStores.loading);
   const brandStoresList = useSelector(brandStoresListSelector);
   const dispatch = useDispatch();
-  const globalStoreId = "ubuntu";
 
   useEffect(() => {
     dispatch(fetchStores());
@@ -37,15 +36,7 @@ function App() {
               brandStoresList.length < 1 ? (
                 <NoStores />
               ) : (
-                // The global store has no /snaps view so needs to be
-                // redirected to /settings
-                <Redirect
-                  to={
-                    brandStoresList[0].id === globalStoreId
-                      ? `/admin/${brandStoresList[0].id}/settings`
-                      : `/admin/${brandStoresList[0].id}/snaps`
-                  }
-                />
+                <Redirect to={`/admin/${brandStoresList[0].id}/snaps`} />
               )
             ) : (
               <h1>Loading...</h1>
