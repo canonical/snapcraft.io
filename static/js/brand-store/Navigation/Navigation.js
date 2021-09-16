@@ -65,7 +65,7 @@ function Navigation() {
                           <NavLink
                             activeClassName="is-active"
                             className="p-side-navigation__link"
-                            to={`/admin/${item.id}/settings`}
+                            to={`/admin/${item.id}/snaps`}
                             isActive={(match, location) => {
                               return location.pathname.includes(item.id);
                             }}

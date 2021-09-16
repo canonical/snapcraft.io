@@ -15,6 +15,7 @@ import { currentStoreSelector } from "../selectors";
 import { fetchStore } from "../slices/currentStoreSlice";
 
 import PasswordToggle from "../shared/PasswordToggle";
+import SectionNav from "../SectionNav";
 
 function Settings() {
   const currentStore = useSelector(currentStoreSelector);
@@ -101,6 +102,9 @@ function Settings() {
     <main className="l-main">
       <div className="p-panel--settings">
         <div className="p-panel__content">
+          <div className="u-fixed-width">
+            <SectionNav sectionName="settings" />
+          </div>
           <Row>
             <Col size="7">
               {isLoading && !isSaving ? (

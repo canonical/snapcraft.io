@@ -93,3 +93,16 @@ def get_snaps_search(store_id):
         return _handle_error(api_error)
 
     return jsonify(snaps)
+
+
+@admin.route("/admin/store/<store_id>/snaps")
+@login_required
+def get_store_snaps(store_id):
+    try:
+        snaps = admin_api.get_store_snaps(flask.session, store_id)
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return jsonify(snaps)
