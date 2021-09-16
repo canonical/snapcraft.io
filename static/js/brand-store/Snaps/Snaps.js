@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Spinner, Row, Col } from "@canonical/react-components";
+import {
+  Spinner,
+  Row,
+  Col,
+  Button,
+  Notification,
+} from "@canonical/react-components";
 
 import { snapsSelector, brandStoresListSelector } from "../selectors";
 import { fetchSnaps } from "../slices/snapsSlice";
 
 import SnapsTable from "./SnapsTable";
 import SnapsFilter from "./SnapsFilter";
+import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
 
 function Snaps() {
@@ -20,6 +27,20 @@ function Snaps() {
   const [snapsInStore, setSnapsInStore] = useState([]);
   const [otherStoreIds, setOtherStoreIds] = useState([]);
   const [otherStores, setOtherStores] = useState([]);
+  const [selectedSnaps, setSelectedSnaps] = useState([]);
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [snapsToRemove, setSnapsToRemove] = useState([]);
+  const [showAddSuccessNotification, setShowAddSuccessNotification] = useState(
+    false
+  );
+  const [showErrorNotification, setShowErrorNotification] = useState(false);
+  const [
+    showRemoveSuccessNotification,
+    setShowRemoveSuccessNotification,
+  ] = useState(false);
+  const [removeSnapSaving, setRemoveSnapSaving] = useState(false);
+  const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState([]);
 
   const getStoreName = (storeId) => {
     const store = brandStoresList.find((item) => item.id === storeId);
@@ -29,6 +50,99 @@ function Snaps() {
     } else {
       return storeId;
     }
+  };
+
+  const addSnaps = (e) => {
+    e.preventDefault();
+
+    setIsSaving(true);
+
+    const snapsToAdd = {
+      add: selectedSnaps.map((item) => {
+        return { name: item.name };
+      }),
+    };
+
+    const snapsData = new FormData();
+    snapsData.set("csrf_token", window.CSRF_TOKEN);
+    snapsData.set("snaps", JSON.stringify(snapsToAdd));
+
+    fetch(`/admin/store/${id}/snaps`, {
+      method: "POST",
+      body: snapsData,
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw Error();
+        }
+      })
+      .then((data) => {
+        dispatch(fetchSnaps(id));
+
+        // Add timeout so that the user has time to notice the save action
+        // in the event of it happening very fast
+        setTimeout(() => {
+          setIsSaving(false);
+          setSelectedSnaps([]);
+          setSidePanelOpen(false);
+
+          if (data.success) {
+            setShowAddSuccessNotification(true);
+          }
+
+          if (data.error) {
+            setShowErrorNotification(true);
+          }
+        }, 1500);
+      })
+      .catch(() => {
+        setIsSaving(false);
+        setShowErrorNotification(true);
+      });
+  };
+
+  const removeSnaps = (e) => {
+    e.preventDefault();
+
+    setRemoveSnapSaving(true);
+
+    const removingSnaps = {
+      remove: snapsToRemove.map((item) => {
+        return { name: item.name };
+      }),
+    };
+
+    const snapsData = new FormData();
+    snapsData.set("csrf_token", window.CSRF_TOKEN);
+    snapsData.set("snaps", JSON.stringify(removingSnaps));
+
+    fetch(`/admin/store/${id}/snaps`, {
+      method: "POST",
+      body: snapsData,
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw Error();
+        }
+      })
+      .then(() => {
+        dispatch(fetchSnaps(id));
+
+        // Add timeout so that the user has time to notice the save action
+        // in the event of it happening very fast
+        setTimeout(() => {
+          setRemoveSnapSaving(false);
+          setSnapsToRemove([]);
+          setShowRemoveSuccessNotification(true);
+        }, 1500);
+      })
+      .catch(() => {
+        setRemoveSnapSaving(false);
+      });
   };
 
   useEffect(() => {
@@ -47,6 +161,12 @@ function Snaps() {
           })
       )
     );
+
+    const nonEssentialSnaps = snaps.filter((item) => {
+      return item.store !== id && !item.essential;
+    });
+
+    setNonEssentialSnapIds(nonEssentialSnaps.map((item) => item.id));
   }, [snaps]);
 
   useEffect(() => {
@@ -62,46 +182,165 @@ function Snaps() {
   }, [otherStoreIds]);
 
   return (
-    <main className="l-main">
-      <div className="p-panel">
-        <div className="p-panel__content">
-          <div className="u-fixed-width">
-            <SectionNav sectionName="snaps" />
-          </div>
-          {snapsLoading && storesLoading ? (
+    <>
+      <main className="l-main">
+        <div className="p-panel">
+          <div className="p-panel__content">
             <div className="u-fixed-width">
-              <Spinner text="Loading&hellip;" />
+              <SectionNav sectionName="snaps" />
             </div>
-          ) : (
-            <>
-              <Row>
-                <Col size="6">
-                  <h2 className="p-heading--4">Snaps in {getStoreName(id)}</h2>
-                </Col>
-                <Col size="6">
-                  <SnapsFilter
-                    setSnapsInStore={setSnapsInStore}
-                    snapsInStore={snapsInStore}
-                    setOtherStores={setOtherStores}
-                    otherStoreIds={otherStoreIds}
-                    getStoreName={getStoreName}
-                    snaps={snaps}
-                    id={id}
-                  />
-                </Col>
-              </Row>
+            {snapsLoading && storesLoading ? (
               <div className="u-fixed-width">
-                <SnapsTable
-                  snaps={snapsInStore}
-                  storeName={getStoreName(id)}
-                  otherStores={otherStores}
-                />
+                <Spinner text="Loading&hellip;" />
               </div>
-            </>
-          )}
+            ) : (
+              <>
+                <Row>
+                  <Col size="6">
+                    <h2 className="p-heading--4">
+                      Snaps in {getStoreName(id)}
+                    </h2>
+                    <Button onClick={() => setSidePanelOpen(true)}>
+                      Include snap
+                    </Button>
+                    <Button
+                      disabled={snapsToRemove.length < 1 || removeSnapSaving}
+                      onClick={removeSnaps}
+                      className={removeSnapSaving ? "has-icon" : ""}
+                    >
+                      {removeSnapSaving ? (
+                        <>
+                          <i className="p-icon--spinner u-animation--spin"></i>
+                          <span>Saving...</span>
+                        </>
+                      ) : snapsToRemove.length > 1 ? (
+                        "Exclude snaps"
+                      ) : (
+                        "Exclude snap"
+                      )}
+                    </Button>
+                  </Col>
+                  <Col size="6">
+                    <SnapsFilter
+                      setSnapsInStore={setSnapsInStore}
+                      snapsInStore={snapsInStore}
+                      setOtherStores={setOtherStores}
+                      otherStoreIds={otherStoreIds}
+                      getStoreName={getStoreName}
+                      snaps={snaps}
+                      id={id}
+                    />
+                  </Col>
+                </Row>
+                <div className="u-fixed-width">
+                  <SnapsTable
+                    snaps={snapsInStore}
+                    storeName={getStoreName(id)}
+                    otherStores={otherStores}
+                    snapsToRemove={snapsToRemove}
+                    setSnapsToRemove={setSnapsToRemove}
+                    nonEssentialSnapIds={nonEssentialSnapIds}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
+      </main>
+      <aside
+        className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
+        id="aside-panel"
+      >
+        <div className="p-panel is-flex-column">
+          <div className="p-panel__header">
+            <h4 className="p-panel__title">Add a snap to {getStoreName(id)}</h4>
+          </div>
+          <div className="p-panel__content u-no-padding--top">
+            <div className="u-fixed-width">
+              <SnapsSearch
+                selectedSnaps={selectedSnaps}
+                setSelectedSnaps={setSelectedSnaps}
+                getStoreName={getStoreName}
+                storeId={id}
+                nonEssentialSnapIds={nonEssentialSnapIds}
+              />
+              {selectedSnaps.length ? (
+                <ul>
+                  {selectedSnaps.map((snap) => {
+                    <li key={snap.id}>{snap.name}</li>;
+                  })}
+                </ul>
+              ) : null}
+            </div>
+          </div>
+          <div className="p-panel__footer u-align--right">
+            <div className="u-fixed-width">
+              <Button
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  setSidePanelOpen(false);
+                  setSelectedSnaps([]);
+                }}
+              >
+                Cancel
+              </Button>
+
+              <Button
+                appearance="positive"
+                disabled={selectedSnaps.length < 1 || isSaving}
+                onClick={addSnaps}
+                className={`u-no-margin--bottom u-no-margin--right ${
+                  isSaving ? "has-icon is-dark" : ""
+                }`}
+              >
+                {isSaving ? (
+                  <>
+                    <i className="p-icon--spinner is-light u-animation--spin"></i>
+                    <span>Saving...</span>
+                  </>
+                ) : selectedSnaps.length <= 1 ? (
+                  "Add snap"
+                ) : (
+                  "Add snaps"
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div className="p-notification-center">
+        {showAddSuccessNotification && (
+          <Notification
+            severity="positive"
+            onDismiss={() => setShowAddSuccessNotification(false)}
+          >
+            Snaps have been added to store
+          </Notification>
+        )}
+
+        {showRemoveSuccessNotification && (
+          <Notification
+            severity="positive"
+            onDismiss={() => setShowRemoveSuccessNotification(false)}
+          >
+            Snaps have been removed from store
+          </Notification>
+        )}
+
+        {showErrorNotification && (
+          <Notification
+            severity="negative"
+            onDismiss={() => setShowErrorNotification(false)}
+          >
+            Something went wrong.{" "}
+            <a href="https://github.com/canonical-web-and-design/snapcraft.io/issues/new">
+              Report a bug
+            </a>
+          </Notification>
+        )}
       </div>
-    </main>
+    </>
   );
 }
 

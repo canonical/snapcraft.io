@@ -58,6 +58,7 @@
     "d3-shape": "2.0.0",
     "d3-time-format": "3.0.0",
     "date-fns": "2.16.1",
+    "downshift": "6.1.7",
     "expose-loader": "1.0.3",
     "fast-average-color": "6.3.0",
     "markdown-it": "12.0.4",
