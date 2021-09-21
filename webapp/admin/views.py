@@ -77,7 +77,7 @@ def post_settings(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/admin/<store_id>/snaps/search.json")
+@admin.route("/admin/<store_id>/snaps/search")
 @login_required
 def get_snaps_search(store_id):
     try:
@@ -106,3 +106,19 @@ def get_store_snaps(store_id):
         return _handle_error(api_error)
 
     return jsonify(snaps)
+
+
+@admin.route("/admin/store/<store_id>/snaps", methods=["POST"])
+@login_required
+def post_manage_store_snaps(store_id):
+    snaps = json.loads(flask.request.form.get("snaps"))
+
+    res = {}
+
+    try:
+        admin_api.update_store_snaps(flask.session, store_id, snaps)
+        res["msg"] = "Changes saved"
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return jsonify({"success": True})

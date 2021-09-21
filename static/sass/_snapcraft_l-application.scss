@@ -111,4 +111,28 @@
       }
     }
   }
+
+  .l-aside {
+    height: $layout-height;
+    position: relative;
+
+    @media (min-width: $breakpoint-small) {
+      width: 22.5rem;
+    }
+
+    .is-flex-column {
+      display: flex;
+      flex-direction: column;
+
+      .p-panel__content {
+        flex: 1 1 0;
+        overflow-y: scroll;
+      }
+    }
+
+    .p-panel__footer {
+      background-color: $color-x-light;
+      padding: 1rem;
+    }
+  }
 }
