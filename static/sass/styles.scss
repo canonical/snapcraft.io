@@ -351,9 +351,9 @@ $color-social-icon-foreground: $color-light;
 
 @include p-password-toggle-input;
 
-@import "snapcraft_p-search-results";
+@import "snapcraft_p-autocomplete";
 
-@include snapcraft-p-search-results;
+@include snapcraft-autocomplete;
 @include snapcraft-p-icons;
 @include vf-p-form-password-toggle;
 
@@ -425,6 +425,37 @@ code {
   color: $color-dark;
 }
 
-.u-top-border {
-  border-top: $border;
+.table-cell--checkbox,
+.table-cell-head--checkbox {
+  padding-left: 2.5rem;
+
+  .p-checkbox {
+    margin-bottom: 0;
+    margin-left: -2rem;
+    padding-top: 0;
+    position: relative;
+    top: 4px;
+
+    .p-checkbox__input {
+      margin-top: 0;
+    }
+  }
+}
+
+.table-cell-head--checkbox {
+  .p-checkbox {
+    top: -2px;
+  }
+}
+
+.p-notification-center {
+  bottom: 0;
+  position: fixed;
+  right: 1rem;
+  z-index: 9999;
+
+  .p-notification--positive,
+  .p-notification--negative {
+    padding-right: 3rem;
+  }
 }
