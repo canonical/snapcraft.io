@@ -3,6 +3,7 @@ import brandStoreReducer from "../slices/brandStoreSlice";
 import currentStoreReducer from "../slices/currentStoreSlice";
 import snapsSelector from "../slices/snapsSlice";
 import membersSelector from "../slices/membersSlice";
+import invitesSelector from "../slices/invitesSlice";
 
 export default configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
     currentStore: currentStoreReducer,
     snaps: snapsSelector,
     members: membersSelector,
+    invites: invitesSelector,
   },
 });

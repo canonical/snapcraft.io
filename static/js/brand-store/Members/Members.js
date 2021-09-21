@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { format } from "date-fns";
 import {
   Spinner,
   Accordion,
@@ -8,19 +9,66 @@ import {
   CheckboxInput,
 } from "@canonical/react-components";
 
-import { membersSelector } from "../selectors";
+import { membersSelector, invitesSelector } from "../selectors";
 import { fetchMembers } from "../slices/membersSlice";
+import { fetchInvites } from "../slices/invitesSlice";
 
 import SectionNav from "../SectionNav";
 
 function Members() {
+  const ROLES = {
+    admin: "admin",
+    review: "reviewer",
+    view: "viewer",
+    access: "publisher",
+  };
+
   const members = useSelector(membersSelector);
   const membersLoading = useSelector((state) => state.members.loading);
+  const invites = useSelector(invitesSelector);
+  const invitesLoading = useSelector((state) => state.members.loading);
   const dispatch = useDispatch();
   const { id } = useParams();
 
+  const getInviteStatusText = (status) => {
+    let iconClassName = "";
+
+    if (status === "Pending") {
+      iconClassName = "p-icon--status-waiting";
+    }
+
+    if (status === "Expired") {
+      iconClassName = "p-icon--warning";
+    }
+
+    if (status === "Revoked") {
+      iconClassName = "p-icon--error";
+    }
+
+    return (
+      <>
+        <i className={iconClassName} /> {status}
+      </>
+    );
+  };
+
+  const getRolesText = (roles) => {
+    let rolesText = "";
+
+    roles.forEach((role, index) => {
+      rolesText += `${ROLES[role]} `;
+
+      if (index < roles.length - 1) {
+        rolesText += "| ";
+      }
+    });
+
+    return rolesText;
+  };
+
   useEffect(() => {
     dispatch(fetchMembers(id));
+    dispatch(fetchInvites(id));
   }, [id]);
 
   return (
@@ -30,12 +78,12 @@ function Members() {
           <div className="u-fixed-width">
             <SectionNav sectionName="members" />
           </div>
-          {membersLoading ? (
+          {membersLoading && invitesLoading ? (
             <div className="u-fixed-width">
               <Spinner text="Loading&hellip;" />
             </div>
           ) : (
-            <div className="u-fixed-width">
+            <div className="u-fixed-width members-accordion">
               <Accordion
                 expanded="members-table"
                 sections={[
@@ -44,6 +92,7 @@ function Members() {
                     title: `${members.length} members`,
                     content: (
                       <MainTable
+                        responsive={true}
                         headers={[
                           { content: "Users" },
                           { content: "Email" },
@@ -106,12 +155,15 @@ function Members() {
                               {
                                 className: "u-truncate",
                                 content: member.displayname,
+                                "aria-label": "Name",
                               },
                               {
                                 className: "u-truncate",
                                 content: member.email,
+                                "aria-label": "Email",
                               },
                               {
+                                "aria-label": "Admin",
                                 content: (
                                   <CheckboxInput
                                     checked={member.roles.includes("admin")}
@@ -123,6 +175,7 @@ function Members() {
                                 ),
                               },
                               {
+                                "aria-label": "Reviewer",
                                 content: (
                                   <CheckboxInput
                                     checked={member.roles.includes("review")}
@@ -130,6 +183,7 @@ function Members() {
                                 ),
                               },
                               {
+                                "aria-label": "Viewer",
                                 content: (
                                   <CheckboxInput
                                     checked={member.roles.includes("view")}
@@ -137,11 +191,53 @@ function Members() {
                                 ),
                               },
                               {
+                                "aria-label": "Publisher",
                                 content: (
                                   <CheckboxInput
                                     checked={member.roles.includes("access")}
                                   />
                                 ),
+                              },
+                            ],
+                          };
+                        })}
+                      />
+                    ),
+                  },
+                  {
+                    key: "invites-table",
+                    title: `${invites.length} invites`,
+                    content: (
+                      <MainTable
+                        responsive={true}
+                        headers={[
+                          { content: "Status" },
+                          { content: "Email" },
+                          { content: "Expires" },
+                          { content: "Roles" },
+                        ]}
+                        rows={invites.map((invite) => {
+                          return {
+                            columns: [
+                              {
+                                "aria-label": "Status",
+                                content: getInviteStatusText(invite.status),
+                              },
+                              {
+                                "aria-label": "Email",
+                                content: invite.email,
+                                className: "u-truncate",
+                              },
+                              {
+                                "aria-label": "Expires",
+                                content: format(
+                                  new Date(invite["expiration-date"]),
+                                  "dd/MM/yyyy"
+                                ),
+                              },
+                              {
+                                "aria-label": "Roles",
+                                content: getRolesText(invite.roles),
                               },
                             ],
                           };
