@@ -356,6 +356,7 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-autocomplete;
 @include snapcraft-p-icons;
 @include vf-p-form-password-toggle;
+@include vf-p-icon-status-waiting;
 
 dl {
   margin-bottom: $spv-outer--scaleable;
@@ -457,5 +458,11 @@ code {
   .p-notification--positive,
   .p-notification--negative {
     padding-right: 3rem;
+  }
+}
+
+.members-accordion {
+  .p-accordion__panel {
+    padding-left: 0;
   }
 }
