@@ -122,3 +122,34 @@ def post_manage_store_snaps(store_id):
         return _handle_error(api_error)
 
     return jsonify({"success": True})
+
+
+@admin.route("/admin/store/<store_id>/members")
+@login_required
+def get_manage_members(store_id):
+    try:
+        members = admin_api.get_store_members(flask.session, store_id)
+
+        for item in members:
+            if item["email"] == flask.session["publisher"]["email"]:
+                item["current_user"] = True
+
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return jsonify(members)
+
+
+@admin.route("/admin/store/<store_id>/invites")
+@login_required
+def get_invites(store_id):
+    try:
+        invites = admin_api.get_store_invites(flask.session, store_id)
+    except StoreApiResponseErrorList as api_response_error_list:
+        return _handle_error_list(api_response_error_list.errors)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return jsonify(invites)
