@@ -142,6 +142,46 @@ def get_manage_members(store_id):
     return jsonify(members)
 
 
+@admin.route("/admin/store/<store_id>/members", methods=["POST"])
+@login_required
+def post_manage_members(store_id):
+    members = json.loads(flask.request.form.get("members"))
+
+    res = {}
+
+    try:
+        admin_api.update_store_members(flask.session, store_id, members)
+        res["msg"] = "Changes saved"
+    except StoreApiResponseErrorList as api_response_error_list:
+
+        codes = [error.get("code") for error in api_response_error_list.errors]
+
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        for code in codes:
+            account_id = ""
+
+            if code == "store-users-no-match":
+                if account_id:
+                    res["msg"] = code
+                else:
+                    res["msg"] = "invite"
+
+            elif code == "store-users-multiple-matches":
+                res["msg"] = code
+            else:
+                for msg in msgs:
+                    flask.flash(msg, "negative")
+
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return jsonify(res)
+
+
 @admin.route("/admin/store/<store_id>/invites")
 @login_required
 def get_invites(store_id):
@@ -153,3 +193,29 @@ def get_invites(store_id):
         return _handle_error(api_error)
 
     return jsonify(invites)
+
+
+@admin.route("/admin/store/<store_id>/invite", methods=["POST"])
+@login_required
+def post_invite_members(store_id):
+    members = json.loads(flask.request.form.get("members"))
+
+    res = {}
+
+    try:
+        admin_api.invite_store_members(flask.session, store_id, members)
+        res["msg"] = "Changes saved"
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        msgs = list(dict.fromkeys(msgs))
+
+        for msg in msgs:
+            flask.flash(msg, "negative")
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
+
+    return jsonify(res)
