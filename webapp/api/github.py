@@ -5,7 +5,7 @@ from os import getenv
 from webapp import api
 from webapp.helpers import get_yaml_loader
 from werkzeug.exceptions import Unauthorized
-
+from requests.exceptions import HTTPError
 
 GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
 
@@ -235,11 +235,18 @@ class GitHub:
         Return True when the current user has the requested permissions
         Possible values: "admin", "push" or "pull"
         """
-        response = self._request(
-            "GET",
-            f"repos/{owner}/{repo}",
-            raise_exceptions=True,
-        )
+        try:
+            response = self._request(
+                "GET",
+                f"repos/{owner}/{repo}",
+                raise_exceptions=True,
+            )
+        except Unauthorized:
+            return False
+        except HTTPError as e:
+            if e.response.status_code == 404:
+                return False
+
         response_permissions = response.json()["permissions"]
         user_permissions = [
             p for p in response_permissions if response_permissions[p]
