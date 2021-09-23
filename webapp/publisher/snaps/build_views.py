@@ -312,7 +312,8 @@ def post_snap_builds(snap_name):
 
     if not github.check_permissions_over_repo(owner, repo):
         flask.flash(
-            "Your GitHub account doesn't have permissions in the repository",
+            "The repository doesn't exist or you don't have"
+            " enough permissions",
             "negative",
         )
         return flask.redirect(redirect_url)
