@@ -114,6 +114,10 @@ export function handleReleaseResponse(
         });
       });
     });
+  } else {
+    if (json.errors) {
+      throw new Error(json.errors[0]);
+    }
   }
 }
 
