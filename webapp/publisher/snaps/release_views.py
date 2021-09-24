@@ -87,8 +87,18 @@ def get_release_history_json(snap_name):
 def post_release(snap_name):
     data = flask.request.json
 
+    # Show error message for no contributors
+    account_snaps = publisher_api.get_account_snaps(flask.session)
+
     if not data:
-        return flask.jsonify({}), 400
+        response = {"errors": ["No changes were submitted"]}
+        return flask.jsonify(response), 400
+
+    if snap_name not in account_snaps:
+        response = {
+            "errors": ["You do not have permissions to modify this Snap"]
+        }
+        return flask.jsonify(response), 400
 
     try:
         response = publisher_api.post_snap_release(
@@ -98,7 +108,10 @@ def post_release(snap_name):
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
-            return flask.jsonify(api_response_error_list.errors), 400
+            response = {
+                "errors": api_response_error_list.errors,
+            }
+            return flask.jsonify(response), 400
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
