@@ -1,8 +1,61 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { MainTable, CheckboxInput } from "@canonical/react-components";
 
-function MembersTable({ filteredMembers }) {
+function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
+  const [members, setMembers] = useState(filteredMembers);
+
+  const handleRoleChange = (member, role) => {
+    const updatedMembers = members.map((item) => {
+      let updatedItem = {};
+
+      if (item.id === member.id) {
+        if (item.roles.includes(role)) {
+          updatedItem = {
+            ...item,
+            roles: item.roles.filter((r) => r !== role),
+          };
+        } else {
+          updatedItem = {
+            ...item,
+            roles: [].concat(item.roles, [role]),
+          };
+        }
+
+        if (changedMembers.find((m) => m.id === member.id)) {
+          if (
+            JSON.stringify([...member.roles].sort()) !==
+            JSON.stringify([...updatedItem.roles].sort())
+          ) {
+            setChangedMembers(
+              [].concat(changedMembers.filter((m) => m.id !== member.id)),
+              [updatedItem]
+            );
+          } else {
+            setChangedMembers(changedMembers.filter((m) => m.id !== member.id));
+          }
+        } else {
+          if (
+            JSON.stringify([...member.roles].sort()) !==
+            JSON.stringify([...updatedItem.roles].sort())
+          ) {
+            setChangedMembers([].concat(changedMembers, [updatedItem]));
+          }
+        }
+
+        return updatedItem;
+      }
+
+      return item;
+    });
+
+    setMembers(updatedMembers);
+  };
+
+  useEffect(() => {
+    setMembers(filteredMembers);
+  }, [filteredMembers]);
+
   return (
     <MainTable
       responsive={true}
@@ -62,7 +115,7 @@ function MembersTable({ filteredMembers }) {
           ),
         },
       ]}
-      rows={filteredMembers.map((member) => {
+      rows={members.map((member) => {
         return {
           columns: [
             {
@@ -79,29 +132,47 @@ function MembersTable({ filteredMembers }) {
               "aria-label": "Admin",
               content: (
                 <CheckboxInput
-                  checked={member.roles.includes("admin")}
+                  defaultChecked={member.roles.includes("admin")}
                   disabled={
                     member.current_user && member.roles.includes("admin")
                   }
+                  onChange={() => {
+                    handleRoleChange(member, "admin");
+                  }}
                 />
               ),
             },
             {
               "aria-label": "Reviewer",
               content: (
-                <CheckboxInput checked={member.roles.includes("review")} />
+                <CheckboxInput
+                  defaultChecked={member.roles.includes("review")}
+                  onChange={(e) => {
+                    handleRoleChange(member, "review");
+                  }}
+                />
               ),
             },
             {
               "aria-label": "Viewer",
               content: (
-                <CheckboxInput checked={member.roles.includes("view")} />
+                <CheckboxInput
+                  defaultChecked={member.roles.includes("view")}
+                  onChange={() => {
+                    handleRoleChange(member, "view");
+                  }}
+                />
               ),
             },
             {
               "aria-label": "Publisher",
               content: (
-                <CheckboxInput checked={member.roles.includes("access")} />
+                <CheckboxInput
+                  defaultChecked={member.roles.includes("access")}
+                  onChange={(e) => {
+                    handleRoleChange(member, "access");
+                  }}
+                />
               ),
             },
           ],
@@ -113,6 +184,8 @@ function MembersTable({ filteredMembers }) {
 
 MembersTable.propTypes = {
   filteredMembers: PropTypes.array.isRequired,
+  changedMembers: PropTypes.array.isRequired,
+  setChangedMembers: PropTypes.func.isRequired,
 };
 
 export default MembersTable;
