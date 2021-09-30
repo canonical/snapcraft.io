@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { MainTable, CheckboxInput } from "@canonical/react-components";
+import ROLES from "./memberRoles";
 
 function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
   const [members, setMembers] = useState(filteredMembers);
@@ -67,7 +68,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
             <>
               <i
                 className="p-icon--information"
-                title="Admins manage the store's users and roles, and control the store's settings."
+                title={ROLES.admin.description}
               >
                 Role description
               </i>{" "}
@@ -80,7 +81,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
             <>
               <i
                 className="p-icon--information"
-                title="Reviewers can approve or reject snaps, and edit snap declarations."
+                title={ROLES.review.description}
               >
                 Role description
               </i>{" "}
@@ -91,10 +92,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
         {
           content: (
             <>
-              <i
-                className="p-icon--information"
-                title="Viewers are read-only users and can view snap details, metrics, and the contents of this store."
-              >
+              <i className="p-icon--information" title={ROLES.view.description}>
                 Role description
               </i>{" "}
               Viewer
@@ -106,7 +104,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
             <>
               <i
                 className="p-icon--information"
-                title="Publishers can invite collaborators to a snap, publish snaps and update snap details."
+                title={ROLES.access.description}
               >
                 Role description
               </i>{" "}
