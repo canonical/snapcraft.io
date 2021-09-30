@@ -6,48 +6,65 @@ import ROLES from "./memberRoles";
 function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
   const [members, setMembers] = useState(filteredMembers);
 
-  const handleRoleChange = (member, role) => {
-    const updatedMembers = members.map((item) => {
+  const checkArrayEqual = (array1, array2) => {
+    if (array1.length !== array2.length) {
+      return false;
+    }
+
+    const array2Sorted = array2.slice().sort();
+
+    return array1
+      .slice()
+      .sort()
+      .every((val, idx) => val === array2Sorted[idx]);
+  };
+
+  const handleRoleChange = (currentMember, role) => {
+    const updatedMembers = members.map((member) => {
       let updatedItem = {};
 
-      if (item.id === member.id) {
-        if (item.roles.includes(role)) {
-          updatedItem = {
-            ...item,
-            roles: item.roles.filter((r) => r !== role),
-          };
-        } else {
-          updatedItem = {
-            ...item,
-            roles: [].concat(item.roles, [role]),
-          };
-        }
-
-        if (changedMembers.find((m) => m.id === member.id)) {
-          if (
-            JSON.stringify([...member.roles].sort()) !==
-            JSON.stringify([...updatedItem.roles].sort())
-          ) {
-            setChangedMembers(
-              [].concat(changedMembers.filter((m) => m.id !== member.id)),
-              [updatedItem]
-            );
-          } else {
-            setChangedMembers(changedMembers.filter((m) => m.id !== member.id));
-          }
-        } else {
-          if (
-            JSON.stringify([...member.roles].sort()) !==
-            JSON.stringify([...updatedItem.roles].sort())
-          ) {
-            setChangedMembers([].concat(changedMembers, [updatedItem]));
-          }
-        }
-
-        return updatedItem;
+      if (member.id !== currentMember.id) {
+        return member;
       }
 
-      return item;
+      if (member.roles.includes(role)) {
+        updatedItem = {
+          ...member,
+          roles: member.roles.filter((r) => r !== role),
+        };
+      } else {
+        updatedItem = {
+          ...member,
+          roles: [].concat(member.roles, [role]),
+        };
+      }
+
+      const changedMember = changedMembers.find(
+        (m) => m.id === currentMember.id
+      );
+
+      const originalMember = filteredMembers.find(
+        (m) => m.id === currentMember.id
+      );
+
+      if (changedMember) {
+        if (checkArrayEqual(originalMember.roles, updatedItem.roles)) {
+          setChangedMembers(
+            changedMembers.filter((m) => m.id !== currentMember.id)
+          );
+        } else {
+          setChangedMembers(
+            [].concat(
+              changedMembers.filter((m) => m.id !== currentMember.id),
+              [updatedItem]
+            )
+          );
+        }
+      } else {
+        setChangedMembers([].concat(changedMembers, [updatedItem]));
+      }
+
+      return updatedItem;
     });
 
     setMembers(updatedMembers);
@@ -145,7 +162,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
               content: (
                 <CheckboxInput
                   defaultChecked={member.roles.includes("review")}
-                  onChange={(e) => {
+                  onChange={() => {
                     handleRoleChange(member, "review");
                   }}
                 />
@@ -167,7 +184,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
               content: (
                 <CheckboxInput
                   defaultChecked={member.roles.includes("access")}
-                  onChange={(e) => {
+                  onChange={() => {
                     handleRoleChange(member, "access");
                   }}
                 />
