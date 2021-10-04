@@ -3,14 +3,9 @@ import PropTypes from "prop-types";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
-function InvitesTable({ invites }) {
-  const ROLES = {
-    admin: "admin",
-    review: "reviewer",
-    view: "viewer",
-    access: "publisher",
-  };
+import ROLES from "./memberRoles";
 
+function InvitesTable({ invites }) {
   const getInviteStatusText = (status) => {
     let iconClassName = "";
 
@@ -36,8 +31,8 @@ function InvitesTable({ invites }) {
   const getRolesText = (roles) => {
     let rolesText = "";
 
-    roles.forEach((role, index) => {
-      rolesText += `${ROLES[role]} `;
+    Object.keys(ROLES).forEach((role, index) => {
+      rolesText += `${ROLES[role].name} `;
 
       if (index < roles.length - 1) {
         rolesText += "| ";

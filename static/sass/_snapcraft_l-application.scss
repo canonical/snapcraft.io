@@ -135,4 +135,17 @@
       padding: 1rem;
     }
   }
+
+  .l-status {
+    background-color: $color-x-light;
+    padding-bottom: $spv-inner--scaleable;
+    padding-top: $spv-inner--scaleable;
+    position: relative;
+    top: -100%;
+  }
+
+  .u-fixed-width,
+  .row {
+    max-width: 100%;
+  }
 }
