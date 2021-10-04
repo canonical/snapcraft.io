@@ -13,7 +13,6 @@ import { brandStoresListSelector } from "../selectors";
 import Navigation from "../Navigation";
 import Snaps from "../Snaps";
 import Members from "../Members";
-import Invites from "../Invites";
 import Settings from "../Settings";
 import NoStores from "../NoStores";
 
@@ -47,9 +46,6 @@ function App() {
           </Route>
           <Route exact path="/admin/:id/members">
             <Members />
-          </Route>
-          <Route exact path="/admin/:id/members/invites">
-            <Invites />
           </Route>
           <Route exact path="/admin/:id/settings">
             <Settings />

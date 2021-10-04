@@ -12,6 +12,8 @@ import {
   Notification,
 } from "@canonical/react-components";
 
+import ROLES from "./memberRoles";
+
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
 
@@ -43,29 +45,10 @@ function Members() {
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [storeName, setStoreName] = useState("");
   const [memberButtonDisabled, setMemberButtonDisabled] = useState(false);
-
-  const ROLES = {
-    admin: {
-      name: "Admin",
-      description:
-        "Admins manage the store's users and roles, and control the store's settings.",
-    },
-    review: {
-      name: "Reviewer",
-      description:
-        "Reviewers can approve or reject snaps, and edit snap declarations.",
-    },
-    view: {
-      name: "Viewer",
-      description:
-        "Viewers are read-only users and can view snap details, metrics, and the contents of this store.",
-    },
-    access: {
-      name: "Publisher",
-      description:
-        "Publishers can invite collaborators to a snap, publish snaps and update snap details.",
-    },
-  };
+  const [changedMembers, setChangedMembers] = useState([]);
+  const [notificationText, setNotificationText] = useState(
+    "Changes have been saved"
+  );
 
   const handleInvite = (action) => {
     setIsSaving(true);
@@ -106,6 +89,7 @@ function Members() {
             dispatch(fetchMembers(id));
             dispatch(fetchInvites(id));
             setShowSuccessNotification(true);
+            setNotificationText("Member has been added to the store");
             setShowInviteForm(false);
           }
         }, 1500);
@@ -203,7 +187,11 @@ function Members() {
                         key: "members-table",
                         title: `${filteredMembers.length} members`,
                         content: (
-                          <MembersTable filteredMembers={filteredMembers} />
+                          <MembersTable
+                            filteredMembers={filteredMembers}
+                            changedMembers={changedMembers}
+                            setChangedMembers={setChangedMembers}
+                          />
                         ),
                       },
                       {
@@ -345,13 +333,75 @@ function Members() {
         </div>
       </aside>
 
+      {changedMembers.length ? (
+        <aside className="l-status">
+          <div className="u-fixed-width u-align--right">
+            <Button
+              className={`u-no-margin--bottom ${
+                isSaving ? "has-icon is-dark" : ""
+              }`}
+              appearance="positive"
+              onClick={() => {
+                setIsSaving(true);
+
+                const memberData = new FormData();
+                const members = changedMembers.map((m) => {
+                  return {
+                    email: m.email,
+                    roles: m.roles,
+                  };
+                });
+
+                memberData.set("csrf_token", window.CSRF_TOKEN);
+                memberData.set("members", JSON.stringify(members));
+
+                fetch(`/admin/store/${id}/members`, {
+                  method: "POST",
+                  body: memberData,
+                })
+                  .then((response) => {
+                    if (response.status === 200) {
+                      return response.json();
+                    } else {
+                      throw Error();
+                    }
+                  })
+                  .then(() => {
+                    // Add timeout so that the user has time to notice the save action
+                    // in the event of it happening very fast
+                    setTimeout(() => {
+                      setChangedMembers([]);
+                      setIsSaving(false);
+                      setShowSuccessNotification(true);
+                      setNotificationText("Member roles have been changed");
+                    }, 1500);
+                  })
+                  .catch(() => {
+                    setIsSaving(false);
+                    setShowErrorNotification(true);
+                  });
+              }}
+            >
+              {isSaving ? (
+                <>
+                  <i className="p-icon--spinner u-animation--spin is-light"></i>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                "Save changes"
+              )}
+            </Button>
+          </div>
+        </aside>
+      ) : null}
+
       <div className="p-notification-center">
         {showSuccessNotification && (
           <Notification
             severity="positive"
             onDismiss={() => setShowSuccessNotification(false)}
           >
-            Member has been added to the store
+            {notificationText}
           </Notification>
         )}
 

@@ -1,8 +1,79 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { MainTable, CheckboxInput } from "@canonical/react-components";
+import ROLES from "./memberRoles";
 
-function MembersTable({ filteredMembers }) {
+function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
+  const [members, setMembers] = useState(filteredMembers);
+
+  const checkArrayEqual = (array1, array2) => {
+    if (array1.length !== array2.length) {
+      return false;
+    }
+
+    const array2Sorted = array2.slice().sort();
+
+    return array1
+      .slice()
+      .sort()
+      .every((val, idx) => val === array2Sorted[idx]);
+  };
+
+  const handleRoleChange = (currentMember, role) => {
+    const updatedMembers = members.map((member) => {
+      let updatedItem = {};
+
+      if (member.id !== currentMember.id) {
+        return member;
+      }
+
+      if (member.roles.includes(role)) {
+        updatedItem = {
+          ...member,
+          roles: member.roles.filter((r) => r !== role),
+        };
+      } else {
+        updatedItem = {
+          ...member,
+          roles: [].concat(member.roles, [role]),
+        };
+      }
+
+      const changedMember = changedMembers.find(
+        (m) => m.id === currentMember.id
+      );
+
+      const originalMember = filteredMembers.find(
+        (m) => m.id === currentMember.id
+      );
+
+      if (changedMember) {
+        if (checkArrayEqual(originalMember.roles, updatedItem.roles)) {
+          setChangedMembers(
+            changedMembers.filter((m) => m.id !== currentMember.id)
+          );
+        } else {
+          setChangedMembers(
+            [].concat(
+              changedMembers.filter((m) => m.id !== currentMember.id),
+              [updatedItem]
+            )
+          );
+        }
+      } else {
+        setChangedMembers([].concat(changedMembers, [updatedItem]));
+      }
+
+      return updatedItem;
+    });
+
+    setMembers(updatedMembers);
+  };
+
+  useEffect(() => {
+    setMembers(filteredMembers);
+  }, [filteredMembers]);
+
   return (
     <MainTable
       responsive={true}
@@ -14,7 +85,7 @@ function MembersTable({ filteredMembers }) {
             <>
               <i
                 className="p-icon--information"
-                title="Admins manage the store's users and roles, and control the store's settings."
+                title={ROLES.admin.description}
               >
                 Role description
               </i>{" "}
@@ -27,7 +98,7 @@ function MembersTable({ filteredMembers }) {
             <>
               <i
                 className="p-icon--information"
-                title="Reviewers can approve or reject snaps, and edit snap declarations."
+                title={ROLES.review.description}
               >
                 Role description
               </i>{" "}
@@ -38,10 +109,7 @@ function MembersTable({ filteredMembers }) {
         {
           content: (
             <>
-              <i
-                className="p-icon--information"
-                title="Viewers are read-only users and can view snap details, metrics, and the contents of this store."
-              >
+              <i className="p-icon--information" title={ROLES.view.description}>
                 Role description
               </i>{" "}
               Viewer
@@ -53,7 +121,7 @@ function MembersTable({ filteredMembers }) {
             <>
               <i
                 className="p-icon--information"
-                title="Publishers can invite collaborators to a snap, publish snaps and update snap details."
+                title={ROLES.access.description}
               >
                 Role description
               </i>{" "}
@@ -62,7 +130,7 @@ function MembersTable({ filteredMembers }) {
           ),
         },
       ]}
-      rows={filteredMembers.map((member) => {
+      rows={members.map((member) => {
         return {
           columns: [
             {
@@ -79,29 +147,47 @@ function MembersTable({ filteredMembers }) {
               "aria-label": "Admin",
               content: (
                 <CheckboxInput
-                  checked={member.roles.includes("admin")}
+                  defaultChecked={member.roles.includes("admin")}
                   disabled={
                     member.current_user && member.roles.includes("admin")
                   }
+                  onChange={() => {
+                    handleRoleChange(member, "admin");
+                  }}
                 />
               ),
             },
             {
               "aria-label": "Reviewer",
               content: (
-                <CheckboxInput checked={member.roles.includes("review")} />
+                <CheckboxInput
+                  defaultChecked={member.roles.includes("review")}
+                  onChange={() => {
+                    handleRoleChange(member, "review");
+                  }}
+                />
               ),
             },
             {
               "aria-label": "Viewer",
               content: (
-                <CheckboxInput checked={member.roles.includes("view")} />
+                <CheckboxInput
+                  defaultChecked={member.roles.includes("view")}
+                  onChange={() => {
+                    handleRoleChange(member, "view");
+                  }}
+                />
               ),
             },
             {
               "aria-label": "Publisher",
               content: (
-                <CheckboxInput checked={member.roles.includes("access")} />
+                <CheckboxInput
+                  defaultChecked={member.roles.includes("access")}
+                  onChange={() => {
+                    handleRoleChange(member, "access");
+                  }}
+                />
               ),
             },
           ],
@@ -113,6 +199,8 @@ function MembersTable({ filteredMembers }) {
 
 MembersTable.propTypes = {
   filteredMembers: PropTypes.array.isRequired,
+  changedMembers: PropTypes.array.isRequired,
+  setChangedMembers: PropTypes.func.isRequired,
 };
 
 export default MembersTable;
