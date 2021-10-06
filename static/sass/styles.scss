@@ -466,3 +466,14 @@ code {
     padding-left: 0;
   }
 }
+
+.invite-action-button {
+  display: block;
+  margin: 0 0 0.75rem !important;
+
+  @media (min-width: $breakpoint-medium) {
+    display: inline-block;
+    margin-bottom: 0 !important;
+    margin-left: 0.75rem !important;
+  }
+}

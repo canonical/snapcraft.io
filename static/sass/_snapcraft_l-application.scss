@@ -30,6 +30,11 @@
     .p-tabs__link[aria-expanded="true"] {
       background-color: $color-x-light;
     }
+
+    .u-fixed-width,
+    .row {
+      max-width: 100%;
+    }
   }
 
   .l-navigation-bar {
@@ -142,10 +147,5 @@
     padding-top: $spv-inner--scaleable;
     position: relative;
     top: -100%;
-  }
-
-  .u-fixed-width,
-  .row {
-    max-width: 100%;
   }
 }
