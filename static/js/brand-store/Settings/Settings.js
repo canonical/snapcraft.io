@@ -11,15 +11,19 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-import { currentStoreSelector } from "../selectors";
+import { currentStoreSelector, membersSelector } from "../selectors";
+import { fetchMembers } from "../slices/membersSlice";
 import { fetchStore } from "../slices/currentStoreSlice";
 
+import NotAuthorized from "../NotAuthorized";
 import PasswordToggle from "../shared/PasswordToggle";
 import SectionNav from "../SectionNav";
 
 function Settings() {
   const currentStore = useSelector(currentStoreSelector);
-  const isLoading = useSelector((state) => state.currentStore.loading);
+  const members = useSelector(membersSelector);
+  const storeLoading = useSelector((state) => state.currentStore.loading);
+  const membersLoading = useSelector((state) => state.members.loading);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -28,6 +32,7 @@ function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
+  const [currentMember, setCurrentMember] = useState(null);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -89,7 +94,10 @@ function Settings() {
     );
   };
 
+  const isAdmin = () => currentMember.roles.includes("admin");
+
   useEffect(() => {
+    dispatch(fetchMembers(id));
     dispatch(fetchStore(id));
   }, [id]);
 
@@ -98,6 +106,10 @@ function Settings() {
     setManualReviewPolicy(currentStore["manual-review-policy"]);
   }, [currentStore.private, currentStore["manual-review-policy"]]);
 
+  useEffect(() => {
+    setCurrentMember(members.find((member) => member.current_user));
+  }, [members, storeLoading, membersLoading]);
+
   return (
     <main className="l-main">
       <div className="p-panel--settings">
@@ -105,12 +117,17 @@ function Settings() {
           <div className="u-fixed-width">
             <SectionNav sectionName="settings" />
           </div>
-          <Row>
-            <Col size="7">
-              {isLoading && !isSaving ? (
-                <Spinner text="Loading&hellip;" />
-              ) : (
-                <>
+          {storeLoading && membersLoading && !isSaving ? (
+            <div className="u-fixed-width">
+              <Spinner text="Loading&hellip;" />
+            </div>
+          ) : (
+            currentMember?.roles &&
+            (!isAdmin() ? (
+              <NotAuthorized />
+            ) : (
+              <Row>
+                <Col size="7">
                   {showSuccessNotification && (
                     <Notification
                       severity="positive"
@@ -133,7 +150,7 @@ function Settings() {
                       .
                     </Notification>
                   )}
-                  <Form onSubmit={handleFormSubmit}>
+                  <Form onSubmit={handleFormSubmit} autoComplete="off">
                     <Input
                       id="is_public"
                       label="Include this store in public lists"
@@ -205,10 +222,10 @@ function Settings() {
                       </Button>
                     </div>
                   </Form>
-                </>
-              )}
-            </Col>
-          </Row>
+                </Col>
+              </Row>
+            ))
+          )}
         </div>
       </div>
     </main>
