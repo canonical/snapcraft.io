@@ -209,7 +209,18 @@ function Members() {
                         {
                           key: "invites-table",
                           title: `${invites.length} invites`,
-                          content: <InvitesTable invites={invites} />,
+                          content: (
+                            <InvitesTable
+                              invites={invites}
+                              setNotificationText={setNotificationText}
+                              setShowSuccessNotification={
+                                setShowSuccessNotification
+                              }
+                              setShowErrorNotification={
+                                setShowErrorNotification
+                              }
+                            />
+                          ),
                         },
                       ]}
                     />
