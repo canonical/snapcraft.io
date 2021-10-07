@@ -9,8 +9,13 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-import { snapsSelector, brandStoresListSelector } from "../selectors";
+import {
+  snapsSelector,
+  brandStoresListSelector,
+  membersSelector,
+} from "../selectors";
 import { fetchSnaps } from "../slices/snapsSlice";
+import { fetchMembers } from "../slices/membersSlice";
 
 import SnapsTable from "./SnapsTable";
 import SnapsFilter from "./SnapsFilter";
@@ -20,8 +25,10 @@ import SectionNav from "../SectionNav";
 function Snaps() {
   const brandStoresList = useSelector(brandStoresListSelector);
   const snaps = useSelector(snapsSelector);
+  const members = useSelector(membersSelector);
   const snapsLoading = useSelector((state) => state.snaps.loading);
   const storesLoading = useSelector((state) => state.brandStores.loading);
+  const membersLoading = useSelector((state) => state.members.loading);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [snapsInStore, setSnapsInStore] = useState([]);
@@ -42,6 +49,7 @@ function Snaps() {
   const [removeSnapSaving, setRemoveSnapSaving] = useState(false);
   const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState([]);
   const [isReloading, setIsReloading] = useState(false);
+  const [currentMember, setCurrentMember] = useState(null);
   let location = useLocation();
 
   const getStoreName = (storeId) => {
@@ -147,7 +155,10 @@ function Snaps() {
       });
   };
 
+  const isAdmin = () => currentMember.roles.includes("admin");
+
   useEffect(() => {
+    dispatch(fetchMembers(id));
     dispatch(fetchSnaps(id));
   }, [id]);
 
@@ -193,57 +204,74 @@ function Snaps() {
     setIsReloading(true);
   }, [location]);
 
+  useEffect(() => {
+    setCurrentMember(members.find((member) => member.current_user));
+  }, [snaps, members, snapsLoading, membersLoading]);
+
   return (
     <>
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">
-            <div className="u-fixed-width">
-              <SectionNav sectionName="snaps" />
-            </div>
-            {snapsLoading && storesLoading ? (
+            {snapsLoading && storesLoading && membersLoading ? (
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
             ) : (
               <>
-                <Row>
-                  <Col size="6">
-                    <h2 className="p-heading--4">
-                      Snaps in {getStoreName(id)}
-                    </h2>
-                    <Button onClick={() => setSidePanelOpen(true)}>
-                      Include snap
-                    </Button>
-                    <Button
-                      disabled={snapsToRemove.length < 1 || removeSnapSaving}
-                      onClick={removeSnaps}
-                      className={removeSnapSaving ? "has-icon" : ""}
-                    >
-                      {removeSnapSaving ? (
-                        <>
-                          <i className="p-icon--spinner u-animation--spin"></i>
-                          <span>Saving...</span>
-                        </>
-                      ) : snapsToRemove.length > 1 ? (
-                        "Exclude snaps"
-                      ) : (
-                        "Exclude snap"
+                {!isReloading && currentMember?.roles && isAdmin() && (
+                  <div className="u-fixed-width">
+                    <SectionNav sectionName="snaps" />
+                  </div>
+                )}
+                {!isReloading && currentMember?.roles && (
+                  <Row>
+                    <Col size="6">
+                      {!isAdmin() && (
+                        <h2 className="p-heading--4">
+                          Snaps in {getStoreName(id)}
+                        </h2>
                       )}
-                    </Button>
-                  </Col>
-                  <Col size="6">
-                    <SnapsFilter
-                      setSnapsInStore={setSnapsInStore}
-                      snapsInStore={snapsInStore}
-                      setOtherStores={setOtherStores}
-                      otherStoreIds={otherStoreIds}
-                      getStoreName={getStoreName}
-                      snaps={snaps}
-                      id={id}
-                    />
-                  </Col>
-                </Row>
+
+                      {isAdmin() && (
+                        <>
+                          <Button onClick={() => setSidePanelOpen(true)}>
+                            Include snap
+                          </Button>
+                          <Button
+                            disabled={
+                              snapsToRemove.length < 1 || removeSnapSaving
+                            }
+                            onClick={removeSnaps}
+                            className={removeSnapSaving ? "has-icon" : ""}
+                          >
+                            {removeSnapSaving ? (
+                              <>
+                                <i className="p-icon--spinner u-animation--spin"></i>
+                                <span>Saving...</span>
+                              </>
+                            ) : snapsToRemove.length > 1 ? (
+                              "Exclude snaps"
+                            ) : (
+                              "Exclude snap"
+                            )}
+                          </Button>
+                        </>
+                      )}
+                    </Col>
+                    <Col size="6">
+                      <SnapsFilter
+                        setSnapsInStore={setSnapsInStore}
+                        snapsInStore={snapsInStore}
+                        setOtherStores={setOtherStores}
+                        otherStoreIds={otherStoreIds}
+                        getStoreName={getStoreName}
+                        snaps={snaps}
+                        id={id}
+                      />
+                    </Col>
+                  </Row>
+                )}
                 <div className="u-fixed-width">
                   {isReloading ? (
                     <Spinner text="Loading&hellip;" />
