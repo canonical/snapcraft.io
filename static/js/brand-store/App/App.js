@@ -34,12 +34,13 @@ function App() {
             {!isLoading ? (
               brandStoresList.length < 1 ? (
                 <NoStores />
+              ) : brandStoresList[0].id === "ubuntu" ? (
+                // Don't redirect to the global store by default
+                <Redirect to={`/admin/${brandStoresList[1].id}/snaps`} />
               ) : (
                 <Redirect to={`/admin/${brandStoresList[0].id}/snaps`} />
               )
-            ) : (
-              <h1>Loading...</h1>
-            )}
+            ) : null}
           </Route>
           <Route exact path="/admin/:id/snaps">
             <Snaps />

@@ -477,3 +477,19 @@ code {
     margin-left: 0.75rem !important;
   }
 }
+
+.snap-sub-table {
+  @media (min-width: $breakpoint-medium) {
+    border-top: 1px solid $colors--light-theme--border-low-contrast;
+  }
+}
+
+.snap-published-in-cell {
+  @media (max-width: $breakpoint-medium - 1px) {
+    display: none !important;
+
+    + td::after {
+      display: none;
+    }
+  }
+}
