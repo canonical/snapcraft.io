@@ -81,6 +81,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
         { content: "Users" },
         { content: "Email" },
         {
+          style: { width: "10%" },
           content: (
             <>
               <i
@@ -94,6 +95,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
           ),
         },
         {
+          style: { width: "10%" },
           content: (
             <>
               <i
@@ -107,6 +109,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
           ),
         },
         {
+          style: { width: "10%" },
           content: (
             <>
               <i className="p-icon--information" title={ROLES.view.description}>
@@ -117,6 +120,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
           ),
         },
         {
+          style: { width: "10%" },
           content: (
             <>
               <i

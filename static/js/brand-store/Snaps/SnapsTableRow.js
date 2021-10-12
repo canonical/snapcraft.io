@@ -18,7 +18,11 @@ function SnapsTableRow({
   return (
     <tr>
       {index === 0 ? (
-        <td rowSpan={snapsCount} aria-label="Published in">
+        <td
+          className="snap-published-in-cell"
+          rowSpan={snapsCount}
+          aria-label="Published in"
+        >
           {storeName}
         </td>
       ) : null}
@@ -37,7 +41,7 @@ function SnapsTableRow({
             checked={snapsToRemove.find((item) => item.id === snap.id)}
           />
         ) : null}
-        {storeId === "ubuntu" ? (
+        {storeId === "ubuntu" && !snap.essential ? (
           <a href={`/${snap.name}`}>{snap.name}</a>
         ) : (
           snap.name

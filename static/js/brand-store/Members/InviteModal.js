@@ -17,7 +17,11 @@ function InviteModal({
 
   const closeHandler = () => setInviteModalOpen(false);
 
-  return inviteModalOpen ? (
+  if (!inviteModalOpen) {
+    return null;
+  }
+
+  return (
     <Modal
       title={`${ACTIONS[inviteActionData.action]} invite`}
       close={closeHandler}
@@ -71,7 +75,7 @@ function InviteModal({
         </p>
       )}
     </Modal>
-  ) : null;
+  );
 }
 
 InviteModal.propTypes = {

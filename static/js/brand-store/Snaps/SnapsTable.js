@@ -21,65 +21,115 @@ function SnapsTable({
   }, [snapsToRemove, nonEssentialSnapIds]);
 
   return (
-    <table className="p-table--mobile-card">
-      <thead>
-        <tr>
-          <th>Published in</th>
-          <th className="table-cell-head--checkbox">
-            <CheckboxInput
-              onChange={(e) => {
-                if (e.target.checked) {
-                  const otherStoresSnaps = otherStores.map(
-                    (item) => item.snaps
-                  );
-                  setSnapsToRemove(
-                    otherStoresSnaps.flat().filter((item) => !item.essential)
-                  );
-                  setCheckAll(true);
-                } else {
-                  setSnapsToRemove([]);
-                  setCheckAll(false);
-                }
-              }}
-              checked={checkAll}
-              disabled={!nonEssentialSnapIds.length}
-            />
-            Name
-          </th>
-          <th>Latest release</th>
-          <th>Release date</th>
-          <th>Publisher</th>
-        </tr>
-      </thead>
-      <tbody>
-        {snaps.map((snap, index) => (
-          <SnapsTableRow
-            key={snap.id}
-            storeName={storeName}
-            storeId={id}
-            snap={snap}
-            snapsCount={snaps.length}
-            index={index}
-          />
-        ))}
-
-        {otherStores &&
-          otherStores.map((store) => {
-            return store.snaps.map((snap, index) => (
-              <SnapsTableRow
-                key={snap.id}
-                storeName={store.name}
-                storeId={store.id}
-                snap={snap}
-                snapsCount={store.snaps.length}
-                index={index}
-                snapsToRemove={snapsToRemove}
-                setSnapsToRemove={setSnapsToRemove}
+    <>
+      <h3 className="p-heading--4 u-hide--medium u-hide--large">
+        Published in {storeName}
+      </h3>
+      <table className="p-table--mobile-card u-no-margin--bottom">
+        <thead>
+          <tr>
+            <th>Published in</th>
+            <th className="table-cell-head--checkbox">
+              <CheckboxInput
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    const otherStoresSnaps = otherStores.map(
+                      (item) => item.snaps
+                    );
+                    setSnapsToRemove(
+                      otherStoresSnaps.flat().filter((item) => !item.essential)
+                    );
+                    setCheckAll(true);
+                  } else {
+                    setSnapsToRemove([]);
+                    setCheckAll(false);
+                  }
+                }}
+                checked={checkAll}
+                disabled={!nonEssentialSnapIds.length}
               />
-            ));
-          })}
-      </tbody>
-    </table>
+              Name
+            </th>
+            <th>Latest release</th>
+            <th>Release date</th>
+            <th>Publisher</th>
+          </tr>
+        </thead>
+        <tbody>
+          {snaps.map((snap, index) => (
+            <SnapsTableRow
+              key={snap.id}
+              storeName={storeName}
+              storeId={id}
+              snap={snap}
+              snapsCount={snaps.length}
+              index={index}
+            />
+          ))}
+        </tbody>
+      </table>
+
+      {otherStores &&
+        otherStores.map((store) => {
+          return (
+            <>
+              <h3 className="p-heading--4 u-hide--medium u-hide--large">
+                Published in {store.name}
+              </h3>
+              <table
+                className="p-table--mobile-card snap-sub-table"
+                key={store.id}
+              >
+                <thead className="u-hide">
+                  <tr>
+                    <th>Published in</th>
+                    <th className="table-cell-head--checkbox">
+                      <CheckboxInput
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const otherStoresSnaps = otherStores.map(
+                              (item) => item.snaps
+                            );
+                            setSnapsToRemove(
+                              otherStoresSnaps
+                                .flat()
+                                .filter((item) => !item.essential)
+                            );
+                            setCheckAll(true);
+                          } else {
+                            setSnapsToRemove([]);
+                            setCheckAll(false);
+                          }
+                        }}
+                        checked={checkAll}
+                        disabled={!nonEssentialSnapIds.length}
+                      />
+                      Name
+                    </th>
+                    <th>Latest release</th>
+                    <th>Release date</th>
+                    <th>Publisher</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {store.snaps.map((snap, index) => (
+                    <SnapsTableRow
+                      key={snap.id}
+                      storeName={store.name}
+                      storeId={store.id}
+                      snap={snap}
+                      snapsCount={store.snaps.length}
+                      index={index}
+                      snapsToRemove={snapsToRemove}
+                      setSnapsToRemove={setSnapsToRemove}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </>
+          );
+        })}
+    </>
   );
 }
 
