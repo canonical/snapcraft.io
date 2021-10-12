@@ -33,6 +33,16 @@ beforeEach(() => {
         "manual-review-policy": "allow",
       },
     },
+    members: {
+      members: [
+        {
+          id: "testid",
+          current_user: true,
+          roles: ["admin"],
+        },
+      ],
+      loading: false,
+    },
   };
 });
 
