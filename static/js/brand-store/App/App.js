@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchStores());
-  }, [dispatch]);
+  }, []);
 
   return (
     <Router>

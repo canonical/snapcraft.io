@@ -18,8 +18,7 @@
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "webpack --watch",
-    "clean": "rm -rf node_modules yarn-error.log css static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
-    "test-brand-store": "jest static/js/brand-store"
+    "clean": "rm -rf node_modules yarn-error.log css static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp"
   },
   "jest": {
     "testURL": "http://localhost.test",
