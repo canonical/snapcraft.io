@@ -1,5 +1,0 @@
-<form action="/admin/{{ store.id }}/members/invite/update" method="post" class="p-action-form" data-js-action-form>
-  <input type="hidden" name="invites" value="">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit" class="is-dense u-no-margin--bottom" data-invite-email="{{ email }}" data-invite-action="{{ action }}" data-invite-action-label="{{ action_label }}" aria-controls="invite-modal" data-js-toggle-modal>{{ action_label }}</button>
-</form>
