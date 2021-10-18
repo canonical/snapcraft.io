@@ -70,13 +70,7 @@ export function getErrorMessage(error) {
   return message;
 }
 
-export function handleReleaseResponse(
-  dispatch,
-  json,
-  release,
-  revisions,
-  defaultTrack
-) {
+export function handleReleaseResponse(dispatch, json, release, revisions) {
   if (json.success) {
     // Update channel map based on the response
     // We need to use channel_map_tree to get branches
@@ -103,11 +97,7 @@ export function handleReleaseResponse(
                 };
               }
 
-              let channel = map.channel;
-              if (RISKS.indexOf(channel.split("/")[0]) > -1) {
-                channel = `${defaultTrack}/${channel}`;
-              }
-
+              let channel = `${trackKey}/${map.channel}`;
               dispatch(releaseRevisionSuccess(revision, channel));
             }
           });
