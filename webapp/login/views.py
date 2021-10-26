@@ -29,7 +29,7 @@ LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 LP_CANONICAL_TEAM = "canonical"
 
 open_id = OpenID(
-    stateless=True,
+    store_factory=lambda: None,
     safe_roots=[],
     extension_responses=[MacaroonResponse, TeamsResponse],
 )
