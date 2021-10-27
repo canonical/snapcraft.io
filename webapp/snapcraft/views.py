@@ -170,6 +170,15 @@ def snapcraft_blueprint():
                 "origin": "ixot",
                 "publisher": "Michael Hathaway",
             },
+            {
+                "package_name": "anyvizcloudadapter",
+                "icon_url": "/".join(
+                    [icon_host, "2020/06/LogoAnyViz_Wolke512.svg.png"]
+                ),
+                "title": "anyvizcloudadapter",
+                "origin": "mirasoft",
+                "publisher": "Mirasoft GmbH & Co KG",
+            },
         ]
 
         networking = [
