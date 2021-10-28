@@ -180,8 +180,10 @@ describe("FileInput", () => {
         relatedTarget: null,
       },
     });
-    expect(input.classList.contains("is-dragging")).toEqual(false);
-    expect(input.classList.contains("can-drop")).toEqual(false);
+    setTimeout(() => {
+      expect(input.classList.contains("is-dragging")).toEqual(false);
+      expect(input.classList.contains("can-drop")).toEqual(false);
+    }, 0);
   });
 
   it("should show a warning if more than 1 image is dragged", () => {
