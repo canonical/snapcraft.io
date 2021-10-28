@@ -201,9 +201,12 @@ function Snaps() {
   }, [otherStoreIds]);
 
   useEffect(() => {
-    setSnapsInStore([]);
-    setOtherStores([]);
-    setIsReloading(true);
+    // protect against hash changes e.g. mobile navigation
+    if (location.pathname !== `/admin/${id}/snaps`) {
+      setSnapsInStore([]);
+      setOtherStores([]);
+      setIsReloading(true);
+    }
   }, [location]);
 
   useEffect(() => {
