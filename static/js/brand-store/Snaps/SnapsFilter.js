@@ -25,7 +25,7 @@ function SnapsFilter({
               snapsInStore.filter((snap) => snap.name.includes(e.target.value))
             );
             setOtherStores(
-              Array.from(otherStoreIds).map((storeId) => {
+              otherStoreIds.map((storeId) => {
                 return {
                   id: storeId,
                   name: getStoreName(storeId),
@@ -40,7 +40,7 @@ function SnapsFilter({
           } else {
             setSnapsInStore(snaps.filter((snap) => snap.store === id));
             setOtherStores(
-              Array.from(otherStoreIds).map((storeId) => {
+              otherStoreIds.map((storeId) => {
                 return {
                   id: storeId,
                   name: getStoreName(storeId),
