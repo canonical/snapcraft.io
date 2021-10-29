@@ -283,6 +283,7 @@ function Snaps() {
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
+                      isAdmin={isAdmin}
                     />
                   )}
                 </div>

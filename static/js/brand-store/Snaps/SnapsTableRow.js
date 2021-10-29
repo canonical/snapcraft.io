@@ -12,8 +12,11 @@ function SnapsTableRow({
   index,
   snapsToRemove,
   setSnapsToRemove,
+  isAdmin,
 }) {
   const { id } = useParams();
+
+  const tableCellClass = isAdmin() ? "table-cell--checkbox" : "";
 
   return (
     <tr>
@@ -26,8 +29,8 @@ function SnapsTableRow({
           {storeName}
         </td>
       ) : null}
-      <td aria-label="Name" className="table-cell--checkbox">
-        {storeId !== id && !snap.essential ? (
+      <td aria-label="Name" className={tableCellClass}>
+        {storeId !== id && !snap.essential && isAdmin() ? (
           <CheckboxInput
             onChange={(e) => {
               if (e.target.checked) {
@@ -66,6 +69,7 @@ SnapsTableRow.propTypes = {
   index: PropTypes.number.isRequired,
   snapsToRemove: PropTypes.array,
   setSnapsToRemove: PropTypes.func,
+  isAdmin: PropTypes.func.isRequired,
 };
 
 export default SnapsTableRow;
