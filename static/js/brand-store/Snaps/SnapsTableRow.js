@@ -41,7 +41,7 @@ function SnapsTableRow({
             checked={snapsToRemove.find((item) => item.id === snap.id)}
           />
         ) : null}
-        {storeId === "ubuntu" && !snap.essential ? (
+        {storeId === "ubuntu" ? (
           <a href={`/${snap.name}`}>{snap.name}</a>
         ) : (
           snap.name
