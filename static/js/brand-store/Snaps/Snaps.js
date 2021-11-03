@@ -166,12 +166,14 @@ function Snaps() {
     setSnapsInStore(snaps.filter((snap) => snap.store === id));
 
     setOtherStoreIds(
-      new Set(
-        snaps
-          .filter((snap) => snap.store !== id)
-          .map((snap) => {
-            return snap.store;
-          })
+      Array.from(
+        new Set(
+          snaps
+            .filter((snap) => snap.store !== id)
+            .map((snap) => {
+              return snap.store;
+            })
+        )
       )
     );
 
@@ -188,7 +190,7 @@ function Snaps() {
 
   useEffect(() => {
     setOtherStores(
-      Array.from(otherStoreIds).map((storeId) => {
+      otherStoreIds.map((storeId) => {
         return {
           id: storeId,
           name: getStoreName(storeId),
@@ -199,9 +201,12 @@ function Snaps() {
   }, [otherStoreIds]);
 
   useEffect(() => {
-    setSnapsInStore([]);
-    setOtherStores([]);
-    setIsReloading(true);
+    // protect against hash changes e.g. mobile navigation
+    if (location.pathname !== `/admin/${id}/snaps`) {
+      setSnapsInStore([]);
+      setOtherStores([]);
+      setIsReloading(true);
+    }
   }, [location]);
 
   useEffect(() => {
