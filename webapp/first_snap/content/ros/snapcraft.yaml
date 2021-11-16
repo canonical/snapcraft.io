@@ -4,8 +4,8 @@ summary: ROS Talker/Listener Example
 description: |
   This example launches a ROS talker and listener.
 
-confinement: devmode
 base: core18
+confinement: devmode
 
 parts:
   ros-tutorials:
@@ -13,7 +13,8 @@ parts:
     source: https://github.com/ros/ros_tutorials.git
     source-branch: melodic-devel
     source-space: roscpp_tutorials/
+    build-packages: [lsb-release]
 
 apps:
-  ${name}:
+  run:
     command: roslaunch roscpp_tutorials talker_listener.launch
