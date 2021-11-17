@@ -29,7 +29,7 @@ class HeroTabPanels {
     );
     const verifiedAccountBadge = `
       <span class="p-verified" title="Verified account">
-        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
+        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" alt="">
       </span>
     `;
     panel.innerHTML = "";
