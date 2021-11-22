@@ -1,4 +1,5 @@
 import React from "react";
+import * as reactRedux from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider, useSelector } from "react-redux";
 import { render, screen } from "@testing-library/react";
@@ -6,26 +7,13 @@ import "@testing-library/jest-dom";
 import Settings from "./Settings";
 import store from "../store";
 
-jest.mock("react-redux", () => ({
-  ...jest.requireActual("react-redux"),
-  useSelector: jest.fn(),
-}));
-
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: jest.fn().mockReturnValue({ id: "test" }),
 }));
 
-let initialState = {};
-
-const setupMockSelector = (state) => {
-  useSelector.mockImplementation((callback) => {
-    return callback(state);
-  });
-};
-
-beforeEach(() => {
-  initialState = {
+function getInitialState() {
+  return {
     currentStore: {
       currentStore: {
         id: "test-id",
@@ -44,6 +32,35 @@ beforeEach(() => {
       loading: false,
     },
   };
+}
+
+interface Member {}
+
+interface State {
+  currentStore: {
+    currentStore: {
+      id: string;
+      private: Boolean;
+      "manual-review-policy": string;
+    };
+  };
+  members: {
+    members: Array<Member>;
+    loading: Boolean;
+  };
+}
+
+let initialState: State = getInitialState();
+
+const mockSelector = jest.spyOn(reactRedux, "useSelector");
+const setupMockSelector = (state: State) => {
+  mockSelector.mockImplementation((callback: any) => {
+    return callback(state);
+  });
+};
+
+beforeEach(() => {
+  initialState = getInitialState();
 });
 
 test("the 'is public' checkbox should not be checked when the current store is set to private", () => {
@@ -90,9 +107,9 @@ test("the correct value is given to the store ID field", () => {
     </Provider>
   );
 
-  expect(screen.getByLabelText("Store ID").value).toEqual(
-    initialState.currentStore.currentStore.id
-  );
+  const storeIdInput = screen.getByLabelText("Store ID") as HTMLInputElement;
+
+  expect(storeIdInput.value).toEqual(initialState.currentStore.currentStore.id);
 });
 
 test("the correct radio button is checked by default for manual review policy", () => {
@@ -106,10 +123,9 @@ test("the correct radio button is checked by default for manual review policy", 
     </Provider>
   );
 
-  const radioButtons = screen.getAllByRole("radio");
-  const checkedRadioButton = radioButtons.find(
-    (button) => button.checked === true
-  );
+  const checkedRadioButton = screen.getByRole("radio", {
+    checked: true,
+  }) as HTMLInputElement;
 
   expect(checkedRadioButton.value).toEqual(
     initialState.currentStore.currentStore["manual-review-policy"]

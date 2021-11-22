@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
@@ -19,22 +19,50 @@ import NotAuthorized from "../NotAuthorized";
 import PasswordToggle from "../shared/PasswordToggle";
 import SectionNav from "../SectionNav";
 
+declare global {
+  interface Window {
+    CSRF_TOKEN: string;
+  }
+}
+
+interface RootState {
+  currentStore: {
+    loading: Boolean;
+  };
+
+  members: {
+    loading: Boolean;
+  };
+}
+
+interface RouteParams {
+  id: string;
+}
+
+interface Member {
+  current_user: {};
+}
+
 function Settings() {
   const currentStore = useSelector(currentStoreSelector);
   const members = useSelector(membersSelector);
-  const storeLoading = useSelector((state) => state.currentStore.loading);
-  const membersLoading = useSelector((state) => state.members.loading);
+  const storeLoading = useSelector(
+    (state: RootState) => state.currentStore.loading
+  );
+  const membersLoading = useSelector(
+    (state: RootState) => state.members.loading
+  );
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id } = useParams<RouteParams>();
 
   const [isPrivateStore, setIsPrivateStore] = useState(true);
   const [manualReviewPolicy, setManualReviewPolicy] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [currentMember, setCurrentMember] = useState(null);
+  const [currentMember, setCurrentMember] = useState({ roles: Array() });
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setIsSaving(true);
@@ -42,7 +70,7 @@ function Settings() {
     const settingsData = new FormData();
     settingsData.set("csrf_token", window.CSRF_TOKEN);
     settingsData.set("store-id", id);
-    settingsData.set("private", isPrivateStore);
+    settingsData.set("private", isPrivateStore.toString());
     settingsData.set("manual-review-policy", manualReviewPolicy);
 
     fetch(`/admin/store/${id}/settings`, {
@@ -83,8 +111,8 @@ function Settings() {
     setIsPrivateStore(!isPrivateStore);
   };
 
-  const handleRadioButtonChange = (e) => {
-    setManualReviewPolicy(e.target.value);
+  const handleRadioButtonChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setManualReviewPolicy((e.target as HTMLInputElement).value);
   };
 
   const getDisabledState = () => {
@@ -107,7 +135,7 @@ function Settings() {
   }, [currentStore.private, currentStore["manual-review-policy"]]);
 
   useEffect(() => {
-    setCurrentMember(members.find((member) => member.current_user));
+    setCurrentMember(members.find((member: Member) => member.current_user));
   }, [members, storeLoading, membersLoading]);
 
   return (
@@ -127,7 +155,7 @@ function Settings() {
               <NotAuthorized />
             ) : (
               <Row>
-                <Col size="7">
+                <Col size={7}>
                   {showSuccessNotification && (
                     <Notification
                       severity="positive"
