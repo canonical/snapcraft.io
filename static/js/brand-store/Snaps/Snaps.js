@@ -155,7 +155,13 @@ function Snaps() {
       });
   };
 
-  const isAdmin = () => currentMember.roles.includes("admin");
+  const isAdmin = () => {
+    return (
+      currentMember &&
+      currentMember.roles &&
+      currentMember.roles.includes("admin")
+    );
+  };
 
   useEffect(() => {
     dispatch(fetchMembers(id));
