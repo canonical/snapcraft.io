@@ -29,7 +29,7 @@ class HeroTabPanels {
     );
     const verifiedAccountBadge = `
       <span class="p-verified" title="Verified account">
-        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg">
+        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" alt="">
       </span>
     `;
     panel.innerHTML = "";
@@ -57,9 +57,9 @@ class HeroTabPanels {
             height="48">
 
           <div class="p-media-object__details">
-            <h4 class="p-media-object__title p-heading--5 u-no-margin--bottom">
+            <h3 class="p-media-object__title p-heading--5 u-no-margin--bottom">
               ${snap.title}
-            </h4>
+            </h3>
             <div class="p-media-object__content">
               <p>
                 <span class="u-off-screen">Publisher: </span>${snap.publisher}
