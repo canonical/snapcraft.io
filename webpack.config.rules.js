@@ -89,4 +89,8 @@ module.exports = [
     test: require.resolve(__dirname + "/static/js/public/brand-store.js"),
     use: ["expose-loader?exposes=snapcraft.public.brandStore", "babel-loader"],
   },
+  {
+    test: require.resolve(__dirname + "/static/js/brand-store/brand-store.js"),
+    use: ["ts-loader"],
+  },
 ];
