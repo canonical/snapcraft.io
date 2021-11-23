@@ -5,6 +5,7 @@ import NoStores from "./NoStores";
 
 test("the page should have the correct title", () => {
   render(<NoStores />);
-
-  expect(screen.getByText("No stores")).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    "No stores"
+  );
 });

@@ -19,5 +19,5 @@
     "noEmit": false,
     "sourceMap": true
   },
-  "include": ["./static/js/brand-store/NoStores"]
+  "include": ["./static/js"]
 }

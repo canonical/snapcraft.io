@@ -5,6 +5,7 @@ import NotAuthorized from "./NotAuthorized";
 
 test("the page should have the correct title", () => {
   render(<NotAuthorized />);
-
-  expect(screen.getByText("Not authorized")).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+    "Not authorized"
+  );
 });
