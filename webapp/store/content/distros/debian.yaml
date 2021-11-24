@@ -10,4 +10,4 @@ install:
     command: |
       sudo apt update
       sudo apt install snapd
-      sudo snap install core
+      snap install core

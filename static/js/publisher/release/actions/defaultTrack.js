@@ -38,7 +38,7 @@ export function clearDefaultTrack() {
         showNotification({
           status: "success",
           appearance: "positive",
-          content: `The default track for ${snapName} has been removed. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from latest track.`,
+          content: `The default track for ${snapName} has been removed. All new installations without a specified track (e.g. \`snap install ${snapName}\`) will receive updates from latest track.`,
           canDismiss: true,
         })
       );
@@ -63,7 +63,7 @@ export function setDefaultTrack() {
         showNotification({
           status: "success",
           appearance: "positive",
-          content: `The default track for ${snapName} has been set to ${currentTrack}. All new installations without a specified track (e.g. \`sudo snap install ${snapName}\`) will receive updates from the newly defined default track.`,
+          content: `The default track for ${snapName} has been set to ${currentTrack}. All new installations without a specified track (e.g. \`snap install ${snapName}\`) will receive updates from the newly defined default track.`,
           canDismiss: true,
         })
       );

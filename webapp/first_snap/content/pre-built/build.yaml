@@ -11,7 +11,7 @@ linux:
     - action: "Return to the root directory of the project containing your snapcraft.yaml and run the snapcraft Docker image:"
       command: docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft
     - action: "Install the snap:"
-      command: sudo snap install --devmode --dangerous *.snap
+      command: snap install --devmode --dangerous *.snap
     - action: "List your installed snaps to confirm:"
       command: snap list
     - action: "Run the snap:"

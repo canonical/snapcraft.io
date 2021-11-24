@@ -66,17 +66,17 @@ class TemplateUtilsTest(unittest.TestCase):
         result = template_utils.install_snippet(
             "spotify", "latest", "stable", ""
         )
-        self.assertTrue(result, "sudo snap install spotify")
+        self.assertTrue(result, "snap install spotify")
 
     def test_install_snippet_with_classic(self):
         result = template_utils.install_snippet(
             "skype", "latest", "stable", "classic"
         )
-        self.assertTrue(result, "sudo snap install skype --classic")
+        self.assertTrue(result, "snap install skype --classic")
 
     def test_install_snippet_with_non_stable_risk_level(self):
         result = template_utils.install_snippet("test", "latest", "edge", "")
-        self.assertTrue(result, "sudo snap install test --edge")
+        self.assertTrue(result, "snap install test --edge")
 
     def test_display_name(self):
         result = template_utils.display_name("Toto", "toto")

@@ -93,7 +93,7 @@ def install_snippet(
     detail pages
     """
 
-    snippet_value = "sudo snap install " + package_name
+    snippet_value = "snap install " + package_name
 
     if lowest_risk_available != "stable":
         snippet_value += f" --{lowest_risk_available}"

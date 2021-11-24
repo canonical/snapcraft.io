@@ -1,7 +1,7 @@
 name: test-freeplane-{name}
 linux:
   - action: "Install the snap:"
-    command: sudo snap install --devmode --dangerous *.snap
+    command: snap install --devmode --dangerous *.snap
   - action: "List your installed snaps to confirm:"
     command: snap list
   - action: "Run the snap:"
@@ -14,7 +14,7 @@ macos:
   - action: "Connect to the virtual machine:"
     command: multipass shell testvm
   - action: "Install the snap inside the virtual machine:"
-    command: sudo snap install --devmode --dangerous ${name}*.snap
+    command: snap install --devmode --dangerous ${name}*.snap
   - action: "Confirm the snap is installed by listing your installed snaps:"
     command: snap list
   - action: "Run the snap inside the virtual machine:"
