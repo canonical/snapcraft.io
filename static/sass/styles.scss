@@ -471,10 +471,17 @@ code {
   display: block;
   margin: 0 0 0.75rem !important;
 
+  &:last-child {
+    margin-bottom: 0 !important;
+  }
+
   @media (min-width: $breakpoint-medium) {
     display: inline-block;
-    margin-bottom: 0 !important;
     margin-left: 0.75rem !important;
+  }
+
+  @media (min-width: 1353px) {
+    margin-bottom: 0 !important;
   }
 }
 
