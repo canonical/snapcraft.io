@@ -19,7 +19,7 @@ import NotAuthorized from "../NotAuthorized";
 import PasswordToggle from "../shared/PasswordToggle";
 import SectionNav from "../SectionNav";
 
-import { RouteParams, Member, CurrentMember } from "../types/shared";
+import { RouteParams, Member } from "../types/shared";
 
 export type RootState = {
   currentStore: {
@@ -53,12 +53,13 @@ function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [currentMember, setCurrentMember] = useState<CurrentMember>({
+  const [currentMember, setCurrentMember] = useState<Member | undefined>({
     displayname: "",
     email: "",
     id: "",
     roles: [],
     username: "",
+    current_user: false,
   });
 
   const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
@@ -121,7 +122,9 @@ function Settings() {
     );
   };
 
-  const isAdmin = () => currentMember.roles.includes("admin");
+  const isAdmin = () => {
+    return currentMember?.roles.includes("admin") || false;
+  };
 
   useEffect(() => {
     dispatch(fetchMembers(id));
