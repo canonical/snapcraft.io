@@ -1,18 +1,19 @@
 import React from "react";
 import * as reactRedux from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Settings from "./Settings";
 import store from "../store";
+import { RootState } from "./Settings";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: jest.fn().mockReturnValue({ id: "test" }),
 }));
 
-function getInitialState() {
+function getInitialState(): RootState {
   return {
     currentStore: {
       currentStore: {
@@ -20,6 +21,7 @@ function getInitialState() {
         private: true,
         "manual-review-policy": "allow",
       },
+      loading: false,
     },
     members: {
       members: [
@@ -34,26 +36,10 @@ function getInitialState() {
   };
 }
 
-interface Member {}
-
-interface State {
-  currentStore: {
-    currentStore: {
-      id: string;
-      private: Boolean;
-      "manual-review-policy": string;
-    };
-  };
-  members: {
-    members: Array<Member>;
-    loading: Boolean;
-  };
-}
-
-let initialState: State = getInitialState();
+let initialState: RootState = getInitialState();
 
 const mockSelector = jest.spyOn(reactRedux, "useSelector");
-const setupMockSelector = (state: State) => {
+const setupMockSelector = (state: RootState) => {
   mockSelector.mockImplementation((callback: any) => {
     return callback(state);
   });

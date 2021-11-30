@@ -19,29 +19,22 @@ import NotAuthorized from "../NotAuthorized";
 import PasswordToggle from "../shared/PasswordToggle";
 import SectionNav from "../SectionNav";
 
-declare global {
-  interface Window {
-    CSRF_TOKEN: string;
-  }
-}
+import { RouteParams, Member, CurrentMember } from "../types/shared";
 
-interface RootState {
+export type RootState = {
   currentStore: {
+    currentStore: {
+      id: string;
+      private: Boolean;
+      "manual-review-policy": string;
+    };
     loading: Boolean;
   };
-
   members: {
+    members: Array<{}>;
     loading: Boolean;
   };
-}
-
-interface RouteParams {
-  id: string;
-}
-
-interface Member {
-  current_user: {};
-}
+};
 
 function Settings() {
   const currentStore = useSelector(currentStoreSelector);
@@ -60,7 +53,13 @@ function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [currentMember, setCurrentMember] = useState({ roles: Array() });
+  const [currentMember, setCurrentMember] = useState<CurrentMember>({
+    displayname: "",
+    email: "",
+    id: "",
+    roles: [],
+    username: "",
+  });
 
   const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -112,7 +111,7 @@ function Settings() {
   };
 
   const handleRadioButtonChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setManualReviewPolicy((e.target as HTMLInputElement).value);
+    setManualReviewPolicy(e.currentTarget.value);
   };
 
   const getDisabledState = () => {
