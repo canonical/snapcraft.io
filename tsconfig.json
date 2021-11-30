@@ -19,5 +19,10 @@
     "noEmit": false,
     "sourceMap": true
   },
-  "include": ["./static/js"]
+  "include": ["./static/js"],
+  "paths": [
+    {
+      "*": ["types/*.d.ts"]
+    }
+  ]
 }
