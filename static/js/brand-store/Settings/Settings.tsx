@@ -19,7 +19,7 @@ import NotAuthorized from "../NotAuthorized";
 import PasswordToggle from "../shared/PasswordToggle";
 import SectionNav from "../SectionNav";
 
-import { RouteParams, Member } from "../types/shared";
+import type { RouteParams, Member } from "../types/shared";
 
 export type RootState = {
   currentStore: {
