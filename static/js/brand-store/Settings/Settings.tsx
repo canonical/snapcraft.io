@@ -53,14 +53,7 @@ function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [currentMember, setCurrentMember] = useState<Member | undefined>({
-    displayname: "",
-    email: "",
-    id: "",
-    roles: [],
-    username: "",
-    current_user: false,
-  });
+  const [currentMember, setCurrentMember] = useState<Member | undefined>();
 
   const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
