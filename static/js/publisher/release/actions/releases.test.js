@@ -396,49 +396,48 @@ describe("releases actions", () => {
     // This is breaking in PRs but not locally
     // There is an issue to fix this:
     // https://github.com/canonical-web-and-design/snapcraft.io/issues/3787
-    //
-    // it("should handle an error", () => {
-    //   const store = mockStore({
-    //     options: {
-    //       snapName: "test",
-    //       csrfToken: "test",
-    //       defaultTrack: "latest",
-    //     },
-    //     pendingReleases: {},
-    //   });
+    it.skip("should handle an error", () => {
+      const store = mockStore({
+        options: {
+          snapName: "test",
+          csrfToken: "test",
+          defaultTrack: "latest",
+        },
+        pendingReleases: {},
+      });
 
-    //   global.fetch = jest
-    //     .fn()
-    //     // fetchReleases API Response
-    //     .mockResolvedValueOnce({
-    //       json: () => ({
-    //         success: true,
-    //       }),
-    //     });
+      global.fetch = jest
+        .fn()
+        // fetchReleases API Response
+        .mockResolvedValueOnce({
+          json: () => ({
+            success: true,
+          }),
+        });
 
-    //   return store.dispatch(releaseRevisions()).then(() => {
-    //     const actions = store.getActions();
-    //     expect(actions).toEqual([
-    //       {
-    //         type: "HIDE_NOTIFICATION",
-    //       },
-    //       {
-    //         type: "SHOW_NOTIFICATION",
-    //         payload: {
-    //           appearance: "negative",
-    //           content: "Cannot read property 'forEach' of undefined",
-    //           status: "error",
-    //         },
-    //       },
-    //       {
-    //         type: "CANCEL_PENDING_RELEASES",
-    //       },
-    //       {
-    //         type: "CLOSE_HISTORY",
-    //       },
-    //     ]);
-    //   });
-    // });
+      return store.dispatch(releaseRevisions()).then(() => {
+        const actions = store.getActions();
+        expect(actions).toEqual([
+          {
+            type: "HIDE_NOTIFICATION",
+          },
+          {
+            type: "SHOW_NOTIFICATION",
+            payload: {
+              appearance: "negative",
+              content: "Cannot read property 'forEach' of undefined",
+              status: "error",
+            },
+          },
+          {
+            type: "CANCEL_PENDING_RELEASES",
+          },
+          {
+            type: "CLOSE_HISTORY",
+          },
+        ]);
+      });
+    });
 
     it("should dispatch all the actions", () => {
       const revision = {
