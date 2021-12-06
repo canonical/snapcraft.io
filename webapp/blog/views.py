@@ -31,7 +31,7 @@ def init_blog(app, url_prefix):
     @blog.route("/api/snap-posts/<snap>")
     def snap_posts(snap):
         try:
-            blog_tags = blog_api.get_tag_by_name(f"sc:snap:{snap}")
+            blog_tags = blog_api.get_tag_by_slug(f"sc:snap:{snap}")
         except NotFoundError:
             blog_tags = None
 
@@ -39,7 +39,7 @@ def init_blog(app, url_prefix):
         articles = []
 
         if blog_tags:
-            snapcraft_tag = blog_api.get_tag_by_name("snapcraft.io")
+            snapcraft_tag = blog_api.get_tag_by_slug("snapcraft.io")
 
             try:
                 blog_articles, total_pages = blog_api.get_articles(
