@@ -34,7 +34,7 @@
     "@babel/preset-typescript": "7.16.0",
     "@canonical/cookie-policy": "3.3.0",
     "@canonical/global-nav": "2.5.0",
-    "@canonical/latest-news": "1.2.0",
+    "@canonical/latest-news": "1.3.0",
     "@canonical/react-components": "0.24.0",
     "@reduxjs/toolkit": "1.6.1",
     "@sentry/react": "6.12.0",
