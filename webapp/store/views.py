@@ -324,6 +324,13 @@ def store_blueprint(store_query=None):
             publisher_content_path + publisher + ".yaml", typ="safe"
         )
 
+        popular_snaps = helpers.get_yaml(
+            publisher_content_path + publisher + "-snaps.yaml",
+            typ="safe",
+        )
+
+        context["popular_snaps"] = popular_snaps["snaps"]
+
         if not context:
             flask.abort(404)
 
@@ -342,13 +349,6 @@ def store_blueprint(store_query=None):
                     [snap for snap in snaps_results if snap["apps"]]
                 )
 
-        if "snaps" not in context:
-            snaps = helpers.get_yaml(
-                publisher_content_path + publisher + "-snaps.yaml", typ="safe"
-            )
-
-            context["snaps"] = snaps["snaps"]
-
         featured_snaps = [
             snap["package_name"] for snap in context["featured_snaps"]
         ]
@@ -358,6 +358,8 @@ def store_blueprint(store_query=None):
             for snap in context["snaps"]
             if snap["package_name"] not in featured_snaps
         ]
+
+        context["snaps_count"] = len(snaps_results)
 
         return flask.render_template("store/publisher-details.html", **context)
 
