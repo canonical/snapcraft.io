@@ -2,7 +2,7 @@
 
 {% block meta_title %}
   {% if query %}
-    Snap search results for '{{ query }}'
+    Snap search results for '{{ display_query }}'
     {% if category_display %}
       in {{ category_display }}
       {% endif %}
@@ -21,7 +21,7 @@
       <div class="p-form__group">
         <label for="search-input" class="u-off-screen">Search</label>
         <div class="p-form__control u-clearfix">
-          <input class="u-no-margin--bottom" id="search-input" type="search" name="q" value="{{ query }}" autofocus />
+          <input class="u-no-margin--bottom" id="search-input" type="search" name="q" value="{{ display_query }}" autofocus />
         </div>
       </div>
       <button type="submit" alt="search" class="p-button--positive">Search</button>
