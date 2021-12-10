@@ -4,7 +4,13 @@
 
 {# TODO: title, meta, etc #}
 {% block meta_title %}{{ publisher }} in the Snap Store{% endblock %}
-{% block meta_description %}Install {{ publisher }} software for Linux in the Snap Store{% endblock %}
+{% block meta_description %}
+  {% if meta_description %}
+    {{ meta_description }}
+  {% else %}
+    Install {{ publisher }} software for Linux in the Snap Store
+  {% endif %}
+{% endblock %}
 
 {% if icon_url %}
   {% block meta_image %}
@@ -63,7 +69,11 @@
         <h4>About {{ publisher }}</h4>
         <dl>
           <dt>Snaps published</dt>
-          <dd>{{ snaps|length + featured_snaps|length }}</dd>
+          {% if snaps_count %}
+            <dd>{{ snaps_count }}</dd>
+          {% else %}
+            <dd>{{ snaps|length + featured_snaps|length }}</dd>
+          {% endif %}
           <dt>Publisher since</dt>
           <dd>{{ publisher_since }}</dd>
         </dl>
@@ -103,15 +113,38 @@
   {% endif %}
 
   <div class="p-strip is-shallow">
+    {% if show_popular_snaps %}
+      <div class="u-fixed-width">
+        <h2 class="p-heading--4">Popular snaps</h2>
+      </div>
       <div class="row">
-      {% set hide_publisher = True %}
-      {% set show_summary = True %}
-      {% for snap in snaps %}
-        <div class="col-3">
-          {% include "store/_media-object-snap-partial.html" %}
-        </div>
-      {% endfor %}
-    </div>
+        {% set hide_publisher = True %}
+        {% set show_summary = True %}
+        {% for snap in popular_snaps %}
+          <div class="col-3">
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if hide_all_snaps != True %}
+      <div class="row">
+        {% set hide_publisher = True %}
+        {% set show_summary = True %}
+        {% for snap in snaps %}
+          <div class="col-3">
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if link_to_search %}
+      <div class="u-fixed-width">
+        <p><a href="/search?q=publisher%3A{{username}}">See all snaps published by {{ publisher }}&nbsp;&rsaquo;</a></p>
+      </div>
+    {% endif %}
   </div>
 
   {% if api_error %}
