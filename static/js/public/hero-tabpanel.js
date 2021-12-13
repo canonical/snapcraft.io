@@ -1,9 +1,7 @@
 class HeroTabPanels {
   constructor(mainContainerSelector, categoryList) {
-    this.timer = null;
     this.mainContainer = document.querySelector(mainContainerSelector);
     this.categoryList = categoryList;
-    this.categories = [];
 
     if (this.mainContainer) {
       this.panelContainer = this.mainContainer.querySelector(
@@ -17,7 +15,7 @@ class HeroTabPanels {
         this.initPanels();
       }
 
-      this.initEvents();
+      this.handleTabChange();
     } else {
       throw new Error(`${mainContainerSelector} does not exist`);
     }
@@ -80,15 +78,13 @@ class HeroTabPanels {
   }
 
   changeTabs(target) {
-    clearInterval(this.timer);
-
     const nextCategoryName = target.getAttribute("aria-controls").split("-")[1];
     const viewAllLinkList = [].slice.call(
       this.mainContainer.querySelectorAll("[data-js='view-all']")
     );
     // Show the appropriate 'View all' link
     viewAllLinkList.forEach((el) => {
-      if (el.getAttribute("id") === `view-all-${nextCategoryName}`) {
+      if (el.id === `view-all-${nextCategoryName}`) {
         el.classList.remove("u-hide");
       } else {
         el.classList.add("u-hide");
@@ -97,11 +93,9 @@ class HeroTabPanels {
 
     // Remove all current selected tabs
     this.tabs.forEach((tab) => {
-      this.draw(0, tab.querySelector(".before"));
       tab.setAttribute("aria-selected", false);
     });
 
-    // Set this tab as selected
     target.setAttribute("aria-selected", true);
 
     // Hide all tab panels
@@ -113,23 +107,6 @@ class HeroTabPanels {
     this.mainContainer
       .querySelector(`#${target.getAttribute("aria-controls")}`)
       .classList.add("u-animate--reveal");
-
-    this.playTab(target);
-  }
-
-  draw(timePassed, tab) {
-    tab.style.width = timePassed + "%";
-  }
-
-  triggerNextTab(tab) {
-    let nextTab = tab.nextElementSibling;
-    if (!nextTab) {
-      nextTab = this.mainContainer.querySelectorAll(
-        "[data-js='carousel-tab']"
-      )[0];
-    }
-    this.currentTab = nextTab.getAttribute("id");
-    this.changeTabs(nextTab);
   }
 
   recordEvent(fromTab, toTab) {
@@ -145,34 +122,7 @@ class HeroTabPanels {
     }
   }
 
-  playTab(tab) {
-    const start = Date.now();
-    const duration = 20000;
-    const tabIndicator = tab.querySelector(".before");
-    const that = this;
-
-    if (tabIndicator) {
-      that.timer = setInterval(function () {
-        const timePassed = Date.now() - start;
-        if (timePassed >= duration) {
-          clearInterval(that.timer);
-          that.triggerNextTab(tab);
-          return;
-        }
-        that.draw(timePassed / (duration / 100), tabIndicator);
-      }, 20);
-    }
-  }
-
   initPanels() {
-    // Set current tab
-    this.currentTab = `${this.categoryList[0].name}-snaps`;
-    // Select the inital active tab
-    const initalActiveTab = this.mainContainer.querySelector(
-      `[data-js='carousel-tab'][aria-selected="true"]`
-    );
-    this.playTab(initalActiveTab);
-
     // Fetch the category data
     this.categoryList.forEach((category) => {
       fetch(`/store/featured-snaps/${category.toLowerCase()}`)
@@ -184,10 +134,6 @@ class HeroTabPanels {
           }
         })
         .then((results) => {
-          this.categories.push({
-            name: category.toLowerCase(),
-            snaps: results,
-          });
           this.updatePanel(category.toLowerCase(), results);
         })
         .catch((error) => {
@@ -196,14 +142,17 @@ class HeroTabPanels {
     });
   }
 
-  initEvents() {
-    const that = this;
-    // Add a click event handler to each tab
+  handleTabChange() {
+    const currentTab = this.tabs.find(
+      (tab) => tab.getAttribute("aria-selected") === "true"
+    );
+    this.currentTab = currentTab.id;
     this.tabs.forEach((tab) => {
-      tab.addEventListener("click", function (e) {
+      tab.addEventListener("click", (e) => {
         const target = e.target.closest("[data-js='carousel-tab']");
-        that.recordEvent(that.currentTab, target.getAttribute("id"));
-        that.changeTabs(target);
+        this.recordEvent(this.currentTab, target.id);
+        this.changeTabs(target);
+        this.currentTab = target.id;
       });
     });
   }
