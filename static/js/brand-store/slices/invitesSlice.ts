@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AppDispatch } from "../store";
 
 export const slice = createSlice({
   name: "invites",
@@ -26,8 +27,8 @@ export const {
   getInvitesError,
 } = slice.actions;
 
-export function fetchInvites(storeId) {
-  return async (dispatch) => {
+export function fetchInvites(storeId: string) {
+  return async (dispatch: AppDispatch) => {
     dispatch(getInvitesLoading());
 
     try {

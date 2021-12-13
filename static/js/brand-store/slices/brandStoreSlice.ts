@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AppDispatch } from "../store";
 
 export const slice = createSlice({
   name: "brandStores",
@@ -27,7 +28,7 @@ export const {
 } = slice.actions;
 
 export function fetchStores() {
-  return async (dispatch) => {
+  return async (dispatch: AppDispatch) => {
     dispatch(getBrandStoresLoading());
 
     try {

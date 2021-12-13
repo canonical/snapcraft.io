@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AppDispatch } from "../store";
 
 export const slice = createSlice({
   name: "snaps",
@@ -26,8 +27,8 @@ export const {
   getSnapsError,
 } = slice.actions;
 
-export function fetchSnaps(storeId) {
-  return async (dispatch) => {
+export function fetchSnaps(storeId: string) {
+  return async (dispatch: AppDispatch) => {
     dispatch(getSnapsLoading());
 
     try {

@@ -5,7 +5,7 @@ import snapsSelector from "../slices/snapsSlice";
 import membersSelector from "../slices/membersSlice";
 import invitesSelector from "../slices/invitesSlice";
 
-export default configureStore({
+export const store = configureStore({
   reducer: {
     brandStores: brandStoreReducer,
     currentStore: currentStoreReducer,
@@ -14,3 +14,5 @@ export default configureStore({
     invites: invitesSelector,
   },
 });
+
+export type AppDispatch = typeof store.dispatch;

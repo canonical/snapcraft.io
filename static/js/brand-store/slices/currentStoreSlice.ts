@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { AppDispatch } from "../store";
 
 export const slice = createSlice({
   name: "currentStore",
@@ -26,8 +27,8 @@ export const {
   getCurrentStoreError,
 } = slice.actions;
 
-export function fetchStore(storeId) {
-  return async (dispatch) => {
+export function fetchStore(storeId: string) {
+  return async (dispatch: AppDispatch) => {
     dispatch(getCurrentStoreLoading());
 
     try {
