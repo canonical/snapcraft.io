@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import PropTypes from "prop-types";
+import type { RouteParams } from "../types/shared";
 
-function SectionNav({ sectionName }) {
-  const { id } = useParams();
+function SectionNav({ sectionName }: { sectionName: string }) {
+  const { id } = useParams<RouteParams>();
 
   return (
     <div className="p-tabs">
@@ -42,9 +42,5 @@ function SectionNav({ sectionName }) {
     </div>
   );
 }
-
-SectionNav.propTypes = {
-  sectionName: PropTypes.string.isRequired,
-};
 
 export default SectionNav;
