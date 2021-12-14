@@ -51,19 +51,21 @@
       <button type="submit" alt="search" class="p-button--positive">Search</button>
     </form>
 
+    {% set selected_index = range(1, hero_categories | length + 1) | random %}
+
     <div data-js="hero-snaps-container">
       <div class="u-fixed-width u-clearfix" style="margin-block-start: 1.5rem;">
         <p class="p-heading--5 u-float-left">Some snaps you may like</p>
         <p class="u-float-right">
         {% for category in hero_categories %}
-          <a href="/search?category={{ category|lower }}" id="view-all-{{ category|lower }}" class="p-hero-tab__link{% if loop.index > 1 %} u-hide{% endif %}" data-js="view-all">View all {{ category }} snaps&nbsp;&rsaquo;</a>
+          <a href="/search?category={{ category|lower }}" id="view-all-{{ category|lower }}" class="p-hero-tab__link{% if loop.index != selected_index %} u-hide{% endif %}" data-js="view-all">View all {{ category }} snaps&nbsp;&rsaquo;</a>
         {% endfor %}
         </p>
       </div>
 
       <div data-js="panels-container">
         {% for category in hero_categories %}
-        <div class="p-hero-panel row u-no-padding--left u-no-padding--right{% if loop.index == 1 %} u-animate--reveal{% endif%}" id="panel-{{ category|lower }}-snaps" role="tabpanel" aria-labelledby="{{ category|lower }}-snaps">
+        <div class="p-hero-panel row u-no-padding--left u-no-padding--right{% if loop.index == selected_index %} u-animate--reveal{% endif%}" id="panel-{{ category|lower }}-snaps" role="tabpanel" aria-labelledby="{{ category|lower }}-snaps">
           {% for _ in range(0, 3) %}
           <div class="col-4">
             <div class="p-card p-media-object p-media-object--snap is-placeholder">
@@ -88,7 +90,7 @@
       <div class="u-fixed-width p-hero-tab">
         <div role="tablist" aria-label="Fatured snaps" class="p-hero-tab__list">
           {% for category in hero_categories %}
-          <button role="tab" aria-selected="{% if loop.index == 1 %}true{% else %}false{% endif %}" aria-controls="panel-{{ category|lower }}-snaps" id="{{ category|lower }}-snaps" class="p-hero-tab__item" data-js="carousel-tab">
+          <button role="tab" aria-selected="{% if loop.index == selected_index %}true{% else %}false{% endif %}" aria-controls="panel-{{ category|lower }}-snaps" id="{{ category|lower }}-snaps" class="p-hero-tab__item" data-js="carousel-tab">
             <i class="before"></i>
             <p class="p-hero-tab__title">{{ category }}</p>
           </button>
