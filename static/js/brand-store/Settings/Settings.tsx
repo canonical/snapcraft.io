@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useAppDispatch } from "../hooks";
 import {
   Form,
   Input,
@@ -45,7 +46,7 @@ function Settings() {
   const membersLoading = useSelector(
     (state: RootState) => state.members.loading
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { id } = useParams<RouteParams>();
 
   const [isPrivateStore, setIsPrivateStore] = useState(true);
