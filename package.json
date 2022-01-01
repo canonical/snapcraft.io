@@ -39,7 +39,7 @@
     "@reduxjs/toolkit": "1.6.1",
     "@sentry/react": "6.12.0",
     "@sentry/tracing": "6.12.0",
-    "@tarekraafat/autocomplete.js": "9.1.1",
+    "@tarekraafat/autocomplete.js": "10.2.6",
     "@testing-library/jest-dom": "5.14.1",
     "@testing-library/react": "11.2.3",
     "@types/jest": "27.0.3",
