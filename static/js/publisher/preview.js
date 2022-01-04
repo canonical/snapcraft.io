@@ -156,7 +156,7 @@ function screenshotsAndVideos(screenshots, video) {
     col10.className = "col-10 u-align-text--center";
     holder.appendChild(col10);
     const videoSlide = document.createElement("div");
-    videoSlide.className = "js-video-slide";
+    videoSlide.className = "js-video-slide u-embedded-media";
     videoSlide.setAttribute("data-video-type", videoDetails.type);
     videoSlide.setAttribute("data-video-url", videoDetails.url);
     videoSlide.setAttribute("data-video-id", videoDetails.id);
