@@ -2,7 +2,7 @@ domain: snapcraft.io
 
 image: prod-comms.docker-registry.canonical.com/snapcraft.io
 
-env:
+env:  &env
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 
@@ -99,6 +99,23 @@ production:
     }
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
+  routes:
+    - paths: [/docs, /tutorials]
+      name: snapcraft-io-discourse
+      app_name: snapcraft.io-discourse
+      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      replicas: 5
+      memoryLimit: 256Mi
+      env: *env
+
+    - paths: [/blog]
+      name: snapcraft-io-blog
+      app_name: snapcraft.io-blog
+      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      replicas: 3
+      memoryLimit: 256Mi
+      env: *env
+
 # Overrides for staging
 staging:
   replicas: 3
@@ -108,3 +125,20 @@ staging:
     }
     more_set_headers "X-Robots-Tag: noindex";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
+
+  routes:
+    - paths: [/docs, /tutorials]
+      name: snapcraft-io-discourse
+      app_name: snapcraft.io-discourse
+      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      replicas: 3
+      memoryLimit: 256Mi
+      env: *env
+
+    - paths: [/blog]
+      name: snapcraft-io-blog
+      app_name: snapcraft.io-blog
+      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      replicas: 2
+      memoryLimit: 256Mi
+      env: *env
