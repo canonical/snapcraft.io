@@ -2,7 +2,7 @@ domain: snapcraft.io
 
 image: prod-comms.docker-registry.canonical.com/snapcraft.io
 
-env:  &env
+env: &env
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 
@@ -100,28 +100,27 @@ production:
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
   routes:
-    - paths: [
-        /account,
-        /admin,
-        /login,
-        /login-beta,
-        /logout,
-        /github,
-        /snaps,
-        '/[^/]*/listing',
-        '/[^/]*/publicise',
-        '/[^/]*/releases',
-        '/[^/]*/settings',
-        '/[^/]*/builds',
-        '/[^/]*/webhook',
-        '/[^/]*/[^/]*/webhook',
-        '/[^/]*/preview',
-        '/[^/]*/metrics',
-        '/[^/]*/release',
-        /register-snap,
-        /register-name-dispute,
-        /request-reserved-name,
-        /snap-builds.json
+    - paths: &publisher_paths [
+        '/account(/.*)?$',
+        '/admin(/.*)?$',
+        '/login(/.*)?$',
+        '/logout$',
+        '/github/',
+        '/snaps(/.*)?$',
+        '/[^/]*/listing$',
+        '/[^/]*/publicise$',
+        '/[^/]*/releases$',
+        '/[^/]*/settings$',
+        '/[^/]*/builds$',
+        '/[^/]*/webhook$',
+        '/[^/]*/[^/]*/webhook$',
+        '/[^/]*/preview$',
+        '/[^/]*/metrics$',
+        '/[^/]*/release$',
+        '/register-snap$',
+        '/register-name-dispute$',
+        '/request-reserved-name$',
+        '/snap-builds.json$'
       ]
       name: snapcraft-io-publisher
       app_name: snapcraft.io-publisher
@@ -157,29 +156,7 @@ staging:
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
   routes:
-    - paths: [
-        /account,
-        /admin,
-        /login,
-        /login-beta,
-        /logout,
-        /github,
-        /snaps,
-        '/[^/]*/listing',
-        '/[^/]*/publicise',
-        '/[^/]*/releases',
-        '/[^/]*/settings',
-        '/[^/]*/builds',
-        '/[^/]*/webhook',
-        '/[^/]*/[^/]*/webhook',
-        '/[^/]*/preview',
-        '/[^/]*/metrics',
-        '/[^/]*/release',
-        /register-snap,
-        /register-name-dispute,
-        /request-reserved-name,
-        /snap-builds.json
-      ]
+    - paths: *publisher_paths
       name: snapcraft-io-publisher
       app_name: snapcraft.io-publisher
       image: prod-comms.docker-registry.canonical.com/snapcraft.io
