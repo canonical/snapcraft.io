@@ -100,35 +100,6 @@ production:
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
   routes:
-    - paths: &publisher_paths [
-        '/account(/.*)?$',
-        '/admin(/.*)?$',
-        '/login(/.*)?$',
-        '/logout$',
-        '/github/',
-        '/snaps(/.*)?$',
-        '/[^/]*/listing$',
-        '/[^/]*/publicise$',
-        '/[^/]*/releases$',
-        '/[^/]*/settings$',
-        '/[^/]*/builds$',
-        '/[^/]*/webhook$',
-        '/[^/]*/[^/]*/webhook$',
-        '/[^/]*/preview$',
-        '/[^/]*/metrics$',
-        '/[^/]*/release$',
-        '/register-snap$',
-        '/register-name-dispute$',
-        '/request-reserved-name$',
-        '/snap-builds.json$'
-      ]
-      name: snapcraft-io-publisher
-      app_name: snapcraft.io-publisher
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
-      replicas: 5
-      memoryLimit: 256Mi
-      env: *env
-
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
       app_name: snapcraft.io-discourse
@@ -156,14 +127,6 @@ staging:
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
   routes:
-    - paths: *publisher_paths
-      name: snapcraft-io-publisher
-      app_name: snapcraft.io-publisher
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
-      replicas: 3
-      memoryLimit: 256Mi
-      env: *env
-
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
       app_name: snapcraft.io-discourse
