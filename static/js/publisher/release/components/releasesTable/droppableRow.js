@@ -131,7 +131,7 @@ const ReleasesTableDroppableRow = (props) => {
   });
 
   return (
-    <div ref={drop}>
+    <div className="p-releases-table__row--container" ref={drop}>
       <ReleasesTableChannelRow
         risk={risk}
         branch={branch}
