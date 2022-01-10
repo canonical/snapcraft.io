@@ -5,17 +5,20 @@
   ],
   "rules": {
     "order/properties-alphabetical-order": true,
-    "at-rule-no-unknown": [ true, {
-      "ignoreAtRules": [
-        "extend",
-        "include",
-        "mixin",
-        "for",
-        "function",
-        "if",
-        "warn",
-        "return"
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "extend",
+          "include",
+          "mixin",
+          "for",
+          "function",
+          "if",
+          "warn",
+          "return"
         ]
-    } ],
+      }
+    ]
   }
 }

@@ -305,7 +305,7 @@ class ReleasesTable extends Component {
       <div className="row">
         <div className={className}>
           <div className="p-releases-table__row p-releases-table__row--heading">
-            <div className="p-releases-channel is-placeholder" />
+            <div className="p-releases-channel is-placeholder">Channel</div>
             {archs.map((arch) => (
               <div
                 className={`p-releases-table__cell p-releases-table__arch ${
@@ -317,7 +317,7 @@ class ReleasesTable extends Component {
               </div>
             ))}
           </div>
-          {this.renderRows()}
+          <div>{this.renderRows()}</div>
           {this.renderTabs()}
         </div>
       </div>

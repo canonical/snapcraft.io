@@ -1,4 +1,4 @@
-@import 'snapcraft_patterns_icons';
+@import "snapcraft_patterns_icons";
 
 @mixin snapcraft-release {
   $color-highlighted: #fae6be;
@@ -69,10 +69,9 @@
 
   .p-releases-channel {
     align-items: flex-start;
-    background: $color-light;
+    border-right: 1px solid $colors--light-theme--border-default;
     display: flex;
     flex-shrink: 0;
-    font-size: 1rem;
     padding: $spv-inner--small $sph-inner--small;
     position: relative;
     width: 280px;
@@ -93,6 +92,7 @@
 
     &.is-placeholder {
       background: none;
+      border-right: 0;
     }
 
     .is-over &,
@@ -106,9 +106,12 @@
   // the number of architectures
   // See https://www.growingwiththeweb.com/2014/06/detecting-number-of-siblings-with-css.html
   // For more information
+  .p-releases-table__row--container:not(:first-child) {
+    @extend %table-row-border;
+  }
+
   .p-releases-table__row {
     display: flex;
-    margin-bottom: 2px;
 
     &.p-releases-table__row--heading > div,
     & > div:not(.is-placeholder) {
@@ -150,7 +153,12 @@
   }
 
   .p-releases-table__row--heading {
-    height: 2rem;
+    @extend %table-header-label;
+
+    border-bottom: 1px solid $colors--light-theme--border-default;
+    border-top: 0;
+    margin-bottom: 0;
+    vertical-align: top;
   }
 
   .p-releases-table > h4 {
@@ -229,7 +237,7 @@
 
   .p-release__progressive-percentage,
   .p-release__progressive-pending-percentage {
-    @include vf-animation (#{transform}, fast, in);
+    @include vf-animation(#{transform}, fast, in);
 
     border-radius: 0 4px 4px 0;
     bottom: 0;
@@ -288,14 +296,11 @@
   }
 
   .p-releases-table__cell {
-    @include vf-animation (#{background-color, border-color}, 0, in);
+    @include vf-animation(#{background-color, border-color}, 0, in);
 
-    background: $color-light;
     border-bottom: 3px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
-    font-size: 1rem;
-    margin-left: 2px;
     max-width: 25.2%; // fill the whole space for 3 archs
     min-width: 100px;
     position: relative;
@@ -321,7 +326,7 @@
     }
 
     &.is-active {
-      @include vf-animation (#{background-color, border-color}, fast, in);
+      @include vf-animation(#{background-color, border-color}, fast, in);
 
       background-color: $color-x-light;
       border-color: $color-mid-dark;
@@ -442,7 +447,7 @@
       }
 
       &.is-clickable {
-        @include vf-animation (#{background-color}, fast, in);
+        @include vf-animation(#{background-color}, fast, in);
 
         cursor: pointer;
 
