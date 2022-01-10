@@ -7,7 +7,6 @@ import {
   AVAILABLE,
   RISKS,
   AVAILABLE_REVISIONS_SELECT_ALL,
-  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../../constants";
 import {
   getArchitectures,
@@ -21,7 +20,6 @@ import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
-import AvailableRevisionsTabs from "./availableRevisionsTabs";
 
 const MAX_BRANCHES = 5;
 const MAX_BUILDS = 5;
@@ -148,9 +146,7 @@ class ReleasesTable extends Component {
     if (builds.length) {
       return (
         <Fragment>
-          <h5>Promote from recent Launchpad builds</h5>
           {buildsToShow.map((revisions) => this.renderBuildRow(revisions))}
-
           {builds.length > MAX_BUILDS && (
             <div className="p-releases-table__row--show-all">
               <a onClick={this.handleToggleShowMoreBuilds.bind(this)}>
@@ -168,36 +164,6 @@ class ReleasesTable extends Component {
     }
 
     return null;
-  }
-
-  renderTabs() {
-    const { launchpadRevisions, closeHistory } = this.props;
-
-    if (launchpadRevisions.length) {
-      return (
-        <Fragment>
-          <h4>Revisions available to release</h4>
-          <AvailableRevisionsTabs onChange={closeHistory}>
-            {(item) => {
-              if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
-                return this.renderAvailableRevisions();
-              }
-              if (item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) {
-                return this.renderLaunchpadBuilds();
-              }
-              return null;
-            }}
-          </AvailableRevisionsTabs>
-        </Fragment>
-      );
-    } else {
-      return (
-        <Fragment>
-          <h4>Revisions available to release</h4>
-          {this.renderAvailableRevisionsRow()}
-        </Fragment>
-      );
-    }
   }
 
   renderRows() {
@@ -294,7 +260,7 @@ class ReleasesTable extends Component {
   }
 
   render() {
-    const { archs } = this.props;
+    const { archs, launchpadRevisions } = this.props;
     const filteredArch = this.props.filters && this.props.filters.arch;
 
     const className = `p-releases-table ${
@@ -318,7 +284,9 @@ class ReleasesTable extends Component {
             ))}
           </div>
           <div>{this.renderRows()}</div>
-          {this.renderTabs()}
+          <h4>Revisions available to release</h4>
+          {this.renderAvailableRevisionsRow()}
+          {launchpadRevisions.length > 0 && this.renderLaunchpadBuilds()}
         </div>
       </div>
     );
