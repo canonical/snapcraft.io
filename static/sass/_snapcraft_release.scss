@@ -137,6 +137,10 @@
     height: 4rem;
   }
 
+  .p-releases-table__row--channel:not(:first-child) {
+    @extend %table-row-border;
+  }
+
   .p-releases-table__row--branch {
     height: 4rem;
 
