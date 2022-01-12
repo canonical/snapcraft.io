@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -43,13 +43,13 @@ class ReleasesHeading extends Component {
         <div className="col-6">
           <h4>
             <Wrap htmlFor="track-dropdown">
-              Releases available to install
-              {tracks.length > 1 && (
-                <Fragment>
-                  {" "}
-                  in &nbsp;
+              {tracks.length > 1 ? (
+                <>
+                  Track &nbsp;
                   {this.renderTrackDropdown(tracks)}
-                </Fragment>
+                </>
+              ) : (
+                <>Releases available to install</>
               )}
             </Wrap>
           </h4>
