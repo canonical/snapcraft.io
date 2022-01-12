@@ -64,7 +64,7 @@
     "downshift": "6.1.7",
     "expose-loader": "1.0.3",
     "fast-average-color": "6.3.0",
-    "markdown-it": "12.0.4",
+    "markdown-it": "12.3.2",
     "polylabel": "1.1.0",
     "postcss": "8.2.13",
     "postcss-cli": "8.3.1",
