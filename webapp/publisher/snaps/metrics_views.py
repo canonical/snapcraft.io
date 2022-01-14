@@ -178,11 +178,7 @@ def publisher_snap_metrics(snap_name):
 
     annotations = {"name": "annotations", "series": [], "buckets": []}
 
-    default_track = (
-        details.get("default-track")
-        if details.get("default-track")
-        else "latest"
-    )
+    default_track = details.get("default_track", "latest")
 
     for category in details["categories"]["items"]:
         date = category["since"].split("T")[0]
