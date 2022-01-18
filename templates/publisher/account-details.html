@@ -12,9 +12,9 @@ Account details — Linux software in the Snap Store
   <div class="u-fixed-width">
     {% for category, message in messages %}
     <div class="p-notification--{{ category }}">
-      <p class="p-notification__response">
-        {{ message }}
-      </p>
+      <div class="p-notification__content">
+        <p class="p-notification__message">{{ message }}</p>
+      </div>
     </div>
     {% endfor %}
   </div>
@@ -24,17 +24,19 @@ Account details — Linux software in the Snap Store
     <h3 class="u-float-left">Publisher account details</h3>
     {# We don't show it for Candid users #}
     {% if not "macaroons" in session %}
-    <a href="{{ LOGIN_URL }}" class="p-link--external u-float-right">Edit details</a>
+    <a href="{{ LOGIN_URL }}" class=" u-float-right">Edit details</a>
     {% endif %}
   </div>
   {% if errors %}
   <div class="row">
     <div class="p-notification--negative">
-      <p class="p-notification__response">
-        {% for error in errors %}
-        {{ error.message }}<br />
-        {% endfor %}
-      </p>
+      <div class="p-notification__content">
+        <p class="p-notification__message">
+          {% for error in errors %}
+          {{ error.message }}<br />
+          {% endfor %}
+        </p>
+      </div>
     </div>
   </div>
   {% endif %}

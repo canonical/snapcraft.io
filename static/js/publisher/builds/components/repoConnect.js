@@ -218,10 +218,7 @@ class RepoConnect extends React.Component {
         <p>
           <strong>Name mismatch: </strong>
           {`the snapcraft.yaml uses the snap name "${yamlSnap}", but you've registered the name "${snapName}". `}
-          <a
-            className="p-link--external"
-            href={`https://github.com/${orgRepo}/edit/master/${yamlFilePath}`}
-          >
+          <a href={`https://github.com/${orgRepo}/edit/master/${yamlFilePath}`}>
             Update your snapcraft.yaml to continue.
           </a>
         </p>
@@ -241,10 +238,7 @@ class RepoConnect extends React.Component {
           <a href="https://snapcraft.io/docs/creating-a-snap">
             Learn the basics
           </a>
-          , or{" "}
-          <a className="p-link--external" href={this.getTemplateUrl()}>
-            get started with a template.
-          </a>
+          , or <a href={this.getTemplateUrl()}>get started with a template.</a>
         </p>
         <p>
           Don’t have snapcraft?{" "}

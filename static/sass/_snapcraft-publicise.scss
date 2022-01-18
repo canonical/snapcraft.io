@@ -10,7 +10,7 @@
   }
 
   .p-list__item {
-    padding-left: $sph-inner;
+    padding-left: $sph--large;
 
     &.is-selected {
       @include vf-highlight-bar($color-mid-light, left);

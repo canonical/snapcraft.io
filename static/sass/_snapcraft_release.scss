@@ -51,7 +51,7 @@
   // RELEASES TABLE
 
   .p-releases-table {
-    margin-bottom: $spv-outer--medium;
+    margin-bottom: $spv--large;
   }
 
   // Same again for branches
@@ -72,7 +72,7 @@
     border-right: 1px solid $colors--light-theme--border-default;
     display: flex;
     flex-shrink: 0;
-    padding: $spv-inner--small $sph-inner--small;
+    padding: $spv--small $sph--small;
     position: relative;
     width: 280px;
 
@@ -166,7 +166,7 @@
   }
 
   .p-releases-table > h4 {
-    margin-top: $spv-outer--shallow-scaleable;
+    margin-top: $spv--x-large;
   }
 
   .p-releases-table__menus {
@@ -191,7 +191,7 @@
     bottom: 0.2rem;
     cursor: pointer;
     opacity: 0.6;
-    padding: 0.2rem $sph-inner--small;
+    padding: 0.2rem $sph--small;
     right: 0.2rem;
 
     &:hover,
@@ -211,7 +211,7 @@
   .p-releases-channel__name {
     flex-grow: 1;
     max-width: calc(100% - 55px); // leave space handle and settings menu
-    padding-right: $sph-inner--small;
+    padding-right: $sph--small;
   }
 
   // release cell
@@ -220,7 +220,7 @@
     border-radius: 3px;
     cursor: pointer;
     opacity: 0;
-    padding: 0 $sph-inner--small;
+    padding: 0 $sph--small;
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
@@ -267,7 +267,8 @@
     }
   }
 
-  .p-release__progressive-pending-percentage + .p-release__progressive-percentage {
+  .p-release__progressive-pending-percentage
+    + .p-release__progressive-percentage {
     border-radius: 0;
     border-right: 1px solid $color-x-light;
   }
@@ -359,7 +360,7 @@
   .p-releases-table__arch {
     background: none;
     border: 0;
-    padding: ($spv-inner--small - 0.1rem) $sph-inner--small; // same as p-release-data
+    padding: ($spv--small - 0.1rem) $sph--small; // same as p-release-data
   }
 
   // cell contents (release info)
@@ -374,8 +375,8 @@
     display: flex;
     height: 4rem;
     max-width: 100%;
-    padding: $spv-inner--small $sph-inner--small; // p-releases-table__arch
-    padding-left: ($sph-inner--small - 0.1rem);
+    padding: $spv--small $sph--small; // p-releases-table__arch
+    padding-left: ($sph--small - 0.1rem);
   }
 
   .p-release-data__info {
@@ -384,7 +385,7 @@
 
     &.is-pending {
       font-weight: 400;
-      padding-right: $sph-outer;
+      padding-right: $sph--large;
     }
   }
 
@@ -498,7 +499,7 @@
   }
 
   .p-drag-handle {
-    margin-right: $sph-inner--small;
+    margin-right: $sph--small;
     visibility: hidden;
 
     .is-draggable & {

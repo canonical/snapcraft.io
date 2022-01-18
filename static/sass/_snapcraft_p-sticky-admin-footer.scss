@@ -8,7 +8,7 @@
     position: fixed;
     right: 0;
 
-    @media (min-width: $breakpoint-medium) {
+    @media (min-width: $breakpoint-small) {
       left: 4rem;
     }
 

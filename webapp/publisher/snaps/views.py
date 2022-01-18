@@ -401,7 +401,7 @@ def post_register_name():
                 snap_name,
                 " registered.",
                 ' <a href="https://docs.snapcraft.io/build-snaps/upload"',
-                ' class="p-link--external"',
+                " ",
                 ' target="blank">How to upload a Snap</a>',
             ]
         )

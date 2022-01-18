@@ -13,7 +13,7 @@
     <form class="p-form" method="POST" action="/{{ snap_name }}/builds/disconnect" name="repoDisconnectForm">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <p class="u-align--right u-no-margin--bottom">
-        <button aria-label="Close active modal" aria-controls="repo-disconnect-modal" class="p-button--neutral u-no-margin--bottom">Cancel</button>
+        <button aria-label="Close active modal" aria-controls="repo-disconnect-modal" class="p-button u-no-margin--bottom">Cancel</button>
         <button class="p-button--positive p-button-spinner u-no-margin--right u-no-margin--bottom" data-js="repo-disconnect-confirm">
           <span class="p-button__spinner vanilla-workaround--dark">
             <i class="p-icon--spinner u-animation--spin"></i>

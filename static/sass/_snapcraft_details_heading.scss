@@ -22,7 +22,7 @@
         margin-bottom: 0;
       }
 
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-small) {
         margin-bottom: 0;
       }
     }
@@ -36,7 +36,7 @@
       margin-top: -0.5rem;
     }
 
-    @media screen and (min-width: $breakpoint-medium) {
+    @media screen and (min-width: $breakpoint-small) {
       &__title {
         margin-top: -2 * $sp-x-small;
       }
@@ -54,7 +54,7 @@
       z-index: 5;
     }
 
-    @media screen and (min-width: $breakpoint-medium) {
+    @media screen and (min-width: $breakpoint-small) {
       margin-top: $sp-unit; // align with snap name baseline
     }
 
@@ -90,14 +90,14 @@
     top: 0;
     z-index: 11;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       border: {
         bottom: 1px solid $color-mid-light;
         top: 1px solid $color-mid-light;
       }
 
       box-shadow: none;
-      margin-top: -$spv-outer--shallow-scaleable;
+      margin-top: -$spv--x-large;
       max-width: 100%;
       overflow: visible;
       position: static;
@@ -108,7 +108,7 @@
     }
 
     label {
-      margin-bottom: $spv-outer--small + $spv-nudge-compensation;
+      margin-bottom: $spv--small + $spv-nudge-compensation;
     }
 
     &.is-closed {
@@ -173,7 +173,7 @@
       opacity: 0;
     }
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       pointer-events: none;
     }
   }
@@ -211,11 +211,11 @@
   }
 
   .p-channel-map__version-table {
-    margin-bottom: $spv-outer--medium;
+    margin-bottom: $spv--large;
     max-height: 16rem;
     overflow: auto;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       max-height: 100%;
     }
 
@@ -250,7 +250,7 @@
       }
     }
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       th:nth-child(4) {
         width: 20%;
       }
