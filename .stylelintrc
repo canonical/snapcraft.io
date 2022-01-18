@@ -1,10 +1,21 @@
 {
-  "extends": "stylelint-config-standard",
+  "extends": "stylelint-config-standard-scss",
   "plugins": [
     "stylelint-order"
   ],
   "rules": {
     "order/properties-alphabetical-order": true,
+    "color-function-notation": "legacy",
+    "alpha-value-notation": "number",
+    "selector-class-pattern": null,
+    "selector-max-empty-lines": 1,
+    "no-invalid-position-at-import-rule": null,
+    "scss/at-extend-no-missing-placeholder": null,
+    "scss/percent-placeholder-pattern": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/at-mixin-pattern": null,
+    "scss/no-global-function-names": null,
+    "declaration-block-no-redundant-longhand-properties": null,
     "at-rule-no-unknown": [
       true,
       {
@@ -16,7 +27,8 @@
           "function",
           "if",
           "warn",
-          "return"
+          "return",
+          "use"
         ]
       }
     ]

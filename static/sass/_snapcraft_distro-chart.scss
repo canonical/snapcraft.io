@@ -1,5 +1,4 @@
 @mixin snapcraft-distro-chart {
-
   $bar-color: #084081;
   $color-transparent-white: rgba(255, 255, 255, 0);
 
@@ -37,7 +36,7 @@
       clear: left;
       float: left;
       height: 1px;
-      margin: 0.53125rem 0 0.46875rem;
+      margin: 0.5313rem 0 0.4688rem;
     }
 
     &__more {

@@ -25,7 +25,7 @@
     background-image: url("#{$assets-path}61d83c7e-icon-github.svg");
   }
 
-  //propose to vanilla when two buttons are next to each other
+  // propose to vanilla when two buttons are next to each other
   [class^="p-button"] + [class^="p-button"]:not(span) {
     margin-right: $sph--large;
   }

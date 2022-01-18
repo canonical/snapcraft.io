@@ -80,6 +80,7 @@
     margin: {
       bottom: 0;
       left: 0;
+
       // Overrides a rule in vanilla that adds margin to the right of buttons
       right: 0 !important;
       top: -1.5rem;
@@ -121,6 +122,7 @@
     overflow: hidden;
     padding: 0;
     position: relative;
+
     // Fix of Webkit flickering
     z-index: 1;
   }

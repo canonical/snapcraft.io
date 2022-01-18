@@ -63,7 +63,7 @@
 
     // 2 arch
     &:first-child:nth-last-child(3).p-releases-channel {
-      width: calc(33.333333% - 1rem);
+      width: calc(33.3333% - 1rem);
     }
   }
 
@@ -267,11 +267,13 @@
     }
   }
 
+  // stylelint-disable
   .p-release__progressive-pending-percentage
     + .p-release__progressive-percentage {
     border-radius: 0;
     border-right: 1px solid $color-x-light;
   }
+  // stylelint-enable
 
   .p-contextual-menu__dropdown {
     overflow: visible; // allow tooltips inside menu
@@ -620,13 +622,11 @@
 
   .p-icon--history {
     @extend %icon;
-
     @include snapcraft-icon-history($color-dark);
   }
 
   .p-icon--branch {
     @extend %icon;
-
     @include snapcraft-icon-branch($color-dark, "8px", "11px");
 
     top: 2px;

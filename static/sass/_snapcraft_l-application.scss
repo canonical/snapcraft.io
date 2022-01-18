@@ -2,7 +2,6 @@
   // main navigation height is based on padding and line height of a nav link
   $main-nav-height: map-get($line-heights, default-text) + $spv--large * 2;
   $global-nav-height: 2rem;
-  // application layout is typically 100vh, but we need to also accommodate the main nav
   $layout-height: calc(100vh - #{$main-nav-height} - #{$global-nav-height});
 
   .l-application {
@@ -67,6 +66,7 @@
 
       // side nav tablet view with fixed footer
       &.is-flex-column--medium {
+        // stylelint-disable-next-line max-line-length
         @media (min-width: $application-layout--breakpoint-side-nav-collapsed) and (max-width: $application-layout--breakpoint-side-nav-expanded - 1px) {
           .l-navigation & {
             @content;

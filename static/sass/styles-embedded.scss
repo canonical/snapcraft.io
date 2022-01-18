@@ -5,7 +5,6 @@ $color-navigation-background: #252525;
 
 // vanilla patterns
 @import "vanilla-framework/scss/vanilla";
-
 @include vf-base;
 @include vf-p-grid;
 @include vf-p-headings;
@@ -15,13 +14,9 @@ $color-navigation-background: #252525;
 @include vf-u-align;
 @include vf-u-floats;
 @include vf-u-margin-collapse;
-
 @import "snapcraft_banner";
-
 @include snapcraft-banner;
-
 @import "snapcraft_details_heading";
-
 @include snapcraft-details-heading;
 
 // CUSTOM STYLES FOR EMBEDDED CARD
@@ -50,7 +45,8 @@ $color-navigation-background: #252525;
 }
 
 body {
-  background: $color-x-light; // This will be fix on vanilla https://github.com/vanilla-framework/vanilla-framework/issues/2129
+  background: $color-x-light; // This will be fix on vanilla
+  // https://github.com/vanilla-framework/vanilla-framework/issues/2129
 
   &.is-chrome {
     // workaround for Chrome background overflowing iframe border
