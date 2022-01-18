@@ -23,8 +23,8 @@ export function tooltips() {
 
       if (this.options.graphType && this.options.graphType === "channel") {
         keys = sortChannels(keys, {
-          defaultTrack: this.options.metricsDefaultTrack
-            ? this.options.metricsDefaultTrack
+          defaultTrack: this.options.defaultTrack
+            ? this.options.defaultTrack
             : "latest",
         }).list;
       }

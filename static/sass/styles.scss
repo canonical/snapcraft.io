@@ -27,7 +27,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-links;
 @include vf-p-lists;
 @include vf-p-grid;
-@include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
 @include vf-p-media-object;
@@ -50,7 +49,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-code-snippet;
 @include vf-p-tabs;
 @include vf-p-table-icons;
-@include vf-p-subnav;
 @include vf-p-side-navigation;
 @include vf-p-search-box;
 
@@ -359,7 +357,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-status-waiting;
 
 dl {
-  margin-bottom: $spv-outer--scaleable;
+  margin-bottom: $spv--x-large;
 }
 
 .u-animate--reveal {
@@ -371,7 +369,7 @@ dl {
 // Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3321
 
 .u-show--small {
-  @media screen and (max-width: $breakpoint-medium) {
+  @media screen and (max-width: $breakpoint-large - 1) {
     // we duplicate display to support IE
     // sass-lint:disable no-duplicate-properties
     display: inherit !important;
@@ -402,7 +400,7 @@ code {
 }
 
 .p-modal__dialog {
-  @media only screen and (min-width: $breakpoint-medium) {
+  @media only screen and (min-width: $breakpoint-small) {
     min-width: 400px;
   }
 }
@@ -475,7 +473,7 @@ code {
     margin-bottom: 0 !important;
   }
 
-  @media (min-width: $breakpoint-medium) {
+  @media (min-width: $breakpoint-small) {
     display: inline-block;
     margin-left: 0.75rem !important;
   }
@@ -486,13 +484,13 @@ code {
 }
 
 .snap-sub-table {
-  @media (min-width: $breakpoint-medium) {
+  @media (min-width: $breakpoint-small) {
     border-top: 1px solid $colors--light-theme--border-low-contrast;
   }
 }
 
 .snap-published-in-cell {
-  @media (max-width: $breakpoint-medium - 1px) {
+  @media (max-width: $breakpoint-large - 1) {
     display: none !important;
 
     + td::after {

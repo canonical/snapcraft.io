@@ -173,7 +173,7 @@ function push() {
     if (continueBtn) {
       continueBtn.href = `/${snapName}/releases`;
       continueBtn.classList.add("p-button--positive");
-      continueBtn.classList.remove("p-button--neutral");
+      continueBtn.classList.remove("p-button");
       continueBtn.classList.remove("is-disabled");
       continueBtn.innerHTML = "Continue";
     }
@@ -188,7 +188,7 @@ function push() {
 
 function updateNotification(notificationEl, className, message) {
   notificationEl.className = className;
-  notificationEl.querySelector(".p-notification__response").innerHTML = message;
+  notificationEl.querySelector(".p-notification__message").innerHTML = message;
 }
 
 function successNotification(notificationEl, message) {

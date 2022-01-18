@@ -6,7 +6,7 @@
     transition: opacity 0.5s ease-in;
 
     .p-card {
-      @media screen and(min-width: $breakpoint-medium) {
+      @media screen and(min-width: $breakpoint-large) {
         margin-block-end: 0;
       }
     }

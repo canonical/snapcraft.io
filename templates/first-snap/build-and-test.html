@@ -38,9 +38,11 @@
                     {% for step in build_steps %}
                     {% if loop.last and step.warning %}
                     <div class="p-notification--caution">
-                      <p class="p-notification__response">
-                        {{ step.warning|replace("${name}", snap_name)|safe }}
-                      </p>
+                      <div class="p-notification__content">
+                        <p class="p-notification__message">
+                          {{ step.warning|replace("${name}", snap_name)|safe }}
+                        </p>
+                      </div>
                     </div>
                     {% endif %}
                     {% endfor %}
@@ -81,9 +83,11 @@
                       {% if step.warning %}
                       <span class="p-stepped-list__content">
                         <div class="p-notification--caution">
-                          <p class="p-notification__response">
-                            {{ step.warning|replace("${name}", snap_name)|safe }}
-                          </p>
+                          <div class="p-notification__content">
+                            <p class="p-notification__message">
+                              {{ step.warning|replace("${name}", snap_name)|safe }}
+                            </p>
+                          </div>
                         </div>
                       </span>
                       {% endif %}
@@ -101,7 +105,7 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/package">
+  <a class="p-button" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/package">
     &lsaquo; Previous: Package snap
   </a>
 

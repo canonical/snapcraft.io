@@ -1,5 +1,5 @@
 // https://github.com/canonical-web-and-design/maas.io/blob/master/static/sass/_settings_colors.scss
-$color-modal-overlay:  rgba($color-x-dark, 0.85);
+$color-modal-overlay: rgba($color-x-dark, 0.85);
 $color-modal-controls: rgba($color-x-dark, 0.2);
 
 // https://github.com/canonical-web-and-design/maas.io/blob/master/static/sass/_patterns_modal.scss
@@ -19,7 +19,7 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
       &::after {
         background: {
           color: $color-dark;
-          image: url('#{$assets-path}495995ef-fullscreen-white.svg');
+          image: url("#{$assets-path}495995ef-fullscreen-white.svg");
           position: center;
           repeat: no-repeat;
           size: 50%;
@@ -27,7 +27,7 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
 
         bottom: 15px;
         box-shadow: 0 5px 10px 0 $color-modal-controls;
-        content: '';
+        content: "";
         display: block;
         height: 1.25rem;
         position: absolute;
@@ -66,8 +66,8 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
   .vbox-preloader {
     height: 2rem;
     left: 50%;
-    margin-left: -$sph-inner--small;
-    margin-top: -$sph-inner--small;
+    margin-left: -$sph--small;
+    margin-top: -$sph--small;
     overflow: hidden;
     position: fixed;
     text-indent: -100px;
@@ -76,13 +76,18 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
   }
 
   @keyframes playload {
-    from { background-position: 0; }
-    to { background-position: -576px; }
+    from {
+      background-position: 0;
+    }
+
+    to {
+      background-position: -576px;
+    }
   }
 
   // navigation
   .vbox-close {
-    background: url('#{$assets-path}345e40a0-close_16_white.svg') no-repeat;
+    background: url("#{$assets-path}345e40a0-close_16_white.svg") no-repeat;
     background-position: center;
     background-size: 1rem;
     color: $color-x-light;
@@ -97,7 +102,7 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
     top: 1rem;
     width: 2rem;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       background-position: top 1rem right 1rem;
     }
   }
@@ -125,12 +130,12 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
   }
 
   .vbox-prev {
-    background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
+    background-image: url("#{$assets-path}e8d2e45f-chevron-left.svg");
     left: 1rem;
   }
 
   .vbox-next {
-    background-image: url('#{$assets-path}9716bbab-chevron.svg');
+    background-image: url("#{$assets-path}9716bbab-chevron.svg");
     // Overrides a rule in vanilla that adds margin to the right of buttons
     margin-right: 0 !important;
     right: 1rem;

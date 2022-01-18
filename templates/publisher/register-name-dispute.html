@@ -12,9 +12,9 @@ Snapcraft - Register name dispute
     {% if errors %}
     {% for err in errors %}
     <div class="p-notification--negative">
-      <p class="p-notification__response">
-        <span class="p-notification__title">{{err.message}}</span>
-      </p>
+      <div class="p-notification__content">
+        <p class="p-notification__message">{{err.message}}</p>
+      </div>
     </div>
     {% endfor %}
     {% endif %}
@@ -61,7 +61,7 @@ Snapcraft - Register name dispute
     </div>
     <div class="u-fixed-width u-clearfix">
       <button type="submit" class="p-button--positive u-float-right">Submit name claim</button>
-      <a href="/register-snap" class="p-button--neutral u-float-right">Register a new name</a>
+      <a href="/register-snap" class="p-button u-float-right">Register a new name</a>
     </div>
   </form>
 </div>

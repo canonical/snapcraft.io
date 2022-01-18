@@ -27,7 +27,7 @@
     $icon-size: map-get($icon-sizes, accordion);
 
     overflow: visible;
-    padding-left: $sph-inner + $icon-size + $sph-inner; // same as accordion button
+    padding-left: $sph--large + $icon-size + $sph--large; // same as accordion button
   }
 
   .p-form-validation__message {
