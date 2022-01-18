@@ -44,7 +44,7 @@
     background-color: $default-color;
     border-radius: $border-radius;
     margin-bottom: $sp-xxx-large;
-    padding: $spv-inner--large * 2;
+    padding: $spv--large * 2;
     text-decoration: none;
     transition: background-color 1s ease-out, background 1s ease-out;
     width: 100%;
@@ -67,7 +67,13 @@
     }
 
     &.is-dark {
-      background: linear-gradient(45deg, $dark-transparent 0%, $dark-semi-opaque 70%, $dark-semi-opaque 100%);
+      background:
+        linear-gradient(
+          45deg,
+          $dark-transparent 0%,
+          $dark-semi-opaque 70%,
+          $dark-semi-opaque 100%
+        );
 
       .p-featured-snap__summary,
       .p-featured-snap__title {
@@ -80,7 +86,13 @@
     }
 
     &.is-light {
-      background: linear-gradient(45deg, $light-transparent 0%, $light-semi-opaque 70%, $light-semi-opaque 100%);
+      background:
+        linear-gradient(
+          45deg,
+          $light-transparent 0%,
+          $light-semi-opaque 70%,
+          $light-semi-opaque 100%
+        );
 
       .p-featured-snap__summary,
       .p-featured-snap__title {

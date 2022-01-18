@@ -71,7 +71,7 @@ class DefaultTrackModifier extends Component {
     const { defaultTrack, currentTrack } = this.props;
     return (
       <button
-        className="p-button--neutral u-no-margin--bottom p-tooltip p-tooltip--btm-right"
+        className="p-button u-no-margin--bottom p-tooltip p-tooltip--btm-right"
         aria-describedby="set-default-tooltip"
         onClick={this.setDefaultTrackHandler}
       >

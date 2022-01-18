@@ -28,18 +28,12 @@ class TriggerBuild extends React.Component {
         <div className="u-fixed-width u-clearfix">
           <h4 className="u-float-left">Latest builds</h4>
           {isLoading ? (
-            <button
-              className="p-button--neutral u-float-right has-icon"
-              disabled
-            >
+            <button className="p-button u-float-right has-icon" disabled>
               <i className="p-icon--spinner u-animation--spin" />
               <span>Requesting</span>
             </button>
           ) : (
-            <button
-              className="p-button--neutral u-float-right"
-              onClick={onClick}
-            >
+            <button className="p-button u-float-right" onClick={onClick}>
               Trigger new build
             </button>
           )}

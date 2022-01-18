@@ -22,7 +22,7 @@ Builds for
         <p class="u-no-margin--bottom">
           Your snap is linked to:<br class="u-hide--medium u-hide--large">
           <a href="https://github.com/{{ github_repository }}"
-            class="p-link--external">
+            >
             {{ github_repository }}
           </a><span style="color: #cdcdcd;">&nbsp;&VerticalLine;&nbsp;</span>
           <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>
@@ -67,13 +67,15 @@ Builds for
     <section class="p-strip is-shallow">
       <div class="u-fixed-width">
         <div class="p-notification--negative">
-          <p class="p-notification__response">
-            {% if not github_repository_exists %}
-            Your snap is linked to <a href="https://github.com/{{ github_repository }}" class="p-link--external">{{ github_repository }}</a>, but this repository doesn&rsquo;t exist. <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>.
-            {% elif not yaml_file_exists %}
-            This repository doesn&rsquo;t contain snapcraft.yaml. More on <a href="https://snapcraft.io/docs/creating-snapcraft-yaml">how to create it</a>.
-            {% endif %}
-          </p>
+          <div class="p-notification__content">
+            <p class="p-notification__message">
+              {% if not github_repository_exists %}
+              Your snap is linked to <a href="https://github.com/{{ github_repository }}" >{{ github_repository }}</a>, but this repository doesn&rsquo;t exist. <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>.
+              {% elif not yaml_file_exists %}
+              This repository doesn&rsquo;t contain snapcraft.yaml. More on <a href="https://snapcraft.io/docs/creating-snapcraft-yaml">how to create it</a>.
+              {% endif %}
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -86,9 +88,9 @@ Builds for
       <div class="u-fixed-width">
         {% for category, message in messages %}
         <div class="p-notification--{{ category }}">
-          <p class="p-notification__response">
-            {{ message }}
-          </p>
+          <div class="p-notification__content">
+            <p class="p-notification__message">{{ message }}</p>
+          </div>
         </div>
         {% endfor %}
       </div>
@@ -200,7 +202,7 @@ Builds for
           {% endif %}
         </p>
         <a href="https://github.com/settings/applications"
-          class="p-button--neutral">Review organization access</a>
+          class="p-button">Review organization access</a>
       </div>
     </section>
     {% endif %}

@@ -8,9 +8,11 @@ const events = {
   ".p-sticky-footer a": "footer-0",
   "#main-content .p-button--positive": "content-cta-0",
   ".p-strip .p-button--positive": "content-cta-0",
-  "#main-content .p-button--neutral": "content-cta-1",
-  ".p-strip .p-button--neutral": "content-cta-1",
   "#main-content .p-button": "content-cta-1",
+  ".p-strip .p-button": "content-cta-1",
+  // eslint-disable-next-line no-dupe-keys
+  "#main-content .p-button": "content-cta-1",
+  // eslint-disable-next-line no-dupe-keys
   ".p-strip .p-button": "content-cta-1",
   "#main-content .p-card": "content-card",
   ".p-strip .p-card": "content-card",

@@ -1,9 +1,11 @@
 // based on https://github.com/vanilla-framework/vanilla-framework/pull/2051
 
 @mixin snapcraft-p-strip {
-  $horizontal-edge-padding: $spv-outer--regular-scaleable;
+  $horizontal-edge-padding: $spv--strip-regular;
+  // stylelint-disable
   $slanted-edge-padding: $horizontal-edge-padding * 2; // coloured area takes half the rectangle surface area; to visually compensate, we multiply it by 2
   $bleed: -3px; // stretch outside to compensate for aliasing; otherwise edge of image underneath becomes visible as you resize
+  // stylelint-enable
 
   $color-slanted-background: #106363;
 
@@ -17,12 +19,12 @@
 
     @media (max-width: $breakpoint-large) {
       background-size: cover;
-      padding: $spv-outer--regular-scaleable 0 $slanted-edge-padding;
+      padding: $spv--strip-regular 0 $slanted-edge-padding;
     }
 
     @media (min-width: $breakpoint-large) {
       background-size: 5000px 667px; // actual svg size
-      padding: $spv-outer--regular-scaleable 0 $slanted-edge-padding;
+      padding: $spv--strip-regular 0 $slanted-edge-padding;
     }
 
     // custom styles for extra large screens
@@ -64,8 +66,8 @@
     @extend %vf-strip;
     @extend %vf-strip-slanted;
 
-    background-image:
-      linear-gradient(
+    // stylelint-disable
+    background-image: linear-gradient(
         to bottom left,
         rgba(225, 225, 225, 0.03) 0%,
         rgba(225, 225, 225, 0.03) 49.9%,
@@ -80,6 +82,7 @@
         rgba(225, 225, 225, 0) 100%
       ),
       linear-gradient(10deg, $color-brand, lighten($color-brand, 10%));
+    // stylelint-enable
     background-position: top right, bottom right;
     background-repeat: no-repeat;
     background-size: 80% 70%, 80% 75%, 100% auto;
@@ -94,8 +97,8 @@
     @extend %vf-strip;
 
     background-blend-mode: multiply, multiply;
-    background-image:
-      linear-gradient(
+    // stylelint-disable
+    background-image: linear-gradient(
         to bottom right,
         rgba(119, 41, 83, 0.16) 0,
         rgba(119, 41, 83, 0.16) 49.9%,
@@ -111,13 +114,14 @@
         $color-slanted-background 0,
         $color-slanted-background 100%
       );
+    // stylelint-enable
     background-position: left top, right top;
     background-repeat: no-repeat;
     background-size: 70% 80%, 75% 100%, 100% 100%;
     padding-bottom: 6rem;
     padding-top: 6rem;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       background-size: 70% 30%, 75% 100%, 100% 100%;
       padding-bottom: 3rem;
       padding-top: 3rem;

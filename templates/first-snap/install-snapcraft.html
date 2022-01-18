@@ -40,11 +40,11 @@
 
 {% block fsf_pagination %}
   {% if path.startswith("/first-snap-2") or path.startswith("/first-snap-3") %}
-    <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}/create-account">
+    <a class="p-button" href="/{{ fsf_flow }}/{{ language }}/create-account">
       &lsaquo; Previous: Create account
     </a>
   {% else %}
-    <a class="p-button--neutral" href="/{{ fsf_flow }}/">
+    <a class="p-button" href="/{{ fsf_flow }}/">
       &lsaquo; Previous: Select language
     </a>
   {% endif %}

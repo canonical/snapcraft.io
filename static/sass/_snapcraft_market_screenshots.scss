@@ -13,8 +13,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin-bottom: $spv-outer--small;
-    margin-right: -$spv-outer--medium;
+    margin-bottom: $spv--small;
+    margin-right: -$spv--large;
     min-height: $screenshot-thumb-size;
     position: relative;
   }
@@ -30,8 +30,8 @@
     flex-grow: 0;
     height: $screenshot-thumb-size;
     justify-content: center;
-    margin-bottom: $spv-outer--medium;
-    margin-right: $spv-outer--medium;
+    margin-bottom: $spv--large;
+    margin-right: $spv--large;
     min-width: auto;
     position: relative;
     width: $screenshot-thumb-size;
@@ -51,7 +51,7 @@
     }
 
     &.p-file-input.is-dragging::after {
-      right: $spv-inner--small;
+      right: $spv--small;
     }
 
     .p-listing-images__delete-image .p-icon--delete {

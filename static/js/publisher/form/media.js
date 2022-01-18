@@ -61,10 +61,12 @@ class Media extends React.Component {
     if (this.state.mediaData.length > this.props.mediaLimit) {
       return (
         <div className="p-notification--caution">
-          <p className="p-notification__response">
-            You have over 5 images uploaded. Not all image will be visible to
-            users.
-          </p>
+          <div className="p-notification__content">
+            <p className="p-notification__message">
+              You have over 5 images uploaded. Not all image will be visible to
+              users.
+            </p>
+          </div>
         </div>
       );
     }
@@ -76,20 +78,22 @@ class Media extends React.Component {
     if (Object.keys(errors).length > 0) {
       return (
         <div className="p-notification--negative">
-          <p className="p-notification__response">
-            {Object.keys(errors).map((fileName) => (
-              <Fragment key={`errors-${fileName}`}>
-                {fileName}
-                &nbsp;
-                {errors[fileName].map((error, index) => (
-                  <Fragment key={`errors-${fileName}-${index}`}>
-                    {error}
-                    <br />
-                  </Fragment>
-                ))}
-              </Fragment>
-            ))}
-          </p>
+          <div className="p-notification__content">
+            <p className="p-notification__message">
+              {Object.keys(errors).map((fileName) => (
+                <Fragment key={`errors-${fileName}`}>
+                  {fileName}
+                  &nbsp;
+                  {errors[fileName].map((error, index) => (
+                    <Fragment key={`errors-${fileName}-${index}`}>
+                      {error}
+                      <br />
+                    </Fragment>
+                  ))}
+                </Fragment>
+              ))}
+            </p>
+          </div>
         </div>
       );
     }

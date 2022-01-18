@@ -40,7 +40,7 @@
     &.is-open::after,
     &.is-open::before {
       border-style: solid;
-      content: '';
+      content: "";
       display: block;
       height: 0;
       left: 100%;
@@ -73,7 +73,7 @@
       opacity: 0.6;
 
       &::after {
-        content: 'Coming soon';
+        content: "Coming soon";
         display: block;
         font-size: 0.875rem;
       }

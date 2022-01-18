@@ -39,7 +39,7 @@
                       <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
                     </p>
                   </div>
-                  <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
+                  <a href="/login" class="p-button--positive ">Register / Sign in...</a>
                 </div>
               </div>
             </div>
@@ -66,10 +66,10 @@
                       </p>
                     </div>
                     <div id="register-name-notification" class="p-notification--caution u-hide">
-                      <p class="p-notification__response">
-                        <span class="p-notification__title"></span>
-                        Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
-                      </p>
+                      <div class="p-notification__content">
+                        <h5 class="p-notification__title"></h5>
+                        <p class="p-notification__message">Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)</p>
+                      </div>
                     </div>
                     <button class="p-button--positive p-button-spinner" data-js="js-snap-name-register">
                       <span class="p-button__spinner vanilla-workaround--dark">
@@ -106,7 +106,7 @@
                   <p>
                     Once you've pushed to the Snap store, edit your snap public presentation.
                   </p>
-                  <a class="p-button--neutral js-continue is-disabled">
+                  <a class="p-button js-continue is-disabled">
                     <i class="p-icon--spinner u-animation--spin"></i>
                     &nbsp;Waiting for upload...</a>
                 </div>
@@ -120,7 +120,7 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/build-and-test" aria-label="Previous: Build & test snap">
+  <a class="p-button" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/build-and-test" aria-label="Previous: Build & test snap">
     &lsaquo; Build &amp; test snap
   </a>
 

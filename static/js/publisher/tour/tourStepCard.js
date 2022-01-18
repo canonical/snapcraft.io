@@ -77,7 +77,7 @@ export default function TourStepCard({
           <button
             disabled={currentStepIndex === 0}
             onClick={onPrevClick}
-            className="p-button--neutral has-icon u-no-margin--bottom"
+            className="p-button has-icon u-no-margin--bottom"
           >
             <i className="p-icon--contextual-menu is-prev">Previous step</i>
           </button>
