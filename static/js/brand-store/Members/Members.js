@@ -93,12 +93,20 @@ function Members() {
             setShowSuccessNotification(true);
             setNotificationText("Member has been added to the store");
             setShowInviteForm(false);
+
+            setTimeout(() => {
+              setShowSuccessNotification(false);
+            }, 5000);
           }
         }, 1500);
       })
       .catch(() => {
         setIsSaving(false);
         setShowErrorNotification(true);
+
+        setTimeout(() => {
+          setShowErrorNotification(false);
+        }, 5000);
       });
   };
 
@@ -399,11 +407,19 @@ function Members() {
                       setIsSaving(false);
                       setShowSuccessNotification(true);
                       setNotificationText("Member roles have been changed");
+
+                      setTimeout(() => {
+                        setShowSuccessNotification(false);
+                      }, 5000);
                     }, 1500);
                   })
                   .catch(() => {
                     setIsSaving(false);
                     setShowErrorNotification(true);
+
+                    setTimeout(() => {
+                      setShowErrorNotification(false);
+                    }, 5000);
                   });
               }}
             >
