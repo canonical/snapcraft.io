@@ -342,7 +342,7 @@ class RevisionsList extends Component {
                 <th scope="col">Progressive release status</th>
               )}
               {showChannels && <th scope="col">Channels</th>}
-              <th scope="col" width="140px" className="u-align--right">
+              <th scope="col" width="140px">
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
