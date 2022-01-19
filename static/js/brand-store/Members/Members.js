@@ -292,6 +292,7 @@ function Members() {
                     label={ROLES[role].name}
                     help={ROLES[role].description}
                     onChange={handleRoleChange}
+                    checked={newMemberRoles.includes(role)}
                   />
                 ))}
               </div>
