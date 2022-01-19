@@ -20,7 +20,7 @@ function InvitesTable({
   const [expiredInvites, setExpiredInvites] = useState([]);
   const [revokedInvites, setRevokedInvites] = useState([]);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const [inviteActionData, setInviteActionData] = useState(null);
+  const [inviteActionData, setInviteActionData] = useState({});
   const [inviteModalIsSaving, setInviteModalIsSaving] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ function InvitesTable({
         setTimeout(() => {
           setInviteModalOpen(false);
           setInviteModalIsSaving(false);
-          setInviteActionData(null);
+          setInviteActionData({});
           setNotificationText("The invite status has been updated");
           setShowSuccessNotification(true);
         }, 1500);
@@ -63,7 +63,7 @@ function InvitesTable({
       .catch(() => {
         setInviteModalOpen(false);
         setInviteModalIsSaving(false);
-        setInviteActionData(null);
+        setInviteActionData({});
         setShowErrorNotification(true);
       });
   };
