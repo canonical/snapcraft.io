@@ -173,7 +173,7 @@ function InvitesTable({
             {
               "aria-label": "Status",
               content: getInviteStatusText(invite.status),
-              rowspan: invitesGroup.length,
+              rowSpan: invitesGroup.length,
             },
           ].concat(buildTableCols(invite)),
         };
