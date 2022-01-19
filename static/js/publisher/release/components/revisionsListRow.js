@@ -1,8 +1,8 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { format, formatDistance } from "date-fns";
+import { format } from "date-fns";
 
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../libs/channels";
@@ -85,7 +85,7 @@ const RevisionsListRow = (props) => {
       <td>{!progressiveBeingCancelled && releasable && <Handle />}</td>
       <td>
         {isSelectable ? (
-          <Fragment>
+          <>
             <input
               type="checkbox"
               checked={isSelected && releasable}
@@ -99,7 +99,7 @@ const RevisionsListRow = (props) => {
             >
               <RevisionLabel revision={revision} showTooltip={true} />
             </label>
-          </Fragment>
+          </>
         ) : (
           <span className="p-revisions-list__revision">
             <RevisionLabel revision={revision} showTooltip={true} />
@@ -107,15 +107,7 @@ const RevisionsListRow = (props) => {
         )}
       </td>
       <td>{revision.version}</td>
-      {showBuildRequest && (
-        <td>
-          {buildRequestId && (
-            <Fragment>
-              <i className="p-icon--lp" /> {buildRequestId}
-            </Fragment>
-          )}
-        </td>
-      )}
+      {showBuildRequest && <td>{buildRequestId && <>{buildRequestId}</>}</td>}
       {canShowProgressiveReleases && (
         <td>
           {revision.release && showProgressive && (
@@ -134,16 +126,14 @@ const RevisionsListRow = (props) => {
         </td>
       )}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
-      <td className="u-align--right">
+      <td>
         {isPending && <em>pending release</em>}
         {!isPending && !progressiveBeingCancelled && (
           <span
             className="p-tooltip p-tooltip--btm-center"
             aria-describedby={`revision-uploaded-${revision.revision}`}
           >
-            {formatDistance(revisionDate, new Date(), {
-              addSuffix: true,
-            })}
+            {format(revisionDate, "dd MMM yyyy")}
             <span
               className="p-tooltip__message u-align--center"
               role="tooltip"
