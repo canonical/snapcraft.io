@@ -239,6 +239,12 @@ function Members() {
           </div>
         </div>
       </main>
+      <div
+        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+        onClick={() => {
+          setSidePanelOpen(false);
+        }}
+      ></div>
       <aside
         className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
         id="aside-panel"

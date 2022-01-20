@@ -120,6 +120,7 @@
   .l-aside {
     height: $layout-height;
     position: relative;
+    z-index: 999;
 
     @media (min-width: $breakpoint-small) {
       width: 22.5rem;
@@ -147,5 +148,15 @@
     padding-top: $spv--large;
     position: relative;
     top: -100%;
+  }
+
+  .l-aside__overlay {
+    background-color: transparent;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 999;
   }
 }
