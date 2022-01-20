@@ -100,16 +100,28 @@ function Snaps() {
 
           if (data.success) {
             setShowAddSuccessNotification(true);
+
+            setTimeout(() => {
+              setShowAddSuccessNotification(false);
+            }, 5000);
           }
 
           if (data.error) {
             setShowErrorNotification(true);
+
+            setTimeout(() => {
+              setShowErrorNotification(false);
+            }, 5000);
           }
         }, 1500);
       })
       .catch(() => {
         setIsSaving(false);
         setShowErrorNotification(true);
+
+        setTimeout(() => {
+          setShowErrorNotification(false);
+        }, 5000);
       });
   };
 
@@ -148,6 +160,10 @@ function Snaps() {
           setRemoveSnapSaving(false);
           setSnapsToRemove([]);
           setShowRemoveSuccessNotification(true);
+
+          setTimeout(() => {
+            setShowRemoveSuccessNotification(false);
+          }, 5000);
         }, 1500);
       })
       .catch(() => {
@@ -303,6 +319,12 @@ function Snaps() {
           </div>
         </div>
       </main>
+      <div
+        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+        onClick={() => {
+          setSidePanelOpen(false);
+        }}
+      ></div>
       <aside
         className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
         id="aside-panel"
