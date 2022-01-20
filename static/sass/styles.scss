@@ -304,10 +304,11 @@ code {
 
   .p-checkbox {
     margin-bottom: 0;
-    margin-left: -2rem;
+    margin-left: -1.5rem;
+    margin-right: 0.25rem;
     padding-top: 0;
     position: relative;
-    top: 4px;
+    top: 2px;
 
     .p-checkbox__input {
       margin-top: 0;
@@ -317,7 +318,7 @@ code {
 
 .table-cell-head--checkbox {
   .p-checkbox {
-    top: -2px;
+    top: 0;
   }
 }
 
