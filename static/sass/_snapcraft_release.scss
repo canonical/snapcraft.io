@@ -72,12 +72,27 @@
     border-right: 1px solid $colors--light-theme--border-default;
     display: flex;
     flex-shrink: 0;
+    flex-wrap: wrap;
     padding: $spv--small $sph--small;
     position: relative;
     width: 280px;
 
     .p-promote-button {
-      font-size: 0.9rem;
+      display: none;
+    }
+
+    .p-releases-channel__name {
+      padding-right: $sph--small;
+    }
+
+    &:hover {
+      .p-promote-button {
+        display: inline-block;
+      }
+
+      .p-releases-channel__name {
+        max-width: 95px;
+      }
     }
 
     .has-active & {
@@ -135,6 +150,10 @@
 
   .p-releases-table__row--channel {
     height: 4rem;
+
+    &.is-hovered {
+      background-color: $color-light;
+    }
   }
 
   .p-releases-table__row--channel:not(:first-child) {
@@ -204,14 +223,6 @@
   .p-releases-table__branch-timeleft {
     bottom: 0.8rem;
     right: 0.8rem;
-  }
-
-  // channel cell
-
-  .p-releases-channel__name {
-    flex-grow: 1;
-    max-width: calc(100% - 55px); // leave space handle and settings menu
-    padding-right: $sph--small;
   }
 
   // release cell
@@ -286,7 +297,8 @@
 
   .is-grabbing,
   .is-dragging {
-    opacity: 0.9; // little workaround for chrome
+    background-color: #ebfaff !important;
+    cursor: move;
 
     .p-tooltip__message,
     .p-contextual-menu__dropdown {
@@ -299,6 +311,20 @@
 
     .p-tooltip__message {
       display: none !important;
+    }
+  }
+
+  .p-release-data__info {
+    overflow: hidden;
+    white-space: nowrap;
+
+    &.is-pending {
+      font-weight: 400;
+      padding-right: $sph--large;
+    }
+
+    .p-tooltip__message {
+      pointer-events: none;
     }
   }
 
@@ -329,6 +355,7 @@
     &:focus,
     &:hover,
     &.is-active {
+      background-color: $color-light;
       opacity: 1;
     }
 
@@ -381,16 +408,6 @@
     padding-left: ($sph--small - 0.1rem);
   }
 
-  .p-release-data__info {
-    overflow: hidden;
-    white-space: nowrap;
-
-    &.is-pending {
-      font-weight: 400;
-      padding-right: $sph--large;
-    }
-  }
-
   .p-releases-table__cell.is-active .p-release-data__icon {
     opacity: 1;
   }
@@ -413,6 +430,17 @@
     padding-top: 0.6em;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .p-releases-channel__inner {
+    display: flex;
+    flex: 1;
+  }
+
+  .p-release-data__meta-container {
+    display: block;
+    padding-left: 24px;
+    width: 100%;
   }
 
   .p-release-data__meta {
@@ -493,11 +521,16 @@
 
   // DND
   .is-draggable {
-    cursor: grab !important;
+    cursor: grab;
   }
 
   .is-dragging {
-    opacity: 0.5 !important; // fighting specificity
+    background-color: #ebfaff !important;
+    cursor: move;
+
+    .is-draggable {
+      cursor: move;
+    }
   }
 
   .p-drag-handle {
@@ -558,12 +591,6 @@
 
   .p-contextual-menu__dropdown.is-wide {
     min-width: 16rem;
-  }
-
-  .p-contextual-menu__link {
-    color: $color-link;
-    padding-bottom: $sp-x-small;
-    padding-top: $sp-x-small;
   }
 
   .p-contextual-menu__link.is-indented {
