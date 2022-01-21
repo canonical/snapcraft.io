@@ -14,7 +14,7 @@ from flask_wtf.csrf import generate_csrf, validate_csrf
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
+from webapp.api.exceptions import ApiError, ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
@@ -52,8 +52,6 @@ def login_handler():
             return flask.redirect(flask.url_for(".logout"))
         else:
             return flask.abort(502, str(api_response_error))
-    except ApiCircuitBreaker:
-        flask.abort(503)
     except ApiError as api_error:
         return flask.abort(502, str(api_error))
 
@@ -96,9 +94,6 @@ def after_login(resp):
         flask.session["publisher"]["stores"] = logic.get_stores(
             account["stores"], roles=["admin", "review", "view"]
         )
-
-    except ApiCircuitBreaker:
-        flask.abort(503)
     except Exception:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,

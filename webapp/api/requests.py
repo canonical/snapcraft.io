@@ -1,13 +1,14 @@
 import os
 
-import requests
+from gevent import Timeout as GeventTimeout
+from requests import Session as RequestsSession
+from requests.exceptions import Timeout, ConnectionError
 
-from pybreaker import CircuitBreaker, CircuitBreakerError
-from webapp.api.exceptions import (
-    ApiCircuitBreaker,
-    ApiConnectionError,
-    ApiTimeoutError,
-)
+from webapp.api.exceptions import ApiConnectionError, ApiTimeoutError
+
+
+class GeventGreenletTimeout(Exception):
+    pass
 
 
 class BaseSession:
@@ -24,42 +25,34 @@ class BaseSession:
             commit_hash=os.getenv("COMMIT_ID", "commit_id"),
             environment=os.getenv("ENVIRONMENT", "devel"),
         )
-
         headers = {"User-Agent": storefront_header}
         self.headers.update(headers)
-        self.api_breaker = CircuitBreaker(fail_max=5, reset_timeout=60)
 
     def request(self, method, url, timeout=12, **kwargs):
         try:
-            request = self.api_breaker.call(
-                super().request,
-                method=method,
-                url=url,
-                timeout=timeout,
-                **kwargs
-            )
-        except requests.exceptions.Timeout:
+            with GeventTimeout(
+                27,
+                GeventGreenletTimeout(
+                    "TIMEOUT BEFORE HAVING TO RESTART THE GUNICORN WORKER"
+                ),
+            ):
+                return super().request(
+                    method=method, url=url, timeout=timeout, **kwargs
+                )
+        except Timeout:
             raise ApiTimeoutError(
                 "The request to {} took too long".format(url)
             )
-        except requests.exceptions.ConnectionError:
+        except ConnectionError:
             raise ApiConnectionError(
                 "Failed to establish connection to {}.".format(url)
             )
-        except CircuitBreakerError:
-            raise ApiCircuitBreaker(
-                "Requests are closed because of too many failures {}".format(
-                    url
-                )
-            )
-
-        return request
 
 
-class Session(BaseSession, requests.Session):
+class Session(BaseSession, RequestsSession):
     pass
 
 
-class PublisherSession(BaseSession, requests.Session):
+class PublisherSession(BaseSession, RequestsSession):
     def request(self, method, url, timeout=None, **kwargs):
         return super().request(method, url, timeout, **kwargs)

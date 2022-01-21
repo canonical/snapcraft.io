@@ -13,7 +13,6 @@ from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
 from canonicalwebteam.store_api.exceptions import (
-    StoreApiCircuitBreaker,
     StoreApiError,
     StoreApiResponseDecodeError,
     StoreApiResponseError,
@@ -48,8 +47,6 @@ def snap_details_views(store, api, handle_errors):
                 flask.abort(502, error_messages)
         except StoreApiResponseError as api_response_error:
             flask.abort(502, str(api_response_error))
-        except StoreApiCircuitBreaker:
-            flask.abort(503)
         except (StoreApiError, ApiError) as api_error:
             flask.abort(502, str(api_error))
 

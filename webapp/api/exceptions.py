@@ -49,7 +49,3 @@ class ApiResponseErrorList(ApiResponseError):
     def __init__(self, message, status_code, errors):
         self.errors = errors
         return super().__init__(message, status_code)
-
-
-class ApiCircuitBreaker(ApiError):
-    pass
