@@ -4,7 +4,6 @@ from canonicalwebteam.store_api.exceptions import (
     PublisherAgreementNotSigned,
     PublisherMacaroonRefreshRequired,
     PublisherMissingUsername,
-    StoreApiCircuitBreaker,
     StoreApiTimeoutError,
 )
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
@@ -19,7 +18,6 @@ import webapp.api.marketo as marketo_api
 from webapp import authentication
 from webapp.helpers import api_publisher_session
 from webapp.api.exceptions import (
-    ApiCircuitBreaker,
     ApiError,
     ApiResponseError,
     ApiTimeoutError,
@@ -60,8 +58,6 @@ def _handle_error(api_error: ApiError):
         return flask.redirect(flask.url_for("account.get_agreement"))
     elif type(api_error) is PublisherMacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
-    elif type(api_error) in [ApiCircuitBreaker, StoreApiCircuitBreaker]:
-        return flask.abort(503)
     else:
         return flask.abort(502, str(api_error))
 

@@ -7,7 +7,6 @@ import webapp.store.logic as logic
 from webapp.api import requests
 from canonicalwebteam.store_api.stores.snapstore import SnapStore
 from canonicalwebteam.store_api.exceptions import (
-    StoreApiCircuitBreaker,
     StoreApiConnectionError,
     StoreApiError,
     StoreApiResponseDecodeError,
@@ -50,10 +49,6 @@ def store_blueprint(store_query=None):
             status_code = 502
         elif type(api_error) is StoreApiConnectionError:
             status_code = 502
-        elif type(api_error) is StoreApiCircuitBreaker:
-            # Special case for this one, because it is the only case where we
-            # don't want the user to be able to access the page.
-            return flask.abort(503)
 
         return status_code, error
 
