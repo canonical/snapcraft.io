@@ -23,10 +23,7 @@ export default class ContextualMenu extends Component {
   }
 
   dropdownButtonClick(event) {
-    const dropdownEl = event.target
-      .closest(".p-promote-button")
-      .querySelector(".p-contextual-menu__dropdown");
-
+    const dropdownEl = event.target.nextSibling;
     const isClosed = dropdownEl.getAttribute("aria-hidden") === "true";
 
     this.closeAllDropdowns();
@@ -50,24 +47,27 @@ export default class ContextualMenu extends Component {
   }
 
   render() {
-    const { appearance, isDisabled, position, title, isWide } = this.props;
-    const menuClass = "p-contextual-menu" + (position ? `--${position}` : "");
-    const buttonClass = `p-button${appearance ? `--${appearance}` : ""}`;
+    const { isDisabled, position, title, isWide } = this.props;
     const className = [
-      "p-promote-button",
-      buttonClass,
-      menuClass,
+      "p-contextual-menu__toggle",
+      "u-no-margin--bottom",
       isDisabled ? "is-disabled" : "",
       this.props.className || "",
     ].join(" ");
 
     return (
       <span
-        className={className}
-        title={title}
-        onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
+        className={`p-contextual-menu${
+          position ? `--${position}` : ""
+        } p-promote-button`}
       >
-        {this.renderIcon()}
+        <button
+          className={className}
+          title={title}
+          onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
+        >
+          {this.renderIcon()}
+        </button>
         <span
           className={`p-contextual-menu__dropdown ${isWide ? "is-wide" : ""}`}
           aria-hidden="true"

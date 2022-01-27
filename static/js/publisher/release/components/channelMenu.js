@@ -105,10 +105,9 @@ export default class ChannelMenu extends Component {
     return (
       <span className={className}>
         <ContextualMenu
-          className="p-icon-button"
-          appearance="base"
+          className="p-button is-small"
           isDisabled={isDisabled}
-          label={<i className="p-icon--settings" />}
+          label={canBePromoted ? "Promote/close" : "Close"}
           ref={this.setMenuRef}
         >
           {canBePromoted && this.renderItems()}
