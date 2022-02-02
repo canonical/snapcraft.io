@@ -6,7 +6,6 @@ The web frontend for the snap store.
 import talisker.requests
 import webapp.api
 
-from flask import request
 from talisker import logging
 
 from canonicalwebteam.flask_base.app import FlaskBase
@@ -76,12 +75,6 @@ def init_snapcraft(app):
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
-
-    @app.before_request
-    def before_request_func():
-        TALISKER_WSGI_LOGGER.info(
-            f"START view={request.endpoint} path={request.path}"
-        )
 
 
 def init_extensions(app):
