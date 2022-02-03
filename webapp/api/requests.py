@@ -1,6 +1,5 @@
 import os
 
-from gevent import Timeout as GeventTimeout
 from requests import Session as RequestsSession
 from requests.exceptions import Timeout, ConnectionError
 
@@ -30,15 +29,9 @@ class BaseSession:
 
     def request(self, method, url, timeout=12, **kwargs):
         try:
-            with GeventTimeout(
-                27,
-                GeventGreenletTimeout(
-                    "TIMEOUT BEFORE HAVING TO RESTART THE GUNICORN WORKER"
-                ),
-            ):
-                return super().request(
-                    method=method, url=url, timeout=timeout, **kwargs
-                )
+            return super().request(
+                method=method, url=url, timeout=timeout, **kwargs
+            )
         except Timeout:
             raise ApiTimeoutError(
                 "The request to {} took too long".format(url)
