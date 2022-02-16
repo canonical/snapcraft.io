@@ -87,7 +87,6 @@ class ReleasesTable extends Component {
   renderHistoryPanel() {
     return (
       <div className="p-releases-table__row" key="history-panel-row">
-        <div className="p-releases-channel is-placeholder u-hide--small" />
         <HistoryPanel key="history-panel" />
       </div>
     );
