@@ -319,15 +319,17 @@ def store_blueprint(store_query=None):
             publisher_content_path + publisher + ".yaml", typ="safe"
         )
 
+        if not context:
+            flask.abort(404)
+
         popular_snaps = helpers.get_yaml(
             publisher_content_path + publisher + "-snaps.yaml",
             typ="safe",
         )
 
-        context["popular_snaps"] = popular_snaps["snaps"]
-
-        if not context:
-            flask.abort(404)
+        context["popular_snaps"] = (
+            popular_snaps["snaps"] if popular_snaps else []
+        )
 
         if "publishers" in context:
             context["snaps"] = []
