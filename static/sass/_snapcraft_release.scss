@@ -1,7 +1,8 @@
 @import "snapcraft_patterns_icons";
 
 @mixin snapcraft-release {
-  $color-highlighted: #fae6be;
+  $color-highlighted: #e9ffec;
+  $color-highlighted-border: 1px dashed #0e8420;
 
   // RELEASES CONFIRM
 
@@ -113,6 +114,7 @@
     .is-over &,
     &.is-highlighted {
       background-color: $color-highlighted;
+      border: $color-highlighted-border;
     }
   }
 
@@ -383,6 +385,7 @@
     .is-over &,
     &.is-highlighted {
       background: $color-highlighted;
+      border: $color-highlighted-border;
     }
   }
 
@@ -479,6 +482,7 @@
 
       &.is-pending {
         background: $color-highlighted;
+        border: $color-highlighted-border;
       }
 
       &.is-clickable {
