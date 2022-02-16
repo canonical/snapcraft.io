@@ -49,6 +49,24 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       <hr class="u-no-margin--bottom" />
     </div>
 
+    {% if update_metadata_on_release|tojson == "true" %}
+    <div class="p-modal update-metadata-warning u-hide" id="modal">
+      <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-title">
+        <header class="p-modal__header">
+          <h2 class="p-modal__title" id="modal-title">
+            Warning
+          </h2>
+          <button type="button" class="p-modal__close js-close-modal" aria-label="Close active modal" aria-controls="modal">Close</button>
+        </header>
+        <p>Making these changes means that the snap will no longer use the data from snapcraft.yaml.</p>
+        <footer class="p-modal__footer">
+          <button type="button" class="u-no-margin--bottom js-close-modal" aria-controls="modal">Cancel</button>
+          <button type="button" class="p-button--positive u-no-margin--bottom js-save-changes">Save changes</button>
+        </footer>
+      </section>
+    </div>
+    {% endif %}
+
     <section class="p-strip is-shallow">
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}

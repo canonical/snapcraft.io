@@ -287,6 +287,8 @@ function initForm(config, initialState, errors) {
   });
 
   formEl.addEventListener("submit", function (event) {
+    event.preventDefault();
+
     const diff = diffState(initialState, state);
 
     // if anything was changed, update state inputs and submit
@@ -296,14 +298,43 @@ function initForm(config, initialState, errors) {
       // make sure we don't warn user about leaving the page when submitting
       ignoreChangesOnUnload = true;
 
-      // disable button and show spinner when loading is long
-      disableSubmit();
-      setTimeout(() => {
+      const updateMetadataModal = document.querySelector(
+        ".update-metadata-warning"
+      );
+
+      if (updateMetadataModal) {
+        updateMetadataModal.classList.remove("u-hide");
+
+        const saveChangesButton = updateMetadataModal.querySelector(
+          ".js-save-changes"
+        );
+        const closeModalButtons = updateMetadataModal.querySelectorAll(
+          ".js-close-modal"
+        );
+
+        closeModalButtons.forEach((closeModalButton) => {
+          closeModalButton.addEventListener("click", () => {
+            updateMetadataModal.classList.add("u-hide");
+          });
+        });
+
+        saveChangesButton.addEventListener("click", () => {
+          updateMetadataModal.classList.add("u-hide");
+          disableSubmit();
+          submitButton.classList.add("has-spinner");
+          setTimeout(() => {
+            formEl.submit();
+          }, 2000);
+        });
+      } else {
+        disableSubmit();
         submitButton.classList.add("has-spinner");
-      }, 2000);
+        setTimeout(() => {
+          formEl.submit();
+        }, 2000);
+      }
     } else {
       updateLocalStorage();
-      event.preventDefault();
     }
   });
 
