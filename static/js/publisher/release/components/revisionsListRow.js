@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -6,7 +6,6 @@ import { format } from "date-fns";
 
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../libs/channels";
-import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 
 import {
@@ -32,10 +31,6 @@ const RevisionsListRow = (props) => {
 
   const releasable = canBeReleased(revision);
 
-  const [canDrag, setDraggable] = useState(
-    !progressiveBeingCancelled && releasable
-  );
-
   const revisionDate = revision.release
     ? new Date(revision.release.when)
     : new Date(revision.created_at);
@@ -51,23 +46,10 @@ const RevisionsListRow = (props) => {
     props.toggleRevision(revision);
   }
 
-  const [isDragging, isGrabbing, drag] = useDragging({
-    item: {
-      revisions: [revision],
-      architectures: revision.architectures,
-      type: DND_ITEM_REVISIONS,
-    },
-    canDrag: canDrag,
-  });
-
   const id = `revision-check-${revision.revision}`;
-  const className = `p-revisions-list__row ${
-    progressiveBeingCancelled ? "" : "is-draggable"
-  } ${isActive ? "is-active" : ""} ${
+  const className = `p-revisions-list__row ${isActive ? "is-active" : ""} ${
     isSelectable && releasable ? "is-clickable" : ""
-  } ${
-    isPending || isSelected || progressiveBeingCancelled ? "is-pending" : ""
-  } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
+  }`;
 
   const buildRequestId =
     revision.attributes && revision.attributes["build-request-id"];
@@ -77,29 +59,26 @@ const RevisionsListRow = (props) => {
 
   return (
     <tr
-      ref={drag}
       key={id}
       className={className}
       onClick={isSelectable && releasable ? revisionSelectChange : null}
     >
-      <td>{!progressiveBeingCancelled && releasable && <Handle />}</td>
       <td>
         {isSelectable ? (
-          <>
+          <label className="p-radio">
             <input
-              type="checkbox"
+              type="radio"
               checked={isSelected && releasable}
-              id={id}
+              aria-lbelledby={id}
               onChange={revisionSelectChange}
               disabled={!releasable}
+              className="p-radio__input"
             />
-            <label
-              className="p-revisions-list__revision is-inline-label"
-              htmlFor={id}
-            >
+            &nbsp;
+            <span className="p-revisions-list__revision p-radio__label" id={id}>
               <RevisionLabel revision={revision} showTooltip={true} />
-            </label>
-          </>
+            </span>
+          </label>
         ) : (
           <span className="p-revisions-list__revision">
             <RevisionLabel revision={revision} showTooltip={true} />
@@ -112,7 +91,6 @@ const RevisionsListRow = (props) => {
         <td>
           {revision.release && showProgressive && (
             <RevisionsListRowProgressive
-              setDraggable={setDraggable}
               channel={channel}
               architecture={revision.release.architecture}
               revision={revision}
