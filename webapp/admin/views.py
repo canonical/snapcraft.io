@@ -1,4 +1,5 @@
 # Packages
+import os
 import json
 import flask
 from canonicalwebteam.store_api.exceptions import (
@@ -20,12 +21,18 @@ admin = flask.Blueprint(
     "admin", __name__, template_folder="/templates", static_folder="/static"
 )
 
+SNAPSTORE_DASHBOARD_API_URL = os.getenv(
+    "SNAPSTORE_DASHBOARD_API_URL", "https://dashboard.snapcraft.io/"
+)
+
+context = {"api_url": SNAPSTORE_DASHBOARD_API_URL}
+
 
 @admin.route("/admin", defaults={"path": ""})
 @admin.route("/admin/<path:path>")
 @login_required
 def get_admin(path):
-    return flask.render_template("admin/admin.html")
+    return flask.render_template("admin/admin.html", **context)
 
 
 @admin.route("/admin/stores")
