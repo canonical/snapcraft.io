@@ -1,5 +1,8 @@
+# Sub dependencies pinned to avoid issues
+ruamel.yaml.clib==0.2.2
+
 # App dependencies
-canonicalwebteam.flask-base==1.0.0
+canonicalwebteam.flask-base==1.0.1
 canonicalwebteam.candid==0.9.0
 canonicalwebteam.discourse==4.0.8
 canonicalwebteam.blog==6.4.0
@@ -19,7 +22,6 @@ pymacaroons==0.13.0
 python-dateutil==2.8.2
 requests==2.27.1
 responses==0.17.0
-ruamel.yaml.clib==0.2.2
 ruamel.yaml==0.16.12
 vcrpy-unittest==0.1.7
 user-agents==2.2.0
