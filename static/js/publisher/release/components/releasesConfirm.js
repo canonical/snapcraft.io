@@ -84,13 +84,35 @@ class ReleasesConfirm extends Component {
 
     return (
       <Fragment>
-        <div className="p-releases-confirm">
-          <div className="row u-vertically-center">
+        <div
+          className={`p-releases-confirm ${updatesCount > 0 ? "" : "u-hide"}`}
+        >
+          <div
+            className="row u-vertically-center"
+            style={{ marginBottom: "0.5rem" }}
+          >
             <div className="col-6">
               {updatesCount > 0 && (
                 <Fragment>
-                  {updatesCount} update
-                  {updatesCount > 1 ? "s" : ""}
+                  <button
+                    type="button"
+                    className="p-button--base u-no-margin--bottom has-icon"
+                    onClick={this.toggleDetails.bind(this)}
+                  >
+                    <i
+                      className={`${
+                        showDetails
+                          ? "p-icon--chevron-down"
+                          : "p-icon--chevron-up"
+                      }`}
+                    >
+                      {showDetails ? "Hide" : "Show"} details
+                    </i>
+                    <span>
+                      {updatesCount} update
+                      {updatesCount > 1 ? "s" : ""}
+                    </span>
+                  </button>
                 </Fragment>
               )}
             </div>
@@ -100,14 +122,7 @@ class ReleasesConfirm extends Component {
                   className={`p-releases-confirm__details-toggle ${
                     showDetails ? "is-open" : ""
                   }`}
-                >
-                  <p className="u-no-margin--bottom">
-                    <span onClick={this.toggleDetails.bind(this)}>
-                      {showDetails ? "Hide" : "Show"} details{" "}
-                      <i className="p-icon--contextual-menu" />
-                    </span>
-                  </p>
-                </div>
+                ></div>
               )}
               <ReleasesConfirmActions
                 isCancelEnabled={isCancelEnabled}
@@ -118,8 +133,10 @@ class ReleasesConfirm extends Component {
               />
             </div>
           </div>
+          <div className="row">
+            {showDetails && <ReleasesConfirmDetails updates={updates} />}
+          </div>
         </div>
-        {showDetails && <ReleasesConfirmDetails updates={updates} />}
       </Fragment>
     );
   }
