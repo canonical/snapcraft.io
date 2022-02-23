@@ -69,7 +69,7 @@ const RevisionsListRow = (props) => {
             <input
               type="radio"
               checked={isSelected && releasable}
-              aria-lbelledby={id}
+              aria-labelledby={id}
               onChange={revisionSelectChange}
               disabled={!releasable}
               className="p-radio__input"

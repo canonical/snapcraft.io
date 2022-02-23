@@ -377,10 +377,13 @@ class RevisionsList extends Component {
             )}
             {!showAllRevisions && filteredRevisions.length > 10 && (
               <tr>
-                <td colSpan={4}>
-                  <a onClick={this.showAllRevisions.bind(this, key)}>
+                <td colSpan={5} className="u-align--right">
+                  <button
+                    className="p-button is-small"
+                    onClick={this.showAllRevisions.bind(this, key)}
+                  >
                     Show all {filteredRevisions.length} revisions
-                  </a>
+                  </button>
                 </td>
               </tr>
             )}

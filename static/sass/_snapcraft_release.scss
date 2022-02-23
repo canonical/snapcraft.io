@@ -70,6 +70,10 @@
     }
   }
 
+  .p-promote-button {
+    display: none;
+  }
+
   .p-releases-channel {
     align-items: flex-start;
     border-right: 1px solid $colors--light-theme--border-default;
@@ -234,11 +238,8 @@
   .p-release-data__icon {
     border-radius: 3px;
     cursor: pointer;
-    opacity: 0;
     padding: 0 $sph--small;
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
+    transform: rotate(-90deg);
   }
 
   .is-pending {
@@ -332,6 +333,23 @@
     }
   }
 
+  .p-drag-handle {
+    margin-left: auto;
+    opacity: 0;
+    visibility: hidden;
+
+    .p-releases-channel__inner & {
+      margin-left: 0;
+      margin-right: 0.5rem;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .is-draggable & {
+      visibility: visible;
+    }
+  }
+
   .p-releases-table__cell {
     @include vf-animation(#{background-color, border-color}, 0, in);
 
@@ -361,6 +379,15 @@
     &.is-active {
       background-color: $color-light;
       opacity: 1;
+
+      .p-drag-handle {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .p-promote-button {
+        display: inline-block;
+      }
     }
 
     &.is-active {
@@ -388,6 +415,11 @@
     &.is-highlighted {
       background: $color-highlighted;
       border: $color-highlighted-border;
+
+      &.is-unassigned {
+        background-color: $color-light;
+        border-color: $color-mid-x-light;
+      }
     }
   }
 
@@ -406,6 +438,7 @@
   }
 
   .p-release-data {
+    align-items: start;
     display: flex;
     height: 4rem;
     max-width: 100%;
@@ -414,18 +447,7 @@
   }
 
   .p-releases-table__cell.is-active .p-release-data__icon {
-    opacity: 1;
-  }
-
-  .p-release-data:hover {
-    .p-release-data__icon {
-      opacity: 0.6;
-
-      &:hover {
-        background-color: $color-x-light;
-        opacity: 1;
-      }
-    }
+    transform: rotate(0deg);
   }
 
   .p-release-data__info--empty {
@@ -523,15 +545,6 @@
 
     .is-draggable {
       cursor: move;
-    }
-  }
-
-  .p-drag-handle {
-    margin-right: $sph--small;
-    visibility: hidden;
-
-    .is-draggable & {
-      visibility: visible;
     }
   }
 

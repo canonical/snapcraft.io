@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -55,7 +55,6 @@ class ReleasesTable extends Component {
 
   handleToggleShowMoreBuilds() {
     const { showAllBuilds } = this.state;
-
     this.setState({
       showAllBuilds: !showAllBuilds,
     });
@@ -96,22 +95,22 @@ class ReleasesTable extends Component {
     const { isHistoryOpen, filters } = this.props;
 
     return (
-      <Fragment>
+      <>
         {this.renderChannelRow(AVAILABLE)}
         {isHistoryOpen &&
           filters.risk === AVAILABLE &&
           this.renderHistoryPanel()}
-      </Fragment>
+      </>
     );
   }
 
   renderAvailableRevisions() {
     return (
-      <Fragment>
+      <>
         <h5>Promote from uploaded revisions</h5>
 
         {this.renderAvailableRevisionsRow()}
-      </Fragment>
+      </>
     );
   }
 
@@ -144,21 +143,37 @@ class ReleasesTable extends Component {
 
     if (builds.length) {
       return (
-        <Fragment>
+        <>
           {buildsToShow.map((revisions) => this.renderBuildRow(revisions))}
           {builds.length > MAX_BUILDS && (
-            <div className="p-releases-table__row--show-all">
-              <a onClick={this.handleToggleShowMoreBuilds.bind(this)}>
-                {!showAllBuilds && (
-                  <Fragment>Show all builds ({builds.length})</Fragment>
-                )}
-                {showAllBuilds && (
-                  <Fragment>Show only {MAX_BUILDS} builds</Fragment>
-                )}
-              </a>
+            <div className="p-releases-table__row--show-all u-align--right">
+              {!showAllBuilds && (
+                <>
+                  <small
+                    className="u-text-muted"
+                    style={{ marginRight: "0.5rem" }}
+                  >
+                    Showing {MAX_BUILDS} of {builds.length} builds
+                  </small>
+                  <button
+                    onClick={this.handleToggleShowMoreBuilds.bind(this)}
+                    className="p-button is-small"
+                  >
+                    Show all builds
+                  </button>
+                </>
+              )}
+              {showAllBuilds && (
+                <button
+                  className="p-button is-small"
+                  onClick={this.handleToggleShowMoreBuilds.bind(this)}
+                >
+                  Show only {MAX_BUILDS} builds
+                </button>
+              )}
             </div>
           )}
-        </Fragment>
+        </>
       );
     }
 
@@ -219,13 +234,9 @@ class ReleasesTable extends Component {
               <div className="p-releases-table__row--show-all">
                 <a onClick={this.handleToggleShowMoreBranches.bind(this, risk)}>
                   {!showAllBranches && (
-                    <Fragment>
-                      Show all branches ({risksBranches.length})
-                    </Fragment>
+                    <>Show all branches ({risksBranches.length})</>
                   )}
-                  {showAllBranches && (
-                    <Fragment>Show only {MAX_BRANCHES} branches</Fragment>
-                  )}
+                  {showAllBranches && <>Show only {MAX_BRANCHES} branches</>}
                 </a>
               </div>
             </div>

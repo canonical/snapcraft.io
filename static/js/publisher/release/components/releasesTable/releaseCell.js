@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
 import { AVAILABLE } from "../../constants";
 import { getTrackingChannel } from "../../releasesState";
 
@@ -40,7 +39,6 @@ const ReleasesTableReleaseCell = (props) => {
     pendingCloses,
     filters,
     isOverParent,
-    showVersion,
     getAvailableCount,
     hasPendingRelease,
     undoRelease,
@@ -133,7 +131,6 @@ const ReleasesTableReleaseCell = (props) => {
       <RevisionInfo
         revision={currentRevision}
         isPending={pendingRelease ? true : false}
-        showVersion={showVersion}
         progressiveState={progressiveState}
         previousRevision={previousRevision ? previousRevision.revision : null}
         pendingProgressiveState={pendingProgressiveState}
@@ -155,8 +152,8 @@ const ReleasesTableReleaseCell = (props) => {
       item={item}
       canDrag={canDrag}
       className={className}
+      cellType="release"
     >
-      {cellInfoNode}
       <HistoryIcon
         onClick={handleHistoryIconClick.bind(
           this,
@@ -166,6 +163,7 @@ const ReleasesTableReleaseCell = (props) => {
           branchName
         )}
       />
+      {cellInfoNode}
       {!isChannelPendingClose &&
         pendingProgressiveState &&
         pendingProgressiveState.percentage && (
@@ -206,7 +204,6 @@ ReleasesTableReleaseCell.propTypes = {
   track: PropTypes.string,
   risk: PropTypes.string,
   arch: PropTypes.string,
-  showVersion: PropTypes.bool,
   branch: PropTypes.object,
   isOverParent: PropTypes.bool,
 
