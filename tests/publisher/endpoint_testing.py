@@ -59,6 +59,7 @@ class BaseTestCases:
                     "nickname": "Toto",
                     "fullname": "El Toto",
                     "email": "testing@testing.com",
+                    "stores": [],
                 }
                 s["macaroon_root"] = root.serialize()
                 s["macaroon_discharge"] = discharge.serialize()
