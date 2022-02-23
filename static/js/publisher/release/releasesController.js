@@ -66,13 +66,11 @@ const ReleasesController = ({
       )}
       {ready && (
         <Fragment>
-          <div className="row">
-            <ReleasesConfirm />
-            {visible && <Notification />}
-          </div>
+          {visible && <Notification />}
           <ReleasesHeading />
           <ReleasesTable />
           {showModal && <Modal />}
+          <ReleasesConfirm />
         </Fragment>
       )}
     </Fragment>

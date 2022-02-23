@@ -7,10 +7,14 @@
   // RELEASES CONFIRM
 
   .p-releases-confirm {
-    border-bottom: 1px solid $color-mid-light;
-    margin-bottom: 1rem;
-    padding: 0.5em 0;
-    position: relative;
+    background-color: $color-x-light;
+    bottom: 0;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.3);
+    left: 0;
+    padding: 0.5em 0 0;
+    position: fixed;
+    right: 0;
+    z-index: 20;
   }
 
   .p-releases-confirm__buttons {
@@ -42,11 +46,9 @@
   }
 
   .p-releases-confirm__details {
-    border-bottom: 1px solid $color-mid-light;
-    margin: 0.5rem 0 1rem;
-    padding-bottom: 0.5rem;
-    position: relative;
-    top: -1rem;
+    border-top: 1px solid $color-mid-light;
+    margin-bottom: 1rem;
+    padding-top: 0.25rem;
   }
 
   // RELEASES TABLE
