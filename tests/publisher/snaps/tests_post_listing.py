@@ -74,7 +74,11 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(
             self.authorization, called.request.headers.get("Authorization")
         )
-        self.assertEqual(b'{"contact": "contact-adress"}', called.request.body)
+        self.assertEqual(
+            b'{"contact": "contact-adress", '
+            b'"update_metadata_on_release": false}',
+            called.request.body,
+        )
 
         assert response.status_code == 302
         assert response.location == self._get_location()
@@ -97,7 +101,9 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             self.authorization, called.request.headers.get("Authorization")
         )
         self.assertEqual(
-            b'{"description": "This is a description\\n"}', called.request.body
+            b'{"description": "This is a description\\n", '
+            b'"update_metadata_on_release": false}',
+            called.request.body,
         )
 
         assert response.status_code == 302
@@ -157,7 +163,8 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             self.authorization, called.request.headers.get("Authorization")
         )
         self.assertEqual(
-            b'{"description": "This is an updated description"}',
+            b'{"description": "This is an updated description", '
+            b'"update_metadata_on_release": false}',
             called.request.body,
         )
         called = responses.calls[1]

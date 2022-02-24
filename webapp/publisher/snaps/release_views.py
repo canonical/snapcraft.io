@@ -88,7 +88,15 @@ def post_release(snap_name):
     data = flask.request.json
 
     # Show error message for no contributors
-    account_snaps = publisher_api.get_account_snaps(flask.session)
+    try:
+        account_snaps = publisher_api.get_account_snaps(flask.session)
+    except StoreApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        else:
+            return flask.jsonify(api_response_error_list.errors), 400
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
 
     if not data:
         response = {"errors": ["No changes were submitted"]}
