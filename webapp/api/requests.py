@@ -24,7 +24,7 @@ class BaseSession:
             commit_hash=os.getenv("COMMIT_ID", "commit_id"),
             environment=os.getenv("ENVIRONMENT", "devel"),
         )
-        headers = {"User-Agent": storefront_header}
+        headers = {"User-Agent": storefront_header, "Connection": "close"}
         self.headers.update(headers)
 
     def request(self, method, url, timeout=12, **kwargs):
