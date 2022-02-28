@@ -19,7 +19,7 @@
       p {
         -webkit-box-orient: vertical;
         color: $color-mid-dark;
-        display: box;
+        display: flex;
         -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
@@ -29,7 +29,7 @@
       p + p {
         -webkit-box-orient: vertical;
         color: $color-dark;
-        display: box;
+        display: flex;
         -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
@@ -73,7 +73,7 @@
       .p-media-object__content {
         p {
           color: transparent;
-          display: box;
+          display: flex;
           position: relative;
 
           &::before {
