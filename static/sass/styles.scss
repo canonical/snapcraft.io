@@ -254,7 +254,7 @@ dl {
 
 .u-line-clamp--3 {
   -webkit-box-orient: vertical;
-  display: box;
+  display: flex;
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;

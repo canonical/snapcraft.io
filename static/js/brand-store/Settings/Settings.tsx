@@ -10,6 +10,7 @@ import {
   Button,
   Spinner,
   Notification,
+  PasswordToggle,
 } from "@canonical/react-components";
 
 import { currentStoreSelector, membersSelector } from "../selectors";
@@ -17,7 +18,6 @@ import { fetchMembers } from "../slices/membersSlice";
 import { fetchStore } from "../slices/currentStoreSlice";
 
 import NotAuthorized from "../NotAuthorized";
-import PasswordToggle from "../shared/PasswordToggle";
 import SectionNav from "../SectionNav";
 
 import type { RouteParams, Member } from "../types/shared";
@@ -185,7 +185,7 @@ function Settings() {
                     />
 
                     <PasswordToggle
-                      value={currentStore.id}
+                      defaultValue={currentStore.id}
                       readOnly={true}
                       label="Store ID"
                       id="store-id"
