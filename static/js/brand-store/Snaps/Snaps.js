@@ -17,6 +17,9 @@ import {
 import { fetchSnaps } from "../slices/snapsSlice";
 import { fetchMembers } from "../slices/membersSlice";
 
+import Publisher from "../Publisher";
+import Reviewer from "../Reviewer";
+import ReviewerAndPublisher from "../ReviewerAndPublisher";
 import SnapsTable from "./SnapsTable";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
@@ -50,6 +53,12 @@ function Snaps() {
   const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState([]);
   const [isReloading, setIsReloading] = useState(false);
   const [currentMember, setCurrentMember] = useState(null);
+  const [currentStore, setCurrentStore] = useState(null);
+  const [isPublisherOnly, setIsPublisherOnly] = useState(false);
+  const [isReviewerOnly, setIsReviewerOnly] = useState(false);
+  const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
+    false
+  );
   let location = useLocation();
 
   const getStoreName = (storeId) => {
@@ -171,13 +180,7 @@ function Snaps() {
       });
   };
 
-  const isAdmin = () => {
-    return (
-      currentMember &&
-      currentMember.roles &&
-      currentMember.roles.includes("admin")
-    );
-  };
+  const isAdmin = () => currentMember?.roles.includes("admin");
 
   useEffect(() => {
     dispatch(fetchMembers(id));
@@ -235,6 +238,26 @@ function Snaps() {
     setCurrentMember(members.find((member) => member.current_user));
   }, [snaps, members, snapsLoading, membersLoading]);
 
+  useEffect(() => {
+    setCurrentStore(brandStoresList.find((store) => store.id === id));
+  }, [brandStoresList, id]);
+
+  useEffect(() => {
+    setIsPublisherOnly(
+      currentStore?.roles.length === 1 && currentStore?.roles.includes("access")
+    );
+
+    setIsReviewerOnly(
+      currentStore?.roles.length === 1 && currentStore?.roles.includes("review")
+    );
+
+    setIsReviewerAndPublisherOnly(
+      currentStore?.roles.length === 2 &&
+        currentStore?.roles.includes("access") &&
+        currentStore?.roles.includes("review")
+    );
+  }, [currentStore, id]);
+
   return (
     <>
       <main className="l-main">
@@ -244,6 +267,12 @@ function Snaps() {
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
+            ) : currentStore && isReviewerAndPublisherOnly ? (
+              <ReviewerAndPublisher />
+            ) : currentStore && isReviewerOnly ? (
+              <Reviewer />
+            ) : currentStore && isPublisherOnly ? (
+              <Publisher />
             ) : (
               <>
                 {!isReloading && currentMember?.roles && isAdmin() && (
