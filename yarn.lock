@@ -1097,10 +1097,10 @@
   resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.3.0.tgz#14fcd8a80051eb65fb274a0cec086e9aca3f19f0"
   integrity sha512-VwGcZo9LGzdeQ/sKt+5TQttIibTxjZEpsEtuWbbsacbqqzqVfqZhDsZkkg/7WNxKQ2lpnyq+4mLT70u9YbYSYA==
 
-"@canonical/react-components@0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.31.0.tgz#717722324a7fc28279d4bfff97231ebd9bace99e"
-  integrity sha512-So+l7r06dybZfVnnSiTS6O9SG+Lh2PN7TPjpqlbmWqXFVFwXNeUiv/Tu3LED5QWWtofnfxvfpiUJgHqHnSt1pQ==
+"@canonical/react-components@0.32.0":
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.32.0.tgz#2f282532d8d8f7800c165cfd46e5111c221fca40"
+  integrity sha512-131jyQ2bIImALN6go5gWoNwCiVN4+LP04SZ9BVCOp2ck1K8pXR+wQnF7EDYnF0CRmkLXWqJRr1OJsORSd3ZlxA==
   dependencies:
     "@types/jest" "27.4.0"
     "@types/node" "16.11.22"
@@ -7681,10 +7681,10 @@ vanilla-framework@3.0.1:
     postcss-cli "9.1.0"
     sass "1.45.2"
 
-vanilla-framework@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-3.1.0.tgz#3d5fa45baf8eb80a09a62ff7060aa81609b4b838"
-  integrity sha512-jx6Dwc3a9qiXdo/xYQu2j5at2bwE22KOnnVYvC9VkfMQUAAnBSUWUNKCun2JydUihYGOvmaQeMI7tLpXAdAFOA==
+vanilla-framework@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-3.1.1.tgz#45ca39e76ef13d3989ae67ceb9ed630bb52ce673"
+  integrity sha512-2OkmJ1uxl7r+TYcJzT85qpq6GvbaTBe1hM8ytio8BkIuIgwlUdGZj+6s/fBEyXQ05d8MgzQt3ZAYLYm3meuDsw==
   dependencies:
     "@canonical/cookie-policy" "3.4.0"
     "@canonical/latest-news" "1.3.0"
