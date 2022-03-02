@@ -328,7 +328,12 @@ const ReleasesTableChannelHeading = (props) => {
         <Handle />
         <div className="p-releases-channel__name p-tooltip p-tooltip--btm-center">
           <span className="p-release-data__info">
-            <span className="p-release-data__title" title={channel}>
+            <span
+              className={`p-release-data__title ${
+                canBePromoted || canBeClosed ? "has-button" : ""
+              }`}
+              title={channel}
+            >
               {rowTitle}
             </span>
           </span>
