@@ -44,6 +44,7 @@ const ReleasesTableReleaseCell = (props) => {
     undoRelease,
     toggleHistoryPanel,
     getProgressiveState,
+    current,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -106,6 +107,7 @@ const ReleasesTableReleaseCell = (props) => {
     isHighlighted ? "is-highlighted" : "",
     isPending ? "is-pending" : "",
     isOverParent ? "is-over" : "",
+    currentRevision?.changed && isUnassigned ? "current-change" : "",
   ].join(" ");
 
   const actionsNode = pendingRelease ? (
@@ -153,16 +155,19 @@ const ReleasesTableReleaseCell = (props) => {
       canDrag={canDrag}
       className={className}
       cellType="release"
+      current={current}
     >
-      <HistoryIcon
-        onClick={handleHistoryIconClick.bind(
-          this,
-          arch,
-          risk,
-          track,
-          branchName
-        )}
-      />
+      {isUnassigned && (
+        <HistoryIcon
+          onClick={handleHistoryIconClick.bind(
+            this,
+            arch,
+            risk,
+            track,
+            branchName
+          )}
+        />
+      )}
       {cellInfoNode}
       {!isChannelPendingClose &&
         pendingProgressiveState &&
@@ -208,6 +213,7 @@ ReleasesTableReleaseCell.propTypes = {
   isOverParent: PropTypes.bool,
 
   revision: PropTypes.object,
+  current: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {

@@ -41,7 +41,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
   return (
     <Fragment>
       <span className="p-release-data__info--empty">
-        {trackingChannel ? "↑" : "–"}
+        {trackingChannel ? `Tracking channel ${trackingChannel}` : "–"}
       </span>
 
       <span className="p-tooltip__message">
@@ -209,7 +209,7 @@ RevisionInfo.propTypes = {
 
 // generic draggable view of releases table cell
 export const ReleasesTableCellView = (props) => {
-  const { item, canDrag, children, actions, cellType } = props;
+  const { item, canDrag, children, actions, cellType, current } = props;
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item,
@@ -251,6 +251,7 @@ export const ReleasesTableCellView = (props) => {
                       pendingChannelMap={RISKS_WITH_AVAILABLE}
                       item={item}
                       promoteRevision={promoteRevision}
+                      current={current}
                     />
                   );
                 })}
@@ -272,4 +273,5 @@ ReleasesTableCellView.propTypes = {
   children: PropTypes.node,
   actions: PropTypes.node,
   cellType: PropTypes.string,
+  current: PropTypes.string,
 };

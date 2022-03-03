@@ -25,10 +25,20 @@ export default class ContextualMenu extends Component {
   dropdownButtonClick(event) {
     const dropdownEl = event.target.nextSibling;
     const isClosed = dropdownEl.getAttribute("aria-hidden") === "true";
+    const tooltipMessage = dropdownEl.parentNode.previousSibling;
 
     this.closeAllDropdowns();
+
+    if (tooltipMessage) {
+      tooltipMessage.classList.remove("u-hide");
+    }
+
     if (isClosed && dropdownEl) {
       dropdownEl.setAttribute("aria-hidden", false);
+
+      if (tooltipMessage) {
+        tooltipMessage.classList.add("u-hide");
+      }
     }
 
     event.stopPropagation();

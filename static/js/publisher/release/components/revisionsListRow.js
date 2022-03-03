@@ -43,6 +43,7 @@ const RevisionsListRow = (props) => {
   }
 
   function revisionSelectChange() {
+    revision.changed = true;
     props.toggleRevision(revision);
   }
 

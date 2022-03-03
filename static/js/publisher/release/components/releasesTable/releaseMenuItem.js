@@ -7,19 +7,21 @@ import { getPendingChannelMap } from "../../selectors";
 import { canBeReleased } from "../../helpers";
 
 function ReleaseMenuItem(props) {
+  const risk = `latest/${props.risk}`;
+
   return (
     <span
       key={props.risk}
-      className="p-contextual-menu__link"
+      className={`p-contextual-menu__link ${
+        props.current === risk ? "is-disabled" : ""
+      }`}
       onClick={() => {
         props.item.revisions.forEach((r) => {
-          return (
-            canBeReleased(r) && props.promoteRevision(r, `latest/${props.risk}`)
-          );
+          return canBeReleased(r) && props.promoteRevision(r, risk);
         });
       }}
     >
-      latest/{props.risk}
+      {risk}
     </span>
   );
 }
@@ -30,6 +32,7 @@ ReleaseMenuItem.propTypes = {
   risk: PropTypes.string,
   pendingChannelMap: PropTypes.object,
   promoteRevision: PropTypes.func,
+  current: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {

@@ -44,6 +44,7 @@ const ReleasesTableChannelRow = (props) => {
         return (
           <ReleasesTableReleaseCell
             key={`${currentTrack}/${risk}/${arch}`}
+            current={`${currentTrack}/${risk}`}
             track={currentTrack}
             risk={risk}
             branch={branch}

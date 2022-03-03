@@ -379,7 +379,7 @@ class RevisionsList extends Component {
               <tr>
                 <td colSpan={5} className="u-align--right">
                   <button
-                    className="p-button is-small"
+                    className="p-button is-small u-no-margin--bottom"
                     onClick={this.showAllRevisions.bind(this, key)}
                   >
                     Show all {filteredRevisions.length} revisions
