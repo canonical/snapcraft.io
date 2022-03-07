@@ -292,7 +292,9 @@ class RevisionsList extends Component {
     return (
       <Fragment>
         <div className="u-clearfix">
-          <h4 className="u-float-left">{title}</h4>
+          <p role="heading" aria-level="4" className="u-float-left ">
+            {title}
+          </p>
           <a
             style={{ marginTop: "0.5rem" }}
             href="#"

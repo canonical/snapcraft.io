@@ -148,6 +148,8 @@ const ReleasesTableReleaseCell = (props) => {
     );
   }
 
+  const showHistoryIcon = currentRevision || isUnassigned;
+
   return (
     <ReleasesTableCellView
       actions={actionsNode}
@@ -157,7 +159,7 @@ const ReleasesTableReleaseCell = (props) => {
       cellType="release"
       current={current}
     >
-      {currentRevision && (
+      {showHistoryIcon && (
         <HistoryIcon
           onClick={handleHistoryIconClick.bind(
             this,
