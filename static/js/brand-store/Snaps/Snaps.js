@@ -17,9 +17,6 @@ import {
 import { fetchSnaps } from "../slices/snapsSlice";
 import { fetchMembers } from "../slices/membersSlice";
 
-import Publisher from "../Publisher";
-import Reviewer from "../Reviewer";
-import ReviewerAndPublisher from "../ReviewerAndPublisher";
 import SnapsTable from "./SnapsTable";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
@@ -53,12 +50,7 @@ function Snaps() {
   const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState([]);
   const [isReloading, setIsReloading] = useState(false);
   const [currentMember, setCurrentMember] = useState(null);
-  const [currentStore, setCurrentStore] = useState(null);
-  const [isPublisherOnly, setIsPublisherOnly] = useState(false);
-  const [isReviewerOnly, setIsReviewerOnly] = useState(false);
-  const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
-    false
-  );
+
   let location = useLocation();
 
   const getStoreName = (storeId) => {
@@ -180,8 +172,6 @@ function Snaps() {
       });
   };
 
-  const isAdmin = () => currentMember?.roles.includes("admin");
-
   useEffect(() => {
     dispatch(fetchMembers(id));
     dispatch(fetchSnaps(id));
@@ -238,26 +228,6 @@ function Snaps() {
     setCurrentMember(members.find((member) => member.current_user));
   }, [snaps, members, snapsLoading, membersLoading]);
 
-  useEffect(() => {
-    setCurrentStore(brandStoresList.find((store) => store.id === id));
-  }, [brandStoresList, id]);
-
-  useEffect(() => {
-    setIsPublisherOnly(
-      currentStore?.roles.length === 1 && currentStore?.roles.includes("access")
-    );
-
-    setIsReviewerOnly(
-      currentStore?.roles.length === 1 && currentStore?.roles.includes("review")
-    );
-
-    setIsReviewerAndPublisherOnly(
-      currentStore?.roles.length === 2 &&
-        currentStore?.roles.includes("access") &&
-        currentStore?.roles.includes("review")
-    );
-  }, [currentStore, id]);
-
   return (
     <>
       <main className="l-main">
@@ -267,15 +237,9 @@ function Snaps() {
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
-            ) : currentStore && isReviewerAndPublisherOnly ? (
-              <ReviewerAndPublisher />
-            ) : currentStore && isReviewerOnly ? (
-              <Reviewer />
-            ) : currentStore && isPublisherOnly ? (
-              <Publisher />
             ) : (
               <>
-                {!isReloading && currentMember?.roles && isAdmin() && (
+                {!isReloading && currentMember && (
                   <div className="u-fixed-width">
                     <SectionNav sectionName="snaps" />
                   </div>
@@ -283,37 +247,25 @@ function Snaps() {
                 {!isReloading && currentMember?.roles && (
                   <Row>
                     <Col size="6">
-                      {!isAdmin() && (
-                        <h2 className="p-heading--4">
-                          Snaps in {getStoreName(id)}
-                        </h2>
-                      )}
-
-                      {isAdmin() && (
-                        <>
-                          <Button onClick={() => setSidePanelOpen(true)}>
-                            Include snap
-                          </Button>
-                          <Button
-                            disabled={
-                              snapsToRemove.length < 1 || removeSnapSaving
-                            }
-                            onClick={removeSnaps}
-                            className={removeSnapSaving ? "has-icon" : ""}
-                          >
-                            {removeSnapSaving ? (
-                              <>
-                                <i className="p-icon--spinner u-animation--spin"></i>
-                                <span>Saving...</span>
-                              </>
-                            ) : snapsToRemove.length > 1 ? (
-                              "Exclude snaps"
-                            ) : (
-                              "Exclude snap"
-                            )}
-                          </Button>
-                        </>
-                      )}
+                      <Button onClick={() => setSidePanelOpen(true)}>
+                        Include snap
+                      </Button>
+                      <Button
+                        disabled={snapsToRemove.length < 1 || removeSnapSaving}
+                        onClick={removeSnaps}
+                        className={removeSnapSaving ? "has-icon" : ""}
+                      >
+                        {removeSnapSaving ? (
+                          <>
+                            <i className="p-icon--spinner u-animation--spin"></i>
+                            <span>Saving...</span>
+                          </>
+                        ) : snapsToRemove.length > 1 ? (
+                          "Exclude snaps"
+                        ) : (
+                          "Exclude snap"
+                        )}
+                      </Button>
                     </Col>
                     <Col size="6">
                       <SnapsFilter
@@ -339,7 +291,6 @@ function Snaps() {
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
-                      isAdmin={isAdmin}
                     />
                   )}
                 </div>

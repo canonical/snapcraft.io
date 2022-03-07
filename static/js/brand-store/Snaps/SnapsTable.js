@@ -12,12 +12,11 @@ function SnapsTable({
   snapsToRemove,
   setSnapsToRemove,
   nonEssentialSnapIds,
-  isAdmin,
 }) {
   const { id } = useParams();
   const [checkAll, setCheckAll] = useState(false);
 
-  const tableCellClass = isAdmin() ? "table-cell--checkbox" : "";
+  const tableCellClass = "table-cell--checkbox";
 
   useEffect(() => {
     setCheckAll(snapsToRemove.length === nonEssentialSnapIds.length);
@@ -33,28 +32,24 @@ function SnapsTable({
           <tr>
             <th>Published in</th>
             <th className={tableCellClass}>
-              {isAdmin() && (
-                <CheckboxInput
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      const otherStoresSnaps = otherStores.map(
-                        (item) => item.snaps
-                      );
-                      setSnapsToRemove(
-                        otherStoresSnaps
-                          .flat()
-                          .filter((item) => !item.essential)
-                      );
-                      setCheckAll(true);
-                    } else {
-                      setSnapsToRemove([]);
-                      setCheckAll(false);
-                    }
-                  }}
-                  checked={checkAll}
-                  disabled={!nonEssentialSnapIds.length}
-                />
-              )}
+              <CheckboxInput
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    const otherStoresSnaps = otherStores.map(
+                      (item) => item.snaps
+                    );
+                    setSnapsToRemove(
+                      otherStoresSnaps.flat().filter((item) => !item.essential)
+                    );
+                    setCheckAll(true);
+                  } else {
+                    setSnapsToRemove([]);
+                    setCheckAll(false);
+                  }
+                }}
+                checked={checkAll}
+                disabled={!nonEssentialSnapIds.length}
+              />
               Name
             </th>
             <th>Latest release</th>
@@ -71,7 +66,6 @@ function SnapsTable({
               snap={snap}
               snapsCount={snaps.length}
               index={index}
-              isAdmin={isAdmin}
             />
           ))}
         </tbody>
@@ -130,7 +124,6 @@ function SnapsTable({
                       index={index}
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
-                      isAdmin={isAdmin}
                     />
                   ))}
                 </tbody>
@@ -145,11 +138,10 @@ function SnapsTable({
 SnapsTable.propTypes = {
   storeName: PropTypes.string.isRequired,
   snaps: PropTypes.array.isRequired,
-  otherStores: PropTypes.object,
+  otherStores: PropTypes.array,
   snapsToRemove: PropTypes.array,
   setSnapsToRemove: PropTypes.func,
   nonEssentialSnapIds: PropTypes.array.isRequired,
-  isAdmin: PropTypes.func.isRequired,
 };
 
 export default SnapsTable;

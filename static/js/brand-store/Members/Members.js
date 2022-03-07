@@ -16,7 +16,6 @@ import ROLES from "./memberRoles";
 
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
-import NotAuthorized from "../NotAuthorized";
 
 import {
   membersSelector,
@@ -50,7 +49,6 @@ function Members() {
   const [notificationText, setNotificationText] = useState(
     "Changes have been saved"
   );
-  const [currentMember, setCurrentMember] = useState(null);
 
   const handleInvite = (action) => {
     setIsSaving(true);
@@ -123,8 +121,6 @@ function Members() {
     setNewMemberRoles(roles);
   };
 
-  const isAdmin = () => currentMember.roles.includes("admin");
-
   useEffect(() => {
     dispatch(fetchMembers(id));
     dispatch(fetchInvites(id));
@@ -147,10 +143,6 @@ function Members() {
     setMemberButtonDisabled(!newMemberEmail || newMemberRoles.length === 0);
   }, [newMemberEmail, newMemberRoles]);
 
-  useEffect(() => {
-    setCurrentMember(members.find((member) => member.current_user));
-  }, [members, membersLoading, invitesLoading]);
-
   return (
     <>
       <main className="l-main">
@@ -164,77 +156,70 @@ function Members() {
                 <Spinner text="Loading&hellip;" />
               </div>
             ) : (
-              currentMember?.roles &&
-              (!isAdmin() ? (
-                <NotAuthorized />
-              ) : (
-                <>
-                  <Row>
-                    <Col size="6">
-                      <Button
-                        onClick={() => {
-                          setSidePanelOpen(true);
-                        }}
-                      >
-                        Add new member
-                      </Button>
-                    </Col>
-                    <Col size="6">
-                      <SearchBox
-                        placeholder="Search and filter"
-                        autocomplete="off"
-                        onChange={(query) => {
-                          if (query) {
-                            setFilteredMembers(
-                              members.filter(
-                                (member) =>
-                                  member.displayname.includes(query) ||
-                                  member.email.includes(query)
-                              )
-                            );
-                          } else {
-                            setFilteredMembers(members);
-                          }
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <div className="u-fixed-width members-accordion">
-                    <Accordion
-                      expanded="members-table"
-                      sections={[
-                        {
-                          key: "members-table",
-                          title: `${filteredMembers.length} members`,
-                          content: (
-                            <MembersTable
-                              filteredMembers={filteredMembers}
-                              changedMembers={changedMembers}
-                              setChangedMembers={setChangedMembers}
-                            />
-                          ),
-                        },
-                        {
-                          key: "invites-table",
-                          title: `${invites.length} invites`,
-                          content: (
-                            <InvitesTable
-                              invites={invites}
-                              setNotificationText={setNotificationText}
-                              setShowSuccessNotification={
-                                setShowSuccessNotification
-                              }
-                              setShowErrorNotification={
-                                setShowErrorNotification
-                              }
-                            />
-                          ),
-                        },
-                      ]}
+              <>
+                <Row>
+                  <Col size="6">
+                    <Button
+                      onClick={() => {
+                        setSidePanelOpen(true);
+                      }}
+                    >
+                      Add new member
+                    </Button>
+                  </Col>
+                  <Col size="6">
+                    <SearchBox
+                      placeholder="Search and filter"
+                      autocomplete="off"
+                      onChange={(query) => {
+                        if (query) {
+                          setFilteredMembers(
+                            members.filter(
+                              (member) =>
+                                member.displayname.includes(query) ||
+                                member.email.includes(query)
+                            )
+                          );
+                        } else {
+                          setFilteredMembers(members);
+                        }
+                      }}
                     />
-                  </div>
-                </>
-              ))
+                  </Col>
+                </Row>
+                <div className="u-fixed-width members-accordion">
+                  <Accordion
+                    expanded="members-table"
+                    sections={[
+                      {
+                        key: "members-table",
+                        title: `${filteredMembers.length} members`,
+                        content: (
+                          <MembersTable
+                            filteredMembers={filteredMembers}
+                            changedMembers={changedMembers}
+                            setChangedMembers={setChangedMembers}
+                          />
+                        ),
+                      },
+                      {
+                        key: "invites-table",
+                        title: `${invites.length} invites`,
+                        content: (
+                          <InvitesTable
+                            invites={invites}
+                            setNotificationText={setNotificationText}
+                            setShowSuccessNotification={
+                              setShowSuccessNotification
+                            }
+                            setShowErrorNotification={setShowErrorNotification}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>
