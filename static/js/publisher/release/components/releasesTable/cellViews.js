@@ -38,10 +38,21 @@ UnassignedInfo.propTypes = {
 
 // content of empty cell in channel row (nothing released or tracking channel)
 export const EmptyInfo = ({ trackingChannel }) => {
+  const trackingChannelSplit = trackingChannel
+    ? trackingChannel.split("/")
+    : null;
+
   return (
     <Fragment>
       <span className="p-release-data__info--empty">
-        {trackingChannel ? `Tracking ${trackingChannel}` : "–"}
+        {trackingChannel ? (
+          <small>
+            Tracking {trackingChannelSplit[0]}/<br />
+            {trackingChannelSplit[1]}
+          </small>
+        ) : (
+          "-"
+        )}
       </span>
 
       <span className="p-tooltip__message">
