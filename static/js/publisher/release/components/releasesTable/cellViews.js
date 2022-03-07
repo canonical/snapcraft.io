@@ -41,12 +41,12 @@ export const EmptyInfo = ({ trackingChannel }) => {
   return (
     <Fragment>
       <span className="p-release-data__info--empty">
-        {trackingChannel ? `Tracking channel ${trackingChannel}` : "–"}
+        {trackingChannel ? `Tracking ${trackingChannel}` : "–"}
       </span>
 
       <span className="p-tooltip__message">
         {trackingChannel
-          ? `Tracking channel ${trackingChannel}`
+          ? `Tracking ${trackingChannel}`
           : "Nothing currently released"}
       </span>
     </Fragment>

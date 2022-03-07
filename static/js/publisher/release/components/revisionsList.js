@@ -66,6 +66,20 @@ class RevisionsList extends Component {
     );
   }
 
+  // Moves the active revision to the top of the list
+  getSortedRevisions(activeRevision, revisions) {
+    const activeRevisionIndex = revisions.findIndex(
+      (revision) =>
+        activeRevision && revision.revision === activeRevision.revision
+    );
+
+    let indexToMove = 1;
+    const item = revisions.splice(activeRevisionIndex, indexToMove)[0];
+    indexToMove = 0;
+    revisions.splice(0, indexToMove, item);
+    return revisions;
+  }
+
   renderRows(
     revisions,
     isSelectable,
@@ -75,7 +89,9 @@ class RevisionsList extends Component {
     hasPendingRelease,
     progressiveReleaseBeingCancelled
   ) {
-    return revisions.map((revision, index) => {
+    const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
+
+    return sortedRevisions.map((revision, index) => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
 

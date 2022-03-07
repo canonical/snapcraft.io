@@ -157,7 +157,7 @@ const ReleasesTableReleaseCell = (props) => {
       cellType="release"
       current={current}
     >
-      {isUnassigned && (
+      {currentRevision && (
         <HistoryIcon
           onClick={handleHistoryIconClick.bind(
             this,
@@ -168,6 +168,7 @@ const ReleasesTableReleaseCell = (props) => {
           )}
         />
       )}
+
       {cellInfoNode}
       {!isChannelPendingClose &&
         pendingProgressiveState &&
