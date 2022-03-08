@@ -356,8 +356,9 @@ const ReleasesTableChannelHeading = (props) => {
       <div className="p-release-data__meta-container">
         {risk !== AVAILABLE && (
           <span className="p-release-data__meta">
-            {channelVersion} |{" "}
-            {channelBuildDate && format(channelBuildDate, "dd MMM yyyy")}
+            {channelVersion}
+            {channelBuildDate &&
+              ` | ${format(channelBuildDate, "dd MMM yyyy")}`}
           </span>
         )}
         {channelVersion && (

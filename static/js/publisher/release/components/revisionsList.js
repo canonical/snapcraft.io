@@ -66,6 +66,20 @@ class RevisionsList extends Component {
     );
   }
 
+  // Moves the active revision to the top of the list
+  getSortedRevisions(activeRevision, revisions) {
+    const activeRevisionIndex = revisions.findIndex(
+      (revision) =>
+        activeRevision && revision.revision === activeRevision.revision
+    );
+
+    let indexToMove = 1;
+    const item = revisions.splice(activeRevisionIndex, indexToMove)[0];
+    indexToMove = 0;
+    revisions.splice(0, indexToMove, item);
+    return revisions;
+  }
+
   renderRows(
     revisions,
     isSelectable,
@@ -75,7 +89,9 @@ class RevisionsList extends Component {
     hasPendingRelease,
     progressiveReleaseBeingCancelled
   ) {
-    return revisions.map((revision, index) => {
+    const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
+
+    return sortedRevisions.map((revision, index) => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
 
@@ -276,7 +292,9 @@ class RevisionsList extends Component {
     return (
       <Fragment>
         <div className="u-clearfix">
-          <h4 className="u-float-left">{title}</h4>
+          <p role="heading" aria-level="4" className="u-float-left ">
+            {title}
+          </p>
           <a
             style={{ marginTop: "0.5rem" }}
             href="#"
@@ -377,10 +395,13 @@ class RevisionsList extends Component {
             )}
             {!showAllRevisions && filteredRevisions.length > 10 && (
               <tr>
-                <td colSpan={4}>
-                  <a onClick={this.showAllRevisions.bind(this, key)}>
+                <td colSpan={5} className="u-align--right">
+                  <button
+                    className="p-button is-small u-no-margin--bottom"
+                    onClick={this.showAllRevisions.bind(this, key)}
+                  >
                     Show all {filteredRevisions.length} revisions
-                  </a>
+                  </button>
                 </td>
               </tr>
             )}

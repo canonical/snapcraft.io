@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
 import { AVAILABLE } from "../../constants";
 import { getTrackingChannel } from "../../releasesState";
 
@@ -40,12 +39,12 @@ const ReleasesTableReleaseCell = (props) => {
     pendingCloses,
     filters,
     isOverParent,
-    showVersion,
     getAvailableCount,
     hasPendingRelease,
     undoRelease,
     toggleHistoryPanel,
     getProgressiveState,
+    current,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -108,6 +107,7 @@ const ReleasesTableReleaseCell = (props) => {
     isHighlighted ? "is-highlighted" : "",
     isPending ? "is-pending" : "",
     isOverParent ? "is-over" : "",
+    currentRevision?.changed && isUnassigned ? "current-change" : "",
   ].join(" ");
 
   const actionsNode = pendingRelease ? (
@@ -133,7 +133,6 @@ const ReleasesTableReleaseCell = (props) => {
       <RevisionInfo
         revision={currentRevision}
         isPending={pendingRelease ? true : false}
-        showVersion={showVersion}
         progressiveState={progressiveState}
         previousRevision={previousRevision ? previousRevision.revision : null}
         pendingProgressiveState={pendingProgressiveState}
@@ -149,23 +148,30 @@ const ReleasesTableReleaseCell = (props) => {
     );
   }
 
+  const showHistoryIcon = currentRevision || isUnassigned;
+
   return (
     <ReleasesTableCellView
       actions={actionsNode}
       item={item}
       canDrag={canDrag}
       className={className}
+      cellType="release"
+      current={current}
     >
+      {showHistoryIcon && (
+        <HistoryIcon
+          onClick={handleHistoryIconClick.bind(
+            this,
+            arch,
+            risk,
+            track,
+            branchName
+          )}
+        />
+      )}
+
       {cellInfoNode}
-      <HistoryIcon
-        onClick={handleHistoryIconClick.bind(
-          this,
-          arch,
-          risk,
-          track,
-          branchName
-        )}
-      />
       {!isChannelPendingClose &&
         pendingProgressiveState &&
         pendingProgressiveState.percentage && (
@@ -206,11 +212,11 @@ ReleasesTableReleaseCell.propTypes = {
   track: PropTypes.string,
   risk: PropTypes.string,
   arch: PropTypes.string,
-  showVersion: PropTypes.bool,
   branch: PropTypes.object,
   isOverParent: PropTypes.bool,
 
   revision: PropTypes.object,
+  current: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {

@@ -70,6 +70,10 @@
     }
   }
 
+  .p-promote-button {
+    display: none;
+  }
+
   .p-releases-channel {
     align-items: flex-start;
     border-right: 1px solid $colors--light-theme--border-default;
@@ -78,7 +82,7 @@
     flex-wrap: wrap;
     padding: $spv--small $sph--small;
     position: relative;
-    width: 280px;
+    width: 240px;
 
     .p-promote-button {
       display: none;
@@ -91,6 +95,9 @@
     &:hover {
       .p-promote-button {
         display: inline-block;
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
       }
 
       .p-releases-channel__name {
@@ -234,11 +241,8 @@
   .p-release-data__icon {
     border-radius: 3px;
     cursor: pointer;
-    opacity: 0;
     padding: 0 $sph--small;
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
+    transform: rotate(-90deg);
   }
 
   .is-pending {
@@ -332,6 +336,29 @@
     }
   }
 
+  .p-drag-handle {
+    margin-left: auto;
+    opacity: 0;
+    visibility: hidden;
+
+    .p-releases-channel__inner & {
+      margin-left: 0;
+      margin-right: 0.5rem;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .p-release-data & {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
+    }
+
+    .is-draggable & {
+      visibility: visible;
+    }
+  }
+
   .p-releases-table__cell {
     @include vf-animation(#{background-color, border-color}, 0, in);
 
@@ -361,13 +388,28 @@
     &.is-active {
       background-color: $color-light;
       opacity: 1;
+
+      .p-drag-handle {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .p-promote-button {
+        display: inline-block;
+        position: absolute;
+        right: 1.75rem;
+        top: 0.5rem;
+      }
     }
 
     &.is-active {
       @include vf-animation(#{background-color, border-color}, fast, in);
 
       background-color: $color-x-light;
-      border-color: $color-mid-dark;
+
+      &:not(.p-releases-table__arch) {
+        border-bottom: 3px solid $color-dark !important;
+      }
 
       .p-release__progressive-percentage,
       .p-release__progressive-pending-percentage {
@@ -381,6 +423,10 @@
       .p-tooltip__message {
         display: none;
       }
+
+      .p-release-data__icon {
+        transform: rotate(0deg);
+      }
     }
 
     &.is-over,
@@ -388,6 +434,16 @@
     &.is-highlighted {
       background: $color-highlighted;
       border: $color-highlighted-border;
+
+      &.is-unassigned {
+        background-color: $color-light;
+        border-color: $color-mid-x-light;
+      }
+
+      .p-promote-button,
+      .p-drag-handle {
+        display: none;
+      }
     }
   }
 
@@ -406,6 +462,7 @@
   }
 
   .p-release-data {
+    align-items: start;
     display: flex;
     height: 4rem;
     max-width: 100%;
@@ -413,26 +470,10 @@
     padding-left: ($sph--small - 0.1rem);
   }
 
-  .p-releases-table__cell.is-active .p-release-data__icon {
-    opacity: 1;
-  }
-
-  .p-release-data:hover {
-    .p-release-data__icon {
-      opacity: 0.6;
-
-      &:hover {
-        background-color: $color-x-light;
-        opacity: 1;
-      }
-    }
-  }
-
   .p-release-data__info--empty {
     display: inline-block;
     overflow: hidden;
     padding-bottom: 0.6em;
-    padding-top: 0.6em;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -456,6 +497,8 @@
   // REVISIONS LIST
 
   .p-revisions-list {
+    margin-bottom: 0;
+
     td,
     th {
       overflow: visible;
@@ -523,15 +566,6 @@
 
     .is-draggable {
       cursor: move;
-    }
-  }
-
-  .p-drag-handle {
-    margin-right: $sph--small;
-    visibility: hidden;
-
-    .is-draggable & {
-      visibility: visible;
     }
   }
 
@@ -622,6 +656,11 @@
     margin-top: $sp-x-small;
   }
 
+  .p-history-panel {
+    border: 1px solid $color-mid-x-light;
+    padding: 1.5rem;
+  }
+
   .p-icon--lp {
     @extend %icon;
 
@@ -662,5 +701,10 @@
     @extend %icon;
 
     background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg%3E %3Cpath d='M14 8L2 14.9282L2 1.0718L14 8Z' fill='%23666'/%3E %3C/g%3E%3C/svg%3E");
+  }
+
+  .current-change {
+    background-color: $color-highlighted !important;
+    border: $color-highlighted-border !important;
   }
 }

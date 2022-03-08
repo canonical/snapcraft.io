@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
 import RevisionLabel from "../revisionLabel";
+import ContextualMenu from "../contextualMenu";
+import { RISKS, RISKS_WITH_AVAILABLE } from "../../constants";
 
 import {
   isInDevmode,
@@ -9,6 +11,10 @@ import {
   canBeReleased,
 } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
+
+import { promoteRevision } from "../../actions/pendingReleases";
+
+import ReleaseMenuItem from "./releaseMenuItem";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (
@@ -32,15 +38,26 @@ UnassignedInfo.propTypes = {
 
 // content of empty cell in channel row (nothing released or tracking channel)
 export const EmptyInfo = ({ trackingChannel }) => {
+  const trackingChannelSplit = trackingChannel
+    ? trackingChannel.split("/")
+    : null;
+
   return (
     <Fragment>
       <span className="p-release-data__info--empty">
-        {trackingChannel ? "↑" : "–"}
+        {trackingChannel ? (
+          <small>
+            Tracking {trackingChannelSplit[0]}/<br />
+            {trackingChannelSplit[1]}
+          </small>
+        ) : (
+          "-"
+        )}
       </span>
 
       <span className="p-tooltip__message">
         {trackingChannel
-          ? `Tracking channel ${trackingChannel}`
+          ? `Tracking ${trackingChannel}`
           : "Nothing currently released"}
       </span>
     </Fragment>
@@ -108,7 +125,6 @@ ProgressiveTooltip.propTypes = {
 export const RevisionInfo = ({
   revision,
   isPending,
-  showVersion,
   progressiveState,
   previousRevision,
   pendingProgressiveState,
@@ -138,9 +154,9 @@ export const RevisionInfo = ({
             isProgressive={previousRevision ? true : false}
           />
         </span>
-        {showVersion && (
-          <span className="p-release-data__meta">{revision.version}</span>
-        )}
+        <span className="p-release-data__meta">
+          {revision.version} | {revision.attributes["build-request-id"]}
+        </span>
       </span>
       <span className="p-tooltip__message">
         {isPending && "Pending release of:"}
@@ -197,7 +213,6 @@ export const RevisionInfo = ({
 RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
-  showVersion: PropTypes.bool,
   progressiveState: PropTypes.object,
   previousRevision: PropTypes.number,
   pendingProgressiveState: PropTypes.object,
@@ -205,7 +220,7 @@ RevisionInfo.propTypes = {
 
 // generic draggable view of releases table cell
 export const ReleasesTableCellView = (props) => {
-  const { item, canDrag, children, actions } = props;
+  const { item, canDrag, children, actions, cellType, current } = props;
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item,
@@ -227,9 +242,35 @@ export const ReleasesTableCellView = (props) => {
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
       >
-        <Handle />
-
         {children}
+        {canDrag && (
+          <>
+            <ContextualMenu
+              className="p-button is-small"
+              label={cellType === "revision" ? "Release" : "Promote"}
+            >
+              <span className="p-contextual-menu__group">
+                <span className="p-contextual-menu__item">
+                  {cellType === "revision" ? "Release" : "Promote"} to:
+                </span>
+                {RISKS.map((risk) => {
+                  return (
+                    <ReleaseMenuItem
+                      key={risk}
+                      currentTrack={risk}
+                      risk={risk}
+                      pendingChannelMap={RISKS_WITH_AVAILABLE}
+                      item={item}
+                      promoteRevision={promoteRevision}
+                      current={current}
+                    />
+                  );
+                })}
+              </span>
+            </ContextualMenu>
+            <Handle />
+          </>
+        )}
       </div>
       {actions}
     </div>
@@ -242,4 +283,6 @@ ReleasesTableCellView.propTypes = {
   className: PropTypes.string,
   children: PropTypes.node,
   actions: PropTypes.node,
+  cellType: PropTypes.string,
+  current: PropTypes.string,
 };
