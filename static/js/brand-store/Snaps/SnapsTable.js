@@ -12,19 +12,19 @@ function SnapsTable({
   snapsToRemove,
   setSnapsToRemove,
   nonEssentialSnapIds,
-  isAdmin,
+  isOnlyViewer,
 }) {
   const { id } = useParams();
   const [checkAll, setCheckAll] = useState(false);
 
-  const tableCellClass = isAdmin() ? "table-cell--checkbox" : "";
+  const tableCellClass = isOnlyViewer() ? "" : "table-cell--checkbox";
 
   useEffect(() => {
     setCheckAll(snapsToRemove.length === nonEssentialSnapIds.length);
   }, [snapsToRemove, nonEssentialSnapIds]);
 
   return (
-    <>
+    <div>
       <h3 className="p-heading--4 u-hide--medium u-hide--large">
         Published in {storeName}
       </h3>
@@ -33,7 +33,7 @@ function SnapsTable({
           <tr>
             <th>Published in</th>
             <th className={tableCellClass}>
-              {isAdmin() && (
+              {!isOnlyViewer() && (
                 <CheckboxInput
                   onChange={(e) => {
                     if (e.target.checked) {
@@ -71,7 +71,7 @@ function SnapsTable({
               snap={snap}
               snapsCount={snaps.length}
               index={index}
-              isAdmin={isAdmin}
+              isOnlyViewer={isOnlyViewer}
             />
           ))}
         </tbody>
@@ -80,7 +80,7 @@ function SnapsTable({
       {otherStores &&
         otherStores.map((store) => {
           return (
-            <>
+            <div key={store.id}>
               <h3 className="p-heading--4 u-hide--medium u-hide--large">
                 Published in {store.name}
               </h3>
@@ -130,26 +130,26 @@ function SnapsTable({
                       index={index}
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
-                      isAdmin={isAdmin}
+                      isOnlyViewer={isOnlyViewer}
                     />
                   ))}
                 </tbody>
               </table>
-            </>
+            </div>
           );
         })}
-    </>
+    </div>
   );
 }
 
 SnapsTable.propTypes = {
   storeName: PropTypes.string.isRequired,
   snaps: PropTypes.array.isRequired,
-  otherStores: PropTypes.object,
+  otherStores: PropTypes.array,
   snapsToRemove: PropTypes.array,
   setSnapsToRemove: PropTypes.func,
   nonEssentialSnapIds: PropTypes.array.isRequired,
-  isAdmin: PropTypes.func.isRequired,
+  isOnlyViewer: PropTypes.func.isRequired,
 };
 
 export default SnapsTable;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Spinner,
@@ -16,7 +16,6 @@ import ROLES from "./memberRoles";
 
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
-import NotAuthorized from "../NotAuthorized";
 
 import {
   membersSelector,
@@ -123,7 +122,8 @@ function Members() {
     setNewMemberRoles(roles);
   };
 
-  const isAdmin = () => currentMember.roles.includes("admin");
+  const isOnlyViewer = () =>
+    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
     dispatch(fetchMembers(id));
@@ -163,78 +163,73 @@ function Members() {
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
+            ) : isOnlyViewer() ? (
+              <Redirect to={`/admin/${id}/snaps`} />
             ) : (
-              currentMember?.roles &&
-              (!isAdmin() ? (
-                <NotAuthorized />
-              ) : (
-                <>
-                  <Row>
-                    <Col size="6">
-                      <Button
-                        onClick={() => {
-                          setSidePanelOpen(true);
-                        }}
-                      >
-                        Add new member
-                      </Button>
-                    </Col>
-                    <Col size="6">
-                      <SearchBox
-                        placeholder="Search and filter"
-                        autocomplete="off"
-                        onChange={(query) => {
-                          if (query) {
-                            setFilteredMembers(
-                              members.filter(
-                                (member) =>
-                                  member.displayname.includes(query) ||
-                                  member.email.includes(query)
-                              )
-                            );
-                          } else {
-                            setFilteredMembers(members);
-                          }
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <div className="u-fixed-width members-accordion">
-                    <Accordion
-                      expanded="members-table"
-                      sections={[
-                        {
-                          key: "members-table",
-                          title: `${filteredMembers.length} members`,
-                          content: (
-                            <MembersTable
-                              filteredMembers={filteredMembers}
-                              changedMembers={changedMembers}
-                              setChangedMembers={setChangedMembers}
-                            />
-                          ),
-                        },
-                        {
-                          key: "invites-table",
-                          title: `${invites.length} invites`,
-                          content: (
-                            <InvitesTable
-                              invites={invites}
-                              setNotificationText={setNotificationText}
-                              setShowSuccessNotification={
-                                setShowSuccessNotification
-                              }
-                              setShowErrorNotification={
-                                setShowErrorNotification
-                              }
-                            />
-                          ),
-                        },
-                      ]}
+              <>
+                <Row>
+                  <Col size="6">
+                    <Button
+                      onClick={() => {
+                        setSidePanelOpen(true);
+                      }}
+                    >
+                      Add new member
+                    </Button>
+                  </Col>
+                  <Col size="6">
+                    <SearchBox
+                      placeholder="Search and filter"
+                      autocomplete="off"
+                      onChange={(query) => {
+                        if (query) {
+                          setFilteredMembers(
+                            members.filter(
+                              (member) =>
+                                member.displayname.includes(query) ||
+                                member.email.includes(query)
+                            )
+                          );
+                        } else {
+                          setFilteredMembers(members);
+                        }
+                      }}
                     />
-                  </div>
-                </>
-              ))
+                  </Col>
+                </Row>
+                <div className="u-fixed-width members-accordion">
+                  <Accordion
+                    expanded="members-table"
+                    sections={[
+                      {
+                        key: "members-table",
+                        title: `${filteredMembers.length} members`,
+                        content: (
+                          <MembersTable
+                            filteredMembers={filteredMembers}
+                            changedMembers={changedMembers}
+                            setChangedMembers={setChangedMembers}
+                          />
+                        ),
+                      },
+                      {
+                        key: "invites-table",
+                        title: `${invites.length} invites`,
+                        content: (
+                          <InvitesTable
+                            invites={invites}
+                            setNotificationText={setNotificationText}
+                            setShowSuccessNotification={
+                              setShowSuccessNotification
+                            }
+                            setShowErrorNotification={setShowErrorNotification}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>

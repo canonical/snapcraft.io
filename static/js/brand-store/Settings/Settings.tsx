@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import { useAppDispatch } from "../hooks";
 import {
   Form,
@@ -17,7 +17,6 @@ import { currentStoreSelector, membersSelector } from "../selectors";
 import { fetchMembers } from "../slices/membersSlice";
 import { fetchStore } from "../slices/currentStoreSlice";
 
-import NotAuthorized from "../NotAuthorized";
 import SectionNav from "../SectionNav";
 
 import type { RouteParams, Member } from "../types/shared";
@@ -116,9 +115,8 @@ function Settings() {
     );
   };
 
-  const isAdmin = () => {
-    return currentMember?.roles.includes("admin") || false;
-  };
+  const isOnlyViewer = () =>
+    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
     dispatch(fetchMembers(id));
@@ -145,110 +143,107 @@ function Settings() {
             <div className="u-fixed-width">
               <Spinner text="Loading&hellip;" />
             </div>
+          ) : isOnlyViewer() ? (
+            <Redirect to={`/admin/${id}/snaps`} />
           ) : (
-            currentMember?.roles &&
-            (!isAdmin() ? (
-              <NotAuthorized />
-            ) : (
-              <Row>
-                <Col size={7}>
-                  {showSuccessNotification && (
-                    <Notification
-                      severity="positive"
-                      title="Success"
-                      onDismiss={() => setShowSuccessNotification(false)}
+            <Row>
+              <Col size={7}>
+                {showSuccessNotification && (
+                  <Notification
+                    severity="positive"
+                    title="Success"
+                    onDismiss={() => setShowSuccessNotification(false)}
+                  >
+                    Settings have been updated
+                  </Notification>
+                )}
+                {showErrorNotification && (
+                  <Notification
+                    severity="negative"
+                    title="Error"
+                    onDismiss={() => setShowErrorNotification(false)}
+                  >
+                    Something went wrong.{" "}
+                    <a href="https://github.com/canonical-web-and-design/snapcraft.io/issues/new">
+                      Report a bug
+                    </a>
+                    .
+                  </Notification>
+                )}
+                <Form onSubmit={handleFormSubmit} autoComplete="off">
+                  <Input
+                    id="is_public"
+                    label="Include this store in public lists"
+                    type="checkbox"
+                    help="This store will not be listed in the store dropdowns like the one in the snap name registration form."
+                    onChange={handleCheckboxChange}
+                    checked={!isPrivateStore}
+                  />
+
+                  <PasswordToggle
+                    defaultValue={currentStore.id}
+                    readOnly={true}
+                    label="Store ID"
+                    id="store-id"
+                  />
+
+                  <h2 className="p-heading--4" id="store-id-label">
+                    Manual review policy
+                  </h2>
+                  <Input
+                    type="radio"
+                    label="Allow"
+                    help="Normal review behaviour will be applied, using the result from the automatic review tool checks."
+                    name="manual-review-policy"
+                    id="manual-review-policy-label-allow"
+                    aria-labelledby="store-id-label"
+                    value="allow"
+                    onChange={handleRadioButtonChange}
+                    checked={manualReviewPolicy === "allow"}
+                  />
+                  <Input
+                    type="radio"
+                    label="Avoid"
+                    help="No snap will be left in the manual review queue, even if the automatic review tool found no issues."
+                    name="manual-review-policy"
+                    id="manual-review-policy-label-avoid"
+                    value="avoid"
+                    onChange={handleRadioButtonChange}
+                    checked={manualReviewPolicy === "avoid"}
+                  />
+                  <Input
+                    type="radio"
+                    label="Require"
+                    help="Every snap will be moved to the review queue, even if the automatic review tool found no issues."
+                    name="manual-review-policy"
+                    id="manual-review-policy-label-require"
+                    value="require"
+                    onChange={handleRadioButtonChange}
+                    checked={manualReviewPolicy === "require"}
+                  />
+
+                  <hr />
+
+                  <div className="u-align--right">
+                    <Button
+                      appearance="positive"
+                      type="submit"
+                      disabled={getDisabledState() || isSaving}
+                      className={isSaving ? "has-icon" : ""}
                     >
-                      Settings have been updated
-                    </Notification>
-                  )}
-                  {showErrorNotification && (
-                    <Notification
-                      severity="negative"
-                      title="Error"
-                      onDismiss={() => setShowErrorNotification(false)}
-                    >
-                      Something went wrong.{" "}
-                      <a href="https://github.com/canonical-web-and-design/snapcraft.io/issues/new">
-                        Report a bug
-                      </a>
-                      .
-                    </Notification>
-                  )}
-                  <Form onSubmit={handleFormSubmit} autoComplete="off">
-                    <Input
-                      id="is_public"
-                      label="Include this store in public lists"
-                      type="checkbox"
-                      help="This store will not be listed in the store dropdowns like the one in the snap name registration form."
-                      onChange={handleCheckboxChange}
-                      checked={!isPrivateStore}
-                    />
-
-                    <PasswordToggle
-                      defaultValue={currentStore.id}
-                      readOnly={true}
-                      label="Store ID"
-                      id="store-id"
-                    />
-
-                    <h2 className="p-heading--4" id="store-id-label">
-                      Manual review policy
-                    </h2>
-                    <Input
-                      type="radio"
-                      label="Allow"
-                      help="Normal review behaviour will be applied, using the result from the automatic review tool checks."
-                      name="manual-review-policy"
-                      id="manual-review-policy-label-allow"
-                      aria-labelledby="store-id-label"
-                      value="allow"
-                      onChange={handleRadioButtonChange}
-                      checked={manualReviewPolicy === "allow"}
-                    />
-                    <Input
-                      type="radio"
-                      label="Avoid"
-                      help="No snap will be left in the manual review queue, even if the automatic review tool found no issues."
-                      name="manual-review-policy"
-                      id="manual-review-policy-label-avoid"
-                      value="avoid"
-                      onChange={handleRadioButtonChange}
-                      checked={manualReviewPolicy === "avoid"}
-                    />
-                    <Input
-                      type="radio"
-                      label="Require"
-                      help="Every snap will be moved to the review queue, even if the automatic review tool found no issues."
-                      name="manual-review-policy"
-                      id="manual-review-policy-label-require"
-                      value="require"
-                      onChange={handleRadioButtonChange}
-                      checked={manualReviewPolicy === "require"}
-                    />
-
-                    <hr />
-
-                    <div className="u-align--right">
-                      <Button
-                        appearance="positive"
-                        type="submit"
-                        disabled={getDisabledState() || isSaving}
-                        className={isSaving ? "has-icon" : ""}
-                      >
-                        {isSaving ? (
-                          <>
-                            <i className="p-icon--spinner is-light u-animation--spin"></i>
-                            <span>Saving...</span>
-                          </>
-                        ) : (
-                          <>Save changes</>
-                        )}
-                      </Button>
-                    </div>
-                  </Form>
-                </Col>
-              </Row>
-            ))
+                      {isSaving ? (
+                        <>
+                          <i className="p-icon--spinner is-light u-animation--spin"></i>
+                          <span>Saving...</span>
+                        </>
+                      ) : (
+                        <>Save changes</>
+                      )}
+                    </Button>
+                  </div>
+                </Form>
+              </Col>
+            </Row>
           )}
         </div>
       </div>
