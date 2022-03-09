@@ -388,7 +388,10 @@
     &.is-active {
       background-color: $color-light;
       opacity: 1;
+    }
 
+    &:focus,
+    &:hover {
       .p-drag-handle {
         opacity: 1;
         visibility: visible;
