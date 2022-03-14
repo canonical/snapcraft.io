@@ -236,19 +236,11 @@
     right: 0.8rem;
   }
 
-  // release cell
-
   .p-release-data__icon {
     border-radius: 3px;
     cursor: pointer;
     padding: 0 $sph--small;
     transform: rotate(-90deg);
-  }
-
-  .is-pending {
-    .p-release-data__icon {
-      margin-right: 1.25rem;
-    }
   }
 
   .p-release-data__title .has-button,
