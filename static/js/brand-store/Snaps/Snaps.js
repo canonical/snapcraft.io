@@ -180,7 +180,8 @@ function Snaps() {
       });
   };
 
-  const isAdmin = () => currentMember?.roles.includes("admin");
+  const isOnlyViewer = () =>
+    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
     dispatch(fetchMembers(id));
@@ -275,21 +276,21 @@ function Snaps() {
               <Publisher />
             ) : (
               <>
-                {!isReloading && currentMember?.roles && isAdmin() && (
+                {!isReloading && !isOnlyViewer() && (
                   <div className="u-fixed-width">
                     <SectionNav sectionName="snaps" />
                   </div>
                 )}
-                {!isReloading && currentMember?.roles && (
+                {!isReloading && (
                   <Row>
                     <Col size="6">
-                      {!isAdmin() && (
+                      {isOnlyViewer() && (
                         <h2 className="p-heading--4">
                           Snaps in {getStoreName(id)}
                         </h2>
                       )}
 
-                      {isAdmin() && (
+                      {!isOnlyViewer() && (
                         <>
                           <Button onClick={() => setSidePanelOpen(true)}>
                             Include snap
@@ -339,7 +340,7 @@ function Snaps() {
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
-                      isAdmin={isAdmin}
+                      isOnlyViewer={isOnlyViewer}
                     />
                   )}
                 </div>
