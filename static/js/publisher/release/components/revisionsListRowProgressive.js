@@ -17,7 +17,6 @@ import { InteractiveProgressiveBar } from "./progressiveBar";
 const RevisionsListRowProgressive = ({
   channel,
   revision,
-  setDraggable,
   releaseRevision,
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
@@ -65,7 +64,6 @@ const RevisionsListRowProgressive = ({
   const handleCancelProgressiveRelease = () => {
     releaseRevision(revision, channel, progressiveState);
     cancelProgressiveRelease(previousRevision);
-    setDraggable(false);
   };
 
   const handleProgressiveChange = (percentage) => {
@@ -77,11 +75,7 @@ const RevisionsListRowProgressive = ({
 
   if (progressiveState) {
     return (
-      <div
-        className="p-revisions-list__revision-progressive"
-        onMouseOver={() => setDraggable(false)}
-        onMouseOut={() => setDraggable(true)}
-      >
+      <div className="p-revisions-list__revision-progressive">
         {showProgressivePause && (
           <span
             className="p-progressive__pause p-tooltip--btm-center"
@@ -155,9 +149,6 @@ RevisionsListRowProgressive.propTypes = {
   channel: PropTypes.string.isRequired,
   architecture: PropTypes.string.isRequired,
   revision: PropTypes.object.isRequired,
-
-  setDraggable: PropTypes.func.isRequired,
-
   progressiveState: PropTypes.object,
   previousRevision: PropTypes.object,
   pendingProgressiveState: PropTypes.object,

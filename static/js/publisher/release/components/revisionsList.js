@@ -101,7 +101,12 @@ class RevisionsList extends Component {
           ? true
           : false;
 
-      const showProgressive = index === 0 && !hasPendingRelease;
+      const showProgressive =
+        index === 0 &&
+        !hasPendingRelease &&
+        activeRevision.progressive &&
+        activeRevision.progressive.percentage !== null &&
+        activeRevision.progressive.paused !== null;
 
       return this.renderRow(
         revision,
@@ -278,7 +283,7 @@ class RevisionsList extends Component {
     );
 
     const showProgressiveReleases =
-      isProgressiveReleaseEnabled && !showChannels;
+      isProgressiveReleaseEnabled && !showChannels && pendingRelease;
 
     const progressiveReleaseBeingCancelled =
       isProgressiveReleaseEnabled && pendingRelease && pendingRelease.replaces;

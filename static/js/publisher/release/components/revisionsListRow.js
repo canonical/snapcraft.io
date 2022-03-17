@@ -88,9 +88,9 @@ const RevisionsListRow = (props) => {
       </td>
       <td>{revision.version}</td>
       {showBuildRequest && <td>{buildRequestId && <>{buildRequestId}</>}</td>}
-      {canShowProgressiveReleases && (
+      {canShowProgressiveReleases && showProgressive && (
         <td>
-          {revision.release && showProgressive && (
+          {revision.release && (
             <RevisionsListRowProgressive
               channel={channel}
               architecture={revision.release.architecture}

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import RevisionLabel from "../revisionLabel";
@@ -18,10 +18,10 @@ import ReleaseMenuItem from "./releaseMenuItem";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (
-  <Fragment>
+  <>
     close channel
     <span className="p-tooltip__message">Pending channel close</span>
-  </Fragment>
+  </>
 );
 
 // content of an empty cell in 'Available' row (when nothing was assigned)
@@ -43,7 +43,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
     : null;
 
   return (
-    <Fragment>
+    <>
       <span className="p-release-data__info--empty">
         {trackingChannel ? (
           <small>
@@ -60,7 +60,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
           ? `Tracking ${trackingChannel}`
           : "Nothing currently released"}
       </span>
-    </Fragment>
+    </>
   );
 };
 
@@ -73,52 +73,98 @@ const ProgressiveTooltip = ({
   previousRevision,
   progressiveState,
   pendingProgressiveState,
+  version,
+  confinement,
 }) => {
   let previousRevisionInfo = "";
   let revisionInfo = "";
   if (progressiveState) {
-    previousRevisionInfo = ` (${100 - progressiveState.percentage}%`;
-    revisionInfo = ` (${progressiveState.percentage}%`;
+    previousRevisionInfo = ` ${100 - progressiveState.percentage}%`;
+    revisionInfo = ` ${progressiveState.percentage || 0}%`;
     if (pendingProgressiveState) {
       previousRevisionInfo = `${previousRevisionInfo} → ${
         100 - pendingProgressiveState.percentage
       }%`;
       revisionInfo = `${revisionInfo} → ${pendingProgressiveState.percentage}%`;
     }
-    previousRevisionInfo = `${previousRevisionInfo} of devices)`;
-    revisionInfo = `${revisionInfo} of devices)`;
+    previousRevisionInfo = `${previousRevisionInfo}`;
+    revisionInfo = `${revisionInfo}`;
   }
 
-  const previousRevisionState = (
-    <Fragment>
-      Revision: <b>{previousRevision}</b>
-      {previousRevisionInfo}
-    </Fragment>
+  let previousRevisionState;
+
+  if (revision.progressive) {
+    previousRevisionState = (
+      <>
+        {Math.floor(100 - revision?.progressive["current-percentage"])}% →{" "}
+        {previousRevisionInfo}
+      </>
+    );
+  }
+
+  let revisionState;
+
+  if (revision.progressive) {
+    revisionState = (
+      <>
+        {Math.floor(revision.progressive["current-percentage"])}% →{" "}
+        {revisionInfo}
+      </>
+    );
+  }
+
+  const currentRevisionData = (
+    <>
+      <strong>{revision.revision} (progressive)</strong>
+      <br />
+      <strong>{revisionState}</strong>
+      <br />
+      <strong>{version}</strong>
+      <br />
+      <strong>{confinement}</strong>
+    </>
   );
 
-  const revisionState = (
-    <Fragment>
-      Revision: <b>{revision}</b>
-      {revisionInfo}
-    </Fragment>
+  const previousRevisionData = (
+    <>
+      <strong>{previousRevision.revision}</strong>
+      <br />
+      <strong>{previousRevisionState}</strong>
+      <br />
+      <strong>{previousRevision.version}</strong>
+      <br />
+      <strong>{previousRevision.confinement}</strong>
+    </>
+  );
+
+  const tooltipLabels = (
+    <>
+      Revision:
+      <br />
+      Release progress:
+      <br />
+      Version:
+      <br />
+      Confinement:
+    </>
   );
 
   return (
-    <Fragment>
-      <b>Progressive release of revision {revision} in progress</b>
-      <br />
-      {previousRevisionState}
-      <br />
-      {revisionState}
-    </Fragment>
+    <div className="row">
+      <div className="col-4">{tooltipLabels}</div>
+      <div className="col-4">{previousRevisionData}</div>
+      <div className="col-4">{currentRevisionData}</div>
+    </div>
   );
 };
 
 ProgressiveTooltip.propTypes = {
-  revision: PropTypes.number,
-  previousRevision: PropTypes.number,
+  revision: PropTypes.object,
+  previousRevision: PropTypes.object,
   progressiveState: PropTypes.object,
   pendingProgressiveState: PropTypes.object,
+  version: PropTypes.string,
+  confinement: PropTypes.string,
 };
 
 // contents of a cell with a revision
@@ -138,63 +184,76 @@ export const RevisionInfo = ({
   const releasable = canBeReleased(revision);
 
   const blockedMessage = (revision) => (
-    <Fragment>
+    <>
       Can’t be released: <b>{revision.status}.</b>
       <br />
-    </Fragment>
+    </>
   );
 
+  const isProgressive =
+    previousRevision &&
+    previousRevision.progressive &&
+    previousRevision.progressive.paused !== null &&
+    previousRevision.progressive.percentage !== null;
+
   return (
-    <Fragment>
+    <>
       <span className="p-release-data__info">
         <span className="p-release-data__title">
           <RevisionLabel
             revision={revision}
             showTooltip={false}
-            isProgressive={previousRevision ? true : false}
+            isProgressive={isProgressive}
+            previousRevision={previousRevision?.revision}
           />
         </span>
         <span className="p-release-data__meta">
-          {revision.version} | {revision.attributes["build-request-id"]}
+          {revision.version}
+          {revision.attributes["build-request-id"] &&
+            ` | ${revision.attributes["build-request-id"]}`}
         </span>
       </span>
       <span className="p-tooltip__message">
         {isPending && "Pending release of:"}
 
         <div className="p-tooltip__group">
-          {!releasable && blockedMessage(revision)}
-          Revision: <b>{revision.revision}</b>
-          <br />
-          Version: <b>{revision.version}</b>
-          {revision.attributes && revision.attributes["build-request-id"] && (
-            <Fragment>
-              <br />
-              Build: {buildIcon}{" "}
-              <b>{revision.attributes["build-request-id"]}</b>
-            </Fragment>
-          )}
-          {isInDevmode(revision) && (
-            <Fragment>
-              <br />
-              {revision.confinement === "devmode" ? (
-                <Fragment>
-                  Confinement: <b>devmode</b>
-                </Fragment>
-              ) : (
-                <Fragment>
-                  Grade: <b>devel</b>
-                </Fragment>
-              )}
-            </Fragment>
-          )}
-          <br />
-          {previousRevision && (
+          {isProgressive ? (
             <ProgressiveTooltip
-              revision={revision.revision}
+              revision={revision}
               previousRevision={previousRevision}
               progressiveState={progressiveState}
               pendingProgressiveState={pendingProgressiveState}
+              version={revision.version}
+              confinement={revision.confinement}
             />
+          ) : (
+            <>
+              {!releasable && blockedMessage(revision)}
+              Revision: <strong>{revision.revision}</strong>
+              <br />
+              Version: <strong>{revision.version}</strong>
+              {revision.attributes && revision.attributes["build-request-id"] && (
+                <>
+                  <br />
+                  Build: {buildIcon}{" "}
+                  <strong>{revision.attributes["build-request-id"]}</strong>
+                </>
+              )}
+              {isInDevmode(revision) && (
+                <>
+                  <br />$
+                  {revision.confinement === "devmode" ? (
+                    <>
+                      Confinement: <strong>devmode</strong>
+                    </>
+                  ) : (
+                    <>
+                      Grade: <strong>devel</strong>
+                    </>
+                  )}
+                </>
+              )}
+            </>
           )}
         </div>
 
@@ -206,7 +265,7 @@ export const RevisionInfo = ({
           </div>
         )}
       </span>
-    </Fragment>
+    </>
   );
 };
 
@@ -214,7 +273,7 @@ RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
   progressiveState: PropTypes.object,
-  previousRevision: PropTypes.number,
+  previousRevision: PropTypes.object,
   pendingProgressiveState: PropTypes.object,
 };
 

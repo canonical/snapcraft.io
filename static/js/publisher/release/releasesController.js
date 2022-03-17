@@ -48,6 +48,7 @@ const ReleasesController = ({
   }, []);
 
   const { visible } = notification;
+
   return (
     <Fragment>
       {!ready && (
@@ -66,7 +67,11 @@ const ReleasesController = ({
       )}
       {ready && (
         <Fragment>
-          {visible && <Notification />}
+          {visible && (
+            <div className="u-fixed-width">
+              <Notification />
+            </div>
+          )}
           <ReleasesHeading />
           <ReleasesTable />
           {showModal && <Modal />}

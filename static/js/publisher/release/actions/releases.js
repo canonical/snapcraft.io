@@ -106,7 +106,13 @@ export function handleReleaseResponse(dispatch, json, release, revisions) {
     });
   } else {
     if (json.errors) {
-      throw new Error(json.errors[0]);
+      let error = json.errors[0];
+
+      if (typeof error !== "string") {
+        error = json.errors[0].message;
+      }
+
+      throw new Error(error);
     }
   }
 }
@@ -119,14 +125,17 @@ export function releaseRevisions() {
       pendingRelease.progressive &&
       pendingRelease.progressive.percentage < 100
     ) {
-      progressive = pendingRelease.progressive;
+      progressive = {
+        percentage: pendingRelease.progressive.percentage,
+        paused: pendingRelease.progressive.paused,
+      };
     }
 
     return {
       id: pendingRelease.revision.revision,
       revision: pendingRelease.revision,
       channels: [pendingRelease.channel],
-      progressive: progressive,
+      progressive,
     };
   };
 
@@ -181,15 +190,15 @@ export function releaseRevisions() {
       )
       .then(() => fetchReleasesHistory(csrfToken, snapName))
       .then((json) => dispatch(updateReleasesData(json)))
-      .catch((error) =>
+      .catch((error) => {
         dispatch(
           showNotification({
             status: "error",
             appearance: "negative",
             content: getErrorMessage(error),
           })
-        )
-      )
+        );
+      })
       .then(() => dispatch(cancelPendingReleases()))
       .then(() => dispatch(closeHistory()));
   };

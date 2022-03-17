@@ -67,6 +67,8 @@ function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
           ] = revisionInfo;
           releasedChannels[mapInfo.channel][mapInfo.architecture].expiration =
             mapInfo["expiration-date"];
+          releasedChannels[mapInfo.channel][mapInfo.architecture].progressive =
+            mapInfo["progressive"];
         } else {
           missingRevisions.push(fetchMissingRevision(snapName, mapInfo));
         }

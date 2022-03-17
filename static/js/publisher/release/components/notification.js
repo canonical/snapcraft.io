@@ -22,11 +22,11 @@ class Notification extends Component {
     const className = notificationStyle("", appearance);
 
     return (
-      <div className={`p-notification ${className}`}>
-        <p className={notificationStyle("response")}>
+      <div className={className}>
+        <div className={notificationStyle("content")}>
           {status && this.getStatus(this.props.status)}
-          {children}
-        </p>
+          <div className="p-notification__message">{children}</div>
+        </div>
         {canDismiss && (
           <button
             className="p-icon--close"
@@ -43,7 +43,7 @@ class Notification extends Component {
   getStatus(status) {
     const statusString = status.charAt(0).toUpperCase() + status.slice(1);
 
-    return <span className={notificationStyle("status")}>{statusString}:</span>;
+    return <h5 className="p-notification__title">{statusString}</h5>;
   }
 }
 

@@ -134,7 +134,7 @@ const ReleasesTableReleaseCell = (props) => {
         revision={currentRevision}
         isPending={pendingRelease ? true : false}
         progressiveState={progressiveState}
-        previousRevision={previousRevision ? previousRevision.revision : null}
+        previousRevision={previousRevision ? previousRevision : null}
         pendingProgressiveState={pendingProgressiveState}
       />
     );
@@ -172,24 +172,6 @@ const ReleasesTableReleaseCell = (props) => {
       )}
 
       {cellInfoNode}
-      {!isChannelPendingClose &&
-        pendingProgressiveState &&
-        pendingProgressiveState.percentage && (
-          <span
-            className="p-release__progressive-pending-percentage"
-            style={{
-              width: `${pendingProgressiveState.percentage}%`,
-            }}
-          />
-        )}
-      {!isChannelPendingClose &&
-        progressiveState &&
-        progressiveState.percentage && (
-          <span
-            className="p-release__progressive-percentage"
-            style={{ width: `${progressiveState.percentage}%` }}
-          />
-        )}
     </ReleasesTableCellView>
   );
 };
