@@ -1,4 +1,4 @@
-name: test-ros2-talker-listener-{name}
+name: ros2-talker-listener-{name}
 linux:
   - action: "Install the snap:"
     command: sudo snap install --devmode --dangerous *.snap

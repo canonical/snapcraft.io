@@ -1,4 +1,4 @@
-name: test-ros-talker-listener-{name}
+name: ros-talker-listener-{name}
 linux:
   auto:
     - action: "Create a directory, move the downloaded snapcraft.yaml file into the new directory and navigate there:"

@@ -1,2 +1,2 @@
-name: test-ros2-talker-listener-{name}
+name: ros2-talker-listener-{name}
 download: git clone https://github.com/snapcraft-docs/ros2-talker-listener
