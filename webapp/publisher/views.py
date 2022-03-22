@@ -5,6 +5,7 @@ from canonicalwebteam.store_api.exceptions import (
     PublisherMacaroonRefreshRequired,
     PublisherMissingUsername,
     StoreApiTimeoutError,
+    StoreApiResourceNotFound,
 )
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
@@ -58,6 +59,8 @@ def _handle_error(api_error: ApiError):
         return flask.redirect(flask.url_for("account.get_agreement"))
     elif type(api_error) is PublisherMacaroonRefreshRequired:
         return refresh_redirect(flask.request.path)
+    elif type(api_error) is StoreApiResourceNotFound:
+        return flask.abort(404, str(api_error))
     else:
         return flask.abort(502, str(api_error))
 

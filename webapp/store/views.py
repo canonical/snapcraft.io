@@ -9,6 +9,7 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStore
 from canonicalwebteam.store_api.exceptions import (
     StoreApiConnectionError,
     StoreApiError,
+    StoreApiResourceNotFound,
     StoreApiResponseDecodeError,
     StoreApiResponseError,
     StoreApiResponseErrorList,
@@ -49,6 +50,8 @@ def store_blueprint(store_query=None):
             status_code = 502
         elif type(api_error) is StoreApiConnectionError:
             status_code = 502
+        elif type(api_error) is StoreApiResourceNotFound:
+            status_code = 404
 
         return status_code, error
 
