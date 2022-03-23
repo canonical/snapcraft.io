@@ -14,6 +14,7 @@ from canonicalwebteam.flask_base.decorators import (
 )
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
+    StoreApiResourceNotFound,
     StoreApiResponseDecodeError,
     StoreApiResponseError,
     StoreApiResponseErrorList,
@@ -30,6 +31,8 @@ def snap_details_views(store, api, handle_errors):
     def _get_context_snap_details(snap_name):
         try:
             details = api.get_item_details(snap_name, api_version=2)
+        except StoreApiResourceNotFound:
+            flask.abort(404, "No snap named {}".format(snap_name))
         except StoreApiTimeoutError as api_timeout_error:
             flask.abort(504, str(api_timeout_error))
         except StoreApiResponseDecodeError as api_response_decode_error:
