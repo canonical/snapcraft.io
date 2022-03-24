@@ -11,7 +11,7 @@
 export const toggleAccordion = (element, show) => {
   element.setAttribute("aria-expanded", show);
   document
-    .querySelector(element.getAttribute("aria-controls"))
+    .querySelector(`#${element.getAttribute("aria-controls")}`)
     .setAttribute("aria-hidden", !show);
 };
 

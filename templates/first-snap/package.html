@@ -3,16 +3,18 @@
 
 {% block fsf_content %}
   <div class="row">
-    <div class="p-accordion" role="tablist" aria-multiselect="true">
+    <div class="p-accordion">
       <ol class="p-accordion__list">
         <li class="p-accordion__group">
-          <button {% if has_user_chosen_name %}aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab--with-title" id="tab1" role="tab" aria-controls="#tab1-section" >
-            <h4 class="p-accordion__title">
-              Step 1: Choose snap name
-              {% if has_user_chosen_name %}<i class="p-icon--success"></i>{% endif %}
-            </h4>
-          </button>
-          <section class="p-accordion__panel" id="tab1-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1-section">
+          <div role="heading" aria-level="1" class="p-accordion__heading">
+            <button {% if has_user_chosen_name %}aria-expanded="false"{% else %}aria-expanded="true"{% endif %} class="p-accordion__tab" id="tab1" role="tab" aria-controls="tab1-section" >
+              <h4 class="p-accordion__title u-no-margin--bottom">
+                Step 1: Choose snap name
+                {% if has_user_chosen_name %}<i class="p-icon--success"></i>{% endif %}
+              </h4>
+            </button>
+          </div>
+          <section class="p-accordion__panel" id="tab1-section" {% if has_user_chosen_name %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1">
             <div class="p-strip is-shallow">
               <div class="row">
                 <div class="col-8">
@@ -33,12 +35,14 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <button {% if has_user_chosen_name %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} type="button" class="p-accordion__tab--with-title" id="tab2" role="tab" aria-controls="#tab2-section">
-            <h4 class="p-accordion__title">
-              Step 2: Download your snapcraft.yaml
-            </h4>
-          </button>
-          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if has_user_chosen_name %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %} aria-labelledby="tab2-section">
+          <div role="heading" aria-level="1" class="p-accordion__heading">
+            <button {% if has_user_chosen_name %}aria-expanded="true"{% else %}aria-expanded="false"{% endif %} class="p-accordion__tab" id="tab2" role="tab" aria-controls="tab2-section" >
+              <h4 class="p-accordion__title u-no-margin--bottom">
+                Step 2: Download your snapcraft.yaml
+              </h4>
+            </button>
+          </div>
+          <section class="p-accordion__panel" id="tab2-section" {% if has_user_chosen_name %}aria-hidden="false"{% else %}aria-hidden="true"{% endif %} aria-labelledby="tab2">
             <div class="p-strip is-shallow">
               <div class="row">
                 <div class="col-9">
