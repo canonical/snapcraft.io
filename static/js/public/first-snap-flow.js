@@ -264,10 +264,10 @@ function initRegisterName(formEl, notificationEl, successEl) {
 
     const currentPanel = formEl.closest(".p-accordion__group");
     const currentToggle = currentPanel.querySelector(
-      ".p-accordion__tab--with-title"
+      ".p-accordion__tab"
     );
     const nextPanel = currentPanel.nextElementSibling;
-    const nextToggle = nextPanel.querySelector(".p-accordion__tab--with-title");
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
 
     const enableButton = () => {
       if (submitButton.disabled) {
