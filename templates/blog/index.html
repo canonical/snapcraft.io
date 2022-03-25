@@ -63,12 +63,12 @@
       {% if current_page > 1 %}
         <li class="p-pagination__item">
           <a class="p-pagination__link--previous" href="/blog?page={{ current_page - 1 }}" title="Previous page">
-            <i class="p-icon--contextual-menu">Previous page</i>
+            <i class="p-icon--chevron-up">Previous page</i>
           </a>
         </li>
       {% else %}
         <li class="p-pagination__item">
-          <span class="p-pagination__link--previous is-disabled"><i class="p-icon--contextual-menu">Previous page</i></span>
+          <span class="p-pagination__link--previous is-disabled"><i class="p-icon--chevron-up">Previous page</i></span>
         </li>
       {% endif %}
 
@@ -129,12 +129,12 @@
       {% if current_page != total_pages %}
         <li class="p-pagination__item">
           <a class="p-pagination__link--next" href="/blog?page={{ current_page + 1 }}" title="Next page">
-            <i class="p-icon--contextual-menu">Next page</i>
+            <i class="p-icon--chevron-up">Next page</i>
           </a>
         </li>
       {% else %}
         <li class="p-pagination__item">
-          <span class="p-pagination__link--next is-disabled"><i class="p-icon--contextual-menu">Next page</i></span>
+          <span class="p-pagination__link--next is-disabled"><i class="p-icon--chevron-up">Next page</i></span>
         </li>
       {% endif %}
     </ol>
