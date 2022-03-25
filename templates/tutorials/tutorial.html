@@ -93,21 +93,21 @@
                 <div class="p-tutorial__pagination">
                   {% if loop.first %}
                     <button class="p-tutorial__pagination-item--prev p-button has-icon u-no-margin--bottom" disabled style="margin-right: 1rem;">
-                      <i class="p-icon--contextual-menu">Previous step</i>
+                      <i class="p-icon--chevron-up">Previous step</i>
                     </button>
                   {% else %}
                     <a href="#{{ loop.index - 1 }}-{{ loop.previtem['slug'] }}" class="p-tutorial__pagination-item--prev p-button has-icon u-no-margin--bottom" style="margin-right: 1rem;">
-                      <i class="p-icon--contextual-menu">Previous step</i>
+                      <i class="p-icon--chevron-up">Previous step</i>
                     </a>
                   {% endif %}
 
                   {% if loop.last %}
                     <button class="p-tutorial__pagination-item--next p-button has-icon u-no-margin--bottom" disabled>
-                      <i class="p-icon--contextual-menu">Next step</i>
+                      <i class="p-icon--chevron-up">Next step</i>
                     </button>
                   {% else %}
                     <a href="#{{ loop.index + 1 }}-{{ loop.nextitem['slug'] }}" class="p-tutorial__pagination-item--next p-button has-icon u-no-margin--bottom">
-                      <i class="p-icon--contextual-menu">Next step</i>
+                      <i class="p-icon--chevron-up">Next step</i>
                     </a>
                   {% endif %}
                 </div>
