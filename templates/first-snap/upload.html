@@ -25,14 +25,12 @@
     <div class="p-accordion">
       <ol class="p-accordion__list">
         <li class="p-accordion__group">
-          <div role="heading" aria-level="1" class="p-accordion__heading">
+          <h4 class="p-accordion__heading">
             <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} class="p-accordion__tab" id="tab1" role="tab" aria-controls="tab1-section" >
-              <h4 class="p-accordion__title u-no-margin--bottom">
-                Step 1: Create an Ubuntu One account
-                {% if user %}<i class="p-icon--success"></i>{% endif %}
-              </h4>
+              Step 1: Create an Ubuntu One account
+              {% if user %}<i class="p-icon--success"></i>{% endif %}
             </button>
-          </div>
+          </h4>
           <section class="p-accordion__panel" id="tab1-section" {% if user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1">
             <div class="p-strip is-shallow">
               <div class="row">
@@ -46,14 +44,12 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <div role="heading" aria-level="1" class="p-accordion__heading">
+          <h4 class="p-accordion__heading">
             <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} class="p-accordion__tab" id="tab2" role="tab" aria-controls="tab2-section">
-              <h4 class="p-accordion__title u-no-margin--bottom">
-                Step 2: Register your snap name
-                <i id="register-name-success" class="p-icon--success u-hide"></i>
-              </h4>
+              Step 2: Register your snap name
+              <i id="register-name-success" class="p-icon--success u-hide"></i>
             </button>
-          </div>
+          </h4>
           <section class="p-accordion__panel" id="tab2-section" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2">
             <div class="p-strip is-shallow">
               <div class="row">
@@ -86,13 +82,11 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <div role="heading" aria-level="1" class="p-accordion__heading">
+          <h4 class="p-accordion__heading">
             <button {% if not user %}disabled{% endif %} class="p-accordion__tab" id="tab3" role="tab" aria-controls="tab3-section" aria-expanded="false">
-              <h4 class="p-accordion__title u-no-margin--bottom">
-                Step 3: Upload to the Snap store
-              </h4>
+              Step 3: Upload to the Snap store
             </button>
-          </div>
+          </h4>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3">
             <div class="p-strip is-shallow">
               <div class="row">
