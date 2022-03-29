@@ -3,7 +3,7 @@ ruamel.yaml.clib==0.2.2
 click==8.0.3
 
 # App dependencies
-canonicalwebteam.flask-base==1.0.2
+canonicalwebteam.flask-base==1.0.3
 canonicalwebteam.candid==0.9.0
 canonicalwebteam.discourse==4.0.8
 canonicalwebteam.blog==6.4.0
