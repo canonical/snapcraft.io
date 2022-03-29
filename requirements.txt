@@ -3,7 +3,7 @@ ruamel.yaml.clib==0.2.2
 click==8.0.3
 
 # App dependencies
-canonicalwebteam.flask-base==1.0.2
+canonicalwebteam.flask-base==1.0.3
 canonicalwebteam.candid==0.9.0
 canonicalwebteam.discourse==4.0.8
 canonicalwebteam.blog==6.4.0
@@ -17,7 +17,7 @@ Flask-WTF==0.15.1
 bleach==3.3.1
 humanize==3.13.1
 mistune==0.8.4
-pybadges==2.2.1
+pybadges==3.0.0
 pycountry==20.7.3
 pymacaroons==0.13.0
 python-dateutil==2.8.2
