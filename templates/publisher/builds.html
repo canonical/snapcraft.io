@@ -63,22 +63,26 @@ Builds for
     </div>
     {% endif %}
 
-    {% if github_repository and (not github_repository_exists or not yaml_file_exists) %}
-    <section class="p-strip is-shallow">
-      <div class="u-fixed-width">
-        <div class="p-notification--negative">
-          <div class="p-notification__content">
-            <p class="p-notification__message">
-              {% if not github_repository_exists %}
-              Your snap is linked to <a href="https://github.com/{{ github_repository }}" >{{ github_repository }}</a>, but this repository doesn&rsquo;t exist. <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>.
-              {% elif not yaml_file_exists %}
-              This repository doesn&rsquo;t contain snapcraft.yaml. More on <a href="https://snapcraft.io/docs/creating-snapcraft-yaml">how to create it</a>.
-              {% endif %}
-            </p>
+    {% if github_repository %}
+      {% if github_app_revoked or not github_repository_exists or not yaml_file_exists %}
+      <section class="p-strip is-shallow">
+        <div class="u-fixed-width">
+          <div class="p-notification--negative">
+            <div class="p-notification__content">
+              <p class="p-notification__message">
+                {% if github_app_revoked %}
+                Access was revoked to your GitHub account. Please check your GitHub OAuth apps or <a href="/github/auth?back=/{{ snap_name }}/builds">click here</a>.
+                {% elif not github_repository_exists %}
+                Your snap is linked to <a href="https://github.com/{{ github_repository }}" >{{ github_repository }}</a>, but this repository doesn&rsquo;t exist. <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>.
+                {% elif not yaml_file_exists %}
+                This repository doesn&rsquo;t contain snapcraft.yaml. More on <a href="https://snapcraft.io/docs/creating-snapcraft-yaml">how to create it</a>.
+                {% endif %}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      {% endif %}
     {% endif %}
 
 

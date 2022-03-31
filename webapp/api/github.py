@@ -267,6 +267,10 @@ class GitHub:
             return False
         elif response.status_code == 200:
             return True
+        elif response.status_code == 401:
+            raise Unauthorized
+
+        response.raise_for_status()
 
     def get_snapcraft_yaml_location(self, owner, repo):
         """
@@ -285,6 +289,8 @@ class GitHub:
                 continue
             elif response.status_code == 200:
                 return loc
+            elif response.status_code == 401:
+                raise Unauthorized
 
             response.raise_for_status()
 
