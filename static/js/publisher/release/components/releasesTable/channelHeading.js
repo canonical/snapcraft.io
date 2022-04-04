@@ -384,7 +384,7 @@ const ReleasesTableChannelHeading = (props) => {
 };
 
 ReleasesTableChannelHeading.propTypes = {
-  // props]
+  // props
   drag: PropTypes.func,
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
