@@ -269,9 +269,9 @@ function Snaps() {
                 <Spinner text="Loading&hellip;" />
               </div>
             ) : currentStore && isReviewerAndPublisherOnly ? (
-              <ReviewerAndPublisher />
+              <ReviewerAndPublisher id={id} />
             ) : currentStore && isReviewerOnly ? (
-              <Reviewer />
+              <Reviewer id={id} />
             ) : currentStore && isPublisherOnly ? (
               <Publisher />
             ) : (
