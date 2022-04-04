@@ -113,13 +113,15 @@ def get_snap_builds(snap_name):
         context["github_repository"] = lp_snap["git_repository_url"][19:]
         github_owner, github_repo = context["github_repository"].split("/")
 
-        context["github_repository_exists"] = github.check_if_repo_exists(
-            github_owner, github_repo
-        )
-
-        context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
-            github_owner, github_repo
-        )
+        try:
+            context["github_repository_exists"] = github.check_if_repo_exists(
+                github_owner, github_repo
+            )
+            context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
+                github_owner, github_repo
+            )
+        except Unauthorized:
+            context["github_app_revoked"] = True
 
         context.update(get_builds(lp_snap, slice(0, BUILDS_PER_PAGE)))
 
