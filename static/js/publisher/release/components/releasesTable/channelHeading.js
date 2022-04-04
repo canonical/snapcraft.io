@@ -251,35 +251,6 @@ const ReleasesTableChannelHeading = (props) => {
     }
   }
 
-  const channelVersionTooltip = (
-    <Fragment>
-      {Object.keys(versionsMap).map((version) => {
-        return (
-          <span key={`tooltip-${channel}-${version}`}>
-            {version}:{" "}
-            <b>
-              {versionsMap[version].length === archs.length
-                ? "All architectures"
-                : versionsMap[version].join(", ")}
-            </b>
-            <br />
-            {isLaunchpadBuild && (
-              <Fragment>
-                Build: <i className="p-icon--lp" /> <b>{channelBuild}</b>
-                <br />
-                Built at:{" "}
-                <b>
-                  {channelBuildDate &&
-                    format(channelBuildDate, "yyyy-MM-dd HH:mm")}
-                </b>
-              </Fragment>
-            )}
-          </span>
-        );
-      })}
-    </Fragment>
-  );
-
   let rowTitle = risk === AVAILABLE ? channelVersion : channel;
 
   if (risk === BUILD) {
