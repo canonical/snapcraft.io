@@ -13,7 +13,6 @@ parts:
     source-branch: dashing
     colcon-rosdistro: dashing
     colcon-source-space: demo_nodes_cpp
-    build-packages: [make, gcc, g++]
     stage-packages: [ros-dashing-ros2launch]
 
 apps:
