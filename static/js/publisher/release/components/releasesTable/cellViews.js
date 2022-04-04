@@ -155,8 +155,11 @@ export const RevisionInfo = ({
           />
         </span>
         <span className="p-release-data__meta">
-          {revision.version} | {revision.attributes["build-request-id"]}
-        </span>
+          {revision.version}
+          {revision.attributes["build-request-id"]
+            ? ` | ${revision.attributes["build-request-id"]}`
+            : ""}
+        </span>{" "}
       </span>
       <span className="p-tooltip__message">
         {isPending && "Pending release of:"}
