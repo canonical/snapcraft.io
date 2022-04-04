@@ -357,12 +357,8 @@ const ReleasesTableChannelHeading = (props) => {
         {risk !== AVAILABLE && (
           <span className="p-release-data__meta">
             {channelVersion}
-            {channelBuildDate &&
-              ` | ${format(channelBuildDate, "dd MMM yyyy")}`}
+            {channelBuildDate && ` | ${format(channelBuildDate, "dd MMM yy")}`}
           </span>
-        )}
-        {channelVersion && (
-          <span className="p-tooltip__message">{channelVersionTooltip}</span>
         )}
       </div>
 
@@ -388,7 +384,7 @@ const ReleasesTableChannelHeading = (props) => {
 };
 
 ReleasesTableChannelHeading.propTypes = {
-  // props
+  // props]
   drag: PropTypes.func,
   risk: PropTypes.string.isRequired,
   branch: PropTypes.object,
