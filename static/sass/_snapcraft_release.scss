@@ -248,6 +248,7 @@
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .p-release__progressive-percentage,
