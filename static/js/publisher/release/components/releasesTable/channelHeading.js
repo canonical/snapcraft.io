@@ -70,7 +70,6 @@ const ReleasesTableChannelHeading = (props) => {
     risk,
     branch,
     numberOfBranches,
-    archs,
     pendingChannelMap,
     openBranches,
     availableBranches,
