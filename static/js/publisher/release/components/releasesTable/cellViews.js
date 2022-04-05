@@ -191,14 +191,14 @@ export const RevisionInfo = ({
             </Fragment>
           )}
           <br />
-          {previousRevision && (
+          {/* {previousRevision && (
             <ProgressiveTooltip
               revision={revision.revision}
               previousRevision={previousRevision}
               progressiveState={progressiveState}
               pendingProgressiveState={pendingProgressiveState}
             />
-          )}
+          )} */}
         </div>
 
         {isInDevmode(revision) && (
