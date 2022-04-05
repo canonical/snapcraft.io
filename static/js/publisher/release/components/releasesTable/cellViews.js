@@ -144,6 +144,12 @@ export const RevisionInfo = ({
     </Fragment>
   );
 
+  const isProgressive =
+    previousRevision &&
+    previousRevision.progressive &&
+    previousRevision.progressive.paused !== null &&
+    previousRevision.progressive.percentage !== null;
+
   return (
     <Fragment>
       <span className="p-release-data__info">
@@ -151,14 +157,20 @@ export const RevisionInfo = ({
           <RevisionLabel
             revision={revision}
             showTooltip={false}
-            isProgressive={previousRevision ? true : false}
+            isProgressive={isProgressive}
+            previousRevision={previousRevision?.revision}
           />
         </span>
         <span className="p-release-data__meta">
-          {revision.version}
-          {revision.attributes["build-request-id"]
-            ? ` | ${revision.attributes["build-request-id"]}`
-            : ""}
+          {isProgressive
+            ? "Progressive release"
+            : `
+            ${revision.version}
+            ${
+              revision.attributes["build-request-id"]
+                ? ` | ${revision.attributes["build-request-id"]}`
+                : ""
+            }`}
         </span>{" "}
       </span>
       <span className="p-tooltip__message">
@@ -217,7 +229,7 @@ RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
   progressiveState: PropTypes.object,
-  previousRevision: PropTypes.number,
+  previousRevision: PropTypes.object,
   pendingProgressiveState: PropTypes.object,
 };
 

@@ -317,6 +317,7 @@
 
   .p-release-data__info {
     overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 
     &.is-pending {

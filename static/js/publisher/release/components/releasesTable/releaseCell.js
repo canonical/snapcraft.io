@@ -134,7 +134,7 @@ const ReleasesTableReleaseCell = (props) => {
         revision={currentRevision}
         isPending={pendingRelease ? true : false}
         progressiveState={progressiveState}
-        previousRevision={previousRevision ? previousRevision.revision : null}
+        previousRevision={previousRevision ? previousRevision : null}
         pendingProgressiveState={pendingProgressiveState}
       />
     );

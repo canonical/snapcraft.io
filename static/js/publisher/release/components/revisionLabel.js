@@ -7,11 +7,12 @@ export default function RevisionLabel({
   revision,
   showTooltip,
   isProgressive,
+  previousRevision,
 }) {
   let revisionLabel = revision.revision;
 
   if (isProgressive) {
-    revisionLabel = `→ ${revisionLabel}`;
+    revisionLabel = `${previousRevision} → ${revisionLabel}`;
   }
 
   if (isInDevmode(revision)) {
@@ -47,4 +48,5 @@ RevisionLabel.propTypes = {
   revision: PropTypes.object.isRequired,
   showTooltip: PropTypes.bool,
   isProgressive: PropTypes.bool,
+  previousRevision: PropTypes.number,
 };
