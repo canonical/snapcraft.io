@@ -1,6 +1,11 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
-function Reviewer({ id }) {
+import type { RouteParams } from "../types/shared";
+
+function Reviewer() {
+  const { id } = useParams<RouteParams>();
+
   return (
     <div className="u-fixed-width">
       <h1>Reviewer</h1>

@@ -1,16 +1,21 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
-function ReviewerAndPublisher({ id }) {
+import type { RouteParams } from "../types/shared";
+
+function ReviewerAndPublisher() {
+  const { id } = useParams<RouteParams>();
+
   return (
     <div className="u-fixed-width">
       <h1>Reviewer and publisher</h1>
       <p>
         As a publisher you can{" "}
-        <a href="/snaps">register a snap name on the Snap store</a>
-        {" "}and{" "}
+        <a href="/snaps">register a snap name on the Snap store</a> and{" "}
         <a href={`${window.API_URL}stores/snaps/`}>
           manage your snaps on the dashboard
-        </a>.
+        </a>
+        .
       </p>
       <p>
         As a reviewer you can{" "}
