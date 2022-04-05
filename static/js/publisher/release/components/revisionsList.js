@@ -354,9 +354,9 @@ class RevisionsList extends Component {
               </th>
               <th scope="col">Version</th>
               {showBuildRequest && <th scope="col">Build Request</th>}
-              {showProgressiveReleases && (
+              {/* {showProgressiveReleases && (
                 <th scope="col">Progressive release status</th>
-              )}
+              )} */}
               {showChannels && <th scope="col">Channels</th>}
               <th scope="col">
                 {isReleaseHistory ? "Release date" : "Submission date"}

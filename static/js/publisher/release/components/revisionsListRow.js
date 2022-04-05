@@ -88,7 +88,7 @@ const RevisionsListRow = (props) => {
       </td>
       <td>{revision.version}</td>
       {showBuildRequest && <td>{buildRequestId && <>{buildRequestId}</>}</td>}
-      {canShowProgressiveReleases && (
+      {/* {canShowProgressiveReleases && (
         <td>
           {revision.release && showProgressive && (
             <RevisionsListRowProgressive
@@ -103,7 +103,7 @@ const RevisionsListRow = (props) => {
         <td>
           <em>Cancel progressive release</em>
         </td>
-      )}
+      )} */}
       {showChannels && <td>{revision.channels.join(", ")}</td>}
       <td>
         {isPending && <em>pending release</em>}
