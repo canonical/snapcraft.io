@@ -251,42 +251,6 @@
     white-space: nowrap;
   }
 
-  .p-release__progressive-percentage,
-  .p-release__progressive-pending-percentage {
-    @include vf-animation(#{transform}, fast, in);
-
-    border-radius: 0 4px 4px 0;
-    bottom: 0;
-    height: 3px;
-    left: 0;
-    position: absolute;
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-
-  .p-release__progressive-percentage {
-    background: $color-link;
-  }
-
-  .p-release__progressive-pending-percentage {
-    background: scale-color($color-link, $lightness: -20%);
-  }
-
-  .is-highlighted {
-    .p-release__progressive-percentage,
-    .p-release__progressive-pending-percentage {
-      height: 5px;
-    }
-  }
-
-  // stylelint-disable
-  .p-release__progressive-pending-percentage
-    + .p-release__progressive-percentage {
-    border-radius: 0;
-    border-right: 1px solid $color-x-light;
-  }
-  // stylelint-enable
-
   .p-contextual-menu__dropdown {
     overflow: visible; // allow tooltips inside menu
     z-index: 2; // workaround for https://github.com/canonical-web-and-design/vanilla-framework/issues/2577
@@ -406,11 +370,6 @@
 
       &:not(.p-releases-table__arch) {
         border-bottom: 3px solid $color-dark !important;
-      }
-
-      .p-release__progressive-percentage,
-      .p-release__progressive-pending-percentage {
-        transform: scaleX(0);
       }
 
       .p-release-data__title {
