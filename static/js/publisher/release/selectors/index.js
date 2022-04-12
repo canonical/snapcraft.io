@@ -270,9 +270,8 @@ export function getRevisionsFromBuild(state, buildId) {
   );
 }
 
-// return an array of 3 items:
+// return an array of 2 items:
 // [
-//    current progressive release status,
 //    the previous revision number,
 //    the progressive release status of a pending release of the same release
 // ]
@@ -283,7 +282,6 @@ export function getProgressiveState(state, channel, arch, isPending) {
 
   const { releases, pendingReleases, revisions } = state;
 
-  let progressiveStatus = null;
   let previousRevision = null;
   let pendingProgressiveStatus = null;
 
@@ -297,8 +295,6 @@ export function getProgressiveState(state, channel, arch, isPending) {
     // If the release is pending we don't want to look up the previous state, as it will be
     // for an outdated release
     if (!isPending && release && release.progressive) {
-      progressiveStatus = jsonClone(release.progressive);
-
       previousRevision = allReleases[1];
 
       if (previousRevision && previousRevision.revision) {
@@ -328,7 +324,7 @@ export function getProgressiveState(state, channel, arch, isPending) {
     }
   }
 
-  return [progressiveStatus, previousRevision, pendingProgressiveStatus];
+  return [previousRevision, pendingProgressiveStatus];
 }
 
 // Is the latest release for a channel & architecture a valid revision?

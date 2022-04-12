@@ -12,7 +12,9 @@ export default function RevisionLabel({
   let revisionLabel = revision.revision;
 
   if (isProgressive) {
-    revisionLabel = `${previousRevision} → ${revisionLabel}`;
+    revisionLabel = `${
+      previousRevision ? previousRevision : "?"
+    } → ${revisionLabel}`;
   }
 
   if (isInDevmode(revision)) {

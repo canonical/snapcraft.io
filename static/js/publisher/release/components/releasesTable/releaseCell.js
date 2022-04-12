@@ -58,16 +58,15 @@ const ReleasesTableReleaseCell = (props) => {
   // check if there is a pending release in this cell
   const pendingRelease = hasPendingRelease(channel, arch);
 
-  let progressiveState;
   let previousRevision;
   let pendingProgressiveState;
 
   if (currentRevision) {
-    [
-      progressiveState,
-      previousRevision,
-      pendingProgressiveState,
-    ] = getProgressiveState(channel, arch, pendingRelease);
+    [previousRevision, pendingProgressiveState] = getProgressiveState(
+      channel,
+      arch,
+      pendingRelease
+    );
   }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
@@ -133,9 +132,7 @@ const ReleasesTableReleaseCell = (props) => {
       <RevisionInfo
         revision={currentRevision}
         isPending={pendingRelease ? true : false}
-        progressiveState={progressiveState}
         previousRevision={previousRevision ? previousRevision : null}
-        pendingProgressiveState={pendingProgressiveState}
       />
     );
   } else if (isUnassigned) {
@@ -172,24 +169,6 @@ const ReleasesTableReleaseCell = (props) => {
       )}
 
       {cellInfoNode}
-      {!isChannelPendingClose &&
-        pendingProgressiveState &&
-        pendingProgressiveState.percentage && (
-          <span
-            className="p-release__progressive-pending-percentage"
-            style={{
-              width: `${pendingProgressiveState.percentage}%`,
-            }}
-          />
-        )}
-      {!isChannelPendingClose &&
-        progressiveState &&
-        progressiveState.percentage && (
-          <span
-            className="p-release__progressive-percentage"
-            style={{ width: `${progressiveState.percentage}%` }}
-          />
-        )}
     </ReleasesTableCellView>
   );
 };
