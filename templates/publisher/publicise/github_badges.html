@@ -11,16 +11,20 @@
       Display:
     </div>
     <div class="col-7" id="js-options">
+      <div>
         <input type="checkbox" name="show-channel" id="option-show-channel" checked>
         <label for="option-show-channel">
           Stable channel from default track
         </label>
+      </div>
+      <div>
         <input type="checkbox" name="show-trending" id="option-show-trending" {% if trending %}checked{% endif %}>
         <label for="option-show-trending">
           Trending status
           <span class="p-form-help-text">Badge will only display when your snap is flagged as trending</span>
         </label>
-        <p class="u-hide" id="options-unchecked-warning"><em>Please select at least one badge to display from the list above</em></p>
+      </div>
+      <p class="u-hide" id="options-unchecked-warning"><em>Please select at least one badge to display from the list above</em></p>
     </div>
   </div>
 
