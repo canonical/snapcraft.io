@@ -10,7 +10,7 @@ import { RootState } from "./Settings";
 
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useParams: jest.fn().mockReturnValue({ id: "test" }),
+  useParams: jest.fn().mockReturnValue({ id: "test-id" }),
 }));
 
 function getInitialState(): RootState {
