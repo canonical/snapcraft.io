@@ -181,7 +181,7 @@ function Settings() {
                   />
 
                   <PasswordToggle
-                    defaultValue={currentStore.id}
+                    defaultValue={id}
                     readOnly={true}
                     label="Store ID"
                     id="store-id"
