@@ -71,16 +71,16 @@ EmptyInfo.propTypes = {
 const ProgressiveTooltip = ({ revision, previousRevision }) => {
   const previousRevisionData = (
     <>
-      <strong>{previousRevision.revision || "Unknown"}</strong>
+      <strong>{previousRevision?.revision || "Unknown"}</strong>
       <br />
       <strong>
-        {Math.floor(100 - revision?.progressive["current-percentage"])}% →{" "}
-        {Math.floor(100 - revision?.progressive?.percentage)}%
+        {Math.round(100 - revision?.progressive["current-percentage"])}% →{" "}
+        {Math.round(100 - revision?.progressive?.percentage)}%
       </strong>
       <br />
-      <strong>{previousRevision.version || "Unknown"}</strong>
+      <strong>{previousRevision?.version || "Unknown"}</strong>
       <br />
-      <strong>{previousRevision.confinement || "Unknown"}</strong>
+      <strong>{previousRevision?.confinement || "Unknown"}</strong>
     </>
   );
 
@@ -89,8 +89,8 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <strong>{revision.revision} (progressive)</strong>
       <br />
       <strong>
-        {Math.floor(revision?.progressive["current-percentage"]) || 0}% →{" "}
-        {Math.floor(revision?.progressive?.percentage)}%
+        {Math.round(revision?.progressive["current-percentage"]) || 0}% →{" "}
+        {Math.round(revision?.progressive?.percentage)}%
       </strong>
       <br />
       <strong>{revision.version}</strong>
@@ -126,7 +126,12 @@ ProgressiveTooltip.propTypes = {
 };
 
 // contents of a cell with a revision
-export const RevisionInfo = ({ revision, isPending, previousRevision }) => {
+export const RevisionInfo = ({
+  revision,
+  isPending,
+  previousRevision,
+  risk,
+}) => {
   let buildIcon = null;
 
   if (isRevisionBuiltOnLauchpad(revision)) {
@@ -144,9 +149,8 @@ export const RevisionInfo = ({ revision, isPending, previousRevision }) => {
 
   // This mimics what the snapcraft cli does as some fields may be
   // present even if a release is not progressive
-  const isProgressive = previousRevision?.progressive?.percentage
-    ? true
-    : false;
+  const isProgressive =
+    revision?.progressive?.percentage && risk !== "AVAILABLE" ? true : false;
 
   return (
     <Fragment>
@@ -227,6 +231,7 @@ RevisionInfo.propTypes = {
   revision: PropTypes.object,
   isPending: PropTypes.bool,
   previousRevision: PropTypes.object,
+  risk: PropTypes.string,
 };
 
 // generic draggable view of releases table cell

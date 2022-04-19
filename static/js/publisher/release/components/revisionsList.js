@@ -46,7 +46,6 @@ class RevisionsList extends Component {
     isPending,
     isActive,
     showBuildRequest,
-    showProgressive,
     progressiveBeingCancelled
   ) {
     const rowKey = `revision-row-${revision.revision}-${
@@ -55,7 +54,6 @@ class RevisionsList extends Component {
     return (
       <RevisionsListRow
         key={rowKey}
-        showProgressive={showProgressive}
         revision={revision}
         isSelectable={isSelectable}
         showChannels={showChannels}
@@ -102,8 +100,6 @@ class RevisionsList extends Component {
           ? true
           : false;
 
-      const showProgressive = index === 0 && !hasPendingRelease;
-
       return this.renderRow(
         revision,
         isSelectable,
@@ -111,7 +107,6 @@ class RevisionsList extends Component {
         false,
         isActive,
         showBuildRequest,
-        showProgressive,
         progressiveBeingCancelled
       );
     });
@@ -355,9 +350,7 @@ class RevisionsList extends Component {
               </th>
               <th scope="col">Version</th>
               {showBuildRequest && <th scope="col">Build Request</th>}
-              {/* {showProgressiveReleases && (
-                <th scope="col">Progressive release status</th>
-              )} */}
+              {showProgressiveReleases && <th scope="col">Release progress</th>}
               {showChannels && <th scope="col">Channels</th>}
               <th scope="col">
                 {isReleaseHistory ? "Release date" : "Submission date"}

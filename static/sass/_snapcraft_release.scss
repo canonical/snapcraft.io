@@ -482,22 +482,6 @@
           background-color: $color-light;
         }
       }
-
-      .p-revisions-list__revision-progressive {
-        cursor: default;
-        display: flex;
-        flex-direction: row;
-
-        .p-progressive__pause,
-        .p-progressive__cancel {
-          cursor: pointer;
-        }
-
-        .progressive-bar__interactive-wrapper {
-          flex-grow: 1;
-          margin: 0 1rem;
-        }
-      }
     }
 
     td:first-of-type,
@@ -647,20 +631,50 @@
     top: 2px;
   }
 
-  .p-icon--pause {
-    @extend %icon;
-
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Crect width='4' height='16' fill='%23666'/%3E %3Crect x='8' width='4' height='16' fill='%23666'/%3E %3C/svg%3E ");
-  }
-
-  .p-icon--resume {
-    @extend %icon;
-
-    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg%3E %3Cpath d='M14 8L2 14.9282L2 1.0718L14 8Z' fill='%23666'/%3E %3C/g%3E%3C/svg%3E");
-  }
-
   .current-change {
     background-color: $color-highlighted !important;
     border: $color-highlighted-border !important;
+  }
+
+  .progressive-chart-key--current::after,
+  .progressive-chart-key--target::after {
+    border-radius: 10px;
+    content: "";
+    display: inline-block;
+    height: 10px;
+    margin-left: 5px;
+    width: 10px;
+  }
+
+  .progressive-chart-key--current::after {
+    background-color: #652466;
+  }
+
+  .progressive-chart-key--target::after {
+    background-color: #5a5a5a;
+  }
+
+  .progressive-progress-bar {
+    background-color: #decddf;
+    border-radius: 10px;
+    height: 10px;
+    margin: 0.5rem 0;
+    position: relative;
+    width: 100%;
+  }
+
+  .progressive-progress-bar__inner {
+    background-color: #652466;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    height: 10px;
+  }
+
+  .progressive-progress-bar__marker {
+    background-color: #5a5a5a;
+    height: 1.5rem;
+    position: absolute;
+    top: calc(0rem - 0.75rem + 5px);
+    width: 2px;
   }
 }
