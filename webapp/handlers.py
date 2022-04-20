@@ -94,7 +94,7 @@ def set_handlers(app):
         return_code = getattr(error, "code", 500)
 
         supress_sentry = False
-        if type(error).__name__ == 'BadGateway':
+        if type(error).__name__ == "BadGateway":
             supress_sentry = True
 
         if not app.testing and not supress_sentry:
