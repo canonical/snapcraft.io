@@ -248,7 +248,18 @@ export const ReleasesTableCellView = (props) => {
   const className = `${classNames} ${props.className}`;
 
   return (
-    <div className={className}>
+    <div
+      className={className}
+      onMouseEnter={() => {
+        const hoveredRow = document.querySelector(
+          ".p-releases-table__row.is-hovered"
+        );
+
+        if (hoveredRow) {
+          hoveredRow.classList.remove("is-hovered");
+        }
+      }}
+    >
       <div
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
