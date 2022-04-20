@@ -405,7 +405,10 @@ class RepoConnect extends React.Component {
               updateSelection={this.handleOrganizationSelect}
             />
           </div>
-          <div className={`col-6 p-form-validation${this.renderIcon()}`}>
+          <div
+            className={`col-6 p-form-validation${this.renderIcon()}`}
+            style={{ position: "relative" }}
+          >
             <DatalistSelect
               options={repoList}
               selectedOption={selectedRepo}
