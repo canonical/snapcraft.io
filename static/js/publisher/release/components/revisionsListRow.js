@@ -103,7 +103,10 @@ const RevisionsListRow = (props) => {
           </label>
         ) : (
           <span className="p-revisions-list__revision">
-            <RevisionLabel revision={revision} showTooltip={true} />
+            <RevisionLabel revision={revision} showTooltip={true} />{" "}
+            {isProgressive && (
+              <span style={{ fontWeight: 300 }}>(Progressive)</span>
+            )}
           </span>
         )}
       </td>
@@ -116,7 +119,7 @@ const RevisionsListRow = (props) => {
               current={revision?.progressive?.["current-percentage"]}
               target={revision?.progressive?.percentage}
             />
-            <div className="u-space-between">
+            <div className="u-space-between" style={{ maxWidth: "320px" }}>
               <span>
                 {Math.round(
                   revision?.progressive?.["current-percentage"]

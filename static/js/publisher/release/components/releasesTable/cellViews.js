@@ -47,8 +47,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
       <span className="p-release-data__info--empty">
         {trackingChannel ? (
           <small>
-            Tracking {trackingChannelSplit[0]}/<br />
-            {trackingChannelSplit[1]}
+            Tracking {trackingChannelSplit[0]}/{trackingChannelSplit[1]}
           </small>
         ) : (
           "-"
@@ -80,6 +79,13 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <br />
       <strong>{previousRevision?.version || "Unknown"}</strong>
       <br />
+      {previousRevision.attributes &&
+        previousRevision.attributes["build-request-id"] && (
+          <>
+            {previousRevision.attributes["build-request-id"]}
+            <br />
+          </>
+        )}
       <strong>{previousRevision?.confinement || "Unknown"}</strong>
     </>
   );
@@ -95,6 +101,12 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <br />
       <strong>{revision.version}</strong>
       <br />
+      {revision.attributes && revision.attributes["build-request-id"] && (
+        <>
+          {revision.attributes["build-request-id"]}
+          <br />
+        </>
+      )}
       <strong>{revision.confinement}</strong>
     </>
   );
@@ -107,6 +119,12 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <br />
       Version:
       <br />
+      {revision.attributes && revision.attributes["build-request-id"] && (
+        <>
+          Build:
+          <br />
+        </>
+      )}
       Confinement:
     </>
   );

@@ -345,14 +345,17 @@ class RevisionsList extends Component {
               <th
                 className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
                 scope="col"
+                style={{ width: "250px" }}
               >
                 Revision
               </th>
-              <th scope="col">Version</th>
+              <th scope="col" style={{ width: "150px" }}>
+                Version
+              </th>
               {showBuildRequest && <th scope="col">Build Request</th>}
               {showProgressiveReleases && <th scope="col">Release progress</th>}
               {showChannels && <th scope="col">Channels</th>}
-              <th scope="col">
+              <th scope="col" style={{ width: "180px" }}>
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
