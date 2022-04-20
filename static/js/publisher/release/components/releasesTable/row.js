@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 
 import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
@@ -14,7 +14,7 @@ const ReleasesTableRow = (props) => {
 
   const draggedRevisions = canDrag ? Object.values(revisions) : [];
 
-  const [isDragging, isGrabbing, drag, preview] = useDragging({
+  const [isDragging, isGrabbing, drag] = useDragging({
     item: {
       revisions: draggedRevisions,
       architectures: getRevisionsArchitectures(draggedRevisions),
@@ -25,14 +25,24 @@ const ReleasesTableRow = (props) => {
     canDrag,
   });
 
+  const tableRow = useRef(null);
+
   return (
     <div
-      ref={preview}
+      ref={tableRow}
       className={`p-releases-table__row p-releases-table__row--${
         branch ? "branch" : "channel"
       } p-releases-table__row--${risk} ${isDragging ? "is-dragging" : ""} ${
         isGrabbing ? "is-grabbing" : ""
       } ${canDrop ? "can-drop" : ""}`}
+      onMouseEnter={(e) => {
+        if (!e.target.parentNode.classList.contains("p-releases-table__cell")) {
+          tableRow.current.classList.add("is-hovered");
+        }
+      }}
+      onMouseLeave={() => {
+        tableRow.current.classList.remove("is-hovered");
+      }}
     >
       <ReleasesTableChannelHeading
         drag={drag}

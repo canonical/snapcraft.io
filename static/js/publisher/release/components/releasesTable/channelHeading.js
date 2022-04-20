@@ -290,9 +290,6 @@ const ReleasesTableChannelHeading = (props) => {
       onMouseEnter={(e) => {
         e.target.parentElement.classList.add("is-hovered");
       }}
-      onMouseLeave={(e) => {
-        e.target.parentElement.classList.remove("is-hovered");
-      }}
     >
       <div className="p-releases-channel__inner">
         <Handle />
