@@ -21,15 +21,14 @@ function SnapsTableRow({
   return (
     <tr>
       {index === 0 ? (
-        <td
-          className="snap-published-in-cell"
-          rowSpan={snapsCount}
-          aria-label="Published in"
-        >
+        <td className="snap-published-in-cell" rowSpan={snapsCount}>
           {storeName}
         </td>
       ) : null}
-      <td aria-label="Name" className={tableCellClass}>
+      <td data-heading="Published in" className="u-hide-table-col--large">
+        {storeName}
+      </td>
+      <td data-heading="Name" className={tableCellClass}>
         {storeId !== id && !snap.essential && !isOnlyViewer() ? (
           <CheckboxInput
             onChange={(e) => {
@@ -45,18 +44,18 @@ function SnapsTableRow({
           />
         ) : null}
         {storeId === "ubuntu" ? (
-          <a href={`/${snap.name}`}>{snap.name}</a>
+          <a href={`/${snap.name}`}>{snap.name || "-"}</a>
         ) : (
-          snap.name
+          snap.name || "-"
         )}
       </td>
-      <td aria-label="Latest release">
+      <td data-heading="Latest release">
         {snap["latest-release"].version ? snap["latest-release"].version : "-"}
       </td>
-      <td aria-label="Release date">
+      <td data-heading="Release date">
         {format(new Date(snap["latest-release"].timestamp), "dd/MM/yyyy")}
       </td>
-      <td aria-label="Publisher">{snap.users[0].displayname}</td>
+      <td data-heading="Publisher">{snap.users[0].displayname}</td>
     </tr>
   );
 }

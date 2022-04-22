@@ -24,121 +24,71 @@ function SnapsTable({
   }, [snapsToRemove, nonEssentialSnapIds]);
 
   return (
-    <div>
-      <h3 className="p-heading--4 u-hide--medium u-hide--large">
-        Published in {storeName}
-      </h3>
-      <table className="p-table--mobile-card u-no-margin--bottom">
-        <thead>
-          <tr>
-            <th>Published in</th>
-            <th className={tableCellClass}>
-              {!isOnlyViewer() && (
-                <CheckboxInput
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      const otherStoresSnaps = otherStores.map(
-                        (item) => item.snaps
-                      );
-                      setSnapsToRemove(
-                        otherStoresSnaps
-                          .flat()
-                          .filter((item) => !item.essential)
-                      );
-                      setCheckAll(true);
-                    } else {
-                      setSnapsToRemove([]);
-                      setCheckAll(false);
-                    }
-                  }}
-                  checked={checkAll}
-                  disabled={!nonEssentialSnapIds.length}
-                />
-              )}
-              Name
-            </th>
-            <th>Latest release</th>
-            <th>Release date</th>
-            <th>Publisher</th>
-          </tr>
-        </thead>
-        <tbody>
-          {snaps.map((snap, index) => (
-            <SnapsTableRow
-              key={snap.id}
-              storeName={storeName}
-              storeId={id}
-              snap={snap}
-              snapsCount={snaps.length}
-              index={index}
-              isOnlyViewer={isOnlyViewer}
-            />
-          ))}
-        </tbody>
-      </table>
-
-      {otherStores &&
-        otherStores.map((store) => {
-          return (
-            <div key={store.id}>
-              <h3 className="p-heading--4 u-hide--medium u-hide--large">
-                Published in {store.name}
-              </h3>
-              <table
-                className="p-table--mobile-card snap-sub-table"
-                key={store.id}
-              >
-                <thead className="u-hide">
-                  <tr>
-                    <th>Published in</th>
-                    <th className="table-cell-head--checkbox">
-                      <CheckboxInput
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            const otherStoresSnaps = otherStores.map(
-                              (item) => item.snaps
-                            );
-                            setSnapsToRemove(
-                              otherStoresSnaps
-                                .flat()
-                                .filter((item) => !item.essential)
-                            );
-                            setCheckAll(true);
-                          } else {
-                            setSnapsToRemove([]);
-                            setCheckAll(false);
-                          }
-                        }}
-                        checked={checkAll}
-                        disabled={!nonEssentialSnapIds.length}
-                      />
-                      Name
-                    </th>
-                    <th>Latest release</th>
-                    <th>Release date</th>
-                    <th>Publisher</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {store.snaps.map((snap, index) => (
-                    <SnapsTableRow
-                      key={snap.id}
-                      storeName={store.name}
-                      storeId={store.id}
-                      snap={snap}
-                      snapsCount={store.snaps.length}
-                      index={index}
-                      snapsToRemove={snapsToRemove}
-                      setSnapsToRemove={setSnapsToRemove}
-                      isOnlyViewer={isOnlyViewer}
-                    />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          );
-        })}
-    </div>
+    <table className="p-table--mobile-card u-no-margin--bottom">
+      <thead>
+        <tr>
+          <th style={{ width: "15%" }}>Published in</th>
+          <th className="u-hide-table-col--large">
+            {/* Required for the mobile layout */}
+          </th>
+          <th className={tableCellClass}>
+            {!isOnlyViewer() && (
+              <CheckboxInput
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    const otherStoresSnaps = otherStores.map(
+                      (item) => item.snaps
+                    );
+                    setSnapsToRemove(
+                      otherStoresSnaps.flat().filter((item) => !item.essential)
+                    );
+                    setCheckAll(true);
+                  } else {
+                    setSnapsToRemove([]);
+                    setCheckAll(false);
+                  }
+                }}
+                checked={checkAll}
+                disabled={!nonEssentialSnapIds.length}
+              />
+            )}
+            Name
+          </th>
+          <th style={{ width: "15%" }}>Latest release</th>
+          <th style={{ width: "15%" }}>Release date</th>
+          <th>Publisher</th>
+        </tr>
+      </thead>
+      <tbody>
+        {snaps.map((snap, index) => (
+          <SnapsTableRow
+            key={snap.id}
+            storeName={storeName}
+            storeId={id}
+            snap={snap}
+            snapsCount={snaps.length}
+            index={index}
+            isOnlyViewer={isOnlyViewer}
+          />
+        ))}
+        {otherStores &&
+          otherStores.map((store) => {
+            return store.snaps.map((snap, index) => (
+              <SnapsTableRow
+                key={snap.id}
+                storeName={store.name}
+                storeId={store.id}
+                snap={snap}
+                snapsCount={store.snaps.length}
+                index={index}
+                snapsToRemove={snapsToRemove}
+                setSnapsToRemove={setSnapsToRemove}
+                isOnlyViewer={isOnlyViewer}
+              />
+            ));
+          })}
+      </tbody>
+    </table>
   );
 }
 
