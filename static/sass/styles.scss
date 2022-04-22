@@ -358,12 +358,6 @@ code {
   }
 }
 
-.snap-sub-table {
-  @media (min-width: $breakpoint-small) {
-    border-top: 1px solid $colors--light-theme--border-low-contrast;
-  }
-}
-
 .snap-published-in-cell {
   @media (max-width: $breakpoint-large - 1) {
     display: none !important;
@@ -377,4 +371,10 @@ code {
 .u-space-between {
   display: flex;
   justify-content: space-between;
+}
+
+.u-hide-table-col--large {
+  @media (min-width: 1036px) {
+    display: none !important;
+  }
 }
