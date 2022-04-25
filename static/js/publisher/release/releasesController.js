@@ -67,6 +67,19 @@ const ReleasesController = ({
       {ready && (
         <Fragment>
           {visible && <Notification />}
+          <div className="u-fixed-width u-hide--large u-hide--medium">
+            <div className="p-notification--caution">
+              <div className="p-notification__content">
+                <h5 className="p-notification__title">
+                  This is a read-only view
+                </h5>
+                <p className="p-notification__message">
+                  Some features are not available on this view. Switch to a
+                  tablet or desktop to edit.
+                </p>
+              </div>
+            </div>
+          </div>
           <ReleasesHeading />
           <ReleasesTable />
           {showModal && <Modal />}
