@@ -4,7 +4,7 @@ import { useDrag, useDrop } from "react-dnd";
 export const DND_ITEM_REVISIONS = "DND_ITEM_REVISIONS";
 
 export const Handle = () => (
-  <span className="p-drag-handle">
+  <span className="p-drag-handle u-hide--small">
     <i className="p-icon--drag" />
   </span>
 );

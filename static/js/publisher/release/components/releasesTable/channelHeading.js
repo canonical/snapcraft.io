@@ -306,7 +306,7 @@ const ReleasesTableChannelHeading = (props) => {
           </span>
         </div>
 
-        <span className="p-releases-table__menus">
+        <span className="p-releases-table__menus u-hide--small">
           {(canBePromoted || canBeClosed) && (
             <ChannelMenu
               tooltip={promoteTooltip}

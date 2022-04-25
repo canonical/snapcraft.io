@@ -69,7 +69,7 @@ export default class ContextualMenu extends Component {
       <span
         className={`p-contextual-menu${
           position ? `--${position}` : ""
-        } p-promote-button`}
+        } p-promote-button u-hide--small`}
       >
         <button
           className={className}
