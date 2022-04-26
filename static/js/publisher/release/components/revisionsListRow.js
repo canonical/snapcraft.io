@@ -85,7 +85,7 @@ const RevisionsListRow = (props) => {
       className={className}
       onClick={isSelectable && releasable ? revisionSelectChange : null}
     >
-      <td>
+      <td data-heading="Revision">
         {isSelectable ? (
           <label className="p-radio">
             <input
@@ -110,11 +110,11 @@ const RevisionsListRow = (props) => {
           </span>
         )}
       </td>
-      <td>{revision.version}</td>
+      <td data-heading="Version">{revision.version}</td>
       {showBuildRequest && <td>{buildRequestId && <>{buildRequestId}</>}</td>}
       {canShowProgressiveReleases &&
         (isProgressive ? (
-          <td>
+          <td data-heading="Release progress">
             <ProgressiveProgressChart
               current={revision?.progressive?.["current-percentage"]}
               target={revision?.progressive?.percentage}
@@ -143,16 +143,13 @@ const RevisionsListRow = (props) => {
             </div>
           </td>
         ) : (
-          <td></td>
+          <td data-heading="Release progress">-</td>
         ))}
 
-      {progressiveBeingCancelled && (
-        <td>
-          <em>Cancel progressive release</em>
-        </td>
+      {showChannels && (
+        <td data-heading="Channels">{revision.channels.join(", ")}</td>
       )}
-      {showChannels && <td>{revision.channels.join(", ")}</td>}
-      <td>
+      <td data-heading="Release date">
         {isPending && <em>pending release</em>}
         {!isPending && !progressiveBeingCancelled && (
           <span

@@ -339,7 +339,7 @@ class RevisionsList extends Component {
             </div>
           </div>
         )}
-        <table className="p-revisions-list">
+        <table className="p-revisions-list p-table--mobile-card">
           <thead>
             <tr>
               <th
