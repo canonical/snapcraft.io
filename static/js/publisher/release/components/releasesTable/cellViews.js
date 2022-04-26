@@ -54,7 +54,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
         )}
       </span>
 
-      <span className="p-tooltip__message">
+      <span className="p-tooltip__message u-hide--small">
         {trackingChannel
           ? `Tracking ${trackingChannel}`
           : "Nothing currently released"}
@@ -193,7 +193,7 @@ export const RevisionInfo = ({
             }`}
         </span>{" "}
       </span>
-      <span className="p-tooltip__message">
+      <span className="p-tooltip__message u-hide--small">
         {isProgressive ? (
           <ProgressiveTooltip
             revision={revision}
