@@ -13,6 +13,7 @@ function SnapsTable({
   setSnapsToRemove,
   nonEssentialSnapIds,
   isOnlyViewer,
+  globalStore,
 }) {
   const { id } = useParams();
   const [checkAll, setCheckAll] = useState(false);
@@ -87,6 +88,20 @@ function SnapsTable({
               />
             ));
           })}
+        {globalStore &&
+          globalStore.snaps.map((snap, index) => (
+            <SnapsTableRow
+              key={snap.id}
+              storeName={globalStore.name}
+              storeId={globalStore.id}
+              snap={snap}
+              snapsCount={globalStore.snaps.length}
+              index={index}
+              snapsToRemove={snapsToRemove}
+              setSnapsToRemove={setSnapsToRemove}
+              isOnlyViewer={isOnlyViewer}
+            />
+          ))}
       </tbody>
     </table>
   );
@@ -100,6 +115,7 @@ SnapsTable.propTypes = {
   setSnapsToRemove: PropTypes.func,
   nonEssentialSnapIds: PropTypes.array.isRequired,
   isOnlyViewer: PropTypes.func.isRequired,
+  globalStore: PropTypes.object,
 };
 
 export default SnapsTable;
