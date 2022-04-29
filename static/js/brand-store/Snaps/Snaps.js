@@ -59,6 +59,7 @@ function Snaps() {
   const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
     false
   );
+  const [globalStore, setGlobalStore] = useState(null);
   let location = useLocation();
 
   const getStoreName = (storeId) => {
@@ -183,6 +184,22 @@ function Snaps() {
   const isOnlyViewer = () =>
     currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
+  const getOtherStoreIds = () => {
+    const storeIds = [];
+
+    snaps.forEach((snap) => {
+      if (snap["other-stores"].length) {
+        snap["other-stores"].forEach((otherStoreId) => {
+          if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
+            storeIds.push(otherStoreId);
+          }
+        });
+      }
+    });
+
+    return storeIds;
+  };
+
   useEffect(() => {
     dispatch(fetchMembers(id));
     dispatch(fetchSnaps(id));
@@ -190,18 +207,7 @@ function Snaps() {
 
   useEffect(() => {
     setSnapsInStore(snaps.filter((snap) => snap.store === id));
-
-    setOtherStoreIds(
-      Array.from(
-        new Set(
-          snaps
-            .filter((snap) => snap.store !== id)
-            .map((snap) => {
-              return snap.store;
-            })
-        )
-      )
-    );
+    setOtherStoreIds(getOtherStoreIds());
 
     const nonEssentialSnaps = snaps.filter((item) => {
       return item.store !== id && !item.essential;
@@ -215,12 +221,22 @@ function Snaps() {
   }, [snaps]);
 
   useEffect(() => {
+    setGlobalStore({
+      id: "ubuntu",
+      name: "Global",
+      snaps: snaps.filter(
+        (snap) => snap.store === "ubuntu" && !snap["other-stores"].length
+      ),
+    });
+
     setOtherStores(
       otherStoreIds.map((storeId) => {
         return {
           id: storeId,
           name: getStoreName(storeId),
-          snaps: snaps.filter((snap) => snap.store === storeId),
+          snaps: snaps.filter((snap) =>
+            snap?.["other-stores"].includes(storeId)
+          ),
         };
       })
     );
@@ -341,6 +357,7 @@ function Snaps() {
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
                       isOnlyViewer={isOnlyViewer}
+                      globalStore={globalStore}
                     />
                   )}
                 </div>
