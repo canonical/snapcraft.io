@@ -272,12 +272,6 @@
     }
   }
 
-  .p-release-data__meta {
-    @media (max-width: $breakpoint-medium) {
-      display: inline !important;
-    }
-  }
-
   .p-release-data__title {
     @media (max-width: $breakpoint-medium) {
       display: inline-block;
@@ -503,12 +497,35 @@
   .p-release-data__meta {
     color: $color-mid-dark;
     font-size: 0.8rem;
+
+    @media (max-width: $breakpoint-medium) {
+      display: inline !important;
+    }
   }
 
   // REVISIONS LIST
 
   .p-revisions-list {
     margin-bottom: 0;
+
+    @media (max-width: $breakpoint-medium) {
+      tbody {
+        display: block;
+
+        tr {
+          border-width: 0 0 1px;
+          padding: 0 0 1rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        td {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
 
     td,
     th {
@@ -535,6 +552,16 @@
 
         &:hover {
           background-color: $color-light;
+        }
+      }
+    }
+
+    td {
+      @media (max-width: $breakpoint-medium) {
+        display: flex;
+
+        &::before {
+          width: 40% !important;
         }
       }
     }
@@ -654,6 +681,27 @@
   .p-history-panel {
     border: 1px solid $color-mid-x-light;
     padding: 1.5rem;
+
+    @media (max-width: $breakpoint-medium) {
+      background-color: $color-x-light;
+      border: 0;
+      height: auto;
+      left: 0;
+      position: absolute;
+      top: -132px;
+      width: 100%;
+      z-index: 1;
+
+      &::before {
+        background-color: $color-x-light;
+        content: "";
+        height: 100vh;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
+    }
   }
 
   .p-icon--lp {
