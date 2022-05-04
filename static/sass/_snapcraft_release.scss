@@ -84,6 +84,10 @@
     position: relative;
     width: 240px;
 
+    @media (max-width: $breakpoint-medium) {
+      display: none;
+    }
+
     .p-promote-button {
       display: none;
     }
@@ -127,6 +131,14 @@
     }
   }
 
+  .p-releases-table__row--container {
+    @media (max-width: $breakpoint-medium) {
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      margin-bottom: 1.5rem;
+    }
+  }
+
   // row
   // This is to have different width items depending on
   // the number of architectures
@@ -146,6 +158,11 @@
       &:first-child:nth-last-child(2) ~ div {
         max-width: 50%;
         width: 50%;
+
+        @media (max-width: $breakpoint-medium) {
+          max-width: 100%;
+          width: 100%;
+        }
       }
 
       // 2 arch
@@ -161,6 +178,11 @@
 
   .p-releases-table__row--channel {
     height: 4rem;
+
+    @media (max-width: $breakpoint-medium) {
+      display: block;
+      height: auto;
+    }
 
     &.is-hovered {
       background-color: $color-light;
@@ -189,7 +211,6 @@
   .p-releases-table__row--heading {
     @extend %table-header-label;
 
-    border-bottom: 1px solid $colors--light-theme--border-default;
     border-top: 0;
     margin-bottom: 0;
     vertical-align: top;
@@ -243,6 +264,25 @@
     padding: 0 $sph--small;
     position: absolute;
     transform: rotate(-90deg);
+
+    @media (max-width: $breakpoint-medium) {
+      left: auto;
+      right: 0.25rem;
+      top: -10px;
+    }
+  }
+
+  .p-release-data__meta {
+    @media (max-width: $breakpoint-medium) {
+      display: inline !important;
+    }
+  }
+
+  .p-release-data__title {
+    @media (max-width: $breakpoint-medium) {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
   }
 
   .p-release-data__title .has-button,
@@ -333,6 +373,12 @@
     padding-left: 28px;
     position: relative;
     transition-duration: 0s; // vf-animation doesn't allow to do that
+
+    @media (max-width: $breakpoint-medium) {
+      border-bottom: 1px solid $colors--light-theme--border-default;
+      max-width: 100%;
+      padding: $spv--small 0 $spv--small $spv--medium;
+    }
 
     .has-active & {
       opacity: 0.5;
@@ -429,6 +475,11 @@
     height: 4rem;
     max-width: 100%;
     padding: $spv--small $sph--small $spv--small 0;
+
+    @media (max-width: $breakpoint-medium) {
+      height: auto;
+      padding-top: 0;
+    }
   }
 
   .p-release-data__info--empty {

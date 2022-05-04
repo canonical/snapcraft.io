@@ -156,6 +156,7 @@ const ReleasesTableReleaseCell = (props) => {
       className={className}
       cellType="release"
       current={current}
+      arch={arch}
     >
       {showHistoryIcon && (
         <HistoryIcon
