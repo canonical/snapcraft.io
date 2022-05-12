@@ -57,7 +57,7 @@ def get_listing_snap(snap_name):
         return _handle_error(api_error)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
-    details_blacklist = snap_details["public_metrics_blacklist"]
+    details_blacklist = snap_details.get("public_metrics_blacklist", [])
 
     is_on_stable = logic.is_snap_on_stable(snap_details["channel_maps_list"])
 
@@ -243,7 +243,9 @@ def post_listing_snap(snap_name):
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
             details_metrics_enabled = snap_details["public_metrics_enabled"]
-            details_blacklist = snap_details["public_metrics_blacklist"]
+            details_blacklist = snap_details.get(
+                "public_metrics_blacklist", []
+            )
 
             is_on_stable = logic.is_snap_on_stable(
                 snap_details["channel_maps_list"]
