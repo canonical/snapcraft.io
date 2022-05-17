@@ -133,8 +133,8 @@
 
   .p-releases-table__row--container {
     @media (max-width: $breakpoint-medium) {
+      border: 1px solid $colors--light-theme--border-default;
       border-radius: $border-radius;
-      box-shadow: $box-shadow;
       margin-bottom: 1.5rem;
     }
   }
@@ -267,7 +267,7 @@
 
     @media (max-width: $breakpoint-medium) {
       left: auto;
-      right: 0.25rem;
+      right: -8px;
       top: -10px;
     }
   }
@@ -370,8 +370,14 @@
 
     @media (max-width: $breakpoint-medium) {
       border-bottom: 1px solid $colors--light-theme--border-default;
+      margin-left: 1rem;
+      margin-right: 1rem;
       max-width: 100%;
-      padding: $spv--small 0 $spv--small $spv--medium;
+      padding: $spv--small 0 $spv--small;
+
+      &:last-child {
+        border-bottom: 0;
+      }
     }
 
     .has-active & {
@@ -472,6 +478,7 @@
 
     @media (max-width: $breakpoint-medium) {
       height: auto;
+      padding-right: 0;
       padding-top: 0;
     }
   }
@@ -509,6 +516,10 @@
     margin-bottom: 0;
 
     @media (max-width: $breakpoint-medium) {
+      border: 1px solid $colors--light-theme--border-default;
+      position: relative;
+      z-index: 1;
+
       tbody {
         display: block;
 
@@ -554,6 +565,17 @@
           background-color: $color-light;
         }
       }
+
+      @media (max-width: $breakpoint-medium) {
+        margin-bottom: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        padding-top: 1rem;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
     }
 
     td {
@@ -569,6 +591,10 @@
     td:first-of-type,
     th:first-of-type {
       padding-left: 0.2rem;
+
+      @media (max-width: $breakpoint-medium) {
+        padding-left: 0;
+      }
     }
 
     td:last-of-type,
