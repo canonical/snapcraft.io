@@ -92,6 +92,7 @@ const ReleasesTableReleaseCell = (props) => {
   };
 
   function handleHistoryIconClick(arch, risk, track, branchName) {
+    window.scrollTo(0, 0);
     toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
@@ -156,6 +157,7 @@ const ReleasesTableReleaseCell = (props) => {
       className={className}
       cellType="release"
       current={current}
+      arch={arch}
     >
       {showHistoryIcon && (
         <HistoryIcon

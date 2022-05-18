@@ -8,7 +8,7 @@ import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
 
 // releases table cell with data for a specific revision (unrelated to channel map)
 const ReleasesTableRevisionCell = (props) => {
-  const { revision } = props;
+  const { revision, arch } = props;
 
   const item = {
     revisions: [revision],
@@ -21,6 +21,7 @@ const ReleasesTableRevisionCell = (props) => {
       item={item}
       canDrag={!!revision && canBeReleased(revision)}
       cellType="revision"
+      arch={arch}
     >
       {revision ? <RevisionInfo revision={revision} /> : <EmptyInfo />}
     </ReleasesTableCellView>
@@ -30,6 +31,7 @@ const ReleasesTableRevisionCell = (props) => {
 ReleasesTableRevisionCell.propTypes = {
   revision: PropTypes.object,
   showVersion: PropTypes.bool,
+  arch: PropTypes.string,
 };
 
 export default ReleasesTableRevisionCell;

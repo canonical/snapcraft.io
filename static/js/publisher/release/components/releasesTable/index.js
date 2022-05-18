@@ -79,6 +79,7 @@ class ReleasesTable extends Component {
         key={rowKey}
         risk={BUILD}
         revisions={revisions}
+        buildRequestId={getBuildId(Object.values(revisions)[0])}
       />
     );
   }
@@ -280,7 +281,7 @@ class ReleasesTable extends Component {
     return (
       <div className="row">
         <div className={className}>
-          <div className="p-releases-table__row p-releases-table__row--heading">
+          <div className="p-releases-table__row p-releases-table__row--heading u-hide--small">
             <div className="p-releases-channel is-placeholder">Channel</div>
             {archs.map((arch) => (
               <div

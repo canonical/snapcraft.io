@@ -130,17 +130,55 @@ const ReleasesTableDroppableRow = (props) => {
     }),
   });
 
+  const channelName = getChannelName(currentTrack, risk, branchName);
+
+  const versions = pendingChannelMap[channel];
+
+  const currentVersions = [];
+
+  if (versions) {
+    for (let [value] of Object.entries(versions)) {
+      if (value && !currentVersions.includes(versions[value].version)) {
+        currentVersions.push(versions[value].version);
+      }
+    }
+  }
+
+  let versionCountString = "";
+
+  if (currentVersions.length > 1) {
+    versionCountString = "Multiple versions";
+  } else {
+    versionCountString = currentVersions[0];
+  }
+
   return (
-    <div className="p-releases-table__row--container" ref={drop}>
-      <ReleasesTableChannelRow
-        risk={risk}
-        branch={branch}
-        revisions={revisions}
-        isOverParent={isOver}
-        draggedItem={item}
-        canDrop={canDrop}
-      />
-    </div>
+    <>
+      <div
+        className="u-space-between u-hide--medium u-hide--large"
+        style={{ marginBottom: "0.5rem" }}
+      >
+        <p className="p-heading--5 u-no-margin--bottom u-no-padding--top">
+          {channelName}
+        </p>
+        <small
+          className="u-text-muted u-no-margin--bottom"
+          style={{ lineHeight: 1.5 }}
+        >
+          {versionCountString}
+        </small>
+      </div>
+      <div className="p-releases-table__row--container" ref={drop}>
+        <ReleasesTableChannelRow
+          risk={risk}
+          branch={branch}
+          revisions={revisions}
+          isOverParent={isOver}
+          draggedItem={item}
+          canDrop={canDrop}
+        />
+      </div>
+    </>
   );
 };
 

@@ -254,7 +254,7 @@ RevisionInfo.propTypes = {
 
 // generic draggable view of releases table cell
 export const ReleasesTableCellView = (props) => {
-  const { item, canDrag, children, actions, cellType, current } = props;
+  const { item, canDrag, children, actions, cellType, current, arch } = props;
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item,
@@ -283,6 +283,9 @@ export const ReleasesTableCellView = (props) => {
         }
       }}
     >
+      <div className="p-heading--5 u-no-margin--bottom u-hide--medium u-hide--large">
+        {arch}
+      </div>
       <div
         ref={drag}
         className="p-release-data p-tooltip p-tooltip--btm-center"
@@ -330,4 +333,5 @@ ReleasesTableCellView.propTypes = {
   actions: PropTypes.node,
   cellType: PropTypes.string,
   current: PropTypes.string,
+  arch: PropTypes.string,
 };

@@ -18,7 +18,7 @@ import RevisionLabel from "./revisionLabel";
 
 const ProgressiveProgressChart = ({ current, target }) => {
   return (
-    <div className="progressive-progress-bar">
+    <div className="progressive-progress-bar u-hide--small">
       <div
         className="progressive-progress-bar__inner"
         style={{ width: `${current}%` }}
@@ -111,7 +111,11 @@ const RevisionsListRow = (props) => {
         )}
       </td>
       <td data-heading="Version">{revision.version}</td>
-      {showBuildRequest && <td>{buildRequestId && <>{buildRequestId}</>}</td>}
+      {showBuildRequest && (
+        <td data-heading="Build request">
+          {buildRequestId && <>{buildRequestId}</>}
+        </td>
+      )}
       {canShowProgressiveReleases &&
         (isProgressive ? (
           <td data-heading="Release progress">
@@ -128,15 +132,15 @@ const RevisionsListRow = (props) => {
                 )}
                 %
                 <br />
-                <span className="progressive-chart-key--current p-muted-heading">
+                <span className="progressive-chart-key--current p-muted-heading u-hide--small">
                   Current
                 </span>
               </span>
-              <span>→</span>
+              <span>&nbsp;→&nbsp;</span>
               <span className="u-align--right">
                 {Math.round(revision?.progressive?.percentage)}%
                 <br />
-                <span className="progressive-chart-key--target p-muted-heading">
+                <span className="progressive-chart-key--target p-muted-heading u-hide--small">
                   Target
                 </span>
               </span>

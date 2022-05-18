@@ -190,7 +190,7 @@ class RevisionsList extends Component {
         isReleaseHistory = true;
         title = (
           <Fragment>
-            Releases history for <b>{filters.arch}</b> in{" "}
+            Releases history for <strong>{filters.arch}</strong> in{" "}
             <b>
               {filters.track}/{filters.risk}
               {filters.branch ? `/${filters.branch}` : ""}
@@ -287,15 +287,25 @@ class RevisionsList extends Component {
 
     return (
       <Fragment>
-        <div className="u-clearfix">
-          <p role="heading" aria-level="4" className="u-float-left ">
+        <button
+          className="p-button--link u-no-margin--bottom u-hide--medium u-hide--large"
+          onClick={this.onCloseClick.bind(this)}
+          style={{ position: "relative" }}
+        >
+          &lsaquo;&nbsp;Releases
+        </button>
+        <div className="u-clearfix" style={{ position: "relative" }}>
+          <p
+            role="heading"
+            aria-level="4"
+            className="u-float-left p-heading--4"
+          >
             {title}
           </p>
-          <a
+          <button
             style={{ marginTop: "0.5rem" }}
-            href="#"
             onClick={this.onCloseClick.bind(this)}
-            className="p-icon--close u-float-right"
+            className="p-icon--close u-float-right p-button--link u-hide--small"
           />
         </div>
         {hasDevmodeRevisions && (

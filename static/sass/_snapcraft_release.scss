@@ -84,6 +84,10 @@
     position: relative;
     width: 240px;
 
+    @media (max-width: $breakpoint-medium) {
+      display: none;
+    }
+
     .p-promote-button {
       display: none;
     }
@@ -127,6 +131,14 @@
     }
   }
 
+  .p-releases-table__row--container {
+    @media (max-width: $breakpoint-medium) {
+      border: 1px solid $colors--light-theme--border-default;
+      border-radius: $border-radius;
+      margin-bottom: 1.5rem;
+    }
+  }
+
   // row
   // This is to have different width items depending on
   // the number of architectures
@@ -146,6 +158,11 @@
       &:first-child:nth-last-child(2) ~ div {
         max-width: 50%;
         width: 50%;
+
+        @media (max-width: $breakpoint-medium) {
+          max-width: 100%;
+          width: 100%;
+        }
       }
 
       // 2 arch
@@ -161,6 +178,11 @@
 
   .p-releases-table__row--channel {
     height: 4rem;
+
+    @media (max-width: $breakpoint-medium) {
+      display: block;
+      height: auto;
+    }
 
     &.is-hovered {
       background-color: $color-light;
@@ -189,7 +211,6 @@
   .p-releases-table__row--heading {
     @extend %table-header-label;
 
-    border-bottom: 1px solid $colors--light-theme--border-default;
     border-top: 0;
     margin-bottom: 0;
     vertical-align: top;
@@ -243,6 +264,19 @@
     padding: 0 $sph--small;
     position: absolute;
     transform: rotate(-90deg);
+
+    @media (max-width: $breakpoint-medium) {
+      left: auto;
+      right: -8px;
+      top: -10px;
+    }
+  }
+
+  .p-release-data__title {
+    @media (max-width: $breakpoint-medium) {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
   }
 
   .p-release-data__title .has-button,
@@ -333,6 +367,18 @@
     padding-left: 28px;
     position: relative;
     transition-duration: 0s; // vf-animation doesn't allow to do that
+
+    @media (max-width: $breakpoint-medium) {
+      border-bottom: 1px solid $colors--light-theme--border-default;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      max-width: 100%;
+      padding: $spv--small 0 $spv--small;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
 
     .has-active & {
       opacity: 0.5;
@@ -429,6 +475,12 @@
     height: 4rem;
     max-width: 100%;
     padding: $spv--small $sph--small $spv--small 0;
+
+    @media (max-width: $breakpoint-medium) {
+      height: auto;
+      padding-right: 0;
+      padding-top: 0;
+    }
   }
 
   .p-release-data__info--empty {
@@ -452,12 +504,39 @@
   .p-release-data__meta {
     color: $color-mid-dark;
     font-size: 0.8rem;
+
+    @media (max-width: $breakpoint-medium) {
+      display: inline !important;
+    }
   }
 
   // REVISIONS LIST
 
   .p-revisions-list {
     margin-bottom: 0;
+
+    @media (max-width: $breakpoint-medium) {
+      border: 1px solid $colors--light-theme--border-default;
+      position: relative;
+      z-index: 1;
+
+      tbody {
+        display: block;
+
+        tr {
+          border-width: 0 0 1px;
+          padding: 0 0 1rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        td {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
 
     td,
     th {
@@ -486,11 +565,36 @@
           background-color: $color-light;
         }
       }
+
+      @media (max-width: $breakpoint-medium) {
+        margin-bottom: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        padding-top: 1rem;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    td {
+      @media (max-width: $breakpoint-medium) {
+        display: flex;
+
+        &::before {
+          width: 40% !important;
+        }
+      }
     }
 
     td:first-of-type,
     th:first-of-type {
       padding-left: 0.2rem;
+
+      @media (max-width: $breakpoint-medium) {
+        padding-left: 0;
+      }
     }
 
     td:last-of-type,
@@ -603,6 +707,27 @@
   .p-history-panel {
     border: 1px solid $color-mid-x-light;
     padding: 1.5rem;
+
+    @media (max-width: $breakpoint-medium) {
+      background-color: $color-x-light;
+      border: 0;
+      height: auto;
+      left: 0;
+      position: absolute;
+      top: -132px;
+      width: 100%;
+      z-index: 1;
+
+      &::before {
+        background-color: $color-x-light;
+        content: "";
+        height: 100vh;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
+    }
   }
 
   .p-icon--lp {

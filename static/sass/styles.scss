@@ -10,6 +10,9 @@ $theme-default-nav: dark;
 $breakpoint-navigation-threshold: 800px;
 $font-display-option: swap;
 
+// responsive
+$breakpoint-medium: 619px;
+
 // vanilla patterns
 @import "vanilla-framework/scss/vanilla";
 
