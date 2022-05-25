@@ -44,7 +44,9 @@ function SnapsTableRow({
           />
         ) : null}
         {storeId === "ubuntu" ? (
-          <a href={`/${snap.name}`}>{snap.name || "-"}</a>
+          <a href={`https://dashboard.snapcraft.io/snaps/${snap.name}`}>
+            {snap.name || "-"}
+          </a>
         ) : (
           snap.name || "-"
         )}
