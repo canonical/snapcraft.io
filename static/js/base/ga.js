@@ -89,4 +89,16 @@ if (typeof dataLayer !== "undefined") {
   });
 }
 
+// We want to prevent any query parameters being added to status.snapcraft.io
+// See https://github.com/canonical-web-and-design/snapcraft.io/issues/3789
+// Google analytics does it, but status.snapcraft.io fails to load with any
+// query parameters
+document
+  .querySelector("[href^='https://status.snapcraft.io']")
+  .addEventListener("click", (e) => {
+    e.preventDefault();
+    const origin = e.path.find((path) => path.origin).origin;
+    window.location.href = origin;
+  });
+
 export { triggerEvent, triggerEventReleaseUI };
