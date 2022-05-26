@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -27,6 +27,7 @@ import {
   isProgressiveReleaseEnabled,
   getPendingRelease,
 } from "../selectors";
+import { relative } from "@sentry/utils";
 
 class RevisionsList extends Component {
   constructor() {
@@ -156,46 +157,46 @@ class RevisionsList extends Component {
 
         if (availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL) {
           title = (
-            <Fragment>
+            <>
               Latest revisions for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         } else if (
           availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_UNRELEASED
         ) {
           title = (
-            <Fragment>
+            <>
               Unreleased revisions for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         } else if (
           availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT
         ) {
           title = (
-            <Fragment>
+            <>
               Recent unreleased revisions for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         } else if (
           availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
         ) {
           title = (
-            <Fragment>
+            <>
               Revisions built on Launchpad for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         }
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
         title = (
-          <Fragment>
+          <>
             Releases history for <strong>{filters.arch}</strong> in{" "}
             <b>
               {filters.track}/{filters.risk}
               {filters.branch ? `/${filters.branch}` : ""}
             </b>
-          </Fragment>
+          </>
         );
 
         filteredRevisions = this.props.filteredReleaseHistory;
@@ -286,7 +287,7 @@ class RevisionsList extends Component {
       pendingRelease.revision.revision !== filteredRevisions[0].revision;
 
     return (
-      <Fragment>
+      <>
         <button
           className="p-button--link u-no-margin--bottom u-hide--medium u-hide--large"
           onClick={this.onCloseClick.bind(this)}
@@ -385,7 +386,7 @@ class RevisionsList extends Component {
               this.renderRows(
                 showAllRevisions
                   ? filteredRevisions
-                  : filteredRevisions.slice(0, 10),
+                  : filteredRevisions.slice(0, 5),
                 !isReleaseHistory,
                 showChannels,
                 activeRevision,
@@ -400,21 +401,37 @@ class RevisionsList extends Component {
                 </td>
               </tr>
             )}
-            {!showAllRevisions && filteredRevisions.length > 10 && (
-              <tr>
-                <td colSpan={5} className="u-align--right">
-                  <button
-                    className="p-button is-small u-no-margin--bottom"
-                    onClick={this.showAllRevisions.bind(this, key)}
-                  >
-                    Show all {filteredRevisions.length} revisions
-                  </button>
+            {!showAllRevisions && filteredRevisions.length > 5 && (
+              <tr className="p-revisions-list__row u-hide--medium u-hide--large">
+                <td colSpan={5}>
+                  Showing 5 of {filteredRevisions.length} revisions
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-      </Fragment>
+
+        {!showAllRevisions && filteredRevisions.length > 5 && (
+          <div
+            className="u-align--right"
+            style={{ position: "relative", zIndex: 1, paddingTop: "0.5rem" }}
+          >
+            <span
+              className="u-hide--small"
+              style={{ display: "inline-block", marginRight: "0.5rem" }}
+            >
+              Showing 5 of {filteredRevisions.length} revisions
+            </span>
+
+            <button
+              className="p-button--link u-no-margin--bottom"
+              onClick={this.showAllRevisions.bind(this, key)}
+            >
+              Show more
+            </button>
+          </div>
+        )}
+      </>
     );
   }
 }

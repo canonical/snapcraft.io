@@ -370,10 +370,8 @@
 
     @media (max-width: $breakpoint-medium) {
       border-bottom: 1px solid $colors--light-theme--border-default;
-      margin-left: 1rem;
-      margin-right: 1rem;
       max-width: 100%;
-      padding: $spv--small 0 $spv--small;
+      padding: $spv--small 1rem $spv--small;
 
       &:last-child {
         border-bottom: 0;
