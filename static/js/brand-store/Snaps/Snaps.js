@@ -224,9 +224,7 @@ function Snaps() {
     setGlobalStore({
       id: "ubuntu",
       name: "Global",
-      snaps: snaps.filter(
-        (snap) => snap.store === "ubuntu" && !snap["other-stores"].length
-      ),
+      snaps: snaps.filter((snap) => snap.store === "ubuntu"),
     });
 
     setOtherStores(
