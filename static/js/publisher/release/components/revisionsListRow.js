@@ -15,30 +15,12 @@ import {
 } from "../selectors";
 
 import RevisionLabel from "./revisionLabel";
-
-const ProgressiveProgressChart = ({ current, target }) => {
-  return (
-    <div className="progressive-progress-bar u-hide--small">
-      <div
-        className="progressive-progress-bar__inner"
-        style={{ width: `${current}%` }}
-      ></div>
-      <div
-        className="progressive-progress-bar__marker"
-        style={{ left: `${Math.round(target)}%` }}
-      ></div>
-    </div>
-  );
-};
-
-ProgressiveProgressChart.propTypes = {
-  current: PropTypes.number,
-  target: PropTypes.number,
-};
+import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
 
 const RevisionsListRow = (props) => {
   const {
     revision,
+    previousRevision,
     isSelectable,
     showChannels,
     showBuildRequest,
@@ -57,6 +39,9 @@ const RevisionsListRow = (props) => {
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
   const isProgressive = revision?.progressive?.percentage ? true : false;
+  const isPreviousProgressive = previousRevision?.progressive?.percentage
+    ? true
+    : false;
 
   let channel;
   if (revision.release) {
@@ -116,39 +101,26 @@ const RevisionsListRow = (props) => {
           {buildRequestId && <>{buildRequestId}</>}
         </td>
       )}
-      {canShowProgressiveReleases &&
-        (isProgressive ? (
-          <td data-heading="Release progress">
-            <ProgressiveProgressChart
-              current={revision?.progressive?.["current-percentage"]}
-              target={revision?.progressive?.percentage}
-            />
-            <div className="u-space-between" style={{ maxWidth: "320px" }}>
-              <span>
-                {Math.round(
-                  revision?.progressive?.["current-percentage"]
-                    ? revision?.progressive?.["current-percentage"]
-                    : 0
-                )}
-                %
-                <br />
-                <span className="progressive-chart-key--current p-muted-heading u-hide--small">
-                  Current
-                </span>
-              </span>
-              <span>&nbsp;→&nbsp;</span>
-              <span className="u-align--right">
-                {Math.round(revision?.progressive?.percentage)}%
-                <br />
-                <span className="progressive-chart-key--target p-muted-heading u-hide--small">
-                  Target
-                </span>
-              </span>
-            </div>
-          </td>
-        ) : (
-          <td data-heading="Release progress">-</td>
-        ))}
+      {canShowProgressiveReleases && isProgressive ? (
+        <td data-heading="Release progress">
+          <ProgressiveReleaseProgressChart
+            currentPercentage={revision?.progressive?.["current-percentage"]}
+            targetPercentage={revision?.progressive?.percentage}
+          />
+        </td>
+      ) : isPreviousProgressive ? (
+        <td data-heading="Release progress">
+          <ProgressiveReleaseProgressChart
+            currentPercentage={100 - previousRevision?.progressive?.percentage}
+            targetPercentage={
+              100 - previousRevision?.progressive?.["current-percentage"]
+            }
+            isPreviousRevision={true}
+          />
+        </td>
+      ) : (
+        <td data-heading="Release progress">-</td>
+      )}
 
       {showChannels && (
         <td data-heading="Channels">{revision.channels.join(", ")}</td>
@@ -178,6 +150,7 @@ const RevisionsListRow = (props) => {
 RevisionsListRow.propTypes = {
   // props
   revision: PropTypes.object.isRequired,
+  previousRevision: PropTypes.object,
   isSelectable: PropTypes.bool,
   showChannels: PropTypes.bool,
   isPending: PropTypes.bool,
