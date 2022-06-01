@@ -38,7 +38,7 @@ function ProgressiveReleaseProgressChart({
             Current
           </span>
         </span>
-        <span>&nbsp;→&nbsp;</span>
+        <span>&nbsp;{isPreviousRevision ? "←" : "→"}&nbsp;</span>
         <span className="u-align--right">
           {Math.round(targetPercentage ? targetPercentage : 0)}%
           <br />
