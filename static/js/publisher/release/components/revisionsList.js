@@ -42,6 +42,7 @@ class RevisionsList extends Component {
 
   renderRow(
     revision,
+    previousRevision,
     isSelectable,
     showChannels,
     isPending,
@@ -56,6 +57,7 @@ class RevisionsList extends Component {
       <RevisionsListRow
         key={rowKey}
         revision={revision}
+        previousRevision={previousRevision}
         isSelectable={isSelectable}
         showChannels={showChannels}
         isPending={isPending}
@@ -101,8 +103,11 @@ class RevisionsList extends Component {
           ? true
           : false;
 
+      const previousRevision = revisions[index - 1];
+
       return this.renderRow(
         revision,
+        previousRevision,
         isSelectable,
         showChannels,
         false,
@@ -375,6 +380,7 @@ class RevisionsList extends Component {
             {showPendingRelease &&
               this.renderRow(
                 pendingRelease.revision,
+                previousRevision,
                 !isReleaseHistory,
                 showChannels,
                 true,

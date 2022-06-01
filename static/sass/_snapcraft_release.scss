@@ -777,6 +777,10 @@
     background-color: #652466;
   }
 
+  .previous-progressive-progress-chart .progressive-chart-key--current::after {
+    background-color: #43717e;
+  }
+
   .progressive-chart-key--target::after {
     background-color: #5a5a5a;
   }
@@ -789,6 +793,10 @@
     max-width: 320px;
     position: relative;
     width: 100%;
+
+    .previous-progressive-progress-chart & {
+      background-color: #d7e1e3;
+    }
   }
 
   .progressive-progress-bar__inner {
@@ -796,6 +804,10 @@
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
     height: 10px;
+
+    .previous-progressive-progress-chart & {
+      background-color: #43717e;
+    }
   }
 
   .progressive-progress-bar__marker {
