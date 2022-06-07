@@ -143,3 +143,20 @@ def format_member_role(role):
     }
 
     return roles[role]
+
+
+def format_link(url):
+    """
+    Template function that removes protocol, path and query string from links
+    """
+    url_parts = url.split(":")
+
+    if url_parts[0] == "mailto":
+        return url_parts[1]
+
+    if url_parts[0] == "http" or url_parts[0] == "https":
+        url_parts_no_slashes = url_parts[1].split("//")[1]
+        url_parts_no_query = url_parts_no_slashes.split("?")[0]
+        url_parts_no_path = url_parts_no_query.split("/")[0]
+
+        return url_parts_no_path

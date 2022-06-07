@@ -1,0 +1,28 @@
+@mixin snapcraft-metadata-links {
+  .p-links-list__item {
+    position: relative;
+
+    &:not(:last-child) {
+      margin-bottom: 0.25rem;
+      padding-bottom: 0.75rem;
+
+      &::after {
+        background-color: $color-light;
+        bottom: 0;
+        content: "";
+        height: 1px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+      }
+    }
+  }
+
+  .external-link-protocol--positive {
+    color: $color-positive;
+  }
+
+  .external-link-protocol--negative {
+    color: $color-negative;
+  }
+}

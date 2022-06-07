@@ -80,6 +80,7 @@ def set_handlers(app):
             "format_member_role": template_utils.format_member_role,
             "image": image_template,
             "stores": stores,
+            "format_link": template_utils.format_link,
         }
 
     # Error handlers
