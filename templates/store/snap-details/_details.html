@@ -1,7 +1,28 @@
 <h4>Details for {{ snap_title }}</h4>
-<dl>
-  <dt>License</dt>
-  <dd data-live="license">{{ license }}</dd>
-  <dt>Last updated</dt>
-  <dd>{{ last_updated }}</dd>
-</dl>
+
+<h5 class="u-no-margin--bottom">License</h5>
+<p>{{ license }}</p>
+
+<hr>
+
+<h5 class="u-no-margin--bottom">Last updated</h5>
+<p>{{ last_updated }}</p>
+
+<hr>
+
+<h5 class="u-no-margin--bottom">Links</h5>
+<ul class="p-list">
+  {% if website or is_preview %}
+    <li>
+      <a href="{{ website }}" data-live="website">Developer website</a>
+    </li>
+  {% endif %}
+          
+  {% if contact or is_preview %}
+    <li>
+      <a href="{{ contact }}" data-live="contact">Contact {{ publisher }}</a>
+    </li>
+  {% endif %}
+</ul>
+
+<hr>

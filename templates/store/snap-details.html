@@ -160,19 +160,13 @@
       <div class="col-8 u-text-wrap">
         {% if summary or is_preview %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
         <div data-live="description">{{ description | safe }}</div>
-        {% if website or is_preview %}<p><a href="{{ website }}" data-live="website">Developer website</a></p>{% endif %}
-        {% if contact or is_preview %}
-          <p>
-            <a href="{{ contact }}" data-live="contact">Contact {{ publisher }}</a>
-          </p>
-        {% endif %}
       </div>
       <div class="col-4">
         {% include "store/snap-details/_details.html" %}
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
         {% if not is_preview and not IS_BRAND_STORE %}
-          <h4>Share this snap</h4>
+          <h4 style="margin-top: 1rem;">Share this snap</h4>
           <p>Generate an embeddable card to be shared on external websites.</p>
           <p><button class="p-button js-embedded-card-toggle">Create embeddable card</button></p>
 
