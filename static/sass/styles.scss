@@ -229,14 +229,13 @@ $color-social-icon-foreground: $color-light;
 @import "snapcraft_p-autocomplete";
 @include snapcraft-autocomplete;
 @include snapcraft-p-icons;
-@import "snapcraft_metadata-links";
-@include snapcraft-metadata-links;
 @include vf-p-form-password-toggle;
 @include vf-p-icon-status-waiting;
 @include vf-p-icon-submit-bug;
 @include vf-p-icon-code;
 @include vf-p-icon-exposed;
-@include vf-p-icon-email;
+@include vf-p-icon-topic;
+@include vf-p-icon-revisions;
 
 dl {
   margin-bottom: $spv--x-large;
@@ -390,4 +389,16 @@ code {
 
 .u-no-max-width {
   max-width: 100% !important;
+}
+
+.p-list-indented {
+  margin-left: 1.25rem;
+}
+
+.external-link-protocol--positive {
+  color: $color-positive;
+}
+
+.external-link-protocol--negative {
+  color: $color-negative;
 }
