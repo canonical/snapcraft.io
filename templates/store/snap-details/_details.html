@@ -1,115 +1,78 @@
 <h4>Details for {{ snap_title }}</h4>
 
-<h5 class="u-no-margin--bottom">License</h5>
-<p>{{ license }}</p>
-
+<h5 class="u-no-margin--bottom"><i class="p-icon--topic"></i> License</h5>
+<ul class="p-list p-list-indented">
+  <li>{{ license }}</li>
+</ul>
 <hr>
 
-<h5 class="u-no-margin--bottom">Last updated</h5>
-<p>{{ last_updated }}</p>
-
+<h5 class="u-no-margin--bottom"><i class="p-icon--revisions"></i> Last updated</h5>
+<ul class="p-list p-list-indented">
+  <li>{{ last_updated }}</li>
+</ul>
 <hr>
 
 <!-- Once `links` is added to the API we can remove the `request.args` check -->
 {% if links and request.args.get("show_metadata_links") %}
-<h5 class="u-no-margin--bottom">Links</h5>
-<ul class="p-list">
   {% if links["website"] %}
-  <li class="p-links-list__item">
-    {% if links["website"]|length == 1 %}
-      <p class="u-no-margin--bottom">
-        <a class="js-external-link" title="{{ links['website'][0] }}" href="{{ links['website'][0] }}" aria-controls="modal">Website</a>
-      </p>
-    {% else %}
-      <p class="u-no-margin--bottom">Websites</p>
-      <ul class="p-list">
-        {% for link in links["website"] %}
-          <li>
-            <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
-          </li>
-        {% endfor %}
-      </ul>  
-    {% endif %}
-  </li>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Websites</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["website"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
   {% endif %}
 
   {% if links["contact"] %}
-  <li class="p-links-list__item">
-    {% if links["contact"]|length == 1 %}
-      <p class="u-no-margin--bottom">
-        <a class="js-external-link" title="{{ links['contact'][0] }}" href="{{ links['contact'][0] }}" aria-controls="modal">Contact</a>
-      </p>
-    {% else %}
-      <p class="u-no-margin--bottom">Contact</p>
-      <ul class="p-list">
-        {% for link in links["contact"] %}
-          <li>
-            <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
-          </li>
-        {% endfor %}
-      </ul>  
-    {% endif %}
-  </li>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--user"></i> Contact</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["contact"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
   {% endif %}
 
   {% if links["donation"] %}
-  <li class="p-links-list__item">
-    {% if links["donation"]|length == 1 %}
-      <p class="u-no-margin--bottom">
-        <a class="js-external-link" title="{{ links['donation'][0] }}" href="{{ links['donation'][0] }}" aria-controls="modal">Donations</a>
-      </p>
-    {% else %}
-      <p class="u-no-margin--bottom">Donations</p>
-      <ul class="p-list">
-        {% for link in links["donation"] %}
-          <li>
-            <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
-          </li>
-        {% endfor %}
-      </ul>  
-    {% endif %}
-  </li>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Donations</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["donation"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
   {% endif %}
 
   {% if links["source-code"] %}
-  <li class="p-links-list__item">
-    {% if links["source-code"]|length == 1 %}
-      <p class="u-no-margin--bottom">
-        <a class="js-external-link" title="{{ links['source-code'][0] }}" href="{{ links['source-code'][0] }}" aria-controls="modal">Source code</a>
-      </p>
-    {% else %}
-      <p class="u-no-margin--bottom">Source code</p>
-      <ul class="p-list">
-        {% for link in links["source-code"] %}
-          <li>
-            <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
-          </li>
-        {% endfor %}
-      </ul>  
-    {% endif %}
-  </li>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--code"></i> Source code</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["source-code"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
   {% endif %}
 
   {% if links["issues"] %}
-  <li class="p-links-list__item">
-    {% if links["issues"]|length == 1 %}
-      <p class="u-no-margin--bottom">
-        <a class="js-external-link" title="{{ links['issues'][0] }}" href="{{ links['issues'][0] }}" aria-controls="modal">Report a bug</a>
-      </p>
-    {% else %}
-      <p class="u-no-margin--bottom">Report a bug</p>
-      <ul class="p-list">
-        {% for link in links["issues"] %}
-          <li>
-            <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
-          </li>
-        {% endfor %}
-      </ul>  
-    {% endif %}
-  </li>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--submit-bug"></i> Report a bug</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["issues"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
   {% endif %}
-</ul>
-<hr>
 
 <div class="p-modal js-exeternal-link-modal u-hide" id="modal">
   <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
@@ -209,8 +172,8 @@
 
 <!-- Once `links` is added to the API we can remove this `else` section -->
 {% else %}
-  <h5 class="u-no-margin--bottom">Links</h5>
-  <ul class="p-list">
+  <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Links</h5>
+  <ul class="p-list p-list-indented">
     {% if website or is_preview %}
       <li>
         <a href="{{ website }}" data-live="website">Developer website</a>
@@ -223,6 +186,5 @@
       </li>
     {% endif %}
   </ul>
-
   <hr>
 {% endif %}
