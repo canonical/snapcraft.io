@@ -1,5 +1,10 @@
 @mixin snapcraft-p-verified {
   .p-verified {
     margin-left: 0.25rem;
+
+    .p-star {
+      vertical-align: middle;
+      margin-top: -3px
+    }
   }
 }
