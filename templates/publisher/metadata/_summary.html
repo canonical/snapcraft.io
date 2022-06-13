@@ -1,0 +1,15 @@
+<div class="row p-form__group p-form-validation {% if field_errors and field_errors['summary'] %}is-error{% endif %}">
+  <div class="col-2" data-tour="listing-summary">
+    <label class="p-form__label">Summary: </label>
+  </div>
+  <div class="col-8">
+    <div class="p-form__control">
+      <input data-tour="listing-summary" class="p-form-validation__input" type="text" name="summary" value="{{ summary }}" required maxlength="128"/>
+      {% if field_errors and field_errors['summary'] %}
+      <p class="p-form-validation__message">
+        <strong>Error:</strong> {{ field_errors['summary'] }}
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
