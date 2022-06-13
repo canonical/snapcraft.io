@@ -58,9 +58,15 @@
                 <ul class="p-media-object__meta-list u-no-margin">
                   <li class="p-media-object__meta-list-item">
                     <span class="u-off-screen">Publisher: </span>{{ snap.publisher }}
-                    {% if snap.developer_validation and snap.developer_validation == VERIFIED_PUBLISHER %}
-                        {% include "partials/_verified_developer.html" %}
-                    {% endif %}
+                      {% if snap.developer_validation %}
+                        {% if snap.developer_validation == VERIFIED_PUBLISHER %}
+                          {% include "partials/_verified_developer.html" %}
+                        {% endif %}
+
+                        {% if snap.developer_validation == STAR_DEVELOPER %}
+                          {% include "partials/_star_developer.html" %}
+                        {% endif %}
+                      {% endif %}
                   </li>
                 </ul>
                 <p class="p-media-object__content">{{ snap.summary }}</p>

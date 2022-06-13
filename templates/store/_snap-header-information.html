@@ -6,6 +6,13 @@
     <span class="p-tooltip__message">Publisher</span>
   </span>
 {% endif %}
-{% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
+
+{% if developer_validation %}
+  {% if developer_validation == VERIFIED_PUBLISHER %}
     {% include "partials/_verified_developer.html" %}
+  {% endif %}
+
+  {% if developer_validation == STAR_DEVELOPER %}
+    {% include "partials/_star_developer.html" %}
+  {% endif %}
 {% endif %}
