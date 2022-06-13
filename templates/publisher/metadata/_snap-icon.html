@@ -1,0 +1,21 @@
+{% if field_errors and field_errors['icon'] %}
+  <div class="u-fixed-width">
+    <div class="p-notification--negative">
+      <div class="p-notification__content">
+        <p class="p-notification__message">
+          <strong>Icon:</strong> {{ field_errors['icon'] }}
+        </p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<div class="row p-form__group p-form__group--top" data-validation-name="icon">
+  <div class="col-2" data-tour="listing-icon">
+    <label class="p-form__label" for="snap-icon">Snap icon:</label>
+  </div>
+  <div class="col-8">
+    <div class="p-form__control js-icon-holder">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="row p-form__group p-form-validation {% if field_errors and field_errors['contact'] %}is-error{% endif %}">
+  <div class="col-2" data-tour="listing-contact">
+    <label for="contact p-form__input">Contact {{ publisher_name }}:</label>
+  </div>
+  <div class="col-8">
+    <div class="p-form__control" data-tour="listing-contact">
+      <input
+        id="contact"
+        class="p-form-validation__input"
+        type="url"
+        name="contact"
+        value="{{ contact }}"
+        maxlength="256"
+        placeholder="mailto:example@example.com" />
+      {% if field_errors and field_errors['contact'] %}
+      <p class="p-form-validation__message">
+        <strong>Error:</strong> {{ field_errors['contact'] }}
+      </p>
+      {% endif %}
+      <p class="p-form-help-text u-no-margin--bottom">
+        An http: or https: link, or an e-mail address
+      </p>
+    </div>
+  </div>
+</div>
