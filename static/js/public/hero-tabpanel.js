@@ -25,11 +25,27 @@ class HeroTabPanels {
     const panel = this.panelContainer.querySelector(
       `[aria-labelledby='${categoryName}-snaps']`
     );
-    const verifiedAccountBadge = `
-      <span class="p-verified" title="Verified account">
-        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" alt="">
-      </span>
+
+    const renderValidationBadge = (validation) => {
+      const verifiedAccountBadge = `
+    <span class="p-verified p-tooltip p-tooltip--top-center">
+      <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" width="12" height="12" alt="Verified account" />
+      <span class="p-tooltip__message u-align--center" role="tooltip">Verified account</span>
+    </span>
     `;
+
+      const starDeveloperBadge = `
+    <span class="p-verified p-tooltip p-tooltip--top-center">
+      <img src="https://assets.ubuntu.com/v1/59af42aa-Star+-+Circle.svg" width="16" height="16" alt="Star developer" />
+      <span class="p-tooltip__message u-align--center" role="tooltip">Star developer</span>
+    </span>
+    `;
+
+      if (!validation) return "";
+      if (validation === "verified") return verifiedAccountBadge;
+      if (validation === "starred") return starDeveloperBadge;
+    };
+
     panel.innerHTML = "";
     snaps.forEach((snap) => {
       const columnDiv = document.createElement("div");
@@ -61,12 +77,7 @@ class HeroTabPanels {
             <div class="p-media-object__content">
               <p>
                 <span class="u-off-screen">Publisher: </span>${snap.publisher}
-                ${
-                  snap.developer_validation &&
-                  snap.developer_validation === "verified"
-                    ? verifiedAccountBadge
-                    : ""
-                }
+                ${renderValidationBadge(snap.developer_validation)}
               </p>
               <p>${snap.summary}</p>
             </div>
