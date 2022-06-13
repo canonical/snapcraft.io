@@ -63,8 +63,8 @@
                           {% include "partials/_verified_developer.html" %}
                         {% endif %}
 
-                        {% if snap.developer_validation == STAR_DEVELOPER %}
-                          {% include "partials/_star_developer.html" %}
+                        {% if snap.developer_validation == STAR_DEVELOPER and request.args.get("show_star_developer")  %}
+                            {% include "partials/_star_developer.html" %}                 
                         {% endif %}
                       {% endif %}
                   </li>
