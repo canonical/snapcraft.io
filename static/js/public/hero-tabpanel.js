@@ -29,7 +29,7 @@ class HeroTabPanels {
     const renderValidationBadge = (validation) => {
       const verifiedAccountBadge = `
     <span class="p-verified p-tooltip p-tooltip--top-center">
-      <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" width="12" height="12" alt="Verified account" />
+      <img src="https://assets.ubuntu.com/v1/ba8a4b7b-Verified.svg" width="14" height="14" alt="Verified account" />
       <span class="p-tooltip__message u-align--center" role="tooltip">Verified account</span>
     </span>
     `;
