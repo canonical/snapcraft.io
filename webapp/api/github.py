@@ -309,30 +309,31 @@ class GitHub:
         )
         return response.json()["sha"]
 
-    def get_snapcraft_yaml_name(self, owner, repo):
+    def get_snapcraft_yaml_data(self, owner, repo, location=None):
         """
-        Return True if the name inside the yaml file match with the snap
+        Parse the snapcraft.yaml from the repo and return a dict
         """
-        loc = self.get_snapcraft_yaml_location(owner, repo)
+        if not location:
+            location = self.get_snapcraft_yaml_location(owner, repo)
 
-        if loc:
+        if location:
             # Get last commit to avoid cache issues with raw.github.com
             last_commit = self.get_last_commit(owner, repo)
 
             response = self.session.request(
                 "GET",
-                f"{self.RAW_CONTENT_URL}/{owner}/{repo}/{last_commit}/{loc}",
+                f"{self.RAW_CONTENT_URL}/{owner}/{repo}"
+                f"/{last_commit}/{location}",
             )
 
             yaml = get_yaml_loader()
+
             try:
-                content = yaml.load(response.content)
+                return yaml.load(response.content)
             except Exception:
                 raise InvalidYAML
 
-            return content.get("name")
-
-        return False
+        return {}
 
     def generate_webhook_secret_for_repo(self, owner, name):
         key = bytes(GITHUB_WEBHOOK_SECRET, "UTF-8")

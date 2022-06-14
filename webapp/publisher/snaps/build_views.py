@@ -112,6 +112,7 @@ def get_snap_builds(snap_name):
         # Git repository without GitHub hostname
         context["github_repository"] = lp_snap["git_repository_url"][19:]
         github_owner, github_repo = context["github_repository"].split("/")
+        gh_snap_base = None
 
         try:
             context["github_repository_exists"] = github.check_if_repo_exists(
@@ -120,10 +121,32 @@ def get_snap_builds(snap_name):
             context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
                 github_owner, github_repo
             )
+
+            if context["yaml_file_exists"]:
+                try:
+                    gh_snap_base = github.get_snapcraft_yaml_data(
+                        github_owner,
+                        github_repo,
+                        location=context["yaml_file_exists"],
+                    ).get("base", None)
+                except InvalidYAML:
+                    # If we can't parse the yaml we don't
+                    # want to causean error
+                    pass
+
         except Unauthorized:
             context["github_app_revoked"] = True
 
-        context.update(get_builds(lp_snap, slice(0, BUILDS_PER_PAGE)))
+        builds = get_builds(lp_snap, slice(0, BUILDS_PER_PAGE))
+        context.update(builds)
+
+        # Notify about i386 arch
+        if gh_snap_base and int(gh_snap_base.replace("core", "")) >= 20:
+            # Check if this publisher was building for i386 recently
+            for build in builds["snap_builds"]:
+                if build["arch_tag"] == "i386":
+                    context["dropped_i386"] = True
+                    break
 
         context["snap_builds_enabled"] = bool(context["snap_builds"])
     else:
@@ -204,7 +227,9 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
     # The property name inside the yaml file doesn't match the snap
     else:
         try:
-            gh_snap_name = github.get_snapcraft_yaml_name(gh_owner, gh_repo)
+            gh_snap_name = github.get_snapcraft_yaml_data(
+                gh_owner, gh_repo
+            ).get("name")
 
             if gh_snap_name != snap_name:
                 result["success"] = False

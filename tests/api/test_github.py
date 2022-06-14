@@ -91,13 +91,13 @@ class GitHubTest(VCRTestCase):
         )
         self.assertEqual(False, case5)
 
-    def test_get_snapcraft_yaml_name(self):
-        case1 = self.client.get_snapcraft_yaml_name(
+    def test_get_snapcraft_yaml_data(self):
+        case1 = self.client.get_snapcraft_yaml_data(
             "build-staging-snapcraft-io", "test1"
         )
-        self.assertEqual("test1", case1)
+        self.assertEqual("test1", case1.get("name"))
 
-        case2 = self.client.get_snapcraft_yaml_name(
+        case2 = self.client.get_snapcraft_yaml_data(
             "build-staging-snapcraft-io", "test5"
         )
-        self.assertEqual(False, case2)
+        self.assertEqual(None, case2.get("name"))
