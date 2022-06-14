@@ -36,7 +36,7 @@ class HeroTabPanels {
 
       const starDeveloperBadge = `
       <span class="p-verified p-tooltip p-tooltip--top-center">
-        <img src="https://assets.ubuntu.com/v1/59af42aa-Star+-+Circle.svg" class="p-star" width="14" height="14" alt="Star developer"/>
+        <img src="https://assets.ubuntu.com/v1/d810dee9-Orange+Star.svg" class="p-star" width="14" height="14" alt="Star developer"/>
         <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-tooltip">Star developer</span>
       </span>
   
