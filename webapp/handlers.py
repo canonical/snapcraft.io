@@ -64,6 +64,7 @@ def set_handlers(app):
             "page_slug": page_slug,
             "user_name": user_name,
             "VERIFIED_PUBLISHER": "verified",
+            "STAR_DEVELOPER": "starred",
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
             "IS_BRAND_STORE": is_brand_store,

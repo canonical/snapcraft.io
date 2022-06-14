@@ -32,8 +32,14 @@
           <h1 class="p-heading--2 p-snap-heading__name">{{ publisher }}</h1>
           <p class="p-snap-heading__publisher">
             ({{ username }})
-            {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
-              {% include "partials/_verified_developer.html" %}
+            {% if developer_validation %}
+              {% if developer_validation == VERIFIED_PUBLISHER %}
+                {% include "partials/_verified_developer.html" %}
+              {% endif %}
+
+              {% if developer_validation == STAR_DEVELOPER and request.args.get("show_star_developer")  %}
+                {% include "partials/_star_developer.html" %}
+              {% endif %}
             {% endif %}
           </p>
         </div>
