@@ -28,6 +28,15 @@ Builds for
           <a href="/{{ snap_name }}/builds" aria-controls="repo-disconnect-modal">Disconnect repo</a>
         </p>
       </div>
+      {% if dropped_i386 %}
+      <div class="row">
+        <div class="p-notification--information">
+          <div class="p-notification__content">
+            <p class="p-notification__message">We have detected that your snap base is core20. This is not compatible with the i386 architecture, therefore that architecture will no longer be built.<br><a href="https://snapcraft.io/docs/migrating-bases#heading--arch">Learn more</a></p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </div>
     {% else %}
     <div class="snapcraft-p-sticky js-sticky-bar">
