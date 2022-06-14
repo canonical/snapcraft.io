@@ -6,7 +6,7 @@
 </ul>
 <hr>
 
-<h5 class="u-no-margin--bottom"><i class="p-icon--revisions"></i> Last updated</h5>
+<h5 class="u-no-margin--bottom"><i class="p-icon--calendar"></i> Last updated</h5>
 <ul class="p-list p-list-indented">
   <li>{{ last_updated }}</li>
 </ul>
@@ -15,7 +15,7 @@
 <!-- Once `links` is added to the API we can remove the `request.args` check -->
 {% if links and request.args.get("show_metadata_links") %}
   {% if links["website"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Websites</h5>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--website"></i> Websites</h5>
     <ul class="p-list p-list-indented">
       {% for link in links["website"] %}
         <li>
@@ -27,7 +27,7 @@
   {% endif %}
 
   {% if links["contact"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--user"></i> Contact</h5>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--mail"></i> Contact</h5>
     <ul class="p-list p-list-indented">
       {% for link in links["contact"] %}
         <li>
@@ -39,7 +39,7 @@
   {% endif %}
 
   {% if links["donation"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Donations</h5>
+    <h5 class="u-no-margin--bottom"><i class="p-icon--gift"></i> Donations</h5>
     <ul class="p-list p-list-indented">
       {% for link in links["donation"] %}
         <li>

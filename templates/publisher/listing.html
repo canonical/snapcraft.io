@@ -141,6 +141,13 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
       </div>
 
       {% include "publisher/metadata/_license.html" %}
+
+      {% if request.args.get("show_metadata_links") %}
+        {% include "publisher/metadata/_source-code.html" %}
+        {% include "publisher/metadata/_issues.html" %}
+        {% include "publisher/metadata/_donations.html" %}
+      {% endif %}
+
       {% include "publisher/metadata/_metrics.html" %}
     </section>
   </form>
