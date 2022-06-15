@@ -254,20 +254,25 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
       </div>
 
       {% if is_on_lp %}
-      <div class="row p-form__group">
-        <hr class="u-no-margin--bottom" />
-      </div>
-
-      <div class="row p-form__group">
-        <div class="col-2">
-          GitHub Webhook:
+        <div class="row p-form__group">
+          <hr class="u-no-margin--bottom" />
         </div>
-        <div class="col-8">
-          <div class="p-form__control">
-            <a href="/{{snap_name}}/builds/update-webhook">Set up webhook</a>
+
+        <div class="row p-form__group">
+          <div class="col-2">
+            <label class="p-form__label">
+              GitHub Webhook:
+            </label>
+          </div>
+          <div class="col-8">
+            <div class="p-form__control">
+              <p>
+                <a href="/{{snap_name}}/builds/update-webhook">Set up webhook</a>
+              </p>
+            </div>
+            <div class="p-form-help-text">Enables automatic builds from GitHub when you push code to your repository.</div>
           </div>
         </div>
-      </div>
       {% endif %}
     </section>
   </form>
