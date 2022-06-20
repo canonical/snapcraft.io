@@ -5,225 +5,231 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
 {% endblock %}
 
 {% block content %}
-<div id="main-content">
-  {% set selected_tab='listing' %}
-  {% include "publisher/_header.html" %}
+{% if request.args.get("show_react_listing") %}
+  <main id="main-content"></main>
+  <script>
+    window.SENTRY_DSN = "{{ SENTRY_DSN }}";
+    window.listingData = {{ listing_data | safe }}
+  </script>
+  <script src="{{ static_url('js/dist/publisher-listing.js') }}"></script>
+{% else %}
+  <div id="main-content">
+    {% set selected_tab='listing' %}
+    {% include "publisher/_header.html" %}
 
-  <form id="market-form" class="market-form p-form p-form--stacked" method="POST" enctype='multipart/form-data'>
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <input type="hidden" name="snap_id" value="{{ snap_id }}" />
+    <form id="market-form" class="market-form p-form p-form--stacked" method="POST" enctype='multipart/form-data'>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="snap_id" value="{{ snap_id }}" />
 
-    <div class="snapcraft-p-sticky js-sticky-bar">
+      <div class="snapcraft-p-sticky js-sticky-bar">
+        <div class="row">
+          <div class="col-7">
+            <p class="snapcraft-p-market-message u-no-margin--bottom">
+              {% if private %}
+              This listing is not public because the snap is set to private.
+              {% elif status == "published" %}
+              Updates to this information will appear immediately on the <a href="/{{ snap_name }}">snap listing page</a>.
+              {% endif %}
+            </p>
+          </div>
+          <div class="col-5">
+            <div class="u-align--right u-clearfix">
+              <button class="js-listing-preview p-button--base p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
+                Preview
+                <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
+              </button>
+              <a class="p-button js-form-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
+              <button type="submit" class="p-button--positive u-no-margin--bottom p-button-spinner js-form-submit" name="submit_apply" value="Save">
+                {#
+                to force dark icon variant we need a fake --dark class name:
+                https://github.com/vanilla-framework/vanilla-framework/issues/1817
+                #}
+                <span class="p-button__spinner vanilla-workaround--dark">
+                  <i class="p-icon--spinner u-animation--spin"></i>
+                </span>
+                <span class="p-button__text">Save</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row">
-        <div class="col-7">
-          <p class="snapcraft-p-market-message u-no-margin--bottom">
-            {% if private %}
-            This listing is not public because the snap is set to private.
-            {% elif status == "published" %}
-            Updates to this information will appear immediately on the <a href="/{{ snap_name }}">snap listing page</a>.
-            {% endif %}
-          </p>
-        </div>
-        <div class="col-5">
-          <div class="u-align--right u-clearfix">
-            <button class="js-listing-preview p-button--base p-tooltip p-tooltip--btm-center" form="preview-form" area-describedby="preview-tooltip">
-              Preview
-              <span class="p-tooltip__message" role="tooltip" id="preview-tooltip">Previews will only work in the same browser, locally</span>
-            </button>
-            <a class="p-button js-form-revert" href="/account/snaps/{{ snap_name }}/listing">Revert</a>
-            <button type="submit" class="p-button--positive u-no-margin--bottom p-button-spinner js-form-submit" name="submit_apply" value="Save">
-              {#
-              to force dark icon variant we need a fake --dark class name:
-              https://github.com/vanilla-framework/vanilla-framework/issues/1817
-              #}
-              <span class="p-button__spinner vanilla-workaround--dark">
-                <i class="p-icon--spinner u-animation--spin"></i>
-              </span>
-              <span class="p-button__text">Save</span>
-            </button>
-          </div>
-        </div>
+        <hr class="u-no-margin--bottom" />
       </div>
-    </div>
-    <div class="row">
-      <hr class="u-no-margin--bottom" />
-    </div>
 
-    {% if update_metadata_on_release|tojson == "true" %}
-    <div class="p-modal update-metadata-warning u-hide" id="modal">
-      <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-title">
-        <header class="p-modal__header">
-          <h2 class="p-modal__title" id="modal-title">
-            Warning
-          </h2>
-          <button type="button" class="p-modal__close js-close-modal" aria-label="Close active modal" aria-controls="modal">Close</button>
-        </header>
-        <p>Making these changes means that the snap will no longer use the data from snapcraft.yaml.</p>
-        <footer class="p-modal__footer">
-          <button type="button" class="u-no-margin--bottom js-close-modal" aria-controls="modal">Cancel</button>
-          <button type="button" class="p-button--positive u-no-margin--bottom js-save-changes">Save changes</button>
-        </footer>
-      </section>
-    </div>
-    {% endif %}
-
-    <section class="p-strip is-shallow">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      <div class="u-fixed-width">
-        {% for category, message in messages %}
-        <div id="market-form-status" class="p-notification--{{ category }}">
-          <div class="p-notification__content">
-            <p class="p-notification__message">{{ message }}</p>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
-      {% endwith %}
-
-      {% if other_errors %}
-      <div class="u-fixed-width">
-        {% for error in other_errors %}
-        <div class="p-notification--negative">
-          <div class="p-notification__content">
-            <p class="p-notification__message">{{ error.message }}</p>
-          </div>
-        </div>
-        {% endfor %}
+      {% if update_metadata_on_release|tojson == "true" %}
+      <div class="p-modal update-metadata-warning u-hide" id="modal">
+        <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-title">
+          <header class="p-modal__header">
+            <h2 class="p-modal__title" id="modal-title">
+              Warning
+            </h2>
+            <button type="button" class="p-modal__close js-close-modal" aria-label="Close active modal" aria-controls="modal">Close</button>
+          </header>
+          <p>Making these changes means that the snap will no longer use the data from snapcraft.yaml.</p>
+          <footer class="p-modal__footer">
+            <button type="button" class="u-no-margin--bottom js-close-modal" aria-controls="modal">Cancel</button>
+            <button type="button" class="p-button--positive u-no-margin--bottom js-save-changes">Save changes</button>
+          </footer>
+        </section>
       </div>
       {% endif %}
 
-      {% if update_metadata_on_release %}
+      <section class="p-strip is-shallow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
         <div class="u-fixed-width">
-          <div class="p-notification--caution">
-            <p class="p-notification__response">Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel. <a class="p-link--external" href="/docs/snapcraft-top-level-metadata">Learn more</a>.</p>
+          {% for category, message in messages %}
+          <div id="market-form-status" class="p-notification--{{ category }}">
+            <div class="p-notification__content">
+              <p class="p-notification__message">{{ message }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if other_errors %}
+        <div class="u-fixed-width">
+          {% for error in other_errors %}
+          <div class="p-notification--negative">
+            <div class="p-notification__content">
+              <p class="p-notification__message">{{ error.message }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if update_metadata_on_release %}
+          <div class="u-fixed-width">
+            <div class="p-notification--caution">
+              <p class="p-notification__response">Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel. <a class="p-link--external" href="/docs/snapcraft-top-level-metadata">Learn more</a>.</p>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="u-fixed-width">
+          <h2 class="p-heading--4">
+            Listing details
+          </h2>
+        </div>
+
+        {% include "publisher/metadata/_snap-icon.html" %}
+        {% include "publisher/metadata/_title.html" %}
+        {% include "publisher/metadata/_category.html" %}
+        {% include "publisher/metadata/_video.html" %}
+        {% include "publisher/metadata/_screenshots.html" %}
+        {% include "publisher/metadata/_featured-banner.html" %}
+        {% include "publisher/metadata/_summary.html" %}
+        {% include "publisher/metadata/_description.html" %}
+
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
           </div>
         </div>
-      {% endif %}
 
-      <div class="u-fixed-width">
-        <h2 class="p-heading--4">
-          Listing details
-        </h2>
-      </div>
-
-      {% include "publisher/metadata/_snap-icon.html" %}
-      {% include "publisher/metadata/_title.html" %}
-      {% include "publisher/metadata/_category.html" %}
-      {% include "publisher/metadata/_video.html" %}
-      {% include "publisher/metadata/_screenshots.html" %}
-      {% include "publisher/metadata/_featured-banner.html" %}
-      {% include "publisher/metadata/_summary.html" %}
-      {% include "publisher/metadata/_description.html" %}
-
-      <div class="p-strip is-shallow">
         <div class="row">
-          <hr class="u-no-margin--bottom" />
+          <h2 class="p-heading--4">Contact information</h2>
         </div>
-      </div>
 
-      <div class="row">
-        <h2 class="p-heading--4">Contact information</h2>
-      </div>
+        {% include "publisher/metadata/_website.html" %}
+        {% include "publisher/metadata/_contact.html" %}
 
-      {% include "publisher/metadata/_website.html" %}
-      {% include "publisher/metadata/_contact.html" %}
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <hr class="u-no-margin--bottom" />
+          </div>
+        </div>
 
-      <div class="p-strip is-shallow">
         <div class="row">
-          <hr class="u-no-margin--bottom" />
+          <h2 class="p-heading--4">Additional information</h2>
         </div>
-      </div>
 
-      <div class="row">
-        <h2 class="p-heading--4">Additional information</h2>
-      </div>
+        {% include "publisher/metadata/_license.html" %}
+        {% include "publisher/metadata/_metrics.html" %}
+      </section>
+    </form>
+    <form id="preview-form" action="/{{ snap_name }}/preview" method="POST" enctype="multipart/form-data" class="u-hide" target="_blank">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="text" name="state" value="" />
+    </form>
+  </div>
 
-      {% include "publisher/metadata/_license.html" %}
-
-      {% if request.args.get("show_metadata_links") %}
-        {% include "publisher/metadata/_source-code.html" %}
-        {% include "publisher/metadata/_issues.html" %}
-        {% include "publisher/metadata/_donations.html" %}
-      {% endif %}
-
-      {% include "publisher/metadata/_metrics.html" %}
-    </section>
-  </form>
-  <form id="preview-form" action="/{{ snap_name }}/preview" method="POST" enctype="multipart/form-data" class="u-hide" target="_blank">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <input type="text" name="state" value="" />
-  </form>
-</div>
-
-<div id="tour-container"></div>
+  <div id="tour-container"></div>
+{% endif %}
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+  {% if not request.args.get("show_react_listing") %}
+    <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script>
-  window.addEventListener("DOMContentLoaded", function() {
-    Raven.context(function () {
-      snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
+  {% if not request.args.get("show_react_listing") %}
+    <script>
+      window.addEventListener("DOMContentLoaded", function() {
+        Raven.context(function () {
+          snapcraft.publisher.initMultiselect('.js-license', {{ licenses|tojson }}, ' OR ');
 
-      const formFields = {
-        snap_name: {{ snap_name|tojson }},
-        title: {{ snap_title|tojson }},
-        summary: {{ summary|tojson }},
-        description: {{ description|tojson }},
-        website: {{ website|tojson }},
-        contact: {{ contact|tojson }},
-        categories: {{ snap_categories.categories|tojson }},
-        images: [
-          {% if icon_url %}
-          { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
-          {% endif %}
-          {% for screenshot_url in screenshot_urls %}
-          { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
-          {% endfor %}
-          {% if banner_urls[0] %}
-          { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
-          {% endif %}
-        ],
-        'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
-        'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
-        'license': {{ license|tojson }},
-        'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
-      };
+          const formFields = {
+            snap_name: {{ snap_name|tojson }},
+            title: {{ snap_title|tojson }},
+            summary: {{ summary|tojson }},
+            description: {{ description|tojson }},
+            website: {{ website|tojson }},
+            contact: {{ contact|tojson }},
+            categories: {{ snap_categories.categories|tojson }},
+            images: [
+              {% if icon_url %}
+              { url: {{ icon_url|tojson }}, type: "icon", status: "uploaded" },
+              {% endif %}
+              {% for screenshot_url in screenshot_urls %}
+              { url: {{ screenshot_url|tojson }}, type: "screenshot", status: "uploaded" },
+              {% endfor %}
+              {% if banner_urls[0] %}
+              { url: {{ banner_urls[0]|tojson }}, type: "banner", status: "uploaded" },
+              {% endif %}
+            ],
+            'public_metrics_enabled': {{ public_metrics_enabled|tojson }},
+            'public_metrics_blacklist': {{ join(public_metrics_blacklist, ',')|tojson }},
+            'license': {{ license|tojson }},
+            'video_urls': {% if video_urls %}{{ video_urls[0]|tojson }}{% else %}""{% endif %}
+          };
 
-      const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
+          const formErrors = {% if error_list %}{{ error_list|tojson}}{% else %}null{% endif %};
 
-      snapcraft.publisher.market.initForm(
-        {
-          snapIconHolder: ".js-icon-holder",
-          bannerHolder: ".js-banner",
-          form: "market-form",
-          formNotification: "market-form-status",
-          licenseRadioContent: [
-            document.getElementById('license-simple-input'),
-            document.getElementById('license-custom-input')
-          ],
-          mediaHolder: ".js-media-holder",
-        },
-        formFields,
-        formErrors
-      );
+          snapcraft.publisher.market.initForm(
+            {
+              snapIconHolder: ".js-icon-holder",
+              bannerHolder: ".js-banner",
+              form: "market-form",
+              formNotification: "market-form-status",
+              licenseRadioContent: [
+                document.getElementById('license-simple-input'),
+                document.getElementById('license-custom-input')
+              ],
+              mediaHolder: ".js-media-holder",
+            },
+            formFields,
+            formErrors
+          );
 
-      snapcraft.publisher.stickyListingBar();
-      snapcraft.publisher.markdownToggle();
-      snapcraft.publisher.initCategories();
+          snapcraft.publisher.stickyListingBar();
+          snapcraft.publisher.markdownToggle();
+          snapcraft.publisher.initCategories();
 
-      snapcraft.publisher.tour.initListingTour({
-        snapName: {{ snap_name|tojson }},
-        container: document.getElementById("tour-container"),
-        steps: {{ tour_steps|tojson }},
-        formFields: formFields
+          snapcraft.publisher.tour.initListingTour({
+            snapName: {{ snap_name|tojson }},
+            container: document.getElementById("tour-container"),
+            steps: {{ tour_steps|tojson }},
+            formFields: formFields
+          });
+        });
       });
-    });
-  });
-</script>
+    </script>
+  {% endif %}
 {% endblock %}

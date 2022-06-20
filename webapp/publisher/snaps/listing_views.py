@@ -4,6 +4,7 @@ from json import loads
 # Packages
 import bleach
 import flask
+from flask import json
 from canonicalwebteam.store_api.stores.snapstore import (
     SnapPublisher,
     SnapStore,
@@ -133,9 +134,12 @@ def get_listing_snap(snap_name):
         "update_metadata_on_release": snap_details[
             "update_metadata_on_release"
         ],
+        "links": {"websites": []},
     }
 
-    return flask.render_template("publisher/listing.html", **context)
+    return flask.render_template(
+        "publisher/listing.html", **context, listing_data=json.dumps(context)
+    )
 
 
 @login_required
