@@ -25,6 +25,7 @@ const md = new MarkdownIt({
   "image",
   "html_inline",
   "fence",
+  "link",
 ]);
 
 // For the different elements we might need to change different properties
