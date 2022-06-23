@@ -1,0 +1,17 @@
+name: Run percy
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * tue,wed,thu,fri,sat'
+
+jobs:
+  snapshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install deps
+        run: yarn install
+
+      - name: Run Percy
+        run: export PERCY_TOKEN=${{ secrets.PERCY_TOKEN }}; ./node_modules/.bin/percy snapshot snapshots.yml
