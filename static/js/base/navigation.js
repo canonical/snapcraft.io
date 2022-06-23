@@ -13,8 +13,9 @@ if (navAccountContainer) {
       );
 
       if (data.publisher) {
-        var displayName =
-          navAccountContainer.querySelector(".js-account--name");
+        var displayName = navAccountContainer.querySelector(
+          ".js-account--name"
+        );
 
         notAuthenticatedMenu.classList.add("u-hide");
         authenticatedMenu.classList.remove("u-hide");
