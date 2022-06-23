@@ -12,8 +12,9 @@ if (navAccountContainer) {
         var authenticatedMenu = navAccountContainer.querySelector(
           ".js-nav-account--authenticated"
         );
-        var displayName =
-          navAccountContainer.querySelector(".js-account--name");
+        var displayName = navAccountContainer.querySelector(
+          ".js-account--name"
+        );
 
         navAccountContainer.classList.add(
           "p-subnav",
