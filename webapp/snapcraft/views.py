@@ -25,6 +25,22 @@ def snapcraft_blueprint():
             "index.html", nps=nps, livestream=livestream
         )
 
+    @snapcraft.route("/account.json")
+    def get_account_json():
+        """
+        A JSON endpoint to request login status
+        """
+        publisher = None
+
+        if "publisher" in session:
+            publisher = session["publisher"]
+
+        response = {"publisher": publisher}
+        response = make_response(response)
+        response.headers["Cache-Control"] = "no-store"
+
+        return response
+
     @snapcraft.route("/iot")
     def iot():
         status_code = 200
