@@ -9,7 +9,8 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
   <main id="main-content"></main>
   <script>
     window.SENTRY_DSN = "{{ SENTRY_DSN }}";
-    window.listingData = {{ listing_data | safe }}
+    window.CSRF_TOKEN = "{{ csrf_token() }}";
+    window.listingData = {{ listing_data | safe }};
   </script>
   <script src="{{ static_url('js/dist/publisher-listing.js') }}"></script>
 {% else %}

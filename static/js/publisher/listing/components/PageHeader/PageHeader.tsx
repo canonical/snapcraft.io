@@ -1,6 +1,5 @@
 import React from "react";
-
-import NavTabs from "../NavTabs";
+import { Strip, Tabs } from "@canonical/react-components";
 
 type Props = {
   snapName: string;
@@ -8,13 +7,43 @@ type Props = {
 
 function PageHeader({ snapName }: Props) {
   return (
-    <section className="p-strip is-shallow u-no-padding--bottom">
+    <Strip shallow={true} className="u-no-padding--bottom">
       <div className="u-fixed-width">
         <a href="/snaps">&lsaquo;&nbsp;My snaps</a>
         <h1 className="p-heading--3">{snapName}</h1>
-        <NavTabs snapName={snapName} />
+        <Tabs
+          listClassName="u-no-margin--bottom"
+          links={[
+            {
+              label: "Listing",
+              active: true,
+              href: `/${snapName}/listing`,
+              "data-tour": "listing-intro",
+            },
+            {
+              label: "Builds",
+              href: `/${snapName}/builds`,
+            },
+            {
+              label: "Releases",
+              href: `/${snapName}/releases`,
+            },
+            {
+              label: "Metrics",
+              href: `/${snapName}/metrics`,
+            },
+            {
+              label: "Publicise",
+              href: `/${snapName}/publicise`,
+            },
+            {
+              label: "Settings",
+              href: `/${snapName}/settings`,
+            },
+          ]}
+        />
       </div>
-    </section>
+    </Strip>
   );
 }
 
