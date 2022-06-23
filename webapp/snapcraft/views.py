@@ -32,11 +32,11 @@ def snapcraft_blueprint():
         """
         publisher = None
 
-        if "publisher" in session:
-            publisher = session["publisher"]
+        if "publisher" in flask.session:
+            publisher = flask.session["publisher"]
 
         response = {"publisher": publisher}
-        response = make_response(response)
+        response = flask.make_response(response)
         response.headers["Cache-Control"] = "no-store"
 
         return response
