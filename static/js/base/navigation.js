@@ -5,24 +5,29 @@ if (navAccountContainer) {
   fetch("/account.json")
     .then((response) => response.json())
     .then((data) => {
-      if (data.publisher) {
-        var notAuthenticatedMenu = navAccountContainer.querySelector(
-          ".js-nav-account--notauthenticated"
-        );
-        var authenticatedMenu = navAccountContainer.querySelector(
-          ".js-nav-account--authenticated"
-        );
-        var displayName = navAccountContainer.querySelector(
-          ".js-account--name"
-        );
+      var notAuthenticatedMenu = navAccountContainer.querySelector(
+        ".js-nav-account--notauthenticated"
+      );
+      var authenticatedMenu = navAccountContainer.querySelector(
+        ".js-nav-account--authenticated"
+      );
 
-        navAccountContainer.classList.add(
-          "p-subnav",
-          "p-navigation__item--dropdown-toggle"
-        );
+      if (data.publisher) {
+        var displayName =
+          navAccountContainer.querySelector(".js-account--name");
+
         notAuthenticatedMenu.classList.add("u-hide");
         authenticatedMenu.classList.remove("u-hide");
         displayName.innerHTML = data.publisher["fullname"];
+
+        if (data.publisher.stores) {
+          authenticatedMenu
+            .querySelector(".js-nav-account--stores")
+            .classList.remove("u-hide");
+        }
+      } else {
+        notAuthenticatedMenu.classList.remove("u-hide");
+        authenticatedMenu.classList.add("u-hide");
       }
     });
 }
