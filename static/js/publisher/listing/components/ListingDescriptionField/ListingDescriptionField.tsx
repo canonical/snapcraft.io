@@ -14,7 +14,7 @@ function ListingDescriptionField({ register, getFieldState }: Props) {
 
   return (
     <Row
-      className={`row p-form__group ${
+      className={`p-form__group ${
         fieldState.invalid && "p-form-validation is-error"
       }`}
     >
