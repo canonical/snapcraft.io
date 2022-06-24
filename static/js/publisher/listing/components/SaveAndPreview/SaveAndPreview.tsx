@@ -1,55 +1,94 @@
-import React from "react";
-import { Button } from "@canonical/react-components";
+import React, { useEffect, useRef } from "react";
+import { Row, Col, Button } from "@canonical/react-components";
+
+import debounce from "../../../../libs/debounce";
 
 type Props = {
   snapName: string;
   isDirty: boolean;
   reset: Function;
+  isSaving: boolean;
+  isValid: boolean;
 };
 
-function SaveAndPreview({ snapName, isDirty, reset }: Props) {
+function SaveAndPreview({
+  snapName,
+  isDirty,
+  reset,
+  isSaving,
+  isValid,
+}: Props) {
+  const stickyBar = useRef<HTMLDivElement>(null);
+  const handleScroll = () => {
+    stickyBar?.current?.classList.toggle(
+      "sticky-shadow",
+      stickyBar?.current?.getBoundingClientRect()?.top === 0
+    );
+  };
+
+  useEffect(() => {
+    document.addEventListener("scroll", debounce(handleScroll, 10, false));
+  }, []);
+
   return (
-    <div className="snapcraft-p-sticky">
-      <div className="row">
-        <div className="col-7">
-          <p className="u-no-margin--bottom">
-            Updates to this information will appear immediately on the{" "}
-            <a href={`/${snapName}`}>snap listing page</a>.
-          </p>
-        </div>
-        <div className="col-5">
-          <div className="u-align--right">
-            <Button
-              type="button"
-              className="p-tooltip--btm-center"
-              aria-describedby="preview-tooltip"
-            >
-              Preview
-              <span
-                className="p-tooltip__message"
-                role="tooltip"
-                id="preview-tooltip"
+    <>
+      <div className="snapcraft-p-sticky" ref={stickyBar}>
+        <Row>
+          <Col size={7}>
+            <p className="u-no-margin--bottom">
+              Updates to this information will appear immediately on the{" "}
+              <a href={`/${snapName}`}>snap listing page</a>.
+            </p>
+          </Col>
+          <Col size={5}>
+            <div className="u-align--right">
+              <Button
+                type="submit"
+                className="p-button--base p-tooltip--btm-center"
+                aria-describedby="preview-tooltip"
+                form="preview-form"
               >
-                Previews will only work in the same browser, locally
-              </span>
-            </Button>
-            <Button
-              appearance="default"
-              disabled={!isDirty}
-              type="reset"
-              onClick={() => {
-                reset();
-              }}
-            >
-              Revert
-            </Button>
-            <Button appearance="positive" disabled={!isDirty} type="submit">
-              Save
-            </Button>
-          </div>
-        </div>
+                Preview
+                <span
+                  className="p-tooltip__message"
+                  role="tooltip"
+                  id="preview-tooltip"
+                >
+                  Previews will only work in the same browser, locally
+                </span>
+              </Button>
+              <Button
+                appearance="default"
+                disabled={!isDirty}
+                type="reset"
+                onClick={() => {
+                  reset();
+                }}
+              >
+                Revert
+              </Button>
+              <Button
+                appearance="positive"
+                disabled={!isDirty || isSaving || !isValid}
+                type="submit"
+                style={{ minWidth: "68px" }}
+              >
+                {isSaving ? (
+                  <i className="p-icon--spinner is-light u-animation--spin">
+                    Saving
+                  </i>
+                ) : (
+                  "Save"
+                )}
+              </Button>
+            </div>
+          </Col>
+        </Row>
       </div>
-    </div>
+      <div className="u-fixed-width">
+        <hr className="u-no-margin--bottom" />
+      </div>
+    </>
   );
 }
 

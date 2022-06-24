@@ -5,6 +5,7 @@ export {};
 declare global {
   interface Window {
     SENTRY_DSN: string;
+    CSRF_TOKEN: string;
     listingData: any;
   }
 }
