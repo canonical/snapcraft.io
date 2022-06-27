@@ -6,15 +6,18 @@ import PageHeader from "../PageHeader";
 import SaveAndPreview from "../SaveAndPreview";
 import ListingFormInput from "../ListingFormInput";
 import ListingDescriptionField from "../ListingDescriptionField";
+import CategoriesInput from "../CategoriesInput";
 import PreviewForm from "../PreviewForm";
 
 interface DirtyFields {
-  [key: string]: string;
+  [key: string]: string | Array<string>;
 }
 
 function App() {
   const snapId = window?.listingData?.snap_id;
   const publisherName = window?.listingData?.publisher_name;
+  const categories = window?.listingData?.categories;
+
   const [listingData, setListingData] = useState({
     snap_name: window?.listingData?.snap_name,
     title: window?.listingData?.snap_title,
@@ -28,6 +31,8 @@ function App() {
     public_metrics_blacklist: window?.listingData?.public_metrics_blacklist,
     license: window?.listingData?.license,
     video_urls: window?.listingData?.video_urls[0],
+    "primary-category": window?.listingData?.snap_categories?.categories[0],
+    "secondary-category": window?.listingData?.snap_categories?.categories[1],
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -40,6 +45,7 @@ function App() {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { isDirty, dirtyFields, isValid },
   } = useForm({ defaultValues: listingData, mode: "onChange" });
 
@@ -48,7 +54,24 @@ function App() {
     const keys = Object.keys(dirtyFields);
 
     keys.forEach((key) => {
-      changes[key] = data[key];
+      if (key !== "primary-category" && key !== "secondary-category") {
+        changes[key] = data[key];
+      }
+
+      if (
+        dirtyFields["primary-category"] ||
+        dirtyFields["secondary-category"]
+      ) {
+        changes.categories = [];
+
+        if (data["primary-category"]) {
+          changes.categories.push(data["primary-category"]);
+        }
+
+        if (data["secondary-category"]) {
+          changes.categories.push(data["secondary-category"]);
+        }
+      }
     });
 
     const formData = new FormData();
@@ -61,6 +84,8 @@ function App() {
     formData.set("video_urls", data?.video_urls);
     formData.set("website", data?.website);
     formData.set("contact", data?.contact);
+    formData.set("primary-category", data?.["primary-category"]);
+    formData.set("secondary-category", data?.["secondary-category"]);
     formData.set("changes", JSON.stringify(changes));
 
     setIsSaving(true);
@@ -69,7 +94,6 @@ function App() {
       method: "POST",
       body: formData,
     }).then((response) => {
-      console.log("response", response);
       if (response.status === 200) {
         setTimeout(() => {
           setIsSaving(false);
@@ -145,6 +169,15 @@ function App() {
             register={register}
             required={true}
             getFieldState={getFieldState}
+          />
+
+          <CategoriesInput
+            categories={categories}
+            register={register}
+            getFieldState={getFieldState}
+            primaryCategory={listingData?.["primary-category"]}
+            secondaryCategory={listingData?.["secondary-category"]}
+            setValue={setValue}
           />
 
           <ListingFormInput
