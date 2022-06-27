@@ -1,5 +1,7 @@
 import unittest
 
+import datetime
+from freezegun import freeze_time
 from webapp.publisher.snaps import logic
 
 
@@ -118,3 +120,22 @@ class PublisherLogicTest(unittest.TestCase):
 
         result = logic.is_snap_on_stable(channel_maps_list)
         self.assertTrue(result)
+
+    def test_convert_date_more_than_yesterday(self):
+        date_test = "2019-01-12T16:48:41.821037+00:00"
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "12 January 2019")
+
+    def test_convert_date_more_today(self):
+        date_test = datetime.datetime.now().strftime("%Y-%m-%d")
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "Today")
+
+    @freeze_time("2021-05-12 10:38:34", tz_offset=-6)
+    def test_convert_date_timezone_yesterday(self):
+        date_test = "2021-05-11T16:48:41.821037+06:00"
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "Make it fail")
