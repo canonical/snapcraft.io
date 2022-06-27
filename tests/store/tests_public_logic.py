@@ -329,10 +329,10 @@ class StoreLogicTest(unittest.TestCase):
 
     @freeze_time("2021-05-12 10:38:34", tz_offset=-6)
     def test_convert_date_timezone_yesterday(self):
-        date_test = "2021-05-11T10:48:41.821037+06:00"
+        date_test = "2021-05-11T10:48:41.821037-06:00"
         result = logic.convert_date(date_test)
 
-        self.assertEqual(result, "Today")
+        self.assertEqual(result, "Yesterday")
 
     def test_get_snap_banner(self):
         snap_with_banner = {
