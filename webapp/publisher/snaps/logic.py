@@ -1,4 +1,5 @@
 import datetime
+import humanize
 import hashlib
 from json import dumps
 
@@ -366,16 +367,28 @@ def filter_available_stores(stores):
 
 
 def convert_date(date_to_convert):
-    """Convert date to human readable format: Month Year
+    """Convert date to human readable format: Month Day Year
+
+    If date is less than a day return: today or yesterday
 
     Format of date to convert: 2019-01-12T16:48:41.821037+00:00
-    Output: January 2019
+    Output: Jan 12 2019
 
     :param date_to_convert: Date to convert
     :returns: Readable date
     """
-    date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
-    return date_parsed.strftime("%B %Y")
+    local_timezone = (
+        datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
+    )
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=local_timezone)
+    delta = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
+        days=1
+    )
+
+    if delta < date_parsed:
+        return humanize.naturalday(date_parsed).title()
+    else:
+        return date_parsed.strftime("%-d %B %Y")
 
 
 def categorise_media(media):
