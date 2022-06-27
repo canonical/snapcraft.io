@@ -42,9 +42,15 @@ class HeroTabPanels {
   
     `;
 
-      if (!validation) return "";
-      if (validation === "verified") return verifiedAccountBadge;
-      if (validation === "starred") return starDeveloperBadge;
+      if (validation === "verified") {
+        return verifiedAccountBadge;
+      }
+
+      if (validation === "starred") {
+        return starDeveloperBadge;
+      }
+
+      return "";
     };
 
     panel.innerHTML = "";
