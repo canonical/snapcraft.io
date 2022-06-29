@@ -20,9 +20,7 @@
       "referenceNumber": 1,
       "name": "Attribution Assurance License",
       "licenseId": "AAL",
-      "seeAlso": [
-        "https://opensource.org/licenses/attribution"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/attribution"],
       "isOsiApproved": true
     },
     {
@@ -32,9 +30,7 @@
       "referenceNumber": 2,
       "name": "Adobe Systems Incorporated Source Code License Agreement",
       "licenseId": "Adobe-2006",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/AdobeLicense"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/AdobeLicense"],
       "isOsiApproved": false
     },
     {
@@ -69,9 +65,7 @@
       "referenceNumber": 5,
       "name": "BSD Zero Clause License",
       "licenseId": "0BSD",
-      "seeAlso": [
-        "http://landley.net/toybox/license.html"
-      ],
+      "seeAlso": ["http://landley.net/toybox/license.html"],
       "isOsiApproved": true
     },
     {
@@ -81,9 +75,7 @@
       "referenceNumber": 6,
       "name": "Afmparse License",
       "licenseId": "Afmparse",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Afmparse"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Afmparse"],
       "isOsiApproved": false
     },
     {
@@ -106,9 +98,7 @@
       "referenceNumber": 8,
       "name": "Affero General Public License v1.0 or later",
       "licenseId": "AGPL-1.0-or-later",
-      "seeAlso": [
-        "http://www.affero.org/oagpl.html"
-      ],
+      "seeAlso": ["http://www.affero.org/oagpl.html"],
       "isOsiApproved": false
     },
     {
@@ -118,9 +108,7 @@
       "referenceNumber": 9,
       "name": "Academic Free License v2.1",
       "licenseId": "AFL-2.1",
-      "seeAlso": [
-        "http://opensource.linux-mirror.org/licenses/afl-2.1.txt"
-      ],
+      "seeAlso": ["http://opensource.linux-mirror.org/licenses/afl-2.1.txt"],
       "isOsiApproved": true
     },
     {
@@ -143,9 +131,7 @@
       "referenceNumber": 11,
       "name": "Affero General Public License v1.0",
       "licenseId": "AGPL-1.0",
-      "seeAlso": [
-        "http://www.affero.org/oagpl.html"
-      ],
+      "seeAlso": ["http://www.affero.org/oagpl.html"],
       "isOsiApproved": false
     },
     {
@@ -155,9 +141,7 @@
       "referenceNumber": 12,
       "name": "Adobe Glyph List License",
       "licenseId": "Adobe-Glyph",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/MIT#AdobeGlyph"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/MIT#AdobeGlyph"],
       "isOsiApproved": false
     },
     {
@@ -179,9 +163,7 @@
       "referenceNumber": 14,
       "name": "Aladdin Free Public License",
       "licenseId": "Aladdin",
-      "seeAlso": [
-        "http://pages.cs.wisc.edu/~ghost/doc/AFPL/6.01/Public.htm"
-      ],
+      "seeAlso": ["http://pages.cs.wisc.edu/~ghost/doc/AFPL/6.01/Public.htm"],
       "isOsiApproved": false
     },
     {
@@ -191,9 +173,7 @@
       "referenceNumber": 15,
       "name": "ANTLR Software Rights Notice",
       "licenseId": "ANTLR-PD",
-      "seeAlso": [
-        "http://www.antlr2.org/license.html"
-      ],
+      "seeAlso": ["http://www.antlr2.org/license.html"],
       "isOsiApproved": false
     },
     {
@@ -203,9 +183,7 @@
       "referenceNumber": 16,
       "name": "Apple MIT License",
       "licenseId": "AML",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Apple_MIT_License"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Apple_MIT_License"],
       "isOsiApproved": false
     },
     {
@@ -215,9 +193,7 @@
       "referenceNumber": 17,
       "name": "Apache License 1.0",
       "licenseId": "Apache-1.0",
-      "seeAlso": [
-        "http://www.apache.org/licenses/LICENSE-1.0"
-      ],
+      "seeAlso": ["http://www.apache.org/licenses/LICENSE-1.0"],
       "isOsiApproved": false
     },
     {
@@ -227,9 +203,7 @@
       "referenceNumber": 18,
       "name": "ANTLR Software Rights Notice with license fallback",
       "licenseId": "ANTLR-PD-fallback",
-      "seeAlso": [
-        "http://www.antlr2.org/license.html"
-      ],
+      "seeAlso": ["http://www.antlr2.org/license.html"],
       "isOsiApproved": false
     },
     {
@@ -239,9 +213,7 @@
       "referenceNumber": 19,
       "name": "Abstyles License",
       "licenseId": "Abstyles",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Abstyles"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Abstyles"],
       "isOsiApproved": false
     },
     {
@@ -251,9 +223,7 @@
       "referenceNumber": 20,
       "name": "Affero General Public License v1.0 only",
       "licenseId": "AGPL-1.0-only",
-      "seeAlso": [
-        "http://www.affero.org/oagpl.html"
-      ],
+      "seeAlso": ["http://www.affero.org/oagpl.html"],
       "isOsiApproved": false
     },
     {
@@ -299,9 +269,7 @@
       "referenceNumber": 24,
       "name": "Apple Public Source License 2.0",
       "licenseId": "APSL-2.0",
-      "seeAlso": [
-        "http://www.opensource.apple.com/license/apsl/"
-      ],
+      "seeAlso": ["http://www.opensource.apple.com/license/apsl/"],
       "isOsiApproved": true
     },
     {
@@ -350,9 +318,7 @@
       "referenceNumber": 28,
       "name": "Adaptive Public License 1.0",
       "licenseId": "APL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/APL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/APL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -362,9 +328,7 @@
       "referenceNumber": 29,
       "name": "Bahyph License",
       "licenseId": "Bahyph",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Bahyph"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Bahyph"],
       "isOsiApproved": false
     },
     {
@@ -374,9 +338,7 @@
       "referenceNumber": 30,
       "name": "Artistic License 1.0",
       "licenseId": "Artistic-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/Artistic-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Artistic-1.0"],
       "isOsiApproved": true
     },
     {
@@ -386,9 +348,7 @@
       "referenceNumber": 31,
       "name": "Academy of Motion Picture Arts and Sciences BSD",
       "licenseId": "AMPAS",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/BSD#AMPASBSD"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/BSD#AMPASBSD"],
       "isOsiApproved": false
     },
     {
@@ -398,9 +358,7 @@
       "referenceNumber": 32,
       "name": "Barr License",
       "licenseId": "Barr",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Barr"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Barr"],
       "isOsiApproved": false
     },
     {
@@ -423,9 +381,7 @@
       "referenceNumber": 34,
       "name": "Blue Oak Model License 1.0.0",
       "licenseId": "BlueOak-1.0.0",
-      "seeAlso": [
-        "https://blueoakcouncil.org/license/1.0.0"
-      ],
+      "seeAlso": ["https://blueoakcouncil.org/license/1.0.0"],
       "isOsiApproved": false
     },
     {
@@ -448,9 +404,7 @@
       "referenceNumber": 36,
       "name": "Artistic License 1.0 w/clause 8",
       "licenseId": "Artistic-1.0-cl8",
-      "seeAlso": [
-        "https://opensource.org/licenses/Artistic-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Artistic-1.0"],
       "isOsiApproved": true
     },
     {
@@ -473,9 +427,7 @@
       "referenceNumber": 38,
       "name": "Borceux license",
       "licenseId": "Borceux",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Borceux"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Borceux"],
       "isOsiApproved": false
     },
     {
@@ -485,9 +437,7 @@
       "referenceNumber": 39,
       "name": "BSD 2-Clause NetBSD License",
       "licenseId": "BSD-2-Clause-NetBSD",
-      "seeAlso": [
-        "http://www.netbsd.org/about/redistribution.html#default"
-      ],
+      "seeAlso": ["http://www.netbsd.org/about/redistribution.html#default"],
       "isOsiApproved": false
     },
     {
@@ -509,9 +459,7 @@
       "referenceNumber": 41,
       "name": "BSD-2-Clause Plus Patent License",
       "licenseId": "BSD-2-Clause-Patent",
-      "seeAlso": [
-        "https://opensource.org/licenses/BSDplusPatent"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/BSDplusPatent"],
       "isOsiApproved": true
     },
     {
@@ -533,9 +481,7 @@
       "referenceNumber": 43,
       "name": "BSD 2-Clause FreeBSD License",
       "licenseId": "BSD-2-Clause-FreeBSD",
-      "seeAlso": [
-        "http://www.freebsd.org/copyright/freebsd-license.html"
-      ],
+      "seeAlso": ["http://www.freebsd.org/copyright/freebsd-license.html"],
       "isOsiApproved": false
     },
     {
@@ -557,9 +503,7 @@
       "referenceNumber": 45,
       "name": "BSD 2-Clause \"Simplified\" License",
       "licenseId": "BSD-2-Clause",
-      "seeAlso": [
-        "https://opensource.org/licenses/BSD-2-Clause"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/BSD-2-Clause"],
       "isOsiApproved": true
     },
     {
@@ -581,9 +525,7 @@
       "referenceNumber": 47,
       "name": "Lawrence Berkeley National Labs BSD variant license",
       "licenseId": "BSD-3-Clause-LBNL",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/LBNLBSD"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/LBNLBSD"],
       "isOsiApproved": true
     },
     {
@@ -643,9 +585,7 @@
       "referenceNumber": 52,
       "name": "BSD 3-Clause \"New\" or \"Revised\" License",
       "licenseId": "BSD-3-Clause",
-      "seeAlso": [
-        "https://opensource.org/licenses/BSD-3-Clause"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/BSD-3-Clause"],
       "isOsiApproved": true
     },
     {
@@ -668,9 +608,7 @@
       "referenceNumber": 54,
       "name": "BitTorrent Open Source License v1.1",
       "licenseId": "BitTorrent-1.1",
-      "seeAlso": [
-        "http://directory.fsf.org/wiki/License:BitTorrentOSL1.1"
-      ],
+      "seeAlso": ["http://directory.fsf.org/wiki/License:BitTorrentOSL1.1"],
       "isOsiApproved": false
     },
     {
@@ -729,9 +667,7 @@
       "referenceNumber": 59,
       "name": "Business Source License 1.1",
       "licenseId": "BUSL-1.1",
-      "seeAlso": [
-        "https://mariadb.com/bsl11/"
-      ],
+      "seeAlso": ["https://mariadb.com/bsl11/"],
       "isOsiApproved": false
     },
     {
@@ -741,9 +677,7 @@
       "referenceNumber": 60,
       "name": "Artistic License 1.0 (Perl)",
       "licenseId": "Artistic-1.0-Perl",
-      "seeAlso": [
-        "http://dev.perl.org/licenses/artistic.html"
-      ],
+      "seeAlso": ["http://dev.perl.org/licenses/artistic.html"],
       "isOsiApproved": true
     },
     {
@@ -793,9 +727,7 @@
       "referenceNumber": 64,
       "name": "Computer Associates Trusted Open Source License 1.1",
       "licenseId": "CATOSL-1.1",
-      "seeAlso": [
-        "https://opensource.org/licenses/CATOSL-1.1"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/CATOSL-1.1"],
       "isOsiApproved": true
     },
     {
@@ -831,9 +763,7 @@
       "referenceNumber": 67,
       "name": "Creative Commons Attribution 2.5 Generic",
       "licenseId": "CC-BY-2.5",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/2.5/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/2.5/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -843,9 +773,7 @@
       "referenceNumber": 68,
       "name": "Creative Commons Attribution 3.0 Austria",
       "licenseId": "CC-BY-3.0-AT",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/3.0/at/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/3.0/at/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -868,9 +796,7 @@
       "referenceNumber": 70,
       "name": "Creative Commons Attribution 3.0 United States",
       "licenseId": "CC-BY-3.0-US",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/3.0/us/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/3.0/us/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -880,9 +806,7 @@
       "referenceNumber": 71,
       "name": "Creative Commons Attribution 1.0 Generic",
       "licenseId": "CC-BY-1.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/1.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/1.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -892,9 +816,7 @@
       "referenceNumber": 72,
       "name": "Creative Commons Attribution Non Commercial 1.0 Generic",
       "licenseId": "CC-BY-NC-1.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nc/1.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nc/1.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -904,9 +826,7 @@
       "referenceNumber": 73,
       "name": "Creative Commons Attribution Non Commercial 2.0 Generic",
       "licenseId": "CC-BY-NC-2.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nc/2.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nc/2.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -916,9 +836,7 @@
       "referenceNumber": 74,
       "name": "Creative Commons Attribution Non Commercial 2.5 Generic",
       "licenseId": "CC-BY-NC-2.5",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nc/2.5/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nc/2.5/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -928,9 +846,7 @@
       "referenceNumber": 75,
       "name": "Creative Commons Attribution 2.0 Generic",
       "licenseId": "CC-BY-2.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/2.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/2.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -940,9 +856,7 @@
       "referenceNumber": 76,
       "name": "Creative Commons Attribution Non Commercial 4.0 International",
       "licenseId": "CC-BY-NC-4.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nc/4.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nc/4.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -976,9 +890,7 @@
       "referenceNumber": 79,
       "name": "Creative Commons Attribution Non Commercial 3.0 Unported",
       "licenseId": "CC-BY-NC-3.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nc/3.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nc/3.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1084,9 +996,7 @@
       "referenceNumber": 88,
       "name": "Creative Commons Attribution No Derivatives 1.0 Generic",
       "licenseId": "CC-BY-ND-1.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nd/1.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nd/1.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1096,9 +1006,7 @@
       "referenceNumber": 89,
       "name": "BSD 3-Clause Clear License",
       "licenseId": "BSD-3-Clause-Clear",
-      "seeAlso": [
-        "http://labs.metacarta.com/license-explanation.html#license"
-      ],
+      "seeAlso": ["http://labs.metacarta.com/license-explanation.html#license"],
       "isOsiApproved": false
     },
     {
@@ -1108,9 +1016,7 @@
       "referenceNumber": 90,
       "name": "Creative Commons Attribution No Derivatives 2.5 Generic",
       "licenseId": "CC-BY-ND-2.5",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nd/2.5/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nd/2.5/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1120,9 +1026,7 @@
       "referenceNumber": 91,
       "name": "Creative Commons Attribution No Derivatives 3.0 Unported",
       "licenseId": "CC-BY-ND-3.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nd/3.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nd/3.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1132,9 +1036,7 @@
       "referenceNumber": 92,
       "name": "Creative Commons Attribution No Derivatives 4.0 International",
       "licenseId": "CC-BY-ND-4.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nd/4.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nd/4.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1144,9 +1046,7 @@
       "referenceNumber": 93,
       "name": "Creative Commons Attribution Share Alike 1.0 Generic",
       "licenseId": "CC-BY-SA-1.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-sa/1.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-sa/1.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1168,9 +1068,7 @@
       "referenceNumber": 95,
       "name": "Creative Commons Attribution Share Alike 2.0 Generic",
       "licenseId": "CC-BY-SA-2.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-sa/2.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-sa/2.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1192,9 +1090,7 @@
       "referenceNumber": 97,
       "name": "Creative Commons Attribution No Derivatives 2.0 Generic",
       "licenseId": "CC-BY-ND-2.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-nd/2.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-nd/2.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1216,9 +1112,7 @@
       "referenceNumber": 99,
       "name": "Creative Commons Attribution Share Alike 3.0 Unported",
       "licenseId": "CC-BY-SA-3.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-sa/3.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-sa/3.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1228,9 +1122,7 @@
       "referenceNumber": 100,
       "name": "Creative Commons Attribution Share Alike 4.0 International",
       "licenseId": "CC-BY-SA-4.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-sa/4.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-sa/4.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1240,9 +1132,7 @@
       "referenceNumber": 101,
       "name": "Creative Commons Attribution Share Alike 2.5 Generic",
       "licenseId": "CC-BY-SA-2.5",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by-sa/2.5/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by-sa/2.5/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1252,9 +1142,7 @@
       "referenceNumber": 102,
       "name": "Creative Commons Attribution 3.0 Unported",
       "licenseId": "CC-BY-3.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/3.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/3.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1264,9 +1152,7 @@
       "referenceNumber": 103,
       "name": "Common Development and Distribution License 1.0",
       "licenseId": "CDDL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/cddl1"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/cddl1"],
       "isOsiApproved": true
     },
     {
@@ -1312,9 +1198,7 @@
       "referenceNumber": 107,
       "name": "Caldera License",
       "licenseId": "Caldera",
-      "seeAlso": [
-        "http://www.lemis.com/grog/UNIX/ancient-source-all.pdf"
-      ],
+      "seeAlso": ["http://www.lemis.com/grog/UNIX/ancient-source-all.pdf"],
       "isOsiApproved": false
     },
     {
@@ -1324,9 +1208,7 @@
       "referenceNumber": 108,
       "name": "Community Data License Agreement Permissive 1.0",
       "licenseId": "CDLA-Permissive-1.0",
-      "seeAlso": [
-        "https://cdla.io/permissive-1-0"
-      ],
+      "seeAlso": ["https://cdla.io/permissive-1-0"],
       "isOsiApproved": false
     },
     {
@@ -1336,9 +1218,7 @@
       "referenceNumber": 109,
       "name": "Creative Commons Attribution 4.0 International",
       "licenseId": "CC-BY-4.0",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/by/4.0/legalcode"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/by/4.0/legalcode"],
       "isOsiApproved": false
     },
     {
@@ -1348,9 +1228,7 @@
       "referenceNumber": 110,
       "name": "Creative Commons Public Domain Dedication and Certification",
       "licenseId": "CC-PDDC",
-      "seeAlso": [
-        "https://creativecommons.org/licenses/publicdomain/"
-      ],
+      "seeAlso": ["https://creativecommons.org/licenses/publicdomain/"],
       "isOsiApproved": false
     },
     {
@@ -1360,9 +1238,7 @@
       "referenceNumber": 111,
       "name": "BSD-4-Clause (University of California-Specific)",
       "licenseId": "BSD-4-Clause-UC",
-      "seeAlso": [
-        "http://www.freebsd.org/copyright/license.html"
-      ],
+      "seeAlso": ["http://www.freebsd.org/copyright/license.html"],
       "isOsiApproved": false
     },
     {
@@ -1372,9 +1248,7 @@
       "referenceNumber": 112,
       "name": "BSD 4-Clause \"Original\" or \"Old\" License",
       "licenseId": "BSD-4-Clause",
-      "seeAlso": [
-        "http://directory.fsf.org/wiki/License:BSD_4Clause"
-      ],
+      "seeAlso": ["http://directory.fsf.org/wiki/License:BSD_4Clause"],
       "isOsiApproved": false
     },
     {
@@ -1410,9 +1284,7 @@
       "referenceNumber": 115,
       "name": "CERN Open Hardware Licence v1.2",
       "licenseId": "CERN-OHL-1.2",
-      "seeAlso": [
-        "https://www.ohwr.org/project/licenses/wikis/cern-ohl-v1.2"
-      ],
+      "seeAlso": ["https://www.ohwr.org/project/licenses/wikis/cern-ohl-v1.2"],
       "isOsiApproved": false
     },
     {
@@ -1422,9 +1294,7 @@
       "referenceNumber": 116,
       "name": "CERN Open Hardware Licence v1.1",
       "licenseId": "CERN-OHL-1.1",
-      "seeAlso": [
-        "https://www.ohwr.org/project/licenses/wikis/cern-ohl-v1.1"
-      ],
+      "seeAlso": ["https://www.ohwr.org/project/licenses/wikis/cern-ohl-v1.1"],
       "isOsiApproved": false
     },
     {
@@ -1470,9 +1340,7 @@
       "referenceNumber": 120,
       "name": "CeCILL Free Software License Agreement v2.0",
       "licenseId": "CECILL-2.0",
-      "seeAlso": [
-        "http://www.cecill.info/licences/Licence_CeCILL_V2-en.html"
-      ],
+      "seeAlso": ["http://www.cecill.info/licences/Licence_CeCILL_V2-en.html"],
       "isOsiApproved": false
     },
     {
@@ -1482,9 +1350,7 @@
       "referenceNumber": 121,
       "name": "CeCILL Free Software License Agreement v1.0",
       "licenseId": "CECILL-1.0",
-      "seeAlso": [
-        "http://www.cecill.info/licences/Licence_CeCILL_V1-fr.html"
-      ],
+      "seeAlso": ["http://www.cecill.info/licences/Licence_CeCILL_V1-fr.html"],
       "isOsiApproved": false
     },
     {
@@ -1494,9 +1360,7 @@
       "referenceNumber": 122,
       "name": "CNRI Python License",
       "licenseId": "CNRI-Python",
-      "seeAlso": [
-        "https://opensource.org/licenses/CNRI-Python"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/CNRI-Python"],
       "isOsiApproved": true
     },
     {
@@ -1530,9 +1394,7 @@
       "referenceNumber": 125,
       "name": "Common Public Attribution License 1.0",
       "licenseId": "CPAL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/CPAL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/CPAL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -1554,9 +1416,7 @@
       "referenceNumber": 127,
       "name": "Common Public License 1.0",
       "licenseId": "CPL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/CPL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/CPL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -1591,9 +1451,7 @@
       "referenceNumber": 130,
       "name": "CNRI Jython License",
       "licenseId": "CNRI-Jython",
-      "seeAlso": [
-        "http://www.jython.org/license.html"
-      ],
+      "seeAlso": ["http://www.jython.org/license.html"],
       "isOsiApproved": false
     },
     {
@@ -1616,9 +1474,7 @@
       "referenceNumber": 132,
       "name": "Code Project Open License 1.02",
       "licenseId": "CPOL-1.02",
-      "seeAlso": [
-        "http://www.codeproject.com/info/cpol10.aspx"
-      ],
+      "seeAlso": ["http://www.codeproject.com/info/cpol10.aspx"],
       "isOsiApproved": false
     },
     {
@@ -1628,9 +1484,7 @@
       "referenceNumber": 133,
       "name": "curl License",
       "licenseId": "curl",
-      "seeAlso": [
-        "https://github.com/bagder/curl/blob/master/COPYING"
-      ],
+      "seeAlso": ["https://github.com/bagder/curl/blob/master/COPYING"],
       "isOsiApproved": false
     },
     {
@@ -1640,9 +1494,7 @@
       "referenceNumber": 134,
       "name": "diffmark license",
       "licenseId": "diffmark",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/diffmark"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/diffmark"],
       "isOsiApproved": false
     },
     {
@@ -1652,9 +1504,7 @@
       "referenceNumber": 135,
       "name": "Crossword License",
       "licenseId": "Crossword",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Crossword"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Crossword"],
       "isOsiApproved": false
     },
     {
@@ -1664,9 +1514,7 @@
       "referenceNumber": 136,
       "name": "Dotseqn License",
       "licenseId": "Dotseqn",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Dotseqn"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Dotseqn"],
       "isOsiApproved": false
     },
     {
@@ -1689,9 +1537,7 @@
       "referenceNumber": 138,
       "name": "DSDP License",
       "licenseId": "DSDP",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/DSDP"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/DSDP"],
       "isOsiApproved": false
     },
     {
@@ -1713,9 +1559,7 @@
       "referenceNumber": 140,
       "name": "Educational Community License v1.0",
       "licenseId": "ECL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/ECL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/ECL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -1725,9 +1569,7 @@
       "referenceNumber": 141,
       "name": "Educational Community License v2.0",
       "licenseId": "ECL-2.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/ECL-2.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/ECL-2.0"],
       "isOsiApproved": true
     },
     {
@@ -1737,9 +1579,7 @@
       "referenceNumber": 142,
       "name": "eCos license version 2.0",
       "licenseId": "eCos-2.0",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/ecos-license.html"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/ecos-license.html"],
       "isOsiApproved": false
     },
     {
@@ -1805,9 +1645,7 @@
       "referenceNumber": 147,
       "name": "EPICS Open License",
       "licenseId": "EPICS",
-      "seeAlso": [
-        "https://epics.anl.gov/license/open.php"
-      ],
+      "seeAlso": ["https://epics.anl.gov/license/open.php"],
       "isOsiApproved": false
     },
     {
@@ -1817,9 +1655,7 @@
       "referenceNumber": 148,
       "name": "Entessa Public License v1.0",
       "licenseId": "Entessa",
-      "seeAlso": [
-        "https://opensource.org/licenses/Entessa"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Entessa"],
       "isOsiApproved": true
     },
     {
@@ -1855,9 +1691,7 @@
       "referenceNumber": 151,
       "name": "CUA Office Public License v1.0",
       "licenseId": "CUA-OPL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/CUA-OPL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/CUA-OPL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -1893,9 +1727,7 @@
       "referenceNumber": 154,
       "name": "Erlang Public License v1.1",
       "licenseId": "ErlPL-1.1",
-      "seeAlso": [
-        "http://www.erlang.org/EPLICENSE"
-      ],
+      "seeAlso": ["http://www.erlang.org/EPLICENSE"],
       "isOsiApproved": false
     },
     {
@@ -1932,9 +1764,7 @@
       "referenceNumber": 157,
       "name": "Cube License",
       "licenseId": "Cube",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Cube"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Cube"],
       "isOsiApproved": false
     },
     {
@@ -1944,9 +1774,7 @@
       "referenceNumber": 158,
       "name": "dvipdfm License",
       "licenseId": "dvipdfm",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/dvipdfm"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/dvipdfm"],
       "isOsiApproved": false
     },
     {
@@ -1956,9 +1784,7 @@
       "referenceNumber": 159,
       "name": "FreeBSD Documentation License",
       "licenseId": "FreeBSD-DOC",
-      "seeAlso": [
-        "https://www.freebsd.org/copyright/freebsd-doc-license/"
-      ],
+      "seeAlso": ["https://www.freebsd.org/copyright/freebsd-doc-license/"],
       "isOsiApproved": false
     },
     {
@@ -1968,9 +1794,7 @@
       "referenceNumber": 160,
       "name": "Eurosym License",
       "licenseId": "Eurosym",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Eurosym"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Eurosym"],
       "isOsiApproved": false
     },
     {
@@ -1992,9 +1816,7 @@
       "referenceNumber": 162,
       "name": "FreeImage Public License v1.0",
       "licenseId": "FreeImage",
-      "seeAlso": [
-        "http://freeimage.sourceforge.net/freeimage-license.txt"
-      ],
+      "seeAlso": ["http://freeimage.sourceforge.net/freeimage-license.txt"],
       "isOsiApproved": false
     },
     {
@@ -2040,9 +1862,7 @@
       "referenceNumber": 166,
       "name": "GNU Free Documentation License v1.1 only - invariants",
       "licenseId": "GFDL-1.1-invariants-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2082,9 +1902,7 @@
       "referenceNumber": 169,
       "name": "GNU Free Documentation License v1.1 or later - no invariants",
       "licenseId": "GFDL-1.1-no-invariants-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2094,9 +1912,7 @@
       "referenceNumber": 170,
       "name": "GNU Free Documentation License v1.1 only",
       "licenseId": "GFDL-1.1-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2106,9 +1922,7 @@
       "referenceNumber": 171,
       "name": "GNU Free Documentation License v1.1 or later",
       "licenseId": "GFDL-1.1-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2118,9 +1932,7 @@
       "referenceNumber": 172,
       "name": "GNU Free Documentation License v1.1",
       "licenseId": "GFDL-1.1",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2143,9 +1955,7 @@
       "referenceNumber": 174,
       "name": "GNU Free Documentation License v1.2 or later - invariants",
       "licenseId": "GFDL-1.2-invariants-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2155,9 +1965,7 @@
       "referenceNumber": 175,
       "name": "GNU Free Documentation License v1.1 or later - invariants",
       "licenseId": "GFDL-1.1-invariants-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2167,9 +1975,7 @@
       "referenceNumber": 176,
       "name": "GNU Free Documentation License v1.2 only - invariants",
       "licenseId": "GFDL-1.2-invariants-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2179,9 +1985,7 @@
       "referenceNumber": 177,
       "name": "GNU Free Documentation License v1.2 only",
       "licenseId": "GFDL-1.2-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2191,9 +1995,7 @@
       "referenceNumber": 178,
       "name": "GNU Free Documentation License v1.2 or later",
       "licenseId": "GFDL-1.2-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2203,9 +2005,7 @@
       "referenceNumber": 179,
       "name": "GNU Free Documentation License v1.2",
       "licenseId": "GFDL-1.2",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2215,9 +2015,7 @@
       "referenceNumber": 180,
       "name": "GNU Free Documentation License v1.2 only - no invariants",
       "licenseId": "GFDL-1.2-no-invariants-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2227,9 +2025,7 @@
       "referenceNumber": 181,
       "name": "GNU Free Documentation License v1.3 only - invariants",
       "licenseId": "GFDL-1.3-invariants-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -2239,9 +2035,7 @@
       "referenceNumber": 182,
       "name": "GNU Free Documentation License v1.3 only - no invariants",
       "licenseId": "GFDL-1.3-no-invariants-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -2251,9 +2045,7 @@
       "referenceNumber": 183,
       "name": "GNU Free Documentation License v1.3 or later - invariants",
       "licenseId": "GFDL-1.3-invariants-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -2263,9 +2055,7 @@
       "referenceNumber": 184,
       "name": "GNU Free Documentation License v1.2 or later - no invariants",
       "licenseId": "GFDL-1.2-no-invariants-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.2.txt"],
       "isOsiApproved": false
     },
     {
@@ -2288,9 +2078,7 @@
       "referenceNumber": 186,
       "name": "Frameworx Open License 1.0",
       "licenseId": "Frameworx-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/Frameworx-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Frameworx-1.0"],
       "isOsiApproved": true
     },
     {
@@ -2312,9 +2100,7 @@
       "referenceNumber": 188,
       "name": "GNU Free Documentation License v1.1 only - no invariants",
       "licenseId": "GFDL-1.1-no-invariants-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/old-licenses/fdl-1.1.txt"],
       "isOsiApproved": false
     },
     {
@@ -2324,9 +2110,7 @@
       "referenceNumber": 189,
       "name": "GL2PS License",
       "licenseId": "GL2PS",
-      "seeAlso": [
-        "http://www.geuz.org/gl2ps/COPYING.GL2PS"
-      ],
+      "seeAlso": ["http://www.geuz.org/gl2ps/COPYING.GL2PS"],
       "isOsiApproved": false
     },
     {
@@ -2336,9 +2120,7 @@
       "referenceNumber": 190,
       "name": "Glulxe License",
       "licenseId": "Glulxe",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Glulxe"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Glulxe"],
       "isOsiApproved": false
     },
     {
@@ -2348,9 +2130,7 @@
       "referenceNumber": 191,
       "name": "3dfx Glide License",
       "licenseId": "Glide",
-      "seeAlso": [
-        "http://www.users.on.net/~triforce/glidexp/COPYING.txt"
-      ],
+      "seeAlso": ["http://www.users.on.net/~triforce/glidexp/COPYING.txt"],
       "isOsiApproved": false
     },
     {
@@ -2360,9 +2140,7 @@
       "referenceNumber": 192,
       "name": "gnuplot License",
       "licenseId": "gnuplot",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Gnuplot"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Gnuplot"],
       "isOsiApproved": false
     },
     {
@@ -2420,9 +2198,7 @@
       "referenceNumber": 197,
       "name": "GNU Free Documentation License v1.3 only",
       "licenseId": "GFDL-1.3-only",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -2458,9 +2234,7 @@
       "referenceNumber": 200,
       "name": "GNU General Public License v2.0 w/Autoconf exception",
       "licenseId": "GPL-2.0-with-autoconf-exception",
-      "seeAlso": [
-        "http://ac-archive.sourceforge.net/doc/copyright.html"
-      ],
+      "seeAlso": ["http://ac-archive.sourceforge.net/doc/copyright.html"],
       "isOsiApproved": false
     },
     {
@@ -2483,9 +2257,7 @@
       "referenceNumber": 202,
       "name": "GNU Free Documentation License v1.3",
       "licenseId": "GFDL-1.3",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -2507,9 +2279,7 @@
       "referenceNumber": 204,
       "name": "Community Data License Agreement Sharing 1.0",
       "licenseId": "CDLA-Sharing-1.0",
-      "seeAlso": [
-        "https://cdla.io/sharing-1-0"
-      ],
+      "seeAlso": ["https://cdla.io/sharing-1-0"],
       "isOsiApproved": false
     },
     {
@@ -2519,9 +2289,7 @@
       "referenceNumber": 205,
       "name": "GNU General Public License v2.0 w/Classpath exception",
       "licenseId": "GPL-2.0-with-classpath-exception",
-      "seeAlso": [
-        "https://www.gnu.org/software/classpath/license.html"
-      ],
+      "seeAlso": ["https://www.gnu.org/software/classpath/license.html"],
       "isOsiApproved": false
     },
     {
@@ -2555,9 +2323,7 @@
       "referenceNumber": 208,
       "name": "GNU General Public License v2.0 w/Font exception",
       "licenseId": "GPL-2.0-with-font-exception",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/gpl-faq.html#FontException"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/gpl-faq.html#FontException"],
       "isOsiApproved": false
     },
     {
@@ -2618,9 +2384,7 @@
       "referenceNumber": 213,
       "name": "GNU General Public License v3.0 w/Autoconf exception",
       "licenseId": "GPL-3.0-with-autoconf-exception",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/autoconf-exception-3.0.html"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/autoconf-exception-3.0.html"],
       "isOsiApproved": false
     },
     {
@@ -2656,9 +2420,7 @@
       "referenceNumber": 216,
       "name": "Historical Permission Notice and Disclaimer",
       "licenseId": "HPND",
-      "seeAlso": [
-        "https://opensource.org/licenses/HPND"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/HPND"],
       "isOsiApproved": true
     },
     {
@@ -2680,9 +2442,7 @@
       "referenceNumber": 218,
       "name": "GNU General Public License v3.0 w/GCC Runtime Library exception",
       "licenseId": "GPL-3.0-with-GCC-exception",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/gcc-exception-3.1.html"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/gcc-exception-3.1.html"],
       "isOsiApproved": true
     },
     {
@@ -2729,9 +2489,7 @@
       "referenceNumber": 222,
       "name": "ImageMagick License",
       "licenseId": "ImageMagick",
-      "seeAlso": [
-        "http://www.imagemagick.org/script/license.php"
-      ],
+      "seeAlso": ["http://www.imagemagick.org/script/license.php"],
       "isOsiApproved": false
     },
     {
@@ -2741,9 +2499,7 @@
       "referenceNumber": 223,
       "name": "iMatix Standard Function Library Agreement",
       "licenseId": "iMatix",
-      "seeAlso": [
-        "http://legacy.imatix.com/html/sfl/sfl4.htm#license"
-      ],
+      "seeAlso": ["http://legacy.imatix.com/html/sfl/sfl4.htm#license"],
       "isOsiApproved": false
     },
     {
@@ -2777,9 +2533,7 @@
       "referenceNumber": 226,
       "name": "Intel Open Source License",
       "licenseId": "Intel",
-      "seeAlso": [
-        "https://opensource.org/licenses/Intel"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Intel"],
       "isOsiApproved": true
     },
     {
@@ -2789,9 +2543,7 @@
       "referenceNumber": 227,
       "name": "Info-ZIP License",
       "licenseId": "Info-ZIP",
-      "seeAlso": [
-        "http://www.info-zip.org/license.html"
-      ],
+      "seeAlso": ["http://www.info-zip.org/license.html"],
       "isOsiApproved": false
     },
     {
@@ -2801,9 +2553,7 @@
       "referenceNumber": 228,
       "name": "IPA Font License",
       "licenseId": "IPA",
-      "seeAlso": [
-        "https://opensource.org/licenses/IPA"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/IPA"],
       "isOsiApproved": true
     },
     {
@@ -2838,9 +2588,7 @@
       "referenceNumber": 231,
       "name": "JasPer License",
       "licenseId": "JasPer-2.0",
-      "seeAlso": [
-        "http://www.ece.uvic.ca/~mdadams/jasper/LICENSE"
-      ],
+      "seeAlso": ["http://www.ece.uvic.ca/~mdadams/jasper/LICENSE"],
       "isOsiApproved": false
     },
     {
@@ -2862,9 +2610,7 @@
       "referenceNumber": 233,
       "name": "JSON License",
       "licenseId": "JSON",
-      "seeAlso": [
-        "http://www.json.org/license.html"
-      ],
+      "seeAlso": ["http://www.json.org/license.html"],
       "isOsiApproved": false
     },
     {
@@ -2874,9 +2620,7 @@
       "referenceNumber": 234,
       "name": "Licence Art Libre 1.2",
       "licenseId": "LAL-1.2",
-      "seeAlso": [
-        "http://artlibre.org/licence/lal/licence-art-libre-12/"
-      ],
+      "seeAlso": ["http://artlibre.org/licence/lal/licence-art-libre-12/"],
       "isOsiApproved": false
     },
     {
@@ -2886,9 +2630,7 @@
       "referenceNumber": 235,
       "name": "Licence Art Libre 1.3",
       "licenseId": "LAL-1.3",
-      "seeAlso": [
-        "https://artlibre.org/"
-      ],
+      "seeAlso": ["https://artlibre.org/"],
       "isOsiApproved": false
     },
     {
@@ -2898,9 +2640,7 @@
       "referenceNumber": 236,
       "name": "Latex2e License",
       "licenseId": "Latex2e",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Latex2e"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Latex2e"],
       "isOsiApproved": false
     },
     {
@@ -2910,9 +2650,7 @@
       "referenceNumber": 237,
       "name": "Leptonica License",
       "licenseId": "Leptonica",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Leptonica"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Leptonica"],
       "isOsiApproved": false
     },
     {
@@ -2971,9 +2709,7 @@
       "referenceNumber": 242,
       "name": "IBM Public License v1.0",
       "licenseId": "IPL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/IPL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/IPL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -3071,9 +2807,7 @@
       "referenceNumber": 250,
       "name": "Lesser General Public License For Linguistic Resources",
       "licenseId": "LGPLLR",
-      "seeAlso": [
-        "http://www-igm.univ-mlv.fr/~unitex/lgpllr.html"
-      ],
+      "seeAlso": ["http://www-igm.univ-mlv.fr/~unitex/lgpllr.html"],
       "isOsiApproved": false
     },
     {
@@ -3083,9 +2817,7 @@
       "referenceNumber": 251,
       "name": "PNG Reference Library version 2",
       "licenseId": "libpng-2.0",
-      "seeAlso": [
-        "http://www.libpng.org/pub/png/src/libpng-LICENSE.txt"
-      ],
+      "seeAlso": ["http://www.libpng.org/pub/png/src/libpng-LICENSE.txt"],
       "isOsiApproved": false
     },
     {
@@ -3095,9 +2827,7 @@
       "referenceNumber": 252,
       "name": "libpng License",
       "licenseId": "Libpng",
-      "seeAlso": [
-        "http://www.libpng.org/pub/png/src/libpng-LICENSE.txt"
-      ],
+      "seeAlso": ["http://www.libpng.org/pub/png/src/libpng-LICENSE.txt"],
       "isOsiApproved": false
     },
     {
@@ -3145,9 +2875,7 @@
       "referenceNumber": 256,
       "name": "libtiff License",
       "licenseId": "libtiff",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/libtiff"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/libtiff"],
       "isOsiApproved": false
     },
     {
@@ -3157,9 +2885,7 @@
       "referenceNumber": 257,
       "name": "GNU Free Documentation License v1.3 or later - no invariants",
       "licenseId": "GFDL-1.3-no-invariants-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -3195,9 +2921,7 @@
       "referenceNumber": 260,
       "name": "Lucent Public License Version 1.0",
       "licenseId": "LPL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/LPL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/LPL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -3232,9 +2956,7 @@
       "referenceNumber": 263,
       "name": "LaTeX Project Public License v1.0",
       "licenseId": "LPPL-1.0",
-      "seeAlso": [
-        "http://www.latex-project.org/lppl/lppl-1-0.txt"
-      ],
+      "seeAlso": ["http://www.latex-project.org/lppl/lppl-1-0.txt"],
       "isOsiApproved": false
     },
     {
@@ -3244,9 +2966,7 @@
       "referenceNumber": 264,
       "name": "LaTeX Project Public License v1.2",
       "licenseId": "LPPL-1.2",
-      "seeAlso": [
-        "http://www.latex-project.org/lppl/lppl-1-2.txt"
-      ],
+      "seeAlso": ["http://www.latex-project.org/lppl/lppl-1-2.txt"],
       "isOsiApproved": false
     },
     {
@@ -3256,9 +2976,7 @@
       "referenceNumber": 265,
       "name": "LaTeX Project Public License v1.3a",
       "licenseId": "LPPL-1.3a",
-      "seeAlso": [
-        "http://www.latex-project.org/lppl/lppl-1-3a.txt"
-      ],
+      "seeAlso": ["http://www.latex-project.org/lppl/lppl-1-3a.txt"],
       "isOsiApproved": false
     },
     {
@@ -3294,9 +3012,7 @@
       "referenceNumber": 268,
       "name": "MakeIndex License",
       "licenseId": "MakeIndex",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/MakeIndex"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/MakeIndex"],
       "isOsiApproved": false
     },
     {
@@ -3319,9 +3035,7 @@
       "referenceNumber": 270,
       "name": "LaTeX Project Public License v1.1",
       "licenseId": "LPPL-1.1",
-      "seeAlso": [
-        "http://www.latex-project.org/lppl/lppl-1-1.txt"
-      ],
+      "seeAlso": ["http://www.latex-project.org/lppl/lppl-1-1.txt"],
       "isOsiApproved": false
     },
     {
@@ -3344,9 +3058,7 @@
       "referenceNumber": 272,
       "name": "The MirOS Licence",
       "licenseId": "MirOS",
-      "seeAlso": [
-        "https://opensource.org/licenses/MirOS"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/MirOS"],
       "isOsiApproved": true
     },
     {
@@ -3382,9 +3094,7 @@
       "referenceNumber": 275,
       "name": "MIT License",
       "licenseId": "MIT",
-      "seeAlso": [
-        "https://opensource.org/licenses/MIT"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/MIT"],
       "isOsiApproved": true
     },
     {
@@ -3394,9 +3104,7 @@
       "referenceNumber": 276,
       "name": "enna License",
       "licenseId": "MIT-enna",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/MIT#enna"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/MIT#enna"],
       "isOsiApproved": false
     },
     {
@@ -3421,9 +3129,7 @@
       "referenceNumber": 278,
       "name": "feh License",
       "licenseId": "MIT-feh",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/MIT#feh"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/MIT#feh"],
       "isOsiApproved": false
     },
     {
@@ -3433,9 +3139,7 @@
       "referenceNumber": 279,
       "name": "MIT +no-false-attribs license",
       "licenseId": "MITNFA",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/MITNFA"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/MITNFA"],
       "isOsiApproved": false
     },
     {
@@ -3458,9 +3162,7 @@
       "referenceNumber": 281,
       "name": "mpich2 License",
       "licenseId": "mpich2",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/MIT"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/MIT"],
       "isOsiApproved": false
     },
     {
@@ -3534,9 +3236,7 @@
       "referenceNumber": 287,
       "name": "Mulan Permissive Software License, Version 2",
       "licenseId": "MulanPSL-2.0",
-      "seeAlso": [
-        "https://license.coscl.org.cn/MulanPSL2/"
-      ],
+      "seeAlso": ["https://license.coscl.org.cn/MulanPSL2/"],
       "isOsiApproved": true
     },
     {
@@ -3546,9 +3246,7 @@
       "referenceNumber": 288,
       "name": "Motosoto License",
       "licenseId": "Motosoto",
-      "seeAlso": [
-        "https://opensource.org/licenses/Motosoto"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Motosoto"],
       "isOsiApproved": true
     },
     {
@@ -3558,9 +3256,7 @@
       "referenceNumber": 289,
       "name": "Mup License",
       "licenseId": "Mup",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Mup"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Mup"],
       "isOsiApproved": false
     },
     {
@@ -3596,9 +3292,7 @@
       "referenceNumber": 292,
       "name": "Naumen Public License",
       "licenseId": "Naumen",
-      "seeAlso": [
-        "https://opensource.org/licenses/Naumen"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Naumen"],
       "isOsiApproved": true
     },
     {
@@ -3608,9 +3302,7 @@
       "referenceNumber": 293,
       "name": "Multics License",
       "licenseId": "Multics",
-      "seeAlso": [
-        "https://opensource.org/licenses/Multics"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Multics"],
       "isOsiApproved": true
     },
     {
@@ -3645,9 +3337,7 @@
       "referenceNumber": 296,
       "name": "Net-SNMP License",
       "licenseId": "Net-SNMP",
-      "seeAlso": [
-        "http://net-snmp.sourceforge.net/about/license.html"
-      ],
+      "seeAlso": ["http://net-snmp.sourceforge.net/about/license.html"],
       "isOsiApproved": false
     },
     {
@@ -3657,9 +3347,7 @@
       "referenceNumber": 297,
       "name": "NetCDF license",
       "licenseId": "NetCDF",
-      "seeAlso": [
-        "http://www.unidata.ucar.edu/software/netcdf/copyright.html"
-      ],
+      "seeAlso": ["http://www.unidata.ucar.edu/software/netcdf/copyright.html"],
       "isOsiApproved": false
     },
     {
@@ -3682,9 +3370,7 @@
       "referenceNumber": 299,
       "name": "Nethack General Public License",
       "licenseId": "NGPL",
-      "seeAlso": [
-        "https://opensource.org/licenses/NGPL"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/NGPL"],
       "isOsiApproved": true
     },
     {
@@ -3720,9 +3406,7 @@
       "referenceNumber": 302,
       "name": "Newsletr License",
       "licenseId": "Newsletr",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Newsletr"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Newsletr"],
       "isOsiApproved": false
     },
     {
@@ -3732,9 +3416,7 @@
       "referenceNumber": 303,
       "name": "No Limit Public License",
       "licenseId": "NLPL",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/NLPL"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/NLPL"],
       "isOsiApproved": false
     },
     {
@@ -3744,9 +3426,7 @@
       "referenceNumber": 304,
       "name": "Nokia Open Source License",
       "licenseId": "Nokia",
-      "seeAlso": [
-        "https://opensource.org/licenses/nokia"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/nokia"],
       "isOsiApproved": true
     },
     {
@@ -3756,9 +3436,7 @@
       "referenceNumber": 305,
       "name": "Netizen Open Source License",
       "licenseId": "NOSL",
-      "seeAlso": [
-        "http://bits.netizen.com.au/licenses/NOSL/nosl.txt"
-      ],
+      "seeAlso": ["http://bits.netizen.com.au/licenses/NOSL/nosl.txt"],
       "isOsiApproved": false
     },
     {
@@ -3768,9 +3446,7 @@
       "referenceNumber": 306,
       "name": "Noweb License",
       "licenseId": "Noweb",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Noweb"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Noweb"],
       "isOsiApproved": false
     },
     {
@@ -3780,9 +3456,7 @@
       "referenceNumber": 307,
       "name": "Norwegian Licence for Open Government Data",
       "licenseId": "NLOD-1.0",
-      "seeAlso": [
-        "http://data.norge.no/nlod/en/1.0"
-      ],
+      "seeAlso": ["http://data.norge.no/nlod/en/1.0"],
       "isOsiApproved": false
     },
     {
@@ -3792,9 +3466,7 @@
       "referenceNumber": 308,
       "name": "Netscape Public License v1.0",
       "licenseId": "NPL-1.0",
-      "seeAlso": [
-        "http://www.mozilla.org/MPL/NPL/1.0/"
-      ],
+      "seeAlso": ["http://www.mozilla.org/MPL/NPL/1.0/"],
       "isOsiApproved": false
     },
     {
@@ -3816,9 +3488,7 @@
       "referenceNumber": 310,
       "name": "NRL License",
       "licenseId": "NRL",
-      "seeAlso": [
-        "http://web.mit.edu/network/isakmp/nrllicense.html"
-      ],
+      "seeAlso": ["http://web.mit.edu/network/isakmp/nrllicense.html"],
       "isOsiApproved": false
     },
     {
@@ -3840,9 +3510,7 @@
       "referenceNumber": 312,
       "name": "NTP License",
       "licenseId": "NTP",
-      "seeAlso": [
-        "https://opensource.org/licenses/NTP"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/NTP"],
       "isOsiApproved": true
     },
     {
@@ -3852,9 +3520,7 @@
       "referenceNumber": 313,
       "name": "GNU Free Documentation License v1.3 or later",
       "licenseId": "GFDL-1.3-or-later",
-      "seeAlso": [
-        "https://www.gnu.org/licenses/fdl-1.3.txt"
-      ],
+      "seeAlso": ["https://www.gnu.org/licenses/fdl-1.3.txt"],
       "isOsiApproved": false
     },
     {
@@ -3864,9 +3530,7 @@
       "referenceNumber": 314,
       "name": "Nunit License",
       "licenseId": "Nunit",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Nunit"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Nunit"],
       "isOsiApproved": false
     },
     {
@@ -3889,9 +3553,7 @@
       "referenceNumber": 316,
       "name": "Netscape Public License v1.1",
       "licenseId": "NPL-1.1",
-      "seeAlso": [
-        "http://www.mozilla.org/MPL/NPL/1.1/"
-      ],
+      "seeAlso": ["http://www.mozilla.org/MPL/NPL/1.1/"],
       "isOsiApproved": false
     },
     {
@@ -3901,9 +3563,7 @@
       "referenceNumber": 317,
       "name": "Open CASCADE Technology Public License",
       "licenseId": "OCCT-PL",
-      "seeAlso": [
-        "http://www.opencascade.com/content/occt-public-license"
-      ],
+      "seeAlso": ["http://www.opencascade.com/content/occt-public-license"],
       "isOsiApproved": false
     },
     {
@@ -3913,9 +3573,7 @@
       "referenceNumber": 318,
       "name": "Open Data Commons Attribution License v1.0",
       "licenseId": "ODC-By-1.0",
-      "seeAlso": [
-        "https://opendatacommons.org/licenses/by/1.0/"
-      ],
+      "seeAlso": ["https://opendatacommons.org/licenses/by/1.0/"],
       "isOsiApproved": false
     },
     {
@@ -4013,9 +3671,7 @@
       "referenceNumber": 326,
       "name": "Taiwan Open Government Data License, version 1.0",
       "licenseId": "OGDL-Taiwan-1.0",
-      "seeAlso": [
-        "https://data.gov.tw/license"
-      ],
+      "seeAlso": ["https://data.gov.tw/license"],
       "isOsiApproved": false
     },
     {
@@ -4025,9 +3681,7 @@
       "referenceNumber": 327,
       "name": "OGC Software License, Version 1.0",
       "licenseId": "OGC-1.0",
-      "seeAlso": [
-        "https://www.ogc.org/ogc/software/1.0"
-      ],
+      "seeAlso": ["https://www.ogc.org/ogc/software/1.0"],
       "isOsiApproved": false
     },
     {
@@ -4122,9 +3776,7 @@
       "referenceNumber": 335,
       "name": "Open Government Licence - Canada",
       "licenseId": "OGL-Canada-2.0",
-      "seeAlso": [
-        "https://open.canada.ca/en/open-government-licence-canada"
-      ],
+      "seeAlso": ["https://open.canada.ca/en/open-government-licence-canada"],
       "isOsiApproved": false
     },
     {
@@ -4267,9 +3919,7 @@
       "referenceNumber": 347,
       "name": "Open LDAP Public License v2.8",
       "licenseId": "OLDAP-2.8",
-      "seeAlso": [
-        "http://www.openldap.org/software/release/license.html"
-      ],
+      "seeAlso": ["http://www.openldap.org/software/release/license.html"],
       "isOsiApproved": true
     },
     {
@@ -4291,9 +3941,7 @@
       "referenceNumber": 349,
       "name": "OpenSSL License",
       "licenseId": "OpenSSL",
-      "seeAlso": [
-        "http://www.openssl.org/source/license.html"
-      ],
+      "seeAlso": ["http://www.openssl.org/source/license.html"],
       "isOsiApproved": false
     },
     {
@@ -4328,9 +3976,7 @@
       "referenceNumber": 352,
       "name": "Open Software License 1.0",
       "licenseId": "OSL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/OSL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/OSL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -4340,9 +3986,7 @@
       "referenceNumber": 353,
       "name": "Open Software License 1.1",
       "licenseId": "OSL-1.1",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/OSL1.1"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/OSL1.1"],
       "isOsiApproved": false
     },
     {
@@ -4390,9 +4034,7 @@
       "referenceNumber": 357,
       "name": "The Parity Public License 6.0.0",
       "licenseId": "Parity-6.0.0",
-      "seeAlso": [
-        "https://paritylicense.com/versions/6.0.0.html"
-      ],
+      "seeAlso": ["https://paritylicense.com/versions/6.0.0.html"],
       "isOsiApproved": false
     },
     {
@@ -4402,9 +4044,7 @@
       "referenceNumber": 358,
       "name": "The Parity Public License 7.0.0",
       "licenseId": "Parity-7.0.0",
-      "seeAlso": [
-        "https://paritylicense.com/versions/7.0.0.html"
-      ],
+      "seeAlso": ["https://paritylicense.com/versions/7.0.0.html"],
       "isOsiApproved": false
     },
     {
@@ -4478,9 +4118,7 @@
       "referenceNumber": 364,
       "name": "PolyForm Small Business License 1.0.0",
       "licenseId": "PolyForm-Small-Business-1.0.0",
-      "seeAlso": [
-        "https://polyformproject.org/licenses/small-business/1.0.0"
-      ],
+      "seeAlso": ["https://polyformproject.org/licenses/small-business/1.0.0"],
       "isOsiApproved": false
     },
     {
@@ -4490,9 +4128,7 @@
       "referenceNumber": 365,
       "name": "PolyForm Noncommercial License 1.0.0",
       "licenseId": "PolyForm-Noncommercial-1.0.0",
-      "seeAlso": [
-        "https://polyformproject.org/licenses/noncommercial/1.0.0"
-      ],
+      "seeAlso": ["https://polyformproject.org/licenses/noncommercial/1.0.0"],
       "isOsiApproved": false
     },
     {
@@ -4502,9 +4138,7 @@
       "referenceNumber": 366,
       "name": "Python Software Foundation License 2.0",
       "licenseId": "PSF-2.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/Python-2.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Python-2.0"],
       "isOsiApproved": false
     },
     {
@@ -4514,9 +4148,7 @@
       "referenceNumber": 367,
       "name": "psfrag License",
       "licenseId": "psfrag",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/psfrag"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/psfrag"],
       "isOsiApproved": false
     },
     {
@@ -4539,9 +4171,7 @@
       "referenceNumber": 369,
       "name": "psutils License",
       "licenseId": "psutils",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/psutils"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/psutils"],
       "isOsiApproved": false
     },
     {
@@ -4551,9 +4181,7 @@
       "referenceNumber": 370,
       "name": "Qhull License",
       "licenseId": "Qhull",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Qhull"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Qhull"],
       "isOsiApproved": false
     },
     {
@@ -4576,9 +4204,7 @@
       "referenceNumber": 372,
       "name": "Rdisc License",
       "licenseId": "Rdisc",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Rdisc_License"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Rdisc_License"],
       "isOsiApproved": false
     },
     {
@@ -4588,9 +4214,7 @@
       "referenceNumber": 373,
       "name": "Python License 2.0",
       "licenseId": "Python-2.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/Python-2.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Python-2.0"],
       "isOsiApproved": true
     },
     {
@@ -4600,9 +4224,7 @@
       "referenceNumber": 374,
       "name": "Reciprocal Public License 1.1",
       "licenseId": "RPL-1.1",
-      "seeAlso": [
-        "https://opensource.org/licenses/RPL-1.1"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/RPL-1.1"],
       "isOsiApproved": true
     },
     {
@@ -4612,9 +4234,7 @@
       "referenceNumber": 375,
       "name": "Reciprocal Public License 1.5",
       "licenseId": "RPL-1.5",
-      "seeAlso": [
-        "https://opensource.org/licenses/RPL-1.5"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/RPL-1.5"],
       "isOsiApproved": true
     },
     {
@@ -4624,9 +4244,7 @@
       "referenceNumber": 376,
       "name": "Red Hat eCos Public License v1.1",
       "licenseId": "RHeCos-1.1",
-      "seeAlso": [
-        "http://ecos.sourceware.org/old-license.html"
-      ],
+      "seeAlso": ["http://ecos.sourceware.org/old-license.html"],
       "isOsiApproved": false
     },
     {
@@ -4636,9 +4254,7 @@
       "referenceNumber": 377,
       "name": "RSA Message-Digest License",
       "licenseId": "RSA-MD",
-      "seeAlso": [
-        "http://www.faqs.org/rfcs/rfc1321.html"
-      ],
+      "seeAlso": ["http://www.faqs.org/rfcs/rfc1321.html"],
       "isOsiApproved": false
     },
     {
@@ -4661,9 +4277,7 @@
       "referenceNumber": 379,
       "name": "Ruby License",
       "licenseId": "Ruby",
-      "seeAlso": [
-        "http://www.ruby-lang.org/en/LICENSE.txt"
-      ],
+      "seeAlso": ["http://www.ruby-lang.org/en/LICENSE.txt"],
       "isOsiApproved": false
     },
     {
@@ -4673,9 +4287,7 @@
       "referenceNumber": 380,
       "name": "Sax Public Domain Notice",
       "licenseId": "SAX-PD",
-      "seeAlso": [
-        "http://www.saxproject.org/copying.html"
-      ],
+      "seeAlso": ["http://www.saxproject.org/copying.html"],
       "isOsiApproved": false
     },
     {
@@ -4685,9 +4297,7 @@
       "referenceNumber": 381,
       "name": "Saxpath License",
       "licenseId": "Saxpath",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Saxpath_License"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Saxpath_License"],
       "isOsiApproved": false
     },
     {
@@ -4697,9 +4307,7 @@
       "referenceNumber": 382,
       "name": "SCEA Shared Source License",
       "licenseId": "SCEA",
-      "seeAlso": [
-        "http://research.scea.com/scea_shared_source_license.html"
-      ],
+      "seeAlso": ["http://research.scea.com/scea_shared_source_license.html"],
       "isOsiApproved": false
     },
     {
@@ -4735,9 +4343,7 @@
       "referenceNumber": 385,
       "name": "SGI Free Software License B v1.0",
       "licenseId": "SGI-B-1.0",
-      "seeAlso": [
-        "http://oss.sgi.com/projects/FreeB/SGIFreeSWLicB.1.0.html"
-      ],
+      "seeAlso": ["http://oss.sgi.com/projects/FreeB/SGIFreeSWLicB.1.0.html"],
       "isOsiApproved": false
     },
     {
@@ -4747,9 +4353,7 @@
       "referenceNumber": 386,
       "name": "SGI Free Software License B v1.1",
       "licenseId": "SGI-B-1.1",
-      "seeAlso": [
-        "http://oss.sgi.com/projects/FreeB/"
-      ],
+      "seeAlso": ["http://oss.sgi.com/projects/FreeB/"],
       "isOsiApproved": false
     },
     {
@@ -4759,9 +4363,7 @@
       "referenceNumber": 387,
       "name": "SGI Free Software License B v2.0",
       "licenseId": "SGI-B-2.0",
-      "seeAlso": [
-        "http://oss.sgi.com/projects/FreeB/SGIFreeSWLicB.2.0.pdf"
-      ],
+      "seeAlso": ["http://oss.sgi.com/projects/FreeB/SGIFreeSWLicB.2.0.pdf"],
       "isOsiApproved": false
     },
     {
@@ -4771,9 +4373,7 @@
       "referenceNumber": 388,
       "name": "Solderpad Hardware License v0.5",
       "licenseId": "SHL-0.5",
-      "seeAlso": [
-        "https://solderpad.org/licenses/SHL-0.5/"
-      ],
+      "seeAlso": ["https://solderpad.org/licenses/SHL-0.5/"],
       "isOsiApproved": false
     },
     {
@@ -4783,9 +4383,7 @@
       "referenceNumber": 389,
       "name": "Solderpad Hardware License, Version 0.51",
       "licenseId": "SHL-0.51",
-      "seeAlso": [
-        "https://solderpad.org/licenses/SHL-0.51/"
-      ],
+      "seeAlso": ["https://solderpad.org/licenses/SHL-0.51/"],
       "isOsiApproved": false
     },
     {
@@ -4795,9 +4393,7 @@
       "referenceNumber": 390,
       "name": "Simple Public License 2.0",
       "licenseId": "SimPL-2.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/SimPL-2.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/SimPL-2.0"],
       "isOsiApproved": true
     },
     {
@@ -4832,9 +4428,7 @@
       "referenceNumber": 393,
       "name": "Sleepycat License",
       "licenseId": "Sleepycat",
-      "seeAlso": [
-        "https://opensource.org/licenses/Sleepycat"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Sleepycat"],
       "isOsiApproved": true
     },
     {
@@ -4844,9 +4438,7 @@
       "referenceNumber": 394,
       "name": "Standard ML of New Jersey License",
       "licenseId": "SMLNJ",
-      "seeAlso": [
-        "https://www.smlnj.org/license.html"
-      ],
+      "seeAlso": ["https://www.smlnj.org/license.html"],
       "isOsiApproved": false
     },
     {
@@ -4916,9 +4508,7 @@
       "referenceNumber": 400,
       "name": "Sun Public License v1.0",
       "licenseId": "SPL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/SPL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/SPL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -4940,9 +4530,7 @@
       "referenceNumber": 402,
       "name": "PHP License v3.01",
       "licenseId": "PHP-3.01",
-      "seeAlso": [
-        "http://www.php.net/license/3_01.txt"
-      ],
+      "seeAlso": ["http://www.php.net/license/3_01.txt"],
       "isOsiApproved": true
     },
     {
@@ -4993,9 +4581,7 @@
       "referenceNumber": 406,
       "name": "Scheme Widget Library (SWL) Software License Agreement",
       "licenseId": "SWL",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/SWL"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/SWL"],
       "isOsiApproved": false
     },
     {
@@ -5005,9 +4591,7 @@
       "referenceNumber": 407,
       "name": "SugarCRM Public License v1.1.3",
       "licenseId": "SugarCRM-1.1.3",
-      "seeAlso": [
-        "http://www.sugarcrm.com/crm/SPL"
-      ],
+      "seeAlso": ["http://www.sugarcrm.com/crm/SPL"],
       "isOsiApproved": false
     },
     {
@@ -5030,9 +4614,7 @@
       "referenceNumber": 409,
       "name": "TCP Wrappers License",
       "licenseId": "TCP-wrappers",
-      "seeAlso": [
-        "http://rc.quest.com/topics/openssh/license.php#tcpwrappers"
-      ],
+      "seeAlso": ["http://rc.quest.com/topics/openssh/license.php#tcpwrappers"],
       "isOsiApproved": false
     },
     {
@@ -5054,9 +4636,7 @@
       "referenceNumber": 411,
       "name": "TMate Open Source License",
       "licenseId": "TMate",
-      "seeAlso": [
-        "http://svnkit.com/license.html"
-      ],
+      "seeAlso": ["http://svnkit.com/license.html"],
       "isOsiApproved": false
     },
     {
@@ -5066,9 +4646,7 @@
       "referenceNumber": 412,
       "name": "Trusster Open Source License",
       "licenseId": "TOSL",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/TOSL"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/TOSL"],
       "isOsiApproved": false
     },
     {
@@ -5078,9 +4656,7 @@
       "referenceNumber": 413,
       "name": "TORQUE v2.5+ Software License v1.1",
       "licenseId": "TORQUE-1.1",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/TORQUEv1.1"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/TORQUEv1.1"],
       "isOsiApproved": false
     },
     {
@@ -5090,9 +4666,7 @@
       "referenceNumber": 414,
       "name": "TAPR Open Hardware License v1.0",
       "licenseId": "TAPR-OHL-1.0",
-      "seeAlso": [
-        "https://www.tapr.org/OHL"
-      ],
+      "seeAlso": ["https://www.tapr.org/OHL"],
       "isOsiApproved": false
     },
     {
@@ -5102,9 +4676,7 @@
       "referenceNumber": 415,
       "name": "Upstream Compatibility License v1.0",
       "licenseId": "UCL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/UCL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/UCL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -5126,9 +4698,7 @@
       "referenceNumber": 417,
       "name": "Unicode License Agreement - Data Files and Software (2016)",
       "licenseId": "Unicode-DFS-2016",
-      "seeAlso": [
-        "http://www.unicode.org/copyright.html"
-      ],
+      "seeAlso": ["http://www.unicode.org/copyright.html"],
       "isOsiApproved": true
     },
     {
@@ -5138,9 +4708,7 @@
       "referenceNumber": 418,
       "name": "Unicode Terms of Use",
       "licenseId": "Unicode-TOU",
-      "seeAlso": [
-        "http://www.unicode.org/copyright.html"
-      ],
+      "seeAlso": ["http://www.unicode.org/copyright.html"],
       "isOsiApproved": false
     },
     {
@@ -5162,9 +4730,7 @@
       "referenceNumber": 420,
       "name": "Universal Permissive License v1.0",
       "licenseId": "UPL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/UPL"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/UPL"],
       "isOsiApproved": true
     },
     {
@@ -5174,9 +4740,7 @@
       "referenceNumber": 421,
       "name": "The Unlicense",
       "licenseId": "Unlicense",
-      "seeAlso": [
-        "https://unlicense.org/"
-      ],
+      "seeAlso": ["https://unlicense.org/"],
       "isOsiApproved": true
     },
     {
@@ -5186,9 +4750,7 @@
       "referenceNumber": 422,
       "name": "VOSTROM Public License for Open Source",
       "licenseId": "VOSTROM",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/VOSTROM"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/VOSTROM"],
       "isOsiApproved": false
     },
     {
@@ -5198,9 +4760,7 @@
       "referenceNumber": 423,
       "name": "Vim License",
       "licenseId": "Vim",
-      "seeAlso": [
-        "http://vimdoc.sourceforge.net/htmldoc/uganda.html"
-      ],
+      "seeAlso": ["http://vimdoc.sourceforge.net/htmldoc/uganda.html"],
       "isOsiApproved": false
     },
     {
@@ -5210,9 +4770,7 @@
       "referenceNumber": 424,
       "name": "Vovida Software License v1.0",
       "licenseId": "VSL-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/VSL-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/VSL-1.0"],
       "isOsiApproved": true
     },
     {
@@ -5259,9 +4817,7 @@
       "referenceNumber": 428,
       "name": "Wsuipa License",
       "licenseId": "Wsuipa",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Wsuipa"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Wsuipa"],
       "isOsiApproved": false
     },
     {
@@ -5271,9 +4827,7 @@
       "referenceNumber": 429,
       "name": "Sybase Open Watcom Public License 1.0",
       "licenseId": "Watcom-1.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/Watcom-1.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Watcom-1.0"],
       "isOsiApproved": true
     },
     {
@@ -5296,9 +4850,7 @@
       "referenceNumber": 431,
       "name": "X11 License",
       "licenseId": "X11",
-      "seeAlso": [
-        "http://www.xfree86.org/3.3.6/COPYRIGHT2.html#3"
-      ],
+      "seeAlso": ["http://www.xfree86.org/3.3.6/COPYRIGHT2.html#3"],
       "isOsiApproved": false
     },
     {
@@ -5308,9 +4860,7 @@
       "referenceNumber": 432,
       "name": "Xerox License",
       "licenseId": "Xerox",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Xerox"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Xerox"],
       "isOsiApproved": false
     },
     {
@@ -5320,9 +4870,7 @@
       "referenceNumber": 433,
       "name": "XFree86 License 1.1",
       "licenseId": "XFree86-1.1",
-      "seeAlso": [
-        "http://www.xfree86.org/current/LICENSE4.html"
-      ],
+      "seeAlso": ["http://www.xfree86.org/current/LICENSE4.html"],
       "isOsiApproved": false
     },
     {
@@ -5332,9 +4880,7 @@
       "referenceNumber": 434,
       "name": "xinetd License",
       "licenseId": "xinetd",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Xinetd_License"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Xinetd_License"],
       "isOsiApproved": false
     },
     {
@@ -5344,9 +4890,7 @@
       "referenceNumber": 435,
       "name": "X.Net License",
       "licenseId": "Xnet",
-      "seeAlso": [
-        "https://opensource.org/licenses/Xnet"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/Xnet"],
       "isOsiApproved": true
     },
     {
@@ -5356,9 +4900,7 @@
       "referenceNumber": 436,
       "name": "XPP License",
       "licenseId": "xpp",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/xpp"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/xpp"],
       "isOsiApproved": false
     },
     {
@@ -5368,9 +4910,7 @@
       "referenceNumber": 437,
       "name": "XSkat License",
       "licenseId": "XSkat",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/XSkat_License"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/XSkat_License"],
       "isOsiApproved": false
     },
     {
@@ -5404,9 +4944,7 @@
       "referenceNumber": 440,
       "name": "Zed License",
       "licenseId": "Zed",
-      "seeAlso": [
-        "https://fedoraproject.org/wiki/Licensing/Zed"
-      ],
+      "seeAlso": ["https://fedoraproject.org/wiki/Licensing/Zed"],
       "isOsiApproved": false
     },
     {
@@ -5440,9 +4978,7 @@
       "referenceNumber": 443,
       "name": "Zimbra Public License v1.4",
       "licenseId": "Zimbra-1.4",
-      "seeAlso": [
-        "http://www.zimbra.com/legal/zimbra-public-license-1-4"
-      ],
+      "seeAlso": ["http://www.zimbra.com/legal/zimbra-public-license-1-4"],
       "isOsiApproved": false
     },
     {
@@ -5477,9 +5013,7 @@
       "referenceNumber": 446,
       "name": "Zope Public License 1.1",
       "licenseId": "ZPL-1.1",
-      "seeAlso": [
-        "http://old.zope.org/Resources/License/ZPL-1.1"
-      ],
+      "seeAlso": ["http://old.zope.org/Resources/License/ZPL-1.1"],
       "isOsiApproved": false
     },
     {
@@ -5502,9 +5036,7 @@
       "referenceNumber": 448,
       "name": "Zope Public License 2.1",
       "licenseId": "ZPL-2.1",
-      "seeAlso": [
-        "http://old.zope.org/Resources/ZPL/"
-      ],
+      "seeAlso": ["http://old.zope.org/Resources/ZPL/"],
       "isOsiApproved": false
     },
     {
@@ -5514,9 +5046,7 @@
       "referenceNumber": 449,
       "name": "wxWindows Library License",
       "licenseId": "wxWindows",
-      "seeAlso": [
-        "https://opensource.org/licenses/WXwindows"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/WXwindows"],
       "isOsiApproved": false
     },
     {
@@ -5538,9 +5068,7 @@
       "referenceNumber": 451,
       "name": "gSOAP Public License v1.3b",
       "licenseId": "gSOAP-1.3b",
-      "seeAlso": [
-        "http://www.cs.fsu.edu/~engelen/license.html"
-      ],
+      "seeAlso": ["http://www.cs.fsu.edu/~engelen/license.html"],
       "isOsiApproved": false
     },
     {
@@ -5588,9 +5116,7 @@
       "referenceNumber": 455,
       "name": "Non-Profit Open Software License 3.0",
       "licenseId": "NPOSL-3.0",
-      "seeAlso": [
-        "https://opensource.org/licenses/NOSL3.0"
-      ],
+      "seeAlso": ["https://opensource.org/licenses/NOSL3.0"],
       "isOsiApproved": true
     },
     {
@@ -5612,9 +5138,7 @@
       "referenceNumber": 457,
       "name": "Standard ML of New Jersey License",
       "licenseId": "StandardML-NJ",
-      "seeAlso": [
-        "http://www.smlnj.org//license.html"
-      ],
+      "seeAlso": ["http://www.smlnj.org//license.html"],
       "isOsiApproved": false
     }
   ],

@@ -34,6 +34,7 @@ function ListingDescriptionField({ register, getFieldState }: Props) {
         </div>
         <p className="p-form-help-text u-no-margin--bottom">
           <Button
+            type="button"
             appearance="link"
             small={true}
             className="u-no-padding--left u-no-padding--right"
