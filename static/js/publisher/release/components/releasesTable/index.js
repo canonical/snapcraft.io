@@ -195,8 +195,13 @@ class ReleasesTable extends Component {
   }
 
   renderRows() {
-    const { branches, isHistoryOpen, filters, openBranches, currentTrack } =
-      this.props;
+    const {
+      branches,
+      isHistoryOpen,
+      filters,
+      openBranches,
+      currentTrack,
+    } = this.props;
     const { showAllRisksBranches } = this.state;
 
     // rows can consist of a channel row or expanded history panel

@@ -353,8 +353,9 @@ export function getSeparatePendingReleases(state) {
 
       if (isProgressiveEnabled && pendingRelease.replaces) {
         const oldRelease = pendingRelease.replaces;
-        cancelProgressive[`${oldRelease.revision.revision}-${channel}`] =
-          oldRelease;
+        cancelProgressive[
+          `${oldRelease.revision.revision}-${channel}`
+        ] = oldRelease;
       } else if (
         isProgressiveEnabled &&
         pendingRelease.progressive &&
