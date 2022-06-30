@@ -14,7 +14,6 @@ import { undoRelease } from "../../actions/pendingReleases";
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
-  getRevisionsFromBuild,
   getProgressiveState,
   hasPendingRelease,
 } from "../../selectors";
@@ -185,7 +184,6 @@ ReleasesTableReleaseCell.propTypes = {
   // compute state
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
-  getRevisionsFromBuild: PropTypes.func,
   getProgressiveState: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
@@ -209,7 +207,6 @@ const mapStateToProps = (state) => {
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: (arch) =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
-    getRevisionsFromBuild: (buildId) => getRevisionsFromBuild(state, buildId),
     getProgressiveState: (channel, arch, isPending) =>
       getProgressiveState(state, channel, arch, isPending),
     hasPendingRelease: (channel, arch) =>
