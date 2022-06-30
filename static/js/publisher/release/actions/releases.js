@@ -3,6 +3,7 @@ import {
   DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE,
 } from "../constants";
 
+import { updateArchitectures } from "./architectures";
 import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
 import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
@@ -26,6 +27,7 @@ function updateReleasesData(releasesData) {
     initReleasesData(revisionsMap, releasesData.releases);
     dispatch(updateRevisions(revisionsMap));
     dispatch(updateReleases(releasesData.releases));
+    dispatch(updateArchitectures(releasesData.revisions));
   };
 }
 

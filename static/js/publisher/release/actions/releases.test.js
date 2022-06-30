@@ -324,6 +324,7 @@ describe("releases actions", () => {
         revisions: {
           3: revision,
         },
+        architectures: [],
       });
 
       global.fetch = jest
@@ -382,6 +383,12 @@ describe("releases actions", () => {
               releases: [release],
             },
             type: "UPDATE_RELEASES",
+          },
+          {
+            payload: {
+              architectures: ["amd64"],
+            },
+            type: "UPDATE_ARCHITECTURES",
           },
           {
             type: "CANCEL_PENDING_RELEASES",
@@ -460,6 +467,7 @@ describe("releases actions", () => {
         revisions: {
           3: revision,
         },
+        architectures: [],
       });
 
       global.fetch = jest
@@ -531,6 +539,12 @@ describe("releases actions", () => {
               releases: [release],
             },
             type: "UPDATE_RELEASES",
+          },
+          {
+            payload: {
+              architectures: ["amd64"],
+            },
+            type: "UPDATE_ARCHITECTURES",
           },
           {
             type: "CANCEL_PENDING_RELEASES",

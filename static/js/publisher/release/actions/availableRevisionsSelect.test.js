@@ -49,6 +49,7 @@ describe("availableRevisionsSelect actions", () => {
         // so this is the value we expect after the actions are dispatched
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED,
         revisions,
+        architectures: ["abc42", "amd42", "test64"],
       });
 
       store.dispatch(selectAvailableRevisions(value));
@@ -130,6 +131,7 @@ describe("availableRevisionsSelect actions", () => {
             // so this is the value we expect after the actions are dispatched
             availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
             revisions,
+            architectures: ["arch1", "arch2", "arch3"],
           });
 
           store.dispatch(selectAvailableRevisions(value));
@@ -207,6 +209,7 @@ describe("availableRevisionsSelect actions", () => {
             // so this is the value we expect after the actions are dispatched
             availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
             revisions,
+            architectures: ["arch1", "arch2", "arch3"],
           });
 
           store.dispatch(selectAvailableRevisions(value));

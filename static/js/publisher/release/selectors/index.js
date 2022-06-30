@@ -171,16 +171,9 @@ export function getFilteredAvailableRevisionsForArch(state, arch) {
 
 // get list of architectures of uploaded revisions
 export function getArchitectures(state) {
-  let archs = [];
-
-  getAllRevisions(state).forEach((revision) => {
-    archs = archs.concat(revision.architectures);
-  });
-
-  // make archs unique and sorted
-  archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
-
-  return archs.sort();
+  return state.architectures && state.architectures.length > 0
+    ? state.architectures.sort()
+    : [];
 }
 
 export function getTracks(state) {
@@ -360,9 +353,8 @@ export function getSeparatePendingReleases(state) {
 
       if (isProgressiveEnabled && pendingRelease.replaces) {
         const oldRelease = pendingRelease.replaces;
-        cancelProgressive[
-          `${oldRelease.revision.revision}-${channel}`
-        ] = oldRelease;
+        cancelProgressive[`${oldRelease.revision.revision}-${channel}`] =
+          oldRelease;
       } else if (
         isProgressiveEnabled &&
         pendingRelease.progressive &&

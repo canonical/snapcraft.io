@@ -8,6 +8,7 @@ import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
 
+import { updateArchitectures } from "./actions/architectures";
 import { updateRevisions } from "./actions/revisions";
 import { updateReleases } from "./actions/releases";
 import { initChannelMap } from "./actions/channelMap";
@@ -22,6 +23,7 @@ const ReleasesController = ({
   snapName,
   releasesData,
   channelMap,
+  updateArchitectures,
   updateReleases,
   updateRevisions,
   initChannelMap,
@@ -40,7 +42,7 @@ const ReleasesController = ({
         initReleasesData(revisionsMap, releasesData.releases);
         updateRevisions(revisionsMap);
         updateReleases(releasesData.releases);
-
+        updateArchitectures(revisionsList);
         initChannelMap(transformedChannelMap);
         setReady(true);
       }
@@ -99,6 +101,7 @@ ReleasesController.propTypes = {
   showModal: PropTypes.bool,
 
   initChannelMap: PropTypes.func,
+  updateArchitectures: PropTypes.func,
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
 };
@@ -113,6 +116,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     initChannelMap: (channelMap) => dispatch(initChannelMap(channelMap)),
+    updateArchitectures: (revisions) =>
+      dispatch(updateArchitectures(revisions)),
     updateRevisions: (revisions) => dispatch(updateRevisions(revisions)),
     updateReleases: (releases) => dispatch(updateReleases(releases)),
   };
