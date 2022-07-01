@@ -12,7 +12,7 @@
     {% include "partials/_verified_developer.html" %}
   {% endif %}
 
-  {% if developer_validation == STAR_DEVELOPER and request.args.get("show_star_developer")  %}
+  {% if developer_validation == STAR_DEVELOPER %}
     {% include "partials/_star_developer.html" %}
   {% endif %}
 {% endif %}
