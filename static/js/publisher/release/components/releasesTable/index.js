@@ -12,7 +12,7 @@ import {
   getArchitectures,
   getBranches,
   getLaunchpadRevisions,
-  getRevisionsFromBuild,
+  getAllRevisions,
 } from "../../selectors";
 import { selectAvailableRevisions, closeHistory } from "../../actions";
 
@@ -119,11 +119,24 @@ class ReleasesTable extends Component {
     const lpRevisions = this.props.launchpadRevisions;
     const { showAllBuilds } = this.state;
 
+    const revisions = this.props.allRevisions;
+    const revisionsMap = revisions.reduce((acc, item) => {
+      const buildId = getBuildId(item);
+      if (buildId) {
+        if (!acc[buildId]) {
+          acc[buildId] = [];
+        }
+
+        acc[buildId].push(item);
+      }
+      return acc;
+    }, {});
+
     const builds = lpRevisions
       .map(getBuildId)
       .filter((item, i, ar) => ar.indexOf(item) === i)
       .map((buildId) => {
-        const revs = this.props.getRevisionsFromBuild(buildId);
+        const revs = revisionsMap[buildId];
 
         const revsMap = {};
 
@@ -314,7 +327,7 @@ ReleasesTable.propTypes = {
   currentTrack: PropTypes.string.isRequired,
 
   launchpadRevisions: PropTypes.array,
-  getRevisionsFromBuild: PropTypes.func,
+  allRevisions: PropTypes.array,
 
   // actions
   selectAvailableRevisions: PropTypes.func,
@@ -330,7 +343,7 @@ const mapStateToProps = (state) => {
     openBranches: state.branches,
     currentTrack: state.currentTrack,
     launchpadRevisions: getLaunchpadRevisions(state),
-    getRevisionsFromBuild: (buildId) => getRevisionsFromBuild(state, buildId),
+    allRevisions: getAllRevisions(state),
   };
 };
 
