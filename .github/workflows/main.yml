@@ -1,8 +1,8 @@
-name: master checks
+name: main checks
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   SECRET_KEY: insecure_test_key
@@ -51,7 +51,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Install python dependencies
-        run: | 
+        run: |
           python3 -m pip install --upgrade pip
           sudo pip3 install flake8 black
 
