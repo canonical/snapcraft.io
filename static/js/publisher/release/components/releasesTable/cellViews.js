@@ -79,13 +79,12 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <br />
       <strong>{previousRevision?.version || "Unknown"}</strong>
       <br />
-      {previousRevision.attributes &&
-        previousRevision.attributes["build-request-id"] && (
-          <>
-            {previousRevision.attributes["build-request-id"]}
-            <br />
-          </>
-        )}
+      {previousRevision?.attributes?.["build-request-id"] && (
+        <>
+          {previousRevision.attributes["build-request-id"]}
+          <br />
+        </>
+      )}
       <strong>{previousRevision?.confinement || "Unknown"}</strong>
     </>
   );
@@ -101,7 +100,7 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <br />
       <strong>{revision.version}</strong>
       <br />
-      {revision.attributes && revision.attributes["build-request-id"] && (
+      {revision?.attributes?.["build-request-id"] && (
         <>
           {revision.attributes["build-request-id"]}
           <br />
@@ -119,7 +118,7 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <br />
       Version:
       <br />
-      {revision.attributes && revision.attributes["build-request-id"] && (
+      {revision?.attributes?.["build-request-id"] && (
         <>
           Build:
           <br />
@@ -187,7 +186,7 @@ export const RevisionInfo = ({
             : `
             ${revision.version}
             ${
-              revision.attributes["build-request-id"]
+              revision?.attributes?.["build-request-id"]
                 ? ` | ${revision.attributes["build-request-id"]}`
                 : ""
             }`}
@@ -208,7 +207,7 @@ export const RevisionInfo = ({
               Revision: <b>{revision.revision}</b>
               <br />
               Version: <b>{revision.version}</b>
-              {revision.attributes && revision.attributes["build-request-id"] && (
+              {revision?.attributes?.["build-request-id"] && (
                 <Fragment>
                   <br />
                   Build: {buildIcon}{" "}
