@@ -13,10 +13,27 @@ interface DirtyFields {
   [key: string]: string | Array<string> | boolean;
 }
 
+type License = {
+  key: string;
+  name: string;
+};
+
 function App() {
   const snapId = window?.listingData?.snap_id;
   const publisherName = window?.listingData?.publisher_name;
   const categories = window?.listingData?.categories;
+
+  const licenseSort = (a: License, b: License) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+
+    if (a.name > b.name) {
+      return 1;
+    }
+
+    return 0;
+  };
 
   const [listingData, setListingData] = useState({
     snap_name: window?.listingData?.snap_name,
@@ -31,9 +48,7 @@ function App() {
     public_metrics_blacklist: window?.listingData?.public_metrics_blacklist,
     license: window?.listingData?.license,
     license_type: window?.listingData?.license_type,
-    licenses: window?.listingData?.licenses,
-    "license-custom": window?.listingData?.license,
-    "license-simple": window?.listingData?.license,
+    licenses: window?.listingData?.licenses.sort(licenseSort),
     video_urls: window?.listingData?.video_urls[0],
     "primary-category": window?.listingData?.snap_categories?.categories[0],
     "secondary-category": window?.listingData?.snap_categories?.categories[1],
@@ -98,7 +113,7 @@ function App() {
     formData.set("secondary-category", data?.["secondary-category"]);
     formData.set("public_metrics_enabled", data?.public_metrics_enabled);
     formData.set("public_metrics_blacklist", data?.public_metrics_blacklist);
-    formData.set("license", data?.license);
+    formData.set("license", data?.license || "unset");
     formData.set("changes", JSON.stringify(changes));
 
     setIsSaving(true);
@@ -202,6 +217,7 @@ function App() {
             register={register}
             listingData={listingData}
             setValue={setValue}
+            watch={watch}
           />
         </Strip>
       </Form>

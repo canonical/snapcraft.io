@@ -1,4 +1,4 @@
-import React, { useState, SyntheticEvent } from "react";
+import React, { useState, SyntheticEvent, useEffect } from "react";
 import Downshift from "downshift";
 
 import debounce from "../../../../libs/debounce";
@@ -10,23 +10,48 @@ type License = {
 
 type Props = {
   licenses: Array<License>;
-  license: string;
+  license: string | undefined;
   register: Function;
   setValue: Function;
+  setLicense: Function;
+  originalLicense: string;
 };
 
-function getLicense(key: string | undefined, licenses: Array<License>) {
-  return licenses.find((license) => license?.key === key);
+function isDirty(newLicense: string, originalLicense: string) {
+  return newLicense !== originalLicense;
 }
 
-function LicenseSearch({ licenses, license, register, setValue }: Props) {
+function LicenseSearch({
+  licenses,
+  license,
+  register,
+  setValue,
+  setLicense,
+  originalLicense,
+}: Props) {
   const [suggestions, setSuggestions] = useState<License[]>([]);
-  const [selectedLicenseKeys, setSelectedLicenseKeys] = useState<
-    (string | undefined)[]
-  >(license.split(" OR ") || []);
-  const [selectedLicenses, setSelectedLicenses] = useState(
-    selectedLicenseKeys.map((item) => getLicense(item, licenses))
+  const [selectedLicenseKeys, setSelectedLicenseKeys] = useState<string[]>(
+    license?.split(" OR ") || []
   );
+  const [selectedLicenses, setSelectedLicenses] = useState<
+    (License | undefined)[]
+  >([]);
+
+  useEffect(() => {
+    if (license) {
+      setSelectedLicenseKeys(license?.split(" OR "));
+    } else {
+      setSelectedLicenseKeys([]);
+    }
+  }, [license]);
+
+  useEffect(() => {
+    setSelectedLicenses(
+      selectedLicenseKeys
+        .filter((key) => licenses.find((l) => l.key === key))
+        .map((key) => licenses.find((l) => l.key === key))
+    );
+  }, [selectedLicenseKeys]);
 
   return (
     <Downshift
@@ -35,28 +60,42 @@ function LicenseSearch({ licenses, license, register, setValue }: Props) {
 
         newSelectedLicenses.push(selection);
 
-        setSelectedLicenses(newSelectedLicenses);
-        setSelectedLicenseKeys(newSelectedLicenses.map((item) => item?.key));
-        setValue("license", selectedLicenseKeys.join(" OR "));
+        const newSelectedLicenseKeys = newSelectedLicenses
+          .sort((a: License | undefined, b: License | undefined) => {
+            if (a && b) {
+              if (a?.name < b?.name) {
+                return -1;
+              }
+
+              if (a?.name > b?.name) {
+                return 1;
+              }
+            }
+
+            return 0;
+          })
+          .map((item) => item?.key);
+
+        const newLicense = newSelectedLicenseKeys.join(" OR ");
+
+        setLicense(newLicense);
+        setValue("license", newLicense, {
+          shouldDirty: isDirty(newLicense, originalLicense),
+        });
         setSuggestions([]);
       }}
       itemToString={() => ""}
     >
-      {({
-        getInputProps,
-        getItemProps,
-        getMenuProps,
-        isOpen,
-        highlightedIndex,
-      }) => (
+      {({ getInputProps, getItemProps, getMenuProps, highlightedIndex }) => (
         <div>
           <input
             type="hidden"
             name="license"
-            value={license}
-            {...register("license")}
+            {...register("license", {
+              value: license,
+            })}
           />
-          <div className="p-multiselect">
+          <div className="p-multiselect u-no-margin--bottom">
             {selectedLicenses.map((selectedLicense) => (
               <span
                 className="p-multiselect__item"
@@ -74,12 +113,16 @@ function LicenseSearch({ licenses, license, register, setValue }: Props) {
                       (item) => item?.key !== selectedLicense?.key
                     );
 
-                    setSelectedLicenses(newSelectedLicenses);
-                    setSelectedLicenseKeys(
-                      newSelectedLicenses.map((item) => item?.key)
-                    );
+                    const newSelectedLicenseKeys: (
+                      | string
+                      | undefined
+                    )[] = newSelectedLicenses.map((item) => item?.key);
 
-                    setValue("license", selectedLicenseKeys.join(" OR "));
+                    const newLicense = newSelectedLicenseKeys.join(" OR ");
+                    setLicense(newLicense);
+                    setValue("license", newLicense, {
+                      shouldDirty: isDirty(newLicense, originalLicense),
+                    });
                   }}
                 >
                   Remove license
@@ -112,17 +155,27 @@ function LicenseSearch({ licenses, license, register, setValue }: Props) {
                   200,
                   false
                 ),
+                onFocus: () => {
+                  setSuggestions(
+                    licenses.filter((item) => {
+                      return !selectedLicenseKeys.includes(item?.key);
+                    })
+                  );
+                },
+                onBlur: () => {
+                  setSuggestions([]);
+                },
               })}
             />
           </div>
-          {isOpen && suggestions.length ? (
+          {suggestions.length ? (
             <ul
               className="p-list p-card--highlighted u-no-padding u-no-margin--bottom p-autocomplete__suggestions"
               {...getMenuProps()}
             >
               {suggestions.map((item: License, index) => (
                 <li
-                  className="p-list__item"
+                  className="p-list__item p-autocomplete__suggestion"
                   key={item.key}
                   {...getItemProps({
                     key: item.key,

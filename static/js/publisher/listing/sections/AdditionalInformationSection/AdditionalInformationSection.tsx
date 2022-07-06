@@ -6,6 +6,7 @@ import MetricsInputs from "../../components/MetricsInputs";
 type Props = {
   register: Function;
   setValue: Function;
+  watch: Function;
   listingData: {
     public_metrics_enabled: boolean;
     public_metrics_blacklist: Array<string>;
@@ -19,6 +20,7 @@ function AdditionalInformationSection({
   register,
   listingData,
   setValue,
+  watch,
 }: Props) {
   return (
     <>
@@ -30,6 +32,7 @@ function AdditionalInformationSection({
         listingData={listingData}
         register={register}
         setValue={setValue}
+        watch={watch}
       />
 
       <MetricsInputs
