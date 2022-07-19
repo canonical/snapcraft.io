@@ -53,6 +53,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-table-icons;
 @include vf-p-side-navigation;
 @include vf-p-search-box;
+@include vf-p-form-tick-elements;
 
 // vanilla utilities
 @include vf-u-floats;

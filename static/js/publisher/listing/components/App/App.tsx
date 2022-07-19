@@ -4,19 +4,36 @@ import { Form, Strip, Notification } from "@canonical/react-components";
 
 import PageHeader from "../PageHeader";
 import SaveAndPreview from "../SaveAndPreview";
-import ListingFormInput from "../ListingFormInput";
-import ListingDescriptionField from "../ListingDescriptionField";
-import CategoriesInput from "../CategoriesInput";
+import ListingDetailsSection from "../../sections/ListingDetailsSection";
+import ContactInformationSection from "../../sections/ContactInformationSection";
+import AdditionalInformationSection from "../../sections/AdditionalInformationSection";
 import PreviewForm from "../PreviewForm";
 
 interface DirtyFields {
-  [key: string]: string | Array<string>;
+  [key: string]: string | Array<string> | boolean;
 }
+
+type License = {
+  key: string;
+  name: string;
+};
 
 function App() {
   const snapId = window?.listingData?.snap_id;
   const publisherName = window?.listingData?.publisher_name;
   const categories = window?.listingData?.categories;
+
+  const licenseSort = (a: License, b: License) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+
+    if (a.name > b.name) {
+      return 1;
+    }
+
+    return 0;
+  };
 
   const [listingData, setListingData] = useState({
     snap_name: window?.listingData?.snap_name,
@@ -30,9 +47,17 @@ function App() {
     public_metrics_enabled: window?.listingData?.public_metrics_enabled,
     public_metrics_blacklist: window?.listingData?.public_metrics_blacklist,
     license: window?.listingData?.license,
+    license_type: window?.listingData?.license_type,
+    licenses: window?.listingData?.licenses.sort(licenseSort),
     video_urls: window?.listingData?.video_urls[0],
     "primary-category": window?.listingData?.snap_categories?.categories[0],
     "secondary-category": window?.listingData?.snap_categories?.categories[1],
+    public_metrics_territories: !window?.listingData?.public_metrics_blacklist.includes(
+      "installed_base_by_country_percent"
+    ),
+    public_metrics_distros: !window?.listingData?.public_metrics_blacklist.includes(
+      "weekly_installed_base_by_operating_system_normalized"
+    ),
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -86,6 +111,9 @@ function App() {
     formData.set("contact", data?.contact);
     formData.set("primary-category", data?.["primary-category"]);
     formData.set("secondary-category", data?.["secondary-category"]);
+    formData.set("public_metrics_enabled", data?.public_metrics_enabled);
+    formData.set("public_metrics_blacklist", data?.public_metrics_blacklist);
+    formData.set("license", data?.license || "unset");
     formData.set("changes", JSON.stringify(changes));
 
     setIsSaving(true);
@@ -99,6 +127,7 @@ function App() {
           setIsSaving(false);
           setHasSaved(true);
           reset(data);
+          window.scrollTo(0, 0);
         }, 1000);
       } else {
         setTimeout(() => {
@@ -158,88 +187,39 @@ function App() {
             </div>
           )}
 
-          <div className="u-fixed-width">
-            <h2 className="p-heading--4">Listing details</h2>
-          </div>
-
-          <ListingFormInput
-            label="Title"
-            name="title"
-            maxLength={40}
+          <ListingDetailsSection
             register={register}
-            required={true}
             getFieldState={getFieldState}
-          />
-
-          <CategoriesInput
+            setValue={setValue}
             categories={categories}
-            register={register}
-            getFieldState={getFieldState}
             primaryCategory={listingData?.["primary-category"]}
             secondaryCategory={listingData?.["secondary-category"]}
+          />
+          <Strip shallow={true}>
+            <div className="u-fixed-width">
+              <hr className="u-no-maring--bottom" />
+            </div>
+          </Strip>
+
+          <ContactInformationSection
+            getFieldState={getFieldState}
+            register={register}
+            publisherName={publisherName}
+          />
+
+          <Strip shallow={true}>
+            <div className="u-fixed-width">
+              <hr className="u-no-maring--bottom" />
+            </div>
+          </Strip>
+
+          <AdditionalInformationSection
+            register={register}
+            listingData={listingData}
             setValue={setValue}
-          />
-
-          <ListingFormInput
-            type="url"
-            label="Video"
-            name="video_urls"
-            register={register}
-            helpText="Vimeo, YouTube or asciinema URL"
-            getFieldState={getFieldState}
-            pattern={/^https?:\/\//gi}
-          />
-
-          <ListingFormInput
-            label="Summary"
-            name="summary"
-            maxLength={128}
-            register={register}
-            required={true}
-            getFieldState={getFieldState}
-          />
-
-          <ListingDescriptionField
-            register={register}
-            getFieldState={getFieldState}
+            watch={watch}
           />
         </Strip>
-
-        <Strip shallow={true}>
-          <div className="u-fixed-width">
-            <hr className="u-no-maring--bottom" />
-          </div>
-        </Strip>
-
-        <div className="u-fixed-width">
-          <h2 className="p-heading--4">Contact information</h2>
-        </div>
-
-        <ListingFormInput
-          type="url"
-          label="Developer website"
-          name="website"
-          register={register}
-          placeholder="https://snapcraft.io"
-          helpText="Please include a valid http:// or https:// link"
-          getFieldState={getFieldState}
-          pattern={
-            /^https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/
-          }
-        />
-
-        <ListingFormInput
-          type="text"
-          label={`Contact ${publisherName}`}
-          name="contact"
-          register={register}
-          placeholder="mailto:example@example.com"
-          helpText="An http: or https: link, or an e-mail address"
-          getFieldState={getFieldState}
-          pattern={
-            /(^https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$)|(^mailto:)?([a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$)/
-          }
-        />
       </Form>
       <PreviewForm listingData={listingData} />
     </>
