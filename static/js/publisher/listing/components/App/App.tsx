@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Form, Strip, Notification } from "@canonical/react-components";
+import {
+  Form,
+  Strip,
+  Notification,
+  Modal,
+  Button,
+} from "@canonical/react-components";
 
 import PageHeader from "../PageHeader";
 import SaveAndPreview from "../SaveAndPreview";
@@ -58,11 +64,19 @@ function App() {
     public_metrics_distros: !window?.listingData?.public_metrics_blacklist.includes(
       "weekly_installed_base_by_operating_system_normalized"
     ),
+    update_metadata_on_release: window?.listingData?.update_metadata_on_release,
   });
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
   const [savedError, setSavedError] = useState(false);
+  const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
+    false
+  );
+  const [formData, setFormData] = useState({});
+  const [updateMetadataOnRelease, setUpdateMetadataOnRelease] = useState(
+    listingData?.update_metadata_on_release
+  );
 
   const {
     register,
@@ -75,6 +89,14 @@ function App() {
   } = useForm({ defaultValues: listingData, mode: "onChange" });
 
   const onSubmit = (data: any) => {
+    if (listingData?.update_metadata_on_release) {
+      setShowMetadataWarningModal(true);
+    }
+
+    setFormData(data);
+  };
+
+  const submitForm = (data: any) => {
     const changes: DirtyFields = {};
     const keys = Object.keys(dirtyFields);
 
@@ -128,6 +150,7 @@ function App() {
           setHasSaved(true);
           reset(data);
           window.scrollTo(0, 0);
+          setUpdateMetadataOnRelease(false);
         }, 1000);
       } else {
         setTimeout(() => {
@@ -152,6 +175,7 @@ function App() {
   return (
     <>
       <PageHeader snapName={listingData?.snap_name} />
+
       <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
         <SaveAndPreview
           snapName={listingData?.snap_name}
@@ -160,6 +184,64 @@ function App() {
           isSaving={isSaving}
           isValid={isValid}
         />
+
+        {updateMetadataOnRelease && (
+          <>
+            <section className="p-strip is-shallow u-no-padding--bottom">
+              <div className="u-fixed-width">
+                <Notification severity="caution">
+                  Information here was automatically updated to the latest
+                  version of the snapcraft.yaml released to the stable channel.{" "}
+                  <a
+                    className="p-link--external"
+                    href="/docs/snapcraft-top-level-metadata"
+                  >
+                    Learn more
+                  </a>
+                  .
+                </Notification>
+              </div>
+            </section>
+
+            {showMetadataWarningModal ? (
+              <Modal
+                close={() => {
+                  setShowMetadataWarningModal(false);
+                }}
+                title="Warning"
+                buttonRow={
+                  <>
+                    <Button
+                      type="button"
+                      className="u-no-margin--bottom"
+                      onClick={() => {
+                        setShowMetadataWarningModal(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      className="u-no-margin--bottom u-no-margin--right"
+                      appearance="positive"
+                      onClick={() => {
+                        submitForm(formData);
+                        setShowMetadataWarningModal(false);
+                      }}
+                    >
+                      Save changes
+                    </Button>
+                  </>
+                }
+              >
+                <p>
+                  Making these changes means that the snap will no longer use
+                  the data from snapcraft.yaml.
+                </p>
+              </Modal>
+            ) : null}
+          </>
+        )}
 
         <Strip shallow={true} className="u-no-padding--bottom">
           {hasSaved && (
