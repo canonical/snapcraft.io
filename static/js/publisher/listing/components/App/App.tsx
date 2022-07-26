@@ -16,7 +16,7 @@ import AdditionalInformationSection from "../../sections/AdditionalInformationSe
 import PreviewForm from "../PreviewForm";
 
 interface DirtyFields {
-  [key: string]: string | Array<string> | boolean;
+  [key: string]: any;
 }
 
 type License = {
@@ -65,6 +65,33 @@ function App() {
       "weekly_installed_base_by_operating_system_normalized"
     ),
     update_metadata_on_release: window?.listingData?.update_metadata_on_release,
+    contacts: window?.listingData?.links?.contact.map((link: string) => {
+      return {
+        url: link,
+      };
+    }),
+    donations: window?.listingData?.links?.donation.map((link: string) => {
+      return {
+        url: link,
+      };
+    }),
+    issues: window?.listingData?.links?.issues.map((link: string) => {
+      return {
+        url: link,
+      };
+    }),
+    "source-code": window?.listingData?.links?.["source-code"].map(
+      (link: string) => {
+        return {
+          url: link,
+        };
+      }
+    ),
+    websites: window?.listingData?.links?.website.map((link: string) => {
+      return {
+        url: link,
+      };
+    }),
   });
 
   const [isSaving, setIsSaving] = useState(false);
@@ -85,23 +112,57 @@ function App() {
     reset,
     watch,
     setValue,
-    formState: { isDirty, dirtyFields, isValid },
+    control,
+    formState,
   } = useForm({ defaultValues: listingData, mode: "onChange" });
+
+  const isDirty = formState.isDirty;
+  const isValid = formState.isValid;
+  const dirtyFields: DirtyFields = formState.dirtyFields;
 
   const onSubmit = (data: any) => {
     if (listingData?.update_metadata_on_release) {
       setShowMetadataWarningModal(true);
+      setFormData(data);
+    } else {
+      submitForm(data);
     }
-
-    setFormData(data);
   };
 
   const submitForm = (data: any) => {
     const changes: DirtyFields = {};
     const keys = Object.keys(dirtyFields);
+    const forbiddenKeys = [
+      "primary-category",
+      "secondary-category",
+      "contacts",
+      "donations",
+      "issues",
+      "source-code",
+      "websites",
+      "licenses",
+    ];
+
+    if (
+      dirtyFields.contacts ||
+      dirtyFields.donations ||
+      dirtyFields.issues ||
+      dirtyFields.license ||
+      dirtyFields["source-code"] ||
+      dirtyFields.website
+    ) {
+      changes.links = {
+        contact: data?.contacts,
+        donation: data?.donations,
+        issues: data?.issues,
+        license: data?.license,
+        "source-code": data?.["source-code"],
+        website: data?.websites,
+      };
+    }
 
     keys.forEach((key) => {
-      if (key !== "primary-category" && key !== "secondary-category") {
+      if (!forbiddenKeys.includes(key) && dirtyFields[key] === true) {
         changes[key] = data[key];
       }
 
@@ -121,6 +182,10 @@ function App() {
       }
     });
 
+    const formatLinkFields = (fields: Array<{ url: string }>) => {
+      return fields.map((item) => item.url);
+    };
+
     const formData = new FormData();
 
     formData.set("csrf_token", window.CSRF_TOKEN);
@@ -136,6 +201,16 @@ function App() {
     formData.set("public_metrics_enabled", data?.public_metrics_enabled);
     formData.set("public_metrics_blacklist", data?.public_metrics_blacklist);
     formData.set("license", data?.license || "unset");
+    formData.set(
+      "links",
+      JSON.stringify({
+        contact: formatLinkFields(data?.contacts),
+        donation: formatLinkFields(data?.donations),
+        issues: formatLinkFields(data?.issues),
+        "source-code": formatLinkFields(data?.["source-code"]),
+        website: formatLinkFields(data?.websites),
+      })
+    );
     formData.set("changes", JSON.stringify(changes));
 
     setIsSaving(true);
@@ -287,6 +362,7 @@ function App() {
             getFieldState={getFieldState}
             register={register}
             publisherName={publisherName}
+            control={control}
           />
 
           <Strip shallow={true}>
