@@ -1,3 +1,41 @@
+const formatImageChanges = (
+  bannerUrls: [string],
+  iconUrl: string,
+  screenshotUrls: [string]
+) => {
+  const images = [];
+
+  if (bannerUrls.length) {
+    bannerUrls.forEach((url: string) => {
+      images.push({
+        url,
+        type: "banner",
+        status: "uploaded",
+      });
+    });
+  }
+
+  if (iconUrl) {
+    images.push({
+      url: iconUrl,
+      type: "icon",
+      status: "uploaded",
+    });
+  }
+
+  if (screenshotUrls.length) {
+    screenshotUrls.forEach((url) => {
+      images.push({
+        url,
+        type: "screenshot",
+        status: "uploaded",
+      });
+    });
+  }
+
+  return images;
+};
+
 function getChanges(
   dirtyFields: { [key: string]: any },
   data: { [key: string]: any }
@@ -31,6 +69,19 @@ function getChanges(
       "source-code": data?.["source-code"],
       website: data?.websites,
     };
+  }
+
+  if (
+    dirtyFields.banner_urls ||
+    dirtyFields.icon_url ||
+    dirtyFields.screenshot_urls ||
+    dirtyFields.icon
+  ) {
+    changes.images = formatImageChanges(
+      data?.banner_urls,
+      data?.icon_url,
+      data?.screenshot_urls
+    );
   }
 
   keys.forEach((key) => {

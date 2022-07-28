@@ -3,6 +3,7 @@ import React from "react";
 import ListingFormInput from "../../components/ListingFormInput";
 import ListingDescriptionField from "../../components/ListingDescriptionField";
 import CategoriesInput from "../../components/CategoriesInput";
+import SnapIcon from "../../components/SnapIcon";
 
 type Props = {
   register: Function;
@@ -14,6 +15,7 @@ type Props = {
     slug: string;
     name: string;
   }>;
+  iconUrl: string;
 };
 
 function ListingDetailsSection({
@@ -23,12 +25,16 @@ function ListingDetailsSection({
   categories,
   primaryCategory,
   secondaryCategory,
+  iconUrl,
 }: Props) {
   return (
     <>
       <div className="u-fixed-width">
         <h2 className="p-heading--4">Listing details</h2>
       </div>
+
+      <SnapIcon iconUrl={iconUrl} register={register} setValue={setValue} />
+
       <ListingFormInput
         label="Title"
         name="title"

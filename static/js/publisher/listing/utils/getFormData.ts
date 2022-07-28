@@ -22,6 +22,7 @@ function getFormData(
   formData.set("public_metrics_enabled", data?.public_metrics_enabled);
   formData.set("public_metrics_blacklist", data?.public_metrics_blacklist);
   formData.set("license", data?.license || "unset");
+  formData.set("images", data?.["images"]);
   formData.set(
     "links",
     JSON.stringify({
@@ -33,6 +34,10 @@ function getFormData(
     })
   );
   formData.set("changes", JSON.stringify(changes));
+
+  if (data?.icon) {
+    formData.append("icon", data?.icon[0]);
+  }
 
   return formData;
 }
