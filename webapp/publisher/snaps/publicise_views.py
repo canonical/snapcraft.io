@@ -32,6 +32,8 @@ def get_publicise(snap_name):
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
 
+    is_released = len(snap_details["channel_maps_list"]) > 0
+
     available_languages = {
         "ar": {"title": "العربية", "text": "احصل عليه من Snap Store"},
         "bg": {"title": "български", "text": "Инсталирайте го от Snap Store"},
@@ -58,6 +60,7 @@ def get_publicise(snap_name):
         "snap_title": snap_details["title"],
         "publisher_name": snap_details["publisher"]["display-name"],
         "snap_id": snap_details["snap_id"],
+        "is_release": is_released,
         "available": available_languages,
         "download_version": "v1.4.2",
     }
