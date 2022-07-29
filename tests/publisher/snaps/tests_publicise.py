@@ -47,6 +47,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
             "title": "test snap",
             "private": False,
             "snap_name": snap_name,
+            "channel_maps_list": [],
             "keywords": [],
             "publisher": {"display-name": "test"},
         }
@@ -73,6 +74,7 @@ class GetPublicisePage(BaseTestCases.EndpointLoggedInErrorHandling):
             "title": "test snap",
             "private": True,
             "snap_name": snap_name,
+            "channel_maps_list": [],
             "keywords": [],
             "publisher": {"display-name": "test"},
         }
