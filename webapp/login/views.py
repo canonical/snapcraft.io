@@ -19,6 +19,7 @@ from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
 from webapp.publisher.views import _handle_error, _handle_error_list
+from webapp.config import LOGIN_VERSION
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -109,6 +110,14 @@ def after_login(resp):
             302,
         ),
     )
+
+    # Get new API (PublisherGW) Macaroon
+    flask.session[
+        "pwg_macaroons"
+    ] = publisher_api.exchange_dashboard_macaroons(flask.session)
+
+    # Set login version used
+    flask.session["login_version"] = LOGIN_VERSION
 
     # Set cookie to know where to redirect users for re-auth
     response.set_cookie(
@@ -203,6 +212,9 @@ def login_callback():
             302,
         ),
     )
+
+    # Set login version used
+    flask.session["login_version"] = LOGIN_VERSION
 
     # Set cookie to know where to redirect users for re-auth
     response.set_cookie(

@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 from pymacaroons import Macaroon
 from webapp.api import sso
+from webapp.config import LOGIN_VERSION
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
@@ -35,6 +36,10 @@ def is_authenticated(session):
     Checks if the user is authenticated from the session
     Returns True if the user is authenticated
     """
+    # Check login version used
+    if session.get("login_version", 0) < LOGIN_VERSION:
+        return False
+
     return (
         "publisher" in session
         and "macaroon_discharge" in session
@@ -49,6 +54,8 @@ def empty_session(session):
     session.pop("macaroons", None)
     session.pop("macaroon_root", None)
     session.pop("macaroon_discharge", None)
+    session.pop("login_version", None)
+    session.pop("pwg_macaroons", None)
     session.pop("publisher", None)
     session.pop("user_shared_snaps", None)
     session.pop("github_auth_secret", None)
