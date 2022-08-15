@@ -237,6 +237,8 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-exposed;
 @include vf-p-icon-topic;
 @include vf-p-icon-revisions;
+@import "snapcraft_snap-icon";
+@include snap-icon;
 
 dl {
   margin-bottom: $spv--x-large;

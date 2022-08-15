@@ -10,7 +10,6 @@ type Props = {
     website: string;
     contact: string;
     categories: Array<string>;
-    images: Array<string>;
     public_metrics_enabled: boolean;
     public_metrics_blacklist: Array<string>;
     license: boolean;

@@ -103,7 +103,11 @@ function App() {
     <>
       <PageHeader snapName={listingData?.snap_name} />
 
-      <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        stacked={true}
+        encType="multipart/form-data"
+      >
         <SaveAndPreview
           snapName={listingData?.snap_name}
           isDirty={isDirty}
@@ -203,6 +207,7 @@ function App() {
             categories={categories}
             primaryCategory={listingData?.["primary-category"]}
             secondaryCategory={listingData?.["secondary-category"]}
+            iconUrl={listingData?.icon_url}
           />
           <Strip shallow={true}>
             <div className="u-fixed-width">
