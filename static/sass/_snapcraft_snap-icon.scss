@@ -1,4 +1,9 @@
 @mixin snap-icon {
+  .snap-icon-container {
+    align-items: flex-start;
+    display: flex;
+  }
+
   .snap-icon-edit {
     align-items: center;
     background-color: $color-x-light;
@@ -16,6 +21,7 @@
     align-items: top;
     display: flex;
     position: relative;
+    width: 120px;
 
     &.is-dragging {
       border: 1px dashed $color-mid-light;
@@ -50,6 +56,7 @@
     opacity: 0;
     position: absolute;
     top: 0;
+    width: 120px;
   }
 
   .snap-add-icon {
@@ -59,10 +66,5 @@
     height: 120px;
     justify-content: center;
     width: 120px;
-  }
-
-  .snap-remove-button {
-    position: relative;
-    z-index: 1;
   }
 }

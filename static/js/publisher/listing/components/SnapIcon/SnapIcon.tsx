@@ -71,63 +71,66 @@ function SnapIcon({ iconUrl, register, setValue }: Props) {
           )}
           <input type="hidden" {...register("icon_url")} />
 
-          <div
-            className={`snap-icon-drop-area ${isDragging ? "is-dragging" : ""}`}
-            onDragOver={() => {
-              setIsDragging(true);
-            }}
-            onDragLeave={() => {
-              setIsDragging(false);
-            }}
-            onDrop={() => {
-              setIsDragging(false);
-            }}
-          >
-            {iconUrl ? (
-              <>
+          <div className="snap-icon-container">
+            <div
+              className={`snap-icon-drop-area ${
+                isDragging ? "is-dragging" : ""
+              }`}
+              onDragOver={() => {
+                setIsDragging(true);
+              }}
+              onDragLeave={() => {
+                setIsDragging(false);
+              }}
+              onDrop={() => {
+                setIsDragging(false);
+              }}
+            >
+              {iconUrl ? (
                 <div className="snap-icon-preview">
                   <img src={iconUrl} width={120} height={120} alt="" />
                   <div className="snap-icon-edit">
                     <span>Edit</span>
                   </div>
                 </div>
-                <div>
-                  <button
-                    type="button"
-                    className="p-button--base snap-remove-button"
-                    onClick={() => {
-                      setIconIsValid(true);
-                      setValue("icon_url", "");
-                      setValue("icon", new File([], ""), {
-                        shouldDirty: window?.listingData?.icon_url !== null,
-                      });
-                    }}
-                  >
-                    <i className="p-icon--delete">Remove icon</i>
-                  </button>
+              ) : (
+                <div className="snap-add-icon">
+                  <i className="p-icon--plus">Add icon</i>
                 </div>
-              </>
-            ) : (
-              <div className="snap-add-icon">
-                <i className="p-icon--plus">Add icon</i>
-              </div>
+              )}
+              <input
+                className="snap-icon-input"
+                type="file"
+                accept="image/png, image/jpeg, image/svg+xml"
+                {...register("icon", {
+                  onChange: (
+                    e: SyntheticEvent<HTMLInputElement> & {
+                      target: HTMLInputElement;
+                    }
+                  ) => {
+                    if (e.target.files) {
+                      setIcon(e.target.files[0]);
+                    }
+                  },
+                })}
+              />
+            </div>
+
+            {iconUrl && (
+              <button
+                type="button"
+                className="p-button--base"
+                onClick={() => {
+                  setIconIsValid(true);
+                  setValue("icon_url", "");
+                  setValue("icon", new File([], ""), {
+                    shouldDirty: window?.listingData?.icon_url !== null,
+                  });
+                }}
+              >
+                <i className="p-icon--delete">Remove icon</i>
+              </button>
             )}
-            <input
-              className="snap-icon-input"
-              type="file"
-              accept="image/png, image/jpeg, image/svg+xml"
-              {...register("icon", {
-                onChange: (
-                  e: SyntheticEvent<HTMLInputElement> & {
-                    target: HTMLInputElement;
-                  }
-                ) => {
-                  if (e.target.files) {
-                    setIcon(e.target.files[0]);
-                  }
-                },
-              })}
-            />
           </div>
 
           <button
