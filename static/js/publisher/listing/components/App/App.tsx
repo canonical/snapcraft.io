@@ -208,6 +208,7 @@ function App() {
             primaryCategory={listingData?.["primary-category"]}
             secondaryCategory={listingData?.["secondary-category"]}
             iconUrl={listingData?.icon_url}
+            bannerUrl={listingData?.banner_url}
           />
           <Strip shallow={true}>
             <div className="u-fixed-width">

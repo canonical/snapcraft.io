@@ -1,34 +1,32 @@
-@mixin snap-icon {
-  .snap-icon-container {
+@mixin snap-image-upload {
+  .snap-image-upload-container {
     align-items: flex-start;
     display: flex;
+    margin-bottom: $spv--large;
   }
 
-  .snap-icon-edit {
+  .snap-image-upload-edit {
     align-items: center;
     background-color: $color-x-light;
     display: flex;
-    height: 120px;
     justify-content: center;
     left: 0;
     opacity: 0;
     position: absolute;
     top: 0;
-    width: 120px;
   }
 
-  .snap-icon-drop-area {
+  .snap-image-upload-drop-area {
     align-items: top;
     display: flex;
     position: relative;
-    width: 120px;
 
     &.is-dragging {
       border: 1px dashed $color-mid-light;
     }
 
     &:hover {
-      .snap-icon-edit {
+      .snap-image-upload-edit {
         border: 1px solid $color-mid-light;
         cursor: pointer;
         opacity: 0.8;
@@ -36,10 +34,8 @@
     }
   }
 
-  .snap-icon-preview {
-    height: 120px;
+  .snap-image-upload-preview {
     position: relative;
-    width: 120px;
 
     img {
       left: 0;
@@ -48,23 +44,19 @@
     }
   }
 
-  .snap-icon-input {
+  .snap-image-upload-input {
     cursor: pointer;
-    height: 120px;
     left: 0;
     margin-bottom: 0;
     opacity: 0;
     position: absolute;
     top: 0;
-    width: 120px;
   }
 
-  .snap-add-icon {
+  .snap-add-image {
     align-items: center;
     border: 1px solid $color-mid-light;
     display: flex;
-    height: 120px;
     justify-content: center;
-    width: 120px;
   }
 }
