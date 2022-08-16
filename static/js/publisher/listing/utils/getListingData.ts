@@ -98,6 +98,8 @@ function getListingData(listingData: { [key: string]: any }) {
     icon_url: window?.listingData?.icon_url,
     screenshot_urls: window?.listingData?.screenshot_urls,
     icon: new File([], ""),
+    banner_url: window?.listingData?.banner_urls[0],
+    banner: new File([], ""),
   };
 }
 

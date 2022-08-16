@@ -1,17 +1,15 @@
 const formatImageChanges = (
-  bannerUrls: [string],
+  bannerUrl: [string],
   iconUrl: string,
   screenshotUrls: [string]
 ) => {
   const images = [];
 
-  if (bannerUrls.length) {
-    bannerUrls.forEach((url: string) => {
-      images.push({
-        url,
-        type: "banner",
-        status: "uploaded",
-      });
+  if (bannerUrl) {
+    images.push({
+      url: bannerUrl,
+      type: "banner",
+      status: "uploaded",
     });
   }
 
@@ -72,13 +70,14 @@ function getChanges(
   }
 
   if (
-    dirtyFields.banner_urls ||
+    dirtyFields.banner_url ||
     dirtyFields.icon_url ||
     dirtyFields.screenshot_urls ||
-    dirtyFields.icon
+    dirtyFields.icon ||
+    dirtyFields.banner
   ) {
     changes.images = formatImageChanges(
-      data?.banner_urls,
+      data?.banner_url,
       data?.icon_url,
       data?.screenshot_urls
     );

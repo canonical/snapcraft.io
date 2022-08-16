@@ -39,6 +39,10 @@ function getFormData(
     formData.append("icon", data?.icon[0]);
   }
 
+  if (data?.banner) {
+    formData.append("banner-image", data?.banner[0]);
+  }
+
   return formData;
 }
 

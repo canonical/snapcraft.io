@@ -3,7 +3,7 @@ import React from "react";
 import ListingFormInput from "../../components/ListingFormInput";
 import ListingDescriptionField from "../../components/ListingDescriptionField";
 import CategoriesInput from "../../components/CategoriesInput";
-import SnapIcon from "../../components/SnapIcon";
+import ImageUpload from "../../components/ImageUpload";
 
 type Props = {
   register: Function;
@@ -16,6 +16,7 @@ type Props = {
     name: string;
   }>;
   iconUrl: string;
+  bannerUrl: string;
 };
 
 function ListingDetailsSection({
@@ -26,6 +27,7 @@ function ListingDetailsSection({
   primaryCategory,
   secondaryCategory,
   iconUrl,
+  bannerUrl,
 }: Props) {
   return (
     <>
@@ -33,7 +35,29 @@ function ListingDetailsSection({
         <h2 className="p-heading--4">Listing details</h2>
       </div>
 
-      <SnapIcon iconUrl={iconUrl} register={register} setValue={setValue} />
+      <ImageUpload
+        imageUrl={iconUrl}
+        register={register}
+        setValue={setValue}
+        validationSchema={{
+          maxFileSize: 256000,
+          minWidth: 40,
+          maxWidth: 512,
+          minHeight: 40,
+          maxHeight: 512,
+          fileTypes: "PNG, JPEG & SVG",
+          aspectRatio: {
+            width: 1,
+            height: 1,
+          },
+        }}
+        label="Snap icon"
+        imageUrlFieldKey="icon_url"
+        imageFieldKey="icon"
+        previewWidth={120}
+        previewHeight={120}
+        fileTypes="image/png, image/jpeg, image/svg+xml"
+      />
 
       <ListingFormInput
         label="Title"
@@ -61,6 +85,31 @@ function ListingDetailsSection({
         helpText="Vimeo, YouTube or asciinema URL"
         getFieldState={getFieldState}
         pattern={/^https?:\/\//gi}
+      />
+
+      <ImageUpload
+        imageUrl={bannerUrl}
+        register={register}
+        setValue={setValue}
+        validationSchema={{
+          maxFileSize: 2000000,
+          minWidth: 720,
+          maxWidth: 4320,
+          minHeight: 240,
+          maxHeight: 1440,
+          fileTypes: "JPEG & PNG files",
+          aspectRatio: {
+            width: 3,
+            height: 1,
+          },
+        }}
+        label="Featured banner"
+        imageUrlFieldKey="banner_url"
+        imageFieldKey="banner"
+        previewWidth={720}
+        previewHeight={240}
+        fileTypes="image/png, image/jpeg"
+        helpText="Adding a featured banner will increase your chances of being featured on snapcraft.io and in GNOME software but does not immediately make you eligible to be featured."
       />
 
       <ListingFormInput
