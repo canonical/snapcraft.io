@@ -100,6 +100,13 @@ function getListingData(listingData: { [key: string]: any }) {
     icon: new File([], ""),
     banner_url: window?.listingData?.banner_urls[0],
     banner: new File([], ""),
+    screenshots: [
+      new File([], ""),
+      new File([], ""),
+      new File([], ""),
+      new File([], ""),
+      new File([], ""),
+    ],
   };
 }
 

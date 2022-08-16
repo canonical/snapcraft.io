@@ -1,7 +1,8 @@
 const formatImageChanges = (
   bannerUrl: [string],
   iconUrl: string,
-  screenshotUrls: [string]
+  screenshotUrls: [string],
+  screenshots: [FileList]
 ) => {
   const images = [];
 
@@ -28,6 +29,19 @@ const formatImageChanges = (
         type: "screenshot",
         status: "uploaded",
       });
+    });
+  }
+
+  if (screenshots) {
+    screenshots.forEach((screenshot) => {
+      if (screenshot[0]) {
+        images.push({
+          url: URL.createObjectURL(screenshot[0]),
+          type: "screenshot",
+          status: "new",
+          name: screenshot[0].name,
+        });
+      }
     });
   }
 
@@ -74,12 +88,14 @@ function getChanges(
     dirtyFields.icon_url ||
     dirtyFields.screenshot_urls ||
     dirtyFields.icon ||
-    dirtyFields.banner
+    dirtyFields.banner ||
+    dirtyFields.screenshots
   ) {
     changes.images = formatImageChanges(
       data?.banner_url,
       data?.icon_url,
-      data?.screenshot_urls
+      data?.screenshot_urls,
+      data?.screenshots
     );
   }
 

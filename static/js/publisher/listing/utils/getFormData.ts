@@ -43,6 +43,12 @@ function getFormData(
     formData.append("banner-image", data?.banner[0]);
   }
 
+  if (data?.screenshots) {
+    data?.screenshots.forEach((screenshot: FileList) => {
+      formData.append("screenshots", screenshot[0]);
+    });
+  }
+
   return formData;
 }
 
