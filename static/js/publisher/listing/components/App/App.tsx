@@ -45,6 +45,7 @@ function App() {
     watch,
     setValue,
     control,
+    getValues,
     formState,
   } = useForm({ defaultValues: listingData, mode: "onChange" });
 
@@ -209,6 +210,8 @@ function App() {
             secondaryCategory={listingData?.["secondary-category"]}
             iconUrl={listingData?.icon_url}
             bannerUrl={listingData?.banner_url}
+            control={control}
+            getValues={getValues}
           />
           <Strip shallow={true}>
             <div className="u-fixed-width">

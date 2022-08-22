@@ -4,6 +4,7 @@ import ListingFormInput from "../../components/ListingFormInput";
 import ListingDescriptionField from "../../components/ListingDescriptionField";
 import CategoriesInput from "../../components/CategoriesInput";
 import ImageUpload from "../../components/ImageUpload";
+import Screenshots from "../../components/Screenshots";
 
 type Props = {
   register: Function;
@@ -17,6 +18,8 @@ type Props = {
   }>;
   iconUrl: string;
   bannerUrl: string;
+  control: any;
+  getValues: Function;
 };
 
 function ListingDetailsSection({
@@ -28,6 +31,8 @@ function ListingDetailsSection({
   secondaryCategory,
   iconUrl,
   bannerUrl,
+  control,
+  getValues,
 }: Props) {
   return (
     <>
@@ -85,6 +90,13 @@ function ListingDetailsSection({
         helpText="Vimeo, YouTube or asciinema URL"
         getFieldState={getFieldState}
         pattern={/^https?:\/\//gi}
+      />
+
+      <Screenshots
+        register={register}
+        control={control}
+        getValues={getValues}
+        setValue={setValue}
       />
 
       <ImageUpload

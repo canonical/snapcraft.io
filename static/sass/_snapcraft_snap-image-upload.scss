@@ -1,8 +1,39 @@
 @mixin snap-image-upload {
+  .snap-image-box {
+    align-items: center;
+    background-color: $color-light;
+    display: flex;
+    height: 132px;
+    justify-content: center;
+    position: relative;
+    width: 132px;
+
+    img {
+      height: auto;
+      width: "132px";
+    }
+
+    button {
+      background-color: $color-x-light;
+      display: none;
+      padding: 0.25rem;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 1;
+    }
+  }
+
   .snap-image-upload-container {
     align-items: flex-start;
     display: flex;
     margin-bottom: $spv--large;
+
+    &:hover {
+      button {
+        display: block !important;
+      }
+    }
   }
 
   .snap-image-upload-edit {
@@ -55,7 +86,6 @@
 
   .snap-add-image {
     align-items: center;
-    border: 1px solid $color-mid-light;
     display: flex;
     justify-content: center;
   }
