@@ -18,7 +18,7 @@ function ListingDescriptionField({ register, getFieldState }: Props) {
         fieldState.invalid && "p-form-validation is-error"
       }`}
     >
-      <Col size={2}>
+      <Col size={2} data-tour="listing-description">
         <label htmlFor={id} className="p-form__label">
           Description:
         </label>
@@ -26,6 +26,7 @@ function ListingDescriptionField({ register, getFieldState }: Props) {
       <Col size={8}>
         <div className="p-form__control">
           <textarea
+            data-tour="listing-description"
             id={id}
             className="p-form-validation__input"
             rows={10}

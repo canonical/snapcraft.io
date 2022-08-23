@@ -9,6 +9,7 @@ import {
 } from "@canonical/react-components";
 
 import { getChanges, getFormData, getListingData } from "../../utils";
+import { initListingTour } from "../../../tour";
 
 import PageHeader from "../PageHeader";
 import SaveAndPreview from "../SaveAndPreview";
@@ -21,6 +22,7 @@ function App() {
   const snapId = window?.listingData?.snap_id;
   const publisherName = window?.listingData?.publisher_name;
   const categories = window?.listingData?.categories;
+  const tourSteps = window?.tourSteps;
 
   const [listingData, setListingData] = useState(
     getListingData(window?.listingData)
@@ -99,6 +101,15 @@ function App() {
       formFieldSubscription.unsubscribe();
     };
   }, [watch]);
+
+  useEffect(() => {
+    initListingTour({
+      snapName: listingData?.snap_name,
+      container: document.getElementById("tour-container"),
+      formFields: listingData,
+      steps: tourSteps,
+    });
+  }, [listingData]);
 
   return (
     <>
@@ -241,6 +252,8 @@ function App() {
         </Strip>
       </Form>
       <PreviewForm listingData={listingData} />
+
+      <div id="tour-container" />
     </>
   );
 }

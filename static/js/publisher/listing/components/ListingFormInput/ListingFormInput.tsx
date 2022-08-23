@@ -13,6 +13,7 @@ type Props = {
   placeholder?: string;
   getFieldState: Function;
   pattern?: RegExp;
+  tourLabel: string;
 };
 
 function ListingFormInput({
@@ -26,6 +27,7 @@ function ListingFormInput({
   placeholder,
   getFieldState,
   pattern,
+  tourLabel,
 }: Props) {
   const id = nanoid();
   const fieldState = getFieldState ? getFieldState(name) : "";
@@ -36,7 +38,7 @@ function ListingFormInput({
         fieldState.invalid && "p-form-validation is-error"
       }`}
     >
-      <Col size={2}>
+      <Col size={2} data-tour={tourLabel}>
         <label htmlFor={id} className="p-form__label">
           {label}:
         </label>
@@ -44,6 +46,7 @@ function ListingFormInput({
       <Col size={8}>
         <div className="p-form__control">
           <input
+            data-tour={tourLabel}
             type={type || "text"}
             id={id}
             className="p-form-validation__input"

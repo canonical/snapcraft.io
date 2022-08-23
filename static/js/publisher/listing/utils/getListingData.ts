@@ -59,7 +59,7 @@ function getListingData(listingData: { [key: string]: any }) {
     license: listingData?.license,
     license_type: listingData?.license_type,
     licenses: listingData?.licenses.sort(licenseSort),
-    video_urls: listingData?.video_urls[0],
+    video_urls: listingData?.video_urls[0] || "",
     "primary-category": listingData?.snap_categories?.categories[0],
     "secondary-category": listingData?.snap_categories?.categories[1],
     public_metrics_territories: !listingData?.public_metrics_blacklist.includes(
@@ -107,6 +107,7 @@ function getListingData(listingData: { [key: string]: any }) {
       new File([], ""),
       new File([], ""),
     ],
+    images,
   };
 }
 

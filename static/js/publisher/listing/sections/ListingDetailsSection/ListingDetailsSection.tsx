@@ -62,6 +62,7 @@ function ListingDetailsSection({
         previewWidth={120}
         previewHeight={120}
         fileTypes="image/png, image/jpeg, image/svg+xml"
+        tourLabel="listing-icon"
       />
 
       <ListingFormInput
@@ -71,6 +72,7 @@ function ListingDetailsSection({
         register={register}
         required={true}
         getFieldState={getFieldState}
+        tourLabel="listing-title"
       />
 
       <CategoriesInput
@@ -90,6 +92,7 @@ function ListingDetailsSection({
         helpText="Vimeo, YouTube or asciinema URL"
         getFieldState={getFieldState}
         pattern={/^https?:\/\//gi}
+        tourLabel="listing-video"
       />
 
       <Screenshots
@@ -122,6 +125,7 @@ function ListingDetailsSection({
         previewHeight={240}
         fileTypes="image/png, image/jpeg"
         helpText="Adding a featured banner will increase your chances of being featured on snapcraft.io and in GNOME software but does not immediately make you eligible to be featured."
+        tourLabel="listing-banner"
       />
 
       <ListingFormInput
@@ -131,6 +135,7 @@ function ListingDetailsSection({
         register={register}
         required={true}
         getFieldState={getFieldState}
+        tourLabel="listing-summary"
       />
 
       <ListingDescriptionField

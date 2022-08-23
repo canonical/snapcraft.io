@@ -7,5 +7,6 @@ declare global {
     SENTRY_DSN: string;
     CSRF_TOKEN: string;
     listingData: any;
+    tourSteps: any;
   }
 }

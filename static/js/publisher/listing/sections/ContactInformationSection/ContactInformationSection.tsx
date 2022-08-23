@@ -36,6 +36,7 @@ function ContactInformationSection({
         pattern={
           /^https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/
         }
+        tourLabel=""
       />
 
       {showMetadataLinks && (
@@ -88,6 +89,7 @@ function ContactInformationSection({
         pattern={
           /(^https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$)|(^mailto:)?([a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$)/
         }
+        tourLabel=""
       />
     </>
   );
