@@ -47,13 +47,13 @@ function CategoriesInput({
           primaryCategoryFieldState.invalid && "p-form-validation is-error"
         }`}
       >
-        <Col size={2}>
+        <Col size={2} data-tour="listing-category">
           <label htmlFor={primaryCategoryFieldId} className="p-form__label">
             Category:
           </label>
         </Col>
         <Col size={5}>
-          <div className="p-form__control">
+          <div className="p-form__control" data-tour="listing-category">
             <select
               name="primary-category"
               id={primaryCategoryFieldId}

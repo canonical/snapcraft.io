@@ -31,6 +31,7 @@ type Props = {
   previewHeight: number;
   helpText?: string;
   fileTypes: string;
+  tourLabel: string;
 };
 
 function ImageUpload({
@@ -45,6 +46,7 @@ function ImageUpload({
   previewHeight,
   helpText,
   fileTypes,
+  tourLabel,
 }: Props) {
   const [showImageRestrictions, setShowImageRestrictions] = useState(false);
   const [imageVaidationError, setImageValidationError] = useState("");
@@ -100,7 +102,7 @@ function ImageUpload({
 
   return (
     <Row className="p-form__group p-form__group--top">
-      <Col size={2}>
+      <Col size={2} data-tour={tourLabel}>
         <label htmlFor={fieldId} className="p-form__label">
           {label}:
         </label>
@@ -112,7 +114,7 @@ function ImageUpload({
 
         <input type="hidden" {...register(imageUrlFieldKey)} />
 
-        <div className="snap-image-upload-container">
+        <div className="snap-image-upload-container" data-tour={tourLabel}>
           <div
             className={`snap-image-upload-drop-area ${
               isDragging ? "is-dragging" : ""

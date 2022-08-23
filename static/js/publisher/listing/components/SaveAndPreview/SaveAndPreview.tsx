@@ -32,7 +32,7 @@ function SaveAndPreview({
 
   return (
     <>
-      <div className="snapcraft-p-sticky" ref={stickyBar}>
+      <div className="snapcraft-p-sticky js-sticky-bar" ref={stickyBar}>
         <Row>
           <Col size={7}>
             <p className="u-no-margin--bottom">
