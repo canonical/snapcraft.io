@@ -5,6 +5,8 @@ import { Row, Col, Notification } from "@canonical/react-components";
 
 import { validateImageDimensions } from "../../utils";
 
+import ScreenshotList from "./ScreenshotList";
+
 type Props = {
   register: Function;
   control: any;
@@ -18,9 +20,9 @@ function Screenshots({ register, control, getValues, setValue }: Props) {
   const [imageIsValid, setImageIsValid] = useState(true);
 
   const {
-    fields: screenshotUrls,
     append: addScreenshotUrl,
     remove: removeScreenshotUrl,
+    move: moveScreenshotUrl,
   } = useFieldArray({
     control,
     name: "screenshot_urls",
@@ -88,72 +90,16 @@ function Screenshots({ register, control, getValues, setValue }: Props) {
           <Notification severity="negative">{imageVaidationError}</Notification>
         )}
 
-        <div className="p-listing-images">
-          {screenshots.map((field, index) => {
-            const screenshotUrl = getValues(`screenshot_urls.${index}`);
-
-            return (
-              <div
-                key={field.id}
-                className="snap-image-upload-container p-listing-images__image"
-              >
-                <div className="snap-image-upload-drop-area">
-                  {screenshotUrl ? (
-                    <div className="snap-image-box">
-                      <div>
-                        <img src={screenshotUrl} alt="" width={132} />
-                      </div>
-                      <button
-                        type="button"
-                        className="p-button--base"
-                        onClick={() => {
-                          removeScreenshotUrl(index);
-                          setValue(`screenshots.${index}`, new File([], ""));
-                        }}
-                      >
-                        <i className="p-icon--delete">Remove screenshot</i>
-                      </button>
-                    </div>
-                  ) : (
-                    <div
-                      className="snap-add-image"
-                      style={{
-                        width: "132px",
-                        height: "132px",
-                      }}
-                    >
-                      {index <= screenshotUrls.length && (
-                        <i className="p-icon--plus">Add image</i>
-                      )}
-                    </div>
-                  )}
-
-                  <input
-                    type="file"
-                    disabled={screenshotUrl || index > screenshotUrls.length}
-                    accept="image/gif, image/png, image/jpeg"
-                    className="snap-image-upload-input"
-                    style={{
-                      width: "132px",
-                      height: "132px",
-                    }}
-                    {...register(`screenshots.${index}`, {
-                      onChange: (
-                        e: SyntheticEvent<HTMLInputElement> & {
-                          target: HTMLInputElement;
-                        }
-                      ) => {
-                        if (e.target.files) {
-                          setImage(e.target.files[0]);
-                        }
-                      },
-                    })}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <ScreenshotList
+          screenshots={screenshots}
+          screenshotUrls={getValues("screenshot_urls")}
+          getValues={getValues}
+          removeScreenshotUrl={removeScreenshotUrl}
+          setValue={setValue}
+          register={register}
+          setImage={setImage}
+          moveScreenshotUrl={moveScreenshotUrl}
+        />
 
         <button
           type="button"
