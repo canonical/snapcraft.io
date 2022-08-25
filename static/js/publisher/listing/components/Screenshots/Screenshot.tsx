@@ -40,7 +40,7 @@ function Screenshot({
 
   return (
     <div
-      ref={setNodeRef}
+      ref={screenshotUrl ? setNodeRef : null}
       style={style}
       {...attributes}
       {...listeners}
