@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   DndContext,
   closestCenter,
-  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -10,7 +9,6 @@ import {
 import {
   arrayMove,
   SortableContext,
-  sortableKeyboardCoordinates,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
@@ -38,10 +36,7 @@ function ScreenshotList({
   moveScreenshotUrl,
 }: Props) {
   const [items, setItems] = useState(screenshots);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
+  const sensors = useSensors(useSensor(PointerSensor));
 
   const handleDragEnd = (e: any) => {
     const { active, over } = e;

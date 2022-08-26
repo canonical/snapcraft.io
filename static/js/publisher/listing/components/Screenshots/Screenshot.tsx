@@ -43,25 +43,26 @@ function Screenshot({
       ref={screenshotUrl ? setNodeRef : null}
       style={style}
       {...attributes}
-      {...listeners}
       className="snap-image-upload-container p-listing-images__image"
     >
-      <div className="snap-image-upload-drop-area">
+      {screenshotUrl && (
+        <button
+          type="button"
+          className="p-button--base snap-remove-image"
+          onClick={() => {
+            removeScreenshotUrl(index);
+            setValue(`screenshots.${index}`, new File([], ""));
+          }}
+        >
+          <i className="p-icon--delete">Remove screenshot</i>
+        </button>
+      )}
+      <div className="snap-image-upload-drop-area" {...listeners}>
         {screenshotUrl ? (
           <div className="snap-image-box">
             <div>
               <img src={screenshotUrl} alt="" width={132} />
             </div>
-            <button
-              type="button"
-              className="p-button--base"
-              onClick={() => {
-                removeScreenshotUrl(index);
-                setValue(`screenshots.${index}`, new File([], ""));
-              }}
-            >
-              <i className="p-icon--delete">Remove screenshot</i>
-            </button>
           </div>
         ) : (
           <div
