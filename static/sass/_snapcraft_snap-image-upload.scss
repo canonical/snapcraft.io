@@ -24,13 +24,24 @@
     }
   }
 
+  .snap-remove-image {
+    background-color: $color-light;
+    display: none;
+    margin: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+  }
+
   .snap-image-upload-container {
     align-items: flex-start;
     display: flex;
     margin-bottom: $spv--large;
+    position: relative;
 
     &:hover {
-      button {
+      .snap-remove-image {
         display: block !important;
       }
     }
