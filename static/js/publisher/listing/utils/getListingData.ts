@@ -108,6 +108,7 @@ function getListingData(listingData: { [key: string]: any }) {
       new File([], ""),
     ],
     images,
+    snap_categories: window?.listingData?.snap_categories?.categories,
   };
 }
 
