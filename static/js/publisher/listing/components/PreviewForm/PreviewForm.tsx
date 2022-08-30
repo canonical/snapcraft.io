@@ -9,15 +9,34 @@ type Props = {
     description: string;
     website: string;
     contact: string;
-    categories: Array<string>;
+    categories: Array<{ name: string; slug: string }>;
     public_metrics_enabled: boolean;
     public_metrics_blacklist: Array<string>;
     license: boolean;
     video_urls: string;
+    snap_categories: Array<string>;
   };
 };
 
 function PreviewForm({ listingData }: Props) {
+  const primaryCategory = listingData?.categories.find((category) => {
+    return category.slug === listingData?.snap_categories[0];
+  });
+
+  const secondaryCategory = listingData?.categories.find((category) => {
+    return category.slug === listingData?.snap_categories[1];
+  });
+
+  listingData.categories = [];
+
+  if (primaryCategory) {
+    listingData.categories.push(primaryCategory);
+  }
+
+  if (secondaryCategory) {
+    listingData.categories.push(secondaryCategory);
+  }
+
   return (
     <Form
       id="preview-form"
