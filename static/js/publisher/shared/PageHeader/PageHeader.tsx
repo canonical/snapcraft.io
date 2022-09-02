@@ -3,9 +3,10 @@ import { Strip, Tabs } from "@canonical/react-components";
 
 type Props = {
   snapName: string;
+  activeTab: string;
 };
 
-function PageHeader({ snapName }: Props) {
+function PageHeader({ snapName, activeTab }: Props) {
   return (
     <Strip shallow={true} className="u-no-padding--bottom">
       <div className="u-fixed-width">
@@ -16,28 +17,33 @@ function PageHeader({ snapName }: Props) {
           links={[
             {
               label: "Listing",
-              active: true,
+              active: activeTab === "listing",
               href: `/${snapName}/listing`,
               "data-tour": "listing-intro",
             },
             {
               label: "Builds",
+              active: activeTab === "builds",
               href: `/${snapName}/builds`,
             },
             {
               label: "Releases",
+              active: activeTab === "releases",
               href: `/${snapName}/releases`,
             },
             {
               label: "Metrics",
+              active: activeTab === "metrics",
               href: `/${snapName}/metrics`,
             },
             {
               label: "Publicise",
+              active: activeTab === "publicise",
               href: `/${snapName}/publicise`,
             },
             {
               label: "Settings",
+              active: activeTab === "settings",
               href: `/${snapName}/settings`,
             },
           ]}

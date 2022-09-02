@@ -11,8 +11,8 @@ import {
 import { getChanges, getFormData, getListingData } from "../../utils";
 import { initListingTour } from "../../../tour";
 
-import PageHeader from "../PageHeader";
-import SaveAndPreview from "../SaveAndPreview";
+import PageHeader from "../../../shared/PageHeader";
+import SaveAndPreview from "../../../shared/SaveAndPreview";
 import ListingDetailsSection from "../../sections/ListingDetailsSection";
 import ContactInformationSection from "../../sections/ContactInformationSection";
 import AdditionalInformationSection from "../../sections/AdditionalInformationSection";
@@ -113,7 +113,7 @@ function App() {
 
   return (
     <>
-      <PageHeader snapName={listingData?.snap_name} />
+      <PageHeader snapName={listingData?.snap_name} activeTab="listing" />
 
       <Form
         onSubmit={handleSubmit(onSubmit)}
@@ -126,6 +126,7 @@ function App() {
           reset={reset}
           isSaving={isSaving}
           isValid={isValid}
+          showPreview={true}
         />
 
         {updateMetadataOnRelease && (

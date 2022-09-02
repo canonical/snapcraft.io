@@ -5,6 +5,26 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
 {% endblock %}
 
 {% block content %}
+{% if request.args.get("show_react_settings") %}
+  <main id="main-content"></main>
+  <script>
+    window.SENTRY_DSN = "{{ SENTRY_DSN }}";
+    window.CSRF_TOKEN = "{{ csrf_token() }}";
+    window.countries = {{ countries|tojson }};
+    window.settingsData = {
+      snap_name: "{{ snap_name }}",
+      snap_id: "{{ snap_id }}",
+      store: "{{ store }}",
+      status: "{{ status }}",
+      update_metadata_on_release: {{ update_metadata_on_release|tojson }},
+      private: {{ private|tojson }},
+      unlisted: {{ unlisted|tojson }},
+      whitelist_countries: {{ whitelist_country_codes|tojson }},
+      blacklist_countries: {{ blacklist_country_codes|tojson }},
+    };
+  </script>
+  <script src="{{ static_url('js/dist/publisher-settings.js') }}"></script>
+{% else %}
 <div id="main-content">
   {% set selected_tab='settings' %}
   {% include "publisher/_header.html" %}
@@ -277,65 +297,70 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
     </section>
   </form>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block scripts_includes %}
-<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+  {% if not request.args.get("show_react_settings") %}
+    <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script>
-  window.addEventListener("DOMContentLoaded", function() {
-    Raven.context(function () {
-      snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
-      snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
+  {% if not request.args.get("show_react_settings") %}
+    <script>
+      window.addEventListener("DOMContentLoaded", function() {
+        Raven.context(function () {
+          snapcraft.publisher.initMultiselect('.js-whitelist', {{ countries|tojson }});
+          snapcraft.publisher.initMultiselect('.js-blacklist', {{ countries|tojson }});
 
-      snapcraft.publisher.market.initForm({
-        form: "settings-form",
-        formNotification: "settings-form-status",
-      }, {
-        'private': {{ private|tojson }},
-        'unlisted': {{ unlisted|tojson }},
-        'whitelist_countries': {{ whitelist_country_codes|tojson }},
-        'blacklist_countries': {{ blacklist_country_codes|tojson }},
-        'update_metadata_on_release': {{ update_metadata_on_release|tojson }},
-      },
-      {% if error_list %}
-        {{ error_list|tojson}}
-      {% else %}
-        null
-      {% endif %}
-      );
+          snapcraft.publisher.market.initForm({
+            form: "settings-form",
+            formNotification: "settings-form-status",
+          }, {
+            'private': {{ private|tojson }},
+            'unlisted': {{ unlisted|tojson }},
+            'whitelist_countries': {{ whitelist_country_codes|tojson }},
+            'blacklist_countries': {{ blacklist_country_codes|tojson }},
+            'update_metadata_on_release': {{ update_metadata_on_release|tojson }},
+          },
+          {% if error_list %}
+            {{ error_list|tojson}}
+          {% else %}
+            null
+          {% endif %}
+          );
 
-      document
-        .getElementById('settings-form')
-        .addEventListener(
-          'change',
-          snapcraft.publisher.settings.changeHandler
-        );
+          document
+            .getElementById('settings-form')
+            .addEventListener(
+              'change',
+              snapcraft.publisher.settings.changeHandler
+            );
 
-      snapcraft.publisher.stickyListingBar();
-      {% if whitelist_country_codes or not blacklist_country_codes %}
-        snapcraft.publisher.settings.enableInput('whitelist');
-      {% elif blacklist_country_codes %}
-        snapcraft.publisher.settings.enableInput('blacklist');
-      {% endif %}
+          snapcraft.publisher.stickyListingBar();
+          {% if whitelist_country_codes or not blacklist_country_codes %}
+            snapcraft.publisher.settings.enableInput('whitelist');
+          {% elif blacklist_country_codes %}
+            snapcraft.publisher.settings.enableInput('blacklist');
+          {% endif %}
 
-      var updateMetadataToggle = document.getElementById("update_metadata_on_release");
-      var updateMetadataWarning = document.getElementById("metadata-edit-warning");
+          var updateMetadataToggle = document.getElementById("update_metadata_on_release");
+          var updateMetadataWarning = document.getElementById("metadata-edit-warning");
 
-      updateMetadataToggle.addEventListener("click", function(e) {
-        const target = e.currentTarget;
+          updateMetadataToggle.addEventListener("click", function(e) {
+            const target = e.currentTarget;
 
-        if (target.checked) {
-          updateMetadataWarning.classList.remove("u-hide");
-          updateMetadataWarning.ariaHidden = false;
-        } else {
-          updateMetadataWarning.classList.add("u-hide");
-          updateMetadataWarning.ariaHidden = true;
-        }
+            if (target.checked) {
+              updateMetadataWarning.classList.remove("u-hide");
+              updateMetadataWarning.ariaHidden = false;
+            } else {
+              updateMetadataWarning.classList.add("u-hide");
+              updateMetadataWarning.ariaHidden = true;
+            }
+          });
+        });
       });
-    });
-  });
-</script>
+    </script>
+  {% endif %}
 {% endblock %}
