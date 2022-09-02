@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Row, Col, Button } from "@canonical/react-components";
 
-import debounce from "../../../../libs/debounce";
+import debounce from "../../../libs/debounce";
 
 type Props = {
   snapName: string;
@@ -9,6 +9,7 @@ type Props = {
   reset: Function;
   isSaving: boolean;
   isValid: boolean;
+  showPreview?: boolean;
 };
 
 function SaveAndPreview({
@@ -17,6 +18,7 @@ function SaveAndPreview({
   reset,
   isSaving,
   isValid,
+  showPreview,
 }: Props) {
   const stickyBar = useRef<HTMLDivElement>(null);
   const handleScroll = () => {
@@ -42,21 +44,23 @@ function SaveAndPreview({
           </Col>
           <Col size={5}>
             <div className="u-align--right">
-              <Button
-                type="submit"
-                className="p-button--base p-tooltip--btm-center"
-                aria-describedby="preview-tooltip"
-                form="preview-form"
-              >
-                Preview
-                <span
-                  className="p-tooltip__message"
-                  role="tooltip"
-                  id="preview-tooltip"
+              {showPreview && (
+                <Button
+                  type="submit"
+                  className="p-button--base p-tooltip--btm-center"
+                  aria-describedby="preview-tooltip"
+                  form="preview-form"
                 >
-                  Previews will only work in the same browser, locally
-                </span>
-              </Button>
+                  Preview
+                  <span
+                    className="p-tooltip__message"
+                    role="tooltip"
+                    id="preview-tooltip"
+                  >
+                    Previews will only work in the same browser, locally
+                  </span>
+                </Button>
+              )}
               <Button
                 appearance="default"
                 disabled={!isDirty}
