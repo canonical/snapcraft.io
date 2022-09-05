@@ -1,7 +1,6 @@
 import * as metrics from "./metrics/metrics";
 import { selector } from "./metrics/filters";
 import * as market from "./form";
-import { initMultiselect } from "./form/multiselect";
 import { initRepoConnect } from "./builds/components/repoConnect";
 import * as publicise from "./publicise";
 import { initCategories } from "./market/categories";
@@ -16,7 +15,6 @@ import buildStatus from "./build-status";
 
 export {
   initCategories,
-  initMultiselect,
   initRepoConnect,
   markdownToggle,
   metrics,
