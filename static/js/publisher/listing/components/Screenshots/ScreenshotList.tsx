@@ -41,7 +41,7 @@ function ScreenshotList({
   const handleDragEnd = (e: any) => {
     const { active, over } = e;
 
-    if (active.id !== over.id) {
+    if (active && over && active?.id !== over?.id) {
       const oldIndex = items.findIndex((item) => item.id === active.id);
       const newIndex = items.findIndex((item) => item.id === over.id);
 
