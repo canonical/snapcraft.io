@@ -73,8 +73,8 @@ function ImageUpload({
     renderedImage.onload = () => {
       if (
         !validateAspectRatio(renderedImage.width, renderedImage.height, {
-          width: 3,
-          height: 1,
+          width: validationSchema?.aspectRatio?.width,
+          height: validationSchema?.aspectRatio?.height,
         })
       ) {
         setImageIsValid(false);
