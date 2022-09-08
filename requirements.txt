@@ -16,7 +16,7 @@ Flask-OpenID==1.3.0
 Flask-WTF==0.15.1
 bleach==3.3.1
 humanize==3.13.1
-mistune==0.8.4
+mistune==2.0.4
 pybadges==3.0.0
 pycountry==20.7.3
 pymacaroons==0.13.0
