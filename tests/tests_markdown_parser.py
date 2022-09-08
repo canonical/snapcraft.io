@@ -143,17 +143,17 @@ class TestMarkdownParser(unittest.TestCase):
         markdown = "* item \n* item \n* item \n"
         result = parse_markdown_description(markdown)
         expected_result = (
-            "<ul>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ul>\n"
+            "<ul>\n<li>item</li>\n<li>item</li>\n<li>item</li>\n</ul>\n"
         )
 
         self.assertEqual(result, expected_result)
 
     def test_parse_list_special_char(self):
-        """Lists (• Foo)"""
-        markdown = "• item \n• item \n• item \n"
+        """Lists (+ Foo)"""
+        markdown = "+ item \n+ item \n+ item \n"
         result = parse_markdown_description(markdown)
         expected_result = (
-            "<ul>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ul>\n"
+            "<ul>\n<li>item</li>\n<li>item</li>\n<li>item</li>\n</ul>\n"
         )
 
         self.assertEqual(result, expected_result)
@@ -163,7 +163,7 @@ class TestMarkdownParser(unittest.TestCase):
         markdown = "1. item \n2. item \n3. item \n"
         result = parse_markdown_description(markdown)
         expected_result = (
-            "<ol>\n<li>item </li>\n<li>item </li>\n<li>item </li>\n</ol>\n"
+            "<ol>\n<li>item</li>\n<li>item</li>\n<li>item</li>\n</ol>\n"
         )
 
         self.assertEqual(result, expected_result)

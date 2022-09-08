@@ -1,140 +1,60 @@
-from mistune import (
-    BlockGrammar,
-    BlockLexer,
-    InlineGrammar,
-    Renderer,
-    Markdown,
-    _pure_pattern,
-    InlineLexer,
-)
 import re
 
+from mistune import HTMLRenderer, Markdown
+from mistune.block_parser import (
+    BlockParser,
+    expand_leading_tab,
+)
+from mistune.inline_parser import InlineParser
+from mistune.plugins.extra import plugin_strikethrough, plugin_url
 
-class DescriptionBlockGrammar(BlockGrammar):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+# All the overrides were discussed here:
+# https://forum.snapcraft.io/t/use-of-markdown-in-snap-metadata-summary-description/2128
 
-        # This is an extention of the list block rule written in BlockGrammar
-        # of mistune library:
-        # https://github.com/lepture/mistune/blob/master/mistune.py#L120-L141
-        # We want to support the • as a tag for lists in markdown.
-        # To do this this [*+-•] is the list of supported tags
-        self.list_block = re.compile(
-            r"^( *)(?=[•*+-]|\d+\.)(([•*+-])?(?:\d+\.)?) [\s\S]+?"
-            r"(?:"
-            r"\n+(?=\1?(?:[-*_] *){3,}(?:\n+|$))"  # hrule
-            r"|\n+(?=%s)"  # def links
-            r"|\n+(?=%s)"  # def footnotes\
-            r"|\n+(?=\1(?(3)\d+\.|[•*+-]) )"  # heterogeneous bullet
-            r"|\n{2,}"
-            r"(?! )"
-            r"(?!\1(?:[•*+-]|\d+\.) )\n*"
-            r"|"
-            r"\s*$)"
-            % (
-                _pure_pattern(super().def_links),
-                _pure_pattern(super().def_footnotes),
-            )
-        )
-        self.list_item = re.compile(
-            r"^(( *)(?:[•*+-]|\d+\.) [^\n]*"
-            r"(?:\n(?!\2(?:[•*+-]|\d+\.) )[^\n]*)*)",
-            flags=re.M,
-        )
-        self.list_bullet = re.compile(r"^ *(?:[•*+-]|\d+\.) +")
-        self.block_code = re.compile(r"^( {3}[^\n]+\n*)+")
+_INDENT_CODE_TRIM = re.compile(r"^ {1,3}", flags=re.M)
 
 
-class DescriptionBlock(BlockLexer):
-    grammar_class = DescriptionBlockGrammar
+class SnapcraftBlockParser(BlockParser):
+    # Indent code is 3 spaces instead of 4
+    INDENT_CODE = re.compile(r"(?:\n*)(?:(?: {3}| *\t)[^\n]+\n*)+")
 
-    default_rules = [
-        "block_code",
-        "list_block",
-        "paragraph",
-        "text",
+    # We removed many block rules
+    RULE_NAMES = (
         "newline",
-    ]
+        "thematic_break",
+        "indent_code",
+        "list_start",
+    )
 
-    list_rules = ("block_code", "list_block", "text", "newline")
-
-    # Need to extend this function since I need to modify this
-    # https://github.com/lepture/mistune/blob/v0.8.4/mistune.py#L29
-    def parse_block_code(self, m):
-        # clean leading whitespace
-        block_code_leading_pattern = re.compile(r"^ {3}", re.M)
-        code = block_code_leading_pattern.sub("", m.group(0))
-        self.tokens.append({"type": "code", "lang": None, "text": code})
-
-
-class DescriptionInlineGrammar(InlineGrammar):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Rewrite to respect this convention:
-        # https://github.com/CanonicalLtd/snap-squad/issues/936
-        self.code = re.compile(r"^(`)([ \S]*?[^`])\1(?!`)")
-
-        # Rewrite to support parentheses inside URLs:
-        # https://github.com/canonical-web-and-design/snapcraft.io/issues/2424
-        self.url = re.compile(
-            r"""^([(])?(https?:\/\/[^\s<]+[^<.,:"'\]\s])(?(1)([)]))"""
-        )
-        self.text = re.compile(
-            r"^[\s\S]+?(?=[\\<!\[_*`~]|\(?https?://| {2,}\n|$)"
-        )
+    def parse_indent_code(self, m, state):
+        text = expand_leading_tab(m.group(0))
+        code = _INDENT_CODE_TRIM.sub("", text)
+        code = code.lstrip("\n")
+        return self.tokenize_block_code(code, None, state)
 
 
-class DescriptionInline(InlineLexer):
-    grammar_class = DescriptionInlineGrammar
+class SnapcraftInlineParser(InlineParser):
+    CODESPAN = r"(`)([ \S]*?[^`])\1(?!`)"
 
-    # Removed rules: inline_html, link, reflink
-    default_rules = [
+    # We removed many inline rules
+    RULE_NAMES = (
         "escape",
-        "autolink",
-        "url",
-        "nolink",
-        "double_emphasis",
-        "emphasis",
-        "code",
+        "auto_link",
+        "ref_link",  # Kept so we don't have to override more code but not used
+        "ref_link2",  # Same as above
+        "asterisk_emphasis",
+        "underscore_emphasis",
+        "codespan",
         "linebreak",
-        "strikethrough",
-        "text",
-    ]
-    inline_html_rules = [
-        "escape",
-        "autolink",
-        "url",
-        "nolink",
-        "double_emphasis",
-        "emphasis",
-        "code",
-        "linebreak",
-        "strikethrough",
-        "text",
-    ]
-
-    def output_url(self, m):
-        output = []
-        output.append(m.group(1) or "")
-
-        # Allow symbols < and > inside the URL
-        link = m.group(2).replace("&lt;", "<").replace("&gt;", ">")
-
-        if self._in_link:
-            output.append(self.renderer.text(link))
-        else:
-            output.append(self.renderer.autolink(link, False))
-
-        output.append(m.group(3) or "")
-        return "".join(output)
+    )
 
 
-renderer = Renderer()
+renderer = HTMLRenderer()
 parser = Markdown(
     renderer=renderer,
-    block=DescriptionBlock(),
-    inline=DescriptionInline(renderer=renderer),
+    block=SnapcraftBlockParser(),
+    inline=SnapcraftInlineParser(renderer),
+    plugins=[plugin_strikethrough, plugin_url],
 )
 
 
