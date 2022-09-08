@@ -1,7 +1,10 @@
 import re
 
 from mistune import HTMLRenderer, Markdown
-from mistune.block_parser import BlockParser
+from mistune.block_parser import (
+    BlockParser,
+    expand_leading_tab,
+)
 from mistune.inline_parser import InlineParser
 from mistune.plugins.extra import plugin_strikethrough, plugin_url
 
@@ -23,9 +26,15 @@ class SnapcraftBlockParser(BlockParser):
         "list_start",
     )
 
+    def parse_indent_code(self, m, state):
+        text = expand_leading_tab(m.group(0))
+        code = _INDENT_CODE_TRIM.sub("", text)
+        code = code.lstrip("\n")
+        return self.tokenize_block_code(code, None, state)
+
 
 class SnapcraftInlineParser(InlineParser):
-    CODESPAN = r"^(`)([ \S]*?[^`])\1(?!`)"
+    CODESPAN = r"(`)([ \S]*?[^`])\1(?!`)"
 
     # We removed many inline rules
     RULE_NAMES = (
