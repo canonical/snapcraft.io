@@ -33,7 +33,7 @@ function SnapsTable({
             {/* Required for the mobile layout */}
           </th>
           <th className={tableCellClass}>
-            {!isOnlyViewer() && (
+            {!isOnlyViewer() ? (
               <CheckboxInput
                 onChange={(e) => {
                   if (e.target.checked) {
@@ -51,9 +51,11 @@ function SnapsTable({
                 }}
                 checked={checkAll}
                 disabled={!nonEssentialSnapIds.length}
+                label="Name"
               />
+            ) : (
+              "Name"
             )}
-            Name
           </th>
           <th style={{ width: "15%" }}>Latest release</th>
           <th style={{ width: "15%" }}>Release date</th>

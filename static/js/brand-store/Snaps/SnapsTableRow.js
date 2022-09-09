@@ -18,6 +18,13 @@ function SnapsTableRow({
 
   const tableCellClass = isOnlyViewer() ? "" : "table-cell--checkbox";
 
+  const snapName =
+    storeId === "ubuntu" ? (
+      <a href={`https://snapcraft.io/${snap.name}`}>{snap.name}</a>
+    ) : (
+      snap.name || "-"
+    );
+
   return (
     <tr>
       {index === 0 ? (
@@ -41,14 +48,10 @@ function SnapsTableRow({
               }
             }}
             checked={snapsToRemove.find((item) => item.id === snap.id)}
+            label={snapName}
           />
-        ) : null}
-        {storeId === "ubuntu" ? (
-          <a href={`https://dashboard.snapcraft.io/snaps/${snap.name}`}>
-            {snap.name || "-"}
-          </a>
         ) : (
-          snap.name || "-"
+          <span style={{ marginLeft: "0.5rem" }}>{snapName}</span>
         )}
       </td>
       <td data-heading="Latest release">
