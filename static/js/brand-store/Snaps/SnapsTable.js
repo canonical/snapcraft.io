@@ -27,7 +27,7 @@ function SnapsTable({
   return (
     <table className="p-table--mobile-card u-no-margin--bottom">
       <caption className="u-screenreader-only">
-        The snap which are published in and available to the {storeName} store.
+        The snaps which are published in and available to the {storeName} store.
       </caption>
       <thead>
         <tr>
