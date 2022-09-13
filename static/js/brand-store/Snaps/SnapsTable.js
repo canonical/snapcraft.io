@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 
 import SnapsTableRow from "./SnapsTableRow";
-import { CheckboxInput } from "@canonical/react-components";
+import { Input } from "@canonical/react-components";
 
 function SnapsTable({
   storeName,
@@ -16,13 +16,26 @@ function SnapsTable({
   globalStore,
 }) {
   const { id } = useParams();
-  const [checkAll, setCheckAll] = useState(false);
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [isIndeterminate, setIsIndeterminate] = useState(false);
 
   const tableCellClass = isOnlyViewer() ? "" : "table-cell--checkbox";
 
+  const otherStoresSnaps = otherStores.map((item) => item.snaps);
+  const allSnaps = otherStoresSnaps.flat().concat(globalStore.snaps);
+
   useEffect(() => {
-    setCheckAll(snapsToRemove.length === nonEssentialSnapIds.length);
-  }, [snapsToRemove, nonEssentialSnapIds]);
+    if (snapsToRemove.length) {
+      if (snapsToRemove.length === nonEssentialSnapIds.length) {
+        setIsChecked(true);
+        setIsIndeterminate(false);
+      } else {
+        setIsChecked(false);
+        setIsIndeterminate(true);
+      }
+    }
+  }, [snapsToRemove]);
 
   return (
     <table className="p-table--mobile-card u-no-margin--bottom">
@@ -37,24 +50,23 @@ function SnapsTable({
           </th>
           <th className={tableCellClass}>
             {!isOnlyViewer() ? (
-              <CheckboxInput
+              <Input
+                type="checkbox"
                 onChange={(e) => {
                   if (e.target.checked) {
-                    const otherStoresSnaps = otherStores.map(
-                      (item) => item.snaps
-                    );
                     setSnapsToRemove(
-                      otherStoresSnaps.flat().filter((item) => !item.essential)
+                      allSnaps.filter((item) => !item.essential)
                     );
-                    setCheckAll(true);
+                    setIsChecked(true);
                   } else {
                     setSnapsToRemove([]);
-                    setCheckAll(false);
+                    setIsChecked(false);
                   }
                 }}
-                checked={checkAll}
                 disabled={!nonEssentialSnapIds.length}
                 label="Name"
+                checked={isChecked}
+                indeterminate={isIndeterminate}
               />
             ) : (
               "Name"
@@ -74,6 +86,8 @@ function SnapsTable({
             snap={snap}
             snapsCount={snaps.length}
             index={index}
+            snapsToRemove={snapsToRemove}
+            setSnapsToRemove={setSnapsToRemove}
             isOnlyViewer={isOnlyViewer}
           />
         ))}
