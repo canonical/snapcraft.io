@@ -51,7 +51,7 @@
     height: $layout-height;
     position: absolute;
     top: auto;
-    z-index: 100;
+    z-index: 99;
 
     @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
       position: static;
