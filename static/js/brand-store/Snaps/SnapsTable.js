@@ -34,6 +34,9 @@ function SnapsTable({
         setIsChecked(false);
         setIsIndeterminate(true);
       }
+    } else {
+      setIsChecked(false);
+      setIsIndeterminate(false);
     }
   }, [snapsToRemove]);
 
