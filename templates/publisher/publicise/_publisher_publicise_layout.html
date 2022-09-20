@@ -9,7 +9,7 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
   {% set selected_tab='publicise' %}
   {% include "publisher/_header.html" %}
 
-  {% if private or not is_released %}
+  {% if private or is_released == False %}
     <section class="p-strip--light is-shallow">
       <div class="row">
         <div class="col-6">
@@ -23,7 +23,7 @@ Publicise {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}{% 
     </section>
   {% endif %}
 
-  <div class="p-strip is-shallow {% if private or not is_released %}u-disabled{% endif %}">
+  <div class="p-strip is-shallow {% if private or is_released == False %}u-disabled{% endif %}">
     <div class="row">
       <div class="col-3">
         <div class="p-navigation--sidebar">
