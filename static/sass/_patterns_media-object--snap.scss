@@ -2,10 +2,6 @@
   .p-media-object--snap {
     width: 100%;
 
-    .p-media-object__details {
-      overflow: hidden;
-    }
-
     .p-media-object__title {
       max-width: 100%;
       overflow: hidden;
@@ -22,7 +18,6 @@
         display: flex;
         -webkit-line-clamp: 2;
         max-height: 3.4rem;
-        overflow: hidden;
         text-decoration: none;
       }
 
