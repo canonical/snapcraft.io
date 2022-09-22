@@ -169,22 +169,25 @@ export function tooltips() {
    */
   this.enableTooltip = () => {
     const dataLayer = select(".layer");
-    const dataLayerBox = dataLayer.node().getBBox();
 
-    dataLayer
-      .append("rect")
-      .style("fill", "none")
-      .style("pointer-events", "all")
-      .attr("class", "pointerLayer")
-      .attr("width", dataLayerBox.width)
-      .attr("height", dataLayerBox.height + this.margin.top)
-      .attr("x", dataLayerBox.x)
-      .attr("y", dataLayerBox.y - this.margin.top / 2)
-      .on("mousemove", mouseMove.bind(this))
-      .on("mouseout", cancelTooltip.bind(this));
+    if (dataLayer.node()) {
+      const dataLayerBox = dataLayer.node().getBBox();
 
-    this.showTooltips = true;
+      dataLayer
+        .append("rect")
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .attr("class", "pointerLayer")
+        .attr("width", dataLayerBox.width)
+        .attr("height", dataLayerBox.height + this.margin.top)
+        .attr("x", dataLayerBox.x)
+        .attr("y", dataLayerBox.y - this.margin.top / 2)
+        .on("mousemove", mouseMove.bind(this))
+        .on("mouseout", cancelTooltip.bind(this));
 
-    return this;
+      this.showTooltips = true;
+
+      return this;
+    }
   };
 }
