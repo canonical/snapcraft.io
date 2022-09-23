@@ -74,7 +74,9 @@ function prepareLineData() {
     };
 
     data.forEach((series) => {
-      obj[series.name] = series.values[i].value;
+      if (series.values.length) {
+        obj[series.name] = series.values[i].value;
+      }
     });
 
     _data.push(obj);
