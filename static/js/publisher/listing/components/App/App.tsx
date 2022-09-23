@@ -8,7 +8,12 @@ import {
   Button,
 } from "@canonical/react-components";
 
-import { getChanges, getFormData, getListingData } from "../../utils";
+import {
+  getChanges,
+  getFormData,
+  getListingData,
+  shouldShowUpdateMetadataWarning,
+} from "../../utils";
 import { initListingTour } from "../../../tour";
 
 import PageHeader from "../../../shared/PageHeader";
@@ -56,7 +61,10 @@ function App() {
   const dirtyFields: { [key: string]: any } = formState.dirtyFields;
 
   const onSubmit = (data: any) => {
-    if (listingData?.update_metadata_on_release) {
+    if (
+      listingData?.update_metadata_on_release &&
+      shouldShowUpdateMetadataWarning(dirtyFields)
+    ) {
       setShowMetadataWarningModal(true);
       setFormData(data);
     } else {
@@ -68,19 +76,24 @@ function App() {
     const changes = getChanges(dirtyFields, data);
     const formData = getFormData(data, snapId, changes);
 
+    const previousDirtyFields = Object.assign({}, dirtyFields);
+
     setIsSaving(true);
 
     fetch(`/${data.snap_name}/listing`, {
       method: "POST",
       body: formData,
     }).then((response) => {
+      if (shouldShowUpdateMetadataWarning(previousDirtyFields)) {
+        setUpdateMetadataOnRelease(false);
+      }
+
       if (response.status === 200) {
         setTimeout(() => {
           setIsSaving(false);
           setHasSaved(true);
           reset(data);
           window.scrollTo(0, 0);
-          setUpdateMetadataOnRelease(false);
         }, 1000);
       } else {
         setTimeout(() => {
