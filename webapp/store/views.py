@@ -359,7 +359,7 @@ def store_blueprint(store_query=None):
             if snap["package_name"] not in featured_snaps
         ]
 
-        context["snaps_count"] = len(snaps_results)
+        context["snaps_count"] = len(context["snaps"]) + len(featured_snaps)
 
         return flask.render_template("store/publisher-details.html", **context)
 
