@@ -22,8 +22,8 @@ function SnapsTable({
 
   const tableCellClass = isOnlyViewer() ? "" : "table-cell--checkbox";
 
-  const otherStoresSnaps = otherStores.map((item) => item.snaps);
-  const allSnaps = otherStoresSnaps.flat().concat(globalStore.snaps);
+  const otherStoresSnaps = otherStores.map((item) => item?.snaps);
+  const allSnaps = otherStoresSnaps.flat().concat(globalStore?.snaps);
 
   useEffect(() => {
     if (snapsToRemove.length) {
