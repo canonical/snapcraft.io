@@ -18,6 +18,7 @@ import { fetchMembers } from "../slices/membersSlice";
 import { fetchStore } from "../slices/currentStoreSlice";
 
 import SectionNav from "../SectionNav";
+import StoreNotFound from "../StoreNotFound";
 
 import type { RouteParams, Member } from "../types/shared";
 
@@ -29,10 +30,12 @@ export type RootState = {
       "manual-review-policy": string;
     };
     loading: Boolean;
+    notFound: Boolean;
   };
   members: {
     members: Array<{}>;
     loading: Boolean;
+    notFound: Boolean;
   };
 };
 
@@ -44,6 +47,12 @@ function Settings() {
   );
   const membersLoading = useSelector(
     (state: RootState) => state.members.loading
+  );
+  const storeNotFound = useSelector(
+    (state: RootState) => state.currentStore.notFound
+  );
+  const membersNotFound = useSelector(
+    (state: RootState) => state.members.notFound
   );
   const dispatch = useAppDispatch();
   const { id } = useParams<RouteParams>();
@@ -137,12 +146,16 @@ function Settings() {
       <div className="p-panel--settings">
         <div className="p-panel__content">
           <div className="u-fixed-width">
-            <SectionNav sectionName="settings" />
+            {!storeNotFound && !membersNotFound && (
+              <SectionNav sectionName="settings" />
+            )}
           </div>
           {storeLoading && membersLoading && !isSaving ? (
             <div className="u-fixed-width">
               <Spinner text="Loading&hellip;" />
             </div>
+          ) : storeNotFound || membersNotFound ? (
+            <StoreNotFound />
           ) : isOnlyViewer() ? (
             <Redirect to={`/admin/${id}/snaps`} />
           ) : (

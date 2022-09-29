@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
+import { getMembersNotFound } from "./membersSlice";
 
 export const slice = createSlice({
   name: "invites",
   initialState: {
     invites: [],
     loading: true,
+    notFound: false,
   },
   reducers: {
     getInvitesLoading: (state) => {
@@ -13,6 +15,10 @@ export const slice = createSlice({
     },
     getInvitesSuccess: (state, { payload }) => {
       state.invites = payload || [];
+      state.loading = false;
+    },
+    getInvitesNotFound: (state) => {
+      state.notFound = true;
       state.loading = false;
     },
     getInvitesError: (state) => {
@@ -24,6 +30,7 @@ export const slice = createSlice({
 export const {
   getInvitesLoading,
   getInvitesSuccess,
+  getInvitesNotFound,
   getInvitesError,
 } = slice.actions;
 
@@ -34,11 +41,10 @@ export function fetchInvites(storeId: string) {
     try {
       const response = await fetch(`/admin/store/${storeId}/invites`);
       const data = await response.json();
-
       dispatch(getInvitesSuccess(data));
     } catch (error) {
+      dispatch(getMembersNotFound());
       dispatch(getInvitesError());
-      console.log("API fetch failed");
     }
   };
 }
