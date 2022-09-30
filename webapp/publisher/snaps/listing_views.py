@@ -372,10 +372,6 @@ def post_listing_snap(snap_name):
 
             return flask.render_template("publisher/listing.html", **context)
 
-        flask.flash("Changes applied successfully.", "positive")
-    else:
-        flask.flash("No changes to save.", "information")
-
     return flask.redirect(
         flask.url_for(".get_listing_snap", snap_name=snap_name)
     )
