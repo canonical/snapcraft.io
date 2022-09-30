@@ -6,6 +6,7 @@ export const slice = createSlice({
   initialState: {
     members: [],
     loading: true,
+    notFound: false,
   },
   reducers: {
     getMembersLoading: (state) => {
@@ -13,6 +14,10 @@ export const slice = createSlice({
     },
     getMembersSuccess: (state, { payload }) => {
       state.members = payload || [];
+      state.loading = false;
+    },
+    getMembersNotFound: (state) => {
+      state.notFound = true;
       state.loading = false;
     },
     getMembersError: (state) => {
@@ -24,6 +29,7 @@ export const slice = createSlice({
 export const {
   getMembersLoading,
   getMembersSuccess,
+  getMembersNotFound,
   getMembersError,
 } = slice.actions;
 
@@ -34,11 +40,10 @@ export function fetchMembers(storeId: string) {
     try {
       const response = await fetch(`/admin/store/${storeId}/members`);
       const data = await response.json();
-
       dispatch(getMembersSuccess(data));
     } catch (error) {
+      dispatch(getMembersNotFound());
       dispatch(getMembersError());
-      console.log("API fetch failed");
     }
   };
 }

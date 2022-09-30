@@ -14,7 +14,7 @@ import Navigation from "../Navigation";
 import Snaps from "../Snaps";
 import Members from "../Members";
 import Settings from "../Settings";
-import NoStores from "../NoStores";
+import StoreNotFound from "../StoreNotFound";
 
 function App() {
   const isLoading = useSelector((state) => state.brandStores.loading);
@@ -32,8 +32,8 @@ function App() {
         <Switch>
           <Route exact path="/admin">
             {!isLoading ? (
-              brandStoresList.length < 1 ? (
-                <NoStores />
+              !brandStoresList || brandStoresList.length < 1 ? (
+                <StoreNotFound />
               ) : brandStoresList[0].id === "ubuntu" ? (
                 // Don't redirect to the global store by default
                 <Redirect to={`/admin/${brandStoresList[1].id}/snaps`} />

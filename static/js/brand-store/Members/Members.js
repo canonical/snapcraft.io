@@ -16,6 +16,7 @@ import ROLES from "./memberRoles";
 
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
+import StoreNotFound from "../StoreNotFound";
 
 import {
   membersSelector,
@@ -33,6 +34,8 @@ function Members() {
   const invites = useSelector(invitesSelector);
   const brandStoresList = useSelector(brandStoresListSelector);
   const invitesLoading = useSelector((state) => state.members.loading);
+  const membersNotFound = useSelector((state) => state.members.notFound);
+  const invitesNotFound = useSelector((state) => state.invites.notFound);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [filteredMembers, setFilteredMembers] = useState([]);
@@ -157,12 +160,16 @@ function Members() {
         <div className="p-panel">
           <div className="p-panel__content">
             <div className="u-fixed-width">
-              <SectionNav sectionName="members" />
+              {!membersNotFound && !invitesNotFound && (
+                <SectionNav sectionName="members" />
+              )}
             </div>
             {membersLoading && invitesLoading ? (
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
+            ) : membersNotFound || invitesNotFound ? (
+              <StoreNotFound />
             ) : isOnlyViewer() ? (
               <Redirect to={`/admin/${id}/snaps`} />
             ) : (

@@ -24,6 +24,7 @@ import SnapsTable from "./SnapsTable";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
+import StoreNotFound from "../StoreNotFound";
 
 function Snaps() {
   const brandStoresList = useSelector(brandStoresListSelector);
@@ -32,6 +33,8 @@ function Snaps() {
   const snapsLoading = useSelector((state) => state.snaps.loading);
   const storesLoading = useSelector((state) => state.brandStores.loading);
   const membersLoading = useSelector((state) => state.members.loading);
+  const snapsNotFound = useSelector((state) => state.snaps.notFound);
+  const membersNotFound = useSelector((state) => state.members.notFound);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [snapsInStore, setSnapsInStore] = useState([]);
@@ -288,13 +291,18 @@ function Snaps() {
               <Reviewer />
             ) : currentStore && isPublisherOnly ? (
               <Publisher />
+            ) : snapsNotFound || membersNotFound ? (
+              <StoreNotFound />
             ) : (
               <>
-                {!isReloading && !isOnlyViewer() && (
-                  <div className="u-fixed-width">
-                    <SectionNav sectionName="snaps" />
-                  </div>
-                )}
+                {!isReloading &&
+                  !isOnlyViewer() &&
+                  !snapsNotFound &&
+                  !membersNotFound && (
+                    <div className="u-fixed-width">
+                      <SectionNav sectionName="snaps" />
+                    </div>
+                  )}
                 {!isReloading && (
                   <Row>
                     <Col size="6">

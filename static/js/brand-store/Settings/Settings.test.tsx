@@ -22,6 +22,7 @@ function getInitialState(): RootState {
         "manual-review-policy": "allow",
       },
       loading: false,
+      notFound: false,
     },
     members: {
       members: [
@@ -32,6 +33,7 @@ function getInitialState(): RootState {
         },
       ],
       loading: false,
+      notFound: false,
     },
   };
 }
