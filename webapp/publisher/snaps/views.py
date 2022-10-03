@@ -19,6 +19,7 @@ from webapp.publisher.snaps import (
     publicise_views,
     release_views,
     settings_views,
+    collaboration_views,
 )
 from webapp.publisher.snaps.builds import map_snap_build_status
 from webapp.publisher.views import _handle_error, _handle_error_list
@@ -62,6 +63,11 @@ publisher_snaps.add_url_rule(
     "/<snap_name>/preview",
     view_func=listing_views.post_preview,
     methods=["POST"],
+)
+publisher_snaps.add_url_rule(
+    "/<snap_name>/collaboration",
+    view_func=collaboration_views.get_collaboration_snap,
+    methods=["GET"],
 )
 
 # Build views
