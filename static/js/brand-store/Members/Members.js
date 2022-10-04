@@ -204,7 +204,7 @@ function Members() {
                     />
                   </Col>
                 </Row>
-                <div className="u-fixed-width members-accordion">
+                <div className="u-fixed-width app-accordion">
                   <Accordion
                     expanded="members-table"
                     sections={[
