@@ -37,6 +37,7 @@ def get_collaboration_snap(snap_name):
         "snap_name": snap_details["snap_name"],
         "snap_title": snap_details["title"],
         "publisher_name": snap_details["publisher"]["display-name"],
+        "collaborators": [],
     }
 
     return flask.render_template(

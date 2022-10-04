@@ -54,8 +54,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-side-navigation;
 @include vf-p-search-box;
 @include vf-p-form-tick-elements;
-
-// vanilla utilities
+@include vf-p-status-label;
 @include vf-u-floats;
 @include vf-u-off-screen;
 @include vf-u-margin-collapse;
@@ -345,9 +344,9 @@ code {
   }
 }
 
-.members-accordion {
+.app-accordion {
   .p-accordion__panel {
-    padding-left: 0;
+    padding-left: 2.5rem;
   }
 }
 
