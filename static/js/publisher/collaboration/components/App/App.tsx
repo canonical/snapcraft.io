@@ -19,11 +19,19 @@ type Collaborator = {
   is_owner: string;
 };
 
+type Invite = {
+  id: string;
+  status: string;
+  email: string;
+  expires: string;
+};
+
 function App() {
   const [data, setData] = useState(window?.data);
   const [collaborators, setCollaborators] = useState(
     window?.data?.collaborators
   );
+  const [invites, setInvites] = useState(window?.data?.invites);
 
   return (
     <>
@@ -96,6 +104,51 @@ function App() {
                                 Revoke
                               </Button>
                             )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ),
+              },
+              {
+                key: "invites-table",
+                title: `Invites (${invites.length})`,
+                content: (
+                  <table>
+                    <caption className="u-screenreader-only">
+                      Invites that have been sent to users to collaborate on the{" "}
+                      {data?.snap_name} snap.
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th>Users</th>
+                        <th>Email</th>
+                        <th>Sent by</th>
+                        <th>Expires</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invites.map((invite: Invite) => (
+                        <tr key={invite?.id}>
+                          <td data-heading="Status">{invite?.status}</td>
+                          <td data-heading="Email">{invite?.email}</td>
+                          <td data-heading="Sent by">-</td>
+                          <td data-heading="Expires">
+                            {format(new Date(invite?.expires), "dd/MM/yyyy")}
+                          </td>
+                          <td className="u-align--right">
+                            <Button type="button" dense>
+                              Revoke
+                            </Button>
+                            <Button type="button" dense>
+                              1 Resend
+                            </Button>
+                            <Button type="button" dense>
+                              Reopen
+                            </Button>
+                            )
                           </td>
                         </tr>
                       ))}
