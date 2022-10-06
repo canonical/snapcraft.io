@@ -102,6 +102,11 @@ publisher_snaps.add_url_rule(
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/check-build-request/<build_id>",
+    view_func=build_views.check_build_request,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
     "/<snap_name>/webhook/notify",
     view_func=build_views.post_github_webhook,
     methods=["POST"],

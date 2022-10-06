@@ -432,14 +432,64 @@ def post_build(snap_name):
         if launchpad.is_snap_building(snap_name):
             launchpad.cancel_snap_builds(snap_name)
 
-        launchpad.build_snap(snap_name)
+        build_id = launchpad.build_snap(snap_name)
     except HTTPError as e:
         # Timeout or not found from Launchpad
         if e.response.status_code in [408, 404]:
-            return flask.jsonify({"success": False})
+            return flask.jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "message": "An error happened building "
+                        "this snap, please try again."
+                    },
+                }
+            )
         raise e
 
-    return flask.jsonify({"success": True})
+    return flask.jsonify({"success": True, "build_id": build_id})
+
+
+@login_required
+def check_build_request(snap_name, build_id):
+    # Don't allow builds from no contributors
+    account_snaps = publisher_api.get_account_snaps(flask.session)
+
+    if snap_name not in account_snaps:
+        return flask.jsonify(
+            {
+                "success": False,
+                "error": {
+                    "type": "FORBIDDEN",
+                    "message": "You are not allowed to request "
+                    "builds for this snap",
+                },
+            }
+        )
+
+    try:
+        response = launchpad.get_snap_build_request(snap_name, build_id)
+    except HTTPError as e:
+        # Timeout or not found from Launchpad
+        if e.response.status_code in [408, 404]:
+            return flask.jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "message": "An error happened building "
+                        "this snap, please try again."
+                    },
+                }
+            )
+        raise e
+
+    return flask.jsonify(
+        {
+            "success": True,
+            "status": response["status"],
+            "error": {"message": response["error_message"]},
+        }
+    )
 
 
 @login_required
