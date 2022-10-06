@@ -141,6 +141,7 @@ class Builds extends React.Component {
   }
 
   triggerFetchBuildRequest(build_id) {
+    const { snapName } = this.props;
     const { ERROR, SUCCESS } = TriggerBuildStatus;
     const { PENDING, COMPLETED, FAILED } = BuildRequestStatus;
     const url = `/${snapName}/builds/check-build-request/`;
@@ -157,9 +158,13 @@ class Builds extends React.Component {
               this.props.updateFreq
             );
           } else if (result.status === COMPLETED) {
-            this.setState({ triggerBuildStatus: SUCCESS });
+            this.setState({
+              triggerBuildStatus: SUCCESS,
+              triggerBuildLoading: false,
+            });
           } else if (result.status === FAILED) {
             this.setState({
+              triggerBuildLoading: false,
               triggerBuildStatus: ERROR,
               triggerBuildErrorMessage: result.error.message
                 ? result.error.message
@@ -200,7 +205,11 @@ class Builds extends React.Component {
       .then((res) => res.json())
       .then((result) => {
         if (result.success) {
-          this.setState({ triggerBuildStatus: SUCCESS });
+          if (result.build_id) {
+            this.triggerFetchBuildRequest(result.build_id);
+          } else {
+            this.setState({ triggerBuildStatus: SUCCESS });
+          }
         } else {
           this.setState({
             triggerBuildStatus: ERROR,
