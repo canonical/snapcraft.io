@@ -17,7 +17,6 @@ function SaveAndPreview({
   isDirty,
   reset,
   isSaving,
-  isValid,
   showPreview,
 }: Props) {
   const stickyBar = useRef<HTMLDivElement>(null);
@@ -73,7 +72,7 @@ function SaveAndPreview({
               </Button>
               <Button
                 appearance="positive"
-                disabled={!isDirty || isSaving || !isValid}
+                disabled={!isDirty || isSaving}
                 type="submit"
                 style={{ minWidth: "68px" }}
               >
