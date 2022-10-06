@@ -483,11 +483,15 @@ def check_build_request(snap_name, build_id):
             )
         raise e
 
+    error_message = None
+    if response["error_message"]:
+        error_message = response["error_message"].split(" HEAD:")[0]
+
     return flask.jsonify(
         {
             "success": True,
             "status": response["status"],
-            "error": {"message": response["error_message"]},
+            "error": {"message": error_message},
         }
     )
 
