@@ -86,9 +86,6 @@ function ContactInformationSection({
         placeholder="mailto:example@example.com"
         helpText="An http: or https: link, or an e-mail address"
         getFieldState={getFieldState}
-        pattern={
-          /(^https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$)|(^mailto:)?([a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$)/
-        }
         tourLabel=""
       />
     </>
