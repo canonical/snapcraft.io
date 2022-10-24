@@ -11,10 +11,12 @@ export const slice = createSlice({
   reducers: {
     getSnapsLoading: (state) => {
       state.loading = true;
+      state.notFound = false;
     },
     getSnapsSuccess: (state, { payload }) => {
       state.snaps = payload || [];
       state.loading = false;
+      state.notFound = false;
     },
     getSnapsNotFound: (state) => {
       state.notFound = true;

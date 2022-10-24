@@ -11,10 +11,12 @@ export const slice = createSlice({
   reducers: {
     getMembersLoading: (state) => {
       state.loading = true;
+      state.notFound = false;
     },
     getMembersSuccess: (state, { payload }) => {
       state.members = payload || [];
       state.loading = false;
+      state.notFound = false;
     },
     getMembersNotFound: (state) => {
       state.notFound = true;
