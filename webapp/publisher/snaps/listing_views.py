@@ -237,7 +237,8 @@ def post_listing_snap(snap_name):
                     body_json["description"]
                 )
 
-            body_json["update_metadata_on_release"] = False
+            if flask.request.form.get("update_metadata_on_release") == "on":
+                body_json["update_metadata_on_release"] = True
 
             try:
                 publisher_api.snap_metadata(snap_id, flask.session, body_json)

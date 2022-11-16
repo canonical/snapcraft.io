@@ -78,6 +78,15 @@ function App() {
 
     const previousDirtyFields = Object.assign({}, dirtyFields);
 
+    if (
+      updateMetadataOnRelease &&
+      !shouldShowUpdateMetadataWarning(previousDirtyFields)
+    ) {
+      formData.set("update_metadata_on_release", "on");
+    } else {
+      formData.set("update_metadata_on_release", "off");
+    }
+
     setIsSaving(true);
 
     fetch(`/${data.snap_name}/listing`, {
