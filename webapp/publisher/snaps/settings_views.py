@@ -88,6 +88,10 @@ def post_settings(snap_name):
     changes = None
     changed_fields = flask.request.form.get("changes")
 
+    print("==================================================================")
+    print(changed_fields)
+    print("==================================================================")
+
     if changed_fields:
         changes = loads(changed_fields)
 
@@ -99,6 +103,8 @@ def post_settings(snap_name):
 
         if body_json:
             try:
+                print("======================================================")
+                print(body_json)
                 publisher_api.snap_metadata(snap_id, flask.session, body_json)
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
