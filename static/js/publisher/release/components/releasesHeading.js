@@ -39,25 +39,27 @@ class ReleasesHeading extends Component {
 
     const Wrap = tracks.length > 1 ? "label" : "span";
     return (
-      <div className="row">
-        <div className="col-6">
-          <h4>
-            <Wrap htmlFor="track-dropdown">
-              {tracks.length > 1 ? (
-                <>
-                  Track &nbsp;
-                  {this.renderTrackDropdown(tracks)}
-                </>
-              ) : (
-                <>Releases available to install</>
-              )}
-            </Wrap>
-          </h4>
+      <section className="p-strip is-shallow u-no-padding--bottom">
+        <div className="row">
+          <div className="col-6">
+            <h4>
+              <Wrap htmlFor="track-dropdown">
+                {tracks.length > 1 ? (
+                  <>
+                    Track &nbsp;
+                    {this.renderTrackDropdown(tracks)}
+                  </>
+                ) : (
+                  <>Releases available to install</>
+                )}
+              </Wrap>
+            </h4>
+          </div>
+          <div className="col-6" style={{ marginTop: "0.25rem" }}>
+            {tracks.length > 1 && <DefaultTrackModifier />}
+          </div>
         </div>
-        <div className="col-6" style={{ marginTop: "0.25rem" }}>
-          {tracks.length > 1 && <DefaultTrackModifier />}
-        </div>
-      </div>
+      </section>
     );
   }
 }

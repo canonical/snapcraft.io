@@ -1,6 +1,8 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, createRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+
+import debounce from "../../../libs/debounce";
 
 import ReleasesConfirmDetails from "./releasesConfirmDetails/";
 import ReleasesConfirmActions from "./releasesConfirmActions";
@@ -21,6 +23,23 @@ class ReleasesConfirm extends Component {
       isLoading: false,
       showDetails: false,
     };
+
+    this.stickyBar = createRef();
+  }
+
+  componentDidMount() {
+    document.addEventListener(
+      "scroll",
+      debounce(() => {
+        const stickyBarRec = this.stickyBar.current.getBoundingClientRect();
+        const top = stickyBarRec.top;
+        const scrollX = window.scrollX;
+        const topPosition = top + scrollX;
+
+        this.stickyBar.current.classList.toggle("is-pinned", topPosition === 0);
+      }),
+      500
+    );
   }
 
   onRevertClick() {
@@ -83,61 +102,59 @@ class ReleasesConfirm extends Component {
     const isCancelEnabled = updatesCount > 0 && !isLoading;
 
     return (
-      <Fragment>
+      <>
         <div
           className={`p-releases-confirm ${updatesCount > 0 ? "" : "u-hide"}`}
+          ref={this.stickyBar}
         >
-          <div
-            className="row u-vertically-center"
-            style={{ marginBottom: "0.5rem" }}
-          >
-            <div className="col-6">
-              {updatesCount > 0 && (
-                <Fragment>
-                  <button
-                    type="button"
-                    className="p-button--base u-no-margin--bottom has-icon"
-                    onClick={this.toggleDetails.bind(this)}
-                  >
-                    <i
-                      className={`${
-                        showDetails
-                          ? "p-icon--chevron-down"
-                          : "p-icon--chevron-up"
-                      }`}
+          <div className="u-fixed-width">
+            <div className="row u-vertically-center p-releases-row">
+              <div className="col-6">
+                {updatesCount > 0 && (
+                  <>
+                    <button
+                      type="button"
+                      className="p-button--base u-no-margin--bottom has-icon"
+                      onClick={this.toggleDetails.bind(this)}
                     >
-                      {showDetails ? "Hide" : "Show"} details
-                    </i>
-                    <span>
-                      {updatesCount} update
-                      {updatesCount > 1 ? "s" : ""}
-                    </span>
-                  </button>
-                </Fragment>
-              )}
+                      <i
+                        className={`${
+                          showDetails
+                            ? "p-icon--chevron-down"
+                            : "p-icon--chevron-up"
+                        }`}
+                      >
+                        {showDetails ? "Hide" : "Show"} details
+                      </i>
+                      <span>
+                        {updatesCount} update
+                        {updatesCount > 1 ? "s" : ""}
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
+              <div className="col-6 p-releases-confirm__actions">
+                {updatesCount > 0 && (
+                  <div
+                    className={`p-releases-confirm__details-toggle ${
+                      showDetails ? "is-open" : ""
+                    }`}
+                  ></div>
+                )}
+                <ReleasesConfirmActions
+                  isCancelEnabled={isCancelEnabled}
+                  cancelPendingReleases={this.onRevertClick.bind(this)}
+                  isApplyEnabled={isApplyEnabled}
+                  applyPendingReleases={this.onApplyClick.bind(this)}
+                  isLoading={isLoading}
+                />
+              </div>
             </div>
-            <div className="col-6 p-releases-confirm__actions">
-              {updatesCount > 0 && (
-                <div
-                  className={`p-releases-confirm__details-toggle ${
-                    showDetails ? "is-open" : ""
-                  }`}
-                ></div>
-              )}
-              <ReleasesConfirmActions
-                isCancelEnabled={isCancelEnabled}
-                cancelPendingReleases={this.onRevertClick.bind(this)}
-                isApplyEnabled={isApplyEnabled}
-                applyPendingReleases={this.onApplyClick.bind(this)}
-                isLoading={isLoading}
-              />
-            </div>
-          </div>
-          <div className="row">
             {showDetails && <ReleasesConfirmDetails updates={updates} />}
           </div>
         </div>
-      </Fragment>
+      </>
     );
   }
 }

@@ -4,17 +4,26 @@
   $color-highlighted: #e9ffec;
   $color-highlighted-border: 1px dashed #0e8420;
 
+  .p-releases-row {
+    border-bottom: $border;
+    padding: $spv--small 0;
+
+    .is-pinned & {
+      border-bottom: none;
+    }
+  }
+
   // RELEASES CONFIRM
 
   .p-releases-confirm {
     background-color: $color-x-light;
-    bottom: 0;
-    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.3);
-    left: 0;
-    padding: 0.5em 0 0;
-    position: fixed;
-    right: 0;
-    z-index: 20;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    &.is-pinned {
+      box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+    }
   }
 
   .p-releases-confirm__buttons {
@@ -46,9 +55,15 @@
   }
 
   .p-releases-confirm__details {
-    border-top: 1px solid $color-mid-light;
+    border-bottom: $border;
     margin-bottom: 1rem;
-    padding-top: 0.25rem;
+    padding-bottom: $spv--small;
+    padding-top: $spv--small;
+
+    .is-pinned & {
+      border-bottom: none;
+      border-top: $border;
+    }
   }
 
   // RELEASES TABLE

@@ -52,6 +52,7 @@ const ReleasesController = ({
   const { visible } = notification;
   return (
     <Fragment>
+      {ready && <ReleasesConfirm />}
       {!ready && (
         <div className="p-strip">
           <div className="row">
@@ -85,7 +86,6 @@ const ReleasesController = ({
           <ReleasesHeading />
           <ReleasesTable />
           {showModal && <Modal />}
-          <ReleasesConfirm />
         </Fragment>
       )}
     </Fragment>
