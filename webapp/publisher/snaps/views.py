@@ -462,19 +462,10 @@ def get_register_name_dispute():
         user = publisher_api.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
-
-    available_stores = logic.filter_available_stores(user["stores"])
-
     snap_name = flask.request.args.get("snap-name")
     store_id = flask.request.args.get("store")
-    store = next(
-        (st for st in available_stores if st["id"] == store_id),
-        None,
-    )
-    if store:
-        store_name = store["name"]
-    else:
-        store_name = "Global"
+    store_name = logic.get_store_name(store_id, user)
+
     if not snap_name:
         return flask.redirect(
             flask.url_for(".get_register_name", snap_name=snap_name)
@@ -491,12 +482,12 @@ def get_register_name_dispute():
 def post_register_name_dispute():
     try:
         snap_name = flask.request.form.get("snap-name", "")
-        store = flask.request.form.get("store", "")
+        # store_id = flask.request.form.get("store", "")
         claim_comment = flask.request.form.get("claim-comment", "")
         publisher_api.post_register_name_dispute(
             flask.session,
             bleach.clean(snap_name),
-            bleach.clean(store),
+            # bleach.clean(store_id),
             bleach.clean(claim_comment),
         )
     except StoreApiResponseErrorList as api_response_error_list:
@@ -514,20 +505,30 @@ def post_register_name_dispute():
     return flask.render_template(
         "publisher/register-name-dispute-success.html",
         snap_name=snap_name,
-        store=store,
+        # store=store_id,
     )
 
 
 @publisher_snaps.route("/request-reserved-name")
 @login_required
 def get_request_reserved_name():
+    try:
+        user = publisher_api.get_account(flask.session)
+    except (StoreApiError, ApiError) as api_error:
+        return _handle_error(api_error)
     snap_name = flask.request.args.get("snap_name")
+    store_id = flask.request.args.get("store")
+    store_name = logic.get_store_name(store_id, user)
     if not snap_name:
         return flask.redirect(
-            flask.url_for(".get_register_name", snap_name=snap_name)
+            flask.url_for(
+                ".get_register_name", snap_name=snap_name, store=store_id
+            )
         )
     return flask.render_template(
-        "publisher/request-reserved-name.html", snap_name=snap_name
+        "publisher/request-reserved-name.html",
+        snap_name=snap_name,
+        store=store_name,
     )
 
 
