@@ -1,5 +1,5 @@
 # Sub dependencies pinned to avoid issues
-ruamel.yaml.clib==0.2.2
+ruamel.yaml.clib==0.2.7
 click==8.0.3
 
 # App dependencies
