@@ -1,5 +1,4 @@
 # Packages
-from pprint import pprint
 import bleach
 import flask
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
@@ -467,8 +466,11 @@ def get_register_name_dispute():
     available_stores = logic.filter_available_stores(user["stores"])
 
     snap_name = flask.request.args.get("snap-name")
-    store_id =  flask.request.args.get("store")
-    store = next((store_dict for store_dict in available_stores if store_dict['id'] == store_id), None)
+    store_id = flask.request.args.get("store")
+    store = next(
+        (st for st in available_stores if st["id"] == store_id),
+        None,
+    )
     if store:
         store_name = store["name"]
     else:
@@ -478,7 +480,9 @@ def get_register_name_dispute():
             flask.url_for(".get_register_name", snap_name=snap_name)
         )
     return flask.render_template(
-        "publisher/register-name-dispute.html", snap_name=snap_name, store=store_name
+        "publisher/register-name-dispute.html",
+        snap_name=snap_name,
+        store=store_name,
     )
 
 
@@ -493,7 +497,7 @@ def post_register_name_dispute():
             flask.session,
             bleach.clean(snap_name),
             bleach.clean(store),
-            bleach.clean(claim_comment)
+            bleach.clean(claim_comment),
         )
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code in [400, 409]:
@@ -508,7 +512,9 @@ def post_register_name_dispute():
         return _handle_error(api_error)
 
     return flask.render_template(
-        "publisher/register-name-dispute-success.html", snap_name=snap_name, store=store
+        "publisher/register-name-dispute-success.html",
+        snap_name=snap_name,
+        store=store,
     )
 
 
