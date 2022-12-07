@@ -21,7 +21,12 @@ publisher_api = SnapPublisher(api_publisher_session)
 
 
 @login_required
-def get_settings(snap_name):
+def get_settings_json(snap_name):
+    return get_settings(snap_name, return_json=True)
+
+
+@login_required
+def get_settings(snap_name, return_json=False):
     try:
         snap_details = publisher_api.get_snap_info(snap_name, flask.session)
     except StoreApiResponseErrorList as api_response_error_list:
@@ -64,7 +69,7 @@ def get_settings(snap_name):
         "snap_title": snap_details["title"],
         "snap_id": snap_details["snap_id"],
         "publisher_name": snap_details["publisher"]["display-name"],
-        "license": license,
+        "license": snap_details["license"],
         "private": snap_details["private"],
         "unlisted": snap_details["unlisted"],
         "countries": countries,
@@ -80,11 +85,19 @@ def get_settings(snap_name):
         ],
     }
 
+    if return_json:
+        return flask.jsonify(context)
+
     return flask.render_template("publisher/settings.html", **context)
 
 
 @login_required
-def post_settings(snap_name):
+def post_settings_json(snap_name):
+    return post_settings(snap_name, return_json=True)
+
+
+@login_required
+def post_settings(snap_name, return_json=False):
     changes = None
     changed_fields = flask.request.form.get("changes")
 
@@ -99,7 +112,11 @@ def post_settings(snap_name):
 
         if body_json:
             try:
-                publisher_api.snap_metadata(snap_id, flask.session, body_json)
+                response = publisher_api.snap_metadata(
+                    snap_id, flask.session, body_json
+                )
+                if return_json:
+                    return flask.jsonify(response)
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(
@@ -158,14 +175,6 @@ def post_settings(snap_name):
             else:
                 blacklist_country_codes = []
 
-            update_metadata_on_release = True
-
-            if "update_metadata_on_release" in snap_details:
-                if snap_details["update_metadata_on_release"] == "on":
-                    update_metadata_on_release = True
-                else:
-                    update_metadata_on_release = False
-
             context = {
                 # read-only values from details API
                 "snap_name": snap_details["snap_name"],
@@ -182,12 +191,17 @@ def post_settings(snap_name):
                 "keywords": snap_details["keywords"],
                 "status": snap_details["status"],
                 "is_on_lp": is_on_lp,
-                "update_metadata_on_release": update_metadata_on_release,
+                "update_metadata_on_release": snap_details[
+                    "update_metadata_on_release"
+                ],
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,
                 "other_errors": other_errors,
             }
+
+            if return_json:
+                return flask.jsonify(context)
 
             return flask.render_template("publisher/settings.html", **context)
 

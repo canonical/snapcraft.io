@@ -31,7 +31,7 @@ function App() {
     setValue,
     control,
   } = useForm({
-    defaultValues: window?.settingsData,
+    defaultValues: settingsData,
     mode: "onChange",
   });
 
@@ -49,27 +49,47 @@ function App() {
     name: "blacklist_country_keys",
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     setIsSaving(true);
+    setHasSaved(false);
+    setSavedError(false);
 
-    fetch(`/${data.snap_name}/settings`, {
+    if (data.visibility === "unlisted") {
+      data.private = false;
+      data.unlisted = true;
+    } else if (data.visibility === "private") {
+      data.private = true;
+      data.unlisted = false;
+    } else if (data.visibility === "public") {
+      data.private = false;
+      data.unlisted = false;
+    }
+
+    const response = await fetch(`/${data.snap_name}/settings.json`, {
       method: "POST",
       body: getFormData(settingsData, dirtyFields, data),
-    }).then((response) => {
-      if (response.status === 200) {
-        setTimeout(() => {
-          setIsSaving(false);
-          setHasSaved(true);
-          reset(data);
-          window.scrollTo(0, 0);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setIsSaving(false);
-          setSavedError(true);
-        }, 1000);
-      }
     });
+
+    if (response.status !== 200) {
+      setIsSaving(false);
+      setSavedError(true);
+      return;
+    }
+
+    let newData = await response.json();
+    newData = { ...data, ...newData };
+
+    if (newData.private) {
+      newData.visibility = "private";
+    } else if (newData.unlisted) {
+      newData.visibility = "unlisted";
+    }
+
+    setIsSaving(false);
+    setHasSaved(true);
+
+    reset(newData);
+    window.scrollTo(0, 0);
   };
 
   useEffect(() => {
@@ -119,7 +139,10 @@ function App() {
                   setHasSaved(false);
                   setSavedError(false);
                 }}
-              />
+              >
+                Please try again later. If the problem persists please contact
+                us.
+              </Notification>
             </div>
           )}
 
@@ -298,7 +321,9 @@ function App() {
                   <input
                     type="checkbox"
                     className="p-checkbox__input"
-                    {...register("update_metadata_on_release")}
+                    {...register("update_metadata_on_release", {
+                      setValueAs: (value) => value === "on" || value === true,
+                    })}
                   />
                   <span className="p-checkbox__label">Enabled</span>
                   <br />
@@ -311,7 +336,6 @@ function App() {
                     <a href="/docs/snapcraft-top-level-metadata">Learn more</a>.
                   </span>
                 </label>
-
                 {getValues("update_metadata_on_release") && (
                   <Notification severity="caution" title="Warning">
                     This snap is set to have its metadata updated when a new
