@@ -107,6 +107,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "keywords": [],
             "status": "published",
             "publisher": {"display-name": "test"},
+            "update_metadata_on_release": False,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -188,6 +189,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "keywords": [],
             "status": "published",
             "publisher": {"display-name": "test"},
+            "update_metadata_on_release": False,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -279,6 +281,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "store": "stotore",
             "keywords": [],
             "status": "published",
+            "update_metadata_on_release": False,
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
