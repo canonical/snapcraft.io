@@ -140,8 +140,7 @@ function App() {
                   setSavedError(false);
                 }}
               >
-                Please try again later. If the problem persists please contact
-                us.
+                Please try again later.
               </Notification>
             </div>
           )}
