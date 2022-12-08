@@ -83,7 +83,9 @@ class HeroTabPanels {
             </h3>
             <div class="p-media-object__content">
               <p>
-                <span class="u-off-screen">Publisher: </span>${snap.publisher}
+                <span class="u-off-screen">Publisher: </span>${
+                  snap.developer_name
+                }
                 ${renderValidationBadge(snap.developer_validation)}
               </p>
               <p>${snap.summary}</p>

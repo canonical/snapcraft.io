@@ -92,7 +92,7 @@ def snap_details_views(store, api, handle_errors):
         # filter out banner and banner-icon images from screenshots
         screenshots = logic.filter_screenshots(details["snap"]["media"])
 
-        icons = logic.get_icon(details["snap"]["media"])
+        icon_url = helpers.get_icon(details["snap"]["media"])
 
         publisher_info = helpers.get_yaml(
             "{}{}.yaml".format(
@@ -146,7 +146,7 @@ def snap_details_views(store, api, handle_errors):
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
             "categories": categories,
-            "icon_url": icons[0] if icons else None,
+            "icon_url": icon_url,
             "version": extracted_info["version"],
             "license": details["snap"]["license"],
             "publisher": details["snap"]["publisher"]["display-name"],
@@ -461,6 +461,7 @@ def snap_details_views(store, api, handle_errors):
             featured_snaps_results = api.get_featured_items(
                 size=13, page=1
             ).get("results", [])
+
         except StoreApiError:
             featured_snaps_results = []
 
@@ -469,6 +470,9 @@ def snap_details_views(store, api, handle_errors):
             for snap in featured_snaps_results
             if snap["package_name"] != snap_name
         ][:12]
+
+        for snap in featured_snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         context.update({"featured_snaps": featured_snaps})
         return flask.render_template(
