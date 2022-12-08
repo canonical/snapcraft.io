@@ -30,7 +30,7 @@
     <div class="p-media-object__content">
       {% if not hide_publisher %}
         <p class="u-overflow-visible">
-          <span class="u-off-screen">Publisher: </span>{{ snap.publisher}}
+          <span class="u-off-screen">Publisher: </span>{{ snap.developer_name }}
             {% if snap.developer_validation %}
               {% set package_name = snap.package_name %}
               {% if snap.developer_validation == VERIFIED_PUBLISHER %}

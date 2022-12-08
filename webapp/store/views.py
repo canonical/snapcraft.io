@@ -74,12 +74,16 @@ def store_blueprint(store_query=None):
 
         try:
             featured_snaps = api.get_featured_items()["results"]
+
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
             return flask.abort(status_code)
 
         if not featured_snaps:
             return flask.abort(503)
+
+        for snap in featured_snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
@@ -114,6 +118,9 @@ def store_blueprint(store_query=None):
         except (StoreApiError, ApiError) as api_error:
             snaps = []
             status_code, error_info = _handle_error(api_error)
+
+        for snap in snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         return (
             flask.render_template(
@@ -185,6 +192,9 @@ def store_blueprint(store_query=None):
             total_results_count = None
 
         snaps_results = searched_results["results"]
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         links = {}
 
@@ -275,6 +285,10 @@ def store_blueprint(store_query=None):
             status_code, error_info = _handle_error(api_error)
 
         snaps_results = searched_results["results"]
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
+
         links = logic.get_pages_details(
             flask.request.base_url,
             (
@@ -345,6 +359,9 @@ def store_blueprint(store_query=None):
                 except StoreApiError:
                     pass
 
+                for snap in snaps_results:
+                    snap["icon_url"] = helpers.get_icon(snap["media"])
+
                 context["snaps"].extend(
                     [snap for snap in snaps_results if snap["apps"]]
                 )
@@ -375,6 +392,9 @@ def store_blueprint(store_query=None):
             )["results"]
         except (StoreApiError, ApiError) as api_error:
             status_code, error_info = _handle_error(api_error)
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
@@ -412,6 +432,9 @@ def store_blueprint(store_query=None):
                 flask.jsonify({"error": error_info}),
                 status_code,
             )
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         return flask.jsonify(snaps_results)
 

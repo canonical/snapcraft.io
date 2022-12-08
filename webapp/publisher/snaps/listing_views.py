@@ -25,7 +25,6 @@ from webapp.publisher.views import _handle_error, _handle_error_list
 from webapp.store.logic import (
     filter_screenshots,
     get_categories,
-    get_icon,
     get_video,
 )
 
@@ -411,9 +410,9 @@ def post_preview(snap_name):
     context["appliances"] = []
 
     # Images
-    icons = get_icon(context["images"])
+    icon = helpers.get_icon(context["images"])
     context["screenshots"] = filter_screenshots(context["images"])
-    context["icon_url"] = icons[0] if icons else None
+    context["icon_url"] = icon
     context["video"] = get_video(context["images"])
 
     # Channel map

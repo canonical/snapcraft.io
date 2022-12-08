@@ -411,10 +411,6 @@ def filter_screenshots(media):
     ][:5]
 
 
-def get_icon(media):
-    return [m["url"] for m in media if m["type"] == "icon"]
-
-
 def get_video(media):
     video = None
     for m in media:
@@ -431,12 +427,15 @@ def promote_snap_with_icon(snaps):
 
     :returns: A list of snaps
     """
-    snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
+    try:
+        snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
 
-    if snap_with_icon:
-        snap_with_icon_index = snaps.index(snap_with_icon)
+        if snap_with_icon:
+            snap_with_icon_index = snaps.index(snap_with_icon)
 
-        snaps.insert(0, snaps.pop(snap_with_icon_index))
+            snaps.insert(0, snaps.pop(snap_with_icon_index))
+    except StopIteration:
+        pass
 
     return snaps
 
