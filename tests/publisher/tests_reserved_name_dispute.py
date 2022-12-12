@@ -10,13 +10,23 @@ class GetRequestReservedNameNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class GetRequestReservedName(BaseTestCases.BaseAppTesting):
     def setUp(self):
+        self.store = "testing-store-id1"
         super().setUp(
             snap_name="test-snap",
             api_url=None,
             endpoint_url="/request-reserved-name",
         )
         self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
-        self.user_payload = {"error_list": [], "stores": [{"id": "testing-store-id1", "name": "test-store", 'roles': ["admin", "review", "view", "access"]}]}
+        self.user_payload = {
+            "error_list": [],
+            "stores": [
+                {
+                    "id": "testing-store-id1",
+                    "name": "test-store",
+                    "roles": ["admin", "review", "view", "access"],
+                }
+            ],
+        }
 
     @responses.activate
     def test_request_reserved_name_logged_in(self):
@@ -24,8 +34,8 @@ class GetRequestReservedName(BaseTestCases.BaseAppTesting):
         responses.add(
             responses.GET, self.user_url, json=self.user_payload, status=200
         )
-        endpoint_url = "{}?snap-name={}".format(
-            self.endpoint_url, self.snap_name
+        endpoint_url = "{}?snap-name={}&store={}".format(
+            self.endpoint_url, self.snap_name, self.store
         )
         response = self.client.get(endpoint_url)
 

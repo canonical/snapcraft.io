@@ -17,8 +17,16 @@ class GetRegisterNameDisputePage(BaseTestCases.BaseAppTesting):
             endpoint_url="/register-name-dispute",
         )
         self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
-        self.user_payload = {"error_list": [], "stores": [{"id": "testing-store-id1", "name": "test-store", 'roles': ["admin", "review", "view", "access"]}]}
-
+        self.user_payload = {
+            "error_list": [],
+            "stores": [
+                {
+                    "id": "testing-store-id1",
+                    "name": "test-store",
+                    "roles": ["admin", "review", "view", "access"],
+                },
+            ],
+        }
 
     @responses.activate
     def test_register_name_dispute_logged_in(self):
