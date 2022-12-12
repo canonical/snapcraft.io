@@ -28,10 +28,10 @@ class GetSearchViewTest(TestCase):
                                 "package_name",
                                 "title",
                                 "summary",
-                                "icon_url",
                                 "architecture",
                                 "media",
-                                "publisher",
+                                "developer_name",
+                                "developer_id",
                                 "developer_validation",
                                 "origin",
                                 "apps",
@@ -62,7 +62,7 @@ class GetSearchViewTest(TestCase):
 
     @responses.activate
     def test_search_q_no_results(self):
-        payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
+        payload = {"_embedded": {"clickindex:package": []}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
             snap_name="snap", page="1", size="44"
@@ -81,14 +81,14 @@ class GetSearchViewTest(TestCase):
         self.assert_context("query", "snap")
         self.assert_context("category", "")
         self.assert_context("category_display", None)
-        self.assert_context("searched_snaps", {})
+        self.assert_context("searched_snaps", [])
         self.assert_context("featured_snaps", [])
         self.assert_context("total", 0)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
 
     @responses.activate
     def test_search_q_with_zero_as_page(self):
-        payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
+        payload = {"_embedded": {"clickindex:package": []}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
             snap_name="snap", page="1", size="44"
@@ -109,7 +109,7 @@ class GetSearchViewTest(TestCase):
         self.assert_context("category", "")
         self.assert_context("category_display", None)
         self.assert_context("featured_snaps", [])
-        self.assert_context("searched_snaps", {})
+        self.assert_context("searched_snaps", [])
         self.assert_context("total", 0)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
 
@@ -118,9 +118,9 @@ class GetSearchViewTest(TestCase):
         payload = {
             "_embedded": {
                 "clickindex:package": [
-                    {"package_name": "toto"},
-                    {"package_name": "tata"},
-                    {"package_name": "tutu"},
+                    {"package_name": "toto", "media": []},
+                    {"package_name": "tata", "media": []},
+                    {"package_name": "tutu", "media": []},
                 ]
             },
             "total": 3,
@@ -152,9 +152,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context(
             "searched_snaps",
             [
-                {"package_name": "toto"},
-                {"package_name": "tata"},
-                {"package_name": "tutu"},
+                {"package_name": "toto", "media": [], "icon_url": ""},
+                {"package_name": "tata", "media": [], "icon_url": ""},
+                {"package_name": "tutu", "media": [], "icon_url": ""},
             ],
         )
         self.assert_context("total", 3)
@@ -165,9 +165,9 @@ class GetSearchViewTest(TestCase):
         payload = {
             "_embedded": {
                 "clickindex:package": [
-                    {"package_name": "toto"},
-                    {"package_name": "tata"},
-                    {"package_name": "tutu"},
+                    {"package_name": "toto", "media": []},
+                    {"package_name": "tata", "media": []},
+                    {"package_name": "tutu", "media": []},
                 ]
             },
             "_links": {
@@ -198,9 +198,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context(
             "searched_snaps",
             [
-                {"package_name": "toto"},
-                {"package_name": "tata"},
-                {"package_name": "tutu"},
+                {"package_name": "toto", "media": [], "icon_url": ""},
+                {"package_name": "tata", "media": [], "icon_url": ""},
+                {"package_name": "tutu", "media": [], "icon_url": ""},
             ],
         )
         self.assert_context("total", None)
@@ -210,13 +210,23 @@ class GetSearchViewTest(TestCase):
     def test_search_q_with_category(self):
         snap_list = [
             {"package_name": "toto", "icon_url": "", "media": []},
-            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
-            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {
+                "package_name": "tata",
+                "icon_url": "tata.jpg",
+                "media": [{"type": "icon", "url": "tata.jpg"}],
+            },
+            {
+                "package_name": "tutu",
+                "icon_url": "tutu.jpg",
+                "media": [{"type": "icon", "url": "tutu.jpg"}],
+            },
             {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 144):
-            snap_list.append({"package_name": "toto" + str(i), "icon_url": ""})
+            snap_list.append(
+                {"package_name": "toto" + str(i), "media": [], "icon_url": ""}
+            )
 
         payload = {
             "_embedded": {"clickindex:package": snap_list[:44]},
@@ -263,14 +273,20 @@ class GetSearchViewTest(TestCase):
     @responses.activate
     def test_search_q_with_category_page_2(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "media": []},
+            {
+                "package_name": "tata",
+                "media": [{"type": "icon", "url": "tata.jpg"}],
+            },
+            {
+                "package_name": "tutu",
+                "media": [{"type": "icon", "url": "tutu.jpg"}],
+            },
+            {"package_name": "tete", "media": []},
         ]
 
         for i in range(0, 44):
-            snap_list.append({"package_name": "toto" + str(i), "icon_url": ""})
+            snap_list.append({"package_name": "toto" + str(i), "media": []})
 
         payload = {
             "_embedded": {"clickindex:package": snap_list},
@@ -295,13 +311,25 @@ class GetSearchViewTest(TestCase):
         endpoint = self.endpoint_url.format(q="", category="toto") + "&page=2"
         response = self.client.get(endpoint)
 
+        snap_list_results = []
+        for snap in snap_list:
+            snap_list_results.append(
+                {
+                    "package_name": snap["package_name"],
+                    "media": snap["media"],
+                    "icon_url": snap["media"][0]["url"]
+                    if len(snap["media"]) > 0
+                    else "",
+                }
+            )
+
         self.assertEqual(response.status_code, 200)
 
         self.assert_context("query", "")
         self.assert_context("category", "toto")
         self.assert_context("category_display", "Toto")
         self.assert_context("featured_snaps", [])
-        self.assert_context("searched_snaps", snap_list)
+        self.assert_context("searched_snaps", snap_list_results)
         self.assert_context("page", 2)
         self.assert_context("total", 144)
         self.assert_context(
@@ -318,13 +346,23 @@ class GetSearchViewTest(TestCase):
     def test_search_q_with_category_featured(self):
         snap_list = [
             {"package_name": "toto", "icon_url": "", "media": []},
-            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
-            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {
+                "package_name": "tata",
+                "icon_url": "tata.jpg",
+                "media": [{"type": "icon", "url": "tata.jpg"}],
+            },
+            {
+                "package_name": "tutu",
+                "icon_url": "tutu.jpg",
+                "media": [{"type": "icon", "url": "tutu.jpg"}],
+            },
             {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 44):
-            snap_list.append({"package_name": "toto" + str(i), "icon_url": ""})
+            snap_list.append(
+                {"package_name": "toto" + str(i), "icon_url": "", "media": []}
+            )
 
         payload = {
             "_embedded": {"clickindex:package": snap_list},

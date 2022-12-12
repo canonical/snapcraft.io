@@ -90,8 +90,8 @@ class GetDistroPageTest(TestCase):
                         "page": "1",
                         "scope": "wide",
                         "confinement": "strict,classic",
-                        "fields": "package_name,title,summary,icon_url,"
-                        "architecture,media,publisher,"
+                        "fields": "package_name,title,summary,"
+                        "architecture,media,developer_name,developer_id,"
                         "developer_validation,origin,apps,sections",
                         "arch": "wide",
                         "section": "featured",

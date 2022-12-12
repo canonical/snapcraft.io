@@ -64,6 +64,6 @@ class PostPreviewPage(BaseTestCases.EndpointLoggedIn):
         self.assertContext("snap_name", self.snap_name)
         self.assertContext("is_preview", True)
         self.assertContext("screenshots", [])
-        self.assertContext("icon_url", None)
+        self.assertContext("icon_url", "")
         self.assertContext("video", None)
         self.assertContext("package_name", self.snap_name)

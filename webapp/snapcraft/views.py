@@ -56,7 +56,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "mosquitto",
                 "origin": "mosquitto",
-                "publisher": "Mosquitto Team",
+                "developer_name": "Mosquitto Team",
                 "developer_validation": "verified",
             },
             {
@@ -64,7 +64,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2017/01/nr-hex_1.png"]),
                 "title": "Node-RED",
                 "origin": "noderedteam",
-                "publisher": "Node-RED-Team",
+                "developer_name": "Node-RED-Team",
                 "developer_validation": "verified",
             },
             {
@@ -72,7 +72,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2017/02/logo-256_1.png"]),
                 "title": "soracom-console",
                 "origin": "soracom",
-                "publisher": "SORACOM Snap Administrator",
+                "developer_name": "SORACOM Snap Administrator",
             },
             {
                 "package_name": "nymea",
@@ -81,7 +81,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "nymea:core",
                 "origin": "nymea GmbH developer",
-                "publisher": "nymea GmbH developer",
+                "developer_name": "nymea GmbH developer",
             },
             {
                 "package_name": "nymea-app",
@@ -90,7 +90,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "nymea:app",
                 "origin": "nymea GmbH developer",
-                "publisher": "nymea GmbH developer",
+                "developer_name": "nymea GmbH developer",
             },
             {
                 "package_name": "domotzpro-agent-publicstore",
@@ -104,21 +104,21 @@ def snapcraft_blueprint():
                     ]
                 ),
                 "origin": "domotzpublicstore",
-                "publisher": "Domotz",
+                "developer_name": "Domotz",
             },
             {
                 "package_name": "mycroft",
                 "icon_url": "/".join([icon_host, "2018/06/icon_brV5dye.png"]),
                 "title": "Mycroft AI",
                 "origin": "Mycroft AI",
-                "publisher": "Mycroft AI",
+                "developer_name": "Mycroft AI",
             },
             {
                 "package_name": "edgexfoundry",
                 "icon_url": "/".join([icon_host, "2018/12/icon_Hx6IyH0.png"]),
                 "title": "edgexfoundry",
                 "origin": "Canonical",
-                "publisher": "Canonical",
+                "developer_name": "Canonical",
                 "developer_validation": "verified",
             },
             {
@@ -128,7 +128,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "mir-kiosk",
                 "origin": "Canonical",
-                "publisher": "Canonical",
+                "developer_name": "Canonical",
                 "developer_validation": "verified",
             },
         ]
@@ -139,7 +139,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2018/07/icon_8BAXEYq.png"]),
                 "title": "Kura™",
                 "origin": "ondra",
-                "publisher": "Ondrej Kubik",
+                "developer_name": "Ondrej Kubik",
             },
             {
                 "package_name": "hunt-r",
@@ -148,7 +148,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "Lantern Tech - Hunt-R Series Gateway Firmware",
                 "origin": "kmorales019",
-                "publisher": "Lantern Technologies",
+                "developer_name": "Lantern Technologies",
             },
             {
                 "package_name": "ammp-edge",
@@ -157,7 +157,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "ammp-edge",
                 "origin": "ammp",
-                "publisher": "AMMP Technologies",
+                "developer_name": "AMMP Technologies",
             },
             {
                 "package_name": "lantern-water-iot",
@@ -166,7 +166,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "Lantern Tech - Smart Water Gateway Firmware",
                 "origin": "kmorales019",
-                "publisher": "Lantern Technologies",
+                "developer_name": "Lantern Technologies",
             },
             {
                 "package_name": "bl-gateway",
@@ -175,7 +175,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "bl-gateway",
                 "origin": "jessegrant",
-                "publisher": "Jesse Grant",
+                "developer_name": "Jesse Grant",
             },
             {
                 "package_name": "ixagent",
@@ -184,7 +184,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "ixagent",
                 "origin": "ixot",
-                "publisher": "Michael Hathaway",
+                "developer_name": "Michael Hathaway",
             },
             {
                 "package_name": "anyvizcloudadapter",
@@ -193,7 +193,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "anyvizcloudadapter",
                 "origin": "mirasoft",
-                "publisher": "Mirasoft GmbH & Co KG",
+                "developer_name": "Mirasoft GmbH & Co KG",
             },
         ]
 
@@ -203,35 +203,35 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2018/04/m5g-flexran.png"]),
                 "title": "flexran",
                 "origin": "mosaic-5g",
-                "publisher": "Mosaic 5G",
+                "developer_name": "Mosaic 5G",
             },
             {
                 "package_name": "oai-cn",
                 "icon_url": "/".join([icon_host, "2018/04/m5g-oai-cn.png"]),
                 "title": "oai-cn",
                 "origin": "mosaic-5g",
-                "publisher": "Mosaic 5G",
+                "developer_name": "Mosaic 5G",
             },
             {
                 "package_name": "oai-ran",
                 "icon_url": "/".join([icon_host, "2018/04/m5g-oai-ran.png"]),
                 "title": "oai-ran",
                 "origin": "mosaic-5g",
-                "publisher": "Mosaic 5G",
+                "developer_name": "Mosaic 5G",
             },
             {
                 "package_name": "ll-mec",
                 "icon_url": "/".join([icon_host, "2018/03/m5g-llmec.png"]),
                 "title": "ll-mec",
                 "origin": "mosaic-5g",
-                "publisher": "Mosaic 5G",
+                "developer_name": "Mosaic 5G",
             },
             {
                 "package_name": "wifi-ap",
                 "icon_url": "/".join([icon_host, "2016/08/icon_16.png"]),
                 "title": "wifi-ap",
                 "origin": "Canonical",
-                "publisher": "Canonical",
+                "developer_name": "Canonical",
                 "developer_validation": "verified",
             },
         ]
@@ -242,7 +242,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2017/11/favicon.png"]),
                 "title": "openHAB",
                 "origin": "openhab",
-                "publisher": "openHAB Foundation e.V.",
+                "developer_name": "openHAB Foundation e.V.",
             },
             {
                 "package_name": "homebridge",
@@ -255,7 +255,7 @@ def snapcraft_blueprint():
                 ),
                 "title": "HOMEbridge",
                 "origin": "ondra",
-                "publisher": "Ondrej Kubik",
+                "developer_name": "Ondrej Kubik",
             },
         ]
 
@@ -265,7 +265,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2015/04/berry.jpg.png"]),
                 "title": "pi2",
                 "origin": "Canonical",
-                "publisher": "Canonical",
+                "developer_name": "Canonical",
                 "developer_validation": "verified",
             },
             {
@@ -273,7 +273,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2016/07/icon_32.png"]),
                 "title": "dragonboard",
                 "origin": "Canonical",
-                "publisher": "Canonical",
+                "developer_name": "Canonical",
                 "developer_validation": "verified",
             },
             {
@@ -281,7 +281,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2016/07/icon_30.png"]),
                 "title": "PC",
                 "origin": "Canonical",
-                "publisher": "Canonical",
+                "developer_name": "Canonical",
                 "developer_validation": "verified",
             },
             {
@@ -289,7 +289,7 @@ def snapcraft_blueprint():
                 "icon_url": "/".join([icon_host, "2020/03/rpi-imager.png"]),
                 "title": "Raspberry Pi Imager",
                 "origin": "Alan Pope",
-                "publisher": "Alan Pope",
+                "developer_name": "Alan Pope",
             },
         ]
 
