@@ -10,18 +10,24 @@ class GetRegisterNameDisputePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class GetRegisterNameDisputePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
+        self.store = "testing-store-id1"
         super().setUp(
             snap_name="test-snap",
             api_url=None,
             endpoint_url="/register-name-dispute",
         )
+        self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
+        self.user_payload = {"error_list": [], "stores": [{"id": "testing-store-id1", "name": "test-store", 'roles': ["admin", "review", "view", "access"]}]}
+
 
     @responses.activate
     def test_register_name_dispute_logged_in(self):
         self._log_in(self.client)
-
-        endpoint_url = "{}?snap-name={}".format(
-            self.endpoint_url, self.snap_name
+        responses.add(
+            responses.GET, self.user_url, json=self.user_payload, status=200
+        )
+        endpoint_url = "{}?snap-name={}&store={}".format(
+            self.endpoint_url, self.snap_name, self.store
         )
         response = self.client.get(endpoint_url)
 
@@ -32,6 +38,9 @@ class GetRegisterNameDisputePage(BaseTestCases.BaseAppTesting):
     @responses.activate
     def test_register_name_dispute_redirect_no_snap_name(self):
         self._log_in(self.client)
+        responses.add(
+            responses.GET, self.user_url, json=self.user_payload, status=200
+        )
         response = self.client.get(self.endpoint_url)
 
         self.assertEqual(response.status_code, 302)

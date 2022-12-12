@@ -471,6 +471,7 @@ def get_register_name_dispute():
         user = publisher_api.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
+
     snap_name = flask.request.args.get("snap-name")
     store_id = flask.request.args.get("store")
     store_name = logic.get_store_name(store_id, user)
@@ -491,12 +492,10 @@ def get_register_name_dispute():
 def post_register_name_dispute():
     try:
         snap_name = flask.request.form.get("snap-name", "")
-        # store_id = flask.request.form.get("store", "")
         claim_comment = flask.request.form.get("claim-comment", "")
         publisher_api.post_register_name_dispute(
             flask.session,
             bleach.clean(snap_name),
-            # bleach.clean(store_id),
             bleach.clean(claim_comment),
         )
     except StoreApiResponseErrorList as api_response_error_list:
@@ -514,7 +513,6 @@ def post_register_name_dispute():
     return flask.render_template(
         "publisher/register-name-dispute-success.html",
         snap_name=snap_name,
-        # store=store_id,
     )
 
 
@@ -525,9 +523,11 @@ def get_request_reserved_name():
         user = publisher_api.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
         return _handle_error(api_error)
+
     snap_name = flask.request.args.get("snap_name")
     store_id = flask.request.args.get("store")
     store_name = logic.get_store_name(store_id, user)
+
     if not snap_name:
         return flask.redirect(
             flask.url_for(
