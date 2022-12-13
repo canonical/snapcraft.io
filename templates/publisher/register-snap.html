@@ -22,7 +22,7 @@ Register new Snap name
       <div class="p-notification--caution">
         <div class="p-notification__content">
           <p class="p-notification__message">
-            Another publisher already registered <strong>{{ snap_name }}</strong>. You can <a href="/register-name-dispute?snap-name={{ snap_name }}">file a dispute</a> to request a transfer of ownership or register a new name below.
+            Another publisher already registered <strong>{{ snap_name }}</strong>. You can <a href="/register-name-dispute?snap-name={{ snap_name }}&store={{ store }}">file a dispute</a> to request a transfer of ownership or register a new name below.
           </p>
         </div>
       </div>
@@ -80,7 +80,7 @@ Register new Snap name
           <label for="snap-store">Store</label>
           <div class="p-form-validation__field">
             <select name="store" id="snap-store">
-              <option value="ubuntu" checked="checked">Global</option>
+              <option value="ubuntu">Global</option> 
               {% for store in available_stores %}
                 <option value="{{ store.id }}">{{ store.name }}</option>
               {% endfor %}
