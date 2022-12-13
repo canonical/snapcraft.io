@@ -332,53 +332,103 @@ def store_blueprint(store_query=None):
             "PUBLISHER_PAGES"
         ]
 
-        context = helpers.get_yaml(
-            publisher_content_path + publisher + ".yaml", typ="safe"
-        )
+        if publisher in ["kde", "snapcrafters", "jetbrains"]:
+            context = helpers.get_yaml(
+                publisher_content_path + publisher + ".yaml", typ="safe"
+            )
 
-        if not context:
-            flask.abort(404)
+            if not context:
+                flask.abort(404)
 
-        popular_snaps = helpers.get_yaml(
-            publisher_content_path + publisher + "-snaps.yaml",
-            typ="safe",
-        )
+            popular_snaps = helpers.get_yaml(
+                publisher_content_path + publisher + "-snaps.yaml",
+                typ="safe",
+            )
 
-        context["popular_snaps"] = (
-            popular_snaps["snaps"] if popular_snaps else []
-        )
+            context["popular_snaps"] = (
+                popular_snaps["snaps"] if popular_snaps else []
+            )
 
-        if "publishers" in context:
-            context["snaps"] = []
-            for publisher in context["publishers"]:
-                snaps_results = []
-                try:
-                    snaps_results = api.get_publisher_items(
-                        publisher, size=500, page=1
-                    )["results"]
-                except StoreApiError:
-                    pass
+            if "publishers" in context:
+                context["snaps"] = []
+                for publisher in context["publishers"]:
+                    snaps_results = []
+                    try:
+                        snaps_results = api.get_publisher_items(
+                            publisher, size=500, page=1
+                        )["results"]
+                    except StoreApiError:
+                        pass
 
-                for snap in snaps_results:
-                    snap["icon_url"] = helpers.get_icon(snap["media"])
+                    for snap in snaps_results:
+                        snap["icon_url"] = helpers.get_icon(snap["media"])
 
-                context["snaps"].extend(
-                    [snap for snap in snaps_results if snap["apps"]]
+                        context["snaps"].extend(
+                            [snap for snap in snaps_results if snap["apps"]]
+                        )
+
+                featured_snaps = [
+                    snap["package_name"] for snap in context["featured_snaps"]
+                ]
+
+                context["snaps"] = [
+                    snap
+                    for snap in context["snaps"]
+                    if snap["package_name"] not in featured_snaps
+                ]
+
+                context["snaps_count"] = len(context["snaps"]) + len(
+                    featured_snaps
                 )
 
-        featured_snaps = [
-            snap["package_name"] for snap in context["featured_snaps"]
-        ]
+                return flask.render_template(
+                    "store/publisher-details.html", **context
+                )
 
-        context["snaps"] = [
-            snap
-            for snap in context["snaps"]
-            if snap["package_name"] not in featured_snaps
-        ]
+        status_code = 200
+        error_info = {}
+        snaps_results = []
+        snaps = []
+        snaps_count = 0
+        publisher_details = {"display-name": publisher, "username": publisher}
 
-        context["snaps_count"] = len(context["snaps"]) + len(featured_snaps)
+        try:
+            snaps_results = api.find(
+                publisher=publisher,
+                fields=[
+                    "title",
+                    "summary",
+                    "media",
+                    "publisher",
+                ],
+            )["results"]
+        except (StoreApiError, ApiError) as api_error:
+            status_code, error_info = _handle_error(api_error)
 
-        return flask.render_template("store/publisher-details.html", **context)
+        for snap in snaps_results:
+            item = snap["snap"]
+            item["name"] = snap["name"]
+            item["icon_url"] = helpers.get_icon(item["media"])
+            snaps.append(item)
+
+        snaps_count = len(snaps)
+
+        if snaps_count > 0:
+            publisher_details = snaps[0]["publisher"]
+
+        context = {
+            "snaps": snaps,
+            "snaps_count": snaps_count,
+            "publisher": publisher_details,
+            "error_info": error_info,
+        }
+
+        return (
+            flask.render_template(
+                "store/community-publisher-details.html", **context
+            ),
+            status_code,
+        )
 
     @store.route("/store/categories/<category>")
     def store_category(category):
