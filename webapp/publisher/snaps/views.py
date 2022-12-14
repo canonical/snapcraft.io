@@ -450,10 +450,7 @@ def post_register_name_json():
 @publisher_snaps.route("/register-name-dispute")
 @login_required
 def get_register_name_dispute():
-    try:
-        user = publisher_api.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    user = publisher_api.get_account(flask.session)
 
     snap_name = flask.request.args.get("snap-name")
     store_id = flask.request.args.get("store")
@@ -498,10 +495,7 @@ def post_register_name_dispute():
 @publisher_snaps.route("/request-reserved-name")
 @login_required
 def get_request_reserved_name():
-    try:
-        user = publisher_api.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    user = publisher_api.get_account(flask.session)
 
     snap_name = flask.request.args.get("snap_name")
     store_id = flask.request.args.get("store")
