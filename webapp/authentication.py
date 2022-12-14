@@ -1,6 +1,8 @@
 import os
 from urllib.parse import urlparse
 
+from talisker import logging
+
 from pymacaroons import Macaroon
 from webapp.api import sso
 
@@ -35,6 +37,25 @@ def is_authenticated(session):
     Checks if the user is authenticated from the session
     Returns True if the user is authenticated
     """
+    missing_session_data = []
+    if "publisher" not in session:
+        missing_session_data.append("publisher")
+
+    if "macaroons" not in session:
+        missing_session_data.append("macaroons")
+
+    if "macaroon_discharge" not in session:
+        missing_session_data.append("macaroon_discharge")
+
+    if "macaroon_root" not in session:
+        missing_session_data.append("macaroon_root")
+
+    if missing_session_data:
+        logging.getLogger("talisker.wsgi").info(
+            "User not authenticated",
+            extra={"missing_session_data": missing_session_data},
+        )
+
     return (
         "publisher" in session
         and "macaroon_discharge" in session
