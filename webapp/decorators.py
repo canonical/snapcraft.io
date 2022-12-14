@@ -18,6 +18,7 @@ def login_required(func):
         login_path = "login-beta" if last_login_method == "candid" else "login"
 
         if not authentication.is_authenticated(flask.session):
+            authentication.empty_session(flask.session)
             return flask.redirect(f"/{login_path}?next={flask.request.path}")
 
         return func(*args, **kwargs)
