@@ -407,7 +407,7 @@ def store_blueprint(store_query=None):
 
         for snap in snaps_results:
             item = snap["snap"]
-            item["name"] = snap["name"]
+            item["package_name"] = snap["name"]
             item["icon_url"] = helpers.get_icon(item["media"])
             snaps.append(item)
 
