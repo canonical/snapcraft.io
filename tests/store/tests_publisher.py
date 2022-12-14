@@ -53,14 +53,20 @@ class GetPublisherPageTest(TestCase):
 
         return app
 
-    def test_non_existant_publisher(self):
-        response = self.client.get("/publisher/toto")
-        self.assertEqual(response.status_code, 404)
+    def test_community_publisher(self):
+        response = self.client.get("/publisher/lukewh")
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/community-publisher-details.html")
 
     def test_existant_publisher(self):
         response = self.client.get("/publisher/jetbrains")
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/publisher-details.html")
+
+    def test_non_existant_publisher(self):
+        response = self.client.get("/publisher/toto")
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/community-publisher-details.html")
 
     @responses.activate
     def test_api_error(self):

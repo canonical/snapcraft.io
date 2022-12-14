@@ -398,3 +398,16 @@ def categorise_media(media):
             screenshot_urls.append(m["url"])
 
     return icon_urls, screenshot_urls, banner_urls
+
+
+def get_store_name(store_id, user):
+
+    available_stores = filter_available_stores(user["stores"])
+    store = next(
+        (st for st in available_stores if st["id"] == store_id),
+        None,
+    )
+    if store:
+        return store["name"]
+    else:
+        return "Global"
