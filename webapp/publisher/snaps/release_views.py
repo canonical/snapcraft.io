@@ -2,15 +2,12 @@
 import flask
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
     StoreApiResponseErrorList,
 )
 
 # Local
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
-from webapp.publisher.views import _handle_error, _handle_error_list
 
 
 publisher_api = SnapPublisher(api_publisher_session)
@@ -25,21 +22,11 @@ def redirect_get_release_history(snap_name):
 
 @login_required
 def get_release_history(snap_name):
-    try:
-        release_history = publisher_api.snap_release_history(
-            flask.session, snap_name
-        )
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    release_history = publisher_api.snap_release_history(
+        flask.session, snap_name
+    )
 
-    try:
-        channel_map = publisher_api.snap_channel_map(flask.session, snap_name)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    channel_map = publisher_api.snap_channel_map(flask.session, snap_name)
 
     snap = channel_map.get("snap", {})
 
@@ -68,17 +55,9 @@ def redirect_post_release(snap_name):
 def get_release_history_json(snap_name):
     page = flask.request.args.get("page", default=1, type=int)
 
-    try:
-        release_history = publisher_api.snap_release_history(
-            flask.session, snap_name, page
-        )
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return flask.jsonify(api_response_error_list.errors), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    release_history = publisher_api.snap_release_history(
+        flask.session, snap_name, page
+    )
 
     return flask.jsonify(release_history)
 
@@ -103,8 +82,6 @@ def post_release(snap_name):
                 "errors": api_response_error_list.errors,
             }
             return flask.jsonify(response), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     return flask.jsonify(response)
 
@@ -123,15 +100,7 @@ def post_close_channel(snap_name):
     if not data:
         return flask.jsonify({}), 400
 
-    try:
-        snap_id = publisher_api.get_snap_id(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return flask.jsonify(api_response_error_list.errors), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    snap_id = publisher_api.get_snap_id(snap_name, flask.session)
 
     try:
         response = publisher_api.post_close_channel(
@@ -146,8 +115,6 @@ def post_close_channel(snap_name):
                 "success": False,
             }
             return flask.jsonify(response), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     response["success"] = True
     return flask.jsonify(response)
@@ -160,15 +127,7 @@ def post_default_track(snap_name):
     if not data:
         return flask.jsonify({}), 400
 
-    try:
-        snap_id = publisher_api.get_snap_id(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return flask.jsonify(api_response_error_list.errors), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    snap_id = publisher_api.get_snap_id(snap_name, flask.session)
 
     try:
         publisher_api.snap_metadata(snap_id, flask.session, data)
@@ -181,8 +140,6 @@ def post_default_track(snap_name):
                 "success": False,
             }
             return flask.jsonify(response), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     return flask.jsonify({"success": True})
 
@@ -201,7 +158,5 @@ def get_snap_revision_json(snap_name, revision):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             return flask.jsonify(api_response_error_list.errors), 400
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     return flask.jsonify(revision)

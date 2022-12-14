@@ -72,12 +72,7 @@ def store_blueprint(store_query=None):
 
         categories = logic.get_categories(categories_results)
 
-        try:
-            featured_snaps = api.get_featured_items()["results"]
-
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
-            return flask.abort(status_code)
+        featured_snaps = api.get_featured_items()["results"]
 
         if not featured_snaps:
             return flask.abort(503)
@@ -113,14 +108,10 @@ def store_blueprint(store_query=None):
         error_info = {}
         status_code = 200
 
-        try:
-            snaps = api.get_all_items(size=16)["results"]
-        except (StoreApiError, ApiError) as api_error:
-            snaps = []
-            status_code, error_info = _handle_error(api_error)
-
-        for snap in snaps:
-            snap["icon_url"] = helpers.get_icon(snap["media"])
+        snaps = api.get_all_items(size=16)["results"]
+        if snaps:
+            for snap in snaps:
+                snap["icon_url"] = helpers.get_icon(snap["media"])
 
         return (
             flask.render_template(
@@ -172,16 +163,12 @@ def store_blueprint(store_query=None):
             snap_searched = f'publisher:{publishers["snapcrafters"]}'
             display_query = "publisher:snapcrafters"
 
-        try:
-            searched_results = api.search(
-                snap_searched,
-                category=snap_category,
-                size=size,
-                page=page,
-            )
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
-            return flask.abort(status_code)
+        searched_results = api.search(
+            snap_searched,
+            category=snap_category,
+            size=size,
+            page=page,
+        )
 
         total_pages = None
 
@@ -279,10 +266,7 @@ def store_blueprint(store_query=None):
         error_info = {}
         searched_results = []
 
-        try:
-            searched_results = api.search(snap_searched, size=size, page=page)
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
+        searched_results = api.search(snap_searched, size=size, page=page)
 
         snaps_results = searched_results["results"]
 
@@ -386,13 +370,9 @@ def store_blueprint(store_query=None):
         error_info = {}
         snaps_results = []
 
-        try:
-            snaps_results = api.get_category_items(
-                category=category, size=10, page=1
-            )["results"]
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
-
+        snaps_results = api.get_category_items(
+            category=category, size=10, page=1
+        )["results"]
         for snap in snaps_results:
             snap["icon_url"] = helpers.get_icon(snap["media"])
 

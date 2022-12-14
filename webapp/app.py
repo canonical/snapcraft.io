@@ -34,6 +34,7 @@ def create_app(testing=False):
         "snapcraft.io",
         favicon_url="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png",
         template_404="404.html",
+        template_500="500.html",
         template_folder="../templates",
         static_folder="../static",
     )
