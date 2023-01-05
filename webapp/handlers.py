@@ -24,8 +24,11 @@ from canonicalwebteam.store_api.exceptions import (
 
 from webapp.api.exceptions import (
     ApiError,
-    ApiTimeoutError,
+    ApiConnectionError,
     ApiResponseErrorList,
+    ApiTimeoutError,
+    ApiResponseDecodeError,
+    ApiResponseError,
 )
 
 from datetime import datetime
@@ -44,6 +47,23 @@ accept_encoding_counter = prometheus_client.Counter(
     "A counter for Accept-Encoding headers, split by browser",
     ["accept_encoding", "browser_family"],
 )
+
+
+def refresh_redirect(path):
+    try:
+        macaroon_discharge = authentication.get_refreshed_discharge(
+            flask.session["macaroon_discharge"]
+        )
+    except ApiResponseError as api_response_error:
+        if api_response_error.status_code == 401:
+            return flask.redirect(flask.url_for("login.logout"))
+        else:
+            return flask.abort(502, str(api_response_error))
+    except ApiError as api_error:
+        return flask.abort(502, str(api_error))
+
+    flask.session["macaroon_discharge"] = macaroon_discharge
+    return flask.redirect(path)
 
 
 def set_handlers(app):
@@ -106,9 +126,10 @@ def set_handlers(app):
 
     # Error handlers
     # ===
-    # Snap API and Store API errors
     @app.errorhandler(500)
     @app.errorhandler(501)
+    @app.errorhandler(502)
+    @app.errorhandler(504)
     @app.errorhandler(505)
     def internal_error(error):
         error_name = getattr(error, "name", type(error).__name__)
@@ -122,14 +143,15 @@ def set_handlers(app):
             app.extensions["sentry"].captureException()
 
         return (
-            render_template("50X.html", error_name=error_name),
+            flask.render_template("50X.html", error_name=error_name),
             return_code,
         )
 
-    @app.errorhandler(StoreApiConnectionError)
-    def connection_failed(error):
+    @app.errorhandler(503)
+    def service_unavailable(error):
         return render_template("503.html"), 503
 
+    @app.errorhandler(404)
     @app.errorhandler(StoreApiResourceNotFound)
     def handle_resource_not_found(error):
         return render_template("404.html", message=str(error)), 404
@@ -140,27 +162,32 @@ def set_handlers(app):
         status_code = 504
         return (
             render_template(
-                "500.html", error_message=str(error), status_code=status_code
+                "50X.html", error_message=str(error), status_code=status_code
             ),
             status_code,
         )
 
-    @app.errorhandler(ApiError)
+    @app.errorhandler(ApiResponseDecodeError)
+    @app.errorhandler(ApiResponseError)
+    @app.errorhandler(ApiConnectionError)
     @app.errorhandler(StoreApiResponseDecodeError)
     @app.errorhandler(StoreApiResponseError)
+    @app.errorhandler(StoreApiConnectionError)
+    @app.errorhandler(ApiError)
     @app.errorhandler(StoreApiError)
     def store_api_error(error):
         status_code = 502
         return (
             render_template(
-                "500.html", error_message=str(error), status_code=status_code
+                "50X.html", error_message=str(error), status_code=status_code
             ),
             status_code,
         )
 
     @app.errorhandler(ApiResponseErrorList)
     @app.errorhandler(StoreApiResponseErrorList)
-    def handle_storeapi_response_error_list(error):
+    def handle_api_error_list(error):
+
         if error.status_code == 404:
             if "snap_name" in request.path:
                 return flask.abort(404, "Snap not found!")
@@ -169,52 +196,44 @@ def set_handlers(app):
                     render_template("404.html", message="Entity not found"),
                     404,
                 )
+        if len(error.errors) == 1 and error.errors[0]["code"] in [
+            "macaroon-permission-required",
+            "macaroon-authorization-required",
+        ]:
+            last_login_method = flask.request.cookies.get("last_login_method")
+            if last_login_method == "candid":
+                login_path = "login-beta"
+            else:
+                login_path = "login"
+            authentication.empty_session(flask.session)
+            return flask.redirect(f"/{login_path}?next={flask.request.path}")
 
         status_code = 502
-        errors = error.errors
-        if errors:
-            if len(errors) == 1 and errors[0]["code"] in [
-                "macaroon-permission-required",
-                "macaroon-authorization-required",
-            ]:
-                last_login_method = flask.request.cookies.get(
-                    "last_login_method"
-                )
+        codes = [
+            f"{error['code']}: {error.get('message', 'No message')}"
+            for error in error.errors
+        ]
 
-                if last_login_method == "candid":
-                    login_path = "login-beta"
-                else:
-                    login_path = "login"
-                authentication.empty_session(flask.session)
-                return flask.redirect(
-                    f"/{login_path}?next={flask.request.path}"
-                )
-
-            errors = ", ".join([e.get("message") for e in error.errors])
-            return (
-                render_template(
-                    "500.html", error_message=errors, status_code=status_code
-                ),
-                status_code,
-            )
-
+        error_msg = ", ".join(codes)
         return (
-            render_template("500.html", status_code=status_code),
+            render_template(
+                "50X.html", error_message=error_msg, status_code=status_code
+            ),
             status_code,
         )
 
     # Publisher error
     @app.errorhandler(PublisherMissingUsername)
-    def handle_publisher_missing_name():
+    def handle_publisher_missing_name(error):
         return flask.redirect(flask.url_for("account.get_account_name"))
 
     @app.errorhandler(PublisherAgreementNotSigned)
-    def handle_publisher_agreement_not_signed():
+    def handle_publisher_agreement_not_signed(error):
         return flask.redirect(flask.url_for("account.get_agreement"))
 
     @app.errorhandler(PublisherMacaroonRefreshRequired)
-    def handle_publisher_macaroon_refresh_required():
-        return flask.redirect(flask.url_for("account.get_agreement"))
+    def handle_publisher_macaroon_refresh_required(error):
+        return refresh_redirect(flask.request.path)
 
     # Global tasks for all requests
     # ===

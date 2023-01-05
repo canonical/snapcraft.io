@@ -2,9 +2,7 @@
 import os
 import json
 import flask
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiResponseErrorList,
-)
+from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 from webapp.decorators import login_required

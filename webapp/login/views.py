@@ -11,12 +11,10 @@ from flask_wtf.csrf import generate_csrf, validate_csrf
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import ApiError, ApiResponseError
+from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
-
-# from webapp.publisher.views import _handle_error, _handle_error_list
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -50,8 +48,6 @@ def login_handler():
             return flask.redirect(flask.url_for(".logout"))
         else:
             return flask.abort(502, str(api_response_error))
-    except ApiError as api_error:
-        return flask.abort(502, str(api_error))
 
     openid_macaroon = MacaroonRequest(
         caveat_id=authentication.get_caveat_id(root)

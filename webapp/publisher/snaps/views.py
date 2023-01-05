@@ -352,6 +352,7 @@ def post_register_name():
         )
     except StoreApiResponseErrorList as api_response_error_list:
         user = publisher_api.get_account(flask.session)
+
         available_stores = logic.filter_available_stores(user["stores"])
 
         if api_response_error_list.status_code == 409:

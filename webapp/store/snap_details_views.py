@@ -6,19 +6,16 @@ import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
-from webapp.api.exceptions import ApiError
 from webapp.markdown import parse_markdown_description
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-)
+from canonicalwebteam.store_api.exceptions import StoreApiError
 from pybadges import badge
 
 
-def snap_details_views(store, api, handle_errors):
+def snap_details_views(store, api):
 
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
@@ -200,11 +197,7 @@ def snap_details_views(store, api, handle_errors):
                 ),
             ]
 
-            try:
-                metrics_response = api.get_public_metrics(metrics_query_json)
-            except (StoreApiError, ApiError) as api_error:
-                status_code, error_info = handle_errors(api_error)
-                metrics_response = None
+            metrics_response = api.get_public_metrics(metrics_query_json)
 
             os_metrics = None
             country_devices = None

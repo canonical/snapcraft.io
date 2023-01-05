@@ -2,16 +2,11 @@
 import flask
 
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-
+from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 
 # Local
 import webapp.api.marketo as marketo_api
-from webapp import authentication
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import (
-    ApiError,
-    ApiResponseError,
-)
 from webapp.decorators import login_required
 
 account = flask.Blueprint(
@@ -20,23 +15,6 @@ account = flask.Blueprint(
 
 marketo = marketo_api.Marketo()
 publisher_api = SnapPublisher(api_publisher_session)
-
-
-def refresh_redirect(path):
-    try:
-        macaroon_discharge = authentication.get_refreshed_discharge(
-            flask.session["macaroon_discharge"]
-        )
-    except ApiResponseError as api_response_error:
-        if api_response_error.status_code == 401:
-            return flask.redirect(flask.url_for("login.logout"))
-        else:
-            return flask.abort(502, str(api_response_error))
-    except ApiError as api_error:
-        return flask.abort(502, str(api_error))
-
-    flask.session["macaroon_discharge"] = macaroon_discharge
-    return flask.redirect(path)
 
 
 @account.route("/")
@@ -133,7 +111,10 @@ def post_account_name():
 
     if username:
         errors = []
-        publisher_api.post_username(flask.session, username)
+        try:
+            publisher_api.post_username(flask.session, username)
+        except StoreApiResponseErrorList as api_response_error_list:
+            errors = errors + api_response_error_list.errors
 
         if errors:
             return flask.render_template(

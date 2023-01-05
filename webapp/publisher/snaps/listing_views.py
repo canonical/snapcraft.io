@@ -199,11 +199,7 @@ def post_listing_snap(snap_name):
                     snap_id, flask.session, images_json, images_files
                 )
             except StoreApiResponseErrorList as api_response_error_list:
-                if api_response_error_list.status_code == 404:
-                    return flask.abort(
-                        404, "No snap named {}".format(snap_name)
-                    )
-                else:
+                if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
 
         body_json = logic.filter_changes_data(changes)
@@ -219,11 +215,7 @@ def post_listing_snap(snap_name):
             try:
                 publisher_api.snap_metadata(snap_id, flask.session, body_json)
             except StoreApiResponseErrorList as api_response_error_list:
-                if api_response_error_list.status_code == 404:
-                    return flask.abort(
-                        404, "No snap named {}".format(snap_name)
-                    )
-                else:
+                if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
 
         if error_list:
