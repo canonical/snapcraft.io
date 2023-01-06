@@ -22,7 +22,6 @@ from webapp.publisher.snaps import (
     collaboration_views,
 )
 from webapp.publisher.snaps.builds import map_snap_build_status
-from webapp.publisher.views import _handle_error, _handle_error_list
 
 publisher_api = SnapPublisher(api_publisher_session)
 
@@ -244,12 +243,7 @@ def redirect_get_account_snaps():
 @publisher_snaps.route("/snaps")
 @login_required
 def get_account_snaps():
-    try:
-        account_info = publisher_api.get_account(flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    account_info = publisher_api.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
@@ -292,10 +286,7 @@ def redirect_get_register_name():
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
-    try:
-        user = publisher_api.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    user = publisher_api.get_account(flask.session)
 
     available_stores = logic.filter_available_stores(user["stores"])
 
@@ -360,10 +351,7 @@ def post_register_name():
             registrant_comment=registrant_comment,
         )
     except StoreApiResponseErrorList as api_response_error_list:
-        try:
-            user = publisher_api.get_account(flask.session)
-        except (StoreApiError, ApiError) as api_error:
-            return _handle_error(api_error)
+        user = publisher_api.get_account(flask.session)
 
         available_stores = logic.filter_available_stores(user["stores"])
 
@@ -412,8 +400,6 @@ def post_register_name():
         }
 
         return flask.render_template("publisher/register-snap.html", **context)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     flask.flash(
         "".join(
@@ -456,8 +442,6 @@ def post_register_name_json():
             flask.jsonify({"errors": api_response_error_list.errors}),
             api_response_error_list.status_code,
         )
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     response["code"] = "created"
 
@@ -467,10 +451,7 @@ def post_register_name_json():
 @publisher_snaps.route("/register-name-dispute")
 @login_required
 def get_register_name_dispute():
-    try:
-        user = publisher_api.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    user = publisher_api.get_account(flask.session)
 
     snap_name = flask.request.args.get("snap-name")
     store_id = flask.request.args.get("store")
@@ -505,10 +486,6 @@ def post_register_name_dispute():
                 snap_name=snap_name,
                 errors=api_response_error_list.errors,
             )
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     return flask.render_template(
         "publisher/register-name-dispute-success.html",
@@ -519,10 +496,7 @@ def post_register_name_dispute():
 @publisher_snaps.route("/request-reserved-name")
 @login_required
 def get_request_reserved_name():
-    try:
-        user = publisher_api.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    user = publisher_api.get_account(flask.session)
 
     snap_name = flask.request.args.get("snap_name")
     store_id = flask.request.args.get("store")
@@ -544,12 +518,7 @@ def get_request_reserved_name():
 @publisher_snaps.route("/snaps/api/snap-count")
 @login_required
 def snap_count():
-    try:
-        account_info = publisher_api.get_account(flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    account_info = publisher_api.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 

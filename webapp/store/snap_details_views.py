@@ -6,52 +6,22 @@ import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
-from webapp.api.exceptions import ApiError
 from webapp.markdown import parse_markdown_description
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-    StoreApiResourceNotFound,
-    StoreApiResponseDecodeError,
-    StoreApiResponseError,
-    StoreApiResponseErrorList,
-    StoreApiTimeoutError,
-)
+from canonicalwebteam.store_api.exceptions import StoreApiError
 from pybadges import badge
 
 
-def snap_details_views(store, api, handle_errors):
+def snap_details_views(store, api):
 
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
     def _get_context_snap_details(snap_name):
-        try:
-            details = api.get_item_details(snap_name, api_version=2)
-        except StoreApiResourceNotFound:
-            flask.abort(404, "No snap named {}".format(snap_name))
-        except StoreApiTimeoutError as api_timeout_error:
-            flask.abort(504, str(api_timeout_error))
-        except StoreApiResponseDecodeError as api_response_decode_error:
-            flask.abort(502, str(api_response_decode_error))
-        except StoreApiResponseErrorList as api_response_error_list:
-            if api_response_error_list.status_code == 404:
-                flask.abort(404, "No snap named {}".format(snap_name))
-            else:
-                if api_response_error_list.errors:
-                    error_messages = ", ".join(
-                        api_response_error_list.errors.key()
-                    )
-                else:
-                    error_messages = "An error occurred."
-                flask.abort(502, error_messages)
-        except StoreApiResponseError as api_response_error:
-            flask.abort(502, str(api_response_error))
-        except (StoreApiError, ApiError) as api_error:
-            flask.abort(502, str(api_error))
+        details = api.get_item_details(snap_name, api_version=2)
 
         # When removing all the channel maps of an existing snap the API,
         # responds that the snaps still exists with data.
@@ -227,11 +197,7 @@ def snap_details_views(store, api, handle_errors):
                 ),
             ]
 
-            try:
-                metrics_response = api.get_public_metrics(metrics_query_json)
-            except (StoreApiError, ApiError) as api_error:
-                status_code, error_info = handle_errors(api_error)
-                metrics_response = None
+            metrics_response = api.get_public_metrics(metrics_query_json)
 
             os_metrics = None
             country_devices = None

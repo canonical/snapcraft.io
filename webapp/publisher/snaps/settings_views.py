@@ -6,16 +6,13 @@ import flask
 import pycountry
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
     StoreApiResponseErrorList,
 )
 
 # Local
 from webapp.helpers import api_publisher_session, launchpad
-from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
-from webapp.publisher.views import _handle_error, _handle_error_list
 
 publisher_api = SnapPublisher(api_publisher_session)
 
@@ -27,15 +24,7 @@ def get_settings_json(snap_name):
 
 @login_required
 def get_settings(snap_name, return_json=False):
-    try:
-        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
 
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
@@ -124,8 +113,6 @@ def post_settings(snap_name, return_json=False):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except (StoreApiError, ApiError) as api_error:
-                return _handle_error(api_error)
 
         if error_list:
             try:
@@ -139,8 +126,6 @@ def post_settings(snap_name, return_json=False):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except (StoreApiError, ApiError) as api_error:
-                return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 

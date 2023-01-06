@@ -17,11 +17,9 @@ from canonicalwebteam.store_api.exceptions import (
 # Local
 from webapp import helpers
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.markdown import parse_markdown_description
 from webapp.publisher.snaps import logic, preview_data
-from webapp.publisher.views import _handle_error, _handle_error_list
 from webapp.store.logic import (
     filter_screenshots,
     get_categories,
@@ -46,15 +44,7 @@ def redirect_post_market_snap(snap_name):
 
 @login_required
 def get_listing_snap(snap_name):
-    try:
-        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
     details_blacklist = snap_details.get("public_metrics_blacklist", [])
@@ -177,19 +167,9 @@ def post_listing_snap(snap_name):
 
         if "images" in changes:
             # Add existing screenshots
-            try:
-                current_screenshots = publisher_api.snap_screenshots(
-                    snap_id, flask.session
-                )
-            except StoreApiResponseErrorList as api_response_error_list:
-                if api_response_error_list.status_code == 404:
-                    return flask.abort(
-                        404, "No snap named {}".format(snap_name)
-                    )
-                else:
-                    return _handle_error_list(api_response_error_list.errors)
-            except (StoreApiError, ApiError) as api_error:
-                return _handle_error(api_error)
+            current_screenshots = publisher_api.snap_screenshots(
+                snap_id, flask.session
+            )
 
             icon_input = (
                 flask.request.files.get("icon")
@@ -219,14 +199,8 @@ def post_listing_snap(snap_name):
                     snap_id, flask.session, images_json, images_files
                 )
             except StoreApiResponseErrorList as api_response_error_list:
-                if api_response_error_list.status_code == 404:
-                    return flask.abort(
-                        404, "No snap named {}".format(snap_name)
-                    )
-                else:
+                if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
-            except (StoreApiError, ApiError) as api_error:
-                return _handle_error(api_error)
 
         body_json = logic.filter_changes_data(changes)
 
@@ -241,14 +215,8 @@ def post_listing_snap(snap_name):
             try:
                 publisher_api.snap_metadata(snap_id, flask.session, body_json)
             except StoreApiResponseErrorList as api_response_error_list:
-                if api_response_error_list.status_code == 404:
-                    return flask.abort(
-                        404, "No snap named {}".format(snap_name)
-                    )
-                else:
+                if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
-            except (StoreApiError, ApiError) as api_error:
-                return _handle_error(api_error)
 
         if error_list:
             try:
@@ -262,8 +230,6 @@ def post_listing_snap(snap_name):
                     )
                 else:
                     error_list = error_list + api_response_error_list.errors
-            except (StoreApiError, ApiError) as api_error:
-                return _handle_error(api_error)
 
             field_errors, other_errors = logic.invalid_field_errors(error_list)
 
@@ -378,15 +344,7 @@ def post_listing_snap(snap_name):
 
 @login_required
 def post_preview(snap_name):
-    try:
-        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
 
     context = {
         "publisher": snap_details["publisher"]["display-name"],
