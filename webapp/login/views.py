@@ -16,6 +16,8 @@ from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
 
+from talisker import logging
+
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
 )
@@ -39,6 +41,11 @@ candid = CandidClient(api_publisher_session)
 @open_id.loginhandler
 def login_handler():
     if authentication.is_authenticated(flask.session):
+        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+            "method:login_handler": True,
+            "is_authenticated": True
+        })
+
         return flask.redirect(open_id.get_next_url())
 
     try:
@@ -56,6 +63,11 @@ def login_handler():
 
     lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
 
+    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+        "method:login_hnadler": True,
+        "lp_teams": lp_teams
+    })
+
     return open_id.try_login(
         LOGIN_URL,
         ask_for=["email", "nickname", "image"],
@@ -70,6 +82,10 @@ def after_login(resp):
 
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
     if not resp.nickname:
+        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+            "method:after_login": True,
+            "resp.nickname": resp.nickname
+        })
         return flask.redirect(LOGIN_URL)
 
     try:
@@ -118,6 +134,10 @@ def after_login(resp):
 @csrf.exempt
 def login_candid():
     if authentication.is_authenticated(flask.session):
+        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+            "method:login_candid": True,
+            "is_authenticated": True
+        })
         return flask.redirect(
             flask.url_for("publisher_snaps.get_account_snaps")
         )
@@ -143,6 +163,11 @@ def login_candid():
         ):
             return flask.abort(400)
         flask.session["next_url"] = next_url
+
+    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+        "method:after_login": True,
+        "login_url": login_url
+    })
 
     return flask.redirect(login_url, 302)
 
@@ -199,6 +224,11 @@ def login_callback():
         "candid",
         expires=datetime.datetime.now() + datetime.timedelta(days=365),
     )
+
+    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+        "method:login_callback": True,
+        "response": response
+    })
 
     return response
 
