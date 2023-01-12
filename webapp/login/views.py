@@ -213,7 +213,7 @@ def login_callback():
 
     # flask.session["publisher"]["stores"] = logic.get_stores(
     #     account["stores"], roles=["admin", "review", "view"]
-    )
+    #)
 
     response = flask.make_response(
         flask.redirect(
