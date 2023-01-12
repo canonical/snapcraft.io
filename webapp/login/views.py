@@ -127,6 +127,13 @@ def after_login(resp):
         expires=datetime.datetime.now() + datetime.timedelta(days=365),
     )
 
+    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
+        "method:after_login": True,
+        "resp.nickname": resp.nickname,
+        "resp.email": resp.email,
+        "resp.image": resp.image
+    })
+
     return response
 
 
