@@ -101,9 +101,9 @@ def after_login(resp):
         }
         owned, shared = logic.get_snap_names_by_ownership(account)
         flask.session["user_shared_snaps"] = shared
-        flask.session["publisher"]["stores"] = logic.get_stores(
-            account["stores"], roles=["admin", "review", "view"]
-        )
+        # flask.session["publisher"]["stores"] = logic.get_stores(
+        #     account["stores"], roles=["admin", "review", "view"]
+        # )
     except Exception:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
@@ -211,8 +211,8 @@ def login_callback():
         "email": publisher["account"]["email"],
     }
 
-    flask.session["publisher"]["stores"] = logic.get_stores(
-        account["stores"], roles=["admin", "review", "view"]
+    # flask.session["publisher"]["stores"] = logic.get_stores(
+    #     account["stores"], roles=["admin", "review", "view"]
     )
 
     response = flask.make_response(
