@@ -128,7 +128,11 @@ def get_snap_builds(snap_name):
         context.update(builds)
 
         # Notify about i386 arch
-        if gh_snap_base and int(gh_snap_base.replace("core", "")) >= 20:
+        if (
+            gh_snap_base
+            and gh_snap_base.replace("core", "")
+            and int(gh_snap_base.replace("core", "")) >= 20
+        ):
             # Check if this publisher was building for i386 recently
             for build in builds["snap_builds"]:
                 if build["arch_tag"] == "i386":
