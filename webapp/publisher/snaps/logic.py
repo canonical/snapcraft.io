@@ -4,8 +4,6 @@ from json import dumps
 
 from dateutil import parser
 
-from talisker import logging
-
 
 def get_snaps_account_info(account_info):
     """Get snaps from the account information of a user
@@ -64,14 +62,8 @@ def get_stores(stores, roles):
     user_stores = []
 
     for store in stores:
-        if not set(roles).isdisjoint(store["roles"]):
+        if "roles" in store and not set(roles).isdisjoint(store["roles"]):
             user_stores.append(store)
-
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:get_stores": True,
-        "stores_len": len(user_stores),
-        "stores": ",".join(user_stores),
-    })
 
     return user_stores
 

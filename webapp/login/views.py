@@ -16,8 +16,6 @@ from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
 
-from talisker import logging
-
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
 )
@@ -41,11 +39,6 @@ candid = CandidClient(api_publisher_session)
 @open_id.loginhandler
 def login_handler():
     if authentication.is_authenticated(flask.session):
-        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-            "method:login_handler": True,
-            "is_authenticated": True
-        })
-
         return flask.redirect(open_id.get_next_url())
 
     try:
@@ -63,11 +56,6 @@ def login_handler():
 
     lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
 
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:login_hnadler": True,
-        "lp_teams": lp_teams
-    })
-
     return open_id.try_login(
         LOGIN_URL,
         ask_for=["email", "nickname", "image"],
@@ -82,10 +70,6 @@ def after_login(resp):
 
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
     if not resp.nickname:
-        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-            "method:after_login": True,
-            "resp.nickname": resp.nickname
-        })
         return flask.redirect(LOGIN_URL)
 
     try:
@@ -101,9 +85,9 @@ def after_login(resp):
         }
         owned, shared = logic.get_snap_names_by_ownership(account)
         flask.session["user_shared_snaps"] = shared
-        # flask.session["publisher"]["stores"] = logic.get_stores(
-        #     account["stores"], roles=["admin", "review", "view"]
-        # )
+        flask.session["publisher"]["stores"] = logic.get_stores(
+            account["stores"], roles=["admin", "review", "view"]
+        )
     except Exception:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
@@ -127,13 +111,6 @@ def after_login(resp):
         expires=datetime.datetime.now() + datetime.timedelta(days=365),
     )
 
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:after_login": True,
-        "resp.nickname": resp.nickname,
-        "resp.email": resp.email,
-        "resp.image": resp.image
-    })
-
     return response
 
 
@@ -141,10 +118,6 @@ def after_login(resp):
 @csrf.exempt
 def login_candid():
     if authentication.is_authenticated(flask.session):
-        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-            "method:login_candid": True,
-            "is_authenticated": True
-        })
         return flask.redirect(
             flask.url_for("publisher_snaps.get_account_snaps")
         )
@@ -170,11 +143,6 @@ def login_candid():
         ):
             return flask.abort(400)
         flask.session["next_url"] = next_url
-
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:after_login": True,
-        "login_url": login_url
-    })
 
     return flask.redirect(login_url, 302)
 
@@ -211,9 +179,9 @@ def login_callback():
         "email": publisher["account"]["email"],
     }
 
-    # flask.session["publisher"]["stores"] = logic.get_stores(
-    #     account["stores"], roles=["admin", "review", "view"]
-    #)
+    flask.session["publisher"]["stores"] = logic.get_stores(
+        account["stores"], roles=["admin", "review", "view"]
+    )
 
     response = flask.make_response(
         flask.redirect(
@@ -231,11 +199,6 @@ def login_callback():
         "candid",
         expires=datetime.datetime.now() + datetime.timedelta(days=365),
     )
-
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:login_callback": True,
-        "response": response
-    })
 
     return response
 

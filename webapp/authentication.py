@@ -4,8 +4,6 @@ from urllib.parse import urlparse
 from pymacaroons import Macaroon
 from webapp.api import sso
 
-from talisker import logging
-
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
 PERMISSIONS = [
@@ -29,11 +27,6 @@ def get_authorization_header(root, discharge):
         Macaroon.deserialize(discharge)
     )
 
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:get_authorization_header": True,
-        "bound": bound.serialize()
-    })
-
     return "Macaroon root={}, discharge={}".format(root, bound.serialize())
 
 
@@ -42,22 +35,11 @@ def is_authenticated(session):
     Checks if the user is authenticated from the session
     Returns True if the user is authenticated
     """
-    is_authed =  (
+    return (
         "publisher" in session
         and "macaroon_discharge" in session
         and "macaroon_root" in session
     ) or ("publisher" in session and "macaroons" in session)
-
-    if not is_authed:
-        logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-            "method:is_authenticated": True,
-            "publisher": "publisher" in session,
-            "macaroon_discharge": "macaroon_discharge" in session,
-            "macaroon_root": "macaroon_root" in session,
-            "macaroons": "macaroons" in session,
-        })
-
-    return is_authed
 
 
 def empty_session(session):
@@ -83,11 +65,6 @@ def get_caveat_id(root):
         if c.location == location
     ]
 
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:get_caveat_id": True,
-        "caveat": caveat.caveat_id
-    })
-
     return caveat.caveat_id
 
 
@@ -97,11 +74,6 @@ def request_macaroon():
     Returns the macaroon.
     """
     response = sso.post_macaroon({"permissions": PERMISSIONS})
-
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:request_macaroon": True,
-        "macaroon": response["macaroon"]
-    })
 
     return response["macaroon"]
 
@@ -113,12 +85,6 @@ def get_refreshed_discharge(discharge):
     """
     response = sso.get_refreshed_discharge({"discharge_macaroon": discharge})
 
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:get_refreshed_discharge": True,
-        "discharge_macaroon": response["discharge_macaroon"]
-    })
-
-
     return response["discharge_macaroon"]
 
 
@@ -127,8 +93,4 @@ def is_macaroon_expired(headers):
     Returns True if the macaroon needs to be refreshed from
     the header response.
     """
-    logging.getLogger("talisker.wsgi").error("AUTH_DEUBG", extra={
-        "method:is_macaroon_expired": True,
-        "has_expired": headers.get("WWW-Authenticate") == ("Macaroon needs_refresh=1")
-    })
     return headers.get("WWW-Authenticate") == ("Macaroon needs_refresh=1")

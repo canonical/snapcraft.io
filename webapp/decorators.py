@@ -4,7 +4,6 @@ import functools
 # Third party packages
 import flask
 from webapp import authentication
-from talisker import logging
 
 
 def login_required(func):
@@ -31,19 +30,6 @@ def login_required(func):
 
             if "macaroon_root" not in flask.session:
                 missing_session_data.append("macaroon_root")
-
-            if missing_session_data:
-                logging.getLogger("talisker.wsgi").error(
-                    "User not authenticated",
-                    extra={
-                        "missing_session_data": missing_session_data,
-                        "email": (
-                            flask.session["publisher"]["email"]
-                            if "publisher" in flask.session
-                            else None
-                        ),
-                    },
-                )
 
             authentication.empty_session(flask.session)
             return flask.redirect(f"/{login_path}?next={flask.request.path}")
