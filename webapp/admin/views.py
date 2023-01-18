@@ -86,11 +86,7 @@ def get_store_snaps(store_id):
 
     snaps = admin_api.get_store_snaps(flask.session, store_id)
     store = admin_api.get_store(flask.session, store_id)
-    snaps.append(
-        {
-            "embedded-snap": store["store-whitelist"]
-        }
-    )
+    snaps.append({"embedded-snap": store["store-whitelist"]})
     return jsonify(snaps)
 
 
