@@ -1,6 +1,7 @@
 # Packages
 import os
 import json
+from pprint import pprint
 import flask
 from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
@@ -85,7 +86,12 @@ def get_snaps_search(store_id):
 def get_store_snaps(store_id):
 
     snaps = admin_api.get_store_snaps(flask.session, store_id)
-
+    store = admin_api.get_store(flask.session, store_id)
+    snaps.append(
+        {
+            "embedded-snap": store["store-whitelist"]
+        }
+    )
     return jsonify(snaps)
 
 
