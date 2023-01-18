@@ -1,7 +1,6 @@
 # Packages
 import os
 import json
-from pprint import pprint
 import flask
 from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
