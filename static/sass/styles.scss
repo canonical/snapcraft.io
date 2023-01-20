@@ -52,6 +52,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-tabs;
 @include vf-p-table-icons;
 @include vf-p-side-navigation;
+@include vf-p-side-navigation-expandable;
 @include vf-p-search-box;
 @include vf-p-form-tick-elements;
 @include vf-p-status-label;
