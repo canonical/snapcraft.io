@@ -176,25 +176,8 @@
     </div>
   </div>
 
-  {% if not IS_BRAND_STORE %}
-    {% if package_name == "hiri" %}
-      {% include "partials/_hiri-case-study.html" %}
-    {% else %}
-      <div data-js="blog-articles" class="u-hide">
-        <div class="u-fixed-width">
-          <hr />
-        </div>
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <div class="col-3">
-              <h3 class="p-heading--4">Related blog posts</h3>
-            </div>
-          </div>
-          <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
-          </div>
-        </div>
-      </div>
-    {% endif %}
+  {% if not IS_BRAND_STORE and package_name == "hiri" %}
+    {% include "partials/_hiri-case-study.html" %}
   {% endif %}
 
   {% if countries or normalized_os %}
@@ -362,12 +345,6 @@
 
         try {
           snapcraft.public.storeDetails.videos('.js-video-slide');
-        } catch(e) {
-          Raven.captureException(e);
-        }
-
-        try {
-          snapcraft.public.storeDetails.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
         } catch(e) {
           Raven.captureException(e);
         }
