@@ -73,8 +73,8 @@ def get_stores(stores=[], roles=[]):
                     "AUTH_DEBUG",
                     extra={
                         "is_valid": True,
-                        "store_name": store.name,
-                        "store_id": store.id,
+                        "store_name": store["name"],
+                        "store_id": store["id"],
                     },
                 )
                 user_stores.append(store)
@@ -83,8 +83,8 @@ def get_stores(stores=[], roles=[]):
                     "AUTH_DEBUG",
                     extra={
                         "is_valid": False,
-                        "store_name": store.name,
-                        "store_id": store.id,
+                        "store_name": store["name"],
+                        "store_id": store["id"],
                     },
                 )
     except Exception as exception:
