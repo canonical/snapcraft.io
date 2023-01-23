@@ -65,28 +65,23 @@ def get_stores(stores=[], roles=[]):
     """
     user_stores = []
 
+    logger.error("AUTH_DEBUG", extra={"store_count": len(stores)})
+    count = 0
+
     try:
-        for store in stores:
-            logger.error("AUTH_DEBUG", extra={"store_count": len(stores)})
+        for store in stores[0:10]:
+            logger.error(
+                "AUTH_DEBUG",
+                extra={
+                    "roles": ",".join(store["roles"]),
+                    "store_name": store["name"],
+                    "store_id": store["id"],
+                    "count": count,
+                },
+            )
+            count = count + 1
             if "roles" in store and not set(roles).isdisjoint(store["roles"]):
-                logger.error(
-                    "AUTH_DEBUG",
-                    extra={
-                        "is_valid": True,
-                        "store_name": store["name"],
-                        "store_id": store["id"],
-                    },
-                )
                 user_stores.append(store)
-            else:
-                logger.error(
-                    "AUTH_DEBUG",
-                    extra={
-                        "is_valid": False,
-                        "store_name": store["name"],
-                        "store_id": store["id"],
-                    },
-                )
     except Exception as exception:
         logger.error(exception)
         user_stores = []
