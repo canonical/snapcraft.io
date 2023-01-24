@@ -66,7 +66,6 @@ def get_stores(stores=[], roles=[]):
     user_stores = []
 
     logger.error("AUTH_DEBUG", extra={"store_count": len(stores)})
-    count = 0
 
     prev_store = None
     for store in stores:
@@ -81,23 +80,9 @@ def get_stores(stores=[], roles=[]):
             )
         prev_store = store
 
-    try:
-        for store in stores[0:10]:
-            logger.error(
-                "AUTH_DEBUG",
-                extra={
-                    "roles": ",".join(store["roles"]),
-                    "store_name": store["name"],
-                    "store_id": store["id"],
-                    "count": count,
-                },
-            )
-            count = count + 1
-            if "roles" in store and not set(roles).isdisjoint(store["roles"]):
-                user_stores.append(store)
-    except Exception as exception:
-        logger.error(exception)
-        user_stores = []
+    for store in stores[0:10]:
+        if "roles" in store and not set(roles).isdisjoint(store["roles"]):
+            user_stores.append(store)
 
     return user_stores
 
