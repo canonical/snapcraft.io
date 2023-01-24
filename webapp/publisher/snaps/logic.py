@@ -68,6 +68,19 @@ def get_stores(stores=[], roles=[]):
     logger.error("AUTH_DEBUG", extra={"store_count": len(stores)})
     count = 0
 
+    prev_store = None
+    for store in stores:
+        if prev_store and not set(prev_store.keys()) == set(store.keys()):
+            extra = {}
+            for key in store.keys():
+                extra[key] = store[key]
+
+            logger.error(
+                "AUTH_DEBUG",
+                extra=extra,
+            )
+        prev_store = store
+
     try:
         for store in stores[0:10]:
             logger.error(
@@ -97,7 +110,6 @@ def get_snap_names_by_ownership(account_info):
     :return: A list of owned snaps names
     :return: A list of shared snaps names
     """
-
     snaps, registered_names = get_snaps_account_info(account_info)
 
     owned_snaps_names = []
