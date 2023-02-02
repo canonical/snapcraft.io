@@ -4,6 +4,8 @@ import os
 
 from dateutil import parser
 
+from emoji import replace_emoji
+
 
 # generator functions for templates
 def generate_slug(path):
@@ -116,7 +118,7 @@ def format_display_name(display_name):
     """Template function that formats the displayed name
     primarily to remove emoji
     """
-    return "".join(display_name.split("✅"))
+    return replace_emoji(display_name, replace="")
 
 
 def display_name(display_name, username):
