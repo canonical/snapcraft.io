@@ -188,7 +188,6 @@ def set_handlers(app):
     @app.errorhandler(ApiResponseErrorList)
     @app.errorhandler(StoreApiResponseErrorList)
     def handle_api_error_list(error):
-
         if error.status_code == 404:
             if "snap_name" in request.path:
                 return flask.abort(404, "Snap not found!")

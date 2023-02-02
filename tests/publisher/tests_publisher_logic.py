@@ -4,7 +4,6 @@ from webapp.publisher.snaps import logic
 
 
 class PublisherLogicTest(unittest.TestCase):
-
     # get_snaps_account_info
     # ===
     def test_empty_snaps(self):

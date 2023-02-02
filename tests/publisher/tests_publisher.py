@@ -45,7 +45,6 @@ class TestCache(BaseTestCases.EndpointLoggedInErrorHandling):
 
 
 class PublisherPage(TestCase):
-
     render_templates = False
 
     def create_app(self):

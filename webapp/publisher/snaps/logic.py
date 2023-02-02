@@ -401,7 +401,6 @@ def categorise_media(media):
 
 
 def get_store_name(store_id, user):
-
     available_stores = filter_available_stores(user["stores"])
     store = next(
         (st for st in available_stores if st["id"] == store_id),
