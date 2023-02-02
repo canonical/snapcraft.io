@@ -112,10 +112,18 @@ def format_number(number: int):
     return "{:,}".format(number)
 
 
+def format_display_name(display_name):
+    """Template function that formats the displayed name
+    primarily to remove emoji
+    """
+    return "".join(display_name.split("✅"))
+
+
 def display_name(display_name, username):
     """Template function that returns the displayed name if the username
     is the same, or the dispayed name and the username if differents
     """
+    display_name = format_display_name(display_name)
     if display_name.lower() == username.lower():
         return display_name
     else:
