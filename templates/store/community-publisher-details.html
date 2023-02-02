@@ -2,12 +2,12 @@
 
 {% block meta_copydoc %}{% endblock %}
 
-{% block meta_title %}{{ publisher["display-name"] }} ({{ publisher["username"] }}) published snaps in the Snap Store{% endblock %}
+{% block meta_title %}{{ format_display_name(publisher["display-name"]) }} ({{ publisher["username"] }}) published snaps in the Snap Store{% endblock %}
 {% block meta_description %}
   {% if meta_description %}
     {{ meta_description }}
   {% else %}
-    Install snaps by {{ publisher["display-name"] }} ({{ publisher["username"] }}) for Linux in the Snap Store
+    Install snaps by {{ format_display_name(publisher["display-name"]) }} ({{ publisher["username"] }}) for Linux in the Snap Store
   {% endif %}
 {% endblock %}
 
@@ -17,7 +17,7 @@
     <div class="u-fixed-width">
       <div class="p-snap-heading">
         <div class="p-snap-heading__title">
-          <h1 class="p-heading--2 p-snap-heading__name">{{ publisher["display-name"] }}</h1>
+          <h1 class="p-heading--2 p-snap-heading__name">{{ format_display_name(publisher["display-name"]) }}</h1>
           <p class="p-snap-heading__publisher">
             ({{ publisher["username"] }})
             {% if publisher["validation"] %}
@@ -38,9 +38,9 @@
   <div class="p-strip is-shallow">
     <div class="row">
       {% if snaps_count == 1 %}
-	<h4>{{publisher["display-name"]}} has published 1 snap</h4>
+	<h4>{{ format_display_name(publisher["display-name"]) }} has published 1 snap</h4>
       {% else %}
-	<h4>{{publisher["display-name"]}} has published {{snaps_count}} snaps</h4>
+	<h4>{{ format_display_name(publisher["display-name"]) }} has published {{snaps_count}} snaps</h4>
       {% endif %}
       {% set hide_publisher = True %}
       {% set show_summary = True %}

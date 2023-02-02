@@ -304,7 +304,6 @@ class OsMetric(Metric):
 
         for distro in self.series:
             if distro["values"][0]:
-
                 name = _capitalize_os_name(distro["name"])
                 oses.append({"name": name, "value": distro["values"][-1]})
 

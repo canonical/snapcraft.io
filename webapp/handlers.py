@@ -115,6 +115,7 @@ def set_handlers(app):
             "join": template_utils.join,
             "static_url": template_utils.static_url,
             "format_number": template_utils.format_number,
+            "format_display_name": template_utils.format_display_name,
             "display_name": template_utils.display_name,
             "install_snippet": template_utils.install_snippet,
             "format_date": template_utils.format_date,
@@ -187,7 +188,6 @@ def set_handlers(app):
     @app.errorhandler(ApiResponseErrorList)
     @app.errorhandler(StoreApiResponseErrorList)
     def handle_api_error_list(error):
-
         if error.status_code == 404:
             if "snap_name" in request.path:
                 return flask.abort(404, "Snap not found!")

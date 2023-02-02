@@ -6,7 +6,6 @@ import webapp.store.logic as logic
 
 
 class StoreLogicTest(unittest.TestCase):
-
     # convert_channel_maps
     # ===
     def test_empty_channel_map(self):

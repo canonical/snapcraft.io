@@ -44,7 +44,6 @@ def get_stores():
 @admin.route("/admin/store/<store_id>")
 @login_required
 def get_settings(store_id):
-
     store = admin_api.get_store(flask.session, store_id)
 
     return jsonify(store)
@@ -83,7 +82,6 @@ def get_snaps_search(store_id):
 @admin.route("/admin/store/<store_id>/snaps")
 @login_required
 def get_store_snaps(store_id):
-
     snaps = admin_api.get_store_snaps(flask.session, store_id)
 
     return jsonify(snaps)
@@ -105,7 +103,6 @@ def post_manage_store_snaps(store_id):
 @admin.route("/admin/store/<store_id>/members")
 @login_required
 def get_manage_members(store_id):
-
     members = admin_api.get_store_members(flask.session, store_id)
 
     for item in members:
@@ -126,7 +123,6 @@ def post_manage_members(store_id):
         admin_api.update_store_members(flask.session, store_id, members)
         res["msg"] = "Changes saved"
     except StoreApiResponseErrorList as api_response_error_list:
-
         codes = [error.get("code") for error in api_response_error_list.errors]
 
         msgs = [
@@ -155,7 +151,6 @@ def post_manage_members(store_id):
 @admin.route("/admin/store/<store_id>/invites")
 @login_required
 def get_invites(store_id):
-
     invites = admin_api.get_store_invites(flask.session, store_id)
 
     return jsonify(invites)

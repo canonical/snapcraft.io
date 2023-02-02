@@ -16,7 +16,6 @@ from pybadges import badge
 
 
 def snap_details_views(store, api):
-
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 

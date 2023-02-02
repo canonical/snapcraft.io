@@ -62,7 +62,6 @@ class TemplateUtilsTest(unittest.TestCase):
         self.assertTrue(result, "10,000")
 
     def test_install_snippet(self):
-
         result = template_utils.install_snippet(
             "spotify", "latest", "stable", ""
         )

@@ -26,7 +26,6 @@ def get_account():
 @account.route("/details", methods=["GET"])
 @login_required
 def get_account_details():
-
     # We don't use the data from this endpoint.
     # It is mostly used to make sure the user has signed
     # the terms and conditions.
