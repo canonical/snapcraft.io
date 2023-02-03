@@ -27,3 +27,5 @@ user-agents==2.2.0
 # Development dependencies
 Flask-Testing==0.8.1
 freezegun==0.3.4
+black==22.12.0
+flake8==6.0.0
