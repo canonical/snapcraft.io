@@ -59,6 +59,7 @@ class BaseTestCases:
                     "nickname": "Toto",
                     "fullname": "El Toto",
                     "email": "testing@testing.com",
+                    "stores": [],
                 }
                 s["macaroon_root"] = root.serialize()
                 s["macaroon_discharge"] = discharge.serialize()
@@ -81,7 +82,6 @@ class BaseTestCases:
 
     class EndpointLoggedOut(BaseAppTesting):
         def setUp(self, snap_name, endpoint_url, method_endpoint="GET"):
-
             self.method_endpoint = method_endpoint
             super().setUp(snap_name, None, endpoint_url)
 
@@ -108,7 +108,6 @@ class BaseTestCases:
             data=None,
             json=None,
         ):
-
             super().setUp(
                 snap_name=snap_name, api_url=api_url, endpoint_url=endpoint_url
             )

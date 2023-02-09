@@ -4,14 +4,16 @@
   {% if from in ["first-snap", "first-snap-unpublished"] %}
   <div class="row">
     <div class="p-notification--information">
-      <p class="p-notification__response">
-        <span class="p-notification__title">Congratulations</span>
-        {% if from == "first-snap" %}
-        {{ snap_name }} is pushed to the Store. Modify its public information, include screenshots then visit <a href="/{{ snap_name }}">your published Snap</a>.
-        {% else %}
-        You can now modify {{ snap_name }} public information.
-        {% endif %}
-      </p>
+      <div class="p-notification__content">
+        <h5 class="p-notification__title">Congratulations</h5>
+        <p class="p-notification__message">
+          {% if from == "first-snap" %}
+          {{ snap_name }} is pushed to the Store. Modify its public information, include screenshots then visit <a href="/{{ snap_name }}">your published Snap</a>.
+          {% else %}
+          You can now modify {{ snap_name }} public information.
+          {% endif %}
+        </p>
+      </div>
     </div>
   </div>
   {% endif %}

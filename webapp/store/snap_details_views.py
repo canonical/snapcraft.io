@@ -6,52 +6,21 @@ import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
-from webapp.api.exceptions import ApiError
 from webapp.markdown import parse_markdown_description
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiCircuitBreaker,
-    StoreApiError,
-    StoreApiResponseDecodeError,
-    StoreApiResponseError,
-    StoreApiResponseErrorList,
-    StoreApiTimeoutError,
-)
+from canonicalwebteam.store_api.exceptions import StoreApiError
 from pybadges import badge
 
 
-def snap_details_views(store, api, handle_errors):
-
+def snap_details_views(store, api):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
     def _get_context_snap_details(snap_name):
-        try:
-            details = api.get_item_details(snap_name, api_version=2)
-        except StoreApiTimeoutError as api_timeout_error:
-            flask.abort(504, str(api_timeout_error))
-        except StoreApiResponseDecodeError as api_response_decode_error:
-            flask.abort(502, str(api_response_decode_error))
-        except StoreApiResponseErrorList as api_response_error_list:
-            if api_response_error_list.status_code == 404:
-                flask.abort(404, "No snap named {}".format(snap_name))
-            else:
-                if api_response_error_list.errors:
-                    error_messages = ", ".join(
-                        api_response_error_list.errors.key()
-                    )
-                else:
-                    error_messages = "An error occurred."
-                flask.abort(502, error_messages)
-        except StoreApiResponseError as api_response_error:
-            flask.abort(502, str(api_response_error))
-        except StoreApiCircuitBreaker:
-            flask.abort(503)
-        except (StoreApiError, ApiError) as api_error:
-            flask.abort(502, str(api_error))
+        details = api.get_item_details(snap_name, api_version=2)
 
         # When removing all the channel maps of an existing snap the API,
         # responds that the snaps still exists with data.
@@ -92,7 +61,7 @@ def snap_details_views(store, api, handle_errors):
         # filter out banner and banner-icon images from screenshots
         screenshots = logic.filter_screenshots(details["snap"]["media"])
 
-        icons = logic.get_icon(details["snap"]["media"])
+        icon_url = helpers.get_icon(details["snap"]["media"])
 
         publisher_info = helpers.get_yaml(
             "{}{}.yaml".format(
@@ -146,7 +115,7 @@ def snap_details_views(store, api, handle_errors):
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
             "categories": categories,
-            "icon_url": icons[0] if icons else None,
+            "icon_url": icon_url,
             "version": extracted_info["version"],
             "license": details["snap"]["license"],
             "publisher": details["snap"]["publisher"]["display-name"],
@@ -227,11 +196,7 @@ def snap_details_views(store, api, handle_errors):
                 ),
             ]
 
-            try:
-                metrics_response = api.get_public_metrics(metrics_query_json)
-            except (StoreApiError, ApiError) as api_error:
-                status_code, error_info = handle_errors(api_error)
-                metrics_response = None
+            metrics_response = api.get_public_metrics(metrics_query_json)
 
             os_metrics = None
             country_devices = None
@@ -275,6 +240,37 @@ def snap_details_views(store, api, handle_errors):
                 "error_info": error_info,
             }
         )
+
+        """
+        This code is purely for testing an upcoming feature
+        It is only available in the view with a query string
+        Once `links` has been added to the API we can remove this
+        """
+        context["links"] = {
+            "donation": [
+                "https://maas.io",
+                "http://juju.is",
+                "https://ubuntu.com/download",
+                "https://charmhub.io?welcome=true",
+                "https://dqlite/docs?hello=true",
+            ],
+            "contact": [
+                "mailto:steve.rydz@canonical.com",
+                "mailto:steve.rydz+test@canonical.com",
+            ],
+            # Wrapping long string to make flake8 happy.
+            # This won't be a problem once `link` is in the API
+            "issues": [
+                "https://github.com/canonical-web-and-design/"
+                "snapcraft.io/issues/new"
+            ],
+            "website": [
+                "https://ubuntu.com",
+            ],
+            "source-code": [
+                "https://github.com/canonical-web-and-design/snapcraft.io"
+            ],
+        }
 
         return (
             flask.render_template("store/snap-details.html", **context),
@@ -430,6 +426,7 @@ def snap_details_views(store, api, handle_errors):
             featured_snaps_results = api.get_featured_items(
                 size=13, page=1
             ).get("results", [])
+
         except StoreApiError:
             featured_snaps_results = []
 
@@ -438,6 +435,9 @@ def snap_details_views(store, api, handle_errors):
             for snap in featured_snaps_results
             if snap["package_name"] != snap_name
         ][:12]
+
+        for snap in featured_snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         context.update({"featured_snaps": featured_snaps})
         return flask.render_template(

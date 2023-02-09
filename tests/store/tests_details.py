@@ -52,7 +52,7 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_api_404(self):
-        payload = {"error-list": []}
+        payload = {"error-list": [{"code": "resource-not-found"}]}
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=404

@@ -9,21 +9,32 @@ import ReleasesTableRow from "./row";
 
 // releases table row based on list of revisions (unrelated to channel map)
 const ReleasesTableRevisionsRow = (props) => {
-  const { currentTrack, risk, revisions, archs } = props;
+  const { currentTrack, risk, revisions, archs, buildRequestId } = props;
   const showVersion = !isSameVersion(revisions);
 
   return (
-    <ReleasesTableRow risk={risk} revisions={revisions}>
-      {archs.map((arch) => {
-        return (
-          <ReleasesTableRevisionCell
-            key={`${currentTrack}/${risk}/${arch}`}
-            revision={revisions ? revisions[arch] : null}
-            showVersion={showVersion}
-          />
-        );
-      })}
-    </ReleasesTableRow>
+    <>
+      <p
+        className="p-heading--5  u-hide--medium u-hide--large"
+        style={{ marginBottom: "0.5rem" }}
+      >
+        {buildRequestId}
+      </p>
+      <div className="p-releases-table__row--container">
+        <ReleasesTableRow risk={risk} revisions={revisions}>
+          {archs.map((arch) => {
+            return (
+              <ReleasesTableRevisionCell
+                key={`${currentTrack}/${risk}/${arch}`}
+                revision={revisions ? revisions[arch] : null}
+                showVersion={showVersion}
+                arch={arch}
+              />
+            );
+          })}
+        </ReleasesTableRow>
+      </div>
+    </>
   );
 };
 
@@ -31,6 +42,7 @@ ReleasesTableRevisionsRow.propTypes = {
   // props
   risk: PropTypes.string.isRequired,
   revisions: PropTypes.object,
+  buildRequestId: PropTypes.string,
 
   // state
   currentTrack: PropTypes.string.isRequired,

@@ -1,7 +1,190 @@
 <h4>Details for {{ snap_title }}</h4>
-<dl>
-  <dt>License</dt>
-  <dd data-live="license">{{ license }}</dd>
-  <dt>Last updated</dt>
-  <dd>{{ last_updated }}</dd>
-</dl>
+
+<h5 class="u-no-margin--bottom"><i class="p-icon--topic"></i> License</h5>
+<ul class="p-list p-list-indented">
+  <li>{{ license }}</li>
+</ul>
+<hr>
+
+<h5 class="u-no-margin--bottom"><i class="p-icon--calendar"></i> Last updated</h5>
+<ul class="p-list p-list-indented">
+  <li>{{ last_updated }}</li>
+</ul>
+<hr>
+
+<!-- Once `links` is added to the API we can remove the `request.args` check -->
+{% if links and request.args.get("show_metadata_links") %}
+  {% if links["website"] %}
+    <h5 class="u-no-margin--bottom"><i class="p-icon--website"></i> Websites</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["website"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
+  {% endif %}
+
+  {% if links["contact"] %}
+    <h5 class="u-no-margin--bottom"><i class="p-icon--mail"></i> Contact</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["contact"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
+  {% endif %}
+
+  {% if links["donation"] %}
+    <h5 class="u-no-margin--bottom"><i class="p-icon--gift"></i> Donations</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["donation"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
+  {% endif %}
+
+  {% if links["source-code"] %}
+    <h5 class="u-no-margin--bottom"><i class="p-icon--code"></i> Source code</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["source-code"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
+  {% endif %}
+
+  {% if links["issues"] %}
+    <h5 class="u-no-margin--bottom"><i class="p-icon--submit-bug"></i> Report a bug</h5>
+    <ul class="p-list p-list-indented">
+      {% for link in links["issues"] %}
+        <li>
+          <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
+        </li>
+      {% endfor %}
+    </ul>  
+    <hr>
+  {% endif %}
+
+<div class="p-modal js-exeternal-link-modal u-hide" id="modal">
+  <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
+    <header class="p-modal__header">
+      <h2 class="p-modal__title" id="modal-title"><i class="p-icon--warning" style="width: 1rem; height: 1rem; position: relative; top: 1px; margin-right: 0.24rem;"></i> External link warning</h2>
+    </header>
+    <p class="u-no-max-width">You are about to open <span class="js-external-link-url"></span></p>
+    <p class="u-no-max-width">Do you wish to proceed?</p>
+    </p>
+    <footer class="p-modal__footer">
+      <button class="u-no-margin--bottom js-close-modal" aria-controls="modal">Go back</button>
+      <a class="p-button--positive u-no-margin--bottom js-open-external-link" href="" target="_blank">Proceed</a>
+    </footer>
+  </section>
+</div>
+
+<script>
+  const externalLinks = document.querySelectorAll(".js-external-link");
+  const externalLinkModal = document.querySelector(".js-exeternal-link-modal");
+  const externalLinkModalCloseButton = externalLinkModal.querySelector(
+    ".js-close-modal"
+  );
+  const externalLinkUrl = externalLinkModal.querySelector(
+    ".js-external-link-url"
+  );
+  const openExternalLinkButton = externalLinkModal.querySelector(
+    ".js-open-external-link"
+  );
+  
+  function openModal() {
+    externalLinkModal.classList.remove("u-hide");
+  }
+  
+  function closeModal() {
+    externalLinkModal.classList.add("u-hide");
+  }
+
+  function setLinkDisplayText(href) {
+    if (href.includes("mailto")) {
+      externalLinkUrl.innerText = href;
+      return;
+    }
+
+    const url = new URL(href);
+
+    const protocolContainer = document.createElement("strong");
+    const hostnameContainer = document.createElement("strong");
+    const pathContainer = document.createElement("span");
+    const searchContainer = document.createElement("span");
+
+    protocolContainer.classList.add(
+      url.protocol === "https:" ? 
+        "external-link-protocol--positive" : "external-link-protocol--negative"
+    );
+
+    pathContainer.classList.add("u-text-muted");
+    searchContainer.classList.add("u-text-muted");
+
+    protocolContainer.innerText = `${url.protocol}//`;
+    hostnameContainer.innerText = url.hostname;
+    
+    if (url.pathname && url.pathname !== "/") {
+      pathContainer.innerText = url.pathname;
+
+    }
+    
+    searchContainer.innerText = url.search;
+
+    externalLinkUrl.innerHTML = "";
+    externalLinkUrl.appendChild(protocolContainer);
+    externalLinkUrl.appendChild(hostnameContainer);
+    externalLinkUrl.appendChild(pathContainer);
+    externalLinkUrl.appendChild(searchContainer);
+  }
+
+  externalLinkModalCloseButton.addEventListener("click", () => {
+    closeModal();
+  });
+
+  externalLinks.forEach((link) => { 
+    
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = e.target.href;
+      openExternalLinkButton.href = href;
+      openExternalLinkButton.addEventListener("click", handleOpenExternalLink); 
+      setLinkDisplayText(href);
+      openModal();
+    });
+  });
+
+  function handleOpenExternalLink() {
+    closeModal();
+    openExternalLinkButton.removeEventListener("click", handleOpenExternalLink);
+  }
+</script>
+
+<!-- Once `links` is added to the API we can remove this `else` section -->
+{% else %}
+  <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Links</h5>
+  <ul class="p-list p-list-indented">
+    {% if website or is_preview %}
+      <li>
+        <a href="{{ website }}" data-live="website">Developer website</a>
+      </li>
+    {% endif %}
+            
+    {% if contact or is_preview %}
+      <li>
+        <a href="{{ contact }}" data-live="contact">Contact {{ format_display_name(publisher) }}</a>
+      </li>
+    {% endif %}
+  </ul>
+  <hr>
+{% endif %}

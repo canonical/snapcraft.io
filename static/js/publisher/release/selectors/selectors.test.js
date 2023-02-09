@@ -522,17 +522,13 @@ describe("getFilteredAvailableRevisionsByArch", () => {
 
 describe("getArchitectures", () => {
   const initialState = reducers(undefined, {});
-  const stateWithRevisions = {
+  const stateWithArchitectures = {
     ...initialState,
-    revisions: {
-      1: { revision: 1, architectures: ["test64"] },
-      2: { revision: 2, architectures: ["amd42", "abc64"] },
-      3: { revision: 3, architectures: ["test64", "amd42"] },
-    },
+    architectures: ["test64", "amd42", "abc64"],
   };
 
   it("should return alphabetical list of all architectures", () => {
-    expect(getArchitectures(stateWithRevisions)).toEqual([
+    expect(getArchitectures(stateWithArchitectures)).toEqual([
       "abc64",
       "amd42",
       "test64",
@@ -913,15 +909,7 @@ describe("getProgressiveState", () => {
   it("should return the progressive release state of a channel and arch", () => {
     expect(
       getProgressiveState(stateWithProgressiveEnabled, "latest/stable", "arch2")
-    ).toEqual([
-      {
-        key: "test",
-        paused: false,
-        percentage: 60,
-      },
-      "revision2",
-      null,
-    ]);
+    ).toEqual(["revision2", null]);
   });
 
   it("should return the progressiveState and pendingProgressiveStatus", () => {
@@ -932,7 +920,6 @@ describe("getProgressiveState", () => {
         "arch2"
       )
     ).toEqual([
-      { key: "test", paused: false, percentage: 60 },
       "revision2",
       { key: "progressive-test", paused: false, percentage: 40 },
     ]);

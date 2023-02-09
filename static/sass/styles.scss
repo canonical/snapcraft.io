@@ -8,8 +8,10 @@ $color-sidenav-item-border-highlight: #82bfa1;
 // navigation variables
 $theme-default-nav: dark;
 $breakpoint-navigation-threshold: 800px;
-
 $font-display-option: swap;
+
+// responsive
+$breakpoint-medium: 619px;
 
 // vanilla patterns
 @import "vanilla-framework/scss/vanilla";
@@ -27,7 +29,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-links;
 @include vf-p-lists;
 @include vf-p-grid;
-@include vf-p-grid-modifications;
 @include vf-p-buttons;
 @include vf-p-strip;
 @include vf-p-media-object;
@@ -50,11 +51,11 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-code-snippet;
 @include vf-p-tabs;
 @include vf-p-table-icons;
-@include vf-p-subnav;
 @include vf-p-side-navigation;
+@include vf-p-side-navigation-expandable;
 @include vf-p-search-box;
-
-// vanilla utilities
+@include vf-p-form-tick-elements;
+@include vf-p-status-label;
 @include vf-u-floats;
 @include vf-u-off-screen;
 @include vf-u-margin-collapse;
@@ -74,292 +75,173 @@ $color-social-icon-foreground: $color-light;
 
 // vanilla layouts
 @include vf-l-application;
-
 @import "patterns_icons";
 @import "snapcraft_custom-cols";
-
 @include snapcraft-custom-cols;
 
 // No drop-in replacement from vanilla, but perhaps we could use
 // p-button has-icon?
 @import "patterns_button_spinner";
-
 @include p-button-spinner;
 
 // Needs some TLC with the new code styling
 @import "patterns_annotated_code";
-
 @include p-annotated-code;
-
 @import "map";
-
 @include snap-details-map;
 
 // Again the new grid doesn't work to implement what happens here
 @import "search-form";
-
 @include search-form;
 
 // The footer pattern has been removed from vanilla
 // so there is little possibility this will be added
 @import "patterns_sticky_footer";
-
 @include p-sticky-footer;
 
 // some bugfixes for Vanilla navigation issues
 @import "snapcraft_p-navigation";
-
 @include snapcraft-p-navigation;
-
 @import "snapcraft_banner";
-
 @include snapcraft-banner;
-
 @import "snapcraft_graph-tooltip";
-
 @include snapcraft-graph-tooltip;
-
 @import "snapcraft_metrics";
-
 @include snapcraft-metrics;
 
 // When we move the listing, formerly market page
 // to react, we should be able to remove this
 @import "snapcraft_market";
-
 @include snapcraft-market;
-
 @import "patterns_testimonial";
-
 @include vf-p-testimonial;
-
 @import "button-overrides";
-
 @include button-overrides;
-
 @import "patterns_logo-links";
-
 @include p-logo-link;
-
 @import "snapcraft_market_screenshots";
-
 @include snapcraft-market-screenshots;
 
 // This needs to be killed with fire
 @import "patterns_maas_modal";
-
 @include maas-p-modal;
-
 @import "snapcraft_details_heading";
-
 @include snapcraft-details-heading;
-
 @import "snapcraft_patterns_icons";
-
 @include snapcraft-p-icon-top;
-
 @import "snapcraft_show-more";
-
 @include snapcraft-show-more;
-
 @import "snapcraft_snap-details";
-
 @include snapcraft-snap-details;
-
 @import "snapcraft_p-form-validation";
-
 @include snapcraft-p-form-validation;
-
 @import "snapcraft_p-notifications";
-
 @include snapcraft-p-notification;
-
 @import "snapcraft_distro-chart";
-
 @include snapcraft-distro-chart;
-
 @import "snapcraft_p-verified";
-
 @include snapcraft-p-verified;
-
 @import "utilities_crop";
-
 @include u-insights-crop;
-
 @import "patterns_blog-post";
-
 @include snapcraft-p-blog-post;
-
 @import "patterns_nested-inputs";
-
 @include snapcraft-p-nested-inputs;
-
 @import "patterns_carousel";
-
 @include snapcraft-p-carousel;
-
 @import "patterns_media-object--snap";
-
 @include snapcraft-p-media-object--snap;
-
 @import "snapcraft_release";
-
 @include snapcraft-release;
-
 @import "snapcraft_p-build";
-
 @include snapcraft-p-build;
-
 @import "patterns_blog-list";
-
 @include snapcraft-p-blog-list;
-
 @import "patterns_form-multiselect";
-
 @include snapcraft-p-multiselect;
-
 @import "patterns_first-snap-flow";
-
 @include snapcraft-p-first-snap-flow;
-
 @import "snapcraft_p-breadcrumbs";
-
 @include snapcraft-p-breadcrumbs;
-
 @import "snapcraft-publicise";
-
 @include snapcraft-publicise;
-
 @import "snapcraft-publisher";
-
 @include snapcraft-publisher;
-
 @import "patterns_modal";
-
 @include vf-p-modal-snapcraft;
-
 @import "patterns_strip_slanted";
-
 @include snapcraft-p-strip;
-
 @import "snapcraft_store";
-
 @include snapcraft-store;
-
 @import "snapcraft_dispute-list";
-
 @include snapcraft-p-dispute-list;
-
 @import "snapcraft_embedded_card_modal";
-
 @include snapcraft-embedded-card-modal;
-
 @import "snapcraft_p-file-input";
-
 @include snapcraft-p-file-input;
-
 @import "patterns_pagination";
-
 @include snapcraft-p-pagination;
-
 @import "snapcraft_p-featured-snap";
-
 @include snapcraft-p-featured-snap;
-
 @import "patterns_distro_banner";
-
 @include p-distro-banner;
-
 @import "snapcraft_p-docs";
-
 @include snapcraft-pattern-docs;
-
 @import "patterns_table";
-
 @include snapcraft-p-table;
-
 @import "utilities_no-limit";
-
 @include u-no-limit;
-
 @import "utilities_flex";
-
 @include u-flex;
-
 @import "utilities_disabled";
-
 @include u-disabled;
-
 @import "utilities_text-wrap";
-
 @include u-text-wrap;
-
 @import "snapcraft_tour";
-
 @include snapcraft-tour;
-
 @import "pattern-hero-tab";
-
 @include snapcraft-hero-tab;
-
 @import "snapcraft_p-tutorials";
-
 @include snapcraft-pattern-tutorials;
 
 // Convert first row of a card to a header
 @import "snapcraft_p-table-mobile-card";
-
 @include snapcraft-p-table-mobile-card;
-
 @import "snapcraft_p-progressive-bar";
-
 @include snapcraft-p-progressive-bar;
-
 @import "snapcraft_p-release-details-row";
-
 @include snapcraft-p-release-details-row;
-
 @import "snapcraft_l-application";
-
 @include snapcraft-l-application;
-
 @import "snapcraft-p-videos";
-
 @include snapcraft-p-videos;
-
 @import "pattern_p-button-group";
-
 @include p-snapcraft-button-group;
-
 @import "snapcraft_p-action-form";
-
 @include snapcraft-action-form;
-
 @import "snapcraft_custom-checkboxes";
-
 @include snapcraft-custom-checkboxes;
-
 @import "snapcraft_p-sticky-admin-footer";
-
 @include snapcraft-sticky-admin-footer;
-
 @import "snapcraft_p-side-panel";
-
 @include snapcraft-p-side-panel;
-
 @import "patterns_p-password-toggle-input";
-
 @include p-password-toggle-input;
-
 @import "snapcraft_p-autocomplete";
-
 @include snapcraft-autocomplete;
 @include snapcraft-p-icons;
 @include vf-p-form-password-toggle;
 @include vf-p-icon-status-waiting;
+@include vf-p-icon-submit-bug;
+@include vf-p-icon-code;
+@include vf-p-icon-exposed;
+@include vf-p-icon-topic;
+@include vf-p-icon-revisions;
+@import "snapcraft_snap-image-upload";
+@include snap-image-upload;
 
 dl {
-  margin-bottom: $spv-outer--scaleable;
+  margin-bottom: $spv--x-large;
 }
 
 .u-animate--reveal {
@@ -371,18 +253,19 @@ dl {
 // Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3321
 
 .u-show--small {
-  @media screen and (max-width: $breakpoint-medium) {
+  @media screen and (max-width: $breakpoint-large - 1) {
     // we duplicate display to support IE
     // sass-lint:disable no-duplicate-properties
     display: inherit !important;
     display: initial !important;
+
     // sass-lint:enable no-duplicate-properties
   }
 }
 
 .u-line-clamp--3 {
   -webkit-box-orient: vertical;
-  display: -webkit-box;
+  display: flex;
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -402,7 +285,7 @@ code {
 }
 
 .p-modal__dialog {
-  @media only screen and (min-width: $breakpoint-medium) {
+  @media only screen and (min-width: $breakpoint-small) {
     min-width: 400px;
   }
 }
@@ -432,10 +315,11 @@ code {
 
   .p-checkbox {
     margin-bottom: 0;
-    margin-left: -2rem;
+    margin-left: -1.5rem;
+    margin-right: 0.25rem;
     padding-top: 0;
     position: relative;
-    top: 4px;
+    top: 2px;
 
     .p-checkbox__input {
       margin-top: 0;
@@ -445,7 +329,7 @@ code {
 
 .table-cell-head--checkbox {
   .p-checkbox {
-    top: -2px;
+    top: 0;
   }
 }
 
@@ -461,9 +345,9 @@ code {
   }
 }
 
-.members-accordion {
+.app-accordion {
   .p-accordion__panel {
-    padding-left: 0;
+    padding-left: 2.5rem;
   }
 }
 
@@ -475,7 +359,7 @@ code {
     margin-bottom: 0 !important;
   }
 
-  @media (min-width: $breakpoint-medium) {
+  @media (min-width: $breakpoint-small) {
     display: inline-block;
     margin-left: 0.75rem !important;
   }
@@ -485,18 +369,48 @@ code {
   }
 }
 
-.snap-sub-table {
-  @media (min-width: $breakpoint-medium) {
-    border-top: 1px solid $colors--light-theme--border-low-contrast;
-  }
-}
-
 .snap-published-in-cell {
-  @media (max-width: $breakpoint-medium - 1px) {
+  @media (max-width: $breakpoint-large - 1) {
     display: none !important;
 
     + td::after {
       display: none;
     }
   }
+}
+
+.u-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.u-hide-table-col--large {
+  @media (min-width: 1036px) {
+    display: none !important;
+  }
+}
+
+.u-no-max-width {
+  max-width: 100% !important;
+}
+
+.p-list-indented {
+  margin-left: 1.25rem;
+}
+
+.external-link-protocol--positive {
+  color: $color-positive;
+}
+
+.external-link-protocol--negative {
+  color: $color-negative;
+}
+
+.u-screenreader-only {
+  height: 1px;
+  left: -10000px;
+  overflow: hidden;
+  position: absolute;
+  top: auto;
+  width: 1px;
 }

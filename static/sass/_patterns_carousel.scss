@@ -1,8 +1,4 @@
 @mixin snapcraft-p-carousel {
-  // below this breakpoint we don't show buttons to move carousels
-  // but leave scroll to allow swiping them on mobile
-  $carousel-buttons-breakpoint: $breakpoint-medium;
-
   .p-carousel {
     margin: 1.5rem 0;
     position: relative;
@@ -39,13 +35,13 @@
       &:hover {
         &::after {
           background-color: $color-x-light;
-          background-image: url('#{$assets-path}c566f22e-fullscreen-grey_16.svg');
+          background-image: url("#{$assets-path}c566f22e-fullscreen-grey_16.svg");
           background-position: 50% 50%;
           background-repeat: no-repeat;
           background-size: 0.75rem 0.75rem;
           border: 1px solid $color-light;
           border-radius: 2px;
-          content: '';
+          content: "";
           display: block;
           height: 1.5rem;
           pointer-events: none;
@@ -84,6 +80,7 @@
     margin: {
       bottom: 0;
       left: 0;
+
       // Overrides a rule in vanilla that adds margin to the right of buttons
       right: 0 !important;
       top: -1.5rem;
@@ -100,7 +97,7 @@
   }
 
   .p-carousel__prev {
-    background-image: url('#{$assets-path}e8d2e45f-chevron-left.svg');
+    background-image: url("#{$assets-path}e8d2e45f-chevron-left.svg");
     left: -1rem;
 
     @media screen and (min-width: $breakpoint-large) {
@@ -109,7 +106,7 @@
   }
 
   .p-carousel__next {
-    background-image: url('#{$assets-path}9716bbab-chevron.svg');
+    background-image: url("#{$assets-path}9716bbab-chevron.svg");
     right: -1rem;
 
     @media screen and (min-width: $breakpoint-large) {
@@ -125,6 +122,7 @@
     overflow: hidden;
     padding: 0;
     position: relative;
+
     // Fix of Webkit flickering
     z-index: 1;
   }

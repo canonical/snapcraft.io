@@ -1,29 +1,12 @@
 # Packages
 import flask
-from canonicalwebteam.store_api.exceptions import (
-    PublisherAgreementNotSigned,
-    PublisherMacaroonRefreshRequired,
-    PublisherMissingUsername,
-    StoreApiCircuitBreaker,
-    StoreApiTimeoutError,
-)
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-    StoreApiResponseErrorList,
-)
 
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 
 # Local
 import webapp.api.marketo as marketo_api
-from webapp import authentication
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import (
-    ApiCircuitBreaker,
-    ApiError,
-    ApiResponseError,
-    ApiTimeoutError,
-)
 from webapp.decorators import login_required
 
 account = flask.Blueprint(
@@ -32,57 +15,6 @@ account = flask.Blueprint(
 
 marketo = marketo_api.Marketo()
 publisher_api = SnapPublisher(api_publisher_session)
-
-
-def refresh_redirect(path):
-    try:
-        macaroon_discharge = authentication.get_refreshed_discharge(
-            flask.session["macaroon_discharge"]
-        )
-    except ApiResponseError as api_response_error:
-        if api_response_error.status_code == 401:
-            return flask.redirect(flask.url_for("login.logout"))
-        else:
-            return flask.abort(502, str(api_response_error))
-    except ApiError as api_error:
-        return flask.abort(502, str(api_error))
-
-    flask.session["macaroon_discharge"] = macaroon_discharge
-    return flask.redirect(path)
-
-
-def _handle_error(api_error: ApiError):
-    if type(api_error) in [ApiTimeoutError, StoreApiTimeoutError]:
-        return flask.abort(504, str(api_error))
-    elif type(api_error) is PublisherMissingUsername:
-        return flask.redirect(flask.url_for("account.get_account_name"))
-    elif type(api_error) is PublisherAgreementNotSigned:
-        return flask.redirect(flask.url_for("account.get_agreement"))
-    elif type(api_error) is PublisherMacaroonRefreshRequired:
-        return refresh_redirect(flask.request.path)
-    elif type(api_error) in [ApiCircuitBreaker, StoreApiCircuitBreaker]:
-        return flask.abort(503)
-    else:
-        return flask.abort(502, str(api_error))
-
-
-def _handle_error_list(errors):
-    if len(errors) == 1 and errors[0]["code"] in [
-        "macaroon-permission-required",
-        "macaroon-authorization-required",
-    ]:
-        last_login_method = flask.request.cookies.get("last_login_method")
-        login_path = "login-beta" if last_login_method == "candid" else "login"
-        authentication.empty_session(flask.session)
-        return flask.redirect(f"/{login_path}?next={flask.request.path}")
-
-    codes = [
-        f"{error['code']}: {error.get('message', 'No message')}"
-        for error in errors
-    ]
-
-    error_messages = ", ".join(codes)
-    return flask.abort(502, error_messages)
 
 
 @account.route("/")
@@ -94,15 +26,10 @@ def get_account():
 @account.route("/details", methods=["GET"])
 @login_required
 def get_account_details():
-    try:
-        # We don't use the data from this endpoint.
-        # It is mostly used to make sure the user has signed
-        # the terms and conditions.
-        publisher_api.get_account(flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    # We don't use the data from this endpoint.
+    # It is mostly used to make sure the user has signed
+    # the terms and conditions.
+    publisher_api.get_account(flask.session)
 
     flask_user = flask.session["publisher"]
 
@@ -164,15 +91,7 @@ def get_agreement():
 def post_agreement():
     agreed = flask.request.form.get("i_agree")
     if agreed == "on":
-        try:
-            publisher_api.post_agreement(flask.session, True)
-        except StoreApiResponseErrorList as api_response_error_list:
-            codes = [error["code"] for error in api_response_error_list.errors]
-            error_messages = ", ".join(codes)
-            flask.abort(502, error_messages)
-        except (StoreApiError, ApiError) as api_error:
-            return _handle_error(api_error)
-
+        publisher_api.post_agreement(flask.session, True)
         return flask.redirect(flask.url_for(".get_account"))
     else:
         return flask.redirect(flask.url_for(".get_agreement"))
@@ -195,8 +114,6 @@ def post_account_name():
             publisher_api.post_username(flask.session, username)
         except StoreApiResponseErrorList as api_response_error_list:
             errors = errors + api_response_error_list.errors
-        except (StoreApiError, ApiError) as api_error:
-            return _handle_error(api_error)
 
         if errors:
             return flask.render_template(

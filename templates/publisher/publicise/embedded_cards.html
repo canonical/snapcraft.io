@@ -13,12 +13,18 @@
         </label>
       </div>
       <div class="col-7">
+        <div>
           <input type="radio" name="store-button" id="store-button-dark" checked="checked" value="black">
           <label for="store-button-dark">Dark</label>
+        </div>
+        <div>
           <input type="radio" name="store-button" id="store-button-light" value="white">
           <label for="store-button-light">Light</label>
+        </div>
+        <div>
           <input type="radio" name="store-button" id="store-button-hide" value="">
           <label for="store-button-hide">Hide button</label>
+        </div>
       </div>
     </div>
   </div>
@@ -28,12 +34,18 @@
         Options:
       </div>
       <div class="col-7" id="js-options">
+        <div>
           <input type="checkbox" name="show-channels" id="option-show-channels" checked>
           <label for="option-show-channels">Show all channels</label>
+        </div>
+        <div>
           <input type="checkbox" name="show-summary" id="option-show-summary" checked>
           <label for="option-show-summary">Show summary</label>
+        </div>
+        <div>
           <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not has_screenshot %}disabled{% else %}checked{% endif %}>
           <label for="option-show-screenshot">Show screenshot</label>
+        </div>
       </div>
     </div>
   </div>

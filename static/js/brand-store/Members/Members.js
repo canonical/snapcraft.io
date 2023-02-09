@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Spinner,
@@ -16,7 +16,7 @@ import ROLES from "./memberRoles";
 
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
-import NotAuthorized from "../NotAuthorized";
+import StoreNotFound from "../StoreNotFound";
 
 import {
   membersSelector,
@@ -34,6 +34,8 @@ function Members() {
   const invites = useSelector(invitesSelector);
   const brandStoresList = useSelector(brandStoresListSelector);
   const invitesLoading = useSelector((state) => state.members.loading);
+  const membersNotFound = useSelector((state) => state.members.notFound);
+  const invitesNotFound = useSelector((state) => state.invites.notFound);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [filteredMembers, setFilteredMembers] = useState([]);
@@ -93,12 +95,20 @@ function Members() {
             setShowSuccessNotification(true);
             setNotificationText("Member has been added to the store");
             setShowInviteForm(false);
+
+            setTimeout(() => {
+              setShowSuccessNotification(false);
+            }, 5000);
           }
         }, 1500);
       })
       .catch(() => {
         setIsSaving(false);
         setShowErrorNotification(true);
+
+        setTimeout(() => {
+          setShowErrorNotification(false);
+        }, 5000);
       });
   };
 
@@ -115,7 +125,8 @@ function Members() {
     setNewMemberRoles(roles);
   };
 
-  const isAdmin = () => currentMember.roles.includes("admin");
+  const isOnlyViewer = () =>
+    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
     dispatch(fetchMembers(id));
@@ -149,88 +160,93 @@ function Members() {
         <div className="p-panel">
           <div className="p-panel__content">
             <div className="u-fixed-width">
-              <SectionNav sectionName="members" />
+              {!membersNotFound && !invitesNotFound && (
+                <SectionNav sectionName="members" />
+              )}
             </div>
             {membersLoading && invitesLoading ? (
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
+            ) : membersNotFound || invitesNotFound ? (
+              <StoreNotFound />
+            ) : isOnlyViewer() ? (
+              <Redirect to={`/admin/${id}/snaps`} />
             ) : (
-              currentMember?.roles &&
-              (!isAdmin() ? (
-                <NotAuthorized />
-              ) : (
-                <>
-                  <Row>
-                    <Col size="6">
-                      <Button
-                        onClick={() => {
-                          setSidePanelOpen(true);
-                        }}
-                      >
-                        Add new member
-                      </Button>
-                    </Col>
-                    <Col size="6">
-                      <SearchBox
-                        placeholder="Search and filter"
-                        autocomplete="off"
-                        onChange={(query) => {
-                          if (query) {
-                            setFilteredMembers(
-                              members.filter(
-                                (member) =>
-                                  member.displayname.includes(query) ||
-                                  member.email.includes(query)
-                              )
-                            );
-                          } else {
-                            setFilteredMembers(members);
-                          }
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <div className="u-fixed-width members-accordion">
-                    <Accordion
-                      expanded="members-table"
-                      sections={[
-                        {
-                          key: "members-table",
-                          title: `${filteredMembers.length} members`,
-                          content: (
-                            <MembersTable
-                              filteredMembers={filteredMembers}
-                              changedMembers={changedMembers}
-                              setChangedMembers={setChangedMembers}
-                            />
-                          ),
-                        },
-                        {
-                          key: "invites-table",
-                          title: `${invites.length} invites`,
-                          content: (
-                            <InvitesTable
-                              invites={invites}
-                              setNotificationText={setNotificationText}
-                              setShowSuccessNotification={
-                                setShowSuccessNotification
-                              }
-                              setShowErrorNotification={
-                                setShowErrorNotification
-                              }
-                            />
-                          ),
-                        },
-                      ]}
+              <>
+                <Row>
+                  <Col size="6">
+                    <Button
+                      onClick={() => {
+                        setSidePanelOpen(true);
+                      }}
+                    >
+                      Add new member
+                    </Button>
+                  </Col>
+                  <Col size="6">
+                    <SearchBox
+                      placeholder="Search and filter"
+                      autocomplete="off"
+                      onChange={(query) => {
+                        if (query) {
+                          setFilteredMembers(
+                            members.filter(
+                              (member) =>
+                                member.displayname.includes(query) ||
+                                member.email.includes(query)
+                            )
+                          );
+                        } else {
+                          setFilteredMembers(members);
+                        }
+                      }}
                     />
-                  </div>
-                </>
-              ))
+                  </Col>
+                </Row>
+                <div className="u-fixed-width app-accordion">
+                  <Accordion
+                    expanded="members-table"
+                    sections={[
+                      {
+                        key: "members-table",
+                        title: `${filteredMembers.length} members`,
+                        content: (
+                          <MembersTable
+                            filteredMembers={filteredMembers}
+                            changedMembers={changedMembers}
+                            setChangedMembers={setChangedMembers}
+                          />
+                        ),
+                      },
+                      {
+                        key: "invites-table",
+                        title: `${invites.length} invites`,
+                        content: (
+                          <InvitesTable
+                            invites={invites}
+                            setNotificationText={setNotificationText}
+                            setShowSuccessNotification={
+                              setShowSuccessNotification
+                            }
+                            setShowErrorNotification={setShowErrorNotification}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>
       </main>
+      <div
+        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+        onClick={() => {
+          setSidePanelOpen(false);
+        }}
+      ></div>
       <aside
         className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
         id="aside-panel"
@@ -292,6 +308,7 @@ function Members() {
                     label={ROLES[role].name}
                     help={ROLES[role].description}
                     onChange={handleRoleChange}
+                    checked={newMemberRoles.includes(role)}
                   />
                 ))}
               </div>
@@ -398,11 +415,19 @@ function Members() {
                       setIsSaving(false);
                       setShowSuccessNotification(true);
                       setNotificationText("Member roles have been changed");
+
+                      setTimeout(() => {
+                        setShowSuccessNotification(false);
+                      }, 5000);
                     }, 1500);
                   })
                   .catch(() => {
                     setIsSaving(false);
                     setShowErrorNotification(true);
+
+                    setTimeout(() => {
+                      setShowErrorNotification(false);
+                    }, 5000);
                   });
               }}
             >

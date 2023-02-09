@@ -6,15 +6,7 @@ import webapp.helpers as helpers
 import webapp.store.logic as logic
 from webapp.api import requests
 from canonicalwebteam.store_api.stores.snapstore import SnapStore
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiCircuitBreaker,
-    StoreApiConnectionError,
-    StoreApiError,
-    StoreApiResponseDecodeError,
-    StoreApiResponseError,
-    StoreApiResponseErrorList,
-    StoreApiTimeoutError,
-)
+from canonicalwebteam.store_api.exceptions import StoreApiError
 from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
@@ -34,30 +26,7 @@ def store_blueprint(store_query=None):
         template_folder="/templates",
         static_folder="/static",
     )
-
-    def _handle_error(api_error: StoreApiError):
-        status_code = 502
-        error = {"message": str(api_error)}
-
-        if type(api_error) is StoreApiTimeoutError:
-            status_code = 504
-        elif type(api_error) is StoreApiResponseDecodeError:
-            status_code = 502
-        elif type(api_error) is StoreApiResponseErrorList:
-            error["errors"] = api_error.errors
-            status_code = 502
-        elif type(api_error) is StoreApiResponseError:
-            status_code = 502
-        elif type(api_error) is StoreApiConnectionError:
-            status_code = 502
-        elif type(api_error) is StoreApiCircuitBreaker:
-            # Special case for this one, because it is the only case where we
-            # don't want the user to be able to access the page.
-            return flask.abort(503)
-
-        return status_code, error
-
-    snap_details_views(store, api, _handle_error)
+    snap_details_views(store, api)
 
     @store.route("/discover")
     def discover():
@@ -74,14 +43,13 @@ def store_blueprint(store_query=None):
 
         categories = logic.get_categories(categories_results)
 
-        try:
-            featured_snaps = api.get_featured_items()["results"]
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
-            return flask.abort(status_code)
+        featured_snaps = api.get_featured_items()["results"]
 
         if not featured_snaps:
             return flask.abort(503)
+
+        for snap in featured_snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
@@ -113,9 +81,11 @@ def store_blueprint(store_query=None):
 
         try:
             snaps = api.get_all_items(size=16)["results"]
-        except (StoreApiError, ApiError) as api_error:
+        except (StoreApiError, ApiError):
             snaps = []
-            status_code, error_info = _handle_error(api_error)
+
+        for snap in snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         return (
             flask.render_template(
@@ -167,16 +137,12 @@ def store_blueprint(store_query=None):
             snap_searched = f'publisher:{publishers["snapcrafters"]}'
             display_query = "publisher:snapcrafters"
 
-        try:
-            searched_results = api.search(
-                snap_searched,
-                category=snap_category,
-                size=size,
-                page=page,
-            )
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
-            return flask.abort(status_code)
+        searched_results = api.search(
+            snap_searched,
+            category=snap_category,
+            size=size,
+            page=page,
+        )
 
         total_pages = None
 
@@ -187,6 +153,9 @@ def store_blueprint(store_query=None):
             total_results_count = None
 
         snaps_results = searched_results["results"]
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         links = {}
 
@@ -271,12 +240,13 @@ def store_blueprint(store_query=None):
         error_info = {}
         searched_results = []
 
-        try:
-            searched_results = api.search(snap_searched, size=size, page=page)
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
+        searched_results = api.search(snap_searched, size=size, page=page)
 
         snaps_results = searched_results["results"]
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
+
         links = logic.get_pages_details(
             flask.request.base_url,
             (
@@ -320,48 +290,100 @@ def store_blueprint(store_query=None):
             "PUBLISHER_PAGES"
         ]
 
-        context = helpers.get_yaml(
-            publisher_content_path + publisher + ".yaml", typ="safe"
-        )
+        if publisher in ["kde", "snapcrafters", "jetbrains"]:
+            context = helpers.get_yaml(
+                publisher_content_path + publisher + ".yaml", typ="safe"
+            )
 
-        popular_snaps = helpers.get_yaml(
-            publisher_content_path + publisher + "-snaps.yaml",
-            typ="safe",
-        )
+            if not context:
+                flask.abort(404)
 
-        context["popular_snaps"] = popular_snaps["snaps"]
+            popular_snaps = helpers.get_yaml(
+                publisher_content_path + publisher + "-snaps.yaml",
+                typ="safe",
+            )
 
-        if not context:
-            flask.abort(404)
+            context["popular_snaps"] = (
+                popular_snaps["snaps"] if popular_snaps else []
+            )
 
-        if "publishers" in context:
-            context["snaps"] = []
-            for publisher in context["publishers"]:
-                snaps_results = []
-                try:
-                    snaps_results = api.get_publisher_items(
-                        publisher, size=500, page=1
-                    )["results"]
-                except StoreApiError:
-                    pass
+            if "publishers" in context:
+                context["snaps"] = []
+                for publisher in context["publishers"]:
+                    snaps_results = []
+                    try:
+                        snaps_results = api.get_publisher_items(
+                            publisher, size=500, page=1
+                        )["results"]
+                    except StoreApiError:
+                        pass
 
-                context["snaps"].extend(
-                    [snap for snap in snaps_results if snap["apps"]]
+                    for snap in snaps_results:
+                        snap["icon_url"] = helpers.get_icon(snap["media"])
+
+                        context["snaps"].extend(
+                            [snap for snap in snaps_results if snap["apps"]]
+                        )
+
+                featured_snaps = [
+                    snap["package_name"] for snap in context["featured_snaps"]
+                ]
+
+                context["snaps"] = [
+                    snap
+                    for snap in context["snaps"]
+                    if snap["package_name"] not in featured_snaps
+                ]
+
+                context["snaps_count"] = len(context["snaps"]) + len(
+                    featured_snaps
                 )
 
-        featured_snaps = [
-            snap["package_name"] for snap in context["featured_snaps"]
-        ]
+                return flask.render_template(
+                    "store/publisher-details.html", **context
+                )
 
-        context["snaps"] = [
-            snap
-            for snap in context["snaps"]
-            if snap["package_name"] not in featured_snaps
-        ]
+        status_code = 200
+        error_info = {}
+        snaps_results = []
+        snaps = []
+        snaps_count = 0
+        publisher_details = {"display-name": publisher, "username": publisher}
 
-        context["snaps_count"] = len(snaps_results)
+        snaps_results = api.find(
+            publisher=publisher,
+            fields=[
+                "title",
+                "summary",
+                "media",
+                "publisher",
+            ],
+        )["results"]
 
-        return flask.render_template("store/publisher-details.html", **context)
+        for snap in snaps_results:
+            item = snap["snap"]
+            item["package_name"] = snap["name"]
+            item["icon_url"] = helpers.get_icon(item["media"])
+            snaps.append(item)
+
+        snaps_count = len(snaps)
+
+        if snaps_count > 0:
+            publisher_details = snaps[0]["publisher"]
+
+        context = {
+            "snaps": snaps,
+            "snaps_count": snaps_count,
+            "publisher": publisher_details,
+            "error_info": error_info,
+        }
+
+        return (
+            flask.render_template(
+                "store/community-publisher-details.html", **context
+            ),
+            status_code,
+        )
 
     @store.route("/store/categories/<category>")
     def store_category(category):
@@ -369,12 +391,11 @@ def store_blueprint(store_query=None):
         error_info = {}
         snaps_results = []
 
-        try:
-            snaps_results = api.get_category_items(
-                category=category, size=10, page=1
-            )["results"]
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
+        snaps_results = api.get_category_items(
+            category=category, size=10, page=1
+        )["results"]
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         # if the first snap (banner snap) doesn't have an icon, remove the last
         # snap from the list to avoid a hanging snap (grid of 9)
@@ -402,16 +423,12 @@ def store_blueprint(store_query=None):
     def featured_snaps_in_category(category):
         snaps_results = []
 
-        try:
-            snaps_results = api.get_category_items(
-                category=category, size=3, page=1
-            )["results"]
-        except (StoreApiError, ApiError) as api_error:
-            status_code, error_info = _handle_error(api_error)
-            return (
-                flask.jsonify({"error": error_info}),
-                status_code,
-            )
+        snaps_results = api.get_category_items(
+            category=category, size=3, page=1
+        )["results"]
+
+        for snap in snaps_results:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
 
         return flask.jsonify(snaps_results)
 

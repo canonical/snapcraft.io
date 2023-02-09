@@ -130,7 +130,8 @@ class ActiveDevices(Metric):
         super().__init__(name, series_sorted, buckets, status)
 
     def get_number_latest_active_devices(self):
-        """Get the number of latest active devices from the list of active devices.
+        """Get the number of latest active devices from the list of
+        active devices.
 
         :returns The number of lastest active devices
         """
@@ -303,7 +304,6 @@ class OsMetric(Metric):
 
         for distro in self.series:
             if distro["values"][0]:
-
                 name = _capitalize_os_name(distro["name"])
                 oses.append({"name": name, "value": distro["values"][-1]})
 

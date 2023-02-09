@@ -12,9 +12,9 @@ Choose username — Linux software in the Snap Store
     {% if error_list %}
       {% for error in error_list %}
         <div class="p-notification--negative">
-          <p class="p-notification__response">
-            {{ error.message|safe }}
-          </p>
+          <div class="p-notification__content">
+            <p class="p-notification__message">{{ error.message|safe }}</p>
+          </div>
         </div>
       {% endfor %}
     {% endif %}
@@ -43,7 +43,7 @@ Choose username — Linux software in the Snap Store
       </div>
       <div class="u-fixed-width u-clearfix">
         <button class="p-button--possitive u-float-right" type="submit">Continue</button>
-        <a class="p-button--neutral u-float-right" href="/">Cancel</a>
+        <a class="p-button u-float-right" href="/">Cancel</a>
       </div>
     </form>
   </div>

@@ -70,16 +70,16 @@ export default function TourStepCard({
           </span>
         )}
 
+        <small className="p-tour-controls__step">
+          {currentStepIndex + 1}/{steps.length}
+        </small>
         <span className="p-tour-controls__buttons">
-          <small className="p-tour-controls__step">
-            {currentStepIndex + 1}/{steps.length}
-          </small>
           <button
             disabled={currentStepIndex === 0}
             onClick={onPrevClick}
-            className="p-button--neutral has-icon u-no-margin--bottom"
+            className="p-button has-icon u-no-margin--bottom"
           >
-            <i className="p-icon--contextual-menu is-prev">Previous step</i>
+            <i className="p-icon--chevron-up is-prev">Previous step</i>
           </button>
           <button
             onClick={isLastStep ? onFinishClick : onNextClick}
@@ -88,9 +88,7 @@ export default function TourStepCard({
             {isLastStep ? (
               "Finish tour"
             ) : (
-              <i className="p-icon--contextual-menu is-light is-next">
-                Next step
-              </i>
+              <i className="p-icon--chevron-up is-light is-next">Next step</i>
             )}
           </button>
         </span>

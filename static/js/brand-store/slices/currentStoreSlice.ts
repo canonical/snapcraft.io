@@ -6,6 +6,7 @@ export const slice = createSlice({
   initialState: {
     currentStore: {},
     loading: true,
+    notFound: false,
   },
   reducers: {
     getCurrentStoreLoading: (state) => {
@@ -13,6 +14,10 @@ export const slice = createSlice({
     },
     getCurrentStoreSuccess: (state, { payload }) => {
       state.currentStore = payload || [];
+      state.loading = false;
+    },
+    getCurrentStoreNotFound: (state) => {
+      state.notFound = true;
       state.loading = false;
     },
     getCurrentStoreError: (state) => {
@@ -24,6 +29,7 @@ export const slice = createSlice({
 export const {
   getCurrentStoreLoading,
   getCurrentStoreSuccess,
+  getCurrentStoreNotFound,
   getCurrentStoreError,
 } = slice.actions;
 
@@ -34,11 +40,10 @@ export function fetchStore(storeId: string) {
     try {
       const response = await fetch(`/admin/store/${storeId}`);
       const data = await response.json();
-
       dispatch(getCurrentStoreSuccess(data));
     } catch (error) {
+      dispatch(getCurrentStoreNotFound());
       dispatch(getCurrentStoreError());
-      console.log("API fetch failed");
     }
   };
 }

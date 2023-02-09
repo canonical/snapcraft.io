@@ -7,52 +7,50 @@
       <h4>Before you publish your snap, you'll need an Ubuntu One account</h4>
       <p>Gain access to a host of great features within snapcraft.io such as your very own store listing page, publisher dashboard and snap usage metrics.</p>
     </div>
+  </div>
+  <div class="p-strip is-shallow u-no-padding--top">
     <div class="row">
       <div class="col-4 col-small-1 col-medium-2">
-        <img height="193" width="308" src="https://assets.ubuntu.com/v1/e3eacb56-fsf-publisher-listing.png" />
+        <img height="193" width="308" src="https://assets.ubuntu.com/v1/e3eacb56-fsf-publisher-listing.png" alt="Skype details page including images of the application running" />
       </div>
       <div class="col-4 col-small-1 col-medium-2">
-        <img height="193" width="308" src="https://assets.ubuntu.com/v1/3220411b-fsf-publisher-dashboard.png" />
+        <img height="193" width="308" src="https://assets.ubuntu.com/v1/3220411b-fsf-publisher-dashboard.png" alt="A publisher dashboard showing three snaps they own and three registered names" />
       </div>
       <div class="col-4 col-small-1 col-medium-2">
-        <img height="193" width="308" src="https://assets.ubuntu.com/v1/55c5070e-fsf-publisher-metrics.png" />
+        <img height="193" width="308" src="https://assets.ubuntu.com/v1/55c5070e-fsf-publisher-metrics.png" alt="A publisher snap matrics page containing the populatity over time of each version of the snap" />
       </div>
     </div>
   </div>
   <div class="row">
-    <div class="p-accordion" role="tablist" aria-multiselect="true">
+    <div class="p-accordion">
       <ol class="p-accordion__list">
         <li class="p-accordion__group">
-          <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab--with-title" id="tab1" role="tab" aria-controls="#tab1-section" >
-            <h4 class="p-accordion__title">
+          <h4 class="p-accordion__heading">
+            <button {% if user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} class="p-accordion__tab" id="tab1" role="tab" aria-controls="tab1-section" >
               Step 1: Create an Ubuntu One account
               {% if user %}<i class="p-icon--success"></i>{% endif %}
-            </h4>
-          </button>
-          <section class="p-accordion__panel" id="tab1-section" role="tabpanel" {% if user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1-section">
+            </button>
+          </h4>
+          <section class="p-accordion__panel" id="tab1-section" {% if user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab1">
             <div class="p-strip is-shallow">
               <div class="row">
                 <div class="col-8">
                   <p>This lets you make releases, alter your store listing and see usage metrics.</p>
-                  <div class="row">
-                    <p class="col-5">
-                      <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" />
-                    </p>
-                  </div>
-                  <a href="/login" class="p-button--positive p-link--external">Register / Sign in...</a>
+                  <img src="https://assets.ubuntu.com/v1/cd588a80-ubuntu-one.png" alt="Ubuntu one Snap store login screen" />
+                  <p><a href="/login" class="p-button--positive">Register / Sign in...</a></p>
                 </div>
               </div>
             </div>
           </section>
         </li>
         <li class="p-accordion__group">
-          <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} type="button" class="p-accordion__tab--with-title" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">
-            <h4 class="p-accordion__title">
+          <h4 class="p-accordion__heading">
+            <button {% if not user %}disabled aria-expanded="false"{% else %}aria-expanded="true"{% endif %} class="p-accordion__tab" id="tab2" role="tab" aria-controls="tab2-section">
               Step 2: Register your snap name
               <i id="register-name-success" class="p-icon--success u-hide"></i>
-            </h4>
-          </button>
-          <section class="p-accordion__panel" id="tab2-section" role="tabpanel" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2-section">
+            </button>
+          </h4>
+          <section class="p-accordion__panel" id="tab2-section" {% if not user %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %} aria-labelledby="tab2">
             <div class="p-strip is-shallow">
               <div class="row">
                 <div class="col-8">
@@ -66,10 +64,10 @@
                       </p>
                     </div>
                     <div id="register-name-notification" class="p-notification--caution u-hide">
-                      <p class="p-notification__response">
-                        <span class="p-notification__title"></span>
-                        Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)
-                      </p>
+                      <div class="p-notification__content">
+                        <h5 class="p-notification__title"></h5>
+                        <p class="p-notification__message">Make sure the name matches what has been used previously (i.e <code>{{ snap_name }}</code>)</p>
+                      </div>
                     </div>
                     <button class="p-button--positive p-button-spinner" data-js="js-snap-name-register">
                       <span class="p-button__spinner vanilla-workaround--dark">
@@ -84,12 +82,12 @@
           </section>
         </li>
         <li class="p-accordion__group">
-          <button {% if not user %}disabled{% endif %} type="button" class="p-accordion__tab--with-title" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">
-            <h4 class="p-accordion__title">
+          <h4 class="p-accordion__heading">
+            <button {% if not user %}disabled{% endif %} class="p-accordion__tab" id="tab3" role="tab" aria-controls="tab3-section" aria-expanded="false">
               Step 3: Upload to the Snap store
-            </h4>
-          </button>
-          <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
+            </button>
+          </h4>
+          <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3">
             <div class="p-strip is-shallow">
               <div class="row">
                 <div class="col-8">
@@ -106,7 +104,7 @@
                   <p>
                     Once you've pushed to the Snap store, edit your snap public presentation.
                   </p>
-                  <a class="p-button--neutral js-continue is-disabled">
+                  <a class="p-button js-continue is-disabled">
                     <i class="p-icon--spinner u-animation--spin"></i>
                     &nbsp;Waiting for upload...</a>
                 </div>
@@ -120,7 +118,7 @@
 {% endblock %}
 
 {% block fsf_pagination %}
-  <a class="p-button--neutral" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/build-and-test" aria-label="Previous: Build & test snap">
+  <a class="p-button" href="/{{ fsf_flow }}/{{ language }}/{{ os }}/build-and-test" aria-label="Previous: Build & test snap">
     &lsaquo; Build &amp; test snap
   </a>
 

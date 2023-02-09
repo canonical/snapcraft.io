@@ -70,7 +70,6 @@ const ReleasesTableChannelHeading = (props) => {
     risk,
     branch,
     numberOfBranches,
-    archs,
     pendingChannelMap,
     openBranches,
     availableBranches,
@@ -251,44 +250,10 @@ const ReleasesTableChannelHeading = (props) => {
     }
   }
 
-  const channelVersionTooltip = (
-    <Fragment>
-      {Object.keys(versionsMap).map((version) => {
-        return (
-          <span key={`tooltip-${channel}-${version}`}>
-            {version}:{" "}
-            <b>
-              {versionsMap[version].length === archs.length
-                ? "All architectures"
-                : versionsMap[version].join(", ")}
-            </b>
-            <br />
-            {isLaunchpadBuild && (
-              <Fragment>
-                Build: <i className="p-icon--lp" /> <b>{channelBuild}</b>
-                <br />
-                Built at:{" "}
-                <b>
-                  {channelBuildDate &&
-                    format(channelBuildDate, "yyyy-MM-dd HH:mm")}
-                </b>
-              </Fragment>
-            )}
-          </span>
-        );
-      })}
-    </Fragment>
-  );
-
   let rowTitle = risk === AVAILABLE ? channelVersion : channel;
 
   if (risk === BUILD) {
-    rowTitle = (
-      <Fragment>
-        <i className="p-icon--lp" />{" "}
-        {formatDistanceToNow(channelBuildDate, { addSuffix: true })}
-      </Fragment>
-    );
+    rowTitle = <>{channelBuild}</>;
   }
 
   if (branch) {
@@ -322,34 +287,47 @@ const ReleasesTableChannelHeading = (props) => {
       className={`p-releases-channel ${
         filteredChannel === channel ? "is-active" : ""
       } ${canDrag ? "is-draggable" : ""}`}
+      onMouseEnter={(e) => {
+        e.target.parentElement.classList.add("is-hovered");
+      }}
     >
-      <Handle />
-      <div className="p-releases-channel__name p-tooltip p-tooltip--btm-center">
-        <span className="p-release-data__info">
-          <span className="p-release-data__title" title={channel}>
-            {rowTitle}
+      <div className="p-releases-channel__inner">
+        <Handle />
+        <div className="p-releases-channel__name p-tooltip p-tooltip--btm-center">
+          <span className="p-release-data__info">
+            <span
+              className={`p-release-data__title ${
+                canBePromoted || canBeClosed ? "has-button" : ""
+              }`}
+              title={channel}
+            >
+              {rowTitle}
+            </span>
           </span>
-          {risk !== AVAILABLE && (
-            <span className="p-release-data__meta">{channelVersion}</span>
-          )}
-          {channelVersion && (
-            <span className="p-tooltip__message">{channelVersionTooltip}</span>
+        </div>
+
+        <span className="p-releases-table__menus u-hide--small">
+          {(canBePromoted || canBeClosed) && (
+            <ChannelMenu
+              tooltip={promoteTooltip}
+              targetChannels={targetChannels}
+              promoteToChannel={promoteRevisions}
+              channel={channel}
+              closeChannel={canBeClosed ? props.closeChannel : null}
+              gaEvent={triggerGAEvent}
+            />
           )}
         </span>
       </div>
 
-      <span className="p-releases-table__menus">
-        {(canBePromoted || canBeClosed) && (
-          <ChannelMenu
-            tooltip={promoteTooltip}
-            targetChannels={targetChannels}
-            promoteToChannel={promoteRevisions}
-            channel={channel}
-            closeChannel={canBeClosed ? props.closeChannel : null}
-            gaEvent={triggerGAEvent}
-          />
+      <div className="p-release-data__meta-container">
+        {risk !== AVAILABLE && (
+          <span className="p-release-data__meta">
+            {channelVersion}
+            {channelBuildDate && ` | ${format(channelBuildDate, "dd MMM yy")}`}
+          </span>
         )}
-      </span>
+      </div>
 
       {numberOfBranches > 0 && (
         <span

@@ -13,6 +13,10 @@ COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
 SENTRY_DSN = os.getenv("SENTRY_DSN", "").strip()
 SENTRY_CONFIG = {"release": COMMIT_ID, "environment": ENVIRONMENT}
 
+if ENVIRONMENT != "devel":
+    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SECURE = True
+
 WEBAPP = os.getenv("WEBAPP", "snapcraft")
 
 if not WEBAPP:

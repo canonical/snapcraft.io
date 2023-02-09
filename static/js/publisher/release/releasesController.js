@@ -8,6 +8,7 @@ import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
 
+import { updateArchitectures } from "./actions/architectures";
 import { updateRevisions } from "./actions/revisions";
 import { updateReleases } from "./actions/releases";
 import { initChannelMap } from "./actions/channelMap";
@@ -22,6 +23,7 @@ const ReleasesController = ({
   snapName,
   releasesData,
   channelMap,
+  updateArchitectures,
   updateReleases,
   updateRevisions,
   initChannelMap,
@@ -40,7 +42,7 @@ const ReleasesController = ({
         initReleasesData(revisionsMap, releasesData.releases);
         updateRevisions(revisionsMap);
         updateReleases(releasesData.releases);
-
+        updateArchitectures(revisionsList);
         initChannelMap(transformedChannelMap);
         setReady(true);
       }
@@ -50,6 +52,7 @@ const ReleasesController = ({
   const { visible } = notification;
   return (
     <Fragment>
+      {ready && <ReleasesConfirm />}
       {!ready && (
         <div className="p-strip">
           <div className="row">
@@ -66,9 +69,19 @@ const ReleasesController = ({
       )}
       {ready && (
         <Fragment>
-          <div className="row">
-            <ReleasesConfirm />
-            {visible && <Notification />}
+          {visible && <Notification />}
+          <div className="u-fixed-width u-hide--large u-hide--medium">
+            <div className="p-notification--caution">
+              <div className="p-notification__content">
+                <h5 className="p-notification__title">
+                  This is a read-only view
+                </h5>
+                <p className="p-notification__message">
+                  Some features are not available on this view. Switch to a
+                  tablet or desktop to edit.
+                </p>
+              </div>
+            </div>
           </div>
           <ReleasesHeading />
           <ReleasesTable />
@@ -88,6 +101,7 @@ ReleasesController.propTypes = {
   showModal: PropTypes.bool,
 
   initChannelMap: PropTypes.func,
+  updateArchitectures: PropTypes.func,
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
 };
@@ -102,6 +116,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     initChannelMap: (channelMap) => dispatch(initChannelMap(channelMap)),
+    updateArchitectures: (revisions) =>
+      dispatch(updateArchitectures(revisions)),
     updateRevisions: (revisions) => dispatch(updateRevisions(revisions)),
     updateReleases: (releases) => dispatch(updateReleases(releases)),
   };

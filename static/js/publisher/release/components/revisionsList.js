@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from "react";
+/* eslint-disable */
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -26,6 +27,7 @@ import {
   isProgressiveReleaseEnabled,
   getPendingRelease,
 } from "../selectors";
+import { relative } from "@sentry/utils";
 
 class RevisionsList extends Component {
   constructor() {
@@ -40,12 +42,12 @@ class RevisionsList extends Component {
 
   renderRow(
     revision,
+    previousRevision,
     isSelectable,
     showChannels,
     isPending,
     isActive,
     showBuildRequest,
-    showProgressive,
     progressiveBeingCancelled
   ) {
     const rowKey = `revision-row-${revision.revision}-${
@@ -54,8 +56,8 @@ class RevisionsList extends Component {
     return (
       <RevisionsListRow
         key={rowKey}
-        showProgressive={showProgressive}
         revision={revision}
+        previousRevision={previousRevision}
         isSelectable={isSelectable}
         showChannels={showChannels}
         isPending={isPending}
@@ -64,6 +66,20 @@ class RevisionsList extends Component {
         progressiveBeingCancelled={progressiveBeingCancelled}
       />
     );
+  }
+
+  // Moves the active revision to the top of the list
+  getSortedRevisions(activeRevision, revisions) {
+    const activeRevisionIndex = revisions.findIndex(
+      (revision) =>
+        activeRevision && revision.revision === activeRevision.revision
+    );
+
+    let indexToMove = 1;
+    const item = revisions.splice(activeRevisionIndex, indexToMove)[0];
+    indexToMove = 0;
+    revisions.splice(0, indexToMove, item);
+    return revisions;
   }
 
   renderRows(
@@ -75,7 +91,9 @@ class RevisionsList extends Component {
     hasPendingRelease,
     progressiveReleaseBeingCancelled
   ) {
-    return revisions.map((revision, index) => {
+    const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
+
+    return sortedRevisions.map((revision, index) => {
       const isActive =
         activeRevision && revision.revision === activeRevision.revision;
 
@@ -85,16 +103,16 @@ class RevisionsList extends Component {
           ? true
           : false;
 
-      const showProgressive = index === 0 && !hasPendingRelease;
+      const previousRevision = revisions[index - 1];
 
       return this.renderRow(
         revision,
+        previousRevision,
         isSelectable,
         showChannels,
         false,
         isActive,
         showBuildRequest,
-        showProgressive,
         progressiveBeingCancelled
       );
     });
@@ -144,46 +162,46 @@ class RevisionsList extends Component {
 
         if (availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL) {
           title = (
-            <Fragment>
+            <>
               Latest revisions for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         } else if (
           availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_UNRELEASED
         ) {
           title = (
-            <Fragment>
+            <>
               Unreleased revisions for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         } else if (
           availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_RECENT
         ) {
           title = (
-            <Fragment>
+            <>
               Recent unreleased revisions for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         } else if (
           availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD
         ) {
           title = (
-            <Fragment>
+            <>
               Revisions built on Launchpad for <b>{filters.arch}</b>
-            </Fragment>
+            </>
           );
         }
       } else {
         // when listing any other (real) channel, show filtered release history
         isReleaseHistory = true;
         title = (
-          <Fragment>
-            Releases history for <b>{filters.arch}</b> in{" "}
+          <>
+            Releases history for <strong>{filters.arch}</strong> in{" "}
             <b>
               {filters.track}/{filters.risk}
               {filters.branch ? `/${filters.branch}` : ""}
             </b>
-          </Fragment>
+          </>
         );
 
         filteredRevisions = this.props.filteredReleaseHistory;
@@ -274,14 +292,26 @@ class RevisionsList extends Component {
       pendingRelease.revision.revision !== filteredRevisions[0].revision;
 
     return (
-      <Fragment>
-        <div className="u-clearfix">
-          <h4 className="u-float-left">{title}</h4>
-          <a
+      <>
+        <button
+          className="p-button--link u-no-margin--bottom u-hide--medium u-hide--large"
+          onClick={this.onCloseClick.bind(this)}
+          style={{ position: "relative" }}
+        >
+          &lsaquo;&nbsp;Releases
+        </button>
+        <div className="u-clearfix" style={{ position: "relative" }}>
+          <p
+            role="heading"
+            aria-level="4"
+            className="u-float-left p-heading--4"
+          >
+            {title}
+          </p>
+          <button
             style={{ marginTop: "0.5rem" }}
-            href="#"
             onClick={this.onCloseClick.bind(this)}
-            className="p-icon--close u-float-right"
+            className="p-icon--close u-float-right p-button--link u-hide--small"
           />
         </div>
         {hasDevmodeRevisions && (
@@ -325,24 +355,23 @@ class RevisionsList extends Component {
             </div>
           </div>
         )}
-        <table className="p-revisions-list">
+        <table className="p-revisions-list p-table--mobile-card">
           <thead>
             <tr>
-              <th width="30px" />
               <th
                 className={!isReleaseHistory ? "col-checkbox-spacer" : ""}
-                width="140px"
                 scope="col"
+                style={{ width: "250px" }}
               >
                 Revision
               </th>
-              <th scope="col">Version</th>
+              <th scope="col" style={{ width: "150px" }}>
+                Version
+              </th>
               {showBuildRequest && <th scope="col">Build Request</th>}
-              {showProgressiveReleases && (
-                <th scope="col">Progressive release status</th>
-              )}
+              {showProgressiveReleases && <th scope="col">Release progress</th>}
               {showChannels && <th scope="col">Channels</th>}
-              <th scope="col" width="140px" className="u-align--right">
+              <th scope="col" style={{ width: "180px" }}>
                 {isReleaseHistory ? "Release date" : "Submission date"}
               </th>
             </tr>
@@ -351,6 +380,7 @@ class RevisionsList extends Component {
             {showPendingRelease &&
               this.renderRow(
                 pendingRelease.revision,
+                previousRevision,
                 !isReleaseHistory,
                 showChannels,
                 true,
@@ -362,7 +392,7 @@ class RevisionsList extends Component {
               this.renderRows(
                 showAllRevisions
                   ? filteredRevisions
-                  : filteredRevisions.slice(0, 10),
+                  : filteredRevisions.slice(0, 5),
                 !isReleaseHistory,
                 showChannels,
                 activeRevision,
@@ -377,18 +407,37 @@ class RevisionsList extends Component {
                 </td>
               </tr>
             )}
-            {!showAllRevisions && filteredRevisions.length > 10 && (
-              <tr>
-                <td colSpan={4}>
-                  <a onClick={this.showAllRevisions.bind(this, key)}>
-                    Show all {filteredRevisions.length} revisions
-                  </a>
+            {!showAllRevisions && filteredRevisions.length > 5 && (
+              <tr className="p-revisions-list__row u-hide--medium u-hide--large">
+                <td colSpan={5}>
+                  Showing 5 of {filteredRevisions.length} revisions
                 </td>
               </tr>
             )}
           </tbody>
         </table>
-      </Fragment>
+
+        {!showAllRevisions && filteredRevisions.length > 5 && (
+          <div
+            className="u-align--right"
+            style={{ position: "relative", zIndex: 1, paddingTop: "0.5rem" }}
+          >
+            <span
+              className="u-hide--small"
+              style={{ display: "inline-block", marginRight: "0.5rem" }}
+            >
+              Showing 5 of {filteredRevisions.length} revisions
+            </span>
+
+            <button
+              className="p-button--link u-no-margin--bottom"
+              onClick={this.showAllRevisions.bind(this, key)}
+            >
+              Show more
+            </button>
+          </div>
+        )}
+      </>
     );
   }
 }

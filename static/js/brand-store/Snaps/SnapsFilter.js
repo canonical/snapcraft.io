@@ -22,7 +22,9 @@ function SnapsFilter({
         onKeyUp={(e) => {
           if (e.target.value) {
             setSnapsInStore(
-              snapsInStore.filter((snap) => snap.name.includes(e.target.value))
+              snapsInStore.filter((snap) =>
+                snap?.name?.includes(e.target.value)
+              )
             );
             setOtherStores(
               otherStoreIds.map((storeId) => {

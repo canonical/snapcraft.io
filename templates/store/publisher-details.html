@@ -32,18 +32,24 @@
           <h1 class="p-heading--2 p-snap-heading__name">{{ publisher }}</h1>
           <p class="p-snap-heading__publisher">
             ({{ username }})
-            {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
-              {% include "partials/_verified_developer.html" %}
+            {% if developer_validation %}
+              {% if developer_validation == VERIFIED_PUBLISHER %}
+                {% include "partials/_verified_developer.html" %}
+              {% endif %}
+
+              {% if developer_validation == STAR_DEVELOPER %}
+                {% include "partials/_star_developer.html" %}
+              {% endif %}
             {% endif %}
           </p>
         </div>
 
         <div class="p-snap-install-buttons">
           {% if website %}
-            <a href="{{ website }}" class="p-button--positive p-link--external p-snap-install-buttons__versions">Visit publisher website</a>
+            <a href="{{ website }}" class="p-button--positive  p-snap-install-buttons__versions">Visit publisher website</a>
           {% endif %}
           {% if contact %}
-            <a href="{{ contact }}" class="p-button--neutral p-link--external p-snap-install-buttons__install">Contact publisher</a>
+            <a href="{{ contact }}" class="p-button  p-snap-install-buttons__install">Contact publisher</a>
           {% endif %}
         </div>
 
@@ -151,9 +157,10 @@
     <div class="row">
       <div class="col-12">
         <div class="p-notification--negative">
-          <p class="p-notification__response">
-            <span class="p-notification__title">Error:</span> API request failed
-          </p>
+          <div class="p-notification__content">
+            <h5 class="p-notification__title">Error</h5>
+            <p class="p-notification__message">API request failed</p>
+          </div>
         </div>
       </div>
     </div>

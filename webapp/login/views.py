@@ -4,21 +4,17 @@ import datetime
 import flask
 from canonicalwebteam.candid import CandidClient
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-    StoreApiResponseErrorList,
-)
+
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 from flask_wtf.csrf import generate_csrf, validate_csrf
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
-from webapp.api.exceptions import ApiCircuitBreaker, ApiError, ApiResponseError
+from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
-from webapp.publisher.views import _handle_error, _handle_error_list
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -52,10 +48,6 @@ def login_handler():
             return flask.redirect(flask.url_for(".logout"))
         else:
             return flask.abort(502, str(api_response_error))
-    except ApiCircuitBreaker:
-        flask.abort(503)
-    except ApiError as api_error:
-        return flask.abort(502, str(api_error))
 
     openid_macaroon = MacaroonRequest(
         caveat_id=authentication.get_caveat_id(root)
@@ -96,9 +88,6 @@ def after_login(resp):
         flask.session["publisher"]["stores"] = logic.get_stores(
             account["stores"], roles=["admin", "review", "view"]
         )
-
-    except ApiCircuitBreaker:
-        flask.abort(503)
     except Exception:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
@@ -179,13 +168,8 @@ def login_callback():
         flask.session["publisher-macaroon"], candid_macaroon
     )
 
-    try:
-        publisher = publisher_api.whoami(flask.session)
-        account = publisher_api.get_account(flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    publisher = publisher_api.whoami(flask.session)
+    account = publisher_api.get_account(flask.session)
 
     flask.session["publisher"] = {
         "account_id": publisher["account"]["id"],

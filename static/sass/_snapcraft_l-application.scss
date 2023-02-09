@@ -1,8 +1,7 @@
 @mixin snapcraft-l-application {
   // main navigation height is based on padding and line height of a nav link
-  $main-nav-height: map-get($line-heights, default-text) + $spv-inner--large * 2;
+  $main-nav-height: map-get($line-heights, default-text) + $spv--large * 2;
   $global-nav-height: 2rem;
-  // application layout is typically 100vh, but we need to also accommodate the main nav
   $layout-height: calc(100vh - #{$main-nav-height} - #{$global-nav-height});
 
   .l-application {
@@ -52,7 +51,7 @@
     height: $layout-height;
     position: absolute;
     top: auto;
-    z-index: 100;
+    z-index: 99;
 
     @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
       position: static;
@@ -67,6 +66,7 @@
 
       // side nav tablet view with fixed footer
       &.is-flex-column--medium {
+        // stylelint-disable-next-line max-line-length
         @media (min-width: $application-layout--breakpoint-side-nav-collapsed) and (max-width: $application-layout--breakpoint-side-nav-expanded - 1px) {
           .l-navigation & {
             @content;
@@ -120,6 +120,7 @@
   .l-aside {
     height: $layout-height;
     position: relative;
+    z-index: 999;
 
     @media (min-width: $breakpoint-small) {
       width: 22.5rem;
@@ -143,9 +144,19 @@
 
   .l-status {
     background-color: $color-x-light;
-    padding-bottom: $spv-inner--scaleable;
-    padding-top: $spv-inner--scaleable;
+    padding-bottom: $spv--large;
+    padding-top: $spv--large;
     position: relative;
     top: -100%;
+  }
+
+  .l-aside__overlay {
+    background-color: transparent;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 999;
   }
 }

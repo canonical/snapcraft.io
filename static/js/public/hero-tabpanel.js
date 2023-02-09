@@ -25,11 +25,34 @@ class HeroTabPanels {
     const panel = this.panelContainer.querySelector(
       `[aria-labelledby='${categoryName}-snaps']`
     );
-    const verifiedAccountBadge = `
-      <span class="p-verified" title="Verified account">
-        <img src="https://assets.ubuntu.com/v1/75654c90-rosette.svg" alt="">
-      </span>
+
+    const renderValidationBadge = (validation) => {
+      const verifiedAccountBadge = `
+    <span class="p-verified p-tooltip p-tooltip--top-center">
+      <img src="https://assets.ubuntu.com/v1/ba8a4b7b-Verified.svg" width="14" height="14" alt="Verified account" />
+      <span class="p-tooltip__message u-align--center" role="tooltip">Verified account</span>
+    </span>
     `;
+
+      const starDeveloperBadge = `
+      <span class="p-verified p-tooltip p-tooltip--top-center">
+        <img src="https://assets.ubuntu.com/v1/d810dee9-Orange+Star.svg" class="p-star" width="14" height="14" alt="Star developer"/>
+        <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-tooltip">Star developer</span>
+      </span>
+  
+    `;
+
+      if (validation === "verified") {
+        return verifiedAccountBadge;
+      }
+
+      if (validation === "starred") {
+        return starDeveloperBadge;
+      }
+
+      return "";
+    };
+
     panel.innerHTML = "";
     snaps.forEach((snap) => {
       const columnDiv = document.createElement("div");
@@ -60,13 +83,10 @@ class HeroTabPanels {
             </h3>
             <div class="p-media-object__content">
               <p>
-                <span class="u-off-screen">Publisher: </span>${snap.publisher}
-                ${
-                  snap.developer_validation &&
-                  snap.developer_validation === "verified"
-                    ? verifiedAccountBadge
-                    : ""
+                <span class="u-off-screen">Publisher: </span>${
+                  snap.developer_name
                 }
+                ${renderValidationBadge(snap.developer_validation)}
               </p>
               <p>${snap.summary}</p>
             </div>

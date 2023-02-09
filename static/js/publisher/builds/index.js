@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 
 import BuildsTable from "./components/buildsTable";
 
-import { TriggerBuildStatus } from "./helpers";
+import { TriggerBuildStatus, BuildRequestStatus } from "./helpers";
 
 import TriggerBuild from "./components/triggerBuild";
 
@@ -140,6 +140,54 @@ class Builds extends React.Component {
     }
   }
 
+  triggerFetchBuildRequest(build_id) {
+    const { snapName } = this.props;
+    const { ERROR, SUCCESS } = TriggerBuildStatus;
+    const { PENDING, COMPLETED, FAILED } = BuildRequestStatus;
+    const url = `/${snapName}/builds/check-build-request/`;
+
+    fetch(`${url}/${build_id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.success) {
+          if (result.status === PENDING) {
+            setTimeout(
+              () => this.triggerFetchBuildRequest(build_id),
+              this.props.updateFreq
+            );
+          } else if (result.status === COMPLETED) {
+            this.setState({
+              triggerBuildStatus: SUCCESS,
+              triggerBuildLoading: false,
+            });
+          } else if (result.status === FAILED) {
+            this.setState({
+              triggerBuildLoading: false,
+              triggerBuildStatus: ERROR,
+              triggerBuildErrorMessage: result.error.message
+                ? result.error.message
+                : "Build request failed",
+            });
+          }
+        } else {
+          this.setState({
+            triggerBuildStatus: ERROR,
+            triggerBuildErrorMessage: result.error.message
+              ? result.error.message
+              : "",
+          });
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          triggerBuildStatus: ERROR,
+          triggerBuildErrorMessage: error.message ? error.message : "",
+        });
+      });
+  }
+
   triggerBuildHandler() {
     const { csrf_token, snapName } = this.props;
     const { ERROR, SUCCESS } = TriggerBuildStatus;
@@ -157,7 +205,11 @@ class Builds extends React.Component {
       .then((res) => res.json())
       .then((result) => {
         if (result.success) {
-          this.setState({ triggerBuildStatus: SUCCESS });
+          if (result.build_id) {
+            this.triggerFetchBuildRequest(result.build_id);
+          } else {
+            this.setState({ triggerBuildStatus: SUCCESS });
+          }
         } else {
           this.setState({
             triggerBuildStatus: ERROR,

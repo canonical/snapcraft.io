@@ -74,6 +74,11 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
     setMembers(filteredMembers);
   }, [filteredMembers]);
 
+  const mobileLabelStyles = {
+    display: "inline-block",
+    marginLeft: "0.5rem",
+  };
+
   return (
     <MainTable
       responsive={true}
@@ -150,48 +155,68 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
             {
               "aria-label": "Admin",
               content: (
-                <CheckboxInput
-                  defaultChecked={member.roles.includes("admin")}
-                  disabled={
-                    member.current_user && member.roles.includes("admin")
-                  }
-                  onChange={() => {
-                    handleRoleChange(member, "admin");
-                  }}
-                />
+                <>
+                  <CheckboxInput
+                    defaultChecked={member.roles.includes("admin")}
+                    disabled={
+                      member.current_user && member.roles.includes("admin")
+                    }
+                    onChange={() => {
+                      handleRoleChange(member, "admin");
+                    }}
+                  />
+                  <span className="u-hide--large" style={mobileLabelStyles}>
+                    Admin
+                  </span>
+                </>
               ),
             },
             {
               "aria-label": "Reviewer",
               content: (
-                <CheckboxInput
-                  defaultChecked={member.roles.includes("review")}
-                  onChange={() => {
-                    handleRoleChange(member, "review");
-                  }}
-                />
+                <>
+                  <CheckboxInput
+                    defaultChecked={member.roles.includes("review")}
+                    onChange={() => {
+                      handleRoleChange(member, "review");
+                    }}
+                  />
+                  <span className="u-hide--large" style={mobileLabelStyles}>
+                    Reviewer
+                  </span>
+                </>
               ),
             },
             {
               "aria-label": "Viewer",
               content: (
-                <CheckboxInput
-                  defaultChecked={member.roles.includes("view")}
-                  onChange={() => {
-                    handleRoleChange(member, "view");
-                  }}
-                />
+                <>
+                  <CheckboxInput
+                    defaultChecked={member.roles.includes("view")}
+                    onChange={() => {
+                      handleRoleChange(member, "view");
+                    }}
+                  />
+                  <span className="u-hide--large" style={mobileLabelStyles}>
+                    Viewer
+                  </span>
+                </>
               ),
             },
             {
               "aria-label": "Publisher",
               content: (
-                <CheckboxInput
-                  defaultChecked={member.roles.includes("access")}
-                  onChange={() => {
-                    handleRoleChange(member, "access");
-                  }}
-                />
+                <>
+                  <CheckboxInput
+                    defaultChecked={member.roles.includes("access")}
+                    onChange={() => {
+                      handleRoleChange(member, "access");
+                    }}
+                  />
+                  <span className="u-hide--large" style={mobileLabelStyles}>
+                    Publisher
+                  </span>
+                </>
               ),
             },
           ],

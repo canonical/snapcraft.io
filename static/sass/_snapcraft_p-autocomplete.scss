@@ -3,20 +3,26 @@
     position: relative;
 
     .p-autocomplete__suggestions {
+      max-height: 220px;
       position: absolute;
       width: 100%;
       z-index: 1;
     }
+
+    .p-autocomplete__suggestion {
+      padding-bottom: 0.5rem;
+      padding-top: 0.5rem;
+    }
   }
 
   .p-autocomplete__result-list {
-    margin-top: $spv-outer--medium;
+    margin-top: $spv--large;
   }
 
   .p-autocomplete__result {
     background-color: $color-light;
     display: flex;
     justify-content: space-between;
-    margin-bottom: $spv-outer--medium;
+    margin-bottom: $spv--large;
   }
 }

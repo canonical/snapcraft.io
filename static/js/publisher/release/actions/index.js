@@ -1,3 +1,4 @@
+export * from "./architectures";
 export * from "./availableRevisionsSelect";
 export * from "./channelMap";
 export * from "./currentTrack";

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -7,13 +7,12 @@ import {
   AVAILABLE,
   RISKS,
   AVAILABLE_REVISIONS_SELECT_ALL,
-  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../../constants";
 import {
   getArchitectures,
   getBranches,
   getLaunchpadRevisions,
-  getRevisionsFromBuild,
+  getAllRevisions,
 } from "../../selectors";
 import { selectAvailableRevisions, closeHistory } from "../../actions";
 
@@ -21,7 +20,6 @@ import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
-import AvailableRevisionsTabs from "./availableRevisionsTabs";
 
 const MAX_BRANCHES = 5;
 const MAX_BUILDS = 5;
@@ -57,7 +55,6 @@ class ReleasesTable extends Component {
 
   handleToggleShowMoreBuilds() {
     const { showAllBuilds } = this.state;
-
     this.setState({
       showAllBuilds: !showAllBuilds,
     });
@@ -82,6 +79,7 @@ class ReleasesTable extends Component {
         key={rowKey}
         risk={BUILD}
         revisions={revisions}
+        buildRequestId={getBuildId(Object.values(revisions)[0])}
       />
     );
   }
@@ -89,7 +87,6 @@ class ReleasesTable extends Component {
   renderHistoryPanel() {
     return (
       <div className="p-releases-table__row" key="history-panel-row">
-        <div className="p-releases-channel is-placeholder u-hide--small" />
         <HistoryPanel key="history-panel" />
       </div>
     );
@@ -99,22 +96,22 @@ class ReleasesTable extends Component {
     const { isHistoryOpen, filters } = this.props;
 
     return (
-      <Fragment>
+      <>
         {this.renderChannelRow(AVAILABLE)}
         {isHistoryOpen &&
           filters.risk === AVAILABLE &&
           this.renderHistoryPanel()}
-      </Fragment>
+      </>
     );
   }
 
   renderAvailableRevisions() {
     return (
-      <Fragment>
+      <>
         <h5>Promote from uploaded revisions</h5>
 
         {this.renderAvailableRevisionsRow()}
-      </Fragment>
+      </>
     );
   }
 
@@ -122,11 +119,24 @@ class ReleasesTable extends Component {
     const lpRevisions = this.props.launchpadRevisions;
     const { showAllBuilds } = this.state;
 
+    const revisions = this.props.allRevisions;
+    const revisionsMap = revisions.reduce((acc, item) => {
+      const buildId = getBuildId(item);
+      if (buildId) {
+        if (!acc[buildId]) {
+          acc[buildId] = [];
+        }
+
+        acc[buildId].push(item);
+      }
+      return acc;
+    }, {});
+
     const builds = lpRevisions
       .map(getBuildId)
       .filter((item, i, ar) => ar.indexOf(item) === i)
       .map((buildId) => {
-        const revs = this.props.getRevisionsFromBuild(buildId);
+        const revs = revisionsMap[buildId];
 
         const revsMap = {};
 
@@ -147,57 +157,41 @@ class ReleasesTable extends Component {
 
     if (builds.length) {
       return (
-        <Fragment>
-          <h5>Promote from recent Launchpad builds</h5>
+        <>
           {buildsToShow.map((revisions) => this.renderBuildRow(revisions))}
-
           {builds.length > MAX_BUILDS && (
-            <div className="p-releases-table__row--show-all">
-              <a onClick={this.handleToggleShowMoreBuilds.bind(this)}>
-                {!showAllBuilds && (
-                  <Fragment>Show all builds ({builds.length})</Fragment>
-                )}
-                {showAllBuilds && (
-                  <Fragment>Show only {MAX_BUILDS} builds</Fragment>
-                )}
-              </a>
+            <div className="p-releases-table__row--show-all u-align--right">
+              {!showAllBuilds && (
+                <>
+                  <small
+                    className="u-text-muted"
+                    style={{ marginRight: "0.5rem" }}
+                  >
+                    Showing {MAX_BUILDS} of {builds.length} builds
+                  </small>
+                  <button
+                    onClick={this.handleToggleShowMoreBuilds.bind(this)}
+                    className="p-button is-small"
+                  >
+                    Show all builds
+                  </button>
+                </>
+              )}
+              {showAllBuilds && (
+                <button
+                  className="p-button is-small"
+                  onClick={this.handleToggleShowMoreBuilds.bind(this)}
+                >
+                  Show only {MAX_BUILDS} builds
+                </button>
+              )}
             </div>
           )}
-        </Fragment>
+        </>
       );
     }
 
     return null;
-  }
-
-  renderTabs() {
-    const { launchpadRevisions, closeHistory } = this.props;
-
-    if (launchpadRevisions.length) {
-      return (
-        <Fragment>
-          <h4>Revisions available to release</h4>
-          <AvailableRevisionsTabs onChange={closeHistory}>
-            {(item) => {
-              if (item === AVAILABLE_REVISIONS_SELECT_ALL) {
-                return this.renderAvailableRevisions();
-              }
-              if (item === AVAILABLE_REVISIONS_SELECT_LAUNCHPAD) {
-                return this.renderLaunchpadBuilds();
-              }
-              return null;
-            }}
-          </AvailableRevisionsTabs>
-        </Fragment>
-      );
-    } else {
-      return (
-        <Fragment>
-          <h4>Revisions available to release</h4>
-          {this.renderAvailableRevisionsRow()}
-        </Fragment>
-      );
-    }
   }
 
   renderRows() {
@@ -254,13 +248,9 @@ class ReleasesTable extends Component {
               <div className="p-releases-table__row--show-all">
                 <a onClick={this.handleToggleShowMoreBranches.bind(this, risk)}>
                   {!showAllBranches && (
-                    <Fragment>
-                      Show all branches ({risksBranches.length})
-                    </Fragment>
+                    <>Show all branches ({risksBranches.length})</>
                   )}
-                  {showAllBranches && (
-                    <Fragment>Show only {MAX_BRANCHES} branches</Fragment>
-                  )}
+                  {showAllBranches && <>Show only {MAX_BRANCHES} branches</>}
                 </a>
               </div>
             </div>
@@ -294,7 +284,7 @@ class ReleasesTable extends Component {
   }
 
   render() {
-    const { archs } = this.props;
+    const { archs, launchpadRevisions } = this.props;
     const filteredArch = this.props.filters && this.props.filters.arch;
 
     const className = `p-releases-table ${
@@ -304,8 +294,8 @@ class ReleasesTable extends Component {
     return (
       <div className="row">
         <div className={className}>
-          <div className="p-releases-table__row p-releases-table__row--heading">
-            <div className="p-releases-channel is-placeholder" />
+          <div className="p-releases-table__row p-releases-table__row--heading u-hide--small">
+            <div className="p-releases-channel is-placeholder">Channel</div>
             {archs.map((arch) => (
               <div
                 className={`p-releases-table__cell p-releases-table__arch ${
@@ -317,8 +307,10 @@ class ReleasesTable extends Component {
               </div>
             ))}
           </div>
-          {this.renderRows()}
-          {this.renderTabs()}
+          <div>{this.renderRows()}</div>
+          <h4>Revisions available to release</h4>
+          {this.renderAvailableRevisionsRow()}
+          {launchpadRevisions.length > 0 && this.renderLaunchpadBuilds()}
         </div>
       </div>
     );
@@ -335,7 +327,7 @@ ReleasesTable.propTypes = {
   currentTrack: PropTypes.string.isRequired,
 
   launchpadRevisions: PropTypes.array,
-  getRevisionsFromBuild: PropTypes.func,
+  allRevisions: PropTypes.array,
 
   // actions
   selectAvailableRevisions: PropTypes.func,
@@ -351,7 +343,7 @@ const mapStateToProps = (state) => {
     openBranches: state.branches,
     currentTrack: state.currentTrack,
     launchpadRevisions: getLaunchpadRevisions(state),
-    getRevisionsFromBuild: (buildId) => getRevisionsFromBuild(state, buildId),
+    allRevisions: getAllRevisions(state),
   };
 };
 

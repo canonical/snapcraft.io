@@ -6,13 +6,20 @@ export const slice = createSlice({
   initialState: {
     snaps: [],
     loading: true,
+    notFound: false,
   },
   reducers: {
     getSnapsLoading: (state) => {
       state.loading = true;
+      state.notFound = false;
     },
     getSnapsSuccess: (state, { payload }) => {
       state.snaps = payload || [];
+      state.loading = false;
+      state.notFound = false;
+    },
+    getSnapsNotFound: (state) => {
+      state.notFound = true;
       state.loading = false;
     },
     getSnapsError: (state) => {
@@ -24,6 +31,7 @@ export const slice = createSlice({
 export const {
   getSnapsLoading,
   getSnapsSuccess,
+  getSnapsNotFound,
   getSnapsError,
 } = slice.actions;
 
@@ -34,11 +42,10 @@ export function fetchSnaps(storeId: string) {
     try {
       const response = await fetch(`/admin/store/${storeId}/snaps`);
       const data = await response.json();
-
       dispatch(getSnapsSuccess(data));
     } catch (error) {
+      dispatch(getSnapsNotFound());
       dispatch(getSnapsError());
-      console.log("API fetch failed");
     }
   };
 }

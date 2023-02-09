@@ -25,6 +25,7 @@ const md = new MarkdownIt({
   "image",
   "html_inline",
   "fence",
+  "link",
 ]);
 
 // For the different elements we might need to change different properties
@@ -252,8 +253,8 @@ function render(packageName) {
   try {
     transformedState = transformStateImages(getState(packageName));
   } catch (e) {
-    const notification = `<div class="p-notification--negative">
-<p class="p-notification__response">Something went wrong. Please ensure you have permission to preview this snap.</p>
+    const notification = `<div class="p-notification--negative"><div class="p-notification__content">
+<p class="p-notification__message">Something went wrong. Please ensure you have permission to preview this snap.</p></div>
 </div>`;
     document.querySelector(".p-snap-heading").parentNode.appendChild(
       (() => {

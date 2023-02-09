@@ -9,7 +9,6 @@ from webapp import helpers
 
 
 def get_n_random_snaps(snaps, choice_number):
-
     if len(snaps) > choice_number:
         return random.sample(snaps, choice_number)
 
@@ -193,8 +192,10 @@ def convert_date(date_to_convert):
     :param date_to_convert: Date to convert
     :returns: Readable date
     """
-    date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
-    delta = datetime.datetime.now() - datetime.timedelta(days=1)
+    local_timezone = datetime.datetime.utcnow().tzinfo
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=local_timezone)
+    delta = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+
     if delta < date_parsed:
         return humanize.naturalday(date_parsed).title()
     else:
@@ -409,10 +410,6 @@ def filter_screenshots(media):
     ][:5]
 
 
-def get_icon(media):
-    return [m["url"] for m in media if m["type"] == "icon"]
-
-
 def get_video(media):
     video = None
     for m in media:
@@ -429,12 +426,15 @@ def promote_snap_with_icon(snaps):
 
     :returns: A list of snaps
     """
-    snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
+    try:
+        snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
 
-    if snap_with_icon:
-        snap_with_icon_index = snaps.index(snap_with_icon)
+        if snap_with_icon:
+            snap_with_icon_index = snaps.index(snap_with_icon)
 
-        snaps.insert(0, snaps.pop(snap_with_icon_index))
+            snaps.insert(0, snaps.pop(snap_with_icon_index))
+    except StopIteration:
+        pass
 
     return snaps
 

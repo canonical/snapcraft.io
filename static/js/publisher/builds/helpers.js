@@ -90,3 +90,9 @@ export const TriggerBuildStatus = {
   SUCCESS,
   IDLE,
 };
+
+export const BuildRequestStatus = {
+  PENDING: "Pending",
+  COMPLETED: "Completed",
+  FAILED: "Failed",
+};

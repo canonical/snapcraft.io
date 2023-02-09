@@ -3,9 +3,11 @@ A Flask application for snapcraft.io.
 
 The web frontend for the snap store.
 """
-
 import talisker.requests
 import webapp.api
+
+from talisker import logging
+
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
@@ -21,6 +23,9 @@ from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
 from webapp.tutorials.views import init_tutorials
+
+
+TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
 
 
 def create_app(testing=False):

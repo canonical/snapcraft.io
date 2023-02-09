@@ -173,7 +173,7 @@ function push() {
     if (continueBtn) {
       continueBtn.href = `/${snapName}/releases`;
       continueBtn.classList.add("p-button--positive");
-      continueBtn.classList.remove("p-button--neutral");
+      continueBtn.classList.remove("p-button");
       continueBtn.classList.remove("is-disabled");
       continueBtn.innerHTML = "Continue";
     }
@@ -188,7 +188,7 @@ function push() {
 
 function updateNotification(notificationEl, className, message) {
   notificationEl.className = className;
-  notificationEl.querySelector(".p-notification__response").innerHTML = message;
+  notificationEl.querySelector(".p-notification__message").innerHTML = message;
 }
 
 function successNotification(notificationEl, message) {
@@ -263,11 +263,9 @@ function initRegisterName(formEl, notificationEl, successEl) {
     );
 
     const currentPanel = formEl.closest(".p-accordion__group");
-    const currentToggle = currentPanel.querySelector(
-      ".p-accordion__tab--with-title"
-    );
+    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
     const nextPanel = currentPanel.nextElementSibling;
-    const nextToggle = nextPanel.querySelector(".p-accordion__tab--with-title");
+    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
 
     const enableButton = () => {
       if (submitButton.disabled) {

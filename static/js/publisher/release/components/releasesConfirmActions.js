@@ -10,7 +10,7 @@ const ReleasesConfirmActions = ({
 }) => (
   <div className="p-releases-confirm__buttons">
     <button
-      className="p-button--neutral u-no-margin--bottom"
+      className="u-no-margin--bottom u-no-margin--right"
       disabled={!isCancelEnabled}
       onClick={cancelPendingReleases}
     >

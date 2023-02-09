@@ -17,10 +17,14 @@ import {
 import { fetchSnaps } from "../slices/snapsSlice";
 import { fetchMembers } from "../slices/membersSlice";
 
+import Publisher from "../Publisher";
+import Reviewer from "../Reviewer";
+import ReviewerAndPublisher from "../ReviewerAndPublisher";
 import SnapsTable from "./SnapsTable";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
+import StoreNotFound from "../StoreNotFound";
 
 function Snaps() {
   const brandStoresList = useSelector(brandStoresListSelector);
@@ -29,6 +33,8 @@ function Snaps() {
   const snapsLoading = useSelector((state) => state.snaps.loading);
   const storesLoading = useSelector((state) => state.brandStores.loading);
   const membersLoading = useSelector((state) => state.members.loading);
+  const snapsNotFound = useSelector((state) => state.snaps.notFound);
+  const membersNotFound = useSelector((state) => state.members.notFound);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [snapsInStore, setSnapsInStore] = useState([]);
@@ -50,6 +56,13 @@ function Snaps() {
   const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState([]);
   const [isReloading, setIsReloading] = useState(false);
   const [currentMember, setCurrentMember] = useState(null);
+  const [currentStore, setCurrentStore] = useState(null);
+  const [isPublisherOnly, setIsPublisherOnly] = useState(false);
+  const [isReviewerOnly, setIsReviewerOnly] = useState(false);
+  const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
+    false
+  );
+  const [globalStore, setGlobalStore] = useState(null);
   let location = useLocation();
 
   const getStoreName = (storeId) => {
@@ -100,16 +113,28 @@ function Snaps() {
 
           if (data.success) {
             setShowAddSuccessNotification(true);
+
+            setTimeout(() => {
+              setShowAddSuccessNotification(false);
+            }, 5000);
           }
 
           if (data.error) {
             setShowErrorNotification(true);
+
+            setTimeout(() => {
+              setShowErrorNotification(false);
+            }, 5000);
           }
         }, 1500);
       })
       .catch(() => {
         setIsSaving(false);
         setShowErrorNotification(true);
+
+        setTimeout(() => {
+          setShowErrorNotification(false);
+        }, 5000);
       });
   };
 
@@ -148,6 +173,10 @@ function Snaps() {
           setRemoveSnapSaving(false);
           setSnapsToRemove([]);
           setShowRemoveSuccessNotification(true);
+
+          setTimeout(() => {
+            setShowRemoveSuccessNotification(false);
+          }, 5000);
         }, 1500);
       })
       .catch(() => {
@@ -155,12 +184,23 @@ function Snaps() {
       });
   };
 
-  const isAdmin = () => {
-    return (
-      currentMember &&
-      currentMember.roles &&
-      currentMember.roles.includes("admin")
-    );
+  const isOnlyViewer = () =>
+    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
+
+  const getOtherStoreIds = () => {
+    const storeIds = [];
+
+    snaps.forEach((snap) => {
+      if (snap["other-stores"].length) {
+        snap["other-stores"].forEach((otherStoreId) => {
+          if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
+            storeIds.push(otherStoreId);
+          }
+        });
+      }
+    });
+
+    return storeIds;
   };
 
   useEffect(() => {
@@ -170,18 +210,7 @@ function Snaps() {
 
   useEffect(() => {
     setSnapsInStore(snaps.filter((snap) => snap.store === id));
-
-    setOtherStoreIds(
-      Array.from(
-        new Set(
-          snaps
-            .filter((snap) => snap.store !== id)
-            .map((snap) => {
-              return snap.store;
-            })
-        )
-      )
-    );
+    setOtherStoreIds(getOtherStoreIds());
 
     const nonEssentialSnaps = snaps.filter((item) => {
       return item.store !== id && !item.essential;
@@ -195,12 +224,20 @@ function Snaps() {
   }, [snaps]);
 
   useEffect(() => {
+    setGlobalStore({
+      id: "ubuntu",
+      name: "Global",
+      snaps: snaps.filter((snap) => snap.store === "ubuntu"),
+    });
+
     setOtherStores(
       otherStoreIds.map((storeId) => {
         return {
           id: storeId,
           name: getStoreName(storeId),
-          snaps: snaps.filter((snap) => snap.store === storeId),
+          snaps: snaps.filter((snap) =>
+            snap?.["other-stores"].includes(storeId)
+          ),
         };
       })
     );
@@ -219,6 +256,26 @@ function Snaps() {
     setCurrentMember(members.find((member) => member.current_user));
   }, [snaps, members, snapsLoading, membersLoading]);
 
+  useEffect(() => {
+    setCurrentStore(brandStoresList.find((store) => store.id === id));
+  }, [brandStoresList, id]);
+
+  useEffect(() => {
+    setIsPublisherOnly(
+      currentStore?.roles.length === 1 && currentStore?.roles.includes("access")
+    );
+
+    setIsReviewerOnly(
+      currentStore?.roles.length === 1 && currentStore?.roles.includes("review")
+    );
+
+    setIsReviewerAndPublisherOnly(
+      currentStore?.roles.length === 2 &&
+        currentStore?.roles.includes("access") &&
+        currentStore?.roles.includes("review")
+    );
+  }, [currentStore, id]);
+
   return (
     <>
       <main className="l-main">
@@ -228,23 +285,34 @@ function Snaps() {
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
+            ) : currentStore && isReviewerAndPublisherOnly ? (
+              <ReviewerAndPublisher />
+            ) : currentStore && isReviewerOnly ? (
+              <Reviewer />
+            ) : currentStore && isPublisherOnly ? (
+              <Publisher />
+            ) : snapsNotFound || membersNotFound ? (
+              <StoreNotFound />
             ) : (
               <>
-                {!isReloading && currentMember?.roles && isAdmin() && (
-                  <div className="u-fixed-width">
-                    <SectionNav sectionName="snaps" />
-                  </div>
-                )}
-                {!isReloading && currentMember?.roles && (
+                {!isReloading &&
+                  !isOnlyViewer() &&
+                  !snapsNotFound &&
+                  !membersNotFound && (
+                    <div className="u-fixed-width">
+                      <SectionNav sectionName="snaps" />
+                    </div>
+                  )}
+                {!isReloading && (
                   <Row>
                     <Col size="6">
-                      {!isAdmin() && (
+                      {isOnlyViewer() && (
                         <h2 className="p-heading--4">
                           Snaps in {getStoreName(id)}
                         </h2>
                       )}
 
-                      {isAdmin() && (
+                      {!isOnlyViewer() && (
                         <>
                           <Button onClick={() => setSidePanelOpen(true)}>
                             Include snap
@@ -294,7 +362,8 @@ function Snaps() {
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
-                      isAdmin={isAdmin}
+                      isOnlyViewer={isOnlyViewer}
+                      globalStore={globalStore}
                     />
                   )}
                 </div>
@@ -303,6 +372,12 @@ function Snaps() {
           </div>
         </div>
       </main>
+      <div
+        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+        onClick={() => {
+          setSidePanelOpen(false);
+        }}
+      ></div>
       <aside
         className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
         id="aside-panel"

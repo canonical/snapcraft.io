@@ -82,7 +82,7 @@ InviteModal.propTypes = {
   inviteActionData: PropTypes.object.isRequired,
   inviteModalOpen: PropTypes.bool.isRequired,
   setInviteModalOpen: PropTypes.func.isRequired,
-  updateInvite: PropTypes.func.updateInvite,
+  updateInvite: PropTypes.func.isRequired,
   inviteModalIsSaving: PropTypes.bool.isRequired,
 };
 

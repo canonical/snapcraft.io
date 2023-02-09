@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 
+import architectures from "./architectures";
 import availableRevisionsSelect from "./availableRevisionsSelect";
 import branches from "./branches";
 import channelMap from "./channelMap";
@@ -15,6 +16,7 @@ import releases from "./releases";
 import revisions from "./revisions";
 
 const releasesReducers = combineReducers({
+  architectures,
   availableRevisionsSelect,
   branches,
   channelMap,

@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-
 import { AVAILABLE } from "../../constants";
 import { getTrackingChannel } from "../../releasesState";
 
@@ -15,7 +14,6 @@ import { undoRelease } from "../../actions/pendingReleases";
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
-  getRevisionsFromBuild,
   getProgressiveState,
   hasPendingRelease,
 } from "../../selectors";
@@ -40,12 +38,12 @@ const ReleasesTableReleaseCell = (props) => {
     pendingCloses,
     filters,
     isOverParent,
-    showVersion,
     getAvailableCount,
     hasPendingRelease,
     undoRelease,
     toggleHistoryPanel,
     getProgressiveState,
+    current,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -59,16 +57,15 @@ const ReleasesTableReleaseCell = (props) => {
   // check if there is a pending release in this cell
   const pendingRelease = hasPendingRelease(channel, arch);
 
-  let progressiveState;
   let previousRevision;
   let pendingProgressiveState;
 
   if (currentRevision) {
-    [
-      progressiveState,
-      previousRevision,
-      pendingProgressiveState,
-    ] = getProgressiveState(channel, arch, pendingRelease);
+    [previousRevision, pendingProgressiveState] = getProgressiveState(
+      channel,
+      arch,
+      pendingRelease
+    );
   }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
@@ -94,6 +91,7 @@ const ReleasesTableReleaseCell = (props) => {
   };
 
   function handleHistoryIconClick(arch, risk, track, branchName) {
+    window.scrollTo(0, 0);
     toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
@@ -108,6 +106,7 @@ const ReleasesTableReleaseCell = (props) => {
     isHighlighted ? "is-highlighted" : "",
     isPending ? "is-pending" : "",
     isOverParent ? "is-over" : "",
+    currentRevision?.changed && isUnassigned ? "current-change" : "",
   ].join(" ");
 
   const actionsNode = pendingRelease ? (
@@ -133,10 +132,8 @@ const ReleasesTableReleaseCell = (props) => {
       <RevisionInfo
         revision={currentRevision}
         isPending={pendingRelease ? true : false}
-        showVersion={showVersion}
-        progressiveState={progressiveState}
-        previousRevision={previousRevision ? previousRevision.revision : null}
-        pendingProgressiveState={pendingProgressiveState}
+        previousRevision={previousRevision ? previousRevision : null}
+        risk={risk}
       />
     );
   } else if (isUnassigned) {
@@ -149,41 +146,31 @@ const ReleasesTableReleaseCell = (props) => {
     );
   }
 
+  const showHistoryIcon = currentRevision || isUnassigned;
+
   return (
     <ReleasesTableCellView
       actions={actionsNode}
       item={item}
       canDrag={canDrag}
       className={className}
+      cellType="release"
+      current={current}
+      arch={arch}
     >
+      {showHistoryIcon && (
+        <HistoryIcon
+          onClick={handleHistoryIconClick.bind(
+            this,
+            arch,
+            risk,
+            track,
+            branchName
+          )}
+        />
+      )}
+
       {cellInfoNode}
-      <HistoryIcon
-        onClick={handleHistoryIconClick.bind(
-          this,
-          arch,
-          risk,
-          track,
-          branchName
-        )}
-      />
-      {!isChannelPendingClose &&
-        pendingProgressiveState &&
-        pendingProgressiveState.percentage && (
-          <span
-            className="p-release__progressive-pending-percentage"
-            style={{
-              width: `${pendingProgressiveState.percentage}%`,
-            }}
-          />
-        )}
-      {!isChannelPendingClose &&
-        progressiveState &&
-        progressiveState.percentage && (
-          <span
-            className="p-release__progressive-percentage"
-            style={{ width: `${progressiveState.percentage}%` }}
-          />
-        )}
     </ReleasesTableCellView>
   );
 };
@@ -197,7 +184,6 @@ ReleasesTableReleaseCell.propTypes = {
   // compute state
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
-  getRevisionsFromBuild: PropTypes.func,
   getProgressiveState: PropTypes.func,
   // actions
   toggleHistoryPanel: PropTypes.func.isRequired,
@@ -206,11 +192,11 @@ ReleasesTableReleaseCell.propTypes = {
   track: PropTypes.string,
   risk: PropTypes.string,
   arch: PropTypes.string,
-  showVersion: PropTypes.bool,
   branch: PropTypes.object,
   isOverParent: PropTypes.bool,
 
   revision: PropTypes.object,
+  current: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
@@ -221,7 +207,6 @@ const mapStateToProps = (state) => {
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: (arch) =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
-    getRevisionsFromBuild: (buildId) => getRevisionsFromBuild(state, buildId),
     getProgressiveState: (channel, arch, isPending) =>
       getProgressiveState(state, channel, arch, isPending),
     hasPendingRelease: (channel, arch) =>

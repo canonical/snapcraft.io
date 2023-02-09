@@ -4,7 +4,6 @@ from webapp.publisher.snaps import logic
 
 
 class PublisherLogicTest(unittest.TestCase):
-
     # get_snaps_account_info
     # ===
     def test_empty_snaps(self):
@@ -118,3 +117,9 @@ class PublisherLogicTest(unittest.TestCase):
 
         result = logic.is_snap_on_stable(channel_maps_list)
         self.assertTrue(result)
+
+    def test_convert_date_month_year(self):
+        date_test = "2021-05-11T16:48:41.821037-06:00"
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "May 2021")

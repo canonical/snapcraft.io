@@ -5,7 +5,7 @@ logo: https://assets.ubuntu.com/v1/193cb6ac-logo-raspberry-pi.svg
 logo-mono: https://assets.ubuntu.com/v1/a31b1451-rpi-b-w.svg
 install:
   - action: |
-      On a <a href="https://www.raspberrypi.org/" class="p-link--external">Raspberry Pi</a> running the latest version of <a href="https://www.raspberrypi.org/downloads/raspbian/" class="p-link--external">Raspbian</a> snap can be installed directly from the command line:
+      On a <a href="https://www.raspberrypi.org/" >Raspberry Pi</a> running the latest version of <a href="https://www.raspberrypi.org/downloads/raspbian/" >Raspbian</a> snap can be installed directly from the command line:
     command: |
       sudo apt update
       sudo apt install snapd

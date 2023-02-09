@@ -1,12 +1,12 @@
-import React, { Fragment, useState } from "react";
+/* eslint-disable */
+import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { format, formatDistance } from "date-fns";
+import { format } from "date-fns";
 
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../libs/channels";
-import { useDragging, DND_ITEM_REVISIONS, Handle } from "./dnd";
 import { toggleRevision } from "../actions/channelMap";
 
 import {
@@ -15,26 +15,22 @@ import {
 } from "../selectors";
 
 import RevisionLabel from "./revisionLabel";
-import RevisionsListRowProgressive from "./revisionsListRowProgressive";
+import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
 
 const RevisionsListRow = (props) => {
   const {
     revision,
+    previousRevision,
     isSelectable,
     showChannels,
     showBuildRequest,
     isPending,
     isActive,
     isProgressiveReleaseEnabled,
-    showProgressive,
     progressiveBeingCancelled,
   } = props;
 
   const releasable = canBeReleased(revision);
-
-  const [canDrag, setDraggable] = useState(
-    !progressiveBeingCancelled && releasable
-  );
 
   const revisionDate = revision.release
     ? new Date(revision.release.when)
@@ -42,32 +38,25 @@ const RevisionsListRow = (props) => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
+  const isProgressive = revision?.progressive?.percentage ? true : false;
+  const isPreviousProgressive = previousRevision?.progressive?.percentage
+    ? true
+    : false;
+
   let channel;
   if (revision.release) {
     channel = getChannelString(revision.release);
   }
 
   function revisionSelectChange() {
+    revision.changed = true;
     props.toggleRevision(revision);
   }
 
-  const [isDragging, isGrabbing, drag] = useDragging({
-    item: {
-      revisions: [revision],
-      architectures: revision.architectures,
-      type: DND_ITEM_REVISIONS,
-    },
-    canDrag: canDrag,
-  });
-
   const id = `revision-check-${revision.revision}`;
-  const className = `p-revisions-list__row ${
-    progressiveBeingCancelled ? "" : "is-draggable"
-  } ${isActive ? "is-active" : ""} ${
+  const className = `p-revisions-list__row ${isActive ? "is-active" : ""} ${
     isSelectable && releasable ? "is-clickable" : ""
-  } ${
-    isPending || isSelected || progressiveBeingCancelled ? "is-pending" : ""
-  } ${isGrabbing ? "is-grabbing" : ""} ${isDragging ? "is-dragging" : ""}`;
+  }`;
 
   const buildRequestId =
     revision.attributes && revision.attributes["build-request-id"];
@@ -77,73 +66,73 @@ const RevisionsListRow = (props) => {
 
   return (
     <tr
-      ref={drag}
       key={id}
       className={className}
       onClick={isSelectable && releasable ? revisionSelectChange : null}
     >
-      <td>{!progressiveBeingCancelled && releasable && <Handle />}</td>
-      <td>
+      <td data-heading="Revision">
         {isSelectable ? (
-          <Fragment>
+          <label className="p-radio">
             <input
-              type="checkbox"
+              type="radio"
               checked={isSelected && releasable}
-              id={id}
+              aria-labelledby={id}
               onChange={revisionSelectChange}
               disabled={!releasable}
+              className="p-radio__input"
             />
-            <label
-              className="p-revisions-list__revision is-inline-label"
-              htmlFor={id}
-            >
+            &nbsp;
+            <span className="p-revisions-list__revision p-radio__label" id={id}>
               <RevisionLabel revision={revision} showTooltip={true} />
-            </label>
-          </Fragment>
+            </span>
+          </label>
         ) : (
           <span className="p-revisions-list__revision">
-            <RevisionLabel revision={revision} showTooltip={true} />
+            <RevisionLabel revision={revision} showTooltip={true} />{" "}
+            {isProgressive && (
+              <span style={{ fontWeight: 300 }}>(Progressive)</span>
+            )}
           </span>
         )}
       </td>
-      <td>{revision.version}</td>
+      <td data-heading="Version">{revision.version}</td>
       {showBuildRequest && (
-        <td>
-          {buildRequestId && (
-            <Fragment>
-              <i className="p-icon--lp" /> {buildRequestId}
-            </Fragment>
-          )}
+        <td data-heading="Build request">
+          {buildRequestId && <>{buildRequestId}</>}
         </td>
       )}
-      {canShowProgressiveReleases && (
-        <td>
-          {revision.release && showProgressive && (
-            <RevisionsListRowProgressive
-              setDraggable={setDraggable}
-              channel={channel}
-              architecture={revision.release.architecture}
-              revision={revision}
-            />
-          )}
+      {canShowProgressiveReleases && isProgressive ? (
+        <td data-heading="Release progress">
+          <ProgressiveReleaseProgressChart
+            currentPercentage={revision?.progressive?.["current-percentage"]}
+            targetPercentage={revision?.progressive?.percentage}
+          />
         </td>
-      )}
-      {progressiveBeingCancelled && (
-        <td>
-          <em>Cancel progressive release</em>
+      ) : isPreviousProgressive ? (
+        <td data-heading="Release progress">
+          <ProgressiveReleaseProgressChart
+            currentPercentage={100 - previousRevision?.progressive?.percentage}
+            targetPercentage={
+              100 - previousRevision?.progressive?.["current-percentage"]
+            }
+            isPreviousRevision={true}
+          />
         </td>
+      ) : (
+        <td data-heading="Release progress">-</td>
       )}
-      {showChannels && <td>{revision.channels.join(", ")}</td>}
-      <td className="u-align--right">
+
+      {showChannels && (
+        <td data-heading="Channels">{revision.channels.join(", ")}</td>
+      )}
+      <td data-heading="Release date">
         {isPending && <em>pending release</em>}
         {!isPending && !progressiveBeingCancelled && (
           <span
             className="p-tooltip p-tooltip--btm-center"
             aria-describedby={`revision-uploaded-${revision.revision}`}
           >
-            {formatDistance(revisionDate, new Date(), {
-              addSuffix: true,
-            })}
+            {format(revisionDate, "dd MMM yyyy")}
             <span
               className="p-tooltip__message u-align--center"
               role="tooltip"
@@ -160,8 +149,8 @@ const RevisionsListRow = (props) => {
 
 RevisionsListRow.propTypes = {
   // props
-  showProgressive: PropTypes.bool.isRequired,
   revision: PropTypes.object.isRequired,
+  previousRevision: PropTypes.object,
   isSelectable: PropTypes.bool,
   showChannels: PropTypes.bool,
   isPending: PropTypes.bool,

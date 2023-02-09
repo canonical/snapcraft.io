@@ -5,20 +5,15 @@ from hashlib import md5
 # Packages
 import flask
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiError,
-    StoreApiResponseErrorList,
-)
+
 from requests.exceptions import HTTPError
 
 # Local
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub, InvalidYAML
-from webapp.api.exceptions import ApiError
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
-from webapp.publisher.views import _handle_error, _handle_error_list
 from werkzeug.exceptions import Unauthorized
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
@@ -72,21 +67,13 @@ def get_builds(lp_snap, selection):
 
 @login_required
 def get_snap_builds(snap_name):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
-        # API call to make users without needed permissions refresh the session
-        # Users needs package_upload_request permission to use this feature
-        publisher_api.get_package_upload_macaroon(
-            session=flask.session, snap_name=snap_name, channels=["edge"]
-        )
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    # API call to make users without needed permissions refresh the session
+    # Users needs package_upload_request permission to use this feature
+    publisher_api.get_package_upload_macaroon(
+        session=flask.session, snap_name=snap_name, channels=["edge"]
+    )
 
     context = {
         "snap_id": details["snap_id"],
@@ -112,16 +99,45 @@ def get_snap_builds(snap_name):
         # Git repository without GitHub hostname
         context["github_repository"] = lp_snap["git_repository_url"][19:]
         github_owner, github_repo = context["github_repository"].split("/")
+        gh_snap_base = None
 
-        context["github_repository_exists"] = github.check_if_repo_exists(
-            github_owner, github_repo
-        )
+        try:
+            context["github_repository_exists"] = github.check_if_repo_exists(
+                github_owner, github_repo
+            )
+            context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
+                github_owner, github_repo
+            )
 
-        context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
-            github_owner, github_repo
-        )
+            if context["yaml_file_exists"]:
+                try:
+                    gh_snap_base = github.get_snapcraft_yaml_data(
+                        github_owner,
+                        github_repo,
+                        location=context["yaml_file_exists"],
+                    ).get("base", None)
+                except InvalidYAML:
+                    # If we can't parse the yaml we don't
+                    # want to cause an error
+                    pass
 
-        context.update(get_builds(lp_snap, slice(0, BUILDS_PER_PAGE)))
+        except Unauthorized:
+            context["github_app_revoked"] = True
+
+        builds = get_builds(lp_snap, slice(0, BUILDS_PER_PAGE))
+        context.update(builds)
+
+        # Notify about i386 arch
+        if (
+            gh_snap_base
+            and gh_snap_base.replace("core", "")
+            and int(gh_snap_base.replace("core", "")) >= 20
+        ):
+            # Check if this publisher was building for i386 recently
+            for build in builds["snap_builds"]:
+                if build["arch_tag"] == "i386":
+                    context["dropped_i386"] = True
+                    break
 
         context["snap_builds_enabled"] = bool(context["snap_builds"])
     else:
@@ -140,15 +156,7 @@ def get_snap_builds(snap_name):
 
 @login_required
 def get_snap_build(snap_name, build_id):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
     context = {
         "snap_id": details["snap_id"],
@@ -202,7 +210,9 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
     # The property name inside the yaml file doesn't match the snap
     else:
         try:
-            gh_snap_name = github.get_snapcraft_yaml_name(gh_owner, gh_repo)
+            gh_snap_name = github.get_snapcraft_yaml_data(
+                gh_owner, gh_repo
+            ).get("name")
 
             if gh_snap_name != snap_name:
                 result["success"] = False
@@ -232,15 +242,7 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
 
 @login_required
 def get_snap_builds_json(snap_name):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
     context = {"snap_builds": []}
 
@@ -259,15 +261,7 @@ def get_snap_builds_json(snap_name):
 
 @login_required
 def get_validate_repo(snap_name):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
     owner, repo = flask.request.args.get("repo").split("/")
 
@@ -283,15 +277,7 @@ def get_validate_repo(snap_name):
 
 @login_required
 def post_snap_builds(snap_name):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
     # Don't allow changes from Admins that are no contributors
     account_snaps = publisher_api.get_account_snaps(flask.session)
@@ -405,27 +391,73 @@ def post_build(snap_name):
         if launchpad.is_snap_building(snap_name):
             launchpad.cancel_snap_builds(snap_name)
 
-        launchpad.build_snap(snap_name)
+        build_id = launchpad.build_snap(snap_name)
     except HTTPError as e:
         # Timeout or not found from Launchpad
         if e.response.status_code in [408, 404]:
-            return flask.jsonify({"success": False})
+            return flask.jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "message": "An error happened building "
+                        "this snap, please try again."
+                    },
+                }
+            )
         raise e
 
-    return flask.jsonify({"success": True})
+    return flask.jsonify({"success": True, "build_id": build_id})
+
+
+@login_required
+def check_build_request(snap_name, build_id):
+    # Don't allow builds from no contributors
+    account_snaps = publisher_api.get_account_snaps(flask.session)
+
+    if snap_name not in account_snaps:
+        return flask.jsonify(
+            {
+                "success": False,
+                "error": {
+                    "type": "FORBIDDEN",
+                    "message": "You are not allowed to request "
+                    "builds for this snap",
+                },
+            }
+        )
+
+    try:
+        response = launchpad.get_snap_build_request(snap_name, build_id)
+    except HTTPError as e:
+        # Timeout or not found from Launchpad
+        if e.response.status_code in [408, 404]:
+            return flask.jsonify(
+                {
+                    "success": False,
+                    "error": {
+                        "message": "An error happened building "
+                        "this snap, please try again."
+                    },
+                }
+            )
+        raise e
+
+    error_message = None
+    if response["error_message"]:
+        error_message = response["error_message"].split(" HEAD:")[0]
+
+    return flask.jsonify(
+        {
+            "success": True,
+            "status": response["status"],
+            "error": {"message": error_message},
+        }
+    )
 
 
 @login_required
 def post_disconnect_repo(snap_name):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except StoreApiError as api_error:
-        return _handle_error(api_error)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
     lp_snap = launchpad.get_snap_by_store_name(snap_name)
     launchpad.delete_snap(details["snap_name"])
@@ -515,15 +547,7 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
 
 @login_required
 def get_update_gh_webhooks(snap_name):
-    try:
-        details = publisher_api.get_snap_info(snap_name, flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code == 404:
-            return flask.abort(404, "No snap named {}".format(snap_name))
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    details = publisher_api.get_snap_info(snap_name, flask.session)
 
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 

@@ -2,7 +2,7 @@ domain: snapcraft.io
 
 image: prod-comms.docker-registry.canonical.com/snapcraft.io
 
-env:  &env
+env: &env
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 

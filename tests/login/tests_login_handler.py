@@ -2,7 +2,6 @@ import requests
 
 import responses
 from flask_testing import TestCase
-from pybreaker import CircuitBreakerError
 from pymacaroons import Macaroon
 from webapp.app import create_app
 
@@ -99,18 +98,3 @@ class LoginHandlerTest(TestCase):
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 502
-
-    @responses.activate
-    def test_login_circuit_breaker(self):
-        responses.add(
-            responses.Response(
-                method="POST",
-                url=self.api_url,
-                body=CircuitBreakerError(),
-                status=500,
-            )
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 503
