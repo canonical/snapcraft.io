@@ -7,6 +7,7 @@ import {
   Col,
   Button,
   Notification,
+  Modal,
 } from "@canonical/react-components";
 
 import {
@@ -62,6 +63,10 @@ function Snaps() {
   const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
     false
   );
+  const [
+    showRemoveSnapsConfirmation,
+    setShowRemoveSnapsConfirmation,
+  ] = useState(false);
   const [globalStore, setGlobalStore] = useState(null);
   let location = useLocation();
 
@@ -138,9 +143,7 @@ function Snaps() {
       });
   };
 
-  const removeSnaps = (e) => {
-    e.preventDefault();
-
+  const removeSnaps = () => {
     setRemoveSnapSaving(true);
 
     const removingSnaps = {
@@ -321,7 +324,9 @@ function Snaps() {
                             disabled={
                               snapsToRemove.length < 1 || removeSnapSaving
                             }
-                            onClick={removeSnaps}
+                            onClick={() => {
+                              setShowRemoveSnapsConfirmation(true);
+                            }}
                             className={removeSnapSaving ? "has-icon" : ""}
                           >
                             {removeSnapSaving ? (
@@ -471,6 +476,55 @@ function Snaps() {
           </Notification>
         )}
       </div>
+
+      {showRemoveSnapsConfirmation && (
+        <Modal
+          close={() => {
+            setShowRemoveSnapsConfirmation(false);
+          }}
+          title={`Exclude selected snap${snapsToRemove.length > 1 ? "s" : ""}`}
+          buttonRow={
+            <>
+              <Button
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  setShowRemoveSnapsConfirmation(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="u-no-margin--bottom u-no-margin--right"
+                appearance="positive"
+                onClick={() => {
+                  setShowRemoveSnapsConfirmation(false);
+                  removeSnaps();
+                }}
+              >
+                Exclude snap{snapsToRemove.length > 1 ? "s" : ""}
+              </Button>
+            </>
+          }
+        >
+          <p>
+            Are you sure you want to exclude{" "}
+            {snapsToRemove.length === 1 ? "this snap" : "these snaps"}?
+          </p>
+          {snapsToRemove.length === 1 ? (
+            <p>
+              <strong>{snapsToRemove[0].name}</strong>
+            </p>
+          ) : (
+            <ul>
+              {snapsToRemove.map((snapToRemove) => (
+                <li key={snapToRemove.id}>
+                  <strong>{snapToRemove.name}</strong>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Modal>
+      )}
     </>
   );
 }
