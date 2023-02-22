@@ -63,6 +63,7 @@ function ListingDetailsSection({
         previewHeight={120}
         fileTypes="image/png, image/jpeg, image/svg+xml"
         tourLabel="listing-icon"
+        hasDarkThemePreview={true}
       />
 
       <ListingFormInput

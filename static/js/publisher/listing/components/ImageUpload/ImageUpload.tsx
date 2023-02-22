@@ -1,6 +1,12 @@
 import React, { useState, SyntheticEvent } from "react";
 import { nanoid } from "nanoid";
-import { Row, Col, Notification } from "@canonical/react-components";
+import {
+  Row,
+  Col,
+  Notification,
+  Switch,
+  Icon,
+} from "@canonical/react-components";
 
 import {
   validateImageDimensions,
@@ -32,6 +38,7 @@ type Props = {
   helpText?: string;
   fileTypes: string;
   tourLabel: string;
+  hasDarkThemePreview?: boolean;
 };
 
 function ImageUpload({
@@ -47,13 +54,23 @@ function ImageUpload({
   helpText,
   fileTypes,
   tourLabel,
+  hasDarkThemePreview,
 }: Props) {
   const [showImageRestrictions, setShowImageRestrictions] = useState(false);
   const [imageVaidationError, setImageValidationError] = useState("");
   const [imageIsValid, setImageIsValid] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
 
   const fieldId = nanoid();
+  const isDark = hasDarkThemePreview && darkThemeEnabled;
+
+  const darkThemeStyles = {
+    backgroundColor: hasDarkThemePreview && isDark ? "#2f2f2f" : "#f7f7f7",
+    color: isDark ? "#fff" : "#111",
+    padding: hasDarkThemePreview ? "1rem 1rem 0" : "0",
+    display: "flex",
+  };
 
   const setImage = (image: File) => {
     if (image.size > validationSchema?.maxFileSize) {
@@ -113,99 +130,129 @@ function ImageUpload({
         )}
 
         <input type="hidden" {...register(imageUrlFieldKey)} />
-
-        <div className="snap-image-upload-container" data-tour={tourLabel}>
-          <div
-            className={`snap-image-upload-drop-area ${
-              isDragging ? "is-dragging" : ""
-            }`}
-            style={{
-              width: `${previewWidth}px`,
-              height: `${previewHeight}px`,
-            }}
-            onDragOver={() => {
-              setIsDragging(true);
-            }}
-            onDragLeave={() => {
-              setIsDragging(false);
-            }}
-            onDrop={() => {
-              setIsDragging(false);
-            }}
-          >
-            {imageUrl ? (
-              <div
-                className="snap-image-upload-preview"
-                style={{
-                  width: `${previewWidth}px`,
-                  height: `${previewHeight}px`,
-                }}
-              >
-                <img
-                  src={imageUrl}
-                  width={previewWidth}
-                  height={previewHeight}
-                  alt=""
-                />
+        <div style={hasDarkThemePreview ? darkThemeStyles : {}}>
+          <div className="snap-image-upload-container" data-tour={tourLabel}>
+            <div
+              className={`snap-image-upload-drop-area ${
+                isDragging ? "is-dragging" : ""
+              }`}
+              style={{
+                width: `${previewWidth}px`,
+                height: `${previewHeight}px`,
+                marginRight: hasDarkThemePreview && !imageUrl ? "1rem" : "0",
+              }}
+              onDragOver={() => {
+                setIsDragging(true);
+              }}
+              onDragLeave={() => {
+                setIsDragging(false);
+              }}
+              onDrop={() => {
+                setIsDragging(false);
+              }}
+            >
+              {imageUrl ? (
                 <div
-                  className="snap-image-upload-edit"
+                  className="snap-image-upload-preview"
                   style={{
                     width: `${previewWidth}px`,
                     height: `${previewHeight}px`,
                   }}
                 >
-                  <span>Edit</span>
+                  <img
+                    src={imageUrl}
+                    width={previewWidth}
+                    height={previewHeight}
+                    alt=""
+                  />
+                  <div
+                    className="snap-image-upload-edit"
+                    style={{
+                      width: `${previewWidth}px`,
+                      height: `${previewHeight}px`,
+                    }}
+                  >
+                    <span>Edit</span>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div
-                className="snap-add-image"
+              ) : (
+                <div
+                  className="snap-add-image"
+                  style={{
+                    width: `${previewWidth}px`,
+                    height: `${previewHeight}px`,
+                    backgroundColor: isDark ? "#666" : "#d9d9d9",
+                  }}
+                >
+                  <Icon name="plus" light={isDark}>
+                    Add image
+                  </Icon>
+                </div>
+              )}
+              <input
+                className="snap-image-upload-input"
                 style={{
                   width: `${previewWidth}px`,
                   height: `${previewHeight}px`,
                 }}
+                type="file"
+                accept={fileTypes}
+                {...register(imageFieldKey, {
+                  onChange: (
+                    e: SyntheticEvent<HTMLInputElement> & {
+                      target: HTMLInputElement;
+                    }
+                  ) => {
+                    if (e.target.files) {
+                      setImage(e.target.files[0]);
+                    }
+                  },
+                })}
+              />
+            </div>
+
+            {imageUrl && (
+              <button
+                type="button"
+                className="p-button--base snap-remove-icon"
+                onClick={() => {
+                  setImageIsValid(true);
+                  setValue(imageUrlFieldKey, "", {
+                    shouldDirty: window?.listingData?.banner_urls[0] !== null,
+                  });
+                  setValue(imageFieldKey, new File([], ""), {
+                    shouldDirty: window?.listingData?.banner_urls[0] !== null,
+                  });
+                }}
               >
-                <i className="p-icon--plus">Add image</i>
-              </div>
+                <Icon name="delete" light={isDark}>
+                  Remove image
+                </Icon>
+              </button>
             )}
-            <input
-              className="snap-image-upload-input"
-              style={{
-                width: `${previewWidth}px`,
-                height: `${previewHeight}px`,
-              }}
-              type="file"
-              accept={fileTypes}
-              {...register(imageFieldKey, {
-                onChange: (
+          </div>
+
+          {hasDarkThemePreview && (
+            <div>
+              <Switch
+                label="Dark theme"
+                onChange={(
                   e: SyntheticEvent<HTMLInputElement> & {
                     target: HTMLInputElement;
                   }
                 ) => {
-                  if (e.target.files) {
-                    setImage(e.target.files[0]);
+                  if (e.target.checked) {
+                    setDarkThemeEnabled(true);
+                  } else {
+                    setDarkThemeEnabled(false);
                   }
-                },
-              })}
-            />
-          </div>
-
-          {imageUrl && (
-            <button
-              type="button"
-              className="p-button--base"
-              onClick={() => {
-                setImageIsValid(true);
-                setValue(imageUrlFieldKey, "", {
-                  shouldDirty: window?.listingData?.banner_urls[0] !== null,
-                });
-                setValue(imageFieldKey, new File([], ""), {
-                  shouldDirty: window?.listingData?.banner_urls[0] !== null,
-                });
-              }}
-            >
-              <i className="p-icon--delete">Remove image</i>
-            </button>
+                }}
+              />
+              <small>
+                This is how your application&rsquo;s icon will look in{" "}
+                {darkThemeEnabled ? "dark" : "light"} theme
+              </small>
+            </div>
           )}
         </div>
 
