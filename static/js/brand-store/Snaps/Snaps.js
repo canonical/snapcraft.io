@@ -482,7 +482,9 @@ function Snaps() {
           close={() => {
             setShowRemoveSnapsConfirmation(false);
           }}
-          title={`Exclude selected snap${snapsToRemove.length > 1 ? "s" : ""}`}
+          title={`Exclude ${
+            snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
+          }`}
           buttonRow={
             <>
               <Button
@@ -506,15 +508,7 @@ function Snaps() {
             </>
           }
         >
-          <p>
-            Are you sure you want to exclude{" "}
-            {snapsToRemove.length === 1 ? "this snap" : "these snaps"}?
-          </p>
-          {snapsToRemove.length === 1 ? (
-            <p>
-              <strong>{snapsToRemove[0].name}</strong>
-            </p>
-          ) : (
+          {snapsToRemove.length > 1 && (
             <ul>
               {snapsToRemove.map((snapToRemove) => (
                 <li key={snapToRemove.id}>
@@ -523,6 +517,10 @@ function Snaps() {
               ))}
             </ul>
           )}
+          <p>
+            {snapsToRemove.length > 1 ? "These snaps" : "This snap"} can still
+            be included again in this store.
+          </p>
         </Modal>
       )}
     </>
