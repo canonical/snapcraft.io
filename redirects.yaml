@@ -1,6 +1,9 @@
 # Remove HTML extensions
 (?P<path>.*)(\.html|/): /{path}
 
+# Redirect tutorials
+tutorials(.*?): /docs/snap-tutorials
+
 # Old URL redirects
 docs/build-snaps: /docs/snap-format
 docs/build-snaps/build-for-another-arch: /docs/building-snaps
