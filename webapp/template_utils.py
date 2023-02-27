@@ -39,6 +39,9 @@ def generate_slug(path):
     if path.startswith("/iot"):
         return "iot"
 
+    if path.startswith("/docs/snap-tutorials"):
+        return "tutorials"
+
     if path.startswith("/docs"):
         return "docs"
 
