@@ -73,7 +73,7 @@
     "polylabel": "1.1.0",
     "postcss": "8.4.21",
     "postcss-cli": "8.3.1",
-    "prettier": "2.8.4",
+    "prettier": "2.2.1",
     "prop-types": "15.8.1",
     "raven-js": "3.27.2",
     "react": "17.0.2",
