@@ -139,6 +139,7 @@ BuildsTable.propTypes = {
   totalBuilds: PropTypes.number,
   isLoading: PropTypes.bool,
   showMoreHandler: PropTypes.func,
+  value: PropTypes.string,
 };
 
 export default BuildsTable;
