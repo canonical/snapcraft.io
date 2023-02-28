@@ -34,7 +34,7 @@
     "@babel/preset-react": "7.18.6",
     "@babel/preset-typescript": "7.21.0",
     "@canonical/cookie-policy": "3.4.0",
-    "@canonical/global-nav": "2.7.0",
+    "@canonical/global-nav": "3.2.4",
     "@canonical/latest-news": "1.4.1",
     "@canonical/react-components": "0.38.0",
     "@dnd-kit/core": "6.0.8",
