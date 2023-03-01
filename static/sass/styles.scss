@@ -6,8 +6,7 @@ $color-navigation-active-bar: $ubuntu-orange;
 $color-sidenav-item-border-highlight: #82bfa1;
 
 // navigation variables
-$theme-default-nav: dark;
-$breakpoint-navigation-threshold: 800px;
+$breakpoint-navigation-threshold: 1036px;
 $font-display-option: swap;
 
 // responsive
@@ -414,4 +413,9 @@ code {
   position: absolute;
   top: auto;
   width: 1px;
+}
+
+// Needed to override as the accent color is different on this site
+.p-navigation__tagged-logo .p-navigation__logo-tag {
+  background-color: $ubuntu-orange;
 }

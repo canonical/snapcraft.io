@@ -8,8 +8,10 @@
 
     if (open) {
       parentElement.classList.add("is-active");
+      parentElement.classList.add("is-selected");
     } else {
       parentElement.classList.remove("is-active");
+      parentElement.classList.remove("is-selected");
     }
   }
 
