@@ -32,7 +32,7 @@ def create_app(testing=False):
     app = FlaskBase(
         __name__,
         "snapcraft.io",
-        favicon_url="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png",
+        favicon_url="https://assets.ubuntu.com/v1/d4ca039f-favicon_16px.png",
         template_404="404.html",
         template_folder="../templates",
         static_folder="../static",
