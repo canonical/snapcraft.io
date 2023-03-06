@@ -194,7 +194,7 @@ function Snaps() {
     const storeIds = [];
 
     snaps.forEach((snap) => {
-      if (snap["other-stores"].length) {
+      if (snaps["other-stores"] && snap["other-stores"].length) {
         snap["other-stores"].forEach((otherStoreId) => {
           if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
             storeIds.push(otherStoreId);
@@ -205,6 +205,10 @@ function Snaps() {
 
     return storeIds;
   };
+
+  const includedStores = snaps
+    .filter((snap) => snap["included-stores"])
+    .map((snap) => snap["included-stores"][0]);
 
   useEffect(() => {
     dispatch(fetchMembers(id));
@@ -369,9 +373,24 @@ function Snaps() {
                       nonEssentialSnapIds={nonEssentialSnapIds}
                       isOnlyViewer={isOnlyViewer}
                       globalStore={globalStore}
+                      includedStores={includedStores}
                     />
                   )}
                 </div>
+                {!!includedStores.length && (
+                  <div className="u-fixed-width">
+                    <h4>Fully included stores</h4>
+                    <p>
+                      In addition to the snaps listed above, all snaps from the
+                      following stores are also included in {getStoreName(id)}.
+                    </p>
+                    <ul>
+                      {includedStores.map((store) => (
+                        <li>{store.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </>
             )}
           </div>
