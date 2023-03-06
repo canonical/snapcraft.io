@@ -83,7 +83,8 @@ def get_snaps_search(store_id):
 @login_required
 def get_store_snaps(store_id):
     snaps = admin_api.get_store_snaps(flask.session, store_id)
-
+    store = admin_api.get_store(flask.session, store_id)
+    snaps.append({"store": store["store-whitelist"]})
     return jsonify(snaps)
 
 
