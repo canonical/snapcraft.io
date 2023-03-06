@@ -89,10 +89,7 @@ def get_store_snaps(store_id):
         for item in store["store-whitelist"]:
             store_item = admin_api.get_store(flask.session, item)
             if store_item:
-                print(store_item)
-                included_stores.append(
-                    {"id": store_item["id"], "name": store_item["name"]}
-                )
+                included_stores.append({"id": store_item["id"], "name": store_item["name"]})
 
         if included_stores:
             snaps.append({"included-stores": included_stores})
