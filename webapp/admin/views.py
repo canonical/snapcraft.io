@@ -84,7 +84,18 @@ def get_snaps_search(store_id):
 def get_store_snaps(store_id):
     snaps = admin_api.get_store_snaps(flask.session, store_id)
     store = admin_api.get_store(flask.session, store_id)
-    snaps.append({"store": store["store-whitelist"]})
+    if "store-whitelist" in store:
+        included_stores = []
+        for item in store["store-whitelist"]:
+            store_item = admin_api.get_store(flask.session, item)
+            if store_item:
+                print(store_item)
+                included_stores.append(
+                    {"id": store_item["id"], "name": store_item["name"]}
+                )
+
+        if included_stores:
+            snaps.append({"included-stores": included_stores})
     return jsonify(snaps)
 
 
