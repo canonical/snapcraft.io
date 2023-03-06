@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Spinner,
@@ -386,7 +386,11 @@ function Snaps() {
                     </p>
                     <ul>
                       {includedStores.map((store) => (
-                        <li>{store.name}</li>
+                        <li key={store.id}>
+                          <Link to={`/admin/${store.id}/snaps`}>
+                            {store.name}
+                          </Link>
+                        </li>
                       ))}
                     </ul>
                   </div>
