@@ -13,6 +13,11 @@ jest.mock("react-router-dom", () => ({
   useParams: jest.fn().mockReturnValue({ id: "test-id" }),
 }));
 
+jest.mock("react-redux", () => ({
+  ...jest.requireActual("react-redux"),
+  useSelector: jest.fn(),
+}));
+
 function getInitialState(): RootState {
   return {
     currentStore: {
