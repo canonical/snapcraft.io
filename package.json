@@ -22,7 +22,10 @@
     "percy": "node_modules/.bin/percy snapshot snapshots.yml"
   },
   "jest": {
-    "testURL": "http://localhost.test",
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost.test"
+    },
     "collectCoverage": true
   },
   "author": "Canonical webteam",
@@ -109,6 +112,7 @@
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "7.32.2",
     "jest": "29.5.0",
+    "jest-environment-jsdom": "29.5.0",
     "sass-loader": "13.2.0",
     "stylelint": "15.2.0",
     "stylelint-config-standard-scss": "7.0.1",
