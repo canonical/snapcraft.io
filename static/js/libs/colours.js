@@ -1,8 +1,8 @@
-import * as Fac from "fast-average-color";
+import { FastAverageColor } from "fast-average-color";
 
 function getColour(holder, imageSelector, imageParentSelector) {
   function extractAndSet(image, parent) {
-    const fac = new Fac();
+    const fac = new FastAverageColor();
     const colour = fac.getColor(image, { defaultColor: [238, 238, 238] });
 
     // If the average colour is black, the logo is probably black,
