@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Spinner,
@@ -171,7 +171,7 @@ function Members() {
             ) : membersNotFound || invitesNotFound ? (
               <StoreNotFound />
             ) : isOnlyViewer() ? (
-              <Redirect to={`/admin/${id}/snaps`} />
+              <Navigate to={`/admin/${id}/snaps`} />
             ) : (
               <>
                 <Row>

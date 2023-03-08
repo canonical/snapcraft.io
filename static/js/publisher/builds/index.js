@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import BuildsTable from "./components/buildsTable";
 
@@ -299,7 +299,9 @@ export function initBuilds(
   totalBuilds,
   singleBuild
 ) {
-  ReactDOM.render(
+  const container = document.querySelector(id);
+  const root = createRoot(container);
+  root.render(
     <Builds
       snapName={snapName}
       csrf_token={csrf_token}
@@ -307,7 +309,6 @@ export function initBuilds(
       totalBuilds={totalBuilds}
       updateFreq={singleBuild ? null : 30000}
       singleBuild={singleBuild}
-    />,
-    document.querySelector(id)
+    />
   );
 }

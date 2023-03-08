@@ -1,4 +1,4 @@
-import Fac from "fast-average-color";
+import * as Fac from "fast-average-color";
 
 function getColour(holder, imageSelector, imageParentSelector) {
   function extractAndSet(image, parent) {

@@ -1,12 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import Banner from "../form/banner";
 import { BANNER_RESTRICTIONS } from "./restrictions";
 
 function initBanner(holder, banners, nextState) {
-  const bannerHolderEl = document.querySelector(holder);
+  const container = document.querySelector(holder);
 
-  if (!bannerHolderEl) {
+  if (!container) {
     throw new Error("No banner holder defined");
   }
 
@@ -16,13 +16,13 @@ function initBanner(holder, banners, nextState) {
     banner = banners[0];
   }
 
-  ReactDOM.render(
+  const root = createRoot(container);
+  root.render(
     <Banner
       bannerImage={banner}
       updateImageState={nextState}
       restrictions={BANNER_RESTRICTIONS}
-    />,
-    bannerHolderEl
+    />
   );
 }
 

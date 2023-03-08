@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
@@ -34,8 +34,9 @@ const initReleases = (
     },
     composeEnhancers(applyMiddleware(thunk))
   );
-
-  ReactDOM.render(
+  const container = document.querySelector(id);
+  const root = createRoot(container);
+  root.render(
     <Provider store={store}>
       <DndProvider backend={HTML5Backend}>
         <ReleasesController
@@ -45,8 +46,7 @@ const initReleases = (
           options={options}
         />
       </DndProvider>
-    </Provider>,
-    document.querySelector(id)
+    </Provider>
   );
 };
 
