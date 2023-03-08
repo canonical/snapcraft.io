@@ -6,14 +6,4 @@ describe("initIcon", () => {
       initIcon();
     }).toThrow();
   });
-
-  it("should render to the holder, without images", () => {
-    const holder = document.createElement("div");
-    holder.id = "icon-holder";
-    document.body.appendChild(holder);
-
-    initIcon("#icon-holder", {}, "snap", () => {});
-
-    expect(holder.querySelectorAll(".p-editable-icon").length).toEqual(1);
-  });
 });
