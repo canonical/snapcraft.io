@@ -21,13 +21,6 @@
     "clean": "rm -rf node_modules yarn-error.log css static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
     "percy": "node_modules/.bin/percy snapshot snapshots.yml"
   },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "testEnvironmentOptions": {
-      "url": "http://localhost.test"
-    },
-    "collectCoverage": true
-  },
   "author": "Canonical webteam",
   "license": "LGPL-3.0-or-later",
   "dependencies": {
@@ -105,6 +98,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "7.19.1",
     "@percy/cli": "1.20.0",
+    "babel-jest": "29.5.0",
     "concurrently": "7.6.0",
     "eslint": "8.35.0",
     "eslint-config-prettier": "8.7.0",

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, Redirect } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { useAppDispatch } from "../hooks";
 import {
   Form,
@@ -71,7 +71,7 @@ function Settings() {
 
     const settingsData = new FormData();
     settingsData.set("csrf_token", window.CSRF_TOKEN);
-    settingsData.set("store-id", id);
+    settingsData.set("store-id", id!);
     settingsData.set("private", isPrivateStore.toString());
     settingsData.set("manual-review-policy", manualReviewPolicy);
 
@@ -87,7 +87,7 @@ function Settings() {
         }
       })
       .then((data) => {
-        dispatch(fetchStore(id));
+        dispatch(fetchStore(id!));
 
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
@@ -128,8 +128,8 @@ function Settings() {
     currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
-    dispatch(fetchMembers(id));
-    dispatch(fetchStore(id));
+    dispatch(fetchMembers(id!));
+    dispatch(fetchStore(id!));
   }, [id]);
 
   useEffect(() => {
@@ -157,7 +157,7 @@ function Settings() {
           ) : storeNotFound || membersNotFound ? (
             <StoreNotFound />
           ) : isOnlyViewer() ? (
-            <Redirect to={`/admin/${id}/snaps`} />
+            <Navigate to={`/admin/${id}/snaps`} />
           ) : (
             <Row>
               <Col size={7}>
