@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import Tour from "./tour/tour";
 
@@ -26,14 +26,14 @@ export function initTour({
     throw Error("initTour expects steps array as an argument.");
   }
 
-  ReactDOM.render(
+  const root = createRoot(container);
+  root.render(
     <Tour
       steps={steps}
       onTourStarted={onTourStarted}
       onTourClosed={onTourClosed}
       startTour={startTour}
-    />,
-    container
+    />
   );
 }
 

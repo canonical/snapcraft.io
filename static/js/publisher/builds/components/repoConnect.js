@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import PropTypes from "prop-types";
 
 import Button from "@canonical/react-components/dist/components/Button";
@@ -446,7 +446,7 @@ RepoConnect.propTypes = {
  * @param {string} snapName
  */
 function init(selector, organizations, user, snapName) {
-  const el = document.querySelector(selector);
+  const container = document.querySelector(selector);
 
   // Add user login to the organization list
   let _organizations = organizations.map((item) => {
@@ -459,15 +459,15 @@ function init(selector, organizations, user, snapName) {
     ..._organizations,
   ];
 
-  if (el) {
+  if (container) {
     // do the react
-    ReactDOM.render(
+    const root = createRoot(container);
+    root.render(
       <RepoConnect
         organizations={_organizations}
         user={user}
         snapName={snapName}
-      />,
-      el
+      />
     );
   }
 }

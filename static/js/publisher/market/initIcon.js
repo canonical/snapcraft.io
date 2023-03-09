@@ -1,24 +1,24 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import Icon from "../form/icon";
 
 import { ICON_RESTRICTIONS } from "../market/restrictions";
 
 function initIcon(holder, icon, title, updateIcon) {
-  const holderEl = document.querySelector(holder);
+  const container = document.querySelector(holder);
 
-  if (!holderEl) {
+  if (!container) {
     throw new Error(`${holder} does not exist.`);
   }
 
-  ReactDOM.render(
+  const root = createRoot(container);
+  root.render(
     <Icon
       icon={icon}
       title={title}
       updateIcon={updateIcon}
       restrictions={ICON_RESTRICTIONS}
-    />,
-    holderEl
+    />
   );
 }
 

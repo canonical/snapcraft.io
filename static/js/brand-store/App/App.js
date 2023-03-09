@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
-  Redirect,
+  Navigate,
 } from "react-router-dom";
 
 import { fetchStores } from "../slices/brandStoreSlice";
@@ -29,29 +29,27 @@ function App() {
     <Router>
       <div className="l-application" role="presentation">
         <Navigation />
-        <Switch>
-          <Route exact path="/admin">
-            {!isLoading ? (
-              !brandStoresList || brandStoresList.length < 1 ? (
-                <StoreNotFound />
-              ) : brandStoresList[0].id === "ubuntu" ? (
-                // Don't redirect to the global store by default
-                <Redirect to={`/admin/${brandStoresList[1].id}/snaps`} />
-              ) : (
-                <Redirect to={`/admin/${brandStoresList[0].id}/snaps`} />
-              )
-            ) : null}
-          </Route>
-          <Route exact path="/admin/:id/snaps">
-            <Snaps />
-          </Route>
-          <Route exact path="/admin/:id/members">
-            <Members />
-          </Route>
-          <Route exact path="/admin/:id/settings">
-            <Settings />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route
+            exact
+            path="/admin"
+            element={
+              !isLoading ? (
+                !brandStoresList || brandStoresList.length < 1 ? (
+                  <StoreNotFound />
+                ) : brandStoresList[0].id === "ubuntu" ? (
+                  // Don't redirect to the global store by default
+                  <Navigate to={`/admin/${brandStoresList[1].id}/snaps`} />
+                ) : (
+                  <Navigate to={`/admin/${brandStoresList[0].id}/snaps`} />
+                )
+              ) : null
+            }
+          />
+          <Route exact path="/admin/:id/snaps" element={<Snaps />} />
+          <Route exact path="/admin/:id/members" element={<Members />} />
+          <Route exact path="/admin/:id/settings" element={<Settings />} />
+        </Routes>
       </div>
     </Router>
   );
