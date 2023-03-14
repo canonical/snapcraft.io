@@ -32,7 +32,13 @@ function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {
     }
   }
 
-  const allowedKeys = ["icon", "banner", "screenshot_urls", "video_urls"];
+  const allowedKeys = [
+    "icon",
+    "banner",
+    "screenshot_urls",
+    "video_urls",
+    "categories",
+  ];
 
   let showWarning = false;
 
