@@ -32,50 +32,17 @@ function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {
     }
   }
 
-  if (filteredDirtyFields.length === 1) {
-    if (
-      filteredDirtyFields.includes("icon") ||
-      filteredDirtyFields.includes("banner") ||
-      filteredDirtyFields.includes("screenshot_urls")
-    ) {
-      return false;
-    }
-  }
+  const allowedKeys = ["icon", "banner", "screenshot_urls", "video_urls"];
 
-  if (filteredDirtyFields.length === 2) {
-    if (
-      filteredDirtyFields.includes("icon") &&
-      filteredDirtyFields.includes("banner")
-    ) {
-      return false;
-    }
+  let showWarning = false;
 
-    if (
-      filteredDirtyFields.includes("icon") &&
-      filteredDirtyFields.includes("screenshot_urls")
-    ) {
-      return false;
+  filteredDirtyFields.forEach((field) => {
+    if (!allowedKeys.includes(field)) {
+      showWarning = true;
     }
+  });
 
-    if (
-      filteredDirtyFields.includes("banner") &&
-      filteredDirtyFields.includes("screenshot_urls")
-    ) {
-      return false;
-    }
-  }
-
-  if (filteredDirtyFields.length === 3) {
-    if (
-      filteredDirtyFields.includes("icon") &&
-      filteredDirtyFields.includes("banner") &&
-      filteredDirtyFields.includes("screenshot_urls")
-    ) {
-      return false;
-    }
-  }
-
-  return true;
+  return showWarning;
 }
 
 export default shouldShowUpdateMetadataWarning;
