@@ -33,11 +33,16 @@ function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {
   }
 
   const allowedKeys = [
-    "icon",
     "banner",
+    "icon",
+    "primary-category",
+    "public_metrics_blacklist",
+    "public_metrics_distros",
+    "public_metrics_enabled",
+    "public_metrics_territories",
     "screenshot_urls",
+    "secondary-category",
     "video_urls",
-    "categories",
   ];
 
   let showWarning = false;
