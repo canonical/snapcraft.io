@@ -36,13 +36,20 @@ function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {
     "banner",
     "icon",
     "primary-category",
-    "public_metrics_blacklist",
-    "public_metrics_distros",
-    "public_metrics_enabled",
-    "public_metrics_territories",
     "screenshot_urls",
     "secondary-category",
     "video_urls",
+    // ========================================================
+    // The following keys can be uncommented once
+    // https://bugs.launchpad.net/snapstore-server/+bug/2011695
+    // is resolved.
+    // We are tracking this internally here:
+    // https://warthogs.atlassian.net/browse/WD-2648
+    // ========================================================
+    // "public_metrics_blacklist",
+    // "public_metrics_distros",
+    // "public_metrics_enabled",
+    // "public_metrics_territories",
   ];
 
   let showWarning = false;
