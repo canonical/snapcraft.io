@@ -387,9 +387,15 @@ function Snaps() {
                     <ul>
                       {includedStores.map((store) => (
                         <li key={store.id}>
-                          <Link to={`/admin/${store.id}/snaps`}>
-                            {store.name}
-                          </Link>
+                          {store.userHasAccess ? (
+                            <Link to={`/admin/${store.id}/snaps`}>
+                              {store.name}
+                            </Link>
+                          ) : (
+                            <>
+                              {store.name} ({store.id})
+                            </>
+                          )}
                         </li>
                       ))}
                     </ul>
