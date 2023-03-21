@@ -4,7 +4,6 @@ import functools
 # Third party packages
 import flask
 from webapp import authentication
-from talisker import logging
 
 
 def login_required(func):
