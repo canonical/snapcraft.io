@@ -97,7 +97,7 @@ def get_store_snaps(store_id):
                             "userHasAccess": True,
                         }
                     )
-            except:
+            except Exception:
                 included_stores.append(
                     {
                         "id": item,
