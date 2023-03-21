@@ -3,7 +3,10 @@ import datetime
 
 import flask
 from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher, SnapStoreAdmin
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapPublisher,
+    SnapStoreAdmin,
+)
 
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
@@ -88,10 +91,12 @@ def after_login(resp):
             in resp.extensions["lp"].is_member,
         }
 
-        if (logic.get_stores(
-                account["stores"], roles=["admin", "review", "view"]
-        )):
-            flask.session["publisher"]["stores"] = admin_api.get_stores(flask.session)
+        if logic.get_stores(
+            account["stores"], roles=["admin", "review", "view"]
+        ):
+            flask.session["publisher"]["stores"] = admin_api.get_stores(
+                flask.session
+            )
     else:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
@@ -183,10 +188,10 @@ def login_callback():
         "email": publisher["account"]["email"],
     }
 
-    if (logic.get_stores(
-        account["stores"], roles=["admin", "review", "view"]
-    )):
-        flask.session["publisher"]["stores"] = admin_api.get_stores(flask.session)
+    if logic.get_stores(account["stores"], roles=["admin", "review", "view"]):
+        flask.session["publisher"]["stores"] = admin_api.get_stores(
+            flask.session
+        )
 
     response = flask.make_response(
         flask.redirect(
