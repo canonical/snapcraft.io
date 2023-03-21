@@ -82,16 +82,25 @@ def get_snaps_search(store_id):
 @admin.route("/admin/store/<store_id>/snaps")
 @login_required
 def get_store_snaps(store_id):
-    snaps = admin_api.get_store_snaps(flask.session, store_id)
+    snaps = admin_api.get_store_snaps(flask.session, store_id) 
     store = admin_api.get_store(flask.session, store_id)
     if "store-whitelist" in store:
         included_stores = []
         for item in store["store-whitelist"]:
-            store_item = admin_api.get_store(flask.session, item)
-            if store_item:
-                print(store_item)
+            #store_item = admin_api.get_store(flask.session, item)
+            #if store_item:
+            #    included_stores.append(
+            #        {"id": store_item["id"], "name": store_item["name"]}
+            #    )
+            try:
+                store_item = admin_api.get_store(flask.session, item)
+                if store_item:
+                    included_stores.append(
+                        {"id": store_item["id"], "name": store_item["name"], "userHasAccess": True}
+                    )
+            except:
                 included_stores.append(
-                    {"id": store_item["id"], "name": store_item["name"]}
+                    {"id": item, "name": "Private store", "userHasAccess": False}
                 )
 
         if included_stores:
