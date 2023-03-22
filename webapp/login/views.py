@@ -3,7 +3,10 @@ import datetime
 
 import flask
 from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapPublisher,
+    SnapStoreAdmin,
+)
 
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
@@ -31,6 +34,7 @@ open_id = OpenID(
 )
 
 publisher_api = SnapPublisher(api_publisher_session)
+admin_api = SnapStoreAdmin(api_publisher_session)
 candid = CandidClient(api_publisher_session)
 
 
@@ -72,8 +76,11 @@ def after_login(resp):
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
-    try:
-        account = publisher_api.get_account(flask.session)
+    account = publisher_api.get_account(flask.session)
+    owned, shared = logic.get_snap_names_by_ownership(account)
+    flask.session["user_shared_snaps"] = shared
+
+    if account:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
             "nickname": account["username"],
@@ -83,12 +90,14 @@ def after_login(resp):
             "is_canonical": LP_CANONICAL_TEAM
             in resp.extensions["lp"].is_member,
         }
-        owned, shared = logic.get_snap_names_by_ownership(account)
-        flask.session["user_shared_snaps"] = shared
-        flask.session["publisher"]["stores"] = logic.get_stores(
+
+        if logic.get_stores(
             account["stores"], roles=["admin", "review", "view"]
-        )
-    except Exception:
+        ):
+            flask.session["publisher"]["stores"] = admin_api.get_stores(
+                flask.session
+            )
+    else:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
             "nickname": resp.nickname,
@@ -179,9 +188,10 @@ def login_callback():
         "email": publisher["account"]["email"],
     }
 
-    flask.session["publisher"]["stores"] = logic.get_stores(
-        account["stores"], roles=["admin", "review", "view"]
-    )
+    if logic.get_stores(account["stores"], roles=["admin", "review", "view"]):
+        flask.session["publisher"]["stores"] = admin_api.get_stores(
+            flask.session
+        )
 
     response = flask.make_response(
         flask.redirect(
