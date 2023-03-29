@@ -6,11 +6,14 @@ import {
   Row,
   Col,
   Notification,
+  Modal,
+  Button,
 } from "@canonical/react-components";
 
 import PageHeader from "../../../shared/PageHeader";
 import SaveAndPreview from "../../../shared/SaveAndPreview";
 import SearchAutocomplete from "../../../shared/SearchAutocomplete";
+import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
 
 import { getSettingsData, getFormData } from "../../utils";
 
@@ -21,6 +24,10 @@ function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
   const [savedError, setSavedError] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
+    false
+  );
 
   const {
     register,
@@ -49,7 +56,21 @@ function App() {
     name: "blacklist_country_keys",
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
+    const dirtyFieldsKeys = Object.keys(dirtyFields);
+    const onlyUpdateMetadataField =
+      dirtyFieldsKeys.length === 1 &&
+      dirtyFieldsKeys[0] === "update_metadata_on_release";
+
+    if (getValues("update_metadata_on_release") && !onlyUpdateMetadataField) {
+      setShowMetadataWarningModal(true);
+      setFormData(data);
+    } else {
+      submitForm(data);
+    }
+  };
+
+  const submitForm = async (data: any) => {
     setIsSaving(true);
     setHasSaved(false);
     setSavedError(false);
@@ -407,6 +428,14 @@ function App() {
           </Row>
         </Strip>
       </Form>
+
+      {showMetadataWarningModal ? (
+        <UpdateMetadataModal
+          setShowMetadataWarningModal={setShowMetadataWarningModal}
+          submitForm={submitForm}
+          formData={formData}
+        />
+      ) : null}
     </>
   );
 }

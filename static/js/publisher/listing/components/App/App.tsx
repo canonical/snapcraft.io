@@ -18,6 +18,7 @@ import { initListingTour } from "../../../tour";
 
 import PageHeader from "../../../shared/PageHeader";
 import SaveAndPreview from "../../../shared/SaveAndPreview";
+import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
 import ListingDetailsSection from "../../sections/ListingDetailsSection";
 import ContactInformationSection from "../../sections/ContactInformationSection";
 import AdditionalInformationSection from "../../sections/AdditionalInformationSection";
@@ -161,41 +162,11 @@ function App() {
             </section>
 
             {showMetadataWarningModal ? (
-              <Modal
-                close={() => {
-                  setShowMetadataWarningModal(false);
-                }}
-                title="Warning"
-                buttonRow={
-                  <>
-                    <Button
-                      type="button"
-                      className="u-no-margin--bottom"
-                      onClick={() => {
-                        setShowMetadataWarningModal(false);
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="button"
-                      className="u-no-margin--bottom u-no-margin--right"
-                      appearance="positive"
-                      onClick={() => {
-                        submitForm(formData);
-                        setShowMetadataWarningModal(false);
-                      }}
-                    >
-                      Save changes
-                    </Button>
-                  </>
-                }
-              >
-                <p>
-                  Making these changes means that the snap will no longer use
-                  the data from snapcraft.yaml.
-                </p>
-              </Modal>
+              <UpdateMetadataModal
+                setShowMetadataWarningModal={setShowMetadataWarningModal}
+                submitForm={submitForm}
+                formData={formData}
+              />
             ) : null}
           </>
         )}
