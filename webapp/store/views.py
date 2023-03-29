@@ -11,6 +11,7 @@ from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 import os
+from pprint import pprint
 
 session = talisker.requests.get_session(requests.Session)
 
@@ -318,12 +319,12 @@ def store_blueprint(store_query=None):
                     except StoreApiError:
                         pass
 
-                    for snap in snaps_results:
-                        snap["icon_url"] = helpers.get_icon(snap["media"])
+            for snap in snaps_results:
+                snap["icon_url"] = helpers.get_icon(snap["media"])
 
-                        context["snaps"].extend(
-                            [snap for snap in snaps_results if snap["apps"]]
-                        )
+                context["snaps"].extend(
+                    [snap for snap in snaps_results if snap["apps"]]
+                )
 
                 featured_snaps = [
                     snap["package_name"] for snap in context["featured_snaps"]
