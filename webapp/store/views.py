@@ -11,7 +11,6 @@ from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 import os
-from pprint import pprint
 
 session = talisker.requests.get_session(requests.Session)
 
