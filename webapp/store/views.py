@@ -85,7 +85,8 @@ def store_blueprint(store_query=None):
             snaps = []
 
         for snap in snaps:
-            snap["icon_url"] = helpers.get_icon(snap["media"])
+            if "media" in snap:
+                snap["icon_url"] = helpers.get_icon(snap["media"])
 
         return (
             flask.render_template(
