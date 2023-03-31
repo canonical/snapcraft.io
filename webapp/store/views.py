@@ -318,13 +318,12 @@ def store_blueprint(store_query=None):
                     except StoreApiError:
                         pass
 
-                    snaps_with_icons = []
-                    if snaps_results:
-                        for snap in snaps_results:
-                            snap["icon_url"] = helpers.get_icon(snap["media"])
-                            if snap["apps"]:
-                                snaps_with_icons.append(snap)
-                        context["snaps"].extend(snaps_with_icons)
+                    for snap in snaps_results:
+                        snap["icon_url"] = helpers.get_icon(snap["media"])
+
+                    context["snaps"].extend(
+                        [snap for snap in snaps_results if snap["apps"]]
+                    )
 
                 featured_snaps = [
                     snap["package_name"] for snap in context["featured_snaps"]
