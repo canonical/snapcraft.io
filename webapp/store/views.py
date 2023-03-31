@@ -322,9 +322,9 @@ def store_blueprint(store_query=None):
                     for snap in snaps_results:
                         snap["icon_url"] = helpers.get_icon(snap["media"])
 
-                        context["snaps"].extend(
-                            [snap for snap in snaps_results if snap["apps"]]
-                        )
+                    context["snaps"].extend(
+                        [snap for snap in snaps_results if snap["apps"]]
+                    )
 
                 featured_snaps = [
                     snap["package_name"] for snap in context["featured_snaps"]
