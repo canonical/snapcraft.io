@@ -79,7 +79,6 @@ def post_account_details():
 
 
 @account.route("/agreement")
-@login_required
 def get_agreement():
     return flask.render_template(
         "publisher/developer_programme_agreement.html"
@@ -87,7 +86,6 @@ def get_agreement():
 
 
 @account.route("/agreement", methods=["POST"])
-@login_required
 def post_agreement():
     agreed = flask.request.form.get("i_agree")
     if agreed == "on":
