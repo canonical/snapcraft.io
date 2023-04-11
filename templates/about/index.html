@@ -7,40 +7,52 @@
 {% block meta_title %}About Snaps | Snapcraft{% endblock %}
 
 {% block about_content %}
-  <h1 class="p-heading--2">About Snaps</h1>
-  <p>
-    Snaps are app packages for desktop, cloud and IoT that are easy to install, secure, cross&dash;platform and dependency&dash;free. Snaps are discoverable and installable from the Snap Store, the app store for Linux with an audience of millions.
-  </p>
-  <div class="p-strip is-shallow">
-    <div class="row">
-      <div class="col-4">
-        <h4>Snap</h4>
-        <p>
-          A snap is a bundle of an app and its dependencies that works without modification across Linux distributions.
-        </p>
-      </div>
-      <div class="col-4">
-        <h4>Snapd</h4>
-        <p>
-          Snapd is the background service that manages and maintains your snaps, automatically.
-        </p>
-      </div>
+<section class="p-strip--light">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="p-heading--2">About Snaps</h1>
     </div>
-    <div class="row">
-      <div class="col-4">
-        <h4>Snap Store</h4>
-        <p>
-          The Snap Store provides a place to upload snaps, and for users to browse and install the software they want.
-        </p>
-      </div>
-      <div class="col-4">
-        <h4>Snapcraft</h4>
-        <p>
-          Snapcraft is the command and the framework used to build and publish snaps.
-        </p>
-      </div>
+    <div class="col-6">
+      <p>Snaps are app packages for desktop, cloud and IoT that are easy to install, secure, cross&dash;platform and dependency&dash;free. Snaps are discoverable and installable from the Snap Store, the app store for Linux with an audience of millions.</p>
+      <ul class="p-list--divided">
+
+        <li class="p-list__item u-no-padding--top row">
+          <div class="col-2">
+            <h4 class="p-heading--5">Snap</h4>
+          </div>
+          <div class="col-4">
+            <p>A snap is a bundle of an app and its dependencies that works without modification across Linux distributions.</p>
+          </div>
+        </li>
+        <li class="p-list__item u-no-padding--top row">
+          <div class="col-2">
+            <h4 class="p-heading--5">Snapd</h4>
+          </div>
+          <div class="col-4">
+            <p>Snapd is the background service that manages and maintains your snaps, automatically.</p>
+          </div>
+        </li>
+        <li class="p-list__item u-no-padding--top row">
+          <div class="col-2">
+            <h4 class="p-heading--5">Snap Store</h4>
+          </div>
+          <div class="col-4">
+            <p>The Snap Store provides a place to upload snaps, and for users to browse and install the software they want.</p>
+          </div>
+        </li>
+        <li class="p-list__item u-no-padding--top row">
+          <div class="col-2">
+            <h4 class="p-heading--5">Snapcraft</h4>
+          </div>
+          <div class="col-4">
+            <p>Snapcraft is the command and the framework used to build and publish snaps.</p>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
+</section>
+
   <div class="p-strip is-shallow">
     {{
       image(
