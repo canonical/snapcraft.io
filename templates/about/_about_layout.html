@@ -3,49 +3,40 @@
 {% set page_slug="about" %}
 
 {% block content %}
-<section class="p-strip">
-  <div class="row">
-    <div class="col-3">
-      <div class="p-side-navigation is-sticky" id="drawer">
-        <a href="#drawer" class="p-side-navigation__toggle js-drawer-toggle" aria-controls="drawer">
-          Toggle side navigation
-        </a>
-
-        <div class="p-side-navigation__overlay js-drawer-toggle" aria-controls="drawer"></div>
-
-        <div class="p-side-navigation__drawer">
-          <div class="p-side-navigation__drawer-header">
-            <a href="#" class="p-side-navigation__toggle--in-drawer js-drawer-toggle" aria-controls="drawer">
-              Toggle side navigation
-            </a>
-          </div>
-
-          <ul class="p-side-navigation__list">
-            <li class="p-side-navigation__item">
-              <a class="p-side-navigation__link{% if request.path == '/about' %} is-active{% endif %}" href="/about">About snaps</a>
-            </li>
-            <li class="p-side-navigation__item ">
-              <a class="p-side-navigation__link{% if request.path == '/about/publish' %} is-active{% endif %}" href="/about/publish">Publish to the Snap Store</a>
-            </li>
-            <li class="p-side-navigation__item ">
-              <a class="p-side-navigation__link{% if request.path == '/about/listing' %} is-active{% endif %}" href="/about/listing">Your snap page</a>
-            </li>
-            <li class="p-side-navigation__item ">
-              <a class="p-side-navigation__link{% if request.path == '/about/release' %} is-active{% endif %}" href="/about/release">Releasing your snap</a>
-            </li>
-            <li class="p-side-navigation__item ">
-              <a class="p-side-navigation__link{% if request.path == '/about/publicise' %} is-active{% endif %}" href="/about/publicise">Publicise and measure</a>
-            </li>
-          </ul>
-
-        </div>
-      </div>
-    </div>
-    <div class="col-8 col-start-large-5">
-
-      {% block about_content %}{% endblock about_content %}
-
-    </div>
+<section class="p-strip is-shallow u-no-padding--bottom">
+  <div class="u-fixed-width">
+    <nav class="p-tabs" aria-label="About Snaps">
+      <ul class="p-tabs__list">
+        <li class="p-tabs__item">
+          <a href="/about" class="p-tabs__link" {% if request.path == '/about' %}aria-selected="true"{% endif %}>
+            About Snaps
+          </a>
+        </li>
+        <li class="p-tabs__item">
+          <a href="/about/publish" class="p-tabs__link" {% if request.path == '/about/publish' %}aria-selected="true"{% endif %}>
+            Publish to the Snap Store
+          </a>
+        </li>
+        <li class="p-tabs__item">
+          <a href="/about/listing" class="p-tabs__link" {% if request.path == '/about/listing' %}aria-selected="true"{% endif %}>
+            Your snap page
+          </a>
+        </li>
+        <li class="p-tabs__item">
+          <a href="/about/release" class="p-tabs__link" {% if request.path == '/about/release' %}aria-selected="true"{% endif %}>
+            Releasing your snap
+          </a>
+        </li>
+        <li class="p-tabs__item">
+          <a href="/about/publicise" class="p-tabs__link" {% if request.path == '/about/publicise' %}aria-selected="true"{% endif %}>
+            Publicise and measure
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </section>
+
+{% block about_content %}{% endblock about_content %}
+
 {% endblock %}
