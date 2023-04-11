@@ -15,7 +15,7 @@ class BaseTestCases:
     This class has a set of test classes that should be inherited by endpoint
     that have authentication.
 
-    It is also used to avoid unittest to run this  file.
+    It is also used to avoid unittest to run this tests file.
     """
 
     class BaseAppTesting(TestCase):
