@@ -450,3 +450,15 @@ code {
 
   background-color: #f2f2f2;
 }
+
+.p-inline-list--vertical-divider {
+  @extend .p-inline-list--middot;
+
+  .p-inline-list__item:not(:last-child) {
+    &::after {
+      border-left: 1px solid $color-mid-light;
+      content: "";
+      right: -0.15rem;
+    }
+  }
+}

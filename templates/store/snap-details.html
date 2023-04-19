@@ -75,7 +75,7 @@
   {% if is_preview %}
     <div class="snapcraft-details-preview">
   {% endif %}
-  <div class="p-strip--light is-shallow snapcraft-banner-background">
+  <div class="p-strip is-shallow">
     {% if is_users_snap and not is_preview %}
       <div class="row js-snap-owner-notification">
         <div class="p-notification--information">
@@ -150,15 +150,16 @@
   {% endif %}
 
   {% if screenshots or video or is_preview %}
-    <div class="p-strip--light is-shallow">
+    <div class="p-strip is-shallow">
       {% include "store/snap-details/_screenshots.html" %}
     </div>
   {% endif %}
 
-  <div class="p-strip is-shallow">
+  <div class="p-strip is-shallow u-no-padding--top">
+    <div class="u-fixed-width"><hr></div>
     <div class="row">
       <div class="col-8 u-text-wrap">
-        {% if summary or is_preview %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
+        {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
         <div data-live="description">{{ description | safe }}</div>
       </div>
       <div class="col-4">
@@ -166,7 +167,7 @@
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
         {% if not is_preview and not IS_BRAND_STORE %}
-          <h4 style="margin-top: 1rem;">Share this snap</h4>
+          <h4 class="p-heading--5">Share this snap</h4>
           <p>Generate an embeddable card to be shared on external websites.</p>
           <p><button class="p-button js-embedded-card-toggle">Create embeddable card</button></p>
 
@@ -176,21 +177,24 @@
     </div>
   </div>
 
+  {% if not IS_BRAND_STORE %}
+    {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
+  {% endif %}
+
   {% if not IS_BRAND_STORE and package_name == "hiri" %}
     {% include "partials/_hiri-case-study.html" %}
   {% endif %}
 
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
-      <div class="u-fixed-width">
-        <hr />
-      </div>
-
       <div class="p-strip is-shallow">
+        <div class="u-fixed-width"><hr></div>
+        <div class="u-fixed-width">
+          <h4 class="p-heading--2">Where people are using {{ snap_title }}</h4>
+        </div>
         <div class="row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
             <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
-              <h4>Where people are using {{ snap_title }}</h4>
               <div id="js-snap-map" class="snapcraft-territories"></div>
             </div>
           {% endif %}
@@ -217,14 +221,16 @@
               </div>
               <div class="p-show-more__fade">
                 <div class="p-show-more__link-container">
-                  <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
+                  <small>
+                    <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
+                  </small>
                 </div>
               </div>
             </div>
             {% else %}
             <div class="col-4 js-snap-distro-chart-holder"
               data-live="weekly_installed_base_by_operating_system_normalized">
-              <h4>Users by distribution (log)</h4>
+              <h4 class="p-heading--5">Users by distribution (log)</h4>
               <div class="snapcraft-distro-chart">
                 <div class="snapcraft-distro-chart__names">
                   {% for distro in normalized_os %}
@@ -247,18 +253,12 @@
     </div>
   {% endif %}
 
-  {% if not IS_BRAND_STORE %}
-    {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
-  {% endif %}
-
   {# REPORT SNAP SECTION - hidden in preview #}
   {% if not is_preview and not IS_BRAND_STORE %}
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-
-    <div class="u-fixed-width">
-      <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
+    <div class="p-strip--light">
+      <div class="u-fixed-width">
+        <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
+      </div>
     </div>
 
     {% include "store/snap-details/_report_snap_modal.html" %}
