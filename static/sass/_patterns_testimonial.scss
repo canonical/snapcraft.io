@@ -4,21 +4,5 @@
     margin: 0;
     margin-bottom: $sp-large * 2;
     padding: 0;
-
-    &__title {
-      margin-top: $sp-medium;
-    }
-
-    &__content {
-      font-style: normal;
-    }
-
-    &__logo {
-      height: 3rem;
-
-      img {
-        max-height: 100%;
-      }
-    }
   }
 }

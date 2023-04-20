@@ -2,474 +2,207 @@
 
 {% block meta_copydoc %}https://docs.google.com/document/d/1_uwPkHmAgV6_uE9ISqIgXjZGJxXPBD90vdeO95h7ikE/edit{% endblock %}
 
-{% set hero_categories = ["Featured", "Development", "Games", "Server"] %}
+{% set featured_categories = ["Featured", "Development", "Games", "Server"] %}
 
 {% block content %}
-<div id="main-content" class="p-strip-slanted--snapcraft">
-  <h1 class="u-off-screen">Snapcraft</h1>
-  <div class="u-fixed-width">
-    {% if nps %}
-    <div class="p-notification p-snapcraft-nps-banner js-notification-holder">
-      <div class="p-notification__response">
-        <p class="u-no-margin--bottom u-no-padding--top">
-          Thank you so much 🙏. Your feedback is really valuable to us. <a href="#" class="js-nps-comment-toggle">Provide further comments</a>
-        </p>
-        <div class="p-snapcraft-nps-banner__form js-nps-comment u-hide">
-          <form>
-            <textarea rows="5" name="snapcraftNPSNotes"></textarea>
-            <div class="row">
-              <div class="col-10">
-                <p class="u-float-left u-no-margin--top u-no-padding--top u-no-margin--bottom">
-                  <small>
-                    Refer to Canonical's <a href="https://www.ubuntu.com/legal/data-privacy/snapcraft-nps" target="_blank" >privacy notice</a>
-                    and <a href="https://www.ubuntu.com/legal/data-privacy" target="_blank" >privacy
-                      policy</a> for information on how data will be processed.
-                  </small>
-                </p>
-              </div>
-              <div class="col-2">
-                <button type="submit" class="has-icon u-float-right button--dark">Send</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <button arial-label="Close notification" class="p-icon--close js-notification-close">Close</button>
-    </div>
-    {% endif %}
-
-    {% include 'partials/livestream-notification.html' %}
-
-    <h2>The app store for Linux</h2>
-    <form action="/search" class="p-form p-form--inline p-form--search">
-      <div class="p-form__group">
-        <label for="search-input" class="u-off-screen">Search</label>
-        <div class="p-form__control u-clearfix">
-          <input class="u-no-margin--bottom" id="search-input" type="search" name="q" value="" placeholder="Search thousands of snaps" />
-        </div>
-      </div>
-      <button type="submit" alt="search" class="p-button--positive">Search</button>
-    </form>
-
-    {% set selected_index = range(1, hero_categories | length + 1) | random %}
-
-    <div data-js="hero-snaps-container">
-      <div class="u-fixed-width u-clearfix" style="margin-block-start: 1.5rem;">
-        <p class="p-heading--5 u-float-left">Some snaps you may like</p>
-        <p class="u-float-right">
-        {% for category in hero_categories %}
-          <a href="/search?category={{ category|lower }}" id="view-all-{{ category|lower }}" class="p-hero-tab__link{% if loop.index != selected_index %} u-hide{% endif %}" data-js="view-all">View all {{ category }} snaps&nbsp;&rsaquo;</a>
-        {% endfor %}
-        </p>
-      </div>
-
-      <div data-js="panels-container">
-        {% for category in hero_categories %}
-        <div class="p-hero-panel row u-no-padding--left u-no-padding--right{% if loop.index == selected_index %} u-animate--reveal{% endif%}" id="panel-{{ category|lower }}-snaps" role="tabpanel" aria-labelledby="{{ category|lower }}-snaps">
-          {% for _ in range(0, 3) %}
-          <div class="col-4">
-            <div class="p-card p-media-object p-media-object--snap is-placeholder">
-              <div class="p-media-object__image"></div>
-              <div class="p-media-object__details">
-                <h4 class="p-media-object__title p-heading--5 u-no-margin--bottom">
-                  Placeholder
-                </h4>
-                <div class="p-media-object__content">
-                  <p> Placeholder</p>
-                  <p class="u-no-margin--bottom">Placeholder</p>
-                  <p>Placeholder</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% endfor %}
-      </div>
-
-      <div class="u-fixed-width p-hero-tab">
-        <div role="tablist" aria-label="Fatured snaps" class="p-hero-tab__list">
-          {% for category in hero_categories %}
-          <button role="tab" aria-selected="{% if loop.index == selected_index %}true{% else %}false{% endif %}" aria-controls="panel-{{ category|lower }}-snaps" id="{{ category|lower }}-snaps" class="p-hero-tab__item" data-js="carousel-tab">
-            <i class="before"></i>
-            <p class="p-hero-tab__title">{{ category }}</p>
-          </button>
-          {% endfor %}
-        </div>
+<main id="main-content">
+  
+  {% with featured_categories = featured_categories %}
+    {% include "home/_featured-snaps.html" %}
+  {% endwith %}
+  
+  <section class="p-strip--homepage u-no-padding--top u-no-padding--bottom">
+    <div class="u-fixed-width"><hr class="u-no-margin--bottom"></div>
+    <div class="row">
+      <div class="col-3">
+        <h2 class="p-muted-heading">Official snaps from major publishers</h2>
       </div>
     </div>
-
-    <div class="u-fixed-width u-align--center">
-      <a href="/store" class="p-button--outline">Browse all snaps</a>
-    </div>
-  </div>
-</div>
-
-<section class="p-strip">
-  <div class="row">
-    <h2 class="p-muted-heading">Official snaps from major publishers</h2>
-  </div>
-  <div class="row">
-    <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/firefox">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/aae93857-logo-mozilla--snapcraft-homepage.svg",
-            alt="Mozilla",
-            width="146",
-            height="145",
-            hi_def=True,
-            loading="eager"
-          ) | safe
-        }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/publisher/kde">
-        {{
+    <div class="row">
+      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+        <a href="/firefox">
+          {{
             image(
-              url="https://assets.ubuntu.com/v1/6958a93e-kde-logo-snapcraft-homepage.svg",
-              alt="KDE",
+              url="https://assets.ubuntu.com/v1/aae93857-logo-mozilla--snapcraft-homepage.svg",
+              alt="Mozilla",
               width="146",
               height="145",
               hi_def=True,
               loading="eager"
             ) | safe
           }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/publisher/jetbrains">
-        {{
-            image(
-              url="https://assets.ubuntu.com/v1/55f6dae7-logo-jetbrains--snapcraft-homepage.svg",
-              alt="JetBrains",
-              width="146",
-              height="145",
-              hi_def=True,
-              loading="eager"
-            ) | safe
-          }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/spotify">
-        {{
-            image(
-              url="https://assets.ubuntu.com/v1/63d5fd3f-logo-spotify--snapcraft-homepage.svg",
-              alt="Spotify",
-              width="146",
-              height="145",
-              hi_def=True,
-              loading="eager"
-            ) | safe
-          }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/google-cloud-sdk">
-        {{
-            image(
-              url="https://assets.ubuntu.com/v1/2d54fa27-logo-google--snapcraft-homepage.svg",
-              alt="Google",
-              width="146",
-              height="145",
-              hi_def=True,
-              loading="eager"
-            ) | safe
-          }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-3 col-2 col-logo u-align--center">
-      <a href="/code">
-        {{
-            image(
-              url="https://assets.ubuntu.com/v1/7b03d4b8-logo-microsoft--snapcraft-homepage.svg",
-              alt="Microsoft",
-              width="146",
-              height="145",
-              hi_def=True,
-              loading="eager"
-            ) | safe
-          }}
-      </a>
-    </div>
-  </div>
-</section>
-
-<div class="u-fixed-width">
-  <hr>
-</div>
-
-<section class="p-strip" data-js="latest-news">
-  <div class="u-fixed-width">
-    <h2>Latest  news from <a href="/blog">our blog&nbsp;&rsaquo;</a></h2>
-  </div>
-  <div id="horizontal-latest-articles" class="row" style="min-height: 84px;">
-    <div class="u-align--center" style="min-height: 9.1rem;"><i class="p-icon--spinner u-animation--spin">Loading...</i></div>
-  </div>
-
-  <template style="display: none;" id="horizontal-articles-template">
-    <div class="col-4">
-      <h3 class="p-heading--4 u-line-clamp--3"><a class="article-link article-title"></a></h3>
-      <footer>
-        <time pubdate datetime="POST_UPDATED" class="article-time"></time> &ndash; <span class="article-author"></span>
-      </footer>
-    </div>
-  </template>
-
-  <script src="/static/js/dist/latest-news.js"></script>
-  <script>
-    canonicalLatestNews.fetchLatestNews({
-      articlesContainerSelector: "#horizontal-latest-articles",
-      articleTemplateSelector: "#horizontal-articles-template",
-      tagId: "2996",
-      limit: 3,
-    });
-  </script>
-</section>
-
-<div class="row">
-  <hr />
-</div>
-
-<div class="p-strip">
-  <div class="u-fixed-width">
-    <h2>Learn how to snap an app <br class="u-hide--large" /> in 30 minutes</h2>
-    <p>What language or framework does your app use?</p>
-  </div>
-  {% include "partials/fsf_language.html" %}
-</div>
-
-<div class="row">
-  <hr />
-</div>
-
-<div class="p-strip">
-  <div class="u-fixed-width">
-    <h2>Testimonials</h2>
-  </div>
-  <div class="row">
-    <div class="col-4">
-      <blockquote class="p-testimonial">
-        <div class="p-testimonial__logo">
-          <a href="/heroku">
-            {{
+        </a>
+      </div>
+      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+        <a href="/publisher/kde">
+          {{
               image(
-                url="https://assets.ubuntu.com/v1/53b1b835-logo-heroku.svg",
-                alt="Heroku",
-                width="95",
-                height="48",
-                hi_def=True
+                url="https://assets.ubuntu.com/v1/6958a93e-kde-logo-snapcraft-homepage.svg",
+                alt="KDE",
+                width="146",
+                height="145",
+                hi_def=True,
+                loading="eager"
               ) | safe
             }}
-          </a>
-        </div>
-        <h3 class="p-testimonial__title">“The auto-updating feature is huge”</h3>
-        <p class="p-testimonial__content">Due to the nature of our platform, we release updates more than daily which admittedly can be annoying for our users to constantly update.</p>
-        <p class="p-testimonial__content">Therefore, having them done seamlessly in the background makes life for our users so much easier. It’s great to see snaps as the first serious attempt to try and unify the community.</p>
-        <cite class="p-testimonial__citation">
-          Jeff Dickey<br /> CLI engineer, <a href="https://www.heroku.com/" >Heroku</a>
-        </cite>
-      </blockquote>
-    </div>
-    <div class="col-4">
-      <blockquote class="p-testimonial">
-        <div class="p-testimonial__logo">
-          <a href="/code">
-            {{
+        </a>
+      </div>
+      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+        <a href="/publisher/jetbrains">
+          {{
               image(
-                url="https://assets.ubuntu.com/v1/e4c220b3-logo-microsoft.svg",
-                alt="Microsoft",
-                width="95",
-                height="48",
-                hi_def=True
-              ) | safe
-            }}
-          </a>
-        </div>
-        <h3 class="p-testimonial__title">“Starting with snaps is easy”</h3>
-        <p class="p-testimonial__content">We definitely find Snapcraft easier as it is yaml based and provides details of what artifacts are needed. Debian packaging has things that need to be followed which can be distribution specific, which creates complication.
-        <p class="p-testimonial__content">The modular containment is what appealed about snaps and [we] can see it will be a lot more flexible. Starting with snaps is easy and the resources that are provided are clean and structured which aids adoption.</p>
-        <cite class="p-testimonial__citation">
-          Lee Coward and Rakesh Singh<br /> <a href="https://www.microsoft.com/net/" >.NET (Microsoft)</a>
-        </cite>
-      </blockquote>
-    </div>
-    <div class="col-4">
-      <blockquote class="p-testimonial">
-        <div class="p-testimonial__logo">
-          <a href="/publisher/jetbrains">
-            {{
-              image(
-                url="https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg",
+                url="https://assets.ubuntu.com/v1/55f6dae7-logo-jetbrains--snapcraft-homepage.svg",
                 alt="JetBrains",
-                width="44",
-                height="48",
-                hi_def=True
+                width="146",
+                height="145",
+                hi_def=True,
+                loading="eager"
               ) | safe
             }}
-          </a>
+        </a>
+      </div>
+      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+        <a href="/spotify">
+          {{
+              image(
+                url="https://assets.ubuntu.com/v1/63d5fd3f-logo-spotify--snapcraft-homepage.svg",
+                alt="Spotify",
+                width="146",
+                height="145",
+                hi_def=True,
+                loading="eager"
+              ) | safe
+            }}
+        </a>
+      </div>
+      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+        <a href="/google-cloud-sdk">
+          {{
+              image(
+                url="https://assets.ubuntu.com/v1/2d54fa27-logo-google--snapcraft-homepage.svg",
+                alt="Google",
+                width="146",
+                height="145",
+                hi_def=True,
+                loading="eager"
+              ) | safe
+            }}
+        </a>
+      </div>
+      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+        <a href="/code">
+          {{
+              image(
+                url="https://assets.ubuntu.com/v1/7b03d4b8-logo-microsoft--snapcraft-homepage.svg",
+                alt="Microsoft",
+                width="146",
+                height="145",
+                hi_def=True,
+                loading="eager"
+              ) | safe
+            }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="p-strip--homepage" data-js="latest-news">
+    <div class="u-fixed-width"><hr class="u-no-margin--bottom"></div>
+    <div class="row">
+      <div class="col-3">
+        <h2 class="p-muted-heading">Latest  news from <a href="/blog">our blog&nbsp;&rsaquo;</a></h2>
+      </div>
+      <div class="col-9">
+        <div id="horizontal-latest-articles" class="row" style="min-height: 84px;">
+          <div class="u-align--center" style="min-height: 9.1rem;"><i class="p-icon--spinner u-animation--spin">Loading...</i></div>
         </div>
-        <h3 class="p-testimonial__title">“A major software discovery tool”</h3>
-        <p class="p-testimonial__content">The Snap store provides additional exposure to our tools for many of our existing and potential users. The decision to use it came quite naturally. We believe the store will be a major software discovery tool on Linux, so the more people find out about our tools naturally and install them more easily, the better for everyone.</p>
-        <cite class="p-testimonial__citation">
-          Aleksey Rostovskiy<br /> Engineer, <a href="https://www.jetbrains.com/" >JetBrains</a>
-        </cite>
-      </blockquote>
+      </div>
     </div>
-  </div>
-</div>
+    <template style="display: none;" id="horizontal-articles-template">
+      <div class="row article-row">
+        <div class="col-6">
+          <h3 class="p-heading--4"><a class="article-link article-title"></a></h3>
+        </div>
+        <div class="col-3">
+          <footer>
+            <time pubdate datetime="POST_UPDATED" class="article-time"></time><br>
+            <em class="article-author"></em>
+          </footer>
+        </div>
+      </div>
+    </template>
+    <script src="/static/js/dist/latest-news.js"></script>
+    <script>
+      canonicalLatestNews.fetchLatestNews({
+        articlesContainerSelector: "#horizontal-latest-articles",
+        articleTemplateSelector: "#horizontal-articles-template",
+        tagId: "2996",
+        limit: 3,
+      });
+    </script>
+  </section>
 
-<div class="row">
-  <hr />
-</div>
+  <section class="p-strip">
+    {% include "partials/fsf_language.html" %}
+  </section>
+  
+  <section class="p-strip--homepage u-no-padding--bottom">
+    {% include "home/_testimonials.html" %}
+  </section>
 
-<div class="p-strip">
-  <div class="row">
-    <div class="col-6">
-      <h2> One build <br>for all Linux and IoT</h2>
+  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="u-no-margin--bottom"></div>
+  
+  <section class="p-strip--homepage u-no-padding--top">
+    <div class="row">
+      <div class="col-6">
+        <h2>Showcase to millions</h2>
+      </div>
+      <div class="col-6">
+        <p>Reach beyond your existing audience with a listing on the Snap Store, the front page for app discovery on Ubuntu and other popular distros.</p>
+        <p style="margin-bottom: 2rem;"><a href="/store">Browse the Snap Store</a></p>
+      </div>
     </div>
-    <div class="col-6">
-      <p>Snaps work across Linux on any distribution or version. Bundle your dependencies and assets, simplifying installs to a single standard command.</p>
-      <p><a href="/docs/installing-snapd">See all supported distributions</a></p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-small-2 col-medium-2 col-2 col-logo">
-      <a class="p-logo-link" href="/docs/installing-snap-on-ubuntu">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/4e18e57c-logo-ubuntu--in-card.png",
-            alt="Ubuntu",
-            width="155",
-            height="155",
-            hi_def=True
-          ) | safe
-        }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">
-      <a class="p-logo-link" href="/docs/installing-snap-on-debian">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/ea24e262-debian.png",
-            alt="Debian",
-            width="155",
-            height="155",
-            hi_def=True
-          ) | safe
-        }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">
-      <a class="p-logo-link" href="/docs/installing-snap-on-pop">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/5a0c5aaa-popos.svg",
-            alt="Pop!_OS",
-            width="155",
-            height="155",
-            hi_def=True
-          ) | safe
-        }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">
-      <a class="p-logo-link" href="/docs/installing-snap-on-raspbian">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/eccf1818-raspberrypi.png",
-            alt="RaspberryPi",
-            width="155",
-            height="155",
-            hi_def=True
-          ) | safe
-        }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">
-      <a class="p-logo-link" href="/docs/installing-snap-on-arch-linux">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/44789cf1-arch.png",
-            alt="arch",
-            width="155",
-            height="155",
-            hi_def=True
-          ) | safe
-        }}
-      </a>
-    </div>
-    <div class="col-small-2 col-medium-2 col-2 col-logo">
-      <a class="p-logo-link" href="/docs/installing-snap-on-fedora">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/f24733d2-fedora.png",
-            alt="fedora",
-            width="155",
-            height="155",
-            hi_def=True
-          ) | safe
-        }}
-      </a>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <hr />
-</div>
-
-<section class="p-strip">
-  <div class="row">
-    <div class="col-6">
-      <h2>Showcase to millions</h2>
-      <p>Reach beyond your existing audience with a listing on the Snap Store, the front page for app discovery on Ubuntu and other popular distros.</p>
-      <p><a class="p-button" href="/store">Browse the Snap Store</a></p>
-    </div>
-    <div class="col-6">
+    <div class="u-fixed-width">
       {{
         image(
-          url="https://assets.ubuntu.com/v1/c87dc31d-showcase-to-millions.png",
+          url="https://assets.ubuntu.com/v1/0b2aebda-showcase_to_millions.jpg",
           alt="Snap details page",
-          width="536",
-          height="302",
-          hi_def=True
+          width="1242",
+          height="622",
+          hi_def=True,
+          attrs={"class": "u-full-width"}
         ) | safe
       }}
     </div>
-  </div>
-</section>
-
-<div class="row">
-  <hr />
-</div>
-
-<section class="p-strip">
-  <div class="row">
-    <div class="col-6">
-      <h2>Measure user growth</h2>
-      <p>Make data-driven decisions with active install metrics. Watch as automatic updates migrate users to your latest release. Understand your audience with geographic and version breakdowns.</p>
+  </section>
+  
+  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="u-no-margin--bottom"></div>
+  
+  <section class="p-strip--homepage u-no-padding--top">
+    <div class="row">
+      <div class="col-6">
+        <h2>Measure user growth</h2>
+        <p>Make data-driven decisions with active install metrics. Watch as automatic updates migrate users to your latest release. Understand your audience with geographic and version breakdowns.</p>
+      </div>
+      <div class="col-6" style="padding-top: 1rem;">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/6a7a7b93-analytics.png",
+            alt="Snap metrics",
+            width="536",
+            height="302",
+            hi_def=True,
+          ) | safe
+        }}
+      </div>
     </div>
-    <div class="col-6">
-      {{
-        image(
-          url="https://assets.ubuntu.com/v1/6a7a7b93-analytics.png",
-          alt="Snap metrics",
-          width="536",
-          height="302",
-          hi_def=True
-        ) | safe
-      }}
-    </div>
-  </div>
-</section>
+  </section>
+</main>
 {% endblock %}
 
 {% block scripts_includes %}
 <script src="{{ static_url('js/dist/homepage.js') }}" defer></script>
-<script src="{{ static_url('js/dist/tabpanel.js') }}" defer></script>
+<script src="{{ static_url('js/dist/featured-snaps.js') }}" defer></script>
 {% if nps %}
 <script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer></script>
 {% endif %}
@@ -479,13 +212,13 @@
 <script>
   window.addEventListener("DOMContentLoaded", function () {
     Raven.context(function () {
-      snapcraft.public.homepage.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+      snapcraft.public.homepage.initFSFLanguageSelect();
       snapcraft.public.homepage.initExpandableArea();
-      snapcraft.public.tabpanel.init("[data-js='hero-snaps-container']", {{ hero_categories| safe }});
+      snapcraft.public.featuredSnaps.init({{ featured_categories|safe }});
 
-  {% if nps %}
-  snapcraft.public.homepage.nps();
-  {% endif %}
+      {% if nps %}
+        snapcraft.public.homepage.nps();
+      {% endif %}
     });
   });
 </script>
