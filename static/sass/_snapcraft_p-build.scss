@@ -51,18 +51,18 @@
   }
 
   .build-container {
-    display: flex;
+    background-image: url('https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg');
     background-position: 56% 80%;
-    flex-direction: row;
     background-repeat: no-repeat;
     bottom: 20px;
-    background-image: url('https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg');
+    display: flex;
+    flex-direction: row;
 
     .build-divider {
       background-color: rgba(0, 0, 0, 0.15);
-      width: 1px;
       margin: 0;
       padding: 0;
+      width: 1px;
     }
   }
 }
