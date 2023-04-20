@@ -1,0 +1,80 @@
+@mixin snapcraft-p-featured-snaps {
+  .snap-card-placeholder {
+    margin-bottom: 17.6px;
+  }
+
+  .snap-card-placeholder__image {
+    background-color: $color-mid-light;
+    height: 64px;
+    margin-bottom: 8px;
+    width: 64px;
+  }
+
+  .snap-card-placeholder__title {
+    background-color: $color-mid-light;
+    height: 25.6px;
+    margin-bottom: 14.4px;
+    width: 40%;
+  }
+
+  .snap-card-placeholder__publisher {
+    background-color: $color-mid-light;
+    height: 12.81px;
+    margin-bottom: 17.6px;
+    width: 100%;
+  }
+
+  .snap-card-placeholder__description {
+    background-color: $color-mid-light;
+    height: 78.41px;
+    width: 100%;
+  }
+
+  .featured-snap-card {
+    padding-top: 8px;
+
+    &:not(:first-child) {
+      @media only screen and (max-width: $breakpoint-large - 1) {
+        border-top: 1px solid $color-mid-light;
+      }
+    }
+
+    @media only screen and (min-width: $breakpoint-large) {
+      .p-media-object {
+        display: block;
+      }
+
+      .p-media-object__image {
+        display: block;
+        margin-bottom: 9px;
+      }
+    }
+  }
+
+  .featured-snaps-search-container {
+    background-image: url("https://assets.ubuntu.com/v1/6ab128f8-snapcraft-banner-bg.jpg");
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-bottom: 4rem;
+
+    @media only screen and (min-width: $breakpoint-medium) {
+      padding-bottom: 8rem;
+    }
+
+    @media only screen and (min-width: $breakpoint-large) {
+      background-image: none;
+      padding-bottom: 4rem;
+    }
+  }
+
+  .featured-snaps-bg {
+    @media only screen and (min-width: $breakpoint-large) {
+      background-image: url("https://assets.ubuntu.com/v1/6ab128f8-snapcraft-banner-bg.jpg");
+      background-position: bottom center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      padding: 8rem 0;
+    }
+  }
+}

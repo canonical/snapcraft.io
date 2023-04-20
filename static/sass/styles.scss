@@ -240,6 +240,8 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-revisions;
 @import "snapcraft_snap-image-upload";
 @include snap-image-upload;
+@import "snapcraft_p-featured-snaps";
+@include snapcraft-p-featured-snaps;
 
 dl {
   margin-bottom: $spv--x-large;
@@ -419,4 +421,32 @@ code {
 // Needed to override as the accent color is different on this site
 .p-navigation__tagged-logo .p-navigation__logo-tag {
   background-color: $ubuntu-orange;
+}
+
+.u-full-width {
+  width: 100%;
+}
+
+.article-row {
+  &:not(:first-child) {
+    border-top: 1px solid $color-mid-light;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+}
+
+.p-tabs__list.is-light {
+  list-style: none;
+
+  .p-tabs__link {
+    background-color: #f4f4f3;
+  }
+}
+
+.p-strip--homepage {
+  @extend .p-strip;
+
+  background-color: #f2f2f2;
 }
