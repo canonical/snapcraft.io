@@ -45,22 +45,22 @@
     padding: 1.5rem;
 
     .build-notification-text {
-      color: #0066cc;
+      color: #06c;
       font-size: 16px;
     }
   }
 
   .build-container {
     display: flex;
-    flex-direction: row;
     background-position: 56% 80%;
-    bottom: 20px;
+    flex-direction: row;
     background-repeat: no-repeat;
+    bottom: 20px;
     background-image: url('https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg');
 
     .build-divider {
-      width: 1px;
       background-color: rgba(0, 0, 0, 0.15);
+      width: 1px;
       margin: 0;
       padding: 0;
     }
