@@ -7,7 +7,7 @@
 {% block meta_title %}About Releasing | Snapcraft{% endblock %}
 
 {% block about_content %}
-  <div class="p-strip is-shallow u-no-padding--top">
+  <!-- <div class="p-strip is-shallow u-no-padding--top">
     <h1 class="p-heading--2">Releasing your snap</h1>
     <h2 class="p-heading--4">
       Release UI
@@ -27,8 +27,58 @@
         hi_def=True
       ) | safe
     }}
-  </div>
-  <div class="p-strip is-shallow">
+  </div> -->
+  <section class="p-strip--light u-no-padding--top" style="padding-bottom: 64px;">
+    <div class="u-fixed-width u-no-margin--bottom u-hide--small" style="padding-top: 64px; height: 0;">
+      <hr>
+    </div>
+    <div class="row">
+      <div class="col-6 u-hide--small">
+        <h1 class="p-heading--2">Releasing UI</h1>
+      </div>
+      <div class="col-6 u-hide--medium u-hide--large" style="padding-top: 35px;">
+        <h1 class="p-heading--2">Releasing UI</h1>
+      </div>
+      <div class="col-6">
+        <p> Snapcraft allows you to release your snaps either by using the command line tool or the visual interface on our website. If you visit your snap page, you will find a “Release” tab in which you can see which version of your software is released to each channel and architecture. The UI is a simple drag-and-drop table where you can move around the revisions of your snap, until you’re happy, before committing. </p>
+        <p> If you use our build service all revisions built at the same time will be tagged as a set, allowing you to work on related revisions easily. Built revisions will also automatically be released to the edge channel &mdash; no&dash;hassle continuous deployment. </p>
+      </div>
+      <div class="row">
+        {{ image(
+            url="https://assets.ubuntu.com/v1/e3f08775-Frame%202959.svg",
+            alt="",
+            width="1109",
+            height="418",
+            hi_def=True
+          ) | safe
+        }}
+      </div>
+    </div>
+  </section>
+  <section class="p-strip--light u-no-padding--top" style="padding-bottom: 64px;">
+    <div class="u-fixed-width u-no-margin--bottom" style="height: 0;">
+      <hr>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <h1 class="p-heading--2">Announcing updates</h1>
+      </div>
+      <div class="col-6">
+        <p> Releasing your snap is only the first step - you also need to tell your users about it. On the <a href="/about/publicise">publicise page</a> there&rsquo;s information about badges and buttons you can use to help promote and inform users about your snap and it&rsquo;s status. We provide a badge that appears when your snap is trending on the Store to show visitors to your site that your snap is something to take a look at. </p>
+      </div>
+      <div class="row" style="padding-top: 24px;">
+        {{ image(
+              url="https://assets.ubuntu.com/v1/434e1131-c6335a68-01+A+universal+store+x2%202.svg",
+              alt="",
+              width="1108",
+              height="494",
+              hi_def=True
+            ) | safe
+          }}
+      </div>
+    </div>
+  </section>
+  <!-- <div class="p-strip is-shallow">
     <h2 class="p-heading--4">
       Announcing updates
     </h2>
@@ -44,5 +94,5 @@
         hi_def=True
       ) | safe
     }}
-  </div>
+  </div> -->
 {% endblock %}
