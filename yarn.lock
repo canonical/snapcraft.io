@@ -7231,19 +7231,10 @@ vanilla-framework@3.11.1:
     sass "1.58.0"
     yaml "1.10.2"
 
-vanilla-framework@3.13.0:
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-3.13.0.tgz#264f6f33e6926e6d1019e7659660f36fa20cd4b4"
-  integrity sha512-L6Z+8q4nbUTl12yCDJ/TqdWRugFeCaPMxUV7o0qrI1/bmuOLGpDaVPhGOcBPIO+uzIxANICVABXvk0qvzAClxA==
-  dependencies:
-    "@canonical/cookie-policy" "3.4.0"
-    "@canonical/latest-news" "1.4.1"
-    autoprefixer "10.4.13"
-    postcss "8.4.21"
-    postcss-cli "9.1.0"
-    postcss-scss "4.0.6"
-    sass "1.58.3"
-    yaml "1.10.2"
+vanilla-framework@4.0.0-alpha.1:
+  version "4.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.0.0-alpha.1.tgz#cb28a7e9a497beac9c19c0668afcc2cd164f1bfd"
+  integrity sha512-qr/ViJ1lQSF0404ibGTmmlQrHjj3Sx5HbiWYaItiLUZoMiu3TXuhAwXyvrOPrzuTDvpE37KI5WAUlNio/JKVWQ==
 
 verbalize@^0.1.2:
   version "0.1.2"

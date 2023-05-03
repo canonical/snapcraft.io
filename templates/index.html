@@ -11,15 +11,15 @@
     {% include "home/_featured-snaps.html" %}
   {% endwith %}
   
-  <section class="p-strip--homepage u-no-padding--top u-no-padding--bottom">
-    <div class="u-fixed-width"><hr class="u-no-margin--bottom"></div>
+  <section class="p-strip--light u-no-padding--top">
+    <div class="u-fixed-width"><hr class="p-rule"></div>
     <div class="row">
       <div class="col-3">
-        <h2 class="p-muted-heading">Official snaps from major publishers</h2>
+        <h2 class="p-muted-heading">Official snaps <br class="u-hide--small">from major publishers</h2>
       </div>
     </div>
     <div class="row">
-      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+      <div class="col-small-2 col-medium-2 col-2 u-align--center">
         <a href="/firefox">
           {{
             image(
@@ -33,7 +33,7 @@
           }}
         </a>
       </div>
-      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+      <div class="col-small-2 col-medium-2 col-2 u-align--center">
         <a href="/publisher/kde">
           {{
               image(
@@ -47,7 +47,7 @@
             }}
         </a>
       </div>
-      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+      <div class="col-small-2 col-medium-2 col-2 u-align--center">
         <a href="/publisher/jetbrains">
           {{
               image(
@@ -61,7 +61,7 @@
             }}
         </a>
       </div>
-      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+      <div class="col-small-2 col-medium-2 col-2 u-align--center">
         <a href="/spotify">
           {{
               image(
@@ -75,7 +75,7 @@
             }}
         </a>
       </div>
-      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+      <div class="col-small-2 col-medium-2 col-2 u-align--center">
         <a href="/google-cloud-sdk">
           {{
               image(
@@ -89,7 +89,7 @@
             }}
         </a>
       </div>
-      <div class="col-small-2 col-medium-3 col-2 u-align--center">
+      <div class="col-small-2 col-medium-2 col-2 u-align--center">
         <a href="/code">
           {{
               image(
@@ -106,28 +106,32 @@
     </div>
   </section>
 
-  <section class="p-strip--homepage" data-js="latest-news">
-    <div class="u-fixed-width"><hr class="u-no-margin--bottom"></div>
-    <div class="row">
-      <div class="col-3">
-        <h2 class="p-muted-heading">Latest  news from <a href="/blog">our blog&nbsp;&rsaquo;</a></h2>
+  <section class="p-strip--light u-no-padding--top" data-js="latest-news">
+    <div class="u-fixed-width"><hr class="p-rule"></div>
+    <div class="row--25-75">
+      <div class="col">
+        <h2 class="p-muted-heading">Latest  news <br class="u-hide--small">from <a href="/blog">our blog&nbsp;&rsaquo;</a></h2>
       </div>
-      <div class="col-9">
+      <div class="col">
         <div id="horizontal-latest-articles" class="row" style="min-height: 84px;">
           <div class="u-align--center" style="min-height: 9.1rem;"><i class="p-icon--spinner u-animation--spin">Loading...</i></div>
         </div>
       </div>
     </div>
     <template style="display: none;" id="horizontal-articles-template">
-      <div class="row article-row">
-        <div class="col-6">
-          <h3 class="p-heading--4"><a class="article-link article-title"></a></h3>
-        </div>
-        <div class="col-3">
-          <footer>
-            <time pubdate datetime="POST_UPDATED" class="article-time"></time><br>
-            <em class="article-author"></em>
-          </footer>
+      <div class="p-strip is-shallow u-no-padding--top article-row">
+        <div class="row">
+          <div class="col-6">
+            <h3 class="p-heading--2"><a class="article-link article-title"></a></h3>
+          </div>
+          <div class="col-3">
+            <footer>
+              <p class="u-no-margin--bottom">
+                <time pubdate datetime="POST_UPDATED" class="article-time"></time><br>
+              </p>
+              <em class="article-author"></em>
+            </footer>
+          </div>
         </div>
       </div>
     </template>
@@ -146,18 +150,18 @@
     {% include "partials/fsf_language.html" %}
   </section>
   
-  <section class="p-strip--homepage u-no-padding--bottom">
+  <section class="p-strip--light">
     {% include "home/_testimonials.html" %}
   </section>
 
-  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="u-no-margin--bottom"></div>
+  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="p-rule"></div>
   
-  <section class="p-strip--homepage u-no-padding--top">
-    <div class="row">
-      <div class="col-6">
+  <section class="p-strip--light u-no-padding--top">
+    <div class="row--50-50">
+      <div class="col">
         <h2>Showcase to millions</h2>
       </div>
-      <div class="col-6">
+      <div class="col">
         <p>Reach beyond your existing audience with a listing on the Snap Store, the front page for app discovery on Ubuntu and other popular distros.</p>
         <p style="margin-bottom: 2rem;"><a href="/store">Browse the Snap Store</a></p>
       </div>
@@ -176,15 +180,15 @@
     </div>
   </section>
   
-  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="u-no-margin--bottom"></div>
+  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="p-rule"></div>
   
-  <section class="p-strip--homepage u-no-padding--top">
-    <div class="row">
-      <div class="col-6">
+  <section class="p-strip--light is-deep u-no-padding--top">
+    <div class="row--50-50">
+      <div class="col">
         <h2>Measure user growth</h2>
         <p>Make data-driven decisions with active install metrics. Watch as automatic updates migrate users to your latest release. Understand your audience with geographic and version breakdowns.</p>
       </div>
-      <div class="col-6" style="padding-top: 1rem;">
+      <div class="col" style="padding-top: 1rem;">
         {{
           image(
             url="https://assets.ubuntu.com/v1/6a7a7b93-analytics.png",

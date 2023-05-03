@@ -1,49 +1,16 @@
 @mixin snapcraft-show-more {
   $color-transparent-white: rgba(255, 255, 255, 0);
 
-  .p-show-more__fade {
-    display: none;
-  }
-
   .p-show-more {
     position: relative;
 
     &.is-collapsed {
       > :first-child {
-        max-height: 17.5rem;
+        height: 0;
+        max-height: 0;
         overflow: hidden;
+        padding: 0;
       }
-
-      &.is-shallow {
-        > :first-child {
-          max-height: 14.25rem;
-        }
-      }
-
-      &.is-deep {
-        > :first-child {
-          max-height: 26rem;
-        }
-      }
-    }
-
-    .p-show-more__fade {
-      background: linear-gradient($color-transparent-white, $color-x-light 50%);
-      bottom: -1.5rem;
-      display: block;
-      padding-top: 3rem;
-      position: absolute;
-      width: 100%;
-    }
-
-    &__link {
-      background: $color-x-light;
-      margin-left: 8.75rem;
-      margin-right: 5px;
-      padding: 0 5px;
-      position: relative;
-      text-decoration: none;
-      top: -0.725rem;
     }
   }
 }

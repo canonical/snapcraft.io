@@ -1,4 +1,4 @@
-<section class="p-strip--homepage is-deep featured-snaps-search-container">
+<section class="p-strip--light is-deep featured-snaps-search-container homepage-suru-strip--mobile">
   <div class="row">
     <div class="col-6 col-start-large-4">
       <h1 class="p-heading--2"><strong>The app store for Linux</strong></h1>
@@ -12,10 +12,10 @@
   </div>
 </section>
 
-<section class="p-strip--homepage u-no-padding--top u-no-padding--bottom">
-  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="u-no-margin--bottom"></div>
-  <div class="row">
-    <div class="col-3">
+<section class="p-strip--light is-deep u-no-padding--top homepage-suru-strip--desktop">
+  <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="p-rule"></div>
+  <div class="row--25-75">
+    <div class="col">
       <h2 class="p-muted-heading" style="margin-bottom: 32px;">Snaps you may like</h2>
       <div class="p-side-navigation u-hide--small u-hide--medium">
         <ul class="p-side-navigation__list">
@@ -36,10 +36,10 @@
         </ul>
       </div>
     </div>
-    <div class="col-9 col-start-large-4">
+    <div class="col">
       <div class="row">
         {% for i in range(0, 3) %}
-          <div class="col-3 featured-snap-card" data-js="featured-snap-card">
+          <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card">
             <div class="snap-card-placeholder" data-js="featured-snap-card-placeholder">
               <div class="snap-card-placeholder__image"></div>
               <div class="snap-card-placeholder__title"></div>
@@ -50,7 +50,7 @@
           </div>
         {% endfor %}
       </div>
-      <hr class="u-no-margin--bottom">
+      <hr class="p-rule">
       <p class="u-no-margin--bottom">
         <a href="/search?category={{ featured_categories[0]|lower }}" data-js="view-category-link">
           View all {{ featured_categories[0]|lower }} snaps
@@ -59,14 +59,15 @@
       <p><a href="/store">View all snaps</a></p>
     </div>
   </div>
-  <div class="u-fixed-width featured-snaps-bg"></div>
   <template style="display: none;" id="featured-snap-card">
     <div class="p-media-object">
-      <a href="" data-js="snap-icon-link">
-        <img class="p-media-object__image" src="" alt="" data-js="snap-icon" width="64" height="64" style="display: block;">
-      </a>
+      <p>
+        <a href="" data-js="snap-icon-link">
+          <img class="p-media-object__image" src="" alt="" data-js="snap-icon" width="64" height="64" style="display: block;">
+        </a>
+      </p>
       <div class="p-media-object__details">
-        <h3 class="p-heading--5 u-no-margin--bottom u-no-padding--top" data-js="snap-title">
+        <h3 class="p-heading--5 u-no-margin--bottom" data-js="snap-title">
           <a class="p-link--soft" href="" data-js="snap-title-link"></a>
         </h3>
         <p class="u-no-padding--top u-text-muted" data-js="snap-publisher"></p>
