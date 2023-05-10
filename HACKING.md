@@ -44,8 +44,8 @@ Download [this Python script](https://github.com/canonical-web-and-design/build.
 Run:
 
 ```bash
-$ sudo apt install python-launchpadlib
-$ ./create-launchpad-credentials
+$ pip install launchpadlib
+$ python3 ./scripts/create-launchpad-credentials.py
 ```
 
 It will print the details needed. If you need complete instructions for obtaining these details, they can be found [here](https://help.launchpad.net/API/SigningRequests).
