@@ -46,23 +46,8 @@ def create_app(testing=False):
         talisker.requests.configure(webapp.helpers.api_session)
         talisker.requests.configure(webapp.helpers.api_publisher_session)
 
-    app.config.from_object("webapp.configs." + app.config["WEBAPP"])
     set_handlers(app)
 
-    if app.config["WEBAPP"] == "snapcraft":
-        init_snapcraft(app)
-    else:
-        init_brandstore(app)
-
-    return app
-
-
-def init_brandstore(app):
-    store = app.config.get("WEBAPP_CONFIG").get("STORE_QUERY")
-    app.register_blueprint(store_blueprint(store))
-
-
-def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
@@ -75,6 +60,8 @@ def init_snapcraft(app):
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
+
+    return app
 
 
 def init_extensions(app):
