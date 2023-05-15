@@ -172,9 +172,7 @@ def snap_details_views(store, api):
         context = _get_context_snap_details(snap_name)
 
         country_metric_name = "weekly_installed_base_by_country_percent"
-        os_metric_name = (
-            "weekly_installed_base_by_operating_system_normalized"
-        )
+        os_metric_name = "weekly_installed_base_by_operating_system_normalized"
 
         end = metrics_helper.get_last_metrics_processed_date()
 
@@ -198,9 +196,7 @@ def snap_details_views(store, api):
         os_metrics = None
         country_devices = None
         if metrics_response:
-            oses = metrics_helper.find_metric(
-                metrics_response, os_metric_name
-            )
+            oses = metrics_helper.find_metric(metrics_response, os_metric_name)
             os_metrics = metrics.OsMetric(
                 name=oses["metric_name"],
                 series=oses["series"],
