@@ -88,11 +88,6 @@ def set_handlers(app):
 
         page_slug = template_utils.generate_slug(flask.request.path)
 
-        is_brand_store = False
-
-        if "STORE_QUERY" in app.config["WEBAPP_CONFIG"]:
-            is_brand_store = True
-
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
@@ -107,7 +102,6 @@ def set_handlers(app):
             "STAR_DEVELOPER": "starred",
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
-            "IS_BRAND_STORE": is_brand_store,
             "now": datetime.now(),
             "user_is_canonical": user_is_canonical,
             # Functions
