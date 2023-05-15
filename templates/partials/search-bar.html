@@ -1,14 +1,7 @@
-<section id="main-content" class="
-{% if webapp_config['STORE_QUERY'] %}
-  p-strip--image is-shallow snapcraft-banner-background
-{% else %}
-  p-strip--image p-strip-slanted--snapcraft
-{% endif %}">
+<section id="main-content" class="p-strip--image p-strip-slanted--snapcraft">
   <div class="u-fixed-width">
-    {% if not IS_BRAND_STORE %}
-      {% include 'partials/livestream-notification.html' %}
-      <h1 class="p-heading--2">Search thousands of snaps used by millions of people across 41 Linux distributions</h1>
-    {% endif %}
+    {% include 'partials/livestream-notification.html' %}
+    <h1 class="p-heading--2">Search thousands of snaps used by millions of people across 41 Linux distributions</h1>
     {% if webapp_config['STORE_SEARCH_INTRO'] %}
       {{ webapp_config['STORE_SEARCH_INTRO']|safe }}
     {% endif %}

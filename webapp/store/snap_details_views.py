@@ -171,59 +171,53 @@ def snap_details_views(store, api):
 
         context = _get_context_snap_details(snap_name)
 
-        webapp_config = flask.current_app.config.get("WEBAPP_CONFIG")
+        country_metric_name = "weekly_installed_base_by_country_percent"
+        os_metric_name = (
+            "weekly_installed_base_by_operating_system_normalized"
+        )
 
-        if "STORE_QUERY" not in webapp_config:
-            country_metric_name = "weekly_installed_base_by_country_percent"
-            os_metric_name = (
-                "weekly_installed_base_by_operating_system_normalized"
+        end = metrics_helper.get_last_metrics_processed_date()
+
+        metrics_query_json = [
+            metrics_helper.get_filter(
+                metric_name=country_metric_name,
+                snap_id=context["snap-id"],
+                start=end,
+                end=end,
+            ),
+            metrics_helper.get_filter(
+                metric_name=os_metric_name,
+                snap_id=context["snap-id"],
+                start=end,
+                end=end,
+            ),
+        ]
+
+        metrics_response = api.get_public_metrics(metrics_query_json)
+
+        os_metrics = None
+        country_devices = None
+        if metrics_response:
+            oses = metrics_helper.find_metric(
+                metrics_response, os_metric_name
+            )
+            os_metrics = metrics.OsMetric(
+                name=oses["metric_name"],
+                series=oses["series"],
+                buckets=oses["buckets"],
+                status=oses["status"],
             )
 
-            end = metrics_helper.get_last_metrics_processed_date()
-
-            metrics_query_json = [
-                metrics_helper.get_filter(
-                    metric_name=country_metric_name,
-                    snap_id=context["snap-id"],
-                    start=end,
-                    end=end,
-                ),
-                metrics_helper.get_filter(
-                    metric_name=os_metric_name,
-                    snap_id=context["snap-id"],
-                    start=end,
-                    end=end,
-                ),
-            ]
-
-            metrics_response = api.get_public_metrics(metrics_query_json)
-
-            os_metrics = None
-            country_devices = None
-            if metrics_response:
-                oses = metrics_helper.find_metric(
-                    metrics_response, os_metric_name
-                )
-                os_metrics = metrics.OsMetric(
-                    name=oses["metric_name"],
-                    series=oses["series"],
-                    buckets=oses["buckets"],
-                    status=oses["status"],
-                )
-
-                territories = metrics_helper.find_metric(
-                    metrics_response, country_metric_name
-                )
-                country_devices = metrics.CountryDevices(
-                    name=territories["metric_name"],
-                    series=territories["series"],
-                    buckets=territories["buckets"],
-                    status=territories["status"],
-                    private=False,
-                )
-        else:
-            os_metrics = None
-            country_devices = None
+            territories = metrics_helper.find_metric(
+                metrics_response, country_metric_name
+            )
+            country_devices = metrics.CountryDevices(
+                name=territories["metric_name"],
+                series=territories["series"],
+                buckets=territories["buckets"],
+                status=territories["status"],
+                private=False,
+            )
 
         context.update(
             {
