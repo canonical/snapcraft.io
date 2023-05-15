@@ -17,10 +17,7 @@ if ENVIRONMENT != "devel":
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
 
-WEBAPP = os.getenv("WEBAPP", "snapcraft")
-
-if not WEBAPP:
-    raise ConfigurationError("`WEBAPP` is not configured")
+WEBAPP_CONFIG = {"LAYOUT": "_layout.html", "STORE_NAME": "Snap store"}
 
 WEBAPP_EXTRA_HEADERS = {}
 
