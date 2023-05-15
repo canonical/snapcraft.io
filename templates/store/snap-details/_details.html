@@ -1,13 +1,13 @@
 <h4>Details for {{ snap_title }}</h4>
 
-<h5 class="u-no-margin--bottom"><i class="p-icon--topic"></i> License</h5>
-<ul class="p-list p-list-indented">
+<h5 class="p-muted-heading">License</h5>
+<ul class="p-list">
   <li>{{ license }}</li>
 </ul>
 <hr>
 
-<h5 class="u-no-margin--bottom"><i class="p-icon--calendar"></i> Last updated</h5>
-<ul class="p-list p-list-indented">
+<h5 class="p-muted-heading">Last updated</h5>
+<ul class="p-list">
   <li>{{ last_updated }}</li>
 </ul>
 <hr>
@@ -15,8 +15,8 @@
 <!-- Once `links` is added to the API we can remove the `request.args` check -->
 {% if links and request.args.get("show_metadata_links") %}
   {% if links["website"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--website"></i> Websites</h5>
-    <ul class="p-list p-list-indented">
+    <h5 class="p-muted-heading">Websites</h5>
+    <ul class="p-list">
       {% for link in links["website"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
@@ -27,8 +27,8 @@
   {% endif %}
 
   {% if links["contact"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--mail"></i> Contact</h5>
-    <ul class="p-list p-list-indented">
+    <h5 class="p-muted-heading">Contact</h5>
+    <ul class="p-list">
       {% for link in links["contact"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
@@ -39,8 +39,8 @@
   {% endif %}
 
   {% if links["donation"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--gift"></i> Donations</h5>
-    <ul class="p-list p-list-indented">
+    <h5 class="p-muted-heading">Donations</h5>
+    <ul class="p-list">
       {% for link in links["donation"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
@@ -51,8 +51,8 @@
   {% endif %}
 
   {% if links["source-code"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--code"></i> Source code</h5>
-    <ul class="p-list p-list-indented">
+    <h5 class="p-muted-heading">Source code</h5>
+    <ul class="p-list">
       {% for link in links["source-code"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
@@ -63,8 +63,8 @@
   {% endif %}
 
   {% if links["issues"] %}
-    <h5 class="u-no-margin--bottom"><i class="p-icon--submit-bug"></i> Report a bug</h5>
-    <ul class="p-list p-list-indented">
+    <h5 class="p-muted-heading">Report a bug</h5>
+    <ul class="p-list">
       {% for link in links["issues"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
@@ -172,8 +172,8 @@
 
 <!-- Once `links` is added to the API we can remove this `else` section -->
 {% else %}
-  <h5 class="u-no-margin--bottom"><i class="p-icon--exposed"></i> Links</h5>
-  <ul class="p-list p-list-indented">
+  <h5 class="p-muted-heading">Links</h5>
+  <ul class="p-list">
     {% if website or is_preview %}
       <li>
         <a href="{{ website }}" data-live="website">Developer website</a>
