@@ -120,8 +120,8 @@ class ReleasesConfirm extends Component {
                       <i
                         className={`${
                           showDetails
-                            ? "p-icon--chevron-down"
-                            : "p-icon--chevron-up"
+                            ? "p-icon--chevron-up"
+                            : "p-icon--chevron-down"
                         }`}
                       >
                         {showDetails ? "Hide" : "Show"} details
