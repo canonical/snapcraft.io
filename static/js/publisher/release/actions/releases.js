@@ -54,7 +54,7 @@ export function handleCloseResponse(dispatch, json, channels) {
 }
 
 export function getErrorMessage(error) {
-  let message = error.message || ERROR_MESSAGE;
+  let message = error.message || error.errors[0].message || ERROR_MESSAGE;
 
   // try to find error messages in response json
   // which may be an array or errors or object with errors propery
