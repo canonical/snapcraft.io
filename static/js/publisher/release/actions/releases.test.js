@@ -86,6 +86,20 @@ describe("releases actions", () => {
         })
       ).toEqual("error! error1 error2");
     });
+
+    it("should return error message if errors property is an array of objects", () => {
+      expect(
+        getErrorMessage({
+          errors: [
+            {
+              code: "invalid-field",
+              extra: { field: "channels", value: ["latest/candidate"] },
+              message: "error message",
+            },
+          ],
+        })
+      ).toEqual("error message");
+    });
   });
 
   describe("handleReleaseResponse", () => {
