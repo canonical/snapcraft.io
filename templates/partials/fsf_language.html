@@ -4,16 +4,15 @@
   {% set layout_no_of_columns=12 %}
 {% endif%}
 
-<div class="p-strip u-no-padding--top">
-  <div class="row">
-    <div class="col-9 col-start-large-4">
+<div class="row">
+  <div class="col-start-large-4 col-9">
+    <div class="p-strip">
       <h2>Learn how to snap an app in 30 minutes</h2>
     </div>
   </div>
 </div>
-
-<div class="row" id="language">
-  <div class="col-3">
+<div class="row p-section" id="language">
+  <div class="col-2">
     <div class="u-hide--large">
       <div class="p-muted-heading">
         <label for="choose-language">Choose your language:</label>
@@ -34,7 +33,7 @@
         <option value="ros-2">ROS 2</option>
       </select>
     </div>
-    <h3 class="p-muted-heading u-hide--small u-hide--medium" style="margin-bottom: 1rem;">Choose your language:</h3>
+    <h3 class="p-muted-heading u-hide--small u-hide--medium u-sv2">Choose <br>your language:</h3>
     <div class="p-side-navigation u-hide--small u-hide--medium">
       <ul class="p-side-navigation__list" data-js="flow-links-container">
         <li class="p-side-navigation__item">
@@ -131,7 +130,7 @@
       </ul>
     </div>
   </div>
-  <div class="col-9 js-fsf-language-select">
+  <div class="col-9 col-start-large-4 js-fsf-language-select p-rule--vertical">
     {% include "home/_fsf_c.html" %}
     {% include "home/_fsf_electron.html" %}
     {% include "home/_fsf_flutter.html" %}

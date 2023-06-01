@@ -4,6 +4,12 @@ $color-brand: #00302f;
 $color-accent: $color-brand;
 $color-navigation-active-bar: $ubuntu-orange;
 $color-sidenav-item-border-highlight: #82bfa1;
+// XXX: remove when updating to the latest 4.0 version which includes this var
+$color-paper: #f3f3f3;
+
+.is-paper {
+  background-color: $color-paper;
+}
 
 // navigation variables
 $breakpoint-navigation-threshold: 1036px;
@@ -441,14 +447,14 @@ code {
   list-style: none;
 
   .p-tabs__link {
-    background-color: #f4f4f3;
+    background-color: $color-paper;
   }
 }
 
 .p-strip--homepage {
   @extend .p-strip;
 
-  background-color: #f2f2f2;
+  background-color: $color-paper;
 }
 
 .p-inline-list--vertical-divider {
@@ -462,3 +468,5 @@ code {
     }
   }
 }
+
+
