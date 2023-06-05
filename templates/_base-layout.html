@@ -21,11 +21,7 @@
     })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
     <!-- End Google Tag Manager -->
 
-    {% if request.path == "/" %}
-      <link rel="stylesheet" href="{{ static_url('css/homepage.css') }}" />
-    {% else %}
-      <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
-    {% endif %}
+    <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
 
     {% block scripts_modules %}{% endblock %}
     <script src="{{ static_url('js/modules/raven.min.js') }}" defer></script>

@@ -51,23 +51,6 @@
     }
   }
 
-  .featured-snaps-search-container {
-    background-image: url("https://assets.ubuntu.com/v1/6ab128f8-snapcraft-banner-bg.jpg");
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    padding-bottom: 4rem;
-
-    @media only screen and (min-width: $breakpoint-medium) {
-      padding-bottom: 8rem;
-    }
-
-    @media only screen and (min-width: $breakpoint-large) {
-      background-image: none;
-      padding-bottom: 4rem;
-    }
-  }
-
   .featured-snaps-bg {
     @media only screen and (min-width: $breakpoint-large) {
       background-image: url("https://assets.ubuntu.com/v1/6ab128f8-snapcraft-banner-bg.jpg");

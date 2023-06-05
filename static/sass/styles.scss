@@ -4,6 +4,7 @@ $color-brand: #00302f;
 $color-accent: $color-brand;
 $color-navigation-active-bar: $ubuntu-orange;
 $color-sidenav-item-border-highlight: #82bfa1;
+
 // XXX: remove when updating to the latest 4.0 version which includes this var
 $color-paper: #f3f3f3;
 
@@ -20,6 +21,7 @@ $breakpoint-medium: 619px;
 
 // vanilla patterns
 @import "vanilla-framework/scss/vanilla";
+@include vanilla;
 
 // import cookie policy
 @import "@canonical/cookie-policy/build/css/cookie-policy";
@@ -27,61 +29,7 @@ $breakpoint-medium: 619px;
 // make social icons match footer p-strip--light color
 $color-social-icon-foreground: $color-light;
 
-@include vf-base;
-@include vf-p-accordion;
-@include vf-p-card; // required by vf-p-tooltips
-@include vf-p-divider;
-@include vf-p-links;
-@include vf-p-lists;
-@include vf-p-grid;
-@include vf-p-buttons;
-@include vf-p-strip;
-@include vf-p-media-object;
-@include vf-p-modal;
-@include vf-p-table-mobile-card;
-@include vf-p-muted-heading;
-@include vf-p-navigation;
-@include vf-p-notification;
-@include vf-p-tooltips;
-@include vf-p-forms;
-@include vf-p-form-help-text;
-@include vf-p-headings;
-@include vf-p-matrix;
-@include vf-p-icons;
-@include vf-p-heading-icon;
-@include vf-p-form-validation;
-@include vf-p-contextual-menu;
-@include vf-p-breadcrumbs;
-@include vf-p-pagination;
-@include vf-p-code-snippet;
-@include vf-p-tabs;
-@include vf-p-table-icons;
-@include vf-p-side-navigation;
-@include vf-p-side-navigation-expandable;
-@include vf-p-search-box;
-@include vf-p-form-tick-elements;
-@include vf-p-status-label;
-@include vf-p-switch;
-@include vf-p-logo-section;
-@include vf-u-floats;
-@include vf-u-off-screen;
-@include vf-u-margin-collapse;
-@include vf-u-padding-collapse;
-@include vf-u-vertically-center;
-@include vf-u-align;
-@include vf-u-clearfix;
-@include vf-u-animations;
-@include vf-u-image-position;
-@include vf-u-equal-height;
-@include vf-u-hide;
-@include vf-u-show;
-@include vf-u-layout;
-@include vf-u-text-muted;
-@include vf-u-truncate;
-@include vf-u-embedded-media;
-
 // vanilla layouts
-@include vf-l-application;
 @import "patterns_icons";
 @import "snapcraft_custom-cols";
 @include snapcraft-custom-cols;
@@ -457,6 +405,17 @@ code {
   background-color: $color-paper;
 }
 
+.p-rule--vertical {
+  &::before {
+    background-color: $colors--light-theme--border-default;
+    display: block;
+    height: 100%;
+    left: map-get($grid-gutter-widths, default) * -0.5;
+    position: absolute;
+    width: 1px;
+  }
+}
+
 .p-inline-list--vertical-divider {
   @extend .p-inline-list--middot;
 
@@ -469,4 +428,16 @@ code {
   }
 }
 
+.main {
+  background: $color-paper;
+}
 
+.p-suru25light {
+  background-color: $color-paper;
+  background-image: url("https://assets.ubuntu.com/v1/7f34ade9-website_suru_25.jpg");
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  max-width: 80rem;
+  padding-top: 19%;
+}
