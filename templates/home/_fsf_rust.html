@@ -1,20 +1,26 @@
 <div class="u-hide" data-flow-details="rust">
-  <div>
-    <div>
+  <hr class="p-rule u-hide--large">
+  <div class="row">
+    <div class="col-3">
       <h3 class="p-heading--5">Why are snaps good for Rust projects?</h3>
-      <ul>
-        <li>Easy to discover and install by millions using the Snap Store or command-line every day.</li>
-        <li>Automatically updated to the latest stable version of your app.</li>
-        <li>Revert to the previous version if an update fails, preserving data.</li>
+    </div>
+    <div class="col-6">
+      <ul class="p-list--divided">
+        <li class="p-list__item has-bullet">Easy to discover and install by millions using the Snap Store or command-line every day.</li>
+        <li class="p-list__item has-bullet">Automatically updated to the latest stable version of your app.</li>
+        <li class="p-list__item has-bullet">Revert to the previous version if an update fails, preserving data.</li>
       </ul>
       <p>You can distribute your apps across Linux using a musl-enabled version of Rust, with all the dependencies satisfied. However, end user discovery and update management remain a challenge. Snaps fill this gap, letting you distribute a Rust app in an app store experience for end users.</p>
       <p>In just a few steps, you’ll have an example Rust app in the Snap Store.</p>
     </div>
-
-    <div>
+  </div>
+  <hr class="p-rule">
+  <div class="row">
+    <div class="col-3">
       <h3 class="p-heading--5">Here's how xsv defines snapcraft.yaml:</h3>
-      <div class="p-show-more is-collapsed" data-js="js-show-more">
-        <pre class="p-code-yaml"><b>name</b>: xsv
+    </div>
+    <div class="p-show-more is-collapsed col-6" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: xsv
 <b>version</b>: '1.0'
 <b>summary</b>: A fast CSV command line toolkit written in Rust
 <b>description</b>: |
@@ -34,7 +40,6 @@
 
       {% include "home/_fsf_yaml_show_more.html" %}
 
-      </div>
     </div>
   </div>
 

@@ -1,19 +1,25 @@
 <div class="u-hide" data-flow-details="java">
-  <div>
-    <div>
+  <hr class="p-rule u-hide--large">
+  <div class="row">
+    <div class="col-3">
       <h3 class="p-heading--5">Why are snaps good for Java projects?</h3>
-      <ul>
-        <li>Simplify installation instructions, regardless of distribution, to snap install myjavaapp.</li>
-        <li>Directly control the delivery of automatic application updates.</li>
+    </div>
+    <div class="col-6">
+      <ul class="p-list--divided">
+        <li class="p-list__item has-bullet">Simplify installation instructions, regardless of distribution, to snap install myjavaapp.</li>
+        <li class="p-list__item has-bullet">Directly control the delivery of automatic application updates.</li>
       </ul>
       <p>Distributing a Java application for Linux and reaching the widest possible audience is complicated. Typically, the user has to make sure the JRE/SDK version and their environment are configured correctly. When a Linux distribution changes the delivered JRE, this can be problematic for applications. Snapcraft ensures the correct JRE is shipped alongside the application at all times.</p>
       <p>In just a few steps, you’ll have an example Java app in the Snap Store.</p>
     </div>
-
-    <div>
+  </div>
+  <hr class="p-rule">
+  <div class="row">
+    <div class="col-3">
       <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/freeplane-mindmapping">freeplane</a> defines snapcraft.yaml:</h3>
-      <div class ="p-show-more is-collapsed" data-js="js-show-more">
-        <pre class="p-code-yaml"><b>name</b>: freeplane
+    </div>
+    <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: freeplane
 <b>version</b>: '1.8.1'
 <b>summary</b>: Application for Mind Mapping [&hellip;]
 <b>description</b>: |
@@ -51,7 +57,6 @@
 
         {% include "home/_fsf_yaml_show_more.html" %}
 
-      </div>
     </div>
   </div>
 

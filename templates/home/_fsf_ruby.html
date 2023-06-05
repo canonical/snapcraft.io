@@ -1,21 +1,27 @@
 <div class="u-hide" data-flow-details="ruby">
-  <div>
-    <div>
+  <hr class="p-rule u-hide--large">
+  <div class="row">
+    <div class="col-3">
       <h3 class="p-heading--5">Why are snaps good for Ruby projects?</h3>
-      <ul>
-        <li>Bundle all the runtime requirements.</li>
-        <li>Simplify installation instructions, regardless of distribution, to snap install myrubyapp.</li>
-        <li>Directly control the delivery of automatic application updates.</li>
-        <li>Extremely simple creation of services.</li>
+    </div>
+    <div class="col-6">
+      <ul class="p-list--divided">
+        <li class="p-list__item has-bullet">Bundle all the runtime requirements.</li>
+        <li class="p-list__item has-bullet">Simplify installation instructions, regardless of distribution, to snap install myrubyapp.</li>
+        <li class="p-list__item has-bullet">Directly control the delivery of automatic application updates.</li>
+        <li class="p-list__item has-bullet">Extremely simple creation of services.</li>
       </ul>
       <p>Linux install instructions for Ruby applications often get complicated. To prevent modules from different Ruby applications clashing with each other, developer tools like rvm or rbenv must be used. With snapcraft, it’s one command to produce a bundle that works anywhere.</p>
       <p>In just a few steps, you’ll have an example Ruby app in the Snap Store.</p>
     </div>
-
-    <div>
+  </div>
+  <hr class="p-rule">
+  <div class="row">
+    <div class="col-3">
       <h3 class="p-heading--5">Here’s how mdl uses it:</h3>
-      <div class="p-show-more is-collapsed" data-js="js-show-more">
-        <pre class="p-code-yaml"><b>name</b>: mdl
+    </div>
+    <div class="p-show-more is-collapsed col-6" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: mdl
 <b>version</b>: "0.5.0"
 <b>summary</b>: Markdown lint tool
 <b>description</b>: |
@@ -43,7 +49,6 @@
 
       {% include "home/_fsf_yaml_show_more.html" %}
 
-      </div>
     </div>
   </div>
 
