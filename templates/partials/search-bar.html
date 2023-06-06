@@ -1,10 +1,15 @@
-<section id="main-content" class="p-strip--image p-strip-slanted--snapcraft">
+<section id="main-content" class="p-strip--dark is-shallow">
   <div class="u-fixed-width">
     {% include 'partials/livestream-notification.html' %}
-    <h1 class="p-heading--2">Search thousands of snaps used by millions of people across 41 Linux distributions</h1>
+    <h1 class="p-heading--2">The app store for Linux</h1>
+    <p>Search thousands of snaps used by millions of people across 41 Linux distributions</p>
     {% if webapp_config['STORE_SEARCH_INTRO'] %}
       {{ webapp_config['STORE_SEARCH_INTRO']|safe }}
     {% endif %}
+  </div>
+</section>
+<section class="p-strip is-shallow snapcraft-banner-background snap-search-bar">
+  <div class="u-fixed-width">
     <form action="/search" class="p-form p-form--inline p-form--search">
       <div class="p-form__group">
         <label for="search-input" class="u-off-screen">Search</label>
@@ -12,7 +17,7 @@
           <input class="u-no-margin--bottom" id="search-input" type="search" name="q" value="{{ query }}" autofocus />
         </div>
       </div>
-      <button type="submit" alt="search" class="p-button--positive">Search</button>
+      <button type="submit" alt="search" class="p-button--positive u-no-margin--bottom">Search</button>
     </form>
   </div>
 </section>
