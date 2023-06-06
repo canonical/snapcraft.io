@@ -7231,9 +7231,10 @@ vanilla-framework@3.11.1:
     sass "1.58.0"
     yaml "1.10.2"
 
-vanilla-framework@canonical/vanilla-framework#vanilla-4.0:
+vanilla-framework@4.0.0-alpha.2:
   version "4.0.0-alpha.2"
-  resolved "https://codeload.github.com/canonical/vanilla-framework/tar.gz/a92c3b8605ff644023f462ca9fb323029644f5f9"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.0.0-alpha.2.tgz#2539ba7faa9c1aca2cb194cd835a1c944b3fb2bd"
+  integrity sha512-7ZFEjt9NoonL5ln22M8SBeok90a0KSaOKr564eRC8BPeKDWTc4XnBbVS4Nm5VtIVxGUKi0H4DlyYDEVSQT4efQ==
 
 verbalize@^0.1.2:
   version "0.1.2"
