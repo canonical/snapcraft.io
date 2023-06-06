@@ -4,6 +4,7 @@ const SCREENSHOTS = {
   slidesPerView: "auto",
   roundLengths: true,
   spaceBetween: 32,
+  resizeObserver: true,
   breakpoints: {
     620: {
       spaceBetween: 16,
