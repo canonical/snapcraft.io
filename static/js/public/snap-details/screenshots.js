@@ -33,24 +33,14 @@ function initScreenshots(screenshotsId) {
 
   screenshotsEl.addEventListener("click", clickCallback);
 
-  const config = Object.assign(SCREENSHOTS_CONFIG, {
-    // This hack is to fix a reported Swiper issue in firefox
-    // https://github.com/nolimits4web/swiper/issues/2218
-    // Hack https://github.com/nolimits4web/swiper/issues/2218#issuecomment-388837042
-    // TODO: When the issue linked above is fixed, remove this
-    on: {
-      init() {
-        setTimeout(() => {
-          window.dispatchEvent(new Event("resize"));
-        }, 200);
-      },
-    },
-  });
-
   // We need to resize the iframe on window resize
   iframeSize(".js-video-slide");
 
-  new Swiper(screenshotsEl.querySelector(".swiper-container"), config);
+  const swipeContainer = screenshotsEl.querySelector(".swiper-container");
+
+  if (swipeContainer) {
+    new Swiper(swipeContainer, SCREENSHOTS_CONFIG);
+  }
 }
 
 function terminateScreenshots(screenshotsId) {
