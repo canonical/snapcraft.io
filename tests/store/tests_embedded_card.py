@@ -26,6 +26,7 @@ class GetEmbeddedCardTest(TestCase):
             "categories": [{"name": "test"}],
             "trending": False,
             "unlisted": False,
+            "links": {},
         },
         "channel-map": [
             {
@@ -72,6 +73,7 @@ class GetEmbeddedCardTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }

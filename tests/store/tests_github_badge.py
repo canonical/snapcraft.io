@@ -26,6 +26,7 @@ class GetGitHubBadgeTest(TestCase):
             "categories": [{"name": "test"}],
             "trending": False,
             "unlisted": False,
+            "links": {},
         },
         "channel-map": [
             {
@@ -85,6 +86,7 @@ class GetGitHubBadgeTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }
