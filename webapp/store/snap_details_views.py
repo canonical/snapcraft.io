@@ -152,6 +152,7 @@ def snap_details_views(store, api):
                 "plexmediaserver": "plex",
                 "openhab": "openhab",
             },
+            "links": details["snap"].get("links"),
         }
 
         return context
@@ -230,37 +231,6 @@ def snap_details_views(store, api):
                 "error_info": error_info,
             }
         )
-
-        """
-        This code is purely for testing an upcoming feature
-        It is only available in the view with a query string
-        Once `links` has been added to the API we can remove this
-        """
-        context["links"] = {
-            "donation": [
-                "https://maas.io",
-                "http://juju.is",
-                "https://ubuntu.com/download",
-                "https://charmhub.io?welcome=true",
-                "https://dqlite/docs?hello=true",
-            ],
-            "contact": [
-                "mailto:steve.rydz@canonical.com",
-                "mailto:steve.rydz+test@canonical.com",
-            ],
-            # Wrapping long string to make flake8 happy.
-            # This won't be a problem once `link` is in the API
-            "issues": [
-                "https://github.com/canonical-web-and-design/"
-                "snapcraft.io/issues/new"
-            ],
-            "website": [
-                "https://ubuntu.com",
-            ],
-            "source-code": [
-                "https://github.com/canonical-web-and-design/snapcraft.io"
-            ],
-        }
 
         return (
             flask.render_template("store/snap-details.html", **context),

@@ -124,27 +124,11 @@ def get_listing_snap(snap_name):
             "update_metadata_on_release"
         ],
         "links": {
-            "contact": [
-                "mailto:steve.rydz@canonical.com",
-                "mailto:steve.rydz+test@canonical.com",
-            ],
-            "donation": [
-                "https://maas.io",
-                "http://juju.is",
-                "https://ubuntu.com/download",
-                "https://charmhub.io?welcome=true",
-                "https://dqlite/docs?hello=true",
-            ],
-            # Wrapping long string to make flake8 happy.
-            # This won't be a problem once `link` is in the API
-            "issues": [
-                "https://github.com/canonical-web-and-design/"
-                "snapcraft.io/issues/new"
-            ],
-            "source-code": [
-                "https://github.com/canonical-web-and-design/snapcraft.io"
-            ],
-            "website": ["https://ubuntu.com", "https://canonical.com"],
+            "contact": [],
+            "donation": [],
+            "issues": [],
+            "source-code": [],
+            "website": [],
         },
     }
 
