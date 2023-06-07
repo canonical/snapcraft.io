@@ -35,6 +35,7 @@ class GetDetailsPageTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }
@@ -119,6 +120,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
         }
 
@@ -153,6 +155,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
             "channel-map": [
                 {
@@ -218,6 +221,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
             "channel-map": [
                 {
@@ -275,6 +279,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
             "channel-map": [
                 {

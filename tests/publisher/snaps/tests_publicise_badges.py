@@ -46,6 +46,7 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "?fields=title%2Csummary%2Cdescription%2Clicense%2Ccontact%2C",
                 "website%2Cpublisher%2Cprices%2Cmedia%2Cdownload%2Cversion%2C",
                 "created-at%2Cconfinement%2Ccategories%2Ctrending%2Cunlisted",
+                "%2Clinks",
             ]
         )
 
