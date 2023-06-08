@@ -98,9 +98,6 @@ def snap_details_views(store, api):
             if (
                 flask.session.get("publisher").get("nickname")
                 == details["snap"]["publisher"]["username"]
-            ) or (
-                "user_shared_snaps" in flask.session
-                and snap_name in flask.session.get("user_shared_snaps")
             ):
                 is_users_snap = True
 
