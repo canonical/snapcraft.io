@@ -51,7 +51,6 @@ def empty_session(session):
     session.pop("macaroon_root", None)
     session.pop("macaroon_discharge", None)
     session.pop("publisher", None)
-    session.pop("user_shared_snaps", None)
     session.pop("github_auth_secret", None)
 
 

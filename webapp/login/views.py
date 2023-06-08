@@ -77,8 +77,6 @@ def after_login(resp):
         return flask.redirect(LOGIN_URL)
 
     account = publisher_api.get_account(flask.session)
-    owned, shared = logic.get_snap_names_by_ownership(account)
-    flask.session["user_shared_snaps"] = shared
 
     if account:
         flask.session["publisher"] = {
