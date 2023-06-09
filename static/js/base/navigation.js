@@ -21,7 +21,7 @@ if (navAccountContainer) {
         authenticatedMenu.classList.remove("u-hide");
         displayName.innerHTML = data.publisher["fullname"];
 
-        if (data.publisher.stores) {
+        if (data.publisher.has_stores) {
           authenticatedMenu
             .querySelector(".js-nav-account--stores")
             .classList.remove("u-hide");

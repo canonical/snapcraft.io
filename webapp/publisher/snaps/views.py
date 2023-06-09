@@ -1,7 +1,10 @@
 # Packages
 import bleach
 import flask
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapPublisher,
+    SnapStoreAdmin,
+)
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
@@ -24,6 +27,7 @@ from webapp.publisher.snaps import (
 from webapp.publisher.snaps.builds import map_snap_build_status
 
 publisher_api = SnapPublisher(api_publisher_session)
+admin_api = SnapStoreAdmin(api_publisher_session)
 
 
 publisher_snaps = flask.Blueprint(
@@ -286,9 +290,9 @@ def redirect_get_register_name():
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
-    user = publisher_api.get_account(flask.session)
+    stores = admin_api.get_stores(flask.session)
 
-    available_stores = logic.filter_available_stores(user["stores"])
+    available_stores = logic.filter_available_stores(stores)
 
     snap_name = flask.request.args.get("snap_name", default="", type=str)
     store = flask.request.args.get("store", default="", type=str)
@@ -351,9 +355,9 @@ def post_register_name():
             registrant_comment=registrant_comment,
         )
     except StoreApiResponseErrorList as api_response_error_list:
-        user = publisher_api.get_account(flask.session)
+        stores = admin_api.get_stores(flask.session)
 
-        available_stores = logic.filter_available_stores(user["stores"])
+        available_stores = logic.filter_available_stores(stores)
 
         if api_response_error_list.status_code == 409:
             for error in api_response_error_list.errors:
@@ -451,11 +455,11 @@ def post_register_name_json():
 @publisher_snaps.route("/register-name-dispute")
 @login_required
 def get_register_name_dispute():
-    user = publisher_api.get_account(flask.session)
+    stores = admin_api.get_stores(flask.session)
 
     snap_name = flask.request.args.get("snap-name")
     store_id = flask.request.args.get("store")
-    store_name = logic.get_store_name(store_id, user)
+    store_name = logic.get_store_name(store_id, stores)
 
     if not snap_name:
         return flask.redirect(
@@ -496,11 +500,11 @@ def post_register_name_dispute():
 @publisher_snaps.route("/request-reserved-name")
 @login_required
 def get_request_reserved_name():
-    user = publisher_api.get_account(flask.session)
+    stores = admin_api.get_stores(flask.session)
 
     snap_name = flask.request.args.get("snap_name")
     store_id = flask.request.args.get("store")
-    store_name = logic.get_store_name(store_id, user)
+    store_name = logic.get_store_name(store_id, stores)
 
     if not snap_name:
         return flask.redirect(

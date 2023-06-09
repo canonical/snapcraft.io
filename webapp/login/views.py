@@ -92,8 +92,8 @@ def after_login(resp):
         if logic.get_stores(
             account["stores"], roles=["admin", "review", "view"]
         ):
-            flask.session["publisher"]["stores"] = admin_api.get_stores(
-                flask.session
+            flask.session["publisher"]["has_stores"] = (
+                len(admin_api.get_stores(flask.session)) > 0
             )
     else:
         flask.session["publisher"] = {
@@ -187,8 +187,8 @@ def login_callback():
     }
 
     if logic.get_stores(account["stores"], roles=["admin", "review", "view"]):
-        flask.session["publisher"]["stores"] = admin_api.get_stores(
-            flask.session
+        flask.session["publisher"]["has_stores"] = (
+            len(admin_api.get_stores(flask.session)) > 0
         )
 
     response = flask.make_response(
