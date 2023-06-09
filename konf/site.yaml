@@ -97,6 +97,7 @@ production:
     if ($host != 'snapcraft.io' ) {
       rewrite ^ https://snapcraft.io$request_uri? permanent;
     }
+    more_set_headers "X-toto: otot";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
   routes:
