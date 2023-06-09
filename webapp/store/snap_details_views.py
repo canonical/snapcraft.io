@@ -98,9 +98,6 @@ def snap_details_views(store, api):
             if (
                 flask.session.get("publisher").get("nickname")
                 == details["snap"]["publisher"]["username"]
-            ) or (
-                "user_shared_snaps" in flask.session
-                and snap_name in flask.session.get("user_shared_snaps")
             ):
                 is_users_snap = True
 
@@ -334,14 +331,7 @@ def snap_details_views(store, api):
         # on Publicise page
         show_as_preview = False
         if is_preview and authentication.is_authenticated(flask.session):
-            if (
-                flask.session.get("publisher").get("nickname")
-                == context["username"]
-            ) or (
-                "user_shared_snaps" in flask.session
-                and snap_name in flask.session.get("user_shared_snaps")
-            ):
-                show_as_preview = True
+            show_as_preview = True
 
         if context["trending"] or show_as_preview:
             svg = get_badge_svg(
