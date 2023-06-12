@@ -148,6 +148,7 @@ export const RevisionInfo = ({
   isPending,
   previousRevision,
   risk,
+  track,
 }) => {
   let buildIcon = null;
 
@@ -167,7 +168,9 @@ export const RevisionInfo = ({
   // This mimics what the snapcraft cli does as some fields may be
   // present even if a release is not progressive
   const isProgressive =
-    revision?.progressive?.percentage && risk !== "AVAILABLE" ? true : false;
+    revision.prog_channels.includes(`${track}/${risk}`) && risk !== "AVAILABLE"
+      ? true
+      : false;
 
   return (
     <Fragment>
@@ -249,6 +252,7 @@ RevisionInfo.propTypes = {
   isPending: PropTypes.bool,
   previousRevision: PropTypes.object,
   risk: PropTypes.string,
+  track: PropTypes.string,
 };
 
 // generic draggable view of releases table cell

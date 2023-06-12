@@ -28,6 +28,18 @@ function initReleasesData(revisionsMap, releases) {
           if (rev.channels.indexOf(channel) === -1) {
             rev.channels.push(channel);
           }
+
+          if (!rev.prog_channels) {
+            rev.prog_channels = [];
+          }
+
+          if (
+            rev.prog_channels.indexOf(channel) === -1 &&
+            release.progressive &&
+            release.progressive.percentage
+          ) {
+            rev.prog_channels.push(channel);
+          }
         }
       }
     });
