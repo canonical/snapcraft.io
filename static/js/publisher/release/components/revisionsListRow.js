@@ -28,6 +28,8 @@ const RevisionsListRow = (props) => {
     isActive,
     isProgressiveReleaseEnabled,
     progressiveBeingCancelled,
+    risk,
+    track,
   } = props;
 
   const releasable = canBeReleased(revision);
@@ -38,10 +40,14 @@ const RevisionsListRow = (props) => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
-  const isProgressive = revision?.progressive?.percentage ? true : false;
-  const isPreviousProgressive = previousRevision?.progressive?.percentage
+  const isProgressive = revision.prog_channels.includes(`${track}/${risk}`)
     ? true
     : false;
+  const isPreviousProgressive =
+    previousRevision &&
+    previousRevision.prog_channels.includes(`${track}/${risk}`)
+      ? true
+      : false;
 
   let channel;
   if (revision.release) {
@@ -157,6 +163,8 @@ RevisionsListRow.propTypes = {
   isActive: PropTypes.bool,
   showBuildRequest: PropTypes.bool.isRequired,
   progressiveBeingCancelled: PropTypes.bool,
+  risk: PropTypes.string,
+  track: PropTypes.string,
 
   // computed state (selectors)
   selectedRevisions: PropTypes.array.isRequired,

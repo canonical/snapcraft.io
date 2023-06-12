@@ -53,6 +53,10 @@ class RevisionsList extends Component {
     const rowKey = `revision-row-${revision.revision}-${
       revision.release ? revision.release.channel : new Date().getTime()
     }`;
+
+    const risk = this.props.filters.risk;
+    const track = this.props.filters.track;
+
     return (
       <RevisionsListRow
         key={rowKey}
@@ -64,6 +68,8 @@ class RevisionsList extends Component {
         isActive={isActive}
         showBuildRequest={showBuildRequest}
         progressiveBeingCancelled={progressiveBeingCancelled}
+        risk={risk}
+        track={track}
       />
     );
   }
