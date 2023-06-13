@@ -40,11 +40,14 @@ const RevisionsListRow = (props) => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
-  const isProgressive = revision.prog_channels.includes(`${track}/${risk}`)
-    ? true
-    : false;
+  const isProgressive =
+    revision.prog_channels &&
+    revision.prog_channels.includes(`${track}/${risk}`)
+      ? true
+      : false;
   const isPreviousProgressive =
     previousRevision &&
+    previousRevision.prog_channels &&
     previousRevision.prog_channels.includes(`${track}/${risk}`)
       ? true
       : false;

@@ -168,7 +168,9 @@ export const RevisionInfo = ({
   // This mimics what the snapcraft cli does as some fields may be
   // present even if a release is not progressive
   const isProgressive =
-    revision.prog_channels.includes(`${track}/${risk}`) && risk !== "AVAILABLE"
+    revision.prog_channels &&
+    revision.prog_channels.includes(`${track}/${risk}`) &&
+    risk !== "AVAILABLE"
       ? true
       : false;
 
