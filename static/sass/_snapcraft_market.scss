@@ -101,7 +101,7 @@
     background: $color-x-light;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 9;
 
     // force it back to static position (for example during the tour)
     &.is-static {
