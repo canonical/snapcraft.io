@@ -1,24 +1,26 @@
-<div class="col-{{ columns }} u-hide" data-flow-details="c">
+<div class="u-hide" data-flow-details="c">
+  <hr class="p-rule u-hide--large">
   <div class="row">
-    <div class="col-{{ (columns/2) | int }}">
-      <h3 class="p-heading--4">Why are snaps good for C/C++ projects?</h3>
-      <ul>
-        <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
-        <li>Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
-        <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
-        <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
-        <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
-      </ul>
-
-      <div class="p-flow-details__continue">
-        <p>In just a few steps, you’ll have an example C/C++ app in the Snap Store.</p>
-        <a class="p-button--positive" href="/first-snap/c/">Continue &rsaquo;</a>
-      </div>
+    <div class="col-3">
+      <h3 class="p-heading--5">Why are snaps good for C/C++ projects?</h3>
     </div>
-
-    <div class="col-{{ (columns/2) | int }}">
-      <h3 class="p-heading--4">Here's how <a href="https://snapcraft.io/dosbox-x">dosbox</a> defines snapcraft.yaml:</h3>
-      <div class ="p-show-more is-collapsed" data-js="js-show-more">
+    <div class="col-6">
+      <ul class="p-list--divided">
+        <li class="p-list__item has-bullet">Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+        <li class="p-list__item has-bullet">Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
+        <li class="p-list__item has-bullet">Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+        <li class="p-list__item has-bullet">Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+        <li class="p-list__item has-bullet">Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      </ul>
+      <p>In just a few steps, you’ll have an example C/C++ app in the Snap Store.</p>
+    </div>
+  </div>
+  <hr class="p-rule">
+    <div class="row">
+      <div class="col-3">
+        <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/dosbox-x">dosbox</a> defines snapcraft.yaml:</h3>
+      </div>
+      <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
         <pre class="p-code-yaml"><b>name</b>: dosbox
 <b>version</b>: "0.74-svn"
 <b>summary</b>: DOS emulator
@@ -56,7 +58,11 @@
 
         {% include "home/_fsf_yaml_show_more.html" %}
 
-      </div>
     </div>
+  </div>
+  
+  <div class="u-align--right">
+    <hr>
+    <a class="p-button--positive" href="/first-snap/c/">Continue &rsaquo;</a>
   </div>
 </div>

@@ -63,12 +63,21 @@
     }
 
     .p-snap-install-buttons__install {
+      @media screen and (max-width: $breakpoint-small - 1) {
+        width: 100%;
+      }
+
       &.is-active {
         background-color: darken($color-positive, 10%);
       }
     }
 
     .p-snap-install-buttons__versions {
+      @media screen and (max-width: $breakpoint-small - 1) {
+        margin-right: 0;
+        width: 100%;
+      }
+
       &.is-active {
         background-color: darken($color-light, 10%);
       }

@@ -4,7 +4,7 @@ module.exports = {
   base: "./static/js/base/base.js",
   release: "./static/js/publisher/release.js",
   about: "./static/js/public/about/index.js",
-  tabpanel: "./static/js/public/hero-tabpanel.js",
+  "featured-snaps": "./static/js/public/featured-snaps.ts",
   modal: "./static/js/public/modal.js",
   // TODO:
   // publisher bundle is big (webpack warning) - try to chunk it down
@@ -22,4 +22,5 @@ module.exports = {
   "publisher-listing": "./static/js/publisher/listing/index.tsx",
   "publisher-settings": "./static/js/publisher/settings/index.tsx",
   "publisher-collaboration": "./static/js/publisher/collaboration/index.tsx",
+  "about-listing": "./static/js/public/about/listing.ts",
 };

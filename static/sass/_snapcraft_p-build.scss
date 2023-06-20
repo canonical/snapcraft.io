@@ -39,4 +39,30 @@
       top: 0.4rem;
     }
   }
+
+  .build-notification {
+    background-color: #e5e5e5;
+    padding: 1.5rem;
+
+    .build-notification-text {
+      color: #06c;
+      font-size: 16px;
+    }
+  }
+
+  .build-container {
+    background-image: url('https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg');
+    background-position: 56% 80%;
+    background-repeat: no-repeat;
+    bottom: 20px;
+    display: flex;
+    flex-direction: row;
+
+    .build-divider {
+      background-color: rgba(0, 0, 0, 0.15);
+      margin: 0;
+      padding: 0;
+      width: 1px;
+    }
+  }
 }

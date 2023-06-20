@@ -1,0 +1,90 @@
+<div class="main">
+  <section class="p-strip is-deep u-no-padding--bottom homepage-suru-strip--mobile">
+    <div class="row">
+      <div class="col-6 col-start-large-4">
+        <div class="p-block">
+          <h1>The app store for Linux</h1>
+        </div>
+        <form class="p-search-box" action="/search">
+          <label class="u-off-screen" for="search">Search</label>
+          <input type="search" id="search" class="p-search-box__input" name="q" placeholder="Search thousands of snaps" required="" autocomplete="on">
+          <button type="reset" class="p-search-box__reset"><i class="p-icon--close">Close</i></button>
+          <button type="submit" class="p-search-box__button"><i class="p-icon--search">Search</i></button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <div class="u-fixed-width u-no-padding--left u-no-padding--right">
+    <div class="p-suru25light"></div>
+  </div>
+  <section class="p-section">
+    <div class="u-fixed-width u-hide--small u-hide--medium"><hr class="p-rule"></div>
+    <div class="row--25-75">
+      <div class="col">
+        <div class="p-section u-sv3">
+          <h2 class="p-muted-heading">Snaps you may like</h2>
+        </div>
+        <div class="p-side-navigation u-hide--small u-hide--medium">
+          <ul class="p-side-navigation__list">
+            {% for category in featured_categories %}
+              <li class="p-side-navigation__item">
+                <a href="#" class="p-side-navigation__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-current="page"{% endif %}>{{ category }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="p-tabs u-hide--large">
+          <ul class="p-tabs__list is-light">
+            {% for category in featured_categories %}
+              <li class="p-tabs__item">
+                <a href="#" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-selected="true"{% endif %}>{{ category }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          {% for i in range(0, 3) %}
+            <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card">
+              <div class="snap-card-placeholder" data-js="featured-snap-card-placeholder">
+                <div class="snap-card-placeholder__image"></div>
+                <div class="snap-card-placeholder__title"></div>
+                <div class="snap-card-placeholder__publisher"></div>
+                <div class="snap-card-placeholder__description"></div>
+              </div>
+              <div class="u-hide" data-js="featured-snap-card-content"></div>
+            </div>
+          {% endfor %}
+        </div>
+        <hr class="p-rule">
+        <ul class="p-list--divided u-no-margin--bottom">
+          <li class="p-list__item">
+            <a href="/search?category={{ featured_categories[0]|lower }}" data-js="view-category-link">
+              View all {{ featured_categories[0]|lower }} snaps
+            </a>            
+          </li>
+          <li class="p-list__item">
+            <a href="/store">View all snaps</a>    
+          </li>
+        </ul>
+      </div>
+    </div>
+    <template style="display: none;" id="featured-snap-card" >
+      <hr class="p-rule u-hide--medium u-hide--large">
+      <div class="p-block">
+        <a href="" data-js="snap-icon-link">
+          <div class="p-strip is-shallow">
+            <img src="" alt="" data-js="snap-icon" width="64" height="64" style="display: block;">
+          </div>
+          <h3 class="p-heading--2" data-js="snap-title">
+            <a class="p-link--soft" href="" data-js="snap-title-link"></a>
+          </h3>
+            <p data-js="snap-publisher" class="p-muted-heading"></p>
+            <p data-js="snap-description"></p>
+        </a>
+      </div>
+    </template>
+  </section>
+</div>
+
