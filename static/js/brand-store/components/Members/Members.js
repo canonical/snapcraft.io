@@ -22,9 +22,9 @@ import {
   membersSelector,
   invitesSelector,
   brandStoresListSelector,
-} from "../selectors";
-import { fetchMembers } from "../slices/membersSlice";
-import { fetchInvites } from "../slices/invitesSlice";
+} from "../../selectors";
+import { fetchMembers } from "../../slices/membersSlice";
+import { fetchInvites } from "../../slices/invitesSlice";
 
 import SectionNav from "../SectionNav";
 

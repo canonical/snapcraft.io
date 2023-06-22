@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Downshift from "downshift";
 import { Spinner } from "@canonical/react-components";
 
-import debounce from "../../libs/debounce";
+import debounce from "../../../libs/debounce";
 
 function SnapsSearch({
   storeId,

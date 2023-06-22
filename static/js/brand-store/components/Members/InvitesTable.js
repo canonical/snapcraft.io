@@ -7,7 +7,7 @@ import { MainTable, Button } from "@canonical/react-components";
 
 import InviteModal from "./InviteModal";
 
-import { fetchInvites } from "../slices/invitesSlice";
+import { fetchInvites } from "../../slices/invitesSlice";
 import ROLES from "./memberRoles";
 
 function InvitesTable({
