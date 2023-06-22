@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Settings from "./Settings";
-import { store } from "../store";
+import { store } from "../../store";
 import { RootState } from "./Settings";
 
 jest.mock("react-router-dom", () => ({

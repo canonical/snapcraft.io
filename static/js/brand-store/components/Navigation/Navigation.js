@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { brandStoresListSelector } from "../selectors";
+import { brandStoresListSelector } from "../../selectors";
 
 function Navigation() {
   const brandStoresList = useSelector(brandStoresListSelector);

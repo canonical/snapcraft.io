@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import type { RouteParams } from "../types/shared";
+import type { RouteParams } from "../../types/shared";
 
 function Reviewer() {
   const { id } = useParams<RouteParams>();

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import type { RouteParams } from "../types/shared";
+import type { RouteParams } from "../../types/shared";
 
 function SectionNav({ sectionName }: { sectionName: string }) {
   const { id } = useParams<RouteParams>();

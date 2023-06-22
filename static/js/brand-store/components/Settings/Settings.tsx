@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Navigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch } from "../../hooks";
 import {
   Form,
   Input,
@@ -13,14 +13,14 @@ import {
   PasswordToggle,
 } from "@canonical/react-components";
 
-import { currentStoreSelector, membersSelector } from "../selectors";
-import { fetchMembers } from "../slices/membersSlice";
-import { fetchStore } from "../slices/currentStoreSlice";
+import { currentStoreSelector, membersSelector } from "../../selectors";
+import { fetchMembers } from "../../slices/membersSlice";
+import { fetchStore } from "../../slices/currentStoreSlice";
 
 import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
 
-import type { RouteParams, Member } from "../types/shared";
+import type { RouteParams, Member } from "../../types/shared";
 
 export type RootState = {
   currentStore: {

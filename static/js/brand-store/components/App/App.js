@@ -7,8 +7,8 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { fetchStores } from "../slices/brandStoreSlice";
-import { brandStoresListSelector } from "../selectors";
+import { fetchStores } from "../../slices/brandStoreSlice";
+import { brandStoresListSelector } from "../../selectors";
 
 import Navigation from "../Navigation";
 import Snaps from "../Snaps";

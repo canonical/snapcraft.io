@@ -14,9 +14,9 @@ import {
   snapsSelector,
   brandStoresListSelector,
   membersSelector,
-} from "../selectors";
-import { fetchSnaps } from "../slices/snapsSlice";
-import { fetchMembers } from "../slices/membersSlice";
+} from "../../selectors";
+import { fetchSnaps } from "../../slices/snapsSlice";
+import { fetchMembers } from "../../slices/membersSlice";
 
 import Publisher from "../Publisher";
 import Reviewer from "../Reviewer";
