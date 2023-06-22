@@ -14,6 +14,10 @@ import Navigation from "../Navigation";
 import Snaps from "../Snaps";
 import Members from "../Members";
 import Settings from "../Settings";
+import Models from "../Models";
+import Model from "../Model";
+import Policies from "../Model/Policies";
+import SigningKeys from "../SigningKeys";
 import StoreNotFound from "../StoreNotFound";
 
 function App() {
@@ -49,6 +53,18 @@ function App() {
           <Route exact path="/admin/:id/snaps" element={<Snaps />} />
           <Route exact path="/admin/:id/members" element={<Members />} />
           <Route exact path="/admin/:id/settings" element={<Settings />} />
+          <Route exact path="/admin/:id/models" element={<Models />} />
+          <Route exact path="/admin/:id/models/:model_id" element={<Model />} />
+          <Route
+            exact
+            path="/admin/:id/models/:model_id/policies"
+            element={<Policies />}
+          />
+          <Route
+            exact
+            path="/admin/:id/signing-keys"
+            element={<SigningKeys />}
+          />
         </Routes>
       </div>
     </Router>
