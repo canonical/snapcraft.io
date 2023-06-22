@@ -18,6 +18,26 @@ function SectionNav({ sectionName }: { sectionName: string }) {
             Snaps
           </Link>
         </li>
+        {/* <li className="p-tabs__item">
+          <Link
+            to={`/admin/${id}/models`}
+            className="p-tabs__link"
+            aria-selected={sectionName === "models"}
+            role="tab"
+          >
+            Models
+          </Link>
+        </li>
+        <li className="p-tabs__item">
+          <Link
+            to={`/admin/${id}/signing-keys`}
+            className="p-tabs__link"
+            aria-selected={sectionName === "signing-keys"}
+            role="tab"
+          >
+            Signing keys
+          </Link>
+        </li> */}
         <li className="p-tabs__item">
           <Link
             to={`/admin/${id}/members`}
