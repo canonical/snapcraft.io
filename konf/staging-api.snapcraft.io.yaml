@@ -1,6 +1,6 @@
 domain: staging-api.snapcraft.io
 
-image: prod-comms.docker-registry.canonical.com/staging-api.snapcraft.io
+image: prod-comms.ps5.docker-registry.canonical.com/staging-api.snapcraft.io
 
 env:
   - name: SNAPSTORE_DASHBOARD_API_URL
