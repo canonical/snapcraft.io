@@ -5,6 +5,7 @@ import { Integrations } from "@sentry/tracing";
 import App from "./components/App";
 import { store } from "./store";
 import { Provider } from "react-redux";
+import { RecoilRoot } from "recoil";
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
@@ -16,6 +17,8 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
   <Provider store={store}>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </Provider>
 );
