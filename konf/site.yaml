@@ -1,6 +1,6 @@
 domain: snapcraft.io
 
-image: prod-comms.docker-registry.canonical.com/snapcraft.io
+image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
 
 env: &env
   - name: SENTRY_DSN
@@ -104,7 +104,7 @@ production:
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
       app_name: snapcraft.io-discourse
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 5
       memoryLimit: 256Mi
       env: *env
@@ -112,7 +112,7 @@ production:
     - paths: [/blog]
       name: snapcraft-io-blog
       app_name: snapcraft.io-blog
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 3
       memoryLimit: 256Mi
       env: *env
@@ -131,7 +131,7 @@ staging:
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
       app_name: snapcraft.io-discourse
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 3
       memoryLimit: 256Mi
       env: *env
@@ -139,7 +139,7 @@ staging:
     - paths: [/blog]
       name: snapcraft-io-blog
       app_name: snapcraft.io-blog
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 2
       memoryLimit: 256Mi
       env: *env
