@@ -3,14 +3,16 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { brandStoresListSelector } from "../../selectors";
 
+import type { Store } from "../../types/shared";
+
 function Navigation() {
   const brandStoresList = useSelector(brandStoresListSelector);
   const [collapsed, setCollapsedState] = useState(true);
-  const hideSideNav = (hide) => {
+  const hideSideNav = (hide: boolean) => {
     setCollapsedState(hide);
 
     if (hide) {
-      document.activeElement.blur();
+      (document.activeElement as HTMLElement).blur();
     }
   };
 
@@ -36,11 +38,7 @@ function Navigation() {
           <div className="p-panel is-flex-column--medium">
             <div className="p-panel__header is-sticky">
               <span className="p-panel__logo">
-                <i
-                  className="p-panel__logo-icon p-icon--snapcraft-cube"
-                  width="24"
-                  height="24"
-                />
+                <i className="p-panel__logo-icon p-icon--snapcraft-cube" />
                 <h2 className="p-heading--5 p-panel__logo-name is-fading-when-collapsed">
                   My stores
                 </h2>
@@ -59,7 +57,7 @@ function Navigation() {
               <div className="p-side-navigation--icons">
                 <nav aria-label="Stores navigation">
                   <ul className="p-side-navigation__list">
-                    {brandStoresList.map((item) => {
+                    {brandStoresList.map((item: Store) => {
                       return item.id && item.name ? (
                         <li className="p-side-navigation__item" key={item.id}>
                           <NavLink
