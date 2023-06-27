@@ -18,7 +18,7 @@ module.exports = {
   search: "./static/js/public/search.js",
   "distro-install": "./static/js/public/distro-install.js",
   "publisher-details": "./static/js/public/publisher-details.js",
-  "brand-store": "./static/js/brand-store/brand-store.js",
+  "brand-store": "./static/js/brand-store/brand-store.tsx",
   "publisher-listing": "./static/js/publisher/listing/index.tsx",
   "publisher-settings": "./static/js/publisher/settings/index.tsx",
   "publisher-collaboration": "./static/js/publisher/collaboration/index.tsx",
