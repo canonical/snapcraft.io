@@ -13,7 +13,9 @@ export type Member = {
 
 export type BrandStores = {
   brandStores: {
-    brandStoresList: Array<{}>;
+    brandStoresList: Stores;
+    loading: boolean;
+    notFound: boolean;
   };
 };
 
@@ -49,3 +51,5 @@ export type Store = {
   id?: string;
   name?: string;
 };
+
+export type Stores = Array<Store>;
