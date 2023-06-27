@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
 
 export const slice = createSlice({
@@ -12,8 +12,8 @@ export const slice = createSlice({
     getBrandStoresLoading: (state) => {
       state.loading = true;
     },
-    getBrandStoresSuccess: (state, { payload }) => {
-      state.brandStoresList = payload || [];
+    getBrandStoresSuccess: (state, action: PayloadAction<[]>) => {
+      state.brandStoresList = action.payload || [];
       state.loading = false;
     },
     getBrandStoresNotFound: (state) => {

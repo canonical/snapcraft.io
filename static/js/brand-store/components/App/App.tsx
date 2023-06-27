@@ -20,13 +20,17 @@ import Policies from "../Model/Policies";
 import SigningKeys from "../SigningKeys";
 import StoreNotFound from "../StoreNotFound";
 
+import type { Stores, BrandStores } from "../../types/shared";
+
 function App() {
-  const isLoading = useSelector((state) => state.brandStores.loading);
-  const brandStoresList = useSelector(brandStoresListSelector);
+  const isLoading = useSelector(
+    (state: BrandStores) => state.brandStores.loading
+  );
+  const brandStoresList: Stores = useSelector(brandStoresListSelector);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchStores());
+    dispatch(fetchStores() as any);
   }, []);
 
   return (
@@ -35,7 +39,6 @@ function App() {
         <Navigation />
         <Routes>
           <Route
-            exact
             path="/admin"
             element={
               !isLoading ? (
@@ -50,21 +53,16 @@ function App() {
               ) : null
             }
           />
-          <Route exact path="/admin/:id/snaps" element={<Snaps />} />
-          <Route exact path="/admin/:id/members" element={<Members />} />
-          <Route exact path="/admin/:id/settings" element={<Settings />} />
-          <Route exact path="/admin/:id/models" element={<Models />} />
-          <Route exact path="/admin/:id/models/:model_id" element={<Model />} />
+          <Route path="/admin/:id/snaps" element={<Snaps />} />
+          <Route path="/admin/:id/members" element={<Members />} />
+          <Route path="/admin/:id/settings" element={<Settings />} />
+          <Route path="/admin/:id/models" element={<Models />} />
+          <Route path="/admin/:id/models/:model_id" element={<Model />} />
           <Route
-            exact
             path="/admin/:id/models/:model_id/policies"
             element={<Policies />}
           />
-          <Route
-            exact
-            path="/admin/:id/signing-keys"
-            element={<SigningKeys />}
-          />
+          <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
         </Routes>
       </div>
     </Router>
