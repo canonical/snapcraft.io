@@ -44,3 +44,8 @@ export type Members = {
     members: Array<Member>;
   };
 };
+
+export type Store = {
+  id?: string;
+  name?: string;
+};
