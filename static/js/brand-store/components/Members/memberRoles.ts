@@ -1,4 +1,10 @@
-const ROLES = {
+interface Roles {
+  [key: string]: {
+    [key: string]: string;
+  };
+}
+
+const ROLES: Roles = {
   admin: {
     name: "Admin",
     description:

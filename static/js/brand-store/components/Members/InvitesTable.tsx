@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button } from "@canonical/react-components";
@@ -10,28 +9,43 @@ import InviteModal from "./InviteModal";
 import { fetchInvites } from "../../slices/invitesSlice";
 import ROLES from "./memberRoles";
 
+import type { Invite, Invites, Status } from "../../types/shared";
+
+type Props = {
+  invites: any;
+  setShowSuccessNotification: Function;
+  setNotificationText: Function;
+  setShowErrorNotification: Function;
+};
+
 function InvitesTable({
   invites,
   setShowSuccessNotification,
   setNotificationText,
   setShowErrorNotification,
-}) {
+}: Props) {
   const [pendingInvites, setPendingInvites] = useState([]);
   const [expiredInvites, setExpiredInvites] = useState([]);
   const [revokedInvites, setRevokedInvites] = useState([]);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const [inviteActionData, setInviteActionData] = useState({});
+  const [inviteActionData, setInviteActionData]: any = useState({});
   const [inviteModalIsSaving, setInviteModalIsSaving] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setPendingInvites(invites.filter((invite) => invite.status === "Pending"));
-    setExpiredInvites(invites.filter((invite) => invite.status === "Expired"));
-    setRevokedInvites(invites.filter((invite) => invite.status === "Revoked"));
+    setPendingInvites(
+      invites.filter((invite: Invite) => invite.status === "Pending")
+    );
+    setExpiredInvites(
+      invites.filter((invite: Invite) => invite.status === "Expired")
+    );
+    setRevokedInvites(
+      invites.filter((invite: Invite) => invite.status === "Revoked")
+    );
   }, [invites]);
 
-  const updateInvite = (inviteData) => {
+  const updateInvite = (inviteData: Invite) => {
     const data = new FormData();
 
     data.set("csrf_token", window.CSRF_TOKEN);
@@ -51,7 +65,7 @@ function InvitesTable({
         }
       })
       .then(() => {
-        dispatch(fetchInvites(id));
+        dispatch(fetchInvites(id as string) as any);
         setTimeout(() => {
           setInviteModalOpen(false);
           setInviteModalIsSaving(false);
@@ -68,7 +82,7 @@ function InvitesTable({
       });
   };
 
-  const getInviteStatusText = (status) => {
+  const getInviteStatusText = (status: Status) => {
     let iconClassName = "";
 
     if (status === "Pending") {
@@ -90,7 +104,7 @@ function InvitesTable({
     );
   };
 
-  const getRolesText = (roles) => {
+  const getRolesText = (roles: Array<string>) => {
     let rolesText = "";
 
     roles.forEach((role, index) => {
@@ -104,7 +118,7 @@ function InvitesTable({
     return rolesText;
   };
 
-  const buildTableCols = (invite) => {
+  const buildTableCols = (invite: Invite) => {
     return [
       {
         "aria-label": "Email",
@@ -165,7 +179,7 @@ function InvitesTable({
     ];
   };
 
-  const buildTableRows = (invitesGroup) => {
+  const buildTableRows = (invitesGroup: Invites) => {
     return invitesGroup.map((invite, index) => {
       if (index === 0) {
         return {
@@ -175,7 +189,8 @@ function InvitesTable({
               content: getInviteStatusText(invite.status),
               rowSpan: invitesGroup.length,
             },
-          ].concat(buildTableCols(invite)),
+            ...buildTableCols(invite),
+          ],
         };
       } else {
         return {
@@ -200,11 +215,11 @@ function InvitesTable({
           { content: "Roles" },
           { content: "", style: { width: "20%" } },
         ]}
-        rows={[].concat(
-          pendingInviteRows,
-          expiredInviteRows,
-          revokedInviteRows
-        )}
+        rows={[
+          ...pendingInviteRows,
+          ...expiredInviteRows,
+          ...revokedInviteRows,
+        ]}
       />
       <InviteModal
         inviteActionData={inviteActionData}
@@ -216,12 +231,5 @@ function InvitesTable({
     </>
   );
 }
-
-InvitesTable.propTypes = {
-  invites: PropTypes.array.isRequired,
-  setShowSuccessNotification: PropTypes.func.isRequired,
-  setNotificationText: PropTypes.func.isRequired,
-  setShowErrorNotification: PropTypes.func.isRequired,
-};
 
 export default InvitesTable;
