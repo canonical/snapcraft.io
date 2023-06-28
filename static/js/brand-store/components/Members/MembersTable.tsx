@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { MainTable, CheckboxInput } from "@canonical/react-components";
 import ROLES from "./memberRoles";
 
-function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
-  const [members, setMembers] = useState(filteredMembers);
+import type { Member } from "../../types/shared";
 
-  const checkArrayEqual = (array1, array2) => {
+type Props = {
+  filteredMembers: Array<Member>;
+  changedMembers: Array<Member>;
+  setChangedMembers: Function;
+};
+
+function MembersTable({
+  filteredMembers,
+  changedMembers,
+  setChangedMembers,
+}: Props) {
+  const [members, setMembers]: any = useState(filteredMembers);
+
+  const checkArrayEqual = (array1: Array<string>, array2: Array<string>) => {
     if (array1.length !== array2.length) {
       return false;
     }
@@ -19,9 +30,9 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
       .every((val, idx) => val === array2Sorted[idx]);
   };
 
-  const handleRoleChange = (currentMember, role) => {
-    const updatedMembers = members.map((member) => {
-      let updatedItem = {};
+  const handleRoleChange = (currentMember: Member, role: string) => {
+    const updatedMembers = members.map((member: Member) => {
+      let updatedItem = { ...member };
 
       if (member.id !== currentMember.id) {
         return member;
@@ -35,33 +46,31 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
       } else {
         updatedItem = {
           ...member,
-          roles: [].concat(member.roles, [role]),
+          roles: [...member.roles, role],
         };
       }
 
       const changedMember = changedMembers.find(
-        (m) => m.id === currentMember.id
+        (m: Member) => m.id === currentMember.id
       );
 
       const originalMember = filteredMembers.find(
-        (m) => m.id === currentMember.id
+        (m: Member) => m.id === currentMember.id
       );
 
-      if (changedMember) {
+      if (changedMember && originalMember) {
         if (checkArrayEqual(originalMember.roles, updatedItem.roles)) {
           setChangedMembers(
             changedMembers.filter((m) => m.id !== currentMember.id)
           );
         } else {
-          setChangedMembers(
-            [].concat(
-              changedMembers.filter((m) => m.id !== currentMember.id),
-              [updatedItem]
-            )
-          );
+          setChangedMembers([
+            ...changedMembers.filter((m) => m.id !== currentMember.id),
+            updatedItem,
+          ]);
         }
       } else {
-        setChangedMembers([].concat(changedMembers, [updatedItem]));
+        setChangedMembers([...changedMembers, updatedItem]);
       }
 
       return updatedItem;
@@ -73,11 +82,6 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
   useEffect(() => {
     setMembers(filteredMembers);
   }, [filteredMembers]);
-
-  const mobileLabelStyles = {
-    display: "inline-block",
-    marginLeft: "0.5rem",
-  };
 
   return (
     <MainTable
@@ -139,7 +143,7 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
           ),
         },
       ]}
-      rows={members.map((member) => {
+      rows={members.map((member: Member) => {
         return {
           columns: [
             {
@@ -153,7 +157,6 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
               "aria-label": "Email",
             },
             {
-              "aria-label": "Admin",
               content: (
                 <>
                   <CheckboxInput
@@ -164,15 +167,12 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
                     onChange={() => {
                       handleRoleChange(member, "admin");
                     }}
+                    label={<span className="u-hide--large">Admin</span>}
                   />
-                  <span className="u-hide--large" style={mobileLabelStyles}>
-                    Admin
-                  </span>
                 </>
               ),
             },
             {
-              "aria-label": "Reviewer",
               content: (
                 <>
                   <CheckboxInput
@@ -180,15 +180,12 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
                     onChange={() => {
                       handleRoleChange(member, "review");
                     }}
+                    label={<span className="u-hide--large">Reviewer</span>}
                   />
-                  <span className="u-hide--large" style={mobileLabelStyles}>
-                    Reviewer
-                  </span>
                 </>
               ),
             },
             {
-              "aria-label": "Viewer",
               content: (
                 <>
                   <CheckboxInput
@@ -196,15 +193,12 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
                     onChange={() => {
                       handleRoleChange(member, "view");
                     }}
+                    label={<span className="u-hide--large">Viewer</span>}
                   />
-                  <span className="u-hide--large" style={mobileLabelStyles}>
-                    Viewer
-                  </span>
                 </>
               ),
             },
             {
-              "aria-label": "Publisher",
               content: (
                 <>
                   <CheckboxInput
@@ -212,10 +206,8 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
                     onChange={() => {
                       handleRoleChange(member, "access");
                     }}
+                    label={<span className="u-hide--large">Publisher</span>}
                   />
-                  <span className="u-hide--large" style={mobileLabelStyles}>
-                    Publisher
-                  </span>
                 </>
               ),
             },
@@ -225,11 +217,5 @@ function MembersTable({ filteredMembers, changedMembers, setChangedMembers }) {
     />
   );
 }
-
-MembersTable.propTypes = {
-  filteredMembers: PropTypes.array.isRequired,
-  changedMembers: PropTypes.array.isRequired,
-  setChangedMembers: PropTypes.func.isRequired,
-};
 
 export default MembersTable;

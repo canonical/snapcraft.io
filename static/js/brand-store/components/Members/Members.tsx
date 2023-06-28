@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -28,33 +28,56 @@ import { fetchInvites } from "../../slices/invitesSlice";
 
 import SectionNav from "../SectionNav";
 
+import type { InvitesSelector } from "../../types/shared";
+
+type Members = {
+  members: {
+    members: Array<Member>;
+    loading: boolean;
+    notFound: boolean;
+  };
+};
+
+type Member = {
+  displayname: string;
+  email: string;
+  id: string;
+  roles: string[];
+  username: string;
+  current_user: boolean;
+};
+
 function Members() {
   const members = useSelector(membersSelector);
-  const membersLoading = useSelector((state) => state.members.loading);
+  const membersLoading = useSelector((state: Members) => state.members.loading);
   const invites = useSelector(invitesSelector);
   const brandStoresList = useSelector(brandStoresListSelector);
-  const invitesLoading = useSelector((state) => state.members.loading);
-  const membersNotFound = useSelector((state) => state.members.notFound);
-  const invitesNotFound = useSelector((state) => state.invites.notFound);
+  const invitesLoading = useSelector((state: Members) => state.members.loading);
+  const membersNotFound = useSelector(
+    (state: Members) => state.members.notFound
+  );
+  const invitesNotFound = useSelector(
+    (state: InvitesSelector) => state.invites.notFound
+  );
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [filteredMembers, setFilteredMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers]: any = useState([]);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [newMemberEmail, setNewMemberEmail] = useState("");
-  const [newMemberRoles, setNewMemberRoles] = useState([]);
+  const [newMemberRoles, setNewMemberRoles]: any = useState([]);
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [showInviteForm, setShowInviteForm] = useState(false);
-  const [storeName, setStoreName] = useState("");
+  const [storeName, setStoreName]: any = useState("");
   const [memberButtonDisabled, setMemberButtonDisabled] = useState(false);
   const [changedMembers, setChangedMembers] = useState([]);
   const [notificationText, setNotificationText] = useState(
     "Changes have been saved"
   );
-  const [currentMember, setCurrentMember] = useState(null);
+  const [currentMember, setCurrentMember]: any = useState(null);
 
-  const handleInvite = (action) => {
+  const handleInvite = (action: string) => {
     setIsSaving(true);
 
     const memberData = new FormData();
@@ -90,8 +113,8 @@ function Members() {
             setSidePanelOpen(false);
             setNewMemberEmail("");
             setNewMemberRoles([]);
-            dispatch(fetchMembers(id));
-            dispatch(fetchInvites(id));
+            dispatch(fetchMembers(id as string) as any);
+            dispatch(fetchInvites(id as string) as any);
             setShowSuccessNotification(true);
             setNotificationText("Member has been added to the store");
             setShowInviteForm(false);
@@ -112,12 +135,12 @@ function Members() {
       });
   };
 
-  const handleRoleChange = (e) => {
+  const handleRoleChange = (e: ChangeEvent) => {
     const role = e.target.id;
-    let roles = newMemberRoles;
+    let roles: Array<string> = newMemberRoles;
 
     if (!roles.includes(role)) {
-      roles = [].concat(roles, [role]);
+      roles = [...roles, role];
     } else {
       roles = roles.filter((item) => item !== role);
     }
@@ -129,8 +152,8 @@ function Members() {
     currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
-    dispatch(fetchMembers(id));
-    dispatch(fetchInvites(id));
+    dispatch(fetchMembers(id as string) as any);
+    dispatch(fetchInvites(id as string) as any);
     setStoreName(() => {
       const store = brandStoresList.find((item) => item.id === id);
 
@@ -175,7 +198,7 @@ function Members() {
             ) : (
               <>
                 <Row>
-                  <Col size="6">
+                  <Col size={6}>
                     <Button
                       onClick={() => {
                         setSidePanelOpen(true);
@@ -184,7 +207,7 @@ function Members() {
                       Add new member
                     </Button>
                   </Col>
-                  <Col size="6">
+                  <Col size={6}>
                     <SearchBox
                       placeholder="Search and filter"
                       autocomplete="off"
@@ -275,7 +298,7 @@ function Members() {
                   permissions:
                 </p>
                 <ul>
-                  {newMemberRoles.map((role) => (
+                  {newMemberRoles.map((role: string) => (
                     <li key={role}>
                       <div>{ROLES[role].name}</div>
                       <small className="u-text-muted">
@@ -386,7 +409,7 @@ function Members() {
                 setIsSaving(true);
 
                 const memberData = new FormData();
-                const members = changedMembers.map((m) => {
+                const members = changedMembers.map((m: Member) => {
                   return {
                     email: m.email,
                     roles: m.roles,
