@@ -2,15 +2,6 @@ export type RouteParams = {
   id: string;
 };
 
-export type Member = {
-  displayname: string;
-  email: string;
-  id: string;
-  roles: string[];
-  username: string;
-  current_user: boolean;
-};
-
 export type BrandStores = {
   brandStores: {
     brandStoresList: Stores;
@@ -37,7 +28,7 @@ export type Snaps = {
 
 export type InvitesSelector = {
   invites: {
-    invites: Array<Invite>;
+    invites: Invites;
     loading: boolean;
     notFound: boolean;
   };
@@ -52,10 +43,23 @@ export type Invite = {
   "expiration-date": string;
 };
 
+export type MembersList = Array<Member>;
+
 export type Members = {
   members: {
-    members: Array<Member>;
+    members: MembersList;
+    loading: boolean;
+    notFound: boolean;
   };
+};
+
+export type Member = {
+  displayname: string;
+  email: string;
+  id: string;
+  roles: string[];
+  username: string;
+  current_user: boolean;
 };
 
 export type Store = {
