@@ -35,10 +35,21 @@ export type Snaps = {
   };
 };
 
-export type Invites = {
+export type InvitesSelector = {
   invites: {
-    invites: Array<{}>;
+    invites: Array<Invite>;
+    loading: boolean;
+    notFound: boolean;
   };
+};
+
+export type Invites = Array<Invite>;
+
+export type Invite = {
+  status: "Pending" | "Expired" | "Revoked";
+  email: string;
+  roles: Array<string>;
+  "expiration-date": string;
 };
 
 export type Members = {
@@ -53,3 +64,5 @@ export type Store = {
 };
 
 export type Stores = Array<Store>;
+
+export type Status = "Pending" | "Expired" | "Revoked";

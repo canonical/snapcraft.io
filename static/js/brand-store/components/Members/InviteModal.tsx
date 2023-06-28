@@ -1,6 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Modal, Button } from "@canonical/react-components";
+
+type Props = {
+  inviteActionData: {
+    action: "resend" | "revoke" | "open";
+    email: string;
+  };
+  inviteModalOpen: boolean;
+  setInviteModalOpen: Function;
+  updateInvite: Function;
+  inviteModalIsSaving: boolean;
+};
 
 function InviteModal({
   inviteActionData,
@@ -8,7 +18,7 @@ function InviteModal({
   setInviteModalOpen,
   updateInvite,
   inviteModalIsSaving,
-}) {
+}: Props) {
   const ACTIONS = {
     resend: "Resend",
     revoke: "Revoke",
@@ -77,13 +87,5 @@ function InviteModal({
     </Modal>
   );
 }
-
-InviteModal.propTypes = {
-  inviteActionData: PropTypes.object.isRequired,
-  inviteModalOpen: PropTypes.bool.isRequired,
-  setInviteModalOpen: PropTypes.func.isRequired,
-  updateInvite: PropTypes.func.isRequired,
-  inviteModalIsSaving: PropTypes.bool.isRequired,
-};
 
 export default InviteModal;
