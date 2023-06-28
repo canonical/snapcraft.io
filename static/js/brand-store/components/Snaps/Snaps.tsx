@@ -27,24 +27,30 @@ import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
 
+import type { BrandStores, Snap, Snaps, Members } from "../../types/shared";
+
 function Snaps() {
   const brandStoresList = useSelector(brandStoresListSelector);
   const snaps = useSelector(snapsSelector);
   const members = useSelector(membersSelector);
-  const snapsLoading = useSelector((state) => state.snaps.loading);
-  const storesLoading = useSelector((state) => state.brandStores.loading);
-  const membersLoading = useSelector((state) => state.members.loading);
-  const snapsNotFound = useSelector((state) => state.snaps.notFound);
-  const membersNotFound = useSelector((state) => state.members.notFound);
+  const snapsLoading = useSelector((state: Snaps) => state.snaps.loading);
+  const storesLoading = useSelector(
+    (state: BrandStores) => state.brandStores.loading
+  );
+  const membersLoading = useSelector((state: Members) => state.members.loading);
+  const snapsNotFound = useSelector((state: Snaps) => state.snaps.notFound);
+  const membersNotFound = useSelector(
+    (state: Members) => state.members.notFound
+  );
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [snapsInStore, setSnapsInStore] = useState([]);
-  const [otherStoreIds, setOtherStoreIds] = useState([]);
+  const [snapsInStore, setSnapsInStore]: any = useState([]);
+  const [otherStoreIds, setOtherStoreIds]: any = useState([]);
   const [otherStores, setOtherStores] = useState([]);
   const [selectedSnaps, setSelectedSnaps] = useState([]);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [snapsToRemove, setSnapsToRemove] = useState([]);
+  const [snapsToRemove, setSnapsToRemove]: any = useState([]);
   const [showAddSuccessNotification, setShowAddSuccessNotification] = useState(
     false
   );
@@ -54,10 +60,10 @@ function Snaps() {
     setShowRemoveSuccessNotification,
   ] = useState(false);
   const [removeSnapSaving, setRemoveSnapSaving] = useState(false);
-  const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState([]);
+  const [nonEssentialSnapIds, setNonEssentialSnapIds]: any = useState([]);
   const [isReloading, setIsReloading] = useState(false);
-  const [currentMember, setCurrentMember] = useState(null);
-  const [currentStore, setCurrentStore] = useState(null);
+  const [currentMember, setCurrentMember]: any = useState(null);
+  const [currentStore, setCurrentStore]: any = useState(null);
   const [isPublisherOnly, setIsPublisherOnly] = useState(false);
   const [isReviewerOnly, setIsReviewerOnly] = useState(false);
   const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
@@ -67,10 +73,10 @@ function Snaps() {
     showRemoveSnapsConfirmation,
     setShowRemoveSnapsConfirmation,
   ] = useState(false);
-  const [globalStore, setGlobalStore] = useState(null);
+  const [globalStore, setGlobalStore]: any = useState(null);
   let location = useLocation();
 
-  const getStoreName = (storeId) => {
+  const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
 
     if (store) {
@@ -80,13 +86,11 @@ function Snaps() {
     }
   };
 
-  const addSnaps = (e) => {
-    e.preventDefault();
-
+  const addSnaps = () => {
     setIsSaving(true);
 
     const snapsToAdd = {
-      add: selectedSnaps.map((item) => {
+      add: selectedSnaps.map((item: Snap) => {
         return { name: item.name };
       }),
     };
@@ -107,7 +111,7 @@ function Snaps() {
         }
       })
       .then((data) => {
-        dispatch(fetchSnaps(id));
+        dispatch(fetchSnaps(id as string) as any);
 
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
@@ -147,7 +151,7 @@ function Snaps() {
     setRemoveSnapSaving(true);
 
     const removingSnaps = {
-      remove: snapsToRemove.map((item) => {
+      remove: snapsToRemove.map((item: Snap) => {
         return { name: item.name };
       }),
     };
@@ -168,7 +172,7 @@ function Snaps() {
         }
       })
       .then(() => {
-        dispatch(fetchSnaps(id));
+        dispatch(fetchSnaps(id as string) as any);
 
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
@@ -191,10 +195,10 @@ function Snaps() {
     currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   const getOtherStoreIds = () => {
-    const storeIds = [];
+    const storeIds: Array<string> = [];
 
     snaps.forEach((snap) => {
-      if (snaps["other-stores"] && snap["other-stores"].length) {
+      if (snap["other-stores"] && snap["other-stores"].length) {
         snap["other-stores"].forEach((otherStoreId) => {
           if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
             storeIds.push(otherStoreId);
@@ -211,8 +215,8 @@ function Snaps() {
     .map((snap) => snap["included-stores"][0]);
 
   useEffect(() => {
-    dispatch(fetchMembers(id));
-    dispatch(fetchSnaps(id));
+    dispatch(fetchMembers(id as string) as any);
+    dispatch(fetchSnaps(id as string) as any);
   }, [id]);
 
   useEffect(() => {
@@ -238,7 +242,7 @@ function Snaps() {
     });
 
     setOtherStores(
-      otherStoreIds.map((storeId) => {
+      otherStoreIds.map((storeId: string) => {
         return {
           id: storeId,
           name: getStoreName(storeId),
@@ -312,10 +316,10 @@ function Snaps() {
                   )}
                 {!isReloading && (
                   <Row>
-                    <Col size="6">
+                    <Col size={6}>
                       {isOnlyViewer() && (
                         <h2 className="p-heading--4">
-                          Snaps in {getStoreName(id)}
+                          Snaps in {getStoreName(id || "")}
                         </h2>
                       )}
 
@@ -347,7 +351,7 @@ function Snaps() {
                         </>
                       )}
                     </Col>
-                    <Col size="6">
+                    <Col size={6}>
                       <SnapsFilter
                         setSnapsInStore={setSnapsInStore}
                         snapsInStore={snapsInStore}
@@ -355,7 +359,7 @@ function Snaps() {
                         otherStoreIds={otherStoreIds}
                         getStoreName={getStoreName}
                         snaps={snaps}
-                        id={id}
+                        id={id || ""}
                       />
                     </Col>
                   </Row>
@@ -366,14 +370,13 @@ function Snaps() {
                   ) : (
                     <SnapsTable
                       snaps={snapsInStore}
-                      storeName={getStoreName(id)}
+                      storeName={getStoreName(id || "")}
                       otherStores={otherStores}
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
                       isOnlyViewer={isOnlyViewer}
                       globalStore={globalStore}
-                      includedStores={includedStores}
                     />
                   )}
                 </div>
@@ -382,10 +385,11 @@ function Snaps() {
                     <h4>Fully included stores</h4>
                     <p>
                       In addition to the snaps listed above, all snaps from the
-                      following stores are also included in {getStoreName(id)}.
+                      following stores are also included in{" "}
+                      {getStoreName(id || "")}.
                     </p>
                     <ul>
-                      {includedStores.map((store) => (
+                      {includedStores.map((store: any) => (
                         <li key={store.id}>
                           {store.userHasAccess ? (
                             <Link to={`/admin/${store.id}/snaps`}>
@@ -418,22 +422,23 @@ function Snaps() {
       >
         <div className="p-panel is-flex-column">
           <div className="p-panel__header">
-            <h4 className="p-panel__title">Add a snap to {getStoreName(id)}</h4>
+            <h4 className="p-panel__title">
+              Add a snap to {getStoreName(id || "")}
+            </h4>
           </div>
           <div className="p-panel__content u-no-padding--top">
             <div className="u-fixed-width">
               <SnapsSearch
                 selectedSnaps={selectedSnaps}
                 setSelectedSnaps={setSelectedSnaps}
-                getStoreName={getStoreName}
-                storeId={id}
+                storeId={id || ""}
                 nonEssentialSnapIds={nonEssentialSnapIds}
               />
               {selectedSnaps.length ? (
                 <ul>
-                  {selectedSnaps.map((snap) => {
-                    <li key={snap.id}>{snap.name}</li>;
-                  })}
+                  {selectedSnaps.map((snap: Snap) => (
+                    <li key={snap.id}>{snap.name}</li>
+                  ))}
                 </ul>
               ) : null}
             </div>
@@ -453,7 +458,10 @@ function Snaps() {
               <Button
                 appearance="positive"
                 disabled={selectedSnaps.length < 1 || isSaving}
-                onClick={addSnaps}
+                onClick={(e) => {
+                  e.preventDefault();
+                  addSnaps();
+                }}
                 className={`u-no-margin--bottom u-no-margin--right ${
                   isSaving ? "has-icon is-dark" : ""
                 }`}
@@ -539,7 +547,7 @@ function Snaps() {
         >
           {snapsToRemove.length > 1 && (
             <ul>
-              {snapsToRemove.map((snapToRemove) => (
+              {snapsToRemove.map((snapToRemove: Snap) => (
                 <li key={snapToRemove.id}>
                   <strong>{snapToRemove.name}</strong>
                 </li>

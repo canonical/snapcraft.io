@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Input } from "@canonical/react-components";
+
+import type { Snap, SnapsList } from "../../types/shared";
+
+type Props = {
+  storeName: string;
+  storeId: string;
+  snap: Snap;
+  snapsCount: number;
+  index: number;
+  snapsToRemove: SnapsList;
+  setSnapsToRemove: Function;
+  isOnlyViewer: Function;
+};
 
 function SnapsTableRow({
   storeName,
@@ -13,7 +25,7 @@ function SnapsTableRow({
   snapsToRemove,
   setSnapsToRemove,
   isOnlyViewer,
-}) {
+}: Props) {
   const { id } = useParams();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -29,7 +41,7 @@ function SnapsTableRow({
 
   useEffect(() => {
     setIsChecked(
-      snapsToRemove.find((item) => item.id === snap.id) ? true : false
+      snapsToRemove.find((item: Snap) => item.id === snap.id) ? true : false
     );
   }, [snapsToRemove]);
 
@@ -49,7 +61,7 @@ function SnapsTableRow({
             type="checkbox"
             onChange={(e) => {
               if (e.target.checked) {
-                setSnapsToRemove([].concat(snapsToRemove, [snap]));
+                setSnapsToRemove([...snapsToRemove, snap]);
               } else {
                 setSnapsToRemove([
                   ...snapsToRemove.filter((item) => item.id !== snap.id),
@@ -73,16 +85,5 @@ function SnapsTableRow({
     </tr>
   );
 }
-
-SnapsTableRow.propTypes = {
-  storeName: PropTypes.string.isRequired,
-  storeId: PropTypes.string.isRequired,
-  snap: PropTypes.object.isRequired,
-  snapsCount: PropTypes.number.isRequired,
-  index: PropTypes.number.isRequired,
-  snapsToRemove: PropTypes.array,
-  setSnapsToRemove: PropTypes.func,
-  isOnlyViewer: PropTypes.func.isRequired,
-};
 
 export default SnapsTableRow;
