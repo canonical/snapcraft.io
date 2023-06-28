@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom";
 import SnapsTableRow from "./SnapsTableRow";
 import { Input } from "@canonical/react-components";
 
-import type { SnapsList, Store, Stores, Snap } from "../../types/shared";
+import type { SnapsList, Store, StoresList, Snap } from "../../types/shared";
 
 type Props = {
   storeName: string;
   snaps: SnapsList;
-  otherStores: Stores;
+  otherStores: StoresList;
   snapsToRemove: SnapsList;
   setSnapsToRemove: Function;
   nonEssentialSnapIds: SnapsList;

@@ -9,7 +9,7 @@ import InviteModal from "./InviteModal";
 import { fetchInvites } from "../../slices/invitesSlice";
 import ROLES from "./memberRoles";
 
-import type { Invite, Invites, Status } from "../../types/shared";
+import type { Invite, InvitesList, Status } from "../../types/shared";
 
 type Props = {
   invites: any;
@@ -179,7 +179,7 @@ function InvitesTable({
     ];
   };
 
-  const buildTableRows = (invitesGroup: Invites) => {
+  const buildTableRows = (invitesGroup: InvitesList) => {
     return invitesGroup.map((invite, index) => {
       if (index === 0) {
         return {

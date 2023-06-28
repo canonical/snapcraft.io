@@ -27,20 +27,29 @@ import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
 
-import type { BrandStores, Snap, Snaps, Members } from "../../types/shared";
+import type {
+  StoresSlice,
+  Snap,
+  SnapsSlice,
+  MembersSlice,
+} from "../../types/shared";
 
-function Snaps() {
+function SnapsSlice() {
   const brandStoresList = useSelector(brandStoresListSelector);
   const snaps = useSelector(snapsSelector);
   const members = useSelector(membersSelector);
-  const snapsLoading = useSelector((state: Snaps) => state.snaps.loading);
+  const snapsLoading = useSelector((state: SnapsSlice) => state.snaps.loading);
   const storesLoading = useSelector(
-    (state: BrandStores) => state.brandStores.loading
+    (state: StoresSlice) => state.brandStores.loading
   );
-  const membersLoading = useSelector((state: Members) => state.members.loading);
-  const snapsNotFound = useSelector((state: Snaps) => state.snaps.notFound);
+  const membersLoading = useSelector(
+    (state: MembersSlice) => state.members.loading
+  );
+  const snapsNotFound = useSelector(
+    (state: SnapsSlice) => state.snaps.notFound
+  );
   const membersNotFound = useSelector(
-    (state: Members) => state.members.notFound
+    (state: MembersSlice) => state.members.notFound
   );
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -564,4 +573,4 @@ function Snaps() {
   );
 }
 
-export default Snaps;
+export default SnapsSlice;

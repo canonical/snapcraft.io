@@ -28,7 +28,7 @@ import { fetchInvites } from "../../slices/invitesSlice";
 
 import SectionNav from "../SectionNav";
 
-import type { InvitesSelector } from "../../types/shared";
+import type { InvitesSlice } from "../../types/shared";
 
 type Members = {
   members: {
@@ -57,7 +57,7 @@ function Members() {
     (state: Members) => state.members.notFound
   );
   const invitesNotFound = useSelector(
-    (state: InvitesSelector) => state.invites.notFound
+    (state: InvitesSlice) => state.invites.notFound
   );
   const dispatch = useDispatch();
   const { id } = useParams();
