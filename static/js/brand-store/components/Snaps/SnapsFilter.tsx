@@ -1,5 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { KeyboardEvent } from "react";
+
+import type { SnapsList } from "../../types/shared";
+
+type Props = {
+  setSnapsInStore: Function;
+  snapsInStore: SnapsList;
+  setOtherStores: Function;
+  otherStoreIds: Array<string>;
+  getStoreName: Function;
+  snaps: SnapsList;
+  id: string;
+};
 
 function SnapsFilter({
   setSnapsInStore,
@@ -9,7 +20,7 @@ function SnapsFilter({
   getStoreName,
   snaps,
   id,
-}) {
+}: Props) {
   return (
     <div className="p-search-box">
       <input
@@ -19,7 +30,11 @@ function SnapsFilter({
         id="search-snaps"
         placeholder="Search snaps"
         autoComplete="off"
-        onKeyUp={(e) => {
+        onKeyUp={(
+          e: KeyboardEvent<HTMLInputElement> & {
+            target: HTMLInputElement;
+          }
+        ) => {
           if (e.target.value) {
             setSnapsInStore(
               snapsInStore.filter((snap) =>
@@ -59,15 +74,5 @@ function SnapsFilter({
     </div>
   );
 }
-
-SnapsFilter.propTypes = {
-  setSnapsInStore: PropTypes.func.isRequired,
-  snapsInStore: PropTypes.array.isRequired,
-  setOtherStores: PropTypes.func.isRequired,
-  otherStoreIds: PropTypes.array.isRequired,
-  getStoreName: PropTypes.func.isRequired,
-  snaps: PropTypes.array.isRequired,
-  id: PropTypes.string.isRequired,
-};
 
 export default SnapsFilter;

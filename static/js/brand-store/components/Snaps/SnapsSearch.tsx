@@ -1,16 +1,24 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState, KeyboardEvent } from "react";
 import Downshift from "downshift";
 import { Spinner } from "@canonical/react-components";
 
 import debounce from "../../../libs/debounce";
+
+import type { SnapsList, Snap } from "../../types/shared";
+
+type Props = {
+  storeId: string;
+  selectedSnaps: SnapsList;
+  setSelectedSnaps: Function;
+  nonEssentialSnapIds: Array<string>;
+};
 
 function SnapsSearch({
   storeId,
   selectedSnaps,
   setSelectedSnaps,
   nonEssentialSnapIds,
-}) {
+}: Props) {
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
@@ -21,7 +29,7 @@ function SnapsSearch({
           setSuggestions([]);
 
           if (!selectedSnaps.find((item) => item.id === selection.id)) {
-            setSelectedSnaps([].concat(selectedSnaps, [selection]));
+            setSelectedSnaps([...selectedSnaps, selection]);
           }
         }}
         itemToString={() => ""}
@@ -46,44 +54,52 @@ function SnapsSearch({
                 placeholder="Search available snaps"
                 autoComplete="off"
                 {...getInputProps({
-                  onKeyUp: debounce((e) => {
-                    if (e.target.value.length < 2) {
-                      return;
-                    }
+                  onKeyUp: debounce(
+                    (
+                      e: KeyboardEvent<HTMLInputElement> & {
+                        target: HTMLInputElement;
+                      }
+                    ) => {
+                      if (e.target.value.length < 2) {
+                        return;
+                      }
 
-                    setIsSearching(true);
+                      setIsSearching(true);
 
-                    fetch(
-                      `/admin/${storeId}/snaps/search?q=${e.target.value}&allowed_for_inclusion=${storeId}`
-                    )
-                      .then((response) => {
-                        if (response.status !== 200) {
-                          throw Error(response.statusText);
-                        }
+                      fetch(
+                        `/admin/${storeId}/snaps/search?q=${e.target.value}&allowed_for_inclusion=${storeId}`
+                      )
+                        .then((response) => {
+                          if (response.status !== 200) {
+                            throw Error(response.statusText);
+                          }
 
-                        return response.json();
-                      })
-                      .then((data) => {
-                        const selectionIds = selectedSnaps.map(
-                          (item) => item.id
-                        );
+                          return response.json();
+                        })
+                        .then((data) => {
+                          const selectionIds = selectedSnaps.map(
+                            (item) => item.id
+                          );
 
-                        setSuggestions(
-                          data.filter((item) => {
-                            return (
-                              !selectionIds.includes(item.id) &&
-                              !nonEssentialSnapIds.includes(item.id)
-                            );
-                          })
-                        );
+                          setSuggestions(
+                            data.filter((item: Snap) => {
+                              return (
+                                !selectionIds.includes(item.id) &&
+                                !nonEssentialSnapIds.includes(item.id)
+                              );
+                            })
+                          );
 
-                        setIsSearching(false);
-                      })
-                      .catch((error) => {
-                        setIsSearching(false);
-                        console.error(error);
-                      });
-                  }, 200),
+                          setIsSearching(false);
+                        })
+                        .catch((error) => {
+                          setIsSearching(false);
+                          console.error(error);
+                        });
+                    },
+                    200,
+                    false
+                  ),
                 })}
               />
               {isSearching && <Spinner text="" />}
@@ -106,7 +122,7 @@ function SnapsSearch({
                 className="p-list p-card--highlighted u-no-padding u-no-margin--bottom p-autocomplete__suggestions"
                 {...getMenuProps()}
               >
-                {suggestions.map((item, index) => (
+                {suggestions.map((item: Snap, index: number) => (
                   <li
                     className="p-list__item"
                     key={item.id}
@@ -167,12 +183,5 @@ function SnapsSearch({
     </>
   );
 }
-
-SnapsSearch.propTypes = {
-  storeId: PropTypes.string.isRequired,
-  selectedSnaps: PropTypes.array.isRequired,
-  setSelectedSnaps: PropTypes.func.isRequired,
-  nonEssentialSnapIds: PropTypes.array.isRequired,
-};
 
 export default SnapsSearch;

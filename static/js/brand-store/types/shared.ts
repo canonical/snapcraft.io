@@ -2,6 +2,9 @@ export type RouteParams = {
   id: string;
 };
 
+export type Status = "Pending" | "Expired" | "Revoked";
+
+// Slices
 export type BrandStores = {
   brandStores: {
     brandStoresList: Stores;
@@ -20,12 +23,6 @@ export type CurrentStore = {
   };
 };
 
-export type Snaps = {
-  snaps: {
-    snaps: Array<{}>;
-  };
-};
-
 export type InvitesSelector = {
   invites: {
     invites: Invites;
@@ -34,23 +31,34 @@ export type InvitesSelector = {
   };
 };
 
-export type Invites = Array<Invite>;
-
-export type Invite = {
-  status: "Pending" | "Expired" | "Revoked";
-  email: string;
-  roles: Array<string>;
-  "expiration-date": string;
-};
-
-export type MembersList = Array<Member>;
-
 export type Members = {
   members: {
     members: MembersList;
     loading: boolean;
     notFound: boolean;
   };
+};
+
+export type Snaps = {
+  snaps: {
+    snaps: SnapsList;
+    loading: boolean;
+    notFound: boolean;
+  };
+};
+
+// Item lists
+export type Invites = Array<Invite>;
+export type MembersList = Array<Member>;
+export type SnapsList = Array<Snap>;
+export type Stores = Array<Store>;
+
+// Entities
+export type Invite = {
+  status: "Pending" | "Expired" | "Revoked";
+  email: string;
+  roles: Array<string>;
+  "expiration-date": string;
 };
 
 export type Member = {
@@ -62,11 +70,27 @@ export type Member = {
   current_user: boolean;
 };
 
-export type Store = {
-  id?: string;
-  name?: string;
+export type Snap = {
+  essential: boolean;
+  id: string;
+  "included-stores": Array<string>;
+  "latest-release": {
+    channel: string;
+    revision: number;
+    timestamp: string;
+    version: string;
+  };
+  name: string;
+  "other-stores": Array<string>;
+  private: boolean;
+  store: string;
+  users: Array<Member>;
 };
 
-export type Stores = Array<Store>;
-
-export type Status = "Pending" | "Expired" | "Revoked";
+export type Store = {
+  id: string;
+  name: string;
+  roles: Array<"admin" | "review" | "view" | "access">;
+  snaps: SnapsList;
+  userHasAccess: boolean;
+};

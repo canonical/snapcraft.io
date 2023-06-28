@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 
 import SnapsTableRow from "./SnapsTableRow";
 import { Input } from "@canonical/react-components";
+
+import type { SnapsList, Store, Stores, Snap } from "../../types/shared";
+
+type Props = {
+  storeName: string;
+  snaps: SnapsList;
+  otherStores: Stores;
+  snapsToRemove: SnapsList;
+  setSnapsToRemove: Function;
+  nonEssentialSnapIds: SnapsList;
+  isOnlyViewer: Function;
+  globalStore: Store;
+};
 
 function SnapsTable({
   storeName,
@@ -14,7 +26,7 @@ function SnapsTable({
   nonEssentialSnapIds,
   isOnlyViewer,
   globalStore,
-}) {
+}: Props) {
   const { id } = useParams();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -69,6 +81,7 @@ function SnapsTable({
                 disabled={!nonEssentialSnapIds.length}
                 label="Name"
                 checked={isChecked}
+                // @ts-ignore
                 indeterminate={isIndeterminate}
               />
             ) : (
@@ -85,7 +98,7 @@ function SnapsTable({
           <SnapsTableRow
             key={snap.id}
             storeName={storeName}
-            storeId={id}
+            storeId={id ? id : globalStore.id}
             snap={snap}
             snapsCount={snaps.length}
             index={index}
@@ -111,7 +124,7 @@ function SnapsTable({
             ));
           })}
         {globalStore &&
-          globalStore.snaps.map((snap, index) => (
+          globalStore.snaps.map((snap: Snap, index: number) => (
             <SnapsTableRow
               key={snap.id}
               storeName={globalStore.name}
@@ -128,16 +141,5 @@ function SnapsTable({
     </table>
   );
 }
-
-SnapsTable.propTypes = {
-  storeName: PropTypes.string.isRequired,
-  snaps: PropTypes.array.isRequired,
-  otherStores: PropTypes.array,
-  snapsToRemove: PropTypes.array,
-  setSnapsToRemove: PropTypes.func,
-  nonEssentialSnapIds: PropTypes.array.isRequired,
-  isOnlyViewer: PropTypes.func.isRequired,
-  globalStore: PropTypes.object,
-};
 
 export default SnapsTable;
