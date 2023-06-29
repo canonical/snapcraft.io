@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { QueryClient, QueryClientProvider } from "react-query";
 import {
   BrowserRouter as Router,
   Routes,
@@ -29,42 +30,53 @@ function App() {
   const brandStoresList: StoresList = useSelector(brandStoresListSelector);
   const dispatch = useDispatch();
 
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+      },
+    },
+  });
+
   useEffect(() => {
     dispatch(fetchStores() as any);
   }, []);
 
   return (
     <Router>
-      <div className="l-application" role="presentation">
-        <Navigation />
-        <Routes>
-          <Route
-            path="/admin"
-            element={
-              !isLoading ? (
-                !brandStoresList || brandStoresList.length < 1 ? (
-                  <StoreNotFound />
-                ) : brandStoresList[0].id === "ubuntu" ? (
-                  // Don't redirect to the global store by default
-                  <Navigate to={`/admin/${brandStoresList[1].id}/snaps`} />
-                ) : (
-                  <Navigate to={`/admin/${brandStoresList[0].id}/snaps`} />
-                )
-              ) : null
-            }
-          />
-          <Route path="/admin/:id/snaps" element={<Snaps />} />
-          <Route path="/admin/:id/members" element={<Members />} />
-          <Route path="/admin/:id/settings" element={<Settings />} />
-          <Route path="/admin/:id/models" element={<Models />} />
-          <Route path="/admin/:id/models/:model_id" element={<Model />} />
-          <Route
-            path="/admin/:id/models/:model_id/policies"
-            element={<Policies />}
-          />
-          <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
-        </Routes>
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div className="l-application" role="presentation">
+          <Navigation />
+          <Routes>
+            <Route
+              path="/admin"
+              element={
+                !isLoading ? (
+                  !brandStoresList || brandStoresList.length < 1 ? (
+                    <StoreNotFound />
+                  ) : brandStoresList[0].id === "ubuntu" ? (
+                    // Don't redirect to the global store by default
+                    <Navigate to={`/admin/${brandStoresList[1].id}/snaps`} />
+                  ) : (
+                    <Navigate to={`/admin/${brandStoresList[0].id}/snaps`} />
+                  )
+                ) : null
+              }
+            />
+            <Route path="/admin/:id/snaps" element={<Snaps />} />
+            <Route path="/admin/:id/members" element={<Members />} />
+            <Route path="/admin/:id/settings" element={<Settings />} />
+            <Route path="/admin/:id/models" element={<Models />} />
+            <Route path="/admin/:id/models/:model_id" element={<Model />} />
+            <Route
+              path="/admin/:id/models/:model_id/policies"
+              element={<Policies />}
+            />
+            <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
+          </Routes>
+        </div>
+      </QueryClientProvider>
     </Router>
   );
 }
