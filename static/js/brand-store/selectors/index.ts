@@ -1,16 +1,15 @@
 import {
-  BrandStores,
-  CurrentStore,
-  Snaps,
-  InvitesSelector,
-  Members,
+  StoresSlice,
+  CurrentStoreSlice,
+  SnapsSlice,
+  InvitesSlice,
+  MembersSlice,
 } from "../types/shared";
 
-export const brandStoresListSelector = (state: BrandStores) =>
+export const brandStoresListSelector = (state: StoresSlice) =>
   state.brandStores.brandStoresList;
-export const currentStoreSelector = (state: CurrentStore) =>
+export const currentStoreSelector = (state: CurrentStoreSlice) =>
   state.currentStore.currentStore;
-export const snapsSelector = (state: Snaps) => state.snaps.snaps;
-export const membersSelector = (state: Members) => state.members.members;
-export const invitesSelector = (state: InvitesSelector) =>
-  state.invites.invites;
+export const snapsSelector = (state: SnapsSlice) => state.snaps.snaps;
+export const membersSelector = (state: MembersSlice) => state.members.members;
+export const invitesSelector = (state: InvitesSlice) => state.invites.invites;

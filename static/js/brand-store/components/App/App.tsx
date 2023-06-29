@@ -20,13 +20,13 @@ import Policies from "../Model/Policies";
 import SigningKeys from "../SigningKeys";
 import StoreNotFound from "../StoreNotFound";
 
-import type { Stores, BrandStores } from "../../types/shared";
+import type { StoresList, StoresSlice } from "../../types/shared";
 
 function App() {
   const isLoading = useSelector(
-    (state: BrandStores) => state.brandStores.loading
+    (state: StoresSlice) => state.brandStores.loading
   );
-  const brandStoresList: Stores = useSelector(brandStoresListSelector);
+  const brandStoresList: StoresList = useSelector(brandStoresListSelector);
   const dispatch = useDispatch();
 
   useEffect(() => {

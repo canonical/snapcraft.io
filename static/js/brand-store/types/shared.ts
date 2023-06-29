@@ -5,15 +5,7 @@ export type RouteParams = {
 export type Status = "Pending" | "Expired" | "Revoked";
 
 // Slices
-export type BrandStores = {
-  brandStores: {
-    brandStoresList: Stores;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
-
-export type CurrentStore = {
+export type CurrentStoreSlice = {
   currentStore: {
     currentStore: {
       id: string;
@@ -23,15 +15,15 @@ export type CurrentStore = {
   };
 };
 
-export type InvitesSelector = {
+export type InvitesSlice = {
   invites: {
-    invites: Invites;
+    invites: InvitesList;
     loading: boolean;
     notFound: boolean;
   };
 };
 
-export type Members = {
+export type MembersSlice = {
   members: {
     members: MembersList;
     loading: boolean;
@@ -39,7 +31,7 @@ export type Members = {
   };
 };
 
-export type Snaps = {
+export type SnapsSlice = {
   snaps: {
     snaps: SnapsList;
     loading: boolean;
@@ -47,11 +39,19 @@ export type Snaps = {
   };
 };
 
+export type StoresSlice = {
+  brandStores: {
+    brandStoresList: StoresList;
+    loading: boolean;
+    notFound: boolean;
+  };
+};
+
 // Item lists
-export type Invites = Array<Invite>;
+export type InvitesList = Array<Invite>;
 export type MembersList = Array<Member>;
 export type SnapsList = Array<Snap>;
-export type Stores = Array<Store>;
+export type StoresList = Array<Store>;
 
 // Entities
 export type Invite = {
