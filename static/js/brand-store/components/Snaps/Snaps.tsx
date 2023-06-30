@@ -207,7 +207,7 @@ function SnapsSlice() {
     const storeIds: Array<string> = [];
 
     snaps.forEach((snap) => {
-      if (snap["other-stores"] && snap["other-stores"].length) {
+      if (snap?.["other-stores"]?.length) {
         snap["other-stores"].forEach((otherStoreId) => {
           if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
             storeIds.push(otherStoreId);
