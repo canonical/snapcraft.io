@@ -94,3 +94,12 @@ export type Store = {
   snaps: SnapsList;
   userHasAccess: boolean;
 };
+
+export type Model = {
+  name: string;
+  "api-key": string;
+  "created-at": string;
+  "created-by": string;
+  "modified-at": string;
+  "modified-by": string;
+};
