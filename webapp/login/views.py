@@ -1,6 +1,8 @@
 import os
 import datetime
 
+from talisker import logging
+
 import flask
 from canonicalwebteam.candid import CandidClient
 from canonicalwebteam.store_api.stores.snapstore import (
@@ -18,6 +20,8 @@ from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
+
+TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -48,6 +52,12 @@ def login_handler():
     try:
         root = authentication.request_macaroon()
     except ApiResponseError as api_response_error:
+
+        TALISKER_WSGI_LOGGER.error(
+            "Error requesting macaroon: %s",
+            api_response_error
+        )
+
         if api_response_error.status_code == 401:
             return flask.redirect(flask.url_for(".logout"))
         else:
