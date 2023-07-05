@@ -255,8 +255,9 @@ function SnapsSlice() {
         return {
           id: storeId,
           name: getStoreName(storeId),
-          snaps: snaps.filter((snap) =>
-            snap?.["other-stores"].includes(storeId)
+          snaps: snaps.filter(
+            (snap) =>
+              snap["other-stores"] && snap["other-stores"].includes(storeId)
           ),
         };
       })
