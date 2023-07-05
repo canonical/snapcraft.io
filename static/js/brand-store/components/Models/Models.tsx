@@ -178,7 +178,6 @@ function Models() {
         className={`l-aside ${
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
-        id="aside-panel"
       >
         <form
           onSubmit={(e) => {
@@ -261,7 +260,7 @@ function Models() {
                 <Button
                   type="submit"
                   appearance="positive"
-                  className="u-no-margin--bottom"
+                  className="u-no-margin--bottom u-no-margin--right"
                   disabled={
                     !newModelName || checkModelNameExists(newModelName, models)
                   }

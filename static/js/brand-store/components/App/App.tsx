@@ -84,6 +84,10 @@ function App() {
               path="/admin/:id/models/:model_id/policies"
               element={<Policies />}
             />
+            <Route
+              path="/admin/:id/models/:model_id/policies/create"
+              element={<Policies />}
+            />
             <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
           </Routes>
         </div>
