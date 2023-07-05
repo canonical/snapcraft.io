@@ -7,6 +7,7 @@ from canonicalwebteam.store_api.stores.snapstore import (
     SnapPublisher,
     SnapStoreAdmin,
 )
+from canonicalwebteam.store_api.stores.charmstore import CharmPublisher
 
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
@@ -36,6 +37,7 @@ open_id = OpenID(
 publisher_api = SnapPublisher(api_publisher_session)
 admin_api = SnapStoreAdmin(api_publisher_session)
 candid = CandidClient(api_publisher_session)
+charm_publisher_api = CharmPublisher(api_publisher_session)
 
 
 @login.route("/login", methods=["GET", "POST"])
@@ -173,6 +175,20 @@ def login_callback():
     # Store bakery authentication
     flask.session["macaroons"] = candid.get_serialized_bakery_macaroon(
         flask.session["publisher-macaroon"], candid_macaroon
+    )
+
+    # Get macaroon from charm publisher and exchange for developer token
+    # for authenticating against the publishergw API
+    publishergw_macaroon = charm_publisher_api.issue_macaroon([])
+    publishergw_candid_macaroon = candid.discharge_macaroon(
+        publishergw_macaroon, discharged_token
+    )
+    publishergw_serialized_macaroons = candid.get_serialized_bakery_macaroon(
+        publishergw_macaroon, publishergw_candid_macaroon
+    )
+
+    flask.session["developer_token"] = charm_publisher_api.exchange_macaroons(
+        publishergw_serialized_macaroons
     )
 
     publisher = publisher_api.whoami(flask.session)
