@@ -35,7 +35,7 @@ describe("Models", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows a create model form when  'Create new model' button clicked", () => {
+  it("shows a create model form when 'Create new model' button clicked", () => {
     const user = userEvent.setup();
     renderComponent();
     user.click(screen.getByRole("link", { name: "Create new model" }));
