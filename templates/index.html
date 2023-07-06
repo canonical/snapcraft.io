@@ -199,6 +199,11 @@
     </div>
   </section>
 </main>
+
+{% if page_slug == "home" %}
+  <a style="position: fixed; right: -3.25rem; top: 50%; transform: rotate(-90deg) translate(-50%, 0)" class="p-button u-no-margin" href="https://krzty8pox19.typeform.com/to/RIA3UrgX?typeform-source=www.google.com">Give feedback</a>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts_includes %}
