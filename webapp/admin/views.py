@@ -2,7 +2,10 @@
 import os
 import json
 import flask
-from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
+from canonicalwebteam.store_api.exceptions import (
+    StoreApiResponseErrorList,
+    StoreApiResourceNotFound,
+)
 from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 from webapp.decorators import login_required
@@ -224,5 +227,132 @@ def update_invite_status(store_id):
 
         for msg in msgs:
             flask.flash(msg, "negative")
+
+    return jsonify(res)
+
+
+# ---------------------- MODELS SERVICES ----------------------
+@admin.route("/admin/store/<store_id>/models")
+@login_required
+def get_models(store_id):
+    """
+    Retrieves models associated with a given store ID.
+
+    Args:
+        store_id (int): The ID of the store for which to retrieve models.
+
+    Returns:
+        dict: A dictionary containing the response message, success status,
+        and data.
+    """
+    res = {}
+    try:
+        models = admin_api.get_store_models(flask.session, store_id)
+        res["msg"] = "Models retrieved"
+        res["success"] = True
+        res["data"] = models
+
+    except StoreApiResponseErrorList as error_list:
+        error_messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        if "unauthorized" in error_messages:
+            res["msg"] = "Store not found"
+        else:
+            res["msg"] = " ".join(error_messages)
+        res["success"] = False
+
+    return jsonify(res)
+
+
+@admin.route("/admin/store/<store_id>/models", methods=["POST"])
+@login_required
+def create_models(store_id: str):
+    """
+    Create a model for a given store.
+
+    Args:
+        store_id (str): The ID of the store.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+        status.
+    """
+
+    # TO DO: Addn validation that name does not exist already
+
+    res = {}
+
+    try:
+        name = flask.request.form.get("name")
+        api_key = flask.request.form.get("api_key", "")
+
+        if len(name) > 128:
+            res["msg"] = "Name is too long. Limit 128 characters"
+            res["success"] = False
+            return jsonify(res)
+
+        if api_key and (len(api_key) != 50 or not api_key.isalpha()):
+            res["msg"] = "Invalid API key"
+            res["success"] = False
+            return jsonify(res)
+
+        admin_api.create_store_model(flask.session, store_id, name, api_key)
+        res["msg"] = "Model created"
+        res["success"] = True
+
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        res["msg"] = (" ").join(msgs)
+
+    except Exception:
+        res["success"] = False
+        res["msg"] = "An error occurred"
+
+    return jsonify(res)
+
+
+@admin.route("/admin/store/<store_id>/models/<model_name>", methods=["PATCH"])
+@login_required
+def update_model(store_id: str, model_name: str):
+    """
+    Update a model for a given store.
+
+    Args:
+        store_id (str): The ID of the store.
+        model_name (str): The name of the model.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+            status.
+    """
+    res = {}
+
+    try:
+        api_key = flask.request.form.get("api_key")
+
+        if api_key and (len(api_key) != 50 or not api_key.isalpha()):
+            res["msg"] = "Invalid API key"
+            res["success"] = False
+            return jsonify(res)
+
+        admin_api.update_store_model(
+            flask.session, store_id, model_name, api_key
+        )
+        res["msg"] = "Model updated"
+        res["success"] = True
+
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["msg"] = error_list.errors[0]["message"]
+
+    except StoreApiResourceNotFound:
+        res["success"] = False
+        res["msg"] = "Model not found"
 
     return jsonify(res)
