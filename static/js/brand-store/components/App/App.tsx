@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { useSetRecoilState } from "recoil";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,6 +11,7 @@ import {
 
 import { fetchStores } from "../../slices/brandStoreSlice";
 import { brandStoresListSelector } from "../../selectors";
+import { brandStoresState } from "../../atoms";
 
 import Navigation from "../Navigation";
 import Snaps from "../Snaps";
@@ -39,9 +41,17 @@ function App() {
     },
   });
 
+  const setRecoilBrandStores = useSetRecoilState(brandStoresState);
+
   useEffect(() => {
     dispatch(fetchStores() as any);
   }, []);
+
+  useEffect(() => {
+    if (brandStoresList) {
+      setRecoilBrandStores(brandStoresList);
+    }
+  }, [brandStoresList]);
 
   return (
     <Router>
@@ -68,9 +78,14 @@ function App() {
             <Route path="/admin/:id/members" element={<Members />} />
             <Route path="/admin/:id/settings" element={<Settings />} />
             <Route path="/admin/:id/models" element={<Models />} />
+            <Route path="/admin/:id/models/create" element={<Models />} />
             <Route path="/admin/:id/models/:model_id" element={<Model />} />
             <Route
               path="/admin/:id/models/:model_id/policies"
+              element={<Policies />}
+            />
+            <Route
+              path="/admin/:id/models/:model_id/policies/create"
               element={<Policies />}
             />
             <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
