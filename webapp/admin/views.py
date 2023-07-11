@@ -2,6 +2,7 @@
 import os
 import json
 import flask
+from flask import make_response
 from canonicalwebteam.store_api.exceptions import (
     StoreApiResponseErrorList,
     StoreApiResourceNotFound,
@@ -248,22 +249,24 @@ def get_models(store_id):
     res = {}
     try:
         models = admin_api.get_store_models(flask.session, store_id)
-        res["msg"] = "Models retrieved"
+        res["message"] = "Models retrieved"
         res["success"] = True
         res["data"] = models
-
+        response = make_response(res, 200)
+        response.cache_control.max_age = "3600"
+        return response
     except StoreApiResponseErrorList as error_list:
         error_messages = [
             f"{error.get('message', 'An error occurred')}"
             for error in error_list.errors
         ]
         if "unauthorized" in error_messages:
-            res["msg"] = "Store not found"
+            res["message"] = "Store not found"
         else:
-            res["msg"] = " ".join(error_messages)
+            res["message"] = " ".join(error_messages)
         res["success"] = False
 
-    return jsonify(res)
+    response = make_response(res, 500)
 
 
 @admin.route("/admin/store/<store_id>/models", methods=["POST"])
@@ -289,32 +292,33 @@ def create_models(store_id: str):
         api_key = flask.request.form.get("api_key", "")
 
         if len(name) > 128:
-            res["msg"] = "Name is too long. Limit 128 characters"
+            res["message"] = "Name is too long. Limit 128 characters"
             res["success"] = False
             return jsonify(res)
 
-        if api_key and (len(api_key) != 50 or not api_key.isalpha()):
-            res["msg"] = "Invalid API key"
+        if api_key and len(api_key) != 50 and not api_key.isalpha():
+            res["message"] = "Invalid API key"
             res["success"] = False
             return jsonify(res)
 
         admin_api.create_store_model(flask.session, store_id, name, api_key)
-        res["msg"] = "Model created"
+        res["message"] = "Model created"
         res["success"] = True
 
+        return make_response(res, 201)
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
-        msgs = [
+        messages = [
             f"{error.get('message', 'An error occurred')}"
             for error in error_list.errors
         ]
-        res["msg"] = (" ").join(msgs)
+        res["message"] = (" ").join(messages)
 
     except Exception:
         res["success"] = False
-        res["msg"] = "An error occurred"
+        res["message"] = "An error occurred"
 
-    return jsonify(res)
+    return make_response(res, 500)
 
 
 @admin.route("/admin/store/<store_id>/models/<model_name>", methods=["PATCH"])
@@ -334,9 +338,9 @@ def update_model(store_id: str, model_name: str):
     res = {}
 
     try:
-        api_key = flask.request.form.get("api_key")
+        api_key = flask.request.form.get("api_key", "")
 
-        if api_key and (len(api_key) != 50 or not api_key.isalpha()):
+        if len(api_key) != 50 and not api_key.isalpha():
             res["msg"] = "Invalid API key"
             res["success"] = False
             return jsonify(res)
@@ -344,15 +348,15 @@ def update_model(store_id: str, model_name: str):
         admin_api.update_store_model(
             flask.session, store_id, model_name, api_key
         )
-        res["msg"] = "Model updated"
+        res["message"] = "Model updated"
         res["success"] = True
 
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
-        res["msg"] = error_list.errors[0]["message"]
+        res["message"] = error_list.errors[0]["message"]
 
     except StoreApiResourceNotFound:
         res["success"] = False
-        res["msg"] = "Model not found"
+        res["message"] = "Model not found"
 
-    return jsonify(res)
+    return make_response(res, 200)
