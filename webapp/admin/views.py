@@ -292,7 +292,7 @@ def create_policy(store_id: str, model_name: str):
         signing_keys = [key["sha3-384"] for key in signing_keys_data]
 
         if not signing_key:
-            res["msg"] = "Signing key required"
+            res["message"] = "Signing key required"
             res["success"] = False
             return jsonify(res)
 
@@ -300,13 +300,12 @@ def create_policy(store_id: str, model_name: str):
             admin_api.create_store_model_policy(
                 flask.session, store_id, model_name, signing_key
             )
-            res["msg"] = "Policy created"
             res["success"] = True
         else:
-            res["msg"] = "Invalid signing key"
+            res["message"] = "Invalid signing key"
             res["success"] = False
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
-        res["msg"] = error_list.errors[0]["message"]
+        res["message"] = error_list.errors[0]["message"]
 
     return make_response(res)
