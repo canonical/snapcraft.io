@@ -122,7 +122,6 @@ def snap_details_views(store, api):
             "publisher_snaps": publisher_snaps,
             "publisher_featured_snaps": publisher_featured_snaps,
             "has_publisher_page": publisher_info is not None,
-            "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),
             "summary": details["snap"]["summary"],
