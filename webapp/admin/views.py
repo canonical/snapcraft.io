@@ -249,7 +249,6 @@ def get_models(store_id):
     res = {}
     try:
         models = admin_api.get_store_models(flask.session, store_id)
-        res["message"] = "Models retrieved"
         res["success"] = True
         res["data"] = models
         response = make_response(res, 200)
@@ -302,7 +301,6 @@ def create_models(store_id: str):
             return jsonify(res)
 
         admin_api.create_store_model(flask.session, store_id, name, api_key)
-        res["message"] = "Model created"
         res["success"] = True
 
         return make_response(res, 201)
@@ -341,14 +339,13 @@ def update_model(store_id: str, model_name: str):
         api_key = flask.request.form.get("api_key", "")
 
         if len(api_key) != 50 and not api_key.isalpha():
-            res["msg"] = "Invalid API key"
+            res["message"] = "Invalid API key"
             res["success"] = False
             return jsonify(res)
 
         admin_api.update_store_model(
             flask.session, store_id, model_name, api_key
         )
-        res["message"] = "Model updated"
         res["success"] = True
 
     except StoreApiResponseErrorList as error_list:
