@@ -2,12 +2,13 @@
 import os
 import json
 import flask
+from flask import make_response
 from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
-from webapp.decorators import login_required
 
 # Local
+from webapp.decorators import login_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -226,3 +227,86 @@ def update_invite_status(store_id):
             flask.flash(msg, "negative")
 
     return jsonify(res)
+
+
+# ---------------------- MODELS SERVICES ----------------------
+@admin.route("/admin/store/<store_id>/models/<model_name>/policies")
+@login_required
+def get_policies(store_id: str, model_name: str):
+    """
+    Get the policies for a given store model.
+
+    Args:
+        store_id (str): The ID of the store.
+        model_name (str): The name of the model.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+    """
+    res = {}
+
+    try:
+        policies = admin_api.get_store_model_policies(
+            flask.session, store_id, model_name
+        )
+        res["success"] = True
+        res["data"] = policies
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["message"] = " ".join(
+            [
+                f"{error.get('message', 'An error occurred')}"
+                for error in error_list.errors
+            ]
+        )
+    except Exception:
+        res["success"] = False
+        res["message"] = "An error occurred"
+
+    response = make_response(res)
+    response.cache_control.max_age = "3600"
+    return response
+
+
+@admin.route(
+    "/admin/store/<store_id>/models/<model_name>/policies", methods=["POST"]
+)
+@login_required
+def create_policy(store_id: str, model_name: str):
+    """
+    Creat policy for a store model.
+
+    Args:
+        store_id (str): The ID of the store.
+        model_name (str): The name of the model.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+    """
+    signing_key = flask.request.form.get("signing_key")
+    res = {}
+    try:
+        signing_keys_data = admin_api.get_store_signing_keys(
+            flask.session, store_id
+        )
+        signing_keys = [key["sha3-384"] for key in signing_keys_data]
+
+        if not signing_key:
+            res["msg"] = "Signing key required"
+            res["success"] = False
+            return jsonify(res)
+
+        if signing_key in signing_keys:
+            admin_api.create_store_model_policy(
+                flask.session, store_id, model_name, signing_key
+            )
+            res["msg"] = "Policy created"
+            res["success"] = True
+        else:
+            res["msg"] = "Invalid signing key"
+            res["success"] = False
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["msg"] = error_list.errors[0]["message"]
+
+    return make_response(res)
