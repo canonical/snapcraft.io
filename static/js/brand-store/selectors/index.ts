@@ -1,15 +1,58 @@
+import { selector } from "recoil";
+
 import {
+  modelsListFilterState,
+  modelsListState,
+  policiesState,
+} from "../atoms";
+
+import { getFilteredModels } from "../utils";
+
+import type {
   StoresSlice,
   CurrentStoreSlice,
   SnapsSlice,
   InvitesSlice,
   MembersSlice,
+  Model,
 } from "../types/shared";
 
-export const brandStoresListSelector = (state: StoresSlice) =>
+// Redux selectors
+const brandStoresListSelector = (state: StoresSlice) =>
   state.brandStores.brandStoresList;
-export const currentStoreSelector = (state: CurrentStoreSlice) =>
+const currentStoreSelector = (state: CurrentStoreSlice) =>
   state.currentStore.currentStore;
-export const snapsSelector = (state: SnapsSlice) => state.snaps.snaps;
-export const membersSelector = (state: MembersSlice) => state.members.members;
-export const invitesSelector = (state: InvitesSlice) => state.invites.invites;
+const snapsSelector = (state: SnapsSlice) => state.snaps.snaps;
+const membersSelector = (state: MembersSlice) => state.members.members;
+const invitesSelector = (state: InvitesSlice) => state.invites.invites;
+
+// Recoil selectors
+const filteredModelsListState = selector<Array<Model>>({
+  key: "filteredModelsList",
+  get: ({ get }) => {
+    const filter = get(modelsListFilterState);
+    const models = get(modelsListState);
+    const policies = get(policiesState);
+    const modelsWithPolicies = models.map((model) => {
+      const policy = policies.find(
+        (policy) => policy["model-name"] === model.name
+      );
+
+      return {
+        ...model,
+        "policy-revision": policy ? policy.revision : undefined,
+      };
+    });
+
+    return getFilteredModels(modelsWithPolicies, filter);
+  },
+});
+
+export {
+  brandStoresListSelector,
+  currentStoreSelector,
+  snapsSelector,
+  membersSelector,
+  invitesSelector,
+  filteredModelsListState,
+};

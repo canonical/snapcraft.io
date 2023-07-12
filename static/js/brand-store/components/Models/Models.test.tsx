@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -17,11 +18,22 @@ jest.mock("react-router-dom", () => {
   };
 });
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
+
 function renderComponent() {
   return render(
     <RecoilRoot>
       <BrowserRouter>
-        <Models />
+        <QueryClientProvider client={queryClient}>
+          <Models />
+        </QueryClientProvider>
       </BrowserRouter>
     </RecoilRoot>
   );
