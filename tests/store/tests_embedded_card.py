@@ -17,7 +17,6 @@ class GetEmbeddedCardTest(TestCase):
             "description": "this is a description",
             "media": [],
             "license": "license",
-            "prices": 0,
             "publisher": {
                 "display-name": "Toto",
                 "username": "toto",
@@ -64,7 +63,6 @@ class GetEmbeddedCardTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",
