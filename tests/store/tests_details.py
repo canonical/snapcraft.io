@@ -26,7 +26,6 @@ class GetDetailsPageTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",
@@ -111,7 +110,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -146,7 +144,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -212,7 +209,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -270,7 +266,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
