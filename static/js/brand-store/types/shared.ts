@@ -103,3 +103,11 @@ export type Model = {
   "modified-at": string;
   "modified-by": string;
 };
+
+export type Policy = {
+  "created-at": string;
+  "created-by": string;
+  "model-name": string;
+  revision: number;
+  "signing-key-sha3-384": string;
+};
