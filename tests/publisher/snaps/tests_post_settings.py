@@ -102,7 +102,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "snap_name": self.snap_name,
             "private": True,
             "unlisted": False,
-            "price": 0,
             "store": "stotore",
             "keywords": [],
             "status": "published",
@@ -158,7 +157,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("private", True)
-        self.assert_context("price", 0)
         self.assert_context("store", "stotore")
         self.assert_context("keywords", [])
         self.assert_context("status", "published")
@@ -184,7 +182,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "unlisted": False,
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
-            "price": 0,
             "store": "stotore",
             "keywords": [],
             "status": "published",
@@ -240,7 +237,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", self.snap_name)
         self.assert_context("private", True)
-        self.assert_context("price", 0)
         self.assert_context("store", "stotore")
         self.assert_context("keywords", [])
         self.assert_context("status", "published")
@@ -277,7 +273,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "unlisted": False,
             "contact": "contact adress",
             "website": "website_url",
-            "price": 0,
             "store": "stotore",
             "keywords": [],
             "status": "published",

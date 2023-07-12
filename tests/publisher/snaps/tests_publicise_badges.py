@@ -21,7 +21,6 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "description": "this is a description",
             "media": [],
             "license": "license",
-            "prices": 0,
             "publisher": {
                 "display-name": "Toto",
                 "username": "toto",
@@ -44,7 +43,7 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
                 "snaps/info/",
                 snap_name,
                 "?fields=title%2Csummary%2Cdescription%2Clicense%2Ccontact%2C",
-                "website%2Cpublisher%2Cprices%2Cmedia%2Cdownload%2Cversion%2C",
+                "website%2Cpublisher%2Cmedia%2Cdownload%2Cversion%2C",
                 "created-at%2Cconfinement%2Ccategories%2Ctrending%2Cunlisted",
                 "%2Clinks",
             ]
