@@ -275,7 +275,6 @@ def filter_changes_data(changes):
         "website",
         "keywords",
         "license",
-        "price",
         "private",
         "unlisted",
         "blacklist_countries",
