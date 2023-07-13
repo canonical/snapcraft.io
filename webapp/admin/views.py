@@ -438,3 +438,109 @@ def create_policy(store_id: str, model_name: str):
         res["message"] = error_list.errors[0]["message"]
 
     return make_response(res)
+
+
+@admin.route("/admin/store/<store_id>/signing-keys")
+@login_required
+def get_signing_keys(store_id: str):
+    res = {}
+    try:
+        signing_keys = admin_api.get_store_signing_keys(
+            flask.session, store_id
+        )
+        res["data"] = signing_keys
+        res["success"] = True
+
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["success"] = False
+        res["message"] = " ".join(
+            [
+                f"{error.get('message', 'An error occurred')}"
+                for error in error_list.errors
+            ]
+        )
+        res["data"] = []
+
+    response = make_response(res)
+    response.cache_control.max_age = 3600
+
+    return response
+
+
+@admin.route("/admin/store/<store_id>/signing-keys", methods=["POST"])
+@login_required
+def create_signing_key(store_id: str):
+    name = flask.request.form.get("name")
+    res = {}
+
+    try:
+        if name and len(name) <= 128:
+            admin_api.create_store_signing_key(flask.session, store_id, name)
+            res["success"] = True
+        else:
+            res["message"] = "Invalid signing key. Limit 128 characters"
+            res["success"] = False
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["message"] = error_list.errors[0]["message"]
+
+    return jsonify(res)
+
+
+@admin.route(
+    "/admin/store/<store_id>/signing-keys/<signing_key_sha3_384>",
+    methods=["DELETE"],
+)
+@login_required
+def delete_signing_key(store_id: str, signing_key_sha3_384: str):
+    """
+    Deletes a signing key from the store.
+
+    Args:
+        store_id (str): The ID of the store.
+        signing_key_sha3_384 (str): The signing key to delete.
+
+    Returns:
+        Response: A response object with the following fields:
+            - success (bool): True if the signing key was deleted successfully,
+              False otherwise.
+            - message (str): A message describing the result of the deletion.
+            - data (dict): A dictionary containing models where the signing
+              key is used.
+    """
+    res = {}
+
+    try:
+        admin_api.delete_store_signing_key(
+            flask.session, store_id, signing_key_sha3_384
+        )
+        res["success"] = True
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        message = error_list.errors[0]["message"]
+        if (
+            message == f"Cannot delete signing key {signing_key_sha3_384} as"
+            " it is used to sign at least one serial policy."
+        ):
+            matching_models = []
+            models = get_models(store_id).json["data"]
+            for model in models:
+                policies = get_policies(store_id, model["name"]).json["data"]
+                matching_policies = []
+                for policy in policies:
+                    if policy["signing-key-sha3-384"] == signing_key_sha3_384:
+                        matching_policies.append(
+                            {"revision": policy["revision"]}
+                        )
+                if matching_policies:
+                    matching_models.append(
+                        {"name": model["name"], "policies": matching_policies}
+                    )
+                res["data"] = {"models": matching_models}
+                res["message"] = "Signing key is used in at least one policy"
+
+        else:
+            res["message"] = message
+
+    return make_response(res)
