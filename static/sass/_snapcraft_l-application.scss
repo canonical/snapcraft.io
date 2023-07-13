@@ -2,6 +2,7 @@
   // main navigation height is based on padding and line height of a nav link
   $main-nav-height: map-get($line-heights, default-text) + $spv--large * 2;
   $layout-height: calc(100vh - #{$main-nav-height});
+  $layout-height-small: calc(100vh - 48px);
 
   .l-application {
     height: $layout-height;
@@ -47,10 +48,14 @@
   }
 
   .l-navigation {
-    height: $layout-height;
+    height: $layout-height-small;
     position: absolute;
     top: auto;
     z-index: 9;
+
+    @media (max-width: $breakpoint-small) {
+      height: $layout-height;
+    }
 
     @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
       position: static;
