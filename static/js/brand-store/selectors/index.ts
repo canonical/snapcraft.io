@@ -1,4 +1,4 @@
-import { selector } from "recoil";
+import { selector, selectorFamily } from "recoil";
 
 import {
   modelsListFilterState,
@@ -48,6 +48,14 @@ const filteredModelsListState = selector<Array<Model>>({
   },
 });
 
+const currentModelState = selectorFamily({
+  key: "currentModel",
+  get: (modelId) => ({ get }) => {
+    const models = get(modelsListState);
+    return models.find((model) => model.name === modelId);
+  },
+});
+
 export {
   brandStoresListSelector,
   currentStoreSelector,
@@ -55,4 +63,5 @@ export {
   membersSelector,
   invitesSelector,
   filteredModelsListState,
+  currentModelState,
 };
