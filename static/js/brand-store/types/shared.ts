@@ -99,9 +99,10 @@ export type Model = {
   name: string;
   "api-key": string;
   "created-at": string;
-  "created-by": string;
+  "created-by"?: string;
   "modified-at": string;
-  "modified-by": string;
+  "modified-by"?: string;
+  "policy-revision"?: number | undefined;
 };
 
 export type Policy = {

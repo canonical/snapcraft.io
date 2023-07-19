@@ -17,7 +17,6 @@ class GetGitHubBadgeTest(TestCase):
             "description": "this is a description",
             "media": [],
             "license": "license",
-            "prices": 0,
             "publisher": {
                 "display-name": "Toto",
                 "username": "toto",
@@ -77,7 +76,6 @@ class GetGitHubBadgeTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",

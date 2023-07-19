@@ -7,10 +7,10 @@ function getFilteredModels(models: Array<Model>, filterQuery?: string | null) {
 
   return models.filter((model: Model) => {
     if (
-      model.name.includes(filterQuery) ||
-      model["api-key"].includes(filterQuery) ||
-      model["created-at"].includes(filterQuery) ||
-      model["modified-at"].includes(filterQuery)
+      (model.name && model.name.includes(filterQuery)) ||
+      (model["api-key"] && model["api-key"].includes(filterQuery)) ||
+      (model["created-at"] && model["created-at"].includes(filterQuery)) ||
+      (model["modified-at"] && model["modified-at"].includes(filterQuery))
     ) {
       return true;
     }
