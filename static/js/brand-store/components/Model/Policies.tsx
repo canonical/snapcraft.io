@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Link,
   useParams,
@@ -6,33 +6,56 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { format } from "date-fns";
-import {
-  MainTable,
-  Row,
-  Col,
-  Button,
-  Input,
-  Icon,
-} from "@canonical/react-components";
+import { useSetRecoilState } from "recoil";
+import { useQuery } from "react-query";
+import { Row, Col, Notification } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
+import PoliciesFilter from "./PoliciesFilter";
+import PoliciesTable from "./PoliciesTable";
+import CreatePolicyForm from "./CreatePolicyForm";
 
-import { getFilteredPolicies, isClosedPanel } from "../../utils";
+import { policiesListFilterState, policiesListState } from "../../atoms";
 
-import type { Policy } from "../../types/shared";
+import { isClosedPanel } from "../../utils";
 
-// This is temporary until the API is connected
-import policiesData from "./policies-data";
+import type { Policy, Query } from "../../types/shared";
 
 function Policies() {
+  const getPolicies = async () => {
+    setPoliciesList([]);
+
+    const response = await fetch(
+      `/admin/store/${id}/models/${model_id}/policies`
+    );
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching policies");
+    }
+
+    const policiesData = await response.json();
+
+    if (!policiesData.success) {
+      throw new Error(policiesData.message);
+    }
+
+    setPoliciesList(policiesData.data);
+    setFilter(searchParams.get("filter") || "");
+  };
+
   const { id, model_id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const policies = getFilteredPolicies(
-    policiesData.data,
-    searchParams.get("filter")
+  const { isLoading, isError, error, refetch }: Query = useQuery(
+    "policies",
+    getPolicies
+  );
+  const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
+  const setFilter = useSetRecoilState<string>(policiesListFilterState);
+  const [searchParams] = useSearchParams();
+  const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
+    false
   );
 
   return (
@@ -49,6 +72,30 @@ function Policies() {
             <div className="u-fixed-width">
               <ModelNav sectionName="policies" />
             </div>
+            {showNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="positive"
+                  onDismiss={() => {
+                    setShowNotification(false);
+                  }}
+                >
+                  New policy created
+                </Notification>
+              </div>
+            )}
+            {showErrorNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  onDismiss={() => {
+                    setShowErrorNotification(false);
+                  }}
+                >
+                  Unable to create policy
+                </Notification>
+              </div>
+            )}
             <Row>
               <Col size={6}>
                 <Link
@@ -59,83 +106,13 @@ function Policies() {
                 </Link>
               </Col>
               <Col size={6}>
-                <div className="p-search-box">
-                  <Input
-                    type="search"
-                    id="search"
-                    className="p-search-box__input"
-                    label="Search policies"
-                    labelClassName="u-off-screen"
-                    placeholder="Search policies"
-                    autoComplete="off"
-                    value={searchParams.get("filter") || ""}
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        setSearchParams({ filter: e.target.value });
-                      } else {
-                        setSearchParams();
-                      }
-                    }}
-                  />
-                  <Button
-                    type="reset"
-                    className="p-search-box__reset"
-                    onClick={() => {
-                      setSearchParams();
-                    }}
-                  >
-                    <Icon name="close">Close</Icon>
-                  </Button>
-                  <Button type="submit" className="p-search-box__button">
-                    <Icon name="search">Search</Icon>
-                  </Button>
-                </div>
+                <PoliciesFilter />
               </Col>
             </Row>
             <div className="u-fixed-width">
-              {policies.length > 0 && (
-                <MainTable
-                  data-testid="policies-table"
-                  sortable
-                  paginate={10}
-                  emptyStateMsg="Fetching policies data..."
-                  headers={[
-                    {
-                      content: "Revision",
-                      sortKey: "revision",
-                    },
-                    {
-                      content: "Signing key",
-                    },
-                    {
-                      content: "Creation date",
-                      sortKey: "created-at",
-                    },
-                  ]}
-                  rows={policies.map((policy: Policy) => {
-                    return {
-                      columns: [
-                        {
-                          content: policy.revision,
-                        },
-                        {
-                          content: policy["signing-key-sha3-384"],
-                        },
-                        {
-                          content: format(
-                            new Date(policy["created-at"]),
-                            "dd/MM/yyyy"
-                          ),
-                        },
-                      ],
-                      sortData: {
-                        revision: policy.revision,
-                        "created-at": policy["created-at"],
-                      },
-                    };
-                  })}
-                />
-              )}
+              {isLoading && <p>Fetching policies...</p>}
+              {isError && error && <p>Error: {error.message}</p>}
+              <PoliciesTable />
             </div>
           </div>
         </div>
@@ -153,49 +130,11 @@ function Policies() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        <div className="p-panel is-flex-column">
-          <div className="p-panel__header">
-            <h4 className="p-panel__title">Create new policy</h4>
-          </div>
-          <div className="p-panel__content">
-            <div className="u-fixed-width">
-              <div>
-                <label htmlFor="signing-key">Signing key</label>
-                <select name="signing-key" id="signing-key" required disabled>
-                  <option value="">Select a signing key</option>
-                </select>
-                <p className="p-form-help-text">
-                  No signing keys available, please{" "}
-                  <Link to={`/admin/${id}/models/signing-keys/create`}>
-                    create one
-                  </Link>{" "}
-                  first.
-                </p>
-              </div>
-            </div>
-          </div>
-          <hr />
-          <div className="p-panel__footer u-align--right">
-            <div className="u-fixed-width">
-              <Button
-                className="u-no-margin--bottom"
-                onClick={() => {
-                  navigate(`/admin/${id}/models/${model_id}/policies`);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                appearance="positive"
-                className="u-no-margin--bottom u-no-margin--right"
-                disabled
-              >
-                Add policy
-              </Button>
-            </div>
-          </div>
-        </div>
+        <CreatePolicyForm
+          setShowNotification={setShowNotification}
+          setShowErrorNotification={setShowErrorNotification}
+          refetchPolicies={refetch}
+        />
       </aside>
     </>
   );

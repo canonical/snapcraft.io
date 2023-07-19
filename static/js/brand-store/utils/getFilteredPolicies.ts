@@ -10,7 +10,10 @@ function getFilteredPolicies(
 
   return policies.filter((policy: Policy) => {
     if (
+      (policy["signing-key-name"] &&
+        policy["signing-key-name"].includes(filterQuery)) ||
       policy["created-at"].includes(filterQuery) ||
+      (policy["modified-at"] && policy["modified-at"].includes(filterQuery)) ||
       policy.revision.toString().includes(filterQuery)
     ) {
       return true;

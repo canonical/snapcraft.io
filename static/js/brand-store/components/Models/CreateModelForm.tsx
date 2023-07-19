@@ -68,20 +68,24 @@ function CreateModelForm({
         body: formData,
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (!response.ok) {
         handleError();
         throw new Error(`${response.status} ${response.statusText}`);
       }
 
-      if (response.ok) {
-        setShowNotification(true);
-        setNewModel({ name: "", apiKey: "" });
-        navigate(`/admin/${id}/models`);
-        setTimeout(() => {
-          setShowNotification(false);
-        }, 5000);
+      const modelsData = await response.json();
+
+      if (!modelsData.success) {
+        throw new Error(modelsData.message);
       }
+
+      setShowNotification(true);
+      setNewModel({ name: "", apiKey: "" });
+      navigate(`/admin/${id}/models`);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
     },
     onError: () => {
       handleError();

@@ -13,7 +13,7 @@ import { Row, Col, Notification } from "@canonical/react-components";
 import {
   modelsListFilterState,
   modelsListState,
-  policiesState,
+  policiesListState,
 } from "../../atoms";
 
 import SectionNav from "../SectionNav";
@@ -62,7 +62,7 @@ function Models() {
       throw new Error(policyData.message);
     }
 
-    setPolicies([...policies, policyData.data]);
+    setPolicies([...policies, ...policyData.data]);
   };
 
   const { id } = useParams();
@@ -70,7 +70,9 @@ function Models() {
   const navigate = useNavigate();
   const { isLoading, isError, error }: Query = useQuery("models", getModels);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
-  const [policies, setPolicies] = useRecoilState<Array<Policy>>(policiesState);
+  const [policies, setPolicies] = useRecoilState<Array<Policy>>(
+    policiesListState
+  );
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
